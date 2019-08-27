@@ -2,160 +2,346 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6EAC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916FFC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A35206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2A020828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:39:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fb00+7/Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dgzpdEO5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730734AbfH0Vhn (ORCPT
+        id S1730621AbfH0VjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:37:43 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43189 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfH0Vhn (ORCPT
+        Tue, 27 Aug 2019 17:39:04 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46439 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbfH0VjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:37:43 -0400
-Received: by mail-wr1-f66.google.com with SMTP id y8so276595wrn.10;
-        Tue, 27 Aug 2019 14:37:40 -0700 (PDT)
+        Tue, 27 Aug 2019 17:39:03 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q139so218213pfc.13;
+        Tue, 27 Aug 2019 14:39:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DSR/MEtGjrUpy7aK5sxf4jRfRx5rcdWBees9b5lcQdg=;
-        b=Fb00+7/ZxKx/ZBPfvWzaB4DUx7ucVShQ1iKNUL43J5KOQnkgbRRAaQresWuojiou9/
-         MxvF5jNCtg2KYfNIIZ30x4HoJLc8s4pN6yg/w5BqeLQ0PnkClE+pHw/Q1gxXVzyOwvtt
-         vCBVWm5iDP4ypYE40S1/7ELiNBTKsTYtXfsYYxSODQeP0HxQdN27LF7a+PsJZltF85Fc
-         GbFxOkx68gnNKnI1Ah8WyB5QojJN9/Gtql2hEJJNMDQl7YnhABDjk4jRhs4Jzy8Ilj2N
-         BhRe0yX1YbNCwvGSRNdWDPxijfWmEpmIsrJ5UgH7G0UzVkwREKqa5La7DkwkQXC2yDNY
-         yPuA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=SQ4jwqBG8EsW432GvBdLsYEJC4NIC/EX2i8l181zzqI=;
+        b=dgzpdEO5dTkMRYWaawNcZ39lE6kArsjkbmqgdDhn51AmtsLQxm83szxiZElja3WrLD
+         UoD2q17YWBfHOslpnXDkQ24WlFYLalV90iu5tZGo5cjEHzivXhUO2cQOzDvsjGh7UusI
+         coJtoDQvK3D0+nXi1024xg+KXtb1bdYHBKgOmUFKHYFMI5aN7G6epzqvINSGu3bl6A5X
+         KBptfOy752t4nUruov9zo8VGEySJCgiHP04GGoNuFY5EeuIbttZMSVDhj5zaNA5s14B+
+         Qk+OKI89qTRPQIHsY6Rmt8Nz9JHTNnYHV6TQCUC3QHgoWfzD+aq2rQfA6PYfKIl2UCSm
+         nnTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=DSR/MEtGjrUpy7aK5sxf4jRfRx5rcdWBees9b5lcQdg=;
-        b=Z13w2iJQE7uJ8XUsT/i1lO+2jeyjvEX732lD90F1KARUoAaMeKdxGBbYaMNgKhI0uZ
-         6nDFa9FL/LiEsd+7kFBxq9+W6GPl2ku8Qe/y58E5P/AS5cm1a/V3B+JjL6aNidgfub37
-         iJhf7Z7O4wUgeQQlWoOq+HDZmSSVFpqDi5L1pS3yjIqvIyQ49OALSgd4pNbZqiKfqD5F
-         ca3flDn9vO2a46po0zQkeZ0LtwnISWwD2j9xq6Om3SvFdGWzQ90EbWLe7sqhmSA5mIQa
-         Xqhau8+gwU6TEFK+F3/tfc4mb3SIiymfOTt2f7GTYyI/sPwF9dcw3mf8k6f5rwsDoc85
-         DWyA==
-X-Gm-Message-State: APjAAAX01BYvWUryNtwoagxyeIZ3Rv1iMUwJRqqUh6cFyNQIXqYdydoX
-        uKmS/6bSA/Tf1e6w3i7/fssLI2z+
-X-Google-Smtp-Source: APXvYqyltLZTJcoMrGfn0h66INKi1m037ZJhGilJJGb+J481jVzpSCuSFxYHhgmlekNpcQaay7LgMg==
-X-Received: by 2002:adf:bd84:: with SMTP id l4mr267400wrh.143.1566941860185;
-        Tue, 27 Aug 2019 14:37:40 -0700 (PDT)
-Received: from [192.168.1.19] (ckl27.neoplus.adsl.tpnet.pl. [83.31.87.27])
-        by smtp.gmail.com with ESMTPSA id e11sm762980wrc.4.2019.08.27.14.37.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 14:37:39 -0700 (PDT)
-Subject: Re: [PATCH v3 2/5] leds: lm3532: Change the define for the fs current
- register
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-To:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Cc:     tony@atomide.com, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190820195307.27590-1-dmurphy@ti.com>
- <20190820195307.27590-2-dmurphy@ti.com> <20190825093227.GC1644@amd>
- <661a6df1-151c-b11b-6bfb-afd5dea6ca64@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
- eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
- FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
- X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
- 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
- Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
- FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
- osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
- IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
- ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
- emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAlgEEwEIAEICGwMHCwkIBwMC
- AQYVCAIJCgsDFgIBAh4BAheABQkJZgNMFiEEvx38ClaPBfeVdXCQvWpQHLeLfCYFAl05/9sC
- GQEACgkQvWpQHLeLfCarMQ/9FN/WqJdN2tf6xkP0RFyS4ft0sT04zkOCFfOMxs8mZ+KZoMU+
- X3a+fEppDL7xgRFpHyGaEel7lSi1eqtzsqZ5JiHbDS1Ht1G8TtATb8q8id68qeSeW2mfzaLQ
- 98NPELGfUXFoUqUQkG5z2p92UrGF4Muj1vOIW93pwvE4uDpNsl+jriwHomLtjIUoZtIRjGfZ
- RCyUQI0vi5LYzXCebuzAjGD7Jh2YAp7fDGrv3qTq8sX+DUJ4H/+I8PiL+jXKkEeppqIhlBJJ
- l4WcgggMu3c2uljYDuqRYghte33BXyCPAocfO2/sN+yJRUTVuRFlOxUk4srz/W8SQDwOAwtK
- V7TzdyF1/jOGBxWwS13EjMb4u3XwPMzcPlEQNdIqz76NFmJ99xYEvgkAmFmRioxuBTRv8Fs1
- c1jQ00WWJ5vezqY6lccdDroPalXWeFzfPjIhKbV3LAYTlqv0It75GW9+0TBhPqdTM15DrCVX
- B7Ues7UnD5FBtWwewTnwr+cu8te449VDMzN2I+a9YKJ1s6uZmzh5HnuKn6tAfGyQh8MujSOM
- lZrNHrRsIsLXOjeGVa84Qk/watEcOoyQ7d+YaVosU0OCZl0GldvbGp1z2u8cd2N/HJ7dAgFh
- Q7dtGXmdXpt2WKQvTvQXhIrCWVQErNYbDZDD2V0TZtlPBaZP4fkUDkvH+Sy5Ag0EVaN9oQEQ
- AMPNymBNoCWc13U6qOztXrIKBVsLGZXq/yOaR2n7gFbFACD0TU7XuH2UcnwvNR+uQFwSrRqa
- EczX2V6iIy2CITXKg5Yvg12yn09gTmafuoIyKoU16XvC3aZQQ2Bn3LO2sRP0j/NuMD9GlO37
- pHCVRpI2DPxFE39TMm1PLbHnDG8+lZql+dpNwWw8dDaRgyXx2Le542CcTBT52VCeeWDtqd2M
- wOr4LioYlfGfAqmwcwucBdTEBUxklQaOR3VbJQx6ntI2oDOBlNGvjnVDzZe+iREd5l40l+Oj
- TaiWvBGXkv6OI+wx5TFPp+BM6ATU+6UzFRTUWbj+LqVA/JMqYHQp04Y4H5GtjbHCa8abRvBw
- IKEvpwTyWZlfXPtp8gRlNmxYn6gQlTyEZAWodXwE7CE+KxNnq7bPHeLvrSn8bLNK682PoTGr
- 0Y00bguYLfyvEwuDYek1/h9YSXtHaCR3CEj4LU1B561G1j7FVaeYbX9bKBAoy/GxAW8J5O1n
- mmw7FnkSHuwO/QDe0COoO0QZ620Cf9IBWYHW4m2M2yh5981lUaiMcNM2kPgsJFYloFo2XGn6
- lWU9BrWjEoNDhHZtF+yaPEuwjZo6x/3E2Tu3E5Jj0VpVcE9U1Zq/fquDY79l2RJn5ENogOs5
- +Pi0GjVpEYQVWfm0PTCxNPOzOzGR4QB3BNFvABEBAAGJAiUEGAEIAA8FAlWjfaECGwwFCQlm
- AYAACgkQvWpQHLeLfCZqGxAAlWBWVvjU6xj70GwengiqYZwmW1i8gfS4TNibQT/KRq0zkBnE
- wgKwXRbVoW38pYVuGa5x/JDQMJDrLAJ0wrCOS3XxbSHCWOl/k2ZD9OaxUeXq6N+OmGTzfrYv
- PUvWS1Hy04q9AD1dIaMNruZQmvnRfkOk2UDncDIg0166/NTHiYI09H5mpWGpHn/2aT6dmpVw
- uoM9/rHlF5s5qAAo95tZ0QW2BtIceG9/rbYlL57waSMPF49awvwLQX5RhWoF8mPS5LsBrXXK
- hmizIsn40tLbi2RtWjzDWgZYitqmmqijeCnDvISN4qJ/nCLO4DjiSGs59w5HR+l0nwePDhOC
- A4RYZqS1e2Clx1VSkDXFpL3egabcIsqK7CZ6a21r8lXVpo4RnMlQsmXZTnRx4SajFvX7PrRg
- /02C811fLfh2r5O5if8sKQ6BKKlHpuuioqfj/w9z3B0aQ71e4n1zNJBO1kcdznikPLAbr7jG
- gkBUXT1yJiwpTfRQr5y2Uo12IJsKxohnNFVYtK8X/R6S0deKPjrZWvAkllgIPcHjMi2Va8yw
- KTj/JgcpUO5KN906Pf7ywZISe7Kbcc/qnE0YjPPSqFOvoeZvHe6EZCMW9+xZsaipvlqpByQV
- UHnVg09K9YFvjUBsBPdC8ef6YwgfR9o6AnPmxl0oMUIXkCCC5c99fzJY/k+JAq0EGAEIACAW
- IQS/HfwKVo8F95V1cJC9alAct4t8JgUCWwqKhgIbAgCBCRC9alAct4t8JnYgBBkWCAAdFiEE
- FMMcSshOZf56bfAEYhBsURv0pdsFAlsKioYACgkQYhBsURv0pdvELgD/U+y3/hsz0bIjMQJY
- 0LLxM/rFY9Vz1L43+lQHXjL3MPsA/1lNm5sailsY7aFBVJxAzTa8ZAGWBdVaGo6KCvimDB8G
- 7joP/jx+oGOmdRogs7mG//H+w9DTnBfPpnfkeiiokGYo/+huWO5V0Ac9tTqZeFc//t/YuYJn
- wWvS0Rx+KL0fT3eh9BQo47uF4yDiZIiWLNh4Agpup1MUSVsz4MjD0lW6ghtnLcGlIgoVHW0v
- tPW1m9jATYyJSOG/MC1iDrcYcp9uVYn5tKfkEeQNspuG6iSfS0q3tajPKnT1nJxMTxVOD2RW
- EIGfaV9Scrou92VD/eC+/8INRsiWS93j3hOKIAV5XRNINFqtzkagPYAP8r6wksjSjh01fSTB
- p5zxjfsIwWDDzDrqgzwv83CvrLXRV3OlG1DNUDYA52qJr47paH5QMWmHW5TNuoBX8qb6RW/H
- M3DzPgT+l+r1pPjMPfvL1t7civZUoPuNzoyFpQRj6TvWi2bGGMQKryeYksXG2zi2+avMFnLe
- lOxGdUZ7jn1SJ6Abba5WL3VrXCP+TUE6bZLgfw8kYa8QSXP3ysyeMI0topHFntBZ8a0KXBNs
- qqFCBWmTHXfwsfW0VgBmRtPO7eXVBybjJ1VXKR2RZxwSq/GoNXh/yrRXQxbcpZ+QP3/Tttsb
- FdKciZ4u3ts+5UwYra0BRuvb51RiZR2wRNnUeBnXWagJVTlG7RHBO/2jJOE6wrcdCMjs0Iiw
- PNWmiVoZA930TvHA5UeGENxdGqo2MvMdRJ54YaIR
-Message-ID: <63495e40-83c1-a1b6-0179-58c0ad6fca9a@gmail.com>
-Date:   Tue, 27 Aug 2019 23:37:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=SQ4jwqBG8EsW432GvBdLsYEJC4NIC/EX2i8l181zzqI=;
+        b=IQoDSBEuQE7d/uW71HYEcDEEiCYlTRebyEy+DvUn2zTOvaFXxxdTBkgXIEHwViGUs1
+         1CB9PGgrZdxJL+YGYCEyM63EMnwRWFy+zu7GJaQN7zwxESsBRHx+VBO7rnqaNKt9/fjl
+         wsZ8Rx0/+6VTy0eAb0d5Z0aDu4k4wPQZmCkFYorMdkndlYiFUGQfEj9k9/ZRVJoJudoX
+         12C91uL1z6ymcCcdvzgytow2hW/w4cw7XXa83n4xCQr388ZW3QvnW90z+Tz9jPuFW4RC
+         HRWOpHwkUeaGazzyvS/IL0Nldm/sc7WU+5EJhcyKgDm750O5d9lF5Cb1FlhWcUq95dW2
+         qPZg==
+X-Gm-Message-State: APjAAAVr+wYLk1alLj8h9Ka6LLBhWMOKJ2XlC+3eq61n9IhMlyKoUBIS
+        h7ja7887S5lWItuM/jquHI5B3iLu1Pc=
+X-Google-Smtp-Source: APXvYqwydFQYfo/fbLncH7Mq5b3qyULdN8E5231knw2rVs31XiwIWzfs7kV8RtBpzhs5KIe9B5hHDA==
+X-Received: by 2002:a63:2807:: with SMTP id o7mr501997pgo.131.1566941942817;
+        Tue, 27 Aug 2019 14:39:02 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id h20sm262646pfq.156.2019.08.27.14.39.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 14:39:02 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Bruce Wang <bzwang@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Fritz Koenig <frkoenig@google.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/9] drm/msm/dpu: unwind async commit handling
+Date:   Tue, 27 Aug 2019 14:33:31 -0700
+Message-Id: <20190827213421.21917-2-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190827213421.21917-1-robdclark@gmail.com>
+References: <20190827213421.21917-1-robdclark@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <661a6df1-151c-b11b-6bfb-afd5dea6ca64@gmail.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/19 11:33 PM, Jacek Anaszewski wrote:
-> On 8/25/19 11:32 AM, Pavel Machek wrote:
->> On Tue 2019-08-20 14:53:04, Dan Murphy wrote:
->>> Change the define name of the full scale current registers.
->>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>
->> Acked-by: Pavel Machek <pavel@ucw.cz>
->>
-> 
-> Thanks, applied.
+From: Rob Clark <robdclark@chromium.org>
 
-My above reply is a mistake, please ignore.
+It attempted to avoid fps drops in the presence of cursor updates.  But
+it is racing, and can result in hw updates after flush before vblank,
+which leads to underruns.
 
-Patch was applied yesterday anyway.
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c    | 41 ++++++++++-----------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h    |  3 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 39 +++++++-------------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h |  3 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     |  5 +--
+ drivers/gpu/drm/msm/msm_atomic.c            |  3 +-
+ 6 files changed, 37 insertions(+), 57 deletions(-)
 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index a52439e029c9..c3f7154017c4 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -610,7 +610,7 @@ static int _dpu_crtc_wait_for_frame_done(struct drm_crtc *crtc)
+ 	return rc;
+ }
+ 
+-void dpu_crtc_commit_kickoff(struct drm_crtc *crtc, bool async)
++void dpu_crtc_commit_kickoff(struct drm_crtc *crtc)
+ {
+ 	struct drm_encoder *encoder;
+ 	struct dpu_crtc *dpu_crtc = to_dpu_crtc(crtc);
+@@ -636,35 +636,32 @@ void dpu_crtc_commit_kickoff(struct drm_crtc *crtc, bool async)
+ 				  crtc->state->encoder_mask)
+ 		dpu_encoder_prepare_for_kickoff(encoder);
+ 
+-	if (!async) {
+-		/* wait for previous frame_event_done completion */
+-		DPU_ATRACE_BEGIN("wait_for_frame_done_event");
+-		ret = _dpu_crtc_wait_for_frame_done(crtc);
+-		DPU_ATRACE_END("wait_for_frame_done_event");
+-		if (ret) {
+-			DPU_ERROR("crtc%d wait for frame done failed;frame_pending%d\n",
+-					crtc->base.id,
+-					atomic_read(&dpu_crtc->frame_pending));
+-			goto end;
+-		}
++	/* wait for previous frame_event_done completion */
++	DPU_ATRACE_BEGIN("wait_for_frame_done_event");
++	ret = _dpu_crtc_wait_for_frame_done(crtc);
++	DPU_ATRACE_END("wait_for_frame_done_event");
++	if (ret) {
++		DPU_ERROR("crtc%d wait for frame done failed;frame_pending%d\n",
++				crtc->base.id,
++				atomic_read(&dpu_crtc->frame_pending));
++		goto end;
++	}
+ 
+-		if (atomic_inc_return(&dpu_crtc->frame_pending) == 1) {
+-			/* acquire bandwidth and other resources */
+-			DPU_DEBUG("crtc%d first commit\n", crtc->base.id);
+-		} else
+-			DPU_DEBUG("crtc%d commit\n", crtc->base.id);
++	if (atomic_inc_return(&dpu_crtc->frame_pending) == 1) {
++		/* acquire bandwidth and other resources */
++		DPU_DEBUG("crtc%d first commit\n", crtc->base.id);
++	} else
++		DPU_DEBUG("crtc%d commit\n", crtc->base.id);
+ 
+-		dpu_crtc->play_count++;
+-	}
++	dpu_crtc->play_count++;
+ 
+ 	dpu_vbif_clear_errors(dpu_kms);
+ 
+ 	drm_for_each_encoder_mask(encoder, crtc->dev, crtc->state->encoder_mask)
+-		dpu_encoder_kickoff(encoder, async);
++		dpu_encoder_kickoff(encoder);
+ 
+ end:
+-	if (!async)
+-		reinit_completion(&dpu_crtc->frame_done_comp);
++	reinit_completion(&dpu_crtc->frame_done_comp);
+ 	DPU_ATRACE_END("crtc_commit");
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
+index 5181f079a6a1..10f78459f6c2 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
+@@ -238,9 +238,8 @@ void dpu_crtc_vblank_callback(struct drm_crtc *crtc);
+ /**
+  * dpu_crtc_commit_kickoff - trigger kickoff of the commit for this crtc
+  * @crtc: Pointer to drm crtc object
+- * @async: true if the commit is asynchronous, false otherwise
+  */
+-void dpu_crtc_commit_kickoff(struct drm_crtc *crtc, bool async);
++void dpu_crtc_commit_kickoff(struct drm_crtc *crtc);
+ 
+ /**
+  * dpu_crtc_complete_commit - callback signalling completion of current commit
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 627c57594221..ac2d534bf59e 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -1421,8 +1421,7 @@ static void dpu_encoder_off_work(struct work_struct *work)
+  * extra_flush_bits: Additional bit mask to include in flush trigger
+  */
+ static void _dpu_encoder_trigger_flush(struct drm_encoder *drm_enc,
+-		struct dpu_encoder_phys *phys, uint32_t extra_flush_bits,
+-		bool async)
++		struct dpu_encoder_phys *phys, uint32_t extra_flush_bits)
+ {
+ 	struct dpu_hw_ctl *ctl;
+ 	int pending_kickoff_cnt;
+@@ -1439,10 +1438,7 @@ static void _dpu_encoder_trigger_flush(struct drm_encoder *drm_enc,
+ 		return;
+ 	}
+ 
+-	if (!async)
+-		pending_kickoff_cnt = dpu_encoder_phys_inc_pending(phys);
+-	else
+-		pending_kickoff_cnt = atomic_read(&phys->pending_kickoff_cnt);
++	pending_kickoff_cnt = dpu_encoder_phys_inc_pending(phys);
+ 
+ 	if (extra_flush_bits && ctl->ops.update_pending_flush)
+ 		ctl->ops.update_pending_flush(ctl, extra_flush_bits);
+@@ -1553,8 +1549,7 @@ static void dpu_encoder_helper_hw_reset(struct dpu_encoder_phys *phys_enc)
+  *	a time.
+  * dpu_enc: Pointer to virtual encoder structure
+  */
+-static void _dpu_encoder_kickoff_phys(struct dpu_encoder_virt *dpu_enc,
+-				      bool async)
++static void _dpu_encoder_kickoff_phys(struct dpu_encoder_virt *dpu_enc)
+ {
+ 	struct dpu_hw_ctl *ctl;
+ 	uint32_t i, pending_flush;
+@@ -1581,13 +1576,12 @@ static void _dpu_encoder_kickoff_phys(struct dpu_encoder_virt *dpu_enc,
+ 		 * for async commits. So don't set this for async, since it'll
+ 		 * roll over to the next commit.
+ 		 */
+-		if (!async && phys->split_role != ENC_ROLE_SLAVE)
++		if (phys->split_role != ENC_ROLE_SLAVE)
+ 			set_bit(i, dpu_enc->frame_busy_mask);
+ 
+ 		if (!phys->ops.needs_single_flush ||
+ 				!phys->ops.needs_single_flush(phys))
+-			_dpu_encoder_trigger_flush(&dpu_enc->base, phys, 0x0,
+-						   async);
++			_dpu_encoder_trigger_flush(&dpu_enc->base, phys, 0x0);
+ 		else if (ctl->ops.get_pending_flush)
+ 			pending_flush |= ctl->ops.get_pending_flush(ctl);
+ 	}
+@@ -1597,7 +1591,7 @@ static void _dpu_encoder_kickoff_phys(struct dpu_encoder_virt *dpu_enc,
+ 		_dpu_encoder_trigger_flush(
+ 				&dpu_enc->base,
+ 				dpu_enc->cur_master,
+-				pending_flush, async);
++				pending_flush);
+ 	}
+ 
+ 	_dpu_encoder_trigger_start(dpu_enc->cur_master);
+@@ -1815,11 +1809,12 @@ void dpu_encoder_prepare_for_kickoff(struct drm_encoder *drm_enc)
+ 	}
+ }
+ 
+-void dpu_encoder_kickoff(struct drm_encoder *drm_enc, bool async)
++void dpu_encoder_kickoff(struct drm_encoder *drm_enc)
+ {
+ 	struct dpu_encoder_virt *dpu_enc;
+ 	struct dpu_encoder_phys *phys;
+ 	ktime_t wakeup_time;
++	unsigned long timeout_ms;
+ 	unsigned int i;
+ 
+ 	DPU_ATRACE_BEGIN("encoder_kickoff");
+@@ -1827,23 +1822,15 @@ void dpu_encoder_kickoff(struct drm_encoder *drm_enc, bool async)
+ 
+ 	trace_dpu_enc_kickoff(DRMID(drm_enc));
+ 
+-	/*
+-	 * Asynchronous frames don't handle FRAME_DONE events. As such, they
+-	 * shouldn't enable the frame_done watchdog since it will always time
+-	 * out.
+-	 */
+-	if (!async) {
+-		unsigned long timeout_ms;
+-		timeout_ms = DPU_ENCODER_FRAME_DONE_TIMEOUT_FRAMES * 1000 /
++	timeout_ms = DPU_ENCODER_FRAME_DONE_TIMEOUT_FRAMES * 1000 /
+ 			drm_mode_vrefresh(&drm_enc->crtc->state->adjusted_mode);
+ 
+-		atomic_set(&dpu_enc->frame_done_timeout_ms, timeout_ms);
+-		mod_timer(&dpu_enc->frame_done_timer,
+-			  jiffies + msecs_to_jiffies(timeout_ms));
+-	}
++	atomic_set(&dpu_enc->frame_done_timeout_ms, timeout_ms);
++	mod_timer(&dpu_enc->frame_done_timer,
++			jiffies + msecs_to_jiffies(timeout_ms));
+ 
+ 	/* All phys encs are ready to go, trigger the kickoff */
+-	_dpu_encoder_kickoff_phys(dpu_enc, async);
++	_dpu_encoder_kickoff_phys(dpu_enc);
+ 
+ 	/* allow phys encs to handle any post-kickoff business */
+ 	for (i = 0; i < dpu_enc->num_phys_encs; i++) {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
+index 997d131c2440..8465b37adf3b 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
+@@ -82,9 +82,8 @@ void dpu_encoder_trigger_kickoff_pending(struct drm_encoder *encoder);
+  * dpu_encoder_kickoff - trigger a double buffer flip of the ctl path
+  *	(i.e. ctl flush and start) immediately.
+  * @encoder:	encoder pointer
+- * @async:	true if this is an asynchronous commit
+  */
+-void dpu_encoder_kickoff(struct drm_encoder *encoder, bool async);
++void dpu_encoder_kickoff(struct drm_encoder *encoder);
+ 
+ /**
+  * dpu_encoder_wait_for_event - Waits for encoder events
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index b8d264bd15df..31454cc5d8c5 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -298,7 +298,7 @@ void dpu_kms_encoder_enable(struct drm_encoder *encoder)
+ 			continue;
+ 
+ 		trace_dpu_kms_enc_enable(DRMID(crtc));
+-		dpu_crtc_commit_kickoff(crtc, false);
++		dpu_crtc_commit_kickoff(crtc);
+ 	}
+ }
+ 
+@@ -315,8 +315,7 @@ static void dpu_kms_commit(struct msm_kms *kms, struct drm_atomic_state *state)
+ 
+ 		if (crtc->state->active) {
+ 			trace_dpu_kms_commit(DRMID(crtc));
+-			dpu_crtc_commit_kickoff(crtc,
+-						state->legacy_cursor_update);
++			dpu_crtc_commit_kickoff(crtc);
+ 		}
+ 	}
+ }
+diff --git a/drivers/gpu/drm/msm/msm_atomic.c b/drivers/gpu/drm/msm/msm_atomic.c
+index dd16babdd8c0..e5aae1645933 100644
+--- a/drivers/gpu/drm/msm/msm_atomic.c
++++ b/drivers/gpu/drm/msm/msm_atomic.c
+@@ -70,8 +70,7 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
+ 		kms->funcs->commit(kms, state);
+ 	}
+ 
+-	if (!state->legacy_cursor_update)
+-		msm_atomic_wait_for_commit_done(dev, state);
++	msm_atomic_wait_for_commit_done(dev, state);
+ 
+ 	kms->funcs->complete_commit(kms, state);
+ 
 -- 
-Best regards,
-Jacek Anaszewski
+2.21.0
+
