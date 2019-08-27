@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D26C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94535C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1281206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60654206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893726;
-	bh=qXVSr0YLceTXHfH0UDfxs8Fkzg59EqLQSN1g3fRdwZU=;
+	s=default; t=1566893732;
+	bh=HDYpMpXygh6DzBAFUso9mRhj6FU64mGHz38ZIkfZbwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wCBJMd3T9XYPTHqTYB5EbDEvobsSR2BA7/q7xpvlhd8Boupc4ad+EIK8RjNn3w2zb
-	 l1P9pHPIiXveSq1qHc6KV4lLQikW2wzbOeNI3xeSJvBZLUW442GSEsopOipkVaN3ql
-	 ZEF+YDHD1GfM7NOJJC21fnLrkYq9/Gp9RI/g+s4E=
+	b=JSH0677YOdRPctZVHEFKxuMiQcdA9DF5QFkgV6BRGzD97W+5HACd4tiRarieI57Ek
+	 6mc3QYHp/kxDwP10gjsJgWIDY+AZjQcAiv02sH46Im285JBTFzONNbNS0OCg+UK2e4
+	 kFiYjto7IA9H7zS2bWLdNmG0pjAvIYyXOtNgcvy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731065AbfH0IP0 (ORCPT
+        id S1729776AbfH0HzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:15:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47146 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:55:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730318AbfH0HzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:55:22 -0400
+        id S1729387AbfH0HzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:55:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87DAD206BF;
-        Tue, 27 Aug 2019 07:55:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFF6020828;
+        Tue, 27 Aug 2019 07:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892521;
-        bh=qXVSr0YLceTXHfH0UDfxs8Fkzg59EqLQSN1g3fRdwZU=;
+        s=default; t=1566892515;
+        bh=HDYpMpXygh6DzBAFUso9mRhj6FU64mGHz38ZIkfZbwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rb2QELoSX4GyoLNGkentA4A3Jn04E0HNBrUxkXyKa04b0GI5N1rvU7goTuQb53gdY
-         o8T8zXzTqzS6cbNHcrRLbEbrmeUoG62skzB4e8qo2TYzYJdL/pDdnyiFLed4mlexoJ
-         tosMxwHDaaodjOGbZexfeypkJ3/Be0yXoFOfaf24=
+        b=KFVZO8zAh62K1DzRehzv1Gh0OtKt3i+QsIN1viyxMpThQ7BLAxi5SIs3k7GbQr2Yu
+         tFyMF6qmZ4Bq7DSTYKyKZN3xojckcg/veOGwS5l5bk4cgq4Punq7gKLPK/Kpx4ov9H
+         bMw3VIbjvDQc1Sy5wNX8zGLMyCVggMZX/I2NTtgA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 22/98] mac80211_hwsim: Fix possible null-pointer dereferences in hwsim_dump_radio_nl()
-Date:   Tue, 27 Aug 2019 09:50:01 +0200
-Message-Id: <20190827072719.418541337@linuxfoundation.org>
+Subject: [PATCH 4.19 20/98] qed: RDMA - Fix the hw_ver returned in device attributes
+Date:   Tue, 27 Aug 2019 09:49:59 +0200
+Message-Id: <20190827072719.349691597@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -60,48 +61,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b55f3b841099e641bdb2701d361a4c304e2dbd6f ]
+[ Upstream commit 81af04b432fdfabcdbd2c06be2ee647e3ca41a22 ]
 
-In hwsim_dump_radio_nl(), when genlmsg_put() on line 3617 fails, hdr is
-assigned to NULL. Then hdr is used on lines 3622 and 3623:
-    genl_dump_check_consistent(cb, hdr);
-    genlmsg_end(skb, hdr);
+The hw_ver field was initialized to zero. Return the chip revision.
+This is relevant for rdma driver.
 
-Thus, possible null-pointer dereferences may occur.
-
-To fix these bugs, hdr is used here when it is not NULL.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Link: https://lore.kernel.org/r/20190729082332.28895-1-baijiaju1990@gmail.com
-[put braces on all branches]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mac80211_hwsim.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_rdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
-index 7cd428c0af433..ce2dd06af62e8 100644
---- a/drivers/net/wireless/mac80211_hwsim.c
-+++ b/drivers/net/wireless/mac80211_hwsim.c
-@@ -3502,10 +3502,12 @@ static int hwsim_dump_radio_nl(struct sk_buff *skb,
- 		hdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid,
- 				  cb->nlh->nlmsg_seq, &hwsim_genl_family,
- 				  NLM_F_MULTI, HWSIM_CMD_GET_RADIO);
--		if (!hdr)
-+		if (hdr) {
-+			genl_dump_check_consistent(cb, hdr);
-+			genlmsg_end(skb, hdr);
-+		} else {
- 			res = -EMSGSIZE;
--		genl_dump_check_consistent(cb, hdr);
--		genlmsg_end(skb, hdr);
-+		}
- 	}
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_rdma.c b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
+index 13802b825d65a..909422d939033 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_rdma.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
+@@ -442,7 +442,7 @@ static void qed_rdma_init_devinfo(struct qed_hwfn *p_hwfn,
+ 	/* Vendor specific information */
+ 	dev->vendor_id = cdev->vendor_id;
+ 	dev->vendor_part_id = cdev->device_id;
+-	dev->hw_ver = 0;
++	dev->hw_ver = cdev->chip_rev;
+ 	dev->fw_ver = (FW_MAJOR_VERSION << 24) | (FW_MINOR_VERSION << 16) |
+ 		      (FW_REVISION_VERSION << 8) | (FW_ENGINEERING_VERSION);
  
- done:
 -- 
 2.20.1
 
