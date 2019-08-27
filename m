@@ -2,84 +2,82 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A46C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E9FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 679D0206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039E122CF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566926724;
-	bh=K/OrNZ1/NkG8w//ts4b2cbgqqyZMD7w/w/VddjKznq8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=xN0/J7GxAXUYM47L6Fb5KdNtZpWEgDSqIaQpPUkAHyLRFNp/snJE3iOidwlVNxnWJ
-	 iNFF7+AiFBOuOKEKRUSM71gNks5LiWYdOsTC+Q2IapXEn9OYtIi6Tx111HCGBH+a/y
-	 H+9fUn4CUpSAd7hDf7eQ44ublFCbZ/nvBgfhDirI=
+	s=default; t=1566926732;
+	bh=PDEYODQSVBU3GBfJzim7cu6Qg3BZhxo6Xvc29aqkWLE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NKaNF5Uw2cVu+V9ofkgoCmFnpOF7yKZydOdRnBvj0zzf7oVJ07b1MSyrVy2IZpnJc
+	 50KsUvYh8zwEISAxBWLlBGGP3db68LVSsfVImezqlYl8bNbuWcNccL88z5/ccJzolT
+	 UMqp9OEa4tJF+VZtMqkgJBOBGf+BFDXcuvlvxe6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730510AbfH0RZX (ORCPT
+        id S1730548AbfH0RZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:25:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbfH0RZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:25:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8377A20679;
-        Tue, 27 Aug 2019 17:25:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566926722;
-        bh=K/OrNZ1/NkG8w//ts4b2cbgqqyZMD7w/w/VddjKznq8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=2Md4vLXa1nt2CEOWtH42unvsgzFIIuRwYIboeiUVIbnyml+Rmu/TGtbdC28ZSDNOw
-         E8MavBKWWnyNIfPsC78gK4kOpjYOQSTjutej5ASFYCXfjFwGvQAk41p2lF63e5kPnE
-         jegq/Mziolkf+lc9vmRN2ptImVxvHEHOh/ai0bHw=
-Date:   Tue, 27 Aug 2019 19:25:19 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-spdx@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: add entry for LICENSES and SPDX stuff
-Message-ID: <20190827172519.GA28849@kroah.com>
+        Tue, 27 Aug 2019 13:25:31 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35280 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbfH0RZa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 13:25:30 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 100so8662922otn.2;
+        Tue, 27 Aug 2019 10:25:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RAdx3knbJdmHJIAYuCsyCxVXwy79upfsZxSrxjBV/Fs=;
+        b=IfTN3DYKpr5XEZL7/cRXpQXN6J1zwuRISho/lEYKqz54sNvHcY34eqcH2sBNC7oI5N
+         yY7JIJKMTqH0jkkXmwqMh/7tdq1javjDkRkCfEX4Beyh34xoJ1TATFVf6+KKVdcQo/os
+         DTvm6E+4keBWl2HE5FX/X3j8r5NcGt8GF4zVbfZy9OAchYypqmancdhTggDeabuAqYJK
+         W4O7lJVWryBvezGyAWPOytI7Sq2+Tm581hxoa6K6zllGgrimCBGu8m1bYq6vqEONeAJa
+         PCc8V5zPWzIubfS1J4Z/CCg+Q7U3fqL12jLUWwS7/nA41XrVrXOnwsxVoN3AXQB9HCPH
+         hD7g==
+X-Gm-Message-State: APjAAAUMJg1vuCCOvQb7ZJHPbR3d1VMBb46moxl+5Go0DEdmF+zBesn0
+        inhss+DCLSMKrrXtdSn4YQ==
+X-Google-Smtp-Source: APXvYqzyYML6e8inoQ40na2bt0XfhvJ9YzCYogrNaMHwGOZqEiHXi8Yf1Csw2h9ooroMQd1yb4hqUA==
+X-Received: by 2002:a9d:3bcb:: with SMTP id k69mr8186736otc.182.1566926730130;
+        Tue, 27 Aug 2019 10:25:30 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z16sm4238710oic.10.2019.08.27.10.25.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 10:25:29 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 12:25:29 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: Re: [PATCH v5 4/4] dt-bindings: iio: imu: st_lsm6dsx: add lsm9ds1
+ device bindings
+Message-ID: <20190827172529.GA16508@bogus>
+References: <20190821132520.28225-1-martin.kepplinger@puri.sm>
+ <20190821132520.28225-5-martin.kepplinger@puri.sm>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190821132520.28225-5-martin.kepplinger@puri.sm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas and I seem to have become the "unofficial" maintainers for these
-files and questions about SPDX things.  So let's make it official.
+On Wed, 21 Aug 2019 15:25:20 +0200, Martin Kepplinger wrote:
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> ---
+>  Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Reported-by: "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9234,6 +9234,17 @@ F:	include/linux/nd.h
- F:	include/linux/libnvdimm.h
- F:	include/uapi/linux/ndctl.h
- 
-+LICENSES and SPDX stuff
-+M:	Thomas Gleixner <tglx@linutronix.de>
-+M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-+L:	linux-spdx@vger.kernel.org
-+S:	Maintained
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/spdx.git
-+F:	COPYING
-+F:	LICENSES/
-+F:	scripts/spdxcheck-test.sh
-+F:	scripts/spdxcheck.py
-+
- LIGHTNVM PLATFORM SUPPORT
- M:	Matias Bjorling <mb@lightnvm.io>
- W:	http://github/OpenChannelSSD
-
+Reviewed-by: Rob Herring <robh@kernel.org>
