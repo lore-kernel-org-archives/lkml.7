@@ -2,113 +2,135 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E7AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 04:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01E1C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 04:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065A0217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 04:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D56217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 04:29:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="amo0Mmim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfH0E17 (ORCPT
+        id S1729199AbfH0E3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 00:27:59 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:47243 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725766AbfH0E17 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 00:27:59 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R631e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Taa5IL3_1566880067;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Taa5IL3_1566880067)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 27 Aug 2019 12:27:50 +0800
-Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
-        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1566410125-66011-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190822080434.GF12785@dhcp22.suse.cz>
- <9e4ba38e-0670-7292-ab3a-38af391598ec@linux.alibaba.com>
- <20190826074350.GE7538@dhcp22.suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <416daa85-44d4-1ef9-cc4c-6b91a8354c79@linux.alibaba.com>
-Date:   Mon, 26 Aug 2019 21:27:38 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190826074350.GE7538@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Tue, 27 Aug 2019 00:29:21 -0400
+Received: from mail-eopbgr130042.outbound.protection.outlook.com ([40.107.13.42]:54244
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725795AbfH0E3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 00:29:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Bhvo4N4tOZc6PyQMfO6YylClKiRbhA7MJP4HEYUaegB8uLBETVgmr8fzoNtT4IleFs9hckoAx2imPStANanvsmNUoCEUHqX41YKJTFS5fnd6aTEUeC59IpHozRpkpwP2hRg10+N3/JFrvYKlXRTk3tAdI9L0IkhSLPRvwAIg0ZV8pjhN8Sdcgu7funtDw1+BGIwMc7UZNF7k4PVE7+Urr6oPYDuqEnyExQA2+e/uDoKLjPH6WoKaV89yfEidvI+rfBAIvoNdsHBV7rgOS5T/RqSnGrKcm0/pWUoZLYALO6SYiuD9TPK//n2LJgArrl683hUE8drR3LnEBNLPiMnMhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MS84kg56Twko/45NYKHmSkzwKtzS4sLY3QbrRYvyEcE=;
+ b=N86aSJ7cpzEa/c1jGXPcSYuLz+xlhoJNrZZG3GjXscXpGSJuSqEtUwqq+2PvxKR/MxnzyRS/1xzHcndyElWpY4yVJgtAifpQFKsEK3ggFEuP+26hF+akUYDsG+J5tn5NPqCs0O72rhoO279wXZGo6cFs3E8elXjzcry+KbgJDb8tWy/cpmIfsTR07/jkDfe8dI2igXmN8RwZDmKxtie4KiW1MOjc7Jvd4GhL/TTjmFE13HXUq317JSrniOX6ThiVg5do9eXuO9/fySlA/UzgmoeXflPP9t/xDZ53CFRfQSAzdPz9gDZTsxIA1V8AH1nIgyRl54hEkL0BFXFTj+xjMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MS84kg56Twko/45NYKHmSkzwKtzS4sLY3QbrRYvyEcE=;
+ b=amo0MmimZqbr37cGbG8Giy5WXvZ14vQ15KCnni+Px0VU1/X/q+Q6pvw1CIQoMPYJMG3jNnp83Yif2Mj8Iqy9PlJHgH13JcUTzuI/b5XaSIjQAhzFL7Qhus/XHM0BfkAuaFpN/vr5AYPYEAs49wEc7BbjeNVQCvUljM3HKR6fB1s=
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
+ AM0PR05MB4532.eurprd05.prod.outlook.com (52.133.55.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Tue, 27 Aug 2019 04:28:37 +0000
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2199.020; Tue, 27 Aug 2019
+ 04:28:37 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Mark Bloch <markb@mellanox.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
+Thread-Topic: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
+Thread-Index: AQHVXE627FcLaFBgXUa8jSc95m92WKcOC/2AgABaVPA=
+Date:   Tue, 27 Aug 2019 04:28:37 +0000
+Message-ID: <AM0PR05MB4866BB4736D265EF28280014D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+ <20190826204119.54386-3-parav@mellanox.com>
+ <6601940a-4832-08d2-e0f6-f9ac24758cdc@mellanox.com>
+In-Reply-To: <6601940a-4832-08d2-e0f6-f9ac24758cdc@mellanox.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [106.51.18.188]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2c05664b-8617-4563-af45-08d72aa707ce
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB4532;
+x-ms-traffictypediagnostic: AM0PR05MB4532:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR05MB45321B351CD98EF782C8811DD1A00@AM0PR05MB4532.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0142F22657
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(39860400002)(136003)(346002)(396003)(199004)(189003)(13464003)(6506007)(71190400001)(71200400001)(6436002)(66066001)(55016002)(86362001)(81156014)(81166006)(9686003)(186003)(8676002)(9456002)(5660300002)(66556008)(66946007)(6116002)(76116006)(66446008)(8936002)(33656002)(3846002)(64756008)(7696005)(2501003)(2906002)(76176011)(66476007)(486006)(6246003)(2201001)(26005)(476003)(25786009)(110136005)(446003)(102836004)(14454004)(229853002)(11346002)(99286004)(4326008)(305945005)(52536014)(55236004)(54906003)(74316002)(14444005)(256004)(7736002)(316002)(478600001)(53546011)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4532;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 5dctfSBB0qt0of8FCBZV+v/D8qfgcEHYFV7aCBcnv3PUAA3JDtGjMlQDNai5XA3mfb+KX1E1ujPOpUjpvBrUFCiZ92xSTt9tJS/Mtj/nNuPDEDIfTn8/jrhQ37j+Rn+JHeFxLjeYt4uaivn+WqvxRCCIXfle2Woxge20bpNSguffrficbJzn/0fycyQT6uU1/wfH/q+U1DiYV1dmhkGBgWj6X1fVCDVBqANnTmfRRkpuk6LEZxw8zkd59e9CPWL9OligZQ97V4uyiieqaECqDfv4PBYhfcAC6hVn6syqozVhWgjIhkWm26iGv85X3tecVLVCFuD/ZVdY8Zope+YmOIMEffFfk0NwMppOjMGpYj4KsECWL5pfRiPZmuLXYlVmev5ouibqH4/LHY8zQzHYGo6JOsqpbum/mjTuFv+d4jY=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c05664b-8617-4563-af45-08d72aa707ce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 04:28:37.3696
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1fcKZbygwuwMZQ60KYzFwNigiaCXKuvQAQHbPxub7mcGCjMeUpb6V9U/Ezyqgp6mbGGF/rVmF/4hn1sEh3Fzig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4532
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/26/19 12:43 AM, Michal Hocko wrote:
-> On Thu 22-08-19 08:33:40, Yang Shi wrote:
->>
->> On 8/22/19 1:04 AM, Michal Hocko wrote:
->>> On Thu 22-08-19 01:55:25, Yang Shi wrote:
-> [...]
->>>> And, they seems very common with the common workloads when THP is
->>>> enabled.  A simple run with MariaDB test of mmtest with THP enabled as
->>>> always shows it could generate over fifteen thousand deferred split THPs
->>>> (accumulated around 30G in one hour run, 75% of 40G memory for my VM).
->>>> It looks worth accounting in MemAvailable.
->>> OK, this makes sense. But your above numbers are really worrying.
->>> Accumulating such a large amount of pages that are likely not going to
->>> be used is really bad. They are essentially blocking any higher order
->>> allocations and also push the system towards more memory pressure.
->> That is accumulated number, during the running of the test, some of them
->> were freed by shrinker already. IOW, it should not reach that much at any
->> given time.
-> Then the above description is highly misleading. What is the actual
-> number of lingering THPs that wait for the memory pressure in the peak?
-
-By rerunning sysbench mariadb test of mmtest, I didn't see too many THPs 
-in the peak. I saw around 2K THPs sometimes on my VM with 40G memory. 
-But they were short-lived (should be freed when the test exit). And, the 
-number of accumulated THPs are variable.
-
-And, this reminded me to go back double check our internal bug report 
-which lead to the "make deferred split shrinker memcg aware" patchset.
-
-In that case, a mysql instance with real production load was running in 
-a memcg with ~86G limit, the number of deferred split THPs may reach to 
-~68G (~34K deferred split THPs) in a few hours. The deferred split THP 
-shrinker was not invoked since global memory pressure is still fine 
-since the host has 256G memory, but memcg limit reclaim was triggered.
-
-And, I can't tell if all those deferred split THPs came from mysql or 
-not since there were some other processes run in that container too 
-according to the oom log.
-
-I will update the commit log with the more solid data from production 
-environment.
-
->   
->>> IIUC deferred splitting is mostly a workaround for nasty locking issues
->>> during splitting, right? This is not really an optimization to cache
->>> THPs for reuse or something like that. What is the reason this is not
->>> done from a worker context? At least THPs which would be freed
->>> completely sound like a good candidate for kworker tear down, no?
->> Yes, deferred split THP was introduced to avoid locking issues according to
->> the document. Memcg awareness would help to trigger the shrinker more often.
->>
->> I think it could be done in a worker context, but when to trigger to worker
->> is a subtle problem.
-> Why? What is the problem to trigger it after unmap of a batch worth of
-> THPs?
-
-This leads to another question, how many THPs are "a batch of worth"? 
-And, they may be short-lived as showed by Kirill's example, we can't 
-tell in advance how long the THPs life time is. We may waste cpu cycles 
-to do something unneeded.
-
-
+SGkgTWFyaywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNYXJrIEJs
+b2NoIDxtYXJrYkBtZWxsYW5veC5jb20+DQo+IFNlbnQ6IFR1ZXNkYXksIEF1Z3VzdCAyNywgMjAx
+OSA0OjMyIEFNDQo+IFRvOiBQYXJhdiBQYW5kaXQgPHBhcmF2QG1lbGxhbm94LmNvbT47IGFsZXgu
+d2lsbGlhbXNvbkByZWRoYXQuY29tOyBKaXJpDQo+IFBpcmtvIDxqaXJpQG1lbGxhbm94LmNvbT47
+IGt3YW5raGVkZUBudmlkaWEuY29tOyBjb2h1Y2tAcmVkaGF0LmNvbTsNCj4gZGF2ZW1AZGF2ZW1s
+b2Z0Lm5ldA0KPiBDYzoga3ZtQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsNCj4gbmV0ZGV2QHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENI
+IDIvNF0gbWRldjogTWFrZSBtZGV2IGFsaWFzIHVuaXF1ZSBhbW9uZyBhbGwgbWRldnMNCj4gDQo+
+IA0KPiANCj4gT24gOC8yNi8xOSAxOjQxIFBNLCBQYXJhdiBQYW5kaXQgd3JvdGU6DQo+ID4gTWRl
+diBhbGlhcyBzaG91bGQgYmUgdW5pcXVlIGFtb25nIGFsbCB0aGUgbWRldnMsIHNvIHRoYXQgd2hl
+biBzdWNoDQo+ID4gYWxpYXMgaXMgdXNlZCBieSB0aGUgbWRldiB1c2VycyB0byBkZXJpdmUgb3Ro
+ZXIgb2JqZWN0cywgdGhlcmUgaXMgbm8NCj4gPiBjb2xsaXNpb24gaW4gYSBnaXZlbiBzeXN0ZW0u
+DQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQYXJhdiBQYW5kaXQgPHBhcmF2QG1lbGxhbm94LmNv
+bT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy92ZmlvL21kZXYvbWRldl9jb3JlLmMgfCA1ICsrKysr
+DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3ZmaW8vbWRldi9tZGV2X2NvcmUuYw0KPiA+IGIvZHJpdmVycy92ZmlvL21k
+ZXYvbWRldl9jb3JlLmMgaW5kZXggZTgyNWZmMzhiMDM3Li42ZWIzN2YwYzYzNjkNCj4gPiAxMDA2
+NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3ZmaW8vbWRldi9tZGV2X2NvcmUuYw0KPiA+ICsrKyBiL2Ry
+aXZlcnMvdmZpby9tZGV2L21kZXZfY29yZS5jDQo+ID4gQEAgLTM3NSw2ICszNzUsMTEgQEAgaW50
+IG1kZXZfZGV2aWNlX2NyZWF0ZShzdHJ1Y3Qga29iamVjdCAqa29iaiwNCj4gc3RydWN0IGRldmlj
+ZSAqZGV2LA0KPiA+ICAJCQlyZXQgPSAtRUVYSVNUOw0KPiA+ICAJCQlnb3RvIG1kZXZfZmFpbDsN
+Cj4gPiAgCQl9DQo+ID4gKwkJaWYgKHRtcC0+YWxpYXMgJiYgc3RyY21wKHRtcC0+YWxpYXMsIGFs
+aWFzKSA9PSAwKSB7DQo+IA0KPiBhbGlhcyBjYW4gYmUgTlVMTCBoZXJlIG5vPw0KPiANCklmIGFs
+aWFzIGlzIE5VTEwsIHRtcC0+YWxpYXMgd291bGQgYWxzbyBiZSBudWxsIGJlY2F1c2UgZm9yIGdp
+dmVuIHBhcmVudCBlaXRoZXIgd2UgaGF2ZSBhbGlhcyBvciB3ZSBkb27igJl0Lg0KU28gaXRzIG5v
+dCBwb3NzaWJsZSB0byBoYXZlIHRtcC0+YWxpYXMgYXMgbnVsbCBhbmQgYWxpYXMgYXMgbm9uIG51
+bGwuDQpCdXQgaXQgbWF5IGJlIGdvb2QvZGVmZW5zaXZlIHRvIGFkZCBjaGVjayBmb3IgYm90aC4N
+Cg0KPiA+ICsJCQltdXRleF91bmxvY2soJm1kZXZfbGlzdF9sb2NrKTsNCj4gPiArCQkJcmV0ID0g
+LUVFWElTVDsNCj4gPiArCQkJZ290byBtZGV2X2ZhaWw7DQo+ID4gKwkJfQ0KPiA+ICAJfQ0KPiA+
+DQo+ID4gIAltZGV2ID0ga3phbGxvYyhzaXplb2YoKm1kZXYpLCBHRlBfS0VSTkVMKTsNCj4gPg0K
+PiANCj4gTWFyaw0K
