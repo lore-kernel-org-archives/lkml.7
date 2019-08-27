@@ -2,168 +2,112 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E966FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C80DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2C8206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:22:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J4/qrorN"
+	by mail.kernel.org (Postfix) with ESMTP id 0EE31206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:22:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbfH0PWj (ORCPT
+        id S1729968AbfH0PWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:22:39 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35254 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfH0PWi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:22:38 -0400
-Received: by mail-wm1-f66.google.com with SMTP id l2so3505500wmg.0;
-        Tue, 27 Aug 2019 08:22:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Spk/7nyE/nT+VZarCTcJww4THetyUEU/waY4Rm0/gF4=;
-        b=J4/qrorNAUBgXfuvu3IwAqPkSje/x/d8mwImUgF/C2Mac0PhX3/mv0uWlvmpSb8aH4
-         TfF4wg1MPJjTD2Z+C8uljmIll1IG/wWJ1v1fDad4aNNx84ebIRM7sYb+UJQ/D58FEW95
-         PuIxC+kDGjFl1fXUPVu1BqrkICY2oCGTGYa1oAlMEcVPmFWvA7UpKmKOfQBo1tWNIVVu
-         F7rmr13jbqb9MbLE//ZmTHmtJjBwMbQO7uxIUWAoTB7AgZrzE4jCXkGZ7+kL34O4KwFw
-         rMy4oerEOhVpJkDxbc2gAPK/HCRsz9GVJ+5GZkpN3hmA5fu0x6hhBwNduGxeKxpxJxjn
-         6PCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Spk/7nyE/nT+VZarCTcJww4THetyUEU/waY4Rm0/gF4=;
-        b=dsFwfCa2+8vvV8mdVbfdHLKOUFzV8CBuupLzf/VI79P6T7fjiezXWInz/vO7Wcfw29
-         EYIiO1ntFvjq8azCvD0qzsa1poJVjVXb6rDZews5Tsu9eS2G0Bd89P2Ly2TJVWiEGrcP
-         xKDlGjf+YlybXDCgRgoX4TbrVWJSFel/2sG0TeQnZ0HRJ4DvSdxvUENzEPMTtj9HoSuY
-         JZN/YIcq00C1k8mrakp/d+nKhVrtFA9sQXdeJrEJTFQa13Q7eKwfwsoKRiAO9gnm+xds
-         G1eVeLe1ImFIFHUEUoefRQlNvvPGRNzrSLC1ijvqglHGp3B8na1Z0ddmZp/ssU8xNyuV
-         D/Ow==
-X-Gm-Message-State: APjAAAVkspQmYdW260nUFk4v4Pxx6bt6QN7Rup+FI5KVsF2IhPYuhRJo
-        601fLWZDV2gLR3QeKQqmpJI=
-X-Google-Smtp-Source: APXvYqzBtu8qQSzftoBoGEPWKov5NjItQxZ9Gts4hY/9P75nGx6LHF01ME5A6BqdidKm85ow9PlN3Q==
-X-Received: by 2002:a1c:a514:: with SMTP id o20mr30113350wme.149.1566919356319;
-        Tue, 27 Aug 2019 08:22:36 -0700 (PDT)
-Received: from [192.168.8.147] (212.160.185.81.rev.sfr.net. [81.185.160.212])
-        by smtp.gmail.com with ESMTPSA id t198sm4822597wmt.39.2019.08.27.08.22.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Aug 2019 08:22:35 -0700 (PDT)
-Subject: Re: [PATCH] ipv6: Not to probe neighbourless routes
-To:     Yi Wang <wang.yi59@zte.com.cn>, davem@davemloft.net
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.liang82@zte.com.cn,
-        Cheng Lin <cheng.lin130@zte.com.cn>
-References: <1566896907-5121-1-git-send-email-wang.yi59@zte.com.cn>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <7788439f-6207-6da0-a6f8-db2d2fc61fe4@gmail.com>
-Date:   Tue, 27 Aug 2019 17:22:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 11:22:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39158 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727064AbfH0PWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 11:22:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0F03BAD22;
+        Tue, 27 Aug 2019 15:22:38 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id D63BF1E4362; Tue, 27 Aug 2019 17:22:37 +0200 (CEST)
+Date:   Tue, 27 Aug 2019 17:22:37 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     SunKe <sunke32@huawei.com>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs/sync.c: Fix UBSAN Undefined behaviour in
+ sync_file_range
+Message-ID: <20190827152237.GC10306@quack2.suse.cz>
+References: <1562898517-143943-1-git-send-email-sunke32@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <1566896907-5121-1-git-send-email-wang.yi59@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1562898517-143943-1-git-send-email-sunke32@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri 12-07-19 10:28:37, SunKe wrote:
+> There is a UBSAN report:
+> UBSAN: Undefined behaviour in ../fs/sync.c:298:10
+> signed integer overflow:
+> -8 + -9223372036854775807 cannot be represented in type 'long long int'
+> CPU: 0 PID: 15876 Comm: syz-executor.3 Not tainted
+> Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+> Call trace:
+> [<ffffff90080ac450>] dump_backtrace+0x0/0x698 arch/arm64/kernel/traps.c:96
+> [<ffffff90080acb20>] show_stack+0x38/0x60 arch/arm64/kernel/traps.c:234
+> [<ffffff9008ca4500>] __dump_stack lib/dump_stack.c:15 [inline]
+> [<ffffff9008ca4500>] dump_stack+0x1a8/0x230 lib/dump_stack.c:51
+> [<ffffff9008d7e078>] ubsan_epilogue+0x34/0x9c lib/ubsan.c:164
+> [<ffffff9008d7ebb4>] handle_overflow+0x228/0x280 lib/ubsan.c:195
+> [<ffffff9008d7ed28>] __ubsan_handle_add_overflow+0x4c/0x68 lib/ubsan.c:203
+> [<ffffff900874c2b8>] SYSC_sync_file_range fs/sync.c:298 [inline]
+> [<ffffff900874c2b8>] SyS_sync_file_range+0x350/0x3e8 fs/sync.c:285
+> [<ffffff9008094480>] el0_svc_naked+0x30/0x34
+> 
+> When calculate the endbyte, there maybe an overflow, even if no effect
+> the kernel, but I also want to avoid overflowing and avoid UBSAN reporting.
+> The original compare is to ensure the offset >= 0 && nbytes >= 0 && no
+> overflow happened.
+> 
+> I do the calculate after compare. ensure the offset >= 0 && nbytes >= 0 &&
+> no overflow may happen first.
+> 
+> Signed-off-by: SunKe <sunke32@huawei.com>
 
+Thanks for the patch. The patch looks good to me. You can add:
 
-On 8/27/19 11:08 AM, Yi Wang wrote:
-> From: Cheng Lin <cheng.lin130@zte.com.cn>
-> 
-> Originally, Router Reachability Probing require a neighbour entry
-> existed. Commit 2152caea7196 ("ipv6: Do not depend on rt->n in
-> rt6_probe().") removed the requirement for a neighbour entry. And
-> commit f547fac624be ("ipv6: rate-limit probes for neighbourless
-> routes") adds rate-limiting for neighbourless routes.
-> 
-> And, the Neighbor Discovery for IP version 6 (IPv6)(rfc4861) says,
-> "
-> 7.2.5.  Receipt of Neighbor Advertisements
-> 
-> When a valid Neighbor Advertisement is received (either solicited or
-> unsolicited), the Neighbor Cache is searched for the target's entry.
-> If no entry exists, the advertisement SHOULD be silently discarded.
-> There is no need to create an entry if none exists, since the
-> recipient has apparently not initiated any communication with the
-> target.
-> ".
-> 
-> In rt6_probe(), just a Neighbor Solicitation message are transmited.
-> When receiving a Neighbor Advertisement, the node does nothing in a
-> Neighborless condition.
-> 
-> Not sure it's needed to create a neighbor entry in Router
-> Reachability Probing. And the Original way may be the right way.
-> 
-> This patch recover the requirement for a neighbour entry.
-> 
-> Signed-off-by: Cheng Lin <cheng.lin130@zte.com.cn>
-> ---
->  include/net/ip6_fib.h | 5 -----
->  net/ipv6/route.c      | 5 +----
->  2 files changed, 1 insertion(+), 9 deletions(-)
-> 
-> diff --git a/include/net/ip6_fib.h b/include/net/ip6_fib.h
-> index 4b5656c..8c2e022 100644
-> --- a/include/net/ip6_fib.h
-> +++ b/include/net/ip6_fib.h
-> @@ -124,11 +124,6 @@ struct rt6_exception {
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+Al, care to pickup this fix?
+
+								Honza
+
+> diff --git a/fs/sync.c b/fs/sync.c
+> index 4d1ff01..5827471 100644
+> --- a/fs/sync.c
+> +++ b/fs/sync.c
+> @@ -246,15 +246,15 @@ int sync_file_range(struct file *file, loff_t offset, loff_t nbytes,
+>  	if (flags & ~VALID_FLAGS)
+>  		goto out;
 >  
->  struct fib6_nh {
->  	struct fib_nh_common	nh_common;
+> -	endbyte = offset + nbytes;
 > -
-> -#ifdef CONFIG_IPV6_ROUTER_PREF
-> -	unsigned long		last_probe;
-> -#endif
-> -
->  	struct rt6_info * __percpu *rt6i_pcpu;
->  	struct rt6_exception_bucket __rcu *rt6i_exception_bucket;
->  };
-> diff --git a/net/ipv6/route.c b/net/ipv6/route.c
-> index fd059e0..c4bcffc 100644
-> --- a/net/ipv6/route.c
-> +++ b/net/ipv6/route.c
-> @@ -639,12 +639,12 @@ static void rt6_probe(struct fib6_nh *fib6_nh)
->  	nh_gw = &fib6_nh->fib_nh_gw6;
->  	dev = fib6_nh->fib_nh_dev;
->  	rcu_read_lock_bh();
-> -	idev = __in6_dev_get(dev);
->  	neigh = __ipv6_neigh_lookup_noref(dev, nh_gw);
->  	if (neigh) {
->  		if (neigh->nud_state & NUD_VALID)
->  			goto out;
+>  	if ((s64)offset < 0)
+>  		goto out;
+> -	if ((s64)endbyte < 0)
+> +	if ((s64)nbytes < 0)
+>  		goto out;
+> -	if (endbyte < offset)
+> +	if (S64_MAX - offset < nbytes)
+>  		goto out;
 >  
-> +		idev = __in6_dev_get(dev);
->  		write_lock(&neigh->lock);
->  		if (!(neigh->nud_state & NUD_VALID) &&
->  		    time_after(jiffies,
-> @@ -654,9 +654,6 @@ static void rt6_probe(struct fib6_nh *fib6_nh)
->  				__neigh_set_probe_once(neigh);
->  		}
->  		write_unlock(&neigh->lock);
-> -	} else if (time_after(jiffies, fib6_nh->last_probe +
-> -				       idev->cnf.rtr_probe_interval)) {
-> -		work = kmalloc(sizeof(*work), GFP_ATOMIC);
->  	}
->  
->  	if (work) {
+> +	endbyte = offset + nbytes;
+> +
+>  	if (sizeof(pgoff_t) == 4) {
+>  		if (offset >= (0x100000000ULL << PAGE_SHIFT)) {
+>  			/*
+> -- 
+> 2.7.4
 > 
-
-Have you really compiled this patch ?
-
-
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
