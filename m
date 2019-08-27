@@ -2,51 +2,53 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F27ADC41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5E9C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB1E520828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A9D20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892440;
-	bh=8EqrmYTm5gwpS9GJIxi7ddxWodcfC4nUipeB9mMnheU=;
+	s=default; t=1566892445;
+	bh=iIPdtioa6VJqh1JiZmHvzr5AJKPyqSAxW9VvwPEVqYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pgOozK7+qq1iiq6bvRdGBgYyYzGDRQ50r5cgOKPfFAIk1VM4TxM7DNjsrgGuRCTxX
-	 u0MUZRzmlXqNzqFKOdJYa+Lmm36DNs6tn4HyqH+qvjlrZEBJdkWWArdiigt3v5tlFR
-	 5H37HplzaEZ4pr66LLKXyDBz6l8E+w1TDhbd+QzA=
+	b=CYJ0UUhvCjX4Jx7Inc6HleJmclnFW6OgiiX+bhfgIfVP7f9ZYfd7UWgX1il8l8JK/
+	 u8Nht7MVFfQtUaZRNP5+++1ueZu0MB4iqA0C57jozrjdIpGqA9A4QO8tF6Ki6YYMTb
+	 PNSW8nHSAiWQsJqxC4DAg1QgX/ELxuTTLDZwsdlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbfH0Hxy (ORCPT
+        id S1729966AbfH0HyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:53:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45412 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:54:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729315AbfH0Hxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:53:51 -0400
+        id S1729361AbfH0Hx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:53:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E68D2186A;
-        Tue, 27 Aug 2019 07:53:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EF3D206BF;
+        Tue, 27 Aug 2019 07:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892430;
-        bh=8EqrmYTm5gwpS9GJIxi7ddxWodcfC4nUipeB9mMnheU=;
+        s=default; t=1566892438;
+        bh=iIPdtioa6VJqh1JiZmHvzr5AJKPyqSAxW9VvwPEVqYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IqFNUN/hhUsOPu+4Z2dABSua3pyVOgRS3byudjqQ8/Ea/AlFOhHhVPW5LKRNV+qcs
-         N7jR4xXfDEIKN/nF5AKHTr7BbACGrzIPW9qd/sEep7WNpYx6YT5wvPpCYJ3f61Zvx3
-         g93o1A06D5vOpgXpxo396tFjVyrx7dHRRDcHqAPE=
+        b=Ee5xcfIOGfUVtm8CssPtjJ46n4ihz3j6+sWuDJRrLFsTnenqyO25C78PfM+3cig4f
+         uKXbhqBYQZsh5ex0luZCjlJQdjbGVZjSJZtNHQuilu5ompWx7q7g1d3NAE5TwdqJ+C
+         0LBQOZQjWJNx2NtSDwtEck1rU2fkBfeSLSZGjbOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.14 50/62] dm btree: fix order of block initialization in btree_split_beneath
-Date:   Tue, 27 Aug 2019 09:50:55 +0200
-Message-Id: <20190827072703.381543115@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 13/62] qed: RDMA - Fix the hw_ver returned in device attributes
+Date:   Tue, 27 Aug 2019 09:50:18 +0200
+Message-Id: <20190827072701.144567158@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -59,88 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+[ Upstream commit 81af04b432fdfabcdbd2c06be2ee647e3ca41a22 ]
 
-commit e4f9d6013820d1eba1432d51dd1c5795759aa77f upstream.
+The hw_ver field was initialized to zero. Return the chip revision.
+This is relevant for rdma driver.
 
-When btree_split_beneath() splits a node to two new children, it will
-allocate two blocks: left and right.  If right block's allocation
-failed, the left block will be unlocked and marked dirty.  If this
-happened, the left block'ss content is zero, because it wasn't
-initialized with the btree struct before the attempot to allocate the
-right block.  Upon return, when flushing the left block to disk, the
-validator will fail when check this block.  Then a BUG_ON is raised.
-
-Fix this by completely initializing the left block before allocating and
-initializing the right block.
-
-Fixes: 4dcb8b57df359 ("dm btree: fix leak of bufio-backed block in btree_split_beneath error path")
-Cc: stable@vger.kernel.org
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/persistent-data/dm-btree.c |   31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_rdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/persistent-data/dm-btree.c
-+++ b/drivers/md/persistent-data/dm-btree.c
-@@ -628,39 +628,40 @@ static int btree_split_beneath(struct sh
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_rdma.c b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
+index 1e13dea66989e..c9258aabca2d4 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_rdma.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
+@@ -398,7 +398,7 @@ static void qed_rdma_init_devinfo(struct qed_hwfn *p_hwfn,
+ 	/* Vendor specific information */
+ 	dev->vendor_id = cdev->vendor_id;
+ 	dev->vendor_part_id = cdev->device_id;
+-	dev->hw_ver = 0;
++	dev->hw_ver = cdev->chip_rev;
+ 	dev->fw_ver = (FW_MAJOR_VERSION << 24) | (FW_MINOR_VERSION << 16) |
+ 		      (FW_REVISION_VERSION << 8) | (FW_ENGINEERING_VERSION);
  
- 	new_parent = shadow_current(s);
- 
-+	pn = dm_block_data(new_parent);
-+	size = le32_to_cpu(pn->header.flags) & INTERNAL_NODE ?
-+		sizeof(__le64) : s->info->value_type.size;
-+
-+	/* create & init the left block */
- 	r = new_block(s->info, &left);
- 	if (r < 0)
- 		return r;
- 
-+	ln = dm_block_data(left);
-+	nr_left = le32_to_cpu(pn->header.nr_entries) / 2;
-+
-+	ln->header.flags = pn->header.flags;
-+	ln->header.nr_entries = cpu_to_le32(nr_left);
-+	ln->header.max_entries = pn->header.max_entries;
-+	ln->header.value_size = pn->header.value_size;
-+	memcpy(ln->keys, pn->keys, nr_left * sizeof(pn->keys[0]));
-+	memcpy(value_ptr(ln, 0), value_ptr(pn, 0), nr_left * size);
-+
-+	/* create & init the right block */
- 	r = new_block(s->info, &right);
- 	if (r < 0) {
- 		unlock_block(s->info, left);
- 		return r;
- 	}
- 
--	pn = dm_block_data(new_parent);
--	ln = dm_block_data(left);
- 	rn = dm_block_data(right);
--
--	nr_left = le32_to_cpu(pn->header.nr_entries) / 2;
- 	nr_right = le32_to_cpu(pn->header.nr_entries) - nr_left;
- 
--	ln->header.flags = pn->header.flags;
--	ln->header.nr_entries = cpu_to_le32(nr_left);
--	ln->header.max_entries = pn->header.max_entries;
--	ln->header.value_size = pn->header.value_size;
--
- 	rn->header.flags = pn->header.flags;
- 	rn->header.nr_entries = cpu_to_le32(nr_right);
- 	rn->header.max_entries = pn->header.max_entries;
- 	rn->header.value_size = pn->header.value_size;
--
--	memcpy(ln->keys, pn->keys, nr_left * sizeof(pn->keys[0]));
- 	memcpy(rn->keys, pn->keys + nr_left, nr_right * sizeof(pn->keys[0]));
--
--	size = le32_to_cpu(pn->header.flags) & INTERNAL_NODE ?
--		sizeof(__le64) : s->info->value_type.size;
--	memcpy(value_ptr(ln, 0), value_ptr(pn, 0), nr_left * size);
- 	memcpy(value_ptr(rn, 0), value_ptr(pn, nr_left),
- 	       nr_right * size);
- 
+-- 
+2.20.1
+
 
 
