@@ -2,124 +2,171 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B836C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41968C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E28F20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15CA32070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:56:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GXtulx5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbfH0Ny4 (ORCPT
+        id S1730021AbfH0N4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:54:56 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40146 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfH0Ny4 (ORCPT
+        Tue, 27 Aug 2019 09:56:01 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:45110 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729396AbfH0N4A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:54:56 -0400
-Received: by mail-lj1-f194.google.com with SMTP id e27so18550709ljb.7;
-        Tue, 27 Aug 2019 06:54:54 -0700 (PDT)
+        Tue, 27 Aug 2019 09:56:00 -0400
+Received: by mail-vs1-f66.google.com with SMTP id j25so13465612vsq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 06:56:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iQzhNAIFt5hn3lNj8VHzyzeNesjUsxuZGnqma8bu4p4=;
+        b=GXtulx5b+8SWICbyuPjwDF9F7bv+zAAqlu3W0izJJ9FxbhtfIyDF2TP/yJ4bvTKKRJ
+         kgNhO8/nY9YbctW58lDbFnAWR6Meq0ojGpQZmXLNP1dQZLvYE8QaHs6k0J0zlZ/SsYls
+         PI8D1ZdYXfEXEnq9nmLbvAMn7hNxxdUoL4jaNKYRLdyyhhon6NVBCTXJ5tGKFO7KK9K1
+         I+ZME+KKZOGOZnRBwyA0gD5Ki2Okp9WZUjEh7cnmTchfvMKoxZjQAMVRCi66JZLUezCE
+         7R4sYFa3DMEvWHqp98Yh/W1rU58+BlXbxxZFO4cimlrY0k3gSvb56qpaixubm0OuJP7a
+         tVsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3Kf3meBMH3dQOB0zq1dnP5knGHxGEskGGNRVHv4UiP8=;
-        b=TpkbHDIfYaeEylgq0sgjAUsdpYob3r6v6kqMacjw4BXrSp6CG7wc0dl9LEHLesWk4s
-         t0kyk2dueMjs7BWhCsmormsV5y3sNzJ/MLVKdWyNP8sBQuwUwcuIHst73B8OsSqOy9E/
-         rWk7THpFSavlvEB1qZUAWzZFIrrqYh0/zO7MudkHFcVK4BJu622VJO/8z0IKRdfrtx5B
-         oMRUTCTxpou4CKvIf89YtfJ1sbe2vNB8/mbvhlu8A0MkEig1vfJ3gFToc+C00mTMhQuT
-         6H3JajHDOsefWM3tOwIyn7nK0/oc8f7f5yt+d6IGh4ggTYPwET1CwBOxds1cp0Zw06wD
-         52IQ==
-X-Gm-Message-State: APjAAAXDTiHeIKBhL1oo8W3C42ZZLtw60npH44upyR/dyS/Xz6JeA8IA
-        VzddwrJOXm/HCG+JKbWiIKCwH8IowRh2TCtg3Vo=
-X-Google-Smtp-Source: APXvYqwuwRUIjB3o/4c3qWijdsknjBy3Rd/MVd/pLrE6XKykRfE2nVir4Chtanumul2xY6GgJdU+rsdvDOUV9NyUax8=
-X-Received: by 2002:a2e:8e87:: with SMTP id z7mr13778817ljk.211.1566914093399;
- Tue, 27 Aug 2019 06:54:53 -0700 (PDT)
+        bh=iQzhNAIFt5hn3lNj8VHzyzeNesjUsxuZGnqma8bu4p4=;
+        b=nLH2N34x6GI72vWVP17/V5lITq7dcMElzC0Lxj11UFu2m4botEPcwI41N6EaqicO1n
+         MgqcrSxlaa2VlLCootK8kzo3fhqP1FruADa4f1CrNBUQ22/4wRux5LAIsKyOEbfyrPDT
+         VJDq/Ra88xeS6cGDyV50pCskpLXAxSRiCHQMaat5sAH+ls/IHunBkw+mRQXo4gtOQvAo
+         B5Q68j+7c4NfJoxsqfXPAPy6M1m/agRXHgaBlIFdHORAPVdx+dX/uBUdeW5J4JglM2OQ
+         V1eAEoJnsHnSOkKYQWvcMMIEDyoJGqVJFePiGk+o5TQ94aaXl5reLZ0V4eXrSSm72Uq6
+         yBFg==
+X-Gm-Message-State: APjAAAVm8a58bcrxjAZtJ/Mwi/MnAZ+yTzG2clPiiIYqF6tYupLDFzRM
+        kxgMTXwX5WkjLGNUUrwE3gvhF644HFOY0VGBUZqV6rTr
+X-Google-Smtp-Source: APXvYqxyqinG9B1wk9mMD63rudWgHA96o+UjC3keLDloPcQN/XZg/h4S9AIvpCaBd00wLVyZueMl5UVixOOQudOS1oc=
+X-Received: by 2002:a67:e287:: with SMTP id g7mr13489601vsf.200.1566914160059;
+ Tue, 27 Aug 2019 06:56:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190822192451.5983-1-scott.branden@broadcom.com> <20190822192451.5983-6-scott.branden@broadcom.com>
-In-Reply-To: <20190822192451.5983-6-scott.branden@broadcom.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 27 Aug 2019 15:54:36 +0200
-Message-ID: <CAK8P3a0QaYFCFkFSx5yOq-E-pt3tXdgMVKQM+POQK5ADN=b8qg@mail.gmail.com>
-Subject: Re: [PATCH 5/7] bcm-vk: add bcm_vk UAPI
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
+References: <20190827134337.GK13294@shell.armlinux.org.uk>
+In-Reply-To: <20190827134337.GK13294@shell.armlinux.org.uk>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 27 Aug 2019 15:55:23 +0200
+Message-ID: <CAPDyKFp7e2OD_idam3-2sEd0wJU5OcP=H04G1OvHmAUo2Y-bYw@mail.gmail.com>
+Subject: Re: Continuous SD IO causes hung task messages
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 9:25 PM Scott Branden
-<scott.branden@broadcom.com> wrote:
+On Tue, 27 Aug 2019 at 15:43, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
 >
-> Add user space api for bcm-vk driver.
+> Hi,
+>
+> While dd'ing the contents of a SD card, I get hung task timeout
+> messages as per below.  However, the dd is making progress.  Any
+> ideas?
+>
+> Presumably, mmc_rescan doesn't get a look-in while IO is progressing
+> for the card?
 
-> +
-> +struct vk_metadata {
-> +       /* struct version, always backwards compatible */
-> +       __u32 version;
-> +
-> +       /* Version 0 fields */
-> +       __u32 card_status;
-> +#define VK_CARD_STATUS_FASTBOOT_READY BIT(0)
-> +#define VK_CARD_STATUS_FWLOADER_READY BIT(1)
-> +
-> +       __u32 firmware_version;
-> +       __u32 fw_status;
-> +       /* End version 0 fields */
-> +
-> +       __u64 reserved[14];
-> +       /* Total of 16*u64 for all versions */
-> +};
+Is it a regression?
 
-I'd suggest getting rid of the API version fields, just leave the version 0
-fields here and add a new structure + ioctl if you need other
-fields
+There not much of recent mmc core and mmc block changes, that I can
+think of at this point.
 
-Versioning usually just adds complexity and is hard to get right.
+>
+> ARM64 host, Macchiatobin, uSD card.
 
-> +struct vk_access {
-> +       __u8 barno;     /* BAR number to use */
-> +       __u8 type;      /* Type of access */
-> +#define VK_ACCESS_READ 0
-> +#define VK_ACCESS_WRITE 1
-> +       __u32 len;      /* length of data */
-> +       __u64 offset;   /* offset in BAR */
-> +       __u32 *data;    /* where to read/write data to */
-> +};
+What mmc host driver is it? mmci?
 
-The pointer in the last member makes the structure incompatible between
-32-bit and 64-bit user space. You could work around that using a __u64
-member and turning that into a pointer using the u64_to_user_ptr()
-macro in the driver in a portable way.
+Kind regards
+Uffe
 
-However, since this seems to be a read/write type interface, maybe
-it's better to just use read/write file operations.
-
-I also wonder if the interface should be on a higher abstraction level
-here.
-
-      Arnd
+>
+> Thanks.
+>
+> root@arm-d06300000000:~# dd if=/dev/mmcblk1 | md5sum
+> INFO: task kworker/2:1:52 blocked for more than 120 seconds.
+>       Not tainted 5.2.0+ #309
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> kworker/2:1     D    0    52      2 0x00000028
+> Workqueue: events_freezable mmc_rescan
+> Call trace:
+>  __switch_to+0xb0/0x198
+>  __schedule+0x22c/0x604
+>  schedule+0x38/0xc8
+>  __mmc_claim_host+0xcc/0x1ec
+>  mmc_get_card+0x30/0x3c
+>  mmc_sd_detect+0x1c/0x78
+>  mmc_rescan+0x1c4/0x35c
+>  process_one_work+0x14c/0x408
+>  worker_thread+0x140/0x3f4
+>  kthread+0xfc/0x128
+>  ret_from_fork+0x10/0x18
+> INFO: task kworker/2:1:52 blocked for more than 120 seconds.
+>       Not tainted 5.2.0+ #309
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> kworker/2:1     D    0    52      2 0x00000028
+> Workqueue: events_freezable mmc_rescan
+> Call trace:
+>  __switch_to+0xb0/0x198
+>  __schedule+0x22c/0x604
+>  schedule+0x38/0xc8
+>  __mmc_claim_host+0xcc/0x1ec
+>  mmc_get_card+0x30/0x3c
+>  mmc_sd_detect+0x1c/0x78
+>  mmc_rescan+0x1c4/0x35c
+>  process_one_work+0x14c/0x408
+>  worker_thread+0x140/0x3f4
+>  kthread+0xfc/0x128
+>  ret_from_fork+0x10/0x18
+> INFO: task kworker/2:1:52 blocked for more than 241 seconds.
+>       Not tainted 5.2.0+ #309
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> kworker/2:1     D    0    52      2 0x00000028
+> Workqueue: events_freezable mmc_rescan
+> Call trace:
+>  __switch_to+0xb0/0x198
+>  __schedule+0x22c/0x604
+>  schedule+0x38/0xc8
+>  __mmc_claim_host+0xcc/0x1ec
+>  mmc_get_card+0x30/0x3c
+>  mmc_sd_detect+0x1c/0x78
+>  mmc_rescan+0x1c4/0x35c
+>  process_one_work+0x14c/0x408
+>  worker_thread+0x140/0x3f4
+>  kthread+0xfc/0x128
+>  ret_from_fork+0x10/0x18
+> INFO: task kworker/2:1:52 blocked for more than 362 seconds.
+>       Not tainted 5.2.0+ #309
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> kworker/2:1     D    0    52      2 0x00000028
+> Workqueue: events_freezable mmc_rescan
+> Call trace:
+>  __switch_to+0xb0/0x198
+>  __schedule+0x22c/0x604
+>  schedule+0x38/0xc8
+>  __mmc_claim_host+0xcc/0x1ec
+>  mmc_get_card+0x30/0x3c
+>  mmc_sd_detect+0x1c/0x78
+>  mmc_rescan+0x1c4/0x35c
+>  process_one_work+0x14c/0x408
+>  worker_thread+0x140/0x3f4
+>  kthread+0xfc/0x128
+>  ret_from_fork+0x10/0x18
+>
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
