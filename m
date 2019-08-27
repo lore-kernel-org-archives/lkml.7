@@ -2,103 +2,85 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94589C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8FFC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C0C21883
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1255217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730625AbfH0SRe (ORCPT
+        id S1730429AbfH0SYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:17:34 -0400
-Received: from mga18.intel.com ([134.134.136.126]:1755 "EHLO mga18.intel.com"
+        Tue, 27 Aug 2019 14:24:07 -0400
+Received: from mga18.intel.com ([134.134.136.126]:2324 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728711AbfH0SRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:17:34 -0400
+        id S1729779AbfH0SYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 14:24:07 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 11:17:33 -0700
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 11:24:06 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
-   d="scan'208";a="185372670"
-Received: from ray.jf.intel.com (HELO [10.7.201.140]) ([10.7.201.140])
-  by orsmga006.jf.intel.com with ESMTP; 27 Aug 2019 11:17:33 -0700
-Subject: Re: [RFC PATCH v2 0/3] x86/mm/tlb: Defer TLB flushes with PTI
-To:     Nadav Amit <namit@vmware.com>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20190823225248.15597-1-namit@vmware.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <f639342a-d7d9-4334-338f-5d20d67bae74@intel.com>
-Date:   Tue, 27 Aug 2019 11:17:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190823225248.15597-1-namit@vmware.com>
-Content-Type: text/plain; charset=utf-8
+   d="scan'208";a="171282551"
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by orsmga007.jf.intel.com with ESMTP; 27 Aug 2019 11:24:06 -0700
+Received: from orsmsx154.amr.corp.intel.com (10.22.226.12) by
+ ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 27 Aug 2019 11:24:06 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.119]) by
+ ORSMSX154.amr.corp.intel.com ([169.254.11.172]) with mapi id 14.03.0439.000;
+ Tue, 27 Aug 2019 11:24:06 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "hch@lst.de" <hch@lst.de>, "x86@kernel.org" <x86@kernel.org>
+CC:     "joro@8bytes.org" <joro@8bytes.org>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] vmd: Stop overriding dma_map_ops
+Thread-Topic: [PATCH] vmd: Stop overriding dma_map_ops
+Thread-Index: AQHVXB/0iQzKFLmxFEGBMerx1QuVCqcPxk4A
+Date:   Tue, 27 Aug 2019 18:24:05 +0000
+Message-ID: <8cad7eb5b5b37aeb041fd0c464383bb5223e4a64.camel@intel.com>
+References: <20190826150652.10316-1-hch@lst.de>
+In-Reply-To: <20190826150652.10316-1-hch@lst.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.232.115.165]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CBA8577B2F8C794E8AE831CFFD893777@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/23/19 3:52 PM, Nadav Amit wrote:
-> n_pages		concurrent	+deferred-pti		change
-> -------		----------	-------------		------
->  1		2119		1986 			-6.7%
-
-Is this implying that a single-page INVPCID is 133 cycles slower than
-INVLPG?  That seems a bit larger than I'd expect.
+T24gTW9uLCAyMDE5LTA4LTI2IGF0IDE3OjA2ICswMjAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
+ZToNCj4gV2l0aCBhIGxpdHRsZSB0d2VhayB0byB0aGUgaW50ZWwtaW9tbXUgY29kZSB3ZSBzaG91
+bGQgYmUgYWJsZSB0byB3b3JrDQo+IGFyb3VuZCB0aGUgVk1EIG1lc3MgZm9yIHRoZSByZXF1ZXN0
+ZXIgSURzIHdpdGhvdXQgaGF2aW5nIHRvIGNyZWF0ZSBnaWFudA0KPiBhbW91bnRzIG9mIGJvaWxl
+cnBsYXRlIERNQSBvcHMgd3JhcHBpbmcgY29kZS4gIFRoZSBvdGhlciBhZHZhbnRhZ2Ugb2YNCj4g
+dGhpcyBzY2hlbWUgaXMgdGhhdCB3ZSBjYW4gcmVzcGVjdCB0aGUgcmVhbCBETUEgbWFza3MgZm9y
+IHRoZSBhY3R1YWwNCj4gZGV2aWNlcywgYW5kIEkgYmV0IGl0IHdpbGwgb25seSBiZSBhIG1hdHRl
+ciBvZiB0aW1lIHVudGlsIHdlJ2xsIHNlZSB0aGUNCj4gZmlyc3QgRE1BIGNoYWxsZW5lZ2VkIE5W
+TWUgZGV2aWNlcy4NCj4gDQo+IFRoZSBvbmx5IGRvd25zaWRlIGlzIHRoYXQgd2UgY2FuJ3Qgb2Zm
+ZXIgdm1kIGFzIGEgbW9kdWxlIGdpdmVuIHRoYXQNCj4gaW50ZWwtaW9tbXUgY2FsbHMgaW50byBp
+dC4gIEJ1dCB0aGUgZHJpdmVyIG9ubHkgaGFzIGFib3V0IDcwMCBsaW5lcw0KPiBvZiBjb2RlLCBz
+byB0aGlzIHNob3VsZCBub3QgYmUgYSBtYWpvciBpc3N1ZS4NCklmIHdlJ3JlIGdvaW5nIHRvIHJl
+bW92ZSBpdHMgYWJpbGl0eSB0byBiZSBhIG1vZHVsZSwgYW5kIGdpdmVuIGl0cw0Kc21hbGwgc2l6
+ZSwgY291bGQgd2UgbWFrZSB0aGlzIGRlZmF1bHQgPXk/DQoNCk90aGVyd2lzZSB3ZSByaXNrIGJy
+ZWFraW5nIHBsYXRmb3JtcyB3aGljaCBoYXZlIGl0IGVuYWJsZWQgd2l0aCBPU1ZzDQp3aG8gbWlz
+cyBlbmFibGluZyBpdA0KDQoNCj4gDQo+IFRoaXMgYWxzbyByZW1vdmVzIHRoZSBsZWZ0b3ZlciBi
+aXRzIG9mIHRoZSBYODZfREVWX0RNQV9PUFMgZG1hX21hcF9vcHMNCj4gcmVnaXN0cnkuDQo+IA0K
+PiBTaWduZWQtb2ZmLWJ5OiBDaHJpc3RvcGggSGVsbHdpZyA8aGNoQGxzdC5kZT4NCj4gDQoNCmxn
+dG0gb3RoZXJ3aXNlDQoNClJldmlld2VkLWJ5OiBKb24gRGVycmljayA8am9uYXRoYW4uZGVycmlj
+a0BpbnRlbC5jb20+DQo=
