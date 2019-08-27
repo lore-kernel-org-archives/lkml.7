@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECCDC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1892DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B1A2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E08FA21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892780;
-	bh=CUbLTv9JU2pmb0kaJXAMD2JE5LoLwLKHrAnxF3m/2Ec=;
+	s=default; t=1566892782;
+	bh=2xan3JA0XbcDCezCqeZgTCnuBblZFltP+c7E3i0dKho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rejKgriH4UCxvk7wInY+tHjpAtbHWz7QWQjf5ICqN97br29TWmJBz9WtM9wipjKLo
-	 ijH2VSwK7XwvHnVL4PYe/Ud3VFLuVpECTaupOddkhmgR5wka+ysCnFgKgigiKdk2EY
-	 pCUqF6iGkTNzyK+CoIDzXcYfTKnlK1Eb7u/nXDNI=
+	b=dL+ePz10xJDpxag7hembcIKRZ95RJQNmy97q35Bm1Hy2oNyGjTCbD5073VAdJmhD/
+	 b+2XHl73j5xoi7SjaFlO+8dgaqVuczc0QzBHGhu2hm2x/yVXZxwkhYSnSugMVZZ4ID
+	 uffjk/WcfazBKQZ5qqoGJAmXaeY3DyZa4C6fONbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731258AbfH0H7i (ORCPT
+        id S1731270AbfH0H7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:59:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53178 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:59:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730852AbfH0H7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:59:35 -0400
+        id S1730667AbfH0H7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:59:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FF81217F5;
-        Tue, 27 Aug 2019 07:59:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BA77206BF;
+        Tue, 27 Aug 2019 07:59:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892774;
-        bh=CUbLTv9JU2pmb0kaJXAMD2JE5LoLwLKHrAnxF3m/2Ec=;
+        s=default; t=1566892777;
+        bh=2xan3JA0XbcDCezCqeZgTCnuBblZFltP+c7E3i0dKho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wn0cNtT1WWYOmlCPMoxCSLXmZ+zbMErMReGv3ZwE+sQDhK/d1VjE1WSiJce3WILfu
-         KaKiovudrcekp+pVHG+CLIYKiuI/40rP1JIkylRJlrsLyluwW9guC2LB0bnIgl/oZo
-         7DhjW9miND/7HIjzTRp5b3QIOfZhXYtrdi3F4UPY=
+        b=EXkdywU6NO1B1u2a8Itv+xrwNpOL6pSMWq5KUIebl+guGAqw1x5ET/3vAJWvIYlUg
+         jYJK+DnOpvr52304uO0lJKP8BKe6rKBjMFA6fcL8AMfaUekZeIoFze1kFSv3mxoJvk
+         ICSd20DKNzqglVa6SG2JE0z5p1Hyj1qIBZkTHwIM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+        stable@vger.kernel.org, russianneuromancer@ya.ru,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 010/162] ASoC: samsung: odroid: fix a double-free issue for cpu_dai
-Date:   Tue, 27 Aug 2019 09:48:58 +0200
-Message-Id: <20190827072738.709898217@linuxfoundation.org>
+Subject: [PATCH 5.2 011/162] ASoC: Intel: bytcht_es8316: Add quirk for Irbis NB41 netbook
+Date:   Tue, 27 Aug 2019 09:48:59 +0200
+Message-Id: <20190827072738.743903640@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -66,64 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2abee12c0ab1924a69993d2c063a39a952e7d836 ]
+[ Upstream commit aa2ba991c4206d5b778dcaa7b4997396e79f8e90 ]
 
-The cpu_dai variable is still being used after the of_node_put() call,
-which may result in double-free:
+The Irbis NB41 netbook has its internal mic on IN2, inverted jack-detect
+and stereo speakers, add a quirk for this.
 
-        of_node_put(cpu_dai);            ---> released here
-
-        ret = devm_snd_soc_register_card(dev, card);
-        if (ret < 0) {
-...
-                goto err_put_clk_i2s;    --> jump to err_put_clk_i2s
-...
-
-err_put_clk_i2s:
-        clk_put(priv->clk_i2s_bus);
-err_put_sclk:
-        clk_put(priv->sclk_i2s);
-err_put_cpu_dai:
-        of_node_put(cpu_dai);            --> double-free here
-
-Fixes: d832d2b246c5 ("ASoC: samsung: odroid: Fix of_node refcount unbalance")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Sangbeom Kim <sbkim73@samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/1562989575-33785-3-git-send-email-wen.yang99@zte.com.cn
+Cc: russianneuromancer@ya.ru
+Reported-and-tested-by: russianneuromancer@ya.ru
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20190712112708.25327-1-hdegoede@redhat.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/samsung/odroid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/intel/boards/bytcht_es8316.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
-index 95c35e3ff3303..d606e48fe551a 100644
---- a/sound/soc/samsung/odroid.c
-+++ b/sound/soc/samsung/odroid.c
-@@ -299,7 +299,6 @@ static int odroid_audio_probe(struct platform_device *pdev)
- 		ret = PTR_ERR(priv->clk_i2s_bus);
- 		goto err_put_sclk;
- 	}
--	of_node_put(cpu_dai);
+diff --git a/sound/soc/intel/boards/bytcht_es8316.c b/sound/soc/intel/boards/bytcht_es8316.c
+index 2fe1ce8791235..c360ebc3ccc7f 100644
+--- a/sound/soc/intel/boards/bytcht_es8316.c
++++ b/sound/soc/intel/boards/bytcht_es8316.c
+@@ -436,6 +436,14 @@ static const struct acpi_gpio_mapping byt_cht_es8316_gpios[] = {
  
- 	ret = devm_snd_soc_register_card(dev, card);
- 	if (ret < 0) {
-@@ -307,6 +306,7 @@ static int odroid_audio_probe(struct platform_device *pdev)
- 		goto err_put_clk_i2s;
- 	}
- 
-+	of_node_put(cpu_dai);
- 	of_node_put(codec);
- 	return 0;
- 
+ /* Please keep this list alphabetically sorted */
+ static const struct dmi_system_id byt_cht_es8316_quirk_table[] = {
++	{	/* Irbis NB41 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "IRBIS"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "NB41"),
++		},
++		.driver_data = (void *)(BYT_CHT_ES8316_INTMIC_IN2_MAP
++					| BYT_CHT_ES8316_JD_INVERTED),
++	},
+ 	{	/* Teclast X98 Plus II */
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "TECLAST"),
 -- 
 2.20.1
 
