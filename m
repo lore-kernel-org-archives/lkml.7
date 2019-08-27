@@ -7,238 +7,179 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC68C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EFCC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F192620578
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDE820656
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:47:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfH0Pqr (ORCPT
+        id S1729408AbfH0Pr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:46:47 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:43607 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfH0Pqr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:46:47 -0400
-Received: from uno.localdomain (unknown [87.18.63.98])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 5ECA3200007;
-        Tue, 27 Aug 2019 15:46:39 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 17:48:10 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 08/14] drm: rcar-du: Add support for CMM
-Message-ID: <20190827154810.mr5jt2rkaorrry3t@uno.localdomain>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-9-jacopo+renesas@jmondi.org>
- <20190827002422.GQ5031@pendragon.ideasonboard.com>
- <20190827145619.33s7gkv7tgtsr6nz@uno.localdomain>
+        Tue, 27 Aug 2019 11:47:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:46990 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbfH0Pr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 11:47:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A5C7337;
+        Tue, 27 Aug 2019 08:47:28 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 598D23F59C;
+        Tue, 27 Aug 2019 08:47:27 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 16:47:25 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH 6/6] PCI: tegra: Add support to enable slot regulators
+Message-ID: <20190827154725.GP14582@e119886-lin.cambridge.arm.com>
+References: <20190826073143.4582-1-vidyas@nvidia.com>
+ <20190826073143.4582-7-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4lusbristpbjpnut"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190827145619.33s7gkv7tgtsr6nz@uno.localdomain>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190826073143.4582-7-vidyas@nvidia.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 26, 2019 at 01:01:43PM +0530, Vidya Sagar wrote:
+> Add support to get regulator information of 3.3V and 12V supplies of a PCIe
+> slot from the respective controller's device-tree node and enable those
+> supplies. This is required in platforms like p2972-0000 where the supplies
+> to x16 slot owned by C5 controller need to be enabled before attempting to
+> enumerate the devices.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 65 ++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 8a27b25893c9..97de2151a738 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -278,6 +278,8 @@ struct tegra_pcie_dw {
+>  	u32 aspm_l0s_enter_lat;
+>  
+>  	struct regulator *pex_ctl_supply;
+> +	struct regulator *slot_ctl_3v3;
+> +	struct regulator *slot_ctl_12v;
+>  
+>  	unsigned int phy_count;
+>  	struct phy **phys;
+> @@ -1047,6 +1049,59 @@ static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
+>  	}
+>  }
+>  
+> +static void tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
+> +{
+> +	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
+> +	if (IS_ERR(pcie->slot_ctl_3v3))
+> +		pcie->slot_ctl_3v3 = NULL;
+> +
+> +	pcie->slot_ctl_12v = devm_regulator_get_optional(pcie->dev, "vpcie12v");
+> +	if (IS_ERR(pcie->slot_ctl_12v))
+> +		pcie->slot_ctl_12v = NULL;
 
---4lusbristpbjpnut
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Do these need to take into consideration -EPROBE_DEFER?
 
-On Tue, Aug 27, 2019 at 04:56:19PM +0200, Jacopo Mondi wrote:
-> Hi Laurent,
->
-> On Tue, Aug 27, 2019 at 03:24:22AM +0300, Laurent Pinchart wrote:
-> > Hi Jacopo,
-> >
-> > Thank you for the patch.
-> >
-> > On Sun, Aug 25, 2019 at 03:51:48PM +0200, Jacopo Mondi wrote:
-> > > Add a driver for the R-Car Display Unit Color Correction Module.
-> > >
-> > > In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
-> > > to perform image enhancement and color correction.
-> > >
-> > > Add support for CMM through a driver that supports configuration of
-> > > the 1-dimensional LUT table. More advanced CMM feature will be
-> > > implemented on top of this basic one.
-> > >
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > ---
-> > >  drivers/gpu/drm/rcar-du/Kconfig    |   7 +
-> > >  drivers/gpu/drm/rcar-du/Makefile   |   1 +
-> > >  drivers/gpu/drm/rcar-du/rcar_cmm.c | 262 +++++++++++++++++++++++++++++
-> > >  drivers/gpu/drm/rcar-du/rcar_cmm.h |  38 +++++
-> > >  4 files changed, 308 insertions(+)
-> > >  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
-> > >  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
-> > >
-> > > diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
-> > > index 1529849e217e..539d232790d1 100644
-> > > --- a/drivers/gpu/drm/rcar-du/Kconfig
-> > > +++ b/drivers/gpu/drm/rcar-du/Kconfig
-> > > @@ -13,6 +13,13 @@ config DRM_RCAR_DU
-> > >  	  Choose this option if you have an R-Car chipset.
-> > >  	  If M is selected the module will be called rcar-du-drm.
-> > >
-> > > +config DRM_RCAR_CMM
-> > > +	bool "R-Car DU Color Management Module (CMM) Support"
-> > > +	depends on DRM && OF
-> > > +	depends on DRM_RCAR_DU
-> > > +	help
-> > > +	  Enable support for R-Car Color Management Module (CMM).
-> > > +
-> > >  config DRM_RCAR_DW_HDMI
-> > >  	tristate "R-Car DU Gen3 HDMI Encoder Support"
-> > >  	depends on DRM && OF
-> > > diff --git a/drivers/gpu/drm/rcar-du/Makefile b/drivers/gpu/drm/rcar-du/Makefile
-> > > index 6c2ed9c46467..4d1187ccc3e5 100644
-> > > --- a/drivers/gpu/drm/rcar-du/Makefile
-> > > +++ b/drivers/gpu/drm/rcar-du/Makefile
-> > > @@ -15,6 +15,7 @@ rcar-du-drm-$(CONFIG_DRM_RCAR_LVDS)	+= rcar_du_of.o \
-> > >  rcar-du-drm-$(CONFIG_DRM_RCAR_VSP)	+= rcar_du_vsp.o
-> > >  rcar-du-drm-$(CONFIG_DRM_RCAR_WRITEBACK) += rcar_du_writeback.o
-> > >
-> > > +obj-$(CONFIG_DRM_RCAR_CMM)		+= rcar_cmm.o
-> > >  obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
-> > >  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+= rcar_dw_hdmi.o
-> > >  obj-$(CONFIG_DRM_RCAR_LVDS)		+= rcar_lvds.o
-> > > diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.c b/drivers/gpu/drm/rcar-du/rcar_cmm.c
-> > > new file mode 100644
-> > > index 000000000000..55361f5701e8
-> > > --- /dev/null
-> > > +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
-> > > @@ -0,0 +1,262 @@
-> > > +// SPDX-License-Identifier: GPL-2.0+
-> > > +/*
-> > > + * rcar_cmm.c -- R-Car Display Unit Color Management Module
-> > > + *
-> > > + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > + */
-> > > +
-> > > +#include <linux/io.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/pm_runtime.h>
-> > > +
-> > > +#include <drm/drm_color_mgmt.h>
-> > > +
-> > > +#include "rcar_cmm.h"
-> > > +
-> > > +#define CM2_LUT_CTRL		0x0000
-> > > +#define CM2_LUT_CTRL_LUT_EN	BIT(0)
-> > > +#define CM2_LUT_TBL_BASE	0x0600
-> > > +#define CM2_LUT_TBL(__i)	(CM2_LUT_TBL_BASE + (__i) * 4)
-> > > +
-> > > +struct rcar_cmm {
-> > > +	void __iomem *base;
-> > > +	bool enabled;
-> > > +
-> > > +	/*
-> > > +	 * @lut:		1D-LUT status
-> > > +	 * @lut.enabled:	1D-LUT enabled flag
-> > > +	 * @lut.size:		Number of entries in the LUT table
-> >
-> > Please see my review of patch 13/14, I wonder if we could drop this
-> > field.
-> >
-> > > +	 * @lut.table:		Table of 1D-LUT entries scaled to HW support
-> > > +	 *			precision (8-bits per color component)
-> > > +	 */
-> > > +	struct {
-> > > +		bool enabled;
-> > > +		unsigned int size;
-> > > +		u32 table[CMM_GAMMA_LUT_SIZE];
-> > > +	} lut;
-> > > +};
-> > > +
-> > > +static inline int rcar_cmm_read(struct rcar_cmm *rcmm, u32 reg)
-> > > +{
-> > > +	return ioread32(rcmm->base + reg);
-> > > +}
-> > > +
-> > > +static inline void rcar_cmm_write(struct rcar_cmm *rcmm, u32 reg, u32 data)
-> > > +{
-> > > +	iowrite32(data, rcmm->base + reg);
-> > > +}
-> > > +
-> > > +/*
-> > > + * rcar_cmm_lut_extract() - Scale down to hw precision the DRM LUT table
-> >
-> > s/hw/hardware/ (and below too)
-> >
-> > > + *			    entries and store them.
-> > > + * @rcmm: Pointer to the CMM device
-> > > + * @size: Number of entries in the table
-> > > + * @drm_lut: DRM LUT table
-> > > + */
-> > > +static void rcar_cmm_lut_extract(struct rcar_cmm *rcmm, size_t size,
-> > > +				 const struct drm_color_lut *drm_lut)
-> > > +{
-> > > +	unsigned int i;
-> > > +
-> > > +	for (i = 0; i < size; ++i) {
-> > > +		const struct drm_color_lut *lut = &drm_lut[i];
-> > > +
-> > > +		rcmm->lut.table[i] = drm_color_lut_extract(lut->red, 8) << 16
-> > > +				   | drm_color_lut_extract(lut->green, 8) << 8
-> > > +				   | drm_color_lut_extract(lut->blue, 8);
-> > > +	}
-> > > +
-> > > +	rcmm->lut.size = size;
-> > > +}
-> > > +
-> > > +/*
-> > > + * rcar_cmm_lut_load() - Write to hw the LUT table entries from the local table.
-> > > + *
-> >
-> > No need for a blank line
-> >
-> > > + * @rcmm: Pointer to the CMM device
-> > > + */
-> > > +static void rcar_cmm_lut_load(struct rcar_cmm *rcmm)
-> >
-> > I would name this rcar_cmm_lut_write().
-> >
->
-> I won't, as I would like to convey the LUT tables is loaded from the
+Thanks,
 
-Sorry, I meant "I wouldn't"... "I won't" is really harsh, sorry about
-it :p
+Andrew Murray
 
-
---4lusbristpbjpnut
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1lULoACgkQcjQGjxah
-Vjz9iA//TFm2CoEu6Ejbp575oyCLJDwkQOTEwiJ6XCrh6OvQqM9UpDmpsrgZm5MO
-ugkRzecDH+1BwFQZOg2gZThpv1DfTel5kuP/4aNAZFJIUEjPn4Ze+NiD9jA/mdnQ
-K0cCc43qlRbKo19aUPWH+w3rpuyQfVZs9hFvgcXHskkdvv3mrcgiZIYOEe0xgvn8
-IZTWr8hNdlngKr2Fz6GRYjoK/+gnrmcOfWP7feD0Gn5+Cl6qwDBukldOhiMvWr0E
-UGisydFFzwx0al9UZQ6vjkLUiowcVaFuFVNqREu+CLaj/uOXPvYE2vG5pBS690Mu
-EiMGVHKFzQJF4C82LsKCoL7rNEdZV6ll0mKZG+btbPAlAzaJOyACmrV1eSFUdcZi
-7ohp8iflx8n2H6u2nkvahDxrnOEKjZlqPkfmECl/uHDlfRd6FHmVgu//K6oO3Xgs
-uaH3xMwned6dgs4xZMKw03Cp/uZu49kGVXP+ZDeFFsAhAgIrxAf41c/DseR66lkY
-T52rkiR5kj465Gj/egoLjSAePE690WKEJJtdY521oP/Y9WJPFHWEvtla98jf+rBq
-XWzENDhmV9AKdUOwwyzreCvMFvPdLhhB8Yb9KJxfzcQIYZVUWbzt2I5CNnvDbeBi
-RiNjmP5gy1A115kPbc2R+U5ighB5Pk0PPk4F0U0+ThS6tmCMhqY=
-=NTm4
------END PGP SIGNATURE-----
-
---4lusbristpbjpnut--
+> +}
+> +
+> +static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
+> +{
+> +	int ret;
+> +
+> +	if (pcie->slot_ctl_3v3) {
+> +		ret = regulator_enable(pcie->slot_ctl_3v3);
+> +		if (ret < 0) {
+> +			dev_err(pcie->dev,
+> +				"Failed to enable 3V3 slot supply: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	if (pcie->slot_ctl_12v) {
+> +		ret = regulator_enable(pcie->slot_ctl_12v);
+> +		if (ret < 0) {
+> +			dev_err(pcie->dev,
+> +				"Failed to enable 12V slot supply: %d\n", ret);
+> +			if (pcie->slot_ctl_3v3)
+> +				regulator_disable(pcie->slot_ctl_3v3);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * According to PCI Express Card Electromechanical Specification
+> +	 * Revision 1.1, Table-2.4, T_PVPERL (Power stable to PERST# inactive)
+> +	 * should be a minimum of 100ms.
+> +	 */
+> +	msleep(100);
+> +
+> +	return 0;
+> +}
+> +
+> +static void tegra_pcie_disable_slot_regulators(struct tegra_pcie_dw *pcie)
+> +{
+> +	if (pcie->slot_ctl_12v)
+> +		regulator_disable(pcie->slot_ctl_12v);
+> +	if (pcie->slot_ctl_3v3)
+> +		regulator_disable(pcie->slot_ctl_3v3);
+> +}
+> +
+>  static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>  					bool en_hw_hot_rst)
+>  {
+> @@ -1060,6 +1115,10 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>  		return ret;
+>  	}
+>  
+> +	ret = tegra_pcie_enable_slot_regulators(pcie);
+> +	if (ret < 0)
+> +		goto fail_slot_reg_en;
+> +
+>  	ret = regulator_enable(pcie->pex_ctl_supply);
+>  	if (ret < 0) {
+>  		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
+> @@ -1142,6 +1201,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>  fail_core_clk:
+>  	regulator_disable(pcie->pex_ctl_supply);
+>  fail_reg_en:
+> +	tegra_pcie_disable_slot_regulators(pcie);
+> +fail_slot_reg_en:
+>  	tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+>  
+>  	return ret;
+> @@ -1174,6 +1235,8 @@ static int __deinit_controller(struct tegra_pcie_dw *pcie)
+>  		return ret;
+>  	}
+>  
+> +	tegra_pcie_disable_slot_regulators(pcie);
+> +
+>  	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+>  	if (ret) {
+>  		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
+> @@ -1372,6 +1435,8 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	tegra_pcie_get_slot_regulators(pcie);
+> +
+>  	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
+>  	if (IS_ERR(pcie->pex_ctl_supply)) {
+>  		dev_err(dev, "Failed to get regulator: %ld\n",
+> -- 
+> 2.17.1
+> 
