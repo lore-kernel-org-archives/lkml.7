@@ -2,83 +2,101 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 708E8C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65CBC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA6B2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74672070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:45:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbfH0NpN (ORCPT
+        id S1729946AbfH0NpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 27 Aug 2019 09:45:15 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43753 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbfH0NpN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 27 Aug 2019 09:45:13 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60922 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726125AbfH0NpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:45:13 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 710D265B4F12DA65DFD3;
-        Tue, 27 Aug 2019 21:45:09 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 27 Aug 2019
- 21:45:01 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <nbd@nbd.name>, <lorenzo.bianconi83@gmail.com>,
-        <ryder.lee@mediatek.com>, <royluo@google.com>,
-        <kvalo@codeaurora.org>, <davem@davemloft.net>,
-        <matthias.bgg@gmail.com>, <swboyd@chromium.org>,
-        <yuehaibing@huawei.com>, <weiyongjun1@huawei.com>
-CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] mt76: mt7603: use devm_platform_ioremap_resource() to simplify code
-Date:   Tue, 27 Aug 2019 21:44:45 +0800
-Message-ID: <20190827134445.14696-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i2bmC-0006fx-GB; Tue, 27 Aug 2019 15:44:48 +0200
+Date:   Tue, 27 Aug 2019 15:44:47 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+cc:     linux-edac@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-efi@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        james.morse@arm.com, rjw@rjwysocki.net,
+        Tony Luck <tony.luck@intel.com>, linuxarm@huawei.com,
+        ard.biesheuvel@linaro.org, nariman.poushin@linaro.org,
+        Jon Masters <jcm@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, peter.maydell@linaro.org,
+        linux-spdx@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 0/6 V2] CCIX Protocol error reporting.
+In-Reply-To: <20190820144732.2370-1-Jonathan.Cameron@huawei.com>
+Message-ID: <alpine.DEB.2.21.1908271539590.1939@nanos.tec.linutronix.de>
+References: <20190820144732.2370-1-Jonathan.Cameron@huawei.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/mixed; boundary="8323329-891169229-1566913488=:1939"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/wireless/mediatek/mt76/mt7603/soc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+--8323329-891169229-1566913488=:1939
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/soc.c b/drivers/net/wireless/mediatek/mt76/mt7603/soc.c
-index c6c1ce6..c22715e 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7603/soc.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7603/soc.c
-@@ -9,7 +9,6 @@
- static int
- mt76_wmac_probe(struct platform_device *pdev)
- {
--	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	struct mt7603_dev *dev;
- 	void __iomem *mem_base;
- 	struct mt76_dev *mdev;
-@@ -20,7 +19,7 @@ mt76_wmac_probe(struct platform_device *pdev)
- 	if (irq < 0)
- 		return irq;
+Jonathan,
+
+On Tue, 20 Aug 2019, Jonathan Cameron wrote:
+
+Cc+ linux-spdx@vger.kernel.org
+
+> The following boilerplate is granting rights to the kernel.
+> Note that I haven't applied the CCIX copyright notice anywhere in this
+> series because we aren't quoting from the specification.  That is
+> much more likely to happen in documentation patches than in code.
+> 
+> Like anything else in this series it is open to comment.
+> 
+> This patch is being distributed by the CCIX Consortium, Inc. (CCIX) to
+> you and other parties that are participating (the "participants") in the
+> Linux kernel with the understanding that the participants will use CCIX's
+> name and trademark only when this patch is used in association with the
+> Linux kernel and associated user space.
+
+The code is licensed under GPLV2, so what precludes any other GPLV2 project
+to import that code?
+
+If there is a mentioning of CCIX Consortium in the imported code then you
+cannot impose that this needs to be removed because it ends up in something
+which is neither Linux kernel nor associated user space. And that's
+especially true when this ends up being a copyright notice.
  
--	mem_base = devm_ioremap_resource(&pdev->dev, res);
-+	mem_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(mem_base)) {
- 		dev_err(&pdev->dev, "Failed to get memory resource\n");
- 		return PTR_ERR(mem_base);
--- 
-2.7.4
+> CCIX is also distributing this patch to these participants with the
+> understanding that if any portion of the CCIX specification will be
+> used or referenced in the Linux kernel, the participants will not modify
+> the cited portion of the CCIX specification and will give CCIX proper
+> copyright attribution by including the following copyright notice with
+> the cited part of the CCIX specification:
+> "© 2019 CCIX CONSORTIUM, INC. ALL RIGHTS RESERVED."
 
+Just to prove the point.
 
+Thanks,
+
+	tglx
+--8323329-891169229-1566913488=:1939--
