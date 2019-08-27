@@ -2,201 +2,85 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCD4C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12218C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD1782070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B182184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:13:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566926025;
+	bh=m7dVOEHHCxPvzSsFOD26uyfjPTaB6y27KfCCTNmaT9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j/mKjkB9O5owA1akU0G99WtWdTdlNIspEpXxdHDFmycF/Z6H3woLST6CqsJiFqn95
+	 o3wt6sNW9OcV8FMw+UxVwksH2+5VzExh2dwmsH3HAD7WaJ0Uz9WScRSBcKcXKXt2nw
+	 IcL0qDXvgOg4WY1u9TqsZID3mPuHZrUzgAqeOfzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbfH0RNi (ORCPT
+        id S1730364AbfH0RNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:13:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:48298 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbfH0RNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:13:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B82C7337;
-        Tue, 27 Aug 2019 10:13:36 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13F4B3F718;
-        Tue, 27 Aug 2019 10:13:36 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 18:13:34 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH 6/6] PCI: tegra: Add support to enable slot regulators
-Message-ID: <20190827171333.GQ14582@e119886-lin.cambridge.arm.com>
-References: <20190826073143.4582-1-vidyas@nvidia.com>
- <20190826073143.4582-7-vidyas@nvidia.com>
- <20190827154725.GP14582@e119886-lin.cambridge.arm.com>
- <91f8914a-22a9-8b7c-bc00-c309a21d83db@nvidia.com>
+        Tue, 27 Aug 2019 13:13:45 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44489 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbfH0RNo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 13:13:44 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k22so15540948oiw.11;
+        Tue, 27 Aug 2019 10:13:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZT59bHFCQxNUysxnKx4v2xMJcoeiALfAwa3rgtRRpmY=;
+        b=F9uphlYR1TynQZyTOVQ7AHpq3i8Qud+Vf2z0pPBlS1Po34fy/KZkbTWjk9Zg+ah7HJ
+         hsJpnWY/Axc4EWD9IAsY4ycjT3rE3enhqLKUBpzqJPHDrV4UO3//6WlJ8lYmKhvCFmEO
+         +HUWXJuo2+tMoMc4YwHG9T1RqlYZsAsArDO8yVhTtYydtpGHx8F+rZk1F3w6qVenUafJ
+         eRQTcEeMCxIYUpqXujXOtQRYw/u8S0V5LoC3JjpYyCBWFiZWWAiqHVaFItjJi0PsAmF9
+         v76CKTDSP/DgjxtCItfD4ILrhUf+L8UAMG2HlpKQUxvZFSGNc3gkuAZTm0KgMS9QV2Vf
+         E54w==
+X-Gm-Message-State: APjAAAVNXrlogCdHAPmELA2Re5fORfHyO3hBYNt+yUkd4WyTDZA0DyeR
+        TPLWLKEgATbGiSg6TwLWMQ==
+X-Google-Smtp-Source: APXvYqxslgK0PstOcKY7gHX+NFLxSs5mbQ5emm9JZKa41JXdGW49/ncn4EIxqEgVRmEBPuRT6rgQSg==
+X-Received: by 2002:a54:4092:: with SMTP id i18mr5226801oii.66.1566926023468;
+        Tue, 27 Aug 2019 10:13:43 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f21sm5458620otq.7.2019.08.27.10.13.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 10:13:42 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 12:13:42 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH 2/7] dt-bindings: arm-smmu: Add Adreno GPU variant
+Message-ID: <20190827171342.GA29932@bogus>
+References: <1566327992-362-1-git-send-email-jcrouse@codeaurora.org>
+ <1566327992-362-3-git-send-email-jcrouse@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <91f8914a-22a9-8b7c-bc00-c309a21d83db@nvidia.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <1566327992-362-3-git-send-email-jcrouse@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 09:54:17PM +0530, Vidya Sagar wrote:
-> On 8/27/2019 9:17 PM, Andrew Murray wrote:
-> > On Mon, Aug 26, 2019 at 01:01:43PM +0530, Vidya Sagar wrote:
-> > > Add support to get regulator information of 3.3V and 12V supplies of a PCIe
-> > > slot from the respective controller's device-tree node and enable those
-> > > supplies. This is required in platforms like p2972-0000 where the supplies
-> > > to x16 slot owned by C5 controller need to be enabled before attempting to
-> > > enumerate the devices.
-> > > 
-> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > ---
-> > >   drivers/pci/controller/dwc/pcie-tegra194.c | 65 ++++++++++++++++++++++
-> > >   1 file changed, 65 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > index 8a27b25893c9..97de2151a738 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > @@ -278,6 +278,8 @@ struct tegra_pcie_dw {
-> > >   	u32 aspm_l0s_enter_lat;
-> > >   	struct regulator *pex_ctl_supply;
-> > > +	struct regulator *slot_ctl_3v3;
-> > > +	struct regulator *slot_ctl_12v;
-> > >   	unsigned int phy_count;
-> > >   	struct phy **phys;
-> > > @@ -1047,6 +1049,59 @@ static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
-> > >   	}
-> > >   }
-> > > +static void tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
-> > > +{
-> > > +	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
-> > > +	if (IS_ERR(pcie->slot_ctl_3v3))
-> > > +		pcie->slot_ctl_3v3 = NULL;
-> > > +
-> > > +	pcie->slot_ctl_12v = devm_regulator_get_optional(pcie->dev, "vpcie12v");
-> > > +	if (IS_ERR(pcie->slot_ctl_12v))
-> > > +		pcie->slot_ctl_12v = NULL;
-> > 
-> > Do these need to take into consideration -EPROBE_DEFER?
-> Since these are devm_* APIs, isn't it taken care of automatically?
-
-devm_regulator_get_optional can still return -EPROBE_DEFER - for times when
-"lookup could succeed in the future".
-
-It's probably helpful here for your driver to distinguish between there not
-being a regulator specified in the DT, and there being a regulator but there
-is no device for it yet. For the latter case - your driver would probe but
-nothing would enumerate.
-
-See pcie-rockchip-host.c for an example of where this is handled.
-
-Of course if, for whatever reason it is unlikely you'll ever get -EPROBE_DEFER
-then maybe it's OK as it is.
-
-Thanks,
-
-Andrew Murray
-
+On Tue, 20 Aug 2019 13:06:27 -0600, Jordan Crouse wrote:
+> Add a compatible string to identify SMMUs that are attached
+> to Adreno GPU devices that wish to support split pagetables.
 > 
-> > 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > > +}
-> > > +
-> > > +static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	if (pcie->slot_ctl_3v3) {
-> > > +		ret = regulator_enable(pcie->slot_ctl_3v3);
-> > > +		if (ret < 0) {
-> > > +			dev_err(pcie->dev,
-> > > +				"Failed to enable 3V3 slot supply: %d\n", ret);
-> > > +			return ret;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	if (pcie->slot_ctl_12v) {
-> > > +		ret = regulator_enable(pcie->slot_ctl_12v);
-> > > +		if (ret < 0) {
-> > > +			dev_err(pcie->dev,
-> > > +				"Failed to enable 12V slot supply: %d\n", ret);
-> > > +			if (pcie->slot_ctl_3v3)
-> > > +				regulator_disable(pcie->slot_ctl_3v3);
-> > > +			return ret;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	/*
-> > > +	 * According to PCI Express Card Electromechanical Specification
-> > > +	 * Revision 1.1, Table-2.4, T_PVPERL (Power stable to PERST# inactive)
-> > > +	 * should be a minimum of 100ms.
-> > > +	 */
-> > > +	msleep(100);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static void tegra_pcie_disable_slot_regulators(struct tegra_pcie_dw *pcie)
-> > > +{
-> > > +	if (pcie->slot_ctl_12v)
-> > > +		regulator_disable(pcie->slot_ctl_12v);
-> > > +	if (pcie->slot_ctl_3v3)
-> > > +		regulator_disable(pcie->slot_ctl_3v3);
-> > > +}
-> > > +
-> > >   static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
-> > >   					bool en_hw_hot_rst)
-> > >   {
-> > > @@ -1060,6 +1115,10 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
-> > >   		return ret;
-> > >   	}
-> > > +	ret = tegra_pcie_enable_slot_regulators(pcie);
-> > > +	if (ret < 0)
-> > > +		goto fail_slot_reg_en;
-> > > +
-> > >   	ret = regulator_enable(pcie->pex_ctl_supply);
-> > >   	if (ret < 0) {
-> > >   		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
-> > > @@ -1142,6 +1201,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
-> > >   fail_core_clk:
-> > >   	regulator_disable(pcie->pex_ctl_supply);
-> > >   fail_reg_en:
-> > > +	tegra_pcie_disable_slot_regulators(pcie);
-> > > +fail_slot_reg_en:
-> > >   	tegra_pcie_bpmp_set_ctrl_state(pcie, false);
-> > >   	return ret;
-> > > @@ -1174,6 +1235,8 @@ static int __deinit_controller(struct tegra_pcie_dw *pcie)
-> > >   		return ret;
-> > >   	}
-> > > +	tegra_pcie_disable_slot_regulators(pcie);
-> > > +
-> > >   	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
-> > >   	if (ret) {
-> > >   		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
-> > > @@ -1372,6 +1435,8 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
-> > >   		return ret;
-> > >   	}
-> > > +	tegra_pcie_get_slot_regulators(pcie);
-> > > +
-> > >   	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
-> > >   	if (IS_ERR(pcie->pex_ctl_supply)) {
-> > >   		dev_err(dev, "Failed to get regulator: %ld\n",
-> > > -- 
-> > > 2.17.1
-> > > 
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
 > 
+>  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
