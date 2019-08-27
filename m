@@ -2,187 +2,115 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF13AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2ADC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C328E21883
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:01:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ItpLCNRM"
+	by mail.kernel.org (Postfix) with ESMTP id B5CBE2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:04:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbfH0JBU (ORCPT
+        id S1728295AbfH0JEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:01:20 -0400
-Received: from forward106p.mail.yandex.net ([77.88.28.109]:49564 "EHLO
-        forward106p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725805AbfH0JBU (ORCPT
+        Tue, 27 Aug 2019 05:04:01 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58728 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfH0JEB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:01:20 -0400
-Received: from mxback28o.mail.yandex.net (mxback28o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::79])
-        by forward106p.mail.yandex.net (Yandex) with ESMTP id E9A541C81A15;
-        Tue, 27 Aug 2019 11:55:00 +0300 (MSK)
-Received: from smtp1p.mail.yandex.net (smtp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:6])
-        by mxback28o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id Hptl9zhHrY-t08a4aTr;
-        Tue, 27 Aug 2019 11:55:00 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1566896100;
-        bh=Y6sfZ58nj6HzDrvBbI59ncoDg0LgIEFsSAJSPkb15cQ=;
-        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=ItpLCNRMQorxM6o/rJmNmiJGruMvcws/t4qnRv6ynhTh/uMXaXRHsMYaoYLDtmHNe
-         tzh+VRvOcyqqsoxaqfnTvn49nEVkDbXuJX2k9SGw6awt1LImS2sx90UVGyiNCEos7P
-         7R8Zw2OpkT6CLzwcS5Q9ZvCUITw2QwY7MkWDbAxw=
-Authentication-Results: mxback28o.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id JOqUfE8LDO-sttCsrGB;
-        Tue, 27 Aug 2019 11:54:59 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.co,
-        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH 11/13] dt-bindings: mips: Add loongson cpus & boards
-Date:   Tue, 27 Aug 2019 16:53:00 +0800
-Message-Id: <20190827085302.5197-12-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
+        Tue, 27 Aug 2019 05:04:01 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 76CE228A3A1;
+        Tue, 27 Aug 2019 10:03:59 +0100 (BST)
+Date:   Tue, 27 Aug 2019 11:03:56 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        jonas@kwiboo.se, jernej.skrabec@siol.net,
+        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 3/8] drm/bridge: synopsys: dw-hdmi: add bus
+ format negociation
+Message-ID: <20190827110356.3bec488b@collabora.com>
+In-Reply-To: <20190827081425.15011-4-narmstrong@baylibre.com>
+References: <20190827081425.15011-1-narmstrong@baylibre.com>
+        <20190827081425.15011-4-narmstrong@baylibre.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prepare for later dts.
+On Tue, 27 Aug 2019 10:14:20 +0200
+Neil Armstrong <narmstrong@baylibre.com> wrote:
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- .../bindings/mips/loongson/cpus.yaml          | 38 +++++++++++
- .../bindings/mips/loongson/devices.yaml       | 64 +++++++++++++++++++
- 2 files changed, 102 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/loongson/cpus.yaml
- create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
+> Add the atomic_get_output_bus_fmts, atomic_get_input_bus_fmts to negociate
 
-diff --git a/Documentation/devicetree/bindings/mips/loongson/cpus.yaml b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
-new file mode 100644
-index 000000000000..410d896a0078
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mips/loongson/cpus.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson CPUs bindings
-+
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+
-+description: |+
-+  The device tree allows to describe the layout of CPUs in a system through
-+  the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
-+  defining properties for every cpu.
-+
-+  Bindings for CPU nodes follow the Devicetree Specification, available from:
-+
-+  https://www.devicetree.org/specifications/
-+
-+properties:
-+  reg:
-+    maxItems: 1
-+    description: |
-+      Physical ID of a CPU, Can be read from CP0 EBase.CPUNum.
-+
-+  compatible:
-+    enum:
-+      - loongson,gs464
-+      - loongson,gs464e
-+      - loongson,gs264
-+      - loongson,gs464v
-+
-+required:
-+  - device_type
-+  - reg
-+  - compatible
-+...
-diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-new file mode 100644
-index 000000000000..181881a9f4a9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mips/loongson/devices.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MediaTek SoC based Platforms Device Tree Bindings
-+
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+description: |
-+  Devices with a Loongson CPU shall have the following properties.
-+
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+
-+      - description: Loongson 3A1000 + RS780E 1Way
-+        items:
-+          - const: loongson,ls3a1000-780e-1way
-+
-+      - description: Loongson 3A1000 + RS780E 2Way
-+        items:
-+          - const: loongson,ls3a1000-780e-2way
-+
-+      - description: Loongson 3A1000 + RS780E 4Way
-+        items:
-+          - const: loongson,ls3a1000-780e-4way
-+
-+      - description: Loongson 3B1000/1500 + RS780E 1Way
-+        items:
-+          - const: loongson,ls3b-780e-1way
-+
-+      - description: Loongson 3B1000/1500 + RS780E 2Way
-+        items:
-+          - const: loongson,ls3b-780e-2way
-+
-+      - description: Loongson 3A2000 + RS780E 1Way
-+        items:
-+          - const: loongson,ls3a2000-780e-1way
-+
-+      - description: Loongson 3A2000 + RS780E 2Way
-+        items:
-+          - const: loongson,ls3a2000-780e-2way
-+
-+      - description: Loongson 3A2000 + RS780E 4Way
-+        items:
-+          - const: loongson,ls3a2000-780e-4way
-+
-+      - description: Loongson 3A3000 + RS780E 1Way
-+        items:
-+          - const: loongson,ls3a3000-780e-1way
-+
-+      - description: Loongson 3A3000 + RS780E 2Way
-+        items:
-+          - const: loongson,ls3a3000-780e-2way
-+
-+      - description: Loongson 3A3000 + RS780E 4Way
-+        items:
-+          - const: loongson,ls3a3000-780e-4way
-+
-+...
--- 
-2.22.0
+								   ^negotiate
 
+> the possible output and input formats for the current mode and monitor,
+> and use the negociated formats in a basic atomic_check callback.
+
+	      ^negotiated
+
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+
+
+>  
+> +static void dw_hdmi_bridge_atomic_get_output_bus_fmts(struct drm_bridge *bridge,
+> +					struct drm_bridge_state *bridge_state,
+> +					struct drm_crtc_state *crtc_state,
+> +					struct drm_connector_state *conn_state,
+> +					unsigned int *num_output_fmts,
+> +					u32 *output_fmts)
+> +{
+> +	struct drm_connector *conn = conn_state->connector;
+> +	struct drm_display_info *info = &conn->display_info;
+> +	struct drm_display_mode *mode = &crtc_state->mode;
+> +	bool is_hdmi2_sink = info->hdmi.scdc.supported;	
+> +	int i = 0;
+> +
+> +	/*
+> +	 * If the current mode enforces 4:2:0, force the output but format
+> +	 * to 4:2:0 and do not add the YUV422/444/RGB formats
+> +	 */
+> +	if (drm_mode_is_420_only(info, mode) ||
+> +	    (!is_hdmi2_sink && drm_mode_is_420_also(info, mode))) {
+> +
+> +		/* Order bus formats from 16bit to 8bit if supported */
+> +		if (info->bpc == 16 &&
+> +		    (info->hdmi.y420_dc_modes & DRM_EDID_YCBCR420_DC_48)) {
+> +			if (output_fmts)
+> +				output_fmts[i] = MEDIA_BUS_FMT_UYYVYY16_0_5X48;
+> +			++i;
+> +		}
+
+You could probably add the following helper:
+
+static void dw_hdmi_bridge_add_fmt(unsigned int *num_fmts, u32 *fmts,
+				   u32 new_fmt)
+{
+	if (fmts)
+		fmts[*num_fmts] = new_fmt;
+
+	(*num_fmts)++;
+}
+
+to avoid duplicating the
+
+	if (fmts)
+		...
+
+	i++;			
+
+logic.
