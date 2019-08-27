@@ -2,129 +2,100 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06493C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B836C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F4C2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566921390;
-	bh=fdK0Z8jsNPgC8gEk+gTbmbbEs3s5PEppR8PzsWR++vE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VX6nq5u8tLwtaK3jhsHEIMDUftXqpNOTGygyAPQXMLmqaAqLxtwTDtopWJINQr0jX
-	 1DjyzjEkc21UWqoPkLGQBTL9Tzk5A/i/RoQ2quovfL0WVFOUYOatnp5NVe+W46RZIS
-	 //mvJUDgvC311kLgg0VMJ/AKra62WvAOCI7PefJ8=
+	by mail.kernel.org (Postfix) with ESMTP id 238252070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:57:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cO4L/q1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbfH0P43 (ORCPT
+        id S1729412AbfH0P5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:56:29 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:47094 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfH0P43 (ORCPT
+        Tue, 27 Aug 2019 11:57:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35972 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfH0P5Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:56:29 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t24so15313489oij.13;
-        Tue, 27 Aug 2019 08:56:28 -0700 (PDT)
+        Tue, 27 Aug 2019 11:57:24 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y19so1501117wrd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 08:57:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=H1torqY/P3gtGJ+ugePzQCECcZOx2AhSiXCBn05NB9k=;
+        b=cO4L/q1kzop9jgA86USjSszzVAloN78q3oEiPirAOB4Db/ItlI+x+XMPuN7CWC9Hxz
+         tk2oUjnpA4X4MNbxmck1DPpLnTOUFqLeLCfw88rJ2lS8ln2Ys5YFLg30QvIX4uBqbYVd
+         XXVfgu39LO7WDOK8AJVUMZM++xiXnHF7e9L2kzsGY77acE3ON6GtDkWv6Ao3vjtVBDZd
+         mGJY3BviFYW1l8aWnedED2o/EnJ045qiE/POJ6gPRvJXWhoSTKkS32R1D6hFgoiR69ZG
+         cuXcOFrepIps47133hTTMVs8M1exwmU9faHNbp1ivqgvEaJwc1Z6GtH7iuEvh9SDsWYL
+         /PbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=496l2D/NBnu+OvAkK9jRIei3uNVRt46Ohb23zKW6VBA=;
-        b=Ip4BOgFzCmdSJc/Fj2oTurPMNEOsOCmNxXS7B9TKVMUyewmCdC3FaWNO//GgzOyalH
-         Zw66tuSK2XIB91oiMc+sZ5HxOAqLIcQ/MVV2CMTMAeenQbEbvYR0vRKyixrU7oJUwY8x
-         mjJLmxIRFc8fFh1ftQzCYGZ2Y0G/uiQyXTTPToamD4APVbUoXqg0b6Dwtm0pMdtVnl/D
-         wqXB6x6R1PXyPXWZMpYSfz6qmom8qi7b0EYeENz9q7WKy92wOwga5rlozBvmYrANow+7
-         rai58C49FldB685/szh2Z7jbD0Vxo7u3La8nIv/5MXPFxfW8CBqse283kBVUbjQKsdSv
-         kXbQ==
-X-Gm-Message-State: APjAAAUqHFl6R2yFiKMifC5AviQBHaV5ZJZwPUItWXRjX4B+c08rM40a
-        AryHwdYF+ELXspM1bHI7Xw==
-X-Google-Smtp-Source: APXvYqw99eOThTzexUEoPloxhW15jSlo6SFvfq/fyqIVqp8VzElz20lzUAUloqaV3S+Cnxsg4g40dw==
-X-Received: by 2002:aca:c6d8:: with SMTP id w207mr15904130oif.94.1566921387977;
-        Tue, 27 Aug 2019 08:56:27 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u5sm4384898oic.45.2019.08.27.08.56.27
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=H1torqY/P3gtGJ+ugePzQCECcZOx2AhSiXCBn05NB9k=;
+        b=WEyuRE440WiS/butbV+Jp9TVijt+xFe6oGuVAx3VSDKqMHGI+XeTbxPWf+WgJ+/q3k
+         coTOihvTErDZUuDOnZJ0gktFxoQ91M/eXp9lBI3C9uCEXYWK+cx4ZiomxqXyKP4QwQ2p
+         d0Pk8dsNIA5C7Soij0SKuZFGCipvEKK7eVE7XcCDoSIVQb4p5Bo5qiAgJd0GOeUpGLFB
+         kq2ckTenmGr3UNKh5Wnml5zan/mHcqw9zrHdinzBDwa4ziFaHfcBg4Q/ddOsveuwdpfC
+         dz9TzQxh4FyxlbFy7tF5QsrfETIh8M7V+7oi8F4xFhm54N4BxVchk+U1/tSt+DC80Br3
+         ezkw==
+X-Gm-Message-State: APjAAAV5NRACaXyFYGdd4m1UKGB5VyX1RKY4UCV6s6kt2zak8Tij6gbL
+        9oFlu/vSXy2tyQ26J4iZ3D4=
+X-Google-Smtp-Source: APXvYqw1eVmS+SjnJwtinntp3LdrJ8JbR6zDEg86MR8gxyYXhMoa2ggTGXf8z78qW/ip4Bnmb32bsw==
+X-Received: by 2002:a5d:6742:: with SMTP id l2mr29732445wrw.70.1566921442215;
+        Tue, 27 Aug 2019 08:57:22 -0700 (PDT)
+Received: from arch-late (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
+        by smtp.gmail.com with ESMTPSA id f24sm4084979wmc.25.2019.08.27.08.57.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 08:56:27 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 10:56:26 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
-Cc:     linux-kernel@vger.kernel.org, Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: imx6q-pcie: add
- "fsl,pcie-phy-refclk-internal" for i.MX7D
-Message-ID: <20190827155626.GA29948@bogus>
-References: <20190813103759.38358-1-git@andred.net>
- <20190813103759.38358-2-git@andred.net>
+        Tue, 27 Aug 2019 08:57:21 -0700 (PDT)
+References: <20190825055429.18547-1-gregkh@linuxfoundation.org> <20190827133611.GE23584@kadam> <20190827134557.GA25038@kroah.com> <m3d0gqisua.fsf@gmail.com> <20190827154308.GD534@kroah.com>
+User-agent: mu4e 1.2.0; emacs 27.0.50
+From:   Rui Miguel Silva <rmfrfs@gmail.com>
+To:     Greg KH <greg@kroah.com>
+Cc:     driverdev-devel@linuxdriverproject.org, devel@driverdev.osuosl.org,
+        elder@kernel.org, johan@kernel.org, linux-kernel@vger.kernel.org,
+        greybus-dev@lists.linaro.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH 0/9] staging: move greybus core out of staging
+In-reply-to: <20190827154308.GD534@kroah.com>
+Date:   Tue, 27 Aug 2019 16:57:20 +0100
+Message-ID: <m3blwaiotb.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190813103759.38358-2-git@andred.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 11:37:59AM +0100, André Draszik wrote:
-> The i.MX7D variant of the IP can use either an external
-> crystal oscillator input or an internal clock input as
-> a reference clock input for the PCIe PHY.
-> 
-> Document the optional property 'fsl,pcie-phy-refclk-internal'
-> 
-> Signed-off-by: André Draszik <git@andred.net>
-> Cc: Richard Zhu <hongxing.zhu@nxp.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: NXP Linux Team <linux-imx@nxp.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index a7f5f5afa0e6..985d7083df9f 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -56,6 +56,11 @@ Additional required properties for imx7d-pcie and imx8mq-pcie:
->  	       - "turnoff"
->  - fsl,imx7d-pcie-phy: A phandle to an fsl,imx7d-pcie-phy node.
+Hi Greg,
+On Tue 27 Aug 2019 at 16:43, Greg KH wrote:
+> On Tue, Aug 27, 2019 at 03:30:21PM +0100, Rui Miguel Silva wrote:
+>> Hi,
+>> On Tue 27 Aug 2019 at 14:45, Greg Kroah-Hartman wrote:
+>> > On Tue, Aug 27, 2019 at 04:36:11PM +0300, Dan Carpenter wrote:
+>> >> I can't compile greybus so it's hard to run Smatch on it...  I have a
+>> >> Smatch thing which ignores missing includes and just tries its best.
+>> >> It mostly generates garbage output but a couple of these look like
+>> >> potential issues:
+>> >
+>> > Why can't you compile the code?
+>> >
+>>
+>> I think we are missing includes in some of the
+>> greybus header files.
+>
+> Really?  Where?  Builds fine here and passes 0-day :)
+>
 
-Not sure how this got in, but why is the phy binding not used here?
+Yeah; just sent a patch to fix it.
 
->  
-> +Additional optional properties for imx7d-pcie:
-> +- fsl,pcie-phy-refclk-internal: If present then an internal PLL input is used
-> +  as PCIe PHY reference clock source. By default an external ocsillator input
-> +  is used.
-
-Can't the clock binding and maybe 'assigned-clocks' be used here? 
-
-Also, this is a property of the PHY, so it belongs in the PHY's node.
-
-Rob
+Cheers,
+   Rui
