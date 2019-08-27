@@ -2,79 +2,78 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F5FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000C6C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B93C32173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60A920828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:53:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566914005;
+	bh=tUkoJ4O4ArWH5T/0OXvUNJmyoqCMtNQceqm7CF/Y9bw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EG1sETQb5DfqJXrAvXTJXh4kjP4E5Tpkr85VwT+nbC9N+LS3nqYNr3WvvseF3FNgW
+	 gdeiSrHVWAtKPy0yiGv0dnwz+SP5B4ib8HNrtNw+P3m1Dj3245Vkx5zUHynGls09QS
+	 KrST8zvm5z41b0ZwZSQQEfAGZr3xM2hEHYWs8yw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbfH0NvZ (ORCPT
+        id S1729678AbfH0NxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:51:25 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5674 "EHLO huawei.com"
+        Tue, 27 Aug 2019 09:53:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35708 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726170AbfH0NvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:51:25 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0D7BA7EEEE9F0493118C;
-        Tue, 27 Aug 2019 21:51:06 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 27 Aug 2019
- 21:50:58 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <mripard@kernel.org>, <wens@csie.org>
-CC:     <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] phy: mdio-sun4i: use devm_platform_ioremap_resource() to simplify code
-Date:   Tue, 27 Aug 2019 21:50:32 +0800
-Message-ID: <20190827135032.14620-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1726170AbfH0NxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:53:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5F707AC45;
+        Tue, 27 Aug 2019 13:53:23 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 15:53:22 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Yafang Shao <laoar.shao@gmail.com>,
+        Adric Blake <promarbler14@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: WARNINGs in set_task_reclaim_state with memory
+ cgroupandfullmemory usage
+Message-ID: <20190827135322.GG7538@dhcp22.suse.cz>
+References: <20190824130516.2540-1-hdanton@sina.com>
+ <CALOAHbAuY9BnpX6x4KSNURbzybjn5UdSNL7-1Li3R0HSQBqiGQ@mail.gmail.com>
+ <20190827132931.848986B0008@kanga.kvack.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827132931.848986B0008@kanga.kvack.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On Tue 27-08-19 21:29:24, Hillf Danton wrote:
+> 
+> >> No preference seems in either way except for retaining
+> >> nr_to_reclaim == SWAP_CLUSTER_MAX and target_mem_cgroup == memcg.
+> >
+> > Setting  target_mem_cgroup here may be a very subtle change for
+> > subsequent processing.
+> > Regarding retraining nr_to_reclaim == SWAP_CLUSTER_MAX, it may not
+> > proper for direct reclaim, that may cause some stall if we iterate all
+> > memcgs here.
+> 
+> Mind posting a RFC to collect thoughts?
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/phy/mdio-sun4i.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/net/phy/mdio-sun4i.c b/drivers/net/phy/mdio-sun4i.c
-index 20ffd8f..58d6504 100644
---- a/drivers/net/phy/mdio-sun4i.c
-+++ b/drivers/net/phy/mdio-sun4i.c
-@@ -92,7 +92,6 @@ static int sun4i_mdio_probe(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct mii_bus *bus;
- 	struct sun4i_mdio_data *data;
--	struct resource *res;
- 	int ret;
- 
- 	bus = mdiobus_alloc_size(sizeof(*data));
-@@ -106,8 +105,7 @@ static int sun4i_mdio_probe(struct platform_device *pdev)
- 	bus->parent = &pdev->dev;
- 
- 	data = bus->priv;
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	data->membase = devm_ioremap_resource(&pdev->dev, res);
-+	data->membase = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(data->membase)) {
- 		ret = PTR_ERR(data->membase);
- 		goto err_out_free_mdiobus;
+I hope I have explained why this is not desirable
+http://lkml.kernel.org/r/20190827120335.GA7538@dhcp22.suse.cz
 -- 
-2.7.4
-
-
+Michal Hocko
+SUSE Labs
