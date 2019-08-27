@@ -2,57 +2,57 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523DAC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0688C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2704F2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79400206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893757;
-	bh=fqxq6ETiBZdsvCAhwofkUWVdIzRN71nf0SFBLf8xv38=;
+	s=default; t=1566893766;
+	bh=zoZ7wu9PPhyAfaaWF3fMYsYbg80wjiSCDJEYLVog2go=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JECq0/YZeXgGz8OeMM0oEJDFy47jzBpLsdt+Nn+pGqEmAHAt29UlFmZsr6YHMnYYl
-	 AyybRAo3zrdtiy6fcjIVi4qR/g/XA8TVd9YOrnzfmdnyc19AMlEND99IH/g094EWpy
-	 GcDsBVVJBpCEWPc/VBnrJMgWp7MDFEG4Uj7rimd0=
+	b=jUwwP8b2wATywqB8TPB+kAldvceBel77mVzKZBUz2zVqDO5XtYDvGyzLL9OaTt5oL
+	 cNL489lXHJyfiZH3fcgSZTtNb7LsXFeXX36V6VkrO7OrsMoTW643ViqJJnzRLpYxM5
+	 nLH09h+OSrX1W9EuQRFy8knb247OWiPQaglkyxsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbfH0Hys (ORCPT
+        id S1730722AbfH0IQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:54:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46432 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:16:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730134AbfH0Hyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:54:44 -0400
+        id S1730081AbfH0Hyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:54:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02C1B2173E;
-        Tue, 27 Aug 2019 07:54:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8517E206BA;
+        Tue, 27 Aug 2019 07:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892483;
-        bh=fqxq6ETiBZdsvCAhwofkUWVdIzRN71nf0SFBLf8xv38=;
+        s=default; t=1566892475;
+        bh=zoZ7wu9PPhyAfaaWF3fMYsYbg80wjiSCDJEYLVog2go=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JuX1q6MY9GEfjbkc3g4qO2KMAWjue9VutdlBZDdTwGpOiSYpQYjTTz0baM5qDH9/L
-         2tE5/aQmpEE1F4Nk8uqFsbv9ucFowVNN/SDn5kPhkaYknN0NiaNtDflozoKg0XJ6z8
-         HMvSueGrnQufn4rBgHwPk2lOuq0tiN7JIgMAFa90=
+        b=gV4Tw/ey62rsYDqzoMYM7+R9/8T/8lkXE0GABHJyVsM5fAEozjfLUfZe7oU8yUwl0
+         vzMMxeiTdA8s+t5ZN8n6QbmMAk+iAVKctBSVnfrue42kjt2DReOZpfkPvvrUj97jfr
+         cUFWCHhGxeIcFZmG2Gn3ADF2UEYycjqseTozvbSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Trukhanov <lahvuun@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 01/98] HID: Add 044f:b320 ThrustMaster, Inc. 2 in 1 DT
-Date:   Tue, 27 Aug 2019 09:49:40 +0200
-Message-Id: <20190827072718.192470316@linuxfoundation.org>
+        stable@vger.kernel.org, benjamin.moody@gmail.com,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Salvatore Bonaccorso <carnil@debian.org>
+Subject: [PATCH 4.14 60/62] xfs: fix missing ILOCK unlock when xfs_setattr_nonsize fails due to EDQUOT
+Date:   Tue, 27 Aug 2019 09:51:05 +0200
+Message-Id: <20190827072703.922260797@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
-References: <20190827072718.142728620@linuxfoundation.org>
+In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
+References: <20190827072659.803647352@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,65 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 65f11c72780fa9d598df88def045ccb6a885cf80 ]
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Enable force feedback for the Thrustmaster Dual Trigger 2 in 1 Rumble Force
-gamepad. Compared to other Thrustmaster devices, left and right rumble
-motors here are swapped.
+commit 1fb254aa983bf190cfd685d40c64a480a9bafaee upstream.
 
-Signed-off-by: Ilya Trukhanov <lahvuun@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Benjamin Moody reported to Debian that XFS partially wedges when a chgrp
+fails on account of being out of disk quota.  I ran his reproducer
+script:
+
+# adduser dummy
+# adduser dummy plugdev
+
+# dd if=/dev/zero bs=1M count=100 of=test.img
+# mkfs.xfs test.img
+# mount -t xfs -o gquota test.img /mnt
+# mkdir -p /mnt/dummy
+# chown -c dummy /mnt/dummy
+# xfs_quota -xc 'limit -g bsoft=100k bhard=100k plugdev' /mnt
+
+(and then as user dummy)
+
+$ dd if=/dev/urandom bs=1M count=50 of=/mnt/dummy/foo
+$ chgrp plugdev /mnt/dummy/foo
+
+and saw:
+
+================================================
+WARNING: lock held when returning to user space!
+5.3.0-rc5 #rc5 Tainted: G        W
+------------------------------------------------
+chgrp/47006 is leaving the kernel with locks still held!
+1 lock held by chgrp/47006:
+ #0: 000000006664ea2d (&xfs_nondir_ilock_class){++++}, at: xfs_ilock+0xd2/0x290 [xfs]
+
+...which is clearly caused by xfs_setattr_nonsize failing to unlock the
+ILOCK after the xfs_qm_vop_chown_reserve call fails.  Add the missing
+unlock.
+
+Reported-by: benjamin.moody@gmail.com
+Fixes: 253f4911f297 ("xfs: better xfs_trans_alloc interface")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Tested-by: Salvatore Bonaccorso <carnil@debian.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hid/hid-tmff.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ fs/xfs/xfs_iops.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hid/hid-tmff.c b/drivers/hid/hid-tmff.c
-index bea8def64f437..30b8c3256c991 100644
---- a/drivers/hid/hid-tmff.c
-+++ b/drivers/hid/hid-tmff.c
-@@ -34,6 +34,8 @@
+--- a/fs/xfs/xfs_iops.c
++++ b/fs/xfs/xfs_iops.c
+@@ -789,6 +789,7 @@ xfs_setattr_nonsize(
  
- #include "hid-ids.h"
- 
-+#define THRUSTMASTER_DEVICE_ID_2_IN_1_DT	0xb320
-+
- static const signed short ff_rumble[] = {
- 	FF_RUMBLE,
- 	-1
-@@ -88,6 +90,7 @@ static int tmff_play(struct input_dev *dev, void *data,
- 	struct hid_field *ff_field = tmff->ff_field;
- 	int x, y;
- 	int left, right;	/* Rumbling */
-+	int motor_swap;
- 
- 	switch (effect->type) {
- 	case FF_CONSTANT:
-@@ -112,6 +115,13 @@ static int tmff_play(struct input_dev *dev, void *data,
- 					ff_field->logical_minimum,
- 					ff_field->logical_maximum);
- 
-+		/* 2-in-1 strong motor is left */
-+		if (hid->product == THRUSTMASTER_DEVICE_ID_2_IN_1_DT) {
-+			motor_swap = left;
-+			left = right;
-+			right = motor_swap;
-+		}
-+
- 		dbg_hid("(left,right)=(%08x, %08x)\n", left, right);
- 		ff_field->value[0] = left;
- 		ff_field->value[1] = right;
-@@ -238,6 +248,8 @@ static const struct hid_device_id tm_devices[] = {
- 		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb304),   /* FireStorm Dual Power 2 (and 3) */
- 		.driver_data = (unsigned long)ff_rumble },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, THRUSTMASTER_DEVICE_ID_2_IN_1_DT),   /* Dual Trigger 2-in-1 */
-+		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb323),   /* Dual Trigger 3-in-1 (PC Mode) */
- 		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb324),   /* Dual Trigger 3-in-1 (PS3 Mode) */
--- 
-2.20.1
-
+ out_cancel:
+ 	xfs_trans_cancel(tp);
++	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+ out_dqrele:
+ 	xfs_qm_dqrele(udqp);
+ 	xfs_qm_dqrele(gdqp);
 
 
