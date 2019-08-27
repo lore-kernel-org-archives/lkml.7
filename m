@@ -5,66 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A74BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4734C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35CC5206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:34:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TbRrANRI"
+	by mail.kernel.org (Postfix) with ESMTP id 8BCB120850
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566866233;
+	bh=4cCCW5gggmUhljpou2v4hYvgPA9Rk9c60MfxjAGdMY8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=wshKsJkVVJgcU/FL9xsxwHruGuutIJBSOEVlrFYhy2XtvErnOyfNENbI8xv5g6qXY
+	 oN9y/WvIVEVzNsKDg0Sfsx3WrvbN5QgQvVokWcHgyGUBT4YKcG47CzxKVqUPJ+7OXD
+	 piM4rmV+tzWeFbZo7ZAY6nAX87sCoSfMfqh6JQSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbfH0Aeg (ORCPT
+        id S1727994AbfH0AhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 20:34:36 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35673 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727994AbfH0Aef (ORCPT
+        Mon, 26 Aug 2019 20:37:12 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38052 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbfH0AhM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 20:34:35 -0400
-Received: by mail-pf1-f194.google.com with SMTP id d85so12921437pfd.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 17:34:35 -0700 (PDT)
+        Mon, 26 Aug 2019 20:37:12 -0400
+Received: by mail-io1-f68.google.com with SMTP id p12so42115089iog.5
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 17:37:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linuxfoundation.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3Vs+TQr7hHy2v8MzMkCOjJVcnNTmLTAgeFS/JpBulfo=;
-        b=TbRrANRIH92j2fSmCx5BdSbQOzmBU/XbqoZ7xd1Ww6AaUEz68WzvbdIanurUAl4uCi
-         TY5ohivdtzQn+XaVmJg6fPUKxrj24BAg74pSnwI7DkAuOrdvMiXXCrTy2hSlOyRnUj+6
-         wtSltIyQcEmY1aect58Y183r1a351O76l3nNE=
+        bh=BzeVAWovI9wNatL9dmXA8c77UhbonukUh6rmg5r+32k=;
+        b=RFd2pTJzpbhIHF6iGKKLVB6oA47DzUgxrLAPE7IxEi6UB3IZzHyhvbYooAtYVjcJWW
+         4DjCKMeysWFIR+5+ixOtvr0LuvkmTvkQfQRH2mCLNjECnJxVKcUAXiVoZ+ZTljt9wt+Q
+         sDuBx6JUPqc8uKtyJhA0TdgvqrzmEPubyW8eA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3Vs+TQr7hHy2v8MzMkCOjJVcnNTmLTAgeFS/JpBulfo=;
-        b=FZfovtVbMVdZJcoOggIgBqKXL0dW6W0ZrN1OsolWBUrxvmiuLP/o4+UrQxXhsfAub2
-         PKIVCFsGjFzOctfxcI9Bdjh9AOnpQBVJr6OPhVVkyA+DPFOcH4pJKS6nToec4XvPx5ki
-         oRC7tPwq2xDvS2ghtYJDNN17K/AkySF/cEdMkXecpwB9MqVM2dZ5loe7KXx2LfubUtCb
-         7O5BFdohtZzeRxBcUdVejRUODk56xRjMsoWILdPS3upkIAgvP0GkMcZA6oV0zW1ex8kS
-         A2PQw2yS1GAoldk0JFKsAnMp+nulYP9Uwtz6qA85ELgeU3ZaHlV8e5+Uqq8kmi3HB/Io
-         mc6g==
-X-Gm-Message-State: APjAAAX/tW/+lSkQz15qvPrGrhpzYL6OJ3RaOIwqCuV03/tRyEp1cDmM
-        M+nK1fmzjOQMrpI+Eq7FOYPZlQ==
-X-Google-Smtp-Source: APXvYqyXHySgZZYqvzNM28Yd+pRvNdNbnVHxIZpOA4FgrKCaNtwMUDuAlL2eCKLsx6jrUwC8C3dTJQ==
-X-Received: by 2002:a05:6a00:8e:: with SMTP id c14mr22563388pfj.241.1566866074901;
-        Mon, 26 Aug 2019 17:34:34 -0700 (PDT)
-Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
-        by smtp.gmail.com with ESMTPSA id a23sm9081429pfc.71.2019.08.26.17.34.32
+        bh=BzeVAWovI9wNatL9dmXA8c77UhbonukUh6rmg5r+32k=;
+        b=rnNkwbw+PBm7ujTM9y2z6RZOBqJnEiscaTAqCBoMNHVLf2eMo2NTT9y9tIHyQ74VyR
+         2tIG69Yf+ZdaHU3XYI2oIVdBrFNZJpmHL6LEfW/ipRUBtuAIr8tyXl9nCN7Are3CWJoo
+         YVwELS2ljgqdtn26OspenmPgHNB1NOPseMbM8IQCTg8mhkPJTqiBmpBZtSvgJJxkpbXP
+         gSb7HVmUo6Xj1/c919LY/cLISD8BbmG+mqN4+UroR+9iwiDRktESwfulcWhoTXLpeuBE
+         v9cMiI+T6omfuE5eNO6wKzlXbrt40jTz+62r/zkAZ17cVk4/J2ZXaM3kOyVe96MY4x4M
+         ms8w==
+X-Gm-Message-State: APjAAAXUiQr+/JmoLwDAuug8fOh5BIt9M03xUEfn9K4WpoQFXXDakydQ
+        yrSqkp7xGnpWA+/patVekFJcDQ==
+X-Google-Smtp-Source: APXvYqxc72IrPdBOQjJ7DSRNsqCKEkfC2oIBkrJ4CwrkYFZ/PDg3oRQ89onY+gSPvXLkKnSmphNiWw==
+X-Received: by 2002:a5d:9c12:: with SMTP id 18mr6327310ioe.48.1566866231264;
+        Mon, 26 Aug 2019 17:37:11 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id v23sm9995828ioh.58.2019.08.26.17.37.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 17:34:34 -0700 (PDT)
-From:   Nicolas Boichat <drinkcat@chromium.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wgong@codeaurora.org, Niklas Cassel <niklas.cassel@linaro.org>,
-        Alagu Sankar <alagusankar@silex-india.com>,
-        briannorris@chromium.org, tientzu@chromium.org
-Subject: [PATCH,RFC] ath10k: Fix skb->len (properly) in ath10k_sdio_mbox_rx_packet
-Date:   Tue, 27 Aug 2019 08:33:26 +0800
-Message-Id: <20190827003326.147452-1-drinkcat@chromium.org>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+        Mon, 26 Aug 2019 17:37:10 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     shuah@kernel.org, corbet@lwn.net
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dan.rue@linaro.org,
+        anders.roxell@linaro.org
+Subject: [PATCH v2] doc: kselftest: update for clarity on running kselftests in CI rings
+Date:   Mon, 26 Aug 2019 18:37:09 -0600
+Message-Id: <20190827003709.26950-1-skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,90 +75,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(not a formal patch, take this as a bug report for now, I can clean
-up depending on the feedback I get here)
+Update to add clarity and recommendations on running newer kselftests
+on older kernels vs. matching the kernel and kselftest revisions.
 
-There's at least 3 issues here, and the patch fixes 2/3 only, I'm not sure
-how/if 1 should be handled.
- 1. ath10k_sdio_mbox_rx_alloc allocating skb of a incorrect size (too
-    small)
- 2. ath10k_sdio_mbox_rx_packet calling skb_put with that incorrect size.
- 3. ath10k_sdio_mbox_rx_process_packet attempts to fixup the size, but
-    does not use proper skb_put commands to do so, so we end up with
-    a mismatch between skb->head + skb->tail and skb->data + skb->len.
+The recommendation is "Match kernel revision and kselftest."
 
-Let's start with 3, this is quite serious as this and causes corruptions
-in the TCP stack, as the stack tries to coalesce packets, and relies on
-skb->tail being correct (that is, skb_tail_pointer must point to the
-first byte _after_ the data): one must never manipulate skb->len
-directly.
-
-Instead, we need to use skb_put to allocate more space (which updates
-skb->len and skb->tail). But it seems odd to do that in
-ath10k_sdio_mbox_rx_process_packet, so I move the code to
-ath10k_sdio_mbox_rx_packet (point 2 above).
-
-However, there is still something strange (point 1 above), why is
-ath10k_sdio_mbox_rx_alloc allocating packets of the incorrect
-(too small?) size? What happens if the packet is bigger than alloc_len?
-Does this lead to corruption/lost data?
-
-Fixes: 8530b4e7b22bc3b ("ath10k: sdio: set skb len for all rx packets")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 ---
+Changes since v1: Fixed "WARNING: Title underline too short."
 
-One simple way to test this is this scriplet, that sends a lot of
-small packets over SSH:
-(for i in `seq 1 300`; do echo $i; sleep 0.1; done) | ssh $IP cat
+ Documentation/dev-tools/kselftest.rst | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-In my testing it rarely ever reach 300 without failure.
-
- drivers/net/wireless/ath/ath10k/sdio.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
-index 8ed4fbd8d6c3888..a9f5002863ee7bb 100644
---- a/drivers/net/wireless/ath/ath10k/sdio.c
-+++ b/drivers/net/wireless/ath/ath10k/sdio.c
-@@ -381,16 +381,14 @@ static int ath10k_sdio_mbox_rx_process_packet(struct ath10k *ar,
- 	struct ath10k_htc_hdr *htc_hdr = (struct ath10k_htc_hdr *)skb->data;
- 	bool trailer_present = htc_hdr->flags & ATH10K_HTC_FLAG_TRAILER_PRESENT;
- 	enum ath10k_htc_ep_id eid;
--	u16 payload_len;
- 	u8 *trailer;
- 	int ret;
+diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
+index 25604904fa6e..308506c5e8fa 100644
+--- a/Documentation/dev-tools/kselftest.rst
++++ b/Documentation/dev-tools/kselftest.rst
+@@ -12,6 +12,31 @@ write new tests using the framework on Kselftest wiki:
  
--	payload_len = le16_to_cpu(htc_hdr->len);
--	skb->len = payload_len + sizeof(struct ath10k_htc_hdr);
-+	/* TODO: Remove this? */
-+	WARN_ON(skb->len != le16_to_cpu(htc_hdr->len) + sizeof(*htc_hdr));
+ https://kselftest.wiki.kernel.org/
  
- 	if (trailer_present) {
--		trailer = skb->data + sizeof(*htc_hdr) +
--			  payload_len - htc_hdr->trailer_len;
-+		trailer = skb->data + skb->len - htc_hdr->trailer_len;
- 
- 		eid = pipe_id_to_eid(htc_hdr->eid);
- 
-@@ -637,8 +635,16 @@ static int ath10k_sdio_mbox_rx_packet(struct ath10k *ar,
- 	ret = ath10k_sdio_readsb(ar, ar_sdio->mbox_info.htc_addr,
- 				 skb->data, pkt->alloc_len);
- 	pkt->status = ret;
--	if (!ret)
-+	if (!ret) {
-+		/* Update actual length. */
-+		/* FIXME: This looks quite wrong, why is pkt->act_len not
-+		 * correct in the first place?
-+		 */
-+		struct ath10k_htc_hdr *htc_hdr =
-+			(struct ath10k_htc_hdr *)skb->data;
-+		pkt->act_len = le16_to_cpu(htc_hdr->len) + sizeof(*htc_hdr);
- 		skb_put(skb, pkt->act_len);
-+	}
- 
- 	return ret;
- }
++Recommendations on running kselftests in Continuous Integration test rings
++==========================================================================
++
++It is recommended that users run Kselftest from the same release. Running
++newer Kselftest on older kernels isn't recommended for the following
++reasons:
++
++- Kselftest from mainline and linux-next might not be stable enough to run
++  on stable kernels.
++- Kselftests detect feature dependencies at run-time and skip tests if a
++  feature and/or configuration they test aren't enabled. Running newer
++  tests on older kernels could result in a few too many skipped/failed
++  conditions. It becomes difficult to evaluate the results.
++- Newer tests provide better coverage. However, users should make a judgement
++  call on coverage vs. run to run consistency and being able to compare
++  run to run results on older kernels.
++
++Recommendations:
++
++Match kernel revision and kselftest. Especially important for LTS and
++Stable kernel Continuous Integration test rings.
++
++Hot-plug tests
++==============
++
+ On some systems, hot-plug tests could hang forever waiting for cpu and
+ memory to be ready to be offlined. A special hot-plug target is created
+ to run the full range of hot-plug tests. In default mode, hot-plug tests run
 -- 
-2.23.0.187.g17f5b7556c-goog
+2.20.1
 
