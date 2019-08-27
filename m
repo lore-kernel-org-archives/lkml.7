@@ -2,370 +2,227 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEF9C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCB5C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFE22173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD2B21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:57:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="wQmCwlqj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730387AbfH0Q5c (ORCPT
+        id S1730430AbfH0Q5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:57:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52900 "EHLO mx1.redhat.com"
+        Tue, 27 Aug 2019 12:57:35 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:39587 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728312AbfH0Q5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:57:31 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DEAFA2CD7E5
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 16:57:29 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id h8so11722454wrb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 09:57:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rMp18QmEXEm3RmyiKYH9h3RqcVFEjkhCb6Mue2DRRfA=;
-        b=ilHNEpb9uO1yWMuroKqavz/Awz/P51MX3QSgDKPNoxNRcrcT2zDZnGYL/z9rZM0o4X
-         odFuyMAruQyDJ4lqu6DLpIFlvsh5SEBks/uxiJXzzOmon33iUFQNxTMN5uxyNdIcBvAH
-         f8rjTPk5rn8G4WOJbTGOM/1c9UqOvC9WoQiXxzRGK99r+TNJ7vBZ7vXFTGRLT2vBi65h
-         2cXhyR0MpVslC3TusPi9P4oBEOqeIpQuIFeatKtLEzkSjv+JbUjhVMCHTCnQPtIejJJa
-         C1Fwp9Dc/roTTPgM4WpCF+4gfUsNTESxuK5PzEjojTrKq+sDCs0zeNmRkBhGQ+MT7ERv
-         Iucw==
-X-Gm-Message-State: APjAAAVUwVIvAJmB+4SJOCv3X+KUDHMkLGEQz7DTR+s/yst1CD2NMX/a
-        IqLVJ5t9tLLvuzUNef3KG27oNOsLjQVEsY71nK4npDqMsXUlI+J5l8MOJw1pudMye5rIlzDrh8k
-        jbgT4jV2xpQwMN4NwHQlU2/RJ
-X-Received: by 2002:adf:f008:: with SMTP id j8mr14850348wro.129.1566925048187;
-        Tue, 27 Aug 2019 09:57:28 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzwuQPdooZdjrLX4sTUTfQN3hVbY9Eld/Ln3ZzFlLGmKjh/nLSdRvG4GPEztqrgwSBpGWKAaQ==
-X-Received: by 2002:adf:f008:: with SMTP id j8mr14850315wro.129.1566925047921;
-        Tue, 27 Aug 2019 09:57:27 -0700 (PDT)
-Received: from ?IPv6:2a01:e0a:8d:b181::e71? ([2a01:e0a:8d:b181::e71])
-        by smtp.gmail.com with ESMTPSA id f134sm5276335wmg.20.2019.08.27.09.57.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Aug 2019 09:57:26 -0700 (PDT)
-Subject: Re: [PATCH] HID: apple: Fix stuck function keys when using FN
-To:     Benjamin Tissoires <benjamin.tissoires@gmail.com>,
-        =?UTF-8?Q?Jo=c3=a3o_Moreno?= <mail@joaomoreno.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <20190610213106.19342-1-mail@joaomoreno.com>
- <CAHxFc3QC147B6j4pBztjK7stLgCveeYhJWojai_SbKNbnpC9yw@mail.gmail.com>
- <CAO-hwJ+1FyaXj0iuCjvc5R-Kqdh6PNB7Un0ko1F_NV7-f5GMdw@mail.gmail.com>
- <CAHxFc3QJ1Xkgckt1BPptXT5S1xkROVdJzHTYT=GAcHXgm5UGqg@mail.gmail.com>
- <CAHxFc3TjZu7_u0U3ZoB466WGNzbfYLe4ZB7C4LuKdBAwkRum5Q@mail.gmail.com>
- <CAN+gG=H6O202SYXGbTG5rTMUt_X5dZyi02YFUquPaqL=FGHXwQ@mail.gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Message-ID: <bf759ce7-a0e1-0da8-ccd8-1925e5ccc184@redhat.com>
-Date:   Tue, 27 Aug 2019 18:57:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAN+gG=H6O202SYXGbTG5rTMUt_X5dZyi02YFUquPaqL=FGHXwQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1729861AbfH0Q5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:57:32 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46Hw605Gqjz9txtP;
+        Tue, 27 Aug 2019 18:57:28 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=wQmCwlqj; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 8NKQJN2SRvVl; Tue, 27 Aug 2019 18:57:28 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46Hw604C6xz9txsv;
+        Tue, 27 Aug 2019 18:57:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566925048; bh=PvXZzhxXa7Ew/PTb0WIWExhIvctSEcQMqLVe6+48jJI=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=wQmCwlqjT5o9SoPbO/35IWcuhh+wfUO6hQlYQbXQEA3aVtAfAseXwfRJ6AZk4Cpm0
+         9p0gSAvQTNIA7PwoNo3JwINbY7jJDs18wvY2Vym+3x10GQ9u37zQNtxDDMyJGnNaW3
+         SS3+jt/FIVqJqpI5lpud9YYDbim/sEmeqJIignRc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4E16F8B847;
+        Tue, 27 Aug 2019 18:57:30 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id yq6dtAxUHZAM; Tue, 27 Aug 2019 18:57:30 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0D1B18B842;
+        Tue, 27 Aug 2019 18:57:30 +0200 (CEST)
+Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id DE510696EA; Tue, 27 Aug 2019 16:57:29 +0000 (UTC)
+Message-Id: <1ed0de54ce6021fa0fdf50e938365546a4f5e316.1566925030.git.christophe.leroy@c-s.fr>
+In-Reply-To: <b1142845c040b9702d1609d5ec473d97595dc0c3.1566925029.git.christophe.leroy@c-s.fr>
+References: <b1142845c040b9702d1609d5ec473d97595dc0c3.1566925029.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 2/2] powerpc/hw_breakpoints: Rewrite 8xx breakpoints to allow
+ any address range size.
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        ravi.bangoria@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 27 Aug 2019 16:57:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi João,
+Unlike standard powerpc, Powerpc 8xx doesn't have SPRN_DABR, but
+it has a breakpoint support based on a set of comparators which
+allow more flexibility.
 
-On 8/12/19 6:57 PM, Benjamin Tissoires wrote:
-> Hi João,
-> 
-> On Thu, Aug 8, 2019 at 10:35 PM João Moreno <mail@joaomoreno.com> wrote:
->>
->> Hi Benjamin,
->>
->> On Mon, 8 Jul 2019 at 22:35, João Moreno <mail@joaomoreno.com> wrote:
->>>
->>> Hi Benjamin,
->>>
->>> No worries, also pretty busy over here. Didn't mean to press.
->>>
->>> On Mon, 1 Jul 2019 at 10:32, Benjamin Tissoires
->>> <benjamin.tissoires@redhat.com> wrote:
->>>>
->>>> Hi João,
->>>>
->>>> On Sun, Jun 30, 2019 at 10:15 PM João Moreno <mail@joaomoreno.com> wrote:
->>>>>
->>>>> Hi Jiri & Benjamin,
->>>>>
->>>>> Let me know if you need something else to get this patch moving forward. This
->>>>> fixes an issue I hit daily, it would be great to get it fixed.
->>>>
->>>> Sorry for the delay, I am very busy with internal corporate stuff, and
->>>> I tried setting up a new CI system at home, and instead of spending a
->>>> couple of ours, I am down to 2 weeks of hard work, without possibility
->>>> to switch to the new right now :(
->>>> Anyway.
->>>>
->>>>>
->>>>> Thanks.
->>>>>
->>>>> On Mon, 10 Jun 2019 at 23:31, Joao Moreno <mail@joaomoreno.com> wrote:
->>>>>>
->>>>>> This fixes an issue in which key down events for function keys would be
->>>>>> repeatedly emitted even after the user has raised the physical key. For
->>>>>> example, the driver fails to emit the F5 key up event when going through
->>>>>> the following steps:
->>>>>> - fnmode=1: hold FN, hold F5, release FN, release F5
->>>>>> - fnmode=2: hold F5, hold FN, release F5, release FN
->>>>
->>>> Ouch :/
->>>>
->>>
->>> Right?!
->>>
->>>>>>
->>>>>> The repeated F5 key down events can be easily verified using xev.
->>>>>>
->>>>>> Signed-off-by: Joao Moreno <mail@joaomoreno.com>
->>>>>> ---
->>>>>>  drivers/hid/hid-apple.c | 21 +++++++++++----------
->>>>>>  1 file changed, 11 insertions(+), 10 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
->>>>>> index 1cb41992aaa1..81867a6fa047 100644
->>>>>> --- a/drivers/hid/hid-apple.c
->>>>>> +++ b/drivers/hid/hid-apple.c
->>>>>> @@ -205,20 +205,21 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
->>>>>>                 trans = apple_find_translation (table, usage->code);
->>>>>>
->>>>>>                 if (trans) {
->>>>>> -                       if (test_bit(usage->code, asc->pressed_fn))
->>>>>> -                               do_translate = 1;
->>>>>> -                       else if (trans->flags & APPLE_FLAG_FKEY)
->>>>>> -                               do_translate = (fnmode == 2 && asc->fn_on) ||
->>>>>> -                                       (fnmode == 1 && !asc->fn_on);
->>>>>> +                       int fn_on = value ? asc->fn_on :
->>>>>> +                               test_bit(usage->code, asc->pressed_fn);
->>>>>> +
->>>>>> +                       if (!value)
->>>>>> +                               clear_bit(usage->code, asc->pressed_fn);
->>>>>> +                       else if (asc->fn_on)
->>>>>> +                               set_bit(usage->code, asc->pressed_fn);
->>>>
->>>> I have the feeling that this is not the correct fix here.
->>>>
->>>> I might be wrong, but the following sequence might also mess up the
->>>> driver state, depending on how the reports are emitted:
->>>> - hold FN, hold F4, hold F5, release F4, release FN, release F5
->>>>
->>>
->>> I believe this should be fine. Following the code:
->>>
->>> - hold FN, sets asc->fn_on to true
->>> - hold F4, in the trans block fn_on will be true and we'll set the F4
->>> bit in the bitmap
->>> - hold F5, in the trans block fn_on will be true and we'll set the F5 bit
->>> - release F4, in the trans block fn_on will be true (because of the bitmap) and
->>> we'll clear the F4 bit
->>> - release FN, asc->fn_on will be false, but it doesn't matter since...
->>> - release F5, in the trans block we'll look into the bitmap (instead
->>> of asc->fn_on),
->>> so fn_on will be true and we'll clear the F5 bit
->>>
->>> I tested it in practice using my changes:
->>>
->>> Interestingly the Apple keyboard doesn't seem to emit an even for F5 when F4 is
->>> pressed, seems like a hardware limitation. But F6 does work. So, when I execute
->>> these events in that order, everything works as it should: xev reports
->>> the following:
->>>
->>> KeyPress F4
->>> KeyPress F6
->>> KeyRelease F4
->>> KeyRelease F6
->>>
->>>> The reason is that the driver only considers you have one key pressed
->>>> with the modifier, and as the code changed its state based on the last
->>>> value.
->>>>
->>>
->>> I believe the bitmap takes care of storing the FN state per key press. The
->>> trick I did was to check on the global `asc->fn_on` state only when a key
->>> is pressed, but check on the bitmap instead when it's released.
->>>
->>> Let me know what you think. Am I missing something here?
->>>
->>> Cheers,
->>> João.
->>>
->>>> IMO a better fix would:
->>>>
->>>> - keep the existing `trans` mapping lookout
->>>> - whenever a `trans` mapping gets found:
->>>>   * get both translated and non-translated currently reported values
->>>> (`test_bit(keycode, input_dev->key)`)
->>>>   * if one of them is set to true, then consider the keycode to be the
->>>> one of the key (no matter fn_on)
->>>>     -> deal with `value` with the corrected keycode
->>>>   * if the key was not pressed:
->>>>     -> chose the keycode based on `fn_on` and `fnmode` states
->>>>     and report the key press event
->>>>
->>>> This should remove the nasty pressed_fn state which depends on the
->>>> other pressed keys.
->>>>
->>>> Cheers,
->>>> Benjamin
->>>>
->>>>>> +
->>>>>> +                       if (trans->flags & APPLE_FLAG_FKEY)
->>>>>> +                               do_translate = (fnmode == 2 && fn_on) ||
->>>>>> +                                       (fnmode == 1 && !fn_on);
->>>>>>                         else
->>>>>>                                 do_translate = asc->fn_on;
->>>>>>
->>>>>>                         if (do_translate) {
->>>>>> -                               if (value)
->>>>>> -                                       set_bit(usage->code, asc->pressed_fn);
->>>>>> -                               else
->>>>>> -                                       clear_bit(usage->code, asc->pressed_fn);
->>>>>> -
->>>>>>                                 input_event(input, usage->type, trans->to,
->>>>>>                                                 value);
->>>>>>
->>>>>> --
->>>>>> 2.19.1
->>>>>>
->>
->> Gave this another look and I still haven't found any issues, let me
->> know if you still
->> think I'm missing something. Thanks!
->>
-> 
-> OK, I am tempted to take the patch, but I'll need to add this as a
-> regression test in my test-suite. This is too complex that it can
-> easily break next time someone looks at it.
-> 
-> Can you send me the report descriptors of the device using
-> hid-recorder from hid-tools[0].
-> Ideally, if you can put the faulty sequence in the logs, that would
-> help writing down the use case.
-> 
+Commit 4ad8622dc548 ("powerpc/8xx: Implement hw_breakpoint")
+implemented breakpoints by emulating the DABR behaviour. It did
+this by setting one comparator the match 4 bytes at breakpoint address
+and the other comparator to match 4 bytes at breakpoint address + 4.
 
-I finally managed to get the regression tests up in
-https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/52
+Rewrite 8xx hw_breakpoint to make breakpoints match all addresses
+defined by the breakpoint address and length by making full use of
+comparators.
 
-This allowed me to better understand the code, and yes, for the F-keys,
-I could not find a faulty situation with your patch.
+Now, comparator E is set to match any address greater than breakpoint
+address minus one. Comparator F is set to match any address lower than
+breakpoint address plus breakpoint length.
 
-However, the same problem is happening with the arrow keys, as arrow up
-is translated to page up.
+When the breakpoint range starts at address 0, the breakpoint is set
+to match comparator F only. When the breakpoint range end at address
+0xffffffff, the breakpoint is set to match comparator E only.
+Otherwise the breakpoint is set to match comparator E and F.
 
-We *could* adapt your patch to solve this, but I find it really hard to understand.
+At the same time, use registers bit names instead of hardcode values.
 
-How about the following diff:
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 ---
-diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-index 81df62f48c4c..ef916c0f3c0b 100644
---- a/drivers/hid/hid-apple.c
-+++ b/drivers/hid/hid-apple.c
-@@ -54,7 +54,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
- struct apple_sc {
- 	unsigned long quirks;
- 	unsigned int fn_on;
--	DECLARE_BITMAP(pressed_fn, KEY_CNT);
- 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
- };
- 
-@@ -181,6 +180,8 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ arch/powerpc/include/asm/reg_8xx.h  | 14 ++++++++++
+ arch/powerpc/kernel/hw_breakpoint.c |  3 ++
+ arch/powerpc/kernel/process.c       | 55 ++++++++++++++++++++++---------------
+ 3 files changed, 50 insertions(+), 22 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/reg_8xx.h b/arch/powerpc/include/asm/reg_8xx.h
+index abc663c0f1db..98e97c22df8b 100644
+--- a/arch/powerpc/include/asm/reg_8xx.h
++++ b/arch/powerpc/include/asm/reg_8xx.h
+@@ -37,7 +37,21 @@
+ #define SPRN_CMPE	152
+ #define SPRN_CMPF	153
+ #define SPRN_LCTRL1	156
++#define   LCTRL1_CTE_GT		0xc0000000
++#define   LCTRL1_CTF_LT		0x14000000
++#define   LCTRL1_CRWE_RW	0x00000000
++#define   LCTRL1_CRWE_RO	0x00040000
++#define   LCTRL1_CRWE_WO	0x000c0000
++#define   LCTRL1_CRWF_RW	0x00000000
++#define   LCTRL1_CRWF_RO	0x00010000
++#define   LCTRL1_CRWF_WO	0x00030000
+ #define SPRN_LCTRL2	157
++#define   LCTRL2_LW0EN		0x80000000
++#define   LCTRL2_LW0LA_E	0x00000000
++#define   LCTRL2_LW0LA_F	0x04000000
++#define   LCTRL2_LW0LA_EandF	0x08000000
++#define   LCTRL2_LW0LADC	0x02000000
++#define   LCTRL2_SLW0EN		0x00000002
+ #ifdef CONFIG_PPC_8xx
+ #define SPRN_ICTRL	158
+ #endif
+diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
+index 28ad3171bb82..d8bd4dbef561 100644
+--- a/arch/powerpc/kernel/hw_breakpoint.c
++++ b/arch/powerpc/kernel/hw_breakpoint.c
+@@ -163,6 +163,9 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+ 	 */
+ 	if (!ppc_breakpoint_available())
+ 		return -ENODEV;
++	/* 8xx can setup a range without limitation */
++	if (IS_ENABLED(CONFIG_PPC_8xx))
++		return 0;
+ 	length_max = 8; /* DABR */
+ 	if (dawr_enabled()) {
+ 		length_max = 512 ; /* 64 doublewords */
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 8fc4de0d22b4..79e4f072a746 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -751,28 +751,6 @@ static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
+ 		mtspr(SPRN_DABRX, dabrx);
+ 	return 0;
+ }
+-#elif defined(CONFIG_PPC_8xx)
+-static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
+-{
+-	unsigned long addr = dabr & ~HW_BRK_TYPE_DABR;
+-	unsigned long lctrl1 = 0x90000000; /* compare type: equal on E & F */
+-	unsigned long lctrl2 = 0x8e000002; /* watchpoint 1 on cmp E | F */
+-
+-	if ((dabr & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_READ)
+-		lctrl1 |= 0xa0000;
+-	else if ((dabr & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_WRITE)
+-		lctrl1 |= 0xf0000;
+-	else if ((dabr & HW_BRK_TYPE_RDWR) == 0)
+-		lctrl2 = 0;
+-
+-	mtspr(SPRN_LCTRL2, 0);
+-	mtspr(SPRN_CMPE, addr);
+-	mtspr(SPRN_CMPF, addr + 4);
+-	mtspr(SPRN_LCTRL1, lctrl1);
+-	mtspr(SPRN_LCTRL2, lctrl2);
+-
+-	return 0;
+-}
+ #else
+ static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
  {
- 	struct apple_sc *asc = hid_get_drvdata(hid);
- 	const struct apple_key_translation *trans, *table;
-+	bool do_translate;
-+	u16 code = 0;
+@@ -793,6 +771,37 @@ static inline int set_dabr(struct arch_hw_breakpoint *brk)
+ 	return __set_dabr(dabr, dabrx);
+ }
  
- 	if (usage->code == KEY_FN) {
- 		asc->fn_on = !!value;
-@@ -189,8 +190,6 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
- 	}
- 
- 	if (fnmode) {
--		int do_translate;
--
- 		if (hid->product >= USB_DEVICE_ID_APPLE_WELLSPRING4_ANSI &&
- 				hid->product <= USB_DEVICE_ID_APPLE_WELLSPRING4A_JIS)
- 			table = macbookair_fn_keys;
-@@ -202,25 +201,33 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
- 		trans = apple_find_translation (table, usage->code);
- 
- 		if (trans) {
--			if (test_bit(usage->code, asc->pressed_fn))
--				do_translate = 1;
--			else if (trans->flags & APPLE_FLAG_FKEY)
--				do_translate = (fnmode == 2 && asc->fn_on) ||
--					(fnmode == 1 && !asc->fn_on);
--			else
--				do_translate = asc->fn_on;
--
--			if (do_translate) {
--				if (value)
--					set_bit(usage->code, asc->pressed_fn);
--				else
--					clear_bit(usage->code, asc->pressed_fn);
--
--				input_event(input, usage->type, trans->to,
--						value);
--
--				return 1;
-+			if (test_bit(trans->from, input->key))
-+				code = trans->from;
-+			if (test_bit(trans->to, input->key))
-+				code = trans->to;
++static inline int set_breakpoint_8xx(struct arch_hw_breakpoint *brk)
++{
++	unsigned long lctrl1 = LCTRL1_CTE_GT | LCTRL1_CTF_LT | LCTRL1_CRWE_RW |
++			       LCTRL1_CRWF_RW;
++	unsigned long lctrl2 = LCTRL2_LW0EN | LCTRL2_LW0LADC | LCTRL2_SLW0EN;
 +
-+			if (!code) {
-+				if (trans->flags & APPLE_FLAG_FKEY) {
-+					switch (fnmode) {
-+					case 1:
-+						do_translate = !asc->fn_on;
-+						break;
-+					case 2:
-+						do_translate = asc->fn_on;
-+						break;
-+					default:
-+						/* should never happen */
-+						do_translate = false;
-+					}
-+				} else {
-+					do_translate = asc->fn_on;
-+				}
++	if (brk->address == 0)
++		lctrl2 |= LCTRL2_LW0LA_F;
++	else if (brk->address + brk->len == 0)
++		lctrl2 |= LCTRL2_LW0LA_E;
++	else
++		lctrl2 |= LCTRL2_LW0LA_EandF;
 +
-+				code = do_translate ? trans->to : trans->from;
- 			}
++	mtspr(SPRN_LCTRL2, 0);
 +
-+			input_event(input, usage->type, code, value);
-+			return 1;
- 		}
- 
- 		if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
----
++	if ((brk->type & HW_BRK_TYPE_RDWR) == 0)
++		return 0;
++
++	if ((brk->type & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_READ)
++		lctrl1 |= LCTRL1_CRWE_RO | LCTRL1_CRWF_RO;
++	if ((brk->type & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_WRITE)
++		lctrl1 |= LCTRL1_CRWE_WO | LCTRL1_CRWF_WO;
++
++	mtspr(SPRN_CMPE, brk->address - 1);
++	mtspr(SPRN_CMPF, brk->address + brk->len);
++	mtspr(SPRN_LCTRL1, lctrl1);
++	mtspr(SPRN_LCTRL2, lctrl2);
++
++	return 0;
++}
++
+ void __set_breakpoint(struct arch_hw_breakpoint *brk)
+ {
+ 	memcpy(this_cpu_ptr(&current_brk), brk, sizeof(*brk));
+@@ -800,6 +809,8 @@ void __set_breakpoint(struct arch_hw_breakpoint *brk)
+ 	if (dawr_enabled())
+ 		// Power8 or later
+ 		set_dawr(brk);
++	else if (IS_ENABLED(CONFIG_PPC_8xx))
++		set_breakpoint_8xx(brk);
+ 	else if (!cpu_has_feature(CPU_FTR_ARCH_207S))
+ 		// Power7 or earlier
+ 		set_dabr(brk);
+-- 
+2.13.3
 
-This is more or less what I suggested, minus the bug fixes.
-
-I find this easier to understand as the .pressed_fn field is not there
-anymore and we just rely on the actual state of the input subsystem.
-
-Comments?
-
-Cheers,
-Benjamin
-
-
-> Cheers,
-> Benjamin
-> 
-> [0] https://gitlab.freedesktop.org/libevdev/hid-tools
-> 
