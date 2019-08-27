@@ -2,194 +2,218 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC92C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A548C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38234206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A5F206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:43:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566917039;
+	bh=YYcpRPJ9ObMCi1TUYaeck+9yIfym9MWqOaqRL4NI7/4=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=IuksBYepfXpCowdqaC5zUhKHDqRqxhUayrUQsBozZS2ar0w1cfgbPV/rOZf0i+K7m
+	 0jFQWUlr3Od4RkreXDdgzWM2LQPvac5+xR4YQnAee0cbqw8Jf5Bk/r6jSJL81Wh5UM
+	 DrlnAT08D/k4t+JQgQw3SarkL1tLGkA0xsFKLhEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbfH0OnA (ORCPT
+        id S1730046AbfH0On6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:43:00 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:45869 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbfH0Om7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:42:59 -0400
-X-Originating-IP: 87.18.63.98
-Received: from uno.localdomain (unknown [87.18.63.98])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id CEF00C0003;
-        Tue, 27 Aug 2019 14:42:50 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 16:44:21 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Ulrich Hecht <uli+renesas@fpond.eu>
-Subject: Re: [PATCH v3 13/14] drm: rcar-du: kms: Update CMM in atomic commit
- tail
-Message-ID: <20190827144421.vbcoizfjxj5ashv2@uno.localdomain>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-14-jacopo+renesas@jmondi.org>
- <20190827000017.GB5274@pendragon.ideasonboard.com>
- <20190827001927.GA5926@pendragon.ideasonboard.com>
+        Tue, 27 Aug 2019 10:43:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbfH0On5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:43:57 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA2B8206BF;
+        Tue, 27 Aug 2019 14:43:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566917036;
+        bh=YYcpRPJ9ObMCi1TUYaeck+9yIfym9MWqOaqRL4NI7/4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cBiwjWnUXHcYFU3+QphcsfL72GFFmfOQGPRnuLrsHhJOcR6F78UmipUiaQI6iZm4D
+         qDQQmggQbuPN+9Oa5GSd4YSLI9mBcKtlNW/gxgg6DxdaRWnTbHQIYPJc3wu4OHjw+1
+         RgMxnG17Y2D37nVwjzKnXMFV7MqFcm11llSvwuts=
+Subject: Re: [PATCH v8] usbip: Implement SG support to vhci-hcd and stub
+ driver
+To:     Suwan Kim <suwan.kim027@gmail.com>, valentina.manea.m@gmail.com,
+        gregkh@linuxfoundation.org, stern@rowland.harvard.edu
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20190826172348.23353-1-suwan.kim027@gmail.com>
+ <d7bc3d7c-47a9-4b8c-ede2-2ed276fe2a77@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <9000ddaa-24f0-5c76-43a4-318f00ea31dc@kernel.org>
+Date:   Tue, 27 Aug 2019 08:43:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3m3cb2q7h77rk35u"
-Content-Disposition: inline
-In-Reply-To: <20190827001927.GA5926@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <d7bc3d7c-47a9-4b8c-ede2-2ed276fe2a77@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/27/19 8:38 AM, shuah wrote:
+> On 8/26/19 11:23 AM, Suwan Kim wrote:
+>> There are bugs on vhci with usb 3.0 storage device. In USB, each SG
+>> list entry buffer should be divisible by the bulk max packet size.
+>> But with native SG support, this problem doesn't matter because the
+>> SG buffer is treated as contiguous buffer. But without native SG
+>> support, USB storage driver breaks SG list into several URBs and the
+>> error occurs because of a buffer size of URB that cannot be divided
+>> by the bulk max packet size. The error situation is as follows.
+>>
+>> When USB Storage driver requests 31.5 KB data and has SG list which
+>> has 3584 bytes buffer followed by 7 4096 bytes buffer for some
+>> reason. USB Storage driver splits this SG list into several URBs
+>> because VHCI doesn't support SG and sends them separately. So the
+>> first URB buffer size is 3584 bytes. When receiving data from device,
+>> USB 3.0 device sends data packet of 1024 bytes size because the max
+>> packet size of BULK pipe is 1024 bytes. So device sends 4096 bytes.
+>> But the first URB buffer has only 3584 bytes buffer size. So host
+>> controller terminates the transfer even though there is more data to
+>> receive. So, vhci needs to support SG transfer to prevent this error.
+>>
+>> In this patch, vhci supports SG regardless of whether the server's
+>> host controller supports SG or not, because stub driver splits SG
+>> list into several URBs if the server's host controller doesn't
+>> support SG.
+>>
+>> To support SG, vhci sets URB_DMA_MAP_SG flag in transfer_flags of
+>> usbip header if URB has SG list and this flag will tell stub driver
+>> to use SG list.
+>>
+>> vhci sends each SG list entry to stub driver. Then, stub driver sees
+>> the total length of the buffer and allocates SG table and pages
+>> according to the total buffer length calling sgl_alloc(). After stub
+>> driver receives completed URB, it again sends each SG list entry to
+>> vhci.
+>>
+>> If the server's host controller doesn't support SG, stub driver
+>> breaks a single SG request into several URBs and submits them to
+>> the server's host controller. When all the split URBs are completed,
+>> stub driver reassembles the URBs into a single return command and
+>> sends it to vhci.
+>>
+>> Moreover, in the situation where vhci supports SG, but stub driver
+>> does not, or vice versa, usbip works normally. Because there is no
+>> protocol modification, there is no problem in communication between
+>> server and client even if the one has a kernel without SG support.
+>>
+>> In the case of vhci supports SG and stub driver doesn't, because
+>> vhci sends only the total length of the buffer to stub driver as
+>> it did before the patch applied, stub driver only needs to allocate
+>> the required length of buffers using only kmalloc() regardless of
+>> whether vhci supports SG or not. But stub driver has to allocate
+>> buffer with kmalloc() as much as the total length of SG buffer which
+>> is quite huge when vhci sends SG request, so it has overhead in
+>> buffer allocation in this situation.
+>>
+>> If stub driver needs to send data buffer to vhci because of IN pipe,
+>> stub driver also sends only total length of buffer as metadata and
+>> then sends real data as vhci does. Then vhci receive data from stub
+>> driver and store it to the corresponding buffer of SG list entry.
+>>
+>> And for the case of stub driver supports SG and vhci doesn't, since
+>> the USB storage driver checks that vhci doesn't support SG and sends
+>> the request to stub driver by splitting the SG list into multiple
+>> URBs, stub driver allocates a buffer for each URB with kmalloc() as
+>> it did before this patch.
+>>
+>> * Test environment
+>>
+>> Test uses two difference machines and two different kernel version
+>> to make mismatch situation between the client and the server where
+>> vhci supports SG, but stub driver does not, or vice versa. All tests
+>> are conducted in both full SG support that both vhci and stub support
+>> SG and half SG support that is the mismatch situation. Test kernel
+>> version is 5.3-rc6 with commit "usb: add a HCD_DMA flag instead of
+>> guestimating DMA capabilities" to avoid unnecessary DMA mapping and
+>> unmapping.
+>>
+>>   - Test kernel version
+>>      - 5.3-rc6 with SG support
+>>      - 5.1.20-200.fc29.x86_64 without SG support
+>>
+>> * SG support test
+>>
+>>   - Test devices
+>>      - Super-speed storage device - SanDisk Ultra USB 3.0
+>>      - High-speed storage device - SMI corporation USB 2.0 flash drive
+>>
+>>   - Test description
+>>
+>> Test read and write operation of mass storage device that uses the
+>> BULK transfer. In test, the client reads and writes files whose size
+>> is over 1G and it works normally.
+>>
+>> * Regression test
+>>
+>>   - Test devices
+>>      - Super-speed device - Logitech Brio webcam
+>>      - High-speed device  - Logitech C920 HD Pro webcam
+>>      - Full-speed device  - Logitech bluetooth mouse
+>>                           - Britz BR-Orion speaker
+>>      - Low-speed device   - Logitech wired mouse
+>>
+>>   - Test description
+>>
+>> Moving and click test for mouse. To test the webcam, use gnome-cheese.
+>> To test the speaker, play music and video on the client. All works
+>> normally.
+>>
+>> * VUDC compatibility test
+>>
+>> VUDC also works well with this patch. Tests are done with two USB
+>> gadget created by CONFIGFS USB gadget. Both use the BULK pipe.
+>>
+>>          1. Serial gadget
+>>          2. Mass storage gadget
+>>
+>>   - Serial gadget test
+>>
+>> Serial gadget on the host sends and receives data using cat command
+>> on the /dev/ttyGS<N>. The client uses minicom to communicate with
+>> the serial gadget.
+>>
+>>   - Mass storage gadget test
+>>
+>> After connecting the gadget with vhci, use "dd" to test read and
+>> write operation on the client side.
+>>
+>> Read  - dd if=/dev/sd<N> iflag=direct of=/dev/null bs=1G count=1
+>> Write - dd if=<my file path> iflag=direct of=/dev/sd<N> bs=1G count=1
+>>
+>> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+>> ---
+>> v7 - v8
+>> - Modify the commit log which describes URB_DMA_MAP_SG flag setting.
+>>
+>> v6 - v7
+>> - Move the flag set in setup_cmd_submit_pdu() of vhci_tx.c and
+>>    manipulate usbip header flag instead of urb->transfer_flags.
+>>
+>> - Remove clearing URB_DMA_MAP_SG flag in vhci_rx.
+> 
+> setup_cmd_submit_pdu() is just for pdu and shouldn't be concerned
+> about the urb.
+> 
+> Please keep the URB_DMA_MAP_SG setting in urb->transfer_flags.
+> That mean you are restoring v6 code change with the commit log
+> updates from v8.
+> 
 
---3m3cb2q7h77rk35u
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+I mean v6 with my comments on v6 addressed, moving setting the flag
+after kalloc() and other comments.
 
-HI Laurent,
+thanks,
+-- Shuah
 
-On Tue, Aug 27, 2019 at 03:19:27AM +0300, Laurent Pinchart wrote:
-> On Tue, Aug 27, 2019 at 03:00:17AM +0300, Laurent Pinchart wrote:
-> > Hi Jacopo,
-> >
-> > Thank you for the patch.
-> >
-> > On Sun, Aug 25, 2019 at 03:51:53PM +0200, Jacopo Mondi wrote:
-> > > Update CMM settings at in the atomic commit tail helper method.
-> > >
-> > > The CMM is updated with new gamma values provided to the driver
-> > > in the GAMMA_LUT blob property.
-> > >
-> > > Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > ---
-> > >  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 35 +++++++++++++++++++++++++++
-> > >  1 file changed, 35 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > > index 61ca1d3c379a..047fdb982a11 100644
-> > > --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > > +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > > @@ -22,6 +22,7 @@
-> > >  #include <linux/of_platform.h>
-> > >  #include <linux/wait.h>
-> > >
-> > > +#include "rcar_cmm.h"
-> > >  #include "rcar_du_crtc.h"
-> > >  #include "rcar_du_drv.h"
-> > >  #include "rcar_du_encoder.h"
-> > > @@ -368,6 +369,37 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
-> > >   * Atomic Check and Update
-> > >   */
-> > >
-> > > +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
-> > > +					     struct drm_crtc_state *old_state)
-> > > +{
-> > > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-> > > +	struct rcar_cmm_config cmm_config = {};
-> > > +
-> > > +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
-> > > +		return;
-> > > +
-> > > +	if (!crtc->state->gamma_lut) {
-> > > +		cmm_config.lut.enable = false;
-> > > +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> > > +
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	cmm_config.lut.enable = true;
-> > > +	cmm_config.lut.table = (struct drm_color_lut *)
-> > > +			       crtc->state->gamma_lut->data;
-> > > +
-> > > +	/* Set LUT table size to 0 if entries should not be updated. */
-> > > +	if (!old_state->gamma_lut ||
-> > > +	    old_state->gamma_lut->base.id != crtc->state->gamma_lut->base.id)
-> > > +		cmm_config.lut.size = crtc->state->gamma_lut->length
-> > > +				    / sizeof(cmm_config.lut.table[0]);
-> >
-> > It has just occurred to me that the hardware only support LUTs of
-
-Where did you find this strict requirement ? I have tried programming
-less than 256 entries in the 1-D LUT table, and it seems to me things
-are working fine (from a visual inspection of the output image, I
-don't see much differences from when I program the full table, maybe
-that's an indication something is bad?)
-
-Thanks
-   j
-> > exactly 256 entries. Should we remove cmm_config.lut.size (simplifying
-> > the code in the CMM driver), and add a check to the CRTC .atomic_check()
-> > handler to reject invalid LUTs ? Sorry for not having caught this
-> > earlier.
->
-> Just an additional comment, if we drop the size field, then the
-> cmm_config.lut.table pointer should be set to NULL when the LUT contents
-> don't need to be updated.
->
-> > > +	else
-> > > +		cmm_config.lut.size = 0;
-> > > +
-> > > +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> > > +}
-> > > +
-> > >  static int rcar_du_atomic_check(struct drm_device *dev,
-> > >  				struct drm_atomic_state *state)
-> > >  {
-> > > @@ -410,6 +442,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
-> > >  			rcdu->dpad1_source = rcrtc->index;
-> > >  	}
-> > >
-> > > +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
-> > > +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
-> > > +
-> > >  	/* Apply the atomic update. */
-> > >  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
-> > >  	drm_atomic_helper_commit_planes(dev, old_state,
-> >
-> > --
-> > Regards,
-> >
-> > Laurent Pinchart
->
-> --
-> Regards,
->
-> Laurent Pinchart
-
---3m3cb2q7h77rk35u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1lQcUACgkQcjQGjxah
-VjzMqRAAvjI1dIl75COJM8s3AwAk9V/Sl1o3l0ttHp1a6JrSakhJCJidsuH29+GC
-XbkCLizR1XSBa2yrfWyAPtFlltJjO35+iypOc73L7OI9tBFyIar7dsRDeCzQ853N
-U26ToA5f9JCvHHAMyc6NJzzqWpp1QkkT2GPJmxavvyvhi0k4zHRvNMhkKmUfq/XS
-vGGV/3q96JTPnHy+loaMRiasMhwt7Ow2SwTgjLlvwQy7v+bFxqXfPGTp+1ovUVxg
-6FUccyq3e2CWH/sL2hcTomIUj4efvnhI5rHZ/pmayxmi++TeUPiZ+qQDZfGVU1hQ
-9R6kUWBgZahFStAeqU4k3Hum4xklB77oeKeB9ndV5IgHzVE+5mpvdQMTYV4bkltT
-KKkleHPtb8CH2Fqm+cu1Odake+iXOWKmjWtsVyAe81GCt80DjdzE01IlPnuuqxP4
-aLS5Q1SAOLN1Z7EiBCU62JyBVB2vl6teH42yD8Y48ctU+0wtLuQ6tS1J8xVAdiQ0
-SdB+gFIHa1skyA4KVR8DxOkaucO2ldAhHLSj0pLKKeR29Ojp9HjfmpJpb/Z+cFYA
-Px2v0e4l/HGXEAvNEr2Glrss6a/Znz4qledwHJBYNDTgp9WqFnD5+1dDWJK0dzOJ
-mS6b+uN5iNbHTQ1TSDDDkAxryETL+mUDPIN1Gnxfq5H5X+NTo08=
-=RTB1
------END PGP SIGNATURE-----
-
---3m3cb2q7h77rk35u--
