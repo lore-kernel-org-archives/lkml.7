@@ -2,79 +2,140 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327B8C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A68C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1462A206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E83DC206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:33:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDT6L9KH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729516AbfH0Mby (ORCPT
+        id S1728807AbfH0MdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:31:54 -0400
-Received: from protonic.xs4all.nl ([83.163.252.89]:52918 "EHLO protonic.nl"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726140AbfH0Mbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:31:52 -0400
-Received: from erd987.prtnl (erd987.prtnl [192.168.237.3])
-        by sparta (Postfix) with ESMTP id 8694B44A00C5;
-        Tue, 27 Aug 2019 14:33:48 +0200 (CEST)
-From:   Robin van der Gracht <robin@protonic.nl>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel @ lists . infradead . org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>,
-        "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        Robin van der Gracht <robin@protonic.nl>
-Subject: [PATCH v2 2/2] arm: dts: imx6qdl: snvs-pwrkey: Change compatible string
-Date:   Tue, 27 Aug 2019 14:32:16 +0200
-Message-Id: <20190827123216.32728-2-robin@protonic.nl>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190827123216.32728-1-robin@protonic.nl>
-References: <20190827123216.32728-1-robin@protonic.nl>
+        Tue, 27 Aug 2019 08:33:20 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36332 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfH0MdT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 08:33:19 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l21so12621181pgm.3;
+        Tue, 27 Aug 2019 05:33:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eLpuR9eRgxYeI49WIr/DhspGOopwmemU6oZ7y4W2wxE=;
+        b=NDT6L9KHNjR1GCoCxK1ZeypCroDAPTE9Xdbr9iwV5pnx2Iw3K2qiOkdU1O+7fEKxSG
+         AHJ0Y2O77FZQ8BcfNtiTAXFJZGtNXJDfM2nYSSDXzfbOe6SYWDkaqmDw4/FMQNDR1MuB
+         RUNGxcGSefzzagY2RfSHmRiVJpfQum72TScMtfnkvTWC19QpCao8tznI0seHahBJH3pE
+         muxHfuh+rxQwYcfWDmxEnw36LJgHQU3yQYWIQlgkNbS1PVcBsQjIj0aO1zykAqKn4uDS
+         AJHnOyT4ioAHBZSNWqzmy4MrOjx8Xog8B0FLqtfH5H0tTEnRs/xao3lAXKbPB6i8BUkA
+         JP8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eLpuR9eRgxYeI49WIr/DhspGOopwmemU6oZ7y4W2wxE=;
+        b=CiLPRIItLCQTpsiz3yJHqqmILDs3lhF46GTh1ldAb963QrwaX6Bsz2YRHPLuP5LjNN
+         VhUx95c+HjEc9jMDmmu38UtoSqoFM9ikI2FB7EH4SovpXH+9QZakw0zwDE5KO+dRusoM
+         4TYbe0EptJhO2o+73hubdXK4FKGxNw45OHzVHMtNIf4nzn2fllB5GxVnZEPwRw2E5OlB
+         gmsWCNWl4+Ax9rS4tl4zsd0qpGSoJmp/LoFPQEKfheH4hZfGtoxrNtsX3ap7/SHEB2br
+         DlyJZlMKIysffJzpvgr7Bc5cBDTzZjQtQHRnUATBuA2qb7DzWluExN+KhdEaY9QI9Riz
+         2IBA==
+X-Gm-Message-State: APjAAAUBmaKIM9ld6Oiyqt4Xrs4xLbmnnT39YTA0w9f3mSBxbm+8i+MJ
+        OAtXIh1MEAMec2Cxr8P8cENzKyZcV4YIYqwYcPI=
+X-Google-Smtp-Source: APXvYqxrik847aPLhiBBi7qMgRzNGcEy1mVw8hFjeVmPyk+8dhmq87qvJI5sFKcfJsvyZPHCCkIVKQwVF30hG+3Czqs=
+X-Received: by 2002:aa7:8219:: with SMTP id k25mr11889026pfi.72.1566909198804;
+ Tue, 27 Aug 2019 05:33:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190819131737.26942-1-Tianyu.Lan@microsoft.com>
+ <87ftlnm7o8.fsf@vitty.brq.redhat.com> <CAOLK0pzXPG9tBnQoKGTSNHMwXXrEQ4zZH1uWn2F2mQ2ddVcoFA@mail.gmail.com>
+In-Reply-To: <CAOLK0pzXPG9tBnQoKGTSNHMwXXrEQ4zZH1uWn2F2mQ2ddVcoFA@mail.gmail.com>
+From:   Tianyu Lan <lantianyu1986@gmail.com>
+Date:   Tue, 27 Aug 2019 20:33:08 +0800
+Message-ID: <CAOLK0pwfxhsZN66dU2DE=qb1Y7mnVVjOCxYJP3Fi7kKgjoOFcw@mail.gmail.com>
+Subject: Re: [PATCH V3 0/3] KVM/Hyper-V: Add Hyper-V direct tlb flush support
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm <kvm@vger.kernel.org>,
+        linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        "linux-kernel@vger kernel org" <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>, corbet@lwn.net,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        michael.h.kelley@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The older imx6 SoCs do not send a power key press interrupt, instead it
-sends a power down request interrupt when the key is released between
-750ms and 5 seconds. The driver uses a different compatible string to ID
-the older SoCs.
+On Tue, Aug 27, 2019 at 8:17 PM Tianyu Lan <lantianyu1986@gmail.com> wrote:
+>
+> On Tue, Aug 27, 2019 at 2:41 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+> >
+> > lantianyu1986@gmail.com writes:
+> >
+> > > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> > >
+> > > This patchset is to add Hyper-V direct tlb support in KVM. Hyper-V
+> > > in L0 can delegate L1 hypervisor to handle tlb flush request from
+> > > L2 guest when direct tlb flush is enabled in L1.
+> > >
+> > > Patch 2 introduces new cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH to enable
+> > > feature from user space. User space should enable this feature only
+> > > when Hyper-V hypervisor capability is exposed to guest and KVM profile
+> > > is hided. There is a parameter conflict between KVM and Hyper-V hypercall.
+> > > We hope L2 guest doesn't use KVM hypercall when the feature is
+> > > enabled. Detail please see comment of new API
+> > > "KVM_CAP_HYPERV_DIRECT_TLBFLUSH"
+> >
+> > I was thinking about this for awhile and I think I have a better
+> > proposal. Instead of adding this new capability let's enable direct TLB
+> > flush when KVM guest enables Hyper-V Hypercall page (writes to
+> > HV_X64_MSR_HYPERCALL) - this guarantees that the guest doesn't need KVM
+> > hypercalls as we can't handle both KVM-style and Hyper-V-style
+> > hypercalls simultaneously and kvm_emulate_hypercall() does:
+> >
+> >         if (kvm_hv_hypercall_enabled(vcpu->kvm))
+> >                 return kvm_hv_hypercall(vcpu);
+> >
+> > What do you think?
+> >
+> > (and instead of adding the capability we can add kvm.ko module parameter
+> > to enable direct tlb flush unconditionally, like
+> > 'hv_direct_tlbflush=-1/0/1' with '-1' being the default (autoselect
+> > based on Hyper-V hypercall enablement, '0' - permanently disabled, '1' -
+> > permanenetly enabled)).
+> >
+>
+> Hi Vitaly::
+>      Actually, I had such idea before. But user space should check
+> whether hv tlb flush
+> is exposed to VM before enabling direct tlb flush. If no, user space
+> should not direct
+> tlb flush for guest since Hyper-V will do more check for each
+> hypercall from nested
+> VM with enabling the feauter..
+>
+Fix the line break.Sorry for noise.
 
-Signed-off-by: Robin van der Gracht <robin@protonic.nl>
+Actually, I had such idea before. But user space should check
+whether hv tlb flush is exposed to VM before enabling direct tlb
+flush. If no, user space should not direct tlb flush for guest since
+Hyper-V will do more check for each hypercall from nested VM
+with enabling the feauter..
 ---
- arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index b3a77bcf00d5..91b97816881c 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -836,7 +836,7 @@
- 				};
- 
- 				snvs_pwrkey: snvs-powerkey {
--					compatible = "fsl,sec-v4.0-pwrkey";
-+					compatible = "fsl,imx6qdl-snvs-pwrkey";
- 					regmap = <&snvs>;
- 					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
- 					linux,keycode = <KEY_POWER>;
--- 
-2.20.1
-
+Best regards
+Tianyu Lan
