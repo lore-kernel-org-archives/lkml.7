@@ -2,171 +2,155 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2B4C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F050C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE6F206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:08:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566911325;
-	bh=AX+JitzJv+K315th2SOy3YtH0VY/SuXeid3kXFuhBUE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VmioHSN7OOPAb1Y/Zv69CJsv4O+S1eNDBwvUAgm1qmAhx5CVGTcI8kmMlvsN0S2c0
-	 5Ow8Ksu3v2zdXS4uwsrCUVZt6n3Bwmlc+Q3SygPzUqjvrUg8kq7EtME6tC9QjKhnKS
-	 ATBYUyGm36EZz5HoIw6a57OS2e96UF1gyVsE4OlU=
+	by mail.kernel.org (Postfix) with ESMTP id 574902077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:08:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="LSEXvsMX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbfH0NIo (ORCPT
+        id S1730016AbfH0NI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:08:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfH0NIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:08:44 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0E162077B;
-        Tue, 27 Aug 2019 13:08:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566911322;
-        bh=AX+JitzJv+K315th2SOy3YtH0VY/SuXeid3kXFuhBUE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CVsC+VDz2ihD4Mm+zIR+ySHxwO7R1ZjnAzMQBd0WbP8AxoP3TW692VdRMOtny23nQ
-         i1IG4nuhZKuFC2N0Yzym8iHftvKzrHoYTuO/7QSdEcngeW+eCrW9qVfLHhEeritQHM
-         7AEWsOIy+0N/pS+Xu4XcFCkCig/nUYCXppx0/CfA=
-Received: by mail-qt1-f176.google.com with SMTP id v38so21203993qtb.0;
-        Tue, 27 Aug 2019 06:08:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAX5OSsNMdf6xww7g8TCrm+aF8ZUgNgNLKeo9N1sUzxwf1Mvs3DQ
-        db+UJaFtptexgVQQN08a4YigpqhbCHa2XNg60g==
-X-Google-Smtp-Source: APXvYqwcXXM593kwWwoazOnu4lDw8LvX4m7hSKGd+f3fLIf8Vsa2X9oW7XZK9KrseUocOJeq32tPVRdHaNWYgMDFrio=
-X-Received: by 2002:ad4:4050:: with SMTP id r16mr20016450qvp.200.1566911321782;
- Tue, 27 Aug 2019 06:08:41 -0700 (PDT)
+        Tue, 27 Aug 2019 09:08:57 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45188 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727784AbfH0NI5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:08:57 -0400
+Received: by mail-pl1-f194.google.com with SMTP id y8so11786188plr.12
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 06:08:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fLKzn2mA80Hl5wtgJKSE5GefgidMmtcVKTEdAzrb1ys=;
+        b=LSEXvsMXS1osnScXKbxTi3fKBv18wI+PDW4Nvq2+kpZ3c9bx+EpsaBZrkNHCXomYC2
+         Oe+FabRp5243tsTmll1xu7EaOxuiawnzHzCpgy+Zm+DAuhzTdvReeHr3qeARxOrso8SH
+         dEE3JRh/qDZ7MAM8FstRQ5DjpXQ6g5RNi2LBU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fLKzn2mA80Hl5wtgJKSE5GefgidMmtcVKTEdAzrb1ys=;
+        b=efvkmv4gd1xJAUnXHX/YrMfl1BLRZXMZmPKYz5P9n0ZNM1vZxPF8i0TL/avi2Dov28
+         NtxYatArLifAYwwSU0JcacpmoDUH9JDB9EVZtdDQQQPQgPShXGiQWlBA66T3xPXefEh9
+         +91c5NcyHd88Nw+EsBqWqIXEm74TpNGY6Bi4rXNUhqVpf5nczdkh19zv8QGZYWQ+Rcq5
+         d2m/v+mW2p6GLsU8StJ+omG1m0p+xXnXz8XQcHsVGwDV9gvL59Ir42lpOSo003cN7e5v
+         2tIfPf6Ksm4K8jUBcIIvz9MmkZGagMn2scidVu899QOPtHp/K+20TS9UMdGi35elI1J4
+         egqg==
+X-Gm-Message-State: APjAAAUSEdUKUpAWxNWkI2WvWLW4yx9gIqDtytq5rFo5yaEk3YRMlgx1
+        z5foybRdWqkte5YD070CZzgCcg==
+X-Google-Smtp-Source: APXvYqzVB3vgR7JI2pMvsQbXOE2X3fasVmErUkh3HU5QGZ4MSD3bPdstKmA4ZesoUGssLrOqQ+uK4A==
+X-Received: by 2002:a17:902:a706:: with SMTP id w6mr9131523plq.166.1566911335938;
+        Tue, 27 Aug 2019 06:08:55 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 138sm16233198pfw.78.2019.08.27.06.08.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 06:08:55 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 09:08:53 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Scott Wood <swood@redhat.com>, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v2 2/3] sched: migrate_enable: Use sleeping_lock to
+ indicate involuntary sleep
+Message-ID: <20190827130853.GB132568@google.com>
+References: <20190821231906.4224-1-swood@redhat.com>
+ <20190821231906.4224-3-swood@redhat.com>
+ <20190823162024.47t7br6ecfclzgkw@linutronix.de>
+ <433936e4c720e6b81f9b297fefaa592fd8a961ad.camel@redhat.com>
+ <20190824031014.GB2731@google.com>
+ <20190826152523.dcjbsgyyir4zjdol@linutronix.de>
+ <20190826162945.GE28441@linux.ibm.com>
+ <20190827092333.jp3darw7teyyw67g@linutronix.de>
 MIME-Version: 1.0
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com> <20190827085302.5197-6-jiaxun.yang@flygoat.com>
-In-Reply-To: <20190827085302.5197-6-jiaxun.yang@flygoat.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 27 Aug 2019 08:08:30 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+aEOPOvRr8c-umqwKdVi=WMXL=fufeDCj2+87P69tLgQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+aEOPOvRr8c-umqwKdVi=WMXL=fufeDCj2+87P69tLgQ@mail.gmail.com>
-Subject: Re: [PATCH 05/13] dt-bindings: interrupt-controller: Add Loongson-3 IOINTC
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.co>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827092333.jp3darw7teyyw67g@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 4:00 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> Document Loongson-3 I/O Interrupt controller.
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  .../loongson,ls3-iointc.yaml                  | 61 +++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-iointc.yaml
->
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-iointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-iointc.yaml
-> new file mode 100644
-> index 000000000000..cc6ac8b2cd7c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-iointc.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: GPL-2.0
+On Tue, Aug 27, 2019 at 11:23:33AM +0200, Sebastian Andrzej Siewior wrote:
+[snip]
+> > However, if this was instead an rcu_read_lock() critical section within
+> > a PREEMPT=y kernel, then if a schedule() occured within stop_one_task(),
+> > RCU would consider that critical section to be preempted.  This means
+> > that any RCU grace period that is blocked by this RCU read-side critical
+> > section would remain blocked until stop_one_cpu() resumed, returned,
+> > and so on until the matching rcu_read_unlock() was reached.  In other
+> > words, RCU would consider that RCU read-side critical section to span
+> > the call to stop_one_cpu() even if stop_one_cpu() invoked schedule().
+> 
+> Isn't that my example from above and what we do in RT? My understanding
+> is that this is the reason why we need BOOST on RT otherwise the RCU
+> critical section could remain blocked for some time.
 
-Dual license please.
+Not just for boost, it is needed to block the grace period itself on
+PREEMPT=y. On PREEMPT=y, if rcu_note_context_switch() happens in middle of a
+rcu_read_lock() reader section, then the task is added to a blocked list
+(rcu_preempt_ctxt_queue). Then just after that, the CPU reports a QS state
+(rcu_qs()) as you can see in the PREEMPT=y implementation of
+rcu_note_context_switch(). Even though the CPU has reported a QS, the grace
+period will not end because the preempted (or block as could be in -rt) task
+is still blocking the grace period. This is fundamental to the function of
+Preemptible-RCU where there is the concept of tasks blocking a grace period,
+not just CPUs.
 
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/interrupt-controller/loongson,ls3-iointc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Loongson-3 I/O Interrupt Controller
-> +
-> +maintainers:
-> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-> +
-> +description: |
-> +  This interrupt controller is found in the Loongson-3 family of chips as the primary
-> +  package interrupt source which can route interrupt to interrupt line of cores.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - loongson,ls3-iointc
+I think what Paul is trying to explain AIUI (Paul please let me know if I
+missed something):
 
-Same comment here.
+(1) Anyone calling rcu_note_context_switch() and expecting it to respect
+RCU-readers that are readers as a result of interrupt disabled regions, have
+incorrect expectations. So calling rcu_note_context_switch() has to be done
+carefully.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  'loongson,map-ip':
-> +    description:
-> +      The interrupt line it's going to map to.
+(2) Disabling interrupts is "generally" implied as an RCU-sched flavor
+reader. However, invoking rcu_note_context_switch() from a disabled interrupt
+region is *required* for rcu_note_context_switch() to work correctly.
 
-I don't understand. Needs a better description.
+(3) On PREEMPT=y kernels, invoking rcu_note_context_switch() from an
+interrupt disabled region does not mean that that the task will be added to a
+blocked list (unless it is also in an RCU-preempt reader) so
+rcu_note_context_switch() may immediately report a quiescent state and
+nothing blockings the grace period.
+So callers of rcu_note_context_switch() must be aware of this behavior.
 
-> +    allOf:
+(4) On PREEMPT=n, unlike PREEMPT=y, there is no blocked list handling and so
+nothing will block the grace period once rcu_note_context_switch() is called.
+So any path calling rcu_note_context_switch() on a PREEMPT=n kernel, in the
+middle of something that is expected to be an RCU reader would be really bad
+from an RCU view point.
 
-You need to define the type here with a $ref.
+Probably, we should add this all to documentation somewhere.
+
+thanks!
+
+ - Joel
 
 
-> +      - maximum: 5
-> +        minimum: 0
-> +
-> +  'loongson,map-core':
-> +    description:
-> +      The core it's going to map to.
-
-There's 1 interrupt ctrlr per core or what?
-
-> +    allOf:
-> +      - maximum: 5
-> +        minimum: 0
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-
-Add a:
-
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    iointc: interrupt-controller@3ff01400 {
-> +        compatible = "loongson,ls3-io-intc";
-> +        reg = <0x3ff01400 0x60>;
-> +        interrupts = <2>;
-> +        loongson,map-ip = <0>;
-> +        loongson,map-core = <0>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +    };
-> --
-> 2.22.0
->
+> > On the other hand, within a PREEMPT=n kernel, the call to schedule()
+> > would split even an rcu_read_lock() critical section.  Which is why I
+> > asked earlier if sleeping_lock_inc() and sleeping_lock_dec() are no-ops
+> > in !PREEMPT_RT_BASE kernels.  We would after all want the usual lockdep
+> > complaints in that case.
+> 
+> sleeping_lock_inc() +dec() is only RT specific. It is part of RT's
+> spin_lock() implementation and used by RCU (rcu_note_context_switch())
+> to not complain if invoked within a critical section.
+> 
+> > Does that help, or am I missing the point?
+> > 
+> > 							Thanx, Paul
+> Sebastian
