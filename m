@@ -2,107 +2,118 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9D3C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA369C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD2620656
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81465214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:49:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="odoHgBQy"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="eV1MNaGv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730008AbfH0Pti (ORCPT
+        id S1729896AbfH0Pti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 27 Aug 2019 11:49:38 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:34468 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728939AbfH0Pti (ORCPT
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42974 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbfH0Pti (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 27 Aug 2019 11:49:38 -0400
-Received: by mail-yb1-f194.google.com with SMTP id u68so8401312ybg.1;
-        Tue, 27 Aug 2019 08:49:37 -0700 (PDT)
+Received: by mail-qt1-f194.google.com with SMTP id t12so21763699qtp.9
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 08:49:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KOl4P8fEhyJyP94iweeG6SBzjgS5BlmzdNYIdasCoOo=;
-        b=odoHgBQygTqmk0h2RGHB9TWZjEnGg1AeVHfM8kOnedBoGC8Vx5LzqU4JJNd9pT9DVW
-         A5TnD6OKeBXIzQogPjongByt11zwP641YMCnDCiGE14GB/ud/wkHc/Z6sQCuSr0jXzYt
-         TQGQfzru4a0xUVBElded01BhK1ICXza6o1sKNQdGFWvWf33y/M/Rq/iIo6f4aXv+zydO
-         0+Rsg4YhHPVHat80ry3dmkWJqOh7/S4IghnUt/g/fbDYVhF/zvYo9aMMehplhE1yIRo0
-         k7aJVf2DeADLvPy/zButBi+2r7Xke2X58KZrfZjGteJT0EMP3JVUbwQtF1HI/7Vshh9q
-         7JiA==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6pvvgSgM9CbdJfaBulsERf+5+2yHIplcG96TA5AmISw=;
+        b=eV1MNaGvP7HxNr2esjzckKmVddzEK3y7o8MIrme4Sno04F5ZbnmCDdt1jLLqed8T5x
+         v8iKIaKUtUSGNbnyxxGyzJTxXIdBzWKlSZ43Rq/9Pf/2vqnR7w6zd5p2saeIKtEBqatg
+         7QPDCEirLtYTsISXIpTvmiTHySnITzmN4dNvB8krvT5hS/7nNJZ3v7+QmSq5Pibvohgm
+         CpMRJRA0VPZalQ50kXT4KXcDPiaXdp4FPv+qqHfIy7wCv4kbh8HHCgg1Usu2Wrn9CtEo
+         XlaAy3fyNDYxZWCkeR6goHFSLQNbXq93U3RQhpcIcV7vri4KHtCVJoVOtjwHjAOFcsfK
+         10kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KOl4P8fEhyJyP94iweeG6SBzjgS5BlmzdNYIdasCoOo=;
-        b=X/WJzXK9l4/6vlDAnDJDxN/duzjhGcweYp4ISi2ZUp+rcwwCurdWkwbxaHUpsS8tzw
-         e/xUDOnhAIlwDXlzxDdqfSuXSQ2xSoNxPrQ559zaRSxje5utzVn86+UyKkzbL+yX+h4/
-         9vEynNDCI+7qxpnCrdeQVmhiG1CHjiBwecb4V9R8AisvzQS9262AGGYcZv/VkIfMke96
-         uEOBCu1nlhwRLB9DG8SYnPqN3B8lHadvWF3O4xpP1CB0iqa5Y20kFlN2U2i93lDi/YJL
-         av8Cjzk5IQemiiJ/BYKosMrSer+6WP9vhDG/2fFtuNT3C8aIoCg+HaWhnKv/KaIY17Fu
-         wr4w==
-X-Gm-Message-State: APjAAAUPJW5RJEXdtxsPme8jEFSdCCuq9755CQeHSuVwAIlU6CCC1c7s
-        OHwTz2uZR1cltcPmmvDVh+Sp8arai2yoktGVRAo=
-X-Google-Smtp-Source: APXvYqy6kt9gml6gMwc9quYeL/HHSyZ3mvLqPYueqyBIWcN1ZKJ00Sr+VEZK+aDYvviLbNPte2oSGIuYZ0nc28oiIu8=
-X-Received: by 2002:a25:5d0b:: with SMTP id r11mr17672976ybb.256.1566920977141;
- Tue, 27 Aug 2019 08:49:37 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6pvvgSgM9CbdJfaBulsERf+5+2yHIplcG96TA5AmISw=;
+        b=Vr/3j88gl02/XJp271TepIX9DTYn+emit7FWhEPZHeRlwn5ZKejQ9yByyGIENU93Tz
+         P5rsvAafUZpdhQggfczH9aZFQahswU5nCjZxKoUC0K5MFEDyT+0hkNxy7vkIJhtpF1j7
+         IsQHl3P5fGs3r5ldnV+9AQhsk4pEnQvajVq+JSzde5GXqRWUfuPKRbHNO8GkA1pcGgKM
+         mL8shIxk09jdTG6iIqbu9GMWVimEHK21vFMwdF3NqQvIA7jovgJynKMLT5Wkj5M3sZ8u
+         5GB4HtZcFFHY3stACtLLJAZcdLRWgh0vXsccesFXO5OmLeeE0ZLyGGsZEPA2+OkIIpy4
+         N2zg==
+X-Gm-Message-State: APjAAAVLlWv2hw8AFqFS3j13h/aaIyhvnXb5ndKhDTfvQIVcYDuBg25x
+        skIbDeocmnfnavKxNXu+fidoCA==
+X-Google-Smtp-Source: APXvYqyu/DYHXP5pxPrBOc9TAqxSuEjtwU6gt2+NCviFunNPjMYicGGmamfkRX2Rl60RbuNuhl7oWg==
+X-Received: by 2002:ac8:24ce:: with SMTP id t14mr24042841qtt.246.1566920977057;
+        Tue, 27 Aug 2019 08:49:37 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-216-168.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.216.168])
+        by smtp.gmail.com with ESMTPSA id u187sm8745056qkh.110.2019.08.27.08.49.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 27 Aug 2019 08:49:36 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1i2dix-0003vR-SQ; Tue, 27 Aug 2019 12:49:35 -0300
+Date:   Tue, 27 Aug 2019 12:49:35 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     leon@kernel.org, Doug Ledford <dledford@redhat.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH] IB/mlx5: Convert to use vm_map_pages_zero()
+Message-ID: <20190827154935.GD7149@ziepe.ca>
+References: <1566713247-23873-1-git-send-email-jrdr.linux@gmail.com>
+ <20190825194354.GC21239@ziepe.ca>
+ <CAFqt6za5uUSKLMn0E25M1tYG853tpdE-kcoUYHdmby5s4d0JKg@mail.gmail.com>
+ <20190826122055.GA27349@ziepe.ca>
+ <CAFqt6zbTm7jA692-Ta9c5rxKoJyMUz2UPBpYGGs69wRtU=itpw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190826081752.57258-1-kkamagui@gmail.com> <CACdnJutomLNthYDzEc0wFBcBHK5iqnk0p-hkAkp57zQZ38oGPA@mail.gmail.com>
- <20190827124707.yhqtaqa4ur6i45h7@linux.intel.com>
-In-Reply-To: <20190827124707.yhqtaqa4ur6i45h7@linux.intel.com>
-From:   Seunghun Han <kkamagui@gmail.com>
-Date:   Wed, 28 Aug 2019 00:49:26 +0900
-Message-ID: <CAHjaAcT_9Rgbb2P29vfGjq49jLnsBXZtuJi7Ae4doD36abWFZg@mail.gmail.com>
-Subject: Re: [PATCH] x86: tpm: Remove a busy bit of the NVS area for
- supporting AMD's fTPM
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Matthew Garrett <mjg59@google.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFqt6zbTm7jA692-Ta9c5rxKoJyMUz2UPBpYGGs69wRtU=itpw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> On Mon, Aug 26, 2019 at 10:40:25AM -0700, Matthew Garrett wrote:
-> > On Mon, Aug 26, 2019 at 1:18 AM Seunghun Han <kkamagui@gmail.com> wrote:
-> > > To support AMD's fTPM, I removed the busy bit from the ACPI NVS area like
-> > > the reserved area so that AMD's fTPM regions could be assigned in it.
+On Tue, Aug 27, 2019 at 01:48:57AM +0530, Souptick Joarder wrote:
+> On Mon, Aug 26, 2019 at 5:50 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
 > >
-> > drivers/acpi/nvs.c saves and restores the contents of NVS regions, and
-> > if other drivers use these regions without any awareness of this then
-> > things may break. I'm reluctant to say that just unilaterally marking
-> > these regions as available is a good thing, but it's clearly what's
-> > expected by AMD's implementation. One approach would be to have a
-> > callback into the nvs code to indicate that a certain region should be
-> > handed off to a driver, which would ensure that we can handle this on
-> > a case by case basis?
->
-> What if E820 would just have a small piece of code just for fTPM's e.g.
-> it would check the ACPI tree for fTPM's and ignore TPM regions.
->
-> /Jarkko
+> > On Mon, Aug 26, 2019 at 01:32:09AM +0530, Souptick Joarder wrote:
+> > > On Mon, Aug 26, 2019 at 1:13 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > >
+> > > > On Sun, Aug 25, 2019 at 11:37:27AM +0530, Souptick Joarder wrote:
+> > > > > First, length passed to mmap is checked explicitly against
+> > > > > PAGE_SIZE.
+> > > > >
+> > > > > Second, if vma->vm_pgoff is passed as non zero, it would return
+> > > > > error. It appears like driver is expecting vma->vm_pgoff to
+> > > > > be passed as 0 always.
+> > > >
+> > > > ? pg_off is not zero
+> > >
+> > > Sorry, I mean, driver has a check against non zero to return error -EOPNOTSUPP
+> > > which means in true scenario driver is expecting vma->vm_pgoff should be passed
+> > > as 0.
+> >
+> > get_index is masking vm_pgoff, it is not 0
+> 
+> Sorry, I missed this part. Further looking into code,
+> in mlx5_ib_mmap(), vma_vm_pgoff is used to get command and
+> inside mlx5_ib_mmap_clock_info_page() entire *dev->mdev->clock_info*
+> is mapped.
+> 
+> Consider that, the below modification will only take care of vma length
+> error check inside vm_map_pages_zero() and an extra check for vma
+> length is not needed.
 
-It seems that it is possible. However, the memory layout is set by
-enumerating e820 table and ACPI table in order, and the memory regions
-are typically added and overlapped to the existing memory layout. I
-also worry about the direct interaction between the e820 table and
-ACPI table. As I know, they have no straightforward interface or
-relationship. So, if we make the code for identifying fTPM regions in
-ACPI table and write it to e820 code, we would meet other problems
-like "acpi=off" kernel option.
+What is the point of vm_map_pages_zero() Is there some reason we should
+prefer it for mapping a single page?
 
-In my view, it is natural that ACPI NVS allows device drivers to
-assign some regions in it if the hardware reports the regions there.
-
-Seunghun
+Jason
