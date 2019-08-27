@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE0CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61260C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4EE2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38A652173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892360;
-	bh=V1T2FamzhMWmbIN+x5SXn0ar1Ks6oD9mnMmDqzKgv44=;
+	s=default; t=1566892363;
+	bh=3htwOyT7gj/2/HR4EphNQ7N5LbhlPmyp74pPeOdykV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nSYXhirIe/jLJIBpROvbIjnt5V2IroSC4p3Rpd0ctaujihOxxP1YozJhD8fxdTAwX
-	 tPfI/oJ6OkLw9mGBO6Nbk/ps9RWBnn+sfKQJR+c7naglmpzuzjWsQukW1r2M+YEsv7
-	 UFIoGdEdp5G6C4tImBTCIcqmormlHl4dWFHsMJaE=
+	b=KTWSXjn7tSRmweF8OjKk+8ZZj+p7n1C0R5D8znf9rl7RXNM8IRO2X7G6NTUcj/SwF
+	 rZWGpJOaBv02a1Tk9sTjSA7toIFuzo49FOprL8o0AL/od6r6OeDA29TAuPfKfKfCX+
+	 n/ApOPbv7Xz+oAED0yOb2UqQJkpfHgH/gWK+sdjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbfH0Hwj (ORCPT
+        id S1729559AbfH0Hwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:52:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43996 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:52:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729487AbfH0Hwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:52:35 -0400
+        id S1729512AbfH0Hwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:52:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 832972173E;
-        Tue, 27 Aug 2019 07:52:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 666CB2173E;
+        Tue, 27 Aug 2019 07:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892354;
-        bh=V1T2FamzhMWmbIN+x5SXn0ar1Ks6oD9mnMmDqzKgv44=;
+        s=default; t=1566892356;
+        bh=3htwOyT7gj/2/HR4EphNQ7N5LbhlPmyp74pPeOdykV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0BvVJSTDneWC6SgqDOiMuSqlZRmOBkdQ2WBOJ07y3dpaaunOCeGgsP5v+zkqborbp
-         cGSRuLiu/eihrx+8zI86wEf6ZDjc5xSY98SWKisZUFDsBZPlmXwGy6xQmmACTvANfZ
-         jnHyD1AXymkLIY124xiJwuveoW1gUzS2kZ778zP4=
+        b=orU6brb7RXIzGcG6ebqfrDTflnh842WmwgBjO4GFOolTNU3WWdw19PPOXmzpX5uuh
+         1k5KmoyU5zcQhalYgHpTQMaX5Jgre6QVM2rh9flNO+SF0AVINAOW7G9EYTyjqVMBGM
+         qzDH4/eXMq/IoFKTjW4/+h99HPcvcVeD44l4AmhQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 09/62] st21nfca_connectivity_event_received: null check the allocation
-Date:   Tue, 27 Aug 2019 09:50:14 +0200
-Message-Id: <20190827072700.876426554@linuxfoundation.org>
+Subject: [PATCH 4.14 27/62] net: hisilicon: Fix dma_map_single failed on arm64
+Date:   Tue, 27 Aug 2019 09:50:32 +0200
+Message-Id: <20190827072702.038855544@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -61,30 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9891d06836e67324c9e9c4675ed90fc8b8110034 ]
+[ Upstream commit 96a50c0d907ac8f5c3d6b051031a19eb8a2b53e3 ]
 
-devm_kzalloc may fail and return null. So the null check is needed.
+On the arm64 platform, executing "ifconfig eth0 up" will fail,
+returning "ifconfig: SIOCSIFFLAGS: Input/output error."
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+ndev->dev is not initialized, dma_map_single->get_dma_ops->
+dummy_dma_ops->__dummy_map_page will return DMA_ERROR_CODE
+directly, so when we use dma_map_single, the first parameter
+is to use the device of platform_device.
+
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/st21nfca/se.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/nfc/st21nfca/se.c b/drivers/nfc/st21nfca/se.c
-index 3a98563d4a121..eac608a457f03 100644
---- a/drivers/nfc/st21nfca/se.c
-+++ b/drivers/nfc/st21nfca/se.c
-@@ -326,6 +326,8 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index b04fb82d7fa3e..1bfe9544b3c10 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -157,6 +157,7 @@ struct hip04_priv {
+ 	unsigned int reg_inten;
  
- 		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
- 						   skb->len - 2, GFP_KERNEL);
-+		if (!transaction)
-+			return -ENOMEM;
+ 	struct napi_struct napi;
++	struct device *dev;
+ 	struct net_device *ndev;
  
- 		transaction->aid_len = skb->data[1];
- 		memcpy(transaction->aid, &skb->data[2],
+ 	struct tx_desc *tx_desc;
+@@ -387,7 +388,7 @@ static int hip04_tx_reclaim(struct net_device *ndev, bool force)
+ 		}
+ 
+ 		if (priv->tx_phys[tx_tail]) {
+-			dma_unmap_single(&ndev->dev, priv->tx_phys[tx_tail],
++			dma_unmap_single(priv->dev, priv->tx_phys[tx_tail],
+ 					 priv->tx_skb[tx_tail]->len,
+ 					 DMA_TO_DEVICE);
+ 			priv->tx_phys[tx_tail] = 0;
+@@ -437,8 +438,8 @@ static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 		return NETDEV_TX_BUSY;
+ 	}
+ 
+-	phys = dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
+-	if (dma_mapping_error(&ndev->dev, phys)) {
++	phys = dma_map_single(priv->dev, skb->data, skb->len, DMA_TO_DEVICE);
++	if (dma_mapping_error(priv->dev, phys)) {
+ 		dev_kfree_skb(skb);
+ 		return NETDEV_TX_OK;
+ 	}
+@@ -508,7 +509,7 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
+ 			goto refill;
+ 		}
+ 
+-		dma_unmap_single(&ndev->dev, priv->rx_phys[priv->rx_head],
++		dma_unmap_single(priv->dev, priv->rx_phys[priv->rx_head],
+ 				 RX_BUF_SIZE, DMA_FROM_DEVICE);
+ 		priv->rx_phys[priv->rx_head] = 0;
+ 
+@@ -537,9 +538,9 @@ refill:
+ 		buf = netdev_alloc_frag(priv->rx_buf_size);
+ 		if (!buf)
+ 			goto done;
+-		phys = dma_map_single(&ndev->dev, buf,
++		phys = dma_map_single(priv->dev, buf,
+ 				      RX_BUF_SIZE, DMA_FROM_DEVICE);
+-		if (dma_mapping_error(&ndev->dev, phys))
++		if (dma_mapping_error(priv->dev, phys))
+ 			goto done;
+ 		priv->rx_buf[priv->rx_head] = buf;
+ 		priv->rx_phys[priv->rx_head] = phys;
+@@ -642,9 +643,9 @@ static int hip04_mac_open(struct net_device *ndev)
+ 	for (i = 0; i < RX_DESC_NUM; i++) {
+ 		dma_addr_t phys;
+ 
+-		phys = dma_map_single(&ndev->dev, priv->rx_buf[i],
++		phys = dma_map_single(priv->dev, priv->rx_buf[i],
+ 				      RX_BUF_SIZE, DMA_FROM_DEVICE);
+-		if (dma_mapping_error(&ndev->dev, phys))
++		if (dma_mapping_error(priv->dev, phys))
+ 			return -EIO;
+ 
+ 		priv->rx_phys[i] = phys;
+@@ -678,7 +679,7 @@ static int hip04_mac_stop(struct net_device *ndev)
+ 
+ 	for (i = 0; i < RX_DESC_NUM; i++) {
+ 		if (priv->rx_phys[i]) {
+-			dma_unmap_single(&ndev->dev, priv->rx_phys[i],
++			dma_unmap_single(priv->dev, priv->rx_phys[i],
+ 					 RX_BUF_SIZE, DMA_FROM_DEVICE);
+ 			priv->rx_phys[i] = 0;
+ 		}
+@@ -822,6 +823,7 @@ static int hip04_mac_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	priv = netdev_priv(ndev);
++	priv->dev = d;
+ 	priv->ndev = ndev;
+ 	platform_set_drvdata(pdev, ndev);
+ 	SET_NETDEV_DEV(ndev, &pdev->dev);
 -- 
 2.20.1
 
