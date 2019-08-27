@@ -7,43 +7,44 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D914CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56406C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B79B92053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 371EB2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731037AbfH0I2M (ORCPT
+        id S1729530AbfH0I0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:28:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42745 "EHLO
+        Tue, 27 Aug 2019 04:26:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42706 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729650AbfH0I0Y (ORCPT
+        with ESMTP id S1727306AbfH0I0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:26:24 -0400
+        Tue, 27 Aug 2019 04:26:20 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2Wnp-0007lf-9r; Tue, 27 Aug 2019 10:26:09 +0200
+        id 1i2Wnt-0007nU-Su; Tue, 27 Aug 2019 10:26:14 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D960B1C07DC;
-        Tue, 27 Aug 2019 10:26:08 +0200 (CEST)
-Date:   Tue, 27 Aug 2019 08:26:08 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 86C021C07DC;
+        Tue, 27 Aug 2019 10:26:13 +0200 (CEST)
+Date:   Tue, 27 Aug 2019 08:26:13 -0000
 From:   tip-bot2 for Arnaldo Carvalho de Melo <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf cpumap: No need to include perf.h, ditch it
+Subject: [tip: perf/core] perf sort: Remove needless headers from sort.h,
+ provide fwd struct decls
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-x10p8slllqkn3fc3bntjx3n0@git.kernel.org>
-References: <tip-x10p8slllqkn3fc3bntjx3n0@git.kernel.org>
+In-Reply-To: <tip-u63el2vqsovsmnhebx1rcixo@git.kernel.org>
+References: <tip-u63el2vqsovsmnhebx1rcixo@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <156689436858.24464.4817200125392462890.tip-bot2@tip-bot2>
+Message-ID: <156689437339.24487.57241566156068084.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,38 +61,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     29e331176da121db22daa5dd9d72533b6a1efb33
-Gitweb:        https://git.kernel.org/tip/29e331176da121db22daa5dd9d72533b6a1efb33
+Commit-ID:     185bcb92c80eae2d85ec834ea76a144fd163e2af
+Gitweb:        https://git.kernel.org/tip/185bcb92c80eae2d85ec834ea76a144fd163e2af
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Thu, 22 Aug 2019 14:26:31 -03:00
+AuthorDate:    Thu, 22 Aug 2019 17:11:39 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 26 Aug 2019 08:36:25 -03:00
+CommitterDate: Mon, 26 Aug 2019 11:58:29 -03:00
 
-perf cpumap: No need to include perf.h, ditch it
+perf sort: Remove needless headers from sort.h, provide fwd struct decls
 
->From a quick look this was never needed and just polluted the build,
-needlessly making things including cpumap.h to be rebuild if perf.h or
-anything it includes gets changed.
+Reducing the includes hell a bit more, speeding up the build and
+avoiding needless rebuilds when just one of those files gets updated.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-x10p8slllqkn3fc3bntjx3n0@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-u63el2vqsovsmnhebx1rcixo@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cpumap.h | 2 --
- 1 file changed, 2 deletions(-)
+ tools/perf/ui/browsers/res_sample.c |  2 ++
+ tools/perf/ui/browsers/scripts.c    |  2 ++
+ tools/perf/ui/stdio/hist.c          |  1 +
+ tools/perf/util/callchain.c         |  1 +
+ tools/perf/util/sort.h              | 15 ++-------------
+ 5 files changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index d0c5bbf..c2519e7 100644
---- a/tools/perf/util/cpumap.h
-+++ b/tools/perf/util/cpumap.h
-@@ -7,8 +7,6 @@
- #include <internal/cpumap.h>
- #include <perf/cpumap.h>
+diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
+index 08897bd..41a9d89 100644
+--- a/tools/perf/ui/browsers/res_sample.c
++++ b/tools/perf/ui/browsers/res_sample.c
+@@ -6,6 +6,8 @@
+ #include "sort.h"
+ #include "config.h"
+ #include "time-utils.h"
++#include "../util.h"
++#include "../../util/util.h"
+ #include <linux/time64.h>
+ #include <linux/zalloc.h>
  
--#include "perf.h"
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index 04f9aff..f2fd9f0 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -1,5 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include "../../builtin.h"
+ #include "../../util/sort.h"
++#include "../../util/util.h"
+ #include "../../util/hist.h"
+ #include "../../util/debug.h"
+ #include "../../util/symbol.h"
+diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
+index ee7ea6d..51ed675 100644
+--- a/tools/perf/ui/stdio/hist.c
++++ b/tools/perf/ui/stdio/hist.c
+@@ -3,6 +3,7 @@
+ #include <linux/string.h>
+ 
+ #include "../../util/callchain.h"
++#include "../../util/debug.h"
+ #include "../../util/hist.h"
+ #include "../../util/map.h"
+ #include "../../util/map_groups.h"
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index d077704..dd6e010 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -20,6 +20,7 @@
+ 
+ #include "asm/bug.h"
+ 
++#include "debug.h"
+ #include "hist.h"
+ #include "sort.h"
+ #include "machine.h"
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 4ae155c..3d7cef7 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -1,29 +1,18 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef __PERF_SORT_H
+ #define __PERF_SORT_H
+-#include "../builtin.h"
 -
- struct cpu_map_data;
+ #include <regex.h>
+-
+-#include "color.h"
++#include <stdbool.h>
+ #include <linux/list.h>
+-#include "cache.h"
+ #include <linux/rbtree.h>
+ #include "map_symbol.h"
+ #include "symbol_conf.h"
+-#include "string.h"
+ #include "callchain.h"
+ #include "values.h"
  
- struct perf_cpu_map *perf_cpu_map__empty_new(int nr);
+-#include "../perf.h"
+-#include "debug.h"
+-#include "header.h"
+-
+-#include <subcmd/parse-options.h>
+-#include "parse-events.h"
+ #include "hist.h"
+-#include "srcline.h"
+ 
++struct option;
+ struct thread;
+ 
+ extern regex_t parent_regex;
