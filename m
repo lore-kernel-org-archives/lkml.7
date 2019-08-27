@@ -2,112 +2,161 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3185CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF346C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE7F21883
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:36:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="deVT/vbY"
+	by mail.kernel.org (Postfix) with ESMTP id 9762B21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbfH0Rg0 (ORCPT
+        id S1730530AbfH0Rg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:36:26 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34396 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbfH0RgZ (ORCPT
+        Tue, 27 Aug 2019 13:36:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4390 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727057AbfH0Rg0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:36:25 -0400
-Received: by mail-io1-f65.google.com with SMTP id s21so157689ioa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 10:36:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0OrHiG8ZkzhZsHqSisGBWWpJnATlfuQ86+HaFYyJA8I=;
-        b=deVT/vbYc4ecP5ExASXcivwIhq9LaGe6lFZQ5X7PEbp1VNmmEvZVoRpTfFuXXega+w
-         g5J6LR1Nmy5GvXW0bBy1RTX8IbvUJvrVfUOm/wokhFpRJdimSUYKhxkWeiyxhTfjKEbb
-         YK8UDkRp/IR35lmplPD4vbkH5JrSz3drDIZHg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0OrHiG8ZkzhZsHqSisGBWWpJnATlfuQ86+HaFYyJA8I=;
-        b=CXwhSg8gQbU/wrX9Drwp4b1guF3BgDDSy2JLU48zUhi58yLrPQY41vTl0UUkgh+W8u
-         o60dld3wyMmMKRPPS3QbNISkxTmLYqHK++FKIqlkJjrJiPb6JIiKzex5NqZd/BRWbpdz
-         bgdAayuJR9YwU+B9m5Qu9M7KZ6cGpQ7+5MaKak7aH11qjx5oahH3RJM/94uO0QY/niwK
-         M74cFtCnMj+32Ym6WrQCq6jRMgkHrKJNh/EPr3ppFqQEoO9+c61w4+tYiCt66acCkKA2
-         IzI0vyqpHnvWd7JnNp9w8ub1Rsy9wmYIO+sykZAdYT3OzhtBTX1ukWR/29cwbXAeqqxy
-         hTjQ==
-X-Gm-Message-State: APjAAAXLVpcDv7MvCnmVAo2kvfDDnteqQbdi+iR1xpAzO02UqWta+qpB
-        ZIe+ngcuA387s3GZJaDT6hBq4A==
-X-Google-Smtp-Source: APXvYqw10pFnr5k3LJbhhD6xNDvDhQzuQL69lTHbE6Fa0PE6dkSJMKuw5olJU9OTjMhs+2qHEEJZqA==
-X-Received: by 2002:a02:bb8c:: with SMTP id g12mr24679646jan.116.1566927384789;
-        Tue, 27 Aug 2019 10:36:24 -0700 (PDT)
-Received: from localhost ([2620:15c:183:0:82e0:aef8:11bc:24c4])
-        by smtp.gmail.com with ESMTPSA id z3sm15276592ioi.54.2019.08.27.10.36.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Aug 2019 10:36:24 -0700 (PDT)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     keescook@chromium.org
-Cc:     Raul E Rangel <rrangel@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] lkdtm/bugs: fix build error in lkdtm_EXHAUST_STACK
-Date:   Tue, 27 Aug 2019 11:36:19 -0600
-Message-Id: <20190827173619.170065-1-rrangel@chromium.org>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+        Tue, 27 Aug 2019 13:36:26 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7RHZW1p010983;
+        Tue, 27 Aug 2019 13:35:49 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2un6kdxwhn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Aug 2019 13:35:48 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7RHTj3G024387;
+        Tue, 27 Aug 2019 17:34:18 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma04wdc.us.ibm.com with ESMTP id 2ujvv6gynf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Aug 2019 17:34:18 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7RHYHin57999844
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Aug 2019 17:34:17 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7794D7805C;
+        Tue, 27 Aug 2019 17:34:17 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6F5807805E;
+        Tue, 27 Aug 2019 17:34:15 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.216])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 27 Aug 2019 17:34:15 +0000 (GMT)
+Message-ID: <77c43754ff72e9a2e8048ccd032351cf0186080a.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 1/1] netfilter: nf_tables: fib: Drop IPV6 packages if
+ IPv6 is disabled on boot
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Date:   Tue, 27 Aug 2019 14:34:14 -0300
+In-Reply-To: <20190827103541.vzwqwg4jlbuzajxu@salvia>
+References: <20190821141505.2394-1-leonardo@linux.ibm.com>
+         <20190827103541.vzwqwg4jlbuzajxu@salvia>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-cNCIg1ywiNXBjGc4Cw+F"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-27_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908270168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lkdtm/bugs.c:94:2: error: format '%d' expects argument of type 'int', but argument 2 has type 'long unsigned int' [-Werror=format=]
-  pr_info("Calling function with %d frame size to depth %d ...\n",
-  ^
-THREAD_SIZE is defined as a unsigned long, cast CONFIG_FRAME_WARN to
-unsigned long as well.
 
-Fixes: 24cccab42c419 ("lkdtm/bugs: Adjust recursion test to avoid elision")
+--=-cNCIg1ywiNXBjGc4Cw+F
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
----
+On Tue, 2019-08-27 at 12:35 +0200, Pablo Neira Ayuso wrote:
+> On Wed, Aug 21, 2019 at 11:15:06AM -0300, Leonardo Bras wrote:
+> > If IPv6 is disabled on boot (ipv6.disable=3D1), but nft_fib_inet ends u=
+p
+> > dealing with a IPv6 package, it causes a kernel panic in
+> > fib6_node_lookup_1(), crashing in bad_page_fault.
+>=20
+> Q: How do you get to see IPv6 packets if IPv6 module is disable?
+I could reproduce this bug on a host ('ipv6.disable=3D1') starting a
+guest with a virtio-net interface with 'filterref' over a virtual
+bridge. It crashes the host during guest boot (just before login).
 
-Changes in v2:
-- Correctly cast CONFIG_FRAME_WARN so the type is consistent.
+By that I could understand that a guest IPv6 network traffic (viavirtio-net=
+) may cause this kernel panic.=20
 
- drivers/misc/lkdtm/bugs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> > The panic is caused by trying to deference a very low address (0x38
+> > in ppc64le), due to ipv6.fib6_main_tbl =3D NULL.
+> > BUG: Kernel NULL pointer dereference at 0x00000038
+> >=20
+> > Fix this behavior by dropping IPv6 packages if !ipv6_mod_enabled().
+>=20
+> I'd suggest: s/package/packet/
+Sure, I will make sure to put it on v3.
+(Sorry, I am not very used to net subsystem.)
+>=20
+> [...]
+> > diff --git a/net/ipv6/netfilter/nft_fib_ipv6.c b/net/ipv6/netfilter/nft=
+_fib_ipv6.c
+> > index 7ece86afd079..75acc417e2ff 100644
+> > --- a/net/ipv6/netfilter/nft_fib_ipv6.c
+> > +++ b/net/ipv6/netfilter/nft_fib_ipv6.c
+> > @@ -125,6 +125,11 @@ void nft_fib6_eval_type(const struct nft_expr *exp=
+r, struct nft_regs *regs,
+> >  	u32 *dest =3D &regs->data[priv->dreg];
+> >  	struct ipv6hdr *iph, _iph;
+> > =20
+> > +	if (!ipv6_mod_enabled()) {
+> > +		regs->verdict.code =3D NF_DROP;
+>=20
+> NFT_BREAK instead to stop evaluating this rule, this results in a
+> mismatch, so you let the user decide what to do with packets that do
+> not match your policy.
+Ok, I will replace for v3.
 
-diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
-index 1606658b9b7e..24245ccdba72 100644
---- a/drivers/misc/lkdtm/bugs.c
-+++ b/drivers/misc/lkdtm/bugs.c
-@@ -22,7 +22,7 @@ struct lkdtm_list {
-  * recurse past the end of THREAD_SIZE by default.
-  */
- #if defined(CONFIG_FRAME_WARN) && (CONFIG_FRAME_WARN > 0)
--#define REC_STACK_SIZE (CONFIG_FRAME_WARN / 2)
-+#define REC_STACK_SIZE (_AC(CONFIG_FRAME_WARN, UL) / 2)
- #else
- #define REC_STACK_SIZE (THREAD_SIZE / 8)
- #endif
-@@ -91,7 +91,7 @@ void lkdtm_LOOP(void)
- 
- void lkdtm_EXHAUST_STACK(void)
- {
--	pr_info("Calling function with %d frame size to depth %d ...\n",
-+	pr_info("Calling function with %lu frame size to depth %d ...\n",
- 		REC_STACK_SIZE, recur_count);
- 	recursive_loop(recur_count);
- 	pr_info("FAIL: survived without exhausting stack?!\n");
--- 
-2.23.0.187.g17f5b7556c-goog
+>=20
+> The drop case at the bottom of the fib eval function never actually
+> never happens.
+Which one do you mean?
+
+
+--=-cNCIg1ywiNXBjGc4Cw+F
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1laZYACgkQlQYWtz9S
+ttQGCRAAhnjh/QWbYyASq5WgwLCyx11sioZdz7iKVUMRTLuMWnyyZbPBOdc7kAw+
+TMDxCvi/O+caKgzOoW2ya3bqtHyI8lSEdbjrxfNBn6+AoxhXKBHBdHKrR6zUYE8J
++rM5AHcg2WZU58uyln0XdiXEmEeZEEq80AhKyYtZRpg8mGoMMo3fMo6zNGVfloBH
+FmGGaohtVXS7BBuTTWZwXIR8fuYtAZKlSyxHrazZksz4PkZAsZWckpfTluy55vzS
+kJBqfG91rkAkaUpuyrVv0hRYQNqWrFP441yutxOX6eWLYusxwHLzZWq1hlVYluiB
+1UCUhIw1WWGP583Iz8YHJ993QRtbwJVDibmXUM39Cg3+kfh9h+vY8sGi96bGRn0h
+NQDxUIXkGXBrAJQPON75Z0igM16rivks3AhHkL8M1HKMWDYJpEHaornjSLYpt0l5
+Yngy+xTXDUdWH0dgoTweWkHIGL+mJ1g5FrJoSFP0pA/kZ17b/X7cRrnUV6E6jUnj
+t6bKHLzY6JvCsiQLo/i9QNp6Eg4Y/cLk5AwRCotJcTupTL65Tp34r6fK0vBDVVoR
+OTqV3jNinxK7BmHW8jGkXxdYJg0T3HcWg6FCqaTnmD9eruGTReSPxUF02QAe+3gk
+iY67EsxcWu6ThPhqePMtyssRz8YOQeXBe0kUjRNKw0pCCFdomlQ=
+=26Ah
+-----END PGP SIGNATURE-----
+
+--=-cNCIg1ywiNXBjGc4Cw+F--
 
