@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D46C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC80FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFB021872
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE40720828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892873;
-	bh=vRZy479767kYTIzX9SBMWkovtJFmbdfeRbCf0+4l3c0=;
+	s=default; t=1566892877;
+	bh=n4pNaO05dxOx6NIO4+x1P922/09WWLtMIBbVP/9Muxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LCBgnO/XXQ+Zs9IHqZ56lApnCGevHeIq8SVEk3+lZ2guEc5zr3ik5tMTLMWCmW59P
-	 maewX/f1MxoiiYlQw9ARgYRz1TEcHRMtvJR1E4h7JGGoX2VfU1oclEoCfdpsQyPJnh
-	 euM5D3IGIeEMOJzF3qQCyYWHVNlrpL4HImTFgRds=
+	b=mL8AblNU2QHdqYXuMN5OUty3W6Mkysrb8e3EXVQkHH25CqneNR9txLrAcOx/sNw8r
+	 WBGHwfuz3l5Yge0HwCqhVbA9IPTdBVapTjYEHOgiHxImgQF/Q4IbTtX1d6IG+3md+K
+	 0GywB/AdvCK2P8qMtE6X/UjvhKbQ8/aFJWTwE12I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731715AbfH0IBM (ORCPT
+        id S1731231AbfH0IBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:01:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56936 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:01:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731189AbfH0IBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:01:09 -0400
+        id S1731697AbfH0IBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:01:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C7FD2186A;
-        Tue, 27 Aug 2019 08:01:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0699421872;
+        Tue, 27 Aug 2019 08:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892868;
-        bh=vRZy479767kYTIzX9SBMWkovtJFmbdfeRbCf0+4l3c0=;
+        s=default; t=1566892871;
+        bh=n4pNaO05dxOx6NIO4+x1P922/09WWLtMIBbVP/9Muxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=11H/nDAmZPSsWv6bjEyBo94KxIXC5oShvg0gyrHjf6GrtFs483izqsVEaazlmv94t
-         N1AZpdjGyl3mfd4TSGZ0ikc44vI/dzkAdeI4zllbACIvvUzsWqmJClc5UvN8sxyF1g
-         a/sLcFwkKsVPbC7l7x4Opu5LWz3bpGACi7EKE2K8=
+        b=wZAyIXt6mTO64F6QLSZ1cY+cJyFxQ3Y3kB/jbZJekhPXcTC8JIiaF7Tvjx8s5F9/5
+         6Kssm61ZGuXtwp6omNpXMdT4TH42LpvJ0hLyl8QgDJQSEu8guBQIBDOLA6Ep4qYP6f
+         ay+BU8NyXyxt3jA+7Wyt2rJre2FHG/n9z0v5xt2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        stable@vger.kernel.org, Cheng-Yi Chiang <cychiang@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 015/162] mips: fix cacheinfo
-Date:   Tue, 27 Aug 2019 09:49:03 +0200
-Message-Id: <20190827072738.866866739@linuxfoundation.org>
+Subject: [PATCH 5.2 042/162] ASoC: rockchip: Fix mono capture
+Date:   Tue, 27 Aug 2019 09:49:30 +0200
+Message-Id: <20190827072739.718169690@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -63,44 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b8bea8a5e5d942e62203416ab41edecaed4fda02 ]
+[ Upstream commit 789e162a6255325325bd321ab0cd51dc7e285054 ]
 
-Because CONFIG_OF defined for MIPS, cacheinfo attempts to fill information
-from DT, ignoring data filled by architecture routine. This leads to error
-reported
+This reverts commit db51707b9c9aeedd310ebce60f15d5bb006567e0.
+Revert "ASoC: rockchip: i2s: Support mono capture"
 
- cacheinfo: Unable to detect cache hierarchy for CPU 0
+Previous discussion in
 
-Way to fix this provided in
-commit fac51482577d ("drivers: base: cacheinfo: fix x86 with
- CONFIG_OF enabled")
+https://patchwork.kernel.org/patch/10147153/
 
-Utilize same mechanism to report that cacheinfo set by architecture
-specific function
+explains the issue of the patch.
+While device is configured as 1-ch, hardware is still
+generating a 2-ch stream.
+When user space reads the data and assumes it is a 1-ch stream,
+the rate will be slower by 2x.
 
-Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Revert the change so 1-ch is not supported.
+User space can selectively take one channel data out of two channel
+if 1-ch is preferred.
+Currently, both channels record identical data.
+
+Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Link: https://lore.kernel.org/r/20190726044202.26866-1-cychiang@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/cacheinfo.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/rockchip/rockchip_i2s.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/kernel/cacheinfo.c b/arch/mips/kernel/cacheinfo.c
-index e0dd66881da68..f777e44653d57 100644
---- a/arch/mips/kernel/cacheinfo.c
-+++ b/arch/mips/kernel/cacheinfo.c
-@@ -69,6 +69,8 @@ static int __populate_cache_leaves(unsigned int cpu)
- 	if (c->tcache.waysize)
- 		populate_cache(tcache, this_leaf, 3, CACHE_TYPE_UNIFIED);
+diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
+index 0a34d0eb8dba9..88ebaf6e1880a 100644
+--- a/sound/soc/rockchip/rockchip_i2s.c
++++ b/sound/soc/rockchip/rockchip_i2s.c
+@@ -326,7 +326,6 @@ static int rockchip_i2s_hw_params(struct snd_pcm_substream *substream,
+ 		val |= I2S_CHN_4;
+ 		break;
+ 	case 2:
+-	case 1:
+ 		val |= I2S_CHN_2;
+ 		break;
+ 	default:
+@@ -459,7 +458,7 @@ static struct snd_soc_dai_driver rockchip_i2s_dai = {
+ 	},
+ 	.capture = {
+ 		.stream_name = "Capture",
+-		.channels_min = 1,
++		.channels_min = 2,
+ 		.channels_max = 2,
+ 		.rates = SNDRV_PCM_RATE_8000_192000,
+ 		.formats = (SNDRV_PCM_FMTBIT_S8 |
+@@ -659,7 +658,7 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
+ 	}
  
-+	this_cpu_ci->cpu_map_populated = true;
-+
- 	return 0;
- }
+ 	if (!of_property_read_u32(node, "rockchip,capture-channels", &val)) {
+-		if (val >= 1 && val <= 8)
++		if (val >= 2 && val <= 8)
+ 			soc_dai->capture.channels_max = val;
+ 	}
  
 -- 
 2.20.1
