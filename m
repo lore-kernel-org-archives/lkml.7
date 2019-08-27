@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136ABC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF86EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D721A2184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E86206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbfH0NKp (ORCPT
+        id S1730103AbfH0NKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:10:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:2917 "EHLO mx1.redhat.com"
+        Tue, 27 Aug 2019 09:10:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58272 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729996AbfH0NKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:10:42 -0400
+        id S1729996AbfH0NKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:10:46 -0400
 Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CF661C059B7A
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 13:10:41 +0000 (UTC)
-Received: by mail-pf1-f199.google.com with SMTP id p16so14640695pfn.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 06:10:41 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8CE5B63704
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 13:10:46 +0000 (UTC)
+Received: by mail-pf1-f199.google.com with SMTP id 22so14576956pfn.22
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 06:10:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9PhF+WzMKEVGVdytBhJDcKZmYrRN4rhUAiWIIAXwSj8=;
-        b=hMAVtBT9gDeEBdGX4L2YlTQnU0Es61e/xKSiStRtjftP9Qv9XmKPr4w+ZxWC/M7uq0
-         TM3gnnz6gN8l4GueDEjA1/+6TcBK5179KXnTg9GABYRa8ITRGvjMxC2sv5wiljKINYgh
-         qiXtocyw/e1jN1VZs6NvQ98rb/mNvSkPDoOnozaJY8vBHZZgP5INrebW3JeKM/a97+fp
-         ivrgLHaePIGNLjSTm1QRaTUK/CxKosAVUsKLde8DGenAUnnD+INmzzBbGT8gRfdj3/qi
-         UrriwsU+Rz5PIMD7UZ/C/bXStaearL9mSdKKGwMEhVu0TIYhl9L3cv/66PtDxi8rzbTT
-         NyCA==
-X-Gm-Message-State: APjAAAWEv0sarA+/dZur31eIzFLfVyqgamRaTWfiy0VpBbIiI4GrlXZj
-        57X9quGRUj2RS9Oox0fdiY8eua6ixnxfWMT2k0MCIWm0ILVBG2+GWlIeG7914uh3pMy5/kUDFhh
-        VCQuvwwvFsIIbRCV8nDdBlbWa
-X-Received: by 2002:aa7:920b:: with SMTP id 11mr12173423pfo.231.1566911441030;
-        Tue, 27 Aug 2019 06:10:41 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxl4ndWKGKKVsD40EsTAmc/7MTedBGO77V4mmisEM/IW00P/JOhZNRtHu1/CCMcRt62+TxhzQ==
-X-Received: by 2002:aa7:920b:: with SMTP id 11mr12173396pfo.231.1566911440783;
-        Tue, 27 Aug 2019 06:10:40 -0700 (PDT)
+        bh=N9+a7Lx6U+FZXaKdnAdrJhECNEGonTqU2sKnt3e3ClU=;
+        b=UURmurtVkcHcZQuSxjUxthzJBLSq+BKrCnG4JKcTAVtRN8R+9xU7JMTavkG3vYwqgX
+         d6VdSW+uJNkAJFkJTS8UDQsNjgHkDfGUx0yI1pZxYmXQbRKmmGoFPalxfEGc6nOacbpo
+         lxE1itIGAmVvLeeJaigePzMesQK072NgRbAMLAQe7ZZjLgCueggVC3Vj7fbkEndk6w8H
+         oJPpcjNJD1bpZkRDpk1BnpEsM8vlqtRbBiF46mBeo3IIuuRmDiy7ZrJhvXm118/3nuCx
+         wXvM9LJFoiP5nQpDFujsp503ztXSQxXAbhdZCNmqytmMVRCjtyPM74At4CgLnVY/V2Uo
+         UZfg==
+X-Gm-Message-State: APjAAAXQVkgta6qooKoGKOWWI9itv827L8Er0T03aKeKs6VCmtkIoNOk
+        QdZnJKZTur3Y3BKzJOtYF0qfUhhqQgPtjlsbOqNqcJxKn93llt6gAhCoqtdwEYxZn4/ns76wyjV
+        4apsF9StWKMT1IdFLINFtvOYu
+X-Received: by 2002:a63:2364:: with SMTP id u36mr20462347pgm.449.1566911445467;
+        Tue, 27 Aug 2019 06:10:45 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqx8gH6I9zaGHxKmC5pr8Mb7cYEdADazuDo9dCtxaA5gmXPWjRBogsoWfRHkoxtzXpTZ565wWA==
+X-Received: by 2002:a63:2364:: with SMTP id u36mr20462326pgm.449.1566911445184;
+        Tue, 27 Aug 2019 06:10:45 -0700 (PDT)
 Received: from xz-x1.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id o67sm24393050pfb.39.2019.08.27.06.10.36
+        by smtp.gmail.com with ESMTPSA id o67sm24393050pfb.39.2019.08.27.06.10.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 06:10:40 -0700 (PDT)
+        Tue, 27 Aug 2019 06:10:44 -0700 (PDT)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
@@ -56,9 +56,9 @@ Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
         Thomas Huth <thuth@redhat.com>,
         Andrew Jones <drjones@redhat.com>, peterx@redhat.com
-Subject: [PATCH 3/4] KVM: selftests: Introduce VM_MODE_PXXV48_4K
-Date:   Tue, 27 Aug 2019 21:10:14 +0800
-Message-Id: <20190827131015.21691-4-peterx@redhat.com>
+Subject: [PATCH 4/4] KVM: selftests: Remove duplicate guest mode handling
+Date:   Tue, 27 Aug 2019 21:10:15 +0800
+Message-Id: <20190827131015.21691-5-peterx@redhat.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190827131015.21691-1-peterx@redhat.com>
 References: <20190827131015.21691-1-peterx@redhat.com>
@@ -69,222 +69,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The naming VM_MODE_P52V48_4K is explicit but unclear when used on
-x86_64 machines, because x86_64 machines are having various physical
-address width rather than some static values.  Here's some examples:
+Remove the duplication code in run_test() of dirty_log_test because
+after some reordering of functions now we can directly use the outcome
+of vm_create().
 
-  - Intel Xeon E3-1220:  36 bits
-  - Intel Core i7-8650:  39 bits
-  - AMD   EPYC 7251:     48 bits
-
-All of them are using 48 bits linear address width but with totally
-different physical address width (and most of the old machines should
-be less than 52 bits).
-
-Let's create a new guest mode called VM_MODE_PXXV48_4K for current
-x86_64 tests and make it as the default to replace the old naming of
-VM_MODE_P52V48_4K because it shows more clearly that the PA width is
-not really a constant.  Meanwhile we also stop assuming all the x86
-machines are having 52 bits PA width but instead we fetch the real
-vm->pa_bits from CPUID 0x80000008 during runtime.
-
-We currently make this exclusively used by x86_64 but no other arch.
-
-As a slight touch up, moving DEBUG macro from dirty_log_test.c to
-kvm_util.h so lib can use it too.
+Meanwhile, with the new VM_MODE_PXXV48_4K, we can safely revert
+b442324b58 too where we stick the x86_64 PA width to 39 bits for
+dirty_log_test.
 
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- tools/testing/selftests/kvm/dirty_log_test.c  |  5 +--
- .../testing/selftests/kvm/include/kvm_util.h  | 11 ++++-
- .../selftests/kvm/lib/aarch64/processor.c     |  3 ++
- tools/testing/selftests/kvm/lib/kvm_util.c    | 40 ++++++++++++++++---
- .../selftests/kvm/lib/x86_64/processor.c      |  8 ++--
- 5 files changed, 53 insertions(+), 14 deletions(-)
+ tools/testing/selftests/kvm/dirty_log_test.c  | 52 ++-----------------
+ .../testing/selftests/kvm/include/kvm_util.h  |  4 ++
+ tools/testing/selftests/kvm/lib/kvm_util.c    | 17 ++++++
+ 3 files changed, 26 insertions(+), 47 deletions(-)
 
 diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-index 040952f3d4ad..b2e07a3173b2 100644
+index b2e07a3173b2..73f679bbf082 100644
 --- a/tools/testing/selftests/kvm/dirty_log_test.c
 +++ b/tools/testing/selftests/kvm/dirty_log_test.c
-@@ -19,8 +19,6 @@
- #include "kvm_util.h"
- #include "processor.h"
+@@ -268,10 +268,8 @@ static struct kvm_vm *create_vm(enum vm_guest_mode mode, uint32_t vcpuid,
+ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
+ 		     unsigned long interval, uint64_t phys_offset)
+ {
+-	unsigned int guest_pa_bits, guest_page_shift;
+ 	pthread_t vcpu_thread;
+ 	struct kvm_vm *vm;
+-	uint64_t max_gfn;
+ 	unsigned long *bmap;
  
--#define DEBUG printf
+ 	/*
+@@ -286,54 +284,13 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
+ 		       2ul << (DIRTY_MEM_BITS - PAGE_SHIFT_4K),
+ 		       guest_code);
+ 
+-	switch (mode) {
+-	case VM_MODE_P52V48_4K:
+-	case VM_MODE_PXXV48_4K:
+-		guest_pa_bits = 52;
+-		guest_page_shift = 12;
+-		break;
+-	case VM_MODE_P52V48_64K:
+-		guest_pa_bits = 52;
+-		guest_page_shift = 16;
+-		break;
+-	case VM_MODE_P48V48_4K:
+-		guest_pa_bits = 48;
+-		guest_page_shift = 12;
+-		break;
+-	case VM_MODE_P48V48_64K:
+-		guest_pa_bits = 48;
+-		guest_page_shift = 16;
+-		break;
+-	case VM_MODE_P40V48_4K:
+-		guest_pa_bits = 40;
+-		guest_page_shift = 12;
+-		break;
+-	case VM_MODE_P40V48_64K:
+-		guest_pa_bits = 40;
+-		guest_page_shift = 16;
+-		break;
+-	default:
+-		TEST_ASSERT(false, "Unknown guest mode, mode: 0x%x", mode);
+-	}
 -
- #define VCPU_ID				1
+-	DEBUG("Testing guest mode: %s\n", vm_guest_mode_string(mode));
+-
+-#ifdef __x86_64__
+-	/*
+-	 * FIXME
+-	 * The x86_64 kvm selftests framework currently only supports a
+-	 * single PML4 which restricts the number of physical address
+-	 * bits we can change to 39.
+-	 */
+-	guest_pa_bits = 39;
+-#endif
+-	max_gfn = (1ul << (guest_pa_bits - guest_page_shift)) - 1;
+-	guest_page_size = (1ul << guest_page_shift);
++	guest_page_size = vm_get_page_size(vm);
+ 	/*
+ 	 * A little more than 1G of guest page sized pages.  Cover the
+ 	 * case where the size is not aligned to 64 pages.
+ 	 */
+-	guest_num_pages = (1ul << (DIRTY_MEM_BITS - guest_page_shift)) + 16;
++	guest_num_pages = (1ul << (DIRTY_MEM_BITS -
++				   vm_get_page_shift(vm))) + 16;
+ #ifdef __s390x__
+ 	/* Round up to multiple of 1M (segment size) */
+ 	guest_num_pages = (guest_num_pages + 0xff) & ~0xffUL;
+@@ -343,7 +300,8 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
+ 			 !!((guest_num_pages * guest_page_size) % host_page_size);
  
- /* The memory slot index to track dirty pages */
-@@ -290,6 +288,7 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
- 
- 	switch (mode) {
- 	case VM_MODE_P52V48_4K:
-+	case VM_MODE_PXXV48_4K:
- 		guest_pa_bits = 52;
- 		guest_page_shift = 12;
- 		break;
-@@ -489,7 +488,7 @@ int main(int argc, char *argv[])
- #endif
- 
- #ifdef __x86_64__
--	vm_guest_mode_params_init(VM_MODE_P52V48_4K, true, true);
-+	vm_guest_mode_params_init(VM_MODE_PXXV48_4K, true, true);
- #endif
- #ifdef __aarch64__
- 	vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
+ 	if (!phys_offset) {
+-		guest_test_phys_mem = (max_gfn - guest_num_pages) * guest_page_size;
++		guest_test_phys_mem = (vm_get_max_gfn(vm) -
++				       guest_num_pages) * guest_page_size;
+ 		guest_test_phys_mem &= ~(host_page_size - 1);
+ 	} else {
+ 		guest_test_phys_mem = phys_offset;
 diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index cfc079f20815..1c700c6b31b5 100644
+index 1c700c6b31b5..0d65fc676182 100644
 --- a/tools/testing/selftests/kvm/include/kvm_util.h
 +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -24,6 +24,8 @@ struct kvm_vm;
- typedef uint64_t vm_paddr_t; /* Virtual Machine (Guest) physical address */
- typedef uint64_t vm_vaddr_t; /* Virtual Machine (Guest) virtual address */
+@@ -155,6 +155,10 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code);
  
-+#define DEBUG printf
+ bool vm_is_unrestricted_guest(struct kvm_vm *vm);
+ 
++unsigned int vm_get_page_size(struct kvm_vm *vm);
++unsigned int vm_get_page_shift(struct kvm_vm *vm);
++unsigned int vm_get_max_gfn(struct kvm_vm *vm);
 +
- /* Minimum allocated guest virtual and physical addresses */
- #define KVM_UTIL_MIN_VADDR		0x2000
- 
-@@ -38,12 +40,19 @@ enum vm_guest_mode {
- 	VM_MODE_P48V48_64K,
- 	VM_MODE_P40V48_4K,
- 	VM_MODE_P40V48_64K,
-+	VM_MODE_PXXV48_4K,	/* For 48bits VA but ANY bits PA */
- 	NUM_VM_MODES,
- };
- 
- #ifdef __aarch64__
- #define VM_MODE_DEFAULT VM_MODE_P40V48_4K
--#else
-+#endif
-+
-+#ifdef __x86_64__
-+#define VM_MODE_DEFAULT VM_MODE_PXXV48_4K
-+#endif
-+
-+#ifndef VM_MODE_DEFAULT
- #define VM_MODE_DEFAULT VM_MODE_P52V48_4K
- #endif
- 
-diff --git a/tools/testing/selftests/kvm/lib/aarch64/processor.c b/tools/testing/selftests/kvm/lib/aarch64/processor.c
-index 486400a97374..86036a59a668 100644
---- a/tools/testing/selftests/kvm/lib/aarch64/processor.c
-+++ b/tools/testing/selftests/kvm/lib/aarch64/processor.c
-@@ -264,6 +264,9 @@ void aarch64_vcpu_setup(struct kvm_vm *vm, int vcpuid, struct kvm_vcpu_init *ini
- 	case VM_MODE_P52V48_4K:
- 		TEST_ASSERT(false, "AArch64 does not support 4K sized pages "
- 				   "with 52-bit physical address ranges");
-+	case VM_MODE_PXXV48_4K:
-+		TEST_ASSERT(false, "AArch64 does not support 4K sized pages "
-+				   "with ANY-bit physical address ranges");
- 	case VM_MODE_P52V48_64K:
- 		tcr_el1 |= 1ul << 14; /* TG0 = 64KB */
- 		tcr_el1 |= 6ul << 32; /* IPS = 52 bits */
+ struct kvm_userspace_memory_region *
+ kvm_userspace_memory_region_find(struct kvm_vm *vm, uint64_t start,
+ 				 uint64_t end);
 diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 0c7c4368bc14..8c6f872a8793 100644
+index 8c6f872a8793..cf39643ff2c7 100644
 --- a/tools/testing/selftests/kvm/lib/kvm_util.c
 +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -8,6 +8,7 @@
- #include "test_util.h"
- #include "kvm_util.h"
- #include "kvm_util_internal.h"
-+#include "processor.h"
- 
- #include <assert.h>
- #include <sys/mman.h>
-@@ -101,12 +102,13 @@ static void vm_open(struct kvm_vm *vm, int perm)
- }
- 
- const char * const vm_guest_mode_string[] = {
--	"PA-bits:52, VA-bits:48, 4K pages",
--	"PA-bits:52, VA-bits:48, 64K pages",
--	"PA-bits:48, VA-bits:48, 4K pages",
--	"PA-bits:48, VA-bits:48, 64K pages",
--	"PA-bits:40, VA-bits:48, 4K pages",
--	"PA-bits:40, VA-bits:48, 64K pages",
-+	"PA-bits:52,  VA-bits:48, 4K pages",
-+	"PA-bits:52,  VA-bits:48, 64K pages",
-+	"PA-bits:48,  VA-bits:48, 4K pages",
-+	"PA-bits:48,  VA-bits:48, 64K pages",
-+	"PA-bits:40,  VA-bits:48, 4K pages",
-+	"PA-bits:40,  VA-bits:48, 64K pages",
-+	"PA-bits:ANY, VA-bits:48, 4K pages",
- };
- _Static_assert(sizeof(vm_guest_mode_string)/sizeof(char *) == NUM_VM_MODES,
- 	       "Missing new mode strings?");
-@@ -185,6 +187,32 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages,
- 		vm->page_size = 0x10000;
- 		vm->page_shift = 16;
- 		break;
-+	case VM_MODE_PXXV48_4K:
-+#ifdef __x86_64__
-+		{
-+			struct kvm_cpuid_entry2 *entry;
-+
-+			/* SDM 4.1.4 */
-+			entry = kvm_get_supported_cpuid_entry(0x80000008);
-+			if (entry) {
-+				vm->pa_bits = entry->eax & 0xff;
-+				vm->va_bits = (entry->eax >> 8) & 0xff;
-+			} else {
-+				vm->pa_bits = vm->va_bits = 32;
-+			}
-+			TEST_ASSERT(vm->va_bits == 48, "Linear address width "
-+				    "(%d bits) not supported", vm->va_bits);
-+			vm->pgtable_levels = 4;
-+			vm->page_size = 0x1000;
-+			vm->page_shift = 12;
-+			DEBUG("Guest physical address width detected: %d\n",
-+			      vm->pa_bits);
-+		}
-+#else
-+		TEST_ASSERT(false, "VM_MODE_PXXV48_4K not supported on "
-+			    "non-x86 platforms");
-+#endif
-+		break;
- 	default:
- 		TEST_ASSERT(false, "Unknown guest mode, mode: 0x%x", mode);
- 	}
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-index 6cb34a0fa200..eb750ee24d2e 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-@@ -228,7 +228,7 @@ void sregs_dump(FILE *stream, struct kvm_sregs *sregs,
- 
- void virt_pgd_alloc(struct kvm_vm *vm, uint32_t pgd_memslot)
+@@ -137,6 +137,8 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages,
  {
--	TEST_ASSERT(vm->mode == VM_MODE_P52V48_4K, "Attempt to use "
-+	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
- 		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
+ 	struct kvm_vm *vm;
  
- 	/* If needed, create page map l4 table. */
-@@ -261,7 +261,7 @@ void virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
- 	uint16_t index[4];
- 	struct pageMapL4Entry *pml4e;
++	DEBUG("Testing guest mode: %s\n", vm_guest_mode_string(mode));
++
+ 	vm = calloc(1, sizeof(*vm));
+ 	TEST_ASSERT(vm != NULL, "Insufficient Memory");
  
--	TEST_ASSERT(vm->mode == VM_MODE_P52V48_4K, "Attempt to use "
-+	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
- 		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
+@@ -1662,3 +1664,18 @@ bool vm_is_unrestricted_guest(struct kvm_vm *vm)
  
- 	TEST_ASSERT((vaddr % vm->page_size) == 0,
-@@ -547,7 +547,7 @@ vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
- 	struct pageDirectoryEntry *pde;
- 	struct pageTableEntry *pte;
- 
--	TEST_ASSERT(vm->mode == VM_MODE_P52V48_4K, "Attempt to use "
-+	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
- 		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
- 
- 	index[0] = (gva >> 12) & 0x1ffu;
-@@ -621,7 +621,7 @@ static void vcpu_setup(struct kvm_vm *vm, int vcpuid, int pgd_memslot, int gdt_m
- 	kvm_setup_gdt(vm, &sregs.gdt, gdt_memslot, pgd_memslot);
- 
- 	switch (vm->mode) {
--	case VM_MODE_P52V48_4K:
-+	case VM_MODE_PXXV48_4K:
- 		sregs.cr0 = X86_CR0_PE | X86_CR0_NE | X86_CR0_PG;
- 		sregs.cr4 |= X86_CR4_PAE | X86_CR4_OSFXSR;
- 		sregs.efer |= (EFER_LME | EFER_LMA | EFER_NX);
+ 	return val == 'Y';
+ }
++
++unsigned int vm_get_page_size(struct kvm_vm *vm)
++{
++	return vm->page_size;
++}
++
++unsigned int vm_get_page_shift(struct kvm_vm *vm)
++{
++	return vm->page_shift;
++}
++
++unsigned int vm_get_max_gfn(struct kvm_vm *vm)
++{
++	return vm->max_gfn;
++}
 -- 
 2.21.0
 
