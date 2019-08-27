@@ -2,138 +2,173 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CE0C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49536C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E6D2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C58E2184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:25:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gcOryOkG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M3G4Y3h4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731361AbfH0UZQ (ORCPT
+        id S1731395AbfH0UZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 16:25:16 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38032 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbfH0UZP (ORCPT
+        Tue, 27 Aug 2019 16:25:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37618 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbfH0UZY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 16:25:15 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7RKP70B093527;
-        Tue, 27 Aug 2019 15:25:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566937507;
-        bh=gEFdEpF3+WHvpWSJY5udGgk0X9B9uxOZiubUNpvloVw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gcOryOkGkUDvclbsETxSdDLvTp8FonXjm/u4yweBik1ycTS8nZcVasBirRn4DeKBN
-         4DFdcUTmNi8isNNyhJxCTXIirpZLs+VBkjAVsjsarVL93BGGH2IEHH1+IjQyuKEAty
-         jOs/TJeujygUh250pCOKKxZH7xsIXLHgtic7mSvY=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7RKP7RV064462
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 27 Aug 2019 15:25:07 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 27
- Aug 2019 15:25:06 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 27 Aug 2019 15:25:06 -0500
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7RKP6DQ070466;
-        Tue, 27 Aug 2019 15:25:06 -0500
-Subject: Re: [PATCH] rpmsg: virtio_rpmsg_bus: replace "%p" with "%pK"
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     <linux-remoteproc@vger.kernel.org>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20181024011909.21674-1-s-anna@ti.com>
- <40831f80-1e36-66ca-b8e5-684d46ba167e@ti.com> <20190827051007.GK1263@builder>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <8d36d695-dd66-c21f-f49e-f6dc3dbdfc5a@ti.com>
-Date:   Tue, 27 Aug 2019 15:25:06 -0500
+        Tue, 27 Aug 2019 16:25:24 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z11so142988wrt.4
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 13:25:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Z2ACtSe6Yiw1+YbjAjRq/giYtTA4VS+c+Zl+5oYIiXY=;
+        b=M3G4Y3h42bkVq/9crq1VzDHEGrLQc0rjs9gPpAzbIP/UbZna8LkFJy34RTWoq/YD3y
+         L//flOHT9MxTy0DixdqaCDt5j90xIg0Qu1edv8Z96TmRZhgr0YVEeW4sT6iSvHtXaRbL
+         5JPpzH44Kpii6B5L2PwOGZMKmFyqesbaXfoFfGiNmMrlbB7fwqJuzwoAJf+rxQ5Ni+QS
+         q2R6YLyw0zZWdRFnh0ez0geQui90mQIvjsTNYyb9p4042lKSlqlDKx1FHGsuC2Iq5aGu
+         O+u4szumPoIF4XBmwLADecXc1QSAfSHTPekC+nzGKT354vm41lpBItQD1cF/IJnkCopL
+         p4Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Z2ACtSe6Yiw1+YbjAjRq/giYtTA4VS+c+Zl+5oYIiXY=;
+        b=S6efHxYsV4NXzW1aMNmCPOKwU7Efdx9GPhpa4tDOdVvwEx+1P2QDh/si1DXiyWze7M
+         iZwLPoC+RgEMkcW9YLzfgvZehMYhLan1OW7lGJsIImXc4ouJjJVuyzS3eq7lLBGQPrCx
+         eWqeyWPwvcPU6fylR7iADOF9+LjSlkVY+/8/M0jvMYUtqM6D4H7EBmD2ci8jffwaPJ6h
+         Xkis7m9rQAewIXMrpEERDpdOR2rJm29ja9JUyhFxshHlBAYt0eDpQcrBw63HTFPI7wGE
+         fP6PcSQjRv48yKwqW74TIbqs4lE/qhiTGb5vVcvzP2vRE/4VzwFW10uAAtVKbD0BWG1R
+         uh1g==
+X-Gm-Message-State: APjAAAW4+3rF87eM0ZovhXVyWO0ICT4Q7SgrojkCPml5XfWlS17BlZhW
+        5drBP1L5Dd/JYdRGp6RBviA2CQ==
+X-Google-Smtp-Source: APXvYqyHpC6GdfK/HOCjnBJXEVM8YLHpWnP6P2IknR138f8AEZoNrRpK/Q0KA/Y/KqjK4k3jrZPmZQ==
+X-Received: by 2002:adf:f507:: with SMTP id q7mr66707wro.210.1566937522099;
+        Tue, 27 Aug 2019 13:25:22 -0700 (PDT)
+Received: from [192.168.86.29] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id e11sm292024wrc.4.2019.08.27.13.25.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 27 Aug 2019 13:25:21 -0700 (PDT)
+Subject: Re: [RESEND PATCH v4 3/4] dt-bindings: ASoC: Add WSA881x bindings
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>, Vinod <vkoul@kernel.org>,
+        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org
+References: <20190822233759.12663-1-srinivas.kandagatla@linaro.org>
+ <20190822233759.12663-4-srinivas.kandagatla@linaro.org>
+ <CAL_JsqLjgOy3TKrpuNYYkRxy-Ln+3FOoKVE9KweS0ycTxriWMQ@mail.gmail.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <81888350-9296-7db1-01b5-4594a3bd5d60@linaro.org>
+Date:   Tue, 27 Aug 2019 21:25:20 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190827051007.GK1263@builder>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CAL_JsqLjgOy3TKrpuNYYkRxy-Ln+3FOoKVE9KweS0ycTxriWMQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Thanks for taking time to review!
 
-On 8/27/19 12:10 AM, Bjorn Andersson wrote:
-> On Fri 09 Aug 13:25 PDT 2019, Suman Anna wrote:
-> 
->> Hi Bjorn,
+On 27/08/2019 13:20, Rob Herring wrote:
+> On Thu, Aug 22, 2019 at 6:38 PM Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
 >>
-> 
-> Hi Suman
-> 
->> On 10/23/18 8:19 PM, Suman Anna wrote:
->>> The virtio_rpmsg_bus driver uses the "%p" format-specifier for
->>> printing the vring buffer address. This prints only a hashed
->>> pointer even for previliged users. Use "%pK" instead so that
->>> the address can be printed during debug using kptr_restrict
->>> sysctl.
+>> This patch adds bindings for WSA8810/WSA8815 Class-D Smart Speaker
+>> Amplifier. This Amplifier also has a simple thermal sensor for
+>> over temperature and speaker protection.
 >>
->> Seems to have been lost among the patches, can you pick up this trivial
->> patch for 5.4? Should apply cleanly on the latest HEAD as well.
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   .../bindings/sound/qcom,wsa881x.yaml          | 44 +++++++++++++++++++
+>>   1 file changed, 44 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
 >>
+>> diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+>> new file mode 100644
+>> index 000000000000..ad718d75c660
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+>> @@ -0,0 +1,44 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/sound/qcom,wsa881x.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Bindings for Qualcomm WSA8810/WSA8815 Class-D Smart Speaker Amplifier
+>> +
+>> +maintainers:
+>> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> +
+>> +allOf:
+>> +  - $ref: "soundwire-controller.yaml#"
 > 
-> I share Andrew's question regarding what benefit you have from knowing
-> this value. Should we not just remove the va from the print? Or do you
-> actually have a use case for it?.
+> This is not the controller, so this should not be included here. You
+> should get lots of warnings from doing so. You did run 'make
+> dt_binding_check', right?
 
-I mainly use it during debug when comparing against kernel_page_tables
-and vmallocinfo. The pools that we use are not always guaranteed to be
-from linear memory, and behavior changes when using with CMA or DMA pools.
+no, I was not aware of this command! will run that before sending next 
+version.
 
-Note that usage of %pK does not leak the addresses automatically, but
-atleast enables me to get the values when needed. The changes also bring
-the usage in rpmsg core in sync with the remoteproc core.
-
-regards
-Suman
 
 > 
-> Regards,
-> Bjorn
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: sdw10217201000
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  pd-gpios:
 > 
->> regards
->> Suman
+> powerdown-gpios is the standard name.
+> 
+sounds good to me, will change this in next version!
+
+>> +    description: GPIO spec for Powerdown/Shutdown line to use
+>> +    maxItems: 1
+>> +
+>> +  "#thermal-sensor-cells":
+>> +    const: 0
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - pd-gpios
+>> +  - #thermal-sensor-cells
+>> +
+>> +examples:
+>> +  - |
+>> +    efuse@1c23800 {
+>> +        compatible = "allwinner,sun4i-a10-sid";
+> 
+> Huh?
+
+Opps! copy paste bugs!!! :-)
+
+> 
+>> +        reg = <0x01c23800 0x10>;
+>> +        pd-gpios = <&wcdpinctrl 2 0>;
+>> +        #thermal-sensor-cells = <0>;
+>> +    };
+>> +
+>> +...
+>> --
+>> 2.21.0
 >>
->>>
->>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>> ---
->>>  drivers/rpmsg/virtio_rpmsg_bus.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
->>> index f29dee731026..1345f373a1a0 100644
->>> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
->>> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
->>> @@ -950,7 +950,7 @@ static int rpmsg_probe(struct virtio_device *vdev)
->>>  		goto vqs_del;
->>>  	}
->>>  
->>> -	dev_dbg(&vdev->dev, "buffers: va %p, dma %pad\n",
->>> +	dev_dbg(&vdev->dev, "buffers: va %pK, dma %pad\n",
->>>  		bufs_va, &vrp->bufs_dma);
->>>  
->>>  	/* half of the buffers is dedicated for RX */
->>>
->>
-
