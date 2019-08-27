@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F97C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488FFC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 199712189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D338233FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892812;
-	bh=ewdmdHom3VZbtVyvXEmlN6w+uRbjKror0DZSrQoiFWo=;
+	s=default; t=1566892815;
+	bh=HEpVpW11R6XtlhWzOO8ZB/UtKNUSDr6cgG+ECkGdp48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RnQsBq5cXtesWS9ZdwX8YLLGleWxZd5ILTR40SdNQXaFJ4rQztZZw8cDezK1dPZwm
-	 no1cUcPdwRPM3PnRPkEVgAFn8+L+p5QDMtTH7g4Z+8j+si3JDynkiBGXcat2sV9tYm
-	 1Wv4yHEYt5XctKLUgLWgzeEAyhoOperYP7E5l2aU=
+	b=jIw5xuFHgfjQzm1zMyk1RbhqLG5WLJuFOkuUQMFVV/pI9mgnD7BT+4J57AYETsX/V
+	 nid9COWI24SIINg5MPtcBDeZgxWfGa77UWEltfxuYTwj8Hez9ypjsufl6geISnYjKv
+	 TPdkq+1NQQ+a9ZXz/hPYHjTnsdMykf8vcMOHc8dY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731401AbfH0IAL (ORCPT
+        id S1731419AbfH0IAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:00:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54610 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:00:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730994AbfH0IAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:00:07 -0400
+        id S1730766AbfH0IAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:00:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47C97206BA;
-        Tue, 27 Aug 2019 08:00:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E75721881;
+        Tue, 27 Aug 2019 08:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892806;
-        bh=ewdmdHom3VZbtVyvXEmlN6w+uRbjKror0DZSrQoiFWo=;
+        s=default; t=1566892809;
+        bh=HEpVpW11R6XtlhWzOO8ZB/UtKNUSDr6cgG+ECkGdp48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XC0rq6VMVDVZT5qXGb8lB+NgLft0Mk9qRXbaXNlbbLXFuQ3HLDZ6IJmEnxQxBGIA9
-         S300n10OaFBIhra1SOeiNypyF7LizVGdEOg44mvCODDypI1p18UbVgqNFkmXQCkf5t
-         AsP2IUCDmzG9UWXbbQlGYf9MYL6DupdJmDmKl8j0=
+        b=peA28AS51ozGtVOPFPHLkZlcYTvJf7d0KydPrm9KLL+mZjys6WD7KyrXvVC1edc7m
+         Q0JzY4R2syFI/JDTldheFMAe4bFGMTfiakIQimMKMPqSMwxUTD2KHknwy3gSsLDOjz
+         bIlzwGWi94nhGrsIcFczkJ1/mHt02ZB7hUhybTAE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Trukhanov <lahvuun@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 013/162] HID: Add 044f:b320 ThrustMaster, Inc. 2 in 1 DT
-Date:   Tue, 27 Aug 2019 09:49:01 +0200
-Message-Id: <20190827072738.804484748@linuxfoundation.org>
+        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 022/162] bpf: sockmap, synchronize_rcu before freeing map
+Date:   Tue, 27 Aug 2019 09:49:10 +0200
+Message-Id: <20190827072739.088740557@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -59,63 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 65f11c72780fa9d598df88def045ccb6a885cf80 ]
+[ Upstream commit 2bb90e5cc90e1d09f631aeab041a9cf913a5bbe5 ]
 
-Enable force feedback for the Thrustmaster Dual Trigger 2 in 1 Rumble Force
-gamepad. Compared to other Thrustmaster devices, left and right rumble
-motors here are swapped.
+We need to have a synchronize_rcu before free'ing the sockmap because
+any outstanding psock references will have a pointer to the map and
+when they use this could trigger a use after free.
 
-Signed-off-by: Ilya Trukhanov <lahvuun@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 604326b41a6fb ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-tmff.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/core/sock_map.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hid/hid-tmff.c b/drivers/hid/hid-tmff.c
-index e12f2588ddebb..bdfc5ff3b2c5c 100644
---- a/drivers/hid/hid-tmff.c
-+++ b/drivers/hid/hid-tmff.c
-@@ -22,6 +22,8 @@
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 1d40e040320d2..bbc91597d8364 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -252,6 +252,8 @@ static void sock_map_free(struct bpf_map *map)
+ 	raw_spin_unlock_bh(&stab->lock);
+ 	rcu_read_unlock();
  
- #include "hid-ids.h"
- 
-+#define THRUSTMASTER_DEVICE_ID_2_IN_1_DT	0xb320
++	synchronize_rcu();
 +
- static const signed short ff_rumble[] = {
- 	FF_RUMBLE,
- 	-1
-@@ -76,6 +78,7 @@ static int tmff_play(struct input_dev *dev, void *data,
- 	struct hid_field *ff_field = tmff->ff_field;
- 	int x, y;
- 	int left, right;	/* Rumbling */
-+	int motor_swap;
- 
- 	switch (effect->type) {
- 	case FF_CONSTANT:
-@@ -100,6 +103,13 @@ static int tmff_play(struct input_dev *dev, void *data,
- 					ff_field->logical_minimum,
- 					ff_field->logical_maximum);
- 
-+		/* 2-in-1 strong motor is left */
-+		if (hid->product == THRUSTMASTER_DEVICE_ID_2_IN_1_DT) {
-+			motor_swap = left;
-+			left = right;
-+			right = motor_swap;
-+		}
-+
- 		dbg_hid("(left,right)=(%08x, %08x)\n", left, right);
- 		ff_field->value[0] = left;
- 		ff_field->value[1] = right;
-@@ -226,6 +236,8 @@ static const struct hid_device_id tm_devices[] = {
- 		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb304),   /* FireStorm Dual Power 2 (and 3) */
- 		.driver_data = (unsigned long)ff_rumble },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, THRUSTMASTER_DEVICE_ID_2_IN_1_DT),   /* Dual Trigger 2-in-1 */
-+		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb323),   /* Dual Trigger 3-in-1 (PC Mode) */
- 		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb324),   /* Dual Trigger 3-in-1 (PS3 Mode) */
+ 	bpf_map_area_free(stab->sks);
+ 	kfree(stab);
+ }
 -- 
 2.20.1
 
