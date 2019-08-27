@@ -2,109 +2,123 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE014C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F29C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FBF320856
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED11720856
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:49:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ifFJaEMU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OiWOyyjt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfH0Xsy (ORCPT
+        id S1726357AbfH0Xt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 19:48:54 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:55548 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbfH0Xsy (ORCPT
+        Tue, 27 Aug 2019 19:49:56 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42713 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfH0Xtz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 19:48:54 -0400
-Received: by mail-pl1-f202.google.com with SMTP id u24so429034plq.22
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 16:48:53 -0700 (PDT)
+        Tue, 27 Aug 2019 19:49:55 -0400
+Received: by mail-io1-f65.google.com with SMTP id e20so2107260iob.9;
+        Tue, 27 Aug 2019 16:49:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=YSfHst/Bl/LfQtkjdspGrz28MoFsoc+Jd1G8OfuVwCk=;
-        b=ifFJaEMU210M+K60despKxp3Iezj8GmCr75ZNS/g7W/DxZtJ/BCTtBazy31NVPXlaz
-         IlCkQ9B+18xp4eOvOUu8cld5QZ7PLu8c1U5cT/dHjFXfBLSg1Pz8Qc2kP8wiYtYE56Me
-         WUoaTFii7vnQ6NywWuCL4ltuQQweq4a0Gj6nMhvASFq0jcKn1u2hSkoegj2rLzEoPy3k
-         m9gXYmTGEZNjuiR8AZLgdnYEY43eatOode69F0b4oVyvFI4LA7kzFaw0fzolYPtkXSMK
-         IVW2NgsHR5+zVEojwMS4cBzm9+IsSYYsnPQ0JSjTyb710JsivjSNxIYqHQEFlzOYjTzY
-         cQuA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XBFwuMKfumEhxRWqgIeR0uvd9esOyws4MEYWvL7oIW8=;
+        b=OiWOyyjtMAR91TWRb1eDNamRNVNreeIIamMyH6N1NauOVAC2Neqf++DG7DOjmbtzDY
+         SeTz8LOCuDvllOOnGHMXLa7MATVs4oN+L5qN+fuCSr0fp9lzACVdS6jgd7HMaAtQN+/b
+         EY2D6FkLLzHsYz8B8OYcjh25dH4+K8Jrb38nGje1dkxwCN9q3vHm/paLAbPyWM4BcYKy
+         AFIo1ERmcmF6RG1tDIE9BxkU1fOtpyYirg49nmCNUk/r7GXWuSeU9xkpbrECV88bZok/
+         oQXA8qN1jqP0ePXubCgaN7igWMJunH1TYvz1fZb/Y7SyFaOU6ZMTZP9BlyjLzwDLpsn6
+         vcoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=YSfHst/Bl/LfQtkjdspGrz28MoFsoc+Jd1G8OfuVwCk=;
-        b=loxep7qeCjDLu08rup0O2xDAnAB0izeEvyl/NeNRS64h0STdpL2cnJUb5tP7rbRxPx
-         8pxK6pFpQbISYxc2MlJeKDK8gqPEU0jFquvakbL/BkgpuUeznv1syXmoUS/VAP9TUZVr
-         IvrOx/HETyH2WmRU75na9WMYkPmjC0fh4qCvjdWo5TamG9BISaoD9FCnOtdKCREmMC4T
-         irl3PSqVbN6C60XukE0iBAy0wFBCg3DsIePJqDuiREAwm6yCUUxUgZAJBm6GfgwXHlu+
-         p8x8GnYw2PtK3+IJtzYRkVb48htjSdpD/cBQlbOUuUuKbCc95gsw2mHkGSX1OS90B5aq
-         U3CQ==
-X-Gm-Message-State: APjAAAXBQxTi/IS+f0F7dWMe9VtF5VuKm3+aOp3TKr/OEegbs49pGopD
-        7dXZWERdJZTDvBdTEky1IUP3YsP5itGg2yKM3iB1VA==
-X-Google-Smtp-Source: APXvYqzKkVTRNR5hP07OYfwSrYSUmv1utGpt7A0BilEznNYCRj7LuiktTCRgu4IhMQfuDNVS+2oq/WXIlGThfWmUGFc/gQ==
-X-Received: by 2002:a63:3148:: with SMTP id x69mr874414pgx.300.1566949732956;
- Tue, 27 Aug 2019 16:48:52 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 16:48:35 -0700
-Message-Id: <20190827234835.234473-1-brendanhiggins@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v1] printk: add dummy vprintk_emit for when CONFIG_PRINTK=n
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     shuah@kernel.org, pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        rostedt@goodmis.org
-Cc:     kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, frowand.list@gmail.com,
-        sboyd@kernel.org, Brendan Higgins <brendanhiggins@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XBFwuMKfumEhxRWqgIeR0uvd9esOyws4MEYWvL7oIW8=;
+        b=DorldATJLdhqusRDrSNVg38OmOROUoeuCQsQ2xR3FaV50Acp37CebZCtxjbFkhwXu/
+         FoWg0WCUzH8kVtFSTE4zY/vJx1DiLeV0FApa0FbPYQBdOsXxcpSjd5w3l6TNiLMlH9IU
+         9NKf+/AlwkRxnTo32vuxwIL4w6GQxS1PEVaPaSKh4bGaYKqsTUv/vmU+RP98an8/pp0u
+         l8UxP5AzWhYrOeZLp7+wABlR4EMUUF6/A2xjE3q3WkVfE4aHMotGiAgMYSf0MgTruL8b
+         HZk9MeFre+tlkVZb+DOUyall0TGnxInlgJzG+wBJ+16EQS+x4thDb0kTYsfMQui/KH+a
+         CPSg==
+X-Gm-Message-State: APjAAAWA3ZyS+J3ZGwTLZRYL8P+dqassbzc7exXTN72ca4mLu+szDz6V
+        f8dnW40y9Ap2CizCstVpXfj1xojY+H+Fe2c2xnXUXbFW
+X-Google-Smtp-Source: APXvYqwT/z7EyqXsu9ad6rpgahJJ6Moy7n0m6yeh1ch5RhJiMCakDiIhBX4R4KjEO2KJBKf0kRp8HcFaCRpZJHfBq/4=
+X-Received: by 2002:a02:9a12:: with SMTP id b18mr1592753jal.70.1566949794676;
+ Tue, 27 Aug 2019 16:49:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190819160643.27998-1-efremov@linux.com> <20190819160643.27998-5-efremov@linux.com>
+In-Reply-To: <20190819160643.27998-5-efremov@linux.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Wed, 28 Aug 2019 09:49:43 +1000
+Message-ID: <CAOSf1CFoEaeZ4xVpEUtNCp1i7O6ebfUotZeNJRep_+zRSoVziw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously vprintk_emit was only defined when CONFIG_PRINTK=y, this
-caused a build failure in kunit/test.c when CONFIG_PRINTK was not set.
-Add a no-op dummy so that callers don't have to ifdef around this.
+On Tue, Aug 20, 2019 at 2:09 AM Denis Efremov <efremov@linux.com> wrote:
+>
+> Remove pciehp_green_led_{on,off,blink}() and use pciehp_set_indicators()
+> instead, since the code is mostly the same.
+>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+>  drivers/pci/hotplug/pciehp.h      |  3 ---
+>  drivers/pci/hotplug/pciehp_ctrl.c | 12 ++++++++---
+>  drivers/pci/hotplug/pciehp_hpc.c  | 36 -------------------------------
+>  3 files changed, 9 insertions(+), 42 deletions(-)
+>
+> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> index acda513f37d7..da429345cf70 100644
+> --- a/drivers/pci/hotplug/pciehp.h
+> +++ b/drivers/pci/hotplug/pciehp.h
+> @@ -170,9 +170,6 @@ void pciehp_get_power_status(struct controller *ctrl, u8 *status);
+>  void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn);
+>  void pciehp_get_latch_status(struct controller *ctrl, u8 *status);
+>  int pciehp_query_power_fault(struct controller *ctrl);
+> -void pciehp_green_led_on(struct controller *ctrl);
+> -void pciehp_green_led_off(struct controller *ctrl);
+> -void pciehp_green_led_blink(struct controller *ctrl);
+>  bool pciehp_card_present(struct controller *ctrl);
+>  bool pciehp_card_present_or_link_active(struct controller *ctrl);
+>  int pciehp_check_link_status(struct controller *ctrl);
+> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+> index 232f7bfcfce9..862fe86e87cc 100644
+> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+> @@ -65,7 +65,9 @@ static int board_added(struct controller *ctrl)
+>                         return retval;
+>         }
+>
+> -       pciehp_green_led_blink(ctrl);
+> +       pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK,
+> +                             PCI_EXP_SLTCTL_ATTN_IND_NONE);
 
-Note: It has been suggested that this go in through the kselftest tree
-along with the KUnit patches, because KUnit depends on this. See the
-second link for the discussion on this.
+I think it woud be good if you provided a helper macro for setting one
+of the indicators rather than open coding the _NONE constant. e.g.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
-Link: https://lore.kernel.org/linux-kselftest/ECADFF3FD767C149AD96A924E7EA6EAF977A5D82@USCULXMSG01.am.sony.com/
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
----
- include/linux/printk.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+#define set_power_indicator(ctrl, x) pciehp_set_indicators(ctrl, (x),
+PCI_EXP_SLTCTL_ATTN_IND_NONE);
 
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index cefd374c47b1..85b7970615a9 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -206,6 +206,13 @@ extern void printk_safe_init(void);
- extern void printk_safe_flush(void);
- extern void printk_safe_flush_on_panic(void);
- #else
-+static inline __printf(5, 0)
-+int vprintk_emit(int facility, int level,
-+		 const char *dict, size_t dictlen,
-+		 const char *fmt, va_list args)
-+{
-+	return 0;
-+}
- static inline __printf(1, 0)
- int vprintk(const char *s, va_list args)
- {
--- 
-2.23.0.187.g17f5b7556c-goog
+then you can do:
 
+set_power_indicator(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK);
+
+which is a bit nicer to read.
