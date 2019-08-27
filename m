@@ -7,55 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC324C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3001DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A200E20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034CA2184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566935880;
-	bh=yO6ZRlrySEZjAOJUV9eLVLtDVsKtxDSqYX1cB4UQxwA=;
+	s=default; t=1566935901;
+	bh=uuhPEfimVDHTG0/D8n8EjZRzC88/UEVYliLB6pGjJnE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=M5U80mA2hKLYicQK2phyllNNzy5Uy/vIG6T3mqV7h/QXtCXsa0ye1tX0qiFwIo2U/
-	 3YlcDQXFvy5kfD2sILkEexTYQvec6yiDFybYNj9lRDEIduWeP29AbbQ5aNtriLV1Dv
-	 D0nJKOtc9zcqZpKl2erndzaygMMzaG0FciBiD6R4=
+	b=W1GF3gS8omwOpC36DGyE8nOW+veA7qG6OuNqEyOKxRlS1ZEbz2mC8c+2pv9p1t/Np
+	 7ccG90cjj8QQDIwZYw/gopqhc0fb53HmmhC+jjFXB7+OHxyO2+9wLf2ok7BtmLtdxI
+	 9AhH7ynzOiTbwv/h34QS8gwQjybynuVaTfgbyURk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731251AbfH0T57 (ORCPT
+        id S1731281AbfH0T6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 15:57:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47506 "EHLO
+        Tue, 27 Aug 2019 15:58:19 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48210 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730221AbfH0T55 (ORCPT
+        with ESMTP id S1729626AbfH0T6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 15:57:57 -0400
+        Tue, 27 Aug 2019 15:58:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=em6MZelX7acWSuGq0e95g/RTon/1iv0z54PUZyQG7gM=; b=EKigAvoh+h8Z
-        K4H+BeUHg1q920TGOHo3dO1q3vT8KYG0F1Ew0XpOReYNp9xqtggBxbuThRYSRP/qbegTrhW2CP/PN
-        pBZrAszLOfQvsbaiNWhsyOvWa0fHKmxTSm4UupRkW5vVjbBbtnkOVHaTFh4Z2jATLryig4OMqIUlu
-        d8L3o=;
+        List-Archive; bh=OaThH/jNUV4FZgiVTkaECXCFgxAkV/6nLC1gNMp4aE4=; b=j5Fu6wEkIkf1
+        UPl+xL48N0ATGFIFtpB6+5w1wfct/0XAwMsAaS+gxEd2BJm0c+WKKWd0oDHoQ16LPubCc4K9geZLx
+        yWVqFCxMalcU2ZwrRjN955ZopjEpZKg2G5kmcEwsttqlF7rNWCvCI556USMqiJ1+QR0ABY+8Bh3iS
+        llz5M=;
 Received: from 188.28.18.107.threembb.co.uk ([188.28.18.107] helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1i2hb9-0001BX-It; Tue, 27 Aug 2019 19:57:48 +0000
+        id 1i2hbY-0001CV-JE; Tue, 27 Aug 2019 19:58:13 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id A0690D02CED; Tue, 27 Aug 2019 20:57:44 +0100 (BST)
+        id 5748AD02CE9; Tue, 27 Aug 2019 20:58:10 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Cc:     alsa-devel@alsa-project.org, Daniel Drake <drake@endlessm.com>,
-        David Yang <yangxiaohua@everest-semi.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: es8316: fix headphone mixer volume table" to the asoc tree
-In-Reply-To: <20190826153900.25969-1-katsuhiro@katsuster.net>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        Chen-Yu Tsai <wens@csie.org>, codekipper@gmail.com,
+        lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>
+Subject: Applied "ASoC: sun4i: Revert A83t description" to the asoc tree
+In-Reply-To: <20190827123131.29129-2-mripard@kernel.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20190827195744.A0690D02CED@fitzroy.sirena.org.uk>
-Date:   Tue, 27 Aug 2019 20:57:44 +0100 (BST)
+Message-Id: <20190827195810.5748AD02CE9@fitzroy.sirena.org.uk>
+Date:   Tue, 27 Aug 2019 20:58:10 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: es8316: fix headphone mixer volume table
+   ASoC: sun4i: Revert A83t description
 
 has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -88,58 +89,72 @@ to this mail.
 Thanks,
 Mark
 
-From f972d02fee2496024cfd6f59021c9d89d54922a6 Mon Sep 17 00:00:00 2001
-From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Date: Tue, 27 Aug 2019 00:38:59 +0900
-Subject: [PATCH] ASoC: es8316: fix headphone mixer volume table
+From 9ec05d4723bf83dd272cef5ccf508e5fe4d30fa3 Mon Sep 17 00:00:00 2001
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Date: Tue, 27 Aug 2019 14:31:31 +0200
+Subject: [PATCH] ASoC: sun4i: Revert A83t description
 
-This patch fix setting table of Headphone mixer volume.
-Current code uses 4 ... 7 values but these values are prohibited.
+The last set of reworks included some fixes to change the A83t behaviour
+and "fix" it.
 
-Correct settings are the following:
-  0000 -12dB
-  0001 -10.5dB
-  0010 -9dB
-  0011 -7.5dB
-  0100 -6dB
-  1000 -4.5dB
-  1001 -3dB
-  1010 -1.5dB
-  1011 0dB
+It turns out that the controller described in the datasheet and the one
+supported here are not the same, yet the A83t has the two of them, and the
+one supported in the driver wasn't the one described in the datasheet.
 
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Reviewed-by: Daniel Drake <drake@endlessm.com>
-Link: https://lore.kernel.org/r/20190826153900.25969-1-katsuhiro@katsuster.net
+Fix this by reintroducing the proper quirks.
+
+Fixes: 69e450e50ca6 ("ASoC: sun4i-i2s: Fix the LRCK period on A83t")
+Fixes: bf943d527987 ("ASoC: sun4i-i2s: Fix MCLK Enable bit offset on A83t")
+Fixes: 2e04fc4dbf50 ("ASoC: sun4i-i2s: Fix WSS and SR fields for the A83t")
+Fixes: 515fcfbc7736 ("ASoC: sun4i-i2s: Fix LRCK and BCLK polarity offsets on newer SoCs")
+Fixes: c1d3a921d72b ("ASoC: sun4i-i2s: Fix the MCLK and BCLK dividers on newer SoCs")
+Fixes: fb19739d7f68 ("ASoC: sun4i-i2s: Use module clock as BCLK parent on newer SoCs")
+Fixes: 71137bcd0a9a ("ASoC: sun4i-i2s: Move the format configuration to a callback")
+Fixes: d70be625f25a ("ASoC: sun4i-i2s: Move the channel configuration to a callback")
+Reported-by: Chen-Yu Tsai <wens@csie.org>
+Tested-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://lore.kernel.org/r/20190827123131.29129-2-mripard@kernel.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/es8316.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ sound/soc/sunxi/sun4i-i2s.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
-index 6db002cc2058..96d04896193f 100644
---- a/sound/soc/codecs/es8316.c
-+++ b/sound/soc/codecs/es8316.c
-@@ -51,7 +51,10 @@ static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(adc_vol_tlv, -9600, 50, 1);
- static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_max_gain_tlv, -650, 150, 0);
- static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_min_gain_tlv, -1200, 150, 0);
- static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_target_tlv, -1650, 150, 0);
--static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(hpmixer_gain_tlv, -1200, 150, 0);
-+static const SNDRV_CTL_TLVD_DECLARE_DB_RANGE(hpmixer_gain_tlv,
-+	0, 4, TLV_DB_SCALE_ITEM(-1200, 150, 0),
-+	8, 11, TLV_DB_SCALE_ITEM(-450, 150, 0),
-+);
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index a6a3f772fdf0..d0a8d5810c0a 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -1106,18 +1106,18 @@ static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
+ 	.has_reset		= true,
+ 	.reg_offset_txdata	= SUN8I_I2S_FIFO_TX_REG,
+ 	.sun4i_i2s_regmap	= &sun4i_i2s_regmap_config,
+-	.field_clkdiv_mclk_en	= REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 8, 8),
+-	.field_fmt_wss		= REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 2),
+-	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 6),
+-	.bclk_dividers		= sun8i_i2s_clk_div,
+-	.num_bclk_dividers	= ARRAY_SIZE(sun8i_i2s_clk_div),
+-	.mclk_dividers		= sun8i_i2s_clk_div,
+-	.num_mclk_dividers	= ARRAY_SIZE(sun8i_i2s_clk_div),
+-	.get_bclk_parent_rate	= sun8i_i2s_get_bclk_parent_rate,
+-	.get_sr			= sun8i_i2s_get_sr_wss,
+-	.get_wss		= sun8i_i2s_get_sr_wss,
+-	.set_chan_cfg		= sun8i_i2s_set_chan_cfg,
+-	.set_fmt		= sun8i_i2s_set_soc_fmt,
++	.field_clkdiv_mclk_en	= REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 7, 7),
++	.field_fmt_wss		= REG_FIELD(SUN4I_I2S_FMT0_REG, 2, 3),
++	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 5),
++	.bclk_dividers		= sun4i_i2s_bclk_div,
++	.num_bclk_dividers	= ARRAY_SIZE(sun4i_i2s_bclk_div),
++	.mclk_dividers		= sun4i_i2s_mclk_div,
++	.num_mclk_dividers	= ARRAY_SIZE(sun4i_i2s_mclk_div),
++	.get_bclk_parent_rate	= sun4i_i2s_get_bclk_parent_rate,
++	.get_sr			= sun4i_i2s_get_sr,
++	.get_wss		= sun4i_i2s_get_wss,
++	.set_chan_cfg		= sun4i_i2s_set_chan_cfg,
++	.set_fmt		= sun4i_i2s_set_soc_fmt,
+ };
  
- static const SNDRV_CTL_TLVD_DECLARE_DB_RANGE(adc_pga_gain_tlv,
- 	0, 0, TLV_DB_SCALE_ITEM(-350, 0, 0),
-@@ -89,7 +92,7 @@ static const struct snd_kcontrol_new es8316_snd_controls[] = {
- 	SOC_DOUBLE_TLV("Headphone Playback Volume", ES8316_CPHP_ICAL_VOL,
- 		       4, 0, 3, 1, hpout_vol_tlv),
- 	SOC_DOUBLE_TLV("Headphone Mixer Volume", ES8316_HPMIX_VOL,
--		       0, 4, 7, 0, hpmixer_gain_tlv),
-+		       0, 4, 11, 0, hpmixer_gain_tlv),
- 
- 	SOC_ENUM("Playback Polarity", dacpol),
- 	SOC_DOUBLE_R_TLV("DAC Playback Volume", ES8316_DAC_VOLL,
+ static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
 -- 
 2.20.1
 
