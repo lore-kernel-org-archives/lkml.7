@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B68FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B56BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2635C2184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1021C217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893411;
-	bh=a97coZqjOjw8sBI9siM5m9pjy191/+hOcjBuL2b/MOg=;
+	s=default; t=1566893413;
+	bh=+M7tqVXJRZzXd4UZceaYNYZOKf9U9w18yhz7pJKEoQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rYRCIpG6nDPi8ADv9pnTcQAeEkNAJqLTfpuMQVyR/7APNRXGHE5vU58tBKzjGvXML
-	 7ZeJ9brps/h23JZwZXimuFEpyWXqtn/srcN4CzVYlMoVdqVsNCp/TragNERaK08rUA
-	 k08pFdSMYuvim4dlD0Ye9lII+LCMvIeucMyeZxfc=
+	b=MW5mZwWIMydOBv8uD5PXkEp+6nXXFi7Pmi8OWFk8zIzNqUU5HDvb2t85om2MIa1ve
+	 uWfpe9Ui9pw2OChefaBVAGE1h0GAVFxtTO/A74um7CnDjmkJaPqXYYAMLr+scG7YWk
+	 hE4xcX9guGDUIbCP1s890WfLvPoc3e7Tc5hX82qQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbfH0ICw (ORCPT
+        id S1731585AbfH0ICu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:02:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60070 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:02:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731554AbfH0ICt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:02:49 -0400
+        id S1732076AbfH0ICq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:02:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05C85206BA;
-        Tue, 27 Aug 2019 08:02:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D66A206BA;
+        Tue, 27 Aug 2019 08:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892968;
-        bh=a97coZqjOjw8sBI9siM5m9pjy191/+hOcjBuL2b/MOg=;
+        s=default; t=1566892965;
+        bh=+M7tqVXJRZzXd4UZceaYNYZOKf9U9w18yhz7pJKEoQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c/r7xYnvn+CvAZx+hpt8iNm/l7d5DTdoyR5edzZt7D9PuN1nwoblIieSNIQV7M0OL
-         0+5nloJkZLtruMrMnU37MATf/S5cLy64TunkOrXSgqz9Xx98j0VenjPUbGuyP4rxEh
-         Bh9Z+Zi2J+FndsD1LOVC8BaxUOIcW+ugxlFDxZwU=
+        b=ycZW2TSEvJQvrCaLV7M1XwZ1t+s0+lSkYqwod7l21sDwOgIQ1AQWIEZfmWR5piC93
+         +b4RuruA6LDADlS+zdAEwXd7NJ6Y4HEZ0iuANchIvzypHeT3ZPm7B+Upx4jjGw0BMy
+         ffD72CTDfcuMFEn8JzyNZlcXfUyD2ApQYSeh0JXo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 060/162] iwlwifi: mvm: send LQ command always ASYNC
-Date:   Tue, 27 Aug 2019 09:49:48 +0200
-Message-Id: <20190827072740.263952722@linuxfoundation.org>
+        =?UTF-8?q?Istv=C3=A1n=20V=C3=A1radi?= <ivaradi@varadiistvan.hu>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 077/162] HID: quirks: Set the INCREMENT_USAGE_ON_DUPLICATE quirk on Saitek X52
+Date:   Tue, 27 Aug 2019 09:50:05 +0200
+Message-Id: <20190827072740.794648794@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -62,174 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cd4d6b0bcd51580efda9ae54ab7b2d630b4147dc ]
+[ Upstream commit 7bc74853fd61432ec59f812a40425bf6d8c986a4 ]
 
-The only place where the command was sent as SYNC is during
-init and this is not really critical. This change is required
-for replacing RS mutex with a spinlock (in the subsequent patch),
-since SYNC comamnd requres sleeping and thus the flow cannot
-be done when holding a spinlock.
+The Saitek X52 joystick has a pair of axes that are originally
+(by the Windows driver) used as mouse pointer controls. The corresponding
+usage->hid values are 0x50024 and 0x50026. Thus they are handled
+as unknown axes and both get mapped to ABS_MISC. The quirk makes
+the second axis to be mapped to ABS_MISC1 and thus made available
+separately.
 
-Signed-off-by: Gregory Greenman <gregory.greenman@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+[jkosina@suse.cz: squashed two patches into one]
+Signed-off-by: István Váradi <ivaradi@varadiistvan.hu>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/mvm.h  |  2 +-
- drivers/net/wireless/intel/iwlwifi/mvm/rs.c   | 23 ++++++++++---------
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c  |  2 +-
- .../net/wireless/intel/iwlwifi/mvm/utils.c    |  4 ++--
- 4 files changed, 16 insertions(+), 15 deletions(-)
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-index ed8fc9a9204ca..0c11a219e3477 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-@@ -1807,7 +1807,7 @@ iwl_mvm_vif_dbgfs_clean(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
- #endif /* CONFIG_IWLWIFI_DEBUGFS */
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 34a812025b948..76aa474e92c15 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -990,6 +990,7 @@
+ #define USB_DEVICE_ID_SAITEK_RAT7	0x0cd7
+ #define USB_DEVICE_ID_SAITEK_RAT9	0x0cfa
+ #define USB_DEVICE_ID_SAITEK_MMO7	0x0cd0
++#define USB_DEVICE_ID_SAITEK_X52	0x075c
  
- /* rate scaling */
--int iwl_mvm_send_lq_cmd(struct iwl_mvm *mvm, struct iwl_lq_cmd *lq, bool sync);
-+int iwl_mvm_send_lq_cmd(struct iwl_mvm *mvm, struct iwl_lq_cmd *lq);
- void iwl_mvm_update_frame_stats(struct iwl_mvm *mvm, u32 rate, bool agg);
- int rs_pretty_print_rate(char *buf, int bufsz, const u32 rate);
- void rs_update_last_rssi(struct iwl_mvm *mvm,
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rs.c b/drivers/net/wireless/intel/iwlwifi/mvm/rs.c
-index 836541caa3167..01b032f18bc8b 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rs.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rs.c
-@@ -1326,7 +1326,7 @@ void iwl_mvm_rs_tx_status(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
- 			IWL_DEBUG_RATE(mvm,
- 				       "Too many rates mismatch. Send sync LQ. rs_state %d\n",
- 				       lq_sta->rs_state);
--			iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq, false);
-+			iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq);
- 		}
- 		/* Regardless, ignore this status info for outdated rate */
- 		return;
-@@ -1388,7 +1388,8 @@ void iwl_mvm_rs_tx_status(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
- 		if (info->status.ampdu_ack_len == 0)
- 			info->status.ampdu_len = 1;
- 
--		rs_collect_tlc_data(mvm, mvmsta, tid, curr_tbl, tx_resp_rate.index,
-+		rs_collect_tlc_data(mvm, mvmsta, tid, curr_tbl,
-+				    tx_resp_rate.index,
- 				    info->status.ampdu_len,
- 				    info->status.ampdu_ack_len);
- 
-@@ -1823,7 +1824,7 @@ static void rs_update_rate_tbl(struct iwl_mvm *mvm,
- 			       struct iwl_scale_tbl_info *tbl)
- {
- 	rs_fill_lq_cmd(mvm, sta, lq_sta, &tbl->rate);
--	iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq, false);
-+	iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq);
- }
- 
- static bool rs_tweak_rate_tbl(struct iwl_mvm *mvm,
-@@ -2925,7 +2926,7 @@ void rs_update_last_rssi(struct iwl_mvm *mvm,
- static void rs_initialize_lq(struct iwl_mvm *mvm,
- 			     struct ieee80211_sta *sta,
- 			     struct iwl_lq_sta *lq_sta,
--			     enum nl80211_band band, bool update)
-+			     enum nl80211_band band)
- {
- 	struct iwl_scale_tbl_info *tbl;
- 	struct rs_rate *rate;
-@@ -2955,7 +2956,7 @@ static void rs_initialize_lq(struct iwl_mvm *mvm,
- 	rs_set_expected_tpt_table(lq_sta, tbl);
- 	rs_fill_lq_cmd(mvm, sta, lq_sta, rate);
- 	/* TODO restore station should remember the lq cmd */
--	iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq, !update);
-+	iwl_mvm_send_lq_cmd(mvm, &lq_sta->lq);
- }
- 
- static void rs_drv_get_rate(void *mvm_r, struct ieee80211_sta *sta,
-@@ -3208,7 +3209,7 @@ void iwl_mvm_update_frame_stats(struct iwl_mvm *mvm, u32 rate, bool agg)
-  * Called after adding a new station to initialize rate scaling
-  */
- static void rs_drv_rate_init(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
--			     enum nl80211_band band, bool update)
-+			     enum nl80211_band band)
- {
- 	int i, j;
- 	struct ieee80211_hw *hw = mvm->hw;
-@@ -3288,7 +3289,7 @@ static void rs_drv_rate_init(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
- #ifdef CONFIG_IWLWIFI_DEBUGFS
- 	iwl_mvm_reset_frame_stats(mvm);
- #endif
--	rs_initialize_lq(mvm, sta, lq_sta, band, update);
-+	rs_initialize_lq(mvm, sta, lq_sta, band);
- }
- 
- static void rs_drv_rate_update(void *mvm_r,
-@@ -3602,7 +3603,7 @@ static void rs_set_lq_ss_params(struct iwl_mvm *mvm,
- 
- 		bfersta_ss_params &= ~LQ_SS_BFER_ALLOWED;
- 		bfersta_lq_cmd->ss_params = cpu_to_le32(bfersta_ss_params);
--		iwl_mvm_send_lq_cmd(mvm, bfersta_lq_cmd, false);
-+		iwl_mvm_send_lq_cmd(mvm, bfersta_lq_cmd);
- 
- 		ss_params |= LQ_SS_BFER_ALLOWED;
- 		IWL_DEBUG_RATE(mvm,
-@@ -3768,7 +3769,7 @@ static void rs_program_fix_rate(struct iwl_mvm *mvm,
- 
- 	if (lq_sta->pers.dbg_fixed_rate) {
- 		rs_fill_lq_cmd(mvm, NULL, lq_sta, NULL);
--		iwl_mvm_send_lq_cmd(lq_sta->pers.drv, &lq_sta->lq, false);
-+		iwl_mvm_send_lq_cmd(lq_sta->pers.drv, &lq_sta->lq);
- 	}
- }
- 
-@@ -4171,7 +4172,7 @@ void iwl_mvm_rs_rate_init(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
- 		struct iwl_mvm_sta *mvmsta = iwl_mvm_sta_from_mac80211(sta);
- 
- 		mutex_lock(&mvmsta->lq_sta.rs_drv.mutex);
--		rs_drv_rate_init(mvm, sta, band, update);
-+		rs_drv_rate_init(mvm, sta, band);
- 		mutex_unlock(&mvmsta->lq_sta.rs_drv.mutex);
- 	}
- }
-@@ -4203,7 +4204,7 @@ static int rs_drv_tx_protection(struct iwl_mvm *mvm, struct iwl_mvm_sta *mvmsta,
- 			lq->flags &= ~LQ_FLAG_USE_RTS_MSK;
- 	}
- 
--	return iwl_mvm_send_lq_cmd(mvm, lq, false);
-+	return iwl_mvm_send_lq_cmd(mvm, lq);
- }
- 
- /**
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-index ac9bc65c4d156..22715cdb83171 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -2978,7 +2978,7 @@ out:
- 	IWL_DEBUG_HT(mvm, "Tx aggregation enabled on ra = %pM tid = %d\n",
- 		     sta->addr, tid);
- 
--	return iwl_mvm_send_lq_cmd(mvm, &mvmsta->lq_sta.rs_drv.lq, false);
-+	return iwl_mvm_send_lq_cmd(mvm, &mvmsta->lq_sta.rs_drv.lq);
- }
- 
- static void iwl_mvm_unreserve_agg_queue(struct iwl_mvm *mvm,
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/utils.c b/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
-index cc56ab88fb439..a71277de2e0eb 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/utils.c
-@@ -641,12 +641,12 @@ int iwl_mvm_reconfig_scd(struct iwl_mvm *mvm, int queue, int fifo, int sta_id,
-  * this case to clear the state indicating that station creation is in
-  * progress.
-  */
--int iwl_mvm_send_lq_cmd(struct iwl_mvm *mvm, struct iwl_lq_cmd *lq, bool sync)
-+int iwl_mvm_send_lq_cmd(struct iwl_mvm *mvm, struct iwl_lq_cmd *lq)
- {
- 	struct iwl_host_cmd cmd = {
- 		.id = LQ_CMD,
- 		.len = { sizeof(struct iwl_lq_cmd), },
--		.flags = sync ? 0 : CMD_ASYNC,
-+		.flags = CMD_ASYNC,
- 		.data = { lq, },
- 	};
- 
+ #define USB_VENDOR_ID_SAMSUNG		0x0419
+ #define USB_DEVICE_ID_SAMSUNG_IR_REMOTE	0x0001
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 5b669f7d653fa..4fe2c3ab76f9c 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -141,6 +141,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_RETROUSB, USB_DEVICE_ID_RETROUSB_SNES_RETROPAD), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_RETROUSB, USB_DEVICE_ID_RETROUSB_SNES_RETROPORT), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_RUMBLEPAD), HID_QUIRK_BADPAD },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_X52), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SEMICO, USB_DEVICE_ID_SEMICO_USB_KEYKOARD2), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SEMICO, USB_DEVICE_ID_SEMICO_USB_KEYKOARD), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SENNHEISER, USB_DEVICE_ID_SENNHEISER_BTD500USB), HID_QUIRK_NOGET },
 -- 
 2.20.1
 
