@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B84C3A59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A019EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29374206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72718217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:32:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vr3HfuBB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KuztGt+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbfH0Ack (ORCPT
+        id S1728127AbfH0Acy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 20:32:40 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41240 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbfH0Acj (ORCPT
+        Mon, 26 Aug 2019 20:32:54 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36765 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbfH0Acy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 20:32:39 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m9so10845334pls.8;
-        Mon, 26 Aug 2019 17:32:39 -0700 (PDT)
+        Mon, 26 Aug 2019 20:32:54 -0400
+Received: by mail-pl1-f195.google.com with SMTP id f19so10858364plr.3;
+        Mon, 26 Aug 2019 17:32:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=kyP8YtTFMbDNG7qsSo2w5pZq5BUurmqPvqGOvI+33I4=;
-        b=Vr3HfuBBvU+CvPCGdWp3sLwJb2EtL3a9crXIjuQJSWLjl5ksVMgCgkQNSbaHfaCgo1
-         4nfBkArMmecu23vp5/O6l0b6QwewovlkmdsPr5K+025s1D+TeJE19WvYtWYy/O9Qzvn9
-         JatA0M6TBp9aWACMyhrP6RPT+DKL1YP0HkDf/cggIQNR6bgaKLsX10Q7R64XSeQeyoAz
-         h4hHMg83fEt4ogVHkfndekQJSxP0niAuzDW0/uzDhMJIF5Kpmr2QHomtV0JF/0tEDRQw
-         GdXqNiD6KogTLeuPK/1R4vFN0+6MSnq5ikb/pElZ/3TadmgpmkWxNMpksCw3QXGQSYma
-         Y7dQ==
+        bh=189g0JP68z9u+Ep1GWrcVIMocc6+TBCdAX4Yd+2DXKM=;
+        b=KuztGt+nXT1gTEb5csKxCYy4+7BmsyakHzvzGyMtFyRqmTySJrI0NB05w5Fuz9nO48
+         Llgge4WwGN02rS9wUnnTdnQ/8KTvKkSVAK65Xvz5ruXm9HJ/x1L8jehOEu+pr3Jswa54
+         zxMllUu66M0CF70bAOEpGjK/3v9U9Jk77jgDAboFs3uCWkTdLWejqzFeJULd0F7pPcr6
+         UlRxO4l5oBhdnM0UBeXqxOcYZV8N5GzwoAt92jTFDJWGTaer2jdvopGcTkdP7Hsou0gA
+         lkrMHx0BxVijrWQ12Br1pQ1jJdTf+Onhh3C1RgDPJdei85GLeIvbroXUB+2PDB3DPSgq
+         ormQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=kyP8YtTFMbDNG7qsSo2w5pZq5BUurmqPvqGOvI+33I4=;
-        b=nmVFPLiypy2JIFLj4MYqAec+izWC6itsjoEEx+YX845l3sH2AZwy+WhL2cTbA+3YvU
-         VurK40F3AxIftXJ76m1yHWRveqYWoh05QYLus5uvPJrUI9LNI0ZlBladUyjg4rPA4dZL
-         iL2afecsBp/gstPPNQyVc45u150YQcT8bTvdOXexWJaUVF9ldheU4M9BuXq0pSiqALxP
-         C9Avugt/LOtP3ND+zOW934WN/TJd2x+Rq0Y0m2LV4SQ1bk4E0asY6/EKCw1/3dM6VESS
-         F08sX/NJlclAkvtYdnOZyHWcvIfIyzJklTTfzk2kJihNRU/RXAWFfw2AiJu07xi3ZnMu
-         qPaA==
-X-Gm-Message-State: APjAAAVIocUJlDAZG6KOzOwrB0A1pbI8cQ5CgESzNJOn8XFc8xihQk3o
-        4hyTAI7x6S3LtymO15hYbig=
-X-Google-Smtp-Source: APXvYqz3ZmR1zugYM2VmnZ+ecV9ZHk+8pBBQ39SEGbJDivdoJ7PQszjh2Nwlp3kG0uQUU22i6Tfntw==
-X-Received: by 2002:a17:902:a706:: with SMTP id w6mr6406893plq.166.1566865959290;
-        Mon, 26 Aug 2019 17:32:39 -0700 (PDT)
+        bh=189g0JP68z9u+Ep1GWrcVIMocc6+TBCdAX4Yd+2DXKM=;
+        b=n19u1XSsm0hIZVvdPB8vvBY9RqSIdtkDlEI4Oi0nprZ/IZlBzDdAaSYUsjBIDqFbu3
+         Ho5G+KNW+F4sivtBkEbciW4vtVkTW4rMlUbNdrLl6P8U7BSkb5nU8HSX7DmJMIN7tfT8
+         2lHDEP/DBGW77KfzhmDG5/T7ZsYpUVrvDG14jl+bcIUP3Z/6XCsyGmyif9S/WH4ys1If
+         kw2IRx52259qE10XGQKxPSL4XWIlX9f5B/0hOoXEeugC/o+GsUVZBU2yAKx6kih/6EHI
+         3u1QyAd4jZiwfTJeyNOCVe7eLTG/m6Ql4eTHyFP5K09XTeNQCSf2GW40b9AlUD5Mf8mh
+         hIQg==
+X-Gm-Message-State: APjAAAXO9Z9iPkE44ZdzXObvMLEtKbCp6fP8Vk0YzSgUkkTesAF2S7V/
+        xZD8aeH9qrEp5pd7yJLpwQs=
+X-Google-Smtp-Source: APXvYqyNdNPY19KQGF32db9ueEkPRVWw5IgAFygk1tLqn7BQl/o/Or77fI0K590F0VOLTbX0RU66mQ==
+X-Received: by 2002:a17:902:5c3:: with SMTP id f61mr20153314plf.98.1566865973709;
+        Mon, 26 Aug 2019 17:32:53 -0700 (PDT)
 Received: from gli-arch.genesyslogic.com.tw (60-251-58-169.HINET-IP.hinet.net. [60.251.58.169])
-        by smtp.gmail.com with ESMTPSA id e13sm14828075pfl.130.2019.08.26.17.32.36
+        by smtp.gmail.com with ESMTPSA id l7sm7444220pff.35.2019.08.26.17.32.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 17:32:38 -0700 (PDT)
+        Mon, 26 Aug 2019 17:32:52 -0700 (PDT)
 From:   Ben Chuang <benchuanggli@gmail.com>
 To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
 Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         johnsonm@danlj.org, ben.chuang@genesyslogic.com.tw,
         Ben Chuang <benchuanggli@gmail.com>
-Subject: [PATCH V6 1/5] mmc: sdhci: Change timeout of loop for checking internal clock stable
-Date:   Tue, 27 Aug 2019 08:32:42 +0800
-Message-Id: <20190827003242.2298-1-benchuanggli@gmail.com>
+Subject: [PATCH V6 2/5] mmc: sdhci: Add PLL Enable support to internal clock setup
+Date:   Tue, 27 Aug 2019 08:32:55 +0800
+Message-Id: <20190827003255.2347-1-benchuanggli@gmail.com>
 X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,32 +75,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 
-According to section 3.2.1 internal clock setup in SD Host Controller
-Simplified Specifications 4.20, the timeout of loop for checking
-internal clock stable is defined as 150ms.
+The GL9750 and GL9755 chipsets, and possibly others, require PLL Enable
+setup as part of the internal clock setup as described in 3.2.1 Internal
+Clock Setup Sequence of SD Host Controller Simplified Specification
+Version 4.20.
 
 Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
 Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
 Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- drivers/mmc/host/sdhci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mmc/host/sdhci.c | 23 +++++++++++++++++++++++
+ drivers/mmc/host/sdhci.h |  1 +
+ 2 files changed, 24 insertions(+)
 
 diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 59acf8e3331e..bed0760a6c2a 100644
+index bed0760a6c2a..9106ebc7a422 100644
 --- a/drivers/mmc/host/sdhci.c
 +++ b/drivers/mmc/host/sdhci.c
-@@ -1636,8 +1636,8 @@ void sdhci_enable_clk(struct sdhci_host *host, u16 clk)
- 	clk |= SDHCI_CLOCK_INT_EN;
- 	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+@@ -1653,6 +1653,29 @@ void sdhci_enable_clk(struct sdhci_host *host, u16 clk)
+ 		udelay(10);
+ 	}
  
--	/* Wait max 20 ms */
--	timeout = ktime_add_ms(ktime_get(), 20);
-+	/* Wait max 150 ms */
-+	timeout = ktime_add_ms(ktime_get(), 150);
- 	while (1) {
- 		bool timedout = ktime_after(ktime_get(), timeout);
++	if (host->version >= SDHCI_SPEC_410 && host->v4_mode) {
++		clk |= SDHCI_CLOCK_PLL_EN;
++		clk &= ~SDHCI_CLOCK_INT_STABLE;
++		sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
++
++		/* Wait max 150 ms */
++		timeout = ktime_add_ms(ktime_get(), 150);
++		while (1) {
++			bool timedout = ktime_after(ktime_get(), timeout);
++
++			clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
++			if (clk & SDHCI_CLOCK_INT_STABLE)
++				break;
++			if (timedout) {
++				pr_err("%s: PLL clock never stabilised.\n",
++				       mmc_hostname(host->mmc));
++				sdhci_dumpregs(host);
++				return;
++			}
++			udelay(10);
++		}
++	}
++
+ 	clk |= SDHCI_CLOCK_CARD_EN;
+ 	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+ }
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 199712e7adbb..72601a4d2e95 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -114,6 +114,7 @@
+ #define  SDHCI_DIV_HI_MASK	0x300
+ #define  SDHCI_PROG_CLOCK_MODE	0x0020
+ #define  SDHCI_CLOCK_CARD_EN	0x0004
++#define  SDHCI_CLOCK_PLL_EN	0x0008
+ #define  SDHCI_CLOCK_INT_STABLE	0x0002
+ #define  SDHCI_CLOCK_INT_EN	0x0001
  
 -- 
 2.22.1
