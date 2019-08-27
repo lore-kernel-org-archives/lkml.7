@@ -2,264 +2,130 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B26BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4A0C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233362077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2CB217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l8N1F/Dz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbfH0MqF (ORCPT
+        id S1729494AbfH0Mq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:46:05 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5669 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726170AbfH0MqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:46:04 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 041F6D3CA078F0D5976C;
-        Tue, 27 Aug 2019 20:45:57 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 27 Aug 2019
- 20:45:45 +0800
-Subject: Re: [PATCH v3 10/10] arm64: Retrieve stolen time as paravirtualized
- guest
-To:     Steven Price <steven.price@arm.com>, Marc Zyngier <maz@kernel.org>,
-        "Will Deacon" <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>
-CC:     <kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        <linux-kernel@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
-References: <20190821153656.33429-1-steven.price@arm.com>
- <20190821153656.33429-11-steven.price@arm.com>
- <6040a45c-fc39-a33e-c6a4-7baa586c247c@huawei.com>
- <29cd1304-6b4d-05ef-3c08-6b4ba769c8fa@arm.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <21c73195-4cf7-8e3f-f188-ba8bfcb4dd41@huawei.com>
-Date:   Tue, 27 Aug 2019 20:43:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        Tue, 27 Aug 2019 08:46:57 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39960 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfH0Mq5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 08:46:57 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c3so18650709wrd.7
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 05:46:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=5QBDLcjxkLr/nnq6qs0lgCdOCwtscFs7g505ezIG0LQ=;
+        b=l8N1F/DzXNM+nJ1ODvblKsaSge7jR1tgnGyWr6gtN2B13qnhtpWlih1mBc7pXZ3vJ3
+         NNX0k4gBpFUirBgKuB+UL+QeyFm+RTPOXN3tvgpwfX4uJlAWZ3MrEyJvavAD10wj+VTr
+         KPnRPtgpYoIUwvnflZAWBqvvrn+4qd+6VFsXqhuJALrIs5GYbrdlTlkRjYnFcJjj1mI7
+         eOrnyEvQ0AQzzAYsJ9qVncvp9D/PVdsTU/pPavB5jM3ft7HosiIU3d+DeZoAaEnPzgTN
+         2gBWCtRQd90oxSysFBW4LDkprZ06II/4b8a08oVAi9KYN+OxgYqKtxa0w8KlLdiuF32p
+         DAyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=5QBDLcjxkLr/nnq6qs0lgCdOCwtscFs7g505ezIG0LQ=;
+        b=qd7aZsE/BdbsY6xTo9QDxPNS0G1zqV6xkNul56t5lyrBo/J+V8QqxvnUxz1UBF5i3K
+         gpStTOYtzXZWEmZujVhPnIcfeEL2oUQlnznfjQmaVFf1GODR8JAo87Mrp2a6gAX8HW/i
+         S2XXGxLxO0Z/OwCZ+o97KA3mnWTuxDj6an11gkxlM6JSDex9GwYIriKWK/+xPXmZRPzs
+         T2I/ygjgXo8ZrbHiqegyFOr/VVPD94n4dEv5QWgBwQ3dFCAF3o6SPBI3VLy/tRzLJPa2
+         GpN3KZegD6KvYGVIlqLCUo1xRjMt70jPpqcVUh1jRg5FUh/UHQlB5CNnFE+VoopeIzwG
+         /ePg==
+X-Gm-Message-State: APjAAAUglzhUQbp0ypDeS8HnYX2IzKuZOMsp4BBYrbEb5E/TODFepoxk
+        KRQ+AmKaCppK2yYM++3vUH2siA==
+X-Google-Smtp-Source: APXvYqwkCYWotRKbdpkyQltpLEzjVgv4zLOCd62Wxvwm420LpJOnl5l1wA6kGmw6pCARSyJtSPQJmA==
+X-Received: by 2002:a5d:604d:: with SMTP id j13mr28317268wrt.244.1566910015713;
+        Tue, 27 Aug 2019 05:46:55 -0700 (PDT)
+Received: from dell ([2.27.35.174])
+        by smtp.gmail.com with ESMTPSA id u129sm3828248wmb.12.2019.08.27.05.46.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 27 Aug 2019 05:46:54 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 13:46:52 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Collabora kernel ML <kernel@collabora.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: Re: [PATCH v6 08/11] mfd: cros_ec: Add convenience struct to define
+ dedicated CrOS EC MCUs
+Message-ID: <20190827124652.GC4804@dell>
+References: <20190823125331.5070-1-enric.balletbo@collabora.com>
+ <20190823125331.5070-9-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <29cd1304-6b4d-05ef-3c08-6b4ba769c8fa@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190823125331.5070-9-enric.balletbo@collabora.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/23 22:22, Steven Price wrote:
-> On 23/08/2019 12:45, Zenghui Yu wrote:
->> Hi Steven,
->>
->> On 2019/8/21 23:36, Steven Price wrote:
->>> Enable paravirtualization features when running under a hypervisor
->>> supporting the PV_TIME_ST hypercall.
->>>
->>> For each (v)CPU, we ask the hypervisor for the location of a shared
->>> page which the hypervisor will use to report stolen time to us. We set
->>> pv_time_ops to the stolen time function which simply reads the stolen
->>> value from the shared page for a VCPU. We guarantee single-copy
->>> atomicity using READ_ONCE which means we can also read the stolen
->>> time for another VCPU than the currently running one while it is
->>> potentially being updated by the hypervisor.
->>>
->>> Signed-off-by: Steven Price <steven.price@arm.com>
->>> ---
->>>    arch/arm64/include/asm/paravirt.h |   9 +-
->>>    arch/arm64/kernel/paravirt.c      | 148 ++++++++++++++++++++++++++++++
->>>    arch/arm64/kernel/time.c          |   3 +
->>>    include/linux/cpuhotplug.h        |   1 +
->>>    4 files changed, 160 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/include/asm/paravirt.h
->>> b/arch/arm64/include/asm/paravirt.h
->>> index 799d9dd6f7cc..125c26c42902 100644
->>> --- a/arch/arm64/include/asm/paravirt.h
->>> +++ b/arch/arm64/include/asm/paravirt.h
->>> @@ -21,6 +21,13 @@ static inline u64 paravirt_steal_clock(int cpu)
->>>    {
->>>        return pv_ops.time.steal_clock(cpu);
->>>    }
->>> -#endif
->>> +
->>> +int __init kvm_guest_init(void);
->>> +
->>> +#else
->>> +
->>> +#define kvm_guest_init()
->>> +
->>> +#endif // CONFIG_PARAVIRT
->>>      #endif
->>> diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
->>> index 4cfed91fe256..ea8dbbbd3293 100644
->>> --- a/arch/arm64/kernel/paravirt.c
->>> +++ b/arch/arm64/kernel/paravirt.c
->>> @@ -6,13 +6,161 @@
->>>     * Author: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
->>>     */
->>>    +#define pr_fmt(fmt) "kvmarm-pv: " fmt
->>> +
->>> +#include <linux/arm-smccc.h>
->>> +#include <linux/cpuhotplug.h>
->>>    #include <linux/export.h>
->>> +#include <linux/io.h>
->>>    #include <linux/jump_label.h>
->>> +#include <linux/printk.h>
->>> +#include <linux/psci.h>
->>> +#include <linux/reboot.h>
->>> +#include <linux/slab.h>
->>>    #include <linux/types.h>
->>> +
->>>    #include <asm/paravirt.h>
->>> +#include <asm/pvclock-abi.h>
->>> +#include <asm/smp_plat.h>
->>>      struct static_key paravirt_steal_enabled;
->>>    struct static_key paravirt_steal_rq_enabled;
->>>      struct paravirt_patch_template pv_ops;
->>>    EXPORT_SYMBOL_GPL(pv_ops);
->>> +
->>> +struct kvmarm_stolen_time_region {
->>> +    struct pvclock_vcpu_stolen_time *kaddr;
->>> +};
->>> +
->>> +static DEFINE_PER_CPU(struct kvmarm_stolen_time_region,
->>> stolen_time_region);
->>> +
->>> +static bool steal_acc = true;
->>> +static int __init parse_no_stealacc(char *arg)
->>> +{
->>> +    steal_acc = false;
->>> +    return 0;
->>> +}
->>> +
->>> +early_param("no-steal-acc", parse_no_stealacc);
->>> +
->>> +/* return stolen time in ns by asking the hypervisor */
->>> +static u64 kvm_steal_clock(int cpu)
->>> +{
->>> +    struct kvmarm_stolen_time_region *reg;
->>> +
->>> +    reg = per_cpu_ptr(&stolen_time_region, cpu);
->>> +    if (!reg->kaddr) {
->>> +        pr_warn_once("stolen time enabled but not configured for cpu
->>> %d\n",
->>> +                 cpu);
->>> +        return 0;
->>> +    }
->>> +
->>> +    return le64_to_cpu(READ_ONCE(reg->kaddr->stolen_time));
->>> +}
->>> +
->>> +static int disable_stolen_time_current_cpu(void)
->>> +{
->>> +    struct kvmarm_stolen_time_region *reg;
->>> +
->>> +    reg = this_cpu_ptr(&stolen_time_region);
->>> +    if (!reg->kaddr)
->>> +        return 0;
->>> +
->>> +    memunmap(reg->kaddr);
->>> +    memset(reg, 0, sizeof(*reg));
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static int stolen_time_dying_cpu(unsigned int cpu)
->>> +{
->>> +    return disable_stolen_time_current_cpu();
->>> +}
->>> +
->>> +static int init_stolen_time_cpu(unsigned int cpu)
->>> +{
->>> +    struct kvmarm_stolen_time_region *reg;
->>> +    struct arm_smccc_res res;
->>> +
->>> +    reg = this_cpu_ptr(&stolen_time_region);
->>> +
->>> +    arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_TIME_ST, &res);
->>> +
->>> +    if ((long)res.a0 < 0)
->>> +        return -EINVAL;
->>> +
->>> +    reg->kaddr = memremap(res.a0,
->>> +                  sizeof(struct pvclock_vcpu_stolen_time),
->>> +                  MEMREMAP_WB);
->>
->> cpuhp callbacks can be invoked in atomic context (see:
->>      secondary_start_kernel ->
->>      notify_cpu_starting ->
->>      invoke callbacks),
->> but memremap might sleep...
->>
->> Try to run a DEBUG_ATOMIC_SLEEP enabled PV guest, I guess we will be
->> greeted by the Sleep-in-Atomic-Context BUG.  We need an alternative
->> here?
+On Fri, 23 Aug 2019, Enric Balletbo i Serra wrote:
+
+> With the increasing use of dedicated CrOS EC MCUs, it takes a fair amount
+> of boiler plate code to add those devices, add a struct that can be used
+> to specify a dedicated CrOS EC MCU so we can just add a new item to it to
+> define a new dedicated MCU.
 > 
-> Actually I had run DEBUG_ATOMIC_SLEEP and not seen any issue. But I
-> think that's because of the way I've configured the region in my kvmtool
-> changes. I'm hitting the path where the memory region is in the linear
-> map of the kernel and so no actual remapping is needed and hence
-> memremap doesn't sleep (the shared structure is in a reserved region of
-> RAM).
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+> Tested-by: Gwendal Grignou <gwendal@chromium.org>
+> ---
 > 
-> But even changing the memory layout of the guest so the call goes into
-> ioremap_page_range() (which contains a might_sleep()) I'm not seeing any
-> problems.
+> Changes in v6:
+> - Add a break statement once the MCU type has been determined (Lee Jones)
+> 
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  drivers/mfd/cros_ec_dev.c | 88 ++++++++++++++++++++++-----------------
+>  1 file changed, 49 insertions(+), 39 deletions(-)
 
-Emm, I hit this SAC BUG when testing your V1 with the kvmtool changes
-you've provided, but forgot to report it at that time.  I go back to V1
-and get the following call trace:
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-[    0.120113] BUG: sleeping function called from invalid context at 
-mm/slab.h:501
-[    0.120118] in_atomic(): 1, irqs_disabled(): 128, pid: 0, name: swapper/1
-[    0.120122] no locks held by swapper/1/0.
-[    0.120126] irq event stamp: 0
-[    0.120135] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-[    0.120145] hardirqs last disabled at (0): [<ffff200010113b40>] 
-copy_process+0x870/0x2878
-[    0.120152] softirqs last  enabled at (0): [<ffff200010113b40>] 
-copy_process+0x870/0x2878
-[    0.120157] softirqs last disabled at (0): [<0000000000000000>] 0x0
-[    0.120164] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.3.0-rc6+ #2
-[    0.120168] Hardware name: linux,dummy-virt (DT)
-[    0.120173] Call trace:
-[    0.120179]  dump_backtrace+0x0/0x250
-[    0.120184]  show_stack+0x24/0x30
-[    0.120192]  dump_stack+0x120/0x174
-[    0.120198]  ___might_sleep+0x1b0/0x280
-[    0.120203]  __might_sleep+0x80/0xf0
-[    0.120209]  kmem_cache_alloc_node_trace+0x30c/0x3c8
-[    0.120216]  __get_vm_area_node+0x9c/0x208
-[    0.120221]  get_vm_area_caller+0x58/0x68
-[    0.120227]  __ioremap_caller+0x78/0x120
-[    0.120233]  ioremap_cache+0xf0/0x1a8
-[    0.120240]  memremap+0x154/0x3b8
-[    0.120245]  init_stolen_time_cpu+0x94/0x150
-[    0.120251]  cpuhp_invoke_callback+0x12c/0x12f8
-[    0.120257]  notify_cpu_starting+0xa0/0xc0
-[    0.120263]  secondary_start_kernel+0x1d4/0x328
-
-But things may have changed because we're talking about V3 now...
-I will dig it a bit deeper.
-
-> Am I missing something? I have to admit I don't entirely follow the
-> early start up - perhaps it's a simple as DEBUG_ATOMIC_SLEEP doesn't
-> work this early in boot?
-
-I think it should work.
-
-
-Thanks,
-zenghui
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
