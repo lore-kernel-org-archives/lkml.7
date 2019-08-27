@@ -2,83 +2,115 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0516C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB5BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 918DB20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C4D020674
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:05:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Smo7xVDM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbfH0LDt (ORCPT
+        id S1728639AbfH0LFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 07:03:49 -0400
-Received: from mga03.intel.com ([134.134.136.65]:7587 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726190AbfH0LDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 07:03:49 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 04:03:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,436,1559545200"; 
-   d="scan'208";a="180194738"
-Received: from jsakkine-mobl1.fi.intel.com (HELO localhost) ([10.237.66.169])
-  by fmsmga008.fm.intel.com with ESMTP; 27 Aug 2019 04:03:45 -0700
-Date:   Tue, 27 Aug 2019 14:03:44 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     Peter Jones <pjones@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Bartosz Szczepanek <bsz@semihalf.com>,
-        Lyude Paul <lyude@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] efi+tpm: Don't access event->count when it isn't
- mapped.
-Message-ID: <20190827110344.4uvjppmkkaeex3mk@linux.intel.com>
-References: <20190826153028.32639-1-pjones@redhat.com>
- <20190826162823.4mxkwhd7mbtro3zy@linux.intel.com>
- <CACdnJuuB_ExhOOtA8Uh7WO42TSNfRHuGaK4Xo=5SbdfWDKr7wA@mail.gmail.com>
+        Tue, 27 Aug 2019 07:05:30 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:47760 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfH0LFa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 07:05:30 -0400
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x7RB5Jn0026909
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 20:05:20 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x7RB5Jn0026909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566903920;
+        bh=dWxuqD4YJcRMD9twhfib+BopSFdJKxF8FxvMFpBbUHc=;
+        h=From:Date:Subject:To:Cc:From;
+        b=Smo7xVDM1saSAc9FhwvktzLiJpBycJ+sjNW1E5H88MtL6GaRaUW3b2mZzyz9yNp3o
+         ON5wteDwVWexvg3jkSIdjcjt7KXVoqLeu07mCJrbhZbQ/Fapo2w1P7OsGinbQvBLrM
+         FcY/alQrWHC8V9s7qhZr+WEohEuzyjCHNJSw8vcNgmWK8H4xgoJvdF+kYX6hzcrZEI
+         PftcTuJqmgMqiFKTy+8du0t/VFew1CMrHkrv3Or9jXK308QkD6AFTMmK72RAIru1Z+
+         BVhRtlDlChWkOSWsiR1Am0tK7rWlw6rF0zLbiQ962A5IRUxsiHooYuBqGzwQ1C7jIM
+         annZ+aZsorbvw==
+X-Nifty-SrcIP: [209.85.221.178]
+Received: by mail-vk1-f178.google.com with SMTP id t136so4665647vkt.9
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 04:05:20 -0700 (PDT)
+X-Gm-Message-State: APjAAAUYbgUFea6EtJuh1EAs3RxELNCJ76c6Y+3NNHHbFUi+HdKUcVp7
+        bYZjEPxJKIGnhUNMz8sY1P5frKCsFA/QCwhIMMU=
+X-Google-Smtp-Source: APXvYqyledIhqfWe+gAo4mMvwSREWvj02FyonTP3pC7GC3fqLFZMC32WbLnqBuyPj2Xf3LXKNxpFogQPsn8yCWi5NfU=
+X-Received: by 2002:a1f:7c0e:: with SMTP id x14mr10777661vkc.0.1566903918828;
+ Tue, 27 Aug 2019 04:05:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACdnJuuB_ExhOOtA8Uh7WO42TSNfRHuGaK4Xo=5SbdfWDKr7wA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 27 Aug 2019 20:04:43 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATg7O0ZQQ4fe2maNqf0ascHU8b2Mfnqkrxzpzj8D_X7pQ@mail.gmail.com>
+Message-ID: <CAK7LNATg7O0ZQQ4fe2maNqf0ascHU8b2Mfnqkrxzpzj8D_X7pQ@mail.gmail.com>
+Subject: powerpc asm-prototypes.h seems odd
+To:     Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 10:44:31AM -0700, Matthew Garrett wrote:
-> On Mon, Aug 26, 2019 at 9:28 AM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > On Mon, Aug 26, 2019 at 11:30:27AM -0400, Peter Jones wrote:
-> > > Some machines generate a lot of event log entries.  When we're
-> > > iterating over them, the code removes the old mapping and adds a
-> > > new one, so once we cross the page boundary we're unmapping the page
-> > > with the count on it.  Hilarity ensues.
-> > >
-> > > This patch keeps the info from the header in local variables so we don't
-> > > need to access that page again or keep track of if it's mapped.
-> > >
-> > > Signed-off-by: Peter Jones <pjones@redhat.com>
-> > > Tested-by: Lyude Paul <lyude@redhat.com>
-> >
-> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Acked-by: Matthew Garrett <mjg59@google.com>
-> 
-> Jarkko, these two should probably go to 5.3 if possible - I
-> independently had a report of a system hitting this issue last week
-> (Intel apparently put a surprising amount of data in the event logs on
-> the NUCs).
+Hi.
 
-OK, I can try to push them. I'll do PR today.
+Lots of powerpc files include <asm/asm-prototypes.h>,
+and powerpc is the only architecture that does this.
 
-/Jarkko
+<asm/asm-prototypes.h> exists to support modversion for asm.
+So, it is supposed to be parsed by genksysms, not to be
+included from other files.  Right?
+
+
+$  git grep  asm/asm-prototypes.h
+arch/arm64/include/asm/asm-prototypes.h: * ... kbuild will
+automatically pick these up from <asm/asm-prototypes.h> and
+arch/powerpc/kernel/early_32.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/irq.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/machine_kexec_64.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/process.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/prom_init.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/ptrace.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/security.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/setup_32.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/signal_32.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/signal_64.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/smp.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/syscalls.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/tau_6xx.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/time.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/trace/ftrace.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kernel/traps.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kvm/book3s_emulate.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kvm/book3s_hv.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kvm/book3s_hv_builtin.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kvm/book3s_hv_rm_xive.c:#include <asm/asm-prototypes.h>
+arch/powerpc/kvm/book3s_pr.c:#include <asm/asm-prototypes.h>
+arch/powerpc/lib/vmx-helper.c:#include <asm/asm-prototypes.h>
+arch/powerpc/mm/book3s64/hash_utils.c:#include <asm/asm-prototypes.h>
+arch/powerpc/mm/book3s64/slb.c:#include <asm/asm-prototypes.h>
+arch/powerpc/platforms/powernv/idle.c:#include <asm/asm-prototypes.h>
+arch/powerpc/platforms/powernv/opal-call.c:#include <asm/asm-prototypes.h>
+arch/powerpc/platforms/powernv/opal-tracepoints.c:#include
+<asm/asm-prototypes.h>
+arch/powerpc/platforms/pseries/lpar.c:#include <asm/asm-prototypes.h>
+scripts/Makefile.build:# .S file exports must have their C prototypes
+defined in asm/asm-prototypes.h
+scripts/Makefile.build:     echo "\#include <asm/asm-prototypes.h>" ;
+                            \
+scripts/Makefile.build:ASM_PROTOTYPES := $(wildcard
+$(srctree)/arch/$(SRCARCH)/include/asm/asm-prototypes.h)
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
