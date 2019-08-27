@@ -2,116 +2,126 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23672C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A7DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBF752186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566916627;
-	bh=y61E+yhJrBK2KCajlCMqMIr/TwcC3uDcysWP0uW033Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0htE3YzvUC7D4WKCxgF4m9BZs7/ZBVqGezXKX6upbQSgYH2TPsjFvbBBWq3ELWejm
-	 Tkgsejnlu6hdi/zpPuIAgEEJR5CrGi1XPw9topH+C9JSv0itH6Ohl5IjYyDwbTE+so
-	 +7WOlJWmW8huNA9Orh1yFwCw/8SaUDiK0J80bRtA=
+	by mail.kernel.org (Postfix) with ESMTP id 9EFEC21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:37:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ti+QgyZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbfH0OhG (ORCPT
+        id S1730147AbfH0OhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:37:06 -0400
-Received: from mga04.intel.com ([192.55.52.120]:12656 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728702AbfH0OhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:37:10 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50190 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbfH0OhF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 27 Aug 2019 10:37:05 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 07:37:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
-   d="scan'208";a="192250328"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga002.jf.intel.com with ESMTP; 27 Aug 2019 07:37:03 -0700
-Date:   Tue, 27 Aug 2019 08:35:16 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.com>,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 4/4] genirq: use irq's affinity for threaded irq with
- IRQF_RESCUE_THREAD
-Message-ID: <20190827143516.GB23091@localhost.localdomain>
-References: <20190827085344.30799-1-ming.lei@redhat.com>
- <20190827085344.30799-5-ming.lei@redhat.com>
+Received: by mail-wm1-f68.google.com with SMTP id v15so3386364wml.0;
+        Tue, 27 Aug 2019 07:37:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JeM1To4kzuWWFQY0hurRC3bVq9JC5GR4RCbNZs8RzZc=;
+        b=ti+QgyZe92tbpaxS01GBziY1cQaCpuy3GgvXFPj1lIwEixWgdwSYSn6hWnaWzJgPmQ
+         cbxNhKIW0yuGKLhizEQY6AKW6eSdgsePvAZMAIEQ0/tYISqfOHrSlVKbcg+g4Hk6gBR8
+         w+OnFj04Y3aIBDy2d5FsfrYcumKXAIC67dtRyuw8YU9ezulwdKVfRlg9ItuE2mXiWEdx
+         5GpmRp+Dg9Dyfv+sfzy9eYFntbSrDsdNtcNWXNGVuUG5P4cBgBgNxZGa4ukEg5PGh5V/
+         mT5t9MOe6z3YDp07mbjV2egMIYuWpQN2Ui2vImJJ4uiBFkHdD1UDd+c2+oEwddJlY+0d
+         feug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JeM1To4kzuWWFQY0hurRC3bVq9JC5GR4RCbNZs8RzZc=;
+        b=kZBpekwkIf9dyrfsvl+45XzTe9Wb4gJkauVJBWwQYopsokIU9ohxKjexPJAa1gz2rG
+         3ykhL0Hh2GXRb8Iltcg4RF1sZQz9K5dtykT8Y03ZDlQDDQVLOdTNJxU1q3KEydmlYVTD
+         FI9mvizy+4Oo7gJWOxis2c1/ikMWDXUhWJHrG8unsbJ9loNp5J9QMURrrWZAuMs83xd9
+         dVJf9FIOrqJgVsk7kvDpxA48+5S0wOmFyjFpYLQjFi+t9pVzpUYYGL95hCZRO6XuQ/vy
+         hzlVUXwsUY4qqPte3KytMtlwQ2L0R16f0c4VFUEnbVL81z1a59GsAQouKAMLCVwezmUS
+         il/g==
+X-Gm-Message-State: APjAAAViOi+hJ2hxAy9G8cq6FZi7W2CA3KA2FCfAzX/iyJ209mQ+Gi0H
+        yIT6YS4YG+AFRe82dpyTTcI=
+X-Google-Smtp-Source: APXvYqzeNJHZh+dvqBYieROvuqZ8FKrs6sHJabcQR0T3U7dIQlO3JQsRUxHL5j5iSRzI+0bE6SYMbg==
+X-Received: by 2002:a7b:cbcf:: with SMTP id n15mr29242445wmi.48.1566916623501;
+        Tue, 27 Aug 2019 07:37:03 -0700 (PDT)
+Received: from localhost.localdomain (3e6b1cc1.rev.stofanet.dk. [62.107.28.193])
+        by smtp.googlemail.com with ESMTPSA id k6sm4008309wrg.0.2019.08.27.07.37.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 07:37:02 -0700 (PDT)
+From:   Bruno Thomsen <bruno.thomsen@gmail.com>
+To:     alexandre.belloni@bootlin.com, linux@roeck-us.net,
+        yuehaibing@huawei.com
+Cc:     a.zummo@towertech.it, bruno.thomsen@gmail.com,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH] rtc: pcf2127: bugfix: watchdog build dependency
+Date:   Tue, 27 Aug 2019 16:36:56 +0200
+Message-Id: <20190827143656.4734-1-bruno.thomsen@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827085344.30799-5-ming.lei@redhat.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 04:53:44PM +0800, Ming Lei wrote:
-> In case of IRQF_RESCUE_THREAD, the threaded handler is only used to
-> handle interrupt when IRQ flood comes, use irq's affinity for this thread
-> so that scheduler may select other not too busy CPUs for handling the
-> interrupt.
-> 
-> Cc: Long Li <longli@microsoft.com>
-> Cc: Ingo Molnar <mingo@redhat.com>,
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Cc: Jens Axboe <axboe@fb.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Sagi Grimberg <sagi@grimberg.me>
-> Cc: John Garry <john.garry@huawei.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Hannes Reinecke <hare@suse.com>
-> Cc: linux-nvme@lists.infradead.org
-> Cc: linux-scsi@vger.kernel.org
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> ---
->  kernel/irq/manage.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-> index 1566abbf50e8..03bc041348b7 100644
-> --- a/kernel/irq/manage.c
-> +++ b/kernel/irq/manage.c
-> @@ -968,7 +968,18 @@ irq_thread_check_affinity(struct irq_desc *desc, struct irqaction *action)
->  	if (cpumask_available(desc->irq_common_data.affinity)) {
->  		const struct cpumask *m;
->  
-> -		m = irq_data_get_effective_affinity_mask(&desc->irq_data);
-> +		/*
-> +		 * Managed IRQ's affinity is setup gracefull on MUNA locality,
+Disable watchdog registation when kernel is build without
+watchdog functionality, and enable watchdog core otherwise.
+This removes compile errors like the one below:
 
-s/MUNA/NUMA
+drivers/rtc/rtc-pcf2127.o: in function `pcf2127_probe.constprop.3':
+rtc-pcf2127.c:(.text.unlikely+0x2c8): undefined reference to
+`devm_watchdog_register_device'
 
-> +		 * also if IRQF_RESCUE_THREAD is set, interrupt flood has been
-> +		 * triggered, so ask scheduler to run the thread on CPUs
-> +		 * specified by this interrupt's affinity.
-> +		 */
-> +		if ((action->flags & IRQF_RESCUE_THREAD) &&
-> +				irqd_affinity_is_managed(&desc->irq_data))
-> +			m = desc->irq_common_data.affinity;
-> +		else
-> +			m = irq_data_get_effective_affinity_mask(
-> +					&desc->irq_data);
->  		cpumask_copy(mask, m);
->  	} else {
->  		valid = false;
-> -- 
+Watchdog feature in chip will always be configured as
+this is safe to do in both cases and minimize code churn.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Reported-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: bbc597561ce1 ("rtc: pcf2127: add watchdog feature support")
+Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
+---
+ drivers/rtc/Kconfig       | 1 +
+ drivers/rtc/rtc-pcf2127.c | 2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index a3bb58a08879..ab0ccf4a3247 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -874,6 +874,7 @@ config RTC_DRV_DS3232_HWMON
+ config RTC_DRV_PCF2127
+ 	tristate "NXP PCF2127"
+ 	depends on RTC_I2C_AND_SPI
++	select WATCHDOG_CORE if WATCHDOG
+ 	help
+ 	  If you say yes here you get support for the NXP PCF2127/29 RTC
+ 	  chips with integrated quartz crystal for industrial applications.
+diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
+index 3ec87d320766..02b069caffd5 100644
+--- a/drivers/rtc/rtc-pcf2127.c
++++ b/drivers/rtc/rtc-pcf2127.c
+@@ -475,9 +475,11 @@ static int pcf2127_probe(struct device *dev, struct regmap *regmap,
+ 		return ret;
+ 	}
+ 
++#ifdef CONFIG_WATCHDOG
+ 	ret = devm_watchdog_register_device(dev, &pcf2127->wdd);
+ 	if (ret)
+ 		return ret;
++#endif /* CONFIG_WATCHDOG */
+ 
+ 	/*
+ 	 * Disable battery low/switch-over timestamp and interrupts.
+-- 
+2.21.0
+
