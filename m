@@ -2,134 +2,92 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5E4C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA486C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B42CF206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF03206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:51:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730076AbfH0Ouc (ORCPT
+        id S1730113AbfH0OvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:50:32 -0400
-Received: from mga03.intel.com ([134.134.136.65]:26254 "EHLO mga03.intel.com"
+        Tue, 27 Aug 2019 10:51:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49804 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbfH0Ouc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:50:32 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 07:50:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
-   d="scan'208";a="171219686"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga007.jf.intel.com with ESMTP; 27 Aug 2019 07:50:30 -0700
-Date:   Tue, 27 Aug 2019 07:50:30 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jan Dakinevich <jan.dakinevich@virtuozzo.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Denis Lunev <den@virtuozzo.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH 3/3] KVM: x86: always stop emulation on page fault
-Message-ID: <20190827145030.GC27459@linux.intel.com>
-References: <1566911210-30059-1-git-send-email-jan.dakinevich@virtuozzo.com>
- <1566911210-30059-4-git-send-email-jan.dakinevich@virtuozzo.com>
+        id S1726441AbfH0OvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:51:05 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E98633084499;
+        Tue, 27 Aug 2019 14:51:04 +0000 (UTC)
+Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 580AA64020;
+        Tue, 27 Aug 2019 14:51:04 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 09:51:02 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: objtool warning "uses BP as a scratch register" with clang-9
+Message-ID: <20190827145102.p7lmkpytf3mngxbj@treble>
+References: <CAK8P3a3G=GCpLtNztuoLR4BuugAB=zpa_Jrz5BSft6Yj-nok1g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1566911210-30059-4-git-send-email-jan.dakinevich@virtuozzo.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAK8P3a3G=GCpLtNztuoLR4BuugAB=zpa_Jrz5BSft6Yj-nok1g@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 27 Aug 2019 14:51:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Cc Peng Hao and Yi Wang
-
-On Tue, Aug 27, 2019 at 01:07:09PM +0000, Jan Dakinevich wrote:
-> inject_emulated_exception() returns true if and only if nested page
-> fault happens. However, page fault can come from guest page tables
-> walk, either nested or not nested. In both cases we should stop an
-> attempt to read under RIP and give guest to step over its own page
-> fault handler.
+On Tue, Aug 27, 2019 at 02:30:06PM +0200, Arnd Bergmann wrote:
+> I upgraded to the latest clang-9 snapshot from http://apt.llvm.org/ today.
+> Many problems are fixed, but I still get tons of warnings like
 > 
-> Fixes: 6ea6e84 ("KVM: x86: inject exceptions produced by x86_decode_insn")
-> Cc: Denis Lunev <den@virtuozzo.com>
-> Cc: Roman Kagan <rkagan@virtuozzo.com>
-> Cc: Denis Plotnikov <dplotnikov@virtuozzo.com>
-> Signed-off-by: Jan Dakinevich <jan.dakinevich@virtuozzo.com>
-> ---
->  arch/x86/kvm/x86.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> arch/x86/kernel/cpu/mtrr/generic.o: warning: objtool:
+> mtrr_type_lookup_variable uses BP as a scratch register
+> arch/x86/kernel/process.o: warning: objtool: get_tsc_mode()+0x21: call
+> without frame pointer save/setup
+> arch/x86/kernel/early_printk.o: warning: objtool: early_vga_write uses
+> BP as a scratch register
+> arch/x86/kernel/sysfb_simplefb.o: warning: objtool: parse_mode uses BP
+> as a scratch register
+> arch/x86/kernel/head64.o: warning: objtool: __startup_64 uses BP as a
+> scratch register
+> kernel/time/timeconv.o: warning: objtool: time64_to_tm uses BP as a
+> scratch register
+> kernel/trace/ring_buffer.o: warning: objtool:
+> ring_buffer_discard_commit uses BP as a scratch register
+> ...
 > 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 93b0bd4..45caa69 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -6521,8 +6521,10 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
->  			if (reexecute_instruction(vcpu, cr2, write_fault_to_spt,
->  						emulation_type))
->  				return EMULATE_DONE;
-> -			if (ctxt->have_exception && inject_emulated_exception(vcpu))
-> +			if (ctxt->have_exception) {
-> +				inject_emulated_exception(vcpu);
->  				return EMULATE_DONE;
-> +			}
-
-
-Yikes, this patch and the previous have quite the sordid history.
-
-
-The non-void return from inject_emulated_exception() was added by commit
-
-  ef54bcfeea6c ("KVM: x86: skip writeback on injection of nested exception")
-
-for the purpose of skipping writeback.  At the time, the above blob in the
-decode flow didn't exist.
-
-
-Decode exception handling was added by commit
-
-  6ea6e84309ca ("KVM: x86: inject exceptions produced by x86_decode_insn")
-
-but it was dead code even then.  The patch discussion[1] even point out that
-it was dead code, i.e. the change probably should have been reverted.
-
-
-Peng Hao and Yi Wang later ran into what appears to be the same bug you're
-hitting[2][3], and even had patches temporarily queued[4][5], but the
-patches never made it to mainline as they broke kvm-unit-tests.  Fun side
-note, Radim even pointed out[4] the bug fixed by patch 1/3.
-
-So, the patches look correct, but there's the open question of why the
-hypercall test was failing for Paolo.  I've tried to reproduce the #DF to
-no avail.
-
-[1] https://lore.kernel.org/patchwork/patch/850077/
-[2] https://lkml.kernel.org/r/1537311828-4547-1-git-send-email-penghao122@sina.com.cn
-[3] https://lkml.kernel.org/r/20190111133002.GA14852@flask
-[4] https://lkml.kernel.org/r/20190111133002.GA14852@flask
-[5] https://lkml.kernel.org/r/9835d255-dd9a-222b-f4a2-93611175b326@redhat.com
-
->  			if (emulation_type & EMULTYPE_SKIP)
->  				return EMULATE_FAIL;
->  			return handle_emulation_failure(vcpu, emulation_type);
-> -- 
-> 2.1.4
+> I created a reduced test case:
 > 
+> $ cat crc32.i
+> typedef unsigned u32;
+> long a, c;
+> u32 b, f;
+> u32 *d, *e;
+> void fn1() {
+>   u32 *g = &f, *h = e, *i = d;
+>   for (; a < c; a++)
+>     b = i[b >> 8 & 255] ^ h[b] ^ g[5];
+> }
+> $ clang-9 -c  crc32.i  -O2   ; objtool check  crc32.o
+> crc32.o: warning: objtool: fn1 uses BP as a scratch register
+
+I assume your config has CONFIG_UNWINDER_FRAME_POINTER=y, since objtool
+is doing frame pointer checking.  Though I'm not sure about that, since
+I don't see -fno-omit-frame-pointer on the reduced clang command line.
+Do you still see this warning with -fno-omit-frame-pointer (assuming
+clang has that option)?
+
+-- 
+Josh
