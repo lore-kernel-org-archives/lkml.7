@@ -6,111 +6,132 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFBFC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D69C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E38E206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B972077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbfH0MaR (ORCPT
+        id S1729688AbfH0MaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:30:17 -0400
-Received: from mail-ot1-f48.google.com ([209.85.210.48]:35179 "EHLO
-        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfH0MaR (ORCPT
+        Tue, 27 Aug 2019 08:30:25 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44468 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfH0MaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:30:17 -0400
-Received: by mail-ot1-f48.google.com with SMTP id 100so7681607otn.2;
-        Tue, 27 Aug 2019 05:30:16 -0700 (PDT)
+        Tue, 27 Aug 2019 08:30:24 -0400
+Received: by mail-qt1-f195.google.com with SMTP id 44so21013718qtg.11
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 05:30:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=aQgUrji3JLkWxgHqWnOkvsVYptayYJD4EEVcvouCxbo=;
-        b=Zl/FXfOrb6F4m/6ElfLObflx9UxbIxCoFeOjmlT7xuTvJBxED6U7auJakymz7hCRP5
-         mTMor/1ZqX9seccYMUVpfzmBMBNHctNQ6zChhk2pzCz+eXFj72AbfF4VJQkEe/Pi1OEM
-         5u0+m7VnCc1mMdqxfvHFDqvcqvVj29+HSqkWdrQcl1/uQGqAWO3YbvZHd/5Y9a1MGSNw
-         U9shXm8rCEQ/14KRfGz06z6PaVF5xzLE5APYr1BDptUBfGkVpncdxLYb0F8QtWKp8Ik8
-         AxYf1ovRf6oICJfjDTJhaw29RbvhaQg2pFlDHFfLK0tImMqyyuLv/WV5dZz9t+bjFNg6
-         8NjA==
-X-Gm-Message-State: APjAAAUROdIgau3XMruHA2pQNy2LAxB1z4guvMZVsgFEDsUyfTDoW/AL
-        +RQyWCmo8aXIoXE+w6o5fZrv/il9SCyvMukUPD4=
-X-Google-Smtp-Source: APXvYqwDLK91nxUQtfrupsXHNL40ooDa0Xmq08hAP8hA9d+dDHMLcXvtPb/j/0H7WP45CRJV0yHH9X1Mu10Yr2XLcGI=
-X-Received: by 2002:a9d:7a90:: with SMTP id l16mr19835500otn.297.1566909015712;
- Tue, 27 Aug 2019 05:30:15 -0700 (PDT)
+        bh=o/st+xfPrEf5neMYSfQiCblpDGrPvpIPRZXQLxNBf/U=;
+        b=hqJA8BcRpFJMepQqy1WMAOSeJ/z436sdhHCQp1nXeoKgSFD4Q8U9eGX2zrwLtOmfJs
+         FnxUbhTIMxwN74zUlTDBXhek/7zM1dZiF/0V6wVTYlJi+d8LLv5zAKJwzVc9sHe0Hs+D
+         3BTRjpB2/6eoMrOifPImvPfAv1TOsei4YjgFh5Wp9x7Cp+NO1QqWEicj1KhecWwEmyKU
+         n6P091ivhdkqzKV2K5L+gK98dIrQFKpUljJGmuhUoWAH5ogVtuVz8siwVKRvPbPYXK00
+         mcVC4bgGhsJ0i/+yMmtbUkArSWlohcX6JUEca7kTxLV7+ddIKrQAfQgUTqwmxKqUhAh1
+         e/DQ==
+X-Gm-Message-State: APjAAAVqZdSU/0ACM9LnjS5VuuWVkAhXjNu7mLaB8pBipuH/yvOAbIUz
+        QWJBaxhtYiv6tNkymfwIntrBkPOk8rm1oYA1FSfKahi039w=
+X-Google-Smtp-Source: APXvYqxR4V2m4EzLzq7hQ6OAB3nXVssdbbBKe+dsLEETN6uhTbHHlgAbrDmgedZiWCGoXH2ZK77Ze9pwd07LNlfAHB0=
+X-Received: by 2002:ac8:2955:: with SMTP id z21mr22350616qtz.204.1566909023051;
+ Tue, 27 Aug 2019 05:30:23 -0700 (PDT)
 MIME-Version: 1.0
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 27 Aug 2019 14:30:04 +0200
-Message-ID: <CAMuHMdUk9G22rDfUrX3CZ=st3_bSehyaW_URtCk0ZfJqFTmLuQ@mail.gmail.com>
-Subject: Re: dma-buf: Add selftests for dma-fence
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 27 Aug 2019 14:30:06 +0200
+Message-ID: <CAK8P3a3G=GCpLtNztuoLR4BuugAB=zpa_Jrz5BSft6Yj-nok1g@mail.gmail.com>
+Subject: objtool warning "uses BP as a scratch register" with clang-9
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
+I upgraded to the latest clang-9 snapshot from http://apt.llvm.org/ today.
+Many problems are fixed, but I still get tons of warnings like
 
-When running the new dmabuf-selftests on two different systems, I get:
+arch/x86/kernel/cpu/mtrr/generic.o: warning: objtool:
+mtrr_type_lookup_variable uses BP as a scratch register
+arch/x86/kernel/process.o: warning: objtool: get_tsc_mode()+0x21: call
+without frame pointer save/setup
+arch/x86/kernel/early_printk.o: warning: objtool: early_vga_write uses
+BP as a scratch register
+arch/x86/kernel/sysfb_simplefb.o: warning: objtool: parse_mode uses BP
+as a scratch register
+arch/x86/kernel/head64.o: warning: objtool: __startup_64 uses BP as a
+scratch register
+kernel/time/timeconv.o: warning: objtool: time64_to_tm uses BP as a
+scratch register
+kernel/trace/ring_buffer.o: warning: objtool:
+ring_buffer_discard_commit uses BP as a scratch register
+...
 
-    dma-buf: Running sanitycheck
-    dma-buf: Running dma_fence
-    sizeof(dma_fence)=48
-    dma-buf: Running dma_fence/sanitycheck
-    dma-buf: Running dma_fence/test_signaling
-    dma-buf: Running dma_fence/test_add_callback
-    dma-buf: Running dma_fence/test_late_add_callback
-    dma-buf: Running dma_fence/test_rm_callback
-    dma-buf: Running dma_fence/test_late_rm_callback
-    dma-buf: Running dma_fence/test_status
-    dma-buf: Running dma_fence/test_error
-    dma-buf: Running dma_fence/test_wait
-    dma-buf: Running dma_fence/test_wait_timeout
-    dma-buf: Running dma_fence/test_stub
-    dma-buf: Running dma_fence/race_signal_callback
-    thread_signal_callback[0] completed 28855 passes, 3929 misses
-    thread_signal_callback[1] completed 28846 passes, 3918 misses
-    thread_signal_callback[0] completed 37179 passes, 37179 misses
-    thread_signal_callback[1] completed 37184 passes, 37183 misses
+I created a reduced test case:
 
-and
+$ cat crc32.i
+typedef unsigned u32;
+long a, c;
+u32 b, f;
+u32 *d, *e;
+void fn1() {
+  u32 *g = &f, *h = e, *i = d;
+  for (; a < c; a++)
+    b = i[b >> 8 & 255] ^ h[b] ^ g[5];
+}
+$ clang-9 -c  crc32.i  -O2   ; objtool check  crc32.o
+crc32.o: warning: objtool: fn1 uses BP as a scratch register
+$ objdump -d crc32.o
+0000000000000000 <fn1>:
+   0: 55                    push   %rbp
+   1: 53                    push   %rbx
+   2: 4c 8b 05 00 00 00 00 mov    0x0(%rip),%r8        # 9 <fn1+0x9>
+   9: 48 8b 05 00 00 00 00 mov    0x0(%rip),%rax        # 10 <fn1+0x10>
+  10: 4c 39 c0              cmp    %r8,%rax
+  13: 7e 7f                jle    94 <fn1+0x94>
+  15: 48 8b 0d 00 00 00 00 mov    0x0(%rip),%rcx        # 1c <fn1+0x1c>
+  1c: 48 8b 15 00 00 00 00 mov    0x0(%rip),%rdx        # 23 <fn1+0x23>
+  23: 8b 1d 00 00 00 00    mov    0x0(%rip),%ebx        # 29 <fn1+0x29>
+  29: 8b 35 00 00 00 00    mov    0x0(%rip),%esi        # 2f <fn1+0x2f>
+  2f: 89 c7                mov    %eax,%edi
+  31: 44 29 c7              sub    %r8d,%edi
+  34: 40 f6 c7 01          test   $0x1,%dil
+  38: 75 05                jne    3f <fn1+0x3f>
+  3a: 4c 89 c7              mov    %r8,%rdi
+  3d: eb 15                jmp    54 <fn1+0x54>
+  3f: 0f b6 ff              movzbl %bh,%edi
+  42: 8b 1c 99              mov    (%rcx,%rbx,4),%ebx
+  45: 33 1c ba              xor    (%rdx,%rdi,4),%ebx
+  48: 31 f3                xor    %esi,%ebx
+  4a: 89 1d 00 00 00 00    mov    %ebx,0x0(%rip)        # 50 <fn1+0x50>
+  50: 49 8d 78 01          lea    0x1(%r8),%rdi
+  54: 49 83 c0 01          add    $0x1,%r8
+  58: 4c 39 c0              cmp    %r8,%rax
+  5b: 74 30                je     8d <fn1+0x8d>
+  5d: 0f 1f 00              nopl   (%rax)
+  60: 0f b6 ef              movzbl %bh,%ebp
+  63: 89 db                mov    %ebx,%ebx
+  65: 8b 1c 99              mov    (%rcx,%rbx,4),%ebx
+  68: 33 1c aa              xor    (%rdx,%rbp,4),%ebx
+  6b: 31 f3                xor    %esi,%ebx
+  6d: 89 1d 00 00 00 00    mov    %ebx,0x0(%rip)        # 73 <fn1+0x73>
+  73: 0f b6 ef              movzbl %bh,%ebp
+  76: 8b 1c 99              mov    (%rcx,%rbx,4),%ebx
+  79: 33 1c aa              xor    (%rdx,%rbp,4),%ebx
+  7c: 31 f3                xor    %esi,%ebx
+  7e: 89 1d 00 00 00 00    mov    %ebx,0x0(%rip)        # 84 <fn1+0x84>
+  84: 48 83 c7 02          add    $0x2,%rdi
+  88: 48 39 c7              cmp    %rax,%rdi
+  8b: 7c d3                jl     60 <fn1+0x60>
+  8d: 48 89 3d 00 00 00 00 mov    %rdi,0x0(%rip)        # 94 <fn1+0x94>
+  94: 5b                    pop    %rbx
+  95: 5d                    pop    %rbp
+  96: c3                    retq
 
-    dma-buf: Running sanitycheck
-    dma-buf: Running dma_fence
-    sizeof(dma_fence)=64
-    dma-buf: Running dma_fence/sanitycheck
-    dma-buf: Running dma_fence/test_signaling
-    dma-buf: Running dma_fence/test_add_callback
-    dma-buf: Running dma_fence/test_late_add_callback
-    dma-buf: Running dma_fence/test_rm_callback
-    dma-buf: Running dma_fence/test_late_rm_callback
-    dma-buf: Running dma_fence/test_status
-    dma-buf: Running dma_fence/test_error
-    dma-buf: Running dma_fence/test_wait
-    dma-buf: Running dma_fence/test_wait_timeout
-    dma-buf: Running dma_fence/test_stub
-    dma-buf: Running dma_fence/race_signal_callback
-    thread_signal_callback[0] completed 3423 passes, 2148 misses
-    thread_signal_callback[1] completed 2360 passes, 9 misses
-    thread_signal_callback[0] completed 4028 passes, 4028 misses
-    thread_signal_callback[1] completed 8080 passes, 8079 misses
+This happens with clang-9 and clang-10 at the moment, but not clang-8.
 
-Unfortunately it is not clear to me if this is good or bad?
-Perhaps the test output can be improved, e.g. with a clear PASS/FAIL output?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+        Arnd
