@@ -2,183 +2,95 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3ABC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2207C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 266DE2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566885048;
-	bh=lEHBj/Cp6miT8ilouSQBQV+Drh2QP6H67UOzw91mqwo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DChmXwjqNlPUTHxn09+RmQmm1WNqfJNy3BUPdsQ9hdTLRxJIDiT77GyVkEwbg1J0y
-	 0voITmwx9ktjnFJePiAVddXReNfjw0ttY9QIPyWlRmyKyLd21iiC8rkdTcGhR12PI5
-	 wWXyLeS1pdwaMTL8NJR1mY7qrv0a36IJnuI5gm50=
+	by mail.kernel.org (Postfix) with ESMTP id 8F6A2217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:51:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ngJAMjjd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbfH0Fur (ORCPT
+        id S1729341AbfH0FvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 01:50:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56606 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 01:51:00 -0400
+Received: from ozlabs.org ([203.11.71.1]:37479 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbfH0Fur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 01:50:47 -0400
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725850AbfH0FvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 01:51:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6119621881;
-        Tue, 27 Aug 2019 05:50:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566885045;
-        bh=lEHBj/Cp6miT8ilouSQBQV+Drh2QP6H67UOzw91mqwo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lL8wC7E1B7MGgDe++xI9cadBfd32jJKBaY969kCdvyVvo4kOUnAo+489m5uhoHWS+
-         g2Bp0V+3nK8HAd/6qJDWmb3epzCBcDzO5XgZNwKdQYThPAfLwNa7BiDqs0avy6i1tw
-         DPgY+OZ07gG6wANcZ/TSrJ+YNi+sq/QM28/dd5JA=
-Received: by mail-wm1-f47.google.com with SMTP id m125so1612422wmm.3;
-        Mon, 26 Aug 2019 22:50:45 -0700 (PDT)
-X-Gm-Message-State: APjAAAWZeqhBk0pfSrDC/YYfdgqW+FpbgKnEQ+FxP806yjROmdBWZPFH
-        a0Ju2GXknvjMxqWGkmM6CAdMyx97vkfdh5FpAWY=
-X-Google-Smtp-Source: APXvYqwNnyZZMDEOGiz8SGYVYZXNdNhhDNzfrrBN8JzCIZlhoSwkV5fBKob4EXAh2VIb2AdJGr8NL5kwPKqsobBp9lY=
-X-Received: by 2002:a1c:1f4e:: with SMTP id f75mr25187337wmf.137.1566885043803;
- Mon, 26 Aug 2019 22:50:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1566540652.git.han_mao@c-sky.com> <820d80272fc5627b8d00e684663a614470217606.1566540652.git.han_mao@c-sky.com>
- <CAEbi=3fbe9zbsLyfA=s9gHtAFJrp5Ox0jWoAqcZudQ_xODicgA@mail.gmail.com>
- <CAJF2gTS80XU=4z-_=N=oGV6GH-+8KXCa74DyhVMcRxJRBq5g4A@mail.gmail.com> <CAEbi=3dtDy=CMRagVrj0ihtpYqS+4NkK7eYmn6Gn=2bV9khWVg@mail.gmail.com>
-In-Reply-To: <CAEbi=3dtDy=CMRagVrj0ihtpYqS+4NkK7eYmn6Gn=2bV9khWVg@mail.gmail.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Tue, 27 Aug 2019 13:50:32 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRePr9SbTv=1w80pHvWpywEQXaikO_TTAEPr2Brk6L3-A@mail.gmail.com>
-Message-ID: <CAJF2gTRePr9SbTv=1w80pHvWpywEQXaikO_TTAEPr2Brk6L3-A@mail.gmail.com>
-Subject: Re: [PATCH V5 1/3] riscv: Add perf callchain support
-To:     Greentime Hu <green.hu@gmail.com>
-Cc:     greentime.hu@sifive.com, Mao Han <han_mao@c-sky.com>,
-        linux-riscv@lists.infradead.org,
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46HdJx1c3mz9sBp;
+        Tue, 27 Aug 2019 15:50:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566885057;
+        bh=8l2yHo/zsqDgKdonCW9f8t8dg+Ve+MZyI/KgwsQsRvs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ngJAMjjd2861Zre7xYXmX5CTcwsOmNDIxgVVlQHk9RrIrprAamjx535HjOWbRBA1A
+         raqEpi6Uq57DBBH1LZpkCYZ9bjPs9N5EXIopSfHswq65scNZ2SjjwX2oCos+PFde6f
+         nexEqP5Epu7PZThC7APnp5FA0LmeynrEbZwXvjOQM9QIjuGEsE3P+en3grocXiwP9E
+         yWuO4QvSAWEjWhiMb69n+KpdlPfqB932IY2eSu/V+NIfcgQ0qWxfsHFT4WebDLzsby
+         bHhFGXS9hXUgzLyDEM9AsFf7pVhD1e9BBN9dSb5OzrSGCUxHlRh/ieDss3t3dHSCd7
+         HOZeDBGhy7cHw==
+Date:   Tue, 27 Aug 2019 15:50:56 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Grzegorz Jaszczyk <jaz@semihalf.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Chevallier <maxime.chevallier@bootlin.com>
+Subject: linux-next: build failure after merge of the phy-next tree
+Message-ID: <20190827155056.3dafb17e@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/TvQjQVBNpyGMBk1Co4XsQai";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need know the values of *regs, eg: regs->sepc, regs->ra, regs->fp,
-regs->sp, regs->tp
+--Sig_/TvQjQVBNpyGMBk1Co4XsQai
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
-   struct pt_regs *regs)
-{
-...
- walk_stackframe(&fr, entry);
+Hi all,
 
-// May be we could detect error here and print the regs' value
-}
+After merging the phy-next tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-On Mon, Aug 26, 2019 at 4:03 PM Greentime Hu <green.hu@gmail.com> wrote:
->
-> Hi Guo,
->
-> Guo Ren <guoren@kernel.org> =E6=96=BC 2019=E5=B9=B48=E6=9C=8824=E6=97=A5 =
-=E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=888:54=E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> > Please check CONFIG_FRAME_POINTER
-> >
-> > 1 *frame =3D *((struct stackframe *)frame->fp - 1);
-> > This code is origionally from riscv/kernel/stacktrace.c: walk_stackfram=
-e
-> >
-> > In linux/Makefile it'll involve the options for gcc to definitely
-> > store ra & prev_fp in fp pointer.
-> > ifdef CONFIG_FRAME_POINTER
-> > KBUILD_CFLAGS +=3D -fno-omit-frame-pointer -fno-optimize-sibling-calls
-> >
-> > So --call-graph fp need depends on CONFIG_FRAME_POINTER.
-> >
->
-> I am pretty sure CONFIG_FRAME_POINTER is Y
-> # zcat /proc/config.gz |grep CONFIG_FRAME_POINTER
-> CONFIG_FRAME_POINTER=3Dy
->
-> This is not going to go wrong every time, the probability of error is
-> about one tenth or one quarter. randomly
-> There may be some conditions that we have not considered.
->
-> I add one more condition to check if it is a valid virtual address and
-> it( ./perf record -e cpu-clock --call-graph fp ls) passes 1000 times
-> without failure in Unleashed board based on 5.3-rc5.
-> Here is my patch. Please have  a look at it. I am not sure if it is a
-> good solution.
->
-> diff --git a/arch/riscv/kernel/perf_callchain.c
-> b/arch/riscv/kernel/perf_callchain.c
-> index d75d15c13dc7..4717942435df 100644
-> --- a/arch/riscv/kernel/perf_callchain.c
-> +++ b/arch/riscv/kernel/perf_callchain.c
-> @@ -18,6 +18,8 @@ static int unwind_frame_kernel(struct stackframe *frame=
-)
->                 return -EPERM;
->         if (frame->fp < CONFIG_PAGE_OFFSET)
->                 return -EPERM;
-> +       if (!virt_addr_valid(frame->fp))
-> +               return -EPERM;
->
->         *frame =3D *((struct stackframe *)frame->fp - 1);
->         if (__kernel_text_address(frame->ra)) {
->
-> It could catch cases called in this way.
->
-> [ 1381.936586] frame->fp=3D:ffffffff00547550
-> [ 1382.038542] CPU: 1 PID: 135 Comm: ls Not tainted
-> 5.3.0-rc5-00003-gb008f6bcd67c-dirty #14
-> [ 1382.307440] Call Trace:
-> [ 1382.388947] [<ffffffe0002a2d8e>] walk_stackframe+0x0/0x9a
-> [ 1382.568053] [<ffffffe0002a2f5a>] show_stack+0x2a/0x34
-> [ 1382.735960] [<ffffffe00083dcd6>] dump_stack+0x62/0x7c
-> [ 1382.903863] [<ffffffe0002a49e0>] perf_callchain_kernel+0xd8/0x102
-> [ 1383.106558] [<ffffffe000340a6e>] get_perf_callchain+0x136/0x1f2
-> [ 1383.303128] [<ffffffe00033d480>] perf_callchain+0x52/0x6e
-> [ 1383.482553] [<ffffffe00033d50a>] perf_prepare_sample+0x6e/0x476
-> [ 1383.679357] [<ffffffe00033d92e>] perf_event_output_forward+0x1c/0x50
-> [ 1383.890633] [<ffffffe000338b4c>] __perf_event_overflow+0x6a/0xa4
-> [ 1384.090279] [<ffffffe000338c40>] perf_swevent_hrtimer+0xba/0x106
-> [ 1384.290094] [<ffffffe0002f307c>] __hrtimer_run_queues+0x84/0x108
-> [ 1384.489694] [<ffffffe0002f36b8>] hrtimer_interrupt+0xca/0x1ce
-> [ 1384.680974] [<ffffffe00072f572>] riscv_timer_interrupt+0x32/0x3a
-> [ 1384.880449] [<ffffffe000854b34>] do_IRQ+0x64/0xbe
-> [ 1385.036698] [<ffffffe0002a1c5c>] ret_from_exception+0x0/0xc
->
-> [13915.697989] frame->fp=3D:fffffffffffff000
-> [13915.799937] CPU: 2 PID: 663 Comm: ls Not tainted
-> 5.3.0-rc5-00003-gb008f6bcd67c-dirty #14
-> [13916.068832] Call Trace:
-> [13916.150380] [<ffffffe0002a2d8e>] walk_stackframe+0x0/0x9a
-> [13916.329450] [<ffffffe0002a2f5a>] show_stack+0x2a/0x34
-> [13916.497360] [<ffffffe00083dcd6>] dump_stack+0x62/0x7c
-> [13916.665265] [<ffffffe0002a49e0>] perf_callchain_kernel+0xd8/0x102
-> [13916.867949] [<ffffffe000340a6e>] get_perf_callchain+0x136/0x1f2
-> [13917.064526] [<ffffffe00033d480>] perf_callchain+0x52/0x6e
-> [13917.243950] [<ffffffe00033d50a>] perf_prepare_sample+0x6e/0x476
-> [13917.440759] [<ffffffe00033d92e>] perf_event_output_forward+0x1c/0x50
-> [13917.652021] [<ffffffe000338b4c>] __perf_event_overflow+0x6a/0xa4
-> [13917.851683] [<ffffffe000338c40>] perf_swevent_hrtimer+0xba/0x106
-> [13918.051494] [<ffffffe0002f307c>] __hrtimer_run_queues+0x84/0x108
-> [13918.251094] [<ffffffe0002f36b8>] hrtimer_interrupt+0xca/0x1ce
-> [13918.442379] [<ffffffe00072f572>] riscv_timer_interrupt+0x32/0x3a
-> [13918.641840] [<ffffffe000854b34>] do_IRQ+0x64/0xbe
-> [13918.798082] [<ffffffe0002a1c5c>] ret_from_exception+0x0/0xc
+ERROR: "__arm_smccc_smc" [drivers/phy/marvell/phy-mvebu-cp110-comphy.ko] un=
+defined!
 
+Caused by commit
 
+  ccee80654309 ("phy: mvebu-cp110-comphy: Add SMC call support")
+
+I have used the phy-next tree from next-20190826 for today.
 
 --=20
-Best Regards
- Guo Ren
+Cheers,
+Stephen Rothwell
 
-ML: https://lore.kernel.org/linux-csky/
+--Sig_/TvQjQVBNpyGMBk1Co4XsQai
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1kxMAACgkQAVBC80lX
+0Gztagf9E0xBamruCKMV8zSsMkhqM116wzZGsOMYRG/GNtNdFdp1G9VxQyLF1kt6
+HZFNl/Uc7hppxWuhzx1CsEcUQaFHdGDrNbgULSfbpEvT/2kWDfdW0KuXqpy1NDrW
+rNwyWkppG4lmTEKEAF3ZowZ0WJjAjQytqjBQRIBFnve1/JRPm+zZ4cW6aLQWu3OP
+9t1Pl0Qq2Mk8oAhXxOIglI6DoEvSbokBCLRnc6FGKgL6Ll74knvYONMG15mk3OS1
+eOQqw2bb6sj0zudYEbtiamrk4PgS3HapKIneeZKUE4fHydy8SMCVoVg4NI3P1GSz
+N1512irwGuke1QR6m7/pWIJqT2+NaA==
+=UBWi
+-----END PGP SIGNATURE-----
+
+--Sig_/TvQjQVBNpyGMBk1Co4XsQai--
