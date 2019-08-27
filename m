@@ -2,104 +2,95 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCDBC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCEBC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C33C20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C498520828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:28:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566887328;
+	bh=t/k0wxnubh6zpRCRRkmbwdN56vGyHsuCtUnVcw9bEvw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yKJLUDYlT6qUa54O4p+mgTmivpWmyM7WjANUZTqt/ULapBMpe1UuqIYTV9l/vM5A0
+	 +Hmwa1NR+8zOwX1nBiuFe5ACxmoq8AwGSqeV37Zdt3Gp1zezBqq1hErkNaid2RbVWM
+	 N89L3LePZTxVHSawR5R/B1BM99qlXBd9Scd72vJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbfH0G2m (ORCPT
+        id S1729095AbfH0G2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 02:28:42 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:48162 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728222AbfH0G2k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 02:28:40 -0400
-IronPort-SDR: ioR+ZrJCfe0zbw+l/u/05zOjEbXdJ3aJe25sKtM4UuJIX+pXt2SREEvtcXorvP0Xe9HX65MpgN
- roIjOOSkAy2o9kgHdnluzZoWPjHPZFq9kQ3bauwwO2WHeNFIy8zKkm2wsAGhz8isHq2eaQt7hc
- sZUNqhNpnwGNHJpziSs1Xt7+xy8ZXutCL23taO4GXYLEidCOqs2bCnt0OtJP8GXE/PA7arTUz3
- wdjRgfWKVq60JkoKlgAsnQjIqPT7Tje8ySh/FA7XPewuDSVmdTEc6oeUD9R2bdzgIycBSZRDSp
- eJc=
-X-IronPort-AV: E=Sophos;i="5.64,436,1559548800"; 
-   d="scan'208";a="40784498"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa3.mentor.iphmx.com with ESMTP; 26 Aug 2019 22:28:39 -0800
-IronPort-SDR: deRt5p8R+EhP9FcgwUknmCS13pQ4lQUr/3axRNuD/7FtvPh0ScQFKf+Qv1jo5U6PI67OygTIup
- KSF6JGzRcNKYMSMRjoqzKVixnd2HLCLdZ8lBxM5ui+726RXknJ6QSuXL/2pJZi1g69lqdGvktl
- XtYX5xqgDaT+P5NTK9MPn5qLqKIwvab8tiPjesOOKRuBGtY8Z4FlWE9Yuz/MLHbi4LMovBoFgF
- nfM7QWWRRl2z4q7CfWaBTWIeeWolXRuCDHQwpIRWP95i4qXlTyg7lwY+aDKIOcJLgovrM/suTZ
- hKo=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v2 19/49] Input: atmel_mxt_ts - add config checksum attribute to sysfs
-Date:   Tue, 27 Aug 2019 15:28:04 +0900
-Message-ID: <20190827062834.20494-5-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190827062834.20494-1-jiada_wang@mentor.com>
-References: <20190827062834.20494-1-jiada_wang@mentor.com>
+        Tue, 27 Aug 2019 02:28:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56358 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725860AbfH0G2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 02:28:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D72E8B0B6;
+        Tue, 27 Aug 2019 06:28:45 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 08:28:44 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Alastair D'Silva <alastair@au1.ibm.com>
+Cc:     alastair@d-silva.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc: Perform a bounds check in arch_add_memory
+Message-ID: <20190827062844.GQ7538@dhcp22.suse.cz>
+References: <20190827052047.31547-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827052047.31547-1-alastair@au1.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: karl tsou <karl.funlab@gmail.com>
+On Tue 27-08-19 15:20:46, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> It is possible for firmware to allocate memory ranges outside
+> the range of physical memory that we support (MAX_PHYSMEM_BITS).
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit 03477477ddbe5dcad42853ab3f84166a8f807acf)
-[gdavis: Forward port and fix conflicts.]
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Doesn't that count as a FW bug? Do you have any evidence of that in the
+field? Just wondering...
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 923ceb5118c5..77a1f8209cee 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -3128,6 +3128,15 @@ static int mxt_configure_objects(struct mxt_data *data,
- 	return error;
- }
- 
-+/* Configuration crc check sum is returned as hex xxxxxx */
-+static ssize_t mxt_config_crc_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct mxt_data *data = dev_get_drvdata(dev);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%06x\n", data->config_crc);
-+}
-+
- /* Firmware Version is returned as Major.Minor.Build */
- static ssize_t mxt_fw_version_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
-@@ -3481,12 +3490,14 @@ static DEVICE_ATTR(fw_version, S_IRUGO, mxt_fw_version_show, NULL);
- static DEVICE_ATTR(hw_version, S_IRUGO, mxt_hw_version_show, NULL);
- static DEVICE_ATTR(object, S_IRUGO, mxt_object_show, NULL);
- static DEVICE_ATTR(update_cfg, S_IWUSR, NULL, mxt_update_cfg_store);
-+static DEVICE_ATTR(config_crc, S_IRUGO, mxt_config_crc_show, NULL);
- 
- static struct attribute *mxt_attrs[] = {
- 	&dev_attr_fw_version.attr,
- 	&dev_attr_hw_version.attr,
- 	&dev_attr_object.attr,
- 	&dev_attr_update_cfg.attr,
-+	&dev_attr_config_crc.attr,
- 	NULL
- };
- 
+> This patch adds a bounds check to ensure that any hotplugged
+> memory is addressable.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>  arch/powerpc/mm/mem.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> index 9191a66b3bc5..de18fb73de30 100644
+> --- a/arch/powerpc/mm/mem.c
+> +++ b/arch/powerpc/mm/mem.c
+> @@ -111,6 +111,9 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
+>  	unsigned long nr_pages = size >> PAGE_SHIFT;
+>  	int rc;
+>  
+> +	if ((start + size - 1) >> MAX_PHYSMEM_BITS)
+> +		return -EINVAL;
+> +
+>  	resize_hpt_for_hotplug(memblock_phys_mem_size());
+>  
+>  	start = (unsigned long)__va(start);
+> -- 
+> 2.21.0
+
 -- 
-2.19.2
-
+Michal Hocko
+SUSE Labs
