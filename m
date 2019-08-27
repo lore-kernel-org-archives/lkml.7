@@ -2,144 +2,157 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0EAC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C74C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E63E72184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 371B0206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729940AbfH0JwO (ORCPT
+        id S1729459AbfH0Jxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:52:14 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33423 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728808AbfH0JwN (ORCPT
+        Tue, 27 Aug 2019 05:53:45 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:41897 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbfH0Jxo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:52:13 -0400
-Received: by mail-ed1-f66.google.com with SMTP id s15so30581027edx.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 02:52:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rc+av+2pK1nD1xvCN1Qm/YJr4PtOyial+kNBUV8i24U=;
-        b=sI5AneQzcPvaoxGO0av9sTzc9/p288FuWa7T3gsskgDA+BCX/jDqUP8GguHQiJHlN5
-         nxotJcQmS4KHs4a0wWkakg6W2G8CsRpoX7luK94BLuH07i/ZgvTQRuM9vZVeyKLRDkYz
-         fjBu3HFZQ2dm7L+dUl2KHyBNyGqEElmzYxIgmbm+HxOC3lipvOJPJk5HVTHVivCC2mWv
-         Vs1sTjeVbeqe3Ftc7G1MaT7Zb8wBtAJidoC9gOsoRT57sU2ZC/yBome/wAQQ4wxuMGm/
-         O8J1VAYV9RN74Zr74RUSVl8vje1Tv2AbD3VGFSdV89YUHJdmE8fT0EGYE5RNocmW6bcK
-         O+UQ==
-X-Gm-Message-State: APjAAAVmus/iqwvMWq298mMIbKZIRdE7x7KG+mj8kjU8/HSL4+big9dn
-        SNl1NtJDN60Bfe0kjXxBPzlnE8DYiOs=
-X-Google-Smtp-Source: APXvYqwDGJh86yyfoimefYGxQ1g75jvplmAUt+FcEqni+FsxWB/VM6BXQgkiZr968JZEAdpU0UZpZA==
-X-Received: by 2002:a17:906:2310:: with SMTP id l16mr20821471eja.0.1566899531239;
-        Tue, 27 Aug 2019 02:52:11 -0700 (PDT)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com. [209.85.128.42])
-        by smtp.gmail.com with ESMTPSA id oo19sm3383313ejb.38.2019.08.27.02.52.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Aug 2019 02:52:10 -0700 (PDT)
-Received: by mail-wm1-f42.google.com with SMTP id m125so2311544wmm.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 02:52:10 -0700 (PDT)
-X-Received: by 2002:a1c:4c06:: with SMTP id z6mr26674457wmf.47.1566899530466;
- Tue, 27 Aug 2019 02:52:10 -0700 (PDT)
+        Tue, 27 Aug 2019 05:53:44 -0400
+X-Originating-IP: 87.18.63.98
+Received: from uno.localdomain (unknown [87.18.63.98])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 2CD171C0005;
+        Tue, 27 Aug 2019 09:53:36 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 11:55:08 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 03/14] arm64: dts: renesas: r8a7796: Add CMM units
+Message-ID: <20190827095508.lpp74fh5capobvcf@uno.localdomain>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-4-jacopo+renesas@jmondi.org>
+ <20190826224337.GL5031@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-References: <20190827093206.17919-1-mripard@kernel.org> <20190827093206.17919-2-mripard@kernel.org>
-In-Reply-To: <20190827093206.17919-2-mripard@kernel.org>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 27 Aug 2019 17:51:59 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64u+Q87woZpVbRLfwn=ocbx9QJeANYiALZ7x7rdDFXc=w@mail.gmail.com>
-Message-ID: <CAGb2v64u+Q87woZpVbRLfwn=ocbx9QJeANYiALZ7x7rdDFXc=w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ASoC: sun4i: Revert A83t description
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Code Kipper <codekipper@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="j65b5dlwaxdtql3o"
+Content-Disposition: inline
+In-Reply-To: <20190826224337.GL5031@pendragon.ideasonboard.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 5:32 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> The last set of reworks included some fixes to change the A83t behaviour
-> and "fix" it.
->
-> It turns out that the controller described in the datasheet and the one
-> supported here are not the same, yet the A83t has the two of them, and the
-> one supported in the driver wasn't the one described in the datasheet.
->
-> Fix this by reintroducing the proper quirks.
->
-> Fixes: 69e450e50ca6 ("ASoC: sun4i-i2s: Fix the LRCK period on A83t")
-> Fixes: bf943d527987 ("ASoC: sun4i-i2s: Fix MCLK Enable bit offset on A83t")
-> Fixes: 2e04fc4dbf50 ("ASoC: sun4i-i2s: Fix WSS and SR fields for the A83t")
-> Fixes: 515fcfbc7736 ("ASoC: sun4i-i2s: Fix LRCK and BCLK polarity offsets on newer SoCs")
-> Fixes: c1d3a921d72b ("ASoC: sun4i-i2s: Fix the MCLK and BCLK dividers on newer SoCs")
-> Fixes: fb19739d7f68 ("ASoC: sun4i-i2s: Use module clock as BCLK parent on newer SoCs")
-> Fixes: 71137bcd0a9a ("ASoC: sun4i-i2s: Move the format configuration to a callback")
-> Fixes: d70be625f25a ("ASoC: sun4i-i2s: Move the channel configuration to a callback")
-> Reported-by: Chen-Yu Tsai <wens@csie.org>
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  sound/soc/sunxi/sun4i-i2s.c | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
->
-> diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> index a6a3f772fdf0..498ceebd9135 100644
-> --- a/sound/soc/sunxi/sun4i-i2s.c
-> +++ b/sound/soc/sunxi/sun4i-i2s.c
-> @@ -1106,18 +1106,18 @@ static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
->         .has_reset              = true,
->         .reg_offset_txdata      = SUN8I_I2S_FIFO_TX_REG,
->         .sun4i_i2s_regmap       = &sun4i_i2s_regmap_config,
-> -       .field_clkdiv_mclk_en   = REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 8, 8),
-> -       .field_fmt_wss          = REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 2),
-> -       .field_fmt_sr           = REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 6),
-> -       .bclk_dividers          = sun8i_i2s_clk_div,
-> -       .num_bclk_dividers      = ARRAY_SIZE(sun8i_i2s_clk_div),
-> -       .mclk_dividers          = sun8i_i2s_clk_div,
-> -       .num_mclk_dividers      = ARRAY_SIZE(sun8i_i2s_clk_div),
-> -       .get_bclk_parent_rate   = sun8i_i2s_get_bclk_parent_rate,
-> -       .get_sr                 = sun8i_i2s_get_sr_wss,
-> -       .get_wss                = sun8i_i2s_get_sr_wss,
-> -       .set_chan_cfg           = sun8i_i2s_set_chan_cfg,
-> -       .set_fmt                = sun8i_i2s_set_soc_fmt,
-> +       .field_clkdiv_mclk_en   = REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 7, 7),
-> +       .field_fmt_wss          = REG_FIELD(SUN4I_I2S_FMT0_REG, 2, 3),
-> +       .field_fmt_sr           = REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 5),
-> +       .bclk_dividers          = sun4i_i2s_bclk_div,
-> +       .num_bclk_dividers      = ARRAY_SIZE(sun4i_i2s_bclk_div),
-> +       .mclk_dividers          = sun4i_i2s_mclk_div,
-> +       .num_mclk_dividers      = ARRAY_SIZE(sun4i_i2s_mclk_div),
-> +       .get_bclk_parent_rate   = sun4i_i2s_get_bclk_parent_rate,
-> +       .get_sr                 = sun4i_i2s_get_sr_wss,
-> +       .get_wss                = sun4i_i2s_get_sr_wss,
 
-You want sun4i_i2s_get_sr and sun4i_i2s_get_wss here.
+--j65b5dlwaxdtql3o
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Otherwise, with both patches applied, I2S on the A83T returns to normal.
+Hi Laurent,
 
-Tested-by: Chen-Yu Tsai <wens@csie.org>
-
-on the Bananapi-M3 with a PiFi DAC v2.0 (has PCM5122) connected.
-16bit stereo 44.1kHz, 48kHz, and 96kHz samples tested.
-
-> +       .set_chan_cfg           = sun4i_i2s_set_chan_cfg,
-> +       .set_fmt                = sun4i_i2s_set_soc_fmt,
->  };
+On Tue, Aug 27, 2019 at 01:43:37AM +0300, Laurent Pinchart wrote:
+> Hi Jacopo,
 >
->  static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
+> Thank you for the patch.
+>
+> Should you squash this with the patches that add CMM units to the other
+> SoCs ?
+
+I don't know, I guess it depends on Geert's preferences. Geert?
+
+
+>
+> On Sun, Aug 25, 2019 at 03:51:43PM +0200, Jacopo Mondi wrote:
+> > Add CMM units to Renesas R-Car M3-W device tree and reference them from
+> > the Display Unit they are connected to.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>
+> Apart from the issue pointed out by Geert,
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+> > ---
+> >  arch/arm64/boot/dts/renesas/r8a7796.dtsi | 25 ++++++++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> > index 3dc9d73f589a..8d78e1f98a23 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> > @@ -2613,6 +2613,30 @@
+> >  			renesas,fcp = <&fcpvi0>;
+> >  		};
+> >
+> > +		cmm0: cmm@fea40000 {
+> > +			compatible = "renesas,cmm-r8a7796";
+> > +			reg = <0 0xfea40000 0 0x1000>;
+> > +			clocks = <&cpg CPG_MOD 711>;
+> > +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> > +			resets = <&cpg 711>;
+> > +		};
+> > +
+> > +		cmm1: cmm@fea50000 {
+> > +			compatible = "renesas,cmm-r8a7796";
+> > +			reg = <0 0xfea50000 0 0x1000>;
+> > +			clocks = <&cpg CPG_MOD 710>;
+> > +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> > +			resets = <&cpg 710>;
+> > +		};
+> > +
+> > +		cmm2: cmm@fea60000 {
+> > +			compatible = "renesas,cmm-r8a7796";
+> > +			reg = <0 0xfea60000 0 0x1000>;
+> > +			clocks = <&cpg CPG_MOD 709>;
+> > +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> > +			resets = <&cpg 709>;
+> > +		};
+> > +
+> >  		csi20: csi2@fea80000 {
+> >  			compatible = "renesas,r8a7796-csi2";
+> >  			reg = <0 0xfea80000 0 0x10000>;
+> > @@ -2766,6 +2790,7 @@
+> >  			status = "disabled";
+> >
+> >  			vsps = <&vspd0 &vspd1 &vspd2>;
+> > +			cmms = <&cmm0 &cmm1 &cmm2>;
+> >
+> >  			ports {
+> >  				#address-cells = <1>;
+>
 > --
-> 2.21.0
+> Regards,
 >
+> Laurent Pinchart
+
+--j65b5dlwaxdtql3o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1k/fsACgkQcjQGjxah
+Vjxiaw//Z5HMC2bGdbZRpCxKiWUOZRLP1eFu80P2Jh/8TSVhc9CSIK5I95E4e1uJ
+JfbbyuJwHRir1zIpQaEOI0xbCsA3iTgYEaAnsuM2cc39zqhKQ1XwaT3BS22/6A2v
+zgav3dt2QH3n+XIKzapRAbTSHwXupoxEkuNBERTX6kPIxQCHW4SwKTvsJlc0bXGK
+CvoWwg7pUi5+92WAQOuEkCrRIZ9sw3p+714MQqtEg6R8+FpkvmsnGFlWvEWr4uff
+qs5nqLda8rkCGn+l3Z+wF2cOdV8t1TAApcBZIMPQTjGbLFqe1wXCsJGKuEdrapoX
+UBVfMGieG3fML6gcxHaJN8z9FM+GTz/VJhjWYdvR2PMExJmmJp+2XFW5UnwJ/wsQ
+kOjjoLNvo0ndZ64jbmsHoXZvkgORPuMsJXGzH4THPRLPInM7oAoCtPlybWVq2iP8
+sy1TLvwXNUP/hHlv7GXbj+Im8uvwfmvRaIZEQqoXTDP4rXtIIDWsGgsUaZqZrpQr
+f5k+cTSGhWHUZoTxNAZXykg2cSDLbQT1svfnJHQz9oEHaxapLTOfF2HFltAY+iCV
+18vwyY1QytTIcyMC3EbW1eR+r+JvJdKk/TCzBkUV74PHWocxBLah0S2+DqApTGEu
+VdDWLqs82AHrz3MvGvkTwf7A4gMIuJRPsXOoeWqgeWlinds78RA=
+=s54F
+-----END PGP SIGNATURE-----
+
+--j65b5dlwaxdtql3o--
