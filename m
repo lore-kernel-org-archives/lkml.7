@@ -2,134 +2,85 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B31C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D355C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5491C206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F95C217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:09:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729216AbfH0JJe (ORCPT
+        id S1729548AbfH0JJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:09:34 -0400
-Received: from out1.zte.com.cn ([202.103.147.172]:48442 "EHLO mxct.zte.com.cn"
+        Tue, 27 Aug 2019 05:09:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38122 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbfH0JJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:09:34 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id CA0093140B52B6C1B3F1;
-        Tue, 27 Aug 2019 17:09:27 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id x7R984kp047150;
-        Tue, 27 Aug 2019 17:08:04 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019082717081800-3205352 ;
-          Tue, 27 Aug 2019 17:08:18 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     davem@davemloft.net
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        wang.liang82@zte.com.cn, Cheng Lin <cheng.lin130@zte.com.cn>
-Subject: [PATCH] ipv6: Not to probe neighbourless routes
-Date:   Tue, 27 Aug 2019 17:08:27 +0800
-Message-Id: <1566896907-5121-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-08-27 17:08:18,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-08-27 17:08:07,
-        Serialize complete at 2019-08-27 17:08:07
-X-MAIL: mse-fl1.zte.com.cn x7R984kp047150
+        id S1725805AbfH0JJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 05:09:41 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9A0BB3023080;
+        Tue, 27 Aug 2019 09:09:41 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-27.pek2.redhat.com [10.72.8.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 564985D717;
+        Tue, 27 Aug 2019 09:09:31 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 17:09:27 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Johannes Thumshirn <jthumshirn@suse.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        John Garry <john.garry@huawei.com>,
+        Hannes Reinecke <hare@suse.com>,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 3/4] nvme: pci: pass IRQF_RESCURE_THREAD to
+ request_threaded_irq
+Message-ID: <20190827090926.GA30871@ming.t460p>
+References: <20190827085344.30799-1-ming.lei@redhat.com>
+ <20190827085344.30799-4-ming.lei@redhat.com>
+ <8837ea73-dcf5-801f-f037-267936bd65bc@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8837ea73-dcf5-801f-f037-267936bd65bc@suse.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 27 Aug 2019 09:09:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cheng Lin <cheng.lin130@zte.com.cn>
+On Tue, Aug 27, 2019 at 11:06:20AM +0200, Johannes Thumshirn wrote:
+> On 27/08/2019 10:53, Ming Lei wrote:
+> [...]
+> > +		char *devname;
+> > +		const struct cpumask *mask;
+> > +		unsigned long irqflags = IRQF_SHARED;
+> > +		int vector = pci_irq_vector(pdev, nvmeq->cq_vector);
+> > +
+> > +		devname = kasprintf(GFP_KERNEL, "nvme%dq%d", nr, nvmeq->qid);
+> > +		if (!devname)
+> > +			return -ENOMEM;
+> > +
+> > +		mask = pci_irq_get_affinity(pdev, nvmeq->cq_vector);
+> > +		if (mask && cpumask_weight(mask) > 1)
+> > +			irqflags |= IRQF_RESCUE_THREAD;
+> > +
+> > +		return request_threaded_irq(vector, nvme_irq, NULL, irqflags,
+> > +				devname, nvmeq);
+> 
+> This will leak 'devname' which gets allocated by kasprintf() a few lines
+> above.
 
-Originally, Router Reachability Probing require a neighbour entry
-existed. Commit 2152caea7196 ("ipv6: Do not depend on rt->n in
-rt6_probe().") removed the requirement for a neighbour entry. And
-commit f547fac624be ("ipv6: rate-limit probes for neighbourless
-routes") adds rate-limiting for neighbourless routes.
+It won't, please see pci_free_irq() in which free_irq() returns the
+'devname' passed in.
 
-And, the Neighbor Discovery for IP version 6 (IPv6)(rfc4861) says,
-"
-7.2.5.  Receipt of Neighbor Advertisements
-
-When a valid Neighbor Advertisement is received (either solicited or
-unsolicited), the Neighbor Cache is searched for the target's entry.
-If no entry exists, the advertisement SHOULD be silently discarded.
-There is no need to create an entry if none exists, since the
-recipient has apparently not initiated any communication with the
-target.
-".
-
-In rt6_probe(), just a Neighbor Solicitation message are transmited.
-When receiving a Neighbor Advertisement, the node does nothing in a
-Neighborless condition.
-
-Not sure it's needed to create a neighbor entry in Router
-Reachability Probing. And the Original way may be the right way.
-
-This patch recover the requirement for a neighbour entry.
-
-Signed-off-by: Cheng Lin <cheng.lin130@zte.com.cn>
----
- include/net/ip6_fib.h | 5 -----
- net/ipv6/route.c      | 5 +----
- 2 files changed, 1 insertion(+), 9 deletions(-)
-
-diff --git a/include/net/ip6_fib.h b/include/net/ip6_fib.h
-index 4b5656c..8c2e022 100644
---- a/include/net/ip6_fib.h
-+++ b/include/net/ip6_fib.h
-@@ -124,11 +124,6 @@ struct rt6_exception {
- 
- struct fib6_nh {
- 	struct fib_nh_common	nh_common;
--
--#ifdef CONFIG_IPV6_ROUTER_PREF
--	unsigned long		last_probe;
--#endif
--
- 	struct rt6_info * __percpu *rt6i_pcpu;
- 	struct rt6_exception_bucket __rcu *rt6i_exception_bucket;
- };
-diff --git a/net/ipv6/route.c b/net/ipv6/route.c
-index fd059e0..c4bcffc 100644
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -639,12 +639,12 @@ static void rt6_probe(struct fib6_nh *fib6_nh)
- 	nh_gw = &fib6_nh->fib_nh_gw6;
- 	dev = fib6_nh->fib_nh_dev;
- 	rcu_read_lock_bh();
--	idev = __in6_dev_get(dev);
- 	neigh = __ipv6_neigh_lookup_noref(dev, nh_gw);
- 	if (neigh) {
- 		if (neigh->nud_state & NUD_VALID)
- 			goto out;
- 
-+		idev = __in6_dev_get(dev);
- 		write_lock(&neigh->lock);
- 		if (!(neigh->nud_state & NUD_VALID) &&
- 		    time_after(jiffies,
-@@ -654,9 +654,6 @@ static void rt6_probe(struct fib6_nh *fib6_nh)
- 				__neigh_set_probe_once(neigh);
- 		}
- 		write_unlock(&neigh->lock);
--	} else if (time_after(jiffies, fib6_nh->last_probe +
--				       idev->cnf.rtr_probe_interval)) {
--		work = kmalloc(sizeof(*work), GFP_ATOMIC);
- 	}
- 
- 	if (work) {
--- 
-1.8.3.1
-
+Thanks,
+Ming
