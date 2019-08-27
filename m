@@ -2,150 +2,58 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64517C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F96CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ABA72184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:20:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="O9e+0NN4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NRqnrGsf"
+	by mail.kernel.org (Postfix) with ESMTP id 579CC217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:21:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbfH0GUh (ORCPT
+        id S1726181AbfH0GVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 02:20:37 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:56856 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfH0GUe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 02:20:34 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 05BB160E40; Tue, 27 Aug 2019 06:20:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566886834;
-        bh=DWiUZ0h0oKq+88OUYVKweLryQ+oqXke10jLm3RzR10s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O9e+0NN4JqBQyK5vUOiB9HNsweYOhC8Q50310R6gbr8MYLcCppJDawyYF4bqZSK4u
-         0amV1PwO0exEhiPH85e0ADuOXiplOJnP9/I3IKbmZmmNcODhjRwIm3oDXopoJnUJOf
-         670EFS0X4Eug6A+zwQfBBZn0HktxvGxdFziJ6y14=
-Received: from amasule-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: amasule@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6200F60E3E;
-        Tue, 27 Aug 2019 06:20:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566886833;
-        bh=DWiUZ0h0oKq+88OUYVKweLryQ+oqXke10jLm3RzR10s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NRqnrGsf2p0BriQBwoB7R9kt+YU3o49SHHA2R6ZTDarEPB/CFh/soc7px1jlh2rVC
-         P1X5390i7KjibJlf/z1E6t8Uk1hbsY4VmXVkAxOlakYSbUcPzox7pOvR966SJvyKI2
-         rXFjmTsrSKI68KPH/LJO+BUEQAiEZ4cln5lVueAw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6200F60E3E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=amasule@codeaurora.org
-From:   Aniket Masule <amasule@codeaurora.org>
-To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
-Subject: [PATCH 3/3] media: venus: Update to bitrate based clock scaling
-Date:   Tue, 27 Aug 2019 11:49:42 +0530
-Message-Id: <1566886782-9406-4-git-send-email-amasule@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1566886782-9406-1-git-send-email-amasule@codeaurora.org>
-References: <1566886782-9406-1-git-send-email-amasule@codeaurora.org>
+        Tue, 27 Aug 2019 02:21:19 -0400
+Received: from verein.lst.de ([213.95.11.211]:53918 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725825AbfH0GVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 02:21:19 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 2A12468AFE; Tue, 27 Aug 2019 08:21:14 +0200 (CEST)
+Date:   Tue, 27 Aug 2019 08:21:13 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Stefano Stabellini <sstabellini@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: swiotlb-xen cleanups
+Message-ID: <20190827062113.GA31752@lst.de>
+References: <20190816130013.31154-1-hch@lst.de> <alpine.DEB.2.21.1908261859490.3428@sstabellini-ThinkPad-T480s>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1908261859490.3428@sstabellini-ThinkPad-T480s>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduced clock scaling using bitrate, preavious
-calculations consider only the cycles per mb.
-Also, clock scaling is now triggered before every
-buffer being queued to the device. This helps in
-deciding precise clock cycles required.
+On Mon, Aug 26, 2019 at 07:00:44PM -0700, Stefano Stabellini wrote:
+> On Fri, 16 Aug 2019, Christoph Hellwig wrote:
+> > Hi Xen maintainers and friends,
+> > 
+> > please take a look at this series that cleans up the parts of swiotlb-xen
+> > that deal with non-coherent caches.
+> 
+> Hi Christoph,
+> 
+> I just wanted to let you know that your series is on my radar, but I
+> have been swamped the last few days. I hope to get to it by the end of
+> the week.
 
-Signed-off-by: Aniket Masule <amasule@codeaurora.org>
----
- drivers/media/platform/qcom/venus/helpers.c | 33 ++++++++++++++++++++++++-----
- 1 file changed, 28 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index 4ed630b..8fee0ef 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -516,17 +516,26 @@ static int scale_clocks(struct venus_inst *inst)
- 	return 0;
- }
- 
--static unsigned long calculate_vpp_freq(struct venus_inst *inst)
-+static unsigned long calculate_inst_freq(struct venus_inst *inst,
-+					 unsigned long filled_len)
- {
--	unsigned long vpp_freq = 0;
-+	unsigned long vpp_freq = 0, vsp_freq = 0;
-+	u64 fps = inst->fps;
- 	u32 mbs_per_sec;
- 
--	mbs_per_sec = load_per_instance(inst);
-+	mbs_per_sec = load_per_instance(inst) / inst->fps;
- 	vpp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
- 	/* 21 / 20 is overhead factor */
- 	vpp_freq += vpp_freq / 20;
-+	vsp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vsp_freq;
- 
--	return vpp_freq;
-+	/* 10 / 7 is overhead factor */
-+	if (inst->session_type == VIDC_SESSION_TYPE_ENC)
-+		vsp_freq += (inst->controls.enc.bitrate * 10) / 7;
-+	else
-+		vsp_freq += ((fps * filled_len * 8) * 10) / 7;
-+
-+	return max(vpp_freq, vsp_freq);
- }
- 
- static int scale_clocks_v4(struct venus_inst *inst)
-@@ -534,12 +543,24 @@ static int scale_clocks_v4(struct venus_inst *inst)
- 	struct venus_core *core = inst->core;
- 	const struct freq_tbl *table = core->res->freq_tbl;
- 	unsigned int num_rows = core->res->freq_tbl_size;
-+	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
- 	struct device *dev = core->dev;
- 	unsigned int i;
- 	unsigned long freq = 0, freq_core1 = 0, freq_core2 = 0;
-+	unsigned long filled_len = 0;
-+	struct venus_buffer *buf, *n;
-+	struct vb2_buffer *vb;
- 	int ret;
- 
--	freq = calculate_vpp_freq(inst);
-+	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
-+		vb = &buf->vb.vb2_buf;
-+		filled_len = max(filled_len, vb2_get_plane_payload(vb, 0));
-+	}
-+
-+	if (inst->session_type == VIDC_SESSION_TYPE_DEC && !filled_len)
-+		return 0;
-+
-+	freq = calculate_inst_freq(inst, filled_len);
- 	inst->clk_data.freq = freq;
- 
- 	mutex_lock(&core->lock);
-@@ -701,6 +722,8 @@ void venus_helper_get_ts_metadata(struct venus_inst *inst, u64 timestamp_us,
- 
- 		if (inst->session_type == VIDC_SESSION_TYPE_DEC)
- 			put_ts_metadata(inst, vbuf);
-+
-+		venus_helper_load_scale_clocks(inst);
- 	} else if (type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
- 		if (inst->session_type == VIDC_SESSION_TYPE_ENC)
- 			fdata.buffer_type = HFI_BUFFER_OUTPUT;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Thanks, and no rush.  Note that I posted a v2 with a few significant
+changes yesterday.
