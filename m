@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC45CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3344FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3BEE206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E32206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:14:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oFeXeHu8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mcxwMmfb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729659AbfH0MOd (ORCPT
+        id S1729700AbfH0MOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:14:33 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:47081 "EHLO
+        Tue, 27 Aug 2019 08:14:38 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33623 "EHLO
         mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729552AbfH0MOc (ORCPT
+        with ESMTP id S1729552AbfH0MOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:14:32 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q139so13988519pfc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 05:14:32 -0700 (PDT)
+        Tue, 27 Aug 2019 08:14:36 -0400
+Received: by mail-pf1-f194.google.com with SMTP id g2so14023231pfq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 05:14:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=ByQuSAprS9jXkayR9k8WNXgC0XRVOmuonTQ+tfTnFgQ=;
-        b=oFeXeHu81LKsmIt7qd79KgGaAgbRDvhtHEbzcJsDTIyDIb1vjLZzGCUYrlXBrhVh0H
-         EHqo53y0jOX76nzMTDHT60A74TY5VPOzJaptg87naVQX71fv2xpUsxrdf4JTzLrG3P9y
-         UL+fVDfDy5e0LgG3YOKlutwrj2KKTkzGaKwTcvEXR39Hw++yOHdyn+wW/CiylqacqCS6
-         GlSyL25Rws+1zruhvD5N06QYOcT3XfLU/SmgccDhL185GVlWBljOK/DMxbk9IAphVKYL
-         27bUZP8p16RYF5L+sU1wsRzIpSnaCjctervDPIayul04UHC9uV6HMHbAhT5l+AaamjTu
-         da/g==
+        bh=cALbZwSOU8EvtF0iOAGpF4/JluhlENqnhyD2XhJQYmg=;
+        b=mcxwMmfbWpjURk+sDZRfOKum+Lk7DBNWQwm5AO0dJRtYGIeQgT/zq9OmcUo1FepTVk
+         1Zfv/ys1eqatL4TQGiUZ/Ca2kxdXTmfhB6C8iBDNEVGYamkGe1+5b0E3iZQDmV9Bdj1c
+         O3skx9Yhfgk+JScWFGWn+dz6r0xisaS/RQ2MUW4nN32dvED1zRFHO8q3oBA5NDkmCwN6
+         5Gg+3+UfAUIcALrGTAsnL/abFFaVA8AZeGtC0rEeZJmq4ft4TPKBP642ywo+oDJRzeN9
+         nxZHIRWY5+6X0ojlla+nUooceujRC7+Mt5OcmnsWiUe3Pyh8mbzVjL1jgQrFIVCk+Ame
+         KPDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=ByQuSAprS9jXkayR9k8WNXgC0XRVOmuonTQ+tfTnFgQ=;
-        b=ugZ+kEYgyuoB0IfTWmUxaC7fb2YFgmVgveQ9gP01a3A3Aw/Stzc8BNd12uUpZT2sY8
-         OrW6qadiTNguMrJnc71d28P3kWxNgPlfFZ2MJLSlnBGLbGbp8V49eHeuBNTGyQOAvN+e
-         0kW96WvCLT6d60/CwUSRurjSsbXb5PRpqCPnBm4MZeaa7drcRGUcPGlYn8w7gMKPfRpU
-         9a+BDJ9aH+9tQoKIYPHXaA+9ZlpaGN0YrPqgGAH08Q3QBtzVD7IBlwxM9FIdv6GBXf+m
-         pUyAnUQVOUQJZ/pAa0syjrMsF9+/ZrRwr793n/GB0e4fzF/pFejXGuadQmOVaqQJsfqJ
-         vxEQ==
-X-Gm-Message-State: APjAAAW4qs9QNtcnZ5VJOFt9MyUVpzjp5JzUig4liSr7VhujiAHDtqgx
-        9U08M5eSmNJgUsO3oMj3zdXjA0N28NpKuQ==
-X-Google-Smtp-Source: APXvYqyftonu9jTlmH0ayDH7TOr6DaBwh6U/L04HWzIFTKUkLf8Jos0TyIP4+efo1N2uctISUk0afQ==
-X-Received: by 2002:a63:3c5:: with SMTP id 188mr20528160pgd.394.1566908071328;
-        Tue, 27 Aug 2019 05:14:31 -0700 (PDT)
+        bh=cALbZwSOU8EvtF0iOAGpF4/JluhlENqnhyD2XhJQYmg=;
+        b=Xs87VNa1AFF6OAX62JFCzo2X1kMjqBBucXz7Q4pQgWmE7oiXsveNHSP4oqHQkD0bBa
+         LVNn3FVAwsKoLoXQvMVSmK55JPdBMB/jJ6nDuftQD30/alQsvqEmxynvV+1HmsDU3wJ2
+         a3fHq2LaOIhPzs+5MiULnjaCzW+Pq162jT3kbcYU80DowSiQd5InrMQFop7OriEvgCOp
+         6wjbdf0hjfZZViRW7rf6g2aJv5JmZuCxOuheNKPhZHLGcEaL68hXWEsL373Ve5Wh0ynq
+         wPC9GheixtRuQ/2NGLZoeFx3sP+sD4w/rcdCncjypfqSCZ8mIVDs7o0eA2DF/pp83s2J
+         LFCQ==
+X-Gm-Message-State: APjAAAXEEJizblGsfSaHjfgP2QAWJDtHHklDrTtFAfKnX68vRlpPyoNU
+        uGSqMPa6mLKDqewWz78DRR8Ul75n/w2qqQ==
+X-Google-Smtp-Source: APXvYqzzwYQ+PQW3FGGHUlGlFCWYJGjjnSBcR2EDGQmBj43++CgSd+f7YRVbPjEDs8tLgcX3EeUJGA==
+X-Received: by 2002:a63:3009:: with SMTP id w9mr21859082pgw.260.1566908075548;
+        Tue, 27 Aug 2019 05:14:35 -0700 (PDT)
 Received: from localhost ([49.248.54.193])
-        by smtp.gmail.com with ESMTPSA id e13sm18207682pfl.130.2019.08.27.05.14.30
+        by smtp.gmail.com with ESMTPSA id b3sm20264505pfp.65.2019.08.27.05.14.34
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 27 Aug 2019 05:14:30 -0700 (PDT)
+        Tue, 27 Aug 2019 05:14:34 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
@@ -65,9 +65,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     linux-pm@vger.kernel.org
-Subject: [PATCH v2 02/15] drivers: thermal: tsens: Simplify code flow in tsens_probe
-Date:   Tue, 27 Aug 2019 17:43:58 +0530
-Message-Id: <e54d2381f481e688429b6910d2f76871b3b8fe9e.1566907161.git.amit.kucheria@linaro.org>
+Subject: [PATCH v2 03/15] drivers: thermal: tsens: Add __func__ identifier to debug statements
+Date:   Tue, 27 Aug 2019 17:43:59 +0530
+Message-Id: <93fa782bde9c66845993ff883532b3f1f02d99e4.1566907161.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1566907161.git.amit.kucheria@linaro.org>
 References: <cover.1566907161.git.amit.kucheria@linaro.org>
@@ -78,42 +78,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move platform_set_drvdata up to avoid an extra 'if (ret)' check after
-the call to tsens_register.
+Printing the function name when enabling debugging makes logs easier to
+read.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/thermal/qcom/tsens.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/thermal/qcom/tsens-common.c | 8 ++++----
+ drivers/thermal/qcom/tsens.c        | 6 +++---
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-index 6ed687a6e53cd..542a7f8c3d962 100644
---- a/drivers/thermal/qcom/tsens.c
-+++ b/drivers/thermal/qcom/tsens.c
-@@ -149,6 +149,8 @@ static int tsens_probe(struct platform_device *pdev)
- 	priv->feat = data->feat;
- 	priv->fields = data->fields;
+diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+index c037bdf92c663..7437bfe196e50 100644
+--- a/drivers/thermal/qcom/tsens-common.c
++++ b/drivers/thermal/qcom/tsens-common.c
+@@ -42,8 +42,8 @@ void compute_intercept_slope(struct tsens_priv *priv, u32 *p1,
  
-+	platform_set_drvdata(pdev, priv);
-+
- 	if (!priv->ops || !priv->ops->init || !priv->ops->get_temp)
- 		return -EINVAL;
+ 	for (i = 0; i < priv->num_sensors; i++) {
+ 		dev_dbg(priv->dev,
+-			"sensor%d - data_point1:%#x data_point2:%#x\n",
+-			i, p1[i], p2[i]);
++			"%s: sensor%d - data_point1:%#x data_point2:%#x\n",
++			__func__, i, p1[i], p2[i]);
  
-@@ -167,11 +169,7 @@ static int tsens_probe(struct platform_device *pdev)
- 		}
+ 		priv->sensor[i].slope = SLOPE_DEFAULT;
+ 		if (mode == TWO_PT_CALIB) {
+@@ -60,7 +60,7 @@ void compute_intercept_slope(struct tsens_priv *priv, u32 *p1,
+ 		priv->sensor[i].offset = (p1[i] * SLOPE_FACTOR) -
+ 				(CAL_DEGC_PT1 *
+ 				priv->sensor[i].slope);
+-		dev_dbg(priv->dev, "offset:%d\n", priv->sensor[i].offset);
++		dev_dbg(priv->dev, "%s: offset:%d\n", __func__, priv->sensor[i].offset);
  	}
- 
--	ret = tsens_register(priv);
--
--	platform_set_drvdata(pdev, priv);
--
--	return ret;
-+	return tsens_register(priv);
  }
  
- static int tsens_remove(struct platform_device *pdev)
+@@ -209,7 +209,7 @@ int __init init_common(struct tsens_priv *priv)
+ 	if (ret)
+ 		goto err_put_device;
+ 	if (!enabled) {
+-		dev_err(dev, "tsens device is not enabled\n");
++		dev_err(dev, "%s: device not enabled\n", __func__);
+ 		ret = -ENODEV;
+ 		goto err_put_device;
+ 	}
+diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+index 542a7f8c3d962..06c6bbd69a1a7 100644
+--- a/drivers/thermal/qcom/tsens.c
++++ b/drivers/thermal/qcom/tsens.c
+@@ -127,7 +127,7 @@ static int tsens_probe(struct platform_device *pdev)
+ 		of_property_read_u32(np, "#qcom,sensors", &num_sensors);
+ 
+ 	if (num_sensors <= 0) {
+-		dev_err(dev, "invalid number of sensors\n");
++		dev_err(dev, "%s: invalid number of sensors\n", __func__);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -156,7 +156,7 @@ static int tsens_probe(struct platform_device *pdev)
+ 
+ 	ret = priv->ops->init(priv);
+ 	if (ret < 0) {
+-		dev_err(dev, "tsens init failed\n");
++		dev_err(dev, "%s: init failed\n", __func__);
+ 		return ret;
+ 	}
+ 
+@@ -164,7 +164,7 @@ static int tsens_probe(struct platform_device *pdev)
+ 		ret = priv->ops->calibrate(priv);
+ 		if (ret < 0) {
+ 			if (ret != -EPROBE_DEFER)
+-				dev_err(dev, "tsens calibration failed\n");
++				dev_err(dev, "%s: calibration failed\n", __func__);
+ 			return ret;
+ 		}
+ 	}
 -- 
 2.17.1
 
