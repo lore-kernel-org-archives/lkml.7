@@ -2,157 +2,176 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8B7C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D9EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3ED2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1552070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:37:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ORQG6ecU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FzLF1znK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730765AbfH0Vgo (ORCPT
+        id S1730789AbfH0VhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:36:44 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38004 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfH0Vgo (ORCPT
+        Tue, 27 Aug 2019 17:37:02 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33834 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfH0VhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:36:44 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w11so177154plp.5;
-        Tue, 27 Aug 2019 14:36:44 -0700 (PDT)
+        Tue, 27 Aug 2019 17:37:01 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n9so195891pgc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 14:37:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k+0AUBxbU6JVGwde8Yye0R2BikQpnByAsWECQmXnXdg=;
-        b=ORQG6ecUUO5DHHrbAG09EZHk4pcKZezQuBxRAF+KWI2FGlRh5SpcXahV1RvNmYAeFl
-         dn1epk7Ea0CJf26fKzI/BP5wzDexaa4K9aOFA2nGh98/oHHeHJf25lame43eyEgYOtNN
-         PIexZfo4kWgQrIKgGV1PspZOBb53LpAoG5aO/wAbEqfUlEbIIcfTyK8+a52s3lXPXjbO
-         bqeoqBQbMSkDMQoua45nrrUo0S9OSEBLwN9uRyZ0Zn505CbC+8+vogDtWZSCTTM6tahU
-         7w9X76M1Jwnevb1HG3vcL5+/WlcOoFvyZAUVDkTldSvpT5s3xzipcHNQFsWS+KJTHJg8
-         7RxA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5kMi4zPMHWacIIVvEpsVNB2uVTvahLBPSKnQM5VXg1g=;
+        b=FzLF1znK+sBBhtGiNLs3csbTpIeQU1SFpy5FX1E/04MwzlJu/0ZnNX95GT+lXi7UBz
+         zgN3APVzjb/03MwWFeLzh3i/89YQq9IqkoacAQAHW5EIku1cKLwHkcx4HL4lkOvKporl
+         MqnddmYmWohTdLV0m6DXGZkUFiTRlkwV10yHHajuYPoperS+VvLU5EYrxY32ot/G8YNN
+         Mr/70wTbXQjVPynmmlkGtV9qwY1dr/LwJ7kq5iPIi2of+ZGeZ9+Pjqr6yfkN+Kaf4W2H
+         9XcNanMdK2BSNCQfEpFMhUZ9HzcL7nafSdnH6BU7EY+T3SSEm2VgZLD1eCI1AP6XBbJi
+         TUcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k+0AUBxbU6JVGwde8Yye0R2BikQpnByAsWECQmXnXdg=;
-        b=qXi+GXrAjDzkXj4Cs2mEXLhVbEu6aA+a0HOMfDujGMvZfJT/pJ0mbUix8ub0BYYD1E
-         O8BdZ0hddJmOMZha3xxAbXcwavXgAbrfubp99BEo6+tKw3lTdU8PMZYvxw8vj/CSgJcu
-         Lx6NkVMwO7vFgEc4/HmEruWuNuzpnxXHR865ycCYd3mNEnee0sCqLZGjgV4HviyS+CHq
-         Y6JY3T3H6MODeUiVa9gXHnfumkOax7G/QtFNSACEjvA6RHmXd7i8pM+1UgQV0GdLk14Y
-         9R6G020UCA1nCgjf1rzcvng8Jz3R9CDYVxlUD19hAWYGl2t8I7cxJePhEVnKghS0kEXa
-         o9HA==
-X-Gm-Message-State: APjAAAV1MZR701VbQHO1saODfUMPhCDk/PA1q4X3y3kSF7uec0yLGQIj
-        KEGAbo2nLn4d/we+7QkUfn4=
-X-Google-Smtp-Source: APXvYqy07weBiz46/PfoQJBr6AVmaA4u5nf1lNwSBxa3zqpE7lPXtS1ZoG1ndxvssYCOXXhfmOjHoQ==
-X-Received: by 2002:a17:902:f01:: with SMTP id 1mr981614ply.337.1566941803570;
-        Tue, 27 Aug 2019 14:36:43 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id b126sm275451pfa.177.2019.08.27.14.36.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 14:36:42 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Bruce Wang <bzwang@chromium.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Enrico Weigelt <info@metux.net>,
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), Fritz Koenig <frkoenig@google.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        linux-kernel@vger.kernel.org (open list),
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 0/9] drm/msm: async commit support
-Date:   Tue, 27 Aug 2019 14:33:30 -0700
-Message-Id: <20190827213421.21917-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5kMi4zPMHWacIIVvEpsVNB2uVTvahLBPSKnQM5VXg1g=;
+        b=TJL5mVIxr+kWkFGE25LvcV0vOQJSL8mjeeiFIystkPL2D87mEGS2wUwu2F1p9z2vYp
+         rOc1gxLZhmvexykqLOLnD5d7MRtl+h9U9qwOodhptcwpF23g6HHwbY5BdzjxBLMW0oxX
+         XKzCgrdHjBc4NCLt32tlx6+eC9RIV/tBTQasXurHgwqbTCKJsrvTyJAnWq/TvBvMWhpz
+         VBCALus+YQipoWSH7CNFLG9mqArRqut6VHVyc+cc749t2vmcJUxxlwgcnAsiSoheb70n
+         d/CQBB4ZGQ7VtsUMsfRhfat7V5teIlD6k2lKWIGx/q0Gb8Nr4tSESXMVibQl8ntZrWIe
+         zpgw==
+X-Gm-Message-State: APjAAAXnmJ2kxQneWq0ve9mJrmX6BA/PVxlMo/Kn9z//EmEKJch5RHc2
+        O1488glxNhXymbBAIO86G20fBbbX2B6YUNiwJVeP2A==
+X-Google-Smtp-Source: APXvYqygR6QsgO+h2AnQoLbAAFRFzalFDLqkKsy4+Dyn2xUfmrn7ceUN77WNJK2y0altaH/XBmGYKqdEW9PU8xDCKXA=
+X-Received: by 2002:aa7:8f2e:: with SMTP id y14mr691594pfr.113.1566941820480;
+ Tue, 27 Aug 2019 14:37:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190827174932.44177-1-brendanhiggins@google.com>
+ <ae9b9102-187c-eefe-d377-6efa63de2d28@kernel.org> <CAFd5g473nZAfM4D=Vkr54O_+nn=MSt3dzuDcXzNMZGRDWg1nxA@mail.gmail.com>
+ <CAFd5g47rSBJS8QVH6d5HqoJW5PJXdNnkoP6WcvQCFUqHUEmDzw@mail.gmail.com>
+In-Reply-To: <CAFd5g47rSBJS8QVH6d5HqoJW5PJXdNnkoP6WcvQCFUqHUEmDzw@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 27 Aug 2019 14:36:49 -0700
+Message-ID: <CAFd5g44A5vtgxBYErP4mCGwDgOHEMYUXCDSF=d9bYB3ktpW5jA@mail.gmail.com>
+Subject: Re: [PATCH v1] kunit: fix failure to build without printk
+To:     shuah <shuah@kernel.org>
+Cc:     kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Tue, Aug 27, 2019 at 2:09 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> On Tue, Aug 27, 2019 at 2:03 PM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > On Tue, Aug 27, 2019 at 1:21 PM shuah <shuah@kernel.org> wrote:
+> > >
+> > > On 8/27/19 11:49 AM, Brendan Higgins wrote:
+> > > > Previously KUnit assumed that printk would always be present, which is
+> > > > not a valid assumption to make. Fix that by ifdefing out functions which
+> > > > directly depend on printk core functions similar to what dev_printk
+> > > > does.
+> > > >
+> > > > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > > > Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
+> > > > Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > > > ---
+> > > >   include/kunit/test.h |  7 +++++++
+> > > >   kunit/test.c         | 41 ++++++++++++++++++++++++-----------------
+> > > >   2 files changed, 31 insertions(+), 17 deletions(-)
+> > > >
+> > > > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > > > index 8b7eb03d4971..339af5f95c4a 100644
+> > > > --- a/include/kunit/test.h
+> > > > +++ b/include/kunit/test.h
+> > > > @@ -339,9 +339,16 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
+> > [...]
+> > > Okay after reviewing this, I am not sure why you need to do all
+> > > this.
+> > >
+> > > Why can't you just change the root function that throws the warn:
+> > >
+> > >   static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
+> > > {
+> > >          return vprintk_emit(0, level, NULL, 0, fmt, args);
+> > > }
+> > >
+> > > You aren'r really doing anything extra here, other than calling
+> > > vprintk_emit()
+> >
+> > Yeah, I did that a while ago. I think it was a combination of trying
+> > to avoid an extra layer of adding and then removing the log level, and
+> > that's what dev_printk and friends did.
+> >
+> > But I think you are probably right. It's a lot of maintenance overhead
+> > to get rid of that. Probably best to just use what the printk people
+> > have.
+> >
+> > > Unless I am missing something, can't you solve this problem by including
+> > > printk.h and let it handle the !CONFIG_PRINTK case?
+> >
+> > Randy, I hope you don't mind, but I am going to ask you to re-ack my
+> > next revision since it basically addresses the problem in a totally
+> > different way.
+>
+> Actually, scratch that. Checkpatch doesn't like me calling printk
+> without using a KERN_<LEVEL>.
+>
+> Now that I am thinking back to when I wrote this. I think it also
+> might not like using a dynamic KERN_<LEVEL> either (printk("%s my
+> message", KERN_INFO)).
+>
+> I am going to have to do some more investigation.
 
-Currently the dpu backend attempts to handle async commits.  But it
-is racey and could result in flushing multiple times in a frame, or
-modifying hw state (such as scanout address or cursor position) after
-the previous flush, but before vblank, causing underflows (which
-manifest as brief black flashes).
+Alright, I am pretty sure it is safe to do printk("%smessage", KERN_<LEVEL>);
 
-This patchset removes the previous dpu async commit handling, and
-reworks the internal kms backend API to decouple flushing.  And in
-the end introduces an hrtimer to flush async updates.  The overall
-approach is:
+Looking at the printk implementation, it appears to do the format
+before it checks the log level:
 
- 1) Move flushing various hw state out of encoder/crtc atomic commit
-    (which is anyways an improvement over the current state, where
-    we either flush from crtc or encoder, depending on whether it is
-    a full modeset)
+https://elixir.bootlin.com/linux/v5.2.10/source/kernel/printk/printk.c#L1907
 
- 2) Switch to crtc_mask for anything that completes after atomic
-    _commit_tail(), so we do not need to keep the atomic state
-    around.  Ie. from drm core's perspective, an async commit
-    completes immediately.
+So I am pretty sure we can do it either with the vprintk_emit or with printk.
 
-    This avoids fighting with drm core about the lifecycle of an
-    atomic state object.
+So it appears that we have to weigh the following trade-offs:
 
- 3) Track a bitmask of crtcs w/ pending async flush, and setup
-    an hrtimer with expiration 1ms before vblank, to trigger
-    the flush.  For async commits, we push the state down to
-    the double buffered hw registers immediately, and only
-    defer writing the flush registers.
+Using vprintk_emit:
 
-Current patchset only includes the dpu backend support for async
-commits.. mdp4 and mdp5 should be relatively trivial (less layers
-of indirection involved).  But I won't have access to any mdp4 hw
-for a few more weeks, so at least that part I might punt on for
-now.
+Pros:
+ - That's what dev_printk uses.
+ - No checkpatch warnings.
 
-Rob Clark (9):
-  drm/msm/dpu: unwind async commit handling
-  drm/msm/dpu: add real wait_for_commit_done()
-  drm/msm/dpu: handle_frame_done() from vblank irq
-  drm/msm: add kms->wait_flush()
-  drm/msm: convert kms->complete_commit() to crtc_mask
-  drm/msm: add kms->flush_commit()
-  drm/msm: split power control from prepare/complete_commit
-  drm/msm: async commit support
-  drm/msm/dpu: async commit support
+Cons:
+ - Harder to maintain (requires ifdefery).
 
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c      |  48 +---
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h      |   7 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c   |  46 ++--
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h   |   8 +-
- .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  |  39 ++--
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |  99 +++++----
- drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c      |  48 ++--
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c      |  47 ++--
- drivers/gpu/drm/msm/msm_atomic.c              | 210 +++++++++++++++---
- drivers/gpu/drm/msm/msm_drv.c                 |   1 +
- drivers/gpu/drm/msm/msm_drv.h                 |   4 +
- drivers/gpu/drm/msm/msm_kms.h                 | 108 ++++++++-
- 12 files changed, 466 insertions(+), 199 deletions(-)
+Using printk:
 
--- 
-2.21.0
+Pros:
+ - Easier to maintain.
 
+Cons:
+ - I am less confident that it is correct (I am not 100% certain that
+printk is intended to be used this way).
+ - Checkpatch warnings.
+ - Extra layer of string formatting.
+
+My preference is to go the vprintk_emit route since I am more
+confident that it is right, but I don't have a strong preference.
