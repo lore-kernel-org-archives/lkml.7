@@ -2,95 +2,84 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E110C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA177C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65AB72173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A802184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566925264;
-	bh=R7F9h5uQJlGzntybFGiaLkhr8sE4tt5MZxDxbvAJzNA=;
+	s=default; t=1566925404;
+	bh=L/c5ZizkwPKVq6te9A4GjqwpWMhO8iIjdrvMtb9yesw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Tx+ejetBnfylmKIMCUURuC7gKCxyOIvPtmFe3rwmn8uRK55AoFBdm1zRqgr7BwPM3
-	 kSBaiQgfwS2hKwC7HAeVMv/ePOHDXhpyuYHsyeS09hAVm90iscPyx5mIHk66JvNrsU
-	 kvZktSfTO5t3GcGN1LPz0t/W6YeXfnbtH6HpG2KM=
+	b=V/FCURJZ7WHYwA//vIQ22wWqBU5kFG124DuMvUXibX3QMRi+k2oj9ND+CYpT5XtRY
+	 1ZOqq9aN9YwXpzQiS/kWZpiIoZRYYZ279/WFdXGl77ozWZQpFjA9a1Was7euRmJ1a8
+	 3m135lQyzDLthxElwN5KDUb2MSAJkm8xHo6ki7zQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbfH0RBD (ORCPT
+        id S1730079AbfH0RDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:01:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbfH0RBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:01:03 -0400
-Received: from localhost (unknown [77.137.115.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ED072184D;
-        Tue, 27 Aug 2019 17:01:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566925262;
-        bh=R7F9h5uQJlGzntybFGiaLkhr8sE4tt5MZxDxbvAJzNA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EVEs4Ht8U0ir6fvcOpezFkjKPvmqxAwn+FdEUcX9zNklA+hAq8P9NiwBBnYQ54Lc7
-         gNZpwO3748lbaLq8djYP+/uY/W/ZSDieNn3HY+mdUtbrNcmf8yveAUqeGqPbjaNO/d
-         WXaBqeDmqOMieK0pReos8pJIDyzAn7IafcP94410=
-Date:   Tue, 27 Aug 2019 20:00:18 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Bernard Metzler <BMT@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
-Message-ID: <20190827170018.GA4725@mtr-leonro.mtl.com>
-References: <20190711081434.GA86557@archlinux-threadripper>
- <20190711133915.GA25807@ziepe.ca>
- <CAKwvOdnHz3uH4ZM20LGQJ3FYhLQQUYn4Lg0B-YMr7Y1L66TAsA@mail.gmail.com>
- <20190711171808.GF25807@ziepe.ca>
- <20190711173030.GA844@archlinux-threadripper>
- <20190823142427.GD12968@ziepe.ca>
- <20190826153800.GA4752@archlinux-threadripper>
- <20190826154228.GE27349@ziepe.ca>
- <20190826233829.GA36284@archlinux-threadripper>
- <20190827150830.brsvsoopxut2od66@treble>
+        Tue, 27 Aug 2019 13:03:23 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35855 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbfH0RDX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 13:03:23 -0400
+Received: by mail-oi1-f193.google.com with SMTP id n1so15531476oic.3;
+        Tue, 27 Aug 2019 10:03:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=egAsBZONFtZF3S68zAxV8vWm95Rzuv+SSezbehwAtCw=;
+        b=DNIo5AA1232Lo4nU/yRAcPD+ay6etEH9XfCCx7hitSOqDSZbQk2PqDjrp2jqWSceHW
+         OhPoU9rcXRIOpwmZEmrYXPJNJOo8GMVW5aaxsIelInugao4FVaIIor1PoQLEH9AVYTxi
+         DL22iwQ6bt2+Y+23aniTZ7dPSDOIhea5He8K6VCTS8ThkLIs1MwyUDmy4jxM/8ScnRQ7
+         hcid3xrgcKeM2MsNZJeIWL53dELCmpo9Pt5W9EF+sz91bYfgEWjgFkm5XWQVOa0lVTg4
+         0uXBQvvWoNGOufd9+HAxdKnUGRgMfmHH6/Z3zgZLEV5mXQXVJYCjGZNXGYWV2cHwUKO6
+         syyQ==
+X-Gm-Message-State: APjAAAWo7iwow3m6kU16wDivroTejVhQbwKLh2uklgcr4ipfFJsvGVQk
+        4CqXieBpGsBi3OuRo3kGVg==
+X-Google-Smtp-Source: APXvYqyrU53AmLJ9RXIkWnzQsmP/nOlBksyu/9B33djgdkagficaUAD5K6LSF+6tYjKO/a4cSoIbMg==
+X-Received: by 2002:aca:b303:: with SMTP id c3mr16045895oif.95.1566925402020;
+        Tue, 27 Aug 2019 10:03:22 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s24sm4246237oic.22.2019.08.27.10.03.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 10:03:21 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 12:03:20 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] reset: dt-bindings: meson: update arb bindings for
+ sm1
+Message-ID: <20190827170320.GA13577@bogus>
+References: <20190820094625.13455-1-jbrunet@baylibre.com>
+ <20190820094625.13455-2-jbrunet@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190827150830.brsvsoopxut2od66@treble>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190820094625.13455-2-jbrunet@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 10:08:30AM -0500, Josh Poimboeuf wrote:
-> On Mon, Aug 26, 2019 at 04:38:29PM -0700, Nathan Chancellor wrote:
-> > Looks like that comes from tune_qsfp, which gets inlined into
-> > tune_serdes but I am far from an objtool expert so I am not
-> > really sure what kind of issues I am looking for. Adding Josh
-> > and Peter for a little more visibility.
-> >
-> > Here is the original .o file as well:
-> >
-> > https://github.com/nathanchance/creduce-files/raw/4e252c0ca19742c90be1445e6c722a43ae561144/rdma-objtool/platform.o.orig
->
->      574:       0f 87 00 0c 00 00       ja     117a <tune_serdes+0xdfa>
->
-> It's jumping to la-la-land past the end of the function.
+On Tue, 20 Aug 2019 11:46:24 +0200, Jerome Brunet wrote:
+> SM1 SoC family adds two new audio FIFOs with the related arb reset lines
+> 
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  .../devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt  | 3 ++-
+>  include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h        | 2 ++
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
 
-How is it possible?
-
-Thanks
-
->
-> --
-> Josh
+Reviewed-by: Rob Herring <robh@kernel.org>
