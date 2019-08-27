@@ -7,54 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0043BC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CFFC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C855221872
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA6120828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:59:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892774;
-	bh=isvN1jFcyXGNsRWOLMIIqbt9jrnVO/ZAKkLb+61Kmrk=;
+	s=default; t=1566892777;
+	bh=bIUiQfUrAfiyzT/EZEz2yoa3/JD/aDxkK+xgJWgp3uU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y6Vi9Z/5TfQopf+UNeAcXEnXIg+PuzIuwBebbekjxsAEz1L1rlonHfuHpA+SgdGt+
-	 1yGiMvplckX/Dfj9uRMIKLXWg0/rVp/fS9/jBVNTBk98xmBs1hRMLuG62KU7SaVzau
-	 nZ1geozAduswuPNcElDdzJrHraVYOmHghZPFdeLc=
+	b=ahPWGl0Eo3e/z55Ui+OG1sMi7OL4g7V3CCQk9swf+70N95bH1PMadlD2G/L4ksIb6
+	 DvkSZJA6BO2WYAzoaVD3fu87Rk4DvP3PsEJ+ndUSk/xxpBA0PvuYQI8PeI9zDq3/KQ
+	 CVYmovQ8Yy5RM/8mTnDZDNJa44DHS44CQVxkQWHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731245AbfH0H7e (ORCPT
+        id S1731235AbfH0H7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:59:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53074 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731232AbfH0H7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:59:32 -0400
+        id S1730832AbfH0H7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:59:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B94FE206BF;
-        Tue, 27 Aug 2019 07:59:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA7F1206BF;
+        Tue, 27 Aug 2019 07:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892772;
-        bh=isvN1jFcyXGNsRWOLMIIqbt9jrnVO/ZAKkLb+61Kmrk=;
+        s=default; t=1566892769;
+        bh=bIUiQfUrAfiyzT/EZEz2yoa3/JD/aDxkK+xgJWgp3uU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZIXJovVBZPfdOz6f0QU9kirrZjLmcpZ9gl2gMHu5M02/tVLNXOk9g5c/mdASwBEjW
-         NokzwDEUw5Iv25qvejbbMmfLVxdKXuQxD4/Lvn77qOmrINtEyGo+xLYKZTy4VnS3Gy
-         93SGWgAYPbYak10ZVG/hi8vsyu6OpebjW0jTlQxg=
+        b=CUZpcBOZaxa5A15KOwKu+wfguQhduVV0PUq0i1t29+8zArDH4OJmL4Oht0yGG/ZKk
+         PZoHAPyYEJ4EPZ4JI1Htn8o26zYLbj09HL6duYw7YiKyZgpEFsi/mCHhFLiicwzLYv
+         6bCrB5KQ+NSLsfHQlSXJQGMBRwyO92i0izG06BVw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 001/162] ASoC: simple_card_utils.h: care NULL dai at asoc_simple_debug_dai()
-Date:   Tue, 27 Aug 2019 09:48:49 +0200
-Message-Id: <20190827072738.194602192@linuxfoundation.org>
+Subject: [PATCH 4.19 95/98] dm zoned: fix potential NULL dereference in dmz_do_reclaim()
+Date:   Tue, 27 Aug 2019 09:51:14 +0200
+Message-Id: <20190827072723.326533622@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
-References: <20190827072738.093683223@linuxfoundation.org>
+In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
+References: <20190827072718.142728620@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,35 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 52db6685932e326ed607644ab7ebdae8c194adda ]
+[ Upstream commit e0702d90b79d430b0ccc276ead4f88440bb51352 ]
 
-props->xxx_dai might be NULL when DPCM.
-This patch cares it for debug.
+This function is supposed to return error pointers so it matches the
+dmz_get_rnd_zone_for_reclaim() function.  The current code could lead to
+a NULL dereference in dmz_do_reclaim()
 
-Fixes: commit 0580dde59438 ("ASoC: simple-card-utils: add asoc_simple_debug_info()")
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/87o922gw4u.wl-kuninori.morimoto.gx@renesas.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: b234c6d7a703 ("dm zoned: improve error handling in reclaim")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/simple_card_utils.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/md/dm-zoned-metadata.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/sound/simple_card_utils.h b/include/sound/simple_card_utils.h
-index 3429888347e7c..b3609e4c46e0f 100644
---- a/include/sound/simple_card_utils.h
-+++ b/include/sound/simple_card_utils.h
-@@ -149,6 +149,10 @@ inline void asoc_simple_debug_dai(struct asoc_simple_priv *priv,
- {
- 	struct device *dev = simple_priv_to_dev(priv);
+diff --git a/drivers/md/dm-zoned-metadata.c b/drivers/md/dm-zoned-metadata.c
+index 00e7a343eacf1..7e8d7fc99410d 100644
+--- a/drivers/md/dm-zoned-metadata.c
++++ b/drivers/md/dm-zoned-metadata.c
+@@ -1579,7 +1579,7 @@ static struct dm_zone *dmz_get_seq_zone_for_reclaim(struct dmz_metadata *zmd)
+ 	struct dm_zone *zone;
  
-+	/* dai might be NULL */
-+	if (!dai)
-+		return;
-+
- 	if (dai->name)
- 		dev_dbg(dev, "%s dai name = %s\n",
- 			name, dai->name);
+ 	if (list_empty(&zmd->map_seq_list))
+-		return NULL;
++		return ERR_PTR(-EBUSY);
+ 
+ 	list_for_each_entry(zone, &zmd->map_seq_list, link) {
+ 		if (!zone->bzone)
+@@ -1588,7 +1588,7 @@ static struct dm_zone *dmz_get_seq_zone_for_reclaim(struct dmz_metadata *zmd)
+ 			return zone;
+ 	}
+ 
+-	return NULL;
++	return ERR_PTR(-EBUSY);
+ }
+ 
+ /*
 -- 
 2.20.1
 
