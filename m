@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEFFC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0459FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB482173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB131217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893135;
-	bh=ebZgYB6R0/vyzOKHPC4jX6y5EBXSalTY8oBL7udNUd4=;
+	s=default; t=1566893138;
+	bh=wzbZxtrhX9Gj/EB3qIZ6hzivxxPXIUx1MjSENaTyTD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fwjj/YG3zkau+FUkaMnYJx1hhdudTnXS4AKu5DOIjNc4Xnfsbbnfyk9ow4Han2665
-	 hGVHr8SQKfPU0v4vK18mBAvc0slXF4uj9U3E+RtYEi8ZH7tt8TAN04/1LVKErF3F4G
-	 hw7BDuP7CCTcTeVMyW0bgYwvXiQ5pqk/G1t+jZgw=
+	b=O331L6T7aa4/1b3p0d8RcXD5ZIg91sbBfgJKPhr7l3fuAl5V+G0xGzqTE9yX+2UBx
+	 HusZ1VNnOAWbt2OVHNdk8ntCFGvWvBd3py5eFXaLTKcw78Xyr5lfiqIohMbqHVUWeM
+	 XujjPZuFUdp6bw0izmISY947qlcr9g6rasaskwCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732827AbfH0IFe (ORCPT
+        id S1732845AbfH0IFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:05:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35226 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:05:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732786AbfH0IF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:05:26 -0400
+        id S1731443AbfH0IFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:05:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C22F822CED;
-        Tue, 27 Aug 2019 08:05:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D10F4217F5;
+        Tue, 27 Aug 2019 08:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893125;
-        bh=ebZgYB6R0/vyzOKHPC4jX6y5EBXSalTY8oBL7udNUd4=;
+        s=default; t=1566893131;
+        bh=wzbZxtrhX9Gj/EB3qIZ6hzivxxPXIUx1MjSENaTyTD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0c9Uh15dDZhMw6neI9kL+P2y/kSa5UxcgSpZvqKVMnZ/L55buw1VH0KwPCFSRawOc
-         ULKzs4KshSYPiINMJeEdNPOVaqAqjo0UD3deiSGbC6LXaLno/Uyb1F/ToqMVhMmeSP
-         xZ/y4A3o4qfuRIduv53QJTJuzc7JrcSP9qx0HUl0=
+        b=OsJPWPIkCLLuUou4FEuUeWTaeqk9fZPiK/SoIL1I4KcYVLpUnWxIIWBNqN9sDpNC0
+         rOiIc0A0AEnKpXeLEcn1EdNvEk05UhvrpFSxteVws3jSmEkrHOvpFyfAlnNlqu9isr
+         WawKRwZHcQTHusqeSmUh4lc4FwmqXCt6gV/DyBfE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil MacLeod <neil@nmacleod.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH 5.2 129/162] x86/boot: Fix boot regression caused by bootparam sanitizing
-Date:   Tue, 27 Aug 2019 09:50:57 +0200
-Message-Id: <20190827072743.013028143@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>
+Subject: [PATCH 5.2 131/162] IB/hfi1: Add additional checks when handling TID RDMA READ RESP packet
+Date:   Tue, 27 Aug 2019 09:50:59 +0200
+Message-Id: <20190827072743.100909227@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,49 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-commit 7846f58fba964af7cb8cf77d4d13c33254725211 upstream.
+commit a8adbf7d0d0a6e3bf7f99da461a06039364e028b upstream.
 
-commit a90118c445cc ("x86/boot: Save fields explicitly, zero out everything
-else") had two errors:
+In a congested fabric with adaptive routing enabled, traces show that
+packets could be delivered out of order, which could cause incorrect
+processing of stale packets. For stale TID RDMA READ RESP packets that
+cause KDETH EFLAGS errors, this patch adds additional checks before
+processing the packets.
 
-    * It preserved boot_params.acpi_rsdp_addr, and
-    * It failed to preserve boot_params.hdr
-
-Therefore, zero out acpi_rsdp_addr, and preserve hdr.
-
-Fixes: a90118c445cc ("x86/boot: Save fields explicitly, zero out everything else")
-Reported-by: Neil MacLeod <neil@nmacleod.com>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Neil MacLeod <neil@nmacleod.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190821192513.20126-1-jhubbard@nvidia.com
+Fixes: 9905bf06e890 ("IB/hfi1: Add functions to receive TID RDMA READ response")
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Link: https://lore.kernel.org/r/20190815192045.105923.59813.stgit@awfm-01.aw.intel.com
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/bootparam_utils.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/tid_rdma.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/bootparam_utils.h
-+++ b/arch/x86/include/asm/bootparam_utils.h
-@@ -59,7 +59,6 @@ static void sanitize_boot_params(struct
- 			BOOT_PARAM_PRESERVE(apm_bios_info),
- 			BOOT_PARAM_PRESERVE(tboot_addr),
- 			BOOT_PARAM_PRESERVE(ist_info),
--			BOOT_PARAM_PRESERVE(acpi_rsdp_addr),
- 			BOOT_PARAM_PRESERVE(hd0_info),
- 			BOOT_PARAM_PRESERVE(hd1_info),
- 			BOOT_PARAM_PRESERVE(sys_desc_table),
-@@ -71,6 +70,7 @@ static void sanitize_boot_params(struct
- 			BOOT_PARAM_PRESERVE(eddbuf_entries),
- 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
- 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
-+			BOOT_PARAM_PRESERVE(hdr),
- 			BOOT_PARAM_PRESERVE(e820_table),
- 			BOOT_PARAM_PRESERVE(eddbuf),
- 		};
+--- a/drivers/infiniband/hw/hfi1/tid_rdma.c
++++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
+@@ -2742,9 +2742,12 @@ static bool handle_read_kdeth_eflags(str
+ 
+ 		wqe = do_rc_completion(qp, wqe, ibp);
+ 		if (qp->s_acked == qp->s_tail)
+-			break;
++			goto s_unlock;
+ 	}
+ 
++	if (qp->s_acked == qp->s_tail)
++		goto s_unlock;
++
+ 	/* Handle the eflags for the request */
+ 	if (wqe->wr.opcode != IB_WR_TID_RDMA_READ)
+ 		goto s_unlock;
 
 
