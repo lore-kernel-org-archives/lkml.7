@@ -2,129 +2,142 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F9FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E55C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD513214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D2CB22DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:07:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566947225;
+	bh=WE4QEs46+F0AXHLzxSkuwUCWzJwNYQIvdKGLoOjedEQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rDMMmpOeUotzWhLZTeMUbDk2Uu1CQkRI8QlDZDrdCRUU11CYugJohurh3MyEsWilN
+	 pcEwOwlDCgV47rnJs0Q3oqBegKgtX3N5m0Zf0Gzul7iok2xJIwWHdzaDENKz5STGuh
+	 sCPIYL86vNA8SmjzJ7U/yyGaBGzYyLM5nQCBpB18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfH0XFT (ORCPT
+        id S1726232AbfH0XHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 19:05:19 -0400
-Received: from baldur.buserror.net ([165.227.176.147]:48606 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfH0XFT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 19:05:19 -0400
-X-Greylist: delayed 3026 seconds by postgrey-1.27 at vger.kernel.org; Tue, 27 Aug 2019 19:05:18 EDT
-Received: from [2601:449:8400:7293:12bf:48ff:fe84:c9a0] (helo=home.buserror.net)
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1i2jd4-0005yb-Kk; Tue, 27 Aug 2019 17:07:56 -0500
-Date:   Tue, 27 Aug 2019 17:07:52 -0500
-From:   Scott Wood <oss@buserror.net>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        diana.craciun@nxp.com, christophe.leroy@c-s.fr,
-        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
-        keescook@chromium.org, kernel-hardening@lists.openwall.com,
-        wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org,
-        jingxiangfeng@huawei.com, zhaohongjiang@huawei.com,
-        thunder.leizhen@huawei.com, fanchengyang@huawei.com,
-        yebin10@huawei.com
-Message-ID: <20190827220752.GA17757@home.buserror.net>
-References: <20190809100800.5426-1-yanaijie@huawei.com>
- <20190809100800.5426-5-yanaijie@huawei.com>
+        Tue, 27 Aug 2019 19:07:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbfH0XHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 19:07:04 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09904214DA;
+        Tue, 27 Aug 2019 23:07:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566947222;
+        bh=WE4QEs46+F0AXHLzxSkuwUCWzJwNYQIvdKGLoOjedEQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Nbk0GzfVvfIDS2w248ZujPEbSU7RmkyFzJLmfCKhInfK7r2zQ1n5pr30kuzojc1n1
+         iUk/K5GEwiUWMu8ikTnYZfkz7SG2Df3/BexhC7K6iOIijWSxbH3ARYdCgKerqaJMQE
+         RkwKbTq8PTfLbZU2WoVQnFT0U0cpKug0xXpfRtHE=
+Date:   Tue, 27 Aug 2019 18:06:59 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof Wilczynski <kw@linux.com>
+Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] PCI: Fix misspelled words.
+Message-ID: <20190827230659.GF9987@google.com>
+References: <20190819115306.27338-1-kw@linux.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190809100800.5426-5-yanaijie@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-SA-Exim-Connect-IP: 2601:449:8400:7293:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: yanaijie@huawei.com, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com, christophe.leroy@c-s.fr, benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com, keescook@chromium.org, kernel-hardening@lists.openwall.com, wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org, jingxiangfeng@huawei.com, zhaohongjiang@huawei.com, thunder.leizhen@huawei.com, fanchengyang@huawei.com, yebin10@huawei.com
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH v6 04/12] powerpc/fsl_booke/32: introduce
- create_tlb_entry() helper
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
+In-Reply-To: <20190819115306.27338-1-kw@linux.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 06:07:52PM +0800, Jason Yan wrote:
-> Add a new helper create_tlb_entry() to create a tlb entry by the virtual
-> and physical address. This is a preparation to support boot kernel at a
-> randomized address.
+On Mon, Aug 19, 2019 at 01:53:06PM +0200, Krzysztof Wilczynski wrote:
+> Fix misspelled words in include/linux/pci.h, drivers/pci/Kconfig,
+> and in the documentation for Freescale i.MX6 and Marvell Armada 7K/8K
+> PCIe interfaces.  No functional change intended.
 > 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> Cc: Diana Craciun <diana.craciun@nxp.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
-> Tested-by: Diana Craciun <diana.craciun@nxp.com>
+> Related commit 96291d565550 ("PCI: Fix typos and whitespace errors").
+> 
+> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+
+Applied with Thomas' ack and Rob's reviewed-by to pci/trivial for
+v5.4, thanks!
+
 > ---
->  arch/powerpc/kernel/head_fsl_booke.S | 29 ++++++++++++++++++++++++++++
->  arch/powerpc/mm/mmu_decl.h           |  1 +
->  2 files changed, 30 insertions(+)
+>  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 2 +-
+>  Documentation/devicetree/bindings/pci/pci-armada8k.txt   | 2 +-
+>  drivers/pci/Kconfig                                      | 2 +-
+>  include/linux/pci.h                                      | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
-> index adf0505dbe02..04d124fee17d 100644
-> --- a/arch/powerpc/kernel/head_fsl_booke.S
-> +++ b/arch/powerpc/kernel/head_fsl_booke.S
-> @@ -1114,6 +1114,35 @@ __secondary_hold_acknowledge:
->  	.long	-1
->  #endif
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> index a7f5f5afa0e6..de4b2baf91e8 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> @@ -50,7 +50,7 @@ Additional required properties for imx7d-pcie and imx8mq-pcie:
+>  - power-domains: Must be set to a phandle pointing to PCIE_PHY power domain
+>  - resets: Must contain phandles to PCIe-related reset lines exposed by SRC
+>    IP block
+> -- reset-names: Must contain the following entires:
+> +- reset-names: Must contain the following entries:
+>  	       - "pciephy"
+>  	       - "apps"
+>  	       - "turnoff"
+> diff --git a/Documentation/devicetree/bindings/pci/pci-armada8k.txt b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
+> index 9e3fc15e1af8..1aaa09254001 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-armada8k.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
+> @@ -11,7 +11,7 @@ Required properties:
+>  - reg-names:
+>     - "ctrl" for the control register region
+>     - "config" for the config space region
+> -- interrupts: Interrupt specifier for the PCIe controler
+> +- interrupts: Interrupt specifier for the PCIe controller
+>  - clocks: reference to the PCIe controller clocks
+>  - clock-names: mandatory if there is a second clock, in this case the
+>     name must be "core" for the first clock and "reg" for the second
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 2ab92409210a..46f4912a370d 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -170,7 +170,7 @@ config PCI_P2PDMA
 >  
-> +/*
-> + * Create a 64M tlb by address and entry
-> + * r3/r4 - physical address
-> + * r5 - virtual address
-> + * r6 - entry
-> + */
-> +_GLOBAL(create_tlb_entry)
-
-This function is broadly named but contains various assumptions about the
-entry being created.  I'd just call it create_kaslr_tlb_entry.
-
-> +	lis     r7,0x1000               /* Set MAS0(TLBSEL) = 1 */
-> +	rlwimi  r7,r6,16,4,15           /* Setup MAS0 = TLBSEL | ESEL(r6) */
-> +	mtspr   SPRN_MAS0,r7            /* Write MAS0 */
-> +
-> +	lis     r6,(MAS1_VALID|MAS1_IPROT)@h
-> +	ori     r6,r6,(MAS1_TSIZE(BOOK3E_PAGESZ_64M))@l
-> +	mtspr   SPRN_MAS1,r6            /* Write MAS1 */
-> +
-> +	lis     r6,MAS2_EPN_MASK(BOOK3E_PAGESZ_64M)@h
-> +	ori     r6,r6,MAS2_EPN_MASK(BOOK3E_PAGESZ_64M)@l
-> +	and     r6,r6,r5
-> +	ori	r6,r6,MAS2_M@l
-> +	mtspr   SPRN_MAS2,r6            /* Write MAS2(EPN) */
-> +
-> +	ori     r8,r4,(MAS3_SW|MAS3_SR|MAS3_SX)
-> +	mtspr   SPRN_MAS3,r8            /* Write MAS3(RPN) */
-> +
-> +	tlbwe                           /* Write TLB */
-> +	isync
-> +	sync
-> +	blr
-
-Should set MAS7 under MMU_FTR_BIG_PHYS (or CONFIG_PHYS_64BIT if it's
-too early for features) -- even if relocatable kernels over 4GiB aren't
-supported (I don't remember if they work or not), MAS7 might be non-zero
-on entry.  And the function claims to take a 64-bit phys addr as input...
-
-MAS2_M should be MAS2_M_IF_NEEDED to match other kmem tlb entries.
-
--Scott
+>  	  Many PCIe root complexes do not support P2P transactions and
+>  	  it's hard to tell which support it at all, so at this time,
+> -	  P2P DMA transations must be between devices behind the same root
+> +	  P2P DMA transactions must be between devices behind the same root
+>  	  port.
+>  
+>  	  If unsure, say N.
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 463486016290..5a89854bd3cb 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -961,7 +961,7 @@ resource_size_t pcibios_align_resource(void *, const struct resource *,
+>  				resource_size_t,
+>  				resource_size_t);
+>  
+> -/* Weak but can be overriden by arch */
+> +/* Weak but can be overridden by arch */
+>  void pci_fixup_cardbus(struct pci_bus *);
+>  
+>  /* Generic PCI functions used internally */
+> -- 
+> 2.22.0
+> 
