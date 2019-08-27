@@ -2,105 +2,186 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E23C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC29DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 163222186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0DB2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:33:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="i9hoGhm0"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XieTwwnC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbfH0Id2 (ORCPT
+        id S1729568AbfH0Idq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:33:28 -0400
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:54256 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfH0Id1 (ORCPT
+        Tue, 27 Aug 2019 04:33:46 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:27916 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729396AbfH0Idn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:33:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id E7A9A3F682;
-        Tue, 27 Aug 2019 10:33:24 +0200 (CEST)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=i9hoGhm0;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id j98srYuiQh1g; Tue, 27 Aug 2019 10:33:23 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id B6F933F532;
-        Tue, 27 Aug 2019 10:33:22 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 771FF360185;
-        Tue, 27 Aug 2019 10:33:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1566894802; bh=zeAGklUjn9OIL0r7umNJ4mAipEito7bY6o7mUyoyTwg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=i9hoGhm08kUy+j0i2BFJxe31nt4xQXmrNwDIrgFAVpOYaolLrOpI3Yg2i2iHfoALs
-         dGQ1fQ3+2d4fMDSYaTgRcJaXgo3BQx3glZWh6vPJo1wQa6AlQ9g1cBdxi1YmalAksT
-         Gxa/JxEygK35uUwLEZn2J202Ws3gdbnnHfrGxuPM=
-Subject: Re: [PATCH v2 0/4] Add support for updated vmware hypercall
- instruction
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
-        linux-graphics-maintainer@vmware.com,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-References: <20190823081316.28478-1-thomas_os@shipmail.org>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <637758e2-302f-24ca-5b18-12590c70be33@shipmail.org>
-Date:   Tue, 27 Aug 2019 10:33:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 27 Aug 2019 04:33:43 -0400
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190827083339epoutp02f3374cdcb16ef95d8136b8139e124ed7~_uolPeijd2773027730epoutp02B
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 08:33:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190827083339epoutp02f3374cdcb16ef95d8136b8139e124ed7~_uolPeijd2773027730epoutp02B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566894819;
+        bh=GR9SjpQC1GTjk5IEkgnMXdybEfO+M4pHWDvq1CPw910=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=XieTwwnC97cxvDUoQbpnT0JSA6n+Fk+S7VdNGOrPiXy28E/jsUBLsPbTLacpBVmq4
+         bf6CJ3I4sO0pBCk0d7teQmVffD1IwjV4K5W0fRZ5VVEidrxI4HknvQW4rKJFd+yMLG
+         kHKbAIJD4wTWpVa9zk1tfYfSw5p+LvA6qAUlqSxI=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20190827083338epcas2p1bd702579931911d8ebfa6ae3218ca896~_uokazBY00556005560epcas2p1x;
+        Tue, 27 Aug 2019 08:33:38 +0000 (GMT)
+Received: from epsmges2p3.samsung.com (unknown [182.195.40.190]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 46Hhwc2X60zMqYkg; Tue, 27 Aug
+        2019 08:33:36 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F2.4A.04068.FDAE46D5; Tue, 27 Aug 2019 17:33:35 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190827083334epcas2p115d479190b9a72c886f66569add78203~_uog_kpL90324603246epcas2p1z;
+        Tue, 27 Aug 2019 08:33:34 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190827083334epsmtrp1f673cf2781a7bd9de3d4862d267c9cf9~_uog9Ynxl2654126541epsmtrp1O;
+        Tue, 27 Aug 2019 08:33:34 +0000 (GMT)
+X-AuditID: b6c32a47-5a1ff70000000fe4-07-5d64eadfc43f
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        07.26.03638.EDAE46D5; Tue, 27 Aug 2019 17:33:34 +0900 (KST)
+Received: from KORDO035251 (unknown [12.36.165.204]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20190827083334epsmtip186318bd933a57fdbaadd80afd23bc675~_uogrxHdu2027020270epsmtip14;
+        Tue, 27 Aug 2019 08:33:34 +0000 (GMT)
+From:   "boojin.kim" <boojin.kim@samsung.com>
+To:     "'Satya Tangirala'" <satyat@google.com>
+Cc:     "'Herbert Xu'" <herbert@gondor.apana.org.au>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        "'Eric Biggers'" <ebiggers@kernel.org>,
+        "'Theodore Y. Ts'o'" <tytso@mit.edu>,
+        "'Chao Yu'" <chao@kernel.org>,
+        "'Jaegeuk Kim'" <jaegeuk@kernel.org>,
+        "'Andreas Dilger'" <adilger.kernel@dilger.ca>,
+        "'Theodore Ts'o'" <tytso@mit.edu>, <dm-devel@redhat.com>,
+        "'Mike Snitzer'" <snitzer@redhat.com>,
+        "'Alasdair Kergon'" <agk@redhat.com>,
+        "'Jens Axboe'" <axboe@kernel.dk>,
+        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
+        "'Kukjin Kim'" <kgene@kernel.org>,
+        "'Jaehoon Chung'" <jh80.chung@samsung.com>,
+        "'Ulf Hansson'" <ulf.hansson@linaro.org>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fscrypt@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-samsung-soc@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 5/9] block: support diskcipher
+Date:   Tue, 27 Aug 2019 17:33:33 +0900
+Message-ID: <03b201d55cb2$1d4d31b0$57e79510$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20190823081316.28478-1-thomas_os@shipmail.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AdVcd9wJ7O+zjwFDS522TgVlMugkdw==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TfUwTdxjOr3e9nrguR0H2S/dhd9Nk1VDaasuPTUyjZl4y48jIdDGScmkv
+        hawfl16LuizDIdRa2TqzGWZhDnSTWUNwhQFDSqQyGIyPRSIBo9PMzii6LxASiI71OMz473mf
+        93nyfuUlMVWDQk2Wun2c1806aSINb7uizc2+NWUv0ne3pKHZR0EcNQ/2YejCzTCBfj45LEN1
+        o5U4iv9ZK0dNXY8xdHzqBZRsjmBoYiEgR+E7DzA0OnpRgWJ3xuUofn0juvXrvAydOn2DQFfP
+        7ERTp+dw1BUfwNFYZx2BehfDAH0x2i1D4Qs3CRT4bhagqup5Bepv2mtRM63nJ2VMZcsBpu3y
+        eqY+5mfGhv1MLHqMYG6MdxFMy9flzKX6GRlTMfQjxvzVfY1gPmmNAmYm9lKBcp9zSwnH2jmv
+        hnPbPPZStyOffrPQut1qMusN2YY8lEtr3KyLy6d37CrIfqPUmVoCrSljnf4UVcAKAp2zdYvX
+        4/dxmhKP4MunOd7u5A0GXiewLsHvduhsHtdrBr3eaEopi50lE008P688ONb3EDsMaleHAElC
+        ajP8aOSDEEgjVVQHgPfOHsGlYBrAip/qZCGwKhXMARjvyxCxaKhcuKeQRHEAByd+B1JwH8C5
+        2k6FqCKojbClPwpEnJnCv109LxdFGPWvAianE7iYyKCMsCp0fKkETq2HwcV/CBErqTzYM9AA
+        JJwOB04ll/QYtRa2/1GHSW1oYMfwg+UCOjgTGpZLmkxYeyyAicUgVUXCiiO9QDLsgPUnLi+b
+        M+BUf6tCwmp4PxxYxuXw2rmzCslcDeDQwtPEJhi5exSIG8MoLWzuzJGW9wrsvb7c27MweOWJ
+        QqKVMBhQScZ18MvpMZlEq+Hf1R9KNAOrex+CT8HLkRVDRlYMGVkxTOT/svUAj4IsjhdcDk4w
+        8ptWnjoGlt5jw84O0DayKwEoEtDPKOGQrUglZ8uEQ64EgCRGZyqdOWyRSmlnD73PeT1Wr9/J
+        CQlgSt3gBKZeY/Okns3tsxpMRrNZn2dCJrMR0c8pY6sn96soB+vj3uM4nvM+9cnIVerDIN02
+        fu57SyxrbXLP0OdvJb552/bxtjaQ9Qt99N2yrdp9dw2O8FfrZm9nYo4n6WHLyeIcoX22/VEj
+        z4Efgo7bI9pOy+sN5c9/++rg9sLduYXbbKhmT7Jmc4PHduazdw7WWCcDOosR2ot79Iv7df12
+        VmjcbT4QfzzQ+OKilulJdERpXChhDRswr8D+B8P/EWw0BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMIsWRmVeSWpSXmKPExsWy7bCSnO69VymxBrcXqlh8/dLBYrH+1DFm
+        i9V3+9ksTk89y2Qx53wLi8Xed7NZLdbu+cNs0f1KxuLJ+lnMFjd+tbFa9D9+zWxx/vwGdotN
+        j6+xWuy9pW1x/95PJouZ8+6wWVxa5G7xat43Fos9e0+yWFzeNYfN4sj/fkaLGef3MVn0r77L
+        ZtG28SujRWvPT3aL42vDHaQ8tqy8yeTRsrncY9sBVY8Fm0o9Lp8t9di0qpPN4861PWwem5fU
+        e+xe8JnJo+nMUWaP9/uusnn0bVnF6PF5k1wAbxSXTUpqTmZZapG+XQJXxo21BQU/eSsuH3vD
+        3MA4m7uLkZNDQsBEouXXC/YuRi4OIYHdjBKXOpcxQySkJLa274GyhSXutxxhhSh6ziix7Mtx
+        FpAEm4C2xObjqxhBbBEg+9GllawgNrPANA6JXR/EQWxhASOJ1q5uJhCbRUBVouP/RzYQm1fA
+        UuLgyYWMELagxMmZT4BmcgD16km0bWSEGCMvsf3tHKgbFCR2nH0NtUpP4nPXWahVIhKzO9uY
+        JzAKzkIyaRbCpFlIJs1C0rGAkWUVo2RqQXFuem6xYYFRXmq5XnFibnFpXrpecn7uJkZwUtDS
+        2sF44kT8IUYBDkYlHl6JM8mxQqyJZcWVuYcYJTiYlUR4c/QTY4V4UxIrq1KL8uOLSnNSiw8x
+        SnOwKInzyucfixQSSE8sSc1OTS1ILYLJMnFwSjUwzu+6tX/72stKzWKemrbqW3KZJgeK77oX
+        vnmD0Nlwy8yz3/uF2aTDk6Q9mT01RQOT/X7MEFBaXeui9Fboo4K3zMMdi7im3nry/vQ537ua
+        eclstddPhB5dfjO89nnTGwtpTb6aTJ2Dh/PtuYV0nv6MZ5ELzkkLcbJeUyojuOHt6spPUS78
+        wjxKLMUZiYZazEXFiQDWZLGyBgMAAA==
+X-CMS-MailID: 20190827083334epcas2p115d479190b9a72c886f66569add78203
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190827083334epcas2p115d479190b9a72c886f66569add78203
+References: <CGME20190827083334epcas2p115d479190b9a72c886f66569add78203@epcas2p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas,
-
-On 8/23/19 10:13 AM, Thomas Hellström (VMware) wrote:
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: <x86@kernel.org>
+On Wed, Aug 21, 2019 at 5:10 AM Satya Tangirala <satyat@kernel.dk> wrote:
+> 
+> Hi Boojin,
 >
-> VMware has started using "vmcall" / "vmmcall" instead of an inl instruction
-> for the "backdoor" interface. This series detects support for those
-> instructions.
-> Outside of the platform code we use the "ALTERNATIVES" self-patching
-> mechanism similarly to how this is done with KVM.
-> Unfortunately we need two new x86 CPU feature flags for this, since we need
-> the default instruction to be "inl". IIRC the vmmouse driver is used by
-> other virtualization solutions than VMware, and those might break if
-> they encounter any of the other instructions.
+> We're very keen to make sure that our approach to inline encryption can
+> work with diverse hardware, including Samsung's FMP hardware; if you
+> can see any issues with using our approach with your hardware please
+> let us know.
 >
-> v2:
-> - Address various style review comments
-> - Use mnemonics instead of bytecode in the ALTERNATIVE_2 macros
-> - Use vmcall / vmmcall also for the High-Bandwidth port calls
-> - Change the %edx argument to what vmcall / vmmcall expect (flags instead of
->    port number). The port number is added in the default ALTERNATIVE_2 path.
-> - Ack to merge the vmmouse patch from Dmitry.
-> - Drop license update for now. Will get back with a freestanding patch.
-Are you OK taking the above series through the x86 tree? In addition to 
-the ack from Dmitry to do this for the vmmouse patch, there's also an 
-ack from Dave to do the same for vmwgfx.
+> We understand that a possible concern for getting FMP working with our
+> patch series for Inline Encryption Support at
+>
+>
+https://lore.kernel.org/linux-block/20190821075714.65140-1-satyat@google.com
+/
+>
+> is that unlike some inline encryption hardware (and also unlike the JEDEC
+> UFS v2.1 spec), FMP doesn't have the concept of a limited number of
+> keyslots - to address that difference we have a "passthrough keyslot
+> manager", which we put up on top of our patch series for inline encryption
+> support at
+>
+> https://android-review.googlesource.com/c/kernel/common/+/980137/2
+>
+> Setting up a passthrough keyslot manager in the request queue of a
+> device allows the device to receive a bio's encryption context as-is with
+> the bio, which is what FMP would prefer. Are there any issues with
+> using the passthrough keyslot manager for FMP?
+>
+> Thanks!
+> Satya
 
-Thanks,
-Thomas
+Dear Satya.
+Keyslot manager is a good solution for ICE. And probably no issue for FMP.
+But, I think it's complicated for FMP because FMP doesn't need
+any keyslot control.
+Crypto API that FMP's using is simply, stable, and supports test. 
+FMP has been mass producing and certificating using crypto APIs
+for several years. 
+So I wants to keep  our current crypto API solution.
+But, I'm looking at your patch.  And I will keep examining at your patch
+because our goal is to run the FMP on the mainline kernel.
+
+Thanks for your reply.
+Boojin Kim.
 
