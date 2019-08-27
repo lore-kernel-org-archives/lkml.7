@@ -2,80 +2,75 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D053C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83317C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF7B2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566913563;
-	bh=307JSPdR4XjDhGEKX+iQOa/+57opZHEvbdDEfTYLKt8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lH5e3cjixfnuZjIsQ5NNnVujBeHx3zV+vCjl6sK1JQ1hOCQuPyt4eLIGl1ry9wcC2
-	 UlpWyvP3kKJos5ZFIF+weP38RPWsmVfcuUZUtLK5rOpIknkx3s5uQbcW8NrhffQ7Z9
-	 aue6aguDIiLIa4MSr16cW8q3Vy3VrRtiStTS/ITw=
+	by mail.kernel.org (Postfix) with ESMTP id 649B92070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbfH0NqC (ORCPT
+        id S1730118AbfH0NqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:46:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbfH0NqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:46:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB0172070B;
-        Tue, 27 Aug 2019 13:46:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566913561;
-        bh=307JSPdR4XjDhGEKX+iQOa/+57opZHEvbdDEfTYLKt8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I0KKSZwBaJHvzJYQm3Y9mvqLwtlhAU8bAfl0DJ5MR64xYBdFWqonshX/LgfvxSKgs
-         KMxJLf8OFoCLZOUg045PE1Vv2GVjO1HMHQgotlgQbydEEk5URXiWtMM/RisLmbMj/y
-         8VNj1H1zKsbgLZBQoEKG/6SwUJMNHjaZt0IXpSP4=
-Date:   Tue, 27 Aug 2019 15:45:57 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
-        elder@kernel.org, johan@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/9] staging: move greybus core out of staging
-Message-ID: <20190827134557.GA25038@kroah.com>
-References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
- <20190827133611.GE23584@kadam>
+        Tue, 27 Aug 2019 09:46:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43756 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfH0NqE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:46:04 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i2bnN-0006j0-IS; Tue, 27 Aug 2019 15:46:01 +0200
+Date:   Tue, 27 Aug 2019 15:46:00 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Frederic Weisbecker <frederic@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [patch V2 38/38] posix-cpu-timers: Utilize timerqueue for
+ storage
+In-Reply-To: <20190827131727.GA25843@lenoir>
+Message-ID: <alpine.DEB.2.21.1908271545070.1939@nanos.tec.linutronix.de>
+References: <20190821190847.665673890@linutronix.de> <20190821192922.835676817@linutronix.de> <20190827004846.GM14309@lenoir> <alpine.DEB.2.21.1908270807080.1939@nanos.tec.linutronix.de> <20190827131727.GA25843@lenoir>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827133611.GE23584@kadam>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 04:36:11PM +0300, Dan Carpenter wrote:
-> I can't compile greybus so it's hard to run Smatch on it...  I have a
-> Smatch thing which ignores missing includes and just tries its best.
-> It mostly generates garbage output but a couple of these look like
-> potential issues:
+On Tue, 27 Aug 2019, Frederic Weisbecker wrote:
+> On Tue, Aug 27, 2019 at 08:08:06AM +0200, Thomas Gleixner wrote:
+> > On Tue, 27 Aug 2019, Frederic Weisbecker wrote:
+> > 
+> > > On Wed, Aug 21, 2019 at 09:09:25PM +0200, Thomas Gleixner wrote:
+> > > >  /**
+> > > > @@ -92,14 +130,10 @@ struct posix_cputimers {
+> > > >  
+> > > >  static inline void posix_cputimers_init(struct posix_cputimers *pct)
+> > > >  {
+> > > > -	pct->timers_active = 0;
+> > > > -	pct->expiry_active = 0;
+> > > 
+> > > No more need to initialize these?
+> > > 
+> > > > +	memset(pct->bases, 0, sizeof(pct->bases));
+> > 
+> > memset() does that IIRC :)
+> 
+> But those two fields aren't part of pct->bases, are they? :)
 
-Why can't you compile the code?
+Duh. I wanted to memset() the full pile obviously.
 
-> drivers/staging/greybus/operation.c:379 gb_operation_message_alloc() warn: check 'message_size' for integer overflows 'kzalloc()'
-
-That should be checked on line 368, right?
-
-> drivers/staging/greybus/light.c:1256 gb_lights_request_handler() warn: 'light->channels' double freed
-> drivers/staging/greybus/light.c:1256 gb_lights_request_handler() warn: 'light->name' double freed
-
-I don't understand this warning, how are these potentially double freed?
-
-And the light.c file isn't moving out of drivers/staging/ just yet :)
-
-thanks,
-
-greg k-h
