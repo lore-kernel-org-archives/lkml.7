@@ -2,117 +2,59 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9E3C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB95C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA366206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:24:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="ChrZR7qM"
+	by mail.kernel.org (Postfix) with ESMTP id 48CBB20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbfH0HYz (ORCPT
+        id S1726616AbfH0H2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:24:55 -0400
-Received: from mx01-fr.bfs.de ([193.174.231.67]:28688 "EHLO mx01-fr.bfs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfH0HYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:24:55 -0400
-Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
-        by mx01-fr.bfs.de (Postfix) with ESMTPS id 44CC1201EB;
-        Tue, 27 Aug 2019 09:24:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
-        t=1566890689; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wJMTtUj8Ra+odPWVkrfvhn2xJpbg4XTU+hLSZTGs2WA=;
-        b=ChrZR7qMGM+a6B00tnrZ5ZiY4CyP6EItaZ/LwPHlY/rt5S43xRoI6soOQ1XQNvAGPpBOfG
-        jJT1jT2D3hWa/Jf98KTSJQ4fae0P2kNLJyAff7sA7ijSAz6lpw7f2XDhA3xuOq6wndtDq9
-        eljxzIDSuG2pfBnJmu6bsf7VrICOQQmw/e3fdZ0E6FIzy+d6IbVpc8gTIwTotcXh0IF448
-        dVSsEVPpKtKjGtyAkr1hpwUw3B7BPZ2s4VjHCOThcsWfxODn9rraxDK+xDhp1EAwBY22iy
-        33iNPV89c3LqqiZs9qL/HXG2BXtr4afSLA6dHYmNxd9wbKHZbdArtl2a9VjaUQ==
-Received: from [134.92.181.33] (unknown [134.92.181.33])
-        by mail-fr.bfs.de (Postfix) with ESMTPS id 6CF34BEEBD;
-        Tue, 27 Aug 2019 09:24:48 +0200 (CEST)
-Message-ID: <5D64DABF.4010601@bfs.de>
-Date:   Tue, 27 Aug 2019 09:24:47 +0200
-From:   walter harms <wharms@bfs.de>
-Reply-To: wharms@bfs.de
-User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
+        Tue, 27 Aug 2019 03:28:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43204 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725811AbfH0H2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:28:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C4061AE4B;
+        Tue, 27 Aug 2019 07:28:15 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 09:28:13 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc:     "mhocko@kernel.org" <mhocko@kernel.org>,
+        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vbabka@suse.cz" <vbabka@suse.cz>
+Subject: Re: poisoned pages do not play well in the buddy allocator
+Message-ID: <20190827072808.GA17746@linux>
+References: <20190826104144.GA7849@linux>
+ <20190827013429.GA5125@hori.linux.bs1.fc.nec.co.jp>
 MIME-Version: 1.0
-To:     Mao Wenan <maowenan@huawei.com>
-CC:     saeedm@mellanox.com, leon@kernel.org, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] net: mlx5: Kconfig: Fix MLX5_CORE_EN dependencies
-References: <20190827031251.98881-1-maowenan@huawei.com>
-In-Reply-To: <20190827031251.98881-1-maowenan@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Authentication-Results: mx01-fr.bfs.de
-X-Spamd-Result: default: False [-3.10 / 7.00];
-         HAS_REPLYTO(0.00)[wharms@bfs.de];
-         TO_DN_SOME(0.00)[];
-         REPLYTO_ADDR_EQ_FROM(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         BAYES_HAM(-3.00)[100.00%];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         NEURAL_HAM(-0.00)[-0.999,0];
-         RCVD_COUNT_TWO(0.00)[2];
-         RCVD_TLS_ALL(0.00)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827013429.GA5125@hori.linux.bs1.fc.nec.co.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Am 27.08.2019 05:12, schrieb Mao Wenan:
-> When MLX5_CORE_EN=y and PCI_HYPERV_INTERFACE is not set, below errors are found:
-> drivers/net/ethernet/mellanox/mlx5/core/en_main.o: In function `mlx5e_nic_enable':
-> en_main.c:(.text+0xb649): undefined reference to `mlx5e_hv_vhca_stats_create'
-> drivers/net/ethernet/mellanox/mlx5/core/en_main.o: In function `mlx5e_nic_disable':
-> en_main.c:(.text+0xb8c4): undefined reference to `mlx5e_hv_vhca_stats_destroy'
+On Tue, Aug 27, 2019 at 01:34:29AM +0000, Naoya Horiguchi wrote:
+> > @Naoya: I could give it a try if you are busy.
 > 
-> This because CONFIG_PCI_HYPERV_INTERFACE is newly introduced by 'commit 348dd93e40c1
-> ("PCI: hv: Add a Hyper-V PCI interface driver for software backchannel interface"),
-> Fix this by making MLX5_CORE_EN imply PCI_HYPERV_INTERFACE.
-> 
-> Fixes: cef35af34d6d ("net/mlx5e: Add mlx5e HV VHCA stats agent")
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-> index 37fef8c..a6a70ce 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-> @@ -35,6 +35,7 @@ config MLX5_CORE_EN
->  	depends on IPV6=y || IPV6=n || MLX5_CORE=m
+> Thanks for raising hand. That's really wonderful. I think that the series [1] is not
+> merge yet but not rejected yet, so feel free to reuse/update/revamp it.
 
-OT but ...
-is that IPV6 needed at all ? can there be something else that yes or no ?
+I will continue pursuing this then :-).
 
-re,
- wh
+Thanks Naoya!
 
->  	select PAGE_POOL
->  	select DIMLIB
-> +	imply PCI_HYPERV_INTERFACE
->  	default n
->  	---help---
->  	  Ethernet support in Mellanox Technologies ConnectX-4 NIC.
+-- 
+Oscar Salvador
+SUSE L3
