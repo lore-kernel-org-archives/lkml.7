@@ -2,227 +2,83 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCB5C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12668C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD2B21881
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D74AF2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:57:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="wQmCwlqj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VBIsrc0k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730430AbfH0Q5f (ORCPT
+        id S1730482AbfH0Q5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:57:35 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:39587 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729861AbfH0Q5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:57:32 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46Hw605Gqjz9txtP;
-        Tue, 27 Aug 2019 18:57:28 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=wQmCwlqj; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 8NKQJN2SRvVl; Tue, 27 Aug 2019 18:57:28 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46Hw604C6xz9txsv;
-        Tue, 27 Aug 2019 18:57:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566925048; bh=PvXZzhxXa7Ew/PTb0WIWExhIvctSEcQMqLVe6+48jJI=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=wQmCwlqjT5o9SoPbO/35IWcuhh+wfUO6hQlYQbXQEA3aVtAfAseXwfRJ6AZk4Cpm0
-         9p0gSAvQTNIA7PwoNo3JwINbY7jJDs18wvY2Vym+3x10GQ9u37zQNtxDDMyJGnNaW3
-         SS3+jt/FIVqJqpI5lpud9YYDbim/sEmeqJIignRc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4E16F8B847;
-        Tue, 27 Aug 2019 18:57:30 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id yq6dtAxUHZAM; Tue, 27 Aug 2019 18:57:30 +0200 (CEST)
-Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0D1B18B842;
-        Tue, 27 Aug 2019 18:57:30 +0200 (CEST)
-Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id DE510696EA; Tue, 27 Aug 2019 16:57:29 +0000 (UTC)
-Message-Id: <1ed0de54ce6021fa0fdf50e938365546a4f5e316.1566925030.git.christophe.leroy@c-s.fr>
-In-Reply-To: <b1142845c040b9702d1609d5ec473d97595dc0c3.1566925029.git.christophe.leroy@c-s.fr>
-References: <b1142845c040b9702d1609d5ec473d97595dc0c3.1566925029.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 2/2] powerpc/hw_breakpoints: Rewrite 8xx breakpoints to allow
- any address range size.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        ravi.bangoria@linux.ibm.com
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 27 Aug 2019 16:57:29 +0000 (UTC)
+        Tue, 27 Aug 2019 12:57:39 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43661 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729861AbfH0Q5h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:57:37 -0400
+Received: by mail-io1-f67.google.com with SMTP id 18so47861884ioe.10
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 09:57:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bGOUb6qETbWsgAJoalsCTFlAvdsb83uQVVXs/w4mwBE=;
+        b=VBIsrc0k26FUtEar2ReJlFb0cg8xeFC2xexRrOXNtYtYJjLoug03whgz8WJlzMuaDQ
+         7JK4jplpFQZ8tCMjKW8F2AKSdfMe0/ceSV/ixQVYo8W2MIizdFxT8C1GuY3dusICVPE3
+         z9vUBtjOJBJHbjPFAkhEj8hvRBhAV5Tw5YgAnSzqZLgkZnELvo83/PqcA7lmTe/S/ZYP
+         v8XbQGjooZ8kU2BJ7I32GgDLo3l1CeWZUn5JoE5AExetPx0bpdPSN0DF8uknSNTZBYgR
+         FGKhWxbUpCK7/lSfOHMiIVnProPheI9lKMJfp0/Ck1ye3VbZdIJYUJ49YgjOtyEWc1qO
+         GATg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bGOUb6qETbWsgAJoalsCTFlAvdsb83uQVVXs/w4mwBE=;
+        b=HmG7Of8nWD8qOV2qVhgka6QzPT6hnkkGXL+d8F2nPAUD1EajL+bS+AzFOolC2U+/kY
+         J9jei1T3l60aM3cSY0FpQzt6FLB2JIoZT8KPk3YZQcEnRBQVB0iwUaUQvmPo/SGaU67S
+         M7DW9J0W0hWErsNvHLcnVBT55srWCDpklR/gVebBvOACvlKKlDA6L28PdYmRKmejlsnH
+         8HTxjZHsTPLSCsSW4smdxq6w8FzCjy7aYSCGxveq4pccyxtNdEF7bLoV5k8qheyzmB5a
+         8BtM5TDFqvYh6dGFSw9GBZ3U4dqiuH+nRy23HeMxEhSSIwUWzMtIxlZAuVnpmRJIQckj
+         alTQ==
+X-Gm-Message-State: APjAAAUz6N4Fl3MQ6uPOWJstxeIJso3DQBQnaXY68p33bhLvFDv/reZH
+        JjrRx5XzG9YMOKsil+LdwRFp9F2zRT0dASloRJxzsg==
+X-Google-Smtp-Source: APXvYqw5P+1iPQwzpQ0PkMddqAw7dDWHOpCeRE8Gzm38lrWZHgeRKZTaqN/9e3LzgB/+45/Suy7SL7Xu8mCoHsnZz8g=
+X-Received: by 2002:a5e:a811:: with SMTP id c17mr326399ioa.122.1566925056306;
+ Tue, 27 Aug 2019 09:57:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190827160404.14098-1-vkuznets@redhat.com> <20190827160404.14098-3-vkuznets@redhat.com>
+In-Reply-To: <20190827160404.14098-3-vkuznets@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 27 Aug 2019 09:57:25 -0700
+Message-ID: <CALMp9eTE4JsUsU2CRE-Y04_nuqpjav1YohuW8SsSdh+m8s=7mw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] KVM: x86: svm: remove unneeded nested_enable_evmcs() hook
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Roman Kagan <rkagan@virtuozzo.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unlike standard powerpc, Powerpc 8xx doesn't have SPRN_DABR, but
-it has a breakpoint support based on a set of comparators which
-allow more flexibility.
-
-Commit 4ad8622dc548 ("powerpc/8xx: Implement hw_breakpoint")
-implemented breakpoints by emulating the DABR behaviour. It did
-this by setting one comparator the match 4 bytes at breakpoint address
-and the other comparator to match 4 bytes at breakpoint address + 4.
-
-Rewrite 8xx hw_breakpoint to make breakpoints match all addresses
-defined by the breakpoint address and length by making full use of
-comparators.
-
-Now, comparator E is set to match any address greater than breakpoint
-address minus one. Comparator F is set to match any address lower than
-breakpoint address plus breakpoint length.
-
-When the breakpoint range starts at address 0, the breakpoint is set
-to match comparator F only. When the breakpoint range end at address
-0xffffffff, the breakpoint is set to match comparator E only.
-Otherwise the breakpoint is set to match comparator E and F.
-
-At the same time, use registers bit names instead of hardcode values.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- arch/powerpc/include/asm/reg_8xx.h  | 14 ++++++++++
- arch/powerpc/kernel/hw_breakpoint.c |  3 ++
- arch/powerpc/kernel/process.c       | 55 ++++++++++++++++++++++---------------
- 3 files changed, 50 insertions(+), 22 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/reg_8xx.h b/arch/powerpc/include/asm/reg_8xx.h
-index abc663c0f1db..98e97c22df8b 100644
---- a/arch/powerpc/include/asm/reg_8xx.h
-+++ b/arch/powerpc/include/asm/reg_8xx.h
-@@ -37,7 +37,21 @@
- #define SPRN_CMPE	152
- #define SPRN_CMPF	153
- #define SPRN_LCTRL1	156
-+#define   LCTRL1_CTE_GT		0xc0000000
-+#define   LCTRL1_CTF_LT		0x14000000
-+#define   LCTRL1_CRWE_RW	0x00000000
-+#define   LCTRL1_CRWE_RO	0x00040000
-+#define   LCTRL1_CRWE_WO	0x000c0000
-+#define   LCTRL1_CRWF_RW	0x00000000
-+#define   LCTRL1_CRWF_RO	0x00010000
-+#define   LCTRL1_CRWF_WO	0x00030000
- #define SPRN_LCTRL2	157
-+#define   LCTRL2_LW0EN		0x80000000
-+#define   LCTRL2_LW0LA_E	0x00000000
-+#define   LCTRL2_LW0LA_F	0x04000000
-+#define   LCTRL2_LW0LA_EandF	0x08000000
-+#define   LCTRL2_LW0LADC	0x02000000
-+#define   LCTRL2_SLW0EN		0x00000002
- #ifdef CONFIG_PPC_8xx
- #define SPRN_ICTRL	158
- #endif
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index 28ad3171bb82..d8bd4dbef561 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -163,6 +163,9 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 	 */
- 	if (!ppc_breakpoint_available())
- 		return -ENODEV;
-+	/* 8xx can setup a range without limitation */
-+	if (IS_ENABLED(CONFIG_PPC_8xx))
-+		return 0;
- 	length_max = 8; /* DABR */
- 	if (dawr_enabled()) {
- 		length_max = 512 ; /* 64 doublewords */
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index 8fc4de0d22b4..79e4f072a746 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -751,28 +751,6 @@ static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
- 		mtspr(SPRN_DABRX, dabrx);
- 	return 0;
- }
--#elif defined(CONFIG_PPC_8xx)
--static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
--{
--	unsigned long addr = dabr & ~HW_BRK_TYPE_DABR;
--	unsigned long lctrl1 = 0x90000000; /* compare type: equal on E & F */
--	unsigned long lctrl2 = 0x8e000002; /* watchpoint 1 on cmp E | F */
--
--	if ((dabr & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_READ)
--		lctrl1 |= 0xa0000;
--	else if ((dabr & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_WRITE)
--		lctrl1 |= 0xf0000;
--	else if ((dabr & HW_BRK_TYPE_RDWR) == 0)
--		lctrl2 = 0;
--
--	mtspr(SPRN_LCTRL2, 0);
--	mtspr(SPRN_CMPE, addr);
--	mtspr(SPRN_CMPF, addr + 4);
--	mtspr(SPRN_LCTRL1, lctrl1);
--	mtspr(SPRN_LCTRL2, lctrl2);
--
--	return 0;
--}
- #else
- static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
- {
-@@ -793,6 +771,37 @@ static inline int set_dabr(struct arch_hw_breakpoint *brk)
- 	return __set_dabr(dabr, dabrx);
- }
- 
-+static inline int set_breakpoint_8xx(struct arch_hw_breakpoint *brk)
-+{
-+	unsigned long lctrl1 = LCTRL1_CTE_GT | LCTRL1_CTF_LT | LCTRL1_CRWE_RW |
-+			       LCTRL1_CRWF_RW;
-+	unsigned long lctrl2 = LCTRL2_LW0EN | LCTRL2_LW0LADC | LCTRL2_SLW0EN;
-+
-+	if (brk->address == 0)
-+		lctrl2 |= LCTRL2_LW0LA_F;
-+	else if (brk->address + brk->len == 0)
-+		lctrl2 |= LCTRL2_LW0LA_E;
-+	else
-+		lctrl2 |= LCTRL2_LW0LA_EandF;
-+
-+	mtspr(SPRN_LCTRL2, 0);
-+
-+	if ((brk->type & HW_BRK_TYPE_RDWR) == 0)
-+		return 0;
-+
-+	if ((brk->type & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_READ)
-+		lctrl1 |= LCTRL1_CRWE_RO | LCTRL1_CRWF_RO;
-+	if ((brk->type & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_WRITE)
-+		lctrl1 |= LCTRL1_CRWE_WO | LCTRL1_CRWF_WO;
-+
-+	mtspr(SPRN_CMPE, brk->address - 1);
-+	mtspr(SPRN_CMPF, brk->address + brk->len);
-+	mtspr(SPRN_LCTRL1, lctrl1);
-+	mtspr(SPRN_LCTRL2, lctrl2);
-+
-+	return 0;
-+}
-+
- void __set_breakpoint(struct arch_hw_breakpoint *brk)
- {
- 	memcpy(this_cpu_ptr(&current_brk), brk, sizeof(*brk));
-@@ -800,6 +809,8 @@ void __set_breakpoint(struct arch_hw_breakpoint *brk)
- 	if (dawr_enabled())
- 		// Power8 or later
- 		set_dawr(brk);
-+	else if (IS_ENABLED(CONFIG_PPC_8xx))
-+		set_breakpoint_8xx(brk);
- 	else if (!cpu_has_feature(CPU_FTR_ARCH_207S))
- 		// Power7 or earlier
- 		set_dabr(brk);
--- 
-2.13.3
-
+On Tue, Aug 27, 2019 at 9:04 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Since commit 5158917c7b019 ("KVM: x86: nVMX: Allow nested_enable_evmcs to
+> be NULL") the code in x86.c is prepared to see nested_enable_evmcs being
+> NULL and in VMX case it actually is when nesting is disabled. Remove the
+> unneeded stub from SVM code.
+>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
