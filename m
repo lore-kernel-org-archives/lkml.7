@@ -2,131 +2,157 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632D4C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794D5C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36BFB2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:49:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VDrvrGap"
+	by mail.kernel.org (Postfix) with ESMTP id 4F2B12341C
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:49:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566910181;
+	bh=1bu0rXvphKzgZ4qatOKJ9eG5F+ybzMBvmitnLK+n9bE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VZ+erR4MtmIib/ORnFYilb/WdbZquQwoKDeQk1dzTuMCATv4rVx85sO+oGYhiwhz0
+	 P0U7wCUm/6wqqV9rnjDcQtJe5jihJp4Np/qwImSBBg4bs4T8adp+HQfeSIEY0S9BrM
+	 Sx5h+xakOTyCiakfQFJUFtQUAQ2ppWlPR4fkYlvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729794AbfH0MtZ (ORCPT
+        id S1729819AbfH0Mtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:49:25 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33453 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfH0MtY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:49:24 -0400
-Received: by mail-wr1-f67.google.com with SMTP id u16so18689272wrr.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 05:49:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=K6sGGcnkNfJ7ijmDZaaObo8SqOBDw8MmU1nR9YFrhj8=;
-        b=VDrvrGap44JQj1pV7ukPNeiNPrl33ZJdIjVWQNuThmlV/RYhymoEVyAKwyHwndqZvN
-         qww7p2ZMRh7JgLOD2y6mCnT9y/evAWEtC13jipki/Uy0KE4NEJMlUVXT7/P1tqUgy+GN
-         SIP39SOCRSxRfHcWg81XLLReIFmnYZCnf2KyBbYHfCu5kPicUx2bOrALKil0Pu4UmcNT
-         sHALJwpk0rPk8rvhl1DqjMWnHyUKetqGj1uVr5HiobXyyXTSmSsdhUneZ6MPsDaVk/hp
-         huWtxDHsBk3K/R8ZJHQOZQs8gJOReqB3jTJGDqd52oAdYlKduIhTFKZ/U6+vDVrc++vY
-         bI/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=K6sGGcnkNfJ7ijmDZaaObo8SqOBDw8MmU1nR9YFrhj8=;
-        b=pAwyKhLndYVnP5aboaCt/oRkIjfaAEUqmaE9kTfjrb1uXDCNNhtJizI9fOmgraHgom
-         olIwyR9X+6uRAC7caJQZsUjW4BbsdguKX1CuwU1eRj380BGzxQ80xTZ3UaWG0mR//mvH
-         6pqK2vdIZp8zusl9qD1qi+imChUpXC2M4GTeqvjl4tCaNiL72Ns9CXCR3w/D681WiNLX
-         xb3X7znj0ML4xZu78C1DHcI4HMuVfV+t7zmKbIrarpp3J8Oh2CekJPHM7EYxOj9RDjEg
-         kkrOvGx9mZLq7SgCWWfdQL5vePhmLLB4RzzMMJCWfz1Rm1YWoJhdSfYG+BC6jN07onCf
-         MakA==
-X-Gm-Message-State: APjAAAXZH+RYWkt8mBqhVoRG8vds8uDeMRXXobtcgMMsvCIbbRToIv+I
-        0fOsW6YV4BSVz6wC8Y9UaOaS4Q==
-X-Google-Smtp-Source: APXvYqwNsNJ89B57qTK4F90oQyhoU6bn99bji2y67EUH88lzxmr0C/UR7DYf6KN5yZwh7dNbo4+uiw==
-X-Received: by 2002:a5d:4446:: with SMTP id x6mr28897624wrr.11.1566910163278;
-        Tue, 27 Aug 2019 05:49:23 -0700 (PDT)
-Received: from dell ([2.27.35.174])
-        by smtp.gmail.com with ESMTPSA id r17sm39025961wrg.93.2019.08.27.05.49.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 27 Aug 2019 05:49:22 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 13:49:21 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Collabora kernel ML <kernel@collabora.com>,
-        Gwendal Grignou <gwendal@chromium.org>
-Subject: Re: [PATCH v6 11/11] arm/arm64: defconfig: Update configs to use the
- new CROS_EC options
-Message-ID: <20190827124921.GE4804@dell>
-References: <20190823125331.5070-1-enric.balletbo@collabora.com>
- <20190823125331.5070-12-enric.balletbo@collabora.com>
+        Tue, 27 Aug 2019 08:49:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726170AbfH0Mtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 08:49:40 -0400
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5E5221883;
+        Tue, 27 Aug 2019 12:49:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566910178;
+        bh=1bu0rXvphKzgZ4qatOKJ9eG5F+ybzMBvmitnLK+n9bE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nMiI24QuRojgqYZFjzzwIerufsNUvx8lI7JtSsQrBGkzztzu8P404G7TV1IHMoZk+
+         vQfnvRb4wxvnJKIMg5DbuI6ucEU4dv9rcqPZwnZcsZKtG+Wx9a+eJwpkwpPMAp2CvZ
+         4hshX5L3VpG0PvKWTpQELJ4FEJwosdFD4eRw5ptk=
+Received: by mail-qk1-f172.google.com with SMTP id g17so16799841qkk.8;
+        Tue, 27 Aug 2019 05:49:38 -0700 (PDT)
+X-Gm-Message-State: APjAAAWM3xZAjeFpYi7rVDsZxiGl9AObWpGl5DjguYIacGmE+AgXNAsg
+        RJZ+WERR3RIQ/tAIOukFh3dmnHUJiYJcn3VbyQ==
+X-Google-Smtp-Source: APXvYqyc8cAqLr+5lWC4OcOsH4WwQCDZJCiD70mt/JKEw8mkjMvEJFueWACXOw3on7KMnzXDUY9z834YBM0JJ8P4vV0=
+X-Received: by 2002:a37:682:: with SMTP id 124mr1666838qkg.393.1566910177817;
+ Tue, 27 Aug 2019 05:49:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190823125331.5070-12-enric.balletbo@collabora.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190827085302.5197-1-jiaxun.yang@flygoat.com> <20190827085302.5197-8-jiaxun.yang@flygoat.com>
+In-Reply-To: <20190827085302.5197-8-jiaxun.yang@flygoat.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 27 Aug 2019 07:49:26 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJzkKDVm_DBpp4_w5YZQkg0yo9TJtvxzN5beTf45gtohw@mail.gmail.com>
+Message-ID: <CAL_JsqJzkKDVm_DBpp4_w5YZQkg0yo9TJtvxzN5beTf45gtohw@mail.gmail.com>
+Subject: Re: [PATCH 07/13] dt-bindings: interrupt-controller: Add Loongson-3 HTINTC
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.co>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 23 Aug 2019, Enric Balletbo i Serra wrote:
-
-> Recently we refactored the CrOS EC drivers moving part of the code from
-> the MFD subsystem to the platform chrome subsystem. During this change
-> we needed to rename some config options, so, update the defconfigs
-> accordingly.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-> Tested-by: Gwendal Grignou <gwendal@chromium.org>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+On Tue, Aug 27, 2019 at 3:59 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+> Document Loongson-3 HyperTransport Interrupt controller.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
-> 
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-> 
->  arch/arm/configs/exynos_defconfig   | 6 +++++-
->  arch/arm/configs/multi_v7_defconfig | 6 ++++--
->  arch/arm/configs/pxa_defconfig      | 4 +++-
->  arch/arm/configs/tegra_defconfig    | 2 +-
->  arch/arm64/configs/defconfig        | 6 ++++--
->  5 files changed, 17 insertions(+), 7 deletions(-)
+>  .../loongson,ls3-htintc.yaml                  | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-htintc.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-htintc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-htintc.yaml
+> new file mode 100644
+> index 000000000000..c1bc0faca656
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-htintc.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/interrupt-controller/loongson,ls3-htintc.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Loongson-3 HyperTransport Interrupt Controller
+> +
+> +maintainers:
+> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +
+> +description: |
+> +  This interrupt controller is found in the Loongson-3 family of chips to transfer
+> +  interrupts from PCH connected on HyperTransport bus.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - loongson,ls3-htintc
 
-This needs an ARM-SoC Ack before I can take it.
+Can be simplified to:
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+compatible
+  const: loongson,ls3-htintc
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 4
+
+Need to list out what each of the 4 are.
+
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +
+> +examples:
+> +  - |
+> +               htintc: interrupt-controller@0xEFDFB000080 {
+
+interrupt-controller@efdfb000080
+
+> +                       compatible = "loongson,ls3-htintc";
+> +                       reg = <0xEFD 0xFB000080 0x100>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <1>;
+> +
+> +                       interrupt-parent = <&iointc>;
+> +                       interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
+> +                                               <25 IRQ_TYPE_LEVEL_HIGH>,
+> +                                               <26 IRQ_TYPE_LEVEL_HIGH>,
+> +                                               <27 IRQ_TYPE_LEVEL_HIGH>;
+
+Run 'make dt_binding_check'. This will not build without the necessary include.
+
+> +    };
+> --
+> 2.22.0
+>
