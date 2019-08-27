@@ -2,389 +2,113 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF1CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 04:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E7AC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 04:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C032173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 04:25:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dBANGAYW"
+	by mail.kernel.org (Postfix) with ESMTP id 065A0217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 04:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729177AbfH0EZL (ORCPT
+        id S1726785AbfH0E17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 00:25:11 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39761 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfH0EZL (ORCPT
+        Tue, 27 Aug 2019 00:27:59 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:47243 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725766AbfH0E17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 00:25:11 -0400
-Received: by mail-io1-f66.google.com with SMTP id l7so43150602ioj.6
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 21:25:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=50AsWxywlUQnTpKVGriNJYvkgwgK3KTBsrNIGfbmuJg=;
-        b=dBANGAYWISHTeTavGx+Oq+JztZ48oyMY2VNfywPY9FNaLGhDilAJBBa4FDN/CblBCA
-         zxO77qI8sPK4WdvgpCDRmw+ggpkCe8mUbFN7zWIUiPn+g1FRFnww5a5I+8rVjt94fMCk
-         cF5jjlpMTS622rv8B3yEVKE9kiP+HhHk6sEYqTKkpfibJBPQy4E5+/qU6fbG/Th8K0GN
-         HMM88LSvNR7JV1Xw3YqOhAZGcdoPHETjZTGvp5b/27VnaX3ZRapVP13/GPcE9BW8ZYyo
-         vZJaiaU27pcaZXAZV6SaY6eSF+dDIKaHpV5HeY/YNxyVlUu7c4ZVrQ4gbUn2FrdqNCGM
-         OtFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=50AsWxywlUQnTpKVGriNJYvkgwgK3KTBsrNIGfbmuJg=;
-        b=Y418tTIFwu02x9ejKyHkVBt5D2at76E53ndieyWf9Z8xHAcsNRLU8wrlIghl5VJ8Ee
-         IuwtlLuRyVk8qe0hpH8moj8MhXpOSXt6hlxTj7Ion2xxchb1cnMAkJON2bYBGtYk55Lf
-         8ICMKcGmWKT/PCOz+Pk307CMspOl/E87qyd8tlFedO1WynMVZxyvUEWEih6mLtjYekhe
-         y6OGwdaYHTqFS07ndc5F/G2g/oQRII5/rqZq0fwpao1Q6fQ0QPuDwMY1Z4v1RTIeqRjS
-         Gg48L2/swKdi5ZxPHaGBn5f6RwSDc8zKz8x5l62xEjQ4o4Dz4FUV5KM7n8EU7FoglMdp
-         0UoA==
-X-Gm-Message-State: APjAAAWEzWRFnVHc6XzglqJxRh/ewxxVbRmiP3HqL1cD4fmqSIr0OX6c
-        +5AR+IRQQneGeQ1yFo5ZBSBMQ+7bZng+6GVN/w595eT87zg=
-X-Google-Smtp-Source: APXvYqwAnYBYhGBIk4q1AhmMKkEfDX6WoyU27/d93CGIhu/pT4/AweH1krcpzwa0imyijNZtlQVuRIyyogHdeMtIxxM=
-X-Received: by 2002:a02:654d:: with SMTP id u74mr21888139jab.115.1566879910001;
- Mon, 26 Aug 2019 21:25:10 -0700 (PDT)
+        Tue, 27 Aug 2019 00:27:59 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R631e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Taa5IL3_1566880067;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Taa5IL3_1566880067)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 27 Aug 2019 12:27:50 +0800
+Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
+        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1566410125-66011-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190822080434.GF12785@dhcp22.suse.cz>
+ <9e4ba38e-0670-7292-ab3a-38af391598ec@linux.alibaba.com>
+ <20190826074350.GE7538@dhcp22.suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <416daa85-44d4-1ef9-cc4c-6b91a8354c79@linux.alibaba.com>
+Date:   Mon, 26 Aug 2019 21:27:38 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <20190826182524.5064-1-andrew.smirnov@gmail.com> <20190826220807.GK5031@pendragon.ideasonboard.com>
-In-Reply-To: <20190826220807.GK5031@pendragon.ideasonboard.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Mon, 26 Aug 2019 21:24:57 -0700
-Message-ID: <CAHQ1cqHuJNTH=HDfEP9de0Df_D45VV034riH4J3+ix23v=aM4Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: tc358767: Expose test mode functionality via debugfs
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190826074350.GE7538@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 3:08 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Andrey,
->
-> Thank you for the patch.
->
-> On Mon, Aug 26, 2019 at 11:25:24AM -0700, Andrey Smirnov wrote:
-> > Presently, the driver code artificially limits test pattern mode to a
-> > single pattern with fixed color selection. It being a kernel module
-> > parameter makes switching "test patter" <-> "proper output" modes
-> > on-the-fly clunky and outright impossible if the driver is built into
-> > the kernel.
-> >
-> > To improve the situation a bit, convert current test pattern code to
-> > use debugfs instead by exposing "TestCtl" register. This way old
-> > "tc_test_pattern=1" functionality can be emulated via:
-> >
-> >     echo -n 0x78146312 > tstctl
-> >
-> > and switch back to regular mode can be done with:
-> >
-> >     echo -n 0x78146310 > tstctl
->
-> Can't we make this more userfriendly by exposing either a test pattern
-> index, or a string ?
 
-We could, but then a) it would require more code in the driver b) the
-files wouldn't correspond directly to something described in the
-part's datasheet. Just didn't seem worth it to me.
 
-> Do all bits in the register need to be controlled
-> from userspace ?
+On 8/26/19 12:43 AM, Michal Hocko wrote:
+> On Thu 22-08-19 08:33:40, Yang Shi wrote:
+>>
+>> On 8/22/19 1:04 AM, Michal Hocko wrote:
+>>> On Thu 22-08-19 01:55:25, Yang Shi wrote:
+> [...]
+>>>> And, they seems very common with the common workloads when THP is
+>>>> enabled.  A simple run with MariaDB test of mmtest with THP enabled as
+>>>> always shows it could generate over fifteen thousand deferred split THPs
+>>>> (accumulated around 30G in one hour run, 75% of 40G memory for my VM).
+>>>> It looks worth accounting in MemAvailable.
+>>> OK, this makes sense. But your above numbers are really worrying.
+>>> Accumulating such a large amount of pages that are likely not going to
+>>> be used is really bad. They are essentially blocking any higher order
+>>> allocations and also push the system towards more memory pressure.
+>> That is accumulated number, during the running of the test, some of them
+>> were freed by shrinker already. IOW, it should not reach that much at any
+>> given time.
+> Then the above description is highly misleading. What is the actual
+> number of lingering THPs that wait for the memory pressure in the peak?
 
-Pretty much, yes. It's formatted as RR_GG_BB_X_M, where R, G, B
-specifies color used for various patterns, X is irrelevant and M
-specifies test pattern to use.
+By rerunning sysbench mariadb test of mmtest, I didn't see too many THPs 
+in the peak. I saw around 2K THPs sometimes on my VM with 40G memory. 
+But they were short-lived (should be freed when the test exit). And, the 
+number of accumulated THPs are variable.
 
->
-> > Note that switching to any of the test patterns, will NOT trigger link
-> > re-establishment whereas switching to normal operation WILL. This is
-> > done so:
-> >
-> > a) we can isolate and verify (e)DP link functionality by switching to
-> >    one of the test patters
-> >
-> > b) trigger a link re-establishment by switching back to normal mode
-> >
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Andrzej Hajda <a.hajda@samsung.com>
-> > Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > Cc: Cory Tusar <cory.tusar@zii.aero>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  drivers/gpu/drm/bridge/tc358767.c | 137 ++++++++++++++++++++++--------
-> >  1 file changed, 101 insertions(+), 36 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-> > index 6308d93ad91d..7a795b613ed0 100644
-> > --- a/drivers/gpu/drm/bridge/tc358767.c
-> > +++ b/drivers/gpu/drm/bridge/tc358767.c
-> > @@ -17,6 +17,7 @@
-> >
-> >  #include <linux/bitfield.h>
-> >  #include <linux/clk.h>
-> > +#include <linux/debugfs.h>
-> >  #include <linux/device.h>
-> >  #include <linux/gpio/consumer.h>
-> >  #include <linux/i2c.h>
-> > @@ -222,11 +223,10 @@
-> >  #define COLOR_B                      GENMASK(15, 8)
-> >  #define ENI2CFILTER          BIT(4)
-> >  #define COLOR_BAR_MODE               GENMASK(1, 0)
-> > +#define COLOR_BAR_MODE_NORMAL        0
-> >  #define COLOR_BAR_MODE_BARS  2
-> > -#define PLL_DBG                      0x0a04
-> >
-> > -static bool tc_test_pattern;
-> > -module_param_named(test, tc_test_pattern, bool, 0644);
->
-> I assume that his being a debug feature there's no system relying on the
-> module parameter that would break if you remove it ?
->
+And, this reminded me to go back double check our internal bug report 
+which lead to the "make deferred split shrinker memcg aware" patchset.
 
-Yeah, I don't know of any system that needs that parameter. It seems
-pretty useless for anything but basic debugging.
+In that case, a mysql instance with real production load was running in 
+a memcg with ~86G limit, the number of deferred split THPs may reach to 
+~68G (~34K deferred split THPs) in a few hours. The deferred split THP 
+shrinker was not invoked since global memory pressure is still fine 
+since the host has 256G memory, but memcg limit reclaim was triggered.
 
-> > +#define PLL_DBG                      0x0a04
-> >
-> >  struct tc_edp_link {
-> >       struct drm_dp_link      base;
-> > @@ -789,16 +789,6 @@ static int tc_set_video_mode(struct tc_data *tc,
-> >       if (ret)
-> >               return ret;
-> >
-> > -     /* Test pattern settings */
-> > -     ret = regmap_write(tc->regmap, TSTCTL,
-> > -                        FIELD_PREP(COLOR_R, 120) |
-> > -                        FIELD_PREP(COLOR_G, 20) |
-> > -                        FIELD_PREP(COLOR_B, 99) |
-> > -                        ENI2CFILTER |
-> > -                        FIELD_PREP(COLOR_BAR_MODE, COLOR_BAR_MODE_BARS));
-> > -     if (ret)
-> > -             return ret;
-> > -
-> >       /* DP Main Stream Attributes */
-> >       vid_sync_dly = hsync_len + left_margin + mode->hdisplay;
-> >       ret = regmap_write(tc->regmap, DP0_VIDSYNCDELAY,
-> > @@ -1150,14 +1140,6 @@ static int tc_stream_enable(struct tc_data *tc)
-> >
-> >       dev_dbg(tc->dev, "enable video stream\n");
-> >
-> > -     /* PXL PLL setup */
-> > -     if (tc_test_pattern) {
-> > -             ret = tc_pxl_pll_en(tc, clk_get_rate(tc->refclk),
-> > -                                 1000 * tc->mode.clock);
-> > -             if (ret)
-> > -                     return ret;
-> > -     }
-> > -
-> >       ret = tc_set_video_mode(tc, &tc->mode);
-> >       if (ret)
-> >               return ret;
-> > @@ -1186,12 +1168,8 @@ static int tc_stream_enable(struct tc_data *tc)
-> >       if (ret)
-> >               return ret;
-> >       /* Set input interface */
-> > -     value = DP0_AUDSRC_NO_INPUT;
-> > -     if (tc_test_pattern)
-> > -             value |= DP0_VIDSRC_COLOR_BAR;
-> > -     else
-> > -             value |= DP0_VIDSRC_DPI_RX;
-> > -     ret = regmap_write(tc->regmap, SYSCTRL, value);
-> > +     ret = regmap_write(tc->regmap, SYSCTRL,
-> > +                        DP0_AUDSRC_NO_INPUT | DP0_VIDSRC_DPI_RX);
-> >       if (ret)
-> >               return ret;
-> >
-> > @@ -1220,39 +1198,44 @@ static void tc_bridge_pre_enable(struct drm_bridge *bridge)
-> >       drm_panel_prepare(tc->panel);
-> >  }
-> >
-> > -static void tc_bridge_enable(struct drm_bridge *bridge)
-> > +static int __tc_bridge_enable(struct tc_data *tc)
-> >  {
-> > -     struct tc_data *tc = bridge_to_tc(bridge);
-> >       int ret;
-> >
-> >       ret = tc_get_display_props(tc);
-> >       if (ret < 0) {
-> >               dev_err(tc->dev, "failed to read display props: %d\n", ret);
-> > -             return;
-> > +             return ret;
-> >       }
-> >
-> >       ret = tc_main_link_enable(tc);
-> >       if (ret < 0) {
-> >               dev_err(tc->dev, "main link enable error: %d\n", ret);
-> > -             return;
-> > +             return ret;
-> >       }
-> >
-> >       ret = tc_stream_enable(tc);
-> >       if (ret < 0) {
-> >               dev_err(tc->dev, "main link stream start error: %d\n", ret);
-> >               tc_main_link_disable(tc);
-> > -             return;
-> >       }
-> >
-> > -     drm_panel_enable(tc->panel);
-> > +     return ret;
-> >  }
-> >
-> > -static void tc_bridge_disable(struct drm_bridge *bridge)
-> > +static void tc_bridge_enable(struct drm_bridge *bridge)
-> >  {
-> >       struct tc_data *tc = bridge_to_tc(bridge);
-> > -     int ret;
-> >
-> > -     drm_panel_disable(tc->panel);
-> > +     if (__tc_bridge_enable(tc) < 0)
-> > +             return;
-> > +
-> > +     drm_panel_enable(tc->panel);
-> > +}
-> > +
-> > +static int __tc_bridge_disable(struct tc_data *tc)
-> > +{
-> > +     int ret;
-> >
-> >       ret = tc_stream_disable(tc);
-> >       if (ret < 0)
-> > @@ -1261,6 +1244,16 @@ static void tc_bridge_disable(struct drm_bridge *bridge)
-> >       ret = tc_main_link_disable(tc);
-> >       if (ret < 0)
-> >               dev_err(tc->dev, "main link disable error: %d\n", ret);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static void tc_bridge_disable(struct drm_bridge *bridge)
-> > +{
-> > +     struct tc_data *tc = bridge_to_tc(bridge);
-> > +
-> > +     drm_panel_disable(tc->panel);
-> > +     __tc_bridge_disable(tc);
-> >  }
-> >
-> >  static void tc_bridge_post_disable(struct drm_bridge *bridge)
-> > @@ -1372,6 +1365,77 @@ static enum drm_connector_status tc_connector_detect(struct drm_connector *conne
-> >               return connector_status_disconnected;
-> >  }
-> >
-> > +static int tc_tstctl_set(void *data, u64 val)
-> > +{
-> > +     struct tc_data *tc = data;
-> > +     int ret;
-> > +
-> > +     if (FIELD_GET(COLOR_BAR_MODE, val) == COLOR_BAR_MODE_NORMAL) {
-> > +             ret = regmap_write(tc->regmap, SYSCTRL, DP0_VIDSRC_DPI_RX);
-> > +             if (ret) {
-> > +                     dev_err(tc->dev,
-> > +                             "failed to select dpi video stream\n");
-> > +                     return ret;
-> > +             }
-> > +
-> > +             ret = regmap_write(tc->regmap, TSTCTL, val | ENI2CFILTER);
-> > +             if (ret) {
-> > +                     dev_err(tc->dev, "failed to set TSTCTL\n");
-> > +                     return ret;
-> > +             }
-> > +
-> > +             ret = tc_pxl_pll_dis(tc);
-> > +             if (ret) {
-> > +                     dev_err(tc->dev, "failed to disable PLL\n");
-> > +                     return ret;
-> > +             }
-> > +
-> > +             /*
-> > +              * Re-establish DP link
-> > +              */
-> > +             ret = __tc_bridge_disable(tc);
-> > +             if (ret)
-> > +                     return ret;
-> > +
-> > +             ret = __tc_bridge_enable(tc);
-> > +             if (ret)
-> > +                     return ret;
->
-> If the bridge is currently disabled you should not enable it. I think
-> you need to guard against race conditions with the enable/disable
-> functions, as well as delay writes until the bridge gets enabled if it
-> is currently disabled.
->
+And, I can't tell if all those deferred split THPs came from mysql or 
+not since there were some other processes run in that container too 
+according to the oom log.
 
-OK, will do in v2.
+I will update the commit log with the more solid data from production 
+environment.
 
-> > +     } else {
-> > +             ret = tc_pxl_pll_en(tc, clk_get_rate(tc->refclk),
-> > +                                 1000 * tc->mode.clock);
-> > +             if (ret) {
-> > +                     dev_err(tc->dev, "failed to enable PLL\n");
-> > +                     return ret;
-> > +             }
-> > +
-> > +             ret = regmap_write(tc->regmap, TSTCTL, val | ENI2CFILTER);
-> > +             if (ret) {
-> > +                     dev_err(tc->dev, "failed to set TSTCTL\n");
-> > +                     return ret;
-> > +             }
-> > +
-> > +             ret = regmap_write(tc->regmap, SYSCTRL, DP0_VIDSRC_COLOR_BAR);
-> > +             if (ret) {
-> > +                     dev_err(tc->dev, "failed to color bar video stream\n");
-> > +                     return ret;
-> > +             }
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +DEFINE_SIMPLE_ATTRIBUTE(tc_tstctl_fops, NULL, tc_tstctl_set, "%llu\n");
->
-> Shouldn't you also provide a get handler ?
+>   
+>>> IIUC deferred splitting is mostly a workaround for nasty locking issues
+>>> during splitting, right? This is not really an optimization to cache
+>>> THPs for reuse or something like that. What is the reason this is not
+>>> done from a worker context? At least THPs which would be freed
+>>> completely sound like a good candidate for kworker tear down, no?
+>> Yes, deferred split THP was introduced to avoid locking issues according to
+>> the document. Memcg awareness would help to trigger the shrinker more often.
+>>
+>> I think it could be done in a worker context, but when to trigger to worker
+>> is a subtle problem.
+> Why? What is the problem to trigger it after unmap of a batch worth of
+> THPs?
 
-There really isn't a use-case for reading the value of TestCtl AFAICT,
-so, I skipped it to avoid having extra code.
+This leads to another question, how many THPs are "a batch of worth"? 
+And, they may be short-lived as showed by Kirill's example, we can't 
+tell in advance how long the THPs life time is. We may waste cpu cycles 
+to do something unneeded.
 
->
-> > +static int tc_late_register(struct drm_connector *connector)
-> > +{
-> > +     if (connector->debugfs_entry)
-> > +             debugfs_create_file_unsafe("tstctl", 0644,
-> > +                                        connector->debugfs_entry,
-> > +                                        connector_to_tc(connector),
-> > +                                        &tc_tstctl_fops);
-> > +     return 0;
-> > +}
->
-> Why a .late_register() handler, can't you do this at probe time ?
->
 
-.late_register() happens after drm_debugfs_connector_add() where
-connector->debugfs_entry gets initialized. AFAICT, I could move that
-code to probe, but then I'd have create a separate debugfs root
-directory as well as add code to clean it up (currently I rely on
-drm_debugfs_connector_remove() removing everything recursively.
-
-Thanks,
-Andrey Smirnov
