@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2410EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7FDC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E200F206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423F8217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893834;
-	bh=MCX7CmsiPjmCXkciOtTum36tIlpCMfDC+mLmzUX/5vU=;
+	s=default; t=1566893835;
+	bh=bMgII+BcVpCBidRBgxQO/AC3Mx3ozJ83MGtmLzdsyGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OAAfDu/0EK2qV9Sk86at7A5B19C1bHmg/05HCQJfeqgwxvphi6gIPX93AMhVC0mGM
-	 dJsQIK7QGu0XmY2bM6so+6pvCv6KAPiNccl28Zm99sXun+OAkn7ualtCqVzvqj9NEH
-	 ox0XB+umZ+vlxLqUWkc7dMcbz/R0BMURItRaTgQ4=
+	b=08DuHwnaht9yC3GHpVPyOmYUIBJV9ljV5HPQrvv7rfhVK3ZBcaAURnz9GklZFjihn
+	 LSl0xck3gjbz+kNvBr5FBE0Qo3BczUtJhLx7MpfNh8/6OYUJ+bYjWbbtIzyHtyYW+w
+	 8aGBdTeuTHztAI0F+fhW2Lcy45SS6u+ZCyFrg+WQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbfH0IRM (ORCPT
+        id S1728585AbfH0IRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:17:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44146 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:17:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729512AbfH0Hwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:52:43 -0400
+        id S1729611AbfH0Hw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:52:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 791EE2186A;
-        Tue, 27 Aug 2019 07:52:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C906721881;
+        Tue, 27 Aug 2019 07:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892363;
-        bh=MCX7CmsiPjmCXkciOtTum36tIlpCMfDC+mLmzUX/5vU=;
+        s=default; t=1566892377;
+        bh=bMgII+BcVpCBidRBgxQO/AC3Mx3ozJ83MGtmLzdsyGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=umHcwDd0rUV8zAV775PUdQ0ROQQ6jrXSXXxo6If1yUN5yMAaf4+uvrDyJVoHNzEew
-         8I0t8fHfZWEsVPWIFfaII/cu9EuE9aZoYIqpSrTP9FybRBG4ff1/BBUUOpRt1Go9hL
-         Sw1YJoMknxfsOxE//AW3H/lVkLFzXvD/U7Xvk8iQ=
+        b=aJFvSLR0XfP2BbBgpqcrySliDdjdy4ZwrvbyruAdMd4HUZwGtS2D70pz1o6mL2PQz
+         ikJ0pNpLsPmTxXXtB/HrR8la8FE/hYYRvnoAwdqZ2Eb6qcAEjy7s3wM7I/bwolNvTg
+         E+B4qL3KiWMX+FNqMUKZwNRxK9CzyJakrpHMyuSc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 29/62] libata: add SG safety checks in SFF pio transfers
-Date:   Tue, 27 Aug 2019 09:50:34 +0200
-Message-Id: <20190827072702.445760099@linuxfoundation.org>
+        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 34/62] perf pmu-events: Fix missing "cpu_clk_unhalted.core" event
+Date:   Tue, 27 Aug 2019 09:50:39 +0200
+Message-Id: <20190827072702.701715776@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -59,44 +65,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 752ead44491e8c91e14d7079625c5916b30921c5 ]
+[ Upstream commit 8e6e5bea2e34c61291d00cb3f47560341aa84bc3 ]
 
-Abort processing of a command if we run out of mapped data in the
-SG list. This should never happen, but a previous bug caused it to
-be possible. Play it safe and attempt to abort nicely if we don't
-have more SG segments left.
+The events defined in pmu-events JSON are parsed and added into perf
+tool. For fixed counters, we handle the encodings between JSON and perf
+by using a static array fixed[].
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+But the fixed[] has missed an important event "cpu_clk_unhalted.core".
+
+For example, on the Tremont platform,
+
+  [root@localhost ~]# perf stat -e cpu_clk_unhalted.core -a
+  event syntax error: 'cpu_clk_unhalted.core'
+                       \___ parser error
+
+With this patch, the event cpu_clk_unhalted.core can be parsed.
+
+  [root@localhost perf]# ./perf stat -e cpu_clk_unhalted.core -a -vvv
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4
+    size                             112
+    config                           0x3c
+    sample_type                      IDENTIFIER
+    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+    disabled                         1
+    inherit                          1
+    exclude_guest                    1
+  ------------------------------------------------------------
+...
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190729072755.2166-1-yao.jin@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-sff.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/pmu-events/jevents.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
-index cc2f2e35f4c2e..8c36ff0c2dd49 100644
---- a/drivers/ata/libata-sff.c
-+++ b/drivers/ata/libata-sff.c
-@@ -704,6 +704,10 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
- 	unsigned int offset;
- 	unsigned char *buf;
- 
-+	if (!qc->cursg) {
-+		qc->curbytes = qc->nbytes;
-+		return;
-+	}
- 	if (qc->curbytes == qc->nbytes - qc->sect_size)
- 		ap->hsm_task_state = HSM_ST_LAST;
- 
-@@ -729,6 +733,8 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
- 
- 	if (qc->cursg_ofs == qc->cursg->length) {
- 		qc->cursg = sg_next(qc->cursg);
-+		if (!qc->cursg)
-+			ap->hsm_task_state = HSM_ST_LAST;
- 		qc->cursg_ofs = 0;
- 	}
- }
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index d51dc9ca8861a..94a7cabe9b824 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -346,6 +346,7 @@ static struct fixed {
+ 	{ "inst_retired.any_p", "event=0xc0" },
+ 	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
+ 	{ "cpu_clk_unhalted.thread", "event=0x3c" },
++	{ "cpu_clk_unhalted.core", "event=0x3c" },
+ 	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
+ 	{ NULL, NULL},
+ };
 -- 
 2.20.1
 
