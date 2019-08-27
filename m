@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E48EC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D00FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF5E120828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E64DE2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892510;
-	bh=u+9OPQw1vstRqpP0g2JG0AgbtnKhFFFhDGGl8jOPHUg=;
+	s=default; t=1566892515;
+	bh=/ProhyZOGgDkQ87AQFsElCg8GB+Mljf8lQ4hzNM4Y20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p7aUMddsPBwZ/Nt6cOuYEnHVWeehmHkf1Ff9RK55/uMI0YIBofPdu/HNlXslvajOS
-	 HC/GCBqphRwi0FvD6gll5IwKgqtEtF14WG3ElOheoUJR9qmfdx+IFH02g5R98AoWfq
-	 tV5M4RsXcm8gZV/owxIRXc6MOlJNCANPySEDAhKQ=
+	b=zMOP89n6Gn+ri41ndMfpYSUCqUvRbTCH7yy/CdcWHYguAbSpusjI9xFdgHlVLXek7
+	 tETbsVtWgkwjLW5ApRu2ZQnjW8SyDBHwLbuEqQdL+ZANUkZ4K2e7Q4TyDOHNZXGYCY
+	 UrDrL4BEHgdXZP5Tp4b9N0Yt4uVXoOy/T7sM+QFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbfH0HzJ (ORCPT
+        id S1730283AbfH0HzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:55:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46816 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:55:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730232AbfH0HzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:55:04 -0400
+        id S1730262AbfH0HzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:55:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2590B2189D;
-        Tue, 27 Aug 2019 07:55:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE9B121872;
+        Tue, 27 Aug 2019 07:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892503;
-        bh=u+9OPQw1vstRqpP0g2JG0AgbtnKhFFFhDGGl8jOPHUg=;
+        s=default; t=1566892509;
+        bh=/ProhyZOGgDkQ87AQFsElCg8GB+Mljf8lQ4hzNM4Y20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MShTDZ1dWoeH7EI5DAeEV2ZpnOAk3mrtYIYcntI4Y2WpSaWdXFAuixBRo++xPhkGv
-         GZtHqEHhvew1Dc8yuXqsu5bXJcjgC/gQlTQZaG095wF3Zrhj90Niw9NuGoTubHkLqd
-         CDa0+ZLmUOWSuG5K9pXWa0KbvDFl/xc1gVncu1X0=
+        b=qJZXHjgA2SDbm2Ttjv/U+/t41cW34KoRbWg+kVVQdwPIeGYilY3SMDNZ1XMAwK/Tj
+         FPW6Ay0rih6rl37KF5+Gwonz45F5hCvzqQtOUVKAdlcPMQm4azxRmxVmnVQaoJ1Boc
+         AGBKbLZg9u/8gAxNDKIwF4A+hLBu+TbdPFR5N6gQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 08/98] net: mvpp2: Dont check for 3 consecutive Idle frames for 10G links
-Date:   Tue, 27 Aug 2019 09:49:47 +0200
-Message-Id: <20190827072718.626446975@linuxfoundation.org>
+Subject: [PATCH 4.19 18/98] ASoC: ti: davinci-mcasp: Correct slot_width posed constraint
+Date:   Tue, 27 Aug 2019 09:49:57 +0200
+Message-Id: <20190827072719.257629386@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -61,37 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bba18318e7d1d5c8b0bbafd65010a0cee3c65608 ]
+[ Upstream commit 1e112c35e3c96db7c8ca6ddaa96574f00c06e7db ]
 
-PPv2's XLGMAC can wait for 3 idle frames before triggering a link up
-event. This can cause the link to be stuck low when there's traffic on
-the interface, so disable this feature.
+The slot_width is a property for the bus while the constraint for
+SNDRV_PCM_HW_PARAM_SAMPLE_BITS is for the in memory format.
 
-Fixes: 4bb043262878 ("net: mvpp2: phylink support")
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Applying slot_width constraint to sample_bits works most of the time, but
+it will blacklist valid formats in some cases.
+
+With slot_width 24 we can support S24_3LE and S24_LE formats as they both
+look the same on the bus, but a a 24 constraint on sample_bits would not
+allow S24_LE as it is stored in 32bits in memory.
+
+Implement a simple hw_rule function to allow all formats which require less
+or equal number of bits on the bus as slot_width (if configured).
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20190726064244.3762-2-peter.ujfalusi@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/davinci/davinci-mcasp.c | 43 ++++++++++++++++++++++++-------
+ 1 file changed, 34 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 6455511457ca3..9b608d23ff7ee 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -4412,9 +4412,9 @@ static void mvpp2_xlg_config(struct mvpp2_port *port, unsigned int mode,
- 	if (state->pause & MLO_PAUSE_RX)
- 		ctrl0 |= MVPP22_XLG_CTRL0_RX_FLOW_CTRL_EN;
+diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
+index 160b2764b2ad8..6a8c279a4b20b 100644
+--- a/sound/soc/davinci/davinci-mcasp.c
++++ b/sound/soc/davinci/davinci-mcasp.c
+@@ -1150,6 +1150,28 @@ static int davinci_mcasp_trigger(struct snd_pcm_substream *substream,
+ 	return ret;
+ }
  
--	ctrl4 &= ~MVPP22_XLG_CTRL4_MACMODSELECT_GMAC;
--	ctrl4 |= MVPP22_XLG_CTRL4_FWD_FC | MVPP22_XLG_CTRL4_FWD_PFC |
--		 MVPP22_XLG_CTRL4_EN_IDLE_CHECK;
-+	ctrl4 &= ~(MVPP22_XLG_CTRL4_MACMODSELECT_GMAC |
-+		   MVPP22_XLG_CTRL4_EN_IDLE_CHECK);
-+	ctrl4 |= MVPP22_XLG_CTRL4_FWD_FC | MVPP22_XLG_CTRL4_FWD_PFC;
++static int davinci_mcasp_hw_rule_slot_width(struct snd_pcm_hw_params *params,
++					    struct snd_pcm_hw_rule *rule)
++{
++	struct davinci_mcasp_ruledata *rd = rule->private;
++	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
++	struct snd_mask nfmt;
++	int i, slot_width;
++
++	snd_mask_none(&nfmt);
++	slot_width = rd->mcasp->slot_width;
++
++	for (i = 0; i <= SNDRV_PCM_FORMAT_LAST; i++) {
++		if (snd_mask_test(fmt, i)) {
++			if (snd_pcm_format_width(i) <= slot_width) {
++				snd_mask_set(&nfmt, i);
++			}
++		}
++	}
++
++	return snd_mask_refine(fmt, &nfmt);
++}
++
+ static const unsigned int davinci_mcasp_dai_rates[] = {
+ 	8000, 11025, 16000, 22050, 32000, 44100, 48000, 64000,
+ 	88200, 96000, 176400, 192000,
+@@ -1257,7 +1279,7 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 	struct davinci_mcasp_ruledata *ruledata =
+ 					&mcasp->ruledata[substream->stream];
+ 	u32 max_channels = 0;
+-	int i, dir;
++	int i, dir, ret;
+ 	int tdm_slots = mcasp->tdm_slots;
  
- 	writel(ctrl0, port->base + MVPP22_XLG_CTRL0_REG);
- 	writel(ctrl4, port->base + MVPP22_XLG_CTRL4_REG);
+ 	/* Do not allow more then one stream per direction */
+@@ -1286,6 +1308,7 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 			max_channels++;
+ 	}
+ 	ruledata->serializers = max_channels;
++	ruledata->mcasp = mcasp;
+ 	max_channels *= tdm_slots;
+ 	/*
+ 	 * If the already active stream has less channels than the calculated
+@@ -1311,20 +1334,22 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 				   0, SNDRV_PCM_HW_PARAM_CHANNELS,
+ 				   &mcasp->chconstr[substream->stream]);
+ 
+-	if (mcasp->slot_width)
+-		snd_pcm_hw_constraint_minmax(substream->runtime,
+-					     SNDRV_PCM_HW_PARAM_SAMPLE_BITS,
+-					     8, mcasp->slot_width);
++	if (mcasp->slot_width) {
++		/* Only allow formats require <= slot_width bits on the bus */
++		ret = snd_pcm_hw_rule_add(substream->runtime, 0,
++					  SNDRV_PCM_HW_PARAM_FORMAT,
++					  davinci_mcasp_hw_rule_slot_width,
++					  ruledata,
++					  SNDRV_PCM_HW_PARAM_FORMAT, -1);
++		if (ret)
++			return ret;
++	}
+ 
+ 	/*
+ 	 * If we rely on implicit BCLK divider setting we should
+ 	 * set constraints based on what we can provide.
+ 	 */
+ 	if (mcasp->bclk_master && mcasp->bclk_div == 0 && mcasp->sysclk_freq) {
+-		int ret;
+-
+-		ruledata->mcasp = mcasp;
+-
+ 		ret = snd_pcm_hw_rule_add(substream->runtime, 0,
+ 					  SNDRV_PCM_HW_PARAM_RATE,
+ 					  davinci_mcasp_hw_rule_rate,
 -- 
 2.20.1
 
