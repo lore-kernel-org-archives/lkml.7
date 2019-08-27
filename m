@@ -2,85 +2,75 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746C4C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D71C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45EA7206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C92B204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:38:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566902311;
+	bh=rWcGSZ8cZ/fDAwG3MCvZ7EawkQ7zJoVjhoQdZUGP0bA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NCVDBP5oOUo1DjtWRLmZGNQn0vgxxJw7GjXniVgrUfXXHrfH7kjKAz+DfoYYyfK+G
+	 jo7sk/tx6/e95pfdreLgFT2cIJgUamJyUMEWYp6rAf4MtXQEFZVp08L/jv8QvIbOcV
+	 8Z/syxmBG5JBqGapx1kSRiHlMtpQbWvAJODBFpTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbfH0Kho (ORCPT
+        id S1729171AbfH0Kia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 06:37:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:42494 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbfH0Khn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 06:37:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1640E28;
-        Tue, 27 Aug 2019 03:37:41 -0700 (PDT)
-Received: from [192.168.0.9] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B0B53F718;
-        Tue, 27 Aug 2019 03:37:39 -0700 (PDT)
-Subject: Re: [PATCH 12/15] sched,fair: flatten update_curr functionality
-To:     Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
-Cc:     kernel-team@fb.com, pjt@google.com, peterz@infradead.org,
-        mingo@redhat.com, morten.rasmussen@arm.com, tglx@linutronix.de,
-        mgorman@techsingularity.net, vincent.guittot@linaro.org
-References: <20190822021740.15554-1-riel@surriel.com>
- <20190822021740.15554-13-riel@surriel.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <63f17078-b467-b239-2824-a0f9b9d14537@arm.com>
-Date:   Tue, 27 Aug 2019 12:37:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 06:38:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52216 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725912AbfH0Ki3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 06:38:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 56FC8AF2C;
+        Tue, 27 Aug 2019 10:38:28 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 12:38:27 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Edward Chron <echron@arista.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, colona@arista.com
+Subject: Re: [PATCH 00/10] OOM Debug print selection and additional
+ information
+Message-ID: <20190827103827.GV7538@dhcp22.suse.cz>
+References: <20190826193638.6638-1-echron@arista.com>
+ <20190827071523.GR7538@dhcp22.suse.cz>
+ <5768394f-1511-5b00-f715-c0c5446a2d2a@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-In-Reply-To: <20190822021740.15554-13-riel@surriel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5768394f-1511-5b00-f715-c0c5446a2d2a@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/08/2019 04:17, Rik van Riel wrote:
-> Make it clear that update_curr only works on tasks any more.
+On Tue 27-08-19 19:10:18, Tetsuo Handa wrote:
+> On 2019/08/27 16:15, Michal Hocko wrote:
+> > All that being said, I do not think this is something we want to merge
+> > without a really _strong_ usecase to back it.
 > 
-> There is no need for task_tick_fair to call it on every sched entity up
-> the hierarchy, so move the call out of entity_tick.
-> 
-> Signed-off-by: Rik van Riel <riel@surriel.com>`
-> Signed-off-by: Rik van Riel <riel@surriel.com>
-> ---
->  kernel/sched/fair.c | 24 +++++++++++-------------
->  1 file changed, 11 insertions(+), 13 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index fa8e88731821..5cfa3dbeba49 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -872,10 +872,11 @@ static void update_tg_load_avg(struct cfs_rq *cfs_rq, int force)
->  static void update_curr(struct cfs_rq *cfs_rq)
->  {
->  	struct sched_entity *curr = cfs_rq->curr;
-> +	struct task_struct *curtask;
->  	u64 now = rq_clock_task(rq_of(cfs_rq));
->  	u64 delta_exec;
->  
-> -	if (unlikely(!curr))
-> +	if (unlikely(!curr) || !entity_is_task(curr))
->  		return;
+> Like the sender's domain "arista.com" suggests, some of information is
+> geared towards networking devices, and ability to report OOM information
+> in a way suitable for automatic recording/analyzing (e.g. without using
+> shell prompt, let alone manually typing SysRq commands) would be convenient
+> for unattended devices.
 
-Shouldn't this be
+Why cannot the remote end of the logging identify the host. It has to
+connect somewhere anyway, right? I also do assume that a log collector
+already does store each log with host id of some form.
 
--       if (unlikely(!curr) || !entity_is_task(curr))
-+       if (unlikely(!curr))
-                return;
-
-+       BUG_ON(!entity_is_task(curr));
-
-IMHO, cfs_rq->curr can only be a task with your changes.
+-- 
+Michal Hocko
+SUSE Labs
