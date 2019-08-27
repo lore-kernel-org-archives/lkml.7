@@ -2,54 +2,59 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD46C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFCDC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6770204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3242204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893289;
-	bh=E2T96lX400mJklYhgl0TGxOlccJvDuTil1Mhu7MLcJk=;
+	s=default; t=1566893291;
+	bh=mmO40OMKYBpLQ8t86cPFUw9lzxw7bu2lLFID7NXlxKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fnb8XDOWrL+12XvyIpSM78HUG0agpgCSJQ3vEwYzdbeG7NkMDlF4OiIkZTQ8buHqi
-	 UitgeWdRhvz8wxbDJ2sbaUFcFU1RqftcIfpGgpFnu+HjkoKJ+LxQ72WNzEowXcd6zQ
-	 1zpFI84/TE+kQv5boZCApNWkp6tpaNeED0Kqpspo=
+	b=eLZB421s4xJHnMFx4iV6woQxGXV+X0w+7wjvyYFsVpNf3+FMulHl+PKi+9XNy/HwO
+	 WXW0KKQO5AYEyRCoTGuY2f9SVvgLAEeWEThZ6GoYfX0OoDhyiBWIp/KwtA3E1qwm7/
+	 totEgeQGMrEw6/fEfvCAb9pqs7v8HKvktBCIQNfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733217AbfH0III (ORCPT
+        id S1731455AbfH0IIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:08:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36606 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:08:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732626AbfH0IGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:06:35 -0400
+        id S1731928AbfH0IGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:06:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEECC206BA;
-        Tue, 27 Aug 2019 08:06:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C4B5206BA;
+        Tue, 27 Aug 2019 08:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893195;
-        bh=E2T96lX400mJklYhgl0TGxOlccJvDuTil1Mhu7MLcJk=;
+        s=default; t=1566893200;
+        bh=mmO40OMKYBpLQ8t86cPFUw9lzxw7bu2lLFID7NXlxKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MaG8JY+++gUMlP0QP5UkseGmMHalsolI2wm1Zu7qwakaXZhYl9UA+nbE4M55oZcJP
-         U1GCbYtQtsvOHlkLVrows5ftnOQ8fDd7cPPElNGT70NXoOduarUlk08RrllETME/Ab
-         dRQbQUMWDl5/fXvjFu6tDAR+qigTLRVm3wo3jigU=
+        b=zjTX6kXj9t5Q8A8dpVeDMkQPxsKW/9DhewjYTE3uyWYBUC2KhTX8QwS4DltNgjKbM
+         hJsIyQUWXI9+xxyE5JP/NTAwKQgHg7Qy6I/0vKsJXSnr/77HBeycbeTScxqRzwX+rw
+         loya4XMc5lKQD2gz1UnAfgGGVJM9mZ+eKADZzwDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
-        Ping Cheng <ping.cheng@wacom.com>,
-        Jason Gerecke <jason.gerecke@wacom.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.2 111/162] HID: wacom: correct misreported EKR ring values
-Date:   Tue, 27 Aug 2019 09:50:39 +0200
-Message-Id: <20190827072742.227384521@linuxfoundation.org>
+        stable@vger.kernel.org, He Zhe <zhe.he@windriver.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 103/162] perf ftrace: Fix failure to set cpumask when only one cpu is present
+Date:   Tue, 27 Aug 2019 09:50:31 +0200
+Message-Id: <20190827072741.861943403@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -62,36 +67,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Armstrong Skomra <skomra@gmail.com>
+[ Upstream commit cf30ae726c011e0372fd4c2d588466c8b50a8907 ]
 
-commit fcf887e7caaa813eea821d11bf2b7619a37df37a upstream.
+The buffer containing the string used to set cpumask is overwritten at
+the end of the string later in cpu_map__snprint_mask due to not enough
+memory space, when there is only one cpu.
 
-The EKR ring claims a range of 0 to 71 but actually reports
-values 1 to 72. The ring is used in relative mode so this
-change should not affect users.
+And thus causes the following failure:
 
-Signed-off-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
-Fixes: 72b236d60218f ("HID: wacom: Add support for Express Key Remote.")
-Cc: <stable@vger.kernel.org> # v4.3+
-Reviewed-by: Ping Cheng <ping.cheng@wacom.com>
-Reviewed-by: Jason Gerecke <jason.gerecke@wacom.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  $ perf ftrace ls
+  failed to reset ftrace
+  $
 
+This patch fixes the calculation of the cpumask string size.
+
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Fixes: dc23103278c5 ("perf ftrace: Add support for -a and -C option")
+Link: http://lkml.kernel.org/r/1564734592-15624-1-git-send-email-zhe.he@windriver.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/wacom_wac.c |    2 +-
+ tools/perf/builtin-ftrace.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -1059,7 +1059,7 @@ static int wacom_remote_irq(struct wacom
- 	input_report_key(input, BTN_BASE2, (data[11] & 0x02));
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 9c228c55e1fb7..22386ab350504 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -173,7 +173,7 @@ static int set_tracing_cpumask(struct cpu_map *cpumap)
+ 	int last_cpu;
  
- 	if (data[12] & 0x80)
--		input_report_abs(input, ABS_WHEEL, (data[12] & 0x7f));
-+		input_report_abs(input, ABS_WHEEL, (data[12] & 0x7f) - 1);
- 	else
- 		input_report_abs(input, ABS_WHEEL, 0);
+ 	last_cpu = cpu_map__cpu(cpumap, cpumap->nr - 1);
+-	mask_size = (last_cpu + 3) / 4 + 1;
++	mask_size = last_cpu / 4 + 2; /* one more byte for EOS */
+ 	mask_size += last_cpu / 32; /* ',' is needed for every 32th cpus */
  
+ 	cpumask = malloc(mask_size);
+-- 
+2.20.1
+
 
 
