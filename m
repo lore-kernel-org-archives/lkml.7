@@ -2,152 +2,171 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF3FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2B4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 427B4206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:07:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lwwkBmUD"
+	by mail.kernel.org (Postfix) with ESMTP id 4FE6F206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:08:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566911325;
+	bh=AX+JitzJv+K315th2SOy3YtH0VY/SuXeid3kXFuhBUE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VmioHSN7OOPAb1Y/Zv69CJsv4O+S1eNDBwvUAgm1qmAhx5CVGTcI8kmMlvsN0S2c0
+	 5Ow8Ksu3v2zdXS4uwsrCUVZt6n3Bwmlc+Q3SygPzUqjvrUg8kq7EtME6tC9QjKhnKS
+	 ATBYUyGm36EZz5HoIw6a57OS2e96UF1gyVsE4OlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730011AbfH0NHn (ORCPT
+        id S1729835AbfH0NIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:07:43 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:47058 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729770AbfH0NHm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:07:42 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q139so14072552pfc.13;
-        Tue, 27 Aug 2019 06:07:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0p0/hlezeGt/XbIcoNDfHR/8GDIxHTpZEoMAoi00kVo=;
-        b=lwwkBmUDxvrSWCOKfQtDd9u6cFOILblaRkNEidKKOyHtBc3Y4yvbvqiAfXUh9n5TxK
-         tBQqsvPhhXlqFv27/EfIqNoSw+t2qirVwqVRtLAvq0fTNWgjVVVvpyrXZdxiFJ9WpKsN
-         0eA/xKIyBetTXLQg2hSC39JBJi0wrpM9HJzX+VU62MNye6pZ3X0t0ExlRrwAQRbZZG01
-         v7RWCShBtjCUsTu62FtRb/YPo3PP+tpoiJ+AwqTFC06wZfVgr7UXghWE6YBz6A4j1krm
-         7Rdq7VXhwciuSiWFHQzdrNjspRnGxpIR21uJHy30f2gDBWemnvnx6etM25pY7UzXQZ31
-         hoPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0p0/hlezeGt/XbIcoNDfHR/8GDIxHTpZEoMAoi00kVo=;
-        b=LWkXurlSpoNv23QWUS1DWgnFYto4noncFRsADRe5hTzemz12+eIAzgjzS51uw0ppfJ
-         V9e4DXv3K9npEOfPlAb5MI7p2Dy9nsk/N91ujPyhs1RbJCtLh8327arjXQB8UF3+1rHK
-         16SmKSG0qZPoeKxUgbeGEbNYIDriJ38Ad7BrRH1GINMvwK+2tK5K2MQV+Hr+X7Mpmwwr
-         jk1JG9iUc19mvXsM9dviASRdDaseDNQUciMgttE553QK3aB1z9bHRWvIxfHEot0DFR8m
-         kFSpSuPHcgjYhTsImGve3yK2yxxIDTfI4+saUzHtY9vUsNfBqHXiHmGU4kSd1WNd0N1Z
-         /cqw==
-X-Gm-Message-State: APjAAAU6xf/BAT4DJjH4ifHxkinnp0T7xpskV5woE8lGU5xcwcLFCcPB
-        ObJ02Foy5A+WI3NFL8OBSWFZSG80f7ozv0sJgw8=
-X-Google-Smtp-Source: APXvYqxAXZc5R1W4+GvI1l4xx6Dj+UN3D4K2f77cZLskNZQvJNdFEJBSLNSa8RtTkr5L5dehnyQJBOMTR9EYrEDpjOs=
-X-Received: by 2002:a62:8343:: with SMTP id h64mr24990152pfe.170.1566911262160;
- Tue, 27 Aug 2019 06:07:42 -0700 (PDT)
+        Tue, 27 Aug 2019 09:08:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbfH0NIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:08:44 -0400
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0E162077B;
+        Tue, 27 Aug 2019 13:08:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566911322;
+        bh=AX+JitzJv+K315th2SOy3YtH0VY/SuXeid3kXFuhBUE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CVsC+VDz2ihD4Mm+zIR+ySHxwO7R1ZjnAzMQBd0WbP8AxoP3TW692VdRMOtny23nQ
+         i1IG4nuhZKuFC2N0Yzym8iHftvKzrHoYTuO/7QSdEcngeW+eCrW9qVfLHhEeritQHM
+         7AEWsOIy+0N/pS+Xu4XcFCkCig/nUYCXppx0/CfA=
+Received: by mail-qt1-f176.google.com with SMTP id v38so21203993qtb.0;
+        Tue, 27 Aug 2019 06:08:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAX5OSsNMdf6xww7g8TCrm+aF8ZUgNgNLKeo9N1sUzxwf1Mvs3DQ
+        db+UJaFtptexgVQQN08a4YigpqhbCHa2XNg60g==
+X-Google-Smtp-Source: APXvYqwcXXM593kwWwoazOnu4lDw8LvX4m7hSKGd+f3fLIf8Vsa2X9oW7XZK9KrseUocOJeq32tPVRdHaNWYgMDFrio=
+X-Received: by 2002:ad4:4050:: with SMTP id r16mr20016450qvp.200.1566911321782;
+ Tue, 27 Aug 2019 06:08:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190819131737.26942-1-Tianyu.Lan@microsoft.com>
- <87ftlnm7o8.fsf@vitty.brq.redhat.com> <CAOLK0pzXPG9tBnQoKGTSNHMwXXrEQ4zZH1uWn2F2mQ2ddVcoFA@mail.gmail.com>
- <87v9uilr5x.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87v9uilr5x.fsf@vitty.brq.redhat.com>
-From:   Tianyu Lan <lantianyu1986@gmail.com>
-Date:   Tue, 27 Aug 2019 21:07:32 +0800
-Message-ID: <CAOLK0py2rvYkLPP9uQ6Q7y31Btu4XOsWr3Vsk6GtUDWvg5uUOg@mail.gmail.com>
-Subject: Re: [PATCH V3 0/3] KVM/Hyper-V: Add Hyper-V direct tlb flush support
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm <kvm@vger.kernel.org>,
-        linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        "linux-kernel@vger kernel org" <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>, corbet@lwn.net,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
+References: <20190827085302.5197-1-jiaxun.yang@flygoat.com> <20190827085302.5197-6-jiaxun.yang@flygoat.com>
+In-Reply-To: <20190827085302.5197-6-jiaxun.yang@flygoat.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 27 Aug 2019 08:08:30 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+aEOPOvRr8c-umqwKdVi=WMXL=fufeDCj2+87P69tLgQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+aEOPOvRr8c-umqwKdVi=WMXL=fufeDCj2+87P69tLgQ@mail.gmail.com>
+Subject: Re: [PATCH 05/13] dt-bindings: interrupt-controller: Add Loongson-3 IOINTC
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paul.burton@mips.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        michael.h.kelley@microsoft.com
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.co>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 8:38 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+On Tue, Aug 27, 2019 at 4:00 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 >
-> Tianyu Lan <lantianyu1986@gmail.com> writes:
+> Document Loongson-3 I/O Interrupt controller.
 >
-> > On Tue, Aug 27, 2019 at 2:41 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> >>
-> >> lantianyu1986@gmail.com writes:
-> >>
-> >> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> >> >
-> >> > This patchset is to add Hyper-V direct tlb support in KVM. Hyper-V
-> >> > in L0 can delegate L1 hypervisor to handle tlb flush request from
-> >> > L2 guest when direct tlb flush is enabled in L1.
-> >> >
-> >> > Patch 2 introduces new cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH to enable
-> >> > feature from user space. User space should enable this feature only
-> >> > when Hyper-V hypervisor capability is exposed to guest and KVM profile
-> >> > is hided. There is a parameter conflict between KVM and Hyper-V hypercall.
-> >> > We hope L2 guest doesn't use KVM hypercall when the feature is
-> >> > enabled. Detail please see comment of new API
-> >> > "KVM_CAP_HYPERV_DIRECT_TLBFLUSH"
-> >>
-> >> I was thinking about this for awhile and I think I have a better
-> >> proposal. Instead of adding this new capability let's enable direct TLB
-> >> flush when KVM guest enables Hyper-V Hypercall page (writes to
-> >> HV_X64_MSR_HYPERCALL) - this guarantees that the guest doesn't need KVM
-> >> hypercalls as we can't handle both KVM-style and Hyper-V-style
-> >> hypercalls simultaneously and kvm_emulate_hypercall() does:
-> >>
-> >>         if (kvm_hv_hypercall_enabled(vcpu->kvm))
-> >>                 return kvm_hv_hypercall(vcpu);
-> >>
-> >> What do you think?
-> >>
-> >> (and instead of adding the capability we can add kvm.ko module parameter
-> >> to enable direct tlb flush unconditionally, like
-> >> 'hv_direct_tlbflush=-1/0/1' with '-1' being the default (autoselect
-> >> based on Hyper-V hypercall enablement, '0' - permanently disabled, '1' -
-> >> permanenetly enabled)).
-> >>
-> >
-> > Hi Vitaly::
-> >      Actually, I had such idea before. But user space should check
-> > whether hv tlb flush
-> > is exposed to VM before enabling direct tlb flush. If no, user space
-> > should not direct
-> > tlb flush for guest since Hyper-V will do more check for each
-> > hypercall from nested
-> > VM with enabling the feauter..
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  .../loongson,ls3-iointc.yaml                  | 61 +++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-iointc.yaml
 >
-> If TLB Flush enlightenment is not exposed to the VM at all there's no
-> difference if we enable direct TLB flush in eVMCS or not: the guest
-> won't be using 'TLB Flush' hypercall and will do TLB flushing with
-> IPIs. And, in case the guest enables Hyper-V hypercall page, it is
-> definitelly not going to use KVM hypercalls so we can't break these.
->
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-iointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-iointc.yaml
+> new file mode 100644
+> index 000000000000..cc6ac8b2cd7c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-iointc.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Yes, this won't tigger KVM/Hyper-V hypercall conflict. My point is
-that if tlb flush enlightenment is not enabled, enabling direct tlb
-flush will not accelate anything and Hyper-V still will check each
-hypercalls from nested VM in order to intercpt tlb flush hypercall
-But guest won't use tlb flush hypercall in this case. The check
-of each hypercall in Hyper-V is redundant. We may avoid the
-overhead via checking status of tlb flush enlightenment and just
-enable direct tlb flush when it's enabled.
+Dual license please.
 
----
-Best regards
-Tianyu Lan
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/interrupt-controller/loongson,ls3-iointc.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Loongson-3 I/O Interrupt Controller
+> +
+> +maintainers:
+> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +
+> +description: |
+> +  This interrupt controller is found in the Loongson-3 family of chips as the primary
+> +  package interrupt source which can route interrupt to interrupt line of cores.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - loongson,ls3-iointc
+
+Same comment here.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  'loongson,map-ip':
+> +    description:
+> +      The interrupt line it's going to map to.
+
+I don't understand. Needs a better description.
+
+> +    allOf:
+
+You need to define the type here with a $ref.
+
+
+> +      - maximum: 5
+> +        minimum: 0
+> +
+> +  'loongson,map-core':
+> +    description:
+> +      The core it's going to map to.
+
+There's 1 interrupt ctrlr per core or what?
+
+> +    allOf:
+> +      - maximum: 5
+> +        minimum: 0
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+
+Add a:
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +    iointc: interrupt-controller@3ff01400 {
+> +        compatible = "loongson,ls3-io-intc";
+> +        reg = <0x3ff01400 0x60>;
+> +        interrupts = <2>;
+> +        loongson,map-ip = <0>;
+> +        loongson,map-core = <0>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +    };
+> --
+> 2.22.0
+>
