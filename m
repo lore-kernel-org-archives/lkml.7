@@ -2,143 +2,293 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AECC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C5AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1365820828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE36B21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:12:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0U3H9Zue"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cp3gfkFi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfH0HLP (ORCPT
+        id S1728286AbfH0HMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:11:15 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44742 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbfH0HLO (ORCPT
+        Tue, 27 Aug 2019 03:12:36 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:33497 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbfH0HMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:11:14 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p17so17613273wrf.11
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 00:11:12 -0700 (PDT)
+        Tue, 27 Aug 2019 03:12:36 -0400
+Received: by mail-yw1-f67.google.com with SMTP id e65so7551395ywh.0;
+        Tue, 27 Aug 2019 00:12:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=n+oDXpG1XwlAPH2qoKlZYIPNnhHtlFVzSMp7jLQVnsQ=;
-        b=0U3H9Zueby+0JaC+U+qrDlMrQ487k3pphAsFFZfTgZL8s3JKiPP+QKv8gRfIjlL8vV
-         AEXL7PP5gRcqD+zBwMRXbiritpuy858lHs9hCtvGhjxMf5xHiyZxTN9z4VojLGKcQF0n
-         h7AHUYUxhYJPzG7OddixlNhvy8bKuiLwd6HQuE1i4xds2b20KlWbcw+BtQkAMOUIrbvf
-         EkPhNiRHbJA07P6OqSCKeUF6mqM5CvG3hSi82MMRU06XYD9+CZ3WpSsaiHaOSI0vRJ6W
-         RhEJStpeQc8ZmgPB8CwRCNV77P6djdbPiBItKjFNvpcWEODrZNdQRP49pes82o8+4nvz
-         A/yA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tu5xcNElhBaNnfeG0jVQbHeyzi3d6ikBp6zzIrvcXtw=;
+        b=cp3gfkFiu31HWR9vnfOFwlABLnsyBxCJ9ycKKjNtISpm2YWxnn5n+AiDgdO+CMtqzx
+         mB+V8ZjrjTbxAIlyLglRqu8OFbw23CSxqufF8vtslc8c9N/b+suywUCnupVMHzEnJdVT
+         MwPvD1zlTGnBQTSEWhwoHmltmguEFtVvUfeokgxYqhwgegYCq5j1edE6otSMcbOQXgQ8
+         SHSZevGIzuKpcKzFwggCpRV6aDFZQhAfsEsx08Sln1pg5q0xa7KMRRGOSLZl0KOdsdFW
+         zF9r3o6dTT6XkC0LC4MJ0XfW0PBlt7xadJ4lwdXY7MJwkTKd8aSGqvLhMWXmE/EIQINO
+         1igg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=n+oDXpG1XwlAPH2qoKlZYIPNnhHtlFVzSMp7jLQVnsQ=;
-        b=iBZlbdk0Yl+Ec670VMx2BD7+VjzYFLmBj1bdzR7vq/Sz4+//G/y3pa29NjQ9m3g2I7
-         Ro3OnNRnEJdLBwkgRDCCgssH9GrOJGVAytAfyPEdWlZsGf4wfkizQcqlECalILUyVmRQ
-         1V3BT9nYx8Hab5J8Yv5OcyCpQ9Q548E8PzFkM17VHbS7yis8BOmsB6eZ2Mh/8LIf2bnq
-         itu5+0cpya4gaIXCazv23nycU6TlyGjkBKji2s0Tlvdur8+ZIgDB95D+C0Fo09t00wl9
-         Jw53R+6DkiA0xuNU2iddngEeHhqSrxBkMzsis/Q/XhPePBNpweuDz2We7lG50Fp+bPQm
-         DFFw==
-X-Gm-Message-State: APjAAAUdmnw9fZJ+7NW1BAXm22BElmbzEL7QJBnQoAmDngvgXIjUSuOV
-        qwFK28ct+8L1nGLhnqVTapknAA==
-X-Google-Smtp-Source: APXvYqx07MVuNaD/pvFVkxK9tzVaT5Le6neLEsTd+O2YoysAAefEmU+anGolY0yJCfYAA++tiUHVqw==
-X-Received: by 2002:a5d:63c8:: with SMTP id c8mr28825411wrw.21.1566889871458;
-        Tue, 27 Aug 2019 00:11:11 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id i66sm2507057wmg.2.2019.08.27.00.11.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 00:11:10 -0700 (PDT)
-Subject: Re: [PATCH] drm/meson: vclk: use the correct G12A frac max value
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190826144647.17302-1-narmstrong@baylibre.com>
- <CAFBinCBdxLnHsqvLT863cUkZ3Cf_2FhzOMQVTvLbxNCsQBi1WQ@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <85001e80-ddca-de06-dbce-d90b6f7a0413@baylibre.com>
-Date:   Tue, 27 Aug 2019 09:11:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tu5xcNElhBaNnfeG0jVQbHeyzi3d6ikBp6zzIrvcXtw=;
+        b=s8vew9CUwa1ghp9Vg1DoUZJ4LPpt7l0cJn82LaBsBT83+qjgQQRFh87oBHXj5zfnh1
+         XyR61GPSAFx44Yj7/2BNGhw6zN0ER21hzLwTBH5fKAQDehwz7+KRBMtlb0DJZLM2FhZj
+         vfpe0fodisbOG0LUvaHqHgt+4Vf66kz4JcTD1A+FRHHB/K/lpECFke9V84G1OreW8yUD
+         jqnDu1TmOA4Fhlk/b7DFmkw6UDz2Yykz8PYXAXNL5eSfhvYoYBbDHJzPQj7PZfn/zTbs
+         Bcue/dp+vnzw1rixqF7+QGhCwhZT2vXBDnwjsK5flqqkhxqtwb7T8tOTGEgXJKlieAVw
+         w0eQ==
+X-Gm-Message-State: APjAAAWhg/6s3xRYO156pex94LQta8ocCU8Riqsjxy4w73Mc3k9Id0AL
+        OvTgKOaK5Ro0COsLHZFrLJ2buvDBzydrEEHFRuY=
+X-Google-Smtp-Source: APXvYqykMWKW8pwv+Tys0T7QhtHLFhPv95dbvkyOqQBMPqRNahlsqWe1Z35At/qshXxc70ZxCuZ7yUTjVqhfzKH63EU=
+X-Received: by 2002:a0d:d596:: with SMTP id x144mr14943989ywd.69.1566889955150;
+ Tue, 27 Aug 2019 00:12:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCBdxLnHsqvLT863cUkZ3Cf_2FhzOMQVTvLbxNCsQBi1WQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190826074400.54794-1-kkamagui@gmail.com> <20190826113239.2tliwil35gsqap54@linux.intel.com>
+In-Reply-To: <20190826113239.2tliwil35gsqap54@linux.intel.com>
+From:   Seunghun Han <kkamagui@gmail.com>
+Date:   Tue, 27 Aug 2019 16:12:23 +0900
+Message-ID: <CAHjaAcTw5O+UNf6OEhLFaosx+4Yx6HtxbJ4RQsPPBVUUhANh4g@mail.gmail.com>
+Subject: Re: [PATCH] tpm: tpm_crb: Fix an improper buffer size calculation bug
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/08/2019 07:40, Martin Blumenstingl wrote:
-> On Mon, Aug 26, 2019 at 4:47 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> When calculating the HDMI PLL settings for a DMT mode PHY frequency,
->> use the correct max fractional PLL value for G12A VPU.
->>
->> With this fix, we can finally setup the 1024x76-60 mode.
-> nit-pick: is this really 1024x76 or 1024x768?
-> 
+>
+> On Mon, Aug 26, 2019 at 04:44:00PM +0900, Seunghun Han wrote:
+> > I'm Seunghun Han and work at the Affiliated Institute of ETRI. I found
+>
+> You can drop the first sentence from the commit message. The SoB below
+> is sufficient.
 
-It is 1024x768, bad copy paste :-p
+Thank you, and I will remove it from next version of the patch.
 
-Neil
+> > a bug related to improper buffer size calculation in crb_fixup_cmd_size
+> > function.
+>
+> The purpose is to cap to the ACPI region when we partially overlap to
+> workaround BIOS's reporting corrupted ACPI tables so that we don't get
+> failure from devm_ioremap().
+>
+> The only funky thing in that function is that it lets through a buffer
+> that is fully outside the ACPI region. There actually exists hardware
+> with this configuration.
+
+Yes, I know it. However, my machine has two ACPI regions (command
+buffer and response buffer) below, and the crb_fixup_cmd_size()
+function couldn't check the point, "a buffer that if fully outside the
+ACPI region". I will explain the exact case at the end of my email.
+
+79a39000-79b6afff : ACPI Non-volatile Storage
+  79b4b000-79b4bfff : MSFT0101:00
+  79b4f000-79b4ffff : MSFT0101:00
+
+> > When the TPM CRB regions are two or more, the crb_map_io function calls
+> > crb_fixup_cmd_size twice to calculate command buffer size and response
+> > buffer size. The purpose of crb_fixup_cmd_size function is to trust
+> > the ACPI region information.
+>
+> This is not true. The driver deals with only one ACPI region ATM.
+
+Yes, the driver deals with only one ACPI region, and it works fine in
+most cases. However, two ACPI regions are in the system like above,
+then crb_map_io() function calls crb_map_res() function twice.
+crb_map_res() function calls devm_ioremap_resouce(). So, TPM CRB
+driver handles two separated regions, command buffer and response
+buffer. I will also explain in detail at the end of my email.
+
+>
+> > However, the function compares only io_res argument with start and size
+> > arguments.  It means the io_res argument is one of command buffer and
+> > response buffer regions. It also means the other region is not calculated
+> > correctly by the function because io_res argument doesn't cover all TPM
+> > CRB regions.
+>
+> The driver gets command and response buffer metrics from the TPM2 ACPI
+> table, not from the ACPI region.
+
+I'm sorry for my mistake. I checked it.
+
+>
+> > To fix this bug, I change crb_check_resource function for storing all TPB
+> > CRB regions to a list and use the list to calculate command buffer size
+> > and response buffer size correctly.
+>
+> This cannot be categorized as a bug. It is simply as new type of hardware.
+> Can you explain in detail what type of hardware are you using?
+
+I will also explain it at the end of my email.
+
+>
+> > ---
+> >  drivers/char/tpm/tpm_crb.c | 50 ++++++++++++++++++++++++++------------
+> >  1 file changed, 34 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+> > index e59f1f91d7f3..b0e94e02e5eb 100644
+> > --- a/drivers/char/tpm/tpm_crb.c
+> > +++ b/drivers/char/tpm/tpm_crb.c
+> > @@ -442,6 +442,9 @@ static int crb_check_resource(struct acpi_resource *ares, void *data)
+> >           acpi_dev_resource_address_space(ares, &win)) {
+> >               *io_res = *res;
+> >               io_res->name = NULL;
+> > +
+> > +             /* Add this TPM CRB resource to the list */
+> > +             return 0;
+> >       }
+> >
+> >       return 1;
+> > @@ -471,20 +474,30 @@ static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
+> >   * region vs the registers. Trust the ACPI region. Such broken systems
+> >   * probably cannot send large TPM commands since the buffer will be truncated.
+> >   */
+> > -static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
+> > +static u64 crb_fixup_cmd_size(struct device *dev, struct list_head *resources,
+> >                             u64 start, u64 size)
+>
+> With a quick spin w/o knowing the details of the hardware I'm dealing
+> with it you should probably reduce the fixup function as
+>
+> static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
+>                               u64 start, u64 size)
+> {
+>         if (start + size - 1 <= io_res->end)
+>                  return size;
+>
+>         dev_err(dev,
+>                  FW_BUG "ACPI region does not cover the entire command/response buffer. %pr vs %llx %llx\n",
+>                  io_res, start, size);
+>
+>         return io_res->end - start + 1;
+> }
+>
+> Then call this inside the loop.
+
+Thank you for your advice. I will change it on your advice.
+
+>
+> Looking at your change it does not make much sense to me.
+>
+> There is a weird asymmetry in it:
+>
+> 1. The code loops through all found ACPI regions when looking for
+>    intersections with the command and response buffers.
+> 2. The devm_ioremap() is done only to the last seen ACPI region. Why the
+>    multiple regions matter for fixup's but not in this case?
+>
+> /Jarkko
+
+I got an AMD system which had a Ryzen Threadripper 1950X and MSI
+mainboard. I had a problem with AMD's fTPM, and my machine showed an
+error message below.
+
+[  5.732084] tpm_crb MSFT0101:00: can't request region for resource
+[mem 0x79b4f000-0x79b4ffff]
+[  5.732089] tpm_crb: probe of MSFT0101:00 failed with error -16
+
+When I saw the iomem, I found two fTPM regions were in the ACPI NVS
+area. The regions are below.
+
+79a39000-79b6afff : ACPI Non-volatile Storage
+  79b4b000-79b4bfff : MSFT0101:00
+  79b4f000-79b4ffff : MSFT0101:00
+
+I analyzed this issue and will explain in detail what happened in my system.
+1) When the system was booted, acpi_bus_scan() function found two
+MSFT0101:00 resources and inserted them into iomem_resource. The
+regions were [0x79b4b000-0x79b4bfff] and [0x79b4f000-0x79b4ffff]. From
+now, I will call the first one Region A and the second one Region B.
+
+2) When the tpm_crb driver was loaded, crb_map_io() function was
+called. Then, crb_map_io() called acpi_dev_get_resources(), and it got
+Region B for the io_res variable because it found the last region from
+iomem_resource as you said.
+
+3) crb_map_io() function called devm_ioremap_resource() with io_res
+(Region B). However, it returned fail because ACPI NVS area was set to
+the busy area.
+
+4*) So, I removed the busy bit from ACPI NVS by changing
+do_mark_busy() function. I sent the patch to you and here is the link,
+https://lkml.org/lkml/2019/8/26/163 . After patching it,
+devm_ioremap_resource() returned successfully. Then, crb_map_io()
+called crb_map_res() with io_res and buf->control_address variables,
+and it also returned successfully.
+
+5)  crb_map_io() got command buffer's physical address and size from
+priv->regs_t->ctrl_cmd_pa_high/low and ctrl_cmd_size. The results were
+that cmd_pa was 0x79b4b000 and the size was 0x4000. cmd_pa was in
+Region A, however, io_res was Region B as I mentioned before. So, when
+crb_map_io() called crb_fixup_cmd_size() with io_res and 0x4000
+arguments, the function returned 0x4000, not 0xfff becuase cmd_pa was
+outside of Region B.
+
+6) crb_map_io() called crb_map_res() with io_res (Region B), cmd_pa
+(Region A), and cmd_size (0x4000), then the crb_map_res() tried to
+call devm_ioremap_resource() because io_res didn't contain cmd_pa and
+size. But, Region A's size was 0xfff, so devm_ioremap_resource()
+couldn't allocate resource and failed. If crb_fixup_cmd_size()
+compared cmd_pa/size with all regions, it could find Region A and
+return the correct size 0xfff.
+
+7*) So, I changed crb_fixup_cmd_size() with the attached patch so that
+it compared arguments with all regions. After that, the function
+returned the correct size 0xfff, and crb_map_res() added Region A and
+returned successfully.
+
+8) crb_map_io() got response buffer's physical address and size from
+priv->regs_t->ctrl_rsp_pa and ctrl_rsp_size. The results were that
+rsp_pa was 0x79b4f000 and the size is 0x4000. rsp_pa was in Region B,
+and the new crb_fixup_cmd_size() I fixed returned 0xfff.
+
+9) crb_map_io() called crb_map_res() with rsp_pa (Region B) and
+rsp_size (0xfff) because cmd_pa (0x79b4b000) was not equal to rsp_pa
+(0x79b4f000). The function returned successfully, and TPM was also
+registered successfully.
+
+10*) After applying my patches, AMD's fTPM worked fine and final iomem is below.
+
+79a39000-79b6afff : ACPI Non-volatile Storage
+  79b4b000-79b4bfff : MSFT0101:00
+    79b4b000-79b4bfff : MSFT0101:00
+  79b4f000-79b4ffff : MSFT0101:00
+    79b4f000-79b4ffff : MSFT0101:00
+
+Lastly, I would like to answer your two questions and request something.
+
+> 1. The code loops through all found ACPI regions when looking for
+>    intersections with the command and response buffers.
+
+As I said, the purpose of the code loop is to find the exact buffer
+size and so that I don't get failure from crb_map_res and(). If it
+doesn't check all regions, then it returns the passed size again and
+causes failure.
+
+> 2. The devm_ioremap() is done only to the last seen ACPI region. Why the
+>    multiple regions matter for fixup's but not in this case?
+
+Actually, if the system has two regions as you have seen above,
+devm_ioremap() is called again because of crb_map_res() function. So,
+multiple regions are matters in this case.
+
+If you are OK, I would like to make a patch v2 on your advice. I also
+would like to ask you about the other patch I sent to you,
+https://lkml.org/lkml/2019/8/26/163 . Would you give me some advice
+about them?
+
+Seunghun
