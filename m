@@ -2,113 +2,117 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF8EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA592C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7840F2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:38:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=animalcreek.com header.i=@animalcreek.com header.b="VHLgrUBZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p5/dni8K"
+	by mail.kernel.org (Postfix) with ESMTP id B58EC2184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:39:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbfH0Pib (ORCPT
+        id S1729131AbfH0Pjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:38:31 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:37063 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726190AbfH0Pib (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:38:31 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id BA06436D8;
-        Tue, 27 Aug 2019 11:38:29 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 27 Aug 2019 11:38:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=animalcreek.com;
-         h=date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=mesmtp; bh=gHaKtllJNGmTopA+xkS0vfLF
-        y3HD/TMPeBCAy1enc6Y=; b=VHLgrUBZADvRutTeTEkzbBUTw/QF8BF61HYNYnoW
-        dRbFwJS9q3ZltD5Im5mzHewi630Peelwyp8e/iqrWbfP7/LheygLPaz2uEOCN/HC
-        gsJkrtYnTsNkWduNLQsZq9r+wW2JfKefe6l7pntevVpAjFWakKyiCY7hn8GnUPrB
-        1qE=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=gHaKtl
-        lJNGmTopA+xkS0vfLFy3HD/TMPeBCAy1enc6Y=; b=p5/dni8K8u25RiXSt8QIvy
-        i+eSqD6/Azc54kgcJgI63Qu0UWA25x03f13ZT/7R3LmIJ1IxgfQolF3wPjbBciST
-        A4XSOJTD38XGz61pMUb4uIoVQoNp96/hSfaKbOIKg5gq5G1LIwCyjAaUQY+Zoram
-        U/q1dJ/rKRGrNXodopnIZeWE03iMMYpxe/rfUS7Fv5ViTtZDxVwUajNTxlsUSi+D
-        VHFgSuM2blxYAzs9LyT/3StKiffd0P73C9eSGmlsL9CkoKEce61QFoDQ7iU8Hvxr
-        UpXeAOMdblmbxdn/vcGUyfRq8H3dBKr5xBAdqHNMNGDaPhtn3rUutyWY3h1MoMVg
-        ==
-X-ME-Sender: <xms:dE5lXfh57OFmcA4zx2vnYh_HkDFbKhGEEthCk3OLmPtpSUpyIjezZw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehkedggedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjohgfsehttdertddtredvnecuhfhrohhmpeforghr
-    khcuifhrvggvrhcuoehmghhrvggvrhesrghnihhmrghltghrvggvkhdrtghomheqnecukf
-    hppeeikedrvddrkedvrddujedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehmghhrvggv
-    rhesrghnihhmrghltghrvggvkhdrtghomhenucevlhhushhtvghrufhiiigvpedu
-X-ME-Proxy: <xmx:dE5lXXKvy54PRi81-ArXBqtrvBUVoKsk7aeOPqLOF6_30XnplahO6Q>
-    <xmx:dE5lXZZP5gxalHX7Af02wPR2C5yEeF07eEZgKejF4PErgPqHx4aE3Q>
-    <xmx:dE5lXY2eoXobTPyPO4KtvOl9L2IemykqDm2QCNafB9kpTYNXXJ2z7A>
-    <xmx:dU5lXW_gmmLl6kqyQ660BbIKeeITqOvJf10hJPpCGYtdMhZF9c5SSBf6Sz0>
-Received: from blue.animalcreek.com (ip68-2-82-171.ph.ph.cox.net [68.2.82.171])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 47DD980060;
-        Tue, 27 Aug 2019 11:38:28 -0400 (EDT)
-Received: by blue.animalcreek.com (Postfix, from userid 1000)
-        id B2E0CA21E58; Tue, 27 Aug 2019 08:38:27 -0700 (MST)
-Date:   Tue, 27 Aug 2019 08:38:27 -0700
-From:   Mark Greer <mgreer@animalcreek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
-        elder@kernel.org, johan@kernel.org, linux-kernel@vger.kernel.org,
-        Vaibhav Hiremath <hvaibhav.linux@gmail.com>,
-        Vaibhav Agarwal <vaibhav.sr@gmail.com>,
-        Mark Greer <mgreer@animalcreek.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        David Lin <dtwlin@gmail.com>,
-        Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Subject: Re: [PATCH 7/9] staging: greybus: move core include files to
- include/linux/greybus/
-Message-ID: <20190827153827.GB26138@animalcreek.com>
-References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
- <20190825055429.18547-8-gregkh@linuxfoundation.org>
+        Tue, 27 Aug 2019 11:39:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:19773 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbfH0Pjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 11:39:43 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0EB2418C890F;
+        Tue, 27 Aug 2019 15:39:43 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 947C95D6B0;
+        Tue, 27 Aug 2019 15:39:39 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 17:39:37 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Parav Pandit <parav@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
+Message-ID: <20190827173937.3e39f578.cohuck@redhat.com>
+In-Reply-To: <20190827092855.29702347@x1.home>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <20190826204119.54386-3-parav@mellanox.com>
+        <20190827122928.752e763b.cohuck@redhat.com>
+        <AM0PR05MB486621458EC71973378CD5A0D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190827132946.0b92d259.cohuck@redhat.com>
+        <20190827092855.29702347@x1.home>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190825055429.18547-8-gregkh@linuxfoundation.org>
-Organization: Animal Creek Technologies, Inc.
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Tue, 27 Aug 2019 15:39:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 07:54:27AM +0200, Greg Kroah-Hartman wrote:
-> With the goal of moving the core of the greybus code out of staging, the
-> include files need to be moved to include/linux/greybus.h and
-> include/linux/greybus/
-> 
-> Cc: Vaibhav Hiremath <hvaibhav.linux@gmail.com>
-> Cc: Johan Hovold <johan@kernel.org>
-> Cc: Alex Elder <elder@kernel.org>
-> Cc: Vaibhav Agarwal <vaibhav.sr@gmail.com>
-> Cc: Mark Greer <mgreer@animalcreek.com>
-> Cc: Viresh Kumar <vireshk@kernel.org>
-> Cc: Rui Miguel Silva <rmfrfs@gmail.com>
-> Cc: David Lin <dtwlin@gmail.com>
-> Cc: "Bryan O'Donoghue" <pure.logic@nexus-software.ie>
-> Cc: greybus-dev@lists.linaro.org
-> Cc: devel@driverdev.osuosl.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
+On Tue, 27 Aug 2019 09:28:55 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-Acked-by: Mark Greer <mgreer@animalcreek.com>
+> On Tue, 27 Aug 2019 13:29:46 +0200
+> Cornelia Huck <cohuck@redhat.com> wrote:
+> 
+> > On Tue, 27 Aug 2019 11:08:59 +0000
+> > Parav Pandit <parav@mellanox.com> wrote:
+> >   
+> > > > -----Original Message-----
+> > > > From: Cornelia Huck <cohuck@redhat.com>
+> > > > Sent: Tuesday, August 27, 2019 3:59 PM
+> > > > To: Parav Pandit <parav@mellanox.com>
+> > > > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
+> > > > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
+> > > > kernel@vger.kernel.org; netdev@vger.kernel.org
+> > > > Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
+> > > > 
+> > > > On Mon, 26 Aug 2019 15:41:17 -0500
+> > > > Parav Pandit <parav@mellanox.com> wrote:
+> > > >       
+> > > > > Mdev alias should be unique among all the mdevs, so that when such
+> > > > > alias is used by the mdev users to derive other objects, there is no
+> > > > > collision in a given system.
+> > > > >
+> > > > > Signed-off-by: Parav Pandit <parav@mellanox.com>
+> > > > > ---
+> > > > >  drivers/vfio/mdev/mdev_core.c | 5 +++++
+> > > > >  1 file changed, 5 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/vfio/mdev/mdev_core.c
+> > > > > b/drivers/vfio/mdev/mdev_core.c index e825ff38b037..6eb37f0c6369
+> > > > > 100644
+> > > > > --- a/drivers/vfio/mdev/mdev_core.c
+> > > > > +++ b/drivers/vfio/mdev/mdev_core.c
+> > > > > @@ -375,6 +375,11 @@ int mdev_device_create(struct kobject *kobj, struct      
+> > > > device *dev,      
+> > > > >  			ret = -EEXIST;
+> > > > >  			goto mdev_fail;
+> > > > >  		}
+> > > > > +		if (tmp->alias && strcmp(tmp->alias, alias) == 0) {      
+> > > > 
+> > > > Any way we can relay to the caller that the uuid was fine, but that we had a
+> > > > hash collision? Duplicate uuids are much more obvious than a collision here.
+> > > >       
+> > > How do you want to relay this rare event?
+> > > Netlink interface has way to return the error message back, but sysfs is limited due to its error code based interface.    
+> > 
+> > I don't know, that's why I asked :)
+> > 
+> > The problem is that "uuid already used" and "hash collision" are
+> > indistinguishable. While "use a different uuid" will probably work in
+> > both cases, "increase alias length" might be a good alternative in some
+> > cases.
+> > 
+> > But if there is no good way to relay the problem, we can live with it.  
+> 
+> It's a rare event, maybe just dev_dbg(dev, "Hash collision creating alias \"%s\" for mdev device %pUl\n",...
+
+Sounds good to me.
