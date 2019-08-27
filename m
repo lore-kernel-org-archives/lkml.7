@@ -2,398 +2,127 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8254C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3452C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B56A20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A3DC205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbfH0LSt (ORCPT
+        id S1727464AbfH0LYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 07:18:49 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5666 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726140AbfH0LSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 07:18:49 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 76BB6CA1B4BC945E8588;
-        Tue, 27 Aug 2019 19:18:09 +0800 (CST)
-Received: from localhost (10.227.98.71) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 27 Aug 2019
- 19:18:05 +0800
-Date:   Tue, 27 Aug 2019 19:17:55 +0800
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Raphael Gault <raphael.gault@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mark.rutland@arm.com>,
-        <raph.gault+kdev@gmail.com>, <peterz@infradead.org>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <acme@kernel.org>, <mingo@redhat.com>
-Subject: Re: [PATCH v4 1/7] perf: arm64: Add test to check userspace access
- to hardware counters.
-Message-ID: <20190827191755.00007a57@huawei.com>
-In-Reply-To: <20190822144220.27860-2-raphael.gault@arm.com>
-References: <20190822144220.27860-1-raphael.gault@arm.com>
-        <20190822144220.27860-2-raphael.gault@arm.com>
-Organization: Huawei R&D UK Ltd.
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 27 Aug 2019 07:24:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:15173 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbfH0LYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 07:24:12 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4E160C057E9F;
+        Tue, 27 Aug 2019 11:24:11 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 81BCA3CCC;
+        Tue, 27 Aug 2019 11:24:07 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 13:24:04 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
+Message-ID: <20190827132404.483a74ad.cohuck@redhat.com>
+In-Reply-To: <AM0PR05MB4866B68C9E60E42359BE1F4DD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <20190826204119.54386-2-parav@mellanox.com>
+        <20190827122428.37442fe1.cohuck@redhat.com>
+        <AM0PR05MB4866B68C9E60E42359BE1F4DD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.227.98.71]
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 27 Aug 2019 11:24:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 22 Aug 2019 15:42:14 +0100
-Raphael Gault <raphael.gault@arm.com> wrote:
+On Tue, 27 Aug 2019 11:12:23 +0000
+Parav Pandit <parav@mellanox.com> wrote:
 
-> This test relies on the fact that the PMU registers are accessible
-> from userspace. It then uses the perf_event_mmap_page to retrieve
-> the counter index and access the underlying register.
+> > -----Original Message-----
+> > From: Cornelia Huck <cohuck@redhat.com>
+> > Sent: Tuesday, August 27, 2019 3:54 PM
+> > To: Parav Pandit <parav@mellanox.com>
+> > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
+> > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; netdev@vger.kernel.org
+> > Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
+> > 
+> > On Mon, 26 Aug 2019 15:41:16 -0500
+> > Parav Pandit <parav@mellanox.com> wrote:
+> >   
+> > > Whenever a parent requests to generate mdev alias, generate a mdev
+> > > alias.
+> > > It is an optional attribute that parent can request to generate for
+> > > each of its child mdev.
+> > > mdev alias is generated using sha1 from the mdev name.  
+> > 
+> > Maybe add some motivation here as well?
+> > 
+> > "Some vendor drivers want an identifier for an mdev device that is shorter than
+> > the uuid, due to length restrictions in the consumers of that identifier.
+> > 
+> > Add a callback that allows a vendor driver to request an alias of a specified
+> > length to be generated (via sha1) for an mdev device. If generated, that alias is
+> > checked for collisions."
+> >   
+> I did described the motivation in the cover letter with example and this design discussion thread.
+
+Yes, but adding it to the patch description makes it available in the
+git history.
+
+> I will include above summary in v1.
+>  
+> > What about:
+> > 
+> > * @get_alias_length: optional callback to specify length of the alias to create
+> > *                    Returns unsigned integer: length of the alias to be created,
+> > *                                              0 to not create an alias
+> >   
+> Ack.
 > 
-> This test uses sched_setaffinity(2) in order to run on all CPU and thus
-> check the behaviour of the PMU of all cpus in a big.LITTLE environment.
+> > I also think it might be beneficial to add a device parameter here now (rather
+> > than later); that seems to be something that makes sense.
+> >   
+> Without showing the use, it shouldn't be added.
+
+It just feels like an omission: Why should the vendor driver only be
+able to return one value here, without knowing which device it is for?
+If a driver supports different devices, it may have different
+requirements for them.
+
 > 
-> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-
-Hi Raphael,
-
-I just tested this on 1620 and it works fairly nicely with one exception...
-
-The test will run and generate garbage numbers if the rest of the
-series isn't yet applied to the kernel.  Is there anything we can do
-to prevent that?
-
-It's a slightly silly complaint, but this also take a while compared to all 
-the other tests if you have lots of cores, so maybe a slightly shorter
-test?
-
-Thanks,
-
-Jonathan
-
-> ---
->  tools/perf/arch/arm64/include/arch-tests.h |   7 +
->  tools/perf/arch/arm64/tests/Build          |   1 +
->  tools/perf/arch/arm64/tests/arch-tests.c   |   4 +
->  tools/perf/arch/arm64/tests/user-events.c  | 254 +++++++++++++++++++++
->  4 files changed, 266 insertions(+)
->  create mode 100644 tools/perf/arch/arm64/tests/user-events.c
+> > >   * Parent device that support mediated device should be registered with  
+> > mdev  
+> > >   * module with mdev_parent_ops structure.
+> > >   **/
+> > > @@ -92,6 +95,7 @@ struct mdev_parent_ops {
+> > >  	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
+> > >  			 unsigned long arg);
+> > >  	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct  
+> > *vma);  
+> > > +	unsigned int (*get_alias_length)(void);
+> > >  };
+> > >
+> > >  /* interface for exporting mdev supported type attributes */  
 > 
-> diff --git a/tools/perf/arch/arm64/include/arch-tests.h b/tools/perf/arch/arm64/include/arch-tests.h
-> index 90ec4c8cb880..6a8483de1015 100644
-> --- a/tools/perf/arch/arm64/include/arch-tests.h
-> +++ b/tools/perf/arch/arm64/include/arch-tests.h
-> @@ -2,11 +2,18 @@
->  #ifndef ARCH_TESTS_H
->  #define ARCH_TESTS_H
->  
-> +#include <linux/compiler.h>
-> +
->  #ifdef HAVE_DWARF_UNWIND_SUPPORT
->  struct thread;
->  struct perf_sample;
-> +int test__arch_unwind_sample(struct perf_sample *sample,
-> +			     struct thread *thread);
->  #endif
->  
->  extern struct test arch_tests[];
-> +int test__rd_pmevcntr(struct test *test __maybe_unused,
-> +		      int subtest __maybe_unused);
-> +
->  
->  #endif
-> diff --git a/tools/perf/arch/arm64/tests/Build b/tools/perf/arch/arm64/tests/Build
-> index a61c06bdb757..3f9a20c17fc6 100644
-> --- a/tools/perf/arch/arm64/tests/Build
-> +++ b/tools/perf/arch/arm64/tests/Build
-> @@ -1,4 +1,5 @@
->  perf-y += regs_load.o
->  perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
->  
-> +perf-y += user-events.o
->  perf-y += arch-tests.o
-> diff --git a/tools/perf/arch/arm64/tests/arch-tests.c b/tools/perf/arch/arm64/tests/arch-tests.c
-> index 5b1543c98022..57df9b89dede 100644
-> --- a/tools/perf/arch/arm64/tests/arch-tests.c
-> +++ b/tools/perf/arch/arm64/tests/arch-tests.c
-> @@ -10,6 +10,10 @@ struct test arch_tests[] = {
->  		.func = test__dwarf_unwind,
->  	},
->  #endif
-> +	{
-> +		.desc = "User counter access",
-> +		.func = test__rd_pmevcntr,
-> +	},
->  	{
->  		.func = NULL,
->  	},
-> diff --git a/tools/perf/arch/arm64/tests/user-events.c b/tools/perf/arch/arm64/tests/user-events.c
-> new file mode 100644
-> index 000000000000..b048d7e392bc
-> --- /dev/null
-> +++ b/tools/perf/arch/arm64/tests/user-events.c
-> @@ -0,0 +1,254 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <asm/bug.h>
-> +#include <errno.h>
-> +#include <unistd.h>
-> +#include <sched.h>
-> +#include <stdlib.h>
-> +#include <signal.h>
-> +#include <sys/mman.h>
-> +#include <sys/sysinfo.h>
-> +#include <sys/types.h>
-> +#include <sys/wait.h>
-> +#include <linux/types.h>
-> +#include "perf.h"
-> +#include "debug.h"
-> +#include "tests/tests.h"
-> +#include "cloexec.h"
-> +#include "util.h"
-> +#include "arch-tests.h"
-> +
-> +/*
-> + * ARMv8 ARM reserves the following encoding for system registers:
-> + * (Ref: ARMv8 ARM, Section: "System instruction class encoding overview",
-> + *  C5.2, version:ARM DDI 0487A.f)
-> + *      [20-19] : Op0
-> + *      [18-16] : Op1
-> + *      [15-12] : CRn
-> + *      [11-8]  : CRm
-> + *      [7-5]   : Op2
-> + */
-> +#define Op0_shift       19
-> +#define Op0_mask        0x3
-> +#define Op1_shift       16
-> +#define Op1_mask        0x7
-> +#define CRn_shift       12
-> +#define CRn_mask        0xf
-> +#define CRm_shift       8
-> +#define CRm_mask        0xf
-> +#define Op2_shift       5
-> +#define Op2_mask        0x7
-> +
-> +#define __stringify(x)	#x
-> +
-> +#define read_sysreg(r) ({						\
-> +	u64 __val;							\
-> +	asm volatile("mrs %0, " __stringify(r) : "=r" (__val));		\
-> +	__val;								\
-> +})
-> +
-> +#define PMEVCNTR_READ_CASE(idx)					\
-> +	case idx:						\
-> +		return read_sysreg(pmevcntr##idx##_el0)
-> +
-> +#define PMEVCNTR_CASES(readwrite)		\
-> +	PMEVCNTR_READ_CASE(0);			\
-> +	PMEVCNTR_READ_CASE(1);			\
-> +	PMEVCNTR_READ_CASE(2);			\
-> +	PMEVCNTR_READ_CASE(3);			\
-> +	PMEVCNTR_READ_CASE(4);			\
-> +	PMEVCNTR_READ_CASE(5);			\
-> +	PMEVCNTR_READ_CASE(6);			\
-> +	PMEVCNTR_READ_CASE(7);			\
-> +	PMEVCNTR_READ_CASE(8);			\
-> +	PMEVCNTR_READ_CASE(9);			\
-> +	PMEVCNTR_READ_CASE(10);			\
-> +	PMEVCNTR_READ_CASE(11);			\
-> +	PMEVCNTR_READ_CASE(12);			\
-> +	PMEVCNTR_READ_CASE(13);			\
-> +	PMEVCNTR_READ_CASE(14);			\
-> +	PMEVCNTR_READ_CASE(15);			\
-> +	PMEVCNTR_READ_CASE(16);			\
-> +	PMEVCNTR_READ_CASE(17);			\
-> +	PMEVCNTR_READ_CASE(18);			\
-> +	PMEVCNTR_READ_CASE(19);			\
-> +	PMEVCNTR_READ_CASE(20);			\
-> +	PMEVCNTR_READ_CASE(21);			\
-> +	PMEVCNTR_READ_CASE(22);			\
-> +	PMEVCNTR_READ_CASE(23);			\
-> +	PMEVCNTR_READ_CASE(24);			\
-> +	PMEVCNTR_READ_CASE(25);			\
-> +	PMEVCNTR_READ_CASE(26);			\
-> +	PMEVCNTR_READ_CASE(27);			\
-> +	PMEVCNTR_READ_CASE(28);			\
-> +	PMEVCNTR_READ_CASE(29);			\
-> +	PMEVCNTR_READ_CASE(30)
-> +
-> +/*
-> + * Read a value direct from PMEVCNTR<idx>
-> + */
-> +static u64 read_evcnt_direct(int idx)
-> +{
-> +	switch (idx) {
-> +	PMEVCNTR_CASES(READ);
-> +	default:
-> +		WARN_ON(1);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static u64 mmap_read_self(void *addr)
-> +{
-> +	struct perf_event_mmap_page *pc = addr;
-> +	u32 seq, idx, time_mult = 0, time_shift = 0;
-> +	u64 count, cyc = 0, time_offset = 0, enabled, running, delta;
-> +
-> +	do {
-> +		seq = READ_ONCE(pc->lock);
-> +		barrier();
-> +
-> +		enabled = READ_ONCE(pc->time_enabled);
-> +		running = READ_ONCE(pc->time_running);
-> +
-> +		if (enabled != running) {
-> +			cyc = read_sysreg(cntvct_el0);
-> +			time_mult = READ_ONCE(pc->time_mult);
-> +			time_shift = READ_ONCE(pc->time_shift);
-> +			time_offset = READ_ONCE(pc->time_offset);
-> +		}
-> +
-> +		idx = READ_ONCE(pc->index);
-> +		count = READ_ONCE(pc->offset);
-> +		if (idx)
-> +			count += read_evcnt_direct(idx - 1);
-> +
-> +		barrier();
-> +	} while (READ_ONCE(pc->lock) != seq);
-> +
-> +	if (enabled != running) {
-> +		u64 quot, rem;
-> +
-> +		quot = (cyc >> time_shift);
-> +		rem = cyc & (((u64)1 << time_shift) - 1);
-> +		delta = time_offset + quot * time_mult +
-> +			((rem * time_mult) >> time_shift);
-> +
-> +		enabled += delta;
-> +		if (idx)
-> +			running += delta;
-> +
-> +		quot = count / running;
-> +		rem = count % running;
-> +		count = quot * enabled + (rem * enabled) / running;
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +static int __test__rd_pmevcntr(void)
-> +{
-> +	volatile int tmp = 0;
-> +	u64 i, loops = 1000;
-> +	int n;
-> +	int fd;
-> +	void *addr;
-> +	struct perf_event_attr attr = {
-> +		.type = PERF_TYPE_HARDWARE,
-> +		.config = PERF_COUNT_HW_INSTRUCTIONS,
-> +		.exclude_kernel = 1,
-> +	};
-> +	u64 delta_sum = 0;
-> +	char sbuf[STRERR_BUFSIZE];
-> +
-> +	fd = sys_perf_event_open(&attr, 0, -1, -1,
-> +				 perf_event_open_cloexec_flag());
-> +	if (fd < 0) {
-> +		pr_err("Error: sys_perf_event_open() syscall returned with %d (%s)\n", fd,
-> +		       str_error_r(errno, sbuf, sizeof(sbuf)));
-> +		return -1;
-> +	}
-> +
-> +	addr = mmap(NULL, page_size, PROT_READ, MAP_SHARED, fd, 0);
-> +	if (addr == (void *)(-1)) {
-> +		pr_err("Error: mmap() syscall returned with (%s)\n",
-> +		       str_error_r(errno, sbuf, sizeof(sbuf)));
-> +		goto out_close;
-> +	}
-> +
-> +	for (n = 0; n < 6; n++) {
-> +		u64 stamp, now, delta;
-> +
-> +		stamp = mmap_read_self(addr);
-> +
-> +		for (i = 0; i < loops; i++)
-> +			tmp++;
-> +
-> +		now = mmap_read_self(addr);
-> +		loops *= 10;
-> +
-> +		delta = now - stamp;
-> +		pr_debug("%14d: %14llu\n", n, (long long)delta);
-> +
-> +		delta_sum += delta;
-> +	}
-> +
-> +	munmap(addr, page_size);
-> +	pr_debug("   ");
-> +
-> +out_close:
-> +	close(fd);
-> +
-> +	if (!delta_sum)
-> +		return -1;
-> +
-> +	return 0;
-> +}
-> +
-> +int test__rd_pmevcntr(struct test __maybe_unused *test,
-> +		      int __maybe_unused subtest)
-> +{
-> +	int status = 0;
-> +	int wret = 0;
-> +	int ret = 0;
-> +	int pid;
-> +	int cpu;
-> +	cpu_set_t cpu_set;
-> +
-> +	pid = fork();
-> +	if (pid < 0)
-> +		return -1;
-> +
-> +	if (!pid) {
-> +		for (cpu = 0; cpu < get_nprocs(); cpu++) {
-> +			pr_info("setting affinity to cpu: %d\n", cpu);
-> +			CPU_ZERO(&cpu_set);
-> +			CPU_SET(cpu, &cpu_set);
-> +			if (sched_setaffinity(getpid(),
-> +					      sizeof(cpu_set),
-> +					      &cpu_set) == -1) {
-> +				pr_err("Error: impossible to set cpu (%d) affinity\n",
-> +				       cpu);
-> +				continue;
-> +			}
-> +			ret = __test__rd_pmevcntr();
-> +		}
-> +		exit(ret);
-> +	}
-> +
-> +	wret = waitpid(pid, &status, 0);
-> +	if (wret < 0)
-> +		return -1;
-> +
-> +	if (WIFSIGNALED(status)) {
-> +		pr_err("Error: the child process was interrupted by a signal\n");
-> +		return -1;
-> +
-> +	if (WIFEXITED(status) && WEXITSTATUS(status)) {
-> +		pr_err("Error: the child process exited with: %d\n",
-> +		       WEXITSTATUS(status));
-> +		return -1;
-> +	}
-> +
-> +	return 0;
-> +}
-
 
