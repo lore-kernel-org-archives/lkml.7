@@ -2,124 +2,111 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85747C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554D8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5841C20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:23:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566886994;
-	bh=est3wmZaSmSGcTJuKxM8cN8m1fYP8CsycRXpIl+3Uos=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YpDx/UlMIqHCzuNgzYAz/Zp1D0EJksI+kxBhm2zhhRa/dBDdoRRbobZ6dx8FkUK+4
-	 +1OTL9mKGRxHrVRu280XbOH2JjeOrf1obcROXmAz/O9QOtWM3dOa8QGuowQE6yYZfe
-	 t88i33ZzIEd9/CdMrEfVyUgI16uqhuQi5T9W1ZeY=
+	by mail.kernel.org (Postfix) with ESMTP id 2BF2120828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:23:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mEw+pjhC";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mEw+pjhC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfH0GXN (ORCPT
+        id S1727369AbfH0GXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 02:23:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfH0GXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 02:23:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 27 Aug 2019 02:23:18 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59420 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbfH0GXS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 02:23:18 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C15BD60DAB; Tue, 27 Aug 2019 06:23:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566886996;
+        bh=8JDB7XEGpzAup5vhaZHeRs9FwAfWZJ2300GU6dey8g0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mEw+pjhC20Hs5D3av8Yqr+CtjJesRRC3MOHxE1RrtsIMK4O/U3rfs5HocUZW1DS7/
+         bl8LfX07Ccwf2K+02pLwxuFJPPhvFBJxqhg9meEi9F6N1y5gkZGqOZbVjHm7MvaGQ0
+         StEQJeGOVYtvcvd4Szgy8/jAs0vIc5raF/CpH0TM=
+Received: from amasule-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AA9C2054F;
-        Tue, 27 Aug 2019 06:23:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566886992;
-        bh=est3wmZaSmSGcTJuKxM8cN8m1fYP8CsycRXpIl+3Uos=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VL2rm9MIAHpcITPpub7LChTfs4fcMod9+jzDAtp8AIJjPL8mzSyQZXEkB7m/e1O09
-         NKd2CD0Vts/kOWTvdnrU6Bi/NdeE+LrBVQixyduwhpZobuT8YYWHqCnx92n6jHN+eC
-         y4ejXRdv8Xla9uHWXghROmKxHmcYIYIybfwBMXoE=
-Date:   Tue, 27 Aug 2019 08:23:09 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     gregkh@linuxfoundation.com, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rajatxjain@gmail.com
-Subject: Re: [PATCH v2 2/2] PCI/AER: Split the AER stats into multiple sysfs
- attributes
-Message-ID: <20190827062309.GA30987@kroah.com>
-References: <20190821231513.36454-2-rajatja@google.com>
- <20190827005114.229726-1-rajatja@google.com>
- <20190827005114.229726-2-rajatja@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827005114.229726-2-rajatja@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        (Authenticated sender: amasule@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E504860CEC;
+        Tue, 27 Aug 2019 06:23:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566886996;
+        bh=8JDB7XEGpzAup5vhaZHeRs9FwAfWZJ2300GU6dey8g0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mEw+pjhC20Hs5D3av8Yqr+CtjJesRRC3MOHxE1RrtsIMK4O/U3rfs5HocUZW1DS7/
+         bl8LfX07Ccwf2K+02pLwxuFJPPhvFBJxqhg9meEi9F6N1y5gkZGqOZbVjHm7MvaGQ0
+         StEQJeGOVYtvcvd4Szgy8/jAs0vIc5raF/CpH0TM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E504860CEC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=amasule@codeaurora.org
+From:   Aniket Masule <amasule@codeaurora.org>
+To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
+Subject: [PATCH v7 0/3] media: venus: Update clock scaling
+Date:   Tue, 27 Aug 2019 11:53:03 +0530
+Message-Id: <1566886986-10329-1-git-send-email-amasule@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 05:51:14PM -0700, Rajat Jain wrote:
-> --- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> @@ -9,89 +9,72 @@ errors may be "seen" / reported by the link partner and not the
->  problematic endpoint itself (which may report all counters as 0 as it never
->  saw any problems).
->  
-> -What:		/sys/bus/pci/devices/<dev>/aer_dev_correctable
-> -Date:		July 2018
-> -KernelVersion: 4.19.0
-> +What: Following files in /sys/bus/pci/devices/<dev>/aer_stats/
-> +correctable_bit0_RxErr
-> +correctable_bit12_Timeout
-> +correctable_bit13_NonFatalErr
-> +correctable_bit14_CorrIntErr
-> +correctable_bit15_HeaderOF
-> +correctable_bit6_BadTLP
-> +correctable_bit7_BadDLLP
-> +correctable_bit8_Rollover
-> +fatal_bit0_Undefined
-> +fatal_bit12_TLP
-> +fatal_bit13_FCP
-> +fatal_bit14_CmpltTO
-> +fatal_bit15_CmpltAbrt
-> +fatal_bit16_UnxCmplt
-> +fatal_bit17_RxOF
-> +fatal_bit18_MalfTLP
-> +fatal_bit19_ECRC
-> +fatal_bit20_UnsupReq
-> +fatal_bit21_ACSViol
-> +fatal_bit22_UncorrIntErr
-> +fatal_bit23_BlockedTLP
-> +fatal_bit24_AtomicOpBlocked
-> +fatal_bit25_TLPBlockedErr
-> +fatal_bit26_PoisonTLPBlocked
-> +fatal_bit4_DLP
-> +fatal_bit5_SDES
-> +nonfatal_bit0_Undefined
-> +nonfatal_bit12_TLP
-> +nonfatal_bit13_FCP
-> +nonfatal_bit14_CmpltTO
-> +nonfatal_bit15_CmpltAbrt
-> +nonfatal_bit16_UnxCmplt
-> +nonfatal_bit17_RxOF
-> +nonfatal_bit18_MalfTLP
-> +nonfatal_bit19_ECRC
-> +nonfatal_bit20_UnsupReq
-> +nonfatal_bit21_ACSViol
-> +nonfatal_bit22_UncorrIntErr
-> +nonfatal_bit23_BlockedTLP
-> +nonfatal_bit24_AtomicOpBlocked
-> +nonfatal_bit25_TLPBlockedErr
-> +nonfatal_bit26_PoisonTLPBlocked
-> +nonfatal_bit4_DLP
-> +nonfatal_bit5_SDES
+In this patch series, clock scaling and core selection methods are
+updated. Current clock scaling is same for vpu4 and previous versions.
+Introducing load calculations using vpp cycles, which indicates the
+cycles required by video hardware to process each macroblock. Also
+adding vsp cycles, cycles require by stream processor. Clock scaling
+is now done more precisely using vpp and vsp cycles.
+Removing core selection from this series, there will be separate patch
+once issue related to power domain is fixed.
 
-All of those should be indented, right?
+This patch depends on the following patches:
+https://lore.kernel.org/patchwork/patch/1114762/ - Venus interconnect support for sdm845
+https://lore.kernel.org/patchwork/patch/1114761/ - Venus interconnect support for sdm845
 
-Same for other entries
+Changes since v6:
+ - Removed core selection.
+ - Corrected frequency calculations.
+ - Removed instance lock used while iterating over buffers.
+ 
+Changes since v5:
+ - Corrected load_per_core calculations.
 
-thanks,
+Changes since v4:
+ - Added call to load_scale_clocks from venus_helper_vb2_buf_queue.
+ - Modified check to match core_id in core_selection.
 
-greg k-h
+Changes since v3:
+ - vsp_cycles and vpp_cyles are now unsigned long.
+ - Core number counting aligned with VIDC_CORE_ID_.
+ - Aligned hardware overload handling of scale_clocks_v4 with scale_clocks.
+ - Added bitrate based clock scaling patch in this patch series.
+ - Instance state check is now moved from scale_clocks to load_scale_clocks
+
+Aniket Masule (3):
+  media: venus: Add codec data table
+  media: venus: Update clock scaling
+  media: venus: Update to bitrate based clock scaling
+
+ drivers/media/platform/qcom/venus/core.c    |  13 ++
+ drivers/media/platform/qcom/venus/core.h    |  16 +++
+ drivers/media/platform/qcom/venus/helpers.c | 188 +++++++++++++++++++++++++---
+ drivers/media/platform/qcom/venus/helpers.h |   3 +-
+ drivers/media/platform/qcom/venus/vdec.c    |   8 +-
+ drivers/media/platform/qcom/venus/venc.c    |   4 +
+ 6 files changed, 209 insertions(+), 23 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
