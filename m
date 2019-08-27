@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBC1C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6361AC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3D772173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36FA82186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893046;
-	bh=OxvKZqEgFGdajh+6mbJpbK1tjc2ZWpcKeqOITLSV9aQ=;
+	s=default; t=1566893050;
+	bh=EckM6EaT5wZqSIkZEo54Rgu+k2ypMTKdIE9vRi5T4LE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jPTEShLQb6wdvMG7NVXYRyjmbi2I4eb/psdqUmK2h0qPirVVzQVgvX0Ggeuzos9dl
-	 /s/rGaKa+5fdMqllmnBXD+8v86Gg31eNQgpKrbNGnLMEkJPn7XbmCGmMWubP4KgzvY
-	 mMj9QW+2k8zj8alb6S+9G2oUYjT4ncJC0AKNa50w=
+	b=paXuTmE8woSd/Uo4vzWs+DJ1tX25mHPBI638nKDk1hbznQXtdeFZOMN49RO42sGu7
+	 j7pfBxL57s+uZhhWiq8Q5gsleuBrQY3E7vi7pFHmCSyYvHKBERki+xonGIRcyWLl1P
+	 /kNW5J+RpiFDjuWPLmmMbd6YMPIgVeIbJmZEVbVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731965AbfH0IEF (ORCPT
+        id S1731666AbfH0IEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:04:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33228 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:04:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729684AbfH0ID7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:03:59 -0400
+        id S1730433AbfH0IEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:04:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1360B206BA;
-        Tue, 27 Aug 2019 08:03:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 277A4206BF;
+        Tue, 27 Aug 2019 08:04:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893038;
-        bh=OxvKZqEgFGdajh+6mbJpbK1tjc2ZWpcKeqOITLSV9aQ=;
+        s=default; t=1566893041;
+        bh=EckM6EaT5wZqSIkZEo54Rgu+k2ypMTKdIE9vRi5T4LE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E25S+Gmw0xNhKz7GkceQ1OHWSFFcyJr8sNbSFKAYuvi0yrTyVQx5OKsYFisoDRQZ1
-         ib821j3sH22G67LWSVigRzi4ThSM89rce7emEy1ktYrjVE+n56WxCKKpLSkHD606Ta
-         EThR5Kbe58JeTdXYGsNs2IrV5GQmIosUUwYISeUM=
+        b=Vuizu/5aQTBxt1MzQcnG4Exlo7sMKG8rQWL6CY+RRZHu4v9oK9VswIaFwYZ+vzWFx
+         fqlH6upaV0oz2JclAyb4fAxEcDI2nhPUIhr37qfgaf1fmibbSh5ADtayijFNC7jm9z
+         PhGUjdB/iCre8HQlSUfAqnsNC5A2I/8nCxrKZBJI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 062/162] isdn: hfcsusb: Fix mISDN driver crash caused by transfer buffer on the stack
-Date:   Tue, 27 Aug 2019 09:49:50 +0200
-Message-Id: <20190827072740.327172080@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 098/162] libata: add SG safety checks in SFF pio transfers
+Date:   Tue, 27 Aug 2019 09:50:26 +0200
+Message-Id: <20190827072741.639793873@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -61,83 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d8a1de3d5bb881507602bc02e004904828f88711 ]
+[ Upstream commit 752ead44491e8c91e14d7079625c5916b30921c5 ]
 
-Since linux 4.9 it is not possible to use buffers on the stack for DMA transfers.
+Abort processing of a command if we run out of mapped data in the
+SG list. This should never happen, but a previous bug caused it to
+be possible. Play it safe and attempt to abort nicely if we don't
+have more SG segments left.
 
-During usb probe the driver crashes with "transfer buffer is on stack" message.
-
-This fix k-allocates a buffer to be used on "read_reg_atomic", which is a macro
-that calls "usb_control_msg" under the hood.
-
-Kernel 4.19 backtrace:
-
-usb_hcd_submit_urb+0x3e5/0x900
-? sched_clock+0x9/0x10
-? log_store+0x203/0x270
-? get_random_u32+0x6f/0x90
-? cache_alloc_refill+0x784/0x8a0
-usb_submit_urb+0x3b4/0x550
-usb_start_wait_urb+0x4e/0xd0
-usb_control_msg+0xb8/0x120
-hfcsusb_probe+0x6bc/0xb40 [hfcsusb]
-usb_probe_interface+0xc2/0x260
-really_probe+0x176/0x280
-driver_probe_device+0x49/0x130
-__driver_attach+0xa9/0xb0
-? driver_probe_device+0x130/0x130
-bus_for_each_dev+0x5a/0x90
-driver_attach+0x14/0x20
-? driver_probe_device+0x130/0x130
-bus_add_driver+0x157/0x1e0
-driver_register+0x51/0xe0
-usb_register_driver+0x5d/0x120
-? 0xf81ed000
-hfcsusb_drv_init+0x17/0x1000 [hfcsusb]
-do_one_initcall+0x44/0x190
-? free_unref_page_commit+0x6a/0xd0
-do_init_module+0x46/0x1c0
-load_module+0x1dc1/0x2400
-sys_init_module+0xed/0x120
-do_fast_syscall_32+0x7a/0x200
-entry_SYSENTER_32+0x6b/0xbe
-
-Signed-off-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/hardware/mISDN/hfcsusb.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/ata/libata-sff.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
-index 8fb7c5dea07fc..008a74a1ed444 100644
---- a/drivers/isdn/hardware/mISDN/hfcsusb.c
-+++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
-@@ -1693,13 +1693,23 @@ hfcsusb_stop_endpoint(struct hfcsusb *hw, int channel)
- static int
- setup_hfcsusb(struct hfcsusb *hw)
- {
-+	void *dmabuf = kmalloc(sizeof(u_char), GFP_KERNEL);
- 	u_char b;
-+	int ret;
+diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
+index 10aa278821427..4f115adb4ee83 100644
+--- a/drivers/ata/libata-sff.c
++++ b/drivers/ata/libata-sff.c
+@@ -658,6 +658,10 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+ 	unsigned int offset;
+ 	unsigned char *buf;
  
- 	if (debug & DBG_HFC_CALL_TRACE)
- 		printk(KERN_DEBUG "%s: %s\n", hw->name, __func__);
++	if (!qc->cursg) {
++		qc->curbytes = qc->nbytes;
++		return;
++	}
+ 	if (qc->curbytes == qc->nbytes - qc->sect_size)
+ 		ap->hsm_task_state = HSM_ST_LAST;
  
-+	if (!dmabuf)
-+		return -ENOMEM;
-+
-+	ret = read_reg_atomic(hw, HFCUSB_CHIP_ID, dmabuf);
-+
-+	memcpy(&b, dmabuf, sizeof(u_char));
-+	kfree(dmabuf);
-+
- 	/* check the chip id */
--	if (read_reg_atomic(hw, HFCUSB_CHIP_ID, &b) != 1) {
-+	if (ret != 1) {
- 		printk(KERN_DEBUG "%s: %s: cannot read chip id\n",
- 		       hw->name, __func__);
- 		return 1;
+@@ -683,6 +687,8 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+ 
+ 	if (qc->cursg_ofs == qc->cursg->length) {
+ 		qc->cursg = sg_next(qc->cursg);
++		if (!qc->cursg)
++			ap->hsm_task_state = HSM_ST_LAST;
+ 		qc->cursg_ofs = 0;
+ 	}
+ }
 -- 
 2.20.1
 
