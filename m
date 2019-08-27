@@ -2,56 +2,51 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F53C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDFBC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAEA206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B44217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892631;
-	bh=cCFlfElHTk27Od+bknINvEpkLtX3fYgqOlg0j9v4jmM=;
+	s=default; t=1566892636;
+	bh=SQhY+TpsZ2oEYPOt8K5AAC0iYYzjOFc5UyErPw4oMUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QOZHcOXF3ZW1BW8pBjsNf156duoLXXIZDr3ZsWuvbUZdbb2kyoWVP4hbnaBdyQvW8
-	 e+/or4qMLUysI0tEtpGYWvClB3VOWq64X2F4vZ9GpLGDxDpfLHcE4ydwkvwnZTbxlT
-	 23lSonHB3/41DnuzO8PY8HIdOeZJor3VrKXrGLIo=
+	b=L4iu2g2q7b+Wa12Sy2zp4+WzVV64/R2dq6hw0tX4NLI2EqNspp+LaSWlVanwNxkcS
+	 9C5R7PO/0xCS/isEJ7BCkNsEyR+14Fvin9Dn7FJ3ccD1BowXDnaFAS//AScYEqEsnJ
+	 6+GVVUJpnh9Tqnu6wjDp0CS6fCqjb0tHzWyctAHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730758AbfH0H5K (ORCPT
+        id S1730772AbfH0H5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:57:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49252 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:57:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730745AbfH0H5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:57:05 -0400
+        id S1730759AbfH0H5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:57:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E17F4206BA;
-        Tue, 27 Aug 2019 07:57:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9161E206BA;
+        Tue, 27 Aug 2019 07:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892624;
-        bh=cCFlfElHTk27Od+bknINvEpkLtX3fYgqOlg0j9v4jmM=;
+        s=default; t=1566892630;
+        bh=SQhY+TpsZ2oEYPOt8K5AAC0iYYzjOFc5UyErPw4oMUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aAiZcen9sXqNHSD0wro81Cd8l0wIDaKWWP9110h4xfkeA8za1Jw4/qlcwGR1kGmxW
-         HCvHalKq9uwZARx9SAwxhdwha+tTh52+jbQpPcO6w7AWIxNpaOYrnO5OnBHvIDrnag
-         wXhKELCG57SH/JgLin1Drf3+E71gj4RCoN2IToJI=
+        b=RAvXCMqEbPzvJJaI9aBaqDZ67XGMajslTqa6a3sobk+iMSognSpGbkbYDnerdFuCf
+         n/FCwUmZso1yiZVkhVlDxJL1aNgD+AsPwLbRb+eaSLd1KNBADWsXgw0zHlhYZDpUx5
+         7Ow10a6SVzHyt1Hyttv5VOK37mYaj/tGeuuqYNvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jarod Wilson <jarod@redhat.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Thomas Falcon <tlfalcon@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 07/98] bonding: Force slave speed check after link state recovery for 802.3ad
-Date:   Tue, 27 Aug 2019 09:49:46 +0200
-Message-Id: <20190827072718.560389472@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.19 60/98] HID: wacom: Correct distance scale for 2nd-gen Intuos devices
+Date:   Tue, 27 Aug 2019 09:50:39 +0200
+Message-Id: <20190827072721.460166857@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -64,72 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 12185dfe44360f814ac4ead9d22ad2af7511b2e9 ]
+From: Jason Gerecke <jason.gerecke@wacom.com>
 
-The following scenario was encountered during testing of logical
-partition mobility on pseries partitions with bonded ibmvnic
-adapters in LACP mode.
+commit b72fb1dcd2ea9d29417711cb302cef3006fa8d5a upstream.
 
-1. Driver receives a signal that the device has been
-   swapped, and it needs to reset to initialize the new
-   device.
+Distance values reported by 2nd-gen Intuos tablets are on an inverted
+scale (0 == far, 63 == near). We need to change them over to a normal
+scale before reporting to userspace or else userspace drivers and
+applications can get confused.
 
-2. Driver reports loss of carrier and begins initialization.
+Ref: https://github.com/linuxwacom/input-wacom/issues/98
+Fixes: eda01dab53 ("HID: wacom: Add four new Intuos devices")
+Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+Cc: <stable@vger.kernel.org> # v4.4+
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-3. Bonding driver receives NETDEV_CHANGE notifier and checks
-   the slave's current speed and duplex settings. Because these
-   are unknown at the time, the bond sets its link state to
-   BOND_LINK_FAIL and handles the speed update, clearing
-   AD_PORT_LACP_ENABLE.
-
-4. Driver finishes recovery and reports that the carrier is on.
-
-5. Bond receives a new notification and checks the speed again.
-   The speeds are valid but miimon has not altered the link
-   state yet.  AD_PORT_LACP_ENABLE remains off.
-
-Because the slave's link state is still BOND_LINK_FAIL,
-no further port checks are made when it recovers. Though
-the slave devices are operational and have valid speed
-and duplex settings, the bond will not send LACPDU's. The
-simplest fix I can see is to force another speed check
-in bond_miimon_commit. This way the bond will update
-AD_PORT_LACP_ENABLE if needed when transitioning from
-BOND_LINK_FAIL to BOND_LINK_UP.
-
-CC: Jarod Wilson <jarod@redhat.com>
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/hid/wacom_wac.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 8f14f85b8e95e..0d2392c4b625a 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2190,6 +2190,15 @@ static void bond_miimon_commit(struct bonding *bond)
- 	bond_for_each_slave(bond, slave, iter) {
- 		switch (slave->new_link) {
- 		case BOND_LINK_NOCHANGE:
-+			/* For 802.3ad mode, check current slave speed and
-+			 * duplex again in case its port was disabled after
-+			 * invalid speed/duplex reporting but recovered before
-+			 * link monitoring could make a decision on the actual
-+			 * link status
-+			 */
-+			if (BOND_MODE(bond) == BOND_MODE_8023AD &&
-+			    slave->link == BOND_LINK_UP)
-+				bond_3ad_adapter_speed_duplex_changed(slave);
- 			continue;
- 
- 		case BOND_LINK_UP:
--- 
-2.20.1
-
+--- a/drivers/hid/wacom_wac.c
++++ b/drivers/hid/wacom_wac.c
+@@ -848,6 +848,8 @@ static int wacom_intuos_general(struct w
+ 		y >>= 1;
+ 		distance >>= 1;
+ 	}
++	if (features->type == INTUOSHT2)
++		distance = features->distance_max - distance;
+ 	input_report_abs(input, ABS_X, x);
+ 	input_report_abs(input, ABS_Y, y);
+ 	input_report_abs(input, ABS_DISTANCE, distance);
 
 
