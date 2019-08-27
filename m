@@ -2,85 +2,94 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26177C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82054C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E295520856
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:10:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Sku2ku6u"
+	by mail.kernel.org (Postfix) with ESMTP id 5792620856
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:10:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfH0XKG (ORCPT
+        id S1726413AbfH0XKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 19:10:06 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:35938 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726030AbfH0XKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 19:10:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=YR2u+b2LhnAELUHnWiGJHlda9p+tN1nN+D0ZxNNeSFg=; b=Sku2ku6uvXejga+FlHP4Ua6LSc
-        X5gdiJkvBtcjGDgiSAcFfFC0Gbfgpy2k8EzblZKgGxL8FcEFxg9V1mAM4TJ6NfaYydV092VkNonx6
-        QL+Qp1QqgIh6aHRSB84A6Av0KoemlAKI1fb9TLcITbhvHy96AZpWYjewXq5XDTa0BUmY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i2kbA-0007AK-8H; Wed, 28 Aug 2019 01:10:00 +0200
-Date:   Wed, 28 Aug 2019 01:10:00 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     David Miller <davem@davemloft.net>
-Cc:     marco.hartmann@nxp.com, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        christian.herber@nxp.com
-Subject: Re: [PATCH v2 net] Add genphy_c45_config_aneg() function to phy-c45.c
-Message-ID: <20190827231000.GA26248@lunn.ch>
-References: <1566385208-23523-1-git-send-email-marco.hartmann@nxp.com>
- <20190827.150103.723109968950216148.davem@davemloft.net>
+        Tue, 27 Aug 2019 19:10:30 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45346 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfH0XK3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 19:10:29 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i2kav-0005Z5-8r; Wed, 28 Aug 2019 01:09:45 +0200
+Date:   Wed, 28 Aug 2019 01:09:44 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ming Lei <ming.lei@redhat.com>
+cc:     linux-kernel@vger.kernel.org, Long Li <longli@microsoft.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        John Garry <john.garry@huawei.com>,
+        Hannes Reinecke <hare@suse.com>,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
+In-Reply-To: <20190827225827.GA5263@ming.t460p>
+Message-ID: <alpine.DEB.2.21.1908280104330.1939@nanos.tec.linutronix.de>
+References: <20190827085344.30799-1-ming.lei@redhat.com> <20190827085344.30799-2-ming.lei@redhat.com> <alpine.DEB.2.21.1908271633450.1939@nanos.tec.linutronix.de> <20190827225827.GA5263@ming.t460p>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827.150103.723109968950216148.davem@davemloft.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 03:01:03PM -0700, David Miller wrote:
-> From: Marco Hartmann <marco.hartmann@nxp.com>
-> Date: Wed, 21 Aug 2019 11:00:46 +0000
+On Wed, 28 Aug 2019, Ming Lei wrote:
+> On Tue, Aug 27, 2019 at 04:42:02PM +0200, Thomas Gleixner wrote:
+> > On Tue, 27 Aug 2019, Ming Lei wrote:
+> > > +
+> > > +	int cpu = raw_smp_processor_id();
+> > > +	struct irq_interval *inter = per_cpu_ptr(&avg_irq_interval, cpu);
+> > > +	u64 delta = sched_clock_cpu(cpu) - inter->last_irq_end;
+> > 
+> > Why are you doing that raw_smp_processor_id() dance? The call site has
+> > interrupts and preemption disabled.
 > 
-> > Commit 34786005eca3 ("net: phy: prevent PHYs w/o Clause 22 regs from calling
-> > genphy_config_aneg") introduced a check that aborts phy_config_aneg()
-> > if the phy is a C45 phy.
-> > This causes phy_state_machine() to call phy_error() so that the phy
-> > ends up in PHY_HALTED state.
-> > 
-> > Instead of returning -EOPNOTSUPP, call genphy_c45_config_aneg()
-> > (analogous to the C22 case) so that the state machine can run
-> > correctly.
-> > 
-> > genphy_c45_config_aneg() closely resembles mv3310_config_aneg()
-> > in drivers/net/phy/marvell10g.c, excluding vendor specific
-> > configurations for 1000BaseT.
-> > 
-> > Fixes: 22b56e827093 ("net: phy: replace genphy_10g_driver with genphy_c45_driver")
-> > 
-> > Signed-off-by: Marco Hartmann <marco.hartmann@nxp.com>
+> OK, will change to __smp_processor_id().
+
+You do not need smp_processor_id() as all.
+
+> > Also how is that supposed to work when sched_clock is jiffies based?
 > 
-> Andrew, gentle ping to respond to Heiner who said:
+> Good catch, looks ktime_get_ns() is needed.
 
-It at least makes it consistent with phy_restart_aneg() and
-phy_aneg_done().
+And what is ktime_get_ns() returning when the only available clocksource is
+jiffies?
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> > 
+> > > +	inter->avg = (inter->avg * IRQ_INTERVAL_EWMA_PREV_FACTOR +
+> > > +		delta * IRQ_INTERVAL_EWMA_CURR_FACTOR) /
+> > > +		IRQ_INTERVAL_EWMA_WEIGHT;
+> > 
+> > We definitely are not going to have a 64bit multiplication and division on
+> > every interrupt. Asided of that this breaks 32bit builds all over the place.
+> 
+> I will convert the above into add/subtract/shift only.
 
-    Andrew
+No. Talk to Daniel. There is not going to be yet another ad hoc thingy just
+to make block happy.
+
+And aside of that why does block not have a "NAPI" mode which was
+explicitely designed to avoid all that?
+
+Thanks,
+
+	tglx
