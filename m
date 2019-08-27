@@ -2,213 +2,264 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA00EC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B26BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DED120828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:46:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566909962;
-	bh=yCqgQ12kHxYxzqTgTCI4OpjJkwqamfkpWEe0FJdQj4A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=f8cvLJi2mfgaeoPq28xucp9XkN+IN2kLzVxDDYYmc3RV+WeVyjMzm7crSfyLbc9Wd
-	 50bfABb6lup7eqMKimKWisoKlP2pOmr6eqtsLXY9nrv5NleP18wsIsYGDk/LrgvsUX
-	 mJvQMcdpfiBmAkQNUH89qjCVf4ejWe4qLZA35KN0=
+	by mail.kernel.org (Postfix) with ESMTP id 233362077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbfH0MqB (ORCPT
+        id S1729865AbfH0MqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:46:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728419AbfH0MqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:46:01 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 218A920828;
-        Tue, 27 Aug 2019 12:46:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566909960;
-        bh=yCqgQ12kHxYxzqTgTCI4OpjJkwqamfkpWEe0FJdQj4A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=odpAnp17cSEWoRRgUiUcoe8nXwCgL2/FZjuJgTyUkgpQbUhEC3zuDaHYaxIAqNyP9
-         abWbUomdXnYqZckmdYKPDHNCKikn6IIAK1VrIowZYRZ4kD5ViGzz0e0zMtGBJ9bTfs
-         uj73hbgdmL5oOjq4okwGOnAzTD7On4nCInkYvfqo=
-Received: by mail-qt1-f169.google.com with SMTP id l9so21086881qtu.6;
-        Tue, 27 Aug 2019 05:46:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAUAHojesIRbaV3imNiLcgyP+R1tFuJysP47vecmeKZ6uZEdtuLO
-        Ao6zoaEs8j9O+i0grvuHDGk3MpEPSZOqceCR9Q==
-X-Google-Smtp-Source: APXvYqxMIwkFC6XIiMee0sCToLwzxMHt+U7wnU76fdzIZruEqzXS6CF6ER8UK2SIZrvi1WgadOF9si04HG6inRzCz+Y=
-X-Received: by 2002:aed:22b3:: with SMTP id p48mr20398904qtc.136.1566909959310;
- Tue, 27 Aug 2019 05:45:59 -0700 (PDT)
+        Tue, 27 Aug 2019 08:46:05 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5669 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726170AbfH0MqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 08:46:04 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 041F6D3CA078F0D5976C;
+        Tue, 27 Aug 2019 20:45:57 +0800 (CST)
+Received: from [127.0.0.1] (10.184.12.158) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 27 Aug 2019
+ 20:45:45 +0800
+Subject: Re: [PATCH v3 10/10] arm64: Retrieve stolen time as paravirtualized
+ guest
+To:     Steven Price <steven.price@arm.com>, Marc Zyngier <maz@kernel.org>,
+        "Will Deacon" <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>
+CC:     <kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        <linux-kernel@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
+References: <20190821153656.33429-1-steven.price@arm.com>
+ <20190821153656.33429-11-steven.price@arm.com>
+ <6040a45c-fc39-a33e-c6a4-7baa586c247c@huawei.com>
+ <29cd1304-6b4d-05ef-3c08-6b4ba769c8fa@arm.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <21c73195-4cf7-8e3f-f188-ba8bfcb4dd41@huawei.com>
+Date:   Tue, 27 Aug 2019 20:43:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
+ Thunderbird/64.0
 MIME-Version: 1.0
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com> <20190827085302.5197-12-jiaxun.yang@flygoat.com>
-In-Reply-To: <20190827085302.5197-12-jiaxun.yang@flygoat.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 27 Aug 2019 07:45:48 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL6htVye-LSBWw1WwRy9xH=zwuH6gurscwoCWj9Te_hAg@mail.gmail.com>
-Message-ID: <CAL_JsqL6htVye-LSBWw1WwRy9xH=zwuH6gurscwoCWj9Te_hAg@mail.gmail.com>
-Subject: Re: [PATCH 11/13] dt-bindings: mips: Add loongson cpus & boards
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.co>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <29cd1304-6b4d-05ef-3c08-6b4ba769c8fa@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 3:55 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> Prepare for later dts.
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  .../bindings/mips/loongson/cpus.yaml          | 38 +++++++++++
->  .../bindings/mips/loongson/devices.yaml       | 64 +++++++++++++++++++
->  2 files changed, 102 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/loongson/cpus.yaml
->  create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
->
-> diff --git a/Documentation/devicetree/bindings/mips/loongson/cpus.yaml b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
-> new file mode 100644
-> index 000000000000..410d896a0078
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
-> @@ -0,0 +1,38 @@
-> +# SPDX-License-Identifier: GPL-2.0
+On 2019/8/23 22:22, Steven Price wrote:
+> On 23/08/2019 12:45, Zenghui Yu wrote:
+>> Hi Steven,
+>>
+>> On 2019/8/21 23:36, Steven Price wrote:
+>>> Enable paravirtualization features when running under a hypervisor
+>>> supporting the PV_TIME_ST hypercall.
+>>>
+>>> For each (v)CPU, we ask the hypervisor for the location of a shared
+>>> page which the hypervisor will use to report stolen time to us. We set
+>>> pv_time_ops to the stolen time function which simply reads the stolen
+>>> value from the shared page for a VCPU. We guarantee single-copy
+>>> atomicity using READ_ONCE which means we can also read the stolen
+>>> time for another VCPU than the currently running one while it is
+>>> potentially being updated by the hypervisor.
+>>>
+>>> Signed-off-by: Steven Price <steven.price@arm.com>
+>>> ---
+>>>    arch/arm64/include/asm/paravirt.h |   9 +-
+>>>    arch/arm64/kernel/paravirt.c      | 148 ++++++++++++++++++++++++++++++
+>>>    arch/arm64/kernel/time.c          |   3 +
+>>>    include/linux/cpuhotplug.h        |   1 +
+>>>    4 files changed, 160 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/include/asm/paravirt.h
+>>> b/arch/arm64/include/asm/paravirt.h
+>>> index 799d9dd6f7cc..125c26c42902 100644
+>>> --- a/arch/arm64/include/asm/paravirt.h
+>>> +++ b/arch/arm64/include/asm/paravirt.h
+>>> @@ -21,6 +21,13 @@ static inline u64 paravirt_steal_clock(int cpu)
+>>>    {
+>>>        return pv_ops.time.steal_clock(cpu);
+>>>    }
+>>> -#endif
+>>> +
+>>> +int __init kvm_guest_init(void);
+>>> +
+>>> +#else
+>>> +
+>>> +#define kvm_guest_init()
+>>> +
+>>> +#endif // CONFIG_PARAVIRT
+>>>      #endif
+>>> diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
+>>> index 4cfed91fe256..ea8dbbbd3293 100644
+>>> --- a/arch/arm64/kernel/paravirt.c
+>>> +++ b/arch/arm64/kernel/paravirt.c
+>>> @@ -6,13 +6,161 @@
+>>>     * Author: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+>>>     */
+>>>    +#define pr_fmt(fmt) "kvmarm-pv: " fmt
+>>> +
+>>> +#include <linux/arm-smccc.h>
+>>> +#include <linux/cpuhotplug.h>
+>>>    #include <linux/export.h>
+>>> +#include <linux/io.h>
+>>>    #include <linux/jump_label.h>
+>>> +#include <linux/printk.h>
+>>> +#include <linux/psci.h>
+>>> +#include <linux/reboot.h>
+>>> +#include <linux/slab.h>
+>>>    #include <linux/types.h>
+>>> +
+>>>    #include <asm/paravirt.h>
+>>> +#include <asm/pvclock-abi.h>
+>>> +#include <asm/smp_plat.h>
+>>>      struct static_key paravirt_steal_enabled;
+>>>    struct static_key paravirt_steal_rq_enabled;
+>>>      struct paravirt_patch_template pv_ops;
+>>>    EXPORT_SYMBOL_GPL(pv_ops);
+>>> +
+>>> +struct kvmarm_stolen_time_region {
+>>> +    struct pvclock_vcpu_stolen_time *kaddr;
+>>> +};
+>>> +
+>>> +static DEFINE_PER_CPU(struct kvmarm_stolen_time_region,
+>>> stolen_time_region);
+>>> +
+>>> +static bool steal_acc = true;
+>>> +static int __init parse_no_stealacc(char *arg)
+>>> +{
+>>> +    steal_acc = false;
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +early_param("no-steal-acc", parse_no_stealacc);
+>>> +
+>>> +/* return stolen time in ns by asking the hypervisor */
+>>> +static u64 kvm_steal_clock(int cpu)
+>>> +{
+>>> +    struct kvmarm_stolen_time_region *reg;
+>>> +
+>>> +    reg = per_cpu_ptr(&stolen_time_region, cpu);
+>>> +    if (!reg->kaddr) {
+>>> +        pr_warn_once("stolen time enabled but not configured for cpu
+>>> %d\n",
+>>> +                 cpu);
+>>> +        return 0;
+>>> +    }
+>>> +
+>>> +    return le64_to_cpu(READ_ONCE(reg->kaddr->stolen_time));
+>>> +}
+>>> +
+>>> +static int disable_stolen_time_current_cpu(void)
+>>> +{
+>>> +    struct kvmarm_stolen_time_region *reg;
+>>> +
+>>> +    reg = this_cpu_ptr(&stolen_time_region);
+>>> +    if (!reg->kaddr)
+>>> +        return 0;
+>>> +
+>>> +    memunmap(reg->kaddr);
+>>> +    memset(reg, 0, sizeof(*reg));
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int stolen_time_dying_cpu(unsigned int cpu)
+>>> +{
+>>> +    return disable_stolen_time_current_cpu();
+>>> +}
+>>> +
+>>> +static int init_stolen_time_cpu(unsigned int cpu)
+>>> +{
+>>> +    struct kvmarm_stolen_time_region *reg;
+>>> +    struct arm_smccc_res res;
+>>> +
+>>> +    reg = this_cpu_ptr(&stolen_time_region);
+>>> +
+>>> +    arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_TIME_ST, &res);
+>>> +
+>>> +    if ((long)res.a0 < 0)
+>>> +        return -EINVAL;
+>>> +
+>>> +    reg->kaddr = memremap(res.a0,
+>>> +                  sizeof(struct pvclock_vcpu_stolen_time),
+>>> +                  MEMREMAP_WB);
+>>
+>> cpuhp callbacks can be invoked in atomic context (see:
+>>      secondary_start_kernel ->
+>>      notify_cpu_starting ->
+>>      invoke callbacks),
+>> but memremap might sleep...
+>>
+>> Try to run a DEBUG_ATOMIC_SLEEP enabled PV guest, I guess we will be
+>> greeted by the Sleep-in-Atomic-Context BUG.  We need an alternative
+>> here?
+> 
+> Actually I had run DEBUG_ATOMIC_SLEEP and not seen any issue. But I
+> think that's because of the way I've configured the region in my kvmtool
+> changes. I'm hitting the path where the memory region is in the linear
+> map of the kernel and so no actual remapping is needed and hence
+> memremap doesn't sleep (the shared structure is in a reserved region of
+> RAM).
+> 
+> But even changing the memory layout of the guest so the call goes into
+> ioremap_page_range() (which contains a might_sleep()) I'm not seeing any
+> problems.
 
-Dual license for new bindings please:
+Emm, I hit this SAC BUG when testing your V1 with the kvmtool changes
+you've provided, but forgot to report it at that time.  I go back to V1
+and get the following call trace:
 
-(GPL-2.0-only OR BSD-2-Clause)
+[    0.120113] BUG: sleeping function called from invalid context at 
+mm/slab.h:501
+[    0.120118] in_atomic(): 1, irqs_disabled(): 128, pid: 0, name: swapper/1
+[    0.120122] no locks held by swapper/1/0.
+[    0.120126] irq event stamp: 0
+[    0.120135] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+[    0.120145] hardirqs last disabled at (0): [<ffff200010113b40>] 
+copy_process+0x870/0x2878
+[    0.120152] softirqs last  enabled at (0): [<ffff200010113b40>] 
+copy_process+0x870/0x2878
+[    0.120157] softirqs last disabled at (0): [<0000000000000000>] 0x0
+[    0.120164] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.3.0-rc6+ #2
+[    0.120168] Hardware name: linux,dummy-virt (DT)
+[    0.120173] Call trace:
+[    0.120179]  dump_backtrace+0x0/0x250
+[    0.120184]  show_stack+0x24/0x30
+[    0.120192]  dump_stack+0x120/0x174
+[    0.120198]  ___might_sleep+0x1b0/0x280
+[    0.120203]  __might_sleep+0x80/0xf0
+[    0.120209]  kmem_cache_alloc_node_trace+0x30c/0x3c8
+[    0.120216]  __get_vm_area_node+0x9c/0x208
+[    0.120221]  get_vm_area_caller+0x58/0x68
+[    0.120227]  __ioremap_caller+0x78/0x120
+[    0.120233]  ioremap_cache+0xf0/0x1a8
+[    0.120240]  memremap+0x154/0x3b8
+[    0.120245]  init_stolen_time_cpu+0x94/0x150
+[    0.120251]  cpuhp_invoke_callback+0x12c/0x12f8
+[    0.120257]  notify_cpu_starting+0xa0/0xc0
+[    0.120263]  secondary_start_kernel+0x1d4/0x328
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mips/loongson/cpus.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Loongson CPUs bindings
-> +
-> +maintainers:
-> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-> +
-> +description: |+
-> +  The device tree allows to describe the layout of CPUs in a system through
-> +  the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
-> +  defining properties for every cpu.
-> +
-> +  Bindings for CPU nodes follow the Devicetree Specification, available from:
-> +
-> +  https://www.devicetree.org/specifications/
-> +
-> +properties:
-> +  reg:
-> +    maxItems: 1
-> +    description: |
-> +      Physical ID of a CPU, Can be read from CP0 EBase.CPUNum.
+But things may have changed because we're talking about V3 now...
+I will dig it a bit deeper.
 
-Is this definition specific to Loongson CPUs or all MIPS?
+> Am I missing something? I have to admit I don't entirely follow the
+> early start up - perhaps it's a simple as DEBUG_ATOMIC_SLEEP doesn't
+> work this early in boot?
 
-I would expect to see a common MIPS CPU schema with these compatibles
-listed there.
+I think it should work.
 
-> +
-> +  compatible:
-> +    enum:
-> +      - loongson,gs464
-> +      - loongson,gs464e
-> +      - loongson,gs264
-> +      - loongson,gs464v
-> +
-> +required:
-> +  - device_type
-> +  - reg
-> +  - compatible
-> +...
-> diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> new file mode 100644
-> index 000000000000..181881a9f4a9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mips/loongson/devices.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek SoC based Platforms Device Tree Bindings
 
-MediaTek SoC?
+Thanks,
+zenghui
 
-> +
-> +maintainers:
-> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-> +description: |
-> +  Devices with a Loongson CPU shall have the following properties.
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +
-> +      - description: Loongson 3A1000 + RS780E 1Way
-> +        items:
-> +          - const: loongson,ls3a1000-780e-1way
-> +
-> +      - description: Loongson 3A1000 + RS780E 2Way
-> +        items:
-> +          - const: loongson,ls3a1000-780e-2way
-> +
-> +      - description: Loongson 3A1000 + RS780E 4Way
-> +        items:
-> +          - const: loongson,ls3a1000-780e-4way
-> +
-> +      - description: Loongson 3B1000/1500 + RS780E 1Way
-> +        items:
-> +          - const: loongson,ls3b-780e-1way
-> +
-> +      - description: Loongson 3B1000/1500 + RS780E 2Way
-> +        items:
-> +          - const: loongson,ls3b-780e-2way
-> +
-> +      - description: Loongson 3A2000 + RS780E 1Way
-> +        items:
-> +          - const: loongson,ls3a2000-780e-1way
-> +
-> +      - description: Loongson 3A2000 + RS780E 2Way
-> +        items:
-> +          - const: loongson,ls3a2000-780e-2way
-> +
-> +      - description: Loongson 3A2000 + RS780E 4Way
-> +        items:
-> +          - const: loongson,ls3a2000-780e-4way
-> +
-> +      - description: Loongson 3A3000 + RS780E 1Way
-> +        items:
-> +          - const: loongson,ls3a3000-780e-1way
-> +
-> +      - description: Loongson 3A3000 + RS780E 2Way
-> +        items:
-> +          - const: loongson,ls3a3000-780e-2way
-> +
-> +      - description: Loongson 3A3000 + RS780E 4Way
-> +        items:
-> +          - const: loongson,ls3a3000-780e-4way
-> +
-> +...
-> --
-> 2.22.0
->
