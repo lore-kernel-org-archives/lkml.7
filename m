@@ -2,153 +2,213 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4BEC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F382BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B1721881
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A307321881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:16:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="qXeND3Fg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="eb9Lr5VW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbfH0QQe (ORCPT
+        id S1729996AbfH0QQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:16:34 -0400
-Received: from mail-eopbgr70070.outbound.protection.outlook.com ([40.107.7.70]:8768
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726522AbfH0QQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:16:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z+rhIAgDXNgiYKIWkcJ9McbfpVVIJz0ku8AK7H0D6+KWK52DjI5phpJ9UBWNrI1YWBIaNQIiAGu0ZdJncEb32C+SpGFFurO3ayGfxNYqQA38edh0arD/Xk5NvnsE/bTzMNJKWud7b3CjigbU0beglL5ziombQiRBg7yMbLHZleOvkNI1s37hLQeBmte1/d+1VZhsqn6yILTTJO7VubDzKRr7nDuQbUOyJIZbX3TYU4WfirnmcFObUOMZXiA7KHA2UUGSXfmiaUXCgWWpMbS2FXbnnrthEi2li87UK3DG5mA0iHfY8345r8uVBmBrTOcyyfMSnemfIddKpE+Uq7Gonw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aIJaeLXMr+YUYArp4PSY4v8NdvFu6NcbH6xow94hfCE=;
- b=Lz7wikcdpMfCMrYpKZ29dz/3d7KRKZUUAADBqbcXuqWSjXfFl9gy3qDZnZ9jQpdVjqnlw6oqB55+zbMQU8ijUXfqph97CKgIaRu5Goj9qJ4gHzOhpof+9+htYPour92/I8cWAYI7+IdEV6dHIdYaTzc5wOi0t7KABpQEMJ/ecycEcZYIJ9c/5iNoE4rnxoqI31ltKpirHF+EijRHk9mB+nBIGHciUeoe5DriPS303qC+53ELUIKEK2Co/CWwjISda+f+qBAD0Gzr6rBw4A1nfV6sZtcsuuvT/Vju23ttjptgGTGbmjldnBS3Ev8zgniW1K0E5rjrcTNxv0XbqBohzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aIJaeLXMr+YUYArp4PSY4v8NdvFu6NcbH6xow94hfCE=;
- b=qXeND3FgVyUhSKkouW/BR9Km+dQGXWt7S4femVf5+b5HA1yhqA07+Uc2K1/Hi/wXebuNqMyrhxxHknT55LmxQUXOhX+klodveVSLfIkxt1UzMaZGrWgD8EjekhcgZt741CCbnCH+mjiWrJnhyapIcQGqaL7JwkOCQaSZKBI1x3A=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB5155.eurprd05.prod.outlook.com (20.178.18.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.20; Tue, 27 Aug 2019 16:16:28 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2199.020; Tue, 27 Aug 2019
- 16:16:28 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     Mark Bloch <markb@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
-Thread-Topic: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
-Thread-Index: AQHVXE627FcLaFBgXUa8jSc95m92WKcOC/2AgABaVPCAALfnAIAADiQA
-Date:   Tue, 27 Aug 2019 16:16:27 +0000
-Message-ID: <AM0PR05MB4866148E1652A20E43260C35D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190826204119.54386-3-parav@mellanox.com>
-        <6601940a-4832-08d2-e0f6-f9ac24758cdc@mellanox.com>
-        <AM0PR05MB4866BB4736D265EF28280014D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <20190827092346.66bb73f1@x1.home>
-In-Reply-To: <20190827092346.66bb73f1@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [106.51.18.188]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cec361c7-7880-48f2-177a-08d72b09ea7b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB5155;
-x-ms-traffictypediagnostic: AM0PR05MB5155:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB5155108B6107897482D14036D1A00@AM0PR05MB5155.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(13464003)(9456002)(5660300002)(8676002)(6436002)(66946007)(66476007)(66556008)(64756008)(76116006)(6246003)(55016002)(66446008)(9686003)(53936002)(33656002)(256004)(66066001)(14444005)(186003)(2906002)(86362001)(99286004)(102836004)(486006)(11346002)(446003)(6506007)(81166006)(7696005)(52536014)(55236004)(14454004)(316002)(476003)(26005)(53546011)(54906003)(76176011)(8936002)(7736002)(74316002)(305945005)(4326008)(71200400001)(229853002)(478600001)(81156014)(71190400001)(6916009)(25786009)(3846002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5155;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ihnyds2WgWM+pQl4MLiC9Ivu5eGm/ctNU4T5/L0XlHq3Q5U6hfbzbevwEe5p+F9rntoPAWebBMMWE0s+CDDotivd3bTQHLmtvfqyMhld+fS5jVHqAm8RlSumbJPp8JOfOxT9m1ApIre7ophV/smSvqz9HRXaiLOJN6z9keGl9Ymn2EqwAn272PovWoWyx3Pl+9rHsSVs/jo6j8XZL3b2bN3MOC9/GSCkF2gv7HejI95gg7lfs04RRAltLH0DGQ/sYc89UyKO/xu65xC4gKr0kPKghKP239vqZwVdJDcL89W0SpDt+MmR37IeH+W8Yf5QOOvpNgjYq5pYgpa/Rhxgy19aVw0X7nwAJrhQKiKclKoRuwlrIpTYu4gzQC/Z9oyL8n1qwW0bTvLBvDOIOFAhCGWT+/LjITBJANHH9GmDCnU=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 27 Aug 2019 12:16:44 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43846 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729570AbfH0QQn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:16:43 -0400
+Received: by mail-ed1-f67.google.com with SMTP id h13so32041369edq.10
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 09:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=/4vkB4jsz3HMn/y1OvFa0QtMWaVVKUXYtk7xoXQcR1Q=;
+        b=eb9Lr5VWWi7xb+OTFQHRxQ6sGLIQJtep/LHzUK62vSCqq5y5DlKsE/gbuGBgVjzT/U
+         N1FTZm7i8hATAp9oRTsWbh8zPj3ZFe3QCVfH+yumMMw+fBu9uFSUFoyW0VxYaYa/g+cY
+         VXheIz2v1+pW9d7Zm5weWQvsypsXnZLd6DbhE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=/4vkB4jsz3HMn/y1OvFa0QtMWaVVKUXYtk7xoXQcR1Q=;
+        b=kUh7iJq5YfWpNPr6bwd1PjA2Cd6ZA1yVVS18SDrZXF5scjd0UVJq/kELi7eYOQn1sh
+         +Drto/ecYi0p/qRwXzn65Q3J4Hf6oOJXn08KI4sgmIGe0XVZJInBR28ZjkuOmUxDUHDg
+         KapB1PnH7+cxLVOhHyJOosrUGpx9SN4dDR/rSjFTPWHICQ4VB1d1yUBN/K4uNDqCB8AW
+         lCYE0ExWMIz/A6rvqz10nl+7d22LhZOsWbJXomi9HkJ4HOcyqgrsVfQ40Rpyux3E47fx
+         R6cLvUtS9JMFzPyffyV9O24i8SPj6pMOSXzpFKVZ3Bn3ym58MtJs4vmZtFcdBqDRby42
+         LPWQ==
+X-Gm-Message-State: APjAAAV44hkD9T2z3cXXsPY+KlbieAYbZLlHQLs5fFfX08onRDcBSGyP
+        kcjoRPam3DOPiyyMOyvjoyOahg==
+X-Google-Smtp-Source: APXvYqy35QyWP0tugDh45Pcrj95ojvkirbBJRhnC4o+YTHQ+nHmoDWdP74SYgYSAtZoBVAidYWl6YA==
+X-Received: by 2002:a17:906:b29a:: with SMTP id q26mr22076728ejz.144.1566922601045;
+        Tue, 27 Aug 2019 09:16:41 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id l26sm3559267ejg.70.2019.08.27.09.16.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 09:16:40 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 18:16:38 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
+        Juston Li <juston.li@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/26] drm/dp_mst: Move link address dumping into a
+ function
+Message-ID: <20190827161637.GB2112@phenom.ffwll.local>
+Mail-Followup-To: Lyude Paul <lyude@redhat.com>,
+        dri-devel@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+        Harry Wentland <hwentlan@amd.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org
+References: <20190718014329.8107-1-lyude@redhat.com>
+ <20190718014329.8107-2-lyude@redhat.com>
+ <20190808195318.GQ7444@phenom.ffwll.local>
+ <5d44346ecb6ab13d9f01142f33d4ff1029054067.camel@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cec361c7-7880-48f2-177a-08d72b09ea7b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 16:16:28.1172
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ek6AoGw7IcFdrbE1hEe63VxWEaXgEalvSi+UrB7qmy8emXGBNXOgkwMcvoKRzTQE3dNQyBeM6M57PycvxZZmcA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5155
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5d44346ecb6ab13d9f01142f33d4ff1029054067.camel@redhat.com>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWxleCBXaWxsaWFtc29u
-IDxhbGV4LndpbGxpYW1zb25AcmVkaGF0LmNvbT4NCj4gU2VudDogVHVlc2RheSwgQXVndXN0IDI3
-LCAyMDE5IDg6NTQgUE0NCj4gVG86IFBhcmF2IFBhbmRpdCA8cGFyYXZAbWVsbGFub3guY29tPg0K
-PiBDYzogTWFyayBCbG9jaCA8bWFya2JAbWVsbGFub3guY29tPjsgSmlyaSBQaXJrbyA8amlyaUBt
-ZWxsYW5veC5jb20+Ow0KPiBrd2Fua2hlZGVAbnZpZGlhLmNvbTsgY29odWNrQHJlZGhhdC5jb207
-IGRhdmVtQGRhdmVtbG9mdC5uZXQ7DQo+IGt2bUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6
-IFtQQVRDSCAyLzRdIG1kZXY6IE1ha2UgbWRldiBhbGlhcyB1bmlxdWUgYW1vbmcgYWxsIG1kZXZz
-DQo+IA0KPiBPbiBUdWUsIDI3IEF1ZyAyMDE5IDA0OjI4OjM3ICswMDAwDQo+IFBhcmF2IFBhbmRp
-dCA8cGFyYXZAbWVsbGFub3guY29tPiB3cm90ZToNCj4gDQo+ID4gSGkgTWFyaywNCj4gPg0KPiA+
-ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IE1hcmsgQmxvY2ggPG1h
-cmtiQG1lbGxhbm94LmNvbT4NCj4gPiA+IFNlbnQ6IFR1ZXNkYXksIEF1Z3VzdCAyNywgMjAxOSA0
-OjMyIEFNDQo+ID4gPiBUbzogUGFyYXYgUGFuZGl0IDxwYXJhdkBtZWxsYW5veC5jb20+OyBhbGV4
-LndpbGxpYW1zb25AcmVkaGF0LmNvbTsNCj4gPiA+IEppcmkgUGlya28gPGppcmlAbWVsbGFub3gu
-Y29tPjsga3dhbmtoZWRlQG52aWRpYS5jb207DQo+ID4gPiBjb2h1Y2tAcmVkaGF0LmNvbTsgZGF2
-ZW1AZGF2ZW1sb2Z0Lm5ldA0KPiA+ID4gQ2M6IGt2bUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiBuZXRkZXZAdmdlci5rZXJuZWwub3JnDQo+ID4g
-PiBTdWJqZWN0OiBSZTogW1BBVENIIDIvNF0gbWRldjogTWFrZSBtZGV2IGFsaWFzIHVuaXF1ZSBh
-bW9uZyBhbGwNCj4gPiA+IG1kZXZzDQo+ID4gPg0KPiA+ID4NCj4gPiA+DQo+ID4gPiBPbiA4LzI2
-LzE5IDE6NDEgUE0sIFBhcmF2IFBhbmRpdCB3cm90ZToNCj4gPiA+ID4gTWRldiBhbGlhcyBzaG91
-bGQgYmUgdW5pcXVlIGFtb25nIGFsbCB0aGUgbWRldnMsIHNvIHRoYXQgd2hlbiBzdWNoDQo+ID4g
-PiA+IGFsaWFzIGlzIHVzZWQgYnkgdGhlIG1kZXYgdXNlcnMgdG8gZGVyaXZlIG90aGVyIG9iamVj
-dHMsIHRoZXJlIGlzDQo+ID4gPiA+IG5vIGNvbGxpc2lvbiBpbiBhIGdpdmVuIHN5c3RlbS4NCj4g
-PiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogUGFyYXYgUGFuZGl0IDxwYXJhdkBtZWxsYW5v
-eC5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAgZHJpdmVycy92ZmlvL21kZXYvbWRldl9jb3Jl
-LmMgfCA1ICsrKysrDQo+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspDQo+
-ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZmaW8vbWRldi9tZGV2X2NvcmUu
-Yw0KPiA+ID4gPiBiL2RyaXZlcnMvdmZpby9tZGV2L21kZXZfY29yZS5jIGluZGV4IGU4MjVmZjM4
-YjAzNy4uNmViMzdmMGM2MzY5DQo+ID4gPiA+IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJz
-L3ZmaW8vbWRldi9tZGV2X2NvcmUuYw0KPiA+ID4gPiArKysgYi9kcml2ZXJzL3ZmaW8vbWRldi9t
-ZGV2X2NvcmUuYw0KPiA+ID4gPiBAQCAtMzc1LDYgKzM3NSwxMSBAQCBpbnQgbWRldl9kZXZpY2Vf
-Y3JlYXRlKHN0cnVjdCBrb2JqZWN0ICprb2JqLA0KPiA+ID4gc3RydWN0IGRldmljZSAqZGV2LA0K
-PiA+ID4gPiAgCQkJcmV0ID0gLUVFWElTVDsNCj4gPiA+ID4gIAkJCWdvdG8gbWRldl9mYWlsOw0K
-PiA+ID4gPiAgCQl9DQo+ID4gPiA+ICsJCWlmICh0bXAtPmFsaWFzICYmIHN0cmNtcCh0bXAtPmFs
-aWFzLCBhbGlhcykgPT0gMCkgew0KPiA+ID4NCj4gPiA+IGFsaWFzIGNhbiBiZSBOVUxMIGhlcmUg
-bm8/DQo+ID4gPg0KPiA+IElmIGFsaWFzIGlzIE5VTEwsIHRtcC0+YWxpYXMgd291bGQgYWxzbyBi
-ZSBudWxsIGJlY2F1c2UgZm9yIGdpdmVuIHBhcmVudCBlaXRoZXINCj4gd2UgaGF2ZSBhbGlhcyBv
-ciB3ZSBkb27igJl0Lg0KPiA+IFNvIGl0cyBub3QgcG9zc2libGUgdG8gaGF2ZSB0bXAtPmFsaWFz
-IGFzIG51bGwgYW5kIGFsaWFzIGFzIG5vbiBudWxsLg0KPiA+IEJ1dCBpdCBtYXkgYmUgZ29vZC9k
-ZWZlbnNpdmUgdG8gYWRkIGNoZWNrIGZvciBib3RoLg0KPiANCj4gbWRldl9saXN0IGlzIGEgZ2xv
-YmFsIGxpc3Qgb2YgYWxsIG1kZXYgZGV2aWNlcywgaG93IGNhbiB3ZSBtYWtlIGFueQ0KPiBhc3N1
-bXB0aW9ucyB0aGF0IGFuIGVsZW1lbnQgaGFzIHRoZSBzYW1lIHBhcmVudD8gIFRoYW5rcywNCj4g
-DQpPaCB5ZXMsIHJpZ2h0LiBJZiB0bXAtPmFsaWFzIGlzIG5vdF9udWxsIGJ1dCBhbGlhcyBjYW4g
-YmUgTlVMTC4NCkkgd2lsbCBmaXggdGhlIGNoZWNrLg0KDQo+IEFsZXgNCj4gDQo+ID4gPiA+ICsJ
-CQltdXRleF91bmxvY2soJm1kZXZfbGlzdF9sb2NrKTsNCj4gPiA+ID4gKwkJCXJldCA9IC1FRVhJ
-U1Q7DQo+ID4gPiA+ICsJCQlnb3RvIG1kZXZfZmFpbDsNCj4gPiA+ID4gKwkJfQ0KPiA+ID4gPiAg
-CX0NCj4gPiA+ID4NCj4gPiA+ID4gIAltZGV2ID0ga3phbGxvYyhzaXplb2YoKm1kZXYpLCBHRlBf
-S0VSTkVMKTsNCj4gPiA+ID4NCj4gPiA+DQo+ID4gPiBNYXJrDQoNCg==
+On Mon, Aug 26, 2019 at 05:51:26PM -0400, Lyude Paul wrote:
+> *sigh* finally have some time to go through these reviews
+
+Hey it took me longer to start even reviewing this, and not even through
+:-( than it took you to reply here. So no worries!
+
+> jfyi: I realized after looking over this patch that it's not actually needed -
+> I had been planning on using drm_dp_dump_link_address() for other things, but
+> ended up deciding to make the final plan to use something that dumps into a
+> format that's identical to the one we're using for dumping DOWN requests. IMHO
+> though, this patch does make things look nicer so I'll probably keep it.
+> 
+> Assuming I can still count your r-b as valid with a change to the commit
+> description?
+
+Sure.
+
+Cheers, Daniel
+
+> 
+> On Thu, 2019-08-08 at 21:53 +0200, Daniel Vetter wrote:
+> > On Wed, Jul 17, 2019 at 09:42:24PM -0400, Lyude Paul wrote:
+> > > Since we're about to be calling this from multiple places. Also it makes
+> > > things easier to read!
+> > > 
+> > > Cc: Juston Li <juston.li@intel.com>
+> > > Cc: Imre Deak <imre.deak@intel.com>
+> > > Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> > > Cc: Harry Wentland <hwentlan@amd.com>
+> > > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > 
+> > Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > 
+> > > ---
+> > >  drivers/gpu/drm/drm_dp_mst_topology.c | 35 ++++++++++++++++++---------
+> > >  1 file changed, 23 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > index 0984b9a34d55..998081b9b205 100644
+> > > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > @@ -2013,6 +2013,28 @@ static void drm_dp_queue_down_tx(struct
+> > > drm_dp_mst_topology_mgr *mgr,
+> > >  	mutex_unlock(&mgr->qlock);
+> > >  }
+> > >  
+> > > +static void
+> > > +drm_dp_dump_link_address(struct drm_dp_link_address_ack_reply *reply)
+> > > +{
+> > > +	struct drm_dp_link_addr_reply_port *port_reply;
+> > > +	int i;
+> > > +
+> > > +	for (i = 0; i < reply->nports; i++) {
+> > > +		port_reply = &reply->ports[i];
+> > > +		DRM_DEBUG_KMS("port %d: input %d, pdt: %d, pn: %d, dpcd_rev:
+> > > %02x, mcs: %d, ddps: %d, ldps %d, sdp %d/%d\n",
+> > > +			      i,
+> > > +			      port_reply->input_port,
+> > > +			      port_reply->peer_device_type,
+> > > +			      port_reply->port_number,
+> > > +			      port_reply->dpcd_revision,
+> > > +			      port_reply->mcs,
+> > > +			      port_reply->ddps,
+> > > +			      port_reply->legacy_device_plug_status,
+> > > +			      port_reply->num_sdp_streams,
+> > > +			      port_reply->num_sdp_stream_sinks);
+> > > +	}
+> > > +}
+> > > +
+> > >  static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
+> > >  				     struct drm_dp_mst_branch *mstb)
+> > >  {
+> > > @@ -2038,18 +2060,7 @@ static void drm_dp_send_link_address(struct
+> > > drm_dp_mst_topology_mgr *mgr,
+> > >  			DRM_DEBUG_KMS("link address nak received\n");
+> > >  		} else {
+> > >  			DRM_DEBUG_KMS("link address reply: %d\n", txmsg-
+> > > >reply.u.link_addr.nports);
+> > > -			for (i = 0; i < txmsg->reply.u.link_addr.nports; i++)
+> > > {
+> > > -				DRM_DEBUG_KMS("port %d: input %d, pdt: %d, pn:
+> > > %d, dpcd_rev: %02x, mcs: %d, ddps: %d, ldps %d, sdp %d/%d\n", i,
+> > > -				       txmsg-
+> > > >reply.u.link_addr.ports[i].input_port,
+> > > -				       txmsg-
+> > > >reply.u.link_addr.ports[i].peer_device_type,
+> > > -				       txmsg-
+> > > >reply.u.link_addr.ports[i].port_number,
+> > > -				       txmsg-
+> > > >reply.u.link_addr.ports[i].dpcd_revision,
+> > > -				       txmsg->reply.u.link_addr.ports[i].mcs,
+> > > -				       txmsg->reply.u.link_addr.ports[i].ddps,
+> > > -				       txmsg-
+> > > >reply.u.link_addr.ports[i].legacy_device_plug_status,
+> > > -				       txmsg-
+> > > >reply.u.link_addr.ports[i].num_sdp_streams,
+> > > -				       txmsg-
+> > > >reply.u.link_addr.ports[i].num_sdp_stream_sinks);
+> > > -			}
+> > > +			drm_dp_dump_link_address(&txmsg->reply.u.link_addr);
+> > >  
+> > >  			drm_dp_check_mstb_guid(mstb, txmsg-
+> > > >reply.u.link_addr.guid);
+> > >  
+> > > -- 
+> > > 2.21.0
+> > > 
+> -- 
+> Cheers,
+> 	Lyude Paul
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
