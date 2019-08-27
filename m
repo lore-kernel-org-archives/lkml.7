@@ -2,134 +2,396 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D400C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CC7C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD1B02189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:37:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oebhzohk"
+	by mail.kernel.org (Postfix) with ESMTP id 0446F21883
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:37:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566920255;
+	bh=EVLmA6X4q3kOLjr2Olj2VbvDBZBfODkjU6EBVbbEqIY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=osk0BeA9p7lKkuUBQvnozL7KEGP9zXatLkOLe1kna50kOJ4WbQZ7vIdctpTM/pyAu
+	 hoGv21QUYEeAKnPLudEgFHIbx8GNM899f3rgB/YoT3bUQJhF5zzqAsIazm6xCSecvm
+	 GA0EGk/E0g+MrXEpb1t/j7QS5V1BJyGc4MVdx7fA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbfH0Pha (ORCPT
+        id S1729935AbfH0Phe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 27 Aug 2019 11:37:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbfH0Pha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 27 Aug 2019 11:37:30 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40033 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728506AbfH0Ph3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:37:29 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so12900700pgj.7;
-        Tue, 27 Aug 2019 08:37:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OGMX6emQR1IxpVlLVh2L9MxkhIrpMKYtuCVjN/it++Y=;
-        b=oebhzohkNVT/w7W7XTgl7/oHL17GkyFgd1KngfBfOtFeWISVFzwlw4FJ1/ilEVb1rJ
-         Vhupo0cLfir4CslrdMPm20LPcVWZOfVlPKnHqTvjUCZYds5FZICwG8mHxoX9m/b0JQUk
-         RZS7mwP93F9aV3dbAYLA+DgQlKyzs3kf4xgyeg//nWAvL/0onj4AIlq+rLMvr+UB0muD
-         vXB4teK+UIqDZsK6RTf0TtMTei8YiTX5pUrNrli/kJxFIfi0MGyavmz+rwFWm4eARzBG
-         DiQcGUUg7JCDtynbvr6XoPlYOj7db5FlRbN5xdju6VENJohNMmJNmUljX7EGm5GUqaaB
-         LvJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OGMX6emQR1IxpVlLVh2L9MxkhIrpMKYtuCVjN/it++Y=;
-        b=IXOjTRc7e81xAbQxCX1qnmz5NZ7rIHLBDKaygKn3Lwj1+124CuemTzdCSAn1gN1ce1
-         iEl6DUDGLJz5mXq241+3KeY4O9axbacoD6hzFuNyxSNL54u8QfAEnxSMsoiBANbR+gwo
-         V0bPKcSWhCtqj5KWhlIaS6s73qs14gDLgq7/cIMc7t/ZdTbg4DuKM2ujNvMnVuH6gf2u
-         K+pRDL6CkVNKNFyRQgBnduSIXeSwlOoQid0FYrGIh0CdJtLB7iNqWtZ181VQimcdCJ4o
-         xDbOdLoCINdiHRunofyx9LoS3sKhXyijnMyxRD895I++NRR4xVdKV2CzPd9qIzpWHEZC
-         vnQg==
-X-Gm-Message-State: APjAAAWQkSVG41MgWQQHDOcHOb/ag7R7XAoWJrLUuXAPYfgg6QB5RQso
-        uoMmOOYlg66UB4I45Niuht0=
-X-Google-Smtp-Source: APXvYqycqUVsu1TtUS45hUIDY1J/diKpn9XcXnmUwZ9v2pFDeU5TxAt/H+OC3jfol/Ak4mHAeMmvQQ==
-X-Received: by 2002:a17:90a:e38e:: with SMTP id b14mr13232435pjz.125.1566920248773;
-        Tue, 27 Aug 2019 08:37:28 -0700 (PDT)
-Received: from [10.230.28.130] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id e3sm2720186pjr.9.2019.08.27.08.37.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 08:37:27 -0700 (PDT)
-Subject: Re: [PATCH v1 net-next] net: phy: mdio_bus: make mdiobus_scan also
- cover PHY that only talks C45
-To:     "Voon, Weifeng" <weifeng.voon@intel.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>
-References: <1566870769-9967-1-git-send-email-weifeng.voon@intel.com>
- <e9ece5ad-a669-6d6b-d050-c633cad15476@gmail.com>
- <20190826185418.GG2168@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC814758ED8@PGSMSX103.gar.corp.intel.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <e7548bb7-a431-748b-36a9-be2eb4c3b400@gmail.com>
-Date:   Tue, 27 Aug 2019 08:37:26 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Received: from linux-8ccs.fritz.box (unknown [92.117.134.103])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04C4C20828;
+        Tue, 27 Aug 2019 15:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566920248;
+        bh=EVLmA6X4q3kOLjr2Olj2VbvDBZBfODkjU6EBVbbEqIY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ffw9NlrvdkKNxlnJcMdUOeNFtEAX8rVktWxtJ1w/nI69cL1ujixJHyZGlNU8Kwtsk
+         dMTGNRAK07vybtYjIA6VoDyyfMpgBgZKCaSP8q2GY43c5YixEH9Fq5i7C315W8rlLK
+         Jp60s9VfT2H9aX6E+cqI+zfjukN8pavP4+5/OhBk=
+Date:   Tue, 27 Aug 2019 17:37:18 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        arnd@arndb.de, geert@linux-m68k.org, gregkh@linuxfoundation.org,
+        hpa@zytor.com, joel@joelfernandes.org,
+        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
+        maco@android.com, maco@google.com, michal.lkml@markovi.net,
+        mingo@redhat.com, oneukum@suse.com, pombredanne@nexb.com,
+        sam@ravnborg.org, sspatil@google.com, stern@rowland.harvard.edu,
+        tglx@linutronix.de, usb-storage@lists.one-eyed-alien.net,
+        x86@kernel.org, yamada.masahiro@socionext.com,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH v3 03/11] module: add support for symbol namespaces.
+Message-ID: <20190827153717.GA20822@linux-8ccs.fritz.box>
+References: <20190813121733.52480-1-maennich@google.com>
+ <20190821114955.12788-1-maennich@google.com>
+ <20190821114955.12788-4-maennich@google.com>
 MIME-Version: 1.0
-In-Reply-To: <D6759987A7968C4889FDA6FA91D5CBC814758ED8@PGSMSX103.gar.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190821114955.12788-4-maennich@google.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
++++ Matthias Maennich [21/08/19 12:49 +0100]:
+>The EXPORT_SYMBOL_NS() and EXPORT_SYMBOL_NS_GPL() macros can be used to
+>export a symbol to a specific namespace.  There are no _GPL_FUTURE and
+>_UNUSED variants because these are currently unused, and I'm not sure
+>they are necessary.
+>
+>I didn't add EXPORT_SYMBOL_NS() for ASM exports; this patch sets the
+>namespace of ASM exports to NULL by default. In case of relative
+>references, it will be relocatable to NULL. If there's a need, this
+>should be pretty easy to add.
+>
+>A module that wants to use a symbol exported to a namespace must add a
+>MODULE_IMPORT_NS() statement to their module code; otherwise, modpost
+>will complain when building the module, and the kernel module loader
+>will emit an error and fail when loading the module.
+>
+>MODULE_IMPORT_NS() adds a modinfo tag 'import_ns' to the module. That
+>tag can be observed by the modinfo command, modpost and kernel/module.c
+>at the time of loading the module.
+>
+>The ELF symbols are renamed to include the namespace with an asm label;
+>for example, symbol 'usb_stor_suspend' in namespace USB_STORAGE becomes
+>'usb_stor_suspend.USB_STORAGE'.  This allows modpost to do namespace
+>checking, without having to go through all the effort of parsing ELF and
+>relocation records just to get to the struct kernel_symbols.
+>
+>On x86_64 I saw no difference in binary size (compression), but at
+>runtime this will require a word of memory per export to hold the
+>namespace. An alternative could be to store namespaced symbols in their
+>own section and use a separate 'struct namespaced_kernel_symbol' for
+>that section, at the cost of making the module loader more complex.
+>
+>Co-developed-by: Martijn Coenen <maco@android.com>
+>Signed-off-by: Martijn Coenen <maco@android.com>
+>Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>Signed-off-by: Matthias Maennich <maennich@google.com>
+>---
+> include/asm-generic/export.h |  6 +--
+> include/linux/export.h       | 85 ++++++++++++++++++++++++++++++------
+> include/linux/module.h       |  2 +
+> kernel/module.c              | 43 ++++++++++++++++++
+> 4 files changed, 120 insertions(+), 16 deletions(-)
+>
+>diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
+>index 63f54907317b..e2b5d0f569d3 100644
+>--- a/include/asm-generic/export.h
+>+++ b/include/asm-generic/export.h
+>@@ -17,11 +17,11 @@
+>
+> .macro __put, val, name
+> #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+>-	.long	\val - ., \name - .
+>+	.long	\val - ., \name - ., 0 - .
+> #elif defined(CONFIG_64BIT)
+>-	.quad	\val, \name
+>+	.quad	\val, \name, 0
+> #else
+>-	.long	\val, \name
+>+	.long	\val, \name, 0
+> #endif
+> .endm
+>
+>diff --git a/include/linux/export.h b/include/linux/export.h
+>index 28a4d2150689..8e12e05444d1 100644
+>--- a/include/linux/export.h
+>+++ b/include/linux/export.h
+>@@ -20,6 +20,8 @@ extern struct module __this_module;
+>
+> #ifdef CONFIG_MODULES
+>
+>+#define NS_SEPARATOR "."
+>+
+> #if defined(__KERNEL__) && !defined(__GENKSYMS__)
+> #ifdef CONFIG_MODVERSIONS
+> /* Mark the CRC weak since genksyms apparently decides not to
+>@@ -49,6 +51,16 @@ extern struct module __this_module;
+>  * absolute relocations that require runtime processing on relocatable
+>  * kernels.
+>  */
+>+#define __KSYMTAB_ENTRY_NS(sym, sec, ns)				\
+>+	__ADDRESSABLE(sym)						\
+>+	asm("	.section \"___ksymtab" sec "+" #sym "\", \"a\"	\n"	\
+>+	    "	.balign	4					\n"	\
+>+	    "__ksymtab_" #sym NS_SEPARATOR #ns ":		\n"	\
+>+	    "	.long	" #sym "- .				\n"	\
+>+	    "	.long	__kstrtab_" #sym "- .			\n"	\
+>+	    "	.long	__kstrtab_ns_" #sym "- .		\n"	\
+>+	    "	.previous					\n")
+>+
+> #define __KSYMTAB_ENTRY(sym, sec)					\
+> 	__ADDRESSABLE(sym)						\
+> 	asm("	.section \"___ksymtab" sec "+" #sym "\", \"a\"	\n"	\
+>@@ -56,32 +68,53 @@ extern struct module __this_module;
+> 	    "__ksymtab_" #sym ":				\n"	\
+> 	    "	.long	" #sym "- .				\n"	\
+> 	    "	.long	__kstrtab_" #sym "- .			\n"	\
+>+	    "	.long	0 - .					\n"	\
+> 	    "	.previous					\n")
+>
+> struct kernel_symbol {
+> 	int value_offset;
+> 	int name_offset;
+>+	int namespace_offset;
+> };
+> #else
+>+#define __KSYMTAB_ENTRY_NS(sym, sec, ns)				\
+>+	static const struct kernel_symbol __ksymtab_##sym##__##ns	\
+>+	asm("__ksymtab_" #sym NS_SEPARATOR #ns)				\
+>+	__attribute__((section("___ksymtab" sec "+" #sym), used))	\
+>+	__aligned(sizeof(void *))					\
+>+	= { (unsigned long)&sym, __kstrtab_##sym, __kstrtab_ns_##sym}
 
+Style nit: missing space after __kstrtab_ns_##sym.
 
-On 8/27/2019 8:23 AM, Voon, Weifeng wrote:
->>>> Make mdiobus_scan() to try harder to look for any PHY that only
->> talks C45.
->>> If you are not using Device Tree or ACPI, and you are letting the MDIO
->>> bus be scanned, it sounds like there should be a way for you to
->>> provide a hint as to which addresses should be scanned (that's
->>> mii_bus::phy_mask) and possibly enhance that with a mask of possible
->>> C45 devices?
->>
->> Yes, i don't like this unconditional c45 scanning. A lot of MDIO bus
->> drivers don't look for the MII_ADDR_C45. They are going to do a C22
->> transfer, and maybe not mask out the MII_ADDR_C45 from reg, causing an
->> invalid register write. Bad things can then happen.
->>
->> With DT and ACPI, we have an explicit indication that C45 should be used,
->> so we know on this platform C45 is safe to use. We need something
->> similar when not using DT or ACPI.
->>
->> 	  Andrew
-> 
-> Florian and Andrew,
-> The mdio c22 is using the start-of-frame ST=01 while mdio c45 is using ST=00
-> as identifier. So mdio c22 device will not response to mdio c45 protocol.
-> As in IEEE 802.1ae-2002 Annex 45A.3 mention that:
-> " Even though the Clause 45 MDIO frames using the ST=00 frame code
-> will also be driven on to the Clause 22 MII Management interface,
-> the Clause 22 PHYs will ignore the frames. "
-> 
-> Hence, I am not seeing any concern that the c45 scanning will mess up with 
-> c22 devices.
+>+
+> #define __KSYMTAB_ENTRY(sym, sec)					\
+> 	static const struct kernel_symbol __ksymtab_##sym		\
+>+	asm("__ksymtab_" #sym)						\
+> 	__attribute__((section("___ksymtab" sec "+" #sym), used))	\
+> 	__aligned(sizeof(void *))					\
+>-	= { (unsigned long)&sym, __kstrtab_##sym }
+>+	= { (unsigned long)&sym, __kstrtab_##sym, NULL }
+>
+> struct kernel_symbol {
+> 	unsigned long value;
+> 	const char *name;
+>+	const char *namespace;
+> };
+> #endif
+>
+>-/* For every exported symbol, place a struct in the __ksymtab section */
+>-#define ___EXPORT_SYMBOL(sym, sec)					\
+>+#define ___export_symbol_common(sym, sec)				\
+> 	extern typeof(sym) sym;						\
+> 	__CRC_SYMBOL(sym, sec)						\
+> 	static const char __kstrtab_##sym[]				\
+> 	__attribute__((section("__ksymtab_strings"), used, aligned(1)))	\
+>-	= #sym;								\
+>+	= #sym								\
 
-It is not so much the messing up that concerns me other than the
-increased scan time. Assuming you are making this change to support your
-stmmac PCI patch series with SGMII/RGMII, etc. cannot you introduce a
-bitmask of C45 PHY addresses that should be scanned and the logic could
-look like (pseudo code):
+Any particular reason for this change? Not that it's important, just
+noticing the inconsistent inclusion of the semicolon in some of the
+macros (e.g. __CRC_SYMBOL includes it but __export_symbol_common doesn't).
 
-- for each bit clear in mii_bus::phy_mask, scan it as C22
-- for each bit clear in mii_bus::phy_c45_mask, scan it as C45
+>+
+>+/* For every exported symbol, place a struct in the __ksymtab section */
+>+#define ___EXPORT_SYMBOL_NS(sym, sec, ns)				\
+>+	___export_symbol_common(sym, sec);			\
+>+	static const char __kstrtab_ns_##sym[]				\
+>+	__attribute__((section("__ksymtab_strings"), used, aligned(1)))	\
+>+	= #ns;								\
+>+	__KSYMTAB_ENTRY_NS(sym, sec, ns)
+>+
+>+#define ___EXPORT_SYMBOL(sym, sec)					\
+>+	___export_symbol_common(sym, sec);				\
+> 	__KSYMTAB_ENTRY(sym, sec)
+>
+> #if defined(__DISABLE_EXPORTS)
+>@@ -91,6 +124,7 @@ struct kernel_symbol {
+>  * be reused in other execution contexts such as the UEFI stub or the
+>  * decompressor.
+>  */
+>+#define __EXPORT_SYMBOL_NS(sym, sec, ns)
+> #define __EXPORT_SYMBOL(sym, sec)
+>
+> #elif defined(CONFIG_TRIM_UNUSED_KSYMS)
+>@@ -117,18 +151,26 @@ struct kernel_symbol {
+> #define __cond_export_sym_1(sym, sec) ___EXPORT_SYMBOL(sym, sec)
+> #define __cond_export_sym_0(sym, sec) /* nothing */
+>
+>+#define __EXPORT_SYMBOL_NS(sym, sec, ns)				\
+>+	__ksym_marker(sym);						\
+>+	__cond_export_ns_sym(sym, sec, ns, __is_defined(__KSYM_##sym))
+>+#define __cond_export_ns_sym(sym, sec, ns, conf)			\
+>+	___cond_export_ns_sym(sym, sec, ns, conf)
+>+#define ___cond_export_ns_sym(sym, sec, ns, enabled)			\
+>+	__cond_export_ns_sym_##enabled(sym, sec, ns)
+>+#define __cond_export_ns_sym_1(sym, sec, ns) ___EXPORT_SYMBOL_NS(sym, sec, ns)
+>+#define __cond_export_ns_sym_0(sym, sec, ns) /* nothing */
+>+
+> #else
+>+#define __EXPORT_SYMBOL_NS ___EXPORT_SYMBOL_NS
+> #define __EXPORT_SYMBOL ___EXPORT_SYMBOL
+> #endif
+>
+>-#define EXPORT_SYMBOL(sym)					\
+>-	__EXPORT_SYMBOL(sym, "")
+>-
+>-#define EXPORT_SYMBOL_GPL(sym)					\
+>-	__EXPORT_SYMBOL(sym, "_gpl")
+>-
+>-#define EXPORT_SYMBOL_GPL_FUTURE(sym)				\
+>-	__EXPORT_SYMBOL(sym, "_gpl_future")
+>+#define EXPORT_SYMBOL(sym) __EXPORT_SYMBOL(sym, "")
+>+#define EXPORT_SYMBOL_GPL(sym) __EXPORT_SYMBOL(sym, "_gpl")
+>+#define EXPORT_SYMBOL_GPL_FUTURE(sym) __EXPORT_SYMBOL(sym, "_gpl_future")
+>+#define EXPORT_SYMBOL_NS(sym, ns) __EXPORT_SYMBOL_NS(sym, "", ns)
+>+#define EXPORT_SYMBOL_NS_GPL(sym, ns) __EXPORT_SYMBOL_NS(sym, "_gpl", ns)
+>
+> #ifdef CONFIG_UNUSED_SYMBOLS
+> #define EXPORT_UNUSED_SYMBOL(sym) __EXPORT_SYMBOL(sym, "_unused")
+>@@ -138,11 +180,28 @@ struct kernel_symbol {
+> #define EXPORT_UNUSED_SYMBOL_GPL(sym)
+> #endif
+>
+>-#endif	/* __GENKSYMS__ */
+>+#endif	/* __KERNEL__ && !__GENKSYMS__ */
+>+
+>+#if defined(__GENKSYMS__)
+>+/*
+>+ * When we're running genksyms, ignore the namespace and make the _NS
+>+ * variants look like the normal ones. There are two reasons for this:
+>+ * 1) In the normal definition of EXPORT_SYMBOL_NS, the 'ns' macro
+>+ *    argument is itself not expanded because it's always tokenized or
+>+ *    concatenated; but when running genksyms, a blank definition of the
+>+ *    macro does allow the argument to be expanded; if a namespace
+>+ *    happens to collide with a #define, this can cause issues.
+>+ * 2) There's no need to modify genksyms to deal with the _NS variants
+>+ */
+>+#define EXPORT_SYMBOL_NS(sym, ns) EXPORT_SYMBOL(sym)
+>+#define EXPORT_SYMBOL_NS_GPL(sym, ns) EXPORT_SYMBOL_GPL(sym)
+>+#endif
+>
+> #else /* !CONFIG_MODULES... */
+>
+> #define EXPORT_SYMBOL(sym)
+>+#define EXPORT_SYMBOL_NS(sym, ns)
+>+#define EXPORT_SYMBOL_NS_GPL(sym, ns)
+> #define EXPORT_SYMBOL_GPL(sym)
+> #define EXPORT_SYMBOL_GPL_FUTURE(sym)
+> #define EXPORT_UNUSED_SYMBOL(sym)
+>diff --git a/include/linux/module.h b/include/linux/module.h
+>index 1455812dd325..b3611e749f72 100644
+>--- a/include/linux/module.h
+>+++ b/include/linux/module.h
+>@@ -280,6 +280,8 @@ struct notifier_block;
+>
+> #ifdef CONFIG_MODULES
+>
+>+#define MODULE_IMPORT_NS(ns) MODULE_INFO(import_ns, #ns)
+>+
+> extern int modules_disabled; /* for sysctl */
+> /* Get/put a kernel symbol (calls must be symmetric) */
+> void *__symbol_get(const char *symbol);
+>diff --git a/kernel/module.c b/kernel/module.c
+>index a23067907169..57e8253f2251 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -544,6 +544,15 @@ static const char *kernel_symbol_name(const struct kernel_symbol *sym)
+> #endif
+> }
+>
+>+static const char *kernel_symbol_namespace(const struct kernel_symbol *sym)
+>+{
+>+#ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+>+	return offset_to_ptr(&sym->namespace_offset);
+>+#else
+>+	return sym->namespace;
+>+#endif
+>+}
+>+
+> static int cmp_name(const void *va, const void *vb)
+> {
+> 	const char *a;
+>@@ -1379,6 +1388,34 @@ static inline int same_magic(const char *amagic, const char *bmagic,
+> }
+> #endif /* CONFIG_MODVERSIONS */
+>
+>+static char *get_modinfo(const struct load_info *info, const char *tag);
+>+static char *get_next_modinfo(const struct load_info *info, const char *tag,
+>+			      char *prev);
+>+
+>+static int verify_namespace_is_imported(const struct load_info *info,
+>+					const struct kernel_symbol *sym,
+>+					struct module *mod)
+>+{
+>+	const char *namespace;
+>+	char *imported_namespace;
+>+
+>+	namespace = kernel_symbol_namespace(sym);
+>+	if (namespace) {
+>+		imported_namespace = get_modinfo(info, "import_ns");
+>+		while (imported_namespace) {
+>+			if (strcmp(namespace, imported_namespace) == 0)
+>+				return 0;
+>+			imported_namespace = get_next_modinfo(
+>+				info, "import_ns", imported_namespace);
+>+		}
+>+		pr_err("%s: module uses symbol (%s) from namespace %s, but does not import it.\n",
+>+		       mod->name, kernel_symbol_name(sym), namespace);
+>+		return -EINVAL;
+>+	}
+>+	return 0;
+>+}
+>+
+>+
+> /* Resolve a symbol for this module.  I.e. if we find one, record usage. */
+> static const struct kernel_symbol *resolve_symbol(struct module *mod,
+> 						  const struct load_info *info,
+>@@ -1413,6 +1450,12 @@ static const struct kernel_symbol *resolve_symbol(struct module *mod,
+> 		goto getname;
+> 	}
+>
+>+	err = verify_namespace_is_imported(info, sym, mod);
+>+	if (err) {
+>+		sym = ERR_PTR(err);
+>+		goto getname;
+>+	}
 
-or something along those lines?
---
-Florian
+I think we should verify the namespace before taking a reference to
+the owner module (just swap the verify_namespace_is_imported() and
+ref_module() calls here).
+
+Other than that, this patch looks good. Thanks!
+
+>+
+> getname:
+> 	/* We must make copy under the lock if we failed to get ref. */
+> 	strncpy(ownername, module_name(owner), MODULE_NAME_LEN);
+>-- 
+>2.23.0.rc1.153.gdeed80330f-goog
+>
