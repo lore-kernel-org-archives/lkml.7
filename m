@@ -2,141 +2,127 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6018C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77049C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBD921883
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BDC9217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566886571;
-	bh=PBGCEYNVYpSqqCNk4I928eIwUCd5nQRLfNUEsAgDX9E=;
+	s=default; t=1566886692;
+	bh=P+7c+SOkIcjtW+gFnv22eSWwVM7bOePpYYZ/INu5lX0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zoCTkFOcIJd0a1jbKajgMK9FRmFLiH68Pxuwx2Vrg03F94hVWphSmOCypQADyk5VL
-	 k08iweh+caVhM27iUjir0VzHz5R0faR/bxD5VnFn9J7B9VcP0F3HpkOnjYprZIG+Ot
-	 zBziq9ROzkl5DXOPECYYOGmJWUEKmQXWU48kQLGw=
+	b=w8Nqht82xevKxPIZsjUXocAT3EtJ5Z2lnVwkhonrXAGWU8h4kcnfWkTyyFA536bID
+	 oUed4bv8MIYwcVIjgAX4JSeOv4bsO7CUvP2d0ZxrzcZsXEtYSeVRTGYTCCt7Nf5nna
+	 eP1YflvGdw9IO0OihzVGGZqWjYTZ2oPfXSK1OzQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbfH0GQK (ORCPT
+        id S1728402AbfH0GSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 02:16:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54126 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725825AbfH0GQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 02:16:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9400EB009;
-        Tue, 27 Aug 2019 06:16:07 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 08:16:06 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Bharath Vedartham <linux.bhar@gmail.com>
-Cc:     Khalid Aziz <khalid.aziz@oracle.com>, akpm@linux-foundation.org,
-        vbabka@suse.cz, mgorman@techsingularity.net,
-        dan.j.williams@intel.com, osalvador@suse.de,
-        richard.weiyang@gmail.com, hannes@cmpxchg.org,
-        arunks@codeaurora.org, rppt@linux.vnet.ibm.com, jgg@ziepe.ca,
-        amir73il@gmail.com, alexander.h.duyck@linux.intel.com,
-        linux-mm@kvack.org, linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/2] Add predictive memory reclamation and compaction
-Message-ID: <20190827061606.GN7538@dhcp22.suse.cz>
-References: <20190813014012.30232-1-khalid.aziz@oracle.com>
- <20190813140553.GK17933@dhcp22.suse.cz>
- <3cb0af00-f091-2f3e-d6cc-73a5171e6eda@oracle.com>
- <20190814085831.GS17933@dhcp22.suse.cz>
- <d3895804-7340-a7ae-d611-62913303e9c5@oracle.com>
- <20190815170215.GQ9477@dhcp22.suse.cz>
- <2668ad2e-ee52-8c88-22c0-1952243af5a1@oracle.com>
- <20190821140632.GI3111@dhcp22.suse.cz>
- <20190826204420.GA16800@bharath12345-Inspiron-5559>
+        Tue, 27 Aug 2019 02:18:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725825AbfH0GSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 02:18:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 704F7206BB;
+        Tue, 27 Aug 2019 06:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566886689;
+        bh=P+7c+SOkIcjtW+gFnv22eSWwVM7bOePpYYZ/INu5lX0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xc0Nj5EfIp0aLHYqY+GHhZLjgmFSXOIUEPvDDea0dSSdEz6UGYlOFRfi5Pzxjy0oH
+         h/oHfa8zw5Wi8Zb5VLLuVUTKTFYfdKuYXQ0VqRWsHN3/KqHFajwo3Gl+vlYQP6CsAn
+         Mtce2q3AJYQZArzo/28uzaNX3RN2AcvoD6zde+8M=
+Date:   Tue, 27 Aug 2019 08:18:06 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, Allison Randal <allison@lohutok.net>
+Subject: Re: [PATCH v2] powerpc: Allow flush_(inval_)dcache_range to work
+ across ranges >4GB
+Message-ID: <20190827061806.GA29034@kroah.com>
+References: <20190821001929.4253-1-alastair@au1.ibm.com>
+ <20190826165021.GB9305@kroah.com>
+ <bae6de93-f135-68c5-9118-a0732e6de301@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190826204420.GA16800@bharath12345-Inspiron-5559>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bae6de93-f135-68c5-9118-a0732e6de301@c-s.fr>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 27-08-19 02:14:20, Bharath Vedartham wrote:
-> Hi Michal,
+On Mon, Aug 26, 2019 at 10:08:26PM +0200, Christophe Leroy wrote:
 > 
-> Here are some of my thoughts,
-> On Wed, Aug 21, 2019 at 04:06:32PM +0200, Michal Hocko wrote:
-> > On Thu 15-08-19 14:51:04, Khalid Aziz wrote:
-> > > Hi Michal,
+> 
+> Le 26/08/2019 à 18:50, Greg Kroah-Hartman a écrit :
+> > On Wed, Aug 21, 2019 at 10:19:27AM +1000, Alastair D'Silva wrote:
+> > > From: Alastair D'Silva <alastair@d-silva.org>
 > > > 
-> > > The smarts for tuning these knobs can be implemented in userspace and
-> > > more knobs added to allow for what is missing today, but we get back to
-> > > the same issue as before. That does nothing to make kernel self-tuning
-> > > and adds possibly even more knobs to userspace. Something so fundamental
-> > > to kernel memory management as making free pages available when they are
-> > > needed really should be taken care of in the kernel itself. Moving it to
-> > > userspace just means the kernel is hobbled unless one installs and tunes
-> > > a userspace package correctly.
+> > > The upstream commit:
+> > > 22e9c88d486a ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
+> > > has a similar effect, but since it is a rewrite of the assembler to C, is
+> > > too invasive for stable. This patch is a minimal fix to address the issue in
+> > > assembler.
+> > > 
+> > > This patch applies cleanly to v5.2, v4.19 & v4.14.
+> > > 
+> > > When calling flush_(inval_)dcache_range with a size >4GB, we were masking
+> > > off the upper 32 bits, so we would incorrectly flush a range smaller
+> > > than intended.
+> > > 
+> > > This patch replaces the 32 bit shifts with 64 bit ones, so that
+> > > the full size is accounted for.
+> > > 
+> > > Changelog:
+> > > v2
+> > >    - Add related upstream commit
+> > > 
+> > > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > > ---
+> > >   arch/powerpc/kernel/misc_64.S | 4 ++--
+> > >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
+> > > index 1ad4089dd110..d4d096f80f4b 100644
+> > > --- a/arch/powerpc/kernel/misc_64.S
+> > > +++ b/arch/powerpc/kernel/misc_64.S
+> > > @@ -130,7 +130,7 @@ _GLOBAL_TOC(flush_dcache_range)
+> > >   	subf	r8,r6,r4		/* compute length */
+> > >   	add	r8,r8,r5		/* ensure we get enough */
+> > >   	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of dcache block size */
+> > > -	srw.	r8,r8,r9		/* compute line count */
+> > > +	srd.	r8,r8,r9		/* compute line count */
+> > >   	beqlr				/* nothing to do? */
+> > >   	mtctr	r8
+> > >   0:	dcbst	0,r6
+> > > @@ -148,7 +148,7 @@ _GLOBAL(flush_inval_dcache_range)
+> > >   	subf	r8,r6,r4		/* compute length */
+> > >   	add	r8,r8,r5		/* ensure we get enough */
+> > >   	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)/* Get log-2 of dcache block size */
+> > > -	srw.	r8,r8,r9		/* compute line count */
+> > > +	srd.	r8,r8,r9		/* compute line count */
+> > >   	beqlr				/* nothing to do? */
+> > >   	sync
+> > >   	isync
 > > 
-> > From my past experience the existing autotunig works mostly ok for a
-> > vast variety of workloads. A more clever tuning is possible and people
-> > are doing that already. Especially for cases when the machine is heavily
-> > overcommited. There are different ways to achieve that. Your new
-> > in-kernel auto tuning would have to be tested on a large variety of
-> > workloads to be proven and riskless. So I am quite skeptical to be
-> > honest.
-> Could you give some references to such works regarding tuning the kernel? 
+> > I need an ack from the powerpc maintainer(s) before I can take this.
+> 
+> I think you already got an ack (on v1). See
+> https://patchwork.ozlabs.org/patch/1147403/#2239663
 
-Talk to Facebook guys and their usage of PSI to control the memory
-distribution and OOM situations.
+How am I supposed to remember that?  :)
 
-> Essentially, Our idea here is to foresee potential memory exhaustion.
-> This foreseeing is done by observing the workload, observing the memory
-> usage of the workload. Based on this observations, we make a prediction
-> whether or not memory exhaustion could occur.
-
-I understand that and I am not disputing this can be useful. All I do
-argue here is that there is unlikely a good "crystall ball" for most/all
-workloads that would justify its inclusion into the kernel and that this
-is something better done in the userspace where you can experiment and
-tune the behavior for a particular workload of your interest.
-
-Therefore I would like to shift the discussion towards existing APIs and
-whether they are suitable for such an advance auto-tuning. I haven't
-heard any arguments about missing pieces.
-
-> If memory exhaustion
-> occurs, we reclaim some more memory. kswapd stops reclaim when
-> hwmark is reached. hwmark is usually set to a fairly low percentage of
-> total memory, in my system for zone Normal hwmark is 13% of total pages.
-> So there is scope for reclaiming more pages to make sure system does not
-> suffer from a lack of pages. 
-
-Yes and we have ways to control those watermarks that your monitoring
-tool can use to alter the reclaim behavior.
- 
-[...]
-> > Therefore I would really focus on discussing whether we have sufficient
-> > APIs to tune the kernel to do the right thing when needed. That requires
-> > to identify gaps in that area. 
-> One thing that comes to my mind is based on the issue Khalid mentioned
-> earlier on how his desktop took more than 30secs to boot up because of
-> the caches using up a lot of memory.
-> Rather than allowing any unused memory to be the page cache, would it be
-> a good idea to fix a size for the caches and elastically change the size
-> based on the workload?
-
-I do not think so. Limiting the pagecache is unlikely to help as it is
-really cheap to reclaim most of the time. In those cases when this is
-not the case (e.g. the underlying FS needs to flush and/or metadata)
-then the same would be possible in a restricted page cache situation
-and you could easily end up stalled waiting for pagecache (e.g. any
-executable/library) while there is a lot of memory.
-
-I cannot comment on the Khalid's example because there were no details
-there but I would be really surprised if the primary source of stall was
-the pagecache.
--- 
-Michal Hocko
-SUSE Labs
+greg k-h
