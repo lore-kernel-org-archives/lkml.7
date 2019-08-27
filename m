@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6776BC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D5BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D377217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC8C2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:09:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="v84wXD4z"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iNORaUj7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbfH0PI4 (ORCPT
+        id S1730301AbfH0PJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:08:56 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58774 "EHLO
+        Tue, 27 Aug 2019 11:09:03 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58784 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726054AbfH0PI4 (ORCPT
+        by vger.kernel.org with ESMTP id S1728612AbfH0PI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:08:56 -0400
+        Tue, 27 Aug 2019 11:08:57 -0400
 Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7RF27Ps026516;
-        Tue, 27 Aug 2019 17:08:29 +0200
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7RF28XA026519;
+        Tue, 27 Aug 2019 17:08:28 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : references : in-reply-to : content-type :
  content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=WCVwMfXR8g1j5Zrd8gSemrcYNLfQjqC+GHfOy9t5zVo=;
- b=v84wXD4zkDFkoWgr/paZtKm5VOcO5Nrnzm7i0EE2WfaYqJa3fi7e2mIQ4iIz+sLvtCvr
- 5/ewb5Q4At/B/iv1d+9B1wSTKn3U39s/W1ipI9+0A+tIJ/6Q+NZLvC1iDmrf5Qvi6MuO
- fgD7nXic52Sre8I0aymQ/tj8WU7dkiBBRymnEWeqThDHfCXw5rvfKTDCJykbj5pdNGyM
- NRjeE8FlDpMjzCLNMbYWjDVB0sXIlVhdr5nIMdOP1oyq7/py2u304A9hR0RibjYzeL1G
- iZZ6eMbS/XXEy/WayuibsrKp/Utelpdr+pITnYWg1YY/gFVDrzMrJrqyH35TQccFqP7C gQ== 
+ bh=XBn5EdlEuwPuny7s/ZVplkEwvVDz5QZdOFX+dgKCXXA=;
+ b=iNORaUj7p6Vrz+dT27NTys4RFbS+VfOsa9329guLiC7b/Do+brszYr2pMO4ew3YzyzNM
+ NB0Pjy6+9dBvLiwvNd+yE7efuMkFFrfe7UiYNHZ7+prV8NXDD24+bgJ5upoorAKVYi+T
+ c3P2DG8fCtnZ3rJDwIq+9B9t7srkeH93DdVhn4TZoQpeXnEtLl6nB/6F6eEMNPuwetOU
+ IFpI3OhI6uS1ozBIUwvNz3fe+qjtwQRge6Fh8bbYlBsa16M/sBr3KC6kFcA+RVBZ8Fa1
+ /bM2ZiVTFBhLv/okCWn0oJvRLk4GFWajAJFT1uMjpZdI7sKsbVj9cw42Q7mZDfhVq/wV WA== 
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2ujv4kt4as-1
+        by mx08-00178001.pphosted.com with ESMTP id 2ujv4kt4b3-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 27 Aug 2019 17:08:29 +0200
+        Tue, 27 Aug 2019 17:08:28 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id CB53B52;
-        Tue, 27 Aug 2019 15:08:20 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7AFAE2B6ABC;
-        Tue, 27 Aug 2019 17:08:20 +0200 (CEST)
-Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 27 Aug
- 2019 17:08:20 +0200
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 20FB056;
+        Tue, 27 Aug 2019 15:08:23 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D02862B76DD;
+        Tue, 27 Aug 2019 17:08:22 +0200 (CEST)
+Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 27 Aug
+ 2019 17:08:22 +0200
 Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
  SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
- 15.00.1473.003; Tue, 27 Aug 2019 17:08:19 +0200
+ 15.00.1473.003; Tue, 27 Aug 2019 17:08:21 +0200
 From:   Gerald BAEZA <gerald.baeza@st.com>
 To:     "will@kernel.org" <will@kernel.org>,
         "mark.rutland@arm.com" <mark.rutland@arm.com>,
@@ -68,11 +68,11 @@ To:     "will@kernel.org" <will@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 CC:     Gerald BAEZA <gerald.baeza@st.com>
-Subject: [PATCH v3 2/5] dt-bindings: perf: stm32: ddrperfm support
-Thread-Topic: [PATCH v3 2/5] dt-bindings: perf: stm32: ddrperfm support
-Thread-Index: AQHVXOlCMu3qbdWcXEe5CqPZR/zfNQ==
-Date:   Tue, 27 Aug 2019 15:08:19 +0000
-Message-ID: <1566918464-23927-3-git-send-email-gerald.baeza@st.com>
+Subject: [PATCH v3 5/5] ARM: dts: stm32: add ddrperfm on stm32mp157c
+Thread-Topic: [PATCH v3 5/5] ARM: dts: stm32: add ddrperfm on stm32mp157c
+Thread-Index: AQHVXOlE7eeGfv5rUUSEpFdWg8XWbA==
+Date:   Tue, 27 Aug 2019 15:08:21 +0000
+Message-ID: <1566918464-23927-6-git-send-email-gerald.baeza@st.com>
 References: <1566918464-23927-1-git-send-email-gerald.baeza@st.com>
 In-Reply-To: <1566918464-23927-1-git-send-email-gerald.baeza@st.com>
 Accept-Language: fr-FR, en-US
@@ -92,41 +92,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DDRPERFM is the DDR Performance Monitor embedded in STM32MP1 SOC.
-
-This documentation indicates how to enable stm32-ddr-pmu driver on
-DDRPERFM peripheral, via the device tree.
+The DDRPERFM is the DDR Performance Monitor embedded
+in STM32MP1 SOC.
 
 Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
 ---
- Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt | 16 ++++++++++++=
-++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/perf/stm32-ddr-pmu.tx=
-t
+ arch/arm/boot/dts/stm32mp157c.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt b/Doc=
-umentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
-new file mode 100644
-index 0000000..87ab12e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
-@@ -0,0 +1,16 @@
-+* STM32 DDR Performance Monitor (DDRPERFM)
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp=
+157c.dtsi
+index 0c4e6eb..6ea6933 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -1378,6 +1378,14 @@
+ 			};
+ 		};
+=20
++		ddrperfm: perf@5a007000 {
++			compatible =3D "st,stm32-ddr-pmu";
++			reg =3D <0x5a007000 0x400>;
++			clocks =3D <&rcc DDRPERFM>;
++			resets =3D <&rcc DDRPERFM_R>;
++			status =3D "okay";
++		};
 +
-+Required properties:
-+- compatible: must be "st,stm32-ddr-pmu".
-+- reg: physical address and length of the registers set.
-+- clocks: phandle and specifier for DDRPERFM input clock
-+- resets: phandle and specifier for DDRPERFM reset
-+
-+Example:
-+	ddrperfm: perf@5a007000 {
-+		compatible =3D "st,stm32-ddr-pmu";
-+		reg =3D <0x5a007000 0x400>;
-+		clocks =3D <&rcc DDRPERFM>;
-+		resets =3D <&rcc DDRPERFM_R>;
-+	};
-+
+ 		usart1: serial@5c000000 {
+ 			compatible =3D "st,stm32h7-uart";
+ 			reg =3D <0x5c000000 0x400>;
 --=20
 2.7.4
