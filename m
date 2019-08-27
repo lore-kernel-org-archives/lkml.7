@@ -2,143 +2,239 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED63C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2541AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853B52189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3596217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:59:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="XRSKmg+t"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="j18oVjBO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729995AbfH0M6V (ORCPT
+        id S1729648AbfH0M7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:58:21 -0400
-Received: from mail-eopbgr680127.outbound.protection.outlook.com ([40.107.68.127]:23887
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727089AbfH0M6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:58:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cdDPN8DxDSTBFwxswdaXHXltlXKeWkZg9fwaK1ac1oFLixz+K3ORWpQuiip3ApRedzvYffYeH+wON0URto++tfdmvn0d3uEn6KUW9rqMW9b4vczRQ+9vCZFd4ph1TPUSbTeknZEczXHxsoBPqTiUnmf69BebmPCbVUFZ3CSqNs/kXxS1No0G5bPdLsH6uLRcg6SS2rydMGg6gKV7n2kGVYXJgiCAxpyv8nROLc0Rxkn3upOJmSDuTOWAHt4bTXX5GeQ5dhUxB1BmXTg5YjOh5WbzeHhA8BWNsPkf+TcDlbm+kv0HzE9gr652xNp8iAJMtjCY9hJjoqx+tBUEv3uiSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P/C4PkNQedwNYM1EURSjwvdEGsXbXUrRck47AsO7/eU=;
- b=JPmrRdijjnqoNNuYbsrJKaCCqILIWNmSJfWGt1gXjJO3DxO1ZQo1xd6zagrwbvPdURCinyD7nzoFiIuc611pVfGttr7tt0CHhuP5BWwCLoQkkDEy/yviAwUoBvmHkQ1iGi3NM/jGTtB7SpMk+LtO8RKNBrwriHNoT/BHVTmPhOZnyBede0HrqyXNoy7U/suvbiiXnL8cag0FDGtMSOMlDJro1iy5DubV8wuyVTkLLjYIMIXEz8wuUBS8BqkvuXQfjgHh2FwQ0qiBPF3TTvea//36FH+rvef5H69gk1usDz+HwU43gOl/9OdE/JpJkOsdS3uvA7hZeuSfyRAdP7P/gg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P/C4PkNQedwNYM1EURSjwvdEGsXbXUrRck47AsO7/eU=;
- b=XRSKmg+toZ6E5ur/RzPEHpWpO0nwh29RixbNhx66o0g4zLcbUeItb4FbqrtKsMXMWKwdSrLVNlk81G9KG3CU6i46IKKljlrVsBiZfl2ezmknVk+MgwVNRXvXOsKSJnByDUizqjZECcs2bsxJfEXX/TBNDTypJ8G7GPJ6mO2v1mY=
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
- DM5PR13MB1578.namprd13.prod.outlook.com (10.175.110.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.14; Tue, 27 Aug 2019 12:58:16 +0000
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::5d60:e645:84a2:be75]) by DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::5d60:e645:84a2:be75%7]) with mapi id 15.20.2220.013; Tue, 27 Aug 2019
- 12:58:16 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "jstancek@redhat.com" <jstancek@redhat.com>
-CC:     "naresh.kamboju@linaro.org" <naresh.kamboju@linaro.org>,
-        "the_hoang0709@yahoo.com" <the_hoang0709@yahoo.com>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        "ltp@lists.linux.it" <ltp@lists.linux.it>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chrubis@suse.cz" <chrubis@suse.cz>,
-        "alexey.kodanev@oracle.com" <alexey.kodanev@oracle.com>
-Subject: Re: Linux-next-20190823: x86_64/i386: prot_hsymlinks.c:325: Failed to
- run cmd: useradd hsym
-Thread-Topic: Linux-next-20190823: x86_64/i386: prot_hsymlinks.c:325: Failed
- to run cmd: useradd hsym
-Thread-Index: YFeV1UC3LeIsRdovt5+kMdO7I/BycvuMo5UAj4lK/k3wd0xbAPZWZFoxiapkYwA=
-Date:   Tue, 27 Aug 2019 12:58:16 +0000
-Message-ID: <294428f05e4dba1a6b10b8744cfa5da0637f84a4.camel@hammerspace.com>
-References: <CA+G9fYtN2tjHZtjtc8isdsD5hF76teeh2-pngUp+uj3WYdj7jA@mail.gmail.com>
-         <20190826104127.GA14729@haruka>
-         <1264279239.8133737.1566817520787.JavaMail.zimbra@redhat.com>
-         <CA+G9fYsHpNKFHr=ZukVvj+uMJDyHj2Xwb9bCfzPQyYzMjZ0rCw@mail.gmail.com>
-         <203971593.8175020.1566830285708.JavaMail.zimbra@redhat.com>
-         <fcd20866bb836d45b1e384dd68080c671bcde938.camel@hammerspace.com>
-         <2039173876.8300255.1566861172742.JavaMail.zimbra@redhat.com>
-         <566e862d9bfaf88cdde6d66f0f59033fe6225a22.camel@hammerspace.com>
-         <866876796.8349197.1566901536625.JavaMail.zimbra@redhat.com>
-In-Reply-To: <866876796.8349197.1566901536625.JavaMail.zimbra@redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0cb6392f-fa45-4bd5-a064-08d72aee3a4e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1578;
-x-ms-traffictypediagnostic: DM5PR13MB1578:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DM5PR13MB15783D05D2CC0AE37C3DB1FDB8A00@DM5PR13MB1578.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(136003)(376002)(39840400004)(366004)(199004)(189003)(478600001)(71190400001)(53936002)(66066001)(6436002)(71200400001)(86362001)(1730700003)(81156014)(81166006)(8676002)(6512007)(5660300002)(5640700003)(91956017)(66946007)(6116002)(66556008)(66446008)(36756003)(118296001)(8936002)(76116006)(6486002)(6506007)(6306002)(64756008)(186003)(2501003)(2351001)(2906002)(76176011)(66476007)(486006)(6246003)(2616005)(476003)(26005)(25786009)(3846002)(966005)(102836004)(14444005)(14454004)(11346002)(4326008)(99286004)(7736002)(54906003)(305945005)(6916009)(256004)(229853002)(316002)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1578;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VZElwg4Xi9UB1zKFdCKgk56rwCJWEoK/BU+HvS9g6Mogmm0LMEtJ6YrJRjW4K/HQ6z4PxAyGlWuH81jqYvNt4+6RcQo7V1SFiWDhGtKH3dqX8f2RLzWInrF254HjkpaZ81WbXM6swl3ifBXhe3QqyENzLvxGX1l1cpHmfvuytisjA/j7A7bVz6VvBOuOIx677f/gH/z2hH9XDVHEYYICaf2HNjlcLB5gtBU8MFGNlI1Y4rDacUTGku8M7swAdahqDLzosFWEE7fQPeIefPK6RC4kUraVk4Ab5o8WHn9LUEs0VDbY83iShbgNMkDVTLGfLBlMXezy+FbVB+fBz1Wm59ZMBsfSz9xEp7DLa6PCzrGB7RpZ0ETf/s4OP7cXeFxRsnR/EDo5L/fR/jY45mNgT4mskFrRJ8hWrHAD8GuM0hw=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3BAF43BB42B35B409DA83EB004335E6B@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 27 Aug 2019 08:59:11 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45077 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfH0M7L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 08:59:11 -0400
+Received: by mail-ed1-f68.google.com with SMTP id x19so31246839eda.12
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 05:59:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HUKCbAic9eIa9RPzJgdlnYetwbCOkv22kAa+78v4bIE=;
+        b=j18oVjBOmB2cLlDjVlcGlayzpzjWBYOXfyylep3Eo92D5ly5vZ898hO0xhJU/IGmO5
+         2VkTLYgGZk7Tw84WyE2KqVZlxDHXsexj+b2rQAoPO0ReUTaC6lF3UtKLYFBb58j9Ozrt
+         Aovc7Kj+Q+HU7vSYQAynu0BcPeb9J5hk4NalLHPFLmzXKHvkXlLk204b4p0ytQ7c/3er
+         YIjVRv/9RaOSXa9WX9KuYDiZF7cULO15TVERwby+R3/Hx3u5pFl6NETjXpJu/hPs13TT
+         mF+UpBfxDxPMthw6E+aCm/fScRoK7oWdXS1BVlwVbmWZs6/Efpl/9jaO1xw0WiB7N3pR
+         ZCmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HUKCbAic9eIa9RPzJgdlnYetwbCOkv22kAa+78v4bIE=;
+        b=Pspn9HIIXgmRR/xaFasA6UokZ7yIfMHbqAbXayc1DyCUV580Xwi1xabpmNvQ3uvEaT
+         o5pKk+PkkVvnAUfnwJaR1JYJv7X/w+dmg0UHvCK87H+wIhi4gc/Y3zUctAxNBhonUQJ6
+         77Ktw/62hLden09rpOMMHUjD/etm3VbV/kBReMnzAFO62KKfaSJvi/q2+Ba/79AedkgX
+         phxEG+yNhmrHMw+cPtdSiSnfe+KUGI6Xl30Y1zUVr1MUmBIfI8jFPv25PpA46aerE73q
+         lXgOXk1SalV6YPv0LsEfNQWdric+eiHElnR7RF7Lhgyq7dMe9pIOC3094S0ycH47Z1zT
+         az/Q==
+X-Gm-Message-State: APjAAAXqtKpe1dqjNgu5/e3nJA/nDGrys+s8Gvi21gTOAVH0axIA8dt5
+        RxrWQ1En43QSsbo/mqPOuUZljA==
+X-Google-Smtp-Source: APXvYqwfRfy3g0liRtJYUoliSYnjdswC/bLO6bfrDhpU643JJBSH6druOUvzA4FLemAESdw38z6yMw==
+X-Received: by 2002:a17:906:c35a:: with SMTP id ci26mr21486446ejb.252.1566910749294;
+        Tue, 27 Aug 2019 05:59:09 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id f6sm1941983edn.63.2019.08.27.05.59.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 27 Aug 2019 05:59:08 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 1BE48100746; Tue, 27 Aug 2019 15:59:11 +0300 (+03)
+Date:   Tue, 27 Aug 2019 15:59:11 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, kirill.shutemov@linux.intel.com,
+        Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
+        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
+Message-ID: <20190827125911.boya23eowxhqmopa@box>
+References: <20190822080434.GF12785@dhcp22.suse.cz>
+ <ee048bbf-3563-d695-ea58-5f1504aee35c@suse.cz>
+ <20190822152934.w6ztolutdix6kbvc@box>
+ <20190826074035.GD7538@dhcp22.suse.cz>
+ <20190826131538.64twqx3yexmhp6nf@box>
+ <20190827060139.GM7538@dhcp22.suse.cz>
+ <20190827110210.lpe36umisqvvesoa@box>
+ <aaaf9742-56f7-44b7-c3db-ad078b7b2220@suse.cz>
+ <20190827120923.GB7538@dhcp22.suse.cz>
+ <20190827121739.bzbxjloq7bhmroeq@box>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cb6392f-fa45-4bd5-a064-08d72aee3a4e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 12:58:16.3949
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yNGIzV3qjUqBWzqLiyxFqHgbfg4Xubn971yOa0xSxiuixPBv8i3gFMQ5/IM2rJgJpci/RpUnzyyQGowR1cszow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1578
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827121739.bzbxjloq7bhmroeq@box>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA4LTI3IGF0IDA2OjI1IC0wNDAwLCBKYW4gU3RhbmNlayB3cm90ZToNCj4g
-VGhhdCB0aGVvcnkgaXMgcHJvYmFibHkgbm90IGNvcnJlY3QgZm9yIHRoaXMgY2FzZSwgc2luY2Ug
-RUlPIEkgc2VlDQo+IGFwcGVhcnMNCj4gdG8gb3JpZ2luYXRlIGZyb20gd3JpdGUgYW5kIG5mc193
-cml0ZWJhY2tfcmVzdWx0KCkuIFRoaXMgZnVuY3Rpb24NCj4gYWxzbw0KPiBwcm9kdWNlcyBtZXNz
-YWdlIHdlIHNhdyBpbiBsb2dzIGZyb20gTmFyZXNoLg0KPiANCj4gSSBjYW4ndCBmaW5kIHdoZXJl
-L2hvdyBpcyByZXNwLT5jb3VudCB1cGRhdGVkIG9uIFdSSVRFIHJlcGx5IGluDQo+IE5GU3YyLg0K
-PiBJc3N1ZSBhbHNvIGdvZXMgYXdheSB3aXRoIHBhdGNoIGJlbG93LCB0aG91Z2ggSSBjYW4ndCBz
-cGVhayBhYm91dCBpdHMNCj4gY29ycmVjdG5lc3M6DQo+IA0KPiBORlMgdmVyc2lvbiAgICAgVHlw
-ZSAgICBUZXN0ICAgIFJldHVybiBjb2RlDQo+IG5mc3ZlcnM9MiAgICAgICB0Y3AgICAgIC1iOmJh
-c2UgICAgICAgICAwDQo+IG5mc3ZlcnM9MiAgICAgICB0Y3AgICAgIC1nOmdlbmVyYWwgICAgICAw
-DQo+IG5mc3ZlcnM9MiAgICAgICB0Y3AgICAgIC1zOnNwZWNpYWwgICAgICAwDQo+IG5mc3ZlcnM9
-MiAgICAgICB0Y3AgICAgIC1sOmxvY2sgICAgICAgICAwDQo+IFRvdGFsIHRpbWU6IDE0MQ0KPiAN
-Cj4gZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnMyeGRyLmMgYi9mcy9uZnMvbmZzMnhkci5jDQo+IGlu
-ZGV4IGNiYzE3YTIwMzI0OC4uNDkxM2M2ZGEyNzBiIDEwMDY0NA0KPiAtLS0gYS9mcy9uZnMvbmZz
-Mnhkci5jDQo+ICsrKyBiL2ZzL25mcy9uZnMyeGRyLmMNCj4gQEAgLTg5Nyw2ICs4OTcsMTYgQEAg
-c3RhdGljIGludCBuZnMyX3hkcl9kZWNfd3JpdGVyZXMoc3RydWN0IHJwY19ycXN0DQo+ICpyZXEs
-IHN0cnVjdCB4ZHJfc3RyZWFtICp4ZHIsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHZvaWQgKmRhdGEpDQo+ICB7DQo+ICAgICAgICAgc3RydWN0IG5mc19wZ2lvX3JlcyAqcmVz
-dWx0ID0gZGF0YTsNCj4gKyAgICAgICBzdHJ1Y3QgcnBjX3Rhc2sgKnJxX3Rhc2sgID0gcmVxLT5y
-cV90YXNrOw0KPiArDQo+ICsgICAgICAgaWYgKHJxX3Rhc2spIHsNCj4gKyAgICAgICAgICAgICAg
-IHN0cnVjdCBuZnNfcGdpb19hcmdzICphcmdzID0gcnFfdGFzay0NCj4gPnRrX21zZy5ycGNfYXJn
-cDsNCj4gKw0KPiArICAgICAgICAgICAgICAgaWYgKGFyZ3MpIHsNCj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgcmVzdWx0LT5jb3VudCA9IGFyZ3MtPmNvdW50Ow0KPiArICAgICAgICAgICAgICAg
-fQ0KPiArICAgICAgIH0NCj4gIA0KPiAgICAgICAgIC8qIEFsbCBORlN2MiB3cml0ZXMgYXJlICJm
-aWxlIHN5bmMiIHdyaXRlcyAqLw0KPiAgICAgICAgIHJlc3VsdC0+dmVyZi0+Y29tbWl0dGVkID0g
-TkZTX0ZJTEVfU1lOQzsNCg0KVGhhbmtzISBJJ3ZlIG1vdmVkIHRoZSBhYm92ZSB0byBuZnNfd3Jp
-dGVfZG9uZSgpIHNvIHRoYXQgd2UgZG8gaXQgb25seQ0Kb24gc3VjY2VzcyAoc2VlIA0KaHR0cDov
-L2dpdC5saW51eC1uZnMub3JnLz9wPXRyb25kbXkvbGludXgtbmZzLmdpdDthPWNvbW1pdGRpZmY7
-aD0zYmE1Njg4ZGE3MDlkZDBmN2Q5MTcwMjljMjA2YmMxODQ4YTZhZTc0DQopDQotLSANClRyb25k
-IE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJv
-bmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On Tue, Aug 27, 2019 at 03:17:39PM +0300, Kirill A. Shutemov wrote:
+> On Tue, Aug 27, 2019 at 02:09:23PM +0200, Michal Hocko wrote:
+> > On Tue 27-08-19 14:01:56, Vlastimil Babka wrote:
+> > > On 8/27/19 1:02 PM, Kirill A. Shutemov wrote:
+> > > > On Tue, Aug 27, 2019 at 08:01:39AM +0200, Michal Hocko wrote:
+> > > >> On Mon 26-08-19 16:15:38, Kirill A. Shutemov wrote:
+> > > >>>
+> > > >>> Unmapped completely pages will be freed with current code. Deferred split
+> > > >>> only applies to partly mapped THPs: at least on 4k of the THP is still
+> > > >>> mapped somewhere.
+> > > >>
+> > > >> Hmm, I am probably misreading the code but at least current Linus' tree
+> > > >> reads page_remove_rmap -> [page_remove_anon_compound_rmap ->\ deferred_split_huge_page even
+> > > >> for fully mapped THP.
+> > > > 
+> > > > Well, you read correctly, but it was not intended. I screwed it up at some
+> > > > point.
+> > > > 
+> > > > See the patch below. It should make it work as intened.
+> > > > 
+> > > > It's not bug as such, but inefficientcy. We add page to the queue where
+> > > > it's not needed.
+> > > 
+> > > But that adding to queue doesn't affect whether the page will be freed
+> > > immediately if there are no more partial mappings, right? I don't see
+> > > deferred_split_huge_page() pinning the page.
+> > > So your patch wouldn't make THPs freed immediately in cases where they
+> > > haven't been freed before immediately, it just fixes a minor
+> > > inefficiency with queue manipulation?
+> > 
+> > Ohh, right. I can see that in free_transhuge_page now. So fully mapped
+> > THPs really do not matter and what I have considered an odd case is
+> > really happening more often.
+> > 
+> > That being said this will not help at all for what Yang Shi is seeing
+> > and we need a more proactive deferred splitting as I've mentioned
+> > earlier.
+> 
+> It was not intended to fix the issue. It's fix for current logic. I'm
+> playing with the work approach now.
+
+Below is what I've come up with. It appears to be functional.
+
+Any comments?
+
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index d77d717c620c..c576e9d772b7 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -758,6 +758,8 @@ typedef struct pglist_data {
+ 	spinlock_t split_queue_lock;
+ 	struct list_head split_queue;
+ 	unsigned long split_queue_len;
++	unsigned int deferred_split_calls;
++	struct work_struct deferred_split_work;
+ #endif
+ 
+ 	/* Fields commonly accessed by the page reclaim scanner */
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index de1f15969e27..12d109bbe8ac 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2820,22 +2820,6 @@ void free_transhuge_page(struct page *page)
+ 	free_compound_page(page);
+ }
+ 
+-void deferred_split_huge_page(struct page *page)
+-{
+-	struct pglist_data *pgdata = NODE_DATA(page_to_nid(page));
+-	unsigned long flags;
+-
+-	VM_BUG_ON_PAGE(!PageTransHuge(page), page);
+-
+-	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
+-	if (list_empty(page_deferred_list(page))) {
+-		count_vm_event(THP_DEFERRED_SPLIT_PAGE);
+-		list_add_tail(page_deferred_list(page), &pgdata->split_queue);
+-		pgdata->split_queue_len++;
+-	}
+-	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
+-}
+-
+ static unsigned long deferred_split_count(struct shrinker *shrink,
+ 		struct shrink_control *sc)
+ {
+@@ -2901,6 +2885,44 @@ static struct shrinker deferred_split_shrinker = {
+ 	.flags = SHRINKER_NUMA_AWARE,
+ };
+ 
++void flush_deferred_split_queue(struct work_struct *work)
++{
++	struct pglist_data *pgdata;
++	struct shrink_control sc;
++
++	pgdata = container_of(work, struct pglist_data, deferred_split_work);
++	sc.nid = pgdata->node_id;
++	sc.nr_to_scan = 0; /* Unlimited */
++
++	deferred_split_scan(NULL, &sc);
++}
++
++#define NR_CALLS_TO_SPLIT 32
++#define NR_PAGES_ON_QUEUE_TO_SPLIT 16
++
++void deferred_split_huge_page(struct page *page)
++{
++	struct pglist_data *pgdata = NODE_DATA(page_to_nid(page));
++	unsigned long flags;
++
++	VM_BUG_ON_PAGE(!PageTransHuge(page), page);
++
++	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
++	if (list_empty(page_deferred_list(page))) {
++		count_vm_event(THP_DEFERRED_SPLIT_PAGE);
++		list_add_tail(page_deferred_list(page), &pgdata->split_queue);
++		pgdata->split_queue_len++;
++		pgdata->deferred_split_calls++;
++	}
++
++	if (pgdata->deferred_split_calls > NR_CALLS_TO_SPLIT &&
++			pgdata->split_queue_len > NR_PAGES_ON_QUEUE_TO_SPLIT) {
++		pgdata->deferred_split_calls = 0;
++		schedule_work(&pgdata->deferred_split_work);
++	}
++	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
++}
++
+ #ifdef CONFIG_DEBUG_FS
+ static int split_huge_pages_set(void *data, u64 val)
+ {
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 9c9194959271..86af66d463e9 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6636,11 +6636,14 @@ static unsigned long __init calc_memmap_size(unsigned long spanned_pages,
+ }
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
++void flush_deferred_split_queue(struct work_struct *work);
+ static void pgdat_init_split_queue(struct pglist_data *pgdat)
+ {
+ 	spin_lock_init(&pgdat->split_queue_lock);
+ 	INIT_LIST_HEAD(&pgdat->split_queue);
+ 	pgdat->split_queue_len = 0;
++	pgdat->deferred_split_calls = 0;
++	INIT_WORK(&pgdat->deferred_split_work, flush_deferred_split_queue);
+ }
+ #else
+ static void pgdat_init_split_queue(struct pglist_data *pgdat) {}
+-- 
+ Kirill A. Shutemov
