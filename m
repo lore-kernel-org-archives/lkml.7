@@ -4,107 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16278C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5115CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECD1E22CBB
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B5221883
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:34:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730659AbfH0RdK (ORCPT
+        id S1730461AbfH0Re5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:33:10 -0400
-Received: from mga18.intel.com ([134.134.136.126]:62460 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730339AbfH0Rck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:32:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 10:32:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
-   d="scan'208";a="171269805"
-Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
-  by orsmga007.jf.intel.com with ESMTP; 27 Aug 2019 10:32:38 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v8 5/8] PCI/AER: Allow clearing Error Status Register in FF mode
-Date:   Tue, 27 Aug 2019 10:29:27 -0700
-Message-Id: <7d641d35fe98cd95e92c0236bd151fa779be4ab6.1566865502.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1566865502.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1566865502.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 27 Aug 2019 13:34:57 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44083 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727306AbfH0Re5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 13:34:57 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1i2fMr-0004Ed-NJ; Tue, 27 Aug 2019 17:34:54 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     stern@rowland.harvard.edu
+Cc:     gregkh@linuxfoundation.org, bauer.chen@realtek.com,
+        ricky_wu@realtek.com, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v3 1/2] USB: storage: ums-realtek: Update module parameter description for auto_delink_en
+Date:   Wed, 28 Aug 2019 01:34:49 +0800
+Message-Id: <20190827173450.13572-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+The option named "auto_delink_en" is a bit misleading, as setting it to
+false doesn't really disable auto-delink but let auto-delink be firmware
+controlled.
 
-As per PCI firmware specification r3.2 Downstream Port Containment
-Related Enhancements ECN, sec 4.5.1, table 4-6, Error Disconnect
-Recover (EDR) support allows OS to handle error recovery and
-clearing Error Registers even in FF mode. So remove FF mode checks in
-pci_cleanup_aer_uncorrect_error_status(), pci_aer_clear_fatal_status()
-and pci_cleanup_aer_error_status_regs() functions.
+Update the description to reflect the real usage of this parameter.
 
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Acked-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 ---
- drivers/pci/pcie/aer.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+v2:
+- Only update module parameter description.
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index b45bc47d04fe..e1509bb900c5 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -383,9 +383,6 @@ int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
- 	if (!pos)
- 		return -EIO;
+ drivers/usb/storage/realtek_cr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/storage/realtek_cr.c b/drivers/usb/storage/realtek_cr.c
+index cc794e25a0b6..beaffac805af 100644
+--- a/drivers/usb/storage/realtek_cr.c
++++ b/drivers/usb/storage/realtek_cr.c
+@@ -38,7 +38,7 @@ MODULE_LICENSE("GPL");
  
--	if (pcie_aer_get_firmware_first(dev))
--		return -EIO;
--
- 	/* Clear status bits for ERR_NONFATAL errors only */
- 	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
- 	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
-@@ -406,9 +403,6 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
- 	if (!pos)
- 		return;
+ static int auto_delink_en = 1;
+ module_param(auto_delink_en, int, S_IRUGO | S_IWUSR);
+-MODULE_PARM_DESC(auto_delink_en, "enable auto delink");
++MODULE_PARM_DESC(auto_delink_en, "auto delink mode (0=firmware, 1=software [default])");
  
--	if (pcie_aer_get_firmware_first(dev))
--		return;
--
- 	/* Clear status bits for ERR_FATAL errors only */
- 	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
- 	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
-@@ -430,9 +424,6 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
- 	if (!pos)
- 		return -EIO;
- 
--	if (pcie_aer_get_firmware_first(dev))
--		return -EIO;
--
- 	port_type = pci_pcie_type(dev);
- 	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
- 		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
-@@ -455,7 +446,8 @@ void pci_aer_init(struct pci_dev *dev)
- 	if (dev->aer_cap)
- 		dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
- 
--	pci_cleanup_aer_error_status_regs(dev);
-+	if (!pcie_aer_get_firmware_first(dev))
-+		pci_cleanup_aer_error_status_regs(dev);
- }
- 
- void pci_aer_exit(struct pci_dev *dev)
+ #ifdef CONFIG_REALTEK_AUTOPM
+ static int ss_en = 1;
 -- 
-2.21.0
+2.17.1
 
