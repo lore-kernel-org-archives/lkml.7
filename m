@@ -2,169 +2,101 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98246C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC84C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7443B20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B3F2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:52:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566924756;
+	bh=psNYNFhynPcHmlTGNRtqf8VrETsxH7Kx/enWHQ/LkZA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Qhkh8EbngewlZH+uT4JXCIpwYyexGIiVMVHz17CYHj4SB56uSVVn27gPKCQD86Edp
+	 kRgHGuFhmfc0+zc/cW/GW/gazN1RPy/jfvVXYhl3zbTR+A/NJrS1+6jkH092xYUMFk
+	 Jl917R+P8pshjexCW7k2jp42YpvRZNsSqyL/ktcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbfH0Qu5 (ORCPT
+        id S1729962AbfH0Qwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:50:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60266 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727893AbfH0Qu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:50:57 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5281E3082B1F;
-        Tue, 27 Aug 2019 16:50:56 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A50DA10016EA;
-        Tue, 27 Aug 2019 16:50:54 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 10:50:54 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Parav Pandit <parav@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
-Message-ID: <20190827105054.3702adda@x1.home>
-In-Reply-To: <20190827153510.0bd10437.cohuck@redhat.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190826204119.54386-2-parav@mellanox.com>
-        <20190827122428.37442fe1.cohuck@redhat.com>
-        <AM0PR05MB4866B68C9E60E42359BE1F4DD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190827132404.483a74ad.cohuck@redhat.com>
-        <AM0PR05MB4866CC932630ADD9BDA51371D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190827134114.01ddd049.cohuck@redhat.com>
-        <AM0PR05MB4866792BEAAB1958BB5A9C4AD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190827153510.0bd10437.cohuck@redhat.com>
-Organization: Red Hat
+        Tue, 27 Aug 2019 12:52:35 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43184 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbfH0Qwf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:52:35 -0400
+Received: by mail-ot1-f66.google.com with SMTP id e12so19316456otp.10;
+        Tue, 27 Aug 2019 09:52:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tJQaEfQzxJRI95haC9x8BQf6ZaZH5SadaGLixg3pTkQ=;
+        b=ltbrHqYba7IzgagVKBCD8naFBE2hcVeC0AmB3d2nVj0rw0pXDTCtdu2CTS/ql1gJIY
+         DdJxJ8yTKZ3NkObexBgnIClylH89VrFOEj9If8U882EI4XVO2b4GK/wtYqxV3y1hEXN7
+         c5Vqlmfqjp9K/dg4mQTJvPMeAU4hWyW8gkEUmlHi17x7SUB17mbhICsK5GN5sxp1KuHo
+         HAPNqFIbrL+BrIic+eybDuESGiGnPAzBhZqNsfS7WjZ+qa+HgKtVZlOtgPvqmTA4Y0Jz
+         rQ9BJR+ygH3+kbOj2e+pvo1TTaPRuEZsV4Ooqe3pdF2bfDJg9N+eV7f5MlRFhIcQsV0t
+         nvEg==
+X-Gm-Message-State: APjAAAXh6tNOmhlSHaAfmbxeC1fYDAt2gY2cmXuiWbORPeqTY+61xzkv
+        VDaqb2Gyk4Fvfh/Kx+JonA==
+X-Google-Smtp-Source: APXvYqyGilh1hnFSb4yL7j69xPv3YKAFNDENe5C8fgprVeR9noOD6uBNAfoQufznTGF82er1HpBS6Q==
+X-Received: by 2002:a9d:65ca:: with SMTP id z10mr19808758oth.167.1566924754327;
+        Tue, 27 Aug 2019 09:52:34 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s22sm4240569oij.37.2019.08.27.09.52.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 09:52:33 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 11:52:32 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Mars Cheng <mars.cheng@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
+        mtk01761 <wendell.lin@mediatek.com>, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 08/11] dt-bindings: mediatek: bindings for MT6779 clk
+Message-ID: <20190827165232.GA28828@bogus>
+References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com>
+ <1566206502-4347-9-git-send-email-mars.cheng@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 27 Aug 2019 16:50:56 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566206502-4347-9-git-send-email-mars.cheng@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019 15:35:10 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
-
-> On Tue, 27 Aug 2019 11:57:07 +0000
-> Parav Pandit <parav@mellanox.com> wrote:
+On Mon, 19 Aug 2019 17:21:39 +0800, Mars Cheng wrote:
+> From: mtk01761 <wendell.lin@mediatek.com>
 > 
-> > > -----Original Message-----
-> > > From: Cornelia Huck <cohuck@redhat.com>
-> > > Sent: Tuesday, August 27, 2019 5:11 PM
-> > > To: Parav Pandit <parav@mellanox.com>
-> > > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
-> > > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
-> > > kernel@vger.kernel.org; netdev@vger.kernel.org
-> > > Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
-> > > 
-> > > On Tue, 27 Aug 2019 11:33:54 +0000
-> > > Parav Pandit <parav@mellanox.com> wrote:
-> > >     
-> > > > > -----Original Message-----
-> > > > > From: Cornelia Huck <cohuck@redhat.com>
-> > > > > Sent: Tuesday, August 27, 2019 4:54 PM
-> > > > > To: Parav Pandit <parav@mellanox.com>
-> > > > > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
-> > > > > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org;
-> > > > > linux- kernel@vger.kernel.org; netdev@vger.kernel.org
-> > > > > Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
-> > > > >
-> > > > > On Tue, 27 Aug 2019 11:12:23 +0000
-> > > > > Parav Pandit <parav@mellanox.com> wrote:
-> > > > >    
-> > > > > > > -----Original Message-----
-> > > > > > > From: Cornelia Huck <cohuck@redhat.com>
-> > > > > > > Sent: Tuesday, August 27, 2019 3:54 PM
-> > > > > > > To: Parav Pandit <parav@mellanox.com>
-> > > > > > > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
-> > > > > > > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org;
-> > > > > > > linux- kernel@vger.kernel.org; netdev@vger.kernel.org
-> > > > > > > Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
-> > > > > > >    
-> > >     
-> > > > > > > What about:
-> > > > > > >
-> > > > > > > * @get_alias_length: optional callback to specify length of the
-> > > > > > > alias to    
-> > > > > create    
-> > > > > > > *                    Returns unsigned integer: length of the alias to be created,
-> > > > > > > *                                              0 to not create an alias
-> > > > > > >    
-> > > > > > Ack.
-> > > > > >    
-> > > > > > > I also think it might be beneficial to add a device parameter
-> > > > > > > here now (rather than later); that seems to be something that makes    
-> > > sense.    
-> > > > > > >    
-> > > > > > Without showing the use, it shouldn't be added.    
-> > > > >
-> > > > > It just feels like an omission: Why should the vendor driver only be
-> > > > > able to return one value here, without knowing which device it is for?
-> > > > > If a driver supports different devices, it may have different
-> > > > > requirements for them.
-> > > > >    
-> > > > Sure. Lets first have this requirement to add it.
-> > > > I am against adding this length field itself without an actual vendor use case,    
-> > > which is adding some complexity in code today.    
-> > > > But it was ok to have length field instead of bool.
-> > > >
-> > > > Lets not further add "no-requirement futuristic knobs" which hasn't shown its    
-> > > need yet.    
-> > > > When a vendor driver needs it, there is nothing prevents such addition.    
-> > > 
-> > > Frankly, I do not see how it adds complexity; the other callbacks have device
-> > > arguments already,    
-> > Other ioctls such as create, remove, mmap, likely need to access the parent.
-> > Hence it make sense to have parent pointer in there.
-> > 
-> > I am not against complexity, I am just saying, at present there is no use-case. Let have use case and we add it.
-> >   
-> > > and the vendor driver is free to ignore it if it does not have
-> > > a use for it. I'd rather add the argument before a possible future user tries
-> > > weird hacks to allow multiple values, but I'll leave the decision to the
-> > > maintainers.    
-> > Why would a possible future user tries a weird hack?
-> > If user needs to access parent device, that driver maintainer should ask for it.  
+> This patch adds the binding documentation for
+> apmixedsys, audiosys, camsys, imgsys, ipesys,
+> infracfg, mfgcfg, mmsys, topckgen, vdecsys,
+> and vencsys for Mediatek MT6779.
 > 
-> I've seen the situation often enough that folks tried to do hacks
-> instead of enhancing the interface.
+> Signed-off-by: mtk01761 <wendell.lin@mediatek.com>
+> ---
+>  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
+>  .../bindings/arm/mediatek/mediatek,audsys.txt      |    1 +
+>  .../bindings/arm/mediatek/mediatek,camsys.txt      |    1 +
+>  .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
+>  .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
+>  .../bindings/arm/mediatek/mediatek,ipesys.txt      |   22 ++++++++++++++++++++
+>  .../bindings/arm/mediatek/mediatek,mfgcfg.txt      |    1 +
+>  .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
+>  .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
+>  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
+>  .../bindings/arm/mediatek/mediatek,vencsys.txt     |    1 +
+>  11 files changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ipesys.txt
 > 
-> Again, let's get a maintainer opinion.
 
-Sure, make someone else have an opinion ;)  I don't have a strong one.
-The argument against a dev arg, as I see it, is that it's unused
-currently, so why should we try to predict a future use case.  The
-argument for, is that we're defining an API between the core and vendor
-driver, where our job in defining that API could certainly be seen as
-anticipating future use cases so as not to unnecessarily churn the
-API.  So do we lean towards a more stable API or do we lean towards
-minimalism?
-
-when called form mdev_register_device(), the arg we'd add seems obvious
-because we really have nothing more to work with than the parent
-device.  But this is only a sanity test and the value there seems
-questionable anyway.  If we look to the real use case in
-mdev_device_create() then clearly dev stands out as a likely useful
-arg, but is the type or kobj also useful?  Would we forfeit the sanity
-test to include those?  I don't have a lot of confidence in being able
-to predict that, so without an obvious set of args, I'm fine with the
-minimalist approach provided.  Thanks,
-
-Alex
+Reviewed-by: Rob Herring <robh@kernel.org>
