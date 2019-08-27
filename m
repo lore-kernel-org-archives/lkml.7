@@ -2,135 +2,68 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CA1C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5C3C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2673B2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:33:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Se7EgIR6"
+	by mail.kernel.org (Postfix) with ESMTP id 04E012186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:35:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566930909;
+	bh=Cu/U9uPqMhWluyz3+nl6gAQbJCiHIIQ6v2svaE2dbk8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=1BUwRJlpKVkmJpmlwG9UHtyMg0leMYKaBBk6MIsdSVHbOZAOh7oeYusUL/LWY3LHN
+	 YC7s5wCdKRcgNGmqghyEZ2ycWozN+S9wBSgRfqInFb8berfzbSUgSFkAE4dVrZtC6f
+	 4e3ZxpW/WQ38Tp4vFjHdO+3YSU8uOGD+DiA693fA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730590AbfH0Sds (ORCPT
+        id S1730814AbfH0SfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:33:48 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:20318 "EHLO pegase1.c-s.fr"
+        Tue, 27 Aug 2019 14:35:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730393AbfH0Sds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:33:48 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46HyF60c9Kz9tyVK;
-        Tue, 27 Aug 2019 20:33:46 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Se7EgIR6; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id J_eUXk7cwSWF; Tue, 27 Aug 2019 20:33:46 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46HyF56fMVz9tyVG;
-        Tue, 27 Aug 2019 20:33:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566930825; bh=S21lhrPpGd6dbYfJ8cqZd9xshNHamMkQCPlDAE1DQLQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Se7EgIR6k6yEUFd0XqRUPKvOIkZd2w0BG6cAq1TQGDUZPr4lrsTG39DLpT2B1NarH
-         hLUUSSbklI0KhG+T3Ji9rdL+SOyOrzBrlfmY+I2ffps7TqPox9MYQDMIDkYFmBwl3S
-         Z2nnkpAVernPwu3vTZB2n1DuYDpIhHBkWzhR527U=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E61778B847;
-        Tue, 27 Aug 2019 20:33:45 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id fvXHAOH7aW9s; Tue, 27 Aug 2019 20:33:45 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6FF4B8B842;
-        Tue, 27 Aug 2019 20:33:45 +0200 (CEST)
-Subject: Re: [PATCH 2/2] powerpc: cleanup hw_irq.h
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <0f7e164afb5d1b022441559fe5a999bb6d3c0a23.1566893505.git.christophe.leroy@c-s.fr>
- <81f39fa06ae582f4a783d26abd2b310204eba8f4.1566893505.git.christophe.leroy@c-s.fr>
- <1566909844.x4jee1jjda.astroid@bobo.none>
- <20190827172909.GA31406@gate.crashing.org>
- <1410046b-e1a3-b892-2add-6c1d353cb781@c-s.fr>
- <20190827182616.GB31406@gate.crashing.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <00cc71bd-35f5-b0d5-e4fa-8368fe4fe78c@c-s.fr>
-Date:   Tue, 27 Aug 2019 20:33:45 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190827182616.GB31406@gate.crashing.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        id S1726871AbfH0SfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 14:35:07 -0400
+Subject: Re: [GIT] Networking
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566930907;
+        bh=Cu/U9uPqMhWluyz3+nl6gAQbJCiHIIQ6v2svaE2dbk8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=jXs1vdElxQL3IrnQNlYyCzcGvmkZylzbm5YS10bKAWCV85Js+IF+yw0y4m00XQiCt
+         fZatelBWUglWGFsG/K29s6nZyyx+QDngHgZlYE/gipFxsVlswyCHaSsVFqnM3Maw57
+         eZTNUmYaupZVxa2gUbYsJpugwQs/IhwIdiL0hle0=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190825.232902.493461685673378789.davem@davemloft.net>
+References: <20190825.232902.493461685673378789.davem@davemloft.net>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190825.232902.493461685673378789.davem@davemloft.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+ refs/heads/master
+X-PR-Tracked-Commit-Id: f53a7ad189594a112167efaf17ea8d0242b5ac00
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 452a04441b4d0d2d567e4128af58867739002640
+Message-Id: <156693090698.10894.2881959253070085295.pr-tracker-bot@kernel.org>
+Date:   Tue, 27 Aug 2019 18:35:06 +0000
+To:     David Miller <davem@davemloft.net>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The pull request you sent on Sun, 25 Aug 2019 23:29:02 -0700 (PDT):
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git refs/heads/master
 
-Le 27/08/2019 à 20:26, Segher Boessenkool a écrit :
-> On Tue, Aug 27, 2019 at 07:36:35PM +0200, Christophe Leroy wrote:
->> Le 27/08/2019 à 19:29, Segher Boessenkool a écrit :
->>> On Tue, Aug 27, 2019 at 10:48:24PM +1000, Nicholas Piggin wrote:
->>>> Christophe Leroy's on August 27, 2019 6:13 pm:
->>>>> +#define wrtee(val)	asm volatile("wrtee %0" : : "r" (val) : "memory")
->>>>> +#define wrteei(val)	asm volatile("wrteei %0" : : "i" (val) :
->>>>> "memory")
->>>>
->>>> Can you implement just one macro that uses __builtin_constant_p to
->>>> select between the imm and reg versions? I forgot if there's some
->>>> corner cases that prevent that working with inline asm i constraints.
->>>
->>> static inline void wrtee(long val)
->>> {
->>> 	asm volatile("wrtee%I0 %0" : : "n"(val) : "memory");
->>> }
->>
->> Great, didn't know that possibility.
->>
->> Can it be used with any insn, for instance with add/addi ?
->> Or with mr/li ?
-> 
-> Any instruction, yes.  %I<n> simply outputs an "i" if operand n is a
-> constant integer, and nothing otherwise.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/452a04441b4d0d2d567e4128af58867739002640
 
-Thinking about it once more, I'm not sure this form is possible, because 
-wrteei expect 0 or 1. If someone calls wrtee(MSR_EE); (or any constant 
-containing MSR_EE) wrteei 1 is expected. And any constant with MSR_EE 
-cleared should result in wrteei 0.
+Thank you!
 
-> 
-> So
->    asm("add%I2 %0,%1,%2" : "=r"(dst) : "r"(src1), "ri"(src1));
-
-"ri", not "n" as for wrtee ?
-
-Christophe
-
-> works well.  I don't see how you would use it for li/mr...  You can do
->    asm("add%I1 %0,0,%1" : "=r"(dst) : "ri"(src));
-> I suppose, but that is not really an mr.
-> 
->>> (This output modifier goes back to the dark ages, some 2.4 or something).
->>
->> Hope Clang support it ...
-> 
-> I don't know, sorry.  But it is used all over the place, see sfp-machine.h
-> for example, so maybe?
-> 
-> 
-> Segher
-> 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
