@@ -2,105 +2,71 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855A8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34756C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5251A2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157952080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732792AbfHZRix (ORCPT
+        id S1733213AbfHZRjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 13:38:53 -0400
-Received: from vsmx012.vodafonemail.xion.oxcs.net ([153.92.174.90]:32865 "EHLO
-        vsmx012.vodafonemail.xion.oxcs.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729466AbfHZRix (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 13:38:53 -0400
-Received: from vsmx004.vodafonemail.xion.oxcs.net (unknown [192.168.75.198])
-        by mta-8-out.mta.xion.oxcs.net (Postfix) with ESMTP id E3171F34CCC;
-        Mon, 26 Aug 2019 17:38:50 +0000 (UTC)
-Received: from lazy.lzy (unknown [87.157.113.162])
-        by mta-8-out.mta.xion.oxcs.net (Postfix) with ESMTPA id 4A10119A968;
-        Mon, 26 Aug 2019 17:38:35 +0000 (UTC)
-Received: from lazy.lzy (localhost [127.0.0.1])
-        by lazy.lzy (8.15.2/8.14.5) with ESMTPS id x7QHcYGp004219
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 26 Aug 2019 19:38:34 +0200
-Received: (from red@localhost)
-        by lazy.lzy (8.15.2/8.15.2/Submit) id x7QHcXtE004218;
-        Mon, 26 Aug 2019 19:38:33 +0200
-Date:   Mon, 26 Aug 2019 19:38:33 +0200
-From:   Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-To:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        USB list <linux-usb@vger.kernel.org>,
-        linux-block@vger.kernel.org,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: reeze while write on external usb 3.0 hard disk [Bug 204095]
-Message-ID: <20190826173833.GA4166@lazy.lzy>
-References: <20190817095422.GA4200@lazy.lzy>
- <Pine.LNX.4.44L0.1908191009490.1506-100000@iolanthe.rowland.org>
- <20190820072326.GD28968@lst.de>
- <20190820163722.GA2991@lazy.lzy>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820163722.GA2991@lazy.lzy>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-VADE-STATUS: LEGIT
+        Mon, 26 Aug 2019 13:39:15 -0400
+Received: from mga02.intel.com ([134.134.136.20]:54763 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729466AbfHZRjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 13:39:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 10:39:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
+   d="scan'208";a="355499039"
+Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
+  by orsmga005.jf.intel.com with ESMTP; 26 Aug 2019 10:39:01 -0700
+From:   Voon Weifeng <weifeng.voon@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: [PATCH v1 net-next 0/4] Add EHL and TGL PCI info and PCI ID
+Date:   Tue, 27 Aug 2019 09:38:07 +0800
+Message-Id: <1566869891-29239-1-git-send-email-weifeng.voon@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 06:37:22PM +0200, Piergiorgio Sartor wrote:
-> On Tue, Aug 20, 2019 at 09:23:26AM +0200, Christoph Hellwig wrote:
-> > On Mon, Aug 19, 2019 at 10:14:25AM -0400, Alan Stern wrote:
-> > > Let's bring this to the attention of some more people.
-> > > 
-> > > It looks like the bug that was supposed to be fixed by commit
-> > > d74ffae8b8dd ("usb-storage: Add a limitation for
-> > > blk_queue_max_hw_sectors()"), which is part of 5.2.5, but apparently
-> > > the bug still occurs.
-> > 
-> > Piergiorgio,
-> > 
-> > can you dump the content of max_hw_sectors_kb file for your USB storage
-> > device and send that to this thread?
-> 
-> Hi all,
-> 
-> for both kernels, 5.1.20 (working) and 5.2.8 (not working),
-> the content of /sys/dev/x:y/queue/max_hw_sectors_kb is 512
-> for USB storage devices (2.0 and 3.0).
-> 
-> This is for the PC showing the issue.
-> 
-> In an other PC, which does not show the issus at the moment,
-> the values are 120, for USB2.0, and 256, for USB3.0.
+In order to keep PCI info simple and neat, this patch series have
+introduced a 3 hierarchy of struct. First layer will be the
+intel_mgbe_common_data struct which keeps all Intel common configuration.
+Second layer will be xxx_common_data which keeps all the different Intel
+microarchitecture, e.g tgl, ehl. The third layer will be configuration
+that tied to the PCI ID only based on speed and RGMII/SGMII interface.
 
-Hi again,
+EHL and TGL will also having a higher system clock which is 200Mhz.
 
-any news on this?
+Voon Weifeng (4):
+  net: stmmac: add EHL SGMII 1Gbps PCI info and PCI ID
+  net: stmmac: add TGL SGMII 1Gbps PCI info and PCI ID
+  net: stmmac: add EHL RGMII 1Gbps PCI info and PCI ID
+  net: stmmac: setup higher frequency clk support for EHL & TGL
 
-Is there anything I can do to help?
-
-Should I report this somewhere else too?
-
-Currently this is quite a huge problem for me,
-since the only working external storage is an
-old 1394 HDD...
-
-Thanks,
-
-bye,
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 172 +++++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c |   3 +
+ include/linux/stmmac.h                           |   1 +
+ 3 files changed, 176 insertions(+)
 
 -- 
+1.9.1
 
-piergiorgio
