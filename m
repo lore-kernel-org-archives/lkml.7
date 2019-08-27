@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BC0C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFD2C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7012189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 788B4206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893231;
-	bh=98BKHUssZiAvVoIeeamna4LlHN+bPH8+OD69xuUHJas=;
+	s=default; t=1566893235;
+	bh=tua5d1hXf1BvgQx1c7amcpAtm6+0tqhdrE6Ve8PXZv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HynwhDfBDjkfFed6OHZVmPMEVMcCLcwop/PFvvVNSy/OJCivZix79xPX0JNN7sYg+
-	 ZvJMQ8ifjR5NcrBMp5q5OnbINSNXBmWCn25OFv375UfjsxCbaZaKXxtCd3y0Zo4VRc
-	 9emM/lOuruyW+nwjODYXlw3EJbRU81MIWiyqiuR8=
+	b=NpEfFamxnjj8Q8PymlHcus1xJhgkFNgUL7bCdss2b6j/wecWFAmLAlWxLLq4R5qqH
+	 qNi2Lgm292NwQAwdCFtY13IpoAsSysBHQItKMTebzOEo+t6gjNOFl2HXgJY4Fr0jXi
+	 BqwsBZxxuRh5mhO7mweOyC0Nr3NALkUP+Qam7W54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732835AbfH0IHK (ORCPT
+        id S1729557AbfH0IHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:07:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37104 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:07:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732787AbfH0IHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:07:05 -0400
+        id S1733133AbfH0IHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:07:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DD5C206BA;
-        Tue, 27 Aug 2019 08:07:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8EA8206BA;
+        Tue, 27 Aug 2019 08:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893223;
-        bh=98BKHUssZiAvVoIeeamna4LlHN+bPH8+OD69xuUHJas=;
+        s=default; t=1566893229;
+        bh=tua5d1hXf1BvgQx1c7amcpAtm6+0tqhdrE6Ve8PXZv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2QP0nT7FvUtd6Wr7HAjiT4GotardjNx4gV6iGH6HKxA5ZO9LWWCAcBEqZUOHuvaKV
-         gkOstcWffDcKeTVBVTSMuoUqA8ZfGxgExIi4zjmKgwLXpcKiZL/SPMu2aRa5XB7eNi
-         cnmUJ+d9xpUAw5UMZ+jzz78JQtgOxEjXcdspuC1s=
+        b=oIY5c2MG+YoBRBhWYQn4fdiavIYSOOZ1qmMBUGkSr1B5yYHP7wJDYvUI7E8u+T3NE
+         WrPutC3UBfT7z2ryISDp+yweLgCvAlM6TdNqM7paM3JokFUljsdXpRnw8DGeFXqNsL
+         kbDbhqmMUiG4dYrQHhN1XfkpYRXsozPOhxalL+yY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Henry Burns <henryburns@google.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Henry Burns <henrywolfeburns@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>,
+        stable@vger.kernel.org, Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.2 151/162] mm/zsmalloc.c: migration can leave pages in ZS_EMPTY indefinitely
-Date:   Tue, 27 Aug 2019 09:51:19 +0200
-Message-Id: <20190827072744.020727711@linuxfoundation.org>
+Subject: [PATCH 5.2 153/162] mm/kasan: fix false positive invalid-free reports with CONFIG_KASAN_SW_TAGS=y
+Date:   Tue, 27 Aug 2019 09:51:21 +0200
+Message-Id: <20190827072744.111451053@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -65,87 +67,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Henry Burns <henryburns@google.com>
+From: Andrey Ryabinin <aryabinin@virtuozzo.com>
 
-commit 1a87aa03597efa9641e92875b883c94c7f872ccb upstream.
+commit 00fb24a42a68b1ee0f6495993fe1be7124433dfb upstream.
 
-In zs_page_migrate() we call putback_zspage() after we have finished
-migrating all pages in this zspage.  However, the return value is
-ignored.  If a zs_free() races in between zs_page_isolate() and
-zs_page_migrate(), freeing the last object in the zspage,
-putback_zspage() will leave the page in ZS_EMPTY for potentially an
-unbounded amount of time.
+The code like this:
 
-To fix this, we need to do the same thing as zs_page_putback() does:
-schedule free_work to occur.
+	ptr = kmalloc(size, GFP_KERNEL);
+	page = virt_to_page(ptr);
+	offset = offset_in_page(ptr);
+	kfree(page_address(page) + offset);
 
-To avoid duplicated code, move the sequence to a new
-putback_zspage_deferred() function which both zs_page_migrate() and
-zs_page_putback() call.
+may produce false-positive invalid-free reports on the kernel with
+CONFIG_KASAN_SW_TAGS=y.
 
-Link: http://lkml.kernel.org/r/20190809181751.219326-1-henryburns@google.com
-Fixes: 48b4800a1c6a ("zsmalloc: page migration support")
-Signed-off-by: Henry Burns <henryburns@google.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Henry Burns <henrywolfeburns@gmail.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Jonathan Adams <jwadams@google.com>
+In the example above we lose the original tag assigned to 'ptr', so
+kfree() gets the pointer with 0xFF tag.  In kfree() we check that 0xFF
+tag is different from the tag in shadow hence print false report.
+
+Instead of just comparing tags, do the following:
+
+1) Check that shadow doesn't contain KASAN_TAG_INVALID.  Otherwise it's
+   double-free and it doesn't matter what tag the pointer have.
+
+2) If pointer tag is different from 0xFF, make sure that tag in the
+   shadow is the same as in the pointer.
+
+Link: http://lkml.kernel.org/r/20190819172540.19581-1-aryabinin@virtuozzo.com
+Fixes: 7f94ffbc4c6a ("kasan: add hooks implementation for tag-based mode")
+Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Reported-by: Walter Wu <walter-zh.wu@mediatek.com>
+Reported-by: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/zsmalloc.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ mm/kasan/common.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -1882,6 +1882,18 @@ static void dec_zspage_isolation(struct
- 	zspage->isolated--;
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -409,8 +409,14 @@ static inline bool shadow_invalid(u8 tag
+ 	if (IS_ENABLED(CONFIG_KASAN_GENERIC))
+ 		return shadow_byte < 0 ||
+ 			shadow_byte >= KASAN_SHADOW_SCALE_SIZE;
+-	else
+-		return tag != (u8)shadow_byte;
++
++	/* else CONFIG_KASAN_SW_TAGS: */
++	if ((u8)shadow_byte == KASAN_TAG_INVALID)
++		return true;
++	if ((tag != KASAN_TAG_KERNEL) && (tag != (u8)shadow_byte))
++		return true;
++
++	return false;
  }
  
-+static void putback_zspage_deferred(struct zs_pool *pool,
-+				    struct size_class *class,
-+				    struct zspage *zspage)
-+{
-+	enum fullness_group fg;
-+
-+	fg = putback_zspage(class, zspage);
-+	if (fg == ZS_EMPTY)
-+		schedule_work(&pool->free_work);
-+
-+}
-+
- static void replace_sub_page(struct size_class *class, struct zspage *zspage,
- 				struct page *newpage, struct page *oldpage)
- {
-@@ -2051,7 +2063,7 @@ static int zs_page_migrate(struct addres
- 	 * the list if @page is final isolated subpage in the zspage.
- 	 */
- 	if (!is_zspage_isolated(zspage))
--		putback_zspage(class, zspage);
-+		putback_zspage_deferred(pool, class, zspage);
- 
- 	reset_page(page);
- 	put_page(page);
-@@ -2097,14 +2109,13 @@ static void zs_page_putback(struct page
- 	spin_lock(&class->lock);
- 	dec_zspage_isolation(zspage);
- 	if (!is_zspage_isolated(zspage)) {
--		fg = putback_zspage(class, zspage);
- 		/*
- 		 * Due to page_lock, we cannot free zspage immediately
- 		 * so let's defer.
- 		 */
--		if (fg == ZS_EMPTY)
--			schedule_work(&pool->free_work);
-+		putback_zspage_deferred(pool, class, zspage);
- 	}
-+
- 	spin_unlock(&class->lock);
- }
- 
+ static bool __kasan_slab_free(struct kmem_cache *cache, void *object,
 
 
