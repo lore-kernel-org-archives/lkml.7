@@ -2,140 +2,121 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DB3C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E07A6C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB6F2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:11:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Sf8vBT1T"
+	by mail.kernel.org (Postfix) with ESMTP id BDD7921872
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:11:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbfH0OLc (ORCPT
+        id S1729804AbfH0OLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:11:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45416 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfH0OLb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:11:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Jn68BdvZhJrmEXMt74AaFJ4t5OFYoY/FSvB04ozunVk=; b=Sf8vBT1TC/Qn3jbU46GFV/fPn
-        pY8Os4CfxDsanw82XFqNEsUjR1fk17yNzSxH4zqssCMYkJL5uctl2L7st0SqAtQQApp5NpN66RiY4
-        2t6KLu2SyF1PnMFxashJAtAxDl0BZDbNRQ5zlt6mwkgszxFilA7z2vWvidwev8jRCJ6ozoUZOw5UL
-        2gvXPcB1c2CgNW6B9lvVv3Tulb5MfEEX+22aMo6CPZVPKIZRyW0YpvzJstm3OPDUt+ybRKsEWlUzt
-        t5PHAQvzzeZx2LXhVWxxdP+cO88KmEZU16ozAFDTQwNyF9eilVKc/9LDY9vZ7F/DEABmHkjQQ0dhH
-        RywpB7qDw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2cC2-0007KK-LQ; Tue, 27 Aug 2019 14:11:30 +0000
-Date:   Tue, 27 Aug 2019 07:11:30 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
-        Alan Kao <alankao@andestech.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Anup Patel <anup@brainfault.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Gary Guo <gary@garyguo.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-riscv@lists.infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH 2/2] RISC-V: Add basic support for SBI v0.2
-Message-ID: <20190827141130.GC21855@infradead.org>
-References: <20190826233256.32383-1-atish.patra@wdc.com>
- <20190826233256.32383-3-atish.patra@wdc.com>
+        Tue, 27 Aug 2019 10:11:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57856 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbfH0OLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:11:40 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 63E8118C892F;
+        Tue, 27 Aug 2019 14:11:40 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4D9555D712;
+        Tue, 27 Aug 2019 14:11:40 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 2AFAE18089C8;
+        Tue, 27 Aug 2019 14:11:40 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 10:11:39 -0400 (EDT)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     peterz@infradead.org, will@kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        dbueso@suse.de, Ingo Molnar <mingo@kernel.org>,
+        Jan Stancek <jstancek@redhat.com>
+Message-ID: <396661303.8419298.1566915099958.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190826143114.23471-1-sashal@kernel.org>
+References: <20190826143114.23471-1-sashal@kernel.org>
+Subject: Re: [PATCH v5.2 1/2] locking/rwsem: Add missing ACQUIRE to
+ read_slowpath exit when queue is empty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826233256.32383-3-atish.patra@wdc.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.40.204.166, 10.4.195.12]
+Thread-Topic: locking/rwsem: Add missing ACQUIRE to read_slowpath exit when queue is empty
+Thread-Index: pM7Z1VrNvE4gMqpOiVyEBizAqOeMqQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Tue, 27 Aug 2019 14:11:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +#define SBI_EXT_BASE 0x10
 
-I think you want an enum enumerating the extensions.
+----- Original Message -----
+> From: Jan Stancek <jstancek@redhat.com>
+> 
+> [ Upstream commit e1b98fa316648420d0434d9ff5b92ad6609ba6c3 ]
+> 
+> LTP mtest06 has been observed to occasionally hit "still mapped when
+> deleted" and following BUG_ON on arm64.
+> 
+> The extra mapcount originated from pagefault handler, which handled
+> pagefault for vma that has already been detached. vma is detached
+> under mmap_sem write lock by detach_vmas_to_be_unmapped(), which
+> also invalidates vmacache.
+> 
+> When the pagefault handler (under mmap_sem read lock) calls
+> find_vma(), vmacache_valid() wrongly reports vmacache as valid.
+> 
+> After rwsem down_read() returns via 'queue empty' path (as of v5.2),
+> it does so without an ACQUIRE on sem->count:
+> 
+>   down_read()
+>     __down_read()
+>       rwsem_down_read_failed()
+>         __rwsem_down_read_failed_common()
+>           raw_spin_lock_irq(&sem->wait_lock);
+>           if (list_empty(&sem->wait_list)) {
+>             if (atomic_long_read(&sem->count) >= 0) {
+>               raw_spin_unlock_irq(&sem->wait_lock);
+>               return sem;
+> 
+> The problem can be reproduced by running LTP mtest06 in a loop and
+> building the kernel (-j $NCPUS) in parallel. It does reproduces since
+> v4.20 on arm64 HPE Apollo 70 (224 CPUs, 256GB RAM, 2 nodes). It
+> triggers reliably in about an hour.
+> 
+> The patched kernel ran fine for 10+ hours.
+> 
+> Signed-off-by: Jan Stancek <jstancek@redhat.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reviewed-by: Will Deacon <will@kernel.org>
+> Acked-by: Waiman Long <longman@redhat.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: dbueso@suse.de
+> Fixes: 4b486b535c33 ("locking/rwsem: Exit read lock slowpath if queue empty &
+> no writer")
+> Link:
+> https://lkml.kernel.org/r/50b8914e20d1d62bb2dee42d342836c2c16ebee7.1563438048.git.jstancek@redhat.com
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+> 
+> This is a backport for the v5.2 stable tree. There were multiple reports
+> of this issue being hit.
+> 
+> Given that there were a few changes to the code around this, I'd
+> appreciate an ack before pulling it in.
 
-> +#define SBI_CALL_LEGACY(ext, fid, arg0, arg1, arg2, arg3) ({	\
->  	register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);	\
->  	register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);	\
->  	register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);	\
->  	register uintptr_t a3 asm ("a3") = (uintptr_t)(arg3);	\
-> -	register uintptr_t a7 asm ("a7") = (uintptr_t)(which);	\
-> +	register uintptr_t a6 asm ("a6") = (uintptr_t)(fid);	\
-> +	register uintptr_t a7 asm ("a7") = (uintptr_t)(ext);	\
+ACK, both look good to me.
+I also re-ran reproducer with this series applied on top of 5.2.10, it PASS-ed.
 
-This seems to break the calling convention.  I also think we should go
-back to the Unix platform working group and make the calling convention
-backwards compatible.  There is really no advantage or disadvantag
-in swapping a6 and a7 in the calling convention itself, but doing so
-means you can just push the ext field in always and it will be
-ignored by the old sbi.
-
-> +struct sbiret riscv_sbi_ecall(int ext, int fid, int arg0, int arg1,
-> +			       int arg2, int arg3);
-> +
-> +#define SBI_CALL_0(ext, fid) riscv_sbi_ecall(ext, fid, 0, 0, 0, 0)
-> +#define SBI_CALL_1(ext, fid, arg0) riscv_sbi_ecall(ext, fid, arg0, 0, 0, 0)
-> +#define SBI_CALL_2(ext, fid, arg0, arg1) \
-> +		riscv_sbi_ecall(ext, fid, arg0, arg1, 0, 0)
-> +#define SBI_CALL_3(ext, fid, arg0, arg1, arg2) \
-> +		riscv_sbi_ecall(ext, fid, arg0, arg1, arg2, 0)
-> +#define SBI_CALL_4(ext, fid, arg0, arg1, arg2, arg3) \
-> +		riscv_sbi_ecall(ext, fid, arg0, arg1, arg2, arg3)
-
-Again, no point in having these wrappers.
-
-> +struct sbiret riscv_sbi_ecall(int ext, int fid, int arg0, int arg1,
-> +			     int arg2, int arg3)
-> +{
-> +	struct sbiret ret;
-> +
-> +	register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);
-> +	register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);
-> +	register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);
-> +	register uintptr_t a3 asm ("a3") = (uintptr_t)(arg3);
-> +	register uintptr_t a6 asm ("a6") = (uintptr_t)(fid);
-> +	register uintptr_t a7 asm ("a7") = (uintptr_t)(ext);
-> +	asm volatile ("ecall"
-> +		      : "+r" (a0), "+r" (a1)
-> +		      : "r" (a2), "r" (a3), "r" (a6), "r" (a7)
-> +		      : "memory");
-> +	ret.error = a0;
-> +	ret.value = a1;
-> +
-> +	return ret;
-
-Again much simpler done in pure asm..
-
-> +	/* legacy SBI version*/
-> +	sbi_firmware_version = 0x1;
-> +	ret = sbi_get_spec_version();
-> +	if (!ret.error)
-> +		sbi_firmware_version = ret.value;
-
-Why not:
-
-	ret = sbi_get_spec_version();
-	if (ret.error)
-		sbi_firmware_version = 0x1; /* legacy SBI */
-	else
-		sbi_firmware_version = ret.value;
-
-btw, I'd find a calling convention that returns the value as a pointer
-much nicer than the return by a struct.  Yes, the RISC-V ABI still
-returns that in registers, but it is a pain in the b**t to use.  Without
-that we could simply pass the variable to fill by reference.
+Thanks,
+Jan
