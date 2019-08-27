@@ -2,120 +2,138 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90248C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1A5C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E092186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529C92077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:10:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="eD60P4gL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R5Z3Ido7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730207AbfH0VHX (ORCPT
+        id S1730456AbfH0VKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:07:23 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:44996 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfH0VHX (ORCPT
+        Tue, 27 Aug 2019 17:10:08 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39912 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728312AbfH0VKH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:07:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4hoDFeBBZSTSJHVR0wNL11+v5DVaTl/jtF0wjfl4NCU=; b=eD60P4gLOy3/3eTm9dcokjeoY
-        bq4UILtFjH6ADIwUW8ytqD8EOyeEisr+itgK6jpSf9rWltAtUR3J5kaJu+7IBSuCzTD0Yu2lUpFDo
-        +tR549c5HiuH7QG7w82gOWwgYk/BSsS/vNrhvpvtY9CDGn4Eu7W3CUBcC5xLLjnnak8XpLoU0Sz6P
-        Z53zHAQ4qQ0wRJ1wqxPfBNfHKpO9oQVa/3RSk2sH38cRX59ajsRr+zRmb0K9ibC521V2rgHbZNB3U
-        RXvpl0WbTOWZQzU7SaPJSQALvmr+LZ6vByrQCzeYdzaEDAo9jxq5/+SdxIUeWqCG4WRRhJ3pfNKaz
-        pEj5rDhRQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:55350)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i2igQ-0006kX-Q5; Tue, 27 Aug 2019 22:07:18 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i2igL-00062p-Mt; Tue, 27 Aug 2019 22:07:13 +0100
-Date:   Tue, 27 Aug 2019 22:07:13 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregory.clement@free-electrons.com" 
-        <gregory.clement@free-electrons.com>,
-        "jlu@pengutronix.de" <jlu@pengutronix.de>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "patches@armlinux.org.uk" <patches@armlinux.org.uk>
-Subject: Re: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
-Message-ID: <20190827210713.GO13294@shell.armlinux.org.uk>
-References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
- <20190712034904.5747-2-chris.packham@alliedtelesis.co.nz>
- <20190823104621.GY13294@shell.armlinux.org.uk>
- <20190823105020.GZ13294@shell.armlinux.org.uk>
- <836653f04f526333e8dbd45361329731f8dfe2ea.camel@alliedtelesis.co.nz>
- <20190827091336.GI13294@shell.armlinux.org.uk>
- <b1e2e5b325b3c4453e2ed63c17e1e11d6b24f099.camel@alliedtelesis.co.nz>
+        Tue, 27 Aug 2019 17:10:07 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u17so148588pgi.6
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 14:10:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gDQhuGUNXTVg1cy6UlUpQaDjBmPIGubFH3m9ia7NwmU=;
+        b=R5Z3Ido7+Z6yOmAJW8IRgNP+qk4n6MJnOHT9/Xi8ETg6NpXvZvDhRz4IuK9UKdYSnI
+         yAzieh4hi3ekHBVWpgVCaAyUZIjzkPsjbxXBZHwB+ssiM/+ytebM5143IwSu7n8B07Hq
+         hkVX1t7b6hLBKFoK1GmLIom7EUBv1RakqFbGnJG2Nuq9Ybh1kI3qBPhKKVBhoZLS7own
+         7K+7ozUhSrKE2Y/0sM2WydLGIT6G+8MTOOpfKkEeKujz1VYMrEXzEPt6KvpmE/m8ZiDX
+         sdLrY+Jlbtg3vL1fFq7CPUa5Y6CFJ/k7P1XlywX37Zk27NBOkOXUyGtFbDV4qPM7Rd/Y
+         ZbKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gDQhuGUNXTVg1cy6UlUpQaDjBmPIGubFH3m9ia7NwmU=;
+        b=YrKe4Y9XMmwrh2EWV/9MLb9rrM5s8Krqb4VmM891THcgzir79d80GheIFUow42aku8
+         xvshGm4qPIy6S37GB+WesaZrZnj+A6Tl2RHhncY1NtRvaDyg9dAPiCHE1akpnD2X9vsx
+         yqHADYVtc7gmcI9V7g/8w64KojJXmVnmC0Dz64WxOluovF6OXupg7GcEwTwIbMsC/rPa
+         iQWKbWnISwEvfQivQOW8kGa2Ha0ulcvd6zSCCxeanQOg7u6WSaqC8PVkXxnVQWj2r3Up
+         EggxSeMyyRPRazY3oau68d7sTQKb8VnFCkZGDqeIHcr8RRu4OBE4y/xkiYuWz4WmJ8hr
+         PvxA==
+X-Gm-Message-State: APjAAAUDK7pIhyCJ/amR2Ybbx+ryojYejZhINk2RESllILOQQGHCw7T4
+        QzqaiCY/NBoM4iYAMU9KVwGdhOiguvmVSlMHbCkddw==
+X-Google-Smtp-Source: APXvYqzdviPbfXTy38bMu6n0IqBlrSoYhZivN3fnTLfz93bOGZ1KraawZl2ZOrhYTE305ZNUJ4rqlmVUsrSjP4nX+Pg=
+X-Received: by 2002:a63:205f:: with SMTP id r31mr385340pgm.159.1566940206681;
+ Tue, 27 Aug 2019 14:10:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b1e2e5b325b3c4453e2ed63c17e1e11d6b24f099.camel@alliedtelesis.co.nz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190827174932.44177-1-brendanhiggins@google.com>
+ <ae9b9102-187c-eefe-d377-6efa63de2d28@kernel.org> <CAFd5g473nZAfM4D=Vkr54O_+nn=MSt3dzuDcXzNMZGRDWg1nxA@mail.gmail.com>
+In-Reply-To: <CAFd5g473nZAfM4D=Vkr54O_+nn=MSt3dzuDcXzNMZGRDWg1nxA@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 27 Aug 2019 14:09:55 -0700
+Message-ID: <CAFd5g47rSBJS8QVH6d5HqoJW5PJXdNnkoP6WcvQCFUqHUEmDzw@mail.gmail.com>
+Subject: Re: [PATCH v1] kunit: fix failure to build without printk
+To:     shuah <shuah@kernel.org>
+Cc:     kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 08:56:05PM +0000, Chris Packham wrote:
-> On Tue, 2019-08-27 at 10:13 +0100, Russell King - ARM Linux admin
-> wrote:
-> > Just send the single patch to the patch tracker - having it against
-> > 5.3-rc is fine (I don't think anything has changed for a long time
-> > with that file.)
-> 
-> Done 
-> https://www.armlinux.org.uk/developer/patches/viewpatch.php?id=8902/1
-> 
-> I'm still not entirely sure what to put for the KernelVersion tag. In
-> hindsight think I misinterpreted your comment above and set it to 5.3rc
-> (where you meant a series based on 5.3-rcX should apply cleanly). It
-> probably should have been next or master because it's way past the
-> merge window for 5.3.
+On Tue, Aug 27, 2019 at 2:03 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> On Tue, Aug 27, 2019 at 1:21 PM shuah <shuah@kernel.org> wrote:
+> >
+> > On 8/27/19 11:49 AM, Brendan Higgins wrote:
+> > > Previously KUnit assumed that printk would always be present, which is
+> > > not a valid assumption to make. Fix that by ifdefing out functions which
+> > > directly depend on printk core functions similar to what dev_printk
+> > > does.
+> > >
+> > > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > > Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
+> > > Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > > ---
+> > >   include/kunit/test.h |  7 +++++++
+> > >   kunit/test.c         | 41 ++++++++++++++++++++++++-----------------
+> > >   2 files changed, 31 insertions(+), 17 deletions(-)
+> > >
+> > > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > > index 8b7eb03d4971..339af5f95c4a 100644
+> > > --- a/include/kunit/test.h
+> > > +++ b/include/kunit/test.h
+> > > @@ -339,9 +339,16 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
+> [...]
+> > Okay after reviewing this, I am not sure why you need to do all
+> > this.
+> >
+> > Why can't you just change the root function that throws the warn:
+> >
+> >   static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
+> > {
+> >          return vprintk_emit(0, level, NULL, 0, fmt, args);
+> > }
+> >
+> > You aren'r really doing anything extra here, other than calling
+> > vprintk_emit()
+>
+> Yeah, I did that a while ago. I think it was a combination of trying
+> to avoid an extra layer of adding and then removing the log level, and
+> that's what dev_printk and friends did.
+>
+> But I think you are probably right. It's a lot of maintenance overhead
+> to get rid of that. Probably best to just use what the printk people
+> have.
+>
+> > Unless I am missing something, can't you solve this problem by including
+> > printk.h and let it handle the !CONFIG_PRINTK case?
+>
+> Randy, I hope you don't mind, but I am going to ask you to re-ack my
+> next revision since it basically addresses the problem in a totally
+> different way.
 
-Think about it as "which kernel version was _this_ patch generated
-against" - it's a guide for me to know which kernel version it
-should be applied to.  The nearest Linus release (rc or final) is
-generally sufficient.
+Actually, scratch that. Checkpatch doesn't like me calling printk
+without using a KERN_<LEVEL>.
 
-If it doesn't apply to my current base, then I might check out that
-version, apply it there, and then merge it in, resolving any
-conflicts during the merge.
+Now that I am thinking back to when I wrote this. I think it also
+might not like using a dynamic KERN_<LEVEL> either (printk("%s my
+message", KERN_INFO)).
 
-It started off with a different purpose: when we had the older
-development system, such as the 2.x series kernels, we would have
-even x being the current stable kernels, and concurrently we'd
-also have x+1 as the development series.  When someone sent me a
-patch back then, it was important to know which kernel series it
-was meant for.
-
-I decided not to get rid of it because it provides useful
-information when patches don't apply, and gives more options
-than me just discarding the patch with a comment saying it
-doesn't apply.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+I am going to have to do some more investigation.
