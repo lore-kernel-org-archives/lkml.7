@@ -2,54 +2,58 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8F9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8525C3A59F
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B5921872
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B48421872
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566869843;
-	bh=YTj2OQ0bLnpmbV403KxQHmFyYkQKNaTl6BZw+TjWSKo=;
+	s=default; t=1566869846;
+	bh=9fzO3vorbQarzFRAtp23N7TysxPcDJe77WFWsd3wyJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aOmjQXAGg/qIT9NAq3eRAxkxUYUKWvLjnP3PdLLvBFnMq9RfDiSZInKtoxpCwZklD
-	 pr2rs8gqpGd/wtiwBrlhYO1DuNKLoXaOO4qZrW8n9n4pTkNYJyRXXSPc/yWqdHMAcp
-	 T3f2X0md5Badq0icWMTKpPfIENTK9MtPZJXTUx8k=
+	b=vviQokutOvUq+qAiohAmiIeq13NiPqy21uaO2uc3WgGD4dS7ZYEuq7R6IZFTjFd3/
+	 O6fTZZCR5Ifbct0LR6FPfuK4aWTcvOUditES8AbVKD/mTEpuk8/iSKTTuuXHb2nxgF
+	 SclxtpgMAAke3dY+DWIBY4nB9RPqpT5QDh2RkXGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfH0BhV (ORCPT
+        id S1728966AbfH0BhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 21:37:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50486 "EHLO mail.kernel.org"
+        Mon, 26 Aug 2019 21:37:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728908AbfH0BhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 21:37:19 -0400
+        id S1728655AbfH0BhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 21:37:22 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A920C217F5;
-        Tue, 27 Aug 2019 01:37:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65FC221848;
+        Tue, 27 Aug 2019 01:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566869837;
-        bh=YTj2OQ0bLnpmbV403KxQHmFyYkQKNaTl6BZw+TjWSKo=;
+        s=default; t=1566869841;
+        bh=9fzO3vorbQarzFRAtp23N7TysxPcDJe77WFWsd3wyJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tw81+GMjabAzu2Kp0AE4sz7ZzTRCChnB2Jhp/02fOucNfDY7t3K0sxAkc9p4c0cNu
-         5HX4l/GiVJydpcznKTnNgxs+L/VQheS7G2DD+60V8DrYiKLrs/0OziuhKBqo7vfV7s
-         Fgo5Wt1HDD8xXPyS74ohBvysba8ZV+82V5O3ARqM=
+        b=XkUI8nWhEYXYYQAi9T98vWOD/9AEALWW+pE/rzMmmnQfxLMWen1jCGkN+btoVaLiL
+         rgrlujRpghnYjCwkYISKK/gr7rHdVjTB59h0uz22/2WvIOhgmpvqhBwfkYRRar536/
+         oaKPGVUY6RLhiYYgsbt6+S6LvKYakeYYF8IFZPFE=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 12/33] perf augmented_raw_syscalls: Reduce perf_event_output() boilerplate
-Date:   Mon, 26 Aug 2019 22:36:13 -0300
-Message-Id: <20190827013634.3173-13-acme@kernel.org>
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 13/33] perf tools: Remove duplicate headers
+Date:   Mon, 26 Aug 2019 22:36:14 -0300
+Message-Id: <20190827013634.3173-14-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190827013634.3173-1-acme@kernel.org>
 References: <20190827013634.3173-1-acme@kernel.org>
@@ -60,99 +64,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Souptick Joarder <jrdr.linux@gmail.com>
 
-Add a augmented__output() helper to reduce the boilerplate of sending
-the augmented tracepoint to the PERF_EVENT_ARRAY BPF map associated with
-the bpf-output event used to communicate with the userspace perf trace
-tool.
+Removed headers which are included twice.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-ln99gt0j4fv0kw0778h6vphm@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1566663319-4283-1-git-send-email-jrdr.linux@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../examples/bpf/augmented_raw_syscalls.c     | 24 +++++++++----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ tools/perf/util/data.c                 | 1 -
+ tools/perf/util/get_current_dir_name.c | 1 -
+ tools/perf/util/stat-display.c         | 1 -
+ 3 files changed, 3 deletions(-)
 
-diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index 8fd5ea059903..b80437971d80 100644
---- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
-+++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -87,6 +87,12 @@ static inline struct augmented_args_payload *augmented_args_payload(void)
- 	return bpf_map_lookup_elem(&augmented_args_tmp, &key);
- }
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 1d1b97a92c3f..74aafe0df506 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -9,7 +9,6 @@
+ #include <unistd.h>
+ #include <string.h>
+ #include <asm/bug.h>
+-#include <sys/types.h>
+ #include <dirent.h>
  
-+static inline int augmented__output(void *ctx, struct augmented_args_payload *args, int len)
-+{
-+	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
-+	return perf_event_output(ctx, &__augmented_syscalls__, BPF_F_CURRENT_CPU, args, len);
-+}
-+
- static inline
- unsigned int augmented_arg__read_str(struct augmented_arg *augmented_arg, const void *arg, unsigned int arg_len)
- {
-@@ -142,8 +148,7 @@ int sys_enter_connect(struct syscall_enter_args *args)
+ #include "data.h"
+diff --git a/tools/perf/util/get_current_dir_name.c b/tools/perf/util/get_current_dir_name.c
+index 01f32f26552d..b205d929245f 100644
+--- a/tools/perf/util/get_current_dir_name.c
++++ b/tools/perf/util/get_current_dir_name.c
+@@ -5,7 +5,6 @@
+ #include "get_current_dir_name.h"
+ #include <unistd.h>
+ #include <stdlib.h>
+-#include <stdlib.h>
  
- 	probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
+ /* Android's 'bionic' library, for one, doesn't have this */
  
--	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
--	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len + socklen);
-+	return augmented__output(args, augmented_args, len + socklen);
- }
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 51d6781aa90d..1461dac2322d 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -14,7 +14,6 @@
+ #include "string2.h"
+ #include <linux/ctype.h>
+ #include "cgroup.h"
+-#include <math.h>
+ #include <api/fs/fs.h>
  
- SEC("!syscalls:sys_enter_sendto")
-@@ -162,8 +167,7 @@ int sys_enter_sendto(struct syscall_enter_args *args)
- 
- 	probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
- 
--	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
--	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len + socklen);
-+	return augmented__output(args, augmented_args, len + socklen);
- }
- 
- SEC("!syscalls:sys_enter_open")
-@@ -178,8 +182,7 @@ int sys_enter_open(struct syscall_enter_args *args)
- 
- 	len += augmented_arg__read_str(&augmented_args->arg, filename_arg, sizeof(augmented_args->arg.value));
- 
--	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
--	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
-+	return augmented__output(args, augmented_args, len);
- }
- 
- SEC("!syscalls:sys_enter_openat")
-@@ -194,8 +197,7 @@ int sys_enter_openat(struct syscall_enter_args *args)
- 
- 	len += augmented_arg__read_str(&augmented_args->arg, filename_arg, sizeof(augmented_args->arg.value));
- 
--	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
--	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
-+	return augmented__output(args, augmented_args, len);
- }
- 
- SEC("!syscalls:sys_enter_rename")
-@@ -212,8 +214,7 @@ int sys_enter_rename(struct syscall_enter_args *args)
- 	oldpath_len = augmented_arg__read_str(&augmented_args->arg, oldpath_arg, sizeof(augmented_args->arg.value));
- 	len += oldpath_len + augmented_arg__read_str((void *)(&augmented_args->arg) + oldpath_len, newpath_arg, sizeof(augmented_args->arg.value));
- 
--	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
--	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
-+	return augmented__output(args, augmented_args, len);
- }
- 
- SEC("!syscalls:sys_enter_renameat")
-@@ -230,8 +231,7 @@ int sys_enter_renameat(struct syscall_enter_args *args)
- 	oldpath_len = augmented_arg__read_str(&augmented_args->arg, oldpath_arg, sizeof(augmented_args->arg.value));
- 	len += oldpath_len + augmented_arg__read_str((void *)(&augmented_args->arg) + oldpath_len, newpath_arg, sizeof(augmented_args->arg.value));
- 
--	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
--	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
-+	return augmented__output(args, augmented_args, len);
- }
- 
- SEC("raw_syscalls:sys_enter")
+ #define CNTR_NOT_SUPPORTED	"<not supported>"
 -- 
 2.21.0
 
