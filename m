@@ -2,53 +2,55 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9720C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B403DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA305206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8587B2189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893243;
-	bh=bIUiQfUrAfiyzT/EZEz2yoa3/JD/aDxkK+xgJWgp3uU=;
+	s=default; t=1566893247;
+	bh=5l8NdeJXT/Pd1cRyEEteliHe12VXiLgTXUaRCo6yo38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0n/4cKMSmBwjxboZe57kDthmDEtrxfc+nkKQnvwxgYoIV19vvSLAO7V3jGncZpajx
-	 DSgpQmeqetnb+bY32d3SpahJ3Ytda9nv+FuKWFYXW0jHZEbzcMUUYpxsY037m8v+DA
-	 EmmOl1U0c36Jh++yCUd1qE87ll5DXsC6hZ/XXc7E=
+	b=xo0UjX2frzWLBOqtrnptqRhYNz0ge5ddfNgl/hZiNsTdeNMqxLT5YxpPVSH9AjvTg
+	 q5/rCKPp37U4RUaw3VhGuRDPUWfnZVTeGHM77lTpCDLNILEaxtaoZORU/hxKTtElyW
+	 vr19tfk0aQ+GiyFtVMriIR5LTC+f5/CHJCSkOkmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733172AbfH0IHW (ORCPT
+        id S1732911AbfH0IH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:07:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37372 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:07:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730471AbfH0IHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:07:18 -0400
+        id S1730471AbfH0IHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:07:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26A79206BA;
-        Tue, 27 Aug 2019 08:07:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1B8D206BA;
+        Tue, 27 Aug 2019 08:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893237;
-        bh=bIUiQfUrAfiyzT/EZEz2yoa3/JD/aDxkK+xgJWgp3uU=;
+        s=default; t=1566893243;
+        bh=5l8NdeJXT/Pd1cRyEEteliHe12VXiLgTXUaRCo6yo38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CU/w/lzPKqa5QGIF4ZIQGpmaw8m/VzIj4N+Q7/sXOfKnFqdW6QTaKAflonuRcpfcl
-         bDYl8a7uFCXZEn8TpgQdYuEf2qgu9APcNIb/YnhfX81Z+Aaw3yzE7pikdc6Ud3nLVG
-         6qtDEcc3E+BAwc1KTEnAJApa9CUsNd9akJf5ro5Y=
+        b=mgyPoAFWWjRctR9q/WL5HUAJHoQospiQHQriJ+/Rol7hmdx98nO6eZ7oGwC2snZXG
+         vjUQheSJnVb+Cxsz6cR6oqBvHJEQ+J5d9z4fieMh3+4fvK1K79bm2EiVBk/b9zt78l
+         Rz2KgPRlo6LLnxLO0o0LYwHwh6o47DlZwVOLjHT0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Dmitry Fomichev <dmitry.fomichev@wdc.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 156/162] dm zoned: fix potential NULL dereference in dmz_do_reclaim()
-Date:   Tue, 27 Aug 2019 09:51:24 +0200
-Message-Id: <20190827072744.239419615@linuxfoundation.org>
+        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.2 148/162] mm: memcontrol: flush percpu vmstats before releasing memcg
+Date:   Tue, 27 Aug 2019 09:51:16 +0200
+Message-Id: <20190827072743.890460259@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -61,45 +63,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e0702d90b79d430b0ccc276ead4f88440bb51352 ]
+From: Roman Gushchin <guro@fb.com>
 
-This function is supposed to return error pointers so it matches the
-dmz_get_rnd_zone_for_reclaim() function.  The current code could lead to
-a NULL dereference in dmz_do_reclaim()
+commit c350a99ea2b1b666c28948d74ab46c16913c28a7 upstream.
 
-Fixes: b234c6d7a703 ("dm zoned: improve error handling in reclaim")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Percpu caching of local vmstats with the conditional propagation by the
+cgroup tree leads to an accumulation of errors on non-leaf levels.
+
+Let's imagine two nested memory cgroups A and A/B.  Say, a process
+belonging to A/B allocates 100 pagecache pages on the CPU 0.  The percpu
+cache will spill 3 times, so that 32*3=96 pages will be accounted to A/B
+and A atomic vmstat counters, 4 pages will remain in the percpu cache.
+
+Imagine A/B is nearby memory.max, so that every following allocation
+triggers a direct reclaim on the local CPU.  Say, each such attempt will
+free 16 pages on a new cpu.  That means every percpu cache will have -16
+pages, except the first one, which will have 4 - 16 = -12.  A/B and A
+atomic counters will not be touched at all.
+
+Now a user removes A/B.  All percpu caches are freed and corresponding
+vmstat numbers are forgotten.  A has 96 pages more than expected.
+
+As memory cgroups are created and destroyed, errors do accumulate.  Even
+1-2 pages differences can accumulate into large numbers.
+
+To fix this issue let's accumulate and propagate percpu vmstat values
+before releasing the memory cgroup.  At this point these numbers are
+stable and cannot be changed.
+
+Since on cpu hotplug we do flush percpu vmstats anyway, we can iterate
+only over online cpus.
+
+Link: http://lkml.kernel.org/r/20190819202338.363363-2-guro@fb.com
+Fixes: 42a300353577 ("mm: memcontrol: fix recursive statistics correctness & scalabilty")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/md/dm-zoned-metadata.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/memcontrol.c |   40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/drivers/md/dm-zoned-metadata.c b/drivers/md/dm-zoned-metadata.c
-index 00e7a343eacf1..7e8d7fc99410d 100644
---- a/drivers/md/dm-zoned-metadata.c
-+++ b/drivers/md/dm-zoned-metadata.c
-@@ -1579,7 +1579,7 @@ static struct dm_zone *dmz_get_seq_zone_for_reclaim(struct dmz_metadata *zmd)
- 	struct dm_zone *zone;
- 
- 	if (list_empty(&zmd->map_seq_list))
--		return NULL;
-+		return ERR_PTR(-EBUSY);
- 
- 	list_for_each_entry(zone, &zmd->map_seq_list, link) {
- 		if (!zone->bzone)
-@@ -1588,7 +1588,7 @@ static struct dm_zone *dmz_get_seq_zone_for_reclaim(struct dmz_metadata *zmd)
- 			return zone;
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -3150,6 +3150,41 @@ static u64 mem_cgroup_read_u64(struct cg
  	}
- 
--	return NULL;
-+	return ERR_PTR(-EBUSY);
  }
  
- /*
--- 
-2.20.1
-
++static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg)
++{
++	unsigned long stat[MEMCG_NR_STAT];
++	struct mem_cgroup *mi;
++	int node, cpu, i;
++
++	for (i = 0; i < MEMCG_NR_STAT; i++)
++		stat[i] = 0;
++
++	for_each_online_cpu(cpu)
++		for (i = 0; i < MEMCG_NR_STAT; i++)
++			stat[i] += raw_cpu_read(memcg->vmstats_percpu->stat[i]);
++
++	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
++		for (i = 0; i < MEMCG_NR_STAT; i++)
++			atomic_long_add(stat[i], &mi->vmstats[i]);
++
++	for_each_node(node) {
++		struct mem_cgroup_per_node *pn = memcg->nodeinfo[node];
++		struct mem_cgroup_per_node *pi;
++
++		for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
++			stat[i] = 0;
++
++		for_each_online_cpu(cpu)
++			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
++				stat[i] += raw_cpu_read(
++					pn->lruvec_stat_cpu->count[i]);
++
++		for (pi = pn; pi; pi = parent_nodeinfo(pi, node))
++			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
++				atomic_long_add(stat[i], &pi->lruvec_stat[i]);
++	}
++}
++
+ #ifdef CONFIG_MEMCG_KMEM
+ static int memcg_online_kmem(struct mem_cgroup *memcg)
+ {
+@@ -4551,6 +4586,11 @@ static void __mem_cgroup_free(struct mem
+ {
+ 	int node;
+ 
++	/*
++	 * Flush percpu vmstats to guarantee the value correctness
++	 * on parent's and all ancestor levels.
++	 */
++	memcg_flush_percpu_vmstats(memcg);
+ 	for_each_node(node)
+ 		free_mem_cgroup_per_node_info(memcg, node);
+ 	free_percpu(memcg->vmstats_percpu);
 
 
