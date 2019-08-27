@@ -2,56 +2,55 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECAFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9022CC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E29262080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A092173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566869896;
-	bh=M0gOTArMUtApwHA0ZY65aMJFsM3Hs3HmmwarAHWVWfs=;
+	s=default; t=1566869905;
+	bh=I7ubcdmLXwxkDg/lL/+K7pzEiMBpYJPmkHTiPqmZOKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LBB1QNXcqW2DWoEnFNmSzInlhV57pgwqG7w4cjvxqsbqn+dMqZw4FCIHluxBmQD1a
-	 Px4IKGml+NFzn9/sEaYwjp82QSvcDUVVwuMyN7Lj4gblz9kLPNtd+zPe8t5uuQL9Pe
-	 zEVV9Gtnz4l+Bb/AiMy+TkM6wNQlUfBFzgE7eVLQ=
+	b=sShn6j7j4G0SYNAcNQIjVw2qnlKxvdwlS3qfgDivKMWGVxjCxWxIItSLPSNoOm+PE
+	 g63unM8ImL9VImenkDNYWGKtd9PkZJZN8LIFRQBtyWzWB9shs2QuoXyM104xtqjMdI
+	 XQL0sSKIKQdt6S5vwqCuq/K+iDS5JEa/P/S2lR0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729278AbfH0BiO (ORCPT
+        id S1729327AbfH0BiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 21:38:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51310 "EHLO mail.kernel.org"
+        Mon, 26 Aug 2019 21:38:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729246AbfH0BiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 21:38:09 -0400
+        id S1728702AbfH0BiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 21:38:20 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75C32217F5;
-        Tue, 27 Aug 2019 01:38:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 417742080C;
+        Tue, 27 Aug 2019 01:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566869888;
-        bh=M0gOTArMUtApwHA0ZY65aMJFsM3Hs3HmmwarAHWVWfs=;
+        s=default; t=1566869899;
+        bh=I7ubcdmLXwxkDg/lL/+K7pzEiMBpYJPmkHTiPqmZOKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D/AqCHxSvnu8/MsNcmXfuFkdEwbMizbQBocPjyaTplvnsD9kQOgan//TltKSwwl6T
-         x6/ql8jyx6onBwxUv2GWt9yASxHNG1cNaQnwZeafZjpnYWiC3iuJzHnbswoBDtH70A
-         NbtfaVemrf8yDnd7DjdLcuQOmEGTbH2AdGtlcP0g=
+        b=nJyMG0KNPAhGNg9lUgcUCSLuwHCyFGT5AfN1LX/7V4gu2Cq1sIEpIU6ys0ke1vFzh
+         ztiyxGTHot/uiuRI690JJWeTCfhxpClQJz30icq1RCs58YeyYL+1ksPRC0xkW32efT
+         yAbk5JnN8rvOKQ12A01h4f9M1hvoU/7CZOvwqunk=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 28/33] libperf: Add PERF_RECORD_SAMPLE 'struct sample_event' to perf/event.h
-Date:   Mon, 26 Aug 2019 22:36:29 -0300
-Message-Id: <20190827013634.3173-29-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 32/33] perf tool: Rename perf_tool::bpf_event to bpf
+Date:   Mon, 26 Aug 2019 22:36:33 -0300
+Message-Id: <20190827013634.3173-33-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190827013634.3173-1-acme@kernel.org>
 References: <20190827013634.3173-1-acme@kernel.org>
@@ -62,111 +61,227 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Move the PERF_RECORD_SAMPLE event definition to libperf's event.h header
-include.
+No need for that _event suffix, do just like all the other meta event
+handlers and suppress that suffix.
 
-In order to keep libperf simple, we switch 'u64/u32/u16/u8' types used
-events to their generic '__u*' versions.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190825181752.722-13-jolsa@kernel.org
+Cc: Song Liu <songliubraving@fb.com>
+Link: https://lkml.kernel.org/n/tip-03spzxtqafbabbbmnm7y4xfx@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/perf/event.h | 5 +++++
- tools/perf/util/event.h             | 5 -----
- tools/perf/util/evlist.c            | 2 +-
- tools/perf/util/evsel.c             | 8 ++++----
- 4 files changed, 10 insertions(+), 10 deletions(-)
+ tools/perf/builtin-script.c |  4 ++--
+ tools/perf/util/bpf-event.c | 11 +++++------
+ tools/perf/util/bpf-event.h | 10 +++++-----
+ tools/perf/util/event.c     | 14 +++++++-------
+ tools/perf/util/event.h     | 10 +++++-----
+ tools/perf/util/machine.c   |  2 +-
+ tools/perf/util/session.c   |  6 +++---
+ tools/perf/util/tool.h      |  2 +-
+ 8 files changed, 29 insertions(+), 30 deletions(-)
 
-diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
-index 585c9d82dba3..e768a2dfbe53 100644
---- a/tools/perf/lib/include/perf/event.h
-+++ b/tools/perf/lib/include/perf/event.h
-@@ -104,4 +104,9 @@ struct bpf_event {
- 	__u8			 tag[BPF_TAG_SIZE];  // prog tag
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 6f389b33fbe5..51e7e6d0eee6 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2492,8 +2492,8 @@ static int __cmd_script(struct perf_script *script)
+ 		script->tool.finished_round = process_finished_round_event;
+ 	}
+ 	if (script->show_bpf_events) {
+-		script->tool.ksymbol   = process_bpf_events;
+-		script->tool.bpf_event = process_bpf_events;
++		script->tool.ksymbol = process_bpf_events;
++		script->tool.bpf     = process_bpf_events;
+ 	}
+ 
+ 	if (perf_script__setup_per_event_dump(script)) {
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index 28fa2b1ce66e..2d6d500c9af7 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -64,12 +64,11 @@ static int machine__process_bpf_event_load(struct machine *machine,
+ 	return 0;
+ }
+ 
+-int machine__process_bpf_event(struct machine *machine __maybe_unused,
+-			       union perf_event *event,
+-			       struct perf_sample *sample __maybe_unused)
++int machine__process_bpf(struct machine *machine, union perf_event *event,
++			 struct perf_sample *sample)
+ {
+ 	if (dump_trace)
+-		perf_event__fprintf_bpf_event(event, stdout);
++		perf_event__fprintf_bpf(event, stdout);
+ 
+ 	switch (event->bpf.type) {
+ 	case PERF_BPF_EVENT_PROG_LOAD:
+@@ -83,7 +82,7 @@ int machine__process_bpf_event(struct machine *machine __maybe_unused,
+ 		 */
+ 		break;
+ 	default:
+-		pr_debug("unexpected bpf_event type of %d\n", event->bpf.type);
++		pr_debug("unexpected bpf event type of %d\n", event->bpf.type);
+ 		break;
+ 	}
+ 	return 0;
+@@ -410,7 +409,7 @@ static int bpf_event__sb_cb(union perf_event *event, void *data)
+ 		 */
+ 		break;
+ 	default:
+-		pr_debug("unexpected bpf_event type of %d\n", event->bpf.type);
++		pr_debug("unexpected bpf event type of %d\n", event->bpf.type);
+ 		break;
+ 	}
+ 
+diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
+index 26ab9239f986..417b78835ea0 100644
+--- a/tools/perf/util/bpf-event.h
++++ b/tools/perf/util/bpf-event.h
+@@ -30,8 +30,8 @@ struct btf_node {
  };
  
-+struct sample_event {
-+	struct perf_event_header header;
-+	__u64			 array[];
-+};
-+
- #endif /* __LIBPERF_EVENT_H */
+ #ifdef HAVE_LIBBPF_SUPPORT
+-int machine__process_bpf_event(struct machine *machine, union perf_event *event,
+-			       struct perf_sample *sample);
++int machine__process_bpf(struct machine *machine, union perf_event *event,
++			 struct perf_sample *sample);
+ 
+ int perf_event__synthesize_bpf_events(struct perf_session *session,
+ 				      perf_event__handler_t process,
+@@ -43,9 +43,9 @@ void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+ 				    struct perf_env *env,
+ 				    FILE *fp);
+ #else
+-static inline int machine__process_bpf_event(struct machine *machine __maybe_unused,
+-					     union perf_event *event __maybe_unused,
+-					     struct perf_sample *sample __maybe_unused)
++static inline int machine__process_bpf(struct machine *machine __maybe_unused,
++				       union perf_event *event __maybe_unused,
++				       struct perf_sample *sample __maybe_unused)
+ {
+ 	return 0;
+ }
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 17304df44fc2..33616ea62a47 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -1343,12 +1343,12 @@ int perf_event__process_ksymbol(struct perf_tool *tool __maybe_unused,
+ 	return machine__process_ksymbol(machine, event, sample);
+ }
+ 
+-int perf_event__process_bpf_event(struct perf_tool *tool __maybe_unused,
+-				  union perf_event *event,
+-				  struct perf_sample *sample __maybe_unused,
+-				  struct machine *machine)
++int perf_event__process_bpf(struct perf_tool *tool __maybe_unused,
++			    union perf_event *event,
++			    struct perf_sample *sample,
++			    struct machine *machine)
+ {
+-	return machine__process_bpf_event(machine, event, sample);
++	return machine__process_bpf(machine, event, sample);
+ }
+ 
+ size_t perf_event__fprintf_mmap(union perf_event *event, FILE *fp)
+@@ -1491,7 +1491,7 @@ size_t perf_event__fprintf_ksymbol(union perf_event *event, FILE *fp)
+ 		       event->ksymbol.flags, event->ksymbol.name);
+ }
+ 
+-size_t perf_event__fprintf_bpf_event(union perf_event *event, FILE *fp)
++size_t perf_event__fprintf_bpf(union perf_event *event, FILE *fp)
+ {
+ 	return fprintf(fp, " type %u, flags %u, id %u\n",
+ 		       event->bpf.type, event->bpf.flags, event->bpf.id);
+@@ -1536,7 +1536,7 @@ size_t perf_event__fprintf(union perf_event *event, FILE *fp)
+ 		ret += perf_event__fprintf_ksymbol(event, fp);
+ 		break;
+ 	case PERF_RECORD_BPF_EVENT:
+-		ret += perf_event__fprintf_bpf_event(event, fp);
++		ret += perf_event__fprintf_bpf(event, fp);
+ 		break;
+ 	default:
+ 		ret += fprintf(fp, "\n");
 diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 091a0690a280..dee0ee57efc2 100644
+index 7251e2eee441..429a3fe52d6c 100644
 --- a/tools/perf/util/event.h
 +++ b/tools/perf/util/event.h
-@@ -37,11 +37,6 @@
- /* perf sample has 16 bits size limit */
- #define PERF_SAMPLE_MAX_SIZE (1 << 16)
+@@ -683,10 +683,10 @@ int perf_event__process_ksymbol(struct perf_tool *tool,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+ 				struct machine *machine);
+-int perf_event__process_bpf_event(struct perf_tool *tool,
+-				  union perf_event *event,
+-				  struct perf_sample *sample,
+-				  struct machine *machine);
++int perf_event__process_bpf(struct perf_tool *tool,
++			    union perf_event *event,
++			    struct perf_sample *sample,
++			    struct machine *machine);
+ int perf_tool__process_synth_event(struct perf_tool *tool,
+ 				   union perf_event *event,
+ 				   struct machine *machine,
+@@ -751,7 +751,7 @@ size_t perf_event__fprintf_thread_map(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_cpu_map(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_namespaces(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_ksymbol(union perf_event *event, FILE *fp);
+-size_t perf_event__fprintf_bpf_event(union perf_event *event, FILE *fp);
++size_t perf_event__fprintf_bpf(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf(union perf_event *event, FILE *fp);
  
--struct sample_event {
--	struct perf_event_header        header;
--	u64 array[];
--};
--
- struct regs_dump {
- 	u64 abi;
- 	u64 mask;
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index ff415680fe0a..47bc54111f57 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -587,7 +587,7 @@ struct evsel *perf_evlist__id2evsel_strict(struct evlist *evlist,
- static int perf_evlist__event2id(struct evlist *evlist,
- 				 union perf_event *event, u64 *id)
- {
--	const u64 *array = event->sample.array;
-+	const __u64 *array = event->sample.array;
- 	ssize_t n;
- 
- 	n = (event->header.size - sizeof(event->header)) >> 3;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 9fadd5857ccc..778262f68d5c 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2009,7 +2009,7 @@ static int perf_evsel__parse_id_sample(const struct evsel *evsel,
- 				       struct perf_sample *sample)
- {
- 	u64 type = evsel->core.attr.sample_type;
--	const u64 *array = event->sample.array;
-+	const __u64 *array = event->sample.array;
- 	bool swapped = evsel->needs_swap;
- 	union u64_swap u;
- 
-@@ -2099,7 +2099,7 @@ int perf_evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- {
- 	u64 type = evsel->core.attr.sample_type;
- 	bool swapped = evsel->needs_swap;
--	const u64 *array;
-+	const __u64 *array;
- 	u16 max_size = event->header.size;
- 	const void *endp = (void *)event + max_size;
- 	u64 sz;
-@@ -2378,7 +2378,7 @@ int perf_evsel__parse_sample_timestamp(struct evsel *evsel,
- 				       u64 *timestamp)
- {
- 	u64 type = evsel->core.attr.sample_type;
--	const u64 *array;
-+	const __u64 *array;
- 
- 	if (!(type & PERF_SAMPLE_TIME))
+ int kallsyms__get_function_start(const char *kallsyms_filename,
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 86b7fd24b1e1..93483f1764d3 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1922,7 +1922,7 @@ int machine__process_event(struct machine *machine, union perf_event *event,
+ 	case PERF_RECORD_KSYMBOL:
+ 		ret = machine__process_ksymbol(machine, event, sample); break;
+ 	case PERF_RECORD_BPF_EVENT:
+-		ret = machine__process_bpf_event(machine, event, sample); break;
++		ret = machine__process_bpf(machine, event, sample); break;
+ 	default:
+ 		ret = -1;
+ 		break;
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 4bfec9db36d6..5786e9c807c5 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -473,8 +473,8 @@ void perf_tool__fill_defaults(struct perf_tool *tool)
+ 		tool->context_switch = perf_event__process_switch;
+ 	if (tool->ksymbol == NULL)
+ 		tool->ksymbol = perf_event__process_ksymbol;
+-	if (tool->bpf_event == NULL)
+-		tool->bpf_event = perf_event__process_bpf_event;
++	if (tool->bpf == NULL)
++		tool->bpf = perf_event__process_bpf;
+ 	if (tool->read == NULL)
+ 		tool->read = process_event_sample_stub;
+ 	if (tool->throttle == NULL)
+@@ -1452,7 +1452,7 @@ static int machines__deliver_event(struct machines *machines,
+ 	case PERF_RECORD_KSYMBOL:
+ 		return tool->ksymbol(tool, event, sample, machine);
+ 	case PERF_RECORD_BPF_EVENT:
+-		return tool->bpf_event(tool, event, sample, machine);
++		return tool->bpf(tool, event, sample, machine);
+ 	default:
+ 		++evlist->stats.nr_unknown_events;
  		return -1;
-@@ -2529,7 +2529,7 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type,
- 				  u64 read_format,
- 				  const struct perf_sample *sample)
- {
--	u64 *array;
-+	__u64 *array;
- 	size_t sz;
- 	/*
- 	 * used for cross-endian analysis. See git commit 65014ab3
+diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+index 7f95dd1d6883..2abbf668b8de 100644
+--- a/tools/perf/util/tool.h
++++ b/tools/perf/util/tool.h
+@@ -56,7 +56,7 @@ struct perf_tool {
+ 			throttle,
+ 			unthrottle,
+ 			ksymbol,
+-			bpf_event;
++			bpf;
+ 
+ 	event_attr_op	attr;
+ 	event_attr_op	event_update;
 -- 
 2.21.0
 
