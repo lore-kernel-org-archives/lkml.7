@@ -2,151 +2,369 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C3DC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88B9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229FE2189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB96206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:28:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JoD1ut+8"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="qDYbiUeo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbfH0J15 (ORCPT
+        id S1729407AbfH0J20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:27:57 -0400
-Received: from mail-eopbgr60056.outbound.protection.outlook.com ([40.107.6.56]:15150
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725793AbfH0J14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:27:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eGZxb0FVie3J918HVdVjOgvP+zsGEZRhXX8mo0hWvcFghHynBJcsDhd+N6sqEzZ6Ld6klZfEgJGe8OYrcuNPF7HjP6MQN2fVH4PsQkB4EnEn5Pc7W3CaIN4WB8BZOCg3I4gCEbzkikMpm2UqfOUptWvXL1qdKEdYVP3K19jSQ0/Ny5wI48NbOG6w9nMtUeeAvXqTTWZ8OVxyVvO9LauxtKoLqEISstrEJj/X3O172+b6FnpLpJL8Nntp0D3cb28eKICgaRnsvsgIZ7w8sjhHOQ1BJRrQ7PWl7rHshM25rge1r8+iZGLLI3gDZtYlEyshuL/4AHtvmOl5oyC5ctHqqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z5MZyXFTtEtFKMu7SJdyOkMnL8vRhRWLKC4eUU4WjJY=;
- b=jW73TuF/ru85gA1MhyHV0vXMzO0j7r2/XIheu+gxiYAWjO5pGBDcInaE/lIvEeL2uxaQ2Q1crj49WNoL+A84lwbvVqYQqSbd0+dhaH2KBmnJAntGZ1SU3gQOPbznxV6TSsF5kBSaLM3atVG9QmLG+xzK2WQ4GzGrtGZdRG8a5sdsgVwpZ4+nyjfQYFroVlxWE/0ILPmABkoAAjtC1jSZYVjZp9MbyQLBrPo6CGZVsKBDQULed9YyRlyk3VPa+XimesjMbhHGPtRbwwJbdVlwcUz6/hrTKPGPT1E/lmpC671TZXdMthZRL0gCSvicq+oDLGH7FUVHV5Ayq/RlkpgCCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z5MZyXFTtEtFKMu7SJdyOkMnL8vRhRWLKC4eUU4WjJY=;
- b=JoD1ut+8RDQDTnsHnjVqx/pjhLBe3gPAhaMoAUYOGKv/DeKSkHE7TNEmEKhcMLZSJqFefAb548NPm4ixi8Z+JcXXfRmvSkchwVnZYr3F323UcyXG3tABDrG5wqN8T7EpVE2zJL2pklBho7fjv0arbRcBi63kuhkZSGB6R12Dbwg=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6866.eurprd04.prod.outlook.com (52.132.213.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Tue, 27 Aug 2019 09:27:53 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::5d98:e1f4:aa72:16b4]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::5d98:e1f4:aa72:16b4%4]) with mapi id 15.20.2178.022; Tue, 27 Aug 2019
- 09:27:53 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "julien.grall@arm.com" <julien.grall@arm.com>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "van.freenix@gmail.com" <van.freenix@gmail.com>
-Subject: RE: [PATCH] arm: xen: mm: use __GPF_DMA32 for arm64
-Thread-Topic: [PATCH] arm: xen: mm: use __GPF_DMA32 for arm64
-Thread-Index: AQHVNi9zmpVhxJk2Z0aPUBEkePn3c6bXnoowgDdoLuA=
-Date:   Tue, 27 Aug 2019 09:27:53 +0000
-Message-ID: <AM0PR04MB44818BB69CAD35DC989A416988A00@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190709083729.11135-1-peng.fan@nxp.com>
- <AM0PR04MB448135E1B2C85F0B6029F7B788C70@AM0PR04MB4481.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB448135E1B2C85F0B6029F7B788C70@AM0PR04MB4481.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cc080c13-9b1e-40b2-3565-08d72ad0d678
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6866;
-x-ms-traffictypediagnostic: AM0PR04MB6866:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB6866743A9FE5324CDF3C0CA288A00@AM0PR04MB6866.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:269;
-x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(366004)(39860400002)(199004)(189003)(8936002)(6436002)(6116002)(55016002)(316002)(486006)(14454004)(476003)(44832011)(5660300002)(8676002)(66946007)(25786009)(3846002)(7736002)(33656002)(446003)(11346002)(6246003)(4326008)(54906003)(53936002)(2906002)(64756008)(66556008)(66476007)(76116006)(66446008)(2201001)(76176011)(186003)(99286004)(71190400001)(71200400001)(256004)(14444005)(102836004)(478600001)(26005)(6506007)(86362001)(7696005)(2501003)(9686003)(4744005)(81156014)(81166006)(110136005)(229853002)(305945005)(74316002)(52536014)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6866;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 9QXx9L9rNlHM7/lOH+iTscQowqdPjE4Czy1EsEVzsUei/tEJ3Hsq499xiK4GeaL00Wsv+ORuZv6BR+VtSLHP39Fw08sQyxnie1k59YfPpmErU7RqyrLUAutEJF0OuBszqKBSEFenX2Dlj/0jLca+g0CI2QFWgg2l031sgLhxHYU9d1lnNwdlMoy564j3q+clSBIBWVAC0I2PKw+imiSgSZGvGT2zrJHWzu/2tIdaftcZFL0/9FLLbmFnqcrV/T4Sema5+zNdVnV4XnM60cofS1iRg8N8vd2V7SrwJUHappsEOz578lKEnoZirMdQA+jj0ly0JPqdyPp7mFsBj/JomT9eoPr9UK/XLlmfTElImkRF5hjKtAKrYUTWbZUwIoY74IeytXw5ciBaDFKq8xBhj1jP4P0LnHy0dVKa5I/m4WU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 27 Aug 2019 05:28:26 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53615 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfH0J20 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 05:28:26 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 10so2299840wmp.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 02:28:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KD1R6ByN/3R82p9ak3vm+s3BMXArMxxW+15y2czIGAE=;
+        b=qDYbiUeoWbOmkfxAYoW+Q0M1Yc1bU6L9JcwHvViFtTTchUEXYn8vxmejI88vcOcCuv
+         c2VllOIlI5ckqOUvgaJNF+OLzkXtgYiZPKT2FAOUFMFXBQma9xjv7VVLvz80100Tm1RO
+         38iWQqxwp7S2gWBUIfMvZixUUoLd4tjF9NqZTMXpUljpnkuN29ignL2SbU5z1/ImfKG1
+         2qG26xJDBj09/ILW1FgQhaDU6n2Z41OPLUz09ll4qnihSlOfOY1UmIHqs189fpz6mOXG
+         rlQGRwbwSBt60FM+2c6uU0Z3K5MlTt2jeFPGKbJBCF+CpqtViC7qMcP+amWl2DzRuF/g
+         bbSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KD1R6ByN/3R82p9ak3vm+s3BMXArMxxW+15y2czIGAE=;
+        b=rAEUZDvH+P0JxbkReKGksHk1zO7wRAh+n4PsW7j+QrTM4CliV0FhJ4PQGTqqyw99im
+         wX86rpavyaNnmCLSEywkyISVc1IGjJxHeiaNgfbjHVjl8TeK7rJei0x5PsfGhki92MLE
+         iZ+ap5cyPD3OPdrzNA9XVUl2nX9leHIoWVKk40NfQFyzkNdo2VwVjwmW5Ff5ve1uMm+b
+         eILb2F7XIhP0rowzNln9Dh4fqncaMQK+jD5SxOTQx5v2rMyRG1FO8GItZNAJdxbXjijb
+         xCRiWdeK69+udoj6VPsqgPHx9/G+08cLCej60rSYLkXcngQKIrQt83iD6B9hpICigjD+
+         fRKg==
+X-Gm-Message-State: APjAAAXs4vSRAdUktoLbSCKa2kLgFqNpYNmvgVBn6ksXDNIgrWPkotHS
+        paBRdLsAEou7o63OV9D7IWKh6sY1leRhmrYFUBbMPQ==
+X-Google-Smtp-Source: APXvYqzmCKihkrDrdGsBhCo8OeLICgm1ur4vzTRcXbBzmPILVEdii9ui9AtvUYLP9Fqj+muLw2EgeGi6VqJEaJbWowI=
+X-Received: by 2002:a1c:3d89:: with SMTP id k131mr25133981wma.24.1566898102426;
+ Tue, 27 Aug 2019 02:28:22 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc080c13-9b1e-40b2-3565-08d72ad0d678
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 09:27:53.5241
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RxGjywD07xFcFfzd7xOcNbeHc1X/ez3EkQ7GDLLnWUZbkGS7d9mq4tlHFr6tQgULxYJE4dXoVjNQz9lyRhNzTA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6866
+References: <20190826233256.32383-1-atish.patra@wdc.com> <20190826233256.32383-3-atish.patra@wdc.com>
+ <20190827075831.GD682@rapoport-lnx> <CAAhSdy3gynEv1k84pghLY6+HcpBCiteUQUDbGn4_eEH_UFpbCA@mail.gmail.com>
+ <20190827083913.GG682@rapoport-lnx>
+In-Reply-To: <20190827083913.GG682@rapoport-lnx>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 27 Aug 2019 14:58:11 +0530
+Message-ID: <CAAhSdy0wBhcggNOd0C4RapnLbZ-a0TtrQ_XiZHNo9KQnJcUaBA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] RISC-V: Add basic support for SBI v0.2
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alan Kao <alankao@andestech.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Gary Guo <gary@garyguo.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping again..
-
-+Julien
-
-> Subject: RE: [PATCH] arm: xen: mm: use __GPF_DMA32 for arm64
->=20
-> Hi Russell, Stefano
->=20
-> > Subject: [PATCH] arm: xen: mm: use __GPF_DMA32 for arm64
->=20
-> Any comments?
->=20
+On Tue, Aug 27, 2019 at 2:09 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+>
+> On Tue, Aug 27, 2019 at 01:53:23PM +0530, Anup Patel wrote:
+> > On Tue, Aug 27, 2019 at 1:28 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> > >
+> > > On Mon, Aug 26, 2019 at 04:32:56PM -0700, Atish Patra wrote:
+> > > > The SBI v0.2 introduces a base extension which is backward compatible
+> > > > with v0.1. Implement all helper functions and minimum required SBI
+> > > > calls from v0.2 for now. All other base extension function will be
+> > > > added later as per need.
+> > > >
+> > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > > ---
+> > > >  arch/riscv/include/asm/sbi.h | 68 +++++++++++++++++++++++++++++-------
+> > > >  arch/riscv/kernel/Makefile   |  1 +
+> > > >  arch/riscv/kernel/sbi.c      | 50 ++++++++++++++++++++++++++
+> > > >  arch/riscv/kernel/setup.c    |  2 ++
+> > > >  4 files changed, 108 insertions(+), 13 deletions(-)
+> > > >  create mode 100644 arch/riscv/kernel/sbi.c
+> > > >
+> > > > diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+> > > > index 7f5ecaaaa0d7..4a4476956693 100644
+> > > > --- a/arch/riscv/include/asm/sbi.h
+> > > > +++ b/arch/riscv/include/asm/sbi.h
+> > > > @@ -8,7 +8,6 @@
+> > > >
+> > > >  #include <linux/types.h>
+> > > >
+> > > > -
+> > > >  #define SBI_EXT_LEGACY_SET_TIMER 0x0
+> > > >  #define SBI_EXT_LEGACY_CONSOLE_PUTCHAR 0x1
+> > > >  #define SBI_EXT_LEGACY_CONSOLE_GETCHAR 0x2
+> > > > @@ -19,28 +18,61 @@
+> > > >  #define SBI_EXT_LEGACY_REMOTE_SFENCE_VMA_ASID 0x7
+> > > >  #define SBI_EXT_LEGACY_SHUTDOWN 0x8
+> > > >
+> > > > -#define SBI_CALL_LEGACY(which, arg0, arg1, arg2, arg3) ({             \
+> > > > +#define SBI_EXT_BASE 0x10
+> > > > +
+> > > > +enum sbi_ext_base_fid {
+> > > > +     SBI_EXT_BASE_GET_SPEC_VERSION = 0,
+> > > > +     SBI_EXT_BASE_GET_IMP_ID,
+> > > > +     SBI_EXT_BASE_GET_IMP_VERSION,
+> > > > +     SBI_EXT_BASE_PROBE_EXT,
+> > > > +     SBI_EXT_BASE_GET_MVENDORID,
+> > > > +     SBI_EXT_BASE_GET_MARCHID,
+> > > > +     SBI_EXT_BASE_GET_MIMPID,
+> > > > +};
+> > > > +
+> > > > +#define SBI_CALL_LEGACY(ext, fid, arg0, arg1, arg2, arg3) ({ \
+> > > >       register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);   \
+> > > >       register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);   \
+> > > >       register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);   \
+> > > >       register uintptr_t a3 asm ("a3") = (uintptr_t)(arg3);   \
+> > > > -     register uintptr_t a7 asm ("a7") = (uintptr_t)(which);  \
+> > > > +     register uintptr_t a6 asm ("a6") = (uintptr_t)(fid);    \
+> > > > +     register uintptr_t a7 asm ("a7") = (uintptr_t)(ext);    \
+> > > >       asm volatile ("ecall"                                   \
+> > > > -                   : "+r" (a0)                               \
+> > > > -                   : "r" (a1), "r" (a2), "r" (a3), "r" (a7)  \
+> > > > +                   : "+r" (a0), "+r" (a1)                    \
+> > > > +                   : "r" (a2), "r" (a3), "r" (a6), "r" (a7) \
+> > >
+> > > Maybe I'm missing something, but how is this supposed to work on systems
+> > > with SBI v0.1? Wouldn't this cause a mismatch in the registers?
 > >
-> > arm64 shares some code under arch/arm/xen, including mm.c.
-> > However ZONE_DMA is removed by commit
-> > ad67f5a6545("arm64: replace ZONE_DMA with ZONE_DMA32").
-> > So to ARM64, need use __GFP_DMA32.
+> > The SBI v0.2 has two major changes:
+> > 1. New improved calling convention which is backward compatible
+> > with SBI v0.1 so older kernels with SBI v0.1 will continue to work as-is.
+> > 2. Base set of mandatory SBI v0.2 calls which can be used to detect
+> > SBI version, check supported SBI calls and extentions.
 > >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  arch/arm/xen/mm.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > Old calling convention in SBI v0.1 was:
+> > Parameters:
+> > a0 -> arg0
+> > a1 -> arg1
+> > a2 -> arg2
+> > a3 -> arg3
+> > a7 -> function_id
+> > Return:
+> > a0 -> return value or error code
 > >
-> > diff --git a/arch/arm/xen/mm.c b/arch/arm/xen/mm.c index
-> > e1d44b903dfc..a95e76d18bf9 100644
-> > --- a/arch/arm/xen/mm.c
-> > +++ b/arch/arm/xen/mm.c
-> > @@ -27,7 +27,7 @@ unsigned long xen_get_swiotlb_free_pages(unsigned
-> int
-> > order)
+> > In SBI v0.2, we have extension and function. Each SBI extension
+> > is a set of function. The new calling convention in SBI v0.2 is:
+> > Parameters:
+> > a0 -> arg0
+> > a1 -> arg1
+> > a2 -> arg2
+> > a3 -> arg3
+> > a6 -> function_id
+> > a7 -> extension_id
+> > Return:
+> > a0 -> error code
+> > a1 -> return value (optional)
+>
+> So with this patch SBI_CALL_LEGACY() uses SBI v0.2 convention, right?
+> Doesn't it mean that you cannot run a new kernel on a system with SBI v0.1?
+
+This is certainly possible. It's just that this patch is using SBI v0.2
+convention for older firmware as well.
+
+Ideally, we should check sbi_version for each legacy SBI calls and
+use different calling convention based sbi_version. The sbi_version
+detection will work fine on both old and new firmwares because
+on old firmware SBI version call will fail which means it is SBI v0.1
+interface.
+
+I think all legacy calls should be moved to kernel/sbi.c.
+
+I have other comments too.
+
+Let me post detailed review comments.
+
+Regards,
+Anup
+
+>
+> > All legacy SBI v0.1 functions can be thought of as separate
+> > extensions. That's how SBI v0.2 will be backward compatible.
 > >
-> >  	for_each_memblock(memory, reg) {
-> >  		if (reg->base < (phys_addr_t)0xffffffff) {
-> > -			flags |=3D __GFP_DMA;
-> > +			flags |=3D __GFP_DMA | __GFP_DMA32;
-> >  			break;
-> >  		}
-> >  	}
->=20
-> Thanks,
-> Peng.
-
-Thanks,
-Peng.
-
->=20
-> > --
-> > 2.16.4
-
+> > Regards,
+> > Anup
+> >
+> > >
+> > > >                     : "memory");                              \
+> > > >       a0;                                                     \
+> > > >  })
+> > > >
+> > > >  /* Lazy implementations until SBI is finalized */
+> > > > -#define SBI_CALL_LEGACY_0(which) SBI_CALL_LEGACY(which, 0, 0, 0, 0)
+> > > > -#define SBI_CALL_LEGACY_1(which, arg0) SBI_CALL_LEGACY(which, arg0, 0, 0, 0)
+> > > > -#define SBI_CALL_LEGACY_2(which, arg0, arg1) \
+> > > > -             SBI_CALL_LEGACY(which, arg0, arg1, 0, 0)
+> > > > -#define SBI_CALL_LEGACY_3(which, arg0, arg1, arg2) \
+> > > > -             SBI_CALL_LEGACY(which, arg0, arg1, arg2, 0)
+> > > > -#define SBI_CALL_LEGACY_4(which, arg0, arg1, arg2, arg3) \
+> > > > -             SBI_CALL_LEGACY(which, arg0, arg1, arg2, arg3)
+> > > > +#define SBI_CALL_LEGACY_0(ext) SBI_CALL_LEGACY(ext, 0, 0, 0, 0, 0)
+> > > > +#define SBI_CALL_LEGACY_1(ext, arg0) SBI_CALL_LEGACY(ext, 0, arg0, 0, 0, 0)
+> > > > +#define SBI_CALL_LEGACY_2(ext, arg0, arg1) \
+> > > > +             SBI_CALL_LEGACY(ext, 0, arg0, arg1, 0, 0)
+> > > > +#define SBI_CALL_LEGACY_3(ext, arg0, arg1, arg2) \
+> > > > +             SBI_CALL_LEGACY(ext, 0, arg0, arg1, arg2, 0)
+> > > > +#define SBI_CALL_LEGACY_4(ext, arg0, arg1, arg2, arg3) \
+> > > > +             SBI_CALL_LEGACY(ext, 0, arg0, arg1, arg2, arg3)
+> > > > +
+> > > > +extern unsigned long sbi_firmware_version;
+> > > > +struct sbiret {
+> > > > +     long error;
+> > > > +     long value;
+> > > > +};
+> > > > +
+> > > > +void riscv_sbi_init(void);
+> > > > +struct sbiret riscv_sbi_ecall(int ext, int fid, int arg0, int arg1,
+> > > > +                            int arg2, int arg3);
+> > > > +
+> > > > +#define SBI_CALL_0(ext, fid) riscv_sbi_ecall(ext, fid, 0, 0, 0, 0)
+> > > > +#define SBI_CALL_1(ext, fid, arg0) riscv_sbi_ecall(ext, fid, arg0, 0, 0, 0)
+> > > > +#define SBI_CALL_2(ext, fid, arg0, arg1) \
+> > > > +             riscv_sbi_ecall(ext, fid, arg0, arg1, 0, 0)
+> > > > +#define SBI_CALL_3(ext, fid, arg0, arg1, arg2) \
+> > > > +             riscv_sbi_ecall(ext, fid, arg0, arg1, arg2, 0)
+> > > > +#define SBI_CALL_4(ext, fid, arg0, arg1, arg2, arg3) \
+> > > > +             riscv_sbi_ecall(ext, fid, arg0, arg1, arg2, arg3)
+> > > > +
+> > > >
+> > > >  static inline void sbi_console_putchar(int ch)
+> > > >  {
+> > > > @@ -99,4 +131,14 @@ static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
+> > > >                         start, size, asid);
+> > > >  }
+> > > >
+> > > > +static inline unsigned long riscv_sbi_major_version(void)
+> > > > +{
+> > > > +     return (sbi_firmware_version >> 24) & 0x7f;
+> > > > +}
+> > > > +
+> > > > +static inline unsigned long riscv_sbi_minor_version(void)
+> > > > +{
+> > > > +     return sbi_firmware_version & 0xffffff;
+> > > > +}
+> > > > +
+> > > >  #endif
+> > > > diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> > > > index 2420d37d96de..faf862d26924 100644
+> > > > --- a/arch/riscv/kernel/Makefile
+> > > > +++ b/arch/riscv/kernel/Makefile
+> > > > @@ -17,6 +17,7 @@ obj-y       += irq.o
+> > > >  obj-y        += process.o
+> > > >  obj-y        += ptrace.o
+> > > >  obj-y        += reset.o
+> > > > +obj-y        += sbi.o
+> > > >  obj-y        += setup.o
+> > > >  obj-y        += signal.o
+> > > >  obj-y        += syscall_table.o
+> > > > diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
+> > > > new file mode 100644
+> > > > index 000000000000..457b8cc0e9d9
+> > > > --- /dev/null
+> > > > +++ b/arch/riscv/kernel/sbi.c
+> > > > @@ -0,0 +1,50 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > > +/*
+> > > > + * SBI initialilization and base extension implementation.
+> > > > + *
+> > > > + * Copyright (c) 2019 Western Digital Corporation or its affiliates.
+> > > > + */
+> > > > +
+> > > > +#include <asm/sbi.h>
+> > > > +#include <linux/sched.h>
+> > > > +
+> > > > +unsigned long sbi_firmware_version;
+> > > > +
+> > > > +struct sbiret riscv_sbi_ecall(int ext, int fid, int arg0, int arg1,
+> > > > +                          int arg2, int arg3)
+> > > > +{
+> > > > +     struct sbiret ret;
+> > > > +
+> > > > +     register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);
+> > > > +     register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);
+> > > > +     register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);
+> > > > +     register uintptr_t a3 asm ("a3") = (uintptr_t)(arg3);
+> > > > +     register uintptr_t a6 asm ("a6") = (uintptr_t)(fid);
+> > > > +     register uintptr_t a7 asm ("a7") = (uintptr_t)(ext);
+> > > > +     asm volatile ("ecall"
+> > > > +                   : "+r" (a0), "+r" (a1)
+> > > > +                   : "r" (a2), "r" (a3), "r" (a6), "r" (a7)
+> > > > +                   : "memory");
+> > > > +     ret.error = a0;
+> > > > +     ret.value = a1;
+> > > > +
+> > > > +     return ret;
+> > > > +}
+> > > > +
+> > > > +static struct sbiret sbi_get_spec_version(void)
+> > > > +{
+> > > > +     return SBI_CALL_0(SBI_EXT_BASE, SBI_EXT_BASE_GET_SPEC_VERSION);
+> > > > +}
+> > > > +
+> > > > +void riscv_sbi_init(void)
+> > > > +{
+> > > > +     struct sbiret ret;
+> > > > +
+> > > > +     /* legacy SBI version*/
+> > > > +     sbi_firmware_version = 0x1;
+> > > > +     ret = sbi_get_spec_version();
+> > > > +     if (!ret.error)
+> > > > +             sbi_firmware_version = ret.value;
+> > > > +     pr_info("SBI version implemented in firmware [%lu:%lu]\n",
+> > > > +             riscv_sbi_major_version(), riscv_sbi_minor_version());
+> > > > +}
+> > > > diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+> > > > index a990a6cb184f..4c324fd398c8 100644
+> > > > --- a/arch/riscv/kernel/setup.c
+> > > > +++ b/arch/riscv/kernel/setup.c
+> > > > @@ -21,6 +21,7 @@
+> > > >  #include <asm/sections.h>
+> > > >  #include <asm/pgtable.h>
+> > > >  #include <asm/smp.h>
+> > > > +#include <asm/sbi.h>
+> > > >  #include <asm/tlbflush.h>
+> > > >  #include <asm/thread_info.h>
+> > > >
+> > > > @@ -70,6 +71,7 @@ void __init setup_arch(char **cmdline_p)
+> > > >       swiotlb_init(1);
+> > > >  #endif
+> > > >
+> > > > +     riscv_sbi_init();
+> > > >  #ifdef CONFIG_SMP
+> > > >       setup_smp();
+> > > >  #endif
+> > > > --
+> > > > 2.21.0
+> > > >
+> > > >
+> > > > _______________________________________________
+> > > > linux-riscv mailing list
+> > > > linux-riscv@lists.infradead.org
+> > > > http://lists.infradead.org/mailman/listinfo/linux-riscv
+> > >
+> > > --
+> > > Sincerely yours,
+> > > Mike.
+> > >
+>
+> --
+> Sincerely yours,
+> Mike.
+>
