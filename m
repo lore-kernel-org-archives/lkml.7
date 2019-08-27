@@ -2,154 +2,130 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B895FC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96141C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85DDE233FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD5D206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:03:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="Vy24JsrB"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FkPmcXAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbfH0KDU (ORCPT
+        id S1729635AbfH0KD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 06:03:20 -0400
-Received: from mail-eopbgr690109.outbound.protection.outlook.com ([40.107.69.109]:59695
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725912AbfH0KDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 06:03:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CCLLh9tHGhGutNySZb0R2tUORy6bJaCmjE406vazF+6/Kgu8gr+iqoUErJ0cNcDteQPtDHPzCs1hg6J0SFOk3C6iXsiXbffJfOd9VAGNm6f127OscxHhGdVrJlapWJRK5ZDWEsJEsLwNo/fSLuuvd2gsqNvdnq4rjGDIFhTVQovptnFM8wtLCgR/k5PW810zV6Nx2rJuR8rraiaD1CjXvkEaigjVCBdB2x1iezGKOwW2m3fourOb0WuIkhNvOEifFVqSK4Gsru6AV+OP0wwmpX/GvWOjs09BXBo6mNnZPM8oolKfkvOxdplV9r3l8xNRhJi+9l4kNBDFqeS+XZvFrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Xwq9EmfsYlF6D5P+L2rJ5Fh+3lrN+JOtnL4zwXCgro=;
- b=TA0ZJKsDG4sJ6ghHznKr/z6eI6AlS9NBQL9TTPDNHAoLg0ReaZTSCM4L6skW1NWO4Pt3vcdPIfneeiglHWcBcK1LGtsl0zU06lDUXnw5uEjDUCrXEY4QRQSzMW8Aa8q9gOJgHi0V9xU6sAoOqMgr/iqnU2KQgWj7Ob6nl8WSLJ6wIVnEkYYiUCxE9Z8VQnEQhvbny81+qYVJv44xkljQUUaZ3QzCPfwv63ncwGkXjzZwWO0u/MpZyBWSv6+cZYNyGFwOJ4jG4ySIx63AOHJu4eCFkphPh9luYwX2DHNyE88/x2R6eMMuaOwy8aIfHgnVUwYKfDIIUjMBTxXXLs+PLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Xwq9EmfsYlF6D5P+L2rJ5Fh+3lrN+JOtnL4zwXCgro=;
- b=Vy24JsrBlA7/Vh3EIWL0Ny/ZTs/hYZqwAmiufIhdLlQBmKOS7JkdpgoZb0jjxsHkcqd8iQ3JKQOuDgt/c+erc9GJZgBaY9qoKiTJuItVwvTmLlicmuDV+VO9gm4J85VF461dzeMK9glJxl/a4qcIHpghgm6bi3v8NrZZjWgggag=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1390.namprd22.prod.outlook.com (10.174.162.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.20; Tue, 27 Aug 2019 10:03:17 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3%11]) with mapi id 15.20.2199.021; Tue, 27 Aug
- 2019 10:03:17 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        Shawn Anastasio <shawn@anastas.io>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/6] MIPS: document mixing "slightly different CCAs"
-Thread-Topic: [PATCH 6/6] MIPS: document mixing "slightly different CCAs"
-Thread-Index: AQHVXL6l2iVfJsYr5Ei+0s2DQeCv9Q==
-Date:   Tue, 27 Aug 2019 10:03:16 +0000
-Message-ID: <20190827100310.p2o5y3aklcoti74z@pburton-laptop>
-References: <20190826132553.4116-1-hch@lst.de>
- <20190826132553.4116-7-hch@lst.de>
-In-Reply-To: <20190826132553.4116-7-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P123CA0011.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:a6::23) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.118.89.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 31247056-33f9-45f6-9500-08d72ad5c7d8
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1390;
-x-ms-traffictypediagnostic: MWHPR2201MB1390:
-x-microsoft-antispam-prvs: <MWHPR2201MB1390144256A14498A26D68CDC1A00@MWHPR2201MB1390.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(366004)(39850400004)(376002)(136003)(396003)(346002)(189003)(199004)(71200400001)(486006)(102836004)(186003)(476003)(386003)(26005)(8676002)(42882007)(478600001)(6246003)(2906002)(305945005)(5660300002)(66066001)(53936002)(8936002)(9686003)(1076003)(446003)(14444005)(81156014)(6486002)(7736002)(81166006)(256004)(11346002)(4326008)(25786009)(14454004)(44832011)(52116002)(6512007)(58126008)(7416002)(6916009)(54906003)(76176011)(6116002)(3846002)(66946007)(66446008)(66476007)(66556008)(64756008)(33716001)(99286004)(71190400001)(316002)(6436002)(6506007)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1390;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hzQ2W7D89/5bOMckqiyD4YmPVgAE+qzEqiVqLEhKTz76XIkalHuEwK5B8RO5FDj5VB80v63tntNByUn6Gd/gOgE6cflzAHG5dXBGD8KgsefRz4nUM/EpQXaDmwaDPu0C1wyF7go+Of4hHuwWIs/GaL+nAdaSD+6Cyh8RSd0oDis+apASwR/lr4gsW/NLoBazYjWbuTH87jVp2jp9QlubW9l7NhHMlwkCSbSjC6ibeiesKnqE5yraqZJpy10BSvnZSmnoYTcCiDFqC/w0wAfz+BDCyPNg6AAKq1VvXtm2EICLMVEhh6yeQScHpabuwGBWVyBeRZO6osHQ3nIR7aSCf5uK9TZ7FvSEPQWf50v9ukrBTDgDe7X4niP0uuM8dFbU9kGn7tHL9IJrN7gwiptGR50dwqDQkAGz8XRtS0UMtEI=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <112563C691B9D24084999634B2E39C47@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 27 Aug 2019 06:03:26 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43234 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfH0KDO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 06:03:14 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y8so18136356wrn.10
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 03:03:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ceHNjOjYXXqKJbeAE7JQVGIbYL1u1AYoPi0HEmNDPSc=;
+        b=FkPmcXARScleAA98yh1f0hvd5zGL3cap9/yDJQXtGHNOjJ+x51S5P9/OnrVC99ODXV
+         H4enT2hrCybB4x2rM/H0KuMJsda8I0SKMgZ6uYSaqmO0ao5hzZq02mDDCIXX9uX0SOmA
+         cmOtHZqMLfB0TDlJVfbXjnUHg8XwxCwNHij6go1d/I6YxMZtS05Rj2iBd90fqe6OhSex
+         m3aofztGTUYBhOY9k3aumMwZglrjYSaC3SHMdXBkS6OGRQo95sldJVbxALu/LJ6yFik3
+         U3Tw+NIDIsHXOZSUFSX4yZDJ8sp7mvyu9wY22BcF0PPmQqkfsm9y5cdrqagpdwLpoQ++
+         xF8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ceHNjOjYXXqKJbeAE7JQVGIbYL1u1AYoPi0HEmNDPSc=;
+        b=aYq0MwPqG/ZVMEya6eUJpxL0VZmkjt+BAQ+GVwZQs8eu2+/LBelg7R2qHmSrQGMYmX
+         KIOuJ5lzOTViDsmdZz8VhKuhKDbdrJ0Cxmv5HN7JVPNN6Igeu1xXW6wGHTo2QB4JAW0j
+         DE3d1WV/97bHIPrL7dZq1ZhIoiq8THf9FFgZXcuF5Y6iJ4kSfXVgEgUs7Srqf6HSpkx7
+         rki5xdCKKMODfOopczLfFe/OXgpaPhA1xqwESBRbAIon0DeAVTysnb6SA2NihheOKSvF
+         IPVzn2yWn18Ffh7uOQyrkRpwQnWyd5GFpCFlupnOpCEdPx8nWnGFhR2B06sMeFiEhCgo
+         ZX0Q==
+X-Gm-Message-State: APjAAAUOfcaBzZEccUWh6hXDu55/hPt0MwKTKsOCb9798lL+jyD9gPkz
+        V5GjuG0oOG8ucclirGS74sG86A==
+X-Google-Smtp-Source: APXvYqyHrsjIv6iA69VxrzeSvvkWJVA1ZCYStwgFPwlD6yYAE9WHbvTRzmgTR7jqHjpRqAb+QBnU5w==
+X-Received: by 2002:adf:fe85:: with SMTP id l5mr26701545wrr.5.1566900192806;
+        Tue, 27 Aug 2019 03:03:12 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id o25sm1816289wmc.36.2019.08.27.03.03.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 03:03:12 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 3/3] arm64: dts: meson-g12b: specify suspend OPP
+Date:   Tue, 27 Aug 2019 12:03:07 +0200
+Message-Id: <20190827100307.21661-4-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190827100307.21661-1-narmstrong@baylibre.com>
+References: <20190827100307.21661-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31247056-33f9-45f6-9500-08d72ad5c7d8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 10:03:16.7814
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ijY4BT1J6qbZ0asLVx9KlfJdlwGDY7JNLjL4/utrumR/7V7gpeHBxew9QwsJA+Izplvd0C8tBPzS1I/l2EOppg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1390
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Tag the 1,2GHz OPPs as suspend OPP to be set before going in suspend mode.
 
-On Mon, Aug 26, 2019 at 03:25:53PM +0200, Christoph Hellwig wrote:
-> Based on an email from Paul Burton, quoting section 4.8 "Cacheability and
-> Coherency Attributes and Access Types" of "MIPS Architecture Volume 1:
-> Introduction to the MIPS32 Architecture" (MD00080, revision 6.01).
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+It has been reported that using various OPPs can lead to error or
+resume with a different OPP from the ROM, thus use this safe OPP as
+it is the default OPP used by the BL2 boot firmware on the 2 clusters.
 
-Acked-by: Paul Burton <paul.burton@mips.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi | 2 ++
+ 2 files changed, 4 insertions(+)
 
-Thanks,
-    Paul
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi
+index d61f43052a34..00ea181bc018 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi
+@@ -39,6 +39,7 @@
+ 		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <781000>;
++			opp-suspend;
+ 		};
+ 
+ 		opp-1398000000 {
+@@ -99,6 +100,7 @@
+ 		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <751000>;
++			opp-suspend;
+ 		};
+ 
+ 		opp-1398000000 {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
+index 046cc332d07f..d68323c6c780 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
+@@ -39,6 +39,7 @@
+ 		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <731000>;
++			opp-suspend;
+ 		};
+ 
+ 		opp-1398000000 {
+@@ -99,6 +100,7 @@
+ 		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <771000>;
++			opp-suspend;
+ 		};
+ 
+ 		opp-1398000000 {
+-- 
+2.22.0
 
-> ---
->  arch/mips/Kconfig | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index fc88f68ea1ee..aff1cadeea43 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -1119,6 +1119,13 @@ config DMA_PERDEV_COHERENT
-> =20
->  config DMA_NONCOHERENT
->  	bool
-> +	#
-> +	# MIPS allows mixing "slightly different" Cacheability and Coherency
-> +	# Attribute bits.  It is believed that the uncached access through
-> +	# KSEG1 and the implementation specific "uncached accelerated" used
-> +	# by pgprot_writcombine can be mixed, and the latter sometimes provides
-> +	# significant advantages.
-> +	#
->  	select ARCH_HAS_DMA_WRITE_COMBINE
->  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
->  	select ARCH_HAS_UNCACHED_SEGMENT
-> --=20
-> 2.20.1
->=20
