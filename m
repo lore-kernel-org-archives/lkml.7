@@ -2,199 +2,184 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4487EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2898AC41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 124BD20856
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F08202186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566947766;
-	bh=9jMpmqKYdS6wxNelbrfMFKsuc8MlK4oRw4YXwrh8W8A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bh1KThz20i2RicMivWme+EfdZtNOFatlc2MZECbw/Z+c3UunwnUiX6FCLOqFPRrXd
-	 BPmp6L8Q0zgnpdTsWh4rHIRHxRBWp5RKtnbFuXY8qSTTBQDmKog6Z/JgwAswV9mhEO
-	 NNXKZW4k3Pt+t1BmZ4UhVPuy+RebrGamuo0yAgJM=
+	s=default; t=1566947835;
+	bh=LHYP3wO1EM0CN7MZnuQ9uyPpTSuaC669PEWoJvNcjA4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NCjlMyIsJ6z4XOWUHsWO44ZI5YVeGvTVtmcafybM9yF0NO39jvbqbclQoq6AWMouO
+	 PyrLgeLvwVpG7D94/blLAIqEAsDRrjIoymxOJ+mpjmkIOxVwDgWsCKy8Lb4kN9sQ/+
+	 QtHyLhU8j3K+U2+efg5ZjtR3MLD1qrBijNwkQ3Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbfH0XQF (ORCPT
+        id S1726315AbfH0XRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 19:16:05 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34943 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfH0XQD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 19:16:03 -0400
-Received: by mail-pl1-f193.google.com with SMTP id gn20so277106plb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 16:16:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Q4+SA5PuF2L2C1z7Pk2rFeuDa5r87TSCdNqKzP/FHYs=;
-        b=FRFD5j1ZbNMCjzpMcf2CyTX4GtUdzR11z9CXlUw/YmLUNVFOm8b5Vk5ZOtm5aX6Yxk
-         OF8a9BeiDBKFeR3PCqrUMf9yPnqjXby1qQEFkxgXMBv60kNGAwBjyFU72uMM20CuNOqp
-         OKxZdys9ciYVvj4WewKJPIkxDTiW1KWCTyscxyjeuYK9MQveyH40P/EknJ8AJIg/Nxiw
-         tPIDhsTtKXLHypNz1d9Wr3QUNAfkWTULeReMm8nXtY75eXTGpeZ1IcfvTwZNGbwHfMPF
-         f3VwD5zFqhLjCVTDx/056gZTi3RJ+utOcM9poj2lMnQhdbrfgBBu/9V2qlPRPH643nrL
-         H9qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=Q4+SA5PuF2L2C1z7Pk2rFeuDa5r87TSCdNqKzP/FHYs=;
-        b=KjTJbPq6BjKiJggYUhobo919lrUW7wIAot+5I2R8UPdl9/ZBEAxre/waUWQYN0KmOy
-         cBYTD+olyc1TmoK8x2YPNOA+IDHwVEwfeJf0ysNBHNKXN6M3mKwKVv1A39I3uGw0a8/C
-         eP90kWpyezDhr4qFYm8qQMVfSlUMG8ZE5SgErpX7gVhKJSt2oz15oMl4hvSG+2NeiRJ5
-         z9iNdBmc69++7S0gnkC7dwVl1M0hKwdaXgpC5fQFYfYjZRtgC6ECZ6kt9EaqLWr/YlAA
-         VbG+ccAeIsdHVDzVySk4HEKzIiuVx4ffv94hsUd4P2gxDVYQdKQHI6cJuQMZCwur5YP1
-         bVMA==
-X-Gm-Message-State: APjAAAXOc7+JQcV2vvzQfJZk5zVjq1dcuZQIQi3OFW6T9ZC6BsRa2/iA
-        Z3oU/RXt/To2mv/E9QADhIw=
-X-Google-Smtp-Source: APXvYqx3ES2+v7wddOdGpkdqCH9XAtzUSfRgRFn2ibcze6Uc+szWjQmHe3RYWaLIea3uGLpl7zALMw==
-X-Received: by 2002:a17:902:d883:: with SMTP id b3mr1409423plz.323.1566947762105;
-        Tue, 27 Aug 2019 16:16:02 -0700 (PDT)
-Received: from gaurie.seo.corp.google.com ([2401:fa00:d:0:1034:ec6b:8056:9e93])
-        by smtp.gmail.com with ESMTPSA id a10sm411624pfl.159.2019.08.27.16.16.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 16:16:01 -0700 (PDT)
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@redhat.com>
-Subject: [PATCH 2/2] perf top: Fix event group with more than two events
-Date:   Wed, 28 Aug 2019 08:15:55 +0900
-Message-Id: <20190827231555.121411-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-In-Reply-To: <20190827231555.121411-1-namhyung@kernel.org>
-References: <20190827231555.121411-1-namhyung@kernel.org>
+        Tue, 27 Aug 2019 19:17:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725997AbfH0XRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 19:17:13 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F35DA20856;
+        Tue, 27 Aug 2019 23:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566947832;
+        bh=LHYP3wO1EM0CN7MZnuQ9uyPpTSuaC669PEWoJvNcjA4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wp2G22s2JiRw967LPOtC7TV8P1ym933f60GQCuP9jTKdhOqTI6+p5eZAJ0ic5NX6J
+         6mH+po7knLNM01dxN+2SAHO5hLA6asmWU0K7y+bFR6YVV+IX0UL+xFzf9QXIKCKS0E
+         LKK8hS8bnaKMHqrjAQF1xXI9iqvvNL0h0qE3zUUc=
+Date:   Tue, 27 Aug 2019 18:17:10 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof Wilczynski <kw@linux.com>
+Cc:     Scott Murray <scott@spiteful.org>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lukas Wunner <lukas@wunner.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] PCI: hotplug: Remove surplus return from a void function
+Message-ID: <20190827231710.GH9987@google.com>
+References: <20190826095143.21353-1-kw@linux.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826095143.21353-1-kw@linux.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The event group feature links relevant hist entries among events so
-that they can be displayed together.  During the link process, each
-hist entry in non-leader events is connected to a hist entry in the
-leader event.  This is done in order of events specified in the
-command line so it assumes that events are linked in the order.
+On Mon, Aug 26, 2019 at 11:51:43AM +0200, Krzysztof Wilczynski wrote:
+> Remove unnecessary empty return statement at the end of a void
+> function in the following:
+> 
+>   - drivers/pci/hotplug/cpci_hotplug_core.c: cleanup_slots()
+>   - drivers/pci/hotplug/cpqphp_core.c: pci_print_IRQ_route()
+>   - drivers/pci/hotplug/cpqphp_ctrl.c: cpqhp_pushbutton_thread()
+>   - drivers/pci/hotplug/cpqphp_ctrl.c: interrupt_event_handler()
+>   - drivers/pci/hotplug/cpqphp_nvram.h: compaq_nvram_init()
+>   - drivers/pci/hotplug/rpadlpar_core.c: rpadlpar_io_init()
+>   - drivers/pci/hotplug/rpaphp_core.c: cleanup_slots()
+> 
+> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
 
-But perf top can break the assumption since it does the link process
-multiple times.  For example, a hist entry can be in the third event
-only at first so it's linked after the leader.  Some time later,
-second event has a hist entry for it and it'll be linked after the
-entry of the third event.
+Applied to pci/trivial for v5.4, thanks!
 
-This makes the code compilicated to deal with such unordered entries.
-This patch simply unlink all the entries after it's printed so that
-they can assume the correct order after the repeated link process.
-Also it'd be easy to deal with decaying old entries IMHO.
+I squashed the mediatek patch into this since they're both trivial.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-top.c |  6 ++++++
- tools/perf/util/hist.c   | 39 +++++++++++++++++++++------------------
- tools/perf/util/hist.h   |  1 +
- 3 files changed, 28 insertions(+), 18 deletions(-)
-
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 9d3059d2029d..b871dd72e4bd 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -272,6 +272,12 @@ static void evlist__resort_hists(struct perf_top *t)
- 	evlist__for_each_entry(evlist, pos) {
- 		struct hists *hists = evsel__hists(pos);
- 
-+		/*
-+		 * unlink existing entries so that they can be linked
-+		 * in a correct order in hists__match() below.
-+		 */
-+		hists__unlink(hists);
-+
- 		if (evlist->enabled) {
- 			if (t->zero) {
- 				hists__delete_entries(hists);
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 8efbf58dc3d0..47401210e087 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -2436,7 +2436,7 @@ void hists__match(struct hists *leader, struct hists *other)
- {
- 	struct rb_root_cached *root;
- 	struct rb_node *nd;
--	struct hist_entry *pos, *pair, *pos_pair, *tmp_pair;
-+	struct hist_entry *pos, *pair;
- 
- 	if (symbol_conf.report_hierarchy) {
- 		/* hierarchy report always collapses entries */
-@@ -2453,24 +2453,8 @@ void hists__match(struct hists *leader, struct hists *other)
- 		pos  = rb_entry(nd, struct hist_entry, rb_node_in);
- 		pair = hists__find_entry(other, pos);
- 
--		if (pair && list_empty(&pair->pairs.node)) {
--			list_for_each_entry_safe(pos_pair, tmp_pair, &pos->pairs.head, pairs.node) {
--				if (pos_pair->hists == other) {
--					/*
--					 * XXX maybe decayed entries can appear
--					 * here?  but then we would have use
--					 * after free, as decayed entries are
--					 * freed see hists__delete_entry
--					 */
--					BUG_ON(!pos_pair->dummy);
--					list_del_init(&pos_pair->pairs.node);
--					hist_entry__delete(pos_pair);
--					break;
--				}
--			}
--
-+		if (pair)
- 			hist_entry__add_pair(pair, pos);
--		}
- 	}
- }
- 
-@@ -2555,6 +2539,25 @@ int hists__link(struct hists *leader, struct hists *other)
- 	return 0;
- }
- 
-+int hists__unlink(struct hists *hists)
-+{
-+	struct rb_root_cached *root;
-+	struct rb_node *nd;
-+	struct hist_entry *pos;
-+
-+	if (hists__has(hists, need_collapse))
-+		root = &hists->entries_collapsed;
-+	else
-+		root = hists->entries_in;
-+
-+	for (nd = rb_first_cached(root); nd; nd = rb_next(nd)) {
-+		pos = rb_entry(nd, struct hist_entry, rb_node_in);
-+		list_del_init(&pos->pairs.node);
-+	}
-+
-+	return 0;
-+}
-+
- void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
- 			  struct perf_sample *sample, bool nonany_branch_mode)
- {
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 83d5fc15429c..7b9267ebebeb 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -217,6 +217,7 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *he);
- 
- void hists__match(struct hists *leader, struct hists *other);
- int hists__link(struct hists *leader, struct hists *other);
-+int hists__unlink(struct hists *hists);
- 
- struct hists_evsel {
- 	struct evsel evsel;
--- 
-2.23.0.187.g17f5b7556c-goog
-
+> ---
+>  drivers/pci/hotplug/cpci_hotplug_core.c | 1 -
+>  drivers/pci/hotplug/cpqphp_core.c       | 1 -
+>  drivers/pci/hotplug/cpqphp_ctrl.c       | 4 ----
+>  drivers/pci/hotplug/cpqphp_nvram.h      | 5 +----
+>  drivers/pci/hotplug/rpadlpar_core.c     | 1 -
+>  drivers/pci/hotplug/rpaphp_core.c       | 1 -
+>  6 files changed, 1 insertion(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
+> index 603eadf3d965..d0559d2faf50 100644
+> --- a/drivers/pci/hotplug/cpci_hotplug_core.c
+> +++ b/drivers/pci/hotplug/cpci_hotplug_core.c
+> @@ -563,7 +563,6 @@ cleanup_slots(void)
+>  	}
+>  cleanup_null:
+>  	up_write(&list_rwsem);
+> -	return;
+>  }
+>  
+>  int
+> diff --git a/drivers/pci/hotplug/cpqphp_core.c b/drivers/pci/hotplug/cpqphp_core.c
+> index 16bbb183695a..b8aacb41a83c 100644
+> --- a/drivers/pci/hotplug/cpqphp_core.c
+> +++ b/drivers/pci/hotplug/cpqphp_core.c
+> @@ -173,7 +173,6 @@ static void pci_print_IRQ_route(void)
+>  		dbg("%d %d %d %d\n", tbus, tdevice >> 3, tdevice & 0x7, tslot);
+>  
+>  	}
+> -	return;
+>  }
+>  
+>  
+> diff --git a/drivers/pci/hotplug/cpqphp_ctrl.c b/drivers/pci/hotplug/cpqphp_ctrl.c
+> index b7f4e1f099d9..68de958a9be8 100644
+> --- a/drivers/pci/hotplug/cpqphp_ctrl.c
+> +++ b/drivers/pci/hotplug/cpqphp_ctrl.c
+> @@ -1872,8 +1872,6 @@ static void interrupt_event_handler(struct controller *ctrl)
+>  			}
+>  		}		/* End of FOR loop */
+>  	}
+> -
+> -	return;
+>  }
+>  
+>  
+> @@ -1943,8 +1941,6 @@ void cpqhp_pushbutton_thread(struct timer_list *t)
+>  
+>  		p_slot->state = STATIC_STATE;
+>  	}
+> -
+> -	return;
+>  }
+>  
+>  
+> diff --git a/drivers/pci/hotplug/cpqphp_nvram.h b/drivers/pci/hotplug/cpqphp_nvram.h
+> index 918ff8dbfe62..70e879b6a23f 100644
+> --- a/drivers/pci/hotplug/cpqphp_nvram.h
+> +++ b/drivers/pci/hotplug/cpqphp_nvram.h
+> @@ -16,10 +16,7 @@
+>  
+>  #ifndef CONFIG_HOTPLUG_PCI_COMPAQ_NVRAM
+>  
+> -static inline void compaq_nvram_init(void __iomem *rom_start)
+> -{
+> -	return;
+> -}
+> +static inline void compaq_nvram_init(void __iomem *rom_start) { }
+>  
+>  static inline int compaq_nvram_load(void __iomem *rom_start, struct controller *ctrl)
+>  {
+> diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
+> index 182f9e3443ee..977946e4e613 100644
+> --- a/drivers/pci/hotplug/rpadlpar_core.c
+> +++ b/drivers/pci/hotplug/rpadlpar_core.c
+> @@ -473,7 +473,6 @@ int __init rpadlpar_io_init(void)
+>  void rpadlpar_io_exit(void)
+>  {
+>  	dlpar_sysfs_exit();
+> -	return;
+>  }
+>  
+>  module_init(rpadlpar_io_init);
+> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+> index c3899ee1db99..18627bb21e9e 100644
+> --- a/drivers/pci/hotplug/rpaphp_core.c
+> +++ b/drivers/pci/hotplug/rpaphp_core.c
+> @@ -408,7 +408,6 @@ static void __exit cleanup_slots(void)
+>  		pci_hp_deregister(&slot->hotplug_slot);
+>  		dealloc_slot_struct(slot);
+>  	}
+> -	return;
+>  }
+>  
+>  static int __init rpaphp_init(void)
+> -- 
+> 2.22.1
+> 
