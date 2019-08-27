@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C856C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA564C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6936E206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A153F206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892958;
-	bh=dHl6+KoD8OPrNumf8l17wWgVRJhE0CepafrgyhtPWGI=;
+	s=default; t=1566892961;
+	bh=cIrO675xPH74UzDk1oUvKTEGphiAOzFgbTUid6zytAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tNOt2XzekDnXZ0Z2ettAAJBSZEbA06PMzKNToSf/spU8K/ml8PNKzDVFO5ME0EKEB
-	 CcVwOZki6pi5n1SGILp8E7SkDi6LfpWP0LzgJG8mw8hx9pPxZCFBHZVL16G3+SwGtV
-	 wYgry0C4Q1frtA0AHbOE7t5Sq592Kyve/VwDV3o4=
+	b=ZT7AVVvmY5RQvrk9kbj4G8bzeCA5cs59+Vurvb4heZ6BCz9I870xFQ/mA4UFL1Etp
+	 iYEp4eoRfHOciMpmov1ysHDBbjWW0L1yVdq5pQe1OKr0JEgYagj3OegplXEBWXbscL
+	 ilMbFJm+2D3jJ/pFFPNWcCByQlUHmb2EQqV0IOL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731560AbfH0ICh (ORCPT
+        id S1732035AbfH0ICk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:02:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59282 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:02:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731940AbfH0ICV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:02:21 -0400
+        id S1731967AbfH0IC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:02:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02EB3206BF;
-        Tue, 27 Aug 2019 08:02:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C54E20828;
+        Tue, 27 Aug 2019 08:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892940;
-        bh=dHl6+KoD8OPrNumf8l17wWgVRJhE0CepafrgyhtPWGI=;
+        s=default; t=1566892946;
+        bh=cIrO675xPH74UzDk1oUvKTEGphiAOzFgbTUid6zytAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kRRkp6BYJjex/ujV/cGfmPEbkEw4kDOIjhu4dbq4dq2zWK6OURWH1jJ6O+/45Bznf
-         BOCPGYVi4mtawjwdg7hMecbc1izcqYTy3NCjKpJ369EkEkSv7KurFtxRYbclMeH0KZ
-         2aVP813qP8z+63Y1w/WKdz+evEcg2q2OKOU2PB1I=
+        b=SfXzhnx+nVUnG3DQKVjcPAjov/jRehPRMsv95dFvNe3TTIBETA9GpIwBWbWnzhVva
+         QADRobuGAiPeKnZ9MvtLmJiOVF2IY/aSGcMjMJJqWtVrZ9S9IR+K3tqRcs0uL2BVj+
+         CqHoZUzCawokp1brRn1xe2Z4VdE91WlSUv2GTNhU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vijendar Mukunda <vijendar.mukunda@amd.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 068/162] ASoC: amd: acp3x: use dma_ops of parent device for acp3x dma driver
-Date:   Tue, 27 Aug 2019 09:49:56 +0200
-Message-Id: <20190827072740.514603453@linuxfoundation.org>
+Subject: [PATCH 5.2 070/162] enetc: Select PHYLIB while CONFIG_FSL_ENETC_VF is set
+Date:   Tue, 27 Aug 2019 09:49:58 +0200
+Message-Id: <20190827072740.576111235@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -61,41 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 88639051017fb61a414b636dd0fc490da2b62b64 ]
+[ Upstream commit 2802d2cf24b1ca7ea4c54dde266ded6a16020eb5 ]
 
-AMD platform device acp3x_rv_i2s created by parent PCI device
-driver. Pass struct device of the parent to
-snd_pcm_lib_preallocate_pages() so dma_alloc_coherent() can use
-correct dma_ops. Otherwise, it will use default dma_ops which
-is nommu_dma_ops on x86_64 even when IOMMU is enabled and
-set to non passthrough mode.
+Like FSL_ENETC, when CONFIG_FSL_ENETC_VF is set,
+we should select PHYLIB, otherwise building still fails:
 
-Signed-off-by: Vijendar Mukunda <vijendar.mukunda@amd.com>
-Link: https://lore.kernel.org/r/1564753899-17124-1-git-send-email-Vijendar.Mukunda@amd.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+drivers/net/ethernet/freescale/enetc/enetc.o: In function `enetc_open':
+enetc.c:(.text+0x2744): undefined reference to `phy_start'
+enetc.c:(.text+0x282c): undefined reference to `phy_disconnect'
+drivers/net/ethernet/freescale/enetc/enetc.o: In function `enetc_close':
+enetc.c:(.text+0x28f8): undefined reference to `phy_stop'
+enetc.c:(.text+0x2904): undefined reference to `phy_disconnect'
+drivers/net/ethernet/freescale/enetc/enetc_ethtool.o:(.rodata+0x3f8): undefined reference to `phy_ethtool_get_link_ksettings'
+drivers/net/ethernet/freescale/enetc/enetc_ethtool.o:(.rodata+0x400): undefined reference to `phy_ethtool_set_link_ksettings'
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: d4fd0404c1c9 ("enetc: Introduce basic PF and VF ENETC ethernet drivers")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/amd/raven/acp3x-pcm-dma.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/freescale/enetc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-index 9775bda2a4ca3..d8aa6ab3f68bc 100644
---- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-+++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-@@ -367,9 +367,11 @@ static snd_pcm_uframes_t acp3x_dma_pointer(struct snd_pcm_substream *substream)
- 
- static int acp3x_dma_new(struct snd_soc_pcm_runtime *rtd)
- {
-+	struct snd_soc_component *component = snd_soc_rtdcom_lookup(rtd,
-+								    DRV_NAME);
-+	struct device *parent = component->dev->parent;
- 	snd_pcm_lib_preallocate_pages_for_all(rtd->pcm, SNDRV_DMA_TYPE_DEV,
--					      rtd->pcm->card->dev,
--					      MIN_BUFFER, MAX_BUFFER);
-+					      parent, MIN_BUFFER, MAX_BUFFER);
- 	return 0;
- }
- 
+diff --git a/drivers/net/ethernet/freescale/enetc/Kconfig b/drivers/net/ethernet/freescale/enetc/Kconfig
+index 8ac109e73a7bb..a268e74b1834e 100644
+--- a/drivers/net/ethernet/freescale/enetc/Kconfig
++++ b/drivers/net/ethernet/freescale/enetc/Kconfig
+@@ -13,6 +13,7 @@ config FSL_ENETC
+ config FSL_ENETC_VF
+ 	tristate "ENETC VF driver"
+ 	depends on PCI && PCI_MSI && (ARCH_LAYERSCAPE || COMPILE_TEST)
++	select PHYLIB
+ 	help
+ 	  This driver supports NXP ENETC gigabit ethernet controller PCIe
+ 	  virtual function (VF) devices enabled by the ENETC PF driver.
 -- 
 2.20.1
 
