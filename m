@@ -2,218 +2,156 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A548C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B589DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62A5F206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566917039;
-	bh=YYcpRPJ9ObMCi1TUYaeck+9yIfym9MWqOaqRL4NI7/4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=IuksBYepfXpCowdqaC5zUhKHDqRqxhUayrUQsBozZS2ar0w1cfgbPV/rOZf0i+K7m
-	 0jFQWUlr3Od4RkreXDdgzWM2LQPvac5+xR4YQnAee0cbqw8Jf5Bk/r6jSJL81Wh5UM
-	 DrlnAT08D/k4t+JQgQw3SarkL1tLGkA0xsFKLhEk=
+	by mail.kernel.org (Postfix) with ESMTP id 87F10206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:45:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="JIdC+EyH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730046AbfH0On6 (ORCPT
+        id S1729967AbfH0OpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:43:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56016 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 10:45:10 -0400
+Received: from mout.web.de ([217.72.192.78]:46695 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbfH0On5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:43:57 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA2B8206BF;
-        Tue, 27 Aug 2019 14:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566917036;
-        bh=YYcpRPJ9ObMCi1TUYaeck+9yIfym9MWqOaqRL4NI7/4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=cBiwjWnUXHcYFU3+QphcsfL72GFFmfOQGPRnuLrsHhJOcR6F78UmipUiaQI6iZm4D
-         qDQQmggQbuPN+9Oa5GSd4YSLI9mBcKtlNW/gxgg6DxdaRWnTbHQIYPJc3wu4OHjw+1
-         RgMxnG17Y2D37nVwjzKnXMFV7MqFcm11llSvwuts=
-Subject: Re: [PATCH v8] usbip: Implement SG support to vhci-hcd and stub
- driver
-To:     Suwan Kim <suwan.kim027@gmail.com>, valentina.manea.m@gmail.com,
-        gregkh@linuxfoundation.org, stern@rowland.harvard.edu
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20190826172348.23353-1-suwan.kim027@gmail.com>
- <d7bc3d7c-47a9-4b8c-ede2-2ed276fe2a77@kernel.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <9000ddaa-24f0-5c76-43a4-318f00ea31dc@kernel.org>
-Date:   Tue, 27 Aug 2019 08:43:55 -0600
+        id S1725920AbfH0OpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:45:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1566917097;
+        bh=136zRDCFtnxKZVXYpCFtMMCXu8o+6cc0jXSq2IGvEdE=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=JIdC+EyHDjXoCaMupMgQjdj/fx/udqs5aYP90IMaA50uYo4ueWb26+SRSJQRn3Hez
+         5AmIS/Zcyff9TarKJGDjAbRu+gg4SjaDhR2StzJd8sEVljr1+xv8TDy6A/jWqejCEN
+         6UtQKr2zT8AzT4BMVi7M9zdfY/MkoYVvJsOoEwXs=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.135.143.232]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LtWsC-1iAQge3NAq-010t8c; Tue, 27
+ Aug 2019 16:44:56 +0200
+To:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        wil6210@qti.qualcomm.com, "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] wil6210: Delete an unnecessary kfree() call in
+ wil_tid_ampdu_rx_alloc()
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <b9620e49-618d-b392-6456-17de5807df75@web.de>
+Date:   Tue, 27 Aug 2019 16:44:55 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <d7bc3d7c-47a9-4b8c-ede2-2ed276fe2a77@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:b686WEIBMhQs/LRLyV8vd+6S5YnUNI6Z/b6Mb9kUJkzfm22gkgr
+ SD3bwJXJ5QYl5l6xcEC+ODDSWEmEM+1Tj2R/LQPx6ZDUX446fGmIpVjwA4/9RrzuJJiYRSr
+ cr9bPo1OaYdGhir/9y+7lnNPswNsgrSZ9v+TySYGAoolEBeMWMEpS7q/lk2Ueyie9Spfvb4
+ fWXgI8v0Er5wyF6j5DDaQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nlpurH5kzFE=:KhYmMYV8dRvHYcOWKRRTsV
+ eyO402nyTD+mB9uwhPKkZAB3ox1w2JQIvDuL7J3R88aFNWWFhhCXO7bDiVJFl2SEJDUwPvy2i
+ LYHmAEAOA+Bh5GJCCKwUJKo+S5EIkSrtJ0AYO8VP39DMzBC0WP0wHJt8tb98OEjF1TJMWzdTd
+ jCUSAIeKRnJzhy78YI7du3RnVCyH+G1TDuCcNx+NJpojvXAQK0XWzx7dqETgdarAOLZamzK4k
+ B/WW/bcU3qP1KI8lFlC4Ukk0i5kTLnasL6H01sLZV2bCFIWNBjtrVe1RXbUkvsE+xuKk97AVV
+ 45whQalTAmrpcSIbwn8e3oMWriGSinUy6MEwXO1voZ6s18fe6utZhxbFH34N30xz6t01iphPZ
+ jO56wMPPlPrlByE0C0GAh70ZX0x97WQbMHTufymNPpTJf1wrs2FaP94VvMlbwyw0s0rcFCXNA
+ s7mdl15fdUrAb7DS9P++EwJubCf2T8roEMvq1RXJUAjod3mvRViBOjC7zIkQIQTDnLYP38Rwn
+ y7oTRQMxZtXKJMK0sgfkyHNzYnxwWAx6UMoppaDBgKMj5e8QTB8kKyobs/oREggtrUS6c7YoR
+ pX+Gr0uAnbQgYfLEieUUfCVC5/mWCQEzcMhlOVWXalI77hQ5GU0XwbUf4Y6DMw2dP3cIXM42z
+ QAcoYmUUyaVNz6lfy0BVCdUKbbIjRNImV/DgmdXR+/J8Bia7+FnZeQacL4bauPFBPJS7FiQXY
+ A1LQ09IYM8X1WGCxsnJGU2NXYm8PAvC1/+bijiHYAQJriXNVJJr1YJ11fquMyqcCEUDm+gzwg
+ bpV2BdG0RFaul/vE9o/ydlVvkCFckzDDPyNIjfF/qFuFcSv9zOzgZ+LBXi7B9IjONLqNu7k17
+ 0UIHA096Il7hsamUXFczdycotF36SU7yDANSym6WsOMfNv3+wqjox/yMQZ1vGsOmZjUZytDXJ
+ plq2oD0dYj5KLAAeLciCXQJ4jdedngsuQIFcCfh8XTW0EIVMk/aW33f+3gnuvCK5WhUytrArC
+ 4ctYGE74Q8vsLCpiYiogOx6AuNp3u+DQO0hLa/pw7pKGx0RZYJNRmMSynNmEaYWhLQhe1A3Qk
+ mO6jVqM4OJNmoUjnN4a9S1QY9DfCgzN7YioRQK6Ae3K2sTLsybmu5ADmZmUdaXA9ElJdTEgn9
+ ehwb8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/19 8:38 AM, shuah wrote:
-> On 8/26/19 11:23 AM, Suwan Kim wrote:
->> There are bugs on vhci with usb 3.0 storage device. In USB, each SG
->> list entry buffer should be divisible by the bulk max packet size.
->> But with native SG support, this problem doesn't matter because the
->> SG buffer is treated as contiguous buffer. But without native SG
->> support, USB storage driver breaks SG list into several URBs and the
->> error occurs because of a buffer size of URB that cannot be divided
->> by the bulk max packet size. The error situation is as follows.
->>
->> When USB Storage driver requests 31.5 KB data and has SG list which
->> has 3584 bytes buffer followed by 7 4096 bytes buffer for some
->> reason. USB Storage driver splits this SG list into several URBs
->> because VHCI doesn't support SG and sends them separately. So the
->> first URB buffer size is 3584 bytes. When receiving data from device,
->> USB 3.0 device sends data packet of 1024 bytes size because the max
->> packet size of BULK pipe is 1024 bytes. So device sends 4096 bytes.
->> But the first URB buffer has only 3584 bytes buffer size. So host
->> controller terminates the transfer even though there is more data to
->> receive. So, vhci needs to support SG transfer to prevent this error.
->>
->> In this patch, vhci supports SG regardless of whether the server's
->> host controller supports SG or not, because stub driver splits SG
->> list into several URBs if the server's host controller doesn't
->> support SG.
->>
->> To support SG, vhci sets URB_DMA_MAP_SG flag in transfer_flags of
->> usbip header if URB has SG list and this flag will tell stub driver
->> to use SG list.
->>
->> vhci sends each SG list entry to stub driver. Then, stub driver sees
->> the total length of the buffer and allocates SG table and pages
->> according to the total buffer length calling sgl_alloc(). After stub
->> driver receives completed URB, it again sends each SG list entry to
->> vhci.
->>
->> If the server's host controller doesn't support SG, stub driver
->> breaks a single SG request into several URBs and submits them to
->> the server's host controller. When all the split URBs are completed,
->> stub driver reassembles the URBs into a single return command and
->> sends it to vhci.
->>
->> Moreover, in the situation where vhci supports SG, but stub driver
->> does not, or vice versa, usbip works normally. Because there is no
->> protocol modification, there is no problem in communication between
->> server and client even if the one has a kernel without SG support.
->>
->> In the case of vhci supports SG and stub driver doesn't, because
->> vhci sends only the total length of the buffer to stub driver as
->> it did before the patch applied, stub driver only needs to allocate
->> the required length of buffers using only kmalloc() regardless of
->> whether vhci supports SG or not. But stub driver has to allocate
->> buffer with kmalloc() as much as the total length of SG buffer which
->> is quite huge when vhci sends SG request, so it has overhead in
->> buffer allocation in this situation.
->>
->> If stub driver needs to send data buffer to vhci because of IN pipe,
->> stub driver also sends only total length of buffer as metadata and
->> then sends real data as vhci does. Then vhci receive data from stub
->> driver and store it to the corresponding buffer of SG list entry.
->>
->> And for the case of stub driver supports SG and vhci doesn't, since
->> the USB storage driver checks that vhci doesn't support SG and sends
->> the request to stub driver by splitting the SG list into multiple
->> URBs, stub driver allocates a buffer for each URB with kmalloc() as
->> it did before this patch.
->>
->> * Test environment
->>
->> Test uses two difference machines and two different kernel version
->> to make mismatch situation between the client and the server where
->> vhci supports SG, but stub driver does not, or vice versa. All tests
->> are conducted in both full SG support that both vhci and stub support
->> SG and half SG support that is the mismatch situation. Test kernel
->> version is 5.3-rc6 with commit "usb: add a HCD_DMA flag instead of
->> guestimating DMA capabilities" to avoid unnecessary DMA mapping and
->> unmapping.
->>
->>   - Test kernel version
->>      - 5.3-rc6 with SG support
->>      - 5.1.20-200.fc29.x86_64 without SG support
->>
->> * SG support test
->>
->>   - Test devices
->>      - Super-speed storage device - SanDisk Ultra USB 3.0
->>      - High-speed storage device - SMI corporation USB 2.0 flash drive
->>
->>   - Test description
->>
->> Test read and write operation of mass storage device that uses the
->> BULK transfer. In test, the client reads and writes files whose size
->> is over 1G and it works normally.
->>
->> * Regression test
->>
->>   - Test devices
->>      - Super-speed device - Logitech Brio webcam
->>      - High-speed device  - Logitech C920 HD Pro webcam
->>      - Full-speed device  - Logitech bluetooth mouse
->>                           - Britz BR-Orion speaker
->>      - Low-speed device   - Logitech wired mouse
->>
->>   - Test description
->>
->> Moving and click test for mouse. To test the webcam, use gnome-cheese.
->> To test the speaker, play music and video on the client. All works
->> normally.
->>
->> * VUDC compatibility test
->>
->> VUDC also works well with this patch. Tests are done with two USB
->> gadget created by CONFIGFS USB gadget. Both use the BULK pipe.
->>
->>          1. Serial gadget
->>          2. Mass storage gadget
->>
->>   - Serial gadget test
->>
->> Serial gadget on the host sends and receives data using cat command
->> on the /dev/ttyGS<N>. The client uses minicom to communicate with
->> the serial gadget.
->>
->>   - Mass storage gadget test
->>
->> After connecting the gadget with vhci, use "dd" to test read and
->> write operation on the client side.
->>
->> Read  - dd if=/dev/sd<N> iflag=direct of=/dev/null bs=1G count=1
->> Write - dd if=<my file path> iflag=direct of=/dev/sd<N> bs=1G count=1
->>
->> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
->> ---
->> v7 - v8
->> - Modify the commit log which describes URB_DMA_MAP_SG flag setting.
->>
->> v6 - v7
->> - Move the flag set in setup_cmd_submit_pdu() of vhci_tx.c and
->>    manipulate usbip header flag instead of urb->transfer_flags.
->>
->> - Remove clearing URB_DMA_MAP_SG flag in vhci_rx.
-> 
-> setup_cmd_submit_pdu() is just for pdu and shouldn't be concerned
-> about the urb.
-> 
-> Please keep the URB_DMA_MAP_SG setting in urb->transfer_flags.
-> That mean you are restoring v6 code change with the commit log
-> updates from v8.
-> 
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 27 Aug 2019 16:39:02 +0200
 
-I mean v6 with my comments on v6 addressed, moving setting the flag
-after kalloc() and other comments.
+A null pointer would be passed to a call of the function =E2=80=9Ckfree=E2=
+=80=9D
+directly after a call of the function =E2=80=9Ckcalloc=E2=80=9D failed at =
+one place.
+Remove this superfluous function call.
 
-thanks,
--- Shuah
+This issue was detected by using the Coccinelle software.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/net/wireless/ath/wil6210/rx_reorder.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/net/wireless/ath/wil6210/rx_reorder.c b/drivers/net/w=
+ireless/ath/wil6210/rx_reorder.c
+index 784239bcb3a6..13246d216803 100644
+=2D-- a/drivers/net/wireless/ath/wil6210/rx_reorder.c
++++ b/drivers/net/wireless/ath/wil6210/rx_reorder.c
+@@ -260,7 +260,6 @@ struct wil_tid_ampdu_rx *wil_tid_ampdu_rx_alloc(struct=
+ wil6210_priv *wil,
+ 	r->reorder_buf =3D
+ 		kcalloc(size, sizeof(struct sk_buff *), GFP_KERNEL);
+ 	if (!r->reorder_buf) {
+-		kfree(r->reorder_buf);
+ 		kfree(r);
+ 		return NULL;
+ 	}
+=2D-
+2.23.0
 
