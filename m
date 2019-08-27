@@ -2,111 +2,87 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661FDC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863A7C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A58214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C2D21883
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566923523;
+	bh=Oyqg9XfbEF5K4wbPScxfrfQcryFdgidyBVES28Fahns=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0GsL9V3MS67Pl1OTgLzrmwRt/C7AaBmRRGQ8hzNR5ocjvbi+1GoZ7LwovmLDEWFp/
+	 usCAy0egC+t4Jh4Y5xj1ZWgpSjGoWFFZLULs1kvnRqtFp8RNu2TeoYpw4XcYm+VgdJ
+	 ZYx/Q/1HVE5zyx7jY3HoNhlzTcpebj/04gJpw0H4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730232AbfH0Qbn (ORCPT
+        id S1730299AbfH0QcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:31:43 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:40221 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfH0Qbm (ORCPT
+        Tue, 27 Aug 2019 12:32:02 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41187 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbfH0QcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:31:42 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id CFBC124000E;
-        Tue, 27 Aug 2019 16:31:37 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 18:31:34 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Karel Zak <kzak@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Subject: Re: New kernel interface for sys_tz and timewarp?
-Message-ID: <20190827163134.GC21922@piout.net>
-References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
- <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
- <20190814000622.GB20365@mit.edu>
- <CAK8P3a1CXRETxn6Gh_cOxM3rZ-wUwVDu-7=yEwjqOY=uEdC6OQ@mail.gmail.com>
- <20190814090936.GB10516@gardel-login>
- <20190814093208.GG3600@piout.net>
- <20190819110903.if3dzhvfnlqutn6s@ws.net.home>
- <20190820185830.GQ3545@piout.net>
- <CAK8P3a0EiP-LsKp1nFHgeRF09tQ0+5kPQd9JXBEKc1is30x3SA@mail.gmail.com>
+        Tue, 27 Aug 2019 12:32:02 -0400
+Received: by mail-ot1-f68.google.com with SMTP id o101so19235797ota.8;
+        Tue, 27 Aug 2019 09:32:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dhRNd7yIwWwUIbw7R2NcCjUjJYu5UmK8SsYGxZLWQBk=;
+        b=eTuzAMeYO+6r4cXeKg9/iPscLZlK7dF7Nn98O7SdTkUspNW5zEu9YNjG8MO8cL2qrb
+         4aWs54Jy655WBHHzb8uBIODDgsT9j8ENre7Cbeu6j5+LNJECuqJ/FiniCLjAll8rKxWc
+         3w9YUy5m/ZMZDOKS1ahmFiQe4eJQ3+jADIkeLYUkUj4jpg3jUNB6wJiRinkyKjYX6Jma
+         QRIufh51/rM8ujMrhmELR7gy6lTte6YM8rDIPrqaK//U73R04kZqYYhgSST8r/vsmFRy
+         zHFNTrIEwW3hkWHYv3ldArdGMJKYCY+F7lR//UJ9uIngghlt1hRVItF+zT8AVUHKhRo4
+         xuZQ==
+X-Gm-Message-State: APjAAAV06HQ5aa1R+Y63KuR3RUH2tBkE4Oe2ebd2EGsTqrVvXolT4diG
+        mezXWI2y0GVoehJovzxWHA==
+X-Google-Smtp-Source: APXvYqxHEgD88+9WHQA+ZuC5MA2YuedZjp45HEWvzxR2iZsyZvmBVQ+6DI3nvg7v+5nqm/Z81mSFpA==
+X-Received: by 2002:a05:6830:b:: with SMTP id c11mr5630082otp.163.1566923521149;
+        Tue, 27 Aug 2019 09:32:01 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u17sm4383022oif.11.2019.08.27.09.32.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 09:32:00 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 11:31:59 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     jassisinghbrar@gmail.com
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkoul@kernel.org, robh+dt@kernel.org,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: milbeaut-m10v-xdmac: Add Socionext
+ Milbeaut XDMAC bindings
+Message-ID: <20190827163159.GA29528@bogus>
+References: <20190818052154.17789-1-jassisinghbrar@gmail.com>
+ <20190818052224.17857-1-jassisinghbrar@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a0EiP-LsKp1nFHgeRF09tQ0+5kPQd9JXBEKc1is30x3SA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190818052224.17857-1-jassisinghbrar@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/08/2019 18:27:32+0200, Arnd Bergmann wrote:
-> On Tue, Aug 20, 2019 at 8:58 PM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> >
-> > On 19/08/2019 13:09:03+0200, Karel Zak wrote:
-> > > On Wed, Aug 14, 2019 at 11:32:08AM +0200, Alexandre Belloni wrote:
-> > > > On 14/08/2019 11:09:36+0200, Lennart Poettering wrote:
-> > > > > On Mi, 14.08.19 10:31, Arnd Bergmann (arnd@arndb.de) wrote:
-> > > > >
-> > > > > > - glibc stops passing the caller timezone argument to the kernel
-> > > > > > - the distro kernel disables CONFIG_RTC_HCTOSYS,
-> > > > > >   CONFIG_RTC_SYSTOHC  and CONFIG_GENERIC_CMOS_UPDATE
-> > > > >
-> > > > > What's the benefit of letting userspace do this? It sounds a lot more
-> > > > > fragile to leave this syncing to userspace if the kernel can do this
-> > > > > trivially on its own.
-> > >
-> > > Good point, why CONFIG_RTC_SYSTOHC has been added to the kernel?
-> > >
-> > > If I good remember than it's because synchronize userspace hwclock
-> > > with rtc is pretty fragile and frustrating. We have improved this
-> > > hwclock code many times and it will never be perfect. See for example
-> > > hwclock --delay= option, sometimes hwclock has no clue about RTC behaviour.
-> > >
-> >
-> > With a bit of care, we can reliably set the rtc to the system time from
-> > userspace. It takes a bit of time (up to 2 seconds) but it can be
-> > reliably set with an accuracy of a few ms on a slow system and an rtc on
-> > a slow bus or a few ns with a fast system and a fast bus.
-> > I know I did say I would implement it in hwclock and I still didn't
-> > (sorry) but we could do better than the --delay option.
+On Sun, 18 Aug 2019 00:22:24 -0500, jassisinghbrar@gmail.com wrote:
+> From: Jassi Brar <jaswinder.singh@linaro.org>
 > 
-> Would you use the regular RTC_SET_TIME ioctl for that, or
-> add a new RTC_SYS_TO_HC command that takes an explicit
-> offset? It sounds to me that the synchronization bit (actually
-> waiting for the right moment to update the rtc registers) is better
-> done in the kernel, while the decision about the offset and when
-> to call into the driver is better done in user space.
+> Document the devicetree bindings for Socionext Milbeaut XDMAC
+> controller. Controller only supports Mem->Mem transfers. Number
+> of physical channels are determined by the number of irqs registered.
+> 
+> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> ---
+>  .../bindings/dma/milbeaut-m10v-xdmac.txt      | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-xdmac.txt
 > 
 
-The existing ioctls are fine to do that, see:
-https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/rtc-tools.git/tree/rtc-sync.c
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Reviewed-by: Rob Herring <robh@kernel.org>
