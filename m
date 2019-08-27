@@ -2,120 +2,118 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC34C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6BBC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229CB217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:15:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="QthS0PTX"
+	by mail.kernel.org (Postfix) with ESMTP id 587D42173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:21:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbfH0FPt (ORCPT
+        id S1726421AbfH0FVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 01:15:49 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:35111 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfH0FPt (ORCPT
+        Tue, 27 Aug 2019 01:21:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36908 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725811AbfH0FVy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 01:15:49 -0400
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x7R5Fajn025312
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 14:15:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x7R5Fajn025312
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566882937;
-        bh=zeAycLLY1+YwZS+X2e0YqPWel6Z800aRLRMBYLbHzjc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QthS0PTXWF5aBM+m7e1UvVbvlMqry/Rqocy8p7BOjVAsh3YG7fXpSvAJOTH+trtQV
-         ThzxsmWaCM5IYVDckq79nclpCwzP5KLhAfrNCBIzPB0lkKT/xFcaqPDIyAXXLhi+ZK
-         FasB5AzWFwEerSy9yysA1paGNQqbzgU6Bj4ghKePZtccCfkkBzupFqOR64KyxddEsA
-         +DjHYFnNtkdQQ/P9E5QeA5tGSqhW4MQorW7lggHr80fG8TJmhiXjp1ZO0G9CBGAjJW
-         YkYUJS+cPrpBl3i8DgeE82aU37/DrrUaPu0vsWWCWm2WeImXOKkBgfknaI3EbHlD7N
-         3AmnrLjbLD1gw==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id i128so12600060vsc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 22:15:36 -0700 (PDT)
-X-Gm-Message-State: APjAAAWNjJLGm3452P7mUqZdhwlGAv8eYsuuxCXzP4Lg+jtyTtPjKGu6
-        zgw7dEcDNcWXeZGMkjJcPgsH94bEWsyZ/Ygoc2U=
-X-Google-Smtp-Source: APXvYqwP0GzvRul07oVJT4KEY7/gNx4mfEnLfUfHczL8h8K2KZo6T88R3SmwojkurNLRCWeIE1hR1si3oTLM73bFypc=
-X-Received: by 2002:a67:fd97:: with SMTP id k23mr12661548vsq.179.1566882935496;
- Mon, 26 Aug 2019 22:15:35 -0700 (PDT)
+        Tue, 27 Aug 2019 01:21:54 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7R5HoFw130212
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 01:21:53 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2umswhf6d8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 01:21:53 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Tue, 27 Aug 2019 06:21:51 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 27 Aug 2019 06:21:48 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7R5LlXU49414226
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Aug 2019 05:21:47 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 177BFA4057;
+        Tue, 27 Aug 2019 05:21:47 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B7FA4A4040;
+        Tue, 27 Aug 2019 05:21:46 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 27 Aug 2019 05:21:46 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 54733A022E;
+        Tue, 27 Aug 2019 15:21:43 +1000 (AEST)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Hildenbrand <david@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc: Perform a bounds check in arch_add_memory
+Date:   Tue, 27 Aug 2019 15:20:46 +1000
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190821092658.32764-1-yamada.masahiro@socionext.com> <20190826113526.GA23425@infradead.org>
-In-Reply-To: <20190826113526.GA23425@infradead.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 27 Aug 2019 14:14:59 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ_5Hz_CXAdx8W0bLjMWQ08KDWK3gG2pfDZOEE+cr0KEw@mail.gmail.com>
-Message-ID: <CAK7LNAQ_5Hz_CXAdx8W0bLjMWQ08KDWK3gG2pfDZOEE+cr0KEw@mail.gmail.com>
-Subject: Re: [PATCH] riscv: add arch/riscv/Kbuild
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19082705-4275-0000-0000-0000035DC4DF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082705-4276-0000-0000-0000386FF3FD
+Message-Id: <20190827052047.31547-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-26_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=936 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908270059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 8:35 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Wed, Aug 21, 2019 at 06:26:58PM +0900, Masahiro Yamada wrote:
-> > Use the standard obj-y form to specify the sub-directories under
-> > arch/riscv/. No functional change intended.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->
-> Do you have a document what the grand scheme here is?
+From: Alastair D'Silva <alastair@d-silva.org>
 
-There is a small documentation about "Makefile" vs "Kbuild"
-in Documentation/kbuild/modules.rst section 3.2
+It is possible for firmware to allocate memory ranges outside
+the range of physical memory that we support (MAX_PHYSMEM_BITS).
 
-It is talking about external modules, but the benefit applies
-to arch/$(SRCARCH)/Kbuild as well.
+This patch adds a bounds check to ensure that any hotplugged
+memory is addressable.
 
-arch/$(SRCARCH)/Makefile is included by the top Makefile
-to specify arch-specific compiler flags, etc.
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+---
+ arch/powerpc/mm/mem.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On the other hand, arch/$(SRCARCH)/Kbuild, if exists, is included
-when Kbuild actually descends into arch/$(SRCARCH)/.
-
-This allows you to hierarchize the sub-directories to visit
-instead of specifying everything in flat in arch/$(SRCARCH)/Makefile.
-
-Major architectures are already doing this.
-
-See
-arch/x86/Kbuild
-arch/sparc/Kbuild
-arch/powerpc/Kbuild
-etc.
-
-(and arm64 also adopted this recently)
-
-
-The trick is "Kbuild" has precedence over "Makefile".
-
-If you are interested in the actual code,
-see line 41 of scripts/Makefile.build
-
-
-
-
->  Less of the magic
-> in arch/$(ARCH)/Makefile sounds like a good idea, but unless we have
-> a very specific split between the kbuild makefile and various override
-> I fear just splitting things up into two files doesn't really help much.
-
-Why not?
-
-
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index 9191a66b3bc5..de18fb73de30 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -111,6 +111,9 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+ 	int rc;
+ 
++	if ((start + size - 1) >> MAX_PHYSMEM_BITS)
++		return -EINVAL;
++
+ 	resize_hpt_for_hotplug(memblock_phys_mem_size());
+ 
+ 	start = (unsigned long)__va(start);
 -- 
-Best Regards
-Masahiro Yamada
+2.21.0
+
