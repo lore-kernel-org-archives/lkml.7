@@ -2,57 +2,59 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F546C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94B0C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 416DD2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACDE02173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893574;
-	bh=98BKHUssZiAvVoIeeamna4LlHN+bPH8+OD69xuUHJas=;
+	s=default; t=1566893579;
+	bh=ufF3t1CWQkT46mQdMzFeTuoDkBirTgFqwuYqOxLy9ig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WJ7XCSBJOm78X0W3/fOGi45n2EyJEY9sL6io2gXARUlWIBoH7XXV292LSX62kDnB/
-	 kLNof2fBCGWbU1cP1JVko/vyHk4dFkNQfD7X2bFBAECnEaFo0DGQb0OTcUVFUoPJSZ
-	 6ghc7lqe3ppTmxBYc+ZcSPIQd+urK1MUNhsz+En0=
+	b=z0rgzTkW3zgPCIfWrVggva+hVwclIWCFTbnLI+6/b5eACyZzAS+uj1mAPVkkeIOqz
+	 swgILyuWmU8XAR4Q78bHgV0PVIrMUn7BKMiDhBi7fLWOLbwzTUnGRbzaMpoZqiX/Rn
+	 2Aln1xgZQ7JV267coSAGCUWRdma6Nk4RD4NqhRoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbfH0H6q (ORCPT
+        id S1731835AbfH0IM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:58:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51398 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:12:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731023AbfH0H6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:58:33 -0400
+        id S1731060AbfH0H6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:58:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A792E2173E;
-        Tue, 27 Aug 2019 07:58:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19194206BF;
+        Tue, 27 Aug 2019 07:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892712;
-        bh=98BKHUssZiAvVoIeeamna4LlHN+bPH8+OD69xuUHJas=;
+        s=default; t=1566892723;
+        bh=ufF3t1CWQkT46mQdMzFeTuoDkBirTgFqwuYqOxLy9ig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w1oVHI82rCSpKLMXob0mrYDvndfJ3nxPjQ1aUe1IBdCIah0ELlxiPaONf4ynU+y6Z
-         KQGQNXhUNfNlviamAbVZYJ5XULPSNzWljuOYgiFS8egNn528rSJPCMyPBzJ1gIIwlf
-         IFmkdHtlvVB9VGJogabpsK5p+4VVd3/SWRKrMc7g=
+        b=EtiHT/XyiaR8hJex5onwV+d5RTxZLee+P/TF8A/wOxj3j8DiwUZyQetH6Yb6DIDOB
+         6n5Ro7CzFPxsI3gU/J0KzQa8ypsf9Xg3G5XHnDJhCBqFxoTSfL4A3vYGT9R7xMQcCE
+         5tJ1zrNugw6CidNGe6Jc81Vlzdo6xDk6qoD9jWx4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Henry Burns <henryburns@google.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Henry Burns <henrywolfeburns@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 86/98] mm/zsmalloc.c: migration can leave pages in ZS_EMPTY indefinitely
-Date:   Tue, 27 Aug 2019 09:51:05 +0200
-Message-Id: <20190827072722.502224783@linuxfoundation.org>
+        stable@vger.kernel.org, He Zhe <zhe.he@windriver.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 54/98] perf cpumap: Fix writing to illegal memory in handling cpumap mask
+Date:   Tue, 27 Aug 2019 09:50:33 +0200
+Message-Id: <20190827072721.174204857@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -65,87 +67,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Henry Burns <henryburns@google.com>
+[ Upstream commit 5f5e25f1c7933a6e1673515c0b1d5acd82fea1ed ]
 
-commit 1a87aa03597efa9641e92875b883c94c7f872ccb upstream.
+cpu_map__snprint_mask() would write to illegal memory pointed by
+zalloc(0) when there is only one cpu.
 
-In zs_page_migrate() we call putback_zspage() after we have finished
-migrating all pages in this zspage.  However, the return value is
-ignored.  If a zs_free() races in between zs_page_isolate() and
-zs_page_migrate(), freeing the last object in the zspage,
-putback_zspage() will leave the page in ZS_EMPTY for potentially an
-unbounded amount of time.
+This patch fixes the calculation and adds sanity check against the input
+parameters.
 
-To fix this, we need to do the same thing as zs_page_putback() does:
-schedule free_work to occur.
-
-To avoid duplicated code, move the sequence to a new
-putback_zspage_deferred() function which both zs_page_migrate() and
-zs_page_putback() call.
-
-Link: http://lkml.kernel.org/r/20190809181751.219326-1-henryburns@google.com
-Fixes: 48b4800a1c6a ("zsmalloc: page migration support")
-Signed-off-by: Henry Burns <henryburns@google.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Henry Burns <henrywolfeburns@gmail.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Jonathan Adams <jwadams@google.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Fixes: 4400ac8a9a90 ("perf cpumap: Introduce cpu_map__snprint_mask()")
+Link: http://lkml.kernel.org/r/1564734592-15624-2-git-send-email-zhe.he@windriver.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/zsmalloc.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ tools/perf/util/cpumap.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -1882,6 +1882,18 @@ static void dec_zspage_isolation(struct
- 	zspage->isolated--;
- }
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 383674f448fcd..f93846edc1e0d 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -701,7 +701,10 @@ size_t cpu_map__snprint_mask(struct cpu_map *map, char *buf, size_t size)
+ 	unsigned char *bitmap;
+ 	int last_cpu = cpu_map__cpu(map, map->nr - 1);
  
-+static void putback_zspage_deferred(struct zs_pool *pool,
-+				    struct size_class *class,
-+				    struct zspage *zspage)
-+{
-+	enum fullness_group fg;
+-	bitmap = zalloc((last_cpu + 7) / 8);
++	if (buf == NULL)
++		return 0;
 +
-+	fg = putback_zspage(class, zspage);
-+	if (fg == ZS_EMPTY)
-+		schedule_work(&pool->free_work);
-+
-+}
-+
- static void replace_sub_page(struct size_class *class, struct zspage *zspage,
- 				struct page *newpage, struct page *oldpage)
- {
-@@ -2051,7 +2063,7 @@ static int zs_page_migrate(struct addres
- 	 * the list if @page is final isolated subpage in the zspage.
- 	 */
- 	if (!is_zspage_isolated(zspage))
--		putback_zspage(class, zspage);
-+		putback_zspage_deferred(pool, class, zspage);
- 
- 	reset_page(page);
- 	put_page(page);
-@@ -2097,14 +2109,13 @@ static void zs_page_putback(struct page
- 	spin_lock(&class->lock);
- 	dec_zspage_isolation(zspage);
- 	if (!is_zspage_isolated(zspage)) {
--		fg = putback_zspage(class, zspage);
- 		/*
- 		 * Due to page_lock, we cannot free zspage immediately
- 		 * so let's defer.
- 		 */
--		if (fg == ZS_EMPTY)
--			schedule_work(&pool->free_work);
-+		putback_zspage_deferred(pool, class, zspage);
- 	}
-+
- 	spin_unlock(&class->lock);
- }
- 
++	bitmap = zalloc(last_cpu / 8 + 1);
+ 	if (bitmap == NULL) {
+ 		buf[0] = '\0';
+ 		return 0;
+-- 
+2.20.1
+
 
 
