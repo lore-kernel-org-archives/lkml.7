@@ -2,126 +2,360 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B045EC3A59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 150C7C3A59F
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C79820679
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB6E2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbfH0Bl3 convert rfc822-to-8bit (ORCPT
+        id S1728667AbfH0Bo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 21:41:29 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:33827 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfH0Bl3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 21:41:29 -0400
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x7R1fB5g018428
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 27 Aug 2019 10:41:11 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x7R1fBC7004398;
-        Tue, 27 Aug 2019 10:41:11 +0900
-Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x7R1f8NS009523;
-        Tue, 27 Aug 2019 10:41:11 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.150] [10.38.151.150]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-7897375; Tue, 27 Aug 2019 10:34:31 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC22GP.gisp.nec.co.jp ([10.38.151.150]) with mapi id 14.03.0439.000; Tue,
- 27 Aug 2019 10:34:29 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     Oscar Salvador <osalvador@suse.de>
-CC:     "mhocko@kernel.org" <mhocko@kernel.org>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vbabka@suse.cz" <vbabka@suse.cz>
-Subject: Re: poisoned pages do not play well in the buddy allocator
-Thread-Topic: poisoned pages do not play well in the buddy allocator
-Thread-Index: AQHVW/rikgbcCOwjjUKpu7s54tdytqcNoE2A
-Date:   Tue, 27 Aug 2019 01:34:29 +0000
-Message-ID: <20190827013429.GA5125@hori.linux.bs1.fc.nec.co.jp>
-References: <20190826104144.GA7849@linux>
-In-Reply-To: <20190826104144.GA7849@linux>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.150]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <5C3D0DDFB19E7145A3A8CE56A8E69AE7@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Mon, 26 Aug 2019 21:44:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49280 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728335AbfH0Bo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 21:44:58 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CE27F30832E1;
+        Tue, 27 Aug 2019 01:44:57 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 19D2C1001281;
+        Tue, 27 Aug 2019 01:44:57 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 19:44:56 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     jiri@mellanox.com, kwankhede@nvidia.com, cohuck@redhat.com,
+        davem@davemloft.net, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
+Message-ID: <20190826194456.6edef7d1@x1.home>
+In-Reply-To: <20190826204119.54386-2-parav@mellanox.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <20190826204119.54386-2-parav@mellanox.com>
+Organization: Red Hat
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 27 Aug 2019 01:44:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 12:41:50PM +0200, Oscar Salvador wrote:
-> Hi,
-> 
-> When analyzing a problem reported by one of our customers, I stumbbled upon an issue
-> that origins from the fact that poisoned pages end up in the buddy allocator.
-> 
-> Let me break down the stepts that lie to the problem:
-> 
-> 1) We soft-offline a page
-> 2) Page gets flagged as HWPoison and is being sent to the buddy allocator.
->    This is done through set_hwpoison_free_buddy_page().
-> 3) Kcompactd wakes up in order to perform some compaction.
-> 4) compact_zone() will call migrate_pages()
-> 5) migrate_pages() will try to get a new page from compaction_alloc() to migrate to
-> 6) if cc->freelist is empty, compaction_alloc() will call isolate_free_pagesblock()
-> 7) isolate_free_pagesblock only checks for PageBuddy() to assume that a page is OK
->    to be used to migrate to. Since HWPoisoned page are also PageBuddy, we add
->    the page to the list. (same problem exists in fast_isolate_freepages()).
-> 
-> The outcome of that is that we end up happily handing poisoned pages in compaction_alloc,
-> so if we ever got a fault on that page through *_fault, we will return VM_FAULT_HWPOISON,
-> and the process will be killed.
-> 
-> I first though that I could get away with it by checking PageHWPoison in
-> {fast_isolate_freepages/isolate_free_pagesblock}, but not really.
-> It might be that the page we are checking is an order > 0 page, so the first page
-> might not be poisoned, but the one the follows might be, and we end up in the
-> same situation.
+On Mon, 26 Aug 2019 15:41:16 -0500
+Parav Pandit <parav@mellanox.com> wrote:
 
-Yes, this is a whole point of the current implementation.
+> Whenever a parent requests to generate mdev alias, generate a mdev
+> alias.
+> It is an optional attribute that parent can request to generate
+> for each of its child mdev.
+> mdev alias is generated using sha1 from the mdev name.
+> 
+> Signed-off-by: Parav Pandit <parav@mellanox.com>
+> ---
+>  drivers/vfio/mdev/mdev_core.c    | 98 +++++++++++++++++++++++++++++++-
+>  drivers/vfio/mdev/mdev_private.h |  5 +-
+>  drivers/vfio/mdev/mdev_sysfs.c   | 13 +++--
+>  include/linux/mdev.h             |  4 ++
+>  4 files changed, 111 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> index b558d4cfd082..e825ff38b037 100644
+> --- a/drivers/vfio/mdev/mdev_core.c
+> +++ b/drivers/vfio/mdev/mdev_core.c
+> @@ -10,9 +10,11 @@
+>  #include <linux/module.h>
+>  #include <linux/device.h>
+>  #include <linux/slab.h>
+> +#include <linux/mm.h>
+>  #include <linux/uuid.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/mdev.h>
+> +#include <crypto/hash.h>
+>  
+>  #include "mdev_private.h"
+>  
+> @@ -27,6 +29,8 @@ static struct class_compat *mdev_bus_compat_class;
+>  static LIST_HEAD(mdev_list);
+>  static DEFINE_MUTEX(mdev_list_lock);
+>  
+> +static struct crypto_shash *alias_hash;
+> +
+>  struct device *mdev_parent_dev(struct mdev_device *mdev)
+>  {
+>  	return mdev->parent->dev;
+> @@ -164,6 +168,18 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>  		goto add_dev_err;
+>  	}
+>  
+> +	if (ops->get_alias_length) {
+> +		unsigned int digest_size;
+> +		unsigned int aligned_len;
+> +
+> +		aligned_len = roundup(ops->get_alias_length(), 2);
+> +		digest_size = crypto_shash_digestsize(alias_hash);
+> +		if (aligned_len / 2 > digest_size) {
+> +			ret = -EINVAL;
+> +			goto add_dev_err;
+> +		}
+> +	}
 
-> 
-> After some more thought, I really came to the conclusion that HWPoison pages should not
-> really be in the buddy allocator, as this is only asking for problems.
-> In this case it is only compaction code, but it could be happening somewhere else,
-> and one would expect that the pages you got from the buddy allocator are __ready__ to use.
-> 
-> I __think__ that we thought we were safe to put HWPoison pages in the buddy allocator as we
-> perform healthy checks when getting a page from there, so we skip poisoned pages
-> 
-> Of course, this is not the end of the story, now that someone got a page, if he frees it,
-> there is a high chance that this page ends up in a pcplist (I saw that).
-> Unless we are on CONFIG_VM_DEBUG, we do not check for the health of pages got from pcplist,
-> as we do when getting a page from the buddy allocator.
-> 
-> I checked [1], and it seems that [2] was going towards fixing this kind of issue.
-> 
-> I think it is about time to revamp the whole thing.
-> 
-> @Naoya: I could give it a try if you are busy.
+This looks like a sanity check, it could be done outside of the
+parent_list_lock, even before we get a parent device reference.
 
-Thanks for raising hand. That's really wonderful. I think that the series [1] is not
-merge yet but not rejected yet, so feel free to reuse/update/revamp it.
+I think we're using a callback for get_alias_length() rather than a
+fixed field to support the mtty module option added in patch 4, right?
+Its utility is rather limited with no args.  I could imagine that if a
+parent wanted to generate an alias that could be incorporated into a
+string with the parent device name that it would be useful to call this
+with the parent device as an arg.  I guess we can save that until a
+user comes along though.
 
-> 
-> [1] https://lore.kernel.org/linux-mm/1541746035-13408-1-git-send-email-n-horiguchi@ah.jp.nec.com/
-> [2] https://lore.kernel.org/linux-mm/1541746035-13408-9-git-send-email-n-horiguchi@ah.jp.nec.com/
-> 
-> -- 
-> Oscar Salvador
-> SUSE L3
-> 
+There doesn't seem to be anything serializing use of alias_hash.
+
+> +
+>  	parent = kzalloc(sizeof(*parent), GFP_KERNEL);
+>  	if (!parent) {
+>  		ret = -ENOMEM;
+> @@ -259,6 +275,7 @@ static void mdev_device_free(struct mdev_device *mdev)
+>  	mutex_unlock(&mdev_list_lock);
+>  
+>  	dev_dbg(&mdev->dev, "MDEV: destroying\n");
+> +	kvfree(mdev->alias);
+>  	kfree(mdev);
+>  }
+>  
+> @@ -269,18 +286,86 @@ static void mdev_device_release(struct device *dev)
+>  	mdev_device_free(mdev);
+>  }
+>  
+> -int mdev_device_create(struct kobject *kobj,
+> -		       struct device *dev, const guid_t *uuid)
+> +static const char *
+> +generate_alias(const char *uuid, unsigned int max_alias_len)
+> +{
+> +	struct shash_desc *hash_desc;
+> +	unsigned int digest_size;
+> +	unsigned char *digest;
+> +	unsigned int alias_len;
+> +	char *alias;
+> +	int ret = 0;
+> +
+> +	/* Align to multiple of 2 as bin2hex will generate
+> +	 * even number of bytes.
+> +	 */
+
+Comment style for non-networking code please.
+
+> +	alias_len = roundup(max_alias_len, 2);
+> +	alias = kvzalloc(alias_len + 1, GFP_KERNEL);
+
+The size we're generating here should be small enough to just use
+kzalloc(), probably below too.
+
+> +	if (!alias)
+> +		return NULL;
+> +
+> +	/* Allocate and init descriptor */
+> +	hash_desc = kvzalloc(sizeof(*hash_desc) +
+> +			     crypto_shash_descsize(alias_hash),
+> +			     GFP_KERNEL);
+> +	if (!hash_desc)
+> +		goto desc_err;
+> +
+> +	hash_desc->tfm = alias_hash;
+> +
+> +	digest_size = crypto_shash_digestsize(alias_hash);
+> +
+> +	digest = kvzalloc(digest_size, GFP_KERNEL);
+> +	if (!digest) {
+> +		ret = -ENOMEM;
+> +		goto digest_err;
+> +	}
+> +	crypto_shash_init(hash_desc);
+> +	crypto_shash_update(hash_desc, uuid, UUID_STRING_LEN);
+> +	crypto_shash_final(hash_desc, digest);
+> +	bin2hex(&alias[0], digest,
+
+&alias[0], ie. alias
+
+> +		min_t(unsigned int, digest_size, alias_len / 2));
+> +	/* When alias length is odd, zero out and additional last byte
+> +	 * that bin2hex has copied.
+> +	 */
+> +	if (max_alias_len % 2)
+> +		alias[max_alias_len] = 0;
+
+Doesn't this give us a null terminated string for odd numbers but not
+even numbers?  Probably best to define that we always provide a null
+terminated string then we could do this unconditionally.
+
+> +
+> +	kvfree(digest);
+> +	kvfree(hash_desc);
+> +	return alias;
+> +
+> +digest_err:
+> +	kvfree(hash_desc);
+> +desc_err:
+> +	kvfree(alias);
+> +	return NULL;
+> +}
+> +
+> +int mdev_device_create(struct kobject *kobj, struct device *dev,
+> +		       const char *uuid_str, const guid_t *uuid)
+>  {
+>  	int ret;
+>  	struct mdev_device *mdev, *tmp;
+>  	struct mdev_parent *parent;
+>  	struct mdev_type *type = to_mdev_type(kobj);
+> +	unsigned int alias_len = 0;
+> +	const char *alias = NULL;
+>  
+>  	parent = mdev_get_parent(type->parent);
+>  	if (!parent)
+>  		return -EINVAL;
+>  
+> +	if (parent->ops->get_alias_length)
+> +		alias_len = parent->ops->get_alias_length();
+> +	if (alias_len) {
+
+Why isn't this nested into the branch above?
+
+> +		alias = generate_alias(uuid_str, alias_len);
+> +		if (!alias) {
+> +			ret = -ENOMEM;
+
+Could use an ERR_PTR and propagate an errno.
+
+> +			goto alias_fail;
+> +		}
+> +	}
+> +
+>  	mutex_lock(&mdev_list_lock);
+>  
+>  	/* Check for duplicate */
+> @@ -300,6 +385,8 @@ int mdev_device_create(struct kobject *kobj,
+>  	}
+>  
+>  	guid_copy(&mdev->uuid, uuid);
+> +	mdev->alias = alias;
+> +	alias = NULL;
+
+A comment justifying this null'ing might help prevent it getting culled
+as some point.  It appears arbitrary at first look.  Thanks,
+
+Alex
+
+>  	list_add(&mdev->next, &mdev_list);
+>  	mutex_unlock(&mdev_list_lock);
+>  
+> @@ -346,6 +433,8 @@ int mdev_device_create(struct kobject *kobj,
+>  	up_read(&parent->unreg_sem);
+>  	put_device(&mdev->dev);
+>  mdev_fail:
+> +	kvfree(alias);
+> +alias_fail:
+>  	mdev_put_parent(parent);
+>  	return ret;
+>  }
+> @@ -406,6 +495,10 @@ EXPORT_SYMBOL(mdev_get_iommu_device);
+>  
+>  static int __init mdev_init(void)
+>  {
+> +	alias_hash = crypto_alloc_shash("sha1", 0, 0);
+> +	if (!alias_hash)
+> +		return -ENOMEM;
+> +
+>  	return mdev_bus_register();
+>  }
+>  
+> @@ -415,6 +508,7 @@ static void __exit mdev_exit(void)
+>  		class_compat_unregister(mdev_bus_compat_class);
+>  
+>  	mdev_bus_unregister();
+> +	crypto_free_shash(alias_hash);
+>  }
+>  
+>  module_init(mdev_init)
+> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
+> index 7d922950caaf..cf1c0d9842c6 100644
+> --- a/drivers/vfio/mdev/mdev_private.h
+> +++ b/drivers/vfio/mdev/mdev_private.h
+> @@ -33,6 +33,7 @@ struct mdev_device {
+>  	struct kobject *type_kobj;
+>  	struct device *iommu_device;
+>  	bool active;
+> +	const char *alias;
+>  };
+>  
+>  #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
+> @@ -57,8 +58,8 @@ void parent_remove_sysfs_files(struct mdev_parent *parent);
+>  int  mdev_create_sysfs_files(struct device *dev, struct mdev_type *type);
+>  void mdev_remove_sysfs_files(struct device *dev, struct mdev_type *type);
+>  
+> -int  mdev_device_create(struct kobject *kobj,
+> -			struct device *dev, const guid_t *uuid);
+> +int mdev_device_create(struct kobject *kobj, struct device *dev,
+> +		       const char *uuid_str, const guid_t *uuid);
+>  int  mdev_device_remove(struct device *dev);
+>  
+>  #endif /* MDEV_PRIVATE_H */
+> diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
+> index 7570c7602ab4..43afe0e80b76 100644
+> --- a/drivers/vfio/mdev/mdev_sysfs.c
+> +++ b/drivers/vfio/mdev/mdev_sysfs.c
+> @@ -63,15 +63,18 @@ static ssize_t create_store(struct kobject *kobj, struct device *dev,
+>  		return -ENOMEM;
+>  
+>  	ret = guid_parse(str, &uuid);
+> -	kfree(str);
+>  	if (ret)
+> -		return ret;
+> +		goto err;
+>  
+> -	ret = mdev_device_create(kobj, dev, &uuid);
+> +	ret = mdev_device_create(kobj, dev, str, &uuid);
+>  	if (ret)
+> -		return ret;
+> +		goto err;
+>  
+> -	return count;
+> +	ret = count;
+> +
+> +err:
+> +	kfree(str);
+> +	return ret;
+>  }
+>  
+>  MDEV_TYPE_ATTR_WO(create);
+> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+> index 0ce30ca78db0..f036fe9854ee 100644
+> --- a/include/linux/mdev.h
+> +++ b/include/linux/mdev.h
+> @@ -72,6 +72,9 @@ struct device *mdev_get_iommu_device(struct device *dev);
+>   * @mmap:		mmap callback
+>   *			@mdev: mediated device structure
+>   *			@vma: vma structure
+> + * @get_alias_length:	Generate alias for the mdevs of this parent based on the
+> + *			mdev device name when it returns non zero alias length.
+> + *			It is optional.
+>   * Parent device that support mediated device should be registered with mdev
+>   * module with mdev_parent_ops structure.
+>   **/
+> @@ -92,6 +95,7 @@ struct mdev_parent_ops {
+>  	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
+>  			 unsigned long arg);
+>  	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
+> +	unsigned int (*get_alias_length)(void);
+>  };
+>  
+>  /* interface for exporting mdev supported type attributes */
+
