@@ -2,126 +2,120 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B95C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC34C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332F42173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229CB217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KuMqge6v"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="QthS0PTX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbfH0FKL (ORCPT
+        id S1729246AbfH0FPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 01:10:11 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37082 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbfH0FKK (ORCPT
+        Tue, 27 Aug 2019 01:15:49 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:35111 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfH0FPt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 01:10:10 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y9so12933682pfl.4
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 22:10:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kue46rIH4JbVHYlsaa+MeXhi8APX3bNmyCw0oXBiDLk=;
-        b=KuMqge6vlDfh8jKRoUD1gXms5XSFdS1FlnpSUUgkV3Anmlc5b2oHqJbvmp9PRK9HwC
-         cXoaHeEt91RFR/N/ICoDIUULdkm9h3zMfzEZUg03XCSuWbDcmXj6mlOFtvixsfmRpljM
-         +f80ERIcyeyyyhaKaWGX+70wWZTaNrqFIFiQZwBBU31lphbOAMIXNQAfQkydWDf4u7VD
-         ZUfkl/7pxtzhTER9JrlBceTvZGBiuHFxDYQPj3hNCwxhDaiTEVkDTAMBqqgZ67LE/pLm
-         s28iAqXtdlfxdlO3SY/yKy70m/oc1Qbb8nWkxpueiPJk2i8QRIInyzbhB57hxPpRiAFI
-         hgEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kue46rIH4JbVHYlsaa+MeXhi8APX3bNmyCw0oXBiDLk=;
-        b=s8Z4i3QQ44+bgXKeSOwsxAr5DM+ylcoHYwLz5F1FtgvyaicvspTVOFOMQo/Rd85gF2
-         rG7kDZZARD0OfJcGtAFiw+iJoqQzIhTNZiRlFLeUuGLmln2UdnaoKEhoGl2jSWPSGRRo
-         RmgRIh9gN/dpZc41qU8SJpVFsLmxkVhMwqWB8WmvxY+h9eWTjEZmSEIy0Tt07kgMA021
-         S1V4dc6W0pwgB6YlMcwijI8m6C89Z5ymWvV4sm8odQLGQXf3Uhb95FKQ1LwLytfGyktG
-         RX6PC6guLJDA+djUdbnj3ElVW6eIVmZC/G6G/HSaw3MX6+SR3zo41NsKDBUyfy+cLLZw
-         m1lA==
-X-Gm-Message-State: APjAAAWE3q1sNjBchFnHViIlegQEdmlcIC5jos4fZ1cceqAgZHxJTnEA
-        9or2xMjxIPz975XM6n4wxV25VSWMi+w=
-X-Google-Smtp-Source: APXvYqwcaGrGmBqQbq+ZXIx4wrncCySdMwJsO+BZOga+pwX1bi4P2t3U7PQxLtkRvcP8a/wee3hCMQ==
-X-Received: by 2002:a17:90a:250c:: with SMTP id j12mr23377818pje.96.1566882609922;
-        Mon, 26 Aug 2019 22:10:09 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y8sm21644391pfr.140.2019.08.26.22.10.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 26 Aug 2019 22:10:09 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 22:10:07 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     linux-remoteproc@vger.kernel.org,
-        Loic Pallardy <loic.pallardy@st.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] rpmsg: virtio_rpmsg_bus: replace "%p" with "%pK"
-Message-ID: <20190827051007.GK1263@builder>
-References: <20181024011909.21674-1-s-anna@ti.com>
- <40831f80-1e36-66ca-b8e5-684d46ba167e@ti.com>
+        Tue, 27 Aug 2019 01:15:49 -0400
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x7R5Fajn025312
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 14:15:36 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x7R5Fajn025312
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566882937;
+        bh=zeAycLLY1+YwZS+X2e0YqPWel6Z800aRLRMBYLbHzjc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QthS0PTXWF5aBM+m7e1UvVbvlMqry/Rqocy8p7BOjVAsh3YG7fXpSvAJOTH+trtQV
+         ThzxsmWaCM5IYVDckq79nclpCwzP5KLhAfrNCBIzPB0lkKT/xFcaqPDIyAXXLhi+ZK
+         FasB5AzWFwEerSy9yysA1paGNQqbzgU6Bj4ghKePZtccCfkkBzupFqOR64KyxddEsA
+         +DjHYFnNtkdQQ/P9E5QeA5tGSqhW4MQorW7lggHr80fG8TJmhiXjp1ZO0G9CBGAjJW
+         YkYUJS+cPrpBl3i8DgeE82aU37/DrrUaPu0vsWWCWm2WeImXOKkBgfknaI3EbHlD7N
+         3AmnrLjbLD1gw==
+X-Nifty-SrcIP: [209.85.217.50]
+Received: by mail-vs1-f50.google.com with SMTP id i128so12600060vsc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 22:15:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAWNjJLGm3452P7mUqZdhwlGAv8eYsuuxCXzP4Lg+jtyTtPjKGu6
+        zgw7dEcDNcWXeZGMkjJcPgsH94bEWsyZ/Ygoc2U=
+X-Google-Smtp-Source: APXvYqwP0GzvRul07oVJT4KEY7/gNx4mfEnLfUfHczL8h8K2KZo6T88R3SmwojkurNLRCWeIE1hR1si3oTLM73bFypc=
+X-Received: by 2002:a67:fd97:: with SMTP id k23mr12661548vsq.179.1566882935496;
+ Mon, 26 Aug 2019 22:15:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <40831f80-1e36-66ca-b8e5-684d46ba167e@ti.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+References: <20190821092658.32764-1-yamada.masahiro@socionext.com> <20190826113526.GA23425@infradead.org>
+In-Reply-To: <20190826113526.GA23425@infradead.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 27 Aug 2019 14:14:59 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ_5Hz_CXAdx8W0bLjMWQ08KDWK3gG2pfDZOEE+cr0KEw@mail.gmail.com>
+Message-ID: <CAK7LNAQ_5Hz_CXAdx8W0bLjMWQ08KDWK3gG2pfDZOEE+cr0KEw@mail.gmail.com>
+Subject: Re: [PATCH] riscv: add arch/riscv/Kbuild
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 09 Aug 13:25 PDT 2019, Suman Anna wrote:
+On Mon, Aug 26, 2019 at 8:35 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Wed, Aug 21, 2019 at 06:26:58PM +0900, Masahiro Yamada wrote:
+> > Use the standard obj-y form to specify the sub-directories under
+> > arch/riscv/. No functional change intended.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>
+> Do you have a document what the grand scheme here is?
 
-> Hi Bjorn,
-> 
+There is a small documentation about "Makefile" vs "Kbuild"
+in Documentation/kbuild/modules.rst section 3.2
 
-Hi Suman
+It is talking about external modules, but the benefit applies
+to arch/$(SRCARCH)/Kbuild as well.
 
-> On 10/23/18 8:19 PM, Suman Anna wrote:
-> > The virtio_rpmsg_bus driver uses the "%p" format-specifier for
-> > printing the vring buffer address. This prints only a hashed
-> > pointer even for previliged users. Use "%pK" instead so that
-> > the address can be printed during debug using kptr_restrict
-> > sysctl.
-> 
-> Seems to have been lost among the patches, can you pick up this trivial
-> patch for 5.4? Should apply cleanly on the latest HEAD as well.
-> 
+arch/$(SRCARCH)/Makefile is included by the top Makefile
+to specify arch-specific compiler flags, etc.
 
-I share Andrew's question regarding what benefit you have from knowing
-this value. Should we not just remove the va from the print? Or do you
-actually have a use case for it?
+On the other hand, arch/$(SRCARCH)/Kbuild, if exists, is included
+when Kbuild actually descends into arch/$(SRCARCH)/.
 
-Regards,
-Bjorn
+This allows you to hierarchize the sub-directories to visit
+instead of specifying everything in flat in arch/$(SRCARCH)/Makefile.
 
-> regards
-> Suman
-> 
-> > 
-> > Signed-off-by: Suman Anna <s-anna@ti.com>
-> > ---
-> >  drivers/rpmsg/virtio_rpmsg_bus.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
-> > index f29dee731026..1345f373a1a0 100644
-> > --- a/drivers/rpmsg/virtio_rpmsg_bus.c
-> > +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
-> > @@ -950,7 +950,7 @@ static int rpmsg_probe(struct virtio_device *vdev)
-> >  		goto vqs_del;
-> >  	}
-> >  
-> > -	dev_dbg(&vdev->dev, "buffers: va %p, dma %pad\n",
-> > +	dev_dbg(&vdev->dev, "buffers: va %pK, dma %pad\n",
-> >  		bufs_va, &vrp->bufs_dma);
-> >  
-> >  	/* half of the buffers is dedicated for RX */
-> > 
-> 
+Major architectures are already doing this.
+
+See
+arch/x86/Kbuild
+arch/sparc/Kbuild
+arch/powerpc/Kbuild
+etc.
+
+(and arm64 also adopted this recently)
+
+
+The trick is "Kbuild" has precedence over "Makefile".
+
+If you are interested in the actual code,
+see line 41 of scripts/Makefile.build
+
+
+
+
+>  Less of the magic
+> in arch/$(ARCH)/Makefile sounds like a good idea, but unless we have
+> a very specific split between the kbuild makefile and various override
+> I fear just splitting things up into two files doesn't really help much.
+
+Why not?
+
+
+-- 
+Best Regards
+Masahiro Yamada
