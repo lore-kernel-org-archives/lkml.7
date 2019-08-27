@@ -2,102 +2,85 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B9DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC9AC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9350A2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:21:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iauj4YMD"
+	by mail.kernel.org (Postfix) with ESMTP id B7A75214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:22:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566926525;
+	bh=YqArVzSP3eSTr3Q1BKp2o458PMOhdquGmnsExLclPAA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w17b6pOSshNit6k9RdVqCqfbQ2gaTNLSMTaUHvXLZgSJtj9BZW10jb++s3exkiMk/
+	 G3Qqkt0zuVdw09bltkr/X6jRvPKeRepnncNYR0bezwHHF3BppfWCaPO1zC0s6AUrMH
+	 0jHq1mDdC/8mictaSEQgVes6ga8E0FbEwywgxRi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730460AbfH0RVz (ORCPT
+        id S1730488AbfH0RWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:21:55 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34355 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbfH0RVy (ORCPT
+        Tue, 27 Aug 2019 13:22:04 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46108 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbfH0RWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:21:54 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b24so14568222pfp.1;
-        Tue, 27 Aug 2019 10:21:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zRigP/msiQiDSPdu4zbzx+Q8x/ih7vzlwsY6a8Wz66s=;
-        b=Iauj4YMDxlI7eSu/g9BPoFQBxpnhpWIfR4fBeRCtD1F+hz08fDxiccP5oYfoAH7en3
-         bTcbEs/SFVl9UkpYreup9INiGKmMuerTPULnaBtTUygkNG0nbaoMSyflf3ERPTRpMLSP
-         VVfD+4qV6SHX/L8+KcYbfan27OAC0eVHgWPrr/r0ugUUblmgOSBvN3t+cz0PmxOiN277
-         /+gewSrztdybZcF91zFblvsW6WTD/D8pBvNHBm5DD8inJL4925TLHvKitxges+MpkKYc
-         rwXDYio+g1DLNHBP7uCu8EKOZZXsGRXU1BcmPBdX4Q+FJZwICl99e6kCKvcIJY5YU3qd
-         Rtbw==
+        Tue, 27 Aug 2019 13:22:04 -0400
+Received: by mail-ot1-f65.google.com with SMTP id z17so19379045otk.13;
+        Tue, 27 Aug 2019 10:22:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zRigP/msiQiDSPdu4zbzx+Q8x/ih7vzlwsY6a8Wz66s=;
-        b=hkp2eQlu60tzcBkxatjrNNtwK+TrpCa2aK415tZ30MKn59tGf21BGygsVcCiFSamac
-         MkW53iYqlt6XYe1Fo4r0zS1DDJEQwKUZ2K95RrDI7VsBXn3hWuFfs1DdA7S6b4xQWio+
-         IhuO2uEK1faXA4FjMjFRVP1eNhJIQl69G89lQ6ZfPRKIdVLCE609t/RILrql7W2hxph7
-         0+PTv04qlJhkP6DiQG+/Sk7JAPoAwJdfPyMxXBl6Zm9tL/yo/bVvLGo2MtbZ6oy0XkTP
-         gVfzxREdAMLWlVkt42ffyL8kY44k3RutlG6NRsWaKoOhUKg1PZW/5JSgNq4UsuIAuNFP
-         S9Ow==
-X-Gm-Message-State: APjAAAUPEuIj3opf5bjlhdomoLwCBj4TdvxliK6XJ0EnIQloqj69xJ84
-        xm4T7SoqaJUCffho1V3cOK7zEx66
-X-Google-Smtp-Source: APXvYqyKRhppJ/qA2UBq6ZMaVWHjlMRhLmiVaZLdW9FTrJ4pwB3mo84sMTVDrIA1/lMdfAUIYt8F0A==
-X-Received: by 2002:a62:4ed1:: with SMTP id c200mr27207401pfb.218.1566926513664;
-        Tue, 27 Aug 2019 10:21:53 -0700 (PDT)
-Received: from localhost (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
-        by smtp.gmail.com with ESMTPSA id 6sm15692223pfa.7.2019.08.27.10.21.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 10:21:53 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 10:21:52 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Alexander Amelkin <a.amelkin@yadro.com>,
-        openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] watchdog/aspeed: add support for dual boot
-Message-ID: <20190827172151.GA31588@roeck-us.net>
-References: <20190827165426.17037-1-i.mikhaylov@yadro.com>
- <20190827165426.17037-4-i.mikhaylov@yadro.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WPpftmwK3OKZMRgsYVJviNISUJHoAZwIDI0S7LTpL6w=;
+        b=W0q92+WG6hCNW+vZej+6W4tkglz6MvMiPcScFFbwIDKersDaYwaz5iZ69l9Lowm3mH
+         W2PYVJsAC344SMc6Qs6LTdp7IH5O4rntek+d+WoLCYkdqE3gKLDLPPe8/TgFiiwGvV8Y
+         HZrFf6vOP94RpxTsmoA35BE0KDXIbEnQGkM/gGNIpIB/pScW0RK6f/e/FppHaoxhPDpl
+         BX/6B7M+F90wq7xRMs9ZeKg3WD5AvDKZbzqhHwx+Vou1GbhcZu4gahDy89IvI/1beUfl
+         tfN+oJ8VwNoYMpADUTw3fQv0SpzBHzhlZk+p/WGTPui/jH9ABh6DT0pd359T3R680bhh
+         pL6w==
+X-Gm-Message-State: APjAAAVGaewFrJqMkEg5bHxsOcZvimoyzKUTmQHgOdFUF36kl9CJ7K1+
+        /Jpf1fpVJK5LeowD1eyFlRof96c=
+X-Google-Smtp-Source: APXvYqxjZ8uf2LA9GzcCtuUvEFrM392BMVxwyyzfao6eluhjcJIf98avFVPEXxAiKtXFK5u0LaztRA==
+X-Received: by 2002:a9d:39c4:: with SMTP id y62mr20481062otb.313.1566926523239;
+        Tue, 27 Aug 2019 10:22:03 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d27sm5477424otf.25.2019.08.27.10.22.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 10:22:02 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 12:22:02 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        gregkh@linuxfoundation.org, mark.rutland@arm.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com, rahul.tanwar@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: lantiq: Update for new SoC
+Message-ID: <20190827172202.GA10615@bogus>
+References: <cover.1566370151.git.rahul.tanwar@linux.intel.com>
+ <ffb6855d4c8d47412775b5fa4ce6ae4dd1161cb8.1566370151.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190827165426.17037-4-i.mikhaylov@yadro.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <ffb6855d4c8d47412775b5fa4ce6ae4dd1161cb8.1566370151.git.rahul.tanwar@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 07:54:25PM +0300, Ivan Mikhaylov wrote:
-> Set WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION into WDT_CLEAR_TIMEOUT_STATUS
-> to clear out boot code source and re-enable access to the primary SPI flash
-> chip while booted via wdt2 from the alternate chip.
+On Wed, 21 Aug 2019 15:06:52 +0800, Rahul Tanwar wrote:
+> Intel Lightning Mountain(LGM) reuses Lantiq ASC serial controller IP.
+> Update the dt bindings to support LGM as well.
 > 
-> AST2400 datasheet says:
-> "In the 2nd flash booting mode, all the address mapping to CS0# would be
-> re-directed to CS1#. And CS0# is not accessable under this mode. To access
-> CS0#, firmware should clear the 2nd boot mode register in the WDT2 status
-> register WDT30.bit[1]."
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  .../devicetree/bindings/serial/lantiq,asc.yaml     | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
 > 
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
 
-Please run "checkpatch --strict" on this patch and fix the reported problems
-(I _did_ ask for proper multi-line aligment before, but there are a couple
-of other issues as well).
-
-Thanks,
-Guenter
+Reviewed-by: Rob Herring <robh@kernel.org>
