@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD1BC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9821C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6333C2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16B92173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893376;
-	bh=RC199nhAYZRtj3va6zftvMHOLXIDuyiqPEEpAliMEkk=;
+	s=default; t=1566893379;
+	bh=pxSnDMCy4QW5fVlt8AHYU8Hw9Z8BgMHTH91vuYTye3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m0NG3LWX03/KqpmK49INf4TWyGJi05UyKeFuhrl2LMrsgS3jFocyKs4DHuK9vwR84
-	 aClYkbYQZ/6HIka0cpd9cBjsmcZ+6rXaXlwsbzxcVgPDtzhn6ImIHP6O//+phuxbCQ
-	 jODJuLb8Vc++AepLZK0YcLRc23oOhG9IlmkHBkLk=
+	b=OAmmN8khQ4Gms22OhqLMVW6leGoSUsfHLKSWKjsoiaUOIXre6lLlh9Oui6vTpHVkt
+	 v91dySezNMKiQh+sb2DEupz1J0WLYeEg+sljyKelEUS+P40GDyTi/gRR0L/OZoNGyH
+	 2f9Gbj8eqTi7HLmOvpGdXdwyS6r+cN1RNpbimJC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732442AbfH0IEI (ORCPT
+        id S1732652AbfH0IJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:04:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33142 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:09:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730764AbfH0IDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:03:53 -0400
+        id S1732436AbfH0IEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:04:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44FF8206BF;
-        Tue, 27 Aug 2019 08:03:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B68742184D;
+        Tue, 27 Aug 2019 08:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893032;
-        bh=RC199nhAYZRtj3va6zftvMHOLXIDuyiqPEEpAliMEkk=;
+        s=default; t=1566893047;
+        bh=pxSnDMCy4QW5fVlt8AHYU8Hw9Z8BgMHTH91vuYTye3I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OoXyzm8DG395oCe1crAKyEX1RvIE1wEqAMaQmBHfmEWEOagkj9mH+E/eSFLrjll6/
-         lmtFMzwwXICfIQUPOiF6TN64AuNl8+SMHM2DYojRKJIa0YmITzbZ7z0cdYTVOVTLii
-         lNNxv9k+w00A3H9bV19pz0mfRGG2/cDf9wSWSrjs=
+        b=gxjPgu2/lkr4RVOpDPRzvNnKUEm8fSDy6iNqw/rHhxrvGkybe7qXI2fIGc26ZscjR
+         c9k4IkZqAohM3gtI0PPBHdQ6xXkgGfwMCGh4LUtKfgJpBihnGOH0SzFD3OlbEdqGcF
+         qqouRdxn4nZlQLQxSJBeHB+VpDu+NjJVZ+RcV8fM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Deepak Rawat <drawat@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 096/162] NFSv4: Ensure state recovery handles ETIMEDOUT correctly
-Date:   Tue, 27 Aug 2019 09:50:24 +0200
-Message-Id: <20190827072741.557647315@linuxfoundation.org>
+Subject: [PATCH 5.2 100/162] drm/vmwgfx: fix memory leak when too many retries have occurred
+Date:   Tue, 27 Aug 2019 09:50:28 +0200
+Message-Id: <20190827072741.727998111@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,89 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 67e7b52d44e3d539dfbfcd866c3d3d69da23a909 ]
+[ Upstream commit 6b7c3b86f0b63134b2ab56508921a0853ffa687a ]
 
-Ensure that the state recovery code handles ETIMEDOUT correctly,
-and also that we set RPC_TASK_TIMEOUT when recovering open state.
+Currently when too many retries have occurred there is a memory
+leak on the allocation for reply on the error return path. Fix
+this by kfree'ing reply before returning.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Addresses-Coverity: ("Resource leak")
+Fixes: a9cd9c044aa9 ("drm/vmwgfx: Add a check to handle host message failure")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Deepak Rawat <drawat@vmware.com>
+Signed-off-by: Deepak Rawat <drawat@vmware.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c  | 2 ++
- fs/nfs/nfs4state.c | 7 +++++--
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_msg.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 74e1732a4bd01..2023011c7a8fe 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -2150,6 +2150,7 @@ static int nfs4_handle_delegation_recall_error(struct nfs_server *server, struct
- 		case -ENOENT:
- 		case -EAGAIN:
- 		case -ESTALE:
-+		case -ETIMEDOUT:
- 			break;
- 		case -NFS4ERR_BADSESSION:
- 		case -NFS4ERR_BADSLOT:
-@@ -2470,6 +2471,7 @@ static int nfs4_run_open_task(struct nfs4_opendata *data,
- 	if (!ctx) {
- 		nfs4_init_sequence(&o_arg->seq_args, &o_res->seq_res, 1, 1);
- 		data->is_recover = true;
-+		task_setup_data.flags |= RPC_TASK_TIMEOUT;
- 	} else {
- 		nfs4_init_sequence(&o_arg->seq_args, &o_res->seq_res, 1, 0);
- 		pnfs_lgopen_prepare(data, ctx);
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 261de26d897f7..0e69cd846afb5 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -1528,6 +1528,7 @@ restart:
- 		switch (status) {
- 		case 0:
- 			break;
-+		case -ETIMEDOUT:
- 		case -ESTALE:
- 		case -NFS4ERR_ADMIN_REVOKED:
- 		case -NFS4ERR_STALE_STATEID:
-@@ -1681,11 +1682,13 @@ restart:
- 		case -NFS4ERR_EXPIRED:
- 		case -NFS4ERR_NO_GRACE:
- 			nfs4_state_mark_reclaim_nograce(sp->so_server->nfs_client, state);
-+			/* Fall through */
- 		case -NFS4ERR_STALE_CLIENTID:
- 		case -NFS4ERR_BADSESSION:
- 		case -NFS4ERR_BADSLOT:
- 		case -NFS4ERR_BAD_HIGH_SLOT:
- 		case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
-+		case -ETIMEDOUT:
- 			goto out_err;
- 		}
- 		nfs4_put_open_state(state);
-@@ -1970,7 +1973,6 @@ static int nfs4_handle_reclaim_lease_error(struct nfs_client *clp, int status)
- 		return -EPERM;
- 	case -EACCES:
- 	case -NFS4ERR_DELAY:
--	case -ETIMEDOUT:
- 	case -EAGAIN:
- 		ssleep(1);
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
+index e4e09d47c5c0e..59e9d05ab928b 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
+@@ -389,8 +389,10 @@ static int vmw_recv_msg(struct rpc_channel *channel, void **msg,
  		break;
-@@ -2599,7 +2601,7 @@ static void nfs4_state_manager(struct nfs_client *clp)
- 		}
+ 	}
  
- 		/* Now recover expired state... */
--		if (test_and_clear_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state)) {
-+		if (test_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state)) {
- 			section = "reclaim nograce";
- 			status = nfs4_do_reclaim(clp,
- 				clp->cl_mvops->nograce_recovery_ops);
-@@ -2607,6 +2609,7 @@ static void nfs4_state_manager(struct nfs_client *clp)
- 				continue;
- 			if (status < 0)
- 				goto out_error;
-+			clear_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state);
- 		}
+-	if (retries == RETRIES)
++	if (retries == RETRIES) {
++		kfree(reply);
+ 		return -EINVAL;
++	}
  
- 		nfs4_end_drain_session(clp);
+ 	*msg_len = reply_len;
+ 	*msg     = reply;
 -- 
 2.20.1
 
