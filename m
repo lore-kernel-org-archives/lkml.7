@@ -2,168 +2,111 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF6CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C90C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01BD520828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A416F20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:49:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mLW/ZDdv"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="n7XMRyf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbfH0Fsj (ORCPT
+        id S1729324AbfH0FtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 01:48:39 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47440 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfH0Fsi (ORCPT
+        Tue, 27 Aug 2019 01:49:03 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43604 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfH0FtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 01:48:38 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7R5mN9X107439;
-        Tue, 27 Aug 2019 00:48:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566884903;
-        bh=NLw1dkWiMq9XrUKh2CldBAJYtOZ9XDX5mN04ZYPcLhw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mLW/ZDdvX02S4VgGO0bsiCCS/YrKFaTx1Sr/yJ+RqX79aIcLFhg7rGFnp2zYtNYxS
-         BdSgY7hUYdDYc44sZk9DIqufyGnfAVhv6ieJ2W5EO1EXDzXiB6utAt74R8+xVp2mdY
-         sTIk5SZlSJ2OlKaze46E6EqSJVYYnJgADlVVhrZA=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7R5mNx9086346
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 27 Aug 2019 00:48:23 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 27
- Aug 2019 00:48:22 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 27 Aug 2019 00:48:22 -0500
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7R5mJvL051681;
-        Tue, 27 Aug 2019 00:48:20 -0500
-Subject: Re: [RESEND PATCH v3 06/20] mtd: spi-nor: Add a default_init() fixup
- hook for gd25q256
-To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>,
-        <marek.vasut@gmail.com>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <boris.brezillon@bootlin.com>
-References: <20190826120821.16351-1-tudor.ambarus@microchip.com>
- <20190826120821.16351-7-tudor.ambarus@microchip.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <74bfb73e-e1c4-ce78-f1cb-6ee0050eb275@ti.com>
-Date:   Tue, 27 Aug 2019 11:18:57 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 01:49:02 -0400
+Received: by mail-ot1-f66.google.com with SMTP id e12so17548710otp.10
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 22:49:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7RBGb3OLJpAQau2j2snbl6ZXBD+gjXfBLYIYixGrB0c=;
+        b=n7XMRyf/Ux88Ml8xjGhdXA9Q3iFgJtT0BpZPsWc98cEcFJ6TQiYB0p3+BFgdYbK0ks
+         Eu6G39nq/TPJjUAhyfj0u+5OUinp0KQQSzJb09SUoRMsiIXwOyxTb5qs0uc/7EP8YyrJ
+         W0wpqtSvCeW+9p6v4bb2bvW6uJsUMRjVaHF1W+6kItySBxerIkc2Qt5F8b8CAxBSG8f6
+         beq5q5PWSa66mvnAnFGcQ60seo1+/Fc4DBSkpO6xcYSrysoRPzNKuhGk/92p3SlULFnL
+         VitTGP0DJ0qVGff0ycBHaSWfSQ5vpt3KcbNH2fMIMCskHaD0I0YeRxiE1UqwrywY3q4F
+         x3Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7RBGb3OLJpAQau2j2snbl6ZXBD+gjXfBLYIYixGrB0c=;
+        b=hcNqbJVCj3HZWdsINPJDgSAeAELSH9B2oizJ6qQV+8P4pc3rjcRirs7K1yDAeXhQBV
+         V8vZJFYefFCGcBma726vqf+nvPqQMqKrBAQxTBMgSU3m5FdVNudzR8qAomIT5ZSF3Plk
+         sUgZw4fZCECAPRua77l1Y2Bq5+LuXBxNgCR0QiS4mC6LXLKc4xAwrr5HhBu8y8VWVWk5
+         ujdAZB9EWyK3Foo09Y6dW0PeY/lflb9TJa2/vXp1Ge0mzPD3Xqabbi7maSEtWjU6QxFQ
+         W0xQyHXYPanzfUmzrtgZlyHFUbDxZGKLvviqta9HQ6LCLPkMHHBp5ogkTCcxsss5fSjs
+         aaQA==
+X-Gm-Message-State: APjAAAXY0q1iw5i/MyATJ5hXnOFrtevjsfXBbt8sINx7EkXphkw26J3O
+        x2FRpv9dkoKMb+mf9JEIvfu5UCw0bR96DAHkH5x7bA==
+X-Google-Smtp-Source: APXvYqyHt3ylRYIOT6ImiUvFQ/SX/9gr7Aon0ozM+XiDQ3ga7QMUZtYdtrQMwzADy4l4V7UM7IwD4lDixKw+wDlCjEs=
+X-Received: by 2002:a05:6830:458:: with SMTP id d24mr12220534otc.126.1566884941281;
+ Mon, 26 Aug 2019 22:49:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190826120821.16351-7-tudor.ambarus@microchip.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <155993563277.3036719.17400338098057706494.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155993567002.3036719.5748845658364934737.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190607202332.GB32656@bombadil.infradead.org>
+In-Reply-To: <20190607202332.GB32656@bombadil.infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 26 Aug 2019 22:48:50 -0700
+Message-ID: <CAPcyv4gU_AfUoh7certr31f+7eZWfkEVqmNLtY2v7H54BxZK1w@mail.gmail.com>
+Subject: Re: [PATCH v3 07/10] lib/memregion: Uplevel the pmem "region" ida to
+ a global allocator
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        X86 ML <x86@kernel.org>, linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 7, 2019 at 1:23 PM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Fri, Jun 07, 2019 at 12:27:50PM -0700, Dan Williams wrote:
+> > diff --git a/lib/memregion.c b/lib/memregion.c
+> > new file mode 100644
+> > index 000000000000..f6c6a94c7921
+> > --- /dev/null
+> > +++ b/lib/memregion.c
+> > @@ -0,0 +1,15 @@
+> > +#include <linux/idr.h>
+> > +
+> > +static DEFINE_IDA(region_ids);
+> > +
+> > +int memregion_alloc(gfp_t gfp)
+> > +{
+> > +     return ida_alloc(&region_ids, gfp);
+> > +}
+> > +EXPORT_SYMBOL(memregion_alloc);
+> > +
+> > +void memregion_free(int id)
+> > +{
+> > +     ida_free(&region_ids, id);
+> > +}
+> > +EXPORT_SYMBOL(memregion_free);
+>
+> Does this trivial abstraction have to live in its own file?  I'd make
+> memregion_alloc/free static inlines that live in a header file, then
+> all you need do is find a suitable .c file to store memregion_ids in,
+> and export that one symbol instead of two.
 
-
-On 26/08/19 5:38 PM, Tudor.Ambarus@microchip.com wrote:
-> From: Boris Brezillon <boris.brezillon@bootlin.com>
-> 
-> gd25q256 needs to tweak the ->quad_enable() implementation and the
-> ->default_init() fixup hook is the perfect place to do that. This way,
-> if we ever need to tweak more things for this flash, we won't have to
-> add new fields in flash_info.
-> 
-> We can get rid of the flash_info->quad_enable field as gd25q256 was
-> the only user.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> [tudor.ambarus@microchip.com: use ->default_init() hook instead of
-> ->post_sfdp()]
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-> ---
-
-
-Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
-
-Regards
-Vignesh
-
-> v3: no changes
-> >  drivers/mtd/spi-nor/spi-nor.c | 28 ++++++++++++++++------------
->  1 file changed, 16 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index 8fd60e1eebd2..3dbbfe34d1d2 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -222,8 +222,6 @@ struct flash_info {
->  
->  	/* Part specific fixup hooks. */
->  	const struct spi_nor_fixups *fixups;
-> -
-> -	int	(*quad_enable)(struct spi_nor *nor);
->  };
->  
->  #define JEDEC_MFR(info)	((info)->id[0])
-> @@ -2126,6 +2124,21 @@ static struct spi_nor_fixups mx25l25635_fixups = {
->  	.post_bfpt = mx25l25635_post_bfpt_fixups,
->  };
->  
-> +static void gd25q256_default_init(struct spi_nor *nor)
-> +{
-> +	/*
-> +	 * Some manufacturer like GigaDevice may use different
-> +	 * bit to set QE on different memories, so the MFR can't
-> +	 * indicate the quad_enable method for this case, we need
-> +	 * to set it in the default_init fixup hook.
-> +	 */
-> +	nor->params.quad_enable = macronix_quad_enable;
-> +}
-> +
-> +static struct spi_nor_fixups gd25q256_fixups = {
-> +	.default_init = gd25q256_default_init,
-> +};
-> +
->  /* NOTE: double check command sets and memory organization when you add
->   * more nor chips.  This current list focusses on newer chips, which
->   * have been converging on command sets which including JEDEC ID.
-> @@ -2218,7 +2231,7 @@ static const struct flash_info spi_nor_ids[] = {
->  		"gd25q256", INFO(0xc84019, 0, 64 * 1024, 512,
->  			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
->  			SPI_NOR_4B_OPCODES | SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB)
-> -			.quad_enable = macronix_quad_enable,
-> +			.fixups = &gd25q256_fixups,
->  	},
->  
->  	/* Intel/Numonyx -- xxxs33b */
-> @@ -4237,15 +4250,6 @@ static int spi_nor_init_params(struct spi_nor *nor)
->  			params->quad_enable = spansion_quad_enable;
->  			break;
->  		}
-> -
-> -		/*
-> -		 * Some manufacturer like GigaDevice may use different
-> -		 * bit to set QE on different memories, so the MFR can't
-> -		 * indicate the quad_enable method for this case, we need
-> -		 * set it in flash info list.
-> -		 */
-> -		if (info->quad_enable)
-> -			params->quad_enable = info->quad_enable;
->  	}
->  
->  	spi_nor_manufacturer_init_params(nor);
-> 
-
--- 
-Regards
-Vignesh
+It turns out yes, this needs to live in its own file. It's an optional
+library that does not fit anywhere else, everywhere I've thought to
+stash it has either triggered obscure build errors based on idr.h
+include dependencies or does not fit due to build dependencies.
