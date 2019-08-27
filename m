@@ -2,52 +2,51 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998C5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7C2C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6681A22CBB
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39B49206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893186;
-	bh=t6k67GIlIUXzT/gXOlEDFqmMVmK3wQOp4nkJAV6YrEI=;
+	s=default; t=1566893192;
+	bh=kkWKgMSn2++kQcHs6rrtBwWij9MF5eoi/UPReTyw1to=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VBkNzDMm+4v78OCzbYvL+xgaNvmrOb9reM9Ck9Q1plfNOgAL6hphvNSnWmJ5beKw/
-	 vA5T8hyDCX5261RB7k8vyO0pB6Hj8+cdvHy7g33TjtvJ+9MpYPYlOpGB+c3WNOJpbD
-	 6xJl7bioclZlrN/sl7DHBUbIc/PRCPaQf4pVkc8g=
+	b=a6hv2xuWHMgNipBdGuvcpEPJAPiluz1jVLJ55kP55PnkMwW0SGZl7dp+CcjYo5Jdr
+	 UceWRcxxOuyEGkkStYvA4ucCGVWo4WUb2BBjJF10YfNOJN+Z0/YUVEQGn62tCCUYW7
+	 mxadUlh2YdwEm+G+/B/cy/yrHZHKQnaCy6JMtCYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733002AbfH0IGQ (ORCPT
+        id S1731665AbfH0IGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:06:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36210 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:06:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732588AbfH0IGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:06:12 -0400
+        id S1731822AbfH0IG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:06:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF65B2186A;
-        Tue, 27 Aug 2019 08:06:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DBFF2189D;
+        Tue, 27 Aug 2019 08:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893171;
-        bh=t6k67GIlIUXzT/gXOlEDFqmMVmK3wQOp4nkJAV6YrEI=;
+        s=default; t=1566893186;
+        bh=kkWKgMSn2++kQcHs6rrtBwWij9MF5eoi/UPReTyw1to=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DYrdvN8dDcLnq4HGegLPUE0mVwAdUcjCxJ4TD9oGr434QUfVJlzOUiMEzWZGJwTW1
-         mEY50IPryRfGykfhCS85Ht6mUzHt8+VRUuy66YrU5s+cG/aY/V8wB2irlm0+lW0swV
-         lPrlNJRNtp3ajsJL2lbAlO4lHbQx31SchkWzRKQM=
+        b=ABTJCpOk0mdQTF/1rY+UgDc40bZdM435E1oneynAmfY1OEx6DH3QXL6FCnjsgRu2l
+         tqpWNi3SwyY1ldsv+31YkiSuVO76dBuEeF6tgm3TyJfoZslw6bI39eX8KzhyRR7qQ7
+         GoDZCGsqIEiLvAOLrwqvBo6XDdscIcN63zPU52rk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Fomichev <dmitry.fomichev@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.2 143/162] dm zoned: improve error handling in i/o map code
-Date:   Tue, 27 Aug 2019 09:51:11 +0200
-Message-Id: <20190827072743.655237170@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 108/162] KVM: arm: Dont write junk to CP15 registers on reset
+Date:   Tue, 27 Aug 2019 09:50:36 +0200
+Message-Id: <20190827072742.092102786@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,109 +59,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+[ Upstream commit c69509c70aa45a8c4954c88c629a64acf4ee4a36 ]
 
-commit d7428c50118e739e672656c28d2b26b09375d4e0 upstream.
+At the moment, the way we reset CP15 registers is mildly insane:
+We write junk to them, call the reset functions, and then check that
+we have something else in them.
 
-Some errors are ignored in the I/O path during queueing chunks
-for processing by chunk works. Since at least these errors are
-transient in nature, it should be possible to retry the failed
-incoming commands.
+The "fun" thing is that this can happen while the guest is running
+(PSCI, for example). If anything in KVM has to evaluate the state
+of a CP15 register while junk is in there, bad thing may happen.
 
-The fix -
+Let's stop doing that. Instead, we track that we have called a
+reset function for that register, and assume that the reset
+function has done something.
 
-Errors that can happen while queueing chunks are carried upwards
-to the main mapping function and it now returns DM_MAPIO_REQUEUE
-for any incoming requests that can not be properly queued.
+In the end, the very need of this reset check is pretty dubious,
+as it doesn't check everything (a lot of the CP15 reg leave outside
+of the cp15_regs[] array). It may well be axed in the near future.
 
-Error logging/debug messages are added where needed.
-
-Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-zoned-target.c |   22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ arch/arm/kvm/coproc.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
---- a/drivers/md/dm-zoned-target.c
-+++ b/drivers/md/dm-zoned-target.c
-@@ -513,22 +513,24 @@ static void dmz_flush_work(struct work_s
-  * Get a chunk work and start it to process a new BIO.
-  * If the BIO chunk has no work yet, create one.
-  */
--static void dmz_queue_chunk_work(struct dmz_target *dmz, struct bio *bio)
-+static int dmz_queue_chunk_work(struct dmz_target *dmz, struct bio *bio)
+diff --git a/arch/arm/kvm/coproc.c b/arch/arm/kvm/coproc.c
+index d2806bcff8bbb..07745ee022a12 100644
+--- a/arch/arm/kvm/coproc.c
++++ b/arch/arm/kvm/coproc.c
+@@ -651,13 +651,22 @@ int kvm_handle_cp14_64(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ }
+ 
+ static void reset_coproc_regs(struct kvm_vcpu *vcpu,
+-			      const struct coproc_reg *table, size_t num)
++			      const struct coproc_reg *table, size_t num,
++			      unsigned long *bmap)
  {
- 	unsigned int chunk = dmz_bio_chunk(dmz->dev, bio);
- 	struct dm_chunk_work *cw;
-+	int ret = 0;
+ 	unsigned long i;
  
- 	mutex_lock(&dmz->chunk_lock);
- 
- 	/* Get the BIO chunk work. If one is not active yet, create one */
- 	cw = radix_tree_lookup(&dmz->chunk_rxtree, chunk);
- 	if (!cw) {
--		int ret;
- 
- 		/* Create a new chunk work */
- 		cw = kmalloc(sizeof(struct dm_chunk_work), GFP_NOIO);
--		if (!cw)
-+		if (unlikely(!cw)) {
-+			ret = -ENOMEM;
- 			goto out;
+ 	for (i = 0; i < num; i++)
+-		if (table[i].reset)
++		if (table[i].reset) {
++			int reg = table[i].reg;
++
+ 			table[i].reset(vcpu, &table[i]);
++			if (reg > 0 && reg < NR_CP15_REGS) {
++				set_bit(reg, bmap);
++				if (table[i].is_64bit)
++					set_bit(reg + 1, bmap);
++			}
 +		}
- 
- 		INIT_WORK(&cw->work, dmz_chunk_work);
- 		refcount_set(&cw->refcount, 0);
-@@ -539,7 +541,6 @@ static void dmz_queue_chunk_work(struct
- 		ret = radix_tree_insert(&dmz->chunk_rxtree, chunk, cw);
- 		if (unlikely(ret)) {
- 			kfree(cw);
--			cw = NULL;
- 			goto out;
- 		}
- 	}
-@@ -547,10 +548,12 @@ static void dmz_queue_chunk_work(struct
- 	bio_list_add(&cw->bio_list, bio);
- 	dmz_get_chunk_work(cw);
- 
-+	dmz_reclaim_bio_acc(dmz->reclaim);
- 	if (queue_work(dmz->chunk_wq, &cw->work))
- 		dmz_get_chunk_work(cw);
- out:
- 	mutex_unlock(&dmz->chunk_lock);
-+	return ret;
  }
  
- /*
-@@ -564,6 +567,7 @@ static int dmz_map(struct dm_target *ti,
- 	sector_t sector = bio->bi_iter.bi_sector;
- 	unsigned int nr_sectors = bio_sectors(bio);
- 	sector_t chunk_sector;
-+	int ret;
+ static struct coproc_params decode_32bit_hsr(struct kvm_vcpu *vcpu)
+@@ -1432,17 +1441,15 @@ void kvm_reset_coprocs(struct kvm_vcpu *vcpu)
+ {
+ 	size_t num;
+ 	const struct coproc_reg *table;
+-
+-	/* Catch someone adding a register without putting in reset entry. */
+-	memset(vcpu->arch.ctxt.cp15, 0x42, sizeof(vcpu->arch.ctxt.cp15));
++	DECLARE_BITMAP(bmap, NR_CP15_REGS) = { 0, };
  
- 	dmz_dev_debug(dev, "BIO op %d sector %llu + %u => chunk %llu, block %llu, %u blocks",
- 		      bio_op(bio), (unsigned long long)sector, nr_sectors,
-@@ -601,8 +605,14 @@ static int dmz_map(struct dm_target *ti,
- 		dm_accept_partial_bio(bio, dev->zone_nr_sectors - chunk_sector);
+ 	/* Generic chip reset first (so target could override). */
+-	reset_coproc_regs(vcpu, cp15_regs, ARRAY_SIZE(cp15_regs));
++	reset_coproc_regs(vcpu, cp15_regs, ARRAY_SIZE(cp15_regs), bmap);
  
- 	/* Now ready to handle this BIO */
--	dmz_reclaim_bio_acc(dmz->reclaim);
--	dmz_queue_chunk_work(dmz, bio);
-+	ret = dmz_queue_chunk_work(dmz, bio);
-+	if (ret) {
-+		dmz_dev_debug(dmz->dev,
-+			      "BIO op %d, can't process chunk %llu, err %i\n",
-+			      bio_op(bio), (u64)dmz_bio_chunk(dmz->dev, bio),
-+			      ret);
-+		return DM_MAPIO_REQUEUE;
-+	}
+ 	table = get_target_table(vcpu->arch.target, &num);
+-	reset_coproc_regs(vcpu, table, num);
++	reset_coproc_regs(vcpu, table, num, bmap);
  
- 	return DM_MAPIO_SUBMITTED;
+ 	for (num = 1; num < NR_CP15_REGS; num++)
+-		WARN(vcpu_cp15(vcpu, num) == 0x42424242,
++		WARN(!test_bit(num, bmap),
+ 		     "Didn't reset vcpu_cp15(vcpu, %zi)", num);
  }
+-- 
+2.20.1
+
 
 
