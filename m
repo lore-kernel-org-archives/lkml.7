@@ -5,54 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7FDC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C55C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 423F8217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D1B206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893835;
-	bh=bMgII+BcVpCBidRBgxQO/AC3Mx3ozJ83MGtmLzdsyGI=;
+	s=default; t=1566893840;
+	bh=ao2XvC2Me3+PmikKc782pXteFXByHv/aYc6+AST064E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=08DuHwnaht9yC3GHpVPyOmYUIBJV9ljV5HPQrvv7rfhVK3ZBcaAURnz9GklZFjihn
-	 LSl0xck3gjbz+kNvBr5FBE0Qo3BczUtJhLx7MpfNh8/6OYUJ+bYjWbbtIzyHtyYW+w
-	 8aGBdTeuTHztAI0F+fhW2Lcy45SS6u+ZCyFrg+WQ=
+	b=XrSRdu8iWEEZhD0HL+MMvMbSXQt6f4c1gKPT81BbKW1efPqDI1OZx+WVIRkElld5r
+	 XlfgWKFAwVK0O+b81wjoQTRS5ae011SVzN9TJeM9ZYlv/45/8V3j4i67q9MMFWcaB3
+	 pStaSFMM1BhYQ33hyWM6yOevCK8M//thAZrr9jdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfH0IRK (ORCPT
+        id S1729485AbfH0Hwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:17:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44450 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729611AbfH0Hw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:52:58 -0400
+        id S1729408AbfH0Hw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:52:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C906721881;
-        Tue, 27 Aug 2019 07:52:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C46A8206BF;
+        Tue, 27 Aug 2019 07:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892377;
-        bh=bMgII+BcVpCBidRBgxQO/AC3Mx3ozJ83MGtmLzdsyGI=;
+        s=default; t=1566892348;
+        bh=ao2XvC2Me3+PmikKc782pXteFXByHv/aYc6+AST064E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aJFvSLR0XfP2BbBgpqcrySliDdjdy4ZwrvbyruAdMd4HUZwGtS2D70pz1o6mL2PQz
-         ikJ0pNpLsPmTxXXtB/HrR8la8FE/hYYRvnoAwdqZ2Eb6qcAEjy7s3wM7I/bwolNvTg
-         E+B4qL3KiWMX+FNqMUKZwNRxK9CzyJakrpHMyuSc=
+        b=nRjbOUZRuQefrkrq2b4iqI5gSyeE2rTdP6vg/QAd5xzy4aaTaw35QV8KakEa6grb1
+         uamsHjd9YL7rULq4N9t1Rz3UURcCDuA4S35QQmMDwztke6AgrCF2WYDqojL9KBKV7i
+         SSP6Cd/DrfNIeg2oeabsTGfoGDlDDpIVmleO+0XI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 34/62] perf pmu-events: Fix missing "cpu_clk_unhalted.core" event
-Date:   Tue, 27 Aug 2019 09:50:39 +0200
-Message-Id: <20190827072702.701715776@linuxfoundation.org>
+Subject: [PATCH 4.14 25/62] net: hisilicon: make hip04_tx_reclaim non-reentrant
+Date:   Tue, 27 Aug 2019 09:50:30 +0200
+Message-Id: <20190827072701.868386004@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -65,62 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8e6e5bea2e34c61291d00cb3f47560341aa84bc3 ]
+[ Upstream commit 1a2c070ae805910a853b4a14818481ed2e17c727 ]
 
-The events defined in pmu-events JSON are parsed and added into perf
-tool. For fixed counters, we handle the encodings between JSON and perf
-by using a static array fixed[].
+If hip04_tx_reclaim is interrupted while it is running
+and then __napi_schedule continues to execute
+hip04_rx_poll->hip04_tx_reclaim, reentrancy occurs
+and oops is generated. So you need to mask the interrupt
+during the hip04_tx_reclaim run.
 
-But the fixed[] has missed an important event "cpu_clk_unhalted.core".
+The kernel oops exception stack is as follows:
 
-For example, on the Tremont platform,
+Unable to handle kernel NULL pointer dereference
+at virtual address 00000050
+pgd = c0003000
+[00000050] *pgd=80000000a04003, *pmd=00000000
+Internal error: Oops: 206 [#1] SMP ARM
+Modules linked in: hip04_eth mtdblock mtd_blkdevs mtd
+ohci_platform ehci_platform ohci_hcd ehci_hcd
+vfat fat sd_mod usb_storage scsi_mod usbcore usb_common
+CPU: 0 PID: 0 Comm: swapper/0 Tainted: G           O    4.4.185 #1
+Hardware name: Hisilicon A15
+task: c0a250e0 task.stack: c0a00000
+PC is at hip04_tx_reclaim+0xe0/0x17c [hip04_eth]
+LR is at hip04_tx_reclaim+0x30/0x17c [hip04_eth]
+pc : [<bf30c3a4>]    lr : [<bf30c2f4>]    psr: 600e0313
+sp : c0a01d88  ip : 00000000  fp : c0601f9c
+r10: 00000000  r9 : c3482380  r8 : 00000001
+r7 : 00000000  r6 : 000000e1  r5 : c3482000  r4 : 0000000c
+r3 : f2209800  r2 : 00000000  r1 : 00000000  r0 : 00000000
+Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment kernel
+Control: 32c5387d  Table: 03d28c80  DAC: 55555555
+Process swapper/0 (pid: 0, stack limit = 0xc0a00190)
+Stack: (0xc0a01d88 to 0xc0a02000)
+[<bf30c3a4>] (hip04_tx_reclaim [hip04_eth]) from [<bf30d2e0>]
+                                                (hip04_rx_poll+0x88/0x368 [hip04_eth])
+[<bf30d2e0>] (hip04_rx_poll [hip04_eth]) from [<c04c2d9c>] (net_rx_action+0x114/0x34c)
+[<c04c2d9c>] (net_rx_action) from [<c021eed8>] (__do_softirq+0x218/0x318)
+[<c021eed8>] (__do_softirq) from [<c021f284>] (irq_exit+0x88/0xac)
+[<c021f284>] (irq_exit) from [<c0240090>] (msa_irq_exit+0x11c/0x1d4)
+[<c0240090>] (msa_irq_exit) from [<c02677e0>] (__handle_domain_irq+0x110/0x148)
+[<c02677e0>] (__handle_domain_irq) from [<c0201588>] (gic_handle_irq+0xd4/0x118)
+[<c0201588>] (gic_handle_irq) from [<c0551700>] (__irq_svc+0x40/0x58)
+Exception stack(0xc0a01f30 to 0xc0a01f78)
+1f20:                                     c0ae8b40 00000000 00000000 00000000
+1f40: 00000002 ffffe000 c0601f9c 00000000 ffffffff c0a2257c c0a22440 c0831a38
+1f60: c0a01ec4 c0a01f80 c0203714 c0203718 600e0213 ffffffff
+[<c0551700>] (__irq_svc) from [<c0203718>] (arch_cpu_idle+0x20/0x3c)
+[<c0203718>] (arch_cpu_idle) from [<c025bfd8>] (cpu_startup_entry+0x244/0x29c)
+[<c025bfd8>] (cpu_startup_entry) from [<c054b0d8>] (rest_init+0xc8/0x10c)
+[<c054b0d8>] (rest_init) from [<c0800c58>] (start_kernel+0x468/0x514)
+Code: a40599e5 016086e2 018088e2 7660efe6 (503090e5)
+---[ end trace 1db21d6d09c49d74 ]---
+Kernel panic - not syncing: Fatal exception in interrupt
+CPU3: stopping
+CPU: 3 PID: 0 Comm: swapper/3 Tainted: G      D    O    4.4.185 #1
 
-  [root@localhost ~]# perf stat -e cpu_clk_unhalted.core -a
-  event syntax error: 'cpu_clk_unhalted.core'
-                       \___ parser error
-
-With this patch, the event cpu_clk_unhalted.core can be parsed.
-
-  [root@localhost perf]# ./perf stat -e cpu_clk_unhalted.core -a -vvv
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             4
-    size                             112
-    config                           0x3c
-    sample_type                      IDENTIFIER
-    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-    disabled                         1
-    inherit                          1
-    exclude_guest                    1
-  ------------------------------------------------------------
-...
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190729072755.2166-1-yao.jin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/pmu-events/jevents.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index d51dc9ca8861a..94a7cabe9b824 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -346,6 +346,7 @@ static struct fixed {
- 	{ "inst_retired.any_p", "event=0xc0" },
- 	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
- 	{ "cpu_clk_unhalted.thread", "event=0x3c" },
-+	{ "cpu_clk_unhalted.core", "event=0x3c" },
- 	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
- 	{ NULL, NULL},
- };
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index c27054b8ce81b..60ef6d40e4896 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -497,6 +497,9 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
+ 	u16 len;
+ 	u32 err;
+ 
++	/* clean up tx descriptors */
++	tx_remaining = hip04_tx_reclaim(ndev, false);
++
+ 	while (cnt && !last) {
+ 		buf = priv->rx_buf[priv->rx_head];
+ 		skb = build_skb(buf, priv->rx_buf_size);
+@@ -557,8 +560,7 @@ refill:
+ 	}
+ 	napi_complete_done(napi, rx);
+ done:
+-	/* clean up tx descriptors and start a new timer if necessary */
+-	tx_remaining = hip04_tx_reclaim(ndev, false);
++	/* start a new timer if necessary */
+ 	if (rx < budget && tx_remaining)
+ 		hip04_start_tx_timer(priv);
+ 
 -- 
 2.20.1
 
