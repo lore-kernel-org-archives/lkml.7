@@ -2,119 +2,146 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53902C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA5EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21CF120828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:54:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566903276;
-	bh=0ebAIqPXd2tnAJcfsrgETGb6e7Acfvfvuv1FFNfLAPQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CCV+PYqVQayEhMmQwv1XutTpfQjTttF9M/R12jAaxWm2BUEgiD0K9lDIrMHXCvGzw
-	 ZoeXB/tuQ24Vz1DDBeCSFAgA7ODVGjRT0UZxR8Qtsd9mfU4SrZCthJV+5Qg/KtUI0/
-	 MAUxi0mC70yJhXpYobJ54h0j0mTuTRlvLNdVm6/g=
+	by mail.kernel.org (Postfix) with ESMTP id 2EC8B20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbfH0Kyf (ORCPT
+        id S1729194AbfH0Kzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 06:54:35 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37846 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfH0Kyf (ORCPT
+        Tue, 27 Aug 2019 06:55:47 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43285 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbfH0Kzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 06:54:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9qktllCdtWjxEHtE8pHlyd4rtHjdGpGQjQOP1g/TPOs=; b=TPJ1X3+JKBtnR3HtNFbYdvEsI
-        1FHLsfNGMTMIgopVPWK2uGBsUcafRJt5PRLALEIEe/VhNWnEVf4qbkgx7iWwBDAEA9inHC8WPBDA9
-        0cQ1b1JbzKv8UQnoJoNA5hn685cx0xK5TjqLrYjo0rXC8bppOKoTUm141+W2h4im+3wwU=;
-Received: from [92.54.175.117] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1i2Z7O-0007uc-Kp; Tue, 27 Aug 2019 10:54:30 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 46D4AD02CE6; Tue, 27 Aug 2019 11:54:30 +0100 (BST)
-Date:   Tue, 27 Aug 2019 11:54:30 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH AUTOSEL 5.2 022/123] ASoC: dapm: Fix handling of
- custom_stop_condition on DAPM graph walks
-Message-ID: <20190827105430.GC23391@sirena.co.uk>
-References: <20190814021047.14828-1-sashal@kernel.org>
- <20190814021047.14828-22-sashal@kernel.org>
- <20190814092052.GB4640@sirena.co.uk>
- <20190826013342.GF5281@sasha-vm>
+        Tue, 27 Aug 2019 06:55:46 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1i2Z8Y-0002mO-FC; Tue, 27 Aug 2019 12:55:42 +0200
+Date:   Tue, 27 Aug 2019 12:55:42 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [ANNOUNCE] v5.2.10-rt5
+Message-ID: <20190827105542.qxvtteirkh55i5ly@linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cjVziHhGDpplWqiR"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190826013342.GF5281@sasha-vm>
-X-Cookie: Don't SANFORIZE me!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Dear RT folks!
 
---cjVziHhGDpplWqiR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm pleased to announce the v5.2.10-rt5 patch set. 
 
-On Sun, Aug 25, 2019 at 09:33:42PM -0400, Sasha Levin wrote:
-> On Wed, Aug 14, 2019 at 10:20:52AM +0100, Mark Brown wrote:
-> > On Tue, Aug 13, 2019 at 10:09:06PM -0400, Sasha Levin wrote:
-> > > From: Charles Keepax <ckeepax@opensource.cirrus.com>
-> > >=20
-> > > [ Upstream commit 8dd26dff00c0636b1d8621acaeef3f6f3a39dd77 ]
-> > >=20
-> > > DPCM uses snd_soc_dapm_dai_get_connected_widgets to build a
-> > > list of the widgets connected to a specific front end DAI so it
-> > > can search through this list for available back end DAIs. The
+Changes since v5.2.10-rt4:
 
-> > The DPCM code and its users are rather fragile, if nobody noticed a
-> > problem I'd worry about causing some other problem to manifest by
-> > disturbing things.
+  - Take care of compile issue within the timer-atmel-tcb driver on
+    AT91. Reported by Alexander Dahl, patched by Alexandre Belloni.
 
-> Doesn't this patch imply that someone noticed it?
+  - Fixes to the hrtimer code to finally avoiding warnings while
+    canceling a running hrtimer in IRQ context. Patches by Julien Grall.
 
-During new development.
+Known issues
+     - rcutorture is currently broken on -RT. Reported by Juri Lelli.
 
-> And if not, it'll just break when folks update their kernel...
+The delta patch against v5.2.10-rt4 is appended below and can be found here:
+ 
+     https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.2/incr/patch-5.2.10-rt4-rt5.patch.xz
 
-> If it creates other problems we should address them now rather than
-> later.
+You can get this release via the git tree at:
 
-Well, if we don't touch anything hopefully everything will
-continue to work just as well.  DPCM is a bit fragile so I'm
-nervous about backporting stuff without people actively working
-with it paying attention to the backports.
+    git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v5.2.10-rt5
 
---cjVziHhGDpplWqiR
-Content-Type: application/pgp-signature; name="signature.asc"
+The RT patch against v5.2.10 can be found here:
 
------BEGIN PGP SIGNATURE-----
+    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.2/older/patch-5.2.10-rt5.patch.xz
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1lC+UACgkQJNaLcl1U
-h9AxoQf/Q46Ql9GZfDxAAKQC9wcjQ+pBcOS1yBYst3p354FqEfA2OwuEjuobwP7M
-p94eSGmfdVqPCZed5jCdB15k0TjpdrB7ms3ACw8dNKW4H7MCUUGjw9HfItc0sB9E
-VXa1ZschrV55MeZfpKVmNSDzAMlqs0R1BtlNR+yYWpDw8yLMP5O2xDLXEbe5rKz9
-ig9d4b88N90tslYwOQSJAyTLR3wyAkYAKhLkBpjP8B/0kWfELlk4k2R30wgAFr4C
-ssdE3NZSjscpogP8Ftt1uc+Qq7uuggLQl5vBRjy9wSXHiWBBR3wGFd69QADZUcEo
-0jMA/EDXJBAn3vKH6Bk2XSi+Yhkkmw==
-=xQzC
------END PGP SIGNATURE-----
+The split quilt queue is available at:
 
---cjVziHhGDpplWqiR--
+    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.2/older/patches-5.2.10-rt5.tar.xz
+
+Sebastian
+
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 36f8c58386e20..2927b673caa62 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -424,7 +424,7 @@ config ATMEL_ST
+ 
+ config ATMEL_TCB_CLKSRC
+ 	bool "Atmel TC Block timer driver" if COMPILE_TEST
+-	depends on HAS_IOMEM && ATMEL_TCLIB
++	depends on HAS_IOMEM
+ 	select TIMER_OF if OF
+ 	help
+ 	  Support for Timer Counter Blocks on Atmel SoCs.
+diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
+index 05b5272f5d7e9..1a5abc178b655 100644
+--- a/drivers/clocksource/timer-atmel-tcb.c
++++ b/drivers/clocksource/timer-atmel-tcb.c
+@@ -265,9 +265,11 @@ static irqreturn_t ch2_irq(int irq, void *handle)
+ 	return IRQ_NONE;
+ }
+ 
++static const u8 atmel_tcb_divisors[5] = { 2, 8, 32, 128, 0, };
++
+ static int __init setup_clkevents(struct atmel_tc *tc, int divisor_idx)
+ {
+-	unsigned divisor = atmel_tc_divisors[divisor_idx];
++	unsigned divisor = atmel_tcb_divisors[divisor_idx];
+ 	int ret;
+ 	struct clk *t2_clk = tc->clk[2];
+ 	int irq = tc->irq[2];
+@@ -360,8 +362,6 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
+ 	writel(ATMEL_TC_SYNC, tcaddr + ATMEL_TC_BCR);
+ }
+ 
+-static const u8 atmel_tcb_divisors[5] = { 2, 8, 32, 128, 0, };
+-
+ static const struct of_device_id atmel_tcb_of_match[] = {
+ 	{ .compatible = "atmel,at91rm9200-tcb", .data = (void *)16, },
+ 	{ .compatible = "atmel,at91sam9x5-tcb", .data = (void *)32, },
+@@ -482,7 +482,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ #ifdef CONFIG_ATMEL_TCB_CLKSRC_USE_SLOW_CLOCK
+ 	ret = setup_clkevents(&tc, clk32k_divisor_idx);
+ #else
+-	ret = setup_clkevents(tc, best_divisor_idx);
++	ret = setup_clkevents(&tc, best_divisor_idx);
+ #endif
+ 	if (ret)
+ 		goto err_unregister_clksrc;
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 7d7db88021311..5eb45a868de9a 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -932,9 +932,9 @@ EXPORT_SYMBOL_GPL(hrtimer_forward);
+ 
+ void hrtimer_grab_expiry_lock(const struct hrtimer *timer)
+ {
+-	struct hrtimer_clock_base *base = timer->base;
++	struct hrtimer_clock_base *base = READ_ONCE(timer->base);
+ 
+-	if (base && base->cpu_base) {
++	if (timer->is_soft && base != &migration_base) {
+ 		spin_lock(&base->cpu_base->softirq_expiry_lock);
+ 		spin_unlock(&base->cpu_base->softirq_expiry_lock);
+ 	}
+diff --git a/localversion-rt b/localversion-rt
+index ad3da1bcab7e8..0efe7ba1930e1 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt4
++-rt5
