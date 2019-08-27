@@ -2,150 +2,115 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DAEC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5DAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 499B621881
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:37:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="amJeN7bN"
+	by mail.kernel.org (Postfix) with ESMTP id 89272204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbfH0Qhg (ORCPT
+        id S1730249AbfH0Qif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:37:36 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45381 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfH0Qhf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:37:35 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q12so19445737wrj.12
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 09:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Go1kHMAm0UaQCiCBE+PzgIHLVN7K4hpTWgZuaxb+3YE=;
-        b=amJeN7bNoXZDGClSUsmTOJ1zxFmTNK0cihb26QdIApZKWXDvBppGc9PTzojK6xG0ti
-         pjOcg4Xmkc99SLTfWZRfD6EWuh38f/Ej/q8agMnk4pO0Jmx8fHSUeGxXa3Zu3oukaAKA
-         MPslJbDOyMoUIxEbKhrs4Mn5Ku82fwBmfREGyMH6tdRSKKeKP+7o25mFvsGcFyjSQAiG
-         c9zbw8rUuj7dbzUk4xZ5E2ED7QjUtTR3W2q+zb4IsoC+xTHTNNiNIDuVOCekrK5IR0mO
-         X7hB48pTtSyXxd9Xo96mTMH7icm8ch4q1UrFyEnZpMQUf/5cwN6r6XFBYxi2nTjELXii
-         P6PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Go1kHMAm0UaQCiCBE+PzgIHLVN7K4hpTWgZuaxb+3YE=;
-        b=isyr0ca8O6fsKvqkV9TSdyfJua4YssKMjDuSqhJQa2pTtbdiz3zcGrVu4VQ+pPkdM5
-         zLhUzdDTu+swInqxNOL9DX4B7XlAMTgpqks8rEbym/SIHnNMFuLHzbmRhrUz4CrAVlBQ
-         lXwWk6of5FgTj3zYdS6ui5KEwNymCc9aKKTA01KCtDhDL10W2gNYosG1xtCg33n2C0rf
-         JyUDJrkQKPS2zWpP3SOPa9rtv6W5gDpYR+fCuunhSpwzn/IAQJmUzFY3eDKzd0kF5+DX
-         SujUjmEh/cQ/rMjpfHzsUuMc2u5wWL3LBQDR8nkvII/xnMCkQNiNWB83E5u9XDvfycEQ
-         OhJA==
-X-Gm-Message-State: APjAAAWhXODQi5ehbKpLl7cb+WYcxMD7cMN27lugZrgOttzDTlasp+zY
-        OfdLqK0dSsEPVa+mnsAZf+zMBw==
-X-Google-Smtp-Source: APXvYqxX15uDp/xlM+yhu2D78R4Tujo7F6qafdGAIfSfB8gUL84JRxMQAeIjUkR0erQQEBrRXfqfWw==
-X-Received: by 2002:adf:c594:: with SMTP id m20mr32545270wrg.126.1566923853579;
-        Tue, 27 Aug 2019 09:37:33 -0700 (PDT)
-Received: from dell ([2.27.35.174])
-        by smtp.gmail.com with ESMTPSA id z2sm3863063wmi.2.2019.08.27.09.37.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 27 Aug 2019 09:37:33 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 17:37:31 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Collabora kernel ML <kernel@collabora.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Olof Johansson <olof@lixom.net>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v6 11/11] arm/arm64: defconfig: Update configs to use the
- new CROS_EC options
-Message-ID: <20190827163731.GG4804@dell>
-References: <20190823125331.5070-1-enric.balletbo@collabora.com>
- <20190823125331.5070-12-enric.balletbo@collabora.com>
- <910312bc-d4f1-b587-b6f2-e832b13d7237@collabora.com>
- <CAK8P3a1ScpJCVEPWiVo+Kc=Ec=c_uhidAt44i==RH+YN5Y+U=Q@mail.gmail.com>
+        Tue, 27 Aug 2019 12:38:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56144 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728506AbfH0Qie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:38:34 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1F11E3082E55;
+        Tue, 27 Aug 2019 16:38:34 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.158])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 087345D70D;
+        Tue, 27 Aug 2019 16:38:29 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 9207122017B; Tue, 27 Aug 2019 12:38:28 -0400 (EDT)
+Date:   Tue, 27 Aug 2019 12:38:28 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        stefanha@redhat.com, dgilbert@redhat.com,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH 01/19] dax: remove block device dependencies
+Message-ID: <20190827163828.GA6859@redhat.com>
+References: <20190821175720.25901-1-vgoyal@redhat.com>
+ <20190821175720.25901-2-vgoyal@redhat.com>
+ <20190826115152.GA21051@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK8P3a1ScpJCVEPWiVo+Kc=Ec=c_uhidAt44i==RH+YN5Y+U=Q@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190826115152.GA21051@infradead.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 27 Aug 2019 16:38:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019, Arnd Bergmann wrote:
-
-> On Tue, Aug 27, 2019 at 4:52 PM Enric Balletbo i Serra
-> <enric.balletbo@collabora.com> wrote:
-> >
-> > Hi,
-> >
-> > On 23/8/19 14:53, Enric Balletbo i Serra wrote:
-> > > Recently we refactored the CrOS EC drivers moving part of the code from
-> > > the MFD subsystem to the platform chrome subsystem. During this change
-> > > we needed to rename some config options, so, update the defconfigs
-> > > accordingly.
-> > >
-> > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > > Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-> > > Tested-by: Gwendal Grignou <gwendal@chromium.org>
-> > > Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> > > ---
-> >
-> >
-> > For some reason I reduced too much the recipients from the get_maintainers
-> > script and I missed the defconfig maintainers. Sorry about that, so cc'ing Arnd,
-> > Olof, Will and Catalin
-> >
-> > To give you some context the full series can be found here [1].
-> >
-> > All the patches in the series are acked and will go through the MFD tree (Lee
-> > Jones). This specific patch is still missing some acks from arm/arm64 defconfigs
-> > and if you are agree can go through the Lee's tree with your acks, otherwise can
-> > go through another tree.
+On Mon, Aug 26, 2019 at 04:51:52AM -0700, Christoph Hellwig wrote:
+> On Wed, Aug 21, 2019 at 01:57:02PM -0400, Vivek Goyal wrote:
+> > From: Stefan Hajnoczi <stefanha@redhat.com>
+> > 
+> > Although struct dax_device itself is not tied to a block device, some
+> > DAX code assumes there is a block device.  Make block devices optional
+> > by allowing bdev to be NULL in commonly used DAX APIs.
+> > 
+> > When there is no block device:
+> >  * Skip the partition offset calculation in bdev_dax_pgoff()
+> >  * Skip the blkdev_issue_zeroout() optimization
+> > 
+> > Note that more block device assumptions remain but I haven't reach those
+> > code paths yet.
 > 
-> Defconfig changes often cause merge conflicts, so I'd prefer to have
-> this merged through the arm-soc tree. Can you resend the latest patch
-> with the Acks to 'soc@kernel.org' to get it into our patchwork?
+> I think this should be split into two patches.
 
-How do you plan to keep this change-set bisectable?
+Hi Christoph,
 
-Ideally the defconfg changes should really be paired with the re-work.
-I was planning on creating an immutable branch for each of the
-stakeholders to pull from.
+Ok, will split in two patches. In fact, I think will completley drop
+the second change right now as I think we might not be hitting that
+path yet.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> For bdev_dax_pgoff
+> I'd much rather have the partition offset if there is on in the daxdev
+> somehow so that we can get rid of the block device entirely.
+
+IIUC, there is one block_device per partition while there is only one
+dax_device for the whole disk. So we can't directly move bdev logical
+offset into dax_device.
+
+We probably could put this in "iomap" and leave it to filesystems to
+report offset into dax_dev in iomap that way dax generic code does not
+have to deal with it. But that probably will be a bigger change.
+
+Did I misunderstand your suggestion.
+
+> 
+> Similarly for dax_range_is_aligned I'd rather have a pure dax way
+> to offload zeroing rather than this bdev hack.
+
+Following commig introduced the change to write zeros through block
+device path.
+
+commit 4b0228fa1d753f77fe0e6cf4c41398ec77dfbd2a
+Author: Vishal Verma <vishal.l.verma@intel.com>
+Date:   Thu Apr 21 15:13:46 2016 -0400
+
+ dax: for truncate/hole-punch, do zeroing through the driver if possible
+
+IIUC, they are doing it so that they can clear gendisk->badblocks list.
+
+So even if there is pure dax way to do it, there will have to some
+involvment of block layer to clear gendisk->badblocks list.
+
+I am not sure I fully understand your suggestion. But I am hoping its
+not a must for these changes to make a progress. For now, I will drop
+change to dax_range_is_aligned().
+
+Thanks
+Vivek
