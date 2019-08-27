@@ -2,108 +2,82 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A50C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA9AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43B520828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:13:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ju+ibQGo"
+	by mail.kernel.org (Postfix) with ESMTP id 9943221881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:14:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbfH0JNv (ORCPT
+        id S1729358AbfH0JOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:13:51 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:36048 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbfH0JNu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:13:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4FZW6WpHVkghAQyfLmfyvtAtB0km+7CvKkK8paBRUnQ=; b=ju+ibQGosYVXbnQwwniWtU4Yp
-        0aVH7H+p9liw4K108OWpO6QcPYzxpix3Hcf1wcqaXgCte5xhe6jgLLmOUBVMdh/dHK/OTIZNvpZ09
-        H3KRlVUGA7QW1PLEXlY4l1FzF2dOpviRC4bODDpzzyJd+9BHkDsZERAAJ3fEs36lwX8TSZFMjDv7w
-        HEVRVzUVsoOWMuKspApzHVghJVBdbP4Ywsp8l8hLpRs9LQ6GkwTUt7gLRxXhEMDEiyoAPhlOjiuDg
-        vDqCLSvIyKIhQyvs4V8++WVrPAYzwZUwCrI1Mu0LQ6+rwcA2nEGG4ssqk2wCh/BwJrH1YI4diQXid
-        HSbh4dMuA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:55136)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i2XXq-0003S4-CF; Tue, 27 Aug 2019 10:13:42 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i2XXk-0005dX-F0; Tue, 27 Aug 2019 10:13:36 +0100
-Date:   Tue, 27 Aug 2019 10:13:36 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jlu@pengutronix.de" <jlu@pengutronix.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "gregory.clement@free-electrons.com" 
-        <gregory.clement@free-electrons.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "patches@armlinux.org.uk" <patches@armlinux.org.uk>
-Subject: Re: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
-Message-ID: <20190827091336.GI13294@shell.armlinux.org.uk>
-References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
- <20190712034904.5747-2-chris.packham@alliedtelesis.co.nz>
- <20190823104621.GY13294@shell.armlinux.org.uk>
- <20190823105020.GZ13294@shell.armlinux.org.uk>
- <836653f04f526333e8dbd45361329731f8dfe2ea.camel@alliedtelesis.co.nz>
+        Tue, 27 Aug 2019 05:14:16 -0400
+Received: from mga17.intel.com ([192.55.52.151]:32104 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725805AbfH0JOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 05:14:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 02:14:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,436,1559545200"; 
+   d="scan'208";a="380850102"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 27 Aug 2019 02:14:15 -0700
+Received: from [10.226.39.22] (ekotax-mobl.gar.corp.intel.com [10.226.39.22])
+        by linux.intel.com (Postfix) with ESMTP id 121F7580444;
+        Tue, 27 Aug 2019 02:14:12 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        hch@infradead.org, jingoohan1@gmail.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        qi-ming.wu@intel.com
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com>
+ <f1cb5ba9-b57a-971a-5a2f-1f13e0cc9507@linux.intel.com>
+ <CAFBinCDojCN0Gxpa0fyh7t8TdvTLc_dwgJgMxC4PoAszK==BKg@mail.gmail.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <c0bb5bcf-6ccb-d155-7184-a7174bb36bd8@linux.intel.com>
+Date:   Tue, 27 Aug 2019 17:14:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <836653f04f526333e8dbd45361329731f8dfe2ea.camel@alliedtelesis.co.nz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAFBinCDojCN0Gxpa0fyh7t8TdvTLc_dwgJgMxC4PoAszK==BKg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 12:46:44AM +0000, Chris Packham wrote:
-> Hi Russell,
-> 
-> On Fri, 2019-08-23 at 11:50 +0100, Russell King - ARM Linux admin
-> wrote:
-> > On Fri, Aug 23, 2019 at 11:46:21AM +0100, Russell King - ARM Linux
-> > admin wrote:
-> > > I can't apply this series - this file does not exist in my tree,
-> > > and
-> > > from what git tells me, it never has existed.  Maybe it's in
-> > > someone
-> > > elses tree?
-> > 
-> > I think the file is in my tree, just as arch/arm/mm/cache-aurora-l2.h
-> > which is where it has been since it was originally submitted in 2012.
-> 
-> Sorry there is a missing patch that moves it next to the
-> hardware/cache-*.h. I can send the missing patch or I can re-send the
-> whole series. If I do send the whole series do you want me to rebase it
-> against a particular tag/tree?
 
-Just send the single patch to the patch tracker - having it against
-5.3-rc is fine (I don't think anything has changed for a long time
-with that file.)
+On 8/27/2019 4:14 AM, Martin Blumenstingl wrote:
+> second example: pcie-tegra194 (only in -next, will be part of v5.4)
+>    struct tegra_pcie_dw {
+>      ...
+>      struct dw_pcie pci;
+>      ...
+>    };
+>
+> so some drivers store a pointer pointer to the dw_pcie struct vs.
+> embedding the dw_pcie struct directly.
+> as far as I know the result will be equal, except that you don't have
+> to use a second devm_kzalloc for struct dw_pcie (and thus reducing
+> memory fragmentation).
+Okay, i will change it to "struct dw_pcie pci;"
 
-Thanks.
+Thanks for the feedback.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Regards,
+
+Dilip
+
