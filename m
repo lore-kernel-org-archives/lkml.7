@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879F2C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2410EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55E69206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E200F206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893828;
-	bh=QFhZUAq6CUY2ejbNoS/Xrn+mjYw8ZHmVgo0Cfwif+tc=;
+	s=default; t=1566893834;
+	bh=MCX7CmsiPjmCXkciOtTum36tIlpCMfDC+mLmzUX/5vU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dhcuW/gkuH9IL2XPvNlkWebBKU2X0wML/IWYMVV/+bQbr3AUPsVwsYIuQrRQ5Cljk
-	 DiZ1UgvGsEZ0BHhiVl17KekcsninPXhI64LtNme5BPXNLCGORaiHJ1SGwrjybR5+a2
-	 ehOseBqMUafT+q9VRWXUc7dSTqaeGuBUbtRx1F9A=
+	b=OAAfDu/0EK2qV9Sk86at7A5B19C1bHmg/05HCQJfeqgwxvphi6gIPX93AMhVC0mGM
+	 dJsQIK7QGu0XmY2bM6so+6pvCv6KAPiNccl28Zm99sXun+OAkn7ualtCqVzvqj9NEH
+	 ox0XB+umZ+vlxLqUWkc7dMcbz/R0BMURItRaTgQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfH0IRH (ORCPT
+        id S1731000AbfH0IRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:17:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44594 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:17:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728711AbfH0HxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:53:06 -0400
+        id S1729512AbfH0Hwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:52:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FD84217F5;
-        Tue, 27 Aug 2019 07:53:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 791EE2186A;
+        Tue, 27 Aug 2019 07:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892386;
-        bh=QFhZUAq6CUY2ejbNoS/Xrn+mjYw8ZHmVgo0Cfwif+tc=;
+        s=default; t=1566892363;
+        bh=MCX7CmsiPjmCXkciOtTum36tIlpCMfDC+mLmzUX/5vU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p1NNQ+Lx54Po5O9pCpCmKos0rep1WCJ3Abi99l2E1sEnOREYOOGhj6t+svINaSq6d
-         lIZrPb8H2i6lA/qg8jgqljdsz+1Lv4KaMcuhEO4KKaQyhl+Ayoavw6f7JPzuOyf2eB
-         jL2N5W/Y4YHXfRvHNvgDq1s8MVWTOfA+xtCyZcQU=
+        b=umHcwDd0rUV8zAV775PUdQ0ROQQ6jrXSXXxo6If1yUN5yMAaf4+uvrDyJVoHNzEew
+         8I0t8fHfZWEsVPWIFfaII/cu9EuE9aZoYIqpSrTP9FybRBG4ff1/BBUUOpRt1Go9hL
+         Sw1YJoMknxfsOxE//AW3H/lVkLFzXvD/U7Xvk8iQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 10/62] st_nci_hci_connectivity_event_received: null check the allocation
-Date:   Tue, 27 Aug 2019 09:50:15 +0200
-Message-Id: <20190827072700.989331884@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 29/62] libata: add SG safety checks in SFF pio transfers
+Date:   Tue, 27 Aug 2019 09:50:34 +0200
+Message-Id: <20190827072702.445760099@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -61,30 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3008e06fdf0973770370f97d5f1fba3701d8281d ]
+[ Upstream commit 752ead44491e8c91e14d7079625c5916b30921c5 ]
 
-devm_kzalloc may fail and return NULL. So the null check is needed.
+Abort processing of a command if we run out of mapped data in the
+SG list. This should never happen, but a previous bug caused it to
+be possible. Play it safe and attempt to abort nicely if we don't
+have more SG segments left.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/st-nci/se.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/ata/libata-sff.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/nfc/st-nci/se.c b/drivers/nfc/st-nci/se.c
-index 56f2112e0cd84..85df2e0093109 100644
---- a/drivers/nfc/st-nci/se.c
-+++ b/drivers/nfc/st-nci/se.c
-@@ -344,6 +344,8 @@ static int st_nci_hci_connectivity_event_received(struct nci_dev *ndev,
+diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
+index cc2f2e35f4c2e..8c36ff0c2dd49 100644
+--- a/drivers/ata/libata-sff.c
++++ b/drivers/ata/libata-sff.c
+@@ -704,6 +704,10 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+ 	unsigned int offset;
+ 	unsigned char *buf;
  
- 		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
- 					    skb->len - 2, GFP_KERNEL);
-+		if (!transaction)
-+			return -ENOMEM;
++	if (!qc->cursg) {
++		qc->curbytes = qc->nbytes;
++		return;
++	}
+ 	if (qc->curbytes == qc->nbytes - qc->sect_size)
+ 		ap->hsm_task_state = HSM_ST_LAST;
  
- 		transaction->aid_len = skb->data[1];
- 		memcpy(transaction->aid, &skb->data[2], transaction->aid_len);
+@@ -729,6 +733,8 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+ 
+ 	if (qc->cursg_ofs == qc->cursg->length) {
+ 		qc->cursg = sg_next(qc->cursg);
++		if (!qc->cursg)
++			ap->hsm_task_state = HSM_ST_LAST;
+ 		qc->cursg_ofs = 0;
+ 	}
+ }
 -- 
 2.20.1
 
