@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC0BC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EEEC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A5E20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F77F20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:41:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c21KIJW5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X9bA6RYW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730824AbfH0UlC (ORCPT
+        id S1730872AbfH0UlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 16:41:02 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:51136 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730760AbfH0Uk7 (ORCPT
+        Tue, 27 Aug 2019 16:41:04 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:41672 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730801AbfH0UlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 16:40:59 -0400
-Received: by mail-pg1-f201.google.com with SMTP id q9so214730pgv.17
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 13:40:58 -0700 (PDT)
+        Tue, 27 Aug 2019 16:41:01 -0400
+Received: by mail-pg1-f202.google.com with SMTP id b18so224090pgg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 13:41:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=/29bjCjTbbl+cLbTxIw0tiWmYrpTAoAKv+ZcK1v+ox8=;
-        b=c21KIJW5g4MvXBOS7sME+t0QDUpjgdIeAAj4Dp8ElLl69ZEoixqIhZ+fwaw+wn7eL7
-         D6/4lnvdM+kKaI4kTkpi9vlsbviFugLjZgcvgVrDVeotJA4dDdzTebuHj3Z9l9tEh/JW
-         +lEUV++D/HbJ+fYgyCwuLobZemlmdv7epF1ZSYGCG/pakcXO33SnFgZZHEIIrnm5+/Gs
-         e0FUU/YtFcx1N0xsk2TOXo7UhtkUeLNis39W+2MdQFq1RFeeTbcRLJLSAHd6BNqAsgQN
-         bCrq6X0Te9hQI9XwHv33OlzZc5rZ5dptuS18x9F7Iz7djaOR+NK/I/nY/STfG/lUNVry
-         6+hQ==
+        bh=c85yaSBCcgJs92ECoOpY1wTN4fvezGR1R2LzkXxYTJA=;
+        b=X9bA6RYW3SmopxTVDf41RMh8cJZOXKHPd+G3Ugca/TkoK4ngGJYO+ZJp13UVO7qDxT
+         203FNJAVQqt719AEzD96jSoIuXdjHvGJlWDIqyE+jltbjJhA8hCd4jnui2w7P1Xcj/3f
+         S9hj/lL2roLibcJ26l3c+yUCJFJ8I0Unkk+n5pRVbCUr5T16FTzx8KnQYZhjvvJGTaig
+         z9uDAtJKZJQBonhsXPO+5D0T9YwTshQeTzFRM04y348tbRlpdWL9OYvUkW7ttsH3ZWNm
+         HSIronvBHUvTuEAJoF0ua6CAYFRuM9K1qzXufDDTSFuf6P4x0Yc8D5C6hix4fdjYsgE1
+         +aEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=/29bjCjTbbl+cLbTxIw0tiWmYrpTAoAKv+ZcK1v+ox8=;
-        b=OfGd/uCxNgJMPULN4Yd9sDx9JZfU6CaGBciDu3Qjcw8S+zNkGNuHuacbx0harMv6hN
-         NmDJMic7Ti9FKUN+zSVZ2jHIrPUX5NQdMLTxJbrkixQGdDr3EjnuJsYmTT9mOp5wg3cF
-         ig0OQBaUM/wKryOZtyaTzbUoqoFweETdhehDh43tZpayrCd6rV6O0HJ39FBk2LaTf868
-         hu3RFzzWpQMuPXCAqTP0leQM1Zvg2M8yB2wSlAvWAgICl6+GE4qhe/XOs3LSVp14LRCZ
-         OWASzQqnYGFNl6TWYJp8uafqapWD2Ss1n0V6Q3QlzM9tkpWkuNNhck6RxwR4TgS9JAnH
-         V8Ug==
-X-Gm-Message-State: APjAAAXxj8qMdKnR0nByTNoyjElBmlsSBpWEFH4C0LOawrr2JdzmTSxh
-        KApj3DgwU3FP4LCx+j+Nw+dhwMtIy9s85FVEOIs=
-X-Google-Smtp-Source: APXvYqws9rBJNdwG7AwVuYJ+B1+1uxBVfBLw5S6uTZm3jhoGgIAtSLYqhIiXulFmjGl2mlFAXSiTZBmYpMcwhY5M8dk=
-X-Received: by 2002:a63:a346:: with SMTP id v6mr281349pgn.57.1566938457832;
- Tue, 27 Aug 2019 13:40:57 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 13:40:04 -0700
+        bh=c85yaSBCcgJs92ECoOpY1wTN4fvezGR1R2LzkXxYTJA=;
+        b=sNns4zhwCAv8l/9/bA/g5zlFNCL3Snvrzrc9tlHnhqsM5d9dZx7pdjBANLaq3MpUqp
+         fGvUWDE9BSA5qz3YeXAq3sq1im+FF3GLQ3TcWtpaUuiE2s6PlLMINvmM+04hJt4szqIU
+         Cr+rhujul9JWpdkYjfdh1jkwFVyFHV37iDK+QCJYILUUFsBx7xKURhD1IqbymORujCV2
+         SZz+253F89BmsUsaQArpQyPPhv4gaC1IIh2RCwSAT38ZTbCGtWttUTjzOgBB9kx4doSD
+         mBetULOTSn11Ks3DbgeaUSNkDdzh8hjn0nL+n20pH/iL+MEJ55kzNWWM+9NepB/h9S64
+         fpDQ==
+X-Gm-Message-State: APjAAAUmRT8VaczpF3Hd937t2LfzrNqdK8UbNkskrAcJpp0NWG5iclVF
+        nyhA+uaDrcL+z35SHLOMcfP7J2wZboazXZ3f5sk=
+X-Google-Smtp-Source: APXvYqw7PQLgNWPjDJWwMVHsbcxdyo3jDvyj6QI+64H142EjniePe3uhwBBmfiWehPkcVNLd6q4evavOhSJQoMPbnjg=
+X-Received: by 2002:a65:6815:: with SMTP id l21mr312139pgt.146.1566938460536;
+ Tue, 27 Aug 2019 13:41:00 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 13:40:05 -0700
 In-Reply-To: <20190827204007.201890-1-ndesaulniers@google.com>
-Message-Id: <20190827204007.201890-12-ndesaulniers@google.com>
+Message-Id: <20190827204007.201890-13-ndesaulniers@google.com>
 Mime-Version: 1.0
 References: <20190827204007.201890-1-ndesaulniers@google.com>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v2 11/14] include/asm-generic: prefer __section from compiler_attributes.h
+Subject: [PATCH v2 12/14] include/linux: prefer __section from compiler_attributes.h
 From:   Nick Desaulniers <ndesaulniers@google.com>
 To:     miguel.ojeda.sandonis@gmail.com
 Cc:     sedat.dilek@gmail.com, will@kernel.org, jpoimboe@redhat.com,
@@ -89,48 +89,131 @@ $ grep -e __section\(\" -e __section__\(\" -r
 See the discussions in:
 Link: https://bugs.llvm.org/show_bug.cgi?id=42950
 Link: https://marc.info/?l=linux-netdev&m=156412960619946&w=2
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Acked-by: Will Deacon <will@kernel.org>
 Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
 Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- include/asm-generic/error-injection.h | 2 +-
- include/asm-generic/kprobes.h         | 5 ++---
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ include/linux/cache.h       | 6 +++---
+ include/linux/cpu.h         | 2 +-
+ include/linux/export.h      | 2 +-
+ include/linux/init_task.h   | 4 ++--
+ include/linux/interrupt.h   | 5 ++---
+ include/linux/sched/debug.h | 2 +-
+ include/linux/srcutree.h    | 2 +-
+ 7 files changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/include/asm-generic/error-injection.h b/include/asm-generic/error-injection.h
-index 95a159a4137f..a593a50b33e3 100644
---- a/include/asm-generic/error-injection.h
-+++ b/include/asm-generic/error-injection.h
-@@ -23,7 +23,7 @@ struct error_injection_entry {
+diff --git a/include/linux/cache.h b/include/linux/cache.h
+index 750621e41d1c..3f4df9eef1e1 100644
+--- a/include/linux/cache.h
++++ b/include/linux/cache.h
+@@ -28,7 +28,7 @@
+  * but may get written to during init, so can't live in .rodata (via "const").
   */
- #define ALLOW_ERROR_INJECTION(fname, _etype)				\
- static struct error_injection_entry __used				\
--	__attribute__((__section__("_error_injection_whitelist")))	\
-+	__section(_error_injection_whitelist)				\
- 	_eil_addr_##fname = {						\
- 		.addr = (unsigned long)fname,				\
- 		.etype = EI_ETYPE_##_etype,				\
-diff --git a/include/asm-generic/kprobes.h b/include/asm-generic/kprobes.h
-index 4a982089c95c..20d69719270f 100644
---- a/include/asm-generic/kprobes.h
-+++ b/include/asm-generic/kprobes.h
-@@ -9,12 +9,11 @@
-  * by using this macro.
+ #ifndef __ro_after_init
+-#define __ro_after_init __attribute__((__section__(".data..ro_after_init")))
++#define __ro_after_init __section(.data..ro_after_init)
+ #endif
+ 
+ #ifndef ____cacheline_aligned
+@@ -45,8 +45,8 @@
+ 
+ #ifndef __cacheline_aligned
+ #define __cacheline_aligned					\
+-  __attribute__((__aligned__(SMP_CACHE_BYTES),			\
+-		 __section__(".data..cacheline_aligned")))
++	__aligned(SMP_CACHE_BYTES)				\
++	__section(.data..cacheline_aligned)
+ #endif /* __cacheline_aligned */
+ 
+ #ifndef __cacheline_aligned_in_smp
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index fcb1386bb0d4..186bbd79d6ce 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -166,7 +166,7 @@ void cpu_startup_entry(enum cpuhp_state state);
+ void cpu_idle_poll_ctrl(bool enable);
+ 
+ /* Attach to any functions which should be considered cpuidle. */
+-#define __cpuidle	__attribute__((__section__(".cpuidle.text")))
++#define __cpuidle	__section(.cpuidle.text)
+ 
+ bool cpu_in_idle(unsigned long pc);
+ 
+diff --git a/include/linux/export.h b/include/linux/export.h
+index fd8711ed9ac4..808c1a0c2ef9 100644
+--- a/include/linux/export.h
++++ b/include/linux/export.h
+@@ -104,7 +104,7 @@ struct kernel_symbol {
+  * discarded in the final link stage.
   */
- # define __NOKPROBE_SYMBOL(fname)				\
--static unsigned long __used					\
--	__attribute__((__section__("_kprobe_blacklist")))	\
-+static unsigned long __used __section(_kprobe_blacklist)	\
- 	_kbl_addr_##fname = (unsigned long)fname;
- # define NOKPROBE_SYMBOL(fname)	__NOKPROBE_SYMBOL(fname)
- /* Use this to forbid a kprobes attach on very low level functions */
--# define __kprobes	__attribute__((__section__(".kprobes.text")))
-+# define __kprobes	__section(.kprobes.text)
- # define nokprobe_inline	__always_inline
+ #define __ksym_marker(sym)	\
+-	static int __ksym_marker_##sym[0] __section(".discard.ksym") __used
++	static int __ksym_marker_##sym[0] __section(.discard.ksym) __used
+ 
+ #define __EXPORT_SYMBOL(sym, sec)				\
+ 	__ksym_marker(sym);					\
+diff --git a/include/linux/init_task.h b/include/linux/init_task.h
+index 6049baa5b8bc..50139505da34 100644
+--- a/include/linux/init_task.h
++++ b/include/linux/init_task.h
+@@ -51,12 +51,12 @@ extern struct cred init_cred;
+ 
+ /* Attach to the init_task data structure for proper alignment */
+ #ifdef CONFIG_ARCH_TASK_STRUCT_ON_STACK
+-#define __init_task_data __attribute__((__section__(".data..init_task")))
++#define __init_task_data __section(.data..init_task)
  #else
- # define NOKPROBE_SYMBOL(fname)
+ #define __init_task_data /**/
+ #endif
+ 
+ /* Attach to the thread_info data structure for proper alignment */
+-#define __init_thread_info __attribute__((__section__(".data..init_thread_info")))
++#define __init_thread_info __section(.data..init_thread_info)
+ 
+ #endif
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 5b8328a99b2a..29debfe4dd0f 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -741,8 +741,7 @@ extern int arch_early_irq_init(void);
+ /*
+  * We want to know which function is an entrypoint of a hardirq or a softirq.
+  */
+-#define __irq_entry		 __attribute__((__section__(".irqentry.text")))
+-#define __softirq_entry  \
+-	__attribute__((__section__(".softirqentry.text")))
++#define __irq_entry	__section(.irqentry.text)
++#define __softirq_entry	__section(.softirqentry.text)
+ 
+ #endif
+diff --git a/include/linux/sched/debug.h b/include/linux/sched/debug.h
+index 95fb9e025247..e17b66221fdd 100644
+--- a/include/linux/sched/debug.h
++++ b/include/linux/sched/debug.h
+@@ -42,7 +42,7 @@ extern void proc_sched_set_task(struct task_struct *p);
+ #endif
+ 
+ /* Attach to any functions which should be ignored in wchan output. */
+-#define __sched		__attribute__((__section__(".sched.text")))
++#define __sched		__section(.sched.text)
+ 
+ /* Linker adds these: start and end of __sched functions */
+ extern char __sched_text_start[], __sched_text_end[];
+diff --git a/include/linux/srcutree.h b/include/linux/srcutree.h
+index 9cfcc8a756ae..9de652f4e1bd 100644
+--- a/include/linux/srcutree.h
++++ b/include/linux/srcutree.h
+@@ -124,7 +124,7 @@ struct srcu_struct {
+ # define __DEFINE_SRCU(name, is_static)					\
+ 	is_static struct srcu_struct name;				\
+ 	struct srcu_struct * const __srcu_struct_##name			\
+-		__section("___srcu_struct_ptrs") = &name
++		__section(___srcu_struct_ptrs) = &name
+ #else
+ # define __DEFINE_SRCU(name, is_static)					\
+ 	static DEFINE_PER_CPU(struct srcu_data, name##_srcu_data);	\
 -- 
 2.23.0.187.g17f5b7556c-goog
 
