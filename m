@@ -2,104 +2,252 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E23C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3816C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C49205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1CE12053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:28:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="t5KGUhPZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731081AbfH0I2R (ORCPT
+        id S1731111AbfH0I2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:28:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42732 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729461AbfH0I0W (ORCPT
+        Tue, 27 Aug 2019 04:28:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54871 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728797AbfH0I2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:26:22 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2Wnx-0007q2-Fe; Tue, 27 Aug 2019 10:26:17 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 15B3C1C0DDF;
-        Tue, 27 Aug 2019 10:26:17 +0200 (CEST)
-Date:   Tue, 27 Aug 2019 08:26:17 -0000
-From:   tip-bot2 for Andi Kleen <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf report: Use timestamp__scnprintf_nsec() for
- time sort key
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190823210338.12360-1-andi@firstfloor.org>
-References: <20190823210338.12360-1-andi@firstfloor.org>
+        Tue, 27 Aug 2019 04:28:18 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p74so2096520wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 01:28:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hZrYD1R7WJYiR8GAdiCixYS23KUbA9+GFETwSrbJeL8=;
+        b=t5KGUhPZLkVvcFpZDMvEFcvQma5D863plyvPgCxiVtdcxDRmBd4Nz1OrXzpNGG0R8/
+         MFZXwqbQnz796LbM5a8DtEE1aDcN7euRieWuXqbO1eLhOg4cQk0zYSbuTBvNiCAMFlf1
+         THeCSh+uXmtlmN4f5lEzvCe8BG/xMyfRlwSDgWSMag5936sChE8OEevKyKTxzDc3iKBm
+         z7vxw9QNrjzccnG510pJ7XJDJlOG0dWlQPPGha9O5Q2YojD8N66HXiu02jW0id3vD1Pn
+         +H6zlh48PLD47W2l2KHE21/MyN36i9gbkGMLQuh0fI03QTmYNyLma87YnRal8tLBI9JS
+         4zbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hZrYD1R7WJYiR8GAdiCixYS23KUbA9+GFETwSrbJeL8=;
+        b=DxdgoODhD8yJ+PNVgZr9dxXDk3JXyvXzGSkp87HjG4Bxh3YYDxHwECjghZyEVs2PJI
+         NV8YJBbCtuAlh+kslDQpZlE7lCN5C44H8I6MvS9m0cWAhjmm4GQdL9ico9VtEMw8ZxcP
+         j6sK6/MLOrv9mKwteDPXvALVdIOcw6XMWEUF+js9XOldnzdsBpgBx52j6kDLasWtfI8G
+         tl6NdydrG8ozigRsL6Dli1yjM6aD4yFegO4t4VnZeu2476vd7ueD0mvRGz6z+SGcAtrz
+         HNpyn5t86Xdxz8vbUwtip1/GFwqSBdOx5DDhNYq+2nbuXxYaUmyWVHXkeFI3MHoCCxpL
+         cy4w==
+X-Gm-Message-State: APjAAAWNSRW8l6HutllbCKHBvk8voGPZfEvUWGiWIIi3H8nl3TiS28+P
+        TzhZ8ChRwhB31o3hu0ozrVY0z4jYEhhQa4ddzqWv+w==
+X-Google-Smtp-Source: APXvYqxY0J8Ax38Avo2shgmLFhgtwVw+uCaxjl/QlygUY3apfuLflYNrzTOlavaJgzCjVsZ5B5W/9oYpQfx1G99l6Lk=
+X-Received: by 2002:a1c:3d89:: with SMTP id k131mr24819207wma.24.1566894494900;
+ Tue, 27 Aug 2019 01:28:14 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <156689437701.24511.15888574333072459132.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190826233256.32383-1-atish.patra@wdc.com> <20190826233256.32383-2-atish.patra@wdc.com>
+ <20190827075136.GC682@rapoport-lnx>
+In-Reply-To: <20190827075136.GC682@rapoport-lnx>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 27 Aug 2019 13:58:03 +0530
+Message-ID: <CAAhSdy0zOtHftesYW9uuM0gjsOcvyhfuBETbtKaR2Kc1-_sCAQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] RISC-V: Mark existing SBI as legacy SBI.
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alan Kao <alankao@andestech.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Gary Guo <gary@garyguo.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+On Tue, Aug 27, 2019 at 1:21 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+>
+> On Mon, Aug 26, 2019 at 04:32:55PM -0700, Atish Patra wrote:
+> > As per the new SBI specification, current SBI implementation is
+> > defined as legacy and will be removed/replaced in future.
+> >
+> > Rename existing implementation to reflect that. This patch is just
+> > a preparatory patch for SBI v0.2 and doesn't introduce any functional
+> > changes.
+> >
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > ---
+> >  arch/riscv/include/asm/sbi.h | 61 +++++++++++++++++++-----------------
+> >  1 file changed, 33 insertions(+), 28 deletions(-)
+> >
+> > diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+> > index 21134b3ef404..7f5ecaaaa0d7 100644
+> > --- a/arch/riscv/include/asm/sbi.h
+> > +++ b/arch/riscv/include/asm/sbi.h
+> > @@ -8,17 +8,18 @@
+> >
+> >  #include <linux/types.h>
+> >
+> > -#define SBI_SET_TIMER 0
+> > -#define SBI_CONSOLE_PUTCHAR 1
+> > -#define SBI_CONSOLE_GETCHAR 2
+> > -#define SBI_CLEAR_IPI 3
+> > -#define SBI_SEND_IPI 4
+> > -#define SBI_REMOTE_FENCE_I 5
+> > -#define SBI_REMOTE_SFENCE_VMA 6
+> > -#define SBI_REMOTE_SFENCE_VMA_ASID 7
+> > -#define SBI_SHUTDOWN 8
+> > -
+> > -#define SBI_CALL(which, arg0, arg1, arg2, arg3) ({           \
+> > +
+> > +#define SBI_EXT_LEGACY_SET_TIMER 0x0
+> > +#define SBI_EXT_LEGACY_CONSOLE_PUTCHAR 0x1
+> > +#define SBI_EXT_LEGACY_CONSOLE_GETCHAR 0x2
+> > +#define SBI_EXT_LEGACY_CLEAR_IPI 0x3
+> > +#define SBI_EXT_LEGACY_SEND_IPI 0x4
+> > +#define SBI_EXT_LEGACY_REMOTE_FENCE_I 0x5
+> > +#define SBI_EXT_LEGACY_REMOTE_SFENCE_VMA 0x6
+> > +#define SBI_EXT_LEGACY_REMOTE_SFENCE_VMA_ASID 0x7
+> > +#define SBI_EXT_LEGACY_SHUTDOWN 0x8
+>
+> I can't say I'm closely following RISC-V development, but what will happen
+> when SBI v0.3 will come out and will render v0.2 legacy?
+> Won't we need another similar renaming then?
 
-Commit-ID:     092804ae092fc6097348f5c09b62cde040717aa1
-Gitweb:        https://git.kernel.org/tip/092804ae092fc6097348f5c09b62cde040717aa1
-Author:        Andi Kleen <ak@linux.intel.com>
-AuthorDate:    Fri, 23 Aug 2019 14:03:37 -07:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 26 Aug 2019 11:58:29 -03:00
+Going forward with SBI v0.3 and higher, we won't see any calling
+convention changes.
 
-perf report: Use timestamp__scnprintf_nsec() for time sort key
+The SBI spec will be maintained and improved by RISC-V UNIX
+platform spec working group.
 
-Use timestamp__scnprintf_nsec() to print nanoseconds for the time sort
-key, instead of open coding.
+My best guess is that, all future SBI releases (v0.3 or higher) will
+include more optional SBI extensions (hart hotplug, power management, etc).
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190823210338.12360-1-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/sort.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+Regards,
+Anup
 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index c522bdd..83eb3fa 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -670,17 +670,11 @@ sort__time_cmp(struct hist_entry *left, struct hist_entry *right)
- static int hist_entry__time_snprintf(struct hist_entry *he, char *bf,
- 				    size_t size, unsigned int width)
- {
--	unsigned long secs;
--	unsigned long long nsecs;
- 	char he_time[32];
- 
--	nsecs = he->time;
--	secs = nsecs / NSEC_PER_SEC;
--	nsecs -= secs * NSEC_PER_SEC;
--
- 	if (symbol_conf.nanosecs)
--		snprintf(he_time, sizeof he_time, "%5lu.%09llu: ",
--			 secs, nsecs);
-+		timestamp__scnprintf_nsec(he->time, he_time,
-+					  sizeof(he_time));
- 	else
- 		timestamp__scnprintf_usec(he->time, he_time,
- 					  sizeof(he_time));
+>
+> > +#define SBI_CALL_LEGACY(which, arg0, arg1, arg2, arg3) ({             \
+> >       register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);   \
+> >       register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);   \
+> >       register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);   \
+> > @@ -32,58 +33,61 @@
+> >  })
+> >
+> >  /* Lazy implementations until SBI is finalized */
+> > -#define SBI_CALL_0(which) SBI_CALL(which, 0, 0, 0, 0)
+> > -#define SBI_CALL_1(which, arg0) SBI_CALL(which, arg0, 0, 0, 0)
+> > -#define SBI_CALL_2(which, arg0, arg1) SBI_CALL(which, arg0, arg1, 0, 0)
+> > -#define SBI_CALL_3(which, arg0, arg1, arg2) \
+> > -             SBI_CALL(which, arg0, arg1, arg2, 0)
+> > -#define SBI_CALL_4(which, arg0, arg1, arg2, arg3) \
+> > -             SBI_CALL(which, arg0, arg1, arg2, arg3)
+> > +#define SBI_CALL_LEGACY_0(which) SBI_CALL_LEGACY(which, 0, 0, 0, 0)
+> > +#define SBI_CALL_LEGACY_1(which, arg0) SBI_CALL_LEGACY(which, arg0, 0, 0, 0)
+> > +#define SBI_CALL_LEGACY_2(which, arg0, arg1) \
+> > +             SBI_CALL_LEGACY(which, arg0, arg1, 0, 0)
+> > +#define SBI_CALL_LEGACY_3(which, arg0, arg1, arg2) \
+> > +             SBI_CALL_LEGACY(which, arg0, arg1, arg2, 0)
+> > +#define SBI_CALL_LEGACY_4(which, arg0, arg1, arg2, arg3) \
+> > +             SBI_CALL_LEGACY(which, arg0, arg1, arg2, arg3)
+> >
+> >  static inline void sbi_console_putchar(int ch)
+> >  {
+> > -     SBI_CALL_1(SBI_CONSOLE_PUTCHAR, ch);
+> > +     SBI_CALL_LEGACY_1(SBI_EXT_LEGACY_CONSOLE_PUTCHAR, ch);
+> >  }
+> >
+> >  static inline int sbi_console_getchar(void)
+> >  {
+> > -     return SBI_CALL_0(SBI_CONSOLE_GETCHAR);
+> > +     return SBI_CALL_LEGACY_0(SBI_EXT_LEGACY_CONSOLE_GETCHAR);
+> >  }
+> >
+> >  static inline void sbi_set_timer(uint64_t stime_value)
+> >  {
+> >  #if __riscv_xlen == 32
+> > -     SBI_CALL_2(SBI_SET_TIMER, stime_value, stime_value >> 32);
+> > +     SBI_CALL_LEGACY_2(SBI_EXT_LEGACY_SET_TIMER, stime_value,
+> > +                       stime_value >> 32);
+> >  #else
+> > -     SBI_CALL_1(SBI_SET_TIMER, stime_value);
+> > +     SBI_CALL_LEGACY_1(SBI_EXT_LEGACY_SET_TIMER, stime_value);
+> >  #endif
+> >  }
+> >
+> >  static inline void sbi_shutdown(void)
+> >  {
+> > -     SBI_CALL_0(SBI_SHUTDOWN);
+> > +     SBI_CALL_LEGACY_0(SBI_EXT_LEGACY_SHUTDOWN);
+> >  }
+> >
+> >  static inline void sbi_clear_ipi(void)
+> >  {
+> > -     SBI_CALL_0(SBI_CLEAR_IPI);
+> > +     SBI_CALL_LEGACY_0(SBI_EXT_LEGACY_CLEAR_IPI);
+> >  }
+> >
+> >  static inline void sbi_send_ipi(const unsigned long *hart_mask)
+> >  {
+> > -     SBI_CALL_1(SBI_SEND_IPI, hart_mask);
+> > +     SBI_CALL_LEGACY_1(SBI_EXT_LEGACY_SEND_IPI, hart_mask);
+> >  }
+> >
+> >  static inline void sbi_remote_fence_i(const unsigned long *hart_mask)
+> >  {
+> > -     SBI_CALL_1(SBI_REMOTE_FENCE_I, hart_mask);
+> > +     SBI_CALL_LEGACY_1(SBI_EXT_LEGACY_REMOTE_FENCE_I, hart_mask);
+> >  }
+> >
+> >  static inline void sbi_remote_sfence_vma(const unsigned long *hart_mask,
+> >                                        unsigned long start,
+> >                                        unsigned long size)
+> >  {
+> > -     SBI_CALL_3(SBI_REMOTE_SFENCE_VMA, hart_mask, start, size);
+> > +     SBI_CALL_LEGACY_3(SBI_EXT_LEGACY_REMOTE_SFENCE_VMA, hart_mask,
+> > +                       start, size);
+> >  }
+> >
+> >  static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
+> > @@ -91,7 +95,8 @@ static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
+> >                                             unsigned long size,
+> >                                             unsigned long asid)
+> >  {
+> > -     SBI_CALL_4(SBI_REMOTE_SFENCE_VMA_ASID, hart_mask, start, size, asid);
+> > +     SBI_CALL_LEGACY_4(SBI_EXT_LEGACY_REMOTE_SFENCE_VMA_ASID, hart_mask,
+> > +                       start, size, asid);
+> >  }
+> >
+> >  #endif
+> > --
+> > 2.21.0
+> >
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+> >
+>
+> --
+> Sincerely yours,
+> Mike.
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
