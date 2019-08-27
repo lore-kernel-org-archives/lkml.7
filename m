@@ -2,153 +2,125 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E084DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C248C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C210B2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EECC2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:50:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Usm12moH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbfH0Wut (ORCPT
+        id S1726371AbfH0Wu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 18:50:49 -0400
-Received: from mga05.intel.com ([192.55.52.43]:54470 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbfH0Wut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 18:50:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 15:50:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,439,1559545200"; 
-   d="scan'208";a="331971435"
-Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
-  by orsmga004.jf.intel.com with ESMTP; 27 Aug 2019 15:50:48 -0700
-Date:   Tue, 27 Aug 2019 15:47:51 -0700
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] PCI: pciehp: Remove pciehp_set_attention_status()
-Message-ID: <20190827224751.GE28404@skuppusw-desk.amr.corp.intel.com>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-References: <20190819160643.27998-1-efremov@linux.com>
- <20190819160643.27998-4-efremov@linux.com>
+        Tue, 27 Aug 2019 18:50:57 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36349 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfH0Wu5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 18:50:57 -0400
+Received: by mail-pf1-f194.google.com with SMTP id w2so346164pfi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 15:50:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zOEu9xUSDVrsGM6W3Flcox0RxExlMvx/ACbW1pnrPBg=;
+        b=Usm12moHUHac03LVvijuSRXEZBvccvhXSPy1aGZptmGTyOJlv9HwXwsEHdqFXO4Fjy
+         oJjqfDRkaK7VUPH4iq5Z8rILoMIkn6m9JCNM6H4QIMSxqk9jAD+Oevb9x69xcP84m5cE
+         Lg2/MGISpiT3slt9ksiZN8SPUlU+UcL8GidncWuemmZCmHTY6Xz7LzvTKno7sCq/IY/3
+         opXEgstVYldu6h1foTnU9ujFEcBzuq4MO/iJqviUjNpKDbi0MhWC9y97nLbn5AeFPrEA
+         d8+jX/Jck3fmEVavrg9+D004WeqLpMx35UEME4kKaai+EKtaosFbxvZ/UVCMo6Y5HmxF
+         RuNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zOEu9xUSDVrsGM6W3Flcox0RxExlMvx/ACbW1pnrPBg=;
+        b=GKTGVuInYPfy0vlNh0w5QjLfjeKJpz3ar/xWDeU50zYsG/Nz5FAUHWgLU5ahB5Ln27
+         CBzjEAaFtOtQNihgJ5rEbOWLeXlnYkk87ak8wRKKi0xdgqfVId8htf8yTFFhZs3fY468
+         BoVipdgnEw2eLSLFcIBBesCBUH6NI5QO+tvykYY0+OcaFNuOnh8NeGsx70Myaf2KyEdi
+         ltNPXUL3gC5v9RwO+GUsnM5cJaN+A2pk6XHr14xcj6EMZS2ueYOoS0QtX3ZUfIs+DdWL
+         cKtxMbm1YPfSduXAViEY0+ng1HpAjOA0OAi9oJ/agvNV6AQK0JjzwbjhIKcAzZBZ7/11
+         fQiw==
+X-Gm-Message-State: APjAAAXyzVpyDHURYTNykP27iMXffVhZTDrLbrH8kT6SiNDjnvBjcgTf
+        wEyZP1TYjpdX1IwOb7K80pow+Qnbtxob8MN0XRV32g==
+X-Google-Smtp-Source: APXvYqw23KIT1k0Xi5MgAknrnDtZVrBXQFptxEYv1UgQ0hbLWHN9Mrvq15ViFtifwG5yvUo07vfeKobCoXeNgNntFxU=
+X-Received: by 2002:aa7:984a:: with SMTP id n10mr1036503pfq.3.1566946256177;
+ Tue, 27 Aug 2019 15:50:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819160643.27998-4-efremov@linux.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190711133915.GA25807@ziepe.ca> <CAKwvOdnHz3uH4ZM20LGQJ3FYhLQQUYn4Lg0B-YMr7Y1L66TAsA@mail.gmail.com>
+ <20190711171808.GF25807@ziepe.ca> <20190711173030.GA844@archlinux-threadripper>
+ <20190823142427.GD12968@ziepe.ca> <20190826153800.GA4752@archlinux-threadripper>
+ <20190826154228.GE27349@ziepe.ca> <20190826233829.GA36284@archlinux-threadripper>
+ <20190827150830.brsvsoopxut2od66@treble> <20190827170018.GA4725@mtr-leonro.mtl.com>
+ <20190827192344.tcrzolbshwdsosl2@treble> <CAKwvOdk3UTT5jUTuG_wRizdpUtgv3qFB3w3NCtJ7ub5DnptYRA@mail.gmail.com>
+In-Reply-To: <CAKwvOdk3UTT5jUTuG_wRizdpUtgv3qFB3w3NCtJ7ub5DnptYRA@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 27 Aug 2019 15:50:44 -0700
+Message-ID: <CAKwvOdmq3VRLt+SUM=Do7OqasLqzoj4R00-JZGBWFjj8TccNgQ@mail.gmail.com>
+Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Bernard Metzler <BMT@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 07:06:42PM +0300, Denis Efremov wrote:
-> Remove pciehp_set_attention_status() and use pciehp_set_indicators()
-> instead, since the code is mostly the same.
-> 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/pci/hotplug/pciehp.h      |  1 -
->  drivers/pci/hotplug/pciehp_core.c |  7 ++++++-
->  drivers/pci/hotplug/pciehp_hpc.c  | 25 -------------------------
->  include/uapi/linux/pci_regs.h     |  1 +
->  4 files changed, 7 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-> index 0e272bf3deb4..acda513f37d7 100644
-> --- a/drivers/pci/hotplug/pciehp.h
-> +++ b/drivers/pci/hotplug/pciehp.h
-> @@ -168,7 +168,6 @@ void pciehp_power_off_slot(struct controller *ctrl);
->  void pciehp_get_power_status(struct controller *ctrl, u8 *status);
->  
->  void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn);
-> -void pciehp_set_attention_status(struct controller *ctrl, u8 status);
->  void pciehp_get_latch_status(struct controller *ctrl, u8 *status);
->  int pciehp_query_power_fault(struct controller *ctrl);
->  void pciehp_green_led_on(struct controller *ctrl);
-> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-> index 6ad0d86762cb..7a86ea90ed94 100644
-> --- a/drivers/pci/hotplug/pciehp_core.c
-> +++ b/drivers/pci/hotplug/pciehp_core.c
-> @@ -102,8 +102,13 @@ static int set_attention_status(struct hotplug_slot *hotplug_slot, u8 status)
->  	struct controller *ctrl = to_ctrl(hotplug_slot);
->  	struct pci_dev *pdev = ctrl->pcie->port;
->  
-> +	if (status)
-> +		status <<= PCI_EXP_SLTCTL_ATTN_IND_SHIFT;
-> +	else
-> +		status = PCI_EXP_SLTCTL_ATTN_IND_OFF;
-> +
->  	pci_config_pm_runtime_get(pdev);
-> -	pciehp_set_attention_status(ctrl, status);
-> +	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_NONE, status);
->  	pci_config_pm_runtime_put(pdev);
->  	return 0;
->  }
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index aa4252d11be2..8f894fd5cd27 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -418,31 +418,6 @@ int pciehp_set_raw_indicator_status(struct hotplug_slot *hotplug_slot,
->  	return 0;
->  }
->  
-> -void pciehp_set_attention_status(struct controller *ctrl, u8 value)
-> -{
-> -	u16 slot_cmd;
-> -
-> -	if (!ATTN_LED(ctrl))
-> -		return;
-> -
-> -	switch (value) {
-> -	case 0:		/* turn off */
-> -		slot_cmd = PCI_EXP_SLTCTL_ATTN_IND_OFF;
-> -		break;
-> -	case 1:		/* turn on */
-> -		slot_cmd = PCI_EXP_SLTCTL_ATTN_IND_ON;
-> -		break;
-> -	case 2:		/* turn blink */
-> -		slot_cmd = PCI_EXP_SLTCTL_ATTN_IND_BLINK;
-> -		break;
-> -	default:
-> -		return;
-> -	}
-> -	pcie_write_cmd_nowait(ctrl, slot_cmd, PCI_EXP_SLTCTL_AIC);
-> -	ctrl_dbg(ctrl, "%s: SLOTCTRL %x write cmd %x\n", __func__,
-> -		 pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL, slot_cmd);
-> -}
-> -
->  void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn)
->  {
->  	u16 cmd = 0, mask = 0;
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 291788b58f3a..27d9f5bc1812 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -591,6 +591,7 @@
->  #define  PCI_EXP_SLTCTL_CCIE	0x0010	/* Command Completed Interrupt Enable */
->  #define  PCI_EXP_SLTCTL_HPIE	0x0020	/* Hot-Plug Interrupt Enable */
->  #define  PCI_EXP_SLTCTL_AIC	0x00c0	/* Attention Indicator Control */
-> +#define  PCI_EXP_SLTCTL_ATTN_IND_SHIFT 6      /* Attention Indicator shift */
->  #define  PCI_EXP_SLTCTL_ATTN_IND_NONE  0x0    /* Attention Indicator noop */
->  #define  PCI_EXP_SLTCTL_ATTN_IND_ON    0x0040 /* Attention Indicator on */
->  #define  PCI_EXP_SLTCTL_ATTN_IND_BLINK 0x0080 /* Attention Indicator blinking */
-> -- 
-> 2.21.0
-> 
+On Tue, Aug 27, 2019 at 2:27 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Tue, Aug 27, 2019 at 12:23 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > On Tue, Aug 27, 2019 at 08:00:18PM +0300, Leon Romanovsky wrote:
+> > > On Tue, Aug 27, 2019 at 10:08:30AM -0500, Josh Poimboeuf wrote:
+> > > > On Mon, Aug 26, 2019 at 04:38:29PM -0700, Nathan Chancellor wrote:
+> > > > > Looks like that comes from tune_qsfp, which gets inlined into
+> > > > > tune_serdes but I am far from an objtool expert so I am not
+> > > > > really sure what kind of issues I am looking for. Adding Josh
+> > > > > and Peter for a little more visibility.
+> > > > >
+> > > > > Here is the original .o file as well:
+> > > > >
+> > > > > https://github.com/nathanchance/creduce-files/raw/4e252c0ca19742c90be1445e6c722a43ae561144/rdma-objtool/platform.o.orig
+> > > >
+> > > >      574:       0f 87 00 0c 00 00       ja     117a <tune_serdes+0xdfa>
+> > > >
+> > > > It's jumping to la-la-land past the end of the function.
+> > >
+> > > How is it possible?
+> >
+> > Looks like a compiler bug.
+>
+> Nathan,
+> Thanks for the reduced test case.  I modified it slightly:
+> https://godbolt.org/z/15xejg
+>
+> You can see that the label LBB0_5 seemingly points off into space.
+> Let me play with this one more a bit, then I will file a bug and
+> report back.
 
+Something funny going on in one of the earliest optimizations.  Seems
+related to an analysis that's deducing that the case statement is
+exhaustive (so the GNU C case range is unrelated), but it's keeping
+the default case and its comparison around.  The analysis is correct;
+the value should never be > 0xF so there shouldn't be any runtime
+bugs, but this would avoid an unnecessary comparison for exhaustive
+switch statements and save a few bytes of object code in such cases.
+
+Filed: https://bugs.llvm.org/show_bug.cgi?id=43129
 -- 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+Thanks,
+~Nick Desaulniers
