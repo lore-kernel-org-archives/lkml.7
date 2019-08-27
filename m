@@ -2,54 +2,52 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1A2C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4E7C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6675F2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 415F42186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892459;
-	bh=tBPZC6mCiWD6n1scrwgRNNIljCMIUEPvwRa4pmU0U9A=;
+	s=default; t=1566892464;
+	bh=zBFIuOVncQ0mQk1/RZt6zBngG9P9fsV2Cwm1yrUWVrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=17HeWRrzzGnrVYguhvgRd1ds9x/7XFyXjhnhLZzBTOxveBhxOqGFgAsu88rNBsX48
-	 0ulT+ZU+6iO5yj6emljM6oZ047E4vgTjc8OLqv91rWIL9bSn9vIsLWf125aBxdzwGE
-	 A9F0i88qLmgBs4++qrB6qOH7mFA8CkE6pgbMQ0c4=
+	b=D9gqjhhdmBy01T3LL+kIwHx7l15sx3oWjYEOIp+GhFeKO0AFWBP8whTA9GhQa77jD
+	 fWhS16HQgq5Ey2jWvxNCNMuahcSedp+V08SN9PxIcWKV2b1j1XqruywBCDlm3xrw7S
+	 GEdHzhZ2ioL5qkUVR55X4cSwZ+Dxlz+KfBkQApyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730010AbfH0HyS (ORCPT
+        id S1730036AbfH0HyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:54:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45774 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:54:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729374AbfH0HyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:54:10 -0400
+        id S1730011AbfH0HyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:54:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61678217F5;
-        Tue, 27 Aug 2019 07:54:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D659D217F5;
+        Tue, 27 Aug 2019 07:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892449;
-        bh=tBPZC6mCiWD6n1scrwgRNNIljCMIUEPvwRa4pmU0U9A=;
+        s=default; t=1566892458;
+        bh=zBFIuOVncQ0mQk1/RZt6zBngG9P9fsV2Cwm1yrUWVrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U7EIaAY2cIgTzV4/02m6rR7wFzd1Yib8Fcn63rMqnTDvczWk39PwdxJIy9H9zrAdt
-         7Qeoqq6efq7A/2rPDeZfJfbK2yCeyrAWyvThIK0pgQnY1wWz6MQVCciENPR6ddkXIZ
-         K/M3577k08nVEFG5mf+YnnPSqItsKpYsovgbvHU0=
+        b=1cuijysvWaE/eSItsiDr+HsUPYjR2F0eqUtb16+Hx5hi2FPn+lZOGL50JHXZXrW2f
+         r636FpjgLuiDRycfyA18WHmJWs9Qg1oIYDFwBv0RrJTUvEcS5qksI8BMoOwQsSXsE7
+         hhBDBZJw48TQVqG+bQYJ9QZj0AZxaotBUf7FUl0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Willem de Bruijn <willemb@google.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 07/62] can: dev: call netif_carrier_off() in register_candev()
-Date:   Tue, 27 Aug 2019 09:50:12 +0200
-Message-Id: <20190827072700.663445408@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.14 54/62] dm zoned: improve error handling in i/o map code
+Date:   Tue, 27 Aug 2019 09:50:59 +0200
+Message-Id: <20190827072703.645002259@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -62,38 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c63845609c4700488e5eacd6ab4d06d5d420e5ef ]
+From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
 
-CONFIG_CAN_LEDS is deprecated. When trying to use the generic netdev
-trigger as suggested, there's a small inconsistency with the link
-property: The LED is on initially, stays on when the device is brought
-up, and then turns off (as expected) when the device is brought down.
+commit d7428c50118e739e672656c28d2b26b09375d4e0 upstream.
 
-Make sure the LED always reflects the state of the CAN device.
+Some errors are ignored in the I/O path during queueing chunks
+for processing by chunk works. Since at least these errors are
+transient in nature, it should be possible to retry the failed
+incoming commands.
 
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The fix -
+
+Errors that can happen while queueing chunks are carried upwards
+to the main mapping function and it now returns DM_MAPIO_REQUEUE
+for any incoming requests that can not be properly queued.
+
+Error logging/debug messages are added where needed.
+
+Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/can/dev.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/md/dm-zoned-target.c |   22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
-index 7d61d8801220e..d92113db4fb97 100644
---- a/drivers/net/can/dev.c
-+++ b/drivers/net/can/dev.c
-@@ -1217,6 +1217,8 @@ int register_candev(struct net_device *dev)
- 		return -EINVAL;
+--- a/drivers/md/dm-zoned-target.c
++++ b/drivers/md/dm-zoned-target.c
+@@ -513,22 +513,24 @@ static void dmz_flush_work(struct work_s
+  * Get a chunk work and start it to process a new BIO.
+  * If the BIO chunk has no work yet, create one.
+  */
+-static void dmz_queue_chunk_work(struct dmz_target *dmz, struct bio *bio)
++static int dmz_queue_chunk_work(struct dmz_target *dmz, struct bio *bio)
+ {
+ 	unsigned int chunk = dmz_bio_chunk(dmz->dev, bio);
+ 	struct dm_chunk_work *cw;
++	int ret = 0;
  
- 	dev->rtnl_link_ops = &can_link_ops;
-+	netif_carrier_off(dev);
-+
- 	return register_netdev(dev);
+ 	mutex_lock(&dmz->chunk_lock);
+ 
+ 	/* Get the BIO chunk work. If one is not active yet, create one */
+ 	cw = radix_tree_lookup(&dmz->chunk_rxtree, chunk);
+ 	if (!cw) {
+-		int ret;
+ 
+ 		/* Create a new chunk work */
+ 		cw = kmalloc(sizeof(struct dm_chunk_work), GFP_NOIO);
+-		if (!cw)
++		if (unlikely(!cw)) {
++			ret = -ENOMEM;
+ 			goto out;
++		}
+ 
+ 		INIT_WORK(&cw->work, dmz_chunk_work);
+ 		atomic_set(&cw->refcount, 0);
+@@ -539,7 +541,6 @@ static void dmz_queue_chunk_work(struct
+ 		ret = radix_tree_insert(&dmz->chunk_rxtree, chunk, cw);
+ 		if (unlikely(ret)) {
+ 			kfree(cw);
+-			cw = NULL;
+ 			goto out;
+ 		}
+ 	}
+@@ -547,10 +548,12 @@ static void dmz_queue_chunk_work(struct
+ 	bio_list_add(&cw->bio_list, bio);
+ 	dmz_get_chunk_work(cw);
+ 
++	dmz_reclaim_bio_acc(dmz->reclaim);
+ 	if (queue_work(dmz->chunk_wq, &cw->work))
+ 		dmz_get_chunk_work(cw);
+ out:
+ 	mutex_unlock(&dmz->chunk_lock);
++	return ret;
  }
- EXPORT_SYMBOL_GPL(register_candev);
--- 
-2.20.1
-
+ 
+ /*
+@@ -564,6 +567,7 @@ static int dmz_map(struct dm_target *ti,
+ 	sector_t sector = bio->bi_iter.bi_sector;
+ 	unsigned int nr_sectors = bio_sectors(bio);
+ 	sector_t chunk_sector;
++	int ret;
+ 
+ 	dmz_dev_debug(dev, "BIO op %d sector %llu + %u => chunk %llu, block %llu, %u blocks",
+ 		      bio_op(bio), (unsigned long long)sector, nr_sectors,
+@@ -601,8 +605,14 @@ static int dmz_map(struct dm_target *ti,
+ 		dm_accept_partial_bio(bio, dev->zone_nr_sectors - chunk_sector);
+ 
+ 	/* Now ready to handle this BIO */
+-	dmz_reclaim_bio_acc(dmz->reclaim);
+-	dmz_queue_chunk_work(dmz, bio);
++	ret = dmz_queue_chunk_work(dmz, bio);
++	if (ret) {
++		dmz_dev_debug(dmz->dev,
++			      "BIO op %d, can't process chunk %llu, err %i\n",
++			      bio_op(bio), (u64)dmz_bio_chunk(dmz->dev, bio),
++			      ret);
++		return DM_MAPIO_REQUEUE;
++	}
+ 
+ 	return DM_MAPIO_SUBMITTED;
+ }
 
 
