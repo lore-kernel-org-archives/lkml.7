@@ -2,341 +2,237 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BF1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A19BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC42F206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3799A206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:49:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="b0CrUdkQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbfH0Osf (ORCPT
+        id S1729800AbfH0Ott (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:48:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:46172 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbfH0Ose (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:48:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CAF2337;
-        Tue, 27 Aug 2019 07:48:33 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6957B3F59C;
-        Tue, 27 Aug 2019 07:48:32 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 15:48:31 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     christophe leroy <christophe.leroy@c-s.fr>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Roy Zang <roy.zang@nxp.com>,
-        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
- ls1088a and ls2088a
-Message-ID: <20190827144830.GN14582@e119886-lin.cambridge.arm.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-8-xiaowei.bao@nxp.com>
- <20190823142756.GI14582@e119886-lin.cambridge.arm.com>
- <AM5PR04MB32990473D4AD65354B5B2235F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <89c90732-5e42-f87e-73b1-8d615355afc4@c-s.fr>
- <AM5PR04MB3299EBADE7BC04C3465B7DB7F5A60@AM5PR04MB3299.eurprd04.prod.outlook.com>
+        Tue, 27 Aug 2019 10:49:49 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47698 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfH0Ott (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:49:49 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B56AB54B;
+        Tue, 27 Aug 2019 16:49:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1566917385;
+        bh=rFgk1pvrfx+jQ2e3NBtVhCM4d/9bcGbvNX4VHdT/37A=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=b0CrUdkQCO3ydWxNsBAIld1kS9jj/8HHn3ZMvhsloLGvd7NF5IyZdM+7F4PkR7SAX
+         +I8p4fn1s6F5g3TrdwVcYGalaeCDqannrp7RmKkMGTnP66I8v+Mxvel67Sg3zl/cmD
+         J3qEFiRxU3DCUf1tpxl+uTs9PDTrQtKS1FgTaZMc=
+Reply-To: kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH 5/7] bcm-vk: add bcm_vk UAPI
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Ohad Ben-Cohen <ohad@wizery.com>
+References: <20190822192451.5983-1-scott.branden@broadcom.com>
+ <20190822192451.5983-6-scott.branden@broadcom.com>
+From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
+ 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
+Organization: Ideas on Board
+Message-ID: <61c3e8a2-b230-844e-466c-ba45b42542a1@ideasonboard.com>
+Date:   Tue, 27 Aug 2019 15:49:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190822192451.5983-6-scott.branden@broadcom.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM5PR04MB3299EBADE7BC04C3465B7DB7F5A60@AM5PR04MB3299.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 03:07:32AM +0000, Xiaowei Bao wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: christophe leroy <christophe.leroy@c-s.fr>
-> > Sent: 2019年8月24日 14:45
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>; Andrew Murray
-> > <andrew.murray@arm.com>
-> > Cc: mark.rutland@arm.com; Roy Zang <roy.zang@nxp.com>;
-> > lorenzo.pieralisi@arm.co; arnd@arndb.de; devicetree@vger.kernel.org;
-> > gregkh@linuxfoundation.org; linuxppc-dev@lists.ozlabs.org;
-> > linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; kishon@ti.com; M.h.
-> > Lian <minghuan.lian@nxp.com>; robh+dt@kernel.org;
-> > gustavo.pimentel@synopsys.com; jingoohan1@gmail.com;
-> > bhelgaas@google.com; Leo Li <leoyang.li@nxp.com>; shawnguo@kernel.org;
-> > Mingkai Hu <mingkai.hu@nxp.com>; linux-arm-kernel@lists.infradead.org
-> > Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
-> > ls1088a and ls2088a
-> > 
-> > 
-> > 
-> > Le 24/08/2019 à 02:18, Xiaowei Bao a écrit :
-> > >
-> > >
-> > >> -----Original Message-----
-> > >> From: Andrew Murray <andrew.murray@arm.com>
-> > >> Sent: 2019年8月23日 22:28
-> > >> To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > >> Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> > >> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
-> > >> lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org;
-> > M.h.
-> > >> Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
-> > >> Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
-> > >> gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
-> > >> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > >> linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
-> > >> Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support
-> > >> for ls1088a and ls2088a
-> > >>
-> > >> On Thu, Aug 22, 2019 at 07:22:40PM +0800, Xiaowei Bao wrote:
-> > >>> Add PCIe EP mode support for ls1088a and ls2088a, there are some
-> > >>> difference between LS1 and LS2 platform, so refactor the code of the
-> > >>> EP driver.
-> > >>>
-> > >>> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > >>> ---
-> > >>> v2:
-> > >>>   - New mechanism for layerscape EP driver.
-> > >>
-> > >> Was there a v1 of this patch?
-> > >
-> > > Yes, but I don't know how to comments, ^_^
-> > 
-> > As far as I can see, in the previous version of the series
-> > (https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatch
-> > work.ozlabs.org%2Fproject%2Flinuxppc-dev%2Flist%2F%3Fseries%3D125315
-> > %26state%3D*&amp;data=02%7C01%7Cxiaowei.bao%40nxp.com%7C1befe9
-> > a67c8046f9535e08d7285eaab6%7C686ea1d3bc2b4c6fa92cd99c5c301635%
-> > 7C0%7C0%7C637022259387139020&amp;sdata=p4wbycd04Z7qRUfAoZtwc
-> > UP7pR%2FuA3%2FjVcWMz6YyQVQ%3D&amp;reserved=0),
-> > the 8/10 was something completely different, and I can't find any other patch
-> > in the series that could have been the v1 of this patch.
-> 
-> Thanks, I will correct it to v1 in next version patch.
+Hi Scott,
 
-I think you numbered it correctly (so please leave it as v2, referring to
-the patch series revision) - I got confused trying to find a previous
-version of this patch.
-
-Perhaps in the future when new patches are introduced in a series you can
-indicate that in the description patch revision history (e.g. introduced
-in v2).
-
-Thanks,
-
-Andrew Murray 
-
+On 22/08/2019 20:24, Scott Branden wrote:
+> Add user space api for bcm-vk driver.
 > 
-> > 
-> > Christophe
-> > 
-> > >
-> > >>
-> > >>>
-> > >>>   drivers/pci/controller/dwc/pci-layerscape-ep.c | 76
-> > >>> ++++++++++++++++++++------
-> > >>>   1 file changed, 58 insertions(+), 18 deletions(-)
-> > >>>
-> > >>> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > >>> b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > >>> index 7ca5fe8..2a66f07 100644
-> > >>> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > >>> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > >>> @@ -20,27 +20,29 @@
-> > >>>
-> > >>>   #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
-> > >>>
-> > >>> -struct ls_pcie_ep {
-> > >>> -	struct dw_pcie		*pci;
-> > >>> -	struct pci_epc_features	*ls_epc;
-> > >>> +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-> > >>> +
-> > >>> +struct ls_pcie_ep_drvdata {
-> > >>> +	u32				func_offset;
-> > >>> +	const struct dw_pcie_ep_ops	*ops;
-> > >>> +	const struct dw_pcie_ops	*dw_pcie_ops;
-> > >>>   };
-> > >>>
-> > >>> -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-> > >>> +struct ls_pcie_ep {
-> > >>> +	struct dw_pcie			*pci;
-> > >>> +	struct pci_epc_features		*ls_epc;
-> > >>> +	const struct ls_pcie_ep_drvdata *drvdata; };
-> > >>>
-> > >>>   static int ls_pcie_establish_link(struct dw_pcie *pci)  {
-> > >>>   	return 0;
-> > >>>   }
-> > >>>
-> > >>> -static const struct dw_pcie_ops ls_pcie_ep_ops = {
-> > >>> +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
-> > >>>   	.start_link = ls_pcie_establish_link,  };
-> > >>>
-> > >>> -static const struct of_device_id ls_pcie_ep_of_match[] = {
-> > >>> -	{ .compatible = "fsl,ls-pcie-ep",},
-> > >>> -	{ },
-> > >>> -};
-> > >>> -
-> > >>>   static const struct pci_epc_features*
-> > >>> ls_pcie_ep_get_features(struct dw_pcie_ep *ep)  { @@ -82,10 +84,44
-> > >>> @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> > >>>   	}
-> > >>>   }
-> > >>>
-> > >>> -static const struct dw_pcie_ep_ops pcie_ep_ops = {
-> > >>> +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
-> > >>> +						u8 func_no)
-> > >>> +{
-> > >>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > >>> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
-> > >>> +	u8 header_type;
-> > >>> +
-> > >>> +	header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
-> > >>> +
-> > >>> +	if (header_type & (1 << 7))
-> > >>> +		return pcie->drvdata->func_offset * func_no;
-> > >>> +	else
-> > >>> +		return 0;
-> > >>
-> > >> It looks like there isn't a PCI define for multi function, the
-> > >> nearest I could find was PCI_HEADER_TYPE_MULTIDEVICE in
-> > >> hotplug/ibmphp.h. A comment above the test might be helpful to explain
-> > the test.
-> > >
-> > > Yes, I have not find the PCI_HEADER_TYPE_MULTIDEVICE define. OK, I
-> > > will add The comments in next version patch.
-> > >
-> > >>
-> > >> As the ls_pcie_ep_drvdata structures are static, the unset
-> > >> .func_offset will be initialised to 0, so you could just drop the test above.
-> > >
-> > > OK, thanks
-> > >
-> > >>
-> > >> However something to the effect of the following may help spot
-> > >> misconfiguration:
-> > >>
-> > >> WARN_ON(func_no && !pcie->drvdata->func_offset); return
-> > >> pcie->drvdata->func_offset * func_no;
-> > >
-> > > Thanks a lot, this looks better.
-> > >
-> > >>
-> > >> The WARN is probably quite useful as if you are attempting to use
-> > >> non-zero functions and func_offset isn't set - then things may appear
-> > >> to work normally but actually will break horribly.
-> > >
-> > > got it, thanks.
-> > >
-> > >>
-> > >> Thanks,
-> > >>
-> > >> Andrew Murray
-> > >>
-> > >>> +}
-> > >>> +
-> > >>> +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
-> > >>>   	.ep_init = ls_pcie_ep_init,
-> > >>>   	.raise_irq = ls_pcie_ep_raise_irq,
-> > >>>   	.get_features = ls_pcie_ep_get_features,
-> > >>> +	.func_conf_select = ls_pcie_ep_func_conf_select, };
-> > >>> +
-> > >>> +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
-> > >>> +	.ops = &ls_pcie_ep_ops,
-> > >>> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
-> > >>> +
-> > >>> +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
-> > >>> +	.func_offset = 0x20000,
-> > >>> +	.ops = &ls_pcie_ep_ops,
-> > >>> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
-> > >>> +
-> > >>> +static const struct of_device_id ls_pcie_ep_of_match[] = {
-> > >>> +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
-> > >>> +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
-> > >>> +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
-> > >>> +	{ },
-> > >>>   };
-> > >>>
-> > >>>   static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie, @@ -98,7
-> > >>> +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
-> > >>>   	int ret;
-> > >>>
-> > >>>   	ep = &pci->ep;
-> > >>> -	ep->ops = &pcie_ep_ops;
-> > >>> +	ep->ops = pcie->drvdata->ops;
-> > >>>
-> > >>>   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > >> "addr_space");
-> > >>>   	if (!res)
-> > >>> @@ -137,14 +173,11 @@ static int __init ls_pcie_ep_probe(struct
-> > >> platform_device *pdev)
-> > >>>   	if (!ls_epc)
-> > >>>   		return -ENOMEM;
-> > >>>
-> > >>> -	dbi_base = platform_get_resource_byname(pdev,
-> > IORESOURCE_MEM,
-> > >> "regs");
-> > >>> -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
-> > >>> -	if (IS_ERR(pci->dbi_base))
-> > >>> -		return PTR_ERR(pci->dbi_base);
-> > >>> +	pcie->drvdata = of_device_get_match_data(dev);
-> > >>>
-> > >>> -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
-> > >>>   	pci->dev = dev;
-> > >>> -	pci->ops = &ls_pcie_ep_ops;
-> > >>> +	pci->ops = pcie->drvdata->dw_pcie_ops;
-> > >>> +
-> > >>>   	pcie->pci = pci;
-> > >>>
-> > >>>   	ls_epc->linkup_notifier = false,
-> > >>> @@ -152,6 +185,13 @@ static int __init ls_pcie_ep_probe(struct
-> > >>> platform_device *pdev)
-> > >>>
-> > >>>   	pcie->ls_epc = ls_epc;
-> > >>>
-> > >>> +	dbi_base = platform_get_resource_byname(pdev,
-> > IORESOURCE_MEM,
-> > >> "regs");
-> > >>> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
-> > >>> +	if (IS_ERR(pci->dbi_base))
-> > >>> +		return PTR_ERR(pci->dbi_base);
-> > >>> +
-> > >>> +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
-> > >>> +
-> > >>>   	platform_set_drvdata(pdev, pcie);
-> > >>>
-> > >>>   	ret = ls_add_pcie_ep(pcie, pdev);
-> > >>> --
-> > >>> 2.9.5
-> > >>>
-> > 
-> > ---
-> > L'absence de virus dans ce courrier électronique a été vérifiée par le logiciel
-> > antivirus Avast.
-> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.
-> > avast.com%2Fantivirus&amp;data=02%7C01%7Cxiaowei.bao%40nxp.com%7
-> > C1befe9a67c8046f9535e08d7285eaab6%7C686ea1d3bc2b4c6fa92cd99c5c3
-> > 01635%7C0%7C0%7C637022259387139020&amp;sdata=JAYds7X%2FHVxgtrg
-> > e%2F%2FvnP84zdb2yReXcctQUiSLC11I%3D&amp;reserved=0
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> ---
+>  include/uapi/linux/misc/bcm_vk.h | 88 ++++++++++++++++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>  create mode 100644 include/uapi/linux/misc/bcm_vk.h
 > 
+> diff --git a/include/uapi/linux/misc/bcm_vk.h b/include/uapi/linux/misc/bcm_vk.h
+> new file mode 100644
+> index 000000000000..df7dfd7f0702
+> --- /dev/null
+> +++ b/include/uapi/linux/misc/bcm_vk.h
+> @@ -0,0 +1,88 @@
+> +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause) */
+> +/*
+> + * Copyright(c) 2018 Broadcom
+> + */
+> +
+> +#ifndef __UAPI_LINUX_MISC_BCM_VK_H
+> +#define __UAPI_LINUX_MISC_BCM_VK_H
+> +
+> +#include <linux/ioctl.h>
+> +#include <linux/types.h>
+> +
+> +struct vk_metadata {
+> +	/* struct version, always backwards compatible */
+> +	__u32 version;
+> +
+> +	/* Version 0 fields */
+> +	__u32 card_status;
+> +#define VK_CARD_STATUS_FASTBOOT_READY BIT(0)
+> +#define VK_CARD_STATUS_FWLOADER_READY BIT(1)
+> +
+> +	__u32 firmware_version;
+> +	__u32 fw_status;
+> +	/* End version 0 fields */
+> +
+> +	__u64 reserved[14];
+> +	/* Total of 16*u64 for all versions */
+> +};
+> +
+> +struct vk_image {
+> +	__u32 type;     /* Type of image */
+> +#define VK_IMAGE_TYPE_BOOT1 1 /* 1st stage (load to SRAM) */
+> +#define VK_IMAGE_TYPE_BOOT2 2 /* 2nd stage (load to DDR) */
+> +	char filename[64]; /* Filename of image */
+> +};
+> +
+> +/* default firmware images names */
+> +#define VK_BOOT1_DEF_FILENAME	    "vk-boot1.bin"
+> +#define VK_BOOT2_DEF_FILENAME	    "vk-boot2.bin"
+> +
+> +struct vk_access {
+> +	__u8 barno;     /* BAR number to use */
+> +	__u8 type;      /* Type of access */
+> +#define VK_ACCESS_READ 0
+> +#define VK_ACCESS_WRITE 1
+> +	__u32 len;      /* length of data */
+> +	__u64 offset;   /* offset in BAR */
+> +	__u32 *data;    /* where to read/write data to */
+> +};
+> +
+> +struct vk_reset {
+> +	__u32 arg1;
+> +	__u32 arg2;
+> +};
+> +
+> +#define VK_MAGIC              0x5E
+> +
+> +/* Get metadata from Valkyrie (firmware version, card status, etc) */
+> +#define VK_IOCTL_GET_METADATA _IOR(VK_MAGIC, 0x1, struct vk_metadata)
+> +
+> +/* Load image to Valkyrie */
+> +#define VK_IOCTL_LOAD_IMAGE   _IOW(VK_MAGIC, 0x2, struct vk_image)
+> +
+> +/* Read data from Valkyrie */
+> +#define VK_IOCTL_ACCESS_BAR   _IOWR(VK_MAGIC, 0x3, struct vk_access)
+> +
+> +/* Send Reset to Valkyrie */
+> +#define VK_IOCTL_RESET        _IOW(VK_MAGIC, 0x4, struct vk_reset)
+
+It sounds a bit like the valkyrie is a generic asynchronous coprocessor,
+does it merit using the remoteproc interfaces to control it ?
+
+Or is it really just a single purpose cell doing video operations ?
+
+--
+Kieran
+
+> +
+> +/*
+> + * message block - basic unit in the message where a message's size is always
+> + *		   N x sizeof(basic_block)
+> + */
+> +struct vk_msg_blk {
+> +	__u8 function_id;
+> +#define VK_FID_TRANS_BUF 5
+> +#define VK_FID_SHUTDOWN  8
+> +	__u8 size;
+> +	__u16 queue_id:4;
+> +	__u16 msg_id:12;
+> +	__u32 context_id;
+> +	__u32 args[2];
+> +#define VK_CMD_PLANES_MASK 0x000F /* number of planes to up/download */
+> +#define VK_CMD_UPLOAD      0x0400 /* memory transfer to vk */
+> +#define VK_CMD_DOWNLOAD    0x0500 /* memory transfer from vk */
+> +#define VK_CMD_MASK        0x0F00 /* command mask */
+> +};
+> +
+> +#endif /* __UAPI_LINUX_MISC_BCM_VK_H */
+> 
+
+-- 
+Regards
+--
+Kieran
