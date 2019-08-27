@@ -2,234 +2,114 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA933C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47586C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7917B2184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:13:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893585;
-	bh=SVdxk6ilj4BwyVaOwvyBgAEyCIvz4LQuT1n5DJ4QGrU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VZD9Y+PJJNupz6rJPtZbduNhr1VjaD6KqRCnWrwaO3Pz5HZO421dsnv6TkqfmGdLF
-	 /qpjFJHKzIptH772/sYUHFryUVzd+3NL7A+orW+T17OJREz+x5XARF5h6PM6WJOUnM
-	 lvDsvAoHk9OPDZ0WFKfZ3EahDRbVmS5cpHBbgMwk=
+	by mail.kernel.org (Postfix) with ESMTP id 12A9D206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:13:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="N58Mo1kB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731988AbfH0INE (ORCPT
+        id S1732049AbfH0INL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:13:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51482 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:13:11 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:32664 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730362AbfH0H6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:58:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55D13206BF;
-        Tue, 27 Aug 2019 07:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892714;
-        bh=SVdxk6ilj4BwyVaOwvyBgAEyCIvz4LQuT1n5DJ4QGrU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AXvqO0iPbMrA4R/NX6wydfHWhod6EyHmMIoMTSTZ2MylB064yyTD9gILIyiubLnjv
-         J5xZ8fiYUCOIb3g+K1KyisVvUyqcgttBB7bV5CV9Z8SB0K4aTmYamslL1XBSM7y/IK
-         NCdH6S/Lq0vmKYLBnG6Emn9p4BrY7v4fqGFisVCU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Henry Burns <henryburns@google.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Henry Burns <henrywolfeburns@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 87/98] mm/zsmalloc.c: fix race condition in zs_destroy_pool
-Date:   Tue, 27 Aug 2019 09:51:06 +0200
-Message-Id: <20190827072722.566030105@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
-References: <20190827072718.142728620@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1729563AbfH0INK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:13:10 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46HhSz6dDWzB09Zp;
+        Tue, 27 Aug 2019 10:13:07 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=N58Mo1kB; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id ibmxAVV2Dw-J; Tue, 27 Aug 2019 10:13:07 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46HhSz5PB6zB09Zn;
+        Tue, 27 Aug 2019 10:13:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566893587; bh=ubHkbneok8K2cTYT/jQrBsXkaZGXihrm+aatYILFw2I=;
+        h=From:Subject:To:Cc:Date:From;
+        b=N58Mo1kBbG+y/ju35+KRtvnTi3QC2IqmKwRtxxKrVECVOpB7TQ9U/D/hiJhSGsQs/
+         vvGrlsSy2dZLG+f06Z+pb9vC9OWOvgluUXq6cvTglnruNzXRRPlAlHUyWry1pdSdBN
+         BkLhBUWJ8cfScwRiVDa3GePPFTdEAV9PB6lMvHTQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C737E8B7F6;
+        Tue, 27 Aug 2019 10:13:08 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id QfE1rjn32BdN; Tue, 27 Aug 2019 10:13:08 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 93D128B74C;
+        Tue, 27 Aug 2019 10:13:08 +0200 (CEST)
+Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id DC623696D8; Tue, 27 Aug 2019 08:13:07 +0000 (UTC)
+Message-Id: <0f7e164afb5d1b022441559fe5a999bb6d3c0a23.1566893505.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 1/2] powerpc: permanently include 8xx registers in reg.h
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 27 Aug 2019 08:13:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Henry Burns <henryburns@google.com>
+Most 8xx registers have specific names, so just include
+reg_8xx.h all the time in reg.h in order to have them defined
+even when CONFIG_PPC_8xx is not selected. This will avoid
+the need for #ifdefs in C code.
 
-commit 701d678599d0c1623aaf4139c03eea260a75b027 upstream.
+Guard SPRN_ICTRL in an #ifdef CONFIG_PPC_8xx as this register
+has same name but different meaning and different spr number as
+another register in the mpc7450.
 
-In zs_destroy_pool() we call flush_work(&pool->free_work).  However, we
-have no guarantee that migration isn't happening in the background at
-that time.
-
-Since migration can't directly free pages, it relies on free_work being
-scheduled to free the pages.  But there's nothing preventing an
-in-progress migrate from queuing the work *after*
-zs_unregister_migration() has called flush_work().  Which would mean
-pages still pointing at the inode when we free it.
-
-Since we know at destroy time all objects should be free, no new
-migrations can come in (since zs_page_isolate() fails for fully-free
-zspages).  This means it is sufficient to track a "# isolated zspages"
-count by class, and have the destroy logic ensure all such pages have
-drained before proceeding.  Keeping that state under the class spinlock
-keeps the logic straightforward.
-
-In this case a memory leak could lead to an eventual crash if compaction
-hits the leaked page.  This crash would only occur if people are
-changing their zswap backend at runtime (which eventually starts
-destruction).
-
-Link: http://lkml.kernel.org/r/20190809181751.219326-2-henryburns@google.com
-Fixes: 48b4800a1c6a ("zsmalloc: page migration support")
-Signed-off-by: Henry Burns <henryburns@google.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Henry Burns <henrywolfeburns@gmail.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Jonathan Adams <jwadams@google.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- mm/zsmalloc.c |   61 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 59 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/reg.h     | 2 --
+ arch/powerpc/include/asm/reg_8xx.h | 2 ++
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -53,6 +53,7 @@
- #include <linux/zpool.h>
- #include <linux/mount.h>
- #include <linux/migrate.h>
-+#include <linux/wait.h>
- #include <linux/pagemap.h>
- #include <linux/fs.h>
- 
-@@ -267,6 +268,10 @@ struct zs_pool {
- #ifdef CONFIG_COMPACTION
- 	struct inode *inode;
- 	struct work_struct free_work;
-+	/* A wait queue for when migration races with async_free_zspage() */
-+	struct wait_queue_head migration_wait;
-+	atomic_long_t isolated_pages;
-+	bool destroying;
+diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
+index 10caa145f98b..b17ee25df226 100644
+--- a/arch/powerpc/include/asm/reg.h
++++ b/arch/powerpc/include/asm/reg.h
+@@ -25,9 +25,7 @@
+ #include <asm/reg_fsl_emb.h>
  #endif
- };
  
-@@ -1894,6 +1899,19 @@ static void putback_zspage_deferred(stru
+-#ifdef CONFIG_PPC_8xx
+ #include <asm/reg_8xx.h>
+-#endif /* CONFIG_PPC_8xx */
  
- }
+ #define MSR_SF_LG	63              /* Enable 64 bit mode */
+ #define MSR_ISF_LG	61              /* Interrupt 64b mode valid on 630 */
+diff --git a/arch/powerpc/include/asm/reg_8xx.h b/arch/powerpc/include/asm/reg_8xx.h
+index 7192eece6c3e..abc663c0f1db 100644
+--- a/arch/powerpc/include/asm/reg_8xx.h
++++ b/arch/powerpc/include/asm/reg_8xx.h
+@@ -38,7 +38,9 @@
+ #define SPRN_CMPF	153
+ #define SPRN_LCTRL1	156
+ #define SPRN_LCTRL2	157
++#ifdef CONFIG_PPC_8xx
+ #define SPRN_ICTRL	158
++#endif
+ #define SPRN_BAR	159
  
-+static inline void zs_pool_dec_isolated(struct zs_pool *pool)
-+{
-+	VM_BUG_ON(atomic_long_read(&pool->isolated_pages) <= 0);
-+	atomic_long_dec(&pool->isolated_pages);
-+	/*
-+	 * There's no possibility of racing, since wait_for_isolated_drain()
-+	 * checks the isolated count under &class->lock after enqueuing
-+	 * on migration_wait.
-+	 */
-+	if (atomic_long_read(&pool->isolated_pages) == 0 && pool->destroying)
-+		wake_up_all(&pool->migration_wait);
-+}
-+
- static void replace_sub_page(struct size_class *class, struct zspage *zspage,
- 				struct page *newpage, struct page *oldpage)
- {
-@@ -1963,6 +1981,7 @@ static bool zs_page_isolate(struct page
- 	 */
- 	if (!list_empty(&zspage->list) && !is_zspage_isolated(zspage)) {
- 		get_zspage_mapping(zspage, &class_idx, &fullness);
-+		atomic_long_inc(&pool->isolated_pages);
- 		remove_zspage(class, zspage, fullness);
- 	}
- 
-@@ -2062,8 +2081,16 @@ static int zs_page_migrate(struct addres
- 	 * Page migration is done so let's putback isolated zspage to
- 	 * the list if @page is final isolated subpage in the zspage.
- 	 */
--	if (!is_zspage_isolated(zspage))
-+	if (!is_zspage_isolated(zspage)) {
-+		/*
-+		 * We cannot race with zs_destroy_pool() here because we wait
-+		 * for isolation to hit zero before we start destroying.
-+		 * Also, we ensure that everyone can see pool->destroying before
-+		 * we start waiting.
-+		 */
- 		putback_zspage_deferred(pool, class, zspage);
-+		zs_pool_dec_isolated(pool);
-+	}
- 
- 	reset_page(page);
- 	put_page(page);
-@@ -2114,8 +2141,8 @@ static void zs_page_putback(struct page
- 		 * so let's defer.
- 		 */
- 		putback_zspage_deferred(pool, class, zspage);
-+		zs_pool_dec_isolated(pool);
- 	}
--
- 	spin_unlock(&class->lock);
- }
- 
-@@ -2138,8 +2165,36 @@ static int zs_register_migration(struct
- 	return 0;
- }
- 
-+static bool pool_isolated_are_drained(struct zs_pool *pool)
-+{
-+	return atomic_long_read(&pool->isolated_pages) == 0;
-+}
-+
-+/* Function for resolving migration */
-+static void wait_for_isolated_drain(struct zs_pool *pool)
-+{
-+
-+	/*
-+	 * We're in the process of destroying the pool, so there are no
-+	 * active allocations. zs_page_isolate() fails for completely free
-+	 * zspages, so we need only wait for the zs_pool's isolated
-+	 * count to hit zero.
-+	 */
-+	wait_event(pool->migration_wait,
-+		   pool_isolated_are_drained(pool));
-+}
-+
- static void zs_unregister_migration(struct zs_pool *pool)
- {
-+	pool->destroying = true;
-+	/*
-+	 * We need a memory barrier here to ensure global visibility of
-+	 * pool->destroying. Thus pool->isolated pages will either be 0 in which
-+	 * case we don't care, or it will be > 0 and pool->destroying will
-+	 * ensure that we wake up once isolation hits 0.
-+	 */
-+	smp_mb();
-+	wait_for_isolated_drain(pool); /* This can block */
- 	flush_work(&pool->free_work);
- 	iput(pool->inode);
- }
-@@ -2377,6 +2432,8 @@ struct zs_pool *zs_create_pool(const cha
- 	if (!pool->name)
- 		goto err;
- 
-+	init_waitqueue_head(&pool->migration_wait);
-+
- 	if (create_cache(pool))
- 		goto err;
- 
-
+ /* Commands.  Only the first few are available to the instruction cache.
+-- 
+2.13.3
 
