@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E01BCC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C856C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B517C206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6936E206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892949;
-	bh=pyrg+z/7eKmpFw42kpMU9376OOflt9hc68pQE0WBeIs=;
+	s=default; t=1566892958;
+	bh=dHl6+KoD8OPrNumf8l17wWgVRJhE0CepafrgyhtPWGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gRSpdw8Vpk184+XSjWpx3SzeD6z7wt/ZjU7x5YSMwZ+m9pZRh72BtlV7ozRbr6kE0
-	 GIgUTnm3stXaBsnfLUN8K/gLs8zHDbyEtquaWU87Qdd7Ijy+db4hn2lgPvmJlmKWdf
-	 jLr9ugGR2eRShZYN79mZnvuOn9e+GnXw0pBI/8oo=
+	b=tNOt2XzekDnXZ0Z2ettAAJBSZEbA06PMzKNToSf/spU8K/ml8PNKzDVFO5ME0EKEB
+	 CcVwOZki6pi5n1SGILp8E7SkDi6LfpWP0LzgJG8mw8hx9pPxZCFBHZVL16G3+SwGtV
+	 wYgry0C4Q1frtA0AHbOE7t5Sq592Kyve/VwDV3o4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbfH0IC2 (ORCPT
+        id S1731560AbfH0ICh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:02:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:02:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729940AbfH0ICK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:02:10 -0400
+        id S1731940AbfH0ICV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:02:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AF2020828;
-        Tue, 27 Aug 2019 08:02:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02EB3206BF;
+        Tue, 27 Aug 2019 08:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892929;
-        bh=pyrg+z/7eKmpFw42kpMU9376OOflt9hc68pQE0WBeIs=;
+        s=default; t=1566892940;
+        bh=dHl6+KoD8OPrNumf8l17wWgVRJhE0CepafrgyhtPWGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZHVMloqXoPzx4dgz68BMFfa9oNK8S3A0oI9BEls452rtrd6SeFfST5TCjD50J4FB/
-         tSr+WuZmHekJrDpt3rAuKF61bGNPCKds9wplDMZIBAkalc6CQSIzVU2ozD8GIZN4e0
-         ewTLkPkwfTFHbkIYJeGVB+nP7ZhkPXgbJy8ISNv8=
+        b=kRRkp6BYJjex/ujV/cGfmPEbkEw4kDOIjhu4dbq4dq2zWK6OURWH1jJ6O+/45Bznf
+         BOCPGYVi4mtawjwdg7hMecbc1izcqYTy3NCjKpJ369EkEkSv7KurFtxRYbclMeH0KZ
+         2aVP813qP8z+63Y1w/WKdz+evEcg2q2OKOU2PB1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        stable@vger.kernel.org,
+        Vijendar Mukunda <vijendar.mukunda@amd.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 020/162] spi: pxa2xx: Balance runtime PM enable/disable on error
-Date:   Tue, 27 Aug 2019 09:49:08 +0200
-Message-Id: <20190827072739.027638612@linuxfoundation.org>
+Subject: [PATCH 5.2 068/162] ASoC: amd: acp3x: use dma_ops of parent device for acp3x dma driver
+Date:   Tue, 27 Aug 2019 09:49:56 +0200
+Message-Id: <20190827072740.514603453@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,47 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1274204542f683e1d8491ebe9cc86284d5a8ebcc ]
+[ Upstream commit 88639051017fb61a414b636dd0fc490da2b62b64 ]
 
-Don't undo the PM initialization if we error out before we managed to
-initialize it. The call to pm_runtime_disable() without being preceded
-by pm_runtime_enable() would disturb the balance of the Force.
+AMD platform device acp3x_rv_i2s created by parent PCI device
+driver. Pass struct device of the parent to
+snd_pcm_lib_preallocate_pages() so dma_alloc_coherent() can use
+correct dma_ops. Otherwise, it will use default dma_ops which
+is nommu_dma_ops on x86_64 even when IOMMU is enabled and
+set to non passthrough mode.
 
-In practice, this happens if we fail to allocate any of the GPIOS ("cs",
-"ready") due to -EPROBE_DEFER because we're getting probled before the
-GPIO driver.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Link: https://lore.kernel.org/r/20190719122713.3444318-1-lkundrak@v3.sk
+Signed-off-by: Vijendar Mukunda <vijendar.mukunda@amd.com>
+Link: https://lore.kernel.org/r/1564753899-17124-1-git-send-email-Vijendar.Mukunda@amd.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 6 ++++--
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index af3f37ba82c83..c1af8887d9186 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1817,14 +1817,16 @@ static int pxa2xx_spi_probe(struct platform_device *pdev)
- 	status = devm_spi_register_controller(&pdev->dev, controller);
- 	if (status != 0) {
- 		dev_err(&pdev->dev, "problem registering spi controller\n");
--		goto out_error_clock_enabled;
-+		goto out_error_pm_runtime_enabled;
- 	}
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index 9775bda2a4ca3..d8aa6ab3f68bc 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -367,9 +367,11 @@ static snd_pcm_uframes_t acp3x_dma_pointer(struct snd_pcm_substream *substream)
  
- 	return status;
+ static int acp3x_dma_new(struct snd_soc_pcm_runtime *rtd)
+ {
++	struct snd_soc_component *component = snd_soc_rtdcom_lookup(rtd,
++								    DRV_NAME);
++	struct device *parent = component->dev->parent;
+ 	snd_pcm_lib_preallocate_pages_for_all(rtd->pcm, SNDRV_DMA_TYPE_DEV,
+-					      rtd->pcm->card->dev,
+-					      MIN_BUFFER, MAX_BUFFER);
++					      parent, MIN_BUFFER, MAX_BUFFER);
+ 	return 0;
+ }
  
--out_error_clock_enabled:
-+out_error_pm_runtime_enabled:
- 	pm_runtime_put_noidle(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-+
-+out_error_clock_enabled:
- 	clk_disable_unprepare(ssp->clk);
- 
- out_error_dma_irq_alloc:
 -- 
 2.20.1
 
