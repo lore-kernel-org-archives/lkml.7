@@ -2,145 +2,138 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136FBC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABF6C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D475620828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA0122CBB
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:41:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Z5MuYxsb"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="m9V++w57"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbfH0MlY (ORCPT
+        id S1729698AbfH0Mlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:41:24 -0400
-Received: from mout.web.de ([212.227.17.12]:35699 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbfH0MlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:41:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1566909655;
-        bh=sljqHy1iT8wDeq/FieHO424nJ0qcdwXpNPoCFzDQxZA=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=Z5MuYxsb/t3lxh70q84ilGUZ5PnsgRo8ZKUANZEW8Uib8YeICzNxnr+eV7ZevxKy+
-         cw7cCZXwSOASkgG9/M/F4NnLEkAuC/P+cNYJbSt4MCMSVHw2lNJ/wlTeLnK/nYZu7S
-         zNrMdfQNsm6hckRI8A9LfLz28bBLyXkMhrGliwqc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.143.232]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lx7Ab-1iHukI2Aaf-016cmA; Tue, 27
- Aug 2019 14:40:55 +0200
-To:     linuxppc-dev@lists.ozlabs.org,
-        Allison Randal <allison@lohutok.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Frank Rowand <frank.rowand@sony.com>,
-        Gen Zhang <blackgod016574@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH 0/2] PowerPC-pSeries: Adjustments for dlpar_store()
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Message-ID: <db28c84d-ac07-6d9a-a371-c97ab72bf763@web.de>
-Date:   Tue, 27 Aug 2019 14:40:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Tue, 27 Aug 2019 08:41:45 -0400
+Received: from mail-eopbgr30044.outbound.protection.outlook.com ([40.107.3.44]:50176
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726170AbfH0Mlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 08:41:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XDFsjIBrUNHlzf6NuuZRTQB1bj/CT87OlS5IgIizDxHEm5/1T/x9NkaYiH92tqAuqGuuoUisB7HzJ7iLsI6POYqQuFi6+JsjRkvilVewZg555wVfyCnXyKbqHXV+IhbAiGMxoRmkwY+OS///3CzjktHrpMAGstqXgeLEjRSZ7pu01aSpw7mjB1w5ceG6d52xh3gReeptBPMbkn2nGEcQBs9OXSJRnQa4cAIDODnxu+tlxKbGoJ94sddXTAV4y8UF/OC3zqVlZeUluFLCp7sBpTYUzNF3bogt/fuRy10LlPGvxNlHDDYN96euydr54JUoE5hOgNOl5/H2n3XJMrpltA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gSz/Tpwfw18gjEkSOqjIvQfoRgdVctIbj69AOyc46NA=;
+ b=h16IXhThw6EwW7iXvmgkpm/gRH+n3FDed4yA8Yg7SrTlY5xwssRUaK9WHQ/zSWDMpOEPfdlt3O0+J51IZedgmR8itnMk/drR6i2GM49y8i8v1RykNZCZ+PEUsDVtNj+DHaAGSqbDEF13fc+l+MvjkaWECc5bQp9ho0UXZJ9b4xGTZt/1/UKyW51063tjaAMxLw3tWeMIi2qoMgBJT1obCz4ZwSjMa70MqFrcW8AbDo4Z7hRkYJ6B819Pvm6HYTlcC8D6moIG5as7F+fByfGAWgUQh5vr+ZlKHJp1JekPecK0CWxNSM/B8bJ8Sne+w3+KuCnkdHahlDgJOJimXv5dlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gSz/Tpwfw18gjEkSOqjIvQfoRgdVctIbj69AOyc46NA=;
+ b=m9V++w57bO3GEarilJHkfMTFceocrxEBDAuKp3sRmi65BngrP7+TBKJgWU7HDxsNeHQgGryiIVQVj7Mr0iC7m3l691WtLSkTMQzHz0+znR4enot9xOY41P0p/MaKv29eM8AVyTbHf5a+JxbHG8ugytvW9g9IVRm0wUaFOORCEO4=
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
+ VI1PR04MB5503.eurprd04.prod.outlook.com (20.178.122.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.19; Tue, 27 Aug 2019 12:41:38 +0000
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::c5e8:90f8:da97:947e]) by VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::c5e8:90f8:da97:947e%3]) with mapi id 15.20.2199.021; Tue, 27 Aug 2019
+ 12:41:38 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+CC:     Eduardo Valentin <edubezval@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Thread-Topic: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Thread-Index: AQHVRn7UNdyaJx5tOE6OrvzyFWKCoA==
+Date:   Tue, 27 Aug 2019 12:41:37 +0000
+Message-ID: <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <20190730022126.17883-1-Anson.Huang@nxp.com>
+ <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9903ad54-50d9-4a3b-6ea9-08d72aebe736
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5503;
+x-ms-traffictypediagnostic: VI1PR04MB5503:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB55035EFF4FC38C77CEA54C17EEA00@VI1PR04MB5503.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0142F22657
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(39860400002)(376002)(366004)(199004)(189003)(26005)(71200400001)(54906003)(71190400001)(8936002)(55016002)(66946007)(66446008)(64756008)(66556008)(66476007)(110136005)(9686003)(52536014)(76116006)(91956017)(66066001)(53936002)(305945005)(316002)(7696005)(8676002)(81156014)(81166006)(33656002)(446003)(44832011)(25786009)(256004)(76176011)(486006)(102836004)(14454004)(229853002)(86362001)(7736002)(74316002)(6436002)(5660300002)(4326008)(6246003)(3846002)(7416002)(6116002)(478600001)(476003)(186003)(2906002)(6506007)(53546011)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5503;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: j8BVFtuAJrZGlfWHLrhEsH+uRYEHE+nPNAVwOMa9n5jg4mOE+rIuMdNVf6RY0XPLLkX/KfaCIXxXAqT+FgXXSXTWvmtkMxpltq4L1XQp0bq//5iPNrc+oyDnTL9cCH61urOlWmIp8fZm0eruaqSSooTY64WGgtxxTmZktZ4KfWf9IseJG1lZGo487yuPhhhcuBMn/zr3lzzdf0DiDOuTZSj+pPVgl/mtIYELlPgZljMA733FZHz4t2G6zYbaPQ7VO4LYxEQqnqG8grHXvOtc71ZxhTOKWIKq3gSSg7Q2eVlojhVdEpHPFI4NHj6kSbUai2e2vQuyYCQL+L4RwAdqhjZXaniRB6lcD4/5RkSyeWJVzmikHsK2OmCOCHod0V1jz/y3+xT3PKl3dtoy4cQXWzQqzTkOMVRlMPpGGA4VMqo=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:oTsH/DEt6X/0F9zv7bGbHxNwZ0bjYrijS2DP38xVB6eZlvFss2k
- qX70p2NNWaP9q3ck8qr2w9yJaeW7dL8fMBDt3jp+GRdm7ztkMDjFNMC7TVdRXPcQEw6QVLK
- YhIMyqdJ7L2CqUR/R7de8k5ng1GMcJ18zG0VgJKDbNwZVsz1D4jGSOF2eZIhc3Vsmli2Bj3
- al9ZtAfaco+RqR+2Q/XOA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Jduo0XaI+b0=:q36t37oyGOoiLEMbH5EGN6
- +tjm+3oFeyZUjaqIKrqSXefSB0iN442nJr76wr2K2FqJ75ARR1/ntKS/9233P+U0fvavtsSug
- lv7Qaf+9kC4E4hG8kduaq7k5okwai0Od704/3Qqf6lblIYCeYYRoUn07bvN0PguwoLhgzwKEJ
- w1lKShUZBl/rI9fs7JndkGras+9Zpraz7KznzWF+zz7SJkXqrSvuXeFwarOp2Bcqv3ZlhY4gh
- K5S180RGdIcOlt/2ufcfMYRLebOsaAhIloeGuuwprj8JYDhYAAaIx9beRp9U5eRSe1UylTDYw
- qr/cxxuDssNH0HEBF0SMDsflQzUTIKTDmk6eoM9HZElmST4SWxTt2fbIERDYkLndXINT/dTr/
- i7Bcqderc1113SADIN22PSxZnSG+c0thKp3jtGNQ4HtB8U9Tvm2SCC91DtNpwVo99hiuJ7cpt
- 4j0kaXRc+KblY/k+B5lMhqr9Jj62Jm0ae63O+TavIyB22AolIAg8f/1GqRFXdd8+EJO/jg9E1
- AsDhqDiWc7JR8w/JBVzTJ6ASRZSNdVycOwqVuIrrpI5RGBO7BFS9y1XSywiAs9ds1vZG8AFhI
- ielmH5OwsomTZSX0TGXsz36EHLSpqFHS7Fo9ZPmxJhdOBrqfyMnWP/UwXeoteG0J33af6hLQr
- EkChbYc0rRP3zkj9zQE6CHATxvUVhRMI0xj/EeRJAYQ7DSlGeISFRZj7Imab34gdSCFpDphbL
- cXS9G0hPaub7UdJHKHg3KNDvX7RGpPLZzzL71Ns0OhU4eAoqE46wFD3etpeg1LoRlHrzC+iss
- zHKkdCo1nlV7bkiCmTUHK27BAqX+8jrCZun92IKEJTtikF1OGCNuj2uvkgdQl02TeGhmEJ7wq
- bd2TWO7iEUTcQxQeRTxRr4UydAyj7TR2sq0l1QCmc60rEOgmt9aMusEoE0xtQvXePgnPlyzHq
- tglzLpvx5KKuQG7m7ijWFn37pCKq4C+qqJGCnDzNaANXo1ABtO9W6673lLWq9G1cT25/fJTZq
- f3q4pKvD4bwosNQXsiWKksnSu86i3N6QhPm0Gt9Z2jYL2hF/xL8gJxTQ9WiTbgE5JEEa1asIe
- xG5QZxDX8bNfuL/NQ3GIxPiExA8vIYcDCx2tuPbgt5cUHb3v2qU3KOTCdckZuApbeHqqNaysZ
- Y4HhU=
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9903ad54-50d9-4a3b-6ea9-08d72aebe736
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 12:41:37.9909
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TjXHPjEjTfuSdxeRcKMcNM6fx3tU0mJtuTvvi3HqmhGxYo9liVI6I/smMDzedMSQgVO4mAEa9v68CWe+wh7mCQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5503
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 27 Aug 2019 14:33:21 +0200
-
-Two update suggestions were taken into account
-from static source code analysis.
-
-Markus Elfring (2):
-  Delete an unnecessary kfree() call
-  Delete an error message for a failed string duplication
-
- arch/powerpc/platforms/pseries/dlpar.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-=2D-
-2.23.0
-
+On 27.08.2019 04:51, Anson Huang wrote:=0A=
+>> In an earlier series the CLK_IS_CRITICAL flags was removed from the TMU=
+=0A=
+>> clock so if the thermal driver doesn't explicitly enable it the system w=
+ill hang=0A=
+>> on probe. This is what happens in linux-next right now!=0A=
+> =0A=
+> The thermal driver should be built with module, so default kernel should =
+can boot=0A=
+> up, do you modify the thermal driver as built-in?=0A=
+> =0A=
+>> Unless this patches is merged soon we'll end up with a 5.4-rc1 that does=
+n't=0A=
+>> boot on imx8mq. An easy fix would be to drop/revert commit=0A=
+>> 951c1aef9691 ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for=0A=
+>> IMX8MQ_CLK_TMU_ROOT") until the thermal patches are accepted.=0A=
+> =0A=
+> If the thermal driver is built as module, I think no need to revert the c=
+ommit, but=0A=
+> if by default thermal driver is built-in or mod probed, then yes, it shou=
+ld NOT break=0A=
+> kernel boot up.=0A=
+=0A=
+The qoriq_thermal driver is built as a module in defconfig and when =0A=
+modules are properly installed in rootfs they will be automatically be =0A=
+probed on boot and cause a hang.=0A=
+=0A=
+I usually run nfsroot with modules:=0A=
+=0A=
+     make modules_install INSTALL_MOD_PATH=3D/srv/nfs/imx8-root=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
