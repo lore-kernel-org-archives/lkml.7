@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D78CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B0CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE292173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD4C2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893278;
-	bh=dwOkGa4skEce3Rb+ErAgW4rMp+8999ceDJaADA8L/kA=;
+	s=default; t=1566893282;
+	bh=3xvGz0//4v6/Aw45avb0487WgKXitcKzbVzpdel9nek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E0GyQiX8oMaRHtCy3+rgmZC86tz9FKvvqdHxmdSD2EgAxquvq8+r0zp5qP2qBX3nP
-	 F+YRNF2vL2PDQHqpcGBP4Vu/qJIvjjFwfVf3vMxdjwkidLlLPfnSaUTPRfqenBP796
-	 m6Yntw2SpQhgf/q7A0akNuoz3CKh74IuNvgTE3EQ=
+	b=gpTuwN6zcpuQHQ4aO5NSljZvEqIlTbelVYAhzQ2bljv3SiPzwsuPOPtfaskUjdXAf
+	 B5sbxRJdxmGsquLqL5G2irZOF44pwqgGuCzSzIyr6GmSrCitIBMC3tHBjsbwAG4mBU
+	 7emsK2E3wDUFyuE7V0glkx0k32M3xqDO9roiru+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733007AbfH0IH5 (ORCPT
+        id S1731164AbfH0IGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:07:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36878 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:06:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732751AbfH0IGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:06:53 -0400
+        id S1732635AbfH0IGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:06:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FB872173E;
-        Tue, 27 Aug 2019 08:06:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01301206BF;
+        Tue, 27 Aug 2019 08:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893212;
-        bh=dwOkGa4skEce3Rb+ErAgW4rMp+8999ceDJaADA8L/kA=;
+        s=default; t=1566893203;
+        bh=3xvGz0//4v6/Aw45avb0487WgKXitcKzbVzpdel9nek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZCLlvgRFXvmFV3eugjHASDVFYVPT0GczoSpJepM7cm+SEq8HXIAJ6AgBrzoQDkPYA
-         KZg+8Ap1PVUAI7mSwWXb+Wd9nD8DpJ8myWOiD+nGNz6x8Ydf3unFe2qOzjXg/+v28J
-         npKqZyV4TAdH4khhKfzSsnyOPZe5ijUyRTCdtAjI=
+        b=MsXaUbJLZJgDox64qlBS5KysZ8To2Qjmr39J1DR9Mtwo3gSLBdXDsDO54fDyoQF1D
+         X/jsxcMaCafoEsjekGsVc5+jT8RLcCsP+e9jMAyi4Ey3Ti4TYcusljo+CBybwbg2wt
+         TmZbTn02LJ/zBkE1W46FwPON+yZfLG4QWgbiQbUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, alastair@d-silva.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.2 160/162] powerpc: Allow flush_(inval_)dcache_range to work across ranges >4GB
-Date:   Tue, 27 Aug 2019 09:51:28 +0200
-Message-Id: <20190827072744.406948686@linuxfoundation.org>
+        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.2 149/162] mm: memcontrol: flush percpu vmevents before releasing memcg
+Date:   Tue, 27 Aug 2019 09:51:17 +0200
+Message-Id: <20190827072743.933362060@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -58,51 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Roman Gushchin <guro@fb.com>
 
-From: Alastair D'Silva <alastair@d-silva.org>
+commit bb65f89b7d3d305c14951f49860711fbcae70692 upstream.
 
-The upstream commit:
-22e9c88d486a ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
-has a similar effect, but since it is a rewrite of the assembler to C, is
-too invasive for stable. This patch is a minimal fix to address the issue in
-assembler.
+Similar to vmstats, percpu caching of local vmevents leads to an
+accumulation of errors on non-leaf levels.  This happens because some
+leftovers may remain in percpu caches, so that they are never propagated
+up by the cgroup tree and just disappear into nonexistence with on
+releasing of the memory cgroup.
 
-This patch applies cleanly to v5.2, v4.19 & v4.14.
+To fix this issue let's accumulate and propagate percpu vmevents values
+before releasing the memory cgroup similar to what we're doing with
+vmstats.
 
-When calling flush_(inval_)dcache_range with a size >4GB, we were masking
-off the upper 32 bits, so we would incorrectly flush a range smaller
-than intended.
+Since on cpu hotplug we do flush percpu vmstats anyway, we can iterate
+only over online cpus.
 
-This patch replaces the 32 bit shifts with 64 bit ones, so that
-the full size is accounted for.
-
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: http://lkml.kernel.org/r/20190819202338.363363-4-guro@fb.com
+Fixes: 42a300353577 ("mm: memcontrol: fix recursive statistics correctness & scalabilty")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/misc_64.S |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/memcontrol.c |   22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/misc_64.S
-+++ b/arch/powerpc/kernel/misc_64.S
-@@ -130,7 +130,7 @@ _GLOBAL_TOC(flush_dcache_range)
- 	subf	r8,r6,r4		/* compute length */
- 	add	r8,r8,r5		/* ensure we get enough */
- 	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of dcache block size */
--	srw.	r8,r8,r9		/* compute line count */
-+	srd.	r8,r8,r9		/* compute line count */
- 	beqlr				/* nothing to do? */
- 	mtctr	r8
- 0:	dcbst	0,r6
-@@ -148,7 +148,7 @@ _GLOBAL(flush_inval_dcache_range)
- 	subf	r8,r6,r4		/* compute length */
- 	add	r8,r8,r5		/* ensure we get enough */
- 	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)/* Get log-2 of dcache block size */
--	srw.	r8,r8,r9		/* compute line count */
-+	srd.	r8,r8,r9		/* compute line count */
- 	beqlr				/* nothing to do? */
- 	sync
- 	isync
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -3185,6 +3185,25 @@ static void memcg_flush_percpu_vmstats(s
+ 	}
+ }
+ 
++static void memcg_flush_percpu_vmevents(struct mem_cgroup *memcg)
++{
++	unsigned long events[NR_VM_EVENT_ITEMS];
++	struct mem_cgroup *mi;
++	int cpu, i;
++
++	for (i = 0; i < NR_VM_EVENT_ITEMS; i++)
++		events[i] = 0;
++
++	for_each_online_cpu(cpu)
++		for (i = 0; i < NR_VM_EVENT_ITEMS; i++)
++			events[i] += raw_cpu_read(
++				memcg->vmstats_percpu->events[i]);
++
++	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
++		for (i = 0; i < NR_VM_EVENT_ITEMS; i++)
++			atomic_long_add(events[i], &mi->vmevents[i]);
++}
++
+ #ifdef CONFIG_MEMCG_KMEM
+ static int memcg_online_kmem(struct mem_cgroup *memcg)
+ {
+@@ -4587,10 +4606,11 @@ static void __mem_cgroup_free(struct mem
+ 	int node;
+ 
+ 	/*
+-	 * Flush percpu vmstats to guarantee the value correctness
++	 * Flush percpu vmstats and vmevents to guarantee the value correctness
+ 	 * on parent's and all ancestor levels.
+ 	 */
+ 	memcg_flush_percpu_vmstats(memcg);
++	memcg_flush_percpu_vmevents(memcg);
+ 	for_each_node(node)
+ 		free_mem_cgroup_per_node_info(memcg, node);
+ 	free_percpu(memcg->vmstats_percpu);
 
 
