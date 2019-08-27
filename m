@@ -2,374 +2,68 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74640C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3703CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D7F2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:13:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jfI8XnYh"
+	by mail.kernel.org (Postfix) with ESMTP id 176442186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:15:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730655AbfH0SN3 (ORCPT
+        id S1730469AbfH0SPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:13:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34714 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728670AbfH0SN1 (ORCPT
+        Tue, 27 Aug 2019 14:15:03 -0400
+Received: from eddie.linux-mips.org ([148.251.95.138]:39296 "EHLO
+        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727893AbfH0SPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:13:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Y6GYMF82hjVxMNwDFnfQOUFOlkjF0gU4GB5zvh3jilU=; b=jfI8XnYhMxnS1112+f9C1EUNH4
-        YAwRPGsp7JPwqndvjO15FifMP2z0MYh6zJQAO0GQfq9BzIjsqsK+V7wy57sRDg7mULhIEpQZy6toI
-        JzRjLqfQKu0G6UVHUDgxMCNcVb5/l8KpC7ZeUK7h6Kmm4+TbtxgvKjt+73Lhgi9rDiEtL//Tqr4km
-        j5gBAAdwgDQmyFaQU+RWBgD84Kv1Ks7BYvwgdCtLKjVd+nYq4g6W43/VkV0CaquHNmHJzkOSg2stv
-        WT4CnL2+Qj5d7T/ll3tD7umU/eyVScB1GwkA+CtyfPbspvMAcd6EhMj0/y+PRUK/mGpHn2iwsEIR7
-        VhoGBpEg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2fxd-0004TJ-K1; Tue, 27 Aug 2019 18:12:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DEF3030768B;
-        Tue, 27 Aug 2019 20:12:16 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 99510203CEC09; Tue, 27 Aug 2019 20:12:50 +0200 (CEST)
-Message-Id: <20190827181147.110246515@infradead.org>
-User-Agent: quilt/0.65
-Date:   Tue, 27 Aug 2019 20:06:24 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org
-Cc:     Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: [PATCH 2/3] x86/alternatives,jump_label: Provide better text_poke() batching interface
-References: <20190827180622.159326993@infradead.org>
+        Tue, 27 Aug 2019 14:15:03 -0400
+Received: (from localhost user: 'ladis' uid#1021 fake: STDIN
+        (ladis@eddie.linux-mips.org)) by eddie.linux-mips.org
+        id S23992798AbfH0SPAV-MII (ORCPT
+        <rfc822;kernel-janitors@vger.kernel.org> + 2 others);
+        Tue, 27 Aug 2019 20:15:00 +0200
+Date:   Tue, 27 Aug 2019 20:14:57 +0200
+From:   Ladislav Michl <ladis@linux-mips.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Markus Elfring <Markus.Elfring@web.de>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Kishore Kadiyala <kishore.kadiyala@ti.com>,
+        Russell King <linux@armlinux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Balaji T K <balajitk@ti.com>,
+        Benoit Cousson <b-cousson@ti.com>,
+        Paul Walmsley <paul@pwsan.com>,
+        Nikolaus Schaller <hns@goldelico.com>
+Subject: Re: [PATCH] ARM: OMAP2+: Delete an unnecessary kfree() call in
+ omap_hsmmc_pdata_init()
+Message-ID: <20190827181457.GA16333@lenoch>
+References: <69025c8c-8d84-6686-138b-cde59467b802@web.de>
+ <20190826162050.GX52127@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826162050.GX52127@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding another text_poke_bp_batch() user made me realize the interface
-is all sorts of wrong. The text poke vector should be internal to the
-implementation.
+On Mon, Aug 26, 2019 at 09:20:50AM -0700, Tony Lindgren wrote:
+> * Markus Elfring <Markus.Elfring@web.de> [190826 06:31]:
+> > From: Markus Elfring <elfring@users.sourceforge.net>
+> > Date: Mon, 26 Aug 2019 15:05:31 +0200
+> > 
+> > A null pointer would be passed to a call of the function "kfree" directly
+> > after a call of the function "kzalloc" failed at one place.
+> > Remove this superfluous function call.
+> > 
+> > This issue was detected by using the Coccinelle software.
+> 
+> Applying into omap-for-v5.4/soc thanks.
 
-This then results in a trivial interface:
-
-  text_poke_queue()  - which has the 'normal' text_poke_bp() interface
-  text_poke_finish() - which takes no arguments and flushes any
-                       pending text_poke()s.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
----
- arch/x86/include/asm/text-patching.h |   16 ++-----
- arch/x86/kernel/alternative.c        |   64 +++++++++++++++++++++++++---
- arch/x86/kernel/jump_label.c         |   80 +++++++++--------------------------
- 3 files changed, 84 insertions(+), 76 deletions(-)
-
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -25,14 +25,6 @@ static inline void apply_paravirt(struct
-  */
- #define POKE_MAX_OPCODE_SIZE	5
- 
--struct text_poke_loc {
--	void *addr;
--	int len;
--	s32 rel32;
--	u8 opcode;
--	const char text[POKE_MAX_OPCODE_SIZE];
--};
--
- extern void text_poke_early(void *addr, const void *opcode, size_t len);
- 
- /*
-@@ -53,13 +45,15 @@ extern void *text_poke(void *addr, const
- extern void *text_poke_kgdb(void *addr, const void *opcode, size_t len);
- extern int poke_int3_handler(struct pt_regs *regs);
- extern void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate);
--extern void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries);
--extern void text_poke_loc_init(struct text_poke_loc *tp, void *addr,
--			       const void *opcode, size_t len, const void *emulate);
-+
-+extern void text_poke_queue(void *addr, const void *opcode, size_t len, const void *emulate);
-+extern void text_poke_finish(void);
-+
- extern int after_bootmem;
- extern __ro_after_init struct mm_struct *poking_mm;
- extern __ro_after_init unsigned long poking_addr;
- 
-+
- #ifndef CONFIG_UML_X86
- static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
- {
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -936,6 +936,14 @@ static void do_sync_core(void *info)
- 	sync_core();
- }
- 
-+struct text_poke_loc {
-+	void *addr;
-+	int len;
-+	s32 rel32;
-+	u8 opcode;
-+	const char text[POKE_MAX_OPCODE_SIZE];
-+};
-+
- static struct bp_patching_desc {
- 	struct text_poke_loc *vec;
- 	int nr_entries;
-@@ -1017,6 +1025,10 @@ int poke_int3_handler(struct pt_regs *re
- }
- NOKPROBE_SYMBOL(poke_int3_handler);
- 
-+#define TP_VEC_MAX (PAGE_SIZE / sizeof(struct text_poke_loc))
-+static struct text_poke_loc tp_vec[TP_VEC_MAX];
-+static int tp_vec_nr;
-+
- /**
-  * text_poke_bp_batch() -- update instructions on live kernel on SMP
-  * @tp:			vector of instructions to patch
-@@ -1038,7 +1050,7 @@ NOKPROBE_SYMBOL(poke_int3_handler);
-  *		  replacing opcode
-  *	- sync cores
-  */
--void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
-+static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
- {
- 	unsigned char int3 = INT3_INSN_OPCODE;
- 	int patched_all_but_first = 0;
-@@ -1105,11 +1117,7 @@ void text_poke_loc_init(struct text_poke
- {
- 	struct insn insn;
- 
--	if (!opcode)
--		opcode = (void *)tp->text;
--	else
--		memcpy((void *)tp->text, opcode, len);
--
-+	memcpy((void *)tp->text, opcode, len);
- 	if (!emulate)
- 		emulate = opcode;
- 
-@@ -1147,6 +1155,50 @@ void text_poke_loc_init(struct text_poke
- 	}
- }
- 
-+/*
-+ * We hard rely on the tp_vec being ordered; ensure this is so by flushing
-+ * early if needed.
-+ */
-+static bool tp_order_fail(void *addr)
-+{
-+	struct text_poke_loc *tp;
-+
-+	if (!tp_vec_nr)
-+		return false;
-+
-+	if (!addr) /* force */
-+		return true;
-+
-+	tp = &tp_vec[tp_vec_nr - 1];
-+	if ((unsigned long)tp->addr > (unsigned long)addr)
-+		return true;
-+
-+	return false;
-+}
-+
-+static void text_poke_flush(void *addr)
-+{
-+	if (tp_vec_nr == TP_VEC_MAX || tp_order_fail(addr)) {
-+		text_poke_bp_batch(tp_vec, tp_vec_nr);
-+		tp_vec_nr = 0;
-+	}
-+}
-+
-+void text_poke_finish(void)
-+{
-+	text_poke_flush(NULL);
-+}
-+
-+void text_poke_queue(void *addr, const void *opcode, size_t len, const void *emulate)
-+{
-+	struct text_poke_loc *tp;
-+
-+	text_poke_flush(addr);
-+
-+	tp = &tp_vec[tp_vec_nr++];
-+	text_poke_loc_init(tp, addr, opcode, len, emulate);
-+}
-+
- /**
-  * text_poke_bp() -- update instructions on live kernel on SMP
-  * @addr:	address to patch
---- a/arch/x86/kernel/jump_label.c
-+++ b/arch/x86/kernel/jump_label.c
-@@ -35,18 +35,19 @@ static void bug_at(unsigned char *ip, in
- 	BUG();
- }
- 
--static void __jump_label_set_jump_code(struct jump_entry *entry,
--				       enum jump_label_type type,
--				       union jump_code_union *code,
--				       int init)
-+static const void *
-+__jump_label_set_jump_code(struct jump_entry *entry, enum jump_label_type type, int init)
- {
-+	static union jump_code_union code; /* relies on text_mutex */
- 	const unsigned char default_nop[] = { STATIC_KEY_INIT_NOP };
- 	const unsigned char *ideal_nop = ideal_nops[NOP_ATOMIC5];
- 	const void *expect;
- 	int line;
- 
--	code->jump = 0xe9;
--	code->offset = jump_entry_target(entry) -
-+	lockdep_assert_held(&text_mutex);
-+
-+	code.jump = JMP32_INSN_OPCODE;
-+	code.offset = jump_entry_target(entry) -
- 		       (jump_entry_code(entry) + JUMP_LABEL_NOP_SIZE);
- 
- 	if (init) {
-@@ -54,23 +55,23 @@ static void __jump_label_set_jump_code(s
- 	} else if (type == JUMP_LABEL_JMP) {
- 		expect = ideal_nop; line = __LINE__;
- 	} else {
--		expect = code->code; line = __LINE__;
-+		expect = code.code; line = __LINE__;
- 	}
- 
- 	if (memcmp((void *)jump_entry_code(entry), expect, JUMP_LABEL_NOP_SIZE))
- 		bug_at((void *)jump_entry_code(entry), line);
- 
- 	if (type == JUMP_LABEL_NOP)
--		memcpy(code, ideal_nop, JUMP_LABEL_NOP_SIZE);
-+		memcpy(&code, ideal_nop, JUMP_LABEL_NOP_SIZE);
-+
-+	return &code;
- }
- 
- static void __ref __jump_label_transform(struct jump_entry *entry,
- 					 enum jump_label_type type,
- 					 int init)
- {
--	union jump_code_union code;
--
--	__jump_label_set_jump_code(entry, type, &code, init);
-+	const void *opcode = __jump_label_set_jump_code(entry, type, init);
- 
- 	/*
- 	 * As long as only a single processor is running and the code is still
-@@ -84,12 +85,12 @@ static void __ref __jump_label_transform
- 	 * always nop being the 'currently valid' instruction
- 	 */
- 	if (init || system_state == SYSTEM_BOOTING) {
--		text_poke_early((void *)jump_entry_code(entry), &code,
-+		text_poke_early((void *)jump_entry_code(entry), opcode,
- 				JUMP_LABEL_NOP_SIZE);
- 		return;
- 	}
- 
--	text_poke_bp((void *)jump_entry_code(entry), &code, JUMP_LABEL_NOP_SIZE, NULL);
-+	text_poke_bp((void *)jump_entry_code(entry), opcode, JUMP_LABEL_NOP_SIZE, NULL);
- }
- 
- void arch_jump_label_transform(struct jump_entry *entry,
-@@ -100,15 +101,10 @@ void arch_jump_label_transform(struct ju
- 	mutex_unlock(&text_mutex);
- }
- 
--#define TP_VEC_MAX (PAGE_SIZE / sizeof(struct text_poke_loc))
--static struct text_poke_loc tp_vec[TP_VEC_MAX];
--static int tp_vec_nr;
--
- bool arch_jump_label_transform_queue(struct jump_entry *entry,
- 				     enum jump_label_type type)
- {
--	struct text_poke_loc *tp;
--	void *entry_code;
-+	const void *opcode;
- 
- 	if (system_state == SYSTEM_BOOTING) {
- 		/*
-@@ -118,53 +114,19 @@ bool arch_jump_label_transform_queue(str
- 		return true;
- 	}
- 
--	/*
--	 * No more space in the vector, tell upper layer to apply
--	 * the queue before continuing.
--	 */
--	if (tp_vec_nr == TP_VEC_MAX)
--		return false;
--
--	tp = &tp_vec[tp_vec_nr];
--
--	entry_code = (void *)jump_entry_code(entry);
--
--	/*
--	 * The INT3 handler will do a bsearch in the queue, so we need entries
--	 * to be sorted. We can survive an unsorted list by rejecting the entry,
--	 * forcing the generic jump_label code to apply the queue. Warning once,
--	 * to raise the attention to the case of an unsorted entry that is
--	 * better not happen, because, in the worst case we will perform in the
--	 * same way as we do without batching - with some more overhead.
--	 */
--	if (tp_vec_nr > 0) {
--		int prev = tp_vec_nr - 1;
--		struct text_poke_loc *prev_tp = &tp_vec[prev];
--
--		if (WARN_ON_ONCE(prev_tp->addr > entry_code))
--			return false;
--	}
--
--	__jump_label_set_jump_code(entry, type,
--				   (union jump_code_union *)&tp->text, 0);
--
--	text_poke_loc_init(tp, entry_code, NULL, JUMP_LABEL_NOP_SIZE, NULL);
--
--	tp_vec_nr++;
--
-+	mutex_lock(&text_mutex);
-+	opcode = __jump_label_set_jump_code(entry, type, 0);
-+	text_poke_queue((void *)jump_entry_code(entry),
-+			opcode, JUMP_LABEL_NOP_SIZE, NULL);
-+	mutex_unlock(&text_mutex);
- 	return true;
- }
- 
- void arch_jump_label_transform_apply(void)
- {
--	if (!tp_vec_nr)
--		return;
--
- 	mutex_lock(&text_mutex);
--	text_poke_bp_batch(tp_vec, tp_vec_nr);
-+	text_poke_finish();
- 	mutex_unlock(&text_mutex);
--
--	tp_vec_nr = 0;
- }
- 
- static enum {
-
-
+Is it really wise touching almost dead code? Last user is pandora board, so
++Cc: Nikolaus Schaller <hns@goldelico.com>
