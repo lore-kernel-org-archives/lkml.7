@@ -2,69 +2,82 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21148C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7B0C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED35E2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4DE217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730188AbfH0NsR (ORCPT
+        id S1730201AbfH0Ns2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:48:17 -0400
-Received: from mga07.intel.com ([134.134.136.100]:16441 "EHLO mga07.intel.com"
+        Tue, 27 Aug 2019 09:48:28 -0400
+Received: from ms.lwn.net ([45.79.88.28]:37120 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfH0NsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:48:15 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 06:48:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
-   d="scan'208";a="380922218"
-Received: from jsakkine-mobl1.fi.intel.com (HELO localhost) ([10.237.66.169])
-  by fmsmga006.fm.intel.com with ESMTP; 27 Aug 2019 06:48:09 -0700
-Date:   Tue, 27 Aug 2019 16:48:08 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-crypto@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dhowells@redhat.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, zohar@linux.ibm.com, jmorris@namei.org,
-        serge@hallyn.com, casey@schaufler-ca.com,
-        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
-        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
-Subject: Re: [PATCH v5 1/4] tpm: move tpm_buf code to include/linux/
-Message-ID: <20190827134808.4mtnzugshylnqwss@linux.intel.com>
-References: <1566392345-15419-1-git-send-email-sumit.garg@linaro.org>
- <1566392345-15419-2-git-send-email-sumit.garg@linaro.org>
+        id S1725825AbfH0Ns1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:48:27 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 70A72537;
+        Tue, 27 Aug 2019 13:48:26 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 07:48:25 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Gerald BAEZA <gerald.baeza@st.com>
+Cc:     "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Documentation: add link to stm32mp157 docs
+Message-ID: <20190827074825.64a28e88@lwn.net>
+In-Reply-To: <1566908347-92201-1-git-send-email-gerald.baeza@st.com>
+References: <1566908347-92201-1-git-send-email-gerald.baeza@st.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566392345-15419-2-git-send-email-sumit.garg@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 06:29:02PM +0530, Sumit Garg wrote:
-> Move tpm_buf code to common include/linux/tpm.h header so that it can
-> be reused via other subsystems like trusted keys etc.
-> 
-> Also rename trusted keys TPM 1.x buffer implementation to tpm1_buf to
-> avoid any compilation errors.
-> 
-> Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+On Tue, 27 Aug 2019 12:19:32 +0000
+Gerald BAEZA <gerald.baeza@st.com> wrote:
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Link to the online stm32mp157 documentation added
+> in the overview.
+> 
+> Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
+> ---
+>  Documentation/arm/stm32/stm32mp157-overview.rst | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/arm/stm32/stm32mp157-overview.rst b/Documentation/arm/stm32/stm32mp157-overview.rst
+> index f62fdc8..8d5a476 100644
+> --- a/Documentation/arm/stm32/stm32mp157-overview.rst
+> +++ b/Documentation/arm/stm32/stm32mp157-overview.rst
+> @@ -14,6 +14,12 @@ It features:
+>  - Standard connectivity, widely inherited from the STM32 MCU family
+>  - Comprehensive security support
+>  
+> +Resources
+> +---------
+> +
+> +Datasheet and reference manual are publicly available on ST website:
+> +.. _STM32MP157: https://www.st.com/en/microcontrollers-microprocessors/stm32mp157.html
+> +
 
-/Jarkko
+Adding the URL is a fine idea.  But you don't need the extra syntax to
+create a link if you're not going to actually make a link out of it.  So
+I'd take the ".. _STM32MP157:" part out and life will be good.
+
+Thanks,
+
+jon
