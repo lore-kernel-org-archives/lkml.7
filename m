@@ -2,66 +2,71 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C17C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 642CAC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B515C20856
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:14:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SXwF+OeE"
+	by mail.kernel.org (Postfix) with ESMTP id 3780820856
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:16:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566947762;
+	bh=azKINZRxAxKEn/RsP2ULdeQIY62nFc53h6EH2owEATE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=GkQl9wdztvrl+krhpeJqkHJgASnQJKD0S8Ly3/T0ZOotGK7jD0zQYCCoXH3CsGUyM
+	 NJGG4zh13gmbveC35ksvUa+YIgxZNQ7Fgaw/KgM3CssDcvVq5be3WoHCWnc9knFO9s
+	 Rlzb74uPA25c6HfhqtfvkyiD1A0I+fjN9jhgJiIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbfH0XOZ (ORCPT
+        id S1726342AbfH0XQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 19:14:25 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46443 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfH0XOZ (ORCPT
+        Tue, 27 Aug 2019 19:16:01 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42709 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfH0XQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 19:14:25 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q139so347077pfc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 16:14:24 -0700 (PDT)
+        Tue, 27 Aug 2019 19:16:00 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i30so361557pfk.9
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 16:16:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=++/KCfeaNC3nr4kWlrphviN9zaclx1/9AX8bnrpiuF0=;
-        b=SXwF+OeE84B2m+HTgsLOn0L8LNC4QulF68aaY/IVRE9pm2jwKM0GjvgtuKP8fAbDs9
-         P6wz6m78MV0qthTR1Rw1dQGesVRRT2Ul/qVw5ef5g60OMJ18WKVtayb3cJ9QdpUqY1fL
-         nsFsRknxWCWEIJUgSF96Sraf1X7Uv4yDsulIk=
+        bh=+C3bks66h8FMyrio7f9pyOh5hCYbxHHGQJQS9xo6UoU=;
+        b=a+AJtp8dk9nnTw/1TgkdefE1GMzxe+Ps3l+QxyuG9OhqOTnMJFkfopIAsvoDSERlXU
+         4RWSDW1XCrZMaRli7COilKMiBTwNnMR7YxiOqNaRlO5fsY49cgSntDzfe2rVgWG5cTKz
+         AQJIhrqAWCnn+KmVEzRkUgjKH472ysIndJFhUWzF+A4UtLY3iVVLurUzZEy4K6fgtQlI
+         VUKFP1ZX5ET56f0NoIeJCIO2WT+LrWwp21rEH4V+x7dB28McaUTJ7gk8PH2lqZy61rk4
+         RyTny2KUsJiiCk50IZCplWDqN2je9Rj5Z0uTkO6DtK0Zv2cSDQwX+w37ggfZEy8Lfj+L
+         L+/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=++/KCfeaNC3nr4kWlrphviN9zaclx1/9AX8bnrpiuF0=;
-        b=dw4jtweywuMZJSyfjlKGyRchSxYV+i9Ygivi1Mvs1slkBGVl4GUs24CLGaL+yzr+TI
-         ygxMLUI4tbsBCLcz87ojRZcpG6ZcIlsw9FkpbqKrsVey2SVXHCb7Qm0qvpPFueyywzmt
-         DdoL5EhW4QLRoBCVwfQQF5o7FGML6K/qUCsnqTZUrQm/Y9RcnGMTpCenEgCPkVxGSEno
-         TK+LEtewoW3bGFIpTCAmUCqh8UntQzCKqZxIU/Bo3dJKV768aA36hOMSf1b0/WB/6NbZ
-         Kho8UT6FxuqlinCu9Kl8ZJ1MfSt0WJbkcVYis7pPdz7eJGeL+RQeeIkt9pCy4Hgkf+8m
-         hPZg==
-X-Gm-Message-State: APjAAAUKj2Ub7ToINwIzNGJ9hOvFb0wnWdKbyvO/V6EyRVdprr0BimLv
-        tOn9A2ysgje30ybwwI3rZDRCwQ==
-X-Google-Smtp-Source: APXvYqxdGLw+MOu8Urgu3QgnnlsAuZnZ9juHk9Et2HN9Ka+AdyrVjtV74Rtd0zj+BhdMIpmCa/dBmw==
-X-Received: by 2002:a65:690b:: with SMTP id s11mr834922pgq.10.1566947664132;
-        Tue, 27 Aug 2019 16:14:24 -0700 (PDT)
-Received: from jwerner-p920.mtv.corp.google.com ([2620:15c:202:201:6a:3f83:ada3:6a0f])
-        by smtp.gmail.com with ESMTPSA id a5sm238576pjs.31.2019.08.27.16.14.22
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=+C3bks66h8FMyrio7f9pyOh5hCYbxHHGQJQS9xo6UoU=;
+        b=RrIoZaxgLWBjOpYEPWkJygjFC5EL7trsCRWF4Ac1ityk2Jatu+xcRu0bAtvWwLcLuF
+         qQCMn8qs+F9ZKlzeIW6WEvNRvpqg5/pTCNVl+v/ISYNE/+891AIppXMrt0MdmCcn3URB
+         SqADkZjh/2vawL1383YrW3jNgrUdzlB4dU4wh2XOcNGu75wkzbyazsApG+jALrbOY58O
+         jEDpYE1LkC/fgx/e6VdkRG+WiKby/LJdP5TVldwoN4m+Sl/7z/a2+xNbgA5lYsNUJvl3
+         Me8E3fGthpZJ9fviXt3xEDU3SvIuYbz88u3MJn3hmzGQoxiCpz0ATQlYRlN18Kwpacgs
+         NOFQ==
+X-Gm-Message-State: APjAAAWLMDok+YB8oEyhIO1gcaWHKn+0z7X2sCdJKD39sySru8BUCVS2
+        gPKRVRcQv3PNNKWvyBuQFTE=
+X-Google-Smtp-Source: APXvYqwQPdZ2EcOyMqp26OkN2sBQhfk8zPcJaIsp8GsX4zfAWUTxP17s0uerAJ0KYzXZvgreTpKNhg==
+X-Received: by 2002:a65:458d:: with SMTP id o13mr842235pgq.34.1566947760006;
+        Tue, 27 Aug 2019 16:16:00 -0700 (PDT)
+Received: from gaurie.seo.corp.google.com ([2401:fa00:d:0:1034:ec6b:8056:9e93])
+        by smtp.gmail.com with ESMTPSA id a10sm411624pfl.159.2019.08.27.16.15.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 16:14:22 -0700 (PDT)
-From:   Julius Werner <jwerner@chromium.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net,
-        Julius Werner <jwerner@chromium.org>
-Subject: [PATCH] usb: storage: Add ums-cros-aoa driver
-Date:   Tue, 27 Aug 2019 16:14:09 -0700
-Message-Id: <20190827231409.253037-1-jwerner@chromium.org>
+        Tue, 27 Aug 2019 16:15:59 -0700 (PDT)
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@redhat.com>
+Subject: [PATCH 1/2] perf top: Decay all events in the evlist
+Date:   Wed, 28 Aug 2019 08:15:54 +0900
+Message-Id: <20190827231555.121411-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -70,300 +75,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a new "unusual" USB mass storage device driver. This
-driver will be used for a virtual USB storage device presented by an
-Android phone running the 'Chrome OS Recovery'* Android app. This app
-uses the Android Open Accessory (AOA) API to talk directly to a USB host
-attached to the phone.
+Currently perf top only decays entries in a selected evsel.  I don't
+know whether it's intended (maybe due to performance reason?) but
+anyway it might show incorrect output when event group is used since
+users will see leader event is decayed but others are not.
 
-The AOA protocol requires the host to send a custom vendor command on
-EP0 to "switch" the phone into "AOA mode" (making it drop off the bus
-and reenumerate with different descriptors). The ums-cros-aoa driver is
-just a small stub driver to send these vendor commands. It identifies
-the device it should operate on by VID/PID passed in through a module
-parameter (e.g. from the bootloader). After the phone is in AOA mode,
-the normal USB mass storage stack will recognize it by its special
-VID/PID like any other "unusual dev". An initializer function will
-further double-check that the device is the device previously operated
-on by ums-cros-aoa.
+This patch moves the decay code into evlist__resort_hists() so that
+stdio and tui code shared the logic.
 
-*NOTE: The Android app is still under development and will be released
-at a later date. I'm submitting this patch now so that the driver name
-and module parameters can be set in stone already, because I have to
-bake them into bootloader code that is not field-updatable.
-
-Signed-off-by: Julius Werner <jwerner@chromium.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- drivers/usb/storage/Kconfig        |  12 +++
- drivers/usb/storage/Makefile       |   2 +
- drivers/usb/storage/cros-aoa.c     | 129 +++++++++++++++++++++++++++++
- drivers/usb/storage/initializers.c |  34 ++++++++
- drivers/usb/storage/initializers.h |   4 +
- drivers/usb/storage/unusual_devs.h |  18 ++++
- 6 files changed, 199 insertions(+)
- create mode 100644 drivers/usb/storage/cros-aoa.c
+ tools/perf/builtin-top.c | 38 +++++++++++++-------------------------
+ 1 file changed, 13 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/usb/storage/Kconfig b/drivers/usb/storage/Kconfig
-index 59aad38b490a6..cc901ee2bb766 100644
---- a/drivers/usb/storage/Kconfig
-+++ b/drivers/usb/storage/Kconfig
-@@ -184,6 +184,18 @@ config USB_STORAGE_ENE_UB6250
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ums-eneub6250.
- 
-+config USB_STORAGE_CROS_AOA
-+	tristate "Support for connecting to Chrome OS Recovery Android app"
-+	default n
-+	depends on USB_STORAGE
-+	help
-+	  Say Y here if you want to connect an Android phone running the Chrome
-+	  OS Recovery app to this device and mount the image served by that app
-+	  as a virtual storage device. Unless you're building for Chrome OS, you
-+	  probably want to say N.
-+
-+	  If this driver is compiled as a module, it will be named ums-cros-aoa.
-+
- endif # USB_STORAGE
- 
- config USB_UAS
-diff --git a/drivers/usb/storage/Makefile b/drivers/usb/storage/Makefile
-index a67ddcbb4e249..f734741d4658b 100644
---- a/drivers/usb/storage/Makefile
-+++ b/drivers/usb/storage/Makefile
-@@ -17,6 +17,7 @@ usb-storage-y += usual-tables.o
- usb-storage-$(CONFIG_USB_STORAGE_DEBUG) += debug.o
- 
- obj-$(CONFIG_USB_STORAGE_ALAUDA)	+= ums-alauda.o
-+obj-$(CONFIG_USB_STORAGE_CROS_AOA)	+= ums-cros-aoa.o
- obj-$(CONFIG_USB_STORAGE_CYPRESS_ATACB) += ums-cypress.o
- obj-$(CONFIG_USB_STORAGE_DATAFAB)	+= ums-datafab.o
- obj-$(CONFIG_USB_STORAGE_ENE_UB6250)	+= ums-eneub6250.o
-@@ -31,6 +32,7 @@ obj-$(CONFIG_USB_STORAGE_SDDR55)	+= ums-sddr55.o
- obj-$(CONFIG_USB_STORAGE_USBAT)		+= ums-usbat.o
- 
- ums-alauda-y		:= alauda.o
-+ums-cros-aoa-y		:= cros-aoa.o
- ums-cypress-y		:= cypress_atacb.o
- ums-datafab-y		:= datafab.o
- ums-eneub6250-y		:= ene_ub6250.o
-diff --git a/drivers/usb/storage/cros-aoa.c b/drivers/usb/storage/cros-aoa.c
-new file mode 100644
-index 0000000000000..269e9193209d9
---- /dev/null
-+++ b/drivers/usb/storage/cros-aoa.c
-@@ -0,0 +1,129 @@
-+// SPDX-License-Identifier: GPL-2 WITH Linux-syscall-note
-+/*
-+ * Driver for Chrome OS Recovery via Android Open Accessory
-+ *
-+ * (c) 2019 Google LLC (Julius Werner <jwerner@chromium.org>)
-+ *
-+ * This driver connects to an Android device via the Android Open Accessory
-+ * protocol to use it as a USB storage back-end. It is used for system recovery
-+ * on Chrome OS. The descriptors sent are specific to the Chrome OS Recovery app
-+ * for Android. The driver is inert unless activated by boot firmware with an
-+ * explicit kernel command line parameter.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/printk.h>
-+#include <linux/usb.h>
-+
-+#include "initializers.h"
-+
-+#define DRV_NAME "ums-cros-aoa"
-+
-+MODULE_DESCRIPTION("Driver for Chrome OS Recovery via Android Open Accessory");
-+MODULE_AUTHOR("Julius Werner <jwerner@chromium.org>");
-+MODULE_LICENSE("GPL");
-+
-+#define AOA_GET_PROTOCOL	51
-+#define AOA_SET_STRING		52
-+#define AOA_START		53
-+
-+#define AOA_STR_MANUFACTURER	0
-+#define AOA_STR_MODEL		1
-+#define AOA_STR_DESCRIPTION	2
-+#define AOA_STR_VERSION		3
-+#define AOA_STR_URI		4
-+#define AOA_STR_SERIAL		5
-+
-+#define CROS_MANUF		"Google"
-+#define CROS_MODEL		"Chrome OS Recovery"
-+#define CROS_DESC		"Chrome OS device in Recovery Mode"
-+#define CROS_VERSION		"1.0"
-+#define CROS_URI		"https://google.com/chromeos/recovery_android"
-+
-+static char *bind;
-+module_param(bind, charp, 0);
-+
-+static struct usb_device_id cros_aoa_ids[] = {
-+	{ USB_DEVICE(0, 0) },	/* to be filled out by cros_aoa_init() */
-+	{ }
-+};
-+/* No MODULE_DEVICE_TABLE(). Autoloading doesn't make sense for this module. */
-+
-+static int set_string(struct usb_device *udev, u16 type, const char *string)
-+{
-+	return usb_control_msg(udev, usb_sndctrlpipe(udev, 0), AOA_SET_STRING,
-+			       USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
-+			       0, type, (char *)string, strlen(string) + 1,
-+			       USB_CTRL_SET_TIMEOUT);
-+}
-+
-+static int cros_aoa_probe(struct usb_interface *intf,
-+			  const struct usb_device_id *id)
-+{
-+	int rv;
-+	u16 aoa_protocol;
-+	struct usb_device *udev = interface_to_usbdev(intf);
-+
-+	rv = usb_control_msg(udev, usb_rcvctrlpipe(udev, 0), AOA_GET_PROTOCOL,
-+			     USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
-+			     0, 0, &aoa_protocol, sizeof(aoa_protocol),
-+			     USB_CTRL_GET_TIMEOUT);
-+	if (rv < 0 && rv != -EPROTO)
-+		goto fail;
-+	if (rv != sizeof(aoa_protocol) || aoa_protocol < 1) {
-+		dev_err(&intf->dev, "bound device does not support AOA?\n");
-+		rv = -ENODEV;
-+		goto fail;
-+	}
-+
-+	if ((rv = set_string(udev, AOA_STR_MANUFACTURER, CROS_MANUF)) < 0 ||
-+	    (rv = set_string(udev, AOA_STR_MODEL, CROS_MODEL)) < 0 ||
-+	    (rv = set_string(udev, AOA_STR_DESCRIPTION, CROS_DESC)) < 0 ||
-+	    (rv = set_string(udev, AOA_STR_VERSION, CROS_VERSION)) < 0 ||
-+	    (rv = set_string(udev, AOA_STR_URI, CROS_URI)) < 0)
-+		goto fail;
-+
-+	rv = usb_control_msg(udev, usb_sndctrlpipe(udev, 0), AOA_START,
-+			     USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
-+			     0, 0, NULL, 0, USB_CTRL_SET_TIMEOUT);
-+
-+	if (!rv) {
-+		dev_info(&intf->dev, "switching to AOA mode\n");
-+		usb_stor_cros_aoa_bind_busnum = udev->bus->busnum;
-+		usb_stor_cros_aoa_bind_route = udev->route;
-+		return 0;
-+	}
-+
-+fail:	dev_err(&intf->dev, "probe error %d\n", rv);
-+	return rv;
-+}
-+
-+static void cros_aoa_disconnect(struct usb_interface *intf)
-+{
-+	/* nothing to do -- we expect this to happen right after probe() */
-+}
-+
-+static struct usb_driver cros_aoa_stub_driver = {
-+	.name =		DRV_NAME,
-+	.probe =	cros_aoa_probe,
-+	.disconnect =	cros_aoa_disconnect,
-+	.id_table =	cros_aoa_ids,
-+};
-+
-+static int __init cros_aoa_init(void)
-+{
-+	if (!bind || sscanf(bind, "%hx:%hx", &cros_aoa_ids[0].idVendor,
-+					     &cros_aoa_ids[0].idProduct) != 2)
-+		return -ENODEV;
-+	pr_info(DRV_NAME ": bound to USB device %4x:%4x\n",
-+		cros_aoa_ids[0].idVendor, cros_aoa_ids[0].idProduct);
-+	return usb_register(&cros_aoa_stub_driver);
-+}
-+
-+static void __exit cros_aoa_exit(void)
-+{
-+	usb_deregister(&cros_aoa_stub_driver);
-+}
-+
-+module_init(cros_aoa_init);
-+module_exit(cros_aoa_exit);
-diff --git a/drivers/usb/storage/initializers.c b/drivers/usb/storage/initializers.c
-index f8f9ce8dc7102..3056db79cd1d9 100644
---- a/drivers/usb/storage/initializers.c
-+++ b/drivers/usb/storage/initializers.c
-@@ -92,3 +92,37 @@ int usb_stor_huawei_e220_init(struct us_data *us)
- 	usb_stor_dbg(us, "Huawei mode set result is %d\n", result);
- 	return 0;
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 5970723cd55a..9d3059d2029d 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -264,13 +264,23 @@ static void perf_top__show_details(struct perf_top *top)
+ 	pthread_mutex_unlock(&notes->lock);
  }
-+
-+#if defined(CONFIG_USB_STORAGE_CROS_AOA) || \
-+		defined(CONFIG_USB_STORAGE_CROS_AOA_MODULE)
-+/*
-+ * Our VID/PID match grabs any Android device that was switched into Android
-+ * Open Accessory mode. We only want to bind to the one that was switched by the
-+ * ums-cros-aoa driver. There's no 100% way to identify the same device again
-+ * (because it changes all descriptors), but checking that it is on the same bus
-+ * with the same topology route should be a pretty good heuristic.
-+ */
-+int usb_stor_cros_aoa_bind_busnum = -1;
-+EXPORT_SYMBOL(usb_stor_cros_aoa_bind_busnum);
-+u32 usb_stor_cros_aoa_bind_route;
-+EXPORT_SYMBOL(usb_stor_cros_aoa_bind_route);
-+
-+int usb_stor_cros_aoa_validate(struct us_data *us)
-+{
-+	if (us->pusb_dev->bus->busnum != usb_stor_cros_aoa_bind_busnum ||
-+	    us->pusb_dev->route != usb_stor_cros_aoa_bind_route) {
-+		dev_info(&us->pusb_intf->dev,
-+			 "ums-cros-aoa ignoring unknown AOA device\n");
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * Only interface 0 connects to the AOA app. Android devices that have
-+	 * ADB enabled also export an interface 1. We don't want it.
-+	 */
-+	if (us->pusb_intf->cur_altsetting->desc.bInterfaceNumber != 0)
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+#endif /* defined(CONFIG_USB_STORAGE_CROS_AOA) || ... */
-diff --git a/drivers/usb/storage/initializers.h b/drivers/usb/storage/initializers.h
-index 2dbf9c7d97492..35fe9ef3247d6 100644
---- a/drivers/usb/storage/initializers.h
-+++ b/drivers/usb/storage/initializers.h
-@@ -37,3 +37,7 @@ int usb_stor_ucr61s2b_init(struct us_data *us);
  
- /* This places the HUAWEI E220 devices in multi-port mode */
- int usb_stor_huawei_e220_init(struct us_data *us);
-+
-+extern int usb_stor_cros_aoa_bind_busnum;
-+extern u32 usb_stor_cros_aoa_bind_route;
-+int usb_stor_cros_aoa_validate(struct us_data *us);
-diff --git a/drivers/usb/storage/unusual_devs.h b/drivers/usb/storage/unusual_devs.h
-index ea0d27a94afe0..45fe9bbc6da18 100644
---- a/drivers/usb/storage/unusual_devs.h
-+++ b/drivers/usb/storage/unusual_devs.h
-@@ -2259,6 +2259,24 @@ UNUSUAL_DEV( 0x1e74, 0x4621, 0x0000, 0x0000,
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
- 		US_FL_BULK_IGNORE_TAG | US_FL_MAX_SECTORS_64 ),
+-static void evlist__resort_hists(struct evlist *evlist)
++static void evlist__resort_hists(struct perf_top *t)
+ {
++	struct evlist *evlist = t->evlist;
+ 	struct evsel *pos;
  
-+/*
-+ * Using an Android phone as USB storage back-end for Chrome OS recovery. See
-+ * usb/storage/cros-aoa.c for details.
-+ */
-+#if defined(CONFIG_USB_STORAGE_CROS_AOA) || \
-+		defined(CONFIG_USB_STORAGE_CROS_AOA_MODULE)
-+UNUSUAL_DEV(  0x18d1, 0x2d00, 0x0000, 0xffff,
-+		"Google",
-+		"Chrome OS Recovery via AOA",
-+		USB_SC_SCSI, USB_PR_BULK, usb_stor_cros_aoa_validate,
-+		US_FL_SINGLE_LUN | US_FL_CAPACITY_OK),
-+UNUSUAL_DEV(  0x18d1, 0x2d01, 0x0000, 0xffff,
-+		"Google",
-+		"Chrome OS Recovery via AOA (with ADB)",
-+		USB_SC_SCSI, USB_PR_BULK, usb_stor_cros_aoa_validate,
-+		US_FL_SINGLE_LUN | US_FL_CAPACITY_OK),
-+#endif /* defined(CONFIG_USB_STORAGE_CROS_AOA) || ... */
+ 	evlist__for_each_entry(evlist, pos) {
+ 		struct hists *hists = evsel__hists(pos);
+ 
++		if (evlist->enabled) {
++			if (t->zero) {
++				hists__delete_entries(hists);
++			} else {
++				hists__decay_entries(hists, t->hide_user_symbols,
++						     t->hide_kernel_symbols);
++			}
++		}
 +
- /* Supplied with some Castlewood ORB removable drives */
- UNUSUAL_DEV(  0x2027, 0xa001, 0x0000, 0x9999,
- 		"Double-H Technology",
+ 		hists__collapse_resort(hists, NULL);
+ 
+ 		/* Non-group events are considered as leader */
+@@ -319,16 +329,7 @@ static void perf_top__print_sym_table(struct perf_top *top)
+ 		return;
+ 	}
+ 
+-	if (top->evlist->enabled) {
+-		if (top->zero) {
+-			hists__delete_entries(hists);
+-		} else {
+-			hists__decay_entries(hists, top->hide_user_symbols,
+-					     top->hide_kernel_symbols);
+-		}
+-	}
+-
+-	evlist__resort_hists(top->evlist);
++	evlist__resort_hists(top);
+ 
+ 	hists__output_recalc_col_len(hists, top->print_entries - printed);
+ 	putchar('\n');
+@@ -576,24 +577,11 @@ static bool perf_top__handle_keypress(struct perf_top *top, int c)
+ static void perf_top__sort_new_samples(void *arg)
+ {
+ 	struct perf_top *t = arg;
+-	struct evsel *evsel = t->sym_evsel;
+-	struct hists *hists;
+ 
+ 	if (t->evlist->selected != NULL)
+ 		t->sym_evsel = t->evlist->selected;
+ 
+-	hists = evsel__hists(evsel);
+-
+-	if (t->evlist->enabled) {
+-		if (t->zero) {
+-			hists__delete_entries(hists);
+-		} else {
+-			hists__decay_entries(hists, t->hide_user_symbols,
+-					     t->hide_kernel_symbols);
+-		}
+-	}
+-
+-	evlist__resort_hists(t->evlist);
++	evlist__resort_hists(t);
+ 
+ 	if (t->lost || t->drop)
+ 		pr_warning("Too slow to read ring buffer (change period (-c/-F) or limit CPUs (-C)\n");
 -- 
-2.20.1
+2.23.0.187.g17f5b7556c-goog
 
