@@ -2,134 +2,148 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02645C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3D1C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B1120828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6CA420828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:39:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566909586;
+	bh=gLIZt3QBqVQuf+84rdK8Q8Zyrw4B4ptYkFNh+jBJOz0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eql0RtEb6eReecGLGjIUiO+Qed8eNTew92YfrUe2U11DRoCU/e82ThM1GdJEfiZ3G
+	 VECcRGx7BhZIM1cl0sODsxVnvUiFfbNy1Bij6gCjlewBRtbX+7NA/k0Vb4yAolvs0L
+	 8YjxwmJJT4SfI+91fkMdC9X9DZroJEfL3fh/t6tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbfH0MiW (ORCPT
+        id S1729308AbfH0Mjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:38:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51114 "EHLO mx1.redhat.com"
+        Tue, 27 Aug 2019 08:39:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbfH0MiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:38:22 -0400
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        id S1726537AbfH0Mjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 08:39:45 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B5CE2811DC
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 12:38:21 +0000 (UTC)
-Received: by mail-wm1-f71.google.com with SMTP id d65so1017303wmd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 05:38:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=mhQh216D8KPUhpQBQ77haDbZ+wPiEolIAFs33u9E+Zo=;
-        b=CjUdb4jBJeuwtBt3PaLYWNr/Nyzs//ITuieyLg8n0ddqYadnocNsfQbea7fV5JD4mS
-         U8ih95P8bHV6AioiYcU2pvcGlW4Sa+Uy4fBYFNwELJ7pUPkbQGGUbwhxKvaesXE2JrW7
-         btLgCfKTN5wRsMQnZGfci+3Z+4gPynid9gMGyVuky2/S+bxFyz5IpWFcM168KHTFxrMF
-         CBhtoJQsKpn40ge6XCxQo2U9Wx0xv0fLymbhvCQWH9wyYSyIkX4yJ5YPBKrfreDQQVhn
-         6zYVNO+o+jW6FS7e4Xhs+kN4E9jOdMfrHwdBl16PqIdNAT0or5FtmxWKPIad3jaPojAZ
-         4/+Q==
-X-Gm-Message-State: APjAAAVk98sIZZ/hSZUL59K4lAd8x4kjhasN18C4CUMoN+uc7vKmYl2h
-        G+pEUbXpynLxeXeOjzQFVZnrhkmvhR1V1ZOR3PHtV1+aKArD9rfN+k11nLPZiQD8baNm+6Lmj//
-        vWewsple+WPwvOFePTmF50D7r
-X-Received: by 2002:adf:f481:: with SMTP id l1mr25892221wro.123.1566909500323;
-        Tue, 27 Aug 2019 05:38:20 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwI/jOubxVQ3m1X/ohXNC7Qj8WcNWE6wblvwS3EBzKXpryhrcDiEf/YNoTuRfvbBF8ToWpKXQ==
-X-Received: by 2002:adf:f481:: with SMTP id l1mr25892187wro.123.1566909500126;
-        Tue, 27 Aug 2019 05:38:20 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id x10sm16906584wrn.39.2019.08.27.05.38.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 05:38:19 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Tianyu Lan <lantianyu1986@gmail.com>
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm <kvm@vger.kernel.org>,
-        linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        "linux-kernel\@vger kernel org" <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>, corbet@lwn.net,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        michael.h.kelley@microsoft.com
-Subject: Re: [PATCH V3 0/3] KVM/Hyper-V: Add Hyper-V direct tlb flush support
-In-Reply-To: <CAOLK0pzXPG9tBnQoKGTSNHMwXXrEQ4zZH1uWn2F2mQ2ddVcoFA@mail.gmail.com>
-References: <20190819131737.26942-1-Tianyu.Lan@microsoft.com> <87ftlnm7o8.fsf@vitty.brq.redhat.com> <CAOLK0pzXPG9tBnQoKGTSNHMwXXrEQ4zZH1uWn2F2mQ2ddVcoFA@mail.gmail.com>
-Date:   Tue, 27 Aug 2019 14:38:18 +0200
-Message-ID: <87v9uilr5x.fsf@vitty.brq.redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0943620828;
+        Tue, 27 Aug 2019 12:39:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566909584;
+        bh=gLIZt3QBqVQuf+84rdK8Q8Zyrw4B4ptYkFNh+jBJOz0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cAX/tMBD+1cACAn6PI7WwLcPzJ1/XPRN7gQfSmkuq/+5UCxPyREoUYArg/ioTVQfz
+         FrcNULmzSyokQRU04kaPDGrn0ewEo/KNw8SEvmCA/4xzmnDa1WsrVbC1gqkA7GUaqt
+         3/AuOZq/fSOi/m9mPWMuRL3lmxXdHLuSLbjFj/pM=
+Received: by mail-qt1-f170.google.com with SMTP id 44so21042510qtg.11;
+        Tue, 27 Aug 2019 05:39:43 -0700 (PDT)
+X-Gm-Message-State: APjAAAURnSf8p0DL1SLJi4ORVq4wkosLJkJAeXxCxnYZPXG9lDDsFYO3
+        pC+ipPlJLO/T3QZj2WRYm9mtLYrZpZXvPwyTyA==
+X-Google-Smtp-Source: APXvYqyCfwW+vnY+upQob/ly6+wXcqdZa6JFfMjuRTb1mhMFINh9OBYo3iJifS5BK8GagbP7PjxJaz2stYoMBOy0HDU=
+X-Received: by 2002:ac8:44c4:: with SMTP id b4mr22321665qto.224.1566909583245;
+ Tue, 27 Aug 2019 05:39:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190827082652.43840-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190827082652.43840-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <20190827082652.43840-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 27 Aug 2019 07:39:32 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJsTDNR7FsdFouLetzhsRhmr3fVT_xzzhKbR7KuTwepuQ@mail.gmail.com>
+Message-ID: <CAL_JsqJsTDNR7FsdFouLetzhsRhmr3fVT_xzzhKbR7KuTwepuQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
+ for LGM SDXC PHY
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        peter.harliman.liem@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tianyu Lan <lantianyu1986@gmail.com> writes:
-
-> On Tue, Aug 27, 2019 at 2:41 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->>
->> lantianyu1986@gmail.com writes:
->>
->> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->> >
->> > This patchset is to add Hyper-V direct tlb support in KVM. Hyper-V
->> > in L0 can delegate L1 hypervisor to handle tlb flush request from
->> > L2 guest when direct tlb flush is enabled in L1.
->> >
->> > Patch 2 introduces new cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH to enable
->> > feature from user space. User space should enable this feature only
->> > when Hyper-V hypervisor capability is exposed to guest and KVM profile
->> > is hided. There is a parameter conflict between KVM and Hyper-V hypercall.
->> > We hope L2 guest doesn't use KVM hypercall when the feature is
->> > enabled. Detail please see comment of new API
->> > "KVM_CAP_HYPERV_DIRECT_TLBFLUSH"
->>
->> I was thinking about this for awhile and I think I have a better
->> proposal. Instead of adding this new capability let's enable direct TLB
->> flush when KVM guest enables Hyper-V Hypercall page (writes to
->> HV_X64_MSR_HYPERCALL) - this guarantees that the guest doesn't need KVM
->> hypercalls as we can't handle both KVM-style and Hyper-V-style
->> hypercalls simultaneously and kvm_emulate_hypercall() does:
->>
->>         if (kvm_hv_hypercall_enabled(vcpu->kvm))
->>                 return kvm_hv_hypercall(vcpu);
->>
->> What do you think?
->>
->> (and instead of adding the capability we can add kvm.ko module parameter
->> to enable direct tlb flush unconditionally, like
->> 'hv_direct_tlbflush=-1/0/1' with '-1' being the default (autoselect
->> based on Hyper-V hypercall enablement, '0' - permanently disabled, '1' -
->> permanenetly enabled)).
->>
+On Tue, Aug 27, 2019 at 3:27 AM Ramuthevar,Vadivel MuruganX
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 >
-> Hi Vitaly::
->      Actually, I had such idea before. But user space should check
-> whether hv tlb flush
-> is exposed to VM before enabling direct tlb flush. If no, user space
-> should not direct
-> tlb flush for guest since Hyper-V will do more check for each
-> hypercall from nested
-> VM with enabling the feauter..
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>
+> Add a YAML schema to use the host controller driver with the
+> SDXC PHY on Intel's Lightning Mountain SoC.
+>
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> ---
+>  .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> new file mode 100644
+> index 000000000000..be05020880bf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
+> +
+> +maintainers:
+> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> +
+> +description: Binding for SDXC PHY
+> +
+> +properties:
+> +  compatible:
+> +    const: intel,lgm-sdxc-phy
+> +
+> +  intel,syscon:
+> +    description: phandle to the sdxc through syscon
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    maxItems: 1
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +required:
+> +  - "#phy-cells"
+> +  - compatible
+> +  - intel,syscon
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    sdxc_phy: sdxc_phy {
+> +        compatible = "intel,lgm-sdxc-phy";
+> +        intel,syscon = <&sysconf>;
 
-If TLB Flush enlightenment is not exposed to the VM at all there's no
-difference if we enable direct TLB flush in eVMCS or not: the guest
-won't be using 'TLB Flush' hypercall and will do TLB flushing with
-IPIs. And, in case the guest enables Hyper-V hypercall page, it is
-definitelly not going to use KVM hypercalls so we can't break these.
+Rather than a phandle, can this be a child node of sysconf? You need a
+binding for sysconf first anyways.
 
--- 
-Vitaly
+> +        clocks = <&sdxc>;
+> +        clock-names = "sdxcclk";
+> +        #phy-cells = <0>;
+> +    };
+> +
+> +...
+> --
+> 2.11.0
+>
