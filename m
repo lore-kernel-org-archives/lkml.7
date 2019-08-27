@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4092FC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADA1C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F991206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 119DB21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892859;
-	bh=dgHXCG99BbGflJzbvIbU4TrzseN4PJlHozqQ2+cqvng=;
+	s=default; t=1566892863;
+	bh=EunKMO7NaZsk1SXtNvSwvp1m/3+ajkQvwMfGkrVaCYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=omKyUJB64q1XSQdEJjomqjAsCEtoj/Rrd5ptn+cIW9ewCP1dP8iU/TdotC9/OMMRY
-	 x5VYPaoi+YFtEtwamkZYLx5sZgsUXebQ8thCrxbArEHU78APptY6C/SG+tMBmXAQ3l
-	 BiSQvMDx4Q85MnGphKPKWNBPlQXJRWvuAUiffh4k=
+	b=cBf9h2goj6xuIcxQeAUbdsM5U/NsWoAvHb1U3hDpcay65bBzacp2K0NSwpUhfqlWO
+	 oRprgNfsCJ4paf2S68qYfsV0cABCePAzYTAQnpNSPYCCmeGk4gQHnNAmp3vjNlJIhL
+	 CO0RVtnQlc6aEegKq3J4Ze2rWvSr0acCdmsKTOzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730927AbfH0IA6 (ORCPT
+        id S1731638AbfH0IBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:00:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56280 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:01:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729770AbfH0IAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:00:53 -0400
+        id S1730495AbfH0IAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:00:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1215321881;
-        Tue, 27 Aug 2019 08:00:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD729206BA;
+        Tue, 27 Aug 2019 08:00:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892851;
-        bh=dgHXCG99BbGflJzbvIbU4TrzseN4PJlHozqQ2+cqvng=;
+        s=default; t=1566892854;
+        bh=EunKMO7NaZsk1SXtNvSwvp1m/3+ajkQvwMfGkrVaCYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zln5XOtOso7uGp29gD68bGj2fX5mwJYpwExPFiHuguqCmaRsLDxkmqklrxPA/rTj6
-         4P/UQe+iIh/axppjbvjUpcjefbz/NP5vPAiFE05BpXC6ehNS0rlvmoVg7hnpp7UNqA
-         aHtghwS9XDEWAKT0n/a1M9ryU0Xvm/T6gSaqP9oc=
+        b=gGRn7JgR/QPFMdUeveu7qQAVZn4Lth3Jyluy/2BtpnWtbKK0Zn3Mq+iSdO0rjUlNY
+         5TJxu99HQIKnK3mCshrM0klkcVnw3OSw9qni+lVJrpoo6FAR44/XM2xEPBuH52OCES
+         sdEgevEjU4fuTXbd/8FciGWal7ICOsu2X0+HWX3g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Jan=20Sebastian=20G=C3=B6tte?= <linux@jaseg.net>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 036/162] Staging: fbtft: Fix GPIO handling
-Date:   Tue, 27 Aug 2019 09:49:24 +0200
-Message-Id: <20190827072739.532505195@linuxfoundation.org>
+Subject: [PATCH 5.2 037/162] libbpf: silence GCC8 warning about string truncation
+Date:   Tue, 27 Aug 2019 09:49:25 +0200
+Message-Id: <20190827072739.562169335@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -61,168 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 92e3e884887c0d278042fbbb6f6c9b41d6addb71 ]
+[ Upstream commit cb8ffde5694ae5fffb456eae932aac442aa3a207 ]
 
-Commit c440eee1a7a1 ("Staging: fbtft: Switch to the gpio descriptor
-interface") breaks GPIO handling. In several places, checks to only set
-a GPIO if it was configured ended up backwards.
-I have tested this fix. The fixed driver works with a ili9486
-display connected to a raspberry pi via SPI.
+Despite a proper NULL-termination after strncpy(..., ..., IFNAMSIZ - 1),
+GCC8 still complains about *expected* string truncation:
 
-Fixes: c440eee1a7a1d ("Staging: fbtft: Switch to the gpio descriptor interface")
-Tested-by: Jan Sebastian Götte <linux@jaseg.net>
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Jan Sebastian Götte <linux@jaseg.net>
-Link: https://lore.kernel.org/r/75ada52f-afa1-08bc-d0ce-966fc1110e70@jaseg.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  xsk.c:330:2: error: 'strncpy' output may be truncated copying 15 bytes
+  from a string of length 15 [-Werror=stringop-truncation]
+    strncpy(ifr.ifr_name, xsk->ifname, IFNAMSIZ - 1);
+
+This patch gets rid of the issue altogether by using memcpy instead.
+There is no performance regression, as strncpy will still copy and fill
+all of the bytes anyway.
+
+v1->v2:
+- rebase against bpf tree.
+
+Cc: Magnus Karlsson <magnus.karlsson@intel.com>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Acked-by: Magnus Karlsson <magnus.karlsson@intel.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/fbtft/fb_bd663474.c  | 2 +-
- drivers/staging/fbtft/fb_ili9163.c   | 2 +-
- drivers/staging/fbtft/fb_ili9325.c   | 2 +-
- drivers/staging/fbtft/fb_s6d1121.c   | 2 +-
- drivers/staging/fbtft/fb_ssd1289.c   | 2 +-
- drivers/staging/fbtft/fb_ssd1331.c   | 4 ++--
- drivers/staging/fbtft/fb_upd161704.c | 2 +-
- drivers/staging/fbtft/fbtft-bus.c    | 2 +-
- drivers/staging/fbtft/fbtft-core.c   | 4 ++--
- 9 files changed, 11 insertions(+), 11 deletions(-)
+ tools/lib/bpf/xsk.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/fbtft/fb_bd663474.c b/drivers/staging/fbtft/fb_bd663474.c
-index b6c6d66e4eb1b..e2c7646588f8c 100644
---- a/drivers/staging/fbtft/fb_bd663474.c
-+++ b/drivers/staging/fbtft/fb_bd663474.c
-@@ -24,7 +24,7 @@
+diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
+index 8e03b65830da0..fa948c5445ecf 100644
+--- a/tools/lib/bpf/xsk.c
++++ b/tools/lib/bpf/xsk.c
+@@ -336,7 +336,7 @@ static int xsk_get_max_queues(struct xsk_socket *xsk)
+ 		return -errno;
  
- static int init_display(struct fbtft_par *par)
- {
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	par->fbtftops.reset(par);
-diff --git a/drivers/staging/fbtft/fb_ili9163.c b/drivers/staging/fbtft/fb_ili9163.c
-index d609a2b67db9b..fd32376700e28 100644
---- a/drivers/staging/fbtft/fb_ili9163.c
-+++ b/drivers/staging/fbtft/fb_ili9163.c
-@@ -77,7 +77,7 @@ static int init_display(struct fbtft_par *par)
- {
- 	par->fbtftops.reset(par);
- 
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	write_reg(par, MIPI_DCS_SOFT_RESET); /* software reset */
-diff --git a/drivers/staging/fbtft/fb_ili9325.c b/drivers/staging/fbtft/fb_ili9325.c
-index b090e7ab6fdd6..85e54a10ed72c 100644
---- a/drivers/staging/fbtft/fb_ili9325.c
-+++ b/drivers/staging/fbtft/fb_ili9325.c
-@@ -85,7 +85,7 @@ static int init_display(struct fbtft_par *par)
- {
- 	par->fbtftops.reset(par);
- 
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	bt &= 0x07;
-diff --git a/drivers/staging/fbtft/fb_s6d1121.c b/drivers/staging/fbtft/fb_s6d1121.c
-index b3d0701880fe3..5a129b1352cc8 100644
---- a/drivers/staging/fbtft/fb_s6d1121.c
-+++ b/drivers/staging/fbtft/fb_s6d1121.c
-@@ -29,7 +29,7 @@ static int init_display(struct fbtft_par *par)
- {
- 	par->fbtftops.reset(par);
- 
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	/* Initialization sequence from Lib_UTFT */
-diff --git a/drivers/staging/fbtft/fb_ssd1289.c b/drivers/staging/fbtft/fb_ssd1289.c
-index bbf75f795234b..88a5b6925901d 100644
---- a/drivers/staging/fbtft/fb_ssd1289.c
-+++ b/drivers/staging/fbtft/fb_ssd1289.c
-@@ -28,7 +28,7 @@ static int init_display(struct fbtft_par *par)
- {
- 	par->fbtftops.reset(par);
- 
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	write_reg(par, 0x00, 0x0001);
-diff --git a/drivers/staging/fbtft/fb_ssd1331.c b/drivers/staging/fbtft/fb_ssd1331.c
-index 4cfe9f8535d0f..37622c9462aa7 100644
---- a/drivers/staging/fbtft/fb_ssd1331.c
-+++ b/drivers/staging/fbtft/fb_ssd1331.c
-@@ -81,7 +81,7 @@ static void write_reg8_bus8(struct fbtft_par *par, int len, ...)
- 	va_start(args, len);
- 
- 	*buf = (u8)va_arg(args, unsigned int);
--	if (!par->gpio.dc)
-+	if (par->gpio.dc)
- 		gpiod_set_value(par->gpio.dc, 0);
- 	ret = par->fbtftops.write(par, par->buf, sizeof(u8));
- 	if (ret < 0) {
-@@ -104,7 +104,7 @@ static void write_reg8_bus8(struct fbtft_par *par, int len, ...)
- 			return;
- 		}
+ 	ifr.ifr_data = (void *)&channels;
+-	strncpy(ifr.ifr_name, xsk->ifname, IFNAMSIZ - 1);
++	memcpy(ifr.ifr_name, xsk->ifname, IFNAMSIZ - 1);
+ 	ifr.ifr_name[IFNAMSIZ - 1] = '\0';
+ 	err = ioctl(fd, SIOCETHTOOL, &ifr);
+ 	if (err && errno != EOPNOTSUPP) {
+@@ -561,7 +561,7 @@ int xsk_socket__create(struct xsk_socket **xsk_ptr, const char *ifname,
+ 		err = -errno;
+ 		goto out_socket;
  	}
--	if (!par->gpio.dc)
-+	if (par->gpio.dc)
- 		gpiod_set_value(par->gpio.dc, 1);
- 	va_end(args);
- }
-diff --git a/drivers/staging/fbtft/fb_upd161704.c b/drivers/staging/fbtft/fb_upd161704.c
-index 564a38e344406..c77832ae5e5ba 100644
---- a/drivers/staging/fbtft/fb_upd161704.c
-+++ b/drivers/staging/fbtft/fb_upd161704.c
-@@ -26,7 +26,7 @@ static int init_display(struct fbtft_par *par)
- {
- 	par->fbtftops.reset(par);
+-	strncpy(xsk->ifname, ifname, IFNAMSIZ - 1);
++	memcpy(xsk->ifname, ifname, IFNAMSIZ - 1);
+ 	xsk->ifname[IFNAMSIZ - 1] = '\0';
  
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	/* Initialization sequence from Lib_UTFT */
-diff --git a/drivers/staging/fbtft/fbtft-bus.c b/drivers/staging/fbtft/fbtft-bus.c
-index 2ea814d0dca5d..63c65dd67b175 100644
---- a/drivers/staging/fbtft/fbtft-bus.c
-+++ b/drivers/staging/fbtft/fbtft-bus.c
-@@ -135,7 +135,7 @@ int fbtft_write_vmem16_bus8(struct fbtft_par *par, size_t offset, size_t len)
- 	remain = len / 2;
- 	vmem16 = (u16 *)(par->info->screen_buffer + offset);
- 
--	if (!par->gpio.dc)
-+	if (par->gpio.dc)
- 		gpiod_set_value(par->gpio.dc, 1);
- 
- 	/* non buffered write */
-diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
-index bc750250ccd6c..5127de922f6a2 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -916,7 +916,7 @@ static int fbtft_init_display_dt(struct fbtft_par *par)
- 		return -EINVAL;
- 
- 	par->fbtftops.reset(par);
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	while (p) {
-@@ -1007,7 +1007,7 @@ int fbtft_init_display(struct fbtft_par *par)
- 	}
- 
- 	par->fbtftops.reset(par);
--	if (!par->gpio.cs)
-+	if (par->gpio.cs)
- 		gpiod_set_value(par->gpio.cs, 0);  /* Activate chip */
- 
- 	i = 0;
+ 	err = xsk_set_xdp_socket_config(&xsk->config, usr_config);
 -- 
 2.20.1
 
