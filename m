@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 394F8C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DFFC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D77521872
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88991206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892600;
-	bh=6tzFu+IH3xMWPHKOI60XXzQnZkJRCFrsRr9v/2+Exic=;
+	s=default; t=1566892602;
+	bh=wBDTt3QJeNyBbFdPFFDHHbJOAO4Y4cMJPz8/cwlUn7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yPnODy1ARRuts7NtF96zU148hVC4N0Gjmo0e8Dom1lE2aCXIVj2g6TB49o40DmlZF
-	 JK57Y9fZ51887csR/YKLz8qZNx4Hef6DZmUAYIKX/snmVeCF618HwIRCXBbqiy0i+F
-	 UjLx8GfC/lxRLvXfcKKKM5trHBp19nmC9A+9lPw4=
+	b=r9dO8p3/hVAF7iQG4Es/Rj2zm8fPHSYF9SU4+o/FworRNFEI68Wdb0Sj7DwfN28WS
+	 3WgcLIPUwDkwGREwGAEpHxqcjN2HVBzysoLZYCVx/F2KKB628Df83BEgwBwP8+Nvkx
+	 Zv2XG1nsjU13GKWO25x2j8MmP1vxDY7Xgn5/n4ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730657AbfH0H4j (ORCPT
+        id S1729139AbfH0H4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:56:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48624 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:56:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730071AbfH0H4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:56:37 -0400
+        id S1730656AbfH0H4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:56:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C3DC206BF;
-        Tue, 27 Aug 2019 07:56:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AA58217F5;
+        Tue, 27 Aug 2019 07:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892596;
-        bh=6tzFu+IH3xMWPHKOI60XXzQnZkJRCFrsRr9v/2+Exic=;
+        s=default; t=1566892599;
+        bh=wBDTt3QJeNyBbFdPFFDHHbJOAO4Y4cMJPz8/cwlUn7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sndbT2MxkRSphl+czNL+WSlPK8jKkecsUDOep4bcSriVqcQf28Ce4Exg20C+IKvrr
-         SWLHNlbnmws8gQna0AmeiXQA4UCPJjhToH6TAj8KvAX+D8EVfpGbracrzhiz+rZg8R
-         U26AOV2E/vuf7lIYnZ+fEtDebOMXxEwcEgzweQuE=
+        b=NG7H+U8pZa1ML8TuivjZCoLOkruC3UC3iRGNvsZn3/9aVc9Aw4c/vJYsYlQsNMDk7
+         kyy4HbJSfAmffSh4bRKKyelBjZL+n+bqijye+rZn3DMZ50HMsBMyynV9SHeTZTlLLy
+         A8sUUyW8xHbrzYogWhK3XbAPLOgm1g5rSPI6rjKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Willem de Bruijn <willemb@google.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 46/98] net: hisilicon: fix hip04-xmit never return TX_BUSY
-Date:   Tue, 27 Aug 2019 09:50:25 +0200
-Message-Id: <20190827072720.657656089@linuxfoundation.org>
+Subject: [PATCH 4.19 11/98] can: dev: call netif_carrier_off() in register_candev()
+Date:   Tue, 27 Aug 2019 09:49:50 +0200
+Message-Id: <20190827072718.817559293@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -60,39 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f2243b82785942be519016067ee6c55a063bbfe2 ]
+[ Upstream commit c63845609c4700488e5eacd6ab4d06d5d420e5ef ]
 
-TX_DESC_NUM is 256, in tx_count, the maximum value of
-mod(TX_DESC_NUM - 1) is 254, the variable "count" in
-the hip04_mac_start_xmit function is never equal to
-(TX_DESC_NUM - 1), so hip04_mac_start_xmit never
-return NETDEV_TX_BUSY.
+CONFIG_CAN_LEDS is deprecated. When trying to use the generic netdev
+trigger as suggested, there's a small inconsistency with the link
+property: The LED is on initially, stays on when the device is brought
+up, and then turns off (as expected) when the device is brought down.
 
-tx_count is modified to mod(TX_DESC_NUM) so that
-the maximum value of tx_count can reach
-(TX_DESC_NUM - 1), then hip04_mac_start_xmit can reurn
-NETDEV_TX_BUSY.
+Make sure the LED always reflects the state of the CAN device.
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/can/dev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 57c0afa25f9fb..fe3b1637fd5f4 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -185,7 +185,7 @@ struct hip04_priv {
+diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
+index c05e4d50d43d7..bd127ce3aba24 100644
+--- a/drivers/net/can/dev.c
++++ b/drivers/net/can/dev.c
+@@ -1260,6 +1260,8 @@ int register_candev(struct net_device *dev)
+ 		return -EINVAL;
  
- static inline unsigned int tx_count(unsigned int head, unsigned int tail)
- {
--	return (head - tail) % (TX_DESC_NUM - 1);
-+	return (head - tail) % TX_DESC_NUM;
+ 	dev->rtnl_link_ops = &can_link_ops;
++	netif_carrier_off(dev);
++
+ 	return register_netdev(dev);
  }
- 
- static void hip04_config_port(struct net_device *ndev, u32 speed, u32 duplex)
+ EXPORT_SYMBOL_GPL(register_candev);
 -- 
 2.20.1
 
