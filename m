@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DEAC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CF1C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E35F72173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C6C2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893419;
-	bh=pAW0MPJCZGmMdY8BZZKPTCFuo+3e8TxH6f0jSsftJ4c=;
+	s=default; t=1566893423;
+	bh=kH1AlPcY4Ev867+PpJaN3BPrKmFvMuvABNNNdCTn1Jg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hpNrie1fxQxF7qiC+V82QacqybRkHtx2JHW/NC4L2kZKTZTpm7p3XeIWn+RaZrWRE
-	 pJId2g/Uywuue4vsv7I0jWlUJcnPSU+rYok4kAdKihRY+c6tHhTCbeh9QY2mc5jNey
-	 FbwgUfak8Ua+q3z7XVmMlseGDk5UgMRmZHSKdi+c=
+	b=pyweL0sWyLHjjY0ZanmTj5VlsYVEeMR5arrXm1k6cTisQOhyX4FfZlFvixFS89++K
+	 W85GVZNzfYDV13IwOPf1/bd+eA8hfHT99vDbIahv/QlQ8sjULor7kUdW65eR+m2Ub9
+	 pnEMMMwBAz7CEmSxFr2lfBCCEtjarVY8KApAfY9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732048AbfH0ICn (ORCPT
+        id S1732430AbfH0IKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:02:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59690 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:10:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732005AbfH0ICg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:02:36 -0400
+        id S1732036AbfH0ICl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:02:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5287206BF;
-        Tue, 27 Aug 2019 08:02:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DAD6206BF;
+        Tue, 27 Aug 2019 08:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892954;
-        bh=pAW0MPJCZGmMdY8BZZKPTCFuo+3e8TxH6f0jSsftJ4c=;
+        s=default; t=1566892960;
+        bh=kH1AlPcY4Ev867+PpJaN3BPrKmFvMuvABNNNdCTn1Jg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P0So7RJeAXNonu3cNqK24UxgqliTJ+ic6zBuqmYULfjt7a14jKhGIFI2FONrYBo3J
-         95IAYAAwA6mJx9q2Cu8ITccwc7W7uOWgBqRC0JWJgb/5XixujjFcFxVS62R298NitJ
-         BB33ytUWZWBTnAPnUasnyBVXD8WDfZGQtloXr6FA=
+        b=dhO/qhw+NdC228QgK9CkYk0lIBWcnBgJWW4lTILCRst9jEx1FEMNEgheMhqyn6Qvd
+         4H+py3WU6JPHHU0h7sUlBsJL4mwFj+2CJwSw6BsChL8amyDA5GYPplnVFaXPCLw9u6
+         FeUnf0q4wPLW0K/TCmSH6Rx9MgpLH/d92iSUgplY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 073/162] NFSv4.1: Fix open stateid recovery
-Date:   Tue, 27 Aug 2019 09:50:01 +0200
-Message-Id: <20190827072740.668662587@linuxfoundation.org>
+Subject: [PATCH 5.2 075/162] NFSv4: Fix a potential sleep while atomic in nfs4_do_reclaim()
+Date:   Tue, 27 Aug 2019 09:50:03 +0200
+Message-Id: <20190827072740.727775456@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,170 +60,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 27a30cf64a5cbe2105e4ff9613246b32d584766a ]
+[ Upstream commit c77e22834ae9a11891cb613bd9a551be1b94f2bc ]
 
-The logic for checking in nfs41_check_open_stateid() whether the state
-is supported by a delegation is inverted. In addition, it makes more
-sense to perform that check before we check for expired locks.
+John Hubbard reports seeing the following stack trace:
 
-Fixes: 8a64c4ef106d1 ("NFSv4.1: Even if the stateid is OK,...")
+nfs4_do_reclaim
+   rcu_read_lock /* we are now in_atomic() and must not sleep */
+       nfs4_purge_state_owners
+           nfs4_free_state_owner
+               nfs4_destroy_seqid_counter
+                   rpc_destroy_wait_queue
+                       cancel_delayed_work_sync
+                           __cancel_work_timer
+                               __flush_work
+                                   start_flush_work
+                                       might_sleep:
+                                        (kernel/workqueue.c:2975: BUG)
+
+The solution is to separate out the freeing of the state owners
+from nfs4_purge_state_owners(), and perform that outside the atomic
+context.
+
+Reported-by: John Hubbard <jhubbard@nvidia.com>
+Fixes: 0aaaf5c424c7f ("NFS: Cache state owners after files are closed")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 65 +++++++++++++++++++++++++++--------------------
- 1 file changed, 38 insertions(+), 27 deletions(-)
+ fs/nfs/nfs4_fs.h    |  3 ++-
+ fs/nfs/nfs4client.c |  5 ++++-
+ fs/nfs/nfs4state.c  | 27 ++++++++++++++++++++++-----
+ 3 files changed, 28 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 420f2350c2781..74e1732a4bd01 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -1654,6 +1654,14 @@ static void nfs_state_set_open_stateid(struct nfs4_state *state,
- 	write_sequnlock(&state->seqlock);
- }
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 8a38a254f5162..235919156eddd 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -465,7 +465,8 @@ static inline void nfs4_schedule_session_recovery(struct nfs4_session *session,
  
-+static void nfs_state_clear_open_state_flags(struct nfs4_state *state)
-+{
-+	clear_bit(NFS_O_RDWR_STATE, &state->flags);
-+	clear_bit(NFS_O_WRONLY_STATE, &state->flags);
-+	clear_bit(NFS_O_RDONLY_STATE, &state->flags);
-+	clear_bit(NFS_OPEN_STATE, &state->flags);
-+}
-+
- static void nfs_state_set_delegation(struct nfs4_state *state,
- 		const nfs4_stateid *deleg_stateid,
- 		fmode_t fmode)
-@@ -2049,13 +2057,7 @@ static int nfs4_open_recover(struct nfs4_opendata *opendata, struct nfs4_state *
+ extern struct nfs4_state_owner *nfs4_get_state_owner(struct nfs_server *, const struct cred *, gfp_t);
+ extern void nfs4_put_state_owner(struct nfs4_state_owner *);
+-extern void nfs4_purge_state_owners(struct nfs_server *);
++extern void nfs4_purge_state_owners(struct nfs_server *, struct list_head *);
++extern void nfs4_free_state_owners(struct list_head *head);
+ extern struct nfs4_state * nfs4_get_open_state(struct inode *, struct nfs4_state_owner *);
+ extern void nfs4_put_open_state(struct nfs4_state *);
+ extern void nfs4_close_state(struct nfs4_state *, fmode_t);
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index 81b9b6d7927ac..208a236dc2350 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -758,9 +758,12 @@ out:
+ 
+ static void nfs4_destroy_server(struct nfs_server *server)
  {
- 	int ret;
- 
--	/* Don't trigger recovery in nfs_test_and_clear_all_open_stateid */
--	clear_bit(NFS_O_RDWR_STATE, &state->flags);
--	clear_bit(NFS_O_WRONLY_STATE, &state->flags);
--	clear_bit(NFS_O_RDONLY_STATE, &state->flags);
- 	/* memory barrier prior to reading state->n_* */
--	clear_bit(NFS_DELEGATED_STATE, &state->flags);
--	clear_bit(NFS_OPEN_STATE, &state->flags);
- 	smp_rmb();
- 	ret = nfs4_open_recover_helper(opendata, FMODE_READ|FMODE_WRITE);
- 	if (ret != 0)
-@@ -2131,6 +2133,8 @@ static int nfs4_open_reclaim(struct nfs4_state_owner *sp, struct nfs4_state *sta
- 	ctx = nfs4_state_find_open_context(state);
- 	if (IS_ERR(ctx))
- 		return -EAGAIN;
-+	clear_bit(NFS_DELEGATED_STATE, &state->flags);
-+	nfs_state_clear_open_state_flags(state);
- 	ret = nfs4_do_open_reclaim(ctx, state);
- 	put_nfs_open_context(ctx);
- 	return ret;
-@@ -2672,6 +2676,7 @@ static int nfs40_open_expired(struct nfs4_state_owner *sp, struct nfs4_state *st
- {
- 	/* NFSv4.0 doesn't allow for delegation recovery on open expire */
- 	nfs40_clear_delegation_stateid(state);
-+	nfs_state_clear_open_state_flags(state);
- 	return nfs4_open_expired(sp, state);
- }
- 
-@@ -2714,13 +2719,13 @@ out_free:
- 	return -NFS4ERR_EXPIRED;
- }
- 
--static void nfs41_check_delegation_stateid(struct nfs4_state *state)
-+static int nfs41_check_delegation_stateid(struct nfs4_state *state)
- {
- 	struct nfs_server *server = NFS_SERVER(state->inode);
- 	nfs4_stateid stateid;
- 	struct nfs_delegation *delegation;
- 	const struct cred *cred = NULL;
--	int status;
-+	int status, ret = NFS_OK;
- 
- 	/* Get the delegation credential for use by test/free_stateid */
- 	rcu_read_lock();
-@@ -2728,20 +2733,15 @@ static void nfs41_check_delegation_stateid(struct nfs4_state *state)
- 	if (delegation == NULL) {
- 		rcu_read_unlock();
- 		nfs_state_clear_delegation(state);
--		return;
-+		return NFS_OK;
- 	}
- 
- 	nfs4_stateid_copy(&stateid, &delegation->stateid);
--	if (test_bit(NFS_DELEGATION_REVOKED, &delegation->flags)) {
--		rcu_read_unlock();
--		nfs_state_clear_delegation(state);
--		return;
--	}
- 
- 	if (!test_and_clear_bit(NFS_DELEGATION_TEST_EXPIRED,
- 				&delegation->flags)) {
- 		rcu_read_unlock();
--		return;
-+		return NFS_OK;
- 	}
- 
- 	if (delegation->cred)
-@@ -2751,8 +2751,24 @@ static void nfs41_check_delegation_stateid(struct nfs4_state *state)
- 	trace_nfs4_test_delegation_stateid(state, NULL, status);
- 	if (status == -NFS4ERR_EXPIRED || status == -NFS4ERR_BAD_STATEID)
- 		nfs_finish_clear_delegation_stateid(state, &stateid);
-+	else
-+		ret = status;
- 
- 	put_cred(cred);
-+	return ret;
-+}
++	LIST_HEAD(freeme);
 +
-+static void nfs41_delegation_recover_stateid(struct nfs4_state *state)
-+{
-+	nfs4_stateid tmp;
-+
-+	if (test_bit(NFS_DELEGATED_STATE, &state->flags) &&
-+	    nfs4_copy_delegation_stateid(state->inode, state->state,
-+				&tmp, NULL) &&
-+	    nfs4_stateid_match_other(&state->stateid, &tmp))
-+		nfs_state_set_delegation(state, &tmp, state->state);
-+	else
-+		nfs_state_clear_delegation(state);
+ 	nfs_server_return_all_delegations(server);
+ 	unset_pnfs_layoutdriver(server);
+-	nfs4_purge_state_owners(server);
++	nfs4_purge_state_owners(server, &freeme);
++	nfs4_free_state_owners(&freeme);
  }
  
+ /*
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 556ec916846f0..261de26d897f7 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -624,24 +624,39 @@ void nfs4_put_state_owner(struct nfs4_state_owner *sp)
  /**
-@@ -2822,21 +2838,12 @@ static int nfs41_check_open_stateid(struct nfs4_state *state)
- 	const struct cred *cred = state->owner->so_cred;
- 	int status;
- 
--	if (test_bit(NFS_OPEN_STATE, &state->flags) == 0) {
--		if (test_bit(NFS_DELEGATED_STATE, &state->flags) == 0)  {
--			if (nfs4_have_delegation(state->inode, state->state))
--				return NFS_OK;
--			return -NFS4ERR_OPENMODE;
--		}
-+	if (test_bit(NFS_OPEN_STATE, &state->flags) == 0)
- 		return -NFS4ERR_BAD_STATEID;
--	}
- 	status = nfs41_test_and_free_expired_stateid(server, stateid, cred);
- 	trace_nfs4_test_open_stateid(state, NULL, status);
- 	if (status == -NFS4ERR_EXPIRED || status == -NFS4ERR_BAD_STATEID) {
--		clear_bit(NFS_O_RDONLY_STATE, &state->flags);
--		clear_bit(NFS_O_WRONLY_STATE, &state->flags);
--		clear_bit(NFS_O_RDWR_STATE, &state->flags);
--		clear_bit(NFS_OPEN_STATE, &state->flags);
-+		nfs_state_clear_open_state_flags(state);
- 		stateid->type = NFS4_INVALID_STATEID_TYPE;
- 		return status;
- 	}
-@@ -2849,7 +2856,11 @@ static int nfs41_open_expired(struct nfs4_state_owner *sp, struct nfs4_state *st
+  * nfs4_purge_state_owners - Release all cached state owners
+  * @server: nfs_server with cached state owners to release
++ * @head: resulting list of state owners
+  *
+  * Called at umount time.  Remaining state owners will be on
+  * the LRU with ref count of zero.
++ * Note that the state owners are not freed, but are added
++ * to the list @head, which can later be used as an argument
++ * to nfs4_free_state_owners.
+  */
+-void nfs4_purge_state_owners(struct nfs_server *server)
++void nfs4_purge_state_owners(struct nfs_server *server, struct list_head *head)
  {
- 	int status;
+ 	struct nfs_client *clp = server->nfs_client;
+ 	struct nfs4_state_owner *sp, *tmp;
+-	LIST_HEAD(doomed);
  
--	nfs41_check_delegation_stateid(state);
-+	status = nfs41_check_delegation_stateid(state);
-+	if (status != NFS_OK)
-+		return status;
-+	nfs41_delegation_recover_stateid(state);
+ 	spin_lock(&clp->cl_lock);
+ 	list_for_each_entry_safe(sp, tmp, &server->state_owners_lru, so_lru) {
+-		list_move(&sp->so_lru, &doomed);
++		list_move(&sp->so_lru, head);
+ 		nfs4_remove_state_owner_locked(sp);
+ 	}
+ 	spin_unlock(&clp->cl_lock);
++}
+ 
+-	list_for_each_entry_safe(sp, tmp, &doomed, so_lru) {
++/**
++ * nfs4_purge_state_owners - Release all cached state owners
++ * @head: resulting list of state owners
++ *
++ * Frees a list of state owners that was generated by
++ * nfs4_purge_state_owners
++ */
++void nfs4_free_state_owners(struct list_head *head)
++{
++	struct nfs4_state_owner *sp, *tmp;
 +
- 	status = nfs41_check_expired_locks(state);
- 	if (status != NFS_OK)
- 		return status;
++	list_for_each_entry_safe(sp, tmp, head, so_lru) {
+ 		list_del(&sp->so_lru);
+ 		nfs4_free_state_owner(sp);
+ 	}
+@@ -1864,12 +1879,13 @@ static int nfs4_do_reclaim(struct nfs_client *clp, const struct nfs4_state_recov
+ 	struct nfs4_state_owner *sp;
+ 	struct nfs_server *server;
+ 	struct rb_node *pos;
++	LIST_HEAD(freeme);
+ 	int status = 0;
+ 
+ restart:
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
+-		nfs4_purge_state_owners(server);
++		nfs4_purge_state_owners(server, &freeme);
+ 		spin_lock(&clp->cl_lock);
+ 		for (pos = rb_first(&server->state_owners);
+ 		     pos != NULL;
+@@ -1898,6 +1914,7 @@ restart:
+ 		spin_unlock(&clp->cl_lock);
+ 	}
+ 	rcu_read_unlock();
++	nfs4_free_state_owners(&freeme);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
