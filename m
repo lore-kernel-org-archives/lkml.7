@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6361AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59200C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36FA82186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 266962184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893050;
-	bh=EckM6EaT5wZqSIkZEo54Rgu+k2ypMTKdIE9vRi5T4LE=;
+	s=default; t=1566893053;
+	bh=zOFzaPp3tC6o+qncWuZ6pg4/tqSgJwxflaLtgkbW6hg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=paXuTmE8woSd/Uo4vzWs+DJ1tX25mHPBI638nKDk1hbznQXtdeFZOMN49RO42sGu7
-	 j7pfBxL57s+uZhhWiq8Q5gsleuBrQY3E7vi7pFHmCSyYvHKBERki+xonGIRcyWLl1P
-	 /kNW5J+RpiFDjuWPLmmMbd6YMPIgVeIbJmZEVbVo=
+	b=2ls2lz3tXULnvbcuXY70FsFvEl3y1BeHTwyp2yCevrmHd9/T458citMlQ/nisPedS
+	 rqd4cwmWX7O1PR0JGqDiIpTYC8YgXy3D3ISLjHpiTXVPal/N4u82vy+oZAtwVYNsx4
+	 AZPCGKeoRV2hvNEFGgM1foOydYcMLiAcmmv4RosA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731666AbfH0IEJ (ORCPT
+        id S1732484AbfH0IEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:04:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33308 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730433AbfH0IEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:04:02 -0400
+        id S1731961AbfH0IEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:04:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 277A4206BF;
-        Tue, 27 Aug 2019 08:04:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E93E6206BA;
+        Tue, 27 Aug 2019 08:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893041;
-        bh=EckM6EaT5wZqSIkZEo54Rgu+k2ypMTKdIE9vRi5T4LE=;
+        s=default; t=1566893044;
+        bh=zOFzaPp3tC6o+qncWuZ6pg4/tqSgJwxflaLtgkbW6hg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vuizu/5aQTBxt1MzQcnG4Exlo7sMKG8rQWL6CY+RRZHu4v9oK9VswIaFwYZ+vzWFx
-         fqlH6upaV0oz2JclAyb4fAxEcDI2nhPUIhr37qfgaf1fmibbSh5ADtayijFNC7jm9z
-         PhGUjdB/iCre8HQlSUfAqnsNC5A2I/8nCxrKZBJI=
+        b=KL+LRDby6EL6caFXckAYL/zLQCB5c4ecI/8dnEJNRosesRTSVlHhDl9EGDR0rIbwD
+         P1BJoDUUuatV6yTkjs/ODPBGkPW44eOvuiNxXOqGhCCyNIqiNcrqvSvYQYg5hNWaNQ
+         8vUd5oDM/BfKdWFg3V4GjV3By0NqWRDlfyAEpEgM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 098/162] libata: add SG safety checks in SFF pio transfers
-Date:   Tue, 27 Aug 2019 09:50:26 +0200
-Message-Id: <20190827072741.639793873@linuxfoundation.org>
+        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 099/162] x86/lib/cpu: Address missing prototypes warning
+Date:   Tue, 27 Aug 2019 09:50:27 +0200
+Message-Id: <20190827072741.681322652@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -59,44 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 752ead44491e8c91e14d7079625c5916b30921c5 ]
+[ Upstream commit 04f5bda84b0712d6f172556a7e8dca9ded5e73b9 ]
 
-Abort processing of a command if we run out of mapped data in the
-SG list. This should never happen, but a previous bug caused it to
-be possible. Play it safe and attempt to abort nicely if we don't
-have more SG segments left.
+When building with W=1, warnings about missing prototypes are emitted:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+  CC      arch/x86/lib/cpu.o
+arch/x86/lib/cpu.c:5:14: warning: no previous prototype for 'x86_family' [-Wmissing-prototypes]
+    5 | unsigned int x86_family(unsigned int sig)
+      |              ^~~~~~~~~~
+arch/x86/lib/cpu.c:18:14: warning: no previous prototype for 'x86_model' [-Wmissing-prototypes]
+   18 | unsigned int x86_model(unsigned int sig)
+      |              ^~~~~~~~~
+arch/x86/lib/cpu.c:33:14: warning: no previous prototype for 'x86_stepping' [-Wmissing-prototypes]
+   33 | unsigned int x86_stepping(unsigned int sig)
+      |              ^~~~~~~~~~~~
+
+Add the proper include file so the prototypes are there.
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/42513.1565234837@turing-police
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-sff.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/lib/cpu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
-index 10aa278821427..4f115adb4ee83 100644
---- a/drivers/ata/libata-sff.c
-+++ b/drivers/ata/libata-sff.c
-@@ -658,6 +658,10 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
- 	unsigned int offset;
- 	unsigned char *buf;
+diff --git a/arch/x86/lib/cpu.c b/arch/x86/lib/cpu.c
+index 04967cdce5d12..7ad68917a51e8 100644
+--- a/arch/x86/lib/cpu.c
++++ b/arch/x86/lib/cpu.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/types.h>
+ #include <linux/export.h>
++#include <asm/cpu.h>
  
-+	if (!qc->cursg) {
-+		qc->curbytes = qc->nbytes;
-+		return;
-+	}
- 	if (qc->curbytes == qc->nbytes - qc->sect_size)
- 		ap->hsm_task_state = HSM_ST_LAST;
- 
-@@ -683,6 +687,8 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
- 
- 	if (qc->cursg_ofs == qc->cursg->length) {
- 		qc->cursg = sg_next(qc->cursg);
-+		if (!qc->cursg)
-+			ap->hsm_task_state = HSM_ST_LAST;
- 		qc->cursg_ofs = 0;
- 	}
- }
+ unsigned int x86_family(unsigned int sig)
+ {
 -- 
 2.20.1
 
