@@ -2,174 +2,363 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6D6C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9A1C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBB220828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DCB020828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:46:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xHm5ro9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbfH0Fq1 (ORCPT
+        id S1729132AbfH0Fqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 01:46:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42668 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbfH0Fq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 01:46:27 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 33CA410C696C;
-        Tue, 27 Aug 2019 05:46:26 +0000 (UTC)
-Received: from localhost (ovpn-12-125.pek2.redhat.com [10.72.12.125])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E30661001944;
-        Tue, 27 Aug 2019 05:46:22 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 13:46:20 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Kairui Song <kasong@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Lianbo Jiang <lijiang@redhat.com>,
-        Dave Young <dyoung@redhat.com>, x86@kernel.org,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Subject: Re: [PATCH v2] x86/kdump: Reserve extra memory when SME or SEV is
- active
-Message-ID: <20190827054620.GB12242@MiWiFi-R3L-srv>
-References: <20190826044535.9646-1-kasong@redhat.com>
+        Tue, 27 Aug 2019 01:46:32 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47236 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfH0Fqb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 01:46:31 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7R5kG9A107128;
+        Tue, 27 Aug 2019 00:46:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566884776;
+        bh=ZAF6lxduyg1DAVm1+t6edccVUM1EdHkaqdYbZYXZhs8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=xHm5ro9L+Re37Rl4h/bOVIzb7tdWP8WOnvEyMvvKaQVvupJfwiLnA0m5RctCJPXYO
+         8q+NX5TZuoNBT0PHL00CN/OhjceROuazI7sFVliSikACr2SEMskLIVMATg/ZhMovPb
+         t0q0aMZWd5YuGIf4h2SOKney9ujCAtMMU1o8ngMs=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7R5kG9Q124670
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 27 Aug 2019 00:46:16 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 27
+ Aug 2019 00:46:15 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 27 Aug 2019 00:46:15 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7R5kDPw088826;
+        Tue, 27 Aug 2019 00:46:13 -0500
+Subject: Re: [PATCH] drm/bridge: tc358767: Expose test mode functionality via
+ debugfs
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        <dri-devel@lists.freedesktop.org>
+CC:     Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        <linux-kernel@vger.kernel.org>
+References: <20190826182524.5064-1-andrew.smirnov@gmail.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <3cc666bd-36f7-c1ca-e369-ee88cd06332c@ti.com>
+Date:   Tue, 27 Aug 2019 08:46:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826044535.9646-1-kasong@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Tue, 27 Aug 2019 05:46:26 +0000 (UTC)
+In-Reply-To: <20190826182524.5064-1-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/26/19 at 12:45pm, Kairui Song wrote:
-> Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
-> SWIOTLB will be enabled even if there is less than 4G of memory when SME
-> is active, to support DMA of devices that not support address with the
-> encrypt bit.
-> 
-> And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
-> active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
-> 
-> Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
-> encryption") will always force SWIOTLB to be enabled when SEV is active
-> in all cases.
-> 
-> Now, when either SME or SEV is active, SWIOTLB will be force enabled,
-> and this is also true for kdump kernel. As a result kdump kernel will
-> run out of already scarce pre-reserved memory easily.
-> 
-> So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
-> kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
-> is specified or any offset is used. As for the high reservation case, an
-> extra low memory region will always be reserved and that is enough for
-> SWIOTLB. Else if the offset format is used, user should be fully aware
-> of any possible kdump kernel memory requirement and have to organize the
-> memory usage carefully.
-> 
-> Signed-off-by: Kairui Song <kasong@redhat.com>
+Hi,
 
-The patch looks good to me, ack it.
-
-Acked-by: Baoquan He <bhe@redhat.com>
-
-Thanks
-Baoquan
-
+On 26/08/2019 21:25, Andrey Smirnov wrote:
+> Presently, the driver code artificially limits test pattern mode to a
+> single pattern with fixed color selection. It being a kernel module
+> parameter makes switching "test patter" <-> "proper output" modes
+> on-the-fly clunky and outright impossible if the driver is built into
+> the kernel.
 > 
+> To improve the situation a bit, convert current test pattern code to
+> use debugfs instead by exposing "TestCtl" register. This way old
+> "tc_test_pattern=1" functionality can be emulated via:
+> 
+>      echo -n 0x78146312 > tstctl
+> 
+> and switch back to regular mode can be done with:
+> 
+>      echo -n 0x78146310 > tstctl
+
+It might be worth explaining the format in the commit msg or in a 
+comment in the driver.
+
+> Note that switching to any of the test patterns, will NOT trigger link
+> re-establishment whereas switching to normal operation WILL. This is
+> done so:
+> 
+> a) we can isolate and verify (e)DP link functionality by switching to
+>     one of the test patters
+> 
+> b) trigger a link re-establishment by switching back to normal mode
+> 
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Andrzej Hajda <a.hajda@samsung.com>
+> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Cc: Cory Tusar <cory.tusar@zii.aero>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-kernel@vger.kernel.org
 > ---
-> Update from V1:
-> - Use mem_encrypt_active() instead of "sme_active() || sev_active()"
-> - Don't reserve extra memory when ",high" or "@offset" is used, and
->   don't print redundant message.
-> - Fix coding style problem
+>   drivers/gpu/drm/bridge/tc358767.c | 137 ++++++++++++++++++++++--------
+>   1 file changed, 101 insertions(+), 36 deletions(-)
 > 
->  arch/x86/kernel/setup.c | 31 ++++++++++++++++++++++++++++---
->  1 file changed, 28 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index bbe35bf879f5..221beb10c55d 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -528,7 +528,7 @@ static int __init reserve_crashkernel_low(void)
->  
->  static void __init reserve_crashkernel(void)
->  {
-> -	unsigned long long crash_size, crash_base, total_mem;
-> +	unsigned long long crash_size, crash_base, total_mem, mem_enc_req;
->  	bool high = false;
->  	int ret;
->  
-> @@ -550,6 +550,15 @@ static void __init reserve_crashkernel(void)
->  		return;
->  	}
->  
-> +	/*
-> +	 * When SME/SEV is active, it will always required an extra SWIOTLB
-> +	 * region.
-> +	 */
-> +	if (mem_encrypt_active())
-> +		mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
-> +	else
-> +		mem_enc_req = 0;
+> diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+> index 6308d93ad91d..7a795b613ed0 100644
+> --- a/drivers/gpu/drm/bridge/tc358767.c
+> +++ b/drivers/gpu/drm/bridge/tc358767.c
+> @@ -17,6 +17,7 @@
+>   
+>   #include <linux/bitfield.h>
+>   #include <linux/clk.h>
+> +#include <linux/debugfs.h>
+>   #include <linux/device.h>
+>   #include <linux/gpio/consumer.h>
+>   #include <linux/i2c.h>
+> @@ -222,11 +223,10 @@
+>   #define COLOR_B			GENMASK(15, 8)
+>   #define ENI2CFILTER		BIT(4)
+>   #define COLOR_BAR_MODE		GENMASK(1, 0)
+> +#define COLOR_BAR_MODE_NORMAL	0
+>   #define COLOR_BAR_MODE_BARS	2
+> -#define PLL_DBG			0x0a04
+>   
+> -static bool tc_test_pattern;
+> -module_param_named(test, tc_test_pattern, bool, 0644);
+> +#define PLL_DBG			0x0a04
+>   
+>   struct tc_edp_link {
+>   	struct drm_dp_link	base;
+> @@ -789,16 +789,6 @@ static int tc_set_video_mode(struct tc_data *tc,
+>   	if (ret)
+>   		return ret;
+>   
+> -	/* Test pattern settings */
+> -	ret = regmap_write(tc->regmap, TSTCTL,
+> -			   FIELD_PREP(COLOR_R, 120) |
+> -			   FIELD_PREP(COLOR_G, 20) |
+> -			   FIELD_PREP(COLOR_B, 99) |
+> -			   ENI2CFILTER |
+> -			   FIELD_PREP(COLOR_BAR_MODE, COLOR_BAR_MODE_BARS));
+> -	if (ret)
+> -		return ret;
+> -
+>   	/* DP Main Stream Attributes */
+>   	vid_sync_dly = hsync_len + left_margin + mode->hdisplay;
+>   	ret = regmap_write(tc->regmap, DP0_VIDSYNCDELAY,
+> @@ -1150,14 +1140,6 @@ static int tc_stream_enable(struct tc_data *tc)
+>   
+>   	dev_dbg(tc->dev, "enable video stream\n");
+>   
+> -	/* PXL PLL setup */
+> -	if (tc_test_pattern) {
+> -		ret = tc_pxl_pll_en(tc, clk_get_rate(tc->refclk),
+> -				    1000 * tc->mode.clock);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+>   	ret = tc_set_video_mode(tc, &tc->mode);
+>   	if (ret)
+>   		return ret;
+> @@ -1186,12 +1168,8 @@ static int tc_stream_enable(struct tc_data *tc)
+>   	if (ret)
+>   		return ret;
+>   	/* Set input interface */
+> -	value = DP0_AUDSRC_NO_INPUT;
+> -	if (tc_test_pattern)
+> -		value |= DP0_VIDSRC_COLOR_BAR;
+> -	else
+> -		value |= DP0_VIDSRC_DPI_RX;
+> -	ret = regmap_write(tc->regmap, SYSCTRL, value);
+> +	ret = regmap_write(tc->regmap, SYSCTRL,
+> +			   DP0_AUDSRC_NO_INPUT | DP0_VIDSRC_DPI_RX);
+>   	if (ret)
+>   		return ret;
+>   
+> @@ -1220,39 +1198,44 @@ static void tc_bridge_pre_enable(struct drm_bridge *bridge)
+>   	drm_panel_prepare(tc->panel);
+>   }
+>   
+> -static void tc_bridge_enable(struct drm_bridge *bridge)
+> +static int __tc_bridge_enable(struct tc_data *tc)
+>   {
+> -	struct tc_data *tc = bridge_to_tc(bridge);
+>   	int ret;
+>   
+>   	ret = tc_get_display_props(tc);
+>   	if (ret < 0) {
+>   		dev_err(tc->dev, "failed to read display props: %d\n", ret);
+> -		return;
+> +		return ret;
+>   	}
+>   
+>   	ret = tc_main_link_enable(tc);
+>   	if (ret < 0) {
+>   		dev_err(tc->dev, "main link enable error: %d\n", ret);
+> -		return;
+> +		return ret;
+>   	}
+>   
+>   	ret = tc_stream_enable(tc);
+>   	if (ret < 0) {
+>   		dev_err(tc->dev, "main link stream start error: %d\n", ret);
+>   		tc_main_link_disable(tc);
+> -		return;
+>   	}
+>   
+> -	drm_panel_enable(tc->panel);
+> +	return ret;
+>   }
+
+Maybe it's just me, but I rather have the last if() block do a "return 
+ret"; and have "return 0;" at the end of the function to keep all the if 
+blocks consistent.
+
+>   
+> -static void tc_bridge_disable(struct drm_bridge *bridge)
+> +static void tc_bridge_enable(struct drm_bridge *bridge)
+>   {
+>   	struct tc_data *tc = bridge_to_tc(bridge);
+> -	int ret;
+>   
+> -	drm_panel_disable(tc->panel);
+> +	if (__tc_bridge_enable(tc) < 0)
+> +		return;
 > +
->  	/* 0 means: find the address automatically */
->  	if (!crash_base) {
->  		/*
-> @@ -563,11 +572,19 @@ static void __init reserve_crashkernel(void)
->  		if (!high)
->  			crash_base = memblock_find_in_range(CRASH_ALIGN,
->  						CRASH_ADDR_LOW_MAX,
-> -						crash_size, CRASH_ALIGN);
-> -		if (!crash_base)
-> +						crash_size + mem_enc_req,
-> +						CRASH_ALIGN);
-> +		/*
-> +		 * For high reservation, an extra low memory for SWIOTLB will
-> +		 * always be reserved later, so no need to reserve extra
-> +		 * memory for memory encryption case here.
-> +		 */
-> +		if (!crash_base) {
-> +			mem_enc_req = 0;
->  			crash_base = memblock_find_in_range(CRASH_ALIGN,
->  						CRASH_ADDR_HIGH_MAX,
->  						crash_size, CRASH_ALIGN);
+> +	drm_panel_enable(tc->panel);
+> +}
+> +
+> +static int __tc_bridge_disable(struct tc_data *tc)
+> +{
+> +	int ret;
+>   
+>   	ret = tc_stream_disable(tc);
+>   	if (ret < 0)
+> @@ -1261,6 +1244,16 @@ static void tc_bridge_disable(struct drm_bridge *bridge)
+>   	ret = tc_main_link_disable(tc);
+>   	if (ret < 0)
+>   		dev_err(tc->dev, "main link disable error: %d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static void tc_bridge_disable(struct drm_bridge *bridge)
+> +{
+> +	struct tc_data *tc = bridge_to_tc(bridge);
+> +
+> +	drm_panel_disable(tc->panel);
+> +	__tc_bridge_disable(tc);
+>   }
+
+Maybe have this enable/disable change as a separate patch?
+
+>   
+>   static void tc_bridge_post_disable(struct drm_bridge *bridge)
+> @@ -1372,6 +1365,77 @@ static enum drm_connector_status tc_connector_detect(struct drm_connector *conne
+>   		return connector_status_disconnected;
+>   }
+>   
+> +static int tc_tstctl_set(void *data, u64 val)
+> +{
+> +	struct tc_data *tc = data;
+> +	int ret;
+> +
+> +	if (FIELD_GET(COLOR_BAR_MODE, val) == COLOR_BAR_MODE_NORMAL) {
+> +		ret = regmap_write(tc->regmap, SYSCTRL, DP0_VIDSRC_DPI_RX);
+> +		if (ret) {
+> +			dev_err(tc->dev,
+> +				"failed to select dpi video stream\n");
+> +			return ret;
 > +		}
->  		if (!crash_base) {
->  			pr_info("crashkernel reservation failed - No suitable area found.\n");
->  			return;
-> @@ -575,6 +592,7 @@ static void __init reserve_crashkernel(void)
->  	} else {
->  		unsigned long long start;
->  
-> +		mem_enc_req = 0;
->  		start = memblock_find_in_range(crash_base,
->  					       crash_base + crash_size,
->  					       crash_size, 1 << 20);
-> @@ -583,6 +601,13 @@ static void __init reserve_crashkernel(void)
->  			return;
->  		}
->  	}
 > +
-> +	if (mem_enc_req) {
-> +		pr_info("Memory encryption is active, crashkernel needs %ldMB extra memory\n",
-> +			(unsigned long)(mem_enc_req >> 20));
-> +		crash_size += mem_enc_req;
+> +		ret = regmap_write(tc->regmap, TSTCTL, val | ENI2CFILTER);
+> +		if (ret) {
+> +			dev_err(tc->dev, "failed to set TSTCTL\n");
+> +			return ret;
+> +		}
+> +
+> +		ret = tc_pxl_pll_dis(tc);
+> +		if (ret) {
+> +			dev_err(tc->dev, "failed to disable PLL\n");
+> +			return ret;
+> +		}
+> +
+> +		/*
+> +		 * Re-establish DP link
+> +		 */
+> +		ret = __tc_bridge_disable(tc);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = __tc_bridge_enable(tc);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		ret = tc_pxl_pll_en(tc, clk_get_rate(tc->refclk),
+> +				    1000 * tc->mode.clock);
+> +		if (ret) {
+> +			dev_err(tc->dev, "failed to enable PLL\n");
+> +			return ret;
+> +		}
+> +
+> +		ret = regmap_write(tc->regmap, TSTCTL, val | ENI2CFILTER);
+> +		if (ret) {
+> +			dev_err(tc->dev, "failed to set TSTCTL\n");
+> +			return ret;
+> +		}
+> +
+> +		ret = regmap_write(tc->regmap, SYSCTRL, DP0_VIDSRC_COLOR_BAR);
+> +		if (ret) {
+> +			dev_err(tc->dev, "failed to color bar video stream\n");
+> +			return ret;
+> +		}
 > +	}
 > +
->  	ret = memblock_reserve(crash_base, crash_size);
->  	if (ret) {
->  		pr_err("%s: Error reserving crashkernel memblock.\n", __func__);
-> -- 
-> 2.21.0
-> 
+> +	return 0;
+> +}
+> +
+> +DEFINE_SIMPLE_ATTRIBUTE(tc_tstctl_fops, NULL, tc_tstctl_set, "%llu\n");
+> +
+> +static int tc_late_register(struct drm_connector *connector)
+> +{
+> +	if (connector->debugfs_entry)
+> +		debugfs_create_file_unsafe("tstctl", 0644,
+> +					   connector->debugfs_entry,
+> +					   connector_to_tc(connector),
+> +					   &tc_tstctl_fops);
+> +	return 0;
+> +}
+
+I very recently wanted to add quick debugfs functionality to a bridge 
+too, but as there didn't seem an easy way to do it, I just lazily added 
+the debugfs files to the debugfs root...
+
+I'm not sure if adding bridge's debugfs files to connector's directory 
+is a good idea. What if we have two bridges, both have the same debugfs 
+file? Or even if there's no conflict, there's also no way to know which 
+bridge a particular debugfs file belongs to.
+
+Maybe we need some DRM infrastructure for bridge debugfs?
+
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
