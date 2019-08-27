@@ -2,131 +2,142 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A64C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB23C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B1D214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBB2214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:20:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="WAmmy3rY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFLfJno4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbfH0OTJ (ORCPT
+        id S1729706AbfH0OU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:19:09 -0400
-Received: from forward101o.mail.yandex.net ([37.140.190.181]:47185 "EHLO
-        forward101o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726054AbfH0OTJ (ORCPT
+        Tue, 27 Aug 2019 10:20:27 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38176 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfH0OU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:19:09 -0400
-Received: from mxback29g.mail.yandex.net (mxback29g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:329])
-        by forward101o.mail.yandex.net (Yandex) with ESMTP id AFAD63C010BE;
-        Tue, 27 Aug 2019 17:19:04 +0300 (MSK)
-Received: from smtp1p.mail.yandex.net (smtp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:6])
-        by mxback29g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id MavhNij79l-J4AWWKPG;
-        Tue, 27 Aug 2019 17:19:04 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1566915544;
-        bh=Q9pUCEdPyR1430MwOUuTZfxYBhNGyX+eoOaRoswXA8U=;
-        h=In-Reply-To:From:To:Subject:Cc:Date:References:Message-ID;
-        b=WAmmy3rYCrQeeIhuTgCHLsoK+q9wGCJXwCyDVMUs0VexG4C610/ecc3VCjOirXaNL
-         NYAUB82oxslNihFOv8WF8bo6oDDy6Bp8S8/CchdRQkvSTQWOyT/PTUzy/UiP914n/B
-         AnUtcMUHfM04St28sfS0qHZRTuP27L7CAqCe6Rsg=
-Authentication-Results: mxback29g.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id AzkE6b5uHe-Ivt4wcrM;
-        Tue, 27 Aug 2019 17:19:02 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH 11/13] dt-bindings: mips: Add loongson cpus & boards
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.co>, devicetree@vger.kernel.org
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
- <20190827085302.5197-12-jiaxun.yang@flygoat.com>
- <CAL_JsqL6htVye-LSBWw1WwRy9xH=zwuH6gurscwoCWj9Te_hAg@mail.gmail.com>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <d94eff2b-76ec-5cd2-512d-5ee0406a1bb9@flygoat.com>
-Date:   Tue, 27 Aug 2019 22:18:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 10:20:27 -0400
+Received: by mail-wr1-f68.google.com with SMTP id e16so1911419wro.5
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 07:20:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iBAm6erRWZATcOthg0y2dJxIFllt+ucHuf1C3MzA8xw=;
+        b=RFLfJno467RtH4FMFNsNGodYoehjqiEmmDcT0VHAQJujyCJrQoi0YkjOSL369QMh6H
+         k5Li5GpbbvhBdrzdZKQ+vvxAw92nk+1X6N6OVTQxPBUjqhtv69OPNiU2eiypNiutjuOT
+         4U3UeVOlM0Mlof1b0Rjcb12rIH38DcARvNw9UhyqmUpqiHhWyzXUgYlovd+GPoe6D1v2
+         cqakq6Ntny2fBwXc0WWS45FRf5qQY/HjtwInf9MwZ6HDKqoa4gIXD2v8E8G/wsI83Fqg
+         /Z5Okhwa3D0sbeKH0Vzpy5vcpeIYZ3nI3a0phBKECaVJ3Te3ofO/VqU4gNJaM0C4iUbG
+         WmOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iBAm6erRWZATcOthg0y2dJxIFllt+ucHuf1C3MzA8xw=;
+        b=WIFHcqNLm+R4/PvS6f1gXESO/mkzeXSrZ5DHgGBnpJ6tam9neKYvD7GwS1/onvt4Uc
+         8W7MmTLlDbdHeWJuZQFMqBuZRkKrcEdaSDJh1cj7EWIc9/331TzcLWj75nWzUo0bUXxf
+         NxqEUw9ykJoD1EAd97KUeSMC/lepcxJuv/b04JT935o6phxXGZePANuk5g1qW8BY4s/k
+         j5NNGvpkzzXN2O746vVQmJc262zIXLTO58gN348vA8PwxgBKLW7q5CIi6mc4zuiEfsC/
+         K+GLNezynt0mj2kNGHTA1NS9wrdefbjuNPRja9ibrjxz5fo+llSTwYA/QdO3EYl1ZX//
+         TyIQ==
+X-Gm-Message-State: APjAAAVqTmhUqSlPM7l/Z79BHtKZr8GC2bHNNcbToTBcFHBYsc0rQvgH
+        WvM/ou9p803JU334BVA/66TFhQCB/JzI7x6xjy8=
+X-Google-Smtp-Source: APXvYqyf+l+zuM8bhu1HQmmKMsstVBdXQfSESMC96ize5xVQmpsWd4VMknKBd7ff6xmTFakrJ7EBlQeZs551NLPIbkY=
+X-Received: by 2002:adf:dfc5:: with SMTP id q5mr31077656wrn.142.1566915624956;
+ Tue, 27 Aug 2019 07:20:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqL6htVye-LSBWw1WwRy9xH=zwuH6gurscwoCWj9Te_hAg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190827070925.16080-1-yuehaibing@huawei.com> <fb49a1d9-8405-4f88-6f9a-af863bd0f657@amd.com>
+In-Reply-To: <fb49a1d9-8405-4f88-6f9a-af863bd0f657@amd.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 27 Aug 2019 10:20:13 -0400
+Message-ID: <CADnq5_Pe-qnTWZrDxmC=xqHJBQ_SkaBv8go9mVWWp7MciC4NHA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] drm/amd/display: remove unused function setFieldWithMask
+To:     Harry Wentland <hwentlan@amd.com>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>,
+        "Koo, Anthony" <Anthony.Koo@amd.com>,
+        "Othman, Ahmad" <Ahmad.Othman@amd.com>,
+        "Bernstein, Eric" <Eric.Bernstein@amd.com>,
+        "Cyr, Aric" <Aric.Cyr@amd.com>,
+        "alvin.lee3@amd.com" <alvin.lee3@amd.com>,
+        "Tatla, Harmanprit" <Harmanprit.Tatla@amd.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/8/27 下午8:45, Rob Herring wrote:
-> On Tue, Aug 27, 2019 at 3:55 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->> Prepare for later dts.
->>
->> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> ---
->>   .../bindings/mips/loongson/cpus.yaml          | 38 +++++++++++
->>   .../bindings/mips/loongson/devices.yaml       | 64 +++++++++++++++++++
->>   2 files changed, 102 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mips/loongson/cpus.yaml
->>   create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/mips/loongson/cpus.yaml b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
->> new file mode 100644
->> index 000000000000..410d896a0078
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
->> @@ -0,0 +1,38 @@
->> +# SPDX-License-Identifier: GPL-2.0
-> Dual license for new bindings please:
+On Tue, Aug 27, 2019 at 10:01 AM Harry Wentland <hwentlan@amd.com> wrote:
 >
-> (GPL-2.0-only OR BSD-2-Clause)
+> On 2019-08-27 3:09 a.m., YueHaibing wrote:
+> > After commit a9f54ce3c603 ("drm/amd/display: Refactoring VTEM"),
+> > there is no caller in tree.
+> >
+> > Reported-by: Hulk Robot <hulkci@huawei.com> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 >
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/mips/loongson/cpus.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Loongson CPUs bindings
->> +
->> +maintainers:
->> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
->> +
->> +description: |+
->> +  The device tree allows to describe the layout of CPUs in a system through
->> +  the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
->> +  defining properties for every cpu.
->> +
->> +  Bindings for CPU nodes follow the Devicetree Specification, available from:
->> +
->> +  https://www.devicetree.org/specifications/
->> +
->> +properties:
->> +  reg:
->> +    maxItems: 1
->> +    description: |
->> +      Physical ID of a CPU, Can be read from CP0 EBase.CPUNum.
-> Is this definition specific to Loongson CPUs or all MIPS?
+> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+>
 
-Currently it's specific to Loongson CPU only, as other processors may 
-using different method to express CPU map.
+Applied.  Thanks!
 
-Different from Arm, MIPS family of processors seems less uniform and 
-have their own designs.
+Alex
 
-For this point, we'd better ask Paul's opinion.
-
---
-
-Jiaxun Yang
-
+> Harry
+>
+> > ---
+> >  .../drm/amd/display/modules/info_packet/info_packet.c | 19 -------------------
+> >  1 file changed, 19 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/display/modules/info_packet/info_packet.c b/drivers/gpu/drm/amd/display/modules/info_packet/info_packet.c
+> > index 5f4b98d..d885d64 100644
+> > --- a/drivers/gpu/drm/amd/display/modules/info_packet/info_packet.c
+> > +++ b/drivers/gpu/drm/amd/display/modules/info_packet/info_packet.c
+> > @@ -114,25 +114,6 @@ enum ColorimetryYCCDP {
+> >       ColorimetryYCC_DP_ITU2020YCbCr  = 7,
+> >  };
+> >
+> > -void setFieldWithMask(unsigned char *dest, unsigned int mask, unsigned int value)
+> > -{
+> > -     unsigned int shift = 0;
+> > -
+> > -     if (!mask || !dest)
+> > -             return;
+> > -
+> > -     while (!((mask >> shift) & 1))
+> > -             shift++;
+> > -
+> > -     //reset
+> > -     *dest = *dest & ~mask;
+> > -     //set
+> > -     //dont let value span past mask
+> > -     value = value & (mask >> shift);
+> > -     //insert value
+> > -     *dest = *dest | (value << shift);
+> > -}
+> > -
+> >  void mod_build_vsc_infopacket(const struct dc_stream_state *stream,
+> >               struct dc_info_packet *info_packet)
+> >  {
+> >
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
