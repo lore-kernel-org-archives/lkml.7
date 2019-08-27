@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9682AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F16C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A3A2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E5DE2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893494;
-	bh=BVc9jPVXfB9lSCQwQrTt1ByWYOlvUO3fKEJjo7L40EQ=;
+	s=default; t=1566893508;
+	bh=/zzZA9U0vrszr+exayCqiwcHv1WS9ZwywmCOOuoNULQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZukhSVpDvLsWNW122NN6rHjbtCEfKfaYGzsfe+f3B/mc8ZytHC2RWoBocCAuq2rCL
-	 4YFVsJsYCGNmaX6m2yYeOsRm+Roi5dmLVF2bR4i+4SnfdIMgDtTM0Slc0fKT9xeYF1
-	 7qXToXB84OBLLmLJpzQA5egdXLQMdXqKKixRQ11U=
+	b=gY82gWtkCbewwB3VTkWQbQoHHnq7Gta5GaudeUWQt0vc9cZX3X1b2zb0try6tC8QA
+	 WEoTO03keEYTbDtBW4sME4nvdxbrx0whThVWdjNSgPZQf6vxkssqMZX+wBpWi+JYNB
+	 DQiNel45M+BNJ0fVXRso80KPSMlFATVHnEsWffeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731657AbfH0IBE (ORCPT
+        id S1730244AbfH0IAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:01:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56496 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731135AbfH0IA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:00:58 -0400
+        id S1731534AbfH0IAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:00:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFCB4206BA;
-        Tue, 27 Aug 2019 08:00:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5998D217F5;
+        Tue, 27 Aug 2019 08:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892857;
-        bh=BVc9jPVXfB9lSCQwQrTt1ByWYOlvUO3fKEJjo7L40EQ=;
+        s=default; t=1566892834;
+        bh=/zzZA9U0vrszr+exayCqiwcHv1WS9ZwywmCOOuoNULQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xUbK7WBQBUALHoprHkz4icthjkKWMYZs3ZZJZ2iLegG3c9ZFCLxbKo9DmSbZjIGo2
-         bwT8xOhRYN3qwE4UQpF445pAwzoJNq8cHCYWZGCu04fEM5yv9rQAGaIyw9byj5UTKY
-         3a8Vhf9qSow4oS0s+K5f2Y40LOodyDAJypvHoA28=
+        b=H98oh5wUvli8zyGKyXeK8sv+nn0giu8oDgLiYEdsNOdgaQmptmnHssFQqkDuVtaoD
+         x/HEk88exjmuZT38Hk55Scyqk5LXYoKTHxOpSeb+oB8SF/pZwZklvZ3ICO8Y0E6K2Y
+         ixVlZbaf2afgY/BeJ4wyXhFzlYu46wViVbHx5jcg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Ilya Maximets <i.maximets@samsung.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 038/162] st21nfca_connectivity_event_received: null check the allocation
-Date:   Tue, 27 Aug 2019 09:49:26 +0200
-Message-Id: <20190827072739.591097394@linuxfoundation.org>
+Subject: [PATCH 5.2 031/162] libbpf: fix using uninitialized ioctl results
+Date:   Tue, 27 Aug 2019 09:49:19 +0200
+Message-Id: <20190827072739.375906444@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -61,30 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9891d06836e67324c9e9c4675ed90fc8b8110034 ]
+[ Upstream commit decb705e01a5d325c9876b9674043cde4b54f0db ]
 
-devm_kzalloc may fail and return null. So the null check is needed.
+'channels.max_combined' initialized only on ioctl success and
+errno is only valid on ioctl failure.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The code doesn't produce any runtime issues, but makes memory
+sanitizers angry:
+
+ Conditional jump or move depends on uninitialised value(s)
+    at 0x55C056F: xsk_get_max_queues (xsk.c:336)
+    by 0x55C05B2: xsk_create_bpf_maps (xsk.c:354)
+    by 0x55C089F: xsk_setup_xdp_prog (xsk.c:447)
+    by 0x55C0E57: xsk_socket__create (xsk.c:601)
+  Uninitialised value was created by a stack allocation
+    at 0x55C04CD: xsk_get_max_queues (xsk.c:318)
+
+Additionally fixed warning on uninitialized bytes in ioctl arguments:
+
+ Syscall param ioctl(SIOCETHTOOL) points to uninitialised byte(s)
+    at 0x648D45B: ioctl (in /usr/lib64/libc-2.28.so)
+    by 0x55C0546: xsk_get_max_queues (xsk.c:330)
+    by 0x55C05B2: xsk_create_bpf_maps (xsk.c:354)
+    by 0x55C089F: xsk_setup_xdp_prog (xsk.c:447)
+    by 0x55C0E57: xsk_socket__create (xsk.c:601)
+  Address 0x1ffefff378 is on thread 1's stack
+  in frame #1, created by xsk_get_max_queues (xsk.c:318)
+  Uninitialised value was created by a stack allocation
+    at 0x55C04CD: xsk_get_max_queues (xsk.c:318)
+
+CC: Magnus Karlsson <magnus.karlsson@intel.com>
+Fixes: 1cad07884239 ("libbpf: add support for using AF_XDP sockets")
+Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/st21nfca/se.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/lib/bpf/xsk.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nfc/st21nfca/se.c b/drivers/nfc/st21nfca/se.c
-index 06fc542fd1987..6586378cacb05 100644
---- a/drivers/nfc/st21nfca/se.c
-+++ b/drivers/nfc/st21nfca/se.c
-@@ -317,6 +317,8 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
+diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
+index ca272c5b67f47..8e03b65830da0 100644
+--- a/tools/lib/bpf/xsk.c
++++ b/tools/lib/bpf/xsk.c
+@@ -327,15 +327,14 @@ static int xsk_load_xdp_prog(struct xsk_socket *xsk)
  
- 		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
- 						   skb->len - 2, GFP_KERNEL);
-+		if (!transaction)
-+			return -ENOMEM;
+ static int xsk_get_max_queues(struct xsk_socket *xsk)
+ {
+-	struct ethtool_channels channels;
+-	struct ifreq ifr;
++	struct ethtool_channels channels = { .cmd = ETHTOOL_GCHANNELS };
++	struct ifreq ifr = {};
+ 	int fd, err, ret;
  
- 		transaction->aid_len = skb->data[1];
- 		memcpy(transaction->aid, &skb->data[2],
+ 	fd = socket(AF_INET, SOCK_DGRAM, 0);
+ 	if (fd < 0)
+ 		return -errno;
+ 
+-	channels.cmd = ETHTOOL_GCHANNELS;
+ 	ifr.ifr_data = (void *)&channels;
+ 	strncpy(ifr.ifr_name, xsk->ifname, IFNAMSIZ - 1);
+ 	ifr.ifr_name[IFNAMSIZ - 1] = '\0';
+@@ -345,7 +344,7 @@ static int xsk_get_max_queues(struct xsk_socket *xsk)
+ 		goto out;
+ 	}
+ 
+-	if (channels.max_combined == 0 || errno == EOPNOTSUPP)
++	if (err || channels.max_combined == 0)
+ 		/* If the device says it has no channels, then all traffic
+ 		 * is sent to a single stream, so max queues = 1.
+ 		 */
 -- 
 2.20.1
 
