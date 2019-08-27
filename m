@@ -2,167 +2,126 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A3CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F6CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593602173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893527;
-	bh=OkhriDzPXJ2ft+U5w8rso8ZEaQTThAc6E1KDJGi771c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DKLkgCHBYzRRhRmDPuP+q9D6k9FX/YSy0d0p1/NRj4RlvFYqhBbwqKCRddj6mywyu
-	 YgP3+0iN8i1ZMjnzFaOnMXBPXWDJ3nFB2jefzmufnH2g+3nr8PMmB37b7/mzM6zjlK
-	 V+uK1gTmtEhesfPGeCabEcWlcbNoMK/ADvs0nk7Y=
+	by mail.kernel.org (Postfix) with ESMTP id B335A2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ou24idic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731300AbfH0H7v (ORCPT
+        id S1731758AbfH0IMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:59:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731291AbfH0H7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:59:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B81D52186A;
-        Tue, 27 Aug 2019 07:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892786;
-        bh=OkhriDzPXJ2ft+U5w8rso8ZEaQTThAc6E1KDJGi771c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vo7aFEJ3Q75DhwL6EiDb1kyPX5Ubny+pHuRyinfZm6gu15jTc7+nP1uIu7RZNkT00
-         pkqovgymDE6fFaO0xssvlYzLk+ZOCuzGdjpKd3B5Ufaw9WH5THUN6R9qHFelCQdcj7
-         NzvEfblyMCJHrzgxzcxb2SmStKyklFIbfWJ532Zc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 004/162] ASoC: audio-graph-card: fix use-after-free in graph_dai_link_of_dpcm()
-Date:   Tue, 27 Aug 2019 09:48:52 +0200
-Message-Id: <20190827072738.306153730@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
-References: <20190827072738.093683223@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 27 Aug 2019 04:12:20 -0400
+Received: from mail-eopbgr20054.outbound.protection.outlook.com ([40.107.2.54]:28775
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730285AbfH0IMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:12:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bLO0X5ryPLkudFuyQrDR/7Tb9JS/Jm4oLpnZhatDWJ/+N/axw3CP6KPp/ntDhMAqfbNLwdt2jQ8IrFP0DOhGvY9bOXJ4rx4q8M5WOlQnJ82z7aTOcT53vQjtQ0bgmkaVItjqBDjqLgDnTqvxbXVBt3o1Qy/Y+GnvNgzCnyCgo5Ui3w05AZiSDn4sWSE2o44AyhLPYUCzhDc3J4q75tDeSrzTWipdk5LMii3sr/F0pCn9utEyBu46W657G7YsHi+/mlfF5IwDzmQsQH8eLClrTBZjO9R1lCnmYjXFYU9zPxAWcDJHXfU6qhvGNLOqvsQ9cjU7gnFSPw3lpYCyP0w0NQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w2ARKlJkhbpcUc/LcscdFIYHYj0orvOhKJY4M1p/Hck=;
+ b=doXVegem/mNNpm5sgU3Qz3zjemPCKbcFlnzf2F7nICpgVotH/DOaLkzWEjdk4p8YFBDsaermavs1rxf3pOUDqb92pmWNV5oU4zZQCtzseCh+7IJXv//FAox2QxQnqOWsiy8b6UmgTlNZuZ8deg8WMZDL/D+OkK0d2OPj26hcq4/FNgV3jDb6pg/bVO1gS1CcJzVLji8AgUM24dfNAST7yG1LyosrGA/9SrUbtPqU0zETwPb+GjIOZM/iV9GMBmAMYT0oVUpCpL8ztSwVGqphRMccXYH7aPV1n2Ux/89cnDiE0ifKngG3RUEUZC17mSvDR6FgyCRrbh1RtY/ajqTi8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w2ARKlJkhbpcUc/LcscdFIYHYj0orvOhKJY4M1p/Hck=;
+ b=ou24idicBedA7nTfpkSNAKEBOflCeuWq0yWz20BfPrTml4YfZ0f+ctOJro2yh3C/eFCbqZxwbA1AmOL62YppL4/B3ZwW3vTVpr7q7LMLUSblUqZiMCk7aMJZgjfD2YLUvmdnzZYJsG+uYkqFY6Eqx67LY5IbnXGiLnohLbuQQmk=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB4153.eurprd04.prod.outlook.com (52.134.111.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.20; Tue, 27 Aug 2019 08:12:14 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::3cd8:4bcf:8626:4254]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::3cd8:4bcf:8626:4254%3]) with mapi id 15.20.2199.021; Tue, 27 Aug 2019
+ 08:12:12 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Nandor Han <nandor.han@vaisala.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "broonie@kernel.org" <broonie@kernel.org>
+CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [v4] rtc: pcf85363/pcf85263: fix error that failed to
+ run hwclock -w
+Thread-Topic: [EXT] Re: [v4] rtc: pcf85363/pcf85263: fix error that failed to
+ run hwclock -w
+Thread-Index: AQHVXJKQHF/rfq3lnkKORRBaxuIvrKcOo8UAgAABInA=
+Date:   Tue, 27 Aug 2019 08:12:12 +0000
+Message-ID: <DB7PR04MB4490EEEEF3E813A1EC34D1C68FA00@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190827043735.31231-1-biwen.li@nxp.com>
+ <2b49e282-fc03-ee59-2719-5a3c1ce573ce@vaisala.com>
+In-Reply-To: <2b49e282-fc03-ee59-2719-5a3c1ce573ce@vaisala.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f994cc01-333a-4151-7ef2-08d72ac643f3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4153;
+x-ms-traffictypediagnostic: DB7PR04MB4153:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB415399811BB521400EA328048FA00@DB7PR04MB4153.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 0142F22657
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(396003)(346002)(39860400002)(136003)(199004)(189003)(53936002)(54906003)(110136005)(76176011)(44832011)(86362001)(14454004)(7696005)(4326008)(6506007)(25786009)(316002)(3846002)(2201001)(99286004)(66476007)(66946007)(64756008)(71190400001)(6116002)(76116006)(66446008)(66556008)(229853002)(478600001)(55016002)(6246003)(71200400001)(52536014)(305945005)(2906002)(33656002)(102836004)(6436002)(26005)(186003)(476003)(486006)(11346002)(7736002)(2501003)(14444005)(256004)(5660300002)(81156014)(81166006)(9686003)(8936002)(66066001)(8676002)(53546011)(446003)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4153;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: F1NDSbbe5sEOzL9NKeB4+DjmaVDNcxHBW5FmR6nz+gDkNB8ltPuppO3+t+QOIhqrC68ssQP9wsbRCJG9fnGtNvz3kShqAyum312Xnjd1vanogJzF+FrHUg8OuTjv7KuylIMqlNQJ5TlpGy5TRCZlJZ9+iTew4YY/LFsgtBLJlIOaMaYBkBzVTgM5hUM53VQPUeS2fJOSMVBRRVyin8uDpd6EbHHhZBlAizZlxD/NVAcsNNzzTjmFFrU8I4co7E4e2qns+zZpr1XlEqgpBOX920RwAsaE2YdoeYe0FC2qd6cCZds/iSV55lupH80kINM3cnovURqRm9RbzcBVP9swhGAA/7GlYj7Lies/7DqFHN5UynQzCIzqMq6+TbS6UpzWErl7Mqn87GbtAzpp3AR1hVbX22Zxkirw9LigSzTscmk=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f994cc01-333a-4151-7ef2-08d72ac643f3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 08:12:12.6667
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7ScnTmrSYeJNO1LcGyQ8xQIxq2UCW5AZ13YLNl5YTrJf+B2zfH0656IOvXBGXzpeIysq4EZ7qmJ5V+0ldTPL9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aa2e362cb6b3f5ca88093ada01e1a0ace8a517b2 ]
-
-After calling of_node_put() on the ports, port, and node variables,
-they are still being used, which may result in use-after-free.
-Fix this issue by calling of_node_put() after the last usage.
-
-Fixes: dd98fbc558a0 ("ASoC: audio-graph-card: cleanup DAI link loop method - step1")
-Link: https://lore.kernel.org/r/1562743509-30496-4-git-send-email-wen.yang99@zte.com.cn
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/generic/audio-graph-card.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/sound/soc/generic/audio-graph-card.c b/sound/soc/generic/audio-graph-card.c
-index 70ed28d97d497..d5188a179378f 100644
---- a/sound/soc/generic/audio-graph-card.c
-+++ b/sound/soc/generic/audio-graph-card.c
-@@ -222,10 +222,6 @@ static int graph_dai_link_of_dpcm(struct asoc_simple_priv *priv,
- 
- 	dev_dbg(dev, "link_of DPCM (%pOF)\n", ep);
- 
--	of_node_put(ports);
--	of_node_put(port);
--	of_node_put(node);
--
- 	if (li->cpu) {
- 		int is_single_links = 0;
- 
-@@ -243,17 +239,17 @@ static int graph_dai_link_of_dpcm(struct asoc_simple_priv *priv,
- 
- 		ret = asoc_simple_parse_cpu(ep, dai_link, &is_single_links);
- 		if (ret)
--			return ret;
-+			goto out_put_node;
- 
- 		ret = asoc_simple_parse_clk_cpu(dev, ep, dai_link, dai);
- 		if (ret < 0)
--			return ret;
-+			goto out_put_node;
- 
- 		ret = asoc_simple_set_dailink_name(dev, dai_link,
- 						   "fe.%s",
- 						   dai_link->cpu_dai_name);
- 		if (ret < 0)
--			return ret;
-+			goto out_put_node;
- 
- 		/* card->num_links includes Codec */
- 		asoc_simple_canonicalize_cpu(dai_link, is_single_links);
-@@ -277,17 +273,17 @@ static int graph_dai_link_of_dpcm(struct asoc_simple_priv *priv,
- 
- 		ret = asoc_simple_parse_codec(ep, dai_link);
- 		if (ret < 0)
--			return ret;
-+			goto out_put_node;
- 
- 		ret = asoc_simple_parse_clk_codec(dev, ep, dai_link, dai);
- 		if (ret < 0)
--			return ret;
-+			goto out_put_node;
- 
- 		ret = asoc_simple_set_dailink_name(dev, dai_link,
- 						   "be.%s",
- 						   codecs->dai_name);
- 		if (ret < 0)
--			return ret;
-+			goto out_put_node;
- 
- 		/* check "prefix" from top node */
- 		snd_soc_of_parse_node_prefix(top, cconf, codecs->of_node,
-@@ -307,19 +303,23 @@ static int graph_dai_link_of_dpcm(struct asoc_simple_priv *priv,
- 
- 	ret = asoc_simple_parse_tdm(ep, dai);
- 	if (ret)
--		return ret;
-+		goto out_put_node;
- 
- 	ret = asoc_simple_parse_daifmt(dev, cpu_ep, codec_ep,
- 				       NULL, &dai_link->dai_fmt);
- 	if (ret < 0)
--		return ret;
-+		goto out_put_node;
- 
- 	dai_link->dpcm_playback		= 1;
- 	dai_link->dpcm_capture		= 1;
- 	dai_link->ops			= &graph_ops;
- 	dai_link->init			= asoc_simple_dai_init;
- 
--	return 0;
-+out_put_node:
-+	of_node_put(ports);
-+	of_node_put(port);
-+	of_node_put(node);
-+	return ret;
- }
- 
- static int graph_dai_link_of(struct asoc_simple_priv *priv,
--- 
-2.20.1
-
-
-
+PiANCj4gT24gOC8yNy8xOSA3OjM3IEFNLCBCaXdlbiBMaSB3cm90ZToNCj4gPiAgIC0gSW4gZHJp
+dmVycy9ydGMvcnRjLXBjZjg1MzYzLmMsIENUUkxfU1RPUF9FTiBpcyAweDJlLCBidXQgRFRfMTAw
+VEhTDQo+ID4gICAgICAgIGlzIDAsIG1heF9yZWdpdGVyIGlzIDB4MmYsIHRoZW4gcmVnIHdpbGwg
+YmUgZXF1YWwgdG8gMHgzMCwNCj4gPiAgICAgICAgJzB4MzAgPCAweDJmJyBpcyBmYWxzZSxzbyBy
+ZWdtYXBfd3JpdGVhYmxlIHdpbGwgcmV0dXJuIGZhbHNlLg0KPiA+DQo+ID4gICAgICAtIFRoZSBw
+Y2Y4NTM2My9wY2Y4NTI2MyBoYXMgdGhlIGNhcGFiaWxpdHkgb2YgYWRkcmVzcyB3cmFwcGluZw0K
+PiA+ICAgICAgICB3aGljaCBtZWFucyBpZiB5b3UgYWNjZXNzIGEgY29udGludW91cyBhZGRyZXNz
+IHJhbmdlIGFjcm9zcyBhDQo+ID4gICAgICAgIGNlcnRhaW4gYm91bmRhcnkobWF4X3JlZ2lzdGVy
+IG9mIHN0cnVjdCByZWdtYXBfY29uZmlnKSB0aGUNCj4gPiAgICAgICAgaGFyZHdhcmUgYWN0dWFs
+bHkgd3JhcHMgdGhlIGFjY2VzcyB0byBhIGxvd2VyIGFkZHJlc3MuIEJ1dCB0aGUNCj4gPiAgICAg
+ICAgYWRkcmVzcyB2aW9sYXRpb24gY2hlY2sgb2YgcmVnbWFwIHJlamVjdHMgc3VjaCBhY2Nlc3Mu
+DQo+IA0KPiBuaXRwaWNrOiBUaGlzIDIgcGFyYWdyYXBocyBjb3VsZCBiZSBjb21iaW5lZCB0byBj
+bGVhciB1cCB0aGUgaXNzdWU6DQo+IA0KPiBgDQo+IFRoZSBwY2Y4NTM2My9wY2Y4NTI2MyBoYXMg
+dGhlIGNhcGFiaWxpdHkgb2YgYWRkcmVzcyB3cmFwcGluZyB3aGljaCBtZWFucyBpZg0KPiB5b3Ug
+YWNjZXNzIGFuIGFkZHJlc3Mgb3V0c2lkZSB0aGUgYWxsb3dlZCByYW5nZQ0KPiAoMHgwMC0weDJm
+KSB0aGUgaGFyZHdhcmUgYWN0dWFsbHkgd3JhcHMgdGhlIGFjY2VzcyB0byBhIGxvd2VyIGFkZHJl
+c3MuDQo+IFRoZSBydGMtcGY4NTM2MyBkcml2ZXIgd2lsbCB1c2UgdGhpcyBmZWF0dXJlIHRvIGNv
+bmZpZ3VyZSB0aGUgdGltZSBhbmQgZXhlY3V0ZSAyDQo+IGFjdGlvbnMgaW4gdGhlIHNhbWUgaTJj
+IHdyaXRlIG9wZXJhdGlvbiAoc3RvcHBpbmcgdGhlIGNsb2NrIGFuZCBjb25maWd1cmUgdGhlDQo+
+IHRpbWUpLiBIb3dldmVyIHRoZSBkcml2ZXIgaGFzIGFsc28gY29uZmlndXJlZCB0aGUgYHJlZ21h
+cCBtYXhyZWdpc3RlcmANCj4gcHJvdGVjdGlvbiBtZWNoYW5pc20gdGhhdCB3aWxsIGJsb2NrIGFj
+Y2Vzc2luZyBhZGRyZXNzZXMgb3V0c2lkZSB2YWxpZCByYW5nZQ0KPiAoMHgwMC0weDJmKS4NCj4g
+YA0KPiANCj4gbml0cGljazogSSB3b3VsZCBhbHNvIHVzZSBzZXBhcmF0ZSBidWZmZXJzIGZvciB0
+aGlzIGFjdGlvbnMuIFVwIHRvIHlvdSA6KQ0KPiANCj4gT3RoZXJ3aXNlIExHVE0gKzENClRoYW5r
+cywgaXQncyBhIGJlYXV0aWZ1bCBleHBsYW5hdGlvbi4NCj4gDQo+IE5hbmRvcg0K
