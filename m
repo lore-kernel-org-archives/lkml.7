@@ -2,53 +2,53 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F362C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0ACEC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E2420828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B26D420828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892729;
-	bh=9139bLgvZNJhVU+/KuehRZ88uo1vuy8PX04vIiAa+M4=;
+	s=default; t=1566892734;
+	bh=x2yaFsxyNtdZbvKQzpaUTp9W7h6k1yHSMcCMiTZWb6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CIYCYDkLSC7ReIQgwIS7PiXn/QbMM0ZwVYC1HF/JaxnErZlv4nYoDDPDbutUH2vuJ
-	 uvttnkjICyh9ceRmLOdb48uM/B/5y8nIPMi7iPIS2kkUYlyqIp3ftKsMaUvsZ9mS4J
-	 Uv7RHGVHJl8aPh1rxb3WFIYVL4MHLkKrl8RGoNMQ=
+	b=QP1+BDJao8eXOjxxLEdq3E3o/F8iPvQ1e+Pmapuj6N9CaV3QVVVay4EBfiIEGbnpT
+	 PgSLsZkbHDaoQQtKcjKCWWxuZbyEvl9n3kvJgeq7gy9rcHKAxE/7hKp9JkNeeSKg8R
+	 +TwpI8eXuw01AzSqeOvIniMepdG24NqC+K8x8xXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731089AbfH0H6s (ORCPT
+        id S1730451AbfH0H6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:58:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51548 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:58:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730990AbfH0H6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:58:38 -0400
+        id S1730706AbfH0H6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:58:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 250CB20828;
-        Tue, 27 Aug 2019 07:58:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 025E4206BF;
+        Tue, 27 Aug 2019 07:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892717;
-        bh=9139bLgvZNJhVU+/KuehRZ88uo1vuy8PX04vIiAa+M4=;
+        s=default; t=1566892720;
+        bh=x2yaFsxyNtdZbvKQzpaUTp9W7h6k1yHSMcCMiTZWb6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=furoQnrJqtEGfAVj39TRqa82AQi2nndI6rVE2qRIv+C0fT1pHzQ93HPCBSJe80+Vi
-         k+Og+w36gsqsQ55BPZ6wQWpgbHjl/u1T+AFxvdC5IrDD4mUhWhn1lImjXsqCjgvzmC
-         bkDcDwh2kWGlB56QYMNIB092dqznbjdrSN04wZd4=
+        b=HatZyc0wqFWWcIFOPt6gdm+UzdiqIAkj/0Pxk+uaVgxg+qfmsU7VWk/t7mW+dfdE0
+         khQ86GyI5jVgrvEliP74JSH9VxwQb9vKkmNu2tDNDV3W5Ggcd27MSp+DYiiHPG9Z1h
+         tVbRKtR5V5GcyKyeB0FJbstgA07bHFMglxxg49po=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, benjamin.moody@gmail.com,
+        stable@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Salvatore Bonaccorso <carnil@debian.org>
-Subject: [PATCH 4.19 88/98] xfs: fix missing ILOCK unlock when xfs_setattr_nonsize fails due to EDQUOT
-Date:   Tue, 27 Aug 2019 09:51:07 +0200
-Message-Id: <20190827072722.653604904@linuxfoundation.org>
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 89/98] xfs: dont trip over uninitialized buffer on extent read of corrupted inode
+Date:   Tue, 27 Aug 2019 09:51:08 +0200
+Message-Id: <20190827072722.722033898@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -61,63 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+commit 6958d11f77d45db80f7e22a21a74d4d5f44dc667 upstream.
 
-commit 1fb254aa983bf190cfd685d40c64a480a9bafaee upstream.
+We've had rather rare reports of bmap btree block corruption where
+the bmap root block has a level count of zero. The root cause of the
+corruption is so far unknown. We do have verifier checks to detect
+this form of on-disk corruption, but this doesn't cover a memory
+corruption variant of the problem. The latter is a reasonable
+possibility because the root block is part of the inode fork and can
+reside in-core for some time before inode extents are read.
 
-Benjamin Moody reported to Debian that XFS partially wedges when a chgrp
-fails on account of being out of disk quota.  I ran his reproducer
-script:
+If this occurs, it leads to a system crash such as the following:
 
-# adduser dummy
-# adduser dummy plugdev
+ BUG: unable to handle kernel paging request at ffffffff00000221
+ PF error: [normal kernel read fault]
+ ...
+ RIP: 0010:xfs_trans_brelse+0xf/0x200 [xfs]
+ ...
+ Call Trace:
+  xfs_iread_extents+0x379/0x540 [xfs]
+  xfs_file_iomap_begin_delay+0x11a/0xb40 [xfs]
+  ? xfs_attr_get+0xd1/0x120 [xfs]
+  ? iomap_write_begin.constprop.40+0x2d0/0x2d0
+  xfs_file_iomap_begin+0x4c4/0x6d0 [xfs]
+  ? __vfs_getxattr+0x53/0x70
+  ? iomap_write_begin.constprop.40+0x2d0/0x2d0
+  iomap_apply+0x63/0x130
+  ? iomap_write_begin.constprop.40+0x2d0/0x2d0
+  iomap_file_buffered_write+0x62/0x90
+  ? iomap_write_begin.constprop.40+0x2d0/0x2d0
+  xfs_file_buffered_aio_write+0xe4/0x3b0 [xfs]
+  __vfs_write+0x150/0x1b0
+  vfs_write+0xba/0x1c0
+  ksys_pwrite64+0x64/0xa0
+  do_syscall_64+0x5a/0x1d0
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-# dd if=/dev/zero bs=1M count=100 of=test.img
-# mkfs.xfs test.img
-# mount -t xfs -o gquota test.img /mnt
-# mkdir -p /mnt/dummy
-# chown -c dummy /mnt/dummy
-# xfs_quota -xc 'limit -g bsoft=100k bhard=100k plugdev' /mnt
+The crash occurs because xfs_iread_extents() attempts to release an
+uninitialized buffer pointer as the level == 0 value prevented the
+buffer from ever being allocated or read. Change the level > 0
+assert to an explicit error check in xfs_iread_extents() to avoid
+crashing the kernel in the event of localized, in-core inode
+corruption.
 
-(and then as user dummy)
-
-$ dd if=/dev/urandom bs=1M count=50 of=/mnt/dummy/foo
-$ chgrp plugdev /mnt/dummy/foo
-
-and saw:
-
-================================================
-WARNING: lock held when returning to user space!
-5.3.0-rc5 #rc5 Tainted: G        W
-------------------------------------------------
-chgrp/47006 is leaving the kernel with locks still held!
-1 lock held by chgrp/47006:
- #0: 000000006664ea2d (&xfs_nondir_ilock_class){++++}, at: xfs_ilock+0xd2/0x290 [xfs]
-
-...which is clearly caused by xfs_setattr_nonsize failing to unlock the
-ILOCK after the xfs_qm_vop_chown_reserve call fails.  Add the missing
-unlock.
-
-Reported-by: benjamin.moody@gmail.com
-Fixes: 253f4911f297 ("xfs: better xfs_trans_alloc interface")
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Tested-by: Salvatore Bonaccorso <carnil@debian.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_iops.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/xfs/libxfs/xfs_bmap.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -803,6 +803,7 @@ xfs_setattr_nonsize(
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index 3a496ffe6551c..ab2465bc413af 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -1178,7 +1178,10 @@ xfs_iread_extents(
+ 	 * Root level must use BMAP_BROOT_PTR_ADDR macro to get ptr out.
+ 	 */
+ 	level = be16_to_cpu(block->bb_level);
+-	ASSERT(level > 0);
++	if (unlikely(level == 0)) {
++		XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, mp);
++		return -EFSCORRUPTED;
++	}
+ 	pp = XFS_BMAP_BROOT_PTR_ADDR(mp, block, 1, ifp->if_broot_bytes);
+ 	bno = be64_to_cpu(*pp);
  
- out_cancel:
- 	xfs_trans_cancel(tp);
-+	xfs_iunlock(ip, XFS_ILOCK_EXCL);
- out_dqrele:
- 	xfs_qm_dqrele(udqp);
- 	xfs_qm_dqrele(gdqp);
+-- 
+2.20.1
+
 
 
