@@ -2,59 +2,53 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E27C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B19C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5AA206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13673206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893077;
-	bh=hNum6xY1ZxdFXvz+d1ludW6VEn5ALBpiGz7sSOzKs3s=;
+	s=default; t=1566893080;
+	bh=OQkgxgGTLnCbPxSscnSx2iY9DtJqNtDtwWWvXJBBKe0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zzm0bH9qI1Lay1+z/rkT09w1qi8uWToo9UP3efalJV2qHKjApVhUJQey34ZxX/zWd
-	 LwLRge/slR/+NvIVH6ZNJVyeN7xI1VdlLa88v2KNkI3wo1VkQzhYh3cSFkMx5Ire2t
-	 /dddlyZbkwBOrIzqzx6Hk7F8KLgdUd791k71qL4Q=
+	b=gCFUMSDhBcCsp8wyOJEhaw1qHuCSoDk2wQkAfUJsFXqYdGxYx7hvXJtQa/0/Nfpky
+	 GFI6VqmKylaGDqHF9RL/HUbwEMIqRInMOD8kzCHrzt+K7LtpzjTzzy4VLcRRIBQPwb
+	 jT8Zg4wHXAnpQM7uhJNzKkCnbTorWeDxBJdPhjts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732607AbfH0IEf (ORCPT
+        id S1732187AbfH0IEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:04:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34066 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:04:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730668AbfH0IEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:04:33 -0400
+        id S1732596AbfH0IEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:04:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0E42206BA;
-        Tue, 27 Aug 2019 08:04:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A85762173E;
+        Tue, 27 Aug 2019 08:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893072;
-        bh=hNum6xY1ZxdFXvz+d1ludW6VEn5ALBpiGz7sSOzKs3s=;
+        s=default; t=1566893075;
+        bh=OQkgxgGTLnCbPxSscnSx2iY9DtJqNtDtwWWvXJBBKe0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jFNBns9uZKA5Kgppjdze725rl9cp5N8GEewZgZCbo4bFicrxmNcLWP1yNPwYGEj3p
-         Y5C61Tojgzx1mYu8fBQicLT0EIvB0DWF7fbcsZxXOsuF2245zevEOzMHjroScUHTNb
-         ir5berFvKvvLPiztZLrone+cgvs52OuYIEiv+eLs=
+        b=pReHA8dUA8MrKB3Ubv07v6VV1m9rqaaI55hSp26OAQQZycBqIGyHthmn4H1yOmu2c
+         1nHhSSMYnYC5t3h4loULHVL9sNHyP7gf+5zfd9f0l9xen9nIHgtk1N0vM5vkVkQCfK
+         UbpiHuXu/ow1DuY0GTCXa0KAF0Ca4n3Nz3Kdsqh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, He Zhe <zhe.he@windriver.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 104/162] perf cpumap: Fix writing to illegal memory in handling cpumap mask
-Date:   Tue, 27 Aug 2019 09:50:32 +0200
-Message-Id: <20190827072741.914554536@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alex Willamson <alex.williamson@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.2 113/162] Revert "KVM: x86/mmu: Zap only the relevant pages when removing a memslot"
+Date:   Tue, 27 Aug 2019 09:50:41 +0200
+Message-Id: <20190827072742.324569389@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -67,48 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5f5e25f1c7933a6e1673515c0b1d5acd82fea1ed ]
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-cpu_map__snprint_mask() would write to illegal memory pointed by
-zalloc(0) when there is only one cpu.
+commit d012a06ab1d23178fc6856d8d2161fbcc4dd8ebd upstream.
 
-This patch fixes the calculation and adds sanity check against the input
-parameters.
+This reverts commit 4e103134b862314dc2f2f18f2fb0ab972adc3f5f.
+Alex Williamson reported regressions with device assignment with
+this patch.  Even though the bug is probably elsewhere and still
+latent, this is needed to fix the regression.
 
-Signed-off-by: He Zhe <zhe.he@windriver.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Fixes: 4400ac8a9a90 ("perf cpumap: Introduce cpu_map__snprint_mask()")
-Link: http://lkml.kernel.org/r/1564734592-15624-2-git-send-email-zhe.he@windriver.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 4e103134b862 ("KVM: x86/mmu: Zap only the relevant pages when removing a memslot", 2019-02-05)
+Reported-by: Alex Willamson <alex.williamson@redhat.com>
+Cc: stable@vger.kernel.org
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/perf/util/cpumap.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/kvm/mmu.c |   33 +--------------------------------
+ 1 file changed, 1 insertion(+), 32 deletions(-)
 
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 0b599229bc7e9..0aba5b39c21ef 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -701,7 +701,10 @@ size_t cpu_map__snprint_mask(struct cpu_map *map, char *buf, size_t size)
- 	unsigned char *bitmap;
- 	int last_cpu = cpu_map__cpu(map, map->nr - 1);
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -5649,38 +5649,7 @@ static void kvm_mmu_invalidate_zap_pages
+ 			struct kvm_memory_slot *slot,
+ 			struct kvm_page_track_notifier_node *node)
+ {
+-	struct kvm_mmu_page *sp;
+-	LIST_HEAD(invalid_list);
+-	unsigned long i;
+-	bool flush;
+-	gfn_t gfn;
+-
+-	spin_lock(&kvm->mmu_lock);
+-
+-	if (list_empty(&kvm->arch.active_mmu_pages))
+-		goto out_unlock;
+-
+-	flush = slot_handle_all_level(kvm, slot, kvm_zap_rmapp, false);
+-
+-	for (i = 0; i < slot->npages; i++) {
+-		gfn = slot->base_gfn + i;
+-
+-		for_each_valid_sp(kvm, sp, gfn) {
+-			if (sp->gfn != gfn)
+-				continue;
+-
+-			kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list);
+-		}
+-		if (need_resched() || spin_needbreak(&kvm->mmu_lock)) {
+-			kvm_mmu_remote_flush_or_zap(kvm, &invalid_list, flush);
+-			flush = false;
+-			cond_resched_lock(&kvm->mmu_lock);
+-		}
+-	}
+-	kvm_mmu_remote_flush_or_zap(kvm, &invalid_list, flush);
+-
+-out_unlock:
+-	spin_unlock(&kvm->mmu_lock);
++	kvm_mmu_zap_all(kvm);
+ }
  
--	bitmap = zalloc((last_cpu + 7) / 8);
-+	if (buf == NULL)
-+		return 0;
-+
-+	bitmap = zalloc(last_cpu / 8 + 1);
- 	if (bitmap == NULL) {
- 		buf[0] = '\0';
- 		return 0;
--- 
-2.20.1
-
+ void kvm_mmu_init_vm(struct kvm *kvm)
 
 
