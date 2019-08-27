@@ -2,168 +2,125 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91192C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C84C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585C7206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB688206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:03:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ZvkBKnvJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jqVXnO87"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730392AbfH0VDb (ORCPT
+        id S1730502AbfH0VDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:03:31 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:10960 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfH0VDa (ORCPT
+        Tue, 27 Aug 2019 17:03:40 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41316 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfH0VDk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:03:30 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Tristram.Ha@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Tristram.Ha@microchip.com";
-  x-sender="Tristram.Ha@microchip.com"; x-conformance=spf_only;
-  x-record-type="v=spf1"; x-record-text="v=spf1 mx
-  a:ushub1.microchip.com a:smtpout.microchip.com
-  a:mx1.microchip.iphmx.com a:mx2.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Tristram.Ha@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tristram.Ha@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: zpWlrr/LAzjO4unoCeeA9rptwCvcMKkjSSBUOju6ttgwYCRfnLiLFLI0qWMTW2QsVcxhrw35bH
- G9IzKMa8Q2otw5X+oU/vrIv7tOhn2vvhdScFVdhWJmyqdJZuZVC2h6ivS5cernHofc1CxXq7lw
- URCckNHLebi0VfYZY3qMvk2/FJYJ9+/unNv0H+OEsOn+s9uz1WfCFFwpLgaSZESJa1HtQUR6HW
- oPRxnCViWHcUvhUl8zsutXksUE7WymR36lDoW05dPij5rfJAQuKj2i5vXbrBpweSo4fEWXIVDY
- qio=
-X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
-   d="scan'208";a="46748735"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Aug 2019 14:03:29 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 27 Aug 2019 14:03:28 -0700
-Received: from NAM01-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 27 Aug 2019 14:03:28 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YUKSdOnUcqhOVAggoOsw3YoIzbrDVdw/LtqFd1hIBSSPflksQY7ZRKu6rG7mIv1a7Xrd8QEnU3w2uPiAxPN+99b2jkuFf/mDrMwA2Umil49KnhTA5yP10J8JMm2GcTk+RyQCh/MAcXG6YA0TTu0goLMiX9YW9IJXZohRhM9yollOAWxpz+YBZDUrdadfHVXb3e/HF5nbGyd0adIJeIN5RQ/NCHFzIyqPs7sF6xo78pWT7EyR2ase1YBrFgdNe2VR/+A+WB25uAAJ1plx/0vQl5ExNqV9ZIBZylkithV99qcF71CkxteJDa8rjSAab3ShD3j7VZ/Vio8LU0QlvQiMbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SbraKHQYPk0Jm70dcR0Zr/1/ZdEZK5cI8MVHjz4JuK4=;
- b=IC4IAKuqj+bXfcqL3OXd0Yo1ILnNd006LDhRo3v9wgyv0zV9hmyHJk4lDjdR4Kw//oib1w/tD3DW0UaAAZoBUlF5QQ69YYc9apgi7Trml6/+xgJlbPAW6C2yDpfRLBxZ9OezSBvUp1B7rjrdE+cc12cszja5M/EYQDlB4HVsA1eF9SjbMYjDxit2fl2etk9t8kVwRFz67tNWLbEZ1W9T2j2WkFf0qyivmm4FaCpmmZYPuzKYZUjjr38eZXr70DZ/ZuZqdg+beD4A/dYqBOSSVshcoq3xurGV54FtRLQ99vD1Y+VJy0qUbdzYEmtJ8LEgUCq+/d0xwOq+EE+3Jcm5xA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Tue, 27 Aug 2019 17:03:40 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 196so183833pfz.8
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 14:03:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SbraKHQYPk0Jm70dcR0Zr/1/ZdEZK5cI8MVHjz4JuK4=;
- b=ZvkBKnvJ5p27Gv0W/BMdtkCePTiQ3TT//Txx30CAiFDkHqp4o6mOzVaYu8KVJONOGJMalFzbgu/Jy25Sff0koB+vEMCNX06b89x1bmGhIWWhgkOZMwDTwv1ffdUqk8dxeek/k6pDB4oUP8kg4GxOvjZBXQo+ldUfa5boCRsfySc=
-Received: from MN2PR11MB3678.namprd11.prod.outlook.com (20.178.252.94) by
- MN2PR11MB4271.namprd11.prod.outlook.com (52.135.36.212) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Tue, 27 Aug 2019 21:03:27 +0000
-Received: from MN2PR11MB3678.namprd11.prod.outlook.com
- ([fe80::b98c:209e:ba2c:e682]) by MN2PR11MB3678.namprd11.prod.outlook.com
- ([fe80::b98c:209e:ba2c:e682%5]) with mapi id 15.20.2199.021; Tue, 27 Aug 2019
- 21:03:27 +0000
-From:   <Tristram.Ha@microchip.com>
-To:     <Razvan.Stefanescu@microchip.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <Razvan.Stefanescu@microchip.com>, <Woojung.Huh@microchip.com>,
-        <vivien.didelot@gmail.com>, <UNGLinuxDriver@microchip.com>,
-        <andrew@lunn.ch>, <f.fainelli@gmail.com>, <davem@davemloft.net>
-Subject: RE: [PATCH 4/4] net: dsa: microchip: avoid hard-codded port count
-Thread-Topic: [PATCH 4/4] net: dsa: microchip: avoid hard-codded port count
-Thread-Index: AQHVXLpYAiqtkBHu40WEfk7DWY00bqcPeo1g
-Date:   Tue, 27 Aug 2019 21:03:27 +0000
-Message-ID: <MN2PR11MB3678CF331310105FA5916A56ECA00@MN2PR11MB3678.namprd11.prod.outlook.com>
-References: <20190827093110.14957-1-razvan.stefanescu@microchip.com>
- <20190827093110.14957-5-razvan.stefanescu@microchip.com>
-In-Reply-To: <20190827093110.14957-5-razvan.stefanescu@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [173.46.67.20]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 41ee7c34-dac7-4e8d-0cee-08d72b3201f4
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR11MB4271;
-x-ms-traffictypediagnostic: MN2PR11MB4271:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB4271442E3B080B3D7DD6F3D2ECA00@MN2PR11MB4271.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2512;
-x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(376002)(396003)(136003)(366004)(189003)(199004)(71200400001)(4326008)(6116002)(3846002)(14454004)(25786009)(71190400001)(102836004)(5660300002)(74316002)(305945005)(6506007)(6862004)(11346002)(99286004)(9686003)(446003)(7736002)(52536014)(7696005)(76176011)(66066001)(14444005)(86362001)(55016002)(26005)(6436002)(33656002)(53936002)(316002)(6636002)(478600001)(81166006)(54906003)(256004)(486006)(66946007)(66556008)(476003)(64756008)(66476007)(76116006)(229853002)(2906002)(8936002)(8676002)(186003)(6246003)(81156014)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4271;H:MN2PR11MB3678.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BB4qEVwq0wUIjvRcw0ZvyLUJJeHzzzYKqDKHjxJK38elRlF9PV9cgyBTdudJYXSCDZUIx9RYx10H+L7pvwWTHouqGdjgIJjlfAcC5qv+l0BlZNyGUjjKi3JJQX07gzJOMPuaUKgDyEjU0z8Mm/ZK9ZWcK95ySkModi+rw+mSo3o7GJ6FpNk0Qg45BpLLZrUPaq0YwggA6jDF5cWMsYbgwQSeShC2Fehv8hnOBsXRawb8HU/LvRhd2rHfq35rAeGMkdTbrnjHscAtbyVTiobK/JG+wCEx1pp0iJMFbiMMGn4HTeDGcx5voR/b3FnpSRYsALhmGkwbdPj6qagNn59zcqcXOVtjUnNL6t0RHle0Ty7HB4IYKx/vs1ThlPU8+pxIXBemS5ROeuc3KiQmOyUTtCAAtEfkZJn31789Co6ZwZY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xqJGmhaCQ0mE4KAqKVKLY8OtGEQ4WA7SvplNI/CPuH8=;
+        b=jqVXnO87Y94ALi10nxX/DLFreu43gwvLsNu/ONVxZGD1OB5Axb2fRwBl5DNDuypTUh
+         iksvVZWNThyaETR2uelRflKf6YuzHxTRBZfLJepcSU9/e/3TKradFWAvI4yl3FKTBMX5
+         P697YyJdaoTE/Ntlq+Su5JLvyj98HWV5GD2tXQNQR7GwUFzk/bCgd4oiQbEZpULIDz8Q
+         VkacS3ZyXmHp4/75Hh2KnuAB0QIgyyVdTN3fUs8naECDt2IGklQVrpUtaB+ZJXukF7cb
+         YBDRWcIa/hpq9bKX8U7dXOaqOrjSvLvvWy+pzHXomaSQ3cmYJgfTpnVZd9tim1pmlPN0
+         3HWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xqJGmhaCQ0mE4KAqKVKLY8OtGEQ4WA7SvplNI/CPuH8=;
+        b=kJO9Cgy7A8wTvxMlzSmpt7GUq1SjTjCunTNQOTxa9ZOWSwUgAfIRddnXyxQnYHCUZV
+         WiTD9RA49/BBBH/FfMAtxrRt5pq36YF9w9ZOu2rYbdL+zkGGfizNHV6Nkon/t/5fc8Bp
+         RASpZ7BOxKz8CSjRwZYul0KiapAmyXp47DTpEDW9NlaIOd0E19or6xoVuq95PzZ8GUQJ
+         Hu0enT7+G93YI6JqT/aB6DYO89BnZRqEkWd0Bf4Q9mEWlbQ/rRzd9TBhVu7mVZhXs1sB
+         DPRTsAPvsE3I7bDbNhEfN78hruhU1lY4Uu3KJtpuBt6nXFKWQx/v1FgeNNpNLhPuaKqf
+         vQyg==
+X-Gm-Message-State: APjAAAXd8lBMI+nonYlM5GpeE9EgikqOZPmtEDpijBhotlUWKEhz3Aoi
+        6LQzyNMm8dBojdB8V2B/3dCvVjClm3T2vt0xddtvOqzF
+X-Google-Smtp-Source: APXvYqwirVi7K5ZiDGHR5Jyl00j3UckS6/n5kmGaXLUAby933/RIoO5528aMdIBKHVDUm3iO5tq3dAelV+iXB3eOQVA=
+X-Received: by 2002:a63:205f:: with SMTP id r31mr356078pgm.159.1566939818927;
+ Tue, 27 Aug 2019 14:03:38 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41ee7c34-dac7-4e8d-0cee-08d72b3201f4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 21:03:27.5905
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EZ/TbV/i6YZfY+ZV8LQBhMHlE1w7qgPc5gNCBAe47gpT0Q/+w/ZVe0jCooE6nWvKZNKJlZdYUUzFzLqbCE0ZsPEsxB2+T5NNb9LorW9m1eE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4271
+References: <20190827174932.44177-1-brendanhiggins@google.com> <ae9b9102-187c-eefe-d377-6efa63de2d28@kernel.org>
+In-Reply-To: <ae9b9102-187c-eefe-d377-6efa63de2d28@kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 27 Aug 2019 14:03:27 -0700
+Message-ID: <CAFd5g473nZAfM4D=Vkr54O_+nn=MSt3dzuDcXzNMZGRDWg1nxA@mail.gmail.com>
+Subject: Re: [PATCH v1] kunit: fix failure to build without printk
+To:     shuah <shuah@kernel.org>
+Cc:     kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [PATCH 4/4] net: dsa: microchip: avoid hard-codded port count
->=20
-> Use port_cnt value to disable interrupts on switch reset.
->=20
-> Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
-> ---
->  drivers/net/dsa/microchip/ksz9477.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/net/dsa/microchip/ksz9477.c
-> b/drivers/net/dsa/microchip/ksz9477.c
-> index 187be42de5f1..54fc05595d48 100644
-> --- a/drivers/net/dsa/microchip/ksz9477.c
-> +++ b/drivers/net/dsa/microchip/ksz9477.c
-> @@ -213,7 +213,7 @@ static int ksz9477_reset_switch(struct ksz_device
-> *dev)
->=20
->  	/* disable interrupts */
->  	ksz_write32(dev, REG_SW_INT_MASK__4, SWITCH_INT_MASK);
-> -	ksz_write32(dev, REG_SW_PORT_INT_MASK__4, 0x7F);
-> +	ksz_write32(dev, REG_SW_PORT_INT_MASK__4, dev->port_cnt);
->  	ksz_read32(dev, REG_SW_PORT_INT_STATUS__4, &data32);
->=20
->  	/* set broadcast storm protection 10% rate */
+On Tue, Aug 27, 2019 at 1:21 PM shuah <shuah@kernel.org> wrote:
+>
+> On 8/27/19 11:49 AM, Brendan Higgins wrote:
+> > Previously KUnit assumed that printk would always be present, which is
+> > not a valid assumption to make. Fix that by ifdefing out functions which
+> > directly depend on printk core functions similar to what dev_printk
+> > does.
+> >
+> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
+> > Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > ---
+> >   include/kunit/test.h |  7 +++++++
+> >   kunit/test.c         | 41 ++++++++++++++++++++++++-----------------
+> >   2 files changed, 31 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > index 8b7eb03d4971..339af5f95c4a 100644
+> > --- a/include/kunit/test.h
+> > +++ b/include/kunit/test.h
+> > @@ -339,9 +339,16 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
+[...]
+> Okay after reviewing this, I am not sure why you need to do all
+> this.
+>
+> Why can't you just change the root function that throws the warn:
+>
+>   static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
+> {
+>          return vprintk_emit(0, level, NULL, 0, fmt, args);
+> }
+>
+> You aren'r really doing anything extra here, other than calling
+> vprintk_emit()
 
-The register value is a portmap, so using port_cnt may be wrong.
+Yeah, I did that a while ago. I think it was a combination of trying
+to avoid an extra layer of adding and then removing the log level, and
+that's what dev_printk and friends did.
 
-The chip is a 7-port switch.  There is a 6-port variant, but it is okay to =
-write 0x7F.
+But I think you are probably right. It's a lot of maintenance overhead
+to get rid of that. Probably best to just use what the printk people
+have.
 
-There is also a 3-port variant which uses a different design.  It is a bit =
-of stretch to use 0x7F on it.
+> Unless I am missing something, can't you solve this problem by including
+> printk.h and let it handle the !CONFIG_PRINTK case?
 
-It is more a code readability or correctness than incorrect hardware operat=
-ion.
-
+Randy, I hope you don't mind, but I am going to ask you to re-ack my
+next revision since it basically addresses the problem in a totally
+different way.
