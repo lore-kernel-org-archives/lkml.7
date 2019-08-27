@@ -2,103 +2,145 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBDDC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DEAC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C6E214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:34:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566912888;
-	bh=JUTyWwX2ET5pcAqmDZd9yiuKVN2SmCNm8sEP12RzMMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H5QAJvdat2dIxMhAaeCWFmGFtjYcch7XqnHm3viSzNXwxGhNHsDxljNc6X2O/9TXG
-	 NBSahPs+v6kKDg7rB+Mo+d/OmlWsy6ekavIXiWvDDKMf+3tbb/j+9R6xli1pWJCSIr
-	 1BiZ5LF9Z9D5c1D5u5GY3x0UvncbSc7OgExQ1tFM=
+	by mail.kernel.org (Postfix) with ESMTP id 516AD2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728742AbfH0Ner (ORCPT
+        id S1729353AbfH0NfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:34:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51100 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 09:35:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54670 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbfH0Ner (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:34:47 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726125AbfH0NfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:35:18 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96FD420828;
-        Tue, 27 Aug 2019 13:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566912886;
-        bh=JUTyWwX2ET5pcAqmDZd9yiuKVN2SmCNm8sEP12RzMMc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W8ZvR5DOjP38DXOaIx0j7myXAl5RgAQIqWTAFcW9XrI6yxAULG4QtZbJ00ES1PtER
-         0IuAUFyISZy/h9ClfTor1novhWyk4vkJPnoMSOET1v3C+MutUZDXG8jrEcjoUM4EX5
-         QdPdAZBYQ45xuf4Ibd0L1LDj/JdnCbt+yZMwUXI4=
-Date:   Tue, 27 Aug 2019 15:34:43 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Ondrej Jirman <megous@megous.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: pine64-plus: Add PHY
- regulator delay
-Message-ID: <20190827133443.fdxl5wjmgkerc3uh@flea>
-References: <20190825130336.14154-1-jernej.skrabec@siol.net>
+        by mx1.redhat.com (Postfix) with ESMTPS id 228993003AFE;
+        Tue, 27 Aug 2019 13:35:17 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EB248600D1;
+        Tue, 27 Aug 2019 13:35:12 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 15:35:10 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
+Message-ID: <20190827153510.0bd10437.cohuck@redhat.com>
+In-Reply-To: <AM0PR05MB4866792BEAAB1958BB5A9C4AD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <20190826204119.54386-2-parav@mellanox.com>
+        <20190827122428.37442fe1.cohuck@redhat.com>
+        <AM0PR05MB4866B68C9E60E42359BE1F4DD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190827132404.483a74ad.cohuck@redhat.com>
+        <AM0PR05MB4866CC932630ADD9BDA51371D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190827134114.01ddd049.cohuck@redhat.com>
+        <AM0PR05MB4866792BEAAB1958BB5A9C4AD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hjrahydg6q3alewh"
-Content-Disposition: inline
-In-Reply-To: <20190825130336.14154-1-jernej.skrabec@siol.net>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 27 Aug 2019 13:35:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 27 Aug 2019 11:57:07 +0000
+Parav Pandit <parav@mellanox.com> wrote:
 
---hjrahydg6q3alewh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> > -----Original Message-----
+> > From: Cornelia Huck <cohuck@redhat.com>
+> > Sent: Tuesday, August 27, 2019 5:11 PM
+> > To: Parav Pandit <parav@mellanox.com>
+> > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
+> > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; netdev@vger.kernel.org
+> > Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
+> > 
+> > On Tue, 27 Aug 2019 11:33:54 +0000
+> > Parav Pandit <parav@mellanox.com> wrote:
+> >   
+> > > > -----Original Message-----
+> > > > From: Cornelia Huck <cohuck@redhat.com>
+> > > > Sent: Tuesday, August 27, 2019 4:54 PM
+> > > > To: Parav Pandit <parav@mellanox.com>
+> > > > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
+> > > > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org;
+> > > > linux- kernel@vger.kernel.org; netdev@vger.kernel.org
+> > > > Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
+> > > >
+> > > > On Tue, 27 Aug 2019 11:12:23 +0000
+> > > > Parav Pandit <parav@mellanox.com> wrote:
+> > > >  
+> > > > > > -----Original Message-----
+> > > > > > From: Cornelia Huck <cohuck@redhat.com>
+> > > > > > Sent: Tuesday, August 27, 2019 3:54 PM
+> > > > > > To: Parav Pandit <parav@mellanox.com>
+> > > > > > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
+> > > > > > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org;
+> > > > > > linux- kernel@vger.kernel.org; netdev@vger.kernel.org
+> > > > > > Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
+> > > > > >  
+> >   
+> > > > > > What about:
+> > > > > >
+> > > > > > * @get_alias_length: optional callback to specify length of the
+> > > > > > alias to  
+> > > > create  
+> > > > > > *                    Returns unsigned integer: length of the alias to be created,
+> > > > > > *                                              0 to not create an alias
+> > > > > >  
+> > > > > Ack.
+> > > > >  
+> > > > > > I also think it might be beneficial to add a device parameter
+> > > > > > here now (rather than later); that seems to be something that makes  
+> > sense.  
+> > > > > >  
+> > > > > Without showing the use, it shouldn't be added.  
+> > > >
+> > > > It just feels like an omission: Why should the vendor driver only be
+> > > > able to return one value here, without knowing which device it is for?
+> > > > If a driver supports different devices, it may have different
+> > > > requirements for them.
+> > > >  
+> > > Sure. Lets first have this requirement to add it.
+> > > I am against adding this length field itself without an actual vendor use case,  
+> > which is adding some complexity in code today.  
+> > > But it was ok to have length field instead of bool.
+> > >
+> > > Lets not further add "no-requirement futuristic knobs" which hasn't shown its  
+> > need yet.  
+> > > When a vendor driver needs it, there is nothing prevents such addition.  
+> > 
+> > Frankly, I do not see how it adds complexity; the other callbacks have device
+> > arguments already,  
+> Other ioctls such as create, remove, mmap, likely need to access the parent.
+> Hence it make sense to have parent pointer in there.
+> 
+> I am not against complexity, I am just saying, at present there is no use-case. Let have use case and we add it.
+> 
+> > and the vendor driver is free to ignore it if it does not have
+> > a use for it. I'd rather add the argument before a possible future user tries
+> > weird hacks to allow multiple values, but I'll leave the decision to the
+> > maintainers.  
+> Why would a possible future user tries a weird hack?
+> If user needs to access parent device, that driver maintainer should ask for it.
 
-On Sun, Aug 25, 2019 at 03:03:36PM +0200, Jernej Skrabec wrote:
-> Depending on kernel and bootloader configuration, it's possible that
-> Realtek ethernet PHY isn't powered on properly. It needs some time
-> before it can be used.
->
-> Fix that by adding 100ms ramp delay to regulator responsible for
-> powering PHY.
->
-> Fixes: 94dcfdc77fc5 ("arm64: allwinner: pine64-plus: Enable dwmac-sun8i")
-> Suggested-by: Ondrej Jirman <megous@megous.com>
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+I've seen the situation often enough that folks tried to do hacks
+instead of enhancing the interface.
 
-How was that delay found?
-
-It should at least have a comment explaining why it's there.
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---hjrahydg6q3alewh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXWUxcwAKCRDj7w1vZxhR
-xQcDAP9PcjmKcemio5RyGsvXfmaqZINOqCwOKsTiONK54RVLbQEAgaFOmHxFyHfJ
-oQcsq82EY17PkSDieqvgY9JWjjbwrgo=
-=kJyJ
------END PGP SIGNATURE-----
-
---hjrahydg6q3alewh--
+Again, let's get a maintainer opinion.
