@@ -3,72 +3,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955AEC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 708E9C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB2B20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D5D920656
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:10:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbfH0KK3 (ORCPT
+        id S1729406AbfH0KKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 06:10:29 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:62304 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfH0KK3 (ORCPT
+        Tue, 27 Aug 2019 06:10:38 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:15476 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729058AbfH0KKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 06:10:29 -0400
-Received: from fsav301.sakura.ne.jp (fsav301.sakura.ne.jp [153.120.85.132])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7RAAQIJ089913;
-        Tue, 27 Aug 2019 19:10:26 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav301.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav301.sakura.ne.jp);
- Tue, 27 Aug 2019 19:10:26 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav301.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7RAALww089881
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Tue, 27 Aug 2019 19:10:26 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH 00/10] OOM Debug print selection and additional
- information
-To:     Michal Hocko <mhocko@kernel.org>, Edward Chron <echron@arista.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, colona@arista.com
-References: <20190826193638.6638-1-echron@arista.com>
- <20190827071523.GR7538@dhcp22.suse.cz>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <5768394f-1511-5b00-f715-c0c5446a2d2a@i-love.sakura.ne.jp>
-Date:   Tue, 27 Aug 2019 19:10:18 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 06:10:37 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="Horatiu.Vultur@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 1yAi4Ua9NRqqYG9pUWXNBJ8g0UQT9uyfb8aoPHVM5JfTpSepP0yUhhi9A04kfVoewLMtPbjlQB
+ V2lpUvqk7DsA3Qf3Bnbj8BXtqKI63nijDtD8iDNmxzxTAAzC9macH5h51O1282qjCc26/31tmB
+ 5nGqJ3HhqX5I7CBFdet9cDi/K7w2ZS33eV6I8DIHrf/hPGvNip7gPja9gdfYEkWOAyvCRQ1BKf
+ 6VvwQWmdQr2/O+Cea4MlVFVWm7esQlbcGPe8RwBDYKAEqmjjccbgPV0ETWu5Rax3/edS3Oja1I
+ h/8=
+X-IronPort-AV: E=Sophos;i="5.64,436,1559545200"; 
+   d="scan'208";a="46737569"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Aug 2019 03:10:36 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 27 Aug 2019 03:10:35 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Tue, 27 Aug 2019 03:10:35 -0700
+Date:   Tue, 27 Aug 2019 12:10:34 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
+        <davem@davemloft.net>, <UNGLinuxDriver@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <allan.nielsen@microchip.com>,
+        <f.fainelli@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
+Subject: Re: [PATCH v2 0/3] Add NETIF_F_HW_BR_CAP feature
+Message-ID: <20190827101033.g2cb6j2j4kuyzh2a@soft-dev3.microsemi.net>
+References: <1566807075-775-1-git-send-email-horatiu.vultur@microchip.com>
+ <20190826123811.GA13411@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <20190827071523.GR7538@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20190826123811.GA13411@lunn.ch>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/08/27 16:15, Michal Hocko wrote:
-> All that being said, I do not think this is something we want to merge
-> without a really _strong_ usecase to back it.
+The 08/26/2019 14:38, Andrew Lunn wrote:
+> External E-Mail
+> 
+> 
+> On Mon, Aug 26, 2019 at 10:11:12AM +0200, Horatiu Vultur wrote:
+> > When a network port is added to a bridge then the port is added in
+> > promisc mode. Some HW that has bridge capabilities(can learn, forward,
+> > flood etc the frames) they are disabling promisc mode in the network
+> > driver when the port is added to the SW bridge.
+> > 
+> > This patch adds the feature NETIF_F_HW_BR_CAP so that the network ports
+> > that have this feature will not be set in promisc mode when they are
+> > added to a SW bridge.
+> > 
+> > In this way the HW that has bridge capabilities don't need to send all the
+> > traffic to the CPU and can also implement the promisc mode and toggle it
+> > using the command 'ip link set dev swp promisc on'
+> 
+> Hi Horatiu
 
-Like the sender's domain "arista.com" suggests, some of information is
-geared towards networking devices, and ability to report OOM information
-in a way suitable for automatic recording/analyzing (e.g. without using
-shell prompt, let alone manually typing SysRq commands) would be convenient
-for unattended devices. We have only one OOM killer implementation and
-format/data are hard-coded. If we can make OOM killer modular, Edward would
-be able to use it.
+Hi Andrew,
+> 
+> I'm still not convinced this is needed. The model is, the hardware is
+> there to accelerate what Linux can do in software. Any peculiarities
+> of the accelerator should be hidden in the driver.  If the accelerator
+> can do its job without needing promisc mode, do that in the driver.
+Thanks for the model description. I will keep in my mind for the next
+patches that I will do.
+> 
+> So you are trying to differentiate between promisc mode because the
+> interface is a member of a bridge, and promisc mode because some
+> application, like pcap, has asked for promisc mode.
+> 
+> dev->promiscuity is a counter. So what you can do it look at its
+> value, and how the interface is being used. If the interface is not a
+> member of a bridge, and the count > 0, enable promisc mode in the
+> accelerator. If the interface is a member of a bridge, and the count >
+> 1, enable promisc mode in the accelerator.
+That sounds like a great idea. I was expecting to add this logic in the
+set_rx_mode function of the driver. But unfortunetly, I got the calls to
+this function before the dev->promiscuity is updated or not to get the
+call at all. For example in case the port is member of a bridge and I try
+to enable the promisc mode.
 
+> 
+>    Andrew
+> 
+> 
+
+-- 
+/Horatiu
