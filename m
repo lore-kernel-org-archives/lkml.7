@@ -2,51 +2,59 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A33CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCEEC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32794217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D112173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892696;
-	bh=tpTGIhEqxp+KBGaDmFcATKiHYBPcEXPJInHvTwLE9V8=;
+	s=default; t=1566892703;
+	bh=S83z92L/pXYvwMOEmE0T89wwCum+IYTdUN0W5Rnk1Bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zzv9S1x2y+anbh48JVg7xrpyuMRcbfeeP5w4f5l3d5+npPeQICQk9lIS4UTa2A1lA
-	 b/+ky82Ol5GNOj6PmhInAz7emImscTt/BJQKBLhzSjYLMV/DAhRl3L89XHfEon3JHU
-	 K5RTY/BneqBJoO8Znq/LAWgU1dfp5Z9GQu8IOC3Y=
+	b=Hgvi+RQW0dtkqawluLcqcVpjdAVRLYt1brl+magXxY/lhonle8ols4Q0aA2D8p7rf
+	 mPFThBx0Rzl4cd6jkpUtL5TitTofKFvHh61JOggC8twCpTUBCMykBjBFPu5YHF2Dkn
+	 9/F5mopx7KiDSaeOwYSnuKuKKe1/L62HnDLxLdH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730975AbfH0H6P (ORCPT
+        id S1730043AbfH0H6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:58:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50682 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:58:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730538AbfH0H6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:58:07 -0400
+        id S1730960AbfH0H6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:58:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6723720828;
-        Tue, 27 Aug 2019 07:58:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D65FC20828;
+        Tue, 27 Aug 2019 07:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892686;
-        bh=tpTGIhEqxp+KBGaDmFcATKiHYBPcEXPJInHvTwLE9V8=;
+        s=default; t=1566892692;
+        bh=S83z92L/pXYvwMOEmE0T89wwCum+IYTdUN0W5Rnk1Bc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CccCQxZCTrYk8I2ZjEUMThGYwfsnSf6qOQQ1Mb7AcdOq7ZcYKQo1PF4uGhpW4/v5Q
-         47EUdOEGYQvawoLdIWFA2ZwvjKqO+d1YwIZqlTCUDBL9+lhWRYq+WVphtbANiEtQzl
-         HIid7JRObAjiq5jglJLx6nq8Z5LcYHfSA+0WIETo=
+        b=PcrhXETxwFziW+TD6uTJMvOAI/DL12T+Tt+m6H4mBN2smKt4e8iUV77ygkfr3kdRo
+         11YJRHZ7mr7Ndhp4eK2oDX2BqrydvRkgD6WjPnh6+37oMrCJkWQ9AKlGFKBTjNmtMt
+         sVVlABz3SPtaDtkHnInmvrMzSU2ItTUcWszyzl88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.19 78/98] dm raid: add missing cleanup in raid_ctr()
-Date:   Tue, 27 Aug 2019 09:50:57 +0200
-Message-Id: <20190827072722.218327181@linuxfoundation.org>
+        stable@vger.kernel.org, He Zhe <zhe.he@windriver.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 53/98] perf ftrace: Fix failure to set cpumask when only one cpu is present
+Date:   Tue, 27 Aug 2019 09:50:32 +0200
+Message-Id: <20190827072721.130822718@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -59,35 +67,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+[ Upstream commit cf30ae726c011e0372fd4c2d588466c8b50a8907 ]
 
-commit dc1a3e8e0cc6b2293b48c044710e63395aeb4fb4 upstream.
+The buffer containing the string used to set cpumask is overwritten at
+the end of the string later in cpu_map__snprint_mask due to not enough
+memory space, when there is only one cpu.
 
-If rs_prepare_reshape() fails, no cleanup is executed, leading to
-leak of the raid_set structure allocated at the beginning of
-raid_ctr(). To fix this issue, go to the label 'bad' if the error
-occurs.
+And thus causes the following failure:
 
-Fixes: 11e4723206683 ("dm raid: stop keeping raid set frozen altogether")
-Cc: stable@vger.kernel.org
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  $ perf ftrace ls
+  failed to reset ftrace
+  $
 
+This patch fixes the calculation of the cpumask string size.
+
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Fixes: dc23103278c5 ("perf ftrace: Add support for -a and -C option")
+Link: http://lkml.kernel.org/r/1564734592-15624-1-git-send-email-zhe.he@windriver.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-raid.c |    2 +-
+ tools/perf/builtin-ftrace.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/dm-raid.c
-+++ b/drivers/md/dm-raid.c
-@@ -3199,7 +3199,7 @@ static int raid_ctr(struct dm_target *ti
- 			  */
- 			r = rs_prepare_reshape(rs);
- 			if (r)
--				return r;
-+				goto bad;
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index f42f228e88992..137955197ba8d 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -174,7 +174,7 @@ static int set_tracing_cpumask(struct cpu_map *cpumap)
+ 	int last_cpu;
  
- 			/* Reshaping ain't recovery, so disable recovery */
- 			rs_setup_recovery(rs, MaxSector);
+ 	last_cpu = cpu_map__cpu(cpumap, cpumap->nr - 1);
+-	mask_size = (last_cpu + 3) / 4 + 1;
++	mask_size = last_cpu / 4 + 2; /* one more byte for EOS */
+ 	mask_size += last_cpu / 32; /* ',' is needed for every 32th cpus */
+ 
+ 	cpumask = malloc(mask_size);
+-- 
+2.20.1
+
 
 
