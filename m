@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE74C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8595BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38954206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59899206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893611;
-	bh=3PHM2/imUAmjiR39qRkqNl74KO+K9Dx8CQk/HwCiYko=;
+	s=default; t=1566893614;
+	bh=8EqrmYTm5gwpS9GJIxi7ddxWodcfC4nUipeB9mMnheU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OWgjAg6LRJMCXZGI1NRWelRSaFTPKr0wP8LO1dqwaRDkF2o+4AwG0lSPafcSfyJVr
-	 45D2936sWP+EnQhJh0jDOcqC6YZWyTuS/t75/6SSVmlDi8T66FMQVm/WDXQKqGtFGg
-	 4epMJQHlZAjADGAe6gNjeyouT4uC2D4GhtonpFOw=
+	b=IJuag+2C/l5uT2VwlXLgx16vayKZJGfSEF4I0EjIcgrBmn8b8UvSO0W4UeC8y0hf5
+	 JGKGEf5qjBrW2ffgSjJHkDVP11Ku+o4ehGIoZf9NLiK/SS/6nLvi/GmQL5JHsH8OFM
+	 2BneKtwiapiL16pE0wjkhClGPvBqzllE1hLnq3Io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731981AbfH0INa (ORCPT
+        id S1730944AbfH0H6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:13:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50934 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:58:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730976AbfH0H6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:58:16 -0400
+        id S1730904AbfH0H6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:58:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6BBC206BF;
-        Tue, 27 Aug 2019 07:58:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C56F206BF;
+        Tue, 27 Aug 2019 07:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892695;
-        bh=3PHM2/imUAmjiR39qRkqNl74KO+K9Dx8CQk/HwCiYko=;
+        s=default; t=1566892681;
+        bh=8EqrmYTm5gwpS9GJIxi7ddxWodcfC4nUipeB9mMnheU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VjSJnMUfDLtP/qXl3UwoTiDMY96ErhK0w938IroznTLTGKE/cK79JGf4maMlT2oin
-         6HfL3cDPzYav+8UsMktpRfYTXOoj/0AdiI3sPr/3vvQAEKcq8F6fOtc90R8PkwBfTX
-         m/ktBpuhxSVQPGVgvKNh5tgssgyQgtgdpTEBh12Q=
+        b=oYQYUtBkGx/vAJ0C94lx62dO7LefETG7pGZLAHK+xZAupmGvZzXlvGV3Xa3ml8eb0
+         1nJFmJtxfkXPTe0s81rHVdGej0ShYl7B41cprgRbZYaval6LzBe/6S2L9e2O2HBNfs
+         5X2cXqSmi9290wjUUuSSsUfdPGv1sWh3F622X7rs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhang Tao <kontais@zoho.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
+        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.19 80/98] dm table: fix invalid memory accesses with too high sector number
-Date:   Tue, 27 Aug 2019 09:50:59 +0200
-Message-Id: <20190827072722.286972407@linuxfoundation.org>
+Subject: [PATCH 4.19 76/98] dm btree: fix order of block initialization in btree_split_beneath
+Date:   Tue, 27 Aug 2019 09:50:55 +0200
+Message-Id: <20190827072722.156784999@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -60,52 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 
-commit 1cfd5d3399e87167b7f9157ef99daa0e959f395d upstream.
+commit e4f9d6013820d1eba1432d51dd1c5795759aa77f upstream.
 
-If the sector number is too high, dm_table_find_target() should return a
-pointer to a zeroed dm_target structure (the caller should test it with
-dm_target_is_valid).
+When btree_split_beneath() splits a node to two new children, it will
+allocate two blocks: left and right.  If right block's allocation
+failed, the left block will be unlocked and marked dirty.  If this
+happened, the left block'ss content is zero, because it wasn't
+initialized with the btree struct before the attempot to allocate the
+right block.  Upon return, when flushing the left block to disk, the
+validator will fail when check this block.  Then a BUG_ON is raised.
 
-However, for some table sizes, the code in dm_table_find_target() that
-performs btree lookup will access out of bound memory structures.
+Fix this by completely initializing the left block before allocating and
+initializing the right block.
 
-Fix this bug by testing the sector number at the beginning of
-dm_table_find_target(). Also, add an "inline" keyword to the function
-dm_table_get_size() because this is a hot path.
-
-Fixes: 512875bd9661 ("dm: table detect io beyond device")
+Fixes: 4dcb8b57df359 ("dm btree: fix leak of bufio-backed block in btree_split_beneath error path")
 Cc: stable@vger.kernel.org
-Reported-by: Zhang Tao <kontais@zoho.com>
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-table.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/md/persistent-data/dm-btree.c |   31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -1349,7 +1349,7 @@ void dm_table_event(struct dm_table *t)
- }
- EXPORT_SYMBOL(dm_table_event);
+--- a/drivers/md/persistent-data/dm-btree.c
++++ b/drivers/md/persistent-data/dm-btree.c
+@@ -628,39 +628,40 @@ static int btree_split_beneath(struct sh
  
--sector_t dm_table_get_size(struct dm_table *t)
-+inline sector_t dm_table_get_size(struct dm_table *t)
- {
- 	return t->num_targets ? (t->highs[t->num_targets - 1] + 1) : 0;
- }
-@@ -1374,6 +1374,9 @@ struct dm_target *dm_table_find_target(s
- 	unsigned int l, n = 0, k = 0;
- 	sector_t *node;
+ 	new_parent = shadow_current(s);
  
-+	if (unlikely(sector >= dm_table_get_size(t)))
-+		return &t->targets[t->num_targets];
++	pn = dm_block_data(new_parent);
++	size = le32_to_cpu(pn->header.flags) & INTERNAL_NODE ?
++		sizeof(__le64) : s->info->value_type.size;
 +
- 	for (l = 0; l < t->depth; l++) {
- 		n = get_child(n, k);
- 		node = get_node(t, l, n);
++	/* create & init the left block */
+ 	r = new_block(s->info, &left);
+ 	if (r < 0)
+ 		return r;
+ 
++	ln = dm_block_data(left);
++	nr_left = le32_to_cpu(pn->header.nr_entries) / 2;
++
++	ln->header.flags = pn->header.flags;
++	ln->header.nr_entries = cpu_to_le32(nr_left);
++	ln->header.max_entries = pn->header.max_entries;
++	ln->header.value_size = pn->header.value_size;
++	memcpy(ln->keys, pn->keys, nr_left * sizeof(pn->keys[0]));
++	memcpy(value_ptr(ln, 0), value_ptr(pn, 0), nr_left * size);
++
++	/* create & init the right block */
+ 	r = new_block(s->info, &right);
+ 	if (r < 0) {
+ 		unlock_block(s->info, left);
+ 		return r;
+ 	}
+ 
+-	pn = dm_block_data(new_parent);
+-	ln = dm_block_data(left);
+ 	rn = dm_block_data(right);
+-
+-	nr_left = le32_to_cpu(pn->header.nr_entries) / 2;
+ 	nr_right = le32_to_cpu(pn->header.nr_entries) - nr_left;
+ 
+-	ln->header.flags = pn->header.flags;
+-	ln->header.nr_entries = cpu_to_le32(nr_left);
+-	ln->header.max_entries = pn->header.max_entries;
+-	ln->header.value_size = pn->header.value_size;
+-
+ 	rn->header.flags = pn->header.flags;
+ 	rn->header.nr_entries = cpu_to_le32(nr_right);
+ 	rn->header.max_entries = pn->header.max_entries;
+ 	rn->header.value_size = pn->header.value_size;
+-
+-	memcpy(ln->keys, pn->keys, nr_left * sizeof(pn->keys[0]));
+ 	memcpy(rn->keys, pn->keys + nr_left, nr_right * sizeof(pn->keys[0]));
+-
+-	size = le32_to_cpu(pn->header.flags) & INTERNAL_NODE ?
+-		sizeof(__le64) : s->info->value_type.size;
+-	memcpy(value_ptr(ln, 0), value_ptr(pn, 0), nr_left * size);
+ 	memcpy(value_ptr(rn, 0), value_ptr(pn, nr_left),
+ 	       nr_right * size);
+ 
 
 
