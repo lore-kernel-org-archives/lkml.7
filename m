@@ -2,127 +2,148 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D25C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 03:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0606BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 03:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E070B2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 03:51:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZ/bEeo+"
+	by mail.kernel.org (Postfix) with ESMTP id DAAE6206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 03:55:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbfH0Dvq (ORCPT
+        id S1729099AbfH0DzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 23:51:46 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42664 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728345AbfH0Dvp (ORCPT
+        Mon, 26 Aug 2019 23:55:15 -0400
+Received: from anchovy1.45ru.net.au ([203.30.46.145]:54739 "EHLO
+        anchovy1.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728909AbfH0DzP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 23:51:45 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i30so13170660pfk.9;
-        Mon, 26 Aug 2019 20:51:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uzw991Nd9jKGjk5uiYDdWpoGos7yXqXk1ZGkmJpLpEc=;
-        b=VZ/bEeo+JL0jEB5ajc2gQ8c0lAQWsCg5gV7chmk0uvbopRZahtryHkP6pu2LfI1kJv
-         isK0BI2HdUHIqMK6fshtaQ4+Q5Diip+Gv7/lohTtwkpwUYur99cozGU9M99bb6kzRTtk
-         eb/ha+mOsD+n5ONGq3fpWc9B52f/i062cvudEoXmRt4ydGKk5hoaVq6xsZGahoQLSgsp
-         lOD1fArESLDxXiUeAxaUa0wKKRwSN/6Xy2YCRM2ctTXQlcfUbdjrvfs3PRKEdR1vjrSJ
-         bXM3pW4AEg+oJaIAW4NVWyv1PJvTNWS0OSbtUHS+8K3rRLTmDo2dKiIWQfmsVSY4qskw
-         WFlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uzw991Nd9jKGjk5uiYDdWpoGos7yXqXk1ZGkmJpLpEc=;
-        b=fzahIZBGOXY2OEikMXCTm41LtfYNRU/+czXZgVrBfF6wQ2l7hM0q5Oi9mMJZw7+Xa/
-         15F2JzDZxIMU/tDQzA68uFqf+SUYmxjIyF6a0CBOpFB8nOukPdfaUujq9rdakem3wQXm
-         7/b5rEjp+YIo3yaWNlFqT5PZRKd6CJUyDYhuuUViL5bclK6OFOG0BmNQM6aFIZ/81eW9
-         XpnjUnQDlJa/kvStidpk1b1Fdv2OvOuwUc5qRMtor+8paAW6xb79WznW+RLaYnVorqbv
-         MEbr5ZZ8OWG2HM4xTfk7XCuusfDy+ZtqF6mL6ZMUhkkL5X/Ch6sBysok7AbqL6Bo9kqQ
-         smsw==
-X-Gm-Message-State: APjAAAXQl1aiXpJECYsx64O9pfXsbx7nQ0Wx/VJpD0NLMYW+mh3HxONs
-        JVWUM9gGlyKm6JFcglQ+2CdC23dL
-X-Google-Smtp-Source: APXvYqwMSCQaA5x5qIUZLvllnP98gD/Ag8iZwbgHtzXNc4bCbFCMJoYX8ghjfU7J1gfOnZZ2LLNOsQ==
-X-Received: by 2002:a65:6406:: with SMTP id a6mr17840286pgv.393.1566877904887;
-        Mon, 26 Aug 2019 20:51:44 -0700 (PDT)
-Received: from server.roeck-us.net (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
-        by smtp.gmail.com with ESMTPSA id y16sm13799827pfn.173.2019.08.26.20.51.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Aug 2019 20:51:43 -0700 (PDT)
-Subject: Re: [PATCH 1/2] hwmon: Add Synaptics AS370 PVT sensor driver
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190826174942.2b28ff05@xhacker.debian>
- <20190826175029.433632f6@xhacker.debian>
- <35b05950-4a72-9e00-50ab-ecd0a7e759a4@roeck-us.net>
- <20190827105110.0be8d669@xhacker.debian>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <e0bfae1c-07f5-f907-0003-2c2f959e8099@roeck-us.net>
-Date:   Mon, 26 Aug 2019 20:51:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Mon, 26 Aug 2019 23:55:15 -0400
+Received: (qmail 14690 invoked by uid 5089); 27 Aug 2019 03:55:13 -0000
+Received: by simscan 1.2.0 ppid: 14576, pid: 14577, t: 0.0517s
+         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
+Received: from unknown (HELO ?192.168.0.128?) (preid@electromag.com.au@203.59.235.95)
+  by anchovy1.45ru.net.au with ESMTPA; 27 Aug 2019 03:55:12 -0000
+Subject: Re: [PATCH 4/4] iio: adc: ina2xx: Use label proper for device
+ identification
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, linux@roeck-us.net,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-iio@vger.kernel.org,
+        =?UTF-8?Q?Stefan_Br=c3=bcns?= <stefan.bruens@rwth-aachen.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Hartmut Knaack <knaack.h@gmx.de>
+References: <cover.1566310292.git.michal.simek@xilinx.com>
+ <0542b562a813c5c22c42484ac24bbb626ac3c022.1566310292.git.michal.simek@xilinx.com>
+ <970c3988-24e4-26c2-9027-d8ff40c3a9bb@electromag.com.au>
+ <bca73b6d-87ae-f8cc-b9f4-3b0a558942d9@xilinx.com>
+ <20190825190753.7d52c3f9@archlinux>
+From:   Phil Reid <preid@electromag.com.au>
+Message-ID: <af5fdfc3-dbc8-40fc-2893-c786670f28d4@electromag.com.au>
+Date:   Tue, 27 Aug 2019 11:55:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190827105110.0be8d669@xhacker.debian>
+In-Reply-To: <20190825190753.7d52c3f9@archlinux>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Language: en-AU
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/19 8:02 PM, Jisheng Zhang wrote:
-> Hi Guenter,
+On 26/08/2019 02:07, Jonathan Cameron wrote:
+> On Wed, 21 Aug 2019 11:12:00 +0200
+> Michal Simek <michal.simek@xilinx.com> wrote:
 > 
-> On Mon, 26 Aug 2019 06:44:34 -0700 Guenter Roeck wrote:
+>> On 21. 08. 19 4:11, Phil Reid wrote:
+>>> On 20/08/2019 22:11, Michal Simek wrote:
+>>>> Add support for using label property for easier device identification via
+>>>> iio framework.
+>>>>
+>>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>>>> ---
+>>>>
+>>>>    drivers/iio/adc/ina2xx-adc.c | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/iio/adc/ina2xx-adc.c b/drivers/iio/adc/ina2xx-adc.c
+>>>> index 7c7c63677bf4..077c54915f70 100644
+>>>> --- a/drivers/iio/adc/ina2xx-adc.c
+>>>> +++ b/drivers/iio/adc/ina2xx-adc.c
+>>>> @@ -1033,7 +1033,7 @@ static int ina2xx_probe(struct i2c_client *client,
+>>>>        snprintf(chip->name, sizeof(chip->name), "%s-%s",
+>>>>             client->name, dev_name(&client->dev));
+>>>>    -    indio_dev->name = chip->name;
+>>>> +    indio_dev->name = of_get_property(np, "label", NULL) ? : chip->name;
+>>>>        indio_dev->setup_ops = &ina2xx_setup_ops;
+>>>>          buffer = devm_iio_kfifo_allocate(&indio_dev->dev);
+>>>>   
+>>> I like this personally. It'd be nice if it was a core function so
+>>> it could be an opt in to any iio device.
+>>>
+>>> Don't know how well received that'd be thou.
+>>>    
+> I'm not particularly keen on changing the semantics of existing
+> ABI, but how about adding new ABI to provide this?
 > 
->>
->>
->> On 8/26/19 3:01 AM, Jisheng Zhang wrote:
->>> Add a new driver for Synaptics AS370 PVT sensors. Currently, only
->>> temperature is supported.
->>>
->>> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
->>> ---
->>>    drivers/hwmon/Kconfig       |  10 +++
->>>    drivers/hwmon/Makefile      |   1 +
->>>    drivers/hwmon/as370-hwmon.c | 158 ++++++++++++++++++++++++++++++++++++
->>>    3 files changed, 169 insertions(+)
->>>    create mode 100644 drivers/hwmon/as370-hwmon.c
->>>
->>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
->>> index 650dd71f9724..d31610933faa 100644
->>> --- a/drivers/hwmon/Kconfig
->>> +++ b/drivers/hwmon/Kconfig
->>> @@ -246,6 +246,16 @@ config SENSORS_ADT7475
->>>          This driver can also be built as a module. If so, the module
->>>          will be called adt7475.
->>>
->>> +config SENSORS_AS370
->>> +     tristate "Synaptics AS370 SoC hardware monitoring driver"
->>
->> I think this needs "depends on HAS_IOMEM".
+> /sys/bus/iio/devices/iio\:device0/label for example?
 > 
-> HWMON depends on HAS_IOMEM, so the dependency has been required
-> by the common HWMON, we don't need it here.
+> I haven't thought about it in depth yet though.  If you spin
+> a patch with that and the DT docs we'll be more likely to get
+> a view from DT maintainers if this is acceptable use of label.
 > 
 
-This is so wrong :-(. As if I2C or SPI based sensor chips would
-require iomem. Oh well, no one complained in 12+ years, so I guess
-we are "fine", at least for the time being.
+I've sent "iio: core: Add optional symbolic label to device attributes"
+for further discussion.
 
-Thanks for noticing.
 
-Guenter
+> Thanks
+> 
+> Jonathan
+> 
+>>
+>> Something like this?
+>>
+>> diff --git a/drivers/iio/industrialio-core.c
+>> b/drivers/iio/industrialio-core.c
+>> index 524a686077ca..d21b495d36a1 100644
+>> --- a/drivers/iio/industrialio-core.c
+>> +++ b/drivers/iio/industrialio-core.c
+>> @@ -1647,6 +1647,9 @@ int __iio_device_register(struct iio_dev
+>> *indio_dev, struct module *this_mod)
+>>          if (!indio_dev->dev.of_node && indio_dev->dev.parent)
+>>                  indio_dev->dev.of_node = indio_dev->dev.parent->of_node;
+>>
+>> +       indio_dev->name = of_get_property(indio_dev->dev.of_node,
+>> "label", NULL) ? :
+>> +                                         indio_dev->name;
+>> +
+>>          ret = iio_check_unique_scan_index(indio_dev);
+>>          if (ret < 0)
+>>                  return ret;
+>>
+>>
+>> M
+> 
+> 
+> 
+
+
+-- 
+Regards
+Phil Reid
+
+ElectroMagnetic Imaging Technology Pty Ltd
+Development of Geophysical Instrumentation & Software
+www.electromag.com.au
+
+3 The Avenue, Midland WA 6056, AUSTRALIA
+Ph: +61 8 9250 8100
+Fax: +61 8 9250 7100
+Email: preid@electromag.com.au
