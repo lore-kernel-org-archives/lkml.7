@@ -2,90 +2,146 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA246C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C12C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A36C822CF4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:20:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566922856;
-	bh=ckEyVMx9zE1AIq7/EgELt51sKYtOqUOLZIeo/sWmaik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ixv+7zX4V5z06De1J+R7BvjuRU/cuXd46+WRzEHjG4H8j4bQBb7xO+EALk/P96Jo7
-	 RDNW5ztCZ9qvlTOzdOG6n/Aybk1DjWISoZcIcENWrel8Pvz24LBMHcl29HuZ0iVald
-	 JMttgvn8X8jry+yThzeOrhevPUBATZ2nVbrulAH8=
+	by mail.kernel.org (Postfix) with ESMTP id 30B6121881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:22:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="AJvYHzwF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730223AbfH0QU4 (ORCPT
+        id S1729666AbfH0QWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:20:56 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42554 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbfH0QUz (ORCPT
+        Tue, 27 Aug 2019 12:22:02 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:43743 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726621AbfH0QWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:20:55 -0400
-Received: by mail-oi1-f195.google.com with SMTP id o6so15395156oic.9;
-        Tue, 27 Aug 2019 09:20:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/+2YwB8+Xi4YT6vhao9F9CgIDSvyioAXjISKvURBpVM=;
-        b=uUGbCQb1GWun6skhhGun3lOYHjx+zqCQLiuPiA5Q0Qv0nyORzHvmmt1S2HO0MZoNyF
-         IuzWGW+sYdkOtjH4EGVglWcp5V1vbb6WlTMCvPKs9xs/BMuWZ2LiklB5Muyf0QW8saV4
-         f44IT1aZo+r5rA9XE8C74Dz9ZRH46km7L/FbLU+NZT7TVokI6wwSC8j/M5MAN0KxV0jb
-         qZxOvNge0Ht8Izsmp8jH7FQVml/zb4cdaEoa0Im9XTJewHrUlNzk76U3uhthrs2JrIpc
-         s9lY7uXjR96pmkyX9vGRpvBzeJhdyDZql7zu4Eee5jpZ0dmSzRwhWbEyG53x2VerjuCC
-         ChQg==
-X-Gm-Message-State: APjAAAVWfP9nRA2qhZViU4pcl9oPm6XKYXuQmnwWV4IcuLZWN++vZOzT
-        +/SimWQf6a+G9up8pIaOMw==
-X-Google-Smtp-Source: APXvYqwVWvlJHLSHxm3WNh8/kzbvwC8YMUkeCo9ZURCfgjbx93rsP4tPShUQbsFtmuJHppSVq6yE2g==
-X-Received: by 2002:aca:d650:: with SMTP id n77mr17486575oig.129.1566922854444;
-        Tue, 27 Aug 2019 09:20:54 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 20sm5759937otd.71.2019.08.27.09.20.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 09:20:53 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 11:20:53 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org,
-        a.hajda@samsung.com, narmstrong@baylibre.com, robdclark@gmail.com,
-        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
-        mark.rutland@arm.com, Laurent.pinchart@ideasonboard.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net, linus.walleij@linaro.org,
-        enric.balletbo@collabora.com, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        freedreno@lists.freedesktop.org
-Subject: Re: [PATCH 01/11] dt-bindings: drm/bridge: analogix-anx78xx: add new
- variants
-Message-ID: <20190827162053.GA12094@bogus>
-References: <20190815004854.19860-1-masneyb@onstation.org>
- <20190815004854.19860-2-masneyb@onstation.org>
+        Tue, 27 Aug 2019 12:22:02 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7RGG0BV019934;
+        Tue, 27 Aug 2019 18:21:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=sTwTEKh7PY7xWSu6lXW3JPWtDKCZvlUhRrOtUzusNF0=;
+ b=AJvYHzwFCR6O19zZZtRcXPFdYXbcTlO2jqn0zDfzYqbPiPAb7hAIgE9tSbq2GYy6IGVd
+ jM+N40rxWGIA24TvZZcsJD53gP6dJz95i+vkp7JcQoVML4qSHRZaw6qPCjoJZhQcnp0m
+ VoICawxzPl15pKMs4xWVmVxvE9BjmSCICDnujxoT46cglrloS4kS6n1B52E5NUdi5hCO
+ cfaMMw50GuWtUR0pE15Cdoyxv4IMQ33npJak1UgZ8MeT83FImATZKCWxRuh4bdiFlPZx
+ QBIynFMBi5Rh4WXTwUPeroFPun85W11NZO2q+u4A09+g+/9CZLGMGcMneN7Mx8ILYdO6 QA== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2uju0vthq6-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 27 Aug 2019 18:21:51 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5BEDF4C;
+        Tue, 27 Aug 2019 16:21:47 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 900432B76DF;
+        Tue, 27 Aug 2019 18:21:46 +0200 (CEST)
+Received: from [10.48.0.131] (10.75.127.45) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 27 Aug
+ 2019 18:21:46 +0200
+Subject: Re: [PATCH] remoteproc: Add a sysfs interface for name
+To:     Suman Anna <s-anna@ti.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190809222057.13924-1-s-anna@ti.com>
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Message-ID: <01cf27f8-c586-5a9e-c361-082bb1facbb4@st.com>
+Date:   Tue, 27 Aug 2019 18:21:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815004854.19860-2-masneyb@onstation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190809222057.13924-1-s-anna@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-27_03:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 20:48:44 -0400, Brian Masney wrote:
-> Add support for the analogix,anx7808, analogix,anx7812, and
-> analogix,anx7818 variants.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  .../devicetree/bindings/display/bridge/anx7814.txt          | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
+Hi Suman,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by:Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+
+Thanks,
+Arnaud
+
+On 8/10/19 12:20 AM, Suman Anna wrote:
+> This patch adds a sysfs interface that provides the name of the
+> remote processor to userspace. This allows the userspace to identify
+> a remote processor as the remoteproc devices themselves are created
+> based on probe order and can change from one boot to another or
+> at runtime.
+> 
+> The name is made available in debugfs originally, and is being
+> retained for now. This can be cleaned up after couple of releases
+> once users get familiar with the new interface.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+>   Documentation/ABI/testing/sysfs-class-remoteproc | 10 ++++++++++
+>   drivers/remoteproc/remoteproc_sysfs.c            | 11 +++++++++++
+>   2 files changed, 21 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-remoteproc b/Documentation/ABI/testing/sysfs-class-remoteproc
+> index c3afe9fab646..36094fbeb974 100644
+> --- a/Documentation/ABI/testing/sysfs-class-remoteproc
+> +++ b/Documentation/ABI/testing/sysfs-class-remoteproc
+> @@ -48,3 +48,13 @@ Description:	Remote processor state
+>   
+>   		Writing "stop" will attempt to halt the remote processor and
+>   		return it to the "offline" state.
+> +
+> +What:		/sys/class/remoteproc/.../name
+> +Date:		August 2019
+> +KernelVersion:	5.4
+> +Contact:	Suman Anna <s-anna@ti.com>
+> +Description:	Remote processor name
+> +
+> +		Reports the name of the remote processor. This can be used by
+> +		userspace in exactly identifying a remote processor and ease
+> +		up the usage in modifying the 'firmware' or 'state' files.
+> diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
+> index fa4131930106..7f8536b73295 100644
+> --- a/drivers/remoteproc/remoteproc_sysfs.c
+> +++ b/drivers/remoteproc/remoteproc_sysfs.c
+> @@ -113,9 +113,20 @@ static ssize_t state_store(struct device *dev,
+>   }
+>   static DEVICE_ATTR_RW(state);
+>   
+> +/* Expose the name of the remote processor via sysfs */
+> +static ssize_t name_show(struct device *dev, struct device_attribute *attr,
+> +			 char *buf)
+> +{
+> +	struct rproc *rproc = to_rproc(dev);
+> +
+> +	return sprintf(buf, "%s\n", rproc->name);
+> +}
+> +static DEVICE_ATTR_RO(name);
+> +
+>   static struct attribute *rproc_attrs[] = {
+>   	&dev_attr_firmware.attr,
+>   	&dev_attr_state.attr,
+> +	&dev_attr_name.attr,
+>   	NULL
+>   };
+>   
+> 
