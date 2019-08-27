@@ -2,760 +2,947 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9233FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A198EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A16221881
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:11:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566929510;
-	bh=HM6CKYlUNJt/wn0Ek9CAn+47w59SZTZp2Xm9aMSeGbI=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=HsksQzUmuhHYQPlIaEP1DpTHnMyrFWJnq5GGZOYyEXqAbiZUTq5X7Sj06FzI5fUaD
-	 oc80bq++LOvuqdUtOpv0LKJQ9988URRKNKn63WnQ0IGE8l5IPrBPAPYrE1ooJSmAQf
-	 +SWpdhm92A6yXIGW67oVdNC5XinPVRqLYS/7eHaY=
+	by mail.kernel.org (Postfix) with ESMTP id 62CCB2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:13:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XRLINOQV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730493AbfH0SLt (ORCPT
+        id S1730532AbfH0SNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:11:49 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43776 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729313AbfH0SLs (ORCPT
+        Tue, 27 Aug 2019 14:13:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34688 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728670AbfH0SNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:11:48 -0400
-Received: by mail-io1-f68.google.com with SMTP id 18so266885ioe.10
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 11:11:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PgKLmqB/YBP1c/eVnkykvuwEHIkyxn4ZiTy0O+mYyUc=;
-        b=czEjLP3hKFLyfCQudIxSr7IFTTcUbL+9GQcJOWSEftGWuH3QY+mrcfCM37KhHhf3Pg
-         Bld20Tn13vU8keUabgqVj/jC8MoaafK3iyzJDadlm1TyleUtV15wl9kN6XE6yMw2+BSN
-         pwkKUYhyxH36jdqrCDNssZ2kdtD/OH/lxGd1c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PgKLmqB/YBP1c/eVnkykvuwEHIkyxn4ZiTy0O+mYyUc=;
-        b=JmV7FRrIlcRF9FEYAowpg7fWkrqyeR3sfz9QcwWfAR5ql/oehcYk9UD/JpThUVKRKQ
-         RDimdDy+O4mJm5LK77SYImN14R8+cY+ZCMO7/lz7gFqCyWn26FqI3tAA3h2ubJH26+OV
-         mTmjDY+kqVabqX6Q4bDshq0wuSKV734NjN2Qnzb1z8HH2HgTCZVHmPvAxHWsNPZgvMRI
-         6I73S1jzP/xf5ApERUMOaIe8t80Lo4BJ7/vC5EUEvhokLD+2rdEDqiC53BAAjjJiCWoH
-         1a7YtDQyGIheWJDuwuGfzg3sti+VQXcxA42SRQVciOKYDI4OMozpjOJCQc6ZmGpisCqF
-         Tq9A==
-X-Gm-Message-State: APjAAAVMjUs9AnF20Japze3CPSwSfvLVQrufttSnaghcydMbBqonFe1r
-        RbKB6itTstivJ9pMmNkHHKvZGQ==
-X-Google-Smtp-Source: APXvYqzSfRExgKS/dfsvgskQYlUhFfa+7SU9jFaZRU73VX1gaDKdvcHf8jnVVh7SaIdEwMtAK05ENw==
-X-Received: by 2002:a6b:e013:: with SMTP id z19mr7858504iog.141.1566929506715;
-        Tue, 27 Aug 2019 11:11:46 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id n22sm17199467iob.37.2019.08.27.11.11.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 11:11:45 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] media: vimc: Collapse component structure into a
- single monolithic driver
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        mchehab@kernel.org, helen.koike@collabora.com, hverkuil@xs4all.nl,
-        laurent.pinchart@ideasonboard.com, andrealmeid@collabora.com,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <cover.1566334362.git.skhan@linuxfoundation.org>
- <a7b877c08d0885fe7e8bffc9b24ef0a2d6236147.1566334363.git.skhan@linuxfoundation.org>
- <3b84f769563775f6b564c7f4e6136b3359e10b67.camel@collabora.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <7e169f3e-4b7b-aac1-d111-b99cc97da3c5@linuxfoundation.org>
-Date:   Tue, 27 Aug 2019 12:11:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 14:13:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/VgoBSQPqyUubUQ9YPFqh2oo2rzQXOUWGaBsla0GcQo=; b=XRLINOQVAycO+8ZAvL5lweHcc/
+        9gb6U5RL1VADHNAxFK1YSSQutmcg0LnwmIBAe+CytiUajM5Nq48b/RhwwKT416KRN83z3P3MbF86/
+        FG2bobX+WHW6EDAssQoiHeo26dlSOdkROJho4/Bqe6elUjQaObeClcqtPK6tlknw/OMt5pZH87O97
+        n4XC6FmnQ69fdvfmtJT00qZOaXxQJJLjBMqXGiCa2TrlPmKecYOozS9EfWyCbXct+ktJsPXSwQVr8
+        kz/AWvMcxOBLXwkZSc6wLGPRPkyn60oLWyBftaMlvptV3+F9UajUW6YXW6JU2grvpi9P3RRpX2++3
+        BL/kJ9rQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i2fxd-0004TK-K8; Tue, 27 Aug 2019 18:12:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E4EDE30768E;
+        Tue, 27 Aug 2019 20:12:16 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id A0802203CEC0B; Tue, 27 Aug 2019 20:12:50 +0200 (CEST)
+Message-Id: <20190827181147.166658077@infradead.org>
+User-Agent: quilt/0.65
+Date:   Tue, 27 Aug 2019 20:06:25 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org
+Cc:     Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: [PATCH 3/3] x86/ftrace: Use text_poke()
+References: <20190827180622.159326993@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <3b84f769563775f6b564c7f4e6136b3359e10b67.camel@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/19 10:16 AM, Dafna Hirschfeld wrote:
-> On Tue, 2019-08-20 at 15:18 -0600, Shuah Khan wrote:
->> vimc uses Component API to split the driver into functional components.
->> The real hardware resembles a monolith structure than component and
->> component structure added a level of complexity making it hard to
->> maintain without adding any real benefit.
->>
->> The sensor is one vimc component that would makes sense to be a separate
->> module to closely align with the real hardware. It would be easier to
->> collapse vimc into single monolithic driver first and then split the
->> sensor off as a separate module.
->>
->> Collapse it into a single monolithic driver removing the Component API.
->> This patch removes the component API and makes minimal changes to the
->> code base preserving the functional division of the code structure.
->> Preserving the functional structure allows us to split the sensor off
->> as a separate module in the future.
->>
->> Major design elements in this change are:
->> - Use existing struct vimc_ent_config and struct vimc_pipeline_config
->>    to drive the initialization of the functional components.
->> - Make vimc_device and vimc_ent_config global by moving them to
->>    vimc-common.h
->> - Add two new hooks add and rm to initialize and register, unregister
->>    and free subdevs.
->> - All component API is now gone and bind and unbind hooks are modified
->>    to do "add" and "rm" with minimal changes to just add and rm subdevs.
->> - vimc-core's bind and unbind are now register and unregister.
->> - vimc-core invokes "add" hooks from its vimc_register_devices().
->>    The "add" hooks remain the same and register subdevs. They don't
->>    create platform devices of their own and use vimc's pdev.dev as
->>    their reference device. The "add" hooks save their vimc_ent_device(s)
->>    in the corresponding vimc_ent_config.
->> - vimc-core invokes "rm" hooks from its unregister to unregister subdevs
->>    and cleanup.
->> - vimc-core invokes "add" and "rm" hooks with pointer to struct vimc_device
->>    and the corresponding struct vimc_ent_config pointer.
->>
->> The following configure and stream test works on all devices.
->>
->> media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
->> media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
->> media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
->> media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
->>
->> v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
->> v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
->> v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
->>
->> v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video1
->> v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
->> v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
->>
->> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->> ---
->>   drivers/media/platform/vimc/Makefile       |   7 +-
->>   drivers/media/platform/vimc/vimc-capture.c |  79 ++------
->>   drivers/media/platform/vimc/vimc-common.h  |  48 +++++
->>   drivers/media/platform/vimc/vimc-core.c    | 199 ++++++++-------------
->>   drivers/media/platform/vimc/vimc-debayer.c |  67 ++-----
->>   drivers/media/platform/vimc/vimc-scaler.c  |  71 ++------
->>   drivers/media/platform/vimc/vimc-sensor.c  |  71 ++------
->>   7 files changed, 176 insertions(+), 366 deletions(-)
->>
->> diff --git a/drivers/media/platform/vimc/Makefile b/drivers/media/platform/vimc/Makefile
->> index 96d06f030c31..a53b2b532e9f 100644
->> --- a/drivers/media/platform/vimc/Makefile
->> +++ b/drivers/media/platform/vimc/Makefile
->> @@ -1,5 +1,6 @@
->>   # SPDX-License-Identifier: GPL-2.0
->> -vimc-y := vimc-core.o vimc-common.o vimc-streamer.o
->> +vimc-y := vimc-core.o vimc-common.o vimc-streamer.o vimc-capture.o \
->> +		vimc-debayer.o vimc-scaler.o vimc-sensor.o
->> +
->> +obj-$(CONFIG_VIDEO_VIMC) += vimc.o
->>   
->> -obj-$(CONFIG_VIDEO_VIMC) += vimc.o vimc-capture.o vimc-debayer.o \
->> -                vimc-scaler.o vimc-sensor.o
->> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
->> index 1d56b91830ba..e04b60ec0738 100644
->> --- a/drivers/media/platform/vimc/vimc-capture.c
->> +++ b/drivers/media/platform/vimc/vimc-capture.c
->> @@ -5,10 +5,6 @@
->>    * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
->>    */
->>   
->> -#include <linux/component.h>
->> -#include <linux/module.h>
->> -#include <linux/mod_devicetable.h>
->> -#include <linux/platform_device.h>
->>   #include <media/v4l2-ioctl.h>
->>   #include <media/videobuf2-core.h>
->>   #include <media/videobuf2-vmalloc.h>
->> @@ -16,8 +12,6 @@
->>   #include "vimc-common.h"
->>   #include "vimc-streamer.h"
->>   
->> -#define VIMC_CAP_DRV_NAME "vimc-capture"
->> -
->>   struct vimc_cap_device {
->>   	struct vimc_ent_device ved;
->>   	struct video_device vdev;
->> @@ -340,13 +334,15 @@ static void vimc_cap_release(struct video_device *vdev)
->>   	kfree(vcap);
->>   }
->>   
->> -static void vimc_cap_comp_unbind(struct device *comp, struct device *master,
->> -				 void *master_data)
->> +void vimc_cap_rm(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
->>   {
->> -	struct vimc_ent_device *ved = dev_get_drvdata(comp);
->> -	struct vimc_cap_device *vcap = container_of(ved, struct vimc_cap_device,
->> -						    ved);
->> +	struct vimc_ent_device *ved = vcfg->ved;
->> +	struct vimc_cap_device *vcap;
->> +
->> +	if (!ved)
->> +		return;
->>   
->> +	vcap = container_of(ved, struct vimc_cap_device, ved);
->>   	vb2_queue_release(&vcap->queue);
->>   	media_entity_cleanup(ved->ent);
->>   	video_unregister_device(&vcap->vdev);
-> 
-> Since !ved assumes that the entity is not added (or added and then
-> removed) I guess it it good to set 'vcfg->ved = NULL' at the end of the
-> 'rm' of all the entities.
-> 
+Move ftrace over to using the generic x86 text_poke functions; this
+avoids having a second/different copy of that code around.
 
-I will update that.
+This also avoids ftrace violating the (new) W^X rule and avoids
+fragmenting the kernel text page-tables, due to no longer having to
+toggle them RW.
 
->> @@ -391,11 +387,9 @@ static void *vimc_cap_process_frame(struct vimc_ent_device *ved,
->>   	return NULL;
->>   }
->>   
->> -static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->> -			      void *master_data)
->> +int vimc_cap_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
->>   {
->> -	struct v4l2_device *v4l2_dev = master_data;
->> -	struct vimc_platform_data *pdata = comp->platform_data;
->> +	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
->>   	const struct vimc_pix_map *vpix;
->>   	struct vimc_cap_device *vcap;
->>   	struct video_device *vdev;
->> @@ -416,7 +410,7 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->>   	}
->>   
->>   	/* Initialize the media entity */
->> -	vcap->vdev.entity.name = pdata->entity_name;
->> +	vcap->vdev.entity.name = vcfg->name;
->>   	vcap->vdev.entity.function = MEDIA_ENT_F_IO_V4L;
->>   	ret = media_entity_pads_init(&vcap->vdev.entity,
->>   				     1, vcap->ved.pads);
->> @@ -440,8 +434,8 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->>   
->>   	ret = vb2_queue_init(q);
->>   	if (ret) {
->> -		dev_err(comp, "%s: vb2 queue init failed (err=%d)\n",
->> -			pdata->entity_name, ret);
->> +		dev_err(&vimc->pdev.dev, "%s: vb2 queue init failed (err=%d)\n",
->> +			vcfg->name, ret);
->>   		goto err_clean_m_ent;
->>   	}
->>   
->> @@ -460,8 +454,7 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->>   	vcap->ved.ent = &vcap->vdev.entity;
->>   	vcap->ved.process_frame = vimc_cap_process_frame;
->>   	vcap->ved.vdev_get_format = vimc_cap_get_format;
->> -	dev_set_drvdata(comp, &vcap->ved);
->> -	vcap->dev = comp;
->> +	vcap->dev = &vimc->pdev.dev;
->>   
->>   	/* Initialize the video_device struct */
->>   	vdev = &vcap->vdev;
->> @@ -474,17 +467,18 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->>   	vdev->queue = q;
->>   	vdev->v4l2_dev = v4l2_dev;
->>   	vdev->vfl_dir = VFL_DIR_RX;
->> -	strscpy(vdev->name, pdata->entity_name, sizeof(vdev->name));
->> +	strscpy(vdev->name, vcfg->name, sizeof(vdev->name));
->>   	video_set_drvdata(vdev, &vcap->ved);
->>   
->>   	/* Register the video_device with the v4l2 and the media framework */
->>   	ret = video_register_device(vdev, VFL_TYPE_GRABBER, -1);
->>   	if (ret) {
->> -		dev_err(comp, "%s: video register failed (err=%d)\n",
->> +		dev_err(&vimc->pdev.dev, "%s: video register failed (err=%d)\n",
->>   			vcap->vdev.name, ret);
->>   		goto err_release_queue;
->>   	}
->>   
->> +	vcfg->ved = &vcap->ved;
->>   	return 0;
->>   
->>   err_release_queue:
->> @@ -498,44 +492,3 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->>   
->>   	return ret;
->>   }
->> -
->> -static const struct component_ops vimc_cap_comp_ops = {
->> -	.bind = vimc_cap_comp_bind,
->> -	.unbind = vimc_cap_comp_unbind,
->> -};
->> -
->> -static int vimc_cap_probe(struct platform_device *pdev)
->> -{
->> -	return component_add(&pdev->dev, &vimc_cap_comp_ops);
->> -}
->> -
->> -static int vimc_cap_remove(struct platform_device *pdev)
->> -{
->> -	component_del(&pdev->dev, &vimc_cap_comp_ops);
->> -
->> -	return 0;
->> -}
->> -
->> -static const struct platform_device_id vimc_cap_driver_ids[] = {
->> -	{
->> -		.name           = VIMC_CAP_DRV_NAME,
->> -	},
->> -	{ }
->> -};
->> -
->> -static struct platform_driver vimc_cap_pdrv = {
->> -	.probe		= vimc_cap_probe,
->> -	.remove		= vimc_cap_remove,
->> -	.id_table	= vimc_cap_driver_ids,
->> -	.driver		= {
->> -		.name	= VIMC_CAP_DRV_NAME,
->> -	},
->> -};
->> -
->> -module_platform_driver(vimc_cap_pdrv);
->> -
->> -MODULE_DEVICE_TABLE(platform, vimc_cap_driver_ids);
->> -
->> -MODULE_DESCRIPTION("Virtual Media Controller Driver (VIMC) Capture");
->> -MODULE_AUTHOR("Helen Mae Koike Fornazier <helen.fornazier@gmail.com>");
->> -MODULE_LICENSE("GPL");
->> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
->> index 9c2e0e216c6b..5b2282de395c 100644
->> --- a/drivers/media/platform/vimc/vimc-common.h
->> +++ b/drivers/media/platform/vimc/vimc-common.h
->> @@ -9,6 +9,7 @@
->>   #define _VIMC_COMMON_H_
->>   
->>   #include <linux/slab.h>
->> +#include <linux/platform_device.h>
->>   #include <media/media-device.h>
->>   #include <media/v4l2-device.h>
->>   
->> @@ -84,6 +85,21 @@ struct vimc_pix_map {
->>   	bool bayer;
->>   };
->>   
->> +/**
->> + * struct vimc_device - main device for vimc driver
->> + *
->> + * @pdev	pointer to the platform device
->> + * @pipe_cfg	pointer to the vimc pipeline configuration structure
->> + * @mdev	the associated media_device parent
->> + * @v4l2_dev	Internal v4l2 parent device
->> + */
->> +struct vimc_device {
->> +	struct platform_device pdev;
->> +	const struct vimc_pipeline_config *pipe_cfg;
->> +	struct media_device mdev;
->> +	struct v4l2_device v4l2_dev;
->> +};
->> +
->>   /**
->>    * struct vimc_ent_device - core struct that represents a node in the topology
->>    *
->> @@ -111,6 +127,38 @@ struct vimc_ent_device {
->>   			      struct v4l2_pix_format *fmt);
->>   };
->>   
->> +/**
->> + * struct vimc_ent_config	Structure which describes individual
->> + *				configuration for each entity
->> + *
->> + * @name			entity name
->> + * @ved				pointer to vimc_ent_device (a node in the
->> + *					topology)
->> + * @add				subdev add hook - initializes and registers
->> + *					subdev called from vimc-core
->> + * @rm				subdev rm hook - unregisters and frees
->> + *					subdev called from vimc-core
->> + */
->> +struct vimc_ent_config {
->> +	const char *name;
->> +	struct vimc_ent_device *ved;
->> +	int (*add)(struct vimc_device *vimc, struct vimc_ent_config *vcfg);
->> +	void (*rm)(struct vimc_device *vimc, struct vimc_ent_config *vcfg);
->> +};
->> +
->> +/* prototypes for vimc_ent_config add and rm hooks */
->> +int vimc_cap_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg);
->> +void vimc_cap_rm(struct vimc_device *vimc, struct vimc_ent_config *vcfg);
->> +
->> +int vimc_deb_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg);
->> +void vimc_deb_rm(struct vimc_device *vimc, struct vimc_ent_config *vcfg);
->> +
->> +int vimc_sca_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg);
->> +void vimc_sca_rm(struct vimc_device *vimc, struct vimc_ent_config *vcfg);
->> +
->> +int vimc_sen_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg);
->> +void vimc_sen_rm(struct vimc_device *vimc, struct vimc_ent_config *vcfg);
->> +
->>   /**
->>    * vimc_pads_init - initialize pads
->>    *
->> diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
->> index 571c55aa0e16..3749bfa88e40 100644
->> --- a/drivers/media/platform/vimc/vimc-core.c
->> +++ b/drivers/media/platform/vimc/vimc-core.c
->> @@ -5,7 +5,6 @@
->>    * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
->>    */
->>   
->> -#include <linux/component.h>
->>   #include <linux/init.h>
->>   #include <linux/module.h>
->>   #include <linux/platform_device.h>
->> @@ -24,29 +23,6 @@
->>   	.flags = link_flags,					\
->>   }
->>   
->> -struct vimc_device {
->> -	/* The platform device */
->> -	struct platform_device pdev;
->> -
->> -	/* The pipeline configuration */
->> -	const struct vimc_pipeline_config *pipe_cfg;
->> -
->> -	/* The Associated media_device parent */
->> -	struct media_device mdev;
->> -
->> -	/* Internal v4l2 parent device*/
->> -	struct v4l2_device v4l2_dev;
->> -
->> -	/* Subdevices */
->> -	struct platform_device **subdevs;
->> -};
->> -
->> -/* Structure which describes individual configuration for each entity */
->> -struct vimc_ent_config {
->> -	const char *name;
->> -	const char *drv;
->> -};
->> -
->>   /* Structure which describes links between entities */
->>   struct vimc_ent_link {
->>   	unsigned int src_ent;
->> @@ -58,7 +34,7 @@ struct vimc_ent_link {
->>   
->>   /* Structure which describes the whole topology */
->>   struct vimc_pipeline_config {
->> -	const struct vimc_ent_config *ents;
->> +	struct vimc_ent_config *ents;
->>   	size_t num_ents;
->>   	const struct vimc_ent_link *links;
->>   	size_t num_links;
->> @@ -68,43 +44,61 @@ struct vimc_pipeline_config {
->>    * Topology Configuration
->>    */
->>   
->> -static const struct vimc_ent_config ent_config[] = {
->> +static struct vimc_ent_config ent_config[] = {
->>   	{
->>   		.name = "Sensor A",
->> -		.drv = "vimc-sensor",
->> +		.ved = NULL,
->> +		.add = vimc_sen_add,
->> +		.rm = vimc_sen_rm,
->>   	},
->>   	{
->>   		.name = "Sensor B",
->> -		.drv = "vimc-sensor",
->> +		.ved = NULL,
->> +		.add = vimc_sen_add,
->> +		.rm = vimc_sen_rm,
->>   	},
->>   	{
->>   		.name = "Debayer A",
->> -		.drv = "vimc-debayer",
->> +		.ved = NULL,
->> +		.add = vimc_deb_add,
->> +		.rm = vimc_deb_rm,
->>   	},
->>   	{
->>   		.name = "Debayer B",
->> -		.drv = "vimc-debayer",
->> +		.ved = NULL,
->> +		.add = vimc_deb_add,
->> +		.rm = vimc_deb_rm,
->>   	},
->>   	{
->>   		.name = "Raw Capture 0",
->> -		.drv = "vimc-capture",
->> +		.ved = NULL,
->> +		.add = vimc_cap_add,
->> +		.rm = vimc_cap_rm,
->>   	},
->>   	{
->>   		.name = "Raw Capture 1",
->> -		.drv = "vimc-capture",
->> +		.ved = NULL,
->> +		.add = vimc_cap_add,
->> +		.rm = vimc_cap_rm,
->>   	},
->>   	{
->> -		.name = "RGB/YUV Input",
->>   		/* TODO: change this to vimc-input when it is implemented */
->> -		.drv = "vimc-sensor",
->> +		.name = "RGB/YUV Input",
->> +		.ved = NULL,
->> +		.add = vimc_sen_add,
->> +		.rm = vimc_sen_rm,
->>   	},
->>   	{
->>   		.name = "Scaler",
->> -		.drv = "vimc-scaler",
->> +		.ved = NULL,
->> +		.add = vimc_sca_add,
->> +		.rm = vimc_sca_rm,
->>   	},
->>   	{
->>   		.name = "RGB/YUV Capture",
->> -		.drv = "vimc-capture",
->> +		.ved = NULL,
->> +		.add = vimc_cap_add,
->> +		.rm = vimc_cap_rm,
->>   	},
->>   };
->>   
->> @@ -127,7 +121,7 @@ static const struct vimc_ent_link ent_links[] = {
->>   	VIMC_ENT_LINK(7, 1, 8, 0, MEDIA_LNK_FL_ENABLED | MEDIA_LNK_FL_IMMUTABLE),
->>   };
->>   
->> -static const struct vimc_pipeline_config pipe_cfg = {
->> +static struct vimc_pipeline_config pipe_cfg = {
->>   	.ents		= ent_config,
->>   	.num_ents	= ARRAY_SIZE(ent_config),
->>   	.links		= ent_links,
->> @@ -144,14 +138,11 @@ static int vimc_create_links(struct vimc_device *vimc)
->>   	/* Initialize the links between entities */
->>   	for (i = 0; i < vimc->pipe_cfg->num_links; i++) {
->>   		const struct vimc_ent_link *link = &vimc->pipe_cfg->links[i];
->> -		/*
->> -		 * TODO: Check another way of retrieving ved struct without
->> -		 * relying on platform_get_drvdata
->> -		 */
->> +
->>   		struct vimc_ent_device *ved_src =
->> -			platform_get_drvdata(vimc->subdevs[link->src_ent]);
->> +			vimc->pipe_cfg->ents[link->src_ent].ved;
->>   		struct vimc_ent_device *ved_sink =
->> -			platform_get_drvdata(vimc->subdevs[link->sink_ent]);
->> +			vimc->pipe_cfg->ents[link->sink_ent].ved;
->>   
->>   		ret = media_create_pad_link(ved_src->ent, link->src_pad,
->>   					    ved_sink->ent, link->sink_pad,
->> @@ -163,13 +154,36 @@ static int vimc_create_links(struct vimc_device *vimc)
->>   	return 0;
->>   }
->>   
->> -static int vimc_comp_bind(struct device *master)
->> +static int vimc_add_subdevs(struct vimc_device *vimc)
->>   {
->> -	struct vimc_device *vimc = container_of(to_platform_device(master),
->> -						struct vimc_device, pdev);
->> +	unsigned int i;
->>   	int ret;
->>   
->> -	dev_dbg(master, "bind");
->> +	for (i = 0; i < vimc->pipe_cfg->num_ents; i++) {
->> +		dev_dbg(&vimc->pdev.dev, "new entity for %s\n",
->> +			vimc->pipe_cfg->ents[i].name);
->> +		ret = vimc->pipe_cfg->ents[i].add(vimc,
->> +				&vimc->pipe_cfg->ents[i]);
->> +		if (ret) {
->> +			dev_err(&vimc->pdev.dev, "add new entity for %s\n",
->> +				vimc->pipe_cfg->ents[i].name);
->> +			return ret;
->> +		}
->> +	}
->> +	return 0;
->> +}
->> +
->> +static void vimc_rm_subdevs(struct vimc_device *vimc)
->> +{
->> +	unsigned int i;
->> +
->> +	for (i = 0; i < vimc->pipe_cfg->num_ents; i++)
->> +		vimc->pipe_cfg->ents[i].rm(vimc, &vimc->pipe_cfg->ents[i]);
->> +}
->> +
->> +static int vimc_register_devices(struct vimc_device *vimc)
->> +{
->> +	int ret;
->>   
->>   	/* Register the v4l2 struct */
->>   	ret = v4l2_device_register(vimc->mdev.dev, &vimc->v4l2_dev);
->> @@ -179,22 +193,22 @@ static int vimc_comp_bind(struct device *master)
->>   		return ret;
->>   	}
->>   
->> -	/* Bind subdevices */
->> -	ret = component_bind_all(master, &vimc->v4l2_dev);
->> +	/* Invoke entity config hooks to initialize and register subdevs */
->> +	ret = vimc_add_subdevs(vimc);
->>   	if (ret)
->> -		goto err_v4l2_unregister;
->> +		goto err_add_subdevs;
->>   
->>   	/* Initialize links */
->>   	ret = vimc_create_links(vimc);
->>   	if (ret)
->> -		goto err_comp_unbind_all;
->> +		goto err_v4l2_unregister;
->>   
->>   	/* Register the media device */
->>   	ret = media_device_register(&vimc->mdev);
->>   	if (ret) {
->>   		dev_err(vimc->mdev.dev,
->>   			"media device register failed (err=%d)\n", ret);
->> -		goto err_comp_unbind_all;
->> +		goto err_v4l2_unregister;
->>   	}
->>   
->>   	/* Expose all subdev's nodes*/
->> @@ -211,98 +225,30 @@ static int vimc_comp_bind(struct device *master)
->>   err_mdev_unregister:
->>   	media_device_unregister(&vimc->mdev);
->>   	media_device_cleanup(&vimc->mdev);
->> -err_comp_unbind_all:
->> -	component_unbind_all(master, NULL);
->>   err_v4l2_unregister:
->>   	v4l2_device_unregister(&vimc->v4l2_dev);
->> +err_add_subdevs:
->> +	vimc_rm_subdevs(vimc);
->>   
->>   	return ret;
->>   }
->>   
->> -static void vimc_comp_unbind(struct device *master)
->> +static void vimc_unregister(struct vimc_device *vimc)
->>   {
->> -	struct vimc_device *vimc = container_of(to_platform_device(master),
->> -						struct vimc_device, pdev);
->> -
->> -	dev_dbg(master, "unbind");
->> -
->>   	media_device_unregister(&vimc->mdev);
->>   	media_device_cleanup(&vimc->mdev);
->> -	component_unbind_all(master, NULL);
->>   	v4l2_device_unregister(&vimc->v4l2_dev);
->>   }
->>   
->> -static int vimc_comp_compare(struct device *comp, void *data)
->> -{
->> -	return comp == data;
->> -}
->> -
->> -static struct component_match *vimc_add_subdevs(struct vimc_device *vimc)
->> -{
->> -	struct component_match *match = NULL;
->> -	struct vimc_platform_data pdata;
->> -	int i;
->> -
->> -	for (i = 0; i < vimc->pipe_cfg->num_ents; i++) {
->> -		dev_dbg(&vimc->pdev.dev, "new pdev for %s\n",
->> -			vimc->pipe_cfg->ents[i].drv);
->> -
->> -		strscpy(pdata.entity_name, vimc->pipe_cfg->ents[i].name,
->> -			sizeof(pdata.entity_name));
->> -
->> -		vimc->subdevs[i] = platform_device_register_data(&vimc->pdev.dev,
->> -						vimc->pipe_cfg->ents[i].drv,
->> -						PLATFORM_DEVID_AUTO,
->> -						&pdata,
->> -						sizeof(pdata));
->> -		if (IS_ERR(vimc->subdevs[i])) {
->> -			match = ERR_CAST(vimc->subdevs[i]);
->> -			while (--i >= 0)
->> -				platform_device_unregister(vimc->subdevs[i]);
->> -
->> -			return match;
->> -		}
->> -
->> -		component_match_add(&vimc->pdev.dev, &match, vimc_comp_compare,
->> -				    &vimc->subdevs[i]->dev);
->> -	}
->> -
->> -	return match;
->> -}
->> -
->> -static void vimc_rm_subdevs(struct vimc_device *vimc)
->> -{
->> -	unsigned int i;
->> -
->> -	for (i = 0; i < vimc->pipe_cfg->num_ents; i++)
->> -		platform_device_unregister(vimc->subdevs[i]);
->> -}
->> -
->> -static const struct component_master_ops vimc_comp_ops = {
->> -	.bind = vimc_comp_bind,
->> -	.unbind = vimc_comp_unbind,
->> -};
->> -
->>   static int vimc_probe(struct platform_device *pdev)
->>   {
->>   	struct vimc_device *vimc = container_of(pdev, struct vimc_device, pdev);
->> -	struct component_match *match = NULL;
->>   	int ret;
->>   
->>   	dev_dbg(&pdev->dev, "probe");
->>   
->>   	memset(&vimc->mdev, 0, sizeof(vimc->mdev));
->>   
->> -	/* Create platform_device for each entity in the topology*/
->> -	vimc->subdevs = devm_kcalloc(&vimc->pdev.dev, vimc->pipe_cfg->num_ents,
->> -				     sizeof(*vimc->subdevs), GFP_KERNEL);
->> -	if (!vimc->subdevs)
->> -		return -ENOMEM;
->> -
->> -	match = vimc_add_subdevs(vimc);
->> -	if (IS_ERR(match))
->> -		return PTR_ERR(match);
->> -
->>   	/* Link the media device within the v4l2_device */
->>   	vimc->v4l2_dev.mdev = &vimc->mdev;
->>   
->> @@ -314,12 +260,9 @@ static int vimc_probe(struct platform_device *pdev)
->>   	vimc->mdev.dev = &pdev->dev;
->>   	media_device_init(&vimc->mdev);
->>   
->> -	/* Add self to the component system */
->> -	ret = component_master_add_with_match(&pdev->dev, &vimc_comp_ops,
->> -					      match);
->> +	ret = vimc_register_devices(vimc);
->>   	if (ret) {
->>   		media_device_cleanup(&vimc->mdev);
->> -		vimc_rm_subdevs(vimc);
->>   		return ret;
->>   	}
->>   
->> @@ -332,8 +275,8 @@ static int vimc_remove(struct platform_device *pdev)
->>   
->>   	dev_dbg(&pdev->dev, "remove");
->>   
->> -	component_master_del(&pdev->dev, &vimc_comp_ops);
->>   	vimc_rm_subdevs(vimc);
->> +	vimc_unregister(vimc);
->>   
->>   	return 0;
->>   }
->> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
->> index b72b8385067b..73dc17f0d990 100644
->> --- a/drivers/media/platform/vimc/vimc-debayer.c
->> +++ b/drivers/media/platform/vimc/vimc-debayer.c
->> @@ -15,8 +15,6 @@
->>   
-> 
-> The included files linux/component.h, linux/mod_devicetable.h,
-> linux/platform_device.h can be removed
-> 
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/include/asm/ftrace.h |    2 
+ arch/x86/kernel/alternative.c |    4 
+ arch/x86/kernel/ftrace.c      |  630 ++++++------------------------------------
+ arch/x86/kernel/traps.c       |    9 
+ 4 files changed, 93 insertions(+), 552 deletions(-)
 
-Thanks. I will do that in my next version.
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -35,8 +35,6 @@ struct dyn_arch_ftrace {
+ 	/* No extra data needed for x86 */
+ };
+ 
+-int ftrace_int3_handler(struct pt_regs *regs);
+-
+ #define FTRACE_GRAPH_TRAMP_ADDR FTRACE_GRAPH_ADDR
+ 
+ #endif /*  CONFIG_DYNAMIC_FTRACE */
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -941,7 +941,7 @@ static struct bp_patching_desc {
+ 	int nr_entries;
+ } bp_patching;
+ 
+-static int patch_cmp(const void *key, const void *elt)
++static int notrace patch_cmp(const void *key, const void *elt)
+ {
+ 	struct text_poke_loc *tp = (struct text_poke_loc *) elt;
+ 
+@@ -953,7 +953,7 @@ static int patch_cmp(const void *key, co
+ }
+ NOKPROBE_SYMBOL(patch_cmp);
+ 
+-int poke_int3_handler(struct pt_regs *regs)
++int notrace poke_int3_handler(struct pt_regs *regs)
+ {
+ 	struct text_poke_loc *tp;
+ 	void *ip;
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -43,16 +43,12 @@ int ftrace_arch_code_modify_prepare(void
+ 	 * ftrace has it set to "read/write".
+ 	 */
+ 	mutex_lock(&text_mutex);
+-	set_kernel_text_rw();
+-	set_all_modules_text_rw();
+ 	return 0;
+ }
+ 
+ int ftrace_arch_code_modify_post_process(void)
+     __releases(&text_mutex)
+ {
+-	set_all_modules_text_ro();
+-	set_kernel_text_ro();
+ 	mutex_unlock(&text_mutex);
+ 	return 0;
+ }
+@@ -60,67 +56,34 @@ int ftrace_arch_code_modify_post_process
+ union ftrace_code_union {
+ 	char code[MCOUNT_INSN_SIZE];
+ 	struct {
+-		unsigned char op;
++		char op;
+ 		int offset;
+ 	} __attribute__((packed));
+ };
+ 
+-static int ftrace_calc_offset(long ip, long addr)
+-{
+-	return (int)(addr - ip);
+-}
+-
+-static unsigned char *
+-ftrace_text_replace(unsigned char op, unsigned long ip, unsigned long addr)
++static const char *ftrace_text_replace(char op, unsigned long ip, unsigned long addr)
+ {
+ 	static union ftrace_code_union calc;
+ 
+-	calc.op		= op;
+-	calc.offset	= ftrace_calc_offset(ip + MCOUNT_INSN_SIZE, addr);
++	calc.op = op;
++	calc.offset = (int)(addr - (ip + MCOUNT_INSN_SIZE));
+ 
+ 	return calc.code;
+ }
+ 
+-static unsigned char *
+-ftrace_call_replace(unsigned long ip, unsigned long addr)
+-{
+-	return ftrace_text_replace(0xe8, ip, addr);
+-}
+-
+-static inline int
+-within(unsigned long addr, unsigned long start, unsigned long end)
+-{
+-	return addr >= start && addr < end;
+-}
+-
+-static unsigned long text_ip_addr(unsigned long ip)
++static const char *ftrace_nop_replace(void)
+ {
+-	/*
+-	 * On x86_64, kernel text mappings are mapped read-only, so we use
+-	 * the kernel identity mapping instead of the kernel text mapping
+-	 * to modify the kernel text.
+-	 *
+-	 * For 32bit kernels, these mappings are same and we can use
+-	 * kernel identity mapping to modify code.
+-	 */
+-	if (within(ip, (unsigned long)_text, (unsigned long)_etext))
+-		ip = (unsigned long)__va(__pa_symbol(ip));
+-
+-	return ip;
++	return ideal_nops[NOP_ATOMIC5];
+ }
+ 
+-static const unsigned char *ftrace_nop_replace(void)
++static const char *ftrace_call_replace(unsigned long ip, unsigned long addr)
+ {
+-	return ideal_nops[NOP_ATOMIC5];
++	return ftrace_text_replace(CALL_INSN_OPCODE, ip, addr);
+ }
+ 
+-static int
+-ftrace_modify_code_direct(unsigned long ip, unsigned const char *old_code,
+-		   unsigned const char *new_code)
++static int ftrace_verify_code(unsigned long ip, const char *old_code)
+ {
+-	unsigned char replaced[MCOUNT_INSN_SIZE];
+-
+-	ftrace_expected = old_code;
++	char cur_code[MCOUNT_INSN_SIZE];
+ 
+ 	/*
+ 	 * Note:
+@@ -129,31 +92,38 @@ ftrace_modify_code_direct(unsigned long
+ 	 * Carefully read and modify the code with probe_kernel_*(), and make
+ 	 * sure what we read is what we expected it to be before modifying it.
+ 	 */
+-
+ 	/* read the text we want to modify */
+-	if (probe_kernel_read(replaced, (void *)ip, MCOUNT_INSN_SIZE))
++	if (probe_kernel_read(cur_code, (void *)ip, MCOUNT_INSN_SIZE)) {
++		WARN_ON(1);
+ 		return -EFAULT;
++	}
+ 
+ 	/* Make sure it is what we expect it to be */
+-	if (memcmp(replaced, old_code, MCOUNT_INSN_SIZE) != 0)
++	if (memcmp(cur_code, old_code, MCOUNT_INSN_SIZE) != 0) {
++		WARN_ON(1);
+ 		return -EINVAL;
++	}
+ 
+-	ip = text_ip_addr(ip);
+-
+-	/* replace the text with the new text */
+-	if (probe_kernel_write((void *)ip, new_code, MCOUNT_INSN_SIZE))
+-		return -EPERM;
++	return 0;
++}
+ 
+-	sync_core();
++static int
++ftrace_modify_code_direct(unsigned long ip, const char *old_code,
++			  const char *new_code)
++{
++	int ret = ftrace_verify_code(ip, old_code);
++	if (ret)
++		return ret;
+ 
++	/* replace the text with the new text */
++	text_poke_early((void *)ip, new_code, MCOUNT_INSN_SIZE);
+ 	return 0;
+ }
+ 
+-int ftrace_make_nop(struct module *mod,
+-		    struct dyn_ftrace *rec, unsigned long addr)
++int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long addr)
+ {
+-	unsigned const char *new, *old;
+ 	unsigned long ip = rec->ip;
++	const char *new, *old;
+ 
+ 	old = ftrace_call_replace(ip, addr);
+ 	new = ftrace_nop_replace();
+@@ -167,19 +137,20 @@ int ftrace_make_nop(struct module *mod,
+ 	 * just modify the code directly.
+ 	 */
+ 	if (addr == MCOUNT_ADDR)
+-		return ftrace_modify_code_direct(rec->ip, old, new);
+-
+-	ftrace_expected = NULL;
++		return ftrace_modify_code_direct(ip, old, new);
+ 
+-	/* Normal cases use add_brk_on_nop */
++	/*
++	 * x86 overrides ftrace_replace_code -- this function will never be used
++	 * in this case.
++	 */
+ 	WARN_ONCE(1, "invalid use of ftrace_make_nop");
+ 	return -EINVAL;
+ }
+ 
+ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+ {
+-	unsigned const char *new, *old;
+ 	unsigned long ip = rec->ip;
++	const char *new, *old;
+ 
+ 	old = ftrace_nop_replace();
+ 	new = ftrace_call_replace(ip, addr);
+@@ -189,43 +160,6 @@ int ftrace_make_call(struct dyn_ftrace *
+ }
+ 
+ /*
+- * The modifying_ftrace_code is used to tell the breakpoint
+- * handler to call ftrace_int3_handler(). If it fails to
+- * call this handler for a breakpoint added by ftrace, then
+- * the kernel may crash.
+- *
+- * As atomic_writes on x86 do not need a barrier, we do not
+- * need to add smp_mb()s for this to work. It is also considered
+- * that we can not read the modifying_ftrace_code before
+- * executing the breakpoint. That would be quite remarkable if
+- * it could do that. Here's the flow that is required:
+- *
+- *   CPU-0                          CPU-1
+- *
+- * atomic_inc(mfc);
+- * write int3s
+- *				<trap-int3> // implicit (r)mb
+- *				if (atomic_read(mfc))
+- *					call ftrace_int3_handler()
+- *
+- * Then when we are finished:
+- *
+- * atomic_dec(mfc);
+- *
+- * If we hit a breakpoint that was not set by ftrace, it does not
+- * matter if ftrace_int3_handler() is called or not. It will
+- * simply be ignored. But it is crucial that a ftrace nop/caller
+- * breakpoint is handled. No other user should ever place a
+- * breakpoint on an ftrace nop/caller location. It must only
+- * be done by this code.
+- */
+-atomic_t modifying_ftrace_code __read_mostly;
+-
+-static int
+-ftrace_modify_code(unsigned long ip, unsigned const char *old_code,
+-		   unsigned const char *new_code);
+-
+-/*
+  * Should never be called:
+  *  As it is only called by __ftrace_replace_code() which is called by
+  *  ftrace_replace_code() that x86 overrides, and by ftrace_update_code()
+@@ -237,452 +171,84 @@ int ftrace_modify_call(struct dyn_ftrace
+ 				 unsigned long addr)
+ {
+ 	WARN_ON(1);
+-	ftrace_expected = NULL;
+ 	return -EINVAL;
+ }
+ 
+-static unsigned long ftrace_update_func;
+-static unsigned long ftrace_update_func_call;
+-
+-static int update_ftrace_func(unsigned long ip, void *new)
+-{
+-	unsigned char old[MCOUNT_INSN_SIZE];
+-	int ret;
+-
+-	memcpy(old, (void *)ip, MCOUNT_INSN_SIZE);
+-
+-	ftrace_update_func = ip;
+-	/* Make sure the breakpoints see the ftrace_update_func update */
+-	smp_wmb();
+-
+-	/* See comment above by declaration of modifying_ftrace_code */
+-	atomic_inc(&modifying_ftrace_code);
+-
+-	ret = ftrace_modify_code(ip, old, new);
+-
+-	atomic_dec(&modifying_ftrace_code);
+-
+-	return ret;
+-}
+-
+ int ftrace_update_ftrace_func(ftrace_func_t func)
+ {
+-	unsigned long ip = (unsigned long)(&ftrace_call);
+-	unsigned char *new;
+-	int ret;
+-
+-	ftrace_update_func_call = (unsigned long)func;
+-
+-	new = ftrace_call_replace(ip, (unsigned long)func);
+-	ret = update_ftrace_func(ip, new);
+-
+-	/* Also update the regs callback function */
+-	if (!ret) {
+-		ip = (unsigned long)(&ftrace_regs_call);
+-		new = ftrace_call_replace(ip, (unsigned long)func);
+-		ret = update_ftrace_func(ip, new);
+-	}
+-
+-	return ret;
+-}
+-
+-static nokprobe_inline int is_ftrace_caller(unsigned long ip)
+-{
+-	if (ip == ftrace_update_func)
+-		return 1;
+-
+-	return 0;
+-}
+-
+-/*
+- * A breakpoint was added to the code address we are about to
+- * modify, and this is the handle that will just skip over it.
+- * We are either changing a nop into a trace call, or a trace
+- * call to a nop. While the change is taking place, we treat
+- * it just like it was a nop.
+- */
+-int ftrace_int3_handler(struct pt_regs *regs)
+-{
+ 	unsigned long ip;
++	const char *new;
+ 
+-	if (WARN_ON_ONCE(!regs))
+-		return 0;
+-
+-	ip = regs->ip - INT3_INSN_SIZE;
+-
+-	if (ftrace_location(ip)) {
+-		int3_emulate_call(regs, (unsigned long)ftrace_regs_caller);
+-		return 1;
+-	} else if (is_ftrace_caller(ip)) {
+-		if (!ftrace_update_func_call) {
+-			int3_emulate_jmp(regs, ip + CALL_INSN_SIZE);
+-			return 1;
+-		}
+-		int3_emulate_call(regs, ftrace_update_func_call);
+-		return 1;
+-	}
+-
+-	return 0;
+-}
+-NOKPROBE_SYMBOL(ftrace_int3_handler);
+-
+-static int ftrace_write(unsigned long ip, const char *val, int size)
+-{
+-	ip = text_ip_addr(ip);
+-
+-	if (probe_kernel_write((void *)ip, val, size))
+-		return -EPERM;
+-
+-	return 0;
+-}
+-
+-static int add_break(unsigned long ip, const char *old)
+-{
+-	unsigned char replaced[MCOUNT_INSN_SIZE];
+-	unsigned char brk = BREAKPOINT_INSTRUCTION;
+-
+-	if (probe_kernel_read(replaced, (void *)ip, MCOUNT_INSN_SIZE))
+-		return -EFAULT;
+-
+-	ftrace_expected = old;
+-
+-	/* Make sure it is what we expect it to be */
+-	if (memcmp(replaced, old, MCOUNT_INSN_SIZE) != 0)
+-		return -EINVAL;
+-
+-	return ftrace_write(ip, &brk, 1);
+-}
+-
+-static int add_brk_on_call(struct dyn_ftrace *rec, unsigned long addr)
+-{
+-	unsigned const char *old;
+-	unsigned long ip = rec->ip;
+-
+-	old = ftrace_call_replace(ip, addr);
+-
+-	return add_break(rec->ip, old);
+-}
+-
+-
+-static int add_brk_on_nop(struct dyn_ftrace *rec)
+-{
+-	unsigned const char *old;
+-
+-	old = ftrace_nop_replace();
+-
+-	return add_break(rec->ip, old);
+-}
+-
+-static int add_breakpoints(struct dyn_ftrace *rec, bool enable)
+-{
+-	unsigned long ftrace_addr;
+-	int ret;
+-
+-	ftrace_addr = ftrace_get_addr_curr(rec);
+-
+-	ret = ftrace_test_record(rec, enable);
+-
+-	switch (ret) {
+-	case FTRACE_UPDATE_IGNORE:
+-		return 0;
+-
+-	case FTRACE_UPDATE_MAKE_CALL:
+-		/* converting nop to call */
+-		return add_brk_on_nop(rec);
+-
+-	case FTRACE_UPDATE_MODIFY_CALL:
+-	case FTRACE_UPDATE_MAKE_NOP:
+-		/* converting a call to a nop */
+-		return add_brk_on_call(rec, ftrace_addr);
+-	}
+-	return 0;
+-}
+-
+-/*
+- * On error, we need to remove breakpoints. This needs to
+- * be done caefully. If the address does not currently have a
+- * breakpoint, we know we are done. Otherwise, we look at the
+- * remaining 4 bytes of the instruction. If it matches a nop
+- * we replace the breakpoint with the nop. Otherwise we replace
+- * it with the call instruction.
+- */
+-static int remove_breakpoint(struct dyn_ftrace *rec)
+-{
+-	unsigned char ins[MCOUNT_INSN_SIZE];
+-	unsigned char brk = BREAKPOINT_INSTRUCTION;
+-	const unsigned char *nop;
+-	unsigned long ftrace_addr;
+-	unsigned long ip = rec->ip;
+-
+-	/* If we fail the read, just give up */
+-	if (probe_kernel_read(ins, (void *)ip, MCOUNT_INSN_SIZE))
+-		return -EFAULT;
+-
+-	/* If this does not have a breakpoint, we are done */
+-	if (ins[0] != brk)
+-		return 0;
+-
+-	nop = ftrace_nop_replace();
+-
+-	/*
+-	 * If the last 4 bytes of the instruction do not match
+-	 * a nop, then we assume that this is a call to ftrace_addr.
+-	 */
+-	if (memcmp(&ins[1], &nop[1], MCOUNT_INSN_SIZE - 1) != 0) {
+-		/*
+-		 * For extra paranoidism, we check if the breakpoint is on
+-		 * a call that would actually jump to the ftrace_addr.
+-		 * If not, don't touch the breakpoint, we make just create
+-		 * a disaster.
+-		 */
+-		ftrace_addr = ftrace_get_addr_new(rec);
+-		nop = ftrace_call_replace(ip, ftrace_addr);
+-
+-		if (memcmp(&ins[1], &nop[1], MCOUNT_INSN_SIZE - 1) == 0)
+-			goto update;
+-
+-		/* Check both ftrace_addr and ftrace_old_addr */
+-		ftrace_addr = ftrace_get_addr_curr(rec);
+-		nop = ftrace_call_replace(ip, ftrace_addr);
+-
+-		ftrace_expected = nop;
+-
+-		if (memcmp(&ins[1], &nop[1], MCOUNT_INSN_SIZE - 1) != 0)
+-			return -EINVAL;
+-	}
+-
+- update:
+-	return ftrace_write(ip, nop, 1);
+-}
+-
+-static int add_update_code(unsigned long ip, unsigned const char *new)
+-{
+-	/* skip breakpoint */
+-	ip++;
+-	new++;
+-	return ftrace_write(ip, new, MCOUNT_INSN_SIZE - 1);
+-}
+-
+-static int add_update_call(struct dyn_ftrace *rec, unsigned long addr)
+-{
+-	unsigned long ip = rec->ip;
+-	unsigned const char *new;
+-
+-	new = ftrace_call_replace(ip, addr);
+-	return add_update_code(ip, new);
+-}
+-
+-static int add_update_nop(struct dyn_ftrace *rec)
+-{
+-	unsigned long ip = rec->ip;
+-	unsigned const char *new;
+-
+-	new = ftrace_nop_replace();
+-	return add_update_code(ip, new);
+-}
+-
+-static int add_update(struct dyn_ftrace *rec, bool enable)
+-{
+-	unsigned long ftrace_addr;
+-	int ret;
+-
+-	ret = ftrace_test_record(rec, enable);
+-
+-	ftrace_addr  = ftrace_get_addr_new(rec);
+-
+-	switch (ret) {
+-	case FTRACE_UPDATE_IGNORE:
+-		return 0;
+-
+-	case FTRACE_UPDATE_MODIFY_CALL:
+-	case FTRACE_UPDATE_MAKE_CALL:
+-		/* converting nop to call */
+-		return add_update_call(rec, ftrace_addr);
+-
+-	case FTRACE_UPDATE_MAKE_NOP:
+-		/* converting a call to a nop */
+-		return add_update_nop(rec);
+-	}
+-
+-	return 0;
+-}
+-
+-static int finish_update_call(struct dyn_ftrace *rec, unsigned long addr)
+-{
+-	unsigned long ip = rec->ip;
+-	unsigned const char *new;
+-
+-	new = ftrace_call_replace(ip, addr);
+-
+-	return ftrace_write(ip, new, 1);
+-}
+-
+-static int finish_update_nop(struct dyn_ftrace *rec)
+-{
+-	unsigned long ip = rec->ip;
+-	unsigned const char *new;
+-
+-	new = ftrace_nop_replace();
+-
+-	return ftrace_write(ip, new, 1);
+-}
+-
+-static int finish_update(struct dyn_ftrace *rec, bool enable)
+-{
+-	unsigned long ftrace_addr;
+-	int ret;
+-
+-	ret = ftrace_update_record(rec, enable);
+-
+-	ftrace_addr = ftrace_get_addr_new(rec);
+-
+-	switch (ret) {
+-	case FTRACE_UPDATE_IGNORE:
+-		return 0;
++	ip = (unsigned long)(&ftrace_call);
++	new = ftrace_call_replace(ip, (unsigned long)func);
++	text_poke_bp((void *)ip, new, MCOUNT_INSN_SIZE, NULL);
+ 
+-	case FTRACE_UPDATE_MODIFY_CALL:
+-	case FTRACE_UPDATE_MAKE_CALL:
+-		/* converting nop to call */
+-		return finish_update_call(rec, ftrace_addr);
+-
+-	case FTRACE_UPDATE_MAKE_NOP:
+-		/* converting a call to a nop */
+-		return finish_update_nop(rec);
+-	}
++	ip = (unsigned long)(&ftrace_regs_call);
++	new = ftrace_call_replace(ip, (unsigned long)func);
++	text_poke_bp((void *)ip, new, MCOUNT_INSN_SIZE, NULL);
+ 
+ 	return 0;
+ }
+ 
+-static void do_sync_core(void *data)
+-{
+-	sync_core();
+-}
+-
+-static void run_sync(void)
+-{
+-	int enable_irqs;
+-
+-	/* No need to sync if there's only one CPU */
+-	if (num_online_cpus() == 1)
+-		return;
+-
+-	enable_irqs = irqs_disabled();
+-
+-	/* We may be called with interrupts disabled (on bootup). */
+-	if (enable_irqs)
+-		local_irq_enable();
+-	on_each_cpu(do_sync_core, NULL, 1);
+-	if (enable_irqs)
+-		local_irq_disable();
+-}
+-
+ void ftrace_replace_code(int enable)
+ {
+ 	struct ftrace_rec_iter *iter;
+ 	struct dyn_ftrace *rec;
+-	const char *report = "adding breakpoints";
+-	int count = 0;
++	const char *new, *old;
+ 	int ret;
+ 
+ 	for_ftrace_rec_iter(iter) {
+ 		rec = ftrace_rec_iter_record(iter);
+ 
+-		ret = add_breakpoints(rec, enable);
+-		if (ret)
+-			goto remove_breakpoints;
+-		count++;
+-	}
+-
+-	run_sync();
+-
+-	report = "updating code";
+-	count = 0;
+-
+-	for_ftrace_rec_iter(iter) {
+-		rec = ftrace_rec_iter_record(iter);
+-
+-		ret = add_update(rec, enable);
+-		if (ret)
+-			goto remove_breakpoints;
+-		count++;
++		switch (ftrace_test_record(rec, enable)) {
++		case FTRACE_UPDATE_IGNORE:
++		default:
++			continue;
++
++		case FTRACE_UPDATE_MAKE_CALL:
++			old = ftrace_nop_replace();
++			break;
++
++		case FTRACE_UPDATE_MODIFY_CALL:
++		case FTRACE_UPDATE_MAKE_NOP:
++			old = ftrace_call_replace(rec->ip, ftrace_get_addr_curr(rec));
++			break;
++		};
++
++		ret = ftrace_verify_code(rec->ip, old);
++		if (ret) {
++			ftrace_bug(ret, rec);
++			return;
++		}
+ 	}
+ 
+-	run_sync();
+-
+-	report = "removing breakpoints";
+-	count = 0;
+-
+ 	for_ftrace_rec_iter(iter) {
+ 		rec = ftrace_rec_iter_record(iter);
+ 
+-		ret = finish_update(rec, enable);
+-		if (ret)
+-			goto remove_breakpoints;
+-		count++;
+-	}
+-
+-	run_sync();
+-
+-	return;
++		switch (ftrace_test_record(rec, enable)) {
++		case FTRACE_UPDATE_IGNORE:
++		default:
++			continue;
++
++		case FTRACE_UPDATE_MAKE_CALL:
++		case FTRACE_UPDATE_MODIFY_CALL:
++			new = ftrace_call_replace(rec->ip, ftrace_get_addr_new(rec));
++			break;
++
++		case FTRACE_UPDATE_MAKE_NOP:
++			new = ftrace_nop_replace();
++			break;
++		};
+ 
+- remove_breakpoints:
+-	pr_warn("Failed on %s (%d):\n", report, count);
+-	ftrace_bug(ret, rec);
+-	for_ftrace_rec_iter(iter) {
+-		rec = ftrace_rec_iter_record(iter);
+-		/*
+-		 * Breakpoints are handled only when this function is in
+-		 * progress. The system could not work with them.
+-		 */
+-		if (remove_breakpoint(rec))
+-			BUG();
++		text_poke_queue((void *)rec->ip, new, MCOUNT_INSN_SIZE, NULL);
++		ftrace_update_record(rec, enable);
+ 	}
+-	run_sync();
+-}
+-
+-static int
+-ftrace_modify_code(unsigned long ip, unsigned const char *old_code,
+-		   unsigned const char *new_code)
+-{
+-	int ret;
+-
+-	ret = add_break(ip, old_code);
+-	if (ret)
+-		goto out;
+-
+-	run_sync();
+-
+-	ret = add_update_code(ip, new_code);
+-	if (ret)
+-		goto fail_update;
+-
+-	run_sync();
+-
+-	ret = ftrace_write(ip, new_code, 1);
+-	/*
+-	 * The breakpoint is handled only when this function is in progress.
+-	 * The system could not work if we could not remove it.
+-	 */
+-	BUG_ON(ret);
+- out:
+-	run_sync();
+-	return ret;
+-
+- fail_update:
+-	/* Also here the system could not work with the breakpoint */
+-	if (ftrace_write(ip, old_code, 1))
+-		BUG();
+-	goto out;
++	text_poke_finish();
+ }
+ 
+ void arch_ftrace_update_code(int command)
+ {
+-	/* See comment above by declaration of modifying_ftrace_code */
+-	atomic_inc(&modifying_ftrace_code);
+-
+ 	ftrace_modify_all_code(command);
+-
+-	atomic_dec(&modifying_ftrace_code);
+ }
+ 
+ int __init ftrace_dyn_arch_init(void)
+@@ -828,11 +394,7 @@ create_trampoline(struct ftrace_ops *ops
+ 
+ 	set_vm_flush_reset_perms(trampoline);
+ 
+-	/*
+-	 * Module allocation needs to be completed by making the page
+-	 * executable. The page is still writable, which is a security hazard,
+-	 * but anyhow ftrace breaks W^X completely.
+-	 */
++	set_memory_ro((unsigned long)trampoline, npages);
+ 	set_memory_x((unsigned long)trampoline, npages);
+ 	return (unsigned long)trampoline;
+ fail:
+@@ -859,11 +421,10 @@ static unsigned long calc_trampoline_cal
+ void arch_ftrace_update_trampoline(struct ftrace_ops *ops)
+ {
+ 	ftrace_func_t func;
+-	unsigned char *new;
+ 	unsigned long offset;
+ 	unsigned long ip;
+ 	unsigned int size;
+-	int ret, npages;
++	const char *new;
+ 
+ 	if (ops->trampoline) {
+ 		/*
+@@ -872,14 +433,11 @@ void arch_ftrace_update_trampoline(struc
+ 		 */
+ 		if (!(ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP))
+ 			return;
+-		npages = PAGE_ALIGN(ops->trampoline_size) >> PAGE_SHIFT;
+-		set_memory_rw(ops->trampoline, npages);
+ 	} else {
+ 		ops->trampoline = create_trampoline(ops, &size);
+ 		if (!ops->trampoline)
+ 			return;
+ 		ops->trampoline_size = size;
+-		npages = PAGE_ALIGN(size) >> PAGE_SHIFT;
+ 	}
+ 
+ 	offset = calc_trampoline_call_offset(ops->flags & FTRACE_OPS_FL_SAVE_REGS);
+@@ -887,15 +445,11 @@ void arch_ftrace_update_trampoline(struc
+ 
+ 	func = ftrace_ops_get_func(ops);
+ 
+-	ftrace_update_func_call = (unsigned long)func;
+-
++	mutex_lock(&text_mutex);
+ 	/* Do a safe modify in case the trampoline is executing */
+ 	new = ftrace_call_replace(ip, (unsigned long)func);
+-	ret = update_ftrace_func(ip, new);
+-	set_memory_ro(ops->trampoline, npages);
+-
+-	/* The update should never fail */
+-	WARN_ON(ret);
++	text_poke_bp((void *)ip, new, MCOUNT_INSN_SIZE, NULL);
++	mutex_unlock(&text_mutex);
+ }
+ 
+ /* Return the address of the function the trampoline calls */
+@@ -981,19 +535,18 @@ void arch_ftrace_trampoline_free(struct
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ extern void ftrace_graph_call(void);
+ 
+-static unsigned char *ftrace_jmp_replace(unsigned long ip, unsigned long addr)
++static const char *ftrace_jmp_replace(unsigned long ip, unsigned long addr)
+ {
+-	return ftrace_text_replace(0xe9, ip, addr);
++	return ftrace_text_replace(JMP32_INSN_OPCODE, ip, addr);
+ }
+ 
+ static int ftrace_mod_jmp(unsigned long ip, void *func)
+ {
+-	unsigned char *new;
++	const char *new;
+ 
+-	ftrace_update_func_call = 0UL;
+ 	new = ftrace_jmp_replace(ip, (unsigned long)func);
+-
+-	return update_ftrace_func(ip, new);
++	text_poke_bp((void *)ip, new, MCOUNT_INSN_SIZE, NULL); // BATCH
++	return 0;
+ }
+ 
+ int ftrace_enable_ftrace_graph_caller(void)
+@@ -1019,10 +572,9 @@ int ftrace_disable_ftrace_graph_caller(v
+ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent,
+ 			   unsigned long frame_pointer)
+ {
++	unsigned long return_hooker = (unsigned long)&return_to_handler;
+ 	unsigned long old;
+ 	int faulted;
+-	unsigned long return_hooker = (unsigned long)
+-				&return_to_handler;
+ 
+ 	/*
+ 	 * When resuming from suspend-to-ram, this function can be indirectly
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -568,15 +568,6 @@ NOKPROBE_SYMBOL(do_general_protection);
+ 
+ dotraplinkage void notrace do_int3(struct pt_regs *regs, long error_code)
+ {
+-#ifdef CONFIG_DYNAMIC_FTRACE
+-	/*
+-	 * ftrace must be first, everything else may cause a recursive crash.
+-	 * See note by declaration of modifying_ftrace_code in ftrace.c
+-	 */
+-	if (unlikely(atomic_read(&modifying_ftrace_code)) &&
+-	    ftrace_int3_handler(regs))
+-		return;
+-#endif
+ 	if (poke_int3_handler(regs))
+ 		return;
+ 
 
-thanks,
--- Shuah
+
