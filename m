@@ -2,85 +2,89 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8FFC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC71C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1255217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 853D4217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730429AbfH0SYH (ORCPT
+        id S1730366AbfH0S0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:24:07 -0400
-Received: from mga18.intel.com ([134.134.136.126]:2324 "EHLO mga18.intel.com"
+        Tue, 27 Aug 2019 14:26:40 -0400
+Received: from gate.crashing.org ([63.228.1.57]:43069 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729779AbfH0SYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:24:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 11:24:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
-   d="scan'208";a="171282551"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by orsmga007.jf.intel.com with ESMTP; 27 Aug 2019 11:24:06 -0700
-Received: from orsmsx154.amr.corp.intel.com (10.22.226.12) by
- ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 27 Aug 2019 11:24:06 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.119]) by
- ORSMSX154.amr.corp.intel.com ([169.254.11.172]) with mapi id 14.03.0439.000;
- Tue, 27 Aug 2019 11:24:06 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "hch@lst.de" <hch@lst.de>, "x86@kernel.org" <x86@kernel.org>
-CC:     "joro@8bytes.org" <joro@8bytes.org>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] vmd: Stop overriding dma_map_ops
-Thread-Topic: [PATCH] vmd: Stop overriding dma_map_ops
-Thread-Index: AQHVXB/0iQzKFLmxFEGBMerx1QuVCqcPxk4A
-Date:   Tue, 27 Aug 2019 18:24:05 +0000
-Message-ID: <8cad7eb5b5b37aeb041fd0c464383bb5223e4a64.camel@intel.com>
-References: <20190826150652.10316-1-hch@lst.de>
-In-Reply-To: <20190826150652.10316-1-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.232.115.165]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CBA8577B2F8C794E8AE831CFFD893777@intel.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        id S1727064AbfH0S0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 14:26:40 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x7RIQHbP000982;
+        Tue, 27 Aug 2019 13:26:17 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x7RIQGDG000979;
+        Tue, 27 Aug 2019 13:26:16 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Tue, 27 Aug 2019 13:26:16 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] powerpc: cleanup hw_irq.h
+Message-ID: <20190827182616.GB31406@gate.crashing.org>
+References: <0f7e164afb5d1b022441559fe5a999bb6d3c0a23.1566893505.git.christophe.leroy@c-s.fr> <81f39fa06ae582f4a783d26abd2b310204eba8f4.1566893505.git.christophe.leroy@c-s.fr> <1566909844.x4jee1jjda.astroid@bobo.none> <20190827172909.GA31406@gate.crashing.org> <1410046b-e1a3-b892-2add-6c1d353cb781@c-s.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1410046b-e1a3-b892-2add-6c1d353cb781@c-s.fr>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA4LTI2IGF0IDE3OjA2ICswMjAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
-ZToNCj4gV2l0aCBhIGxpdHRsZSB0d2VhayB0byB0aGUgaW50ZWwtaW9tbXUgY29kZSB3ZSBzaG91
-bGQgYmUgYWJsZSB0byB3b3JrDQo+IGFyb3VuZCB0aGUgVk1EIG1lc3MgZm9yIHRoZSByZXF1ZXN0
-ZXIgSURzIHdpdGhvdXQgaGF2aW5nIHRvIGNyZWF0ZSBnaWFudA0KPiBhbW91bnRzIG9mIGJvaWxl
-cnBsYXRlIERNQSBvcHMgd3JhcHBpbmcgY29kZS4gIFRoZSBvdGhlciBhZHZhbnRhZ2Ugb2YNCj4g
-dGhpcyBzY2hlbWUgaXMgdGhhdCB3ZSBjYW4gcmVzcGVjdCB0aGUgcmVhbCBETUEgbWFza3MgZm9y
-IHRoZSBhY3R1YWwNCj4gZGV2aWNlcywgYW5kIEkgYmV0IGl0IHdpbGwgb25seSBiZSBhIG1hdHRl
-ciBvZiB0aW1lIHVudGlsIHdlJ2xsIHNlZSB0aGUNCj4gZmlyc3QgRE1BIGNoYWxsZW5lZ2VkIE5W
-TWUgZGV2aWNlcy4NCj4gDQo+IFRoZSBvbmx5IGRvd25zaWRlIGlzIHRoYXQgd2UgY2FuJ3Qgb2Zm
-ZXIgdm1kIGFzIGEgbW9kdWxlIGdpdmVuIHRoYXQNCj4gaW50ZWwtaW9tbXUgY2FsbHMgaW50byBp
-dC4gIEJ1dCB0aGUgZHJpdmVyIG9ubHkgaGFzIGFib3V0IDcwMCBsaW5lcw0KPiBvZiBjb2RlLCBz
-byB0aGlzIHNob3VsZCBub3QgYmUgYSBtYWpvciBpc3N1ZS4NCklmIHdlJ3JlIGdvaW5nIHRvIHJl
-bW92ZSBpdHMgYWJpbGl0eSB0byBiZSBhIG1vZHVsZSwgYW5kIGdpdmVuIGl0cw0Kc21hbGwgc2l6
-ZSwgY291bGQgd2UgbWFrZSB0aGlzIGRlZmF1bHQgPXk/DQoNCk90aGVyd2lzZSB3ZSByaXNrIGJy
-ZWFraW5nIHBsYXRmb3JtcyB3aGljaCBoYXZlIGl0IGVuYWJsZWQgd2l0aCBPU1ZzDQp3aG8gbWlz
-cyBlbmFibGluZyBpdA0KDQoNCj4gDQo+IFRoaXMgYWxzbyByZW1vdmVzIHRoZSBsZWZ0b3ZlciBi
-aXRzIG9mIHRoZSBYODZfREVWX0RNQV9PUFMgZG1hX21hcF9vcHMNCj4gcmVnaXN0cnkuDQo+IA0K
-PiBTaWduZWQtb2ZmLWJ5OiBDaHJpc3RvcGggSGVsbHdpZyA8aGNoQGxzdC5kZT4NCj4gDQoNCmxn
-dG0gb3RoZXJ3aXNlDQoNClJldmlld2VkLWJ5OiBKb24gRGVycmljayA8am9uYXRoYW4uZGVycmlj
-a0BpbnRlbC5jb20+DQo=
+On Tue, Aug 27, 2019 at 07:36:35PM +0200, Christophe Leroy wrote:
+> Le 27/08/2019 à 19:29, Segher Boessenkool a écrit :
+> >On Tue, Aug 27, 2019 at 10:48:24PM +1000, Nicholas Piggin wrote:
+> >>Christophe Leroy's on August 27, 2019 6:13 pm:
+> >>>+#define wrtee(val)	asm volatile("wrtee %0" : : "r" (val) : "memory")
+> >>>+#define wrteei(val)	asm volatile("wrteei %0" : : "i" (val) : 
+> >>>"memory")
+> >>
+> >>Can you implement just one macro that uses __builtin_constant_p to
+> >>select between the imm and reg versions? I forgot if there's some
+> >>corner cases that prevent that working with inline asm i constraints.
+> >
+> >static inline void wrtee(long val)
+> >{
+> >	asm volatile("wrtee%I0 %0" : : "n"(val) : "memory");
+> >}
+> 
+> Great, didn't know that possibility.
+> 
+> Can it be used with any insn, for instance with add/addi ?
+> Or with mr/li ?
+
+Any instruction, yes.  %I<n> simply outputs an "i" if operand n is a
+constant integer, and nothing otherwise.
+
+So
+  asm("add%I2 %0,%1,%2" : "=r"(dst) : "r"(src1), "ri"(src1));
+works well.  I don't see how you would use it for li/mr...  You can do
+  asm("add%I1 %0,0,%1" : "=r"(dst) : "ri"(src));
+I suppose, but that is not really an mr.
+
+> >(This output modifier goes back to the dark ages, some 2.4 or something).
+> 
+> Hope Clang support it ...
+
+I don't know, sorry.  But it is used all over the place, see sfp-machine.h
+for example, so maybe?
+
+
+Segher
