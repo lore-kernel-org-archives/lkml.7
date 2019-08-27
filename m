@@ -2,107 +2,83 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21131C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F5FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE774205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD27220674
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:48:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="c6RI1xNs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbfH0TrU (ORCPT
+        id S1731106AbfH0TsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 15:47:20 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45156 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbfH0TrT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 15:47:19 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m2so232665qki.12
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 12:47:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4To99pYhN71BTubz3nGrKNYdHAubr+/NI0V79/X3hJs=;
-        b=eIER/fcg/bb8CtoL5M4B+mNljjXp5kYb0V3ZF5yO7nse6FdkZsPzDBdSDaXT9QRGu+
-         P8+fkpDAHCx+UpRSRbir2PSrujt2k4/SukSqICpKycHpCilZ+VZQ3Ab7cw7iqrN6TSB2
-         IBgSuCepQV7c2Is7urtvI+/ZQtdFCczXNrcUg1MW0QrlCWrmr36CDkjNZ62rrX9oKzAV
-         beLUN4fKGUfi8hHI/acmVmRsbbwZlTFQe7n7mHiRgZfe8XSJ1lSL82yo2p9oSwcJ1NXr
-         00fOCsFWWdEtxhq5swKOBhB/shtV3Lo0xk2S17brL/3psOdE0cSK2t+qWJupsDXbeP6n
-         28OA==
-X-Gm-Message-State: APjAAAXSPOB6na06idRJK/kN/8nTWnkgh9nk59HIAMQUDu0kCS3F1AJS
-        QV1r2m6BSVonOStywpMPOjZDdJZHu8iL+UCG1nc=
-X-Google-Smtp-Source: APXvYqxgckRsvPeHZn6b1p3gkctQ9LIf08zCEsVjrFAuwpT25u3v1l2WFcylpqiWKU+fjXiK26F3oHm+fGG8s+06hRM=
-X-Received: by 2002:a37:4fcf:: with SMTP id d198mr228694qkb.394.1566935238574;
- Tue, 27 Aug 2019 12:47:18 -0700 (PDT)
+        Tue, 27 Aug 2019 15:48:14 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:41852 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726584AbfH0TsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 15:48:14 -0400
+Received: from zn.tnic (p200300EC2F0CD00054E9B179BF3AF377.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:d000:54e9:b179:bf3a:f377])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 990911EC064F;
+        Tue, 27 Aug 2019 21:48:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1566935292;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+4LADixq8mWqJfEDv1yl7V1aizzRb9Pm5FV9j3wgevQ=;
+        b=c6RI1xNsuYFrlp8PpPT6F+ZJPywbIOirlc44EZPF1690WR4R/jBBBCRJzFTJqU81zL01nU
+        RhSnCInCQBR4BPMIaNJt591vb2cQGcWIhBcyBvL6+owkE9b2KoSMXsSDtoORJceQsv3LEz
+        DMhbendmCr151CBC44E/bb2uXRTszcM=
+Date:   Tue, 27 Aug 2019 21:48:06 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
+        linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        dri-devel@lists.freedekstop.org, Doug Covelli <dcovelli@vmware.com>
+Subject: Re: [PATCH v2 1/4] x86/vmware: Update platform detection code for
+ VMCALL/VMMCALL hypercalls
+Message-ID: <20190827194806.GJ29752@zn.tnic>
+References: <20190823081316.28478-1-thomas_os@shipmail.org>
+ <20190823081316.28478-2-thomas_os@shipmail.org>
+ <20190827125636.GE29752@zn.tnic>
+ <6bd6a477-17b1-20a3-79d6-9aee4f050244@shipmail.org>
 MIME-Version: 1.0
-References: <CAK8P3a3G=GCpLtNztuoLR4BuugAB=zpa_Jrz5BSft6Yj-nok1g@mail.gmail.com>
- <20190827145102.p7lmkpytf3mngxbj@treble> <CAHFW8PRsmmCR6TWoXpQ9gyTA7azX9YOerPErCMggcQX-=fAqng@mail.gmail.com>
- <CAK8P3a2TeaMc_tWzzjuqO-eQjZwJdpbR1yH8yzSQbbVKdWCwSg@mail.gmail.com> <20190827192255.wbyn732llzckmqmq@treble>
-In-Reply-To: <20190827192255.wbyn732llzckmqmq@treble>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 27 Aug 2019 21:47:02 +0200
-Message-ID: <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
-Subject: Re: objtool warning "uses BP as a scratch register" with clang-9
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Ilie Halip <ilie.halip@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6bd6a477-17b1-20a3-79d6-9aee4f050244@shipmail.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 9:23 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> On Tue, Aug 27, 2019 at 09:00:52PM +0200, Arnd Bergmann wrote:
-> > On Tue, Aug 27, 2019 at 5:00 PM Ilie Halip <ilie.halip@gmail.com> wrote:
-> > >
-> > > > > $ clang-9 -c  crc32.i  -O2   ; objtool check  crc32.o
-> > > > > crc32.o: warning: objtool: fn1 uses BP as a scratch register
-> > >
-> > > Yes, I see it too. https://godbolt.org/z/N56HW1
-> > >
-> > > > Do you still see this warning with -fno-omit-frame-pointer (assuming
-> > > > clang has that option)?
-> > >
-> > > Using this makes the warning go away. Running objtool with --no-fp
-> > > also gets rid of it.
-> >
-> > I still see the warning after adding back the -fno-omit-frame-pointer
-> > in my reduced test case:
-> >
-> > $ clang-9 -c  crc32.i -Werror -Wno-address-of-packed-member -Wall
-> > -Wno-pointer-sign -Wno-unused-value -Wno-constant-logical-operand -O2
-> > -Wno-unused -fno-omit-frame-pointer
-> > $ objtool check  crc32.o
-> > crc32.o: warning: objtool: fn1 uses BP as a scratch register
->
-> This warning most likely means that clang is clobbering RBP in leaf
-> functions.  With -fno-omit-frame-pointer, leaf functions don't need to
-> set up the frame pointer, but they at least need to leave RBP untouched,
-> so that an interrupts/exceptions can unwind through the function.
+On Tue, Aug 27, 2019 at 09:19:54PM +0200, Thomas Hellström (VMware) wrote:
+> We *do* have checkpatch.pl in the workflow. In this case I figured the
+> warnings actually didn't make sense. There are breaks present and
+> -Wimplicit-fallthrough doesn't complain...
 
-Yes, that clearly matches what I see in the output where it does
+Oh, we have enabled that by default already:
 
-   0: 55                    push   %rbp
-...
-  73: 0f b6 ef              movzbl %bh,%ebp
-  76: 8b 1c 99              mov    (%rcx,%rbx,4),%ebx
-  79: 33 1c aa              xor    (%rdx,%rbp,4),%ebx
-...
-  95: 5d                    pop    %rbp
-  96: c3                    retq
+  a035d552a93b ("Makefile: Globally enable fall-through warning")
 
-I just did another simple test: an x86-64 defconfig build with
-UNWINDER_FRAME_POINTER shows the exact symptom as
-my randconfig, so it sounds like any configuration with frame
-pointers would, and there is nothing else to it (this also makes
-sense given that it happens with a relatively simple test case
-outside of the kernel).
+I guess checkpatch wrongly complains here and I did trust its output
+blindly. That ain't happening again, sorry about that.
 
-       Arnd
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
