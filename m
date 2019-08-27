@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F62C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A778DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5FF217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F793206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892470;
-	bh=oocRzilriowvGwyzD4I+sBipUlHRbO+/i4RBfBsJ4EA=;
+	s=default; t=1566892473;
+	bh=XGeWsTHypIog1MFp1MGZXbXhUXamoFqtKZtU0EC+ofE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l3L7PIS2sLNeQMc3RTmArKQjX4siU96deckpEPI2lG4Ze80vH23IaBR6r5fNCiyxg
-	 Of9GP6rd8MUHmAeZtbScvlmbDqW72dCkOmYLPnLypMjN1Xwl10WdOZBvVaQRqD+CQC
-	 Eyu1llqTJx3hqAXCgBTME4ZHhBT8YdEjB4syR38c=
+	b=TZ6Ad3Ai0vcX+St8dwynjyGguMB1jcYrXvR/sg3o9VD18DI3mijKNWChlwj1EqzUK
+	 QSUQOY3SkCCPtW1aXkb6vwY8Lx5IvEYRLWPVZmOmDfRYWt4z71UvE31IS7bWG7RS7I
+	 JIucflLnmMrOfMy4fAjHS1UdtfKh80qjmUIIitJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729573AbfH0Hy3 (ORCPT
+        id S1729445AbfH0Hyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:54:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46000 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:54:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729536AbfH0HyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:54:25 -0400
+        id S1730055AbfH0Hy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:54:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75E2B206BF;
-        Tue, 27 Aug 2019 07:54:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43F2A217F5;
+        Tue, 27 Aug 2019 07:54:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892464;
-        bh=oocRzilriowvGwyzD4I+sBipUlHRbO+/i4RBfBsJ4EA=;
+        s=default; t=1566892466;
+        bh=XGeWsTHypIog1MFp1MGZXbXhUXamoFqtKZtU0EC+ofE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IMsOdXm9QxkcR0LmzRECRHsl/h8cWDxiGEDQi7d3o8B78vIXTgRxWLe4NZsyOn0mg
-         xSv5d5ZeuPAAZT8vWyo6gsIrktzcBkX5P3B91ZgWUzh+aQ78AlOyaYItoHTGIA0xqH
-         8XGJXeMFrrx+aLZKuAqXwRqocLpkrHTY9vGBVLfo=
+        b=YZBFgHnXukj7ZgKSCca70o6EE+rGhTHOSZ0dkiLV/BjJiqvcREP7spk384HjdAfCl
+         6PCD6mUigjqNs6I4apb2a3Qb4bxPDm1qlYkYH1yIyf5PcsonzGiz68ObFCU+PMFHt+
+         BJLigzBdPJbuKkNm3JKLXi9Vkg9Js5jvmlff4b3s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.14 56/62] genirq: Properly pair kobject_del() with kobject_add()
-Date:   Tue, 27 Aug 2019 09:51:01 +0200
-Message-Id: <20190827072703.716791086@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 57/62] mm, page_owner: handle THP splits correctly
+Date:   Tue, 27 Aug 2019 09:51:02 +0200
+Message-Id: <20190827072703.769817581@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -59,73 +65,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Kelley <mikelley@microsoft.com>
+From: Vlastimil Babka <vbabka@suse.cz>
 
-commit d0ff14fdc987303aeeb7de6f1bd72c3749ae2a9b upstream.
+commit f7da677bc6e72033f0981b9d58b5c5d409fa641e upstream.
 
-If alloc_descs() fails before irq_sysfs_init() has run, free_desc() in the
-cleanup path will call kobject_del() even though the kobject has not been
-added with kobject_add().
+THP splitting path is missing the split_page_owner() call that
+split_page() has.
 
-Fix this by making the call to kobject_del() conditional on whether
-irq_sysfs_init() has run.
+As a result, split THP pages are wrongly reported in the page_owner file
+as order-9 pages.  Furthermore when the former head page is freed, the
+remaining former tail pages are not listed in the page_owner file at
+all.  This patch fixes that by adding the split_page_owner() call into
+__split_huge_page().
 
-This problem surfaced because commit aa30f47cf666 ("kobject: Add support
-for default attribute groups to kobj_type") makes kobject_del() stricter
-about pairing with kobject_add(). If the pairing is incorrrect, a WARNING
-and backtrace occur in sysfs_remove_group() because there is no parent.
-
-[ tglx: Add a comment to the code and make it work with CONFIG_SYSFS=n ]
-
-Fixes: ecb3f394c5db ("genirq: Expose interrupt information through sysfs")
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1564703564-4116-1-git-send-email-mikelley@microsoft.com
+Link: http://lkml.kernel.org/r/20190820131828.22684-2-vbabka@suse.cz
+Fixes: a9627bc5e34e ("mm/page_owner: introduce split_page_owner and replace manual handling")
+Reported-by: Kirill A. Shutemov <kirill@shutemov.name>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/irqdesc.c |   15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ mm/huge_memory.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -277,6 +277,18 @@ static void irq_sysfs_add(int irq, struc
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -33,6 +33,7 @@
+ #include <linux/page_idle.h>
+ #include <linux/shmem_fs.h>
+ #include <linux/oom.h>
++#include <linux/page_owner.h>
+ 
+ #include <asm/tlb.h>
+ #include <asm/pgalloc.h>
+@@ -2387,6 +2388,9 @@ static void __split_huge_page(struct pag
  	}
- }
  
-+static void irq_sysfs_del(struct irq_desc *desc)
-+{
-+	/*
-+	 * If irq_sysfs_init() has not yet been invoked (early boot), then
-+	 * irq_kobj_base is NULL and the descriptor was never added.
-+	 * kobject_del() complains about a object with no parent, so make
-+	 * it conditional.
-+	 */
-+	if (irq_kobj_base)
-+		kobject_del(&desc->kobj);
-+}
+ 	ClearPageCompound(head);
 +
- static int __init irq_sysfs_init(void)
- {
- 	struct irq_desc *desc;
-@@ -307,6 +319,7 @@ static struct kobj_type irq_kobj_type =
- };
- 
- static void irq_sysfs_add(int irq, struct irq_desc *desc) {}
-+static void irq_sysfs_del(struct irq_desc *desc) {}
- 
- #endif /* CONFIG_SYSFS */
- 
-@@ -420,7 +433,7 @@ static void free_desc(unsigned int irq)
- 	 * The sysfs entry must be serialized against a concurrent
- 	 * irq_sysfs_init() as well.
- 	 */
--	kobject_del(&desc->kobj);
-+	irq_sysfs_del(desc);
- 	delete_irq_desc(irq);
- 
- 	/*
++	split_page_owner(head, HPAGE_PMD_ORDER);
++
+ 	/* See comment in __split_huge_page_tail() */
+ 	if (PageAnon(head)) {
+ 		/* Additional pin to radix tree of swap cache */
 
 
