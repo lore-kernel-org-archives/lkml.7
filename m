@@ -2,78 +2,69 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1729CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21148C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB7A2184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED35E2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730074AbfH0NsJ (ORCPT
+        id S1730188AbfH0NsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:48:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37100 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728324AbfH0NsH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:48:07 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1i2bpN-0005tS-6V; Tue, 27 Aug 2019 13:48:05 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     bhelgaas@google.com, tiwai@suse.com
-Cc:     linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH 2/2] ALSA: hda: Allow HDA to be runtime suspended when dGPU is not bound
-Date:   Tue, 27 Aug 2019 21:47:56 +0800
-Message-Id: <20190827134756.10807-2-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190827134756.10807-1-kai.heng.feng@canonical.com>
-References: <20190827134756.10807-1-kai.heng.feng@canonical.com>
+        Tue, 27 Aug 2019 09:48:17 -0400
+Received: from mga07.intel.com ([134.134.136.100]:16441 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725825AbfH0NsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:48:15 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 06:48:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
+   d="scan'208";a="380922218"
+Received: from jsakkine-mobl1.fi.intel.com (HELO localhost) ([10.237.66.169])
+  by fmsmga006.fm.intel.com with ESMTP; 27 Aug 2019 06:48:09 -0700
+Date:   Tue, 27 Aug 2019 16:48:08 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        linux-security-module@vger.kernel.org, dhowells@redhat.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, zohar@linux.ibm.com, jmorris@namei.org,
+        serge@hallyn.com, casey@schaufler-ca.com,
+        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
+        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
+Subject: Re: [PATCH v5 1/4] tpm: move tpm_buf code to include/linux/
+Message-ID: <20190827134808.4mtnzugshylnqwss@linux.intel.com>
+References: <1566392345-15419-1-git-send-email-sumit.garg@linaro.org>
+ <1566392345-15419-2-git-send-email-sumit.garg@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566392345-15419-2-git-send-email-sumit.garg@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's a common practice to let dGPU unbound and use PCI port PM to
-disable its power through _PR3. When the dGPU comes with an HDA
-function, the HDA won't be suspended if the dGPU is unbound, so the dGPU
-power can't be disabled.
+On Wed, Aug 21, 2019 at 06:29:02PM +0530, Sumit Garg wrote:
+> Move tpm_buf code to common include/linux/tpm.h header so that it can
+> be reused via other subsystems like trusted keys etc.
+> 
+> Also rename trusted keys TPM 1.x buffer implementation to tpm1_buf to
+> avoid any compilation errors.
+> 
+> Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 
-Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
-discrete GPU") only allows HDA to be runtime-suspended once GPU is
-bound, to keep APU's HDA working.
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-However, HDA on dGPU isn't that useful if dGPU is unbound. So let relax
-the runtime suspend requirement for dGPU's HDA function, to save lots of
-power.
-
-BugLink: https://bugs.launchpad.net/bugs/1840835
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- sound/pci/hda/hda_intel.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 99fc0917339b..d4ee070e1a29 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1285,7 +1285,8 @@ static void init_vga_switcheroo(struct azx *chip)
- 		dev_info(chip->card->dev,
- 			 "Handle vga_switcheroo audio client\n");
- 		hda->use_vga_switcheroo = 1;
--		hda->need_eld_notify_link = 1; /* cleared in gpu_bound op */
-+		/* cleared in gpu_bound op */
-+		hda->need_eld_notify_link = !pci_pr3_present(p);
- 		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
- 		pci_dev_put(p);
- 	}
--- 
-2.17.1
-
+/Jarkko
