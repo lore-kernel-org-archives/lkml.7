@@ -2,142 +2,108 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2778C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4C5C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5AE2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="YE33pfbQ"
+	by mail.kernel.org (Postfix) with ESMTP id B7CE42173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566893477;
+	bh=KVeVnzVN+7zWwaCz8UpfKAGtCgoVXGcS7K3bV7aItGk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0J+ewNR2K6hkZGro7B/wk8W3GltKu3w90RJDvLW7qcLwoJun7aS9b8jdnVL93nt9a
+	 Rd8C4JbuelLnvZeyNVClw19GM+j7vweFA11sZujIAdl3KESBi5Khuqz0FBOyjPm4Wk
+	 ifFHe7b/ti5c5q551kDmNHBhr9EgmRjDwvPTKL0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732721AbfH0IK7 (ORCPT
+        id S1729250AbfH0ILQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:10:59 -0400
-Received: from mail-eopbgr1310138.outbound.protection.outlook.com ([40.107.131.138]:6216
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731877AbfH0ICP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:02:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iHJ+A0GqjvOWofsoG1Ll4KAqjQsRu/cpUIyqI+Rl60VwZ0ZpcTXlwb2f8xIbm4Xzibaw2J76a4APTAlODPxehYn/HWExmF6SbW2VdmVjSR28nIVhoo6f6I44iyAOaTbYTbIMeri7sNLrJmrLqLDRcx/rDOXg4fLEwy/Cv2Nm9vE/vVwhzi++k5Ekoi1AYdZi6XC+XOeAPK8ii+zIA7cSJIh21nq1najGNw2W6+fPb5ykPyN4d17ZFZfHyWll/hJNe+fTG8awMFJTaQbN1kQaAsLe3hvlslyXsBNG7Uw23+/lw23t2wcyaMq79L8wArLMT1re1cJqS+TPqJTaihWjZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nBVHo+/qcyk7/gzycBT8m86pD95QG/Ky3pZnxNcMQxM=;
- b=Ggj4ZCXAu02o6GSU/UZnGg/j88qUYidGC1NafCWyVyfRVQkjlgaIu1x5KY6l356SdktJJFWI87QhwjdAgKyWtkAUCXlo1z+M69TaNuW7ubIzXMyeCFMIDXje12GaDuNHTX86Nzr/UHt1Euq8F7lOUpi5AVf+4u/CgXzDmP8f9VRVi8M+ybarTzRzQD6Ul2g9ujND0kCoI1R22dxkHoqcYrFShlBIknm0v82Iwgwb7wtm/yqYQmyIRv0rlcJnoKSp6xPAooaaSF79t8Glx3AW92QFOX9iXe0J5xkqjQIPKlJlCq+AdJ5wQ0OxDEsiyfViv1Fti546opo+6bYSOF/ybA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nBVHo+/qcyk7/gzycBT8m86pD95QG/Ky3pZnxNcMQxM=;
- b=YE33pfbQ5kTwouSsikKVXsw4G3AJBHXN4Y5Hnk353EJBd0o+m9+Nwj2nXEgsyWECSG2LmYcpdXkpKM7R7AXixl6LO7UTONryRxmZXRcF7bxNeDnIBM/bc77wAm7/UhOGloICjVJnvnNkX9tMJDG1DTwAeHPam7R+O9vOtpg5Ebk=
-Received: from KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM (52.132.240.17) by
- KL1P15301MB0263.APCP153.PROD.OUTLOOK.COM (52.132.240.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.1; Tue, 27 Aug 2019 08:02:08 +0000
-Received: from KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM
- ([fe80::c402:2ce2:cafa:8b1e]) by KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM
- ([fe80::c402:2ce2:cafa:8b1e%9]) with mapi id 15.20.2241.000; Tue, 27 Aug 2019
- 08:02:08 +0000
-From:   Wei Hu <weh@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>
-CC:     Iouri Tarassov <iourit@microsoft.com>
-Subject: RE: [PATCH v2] video: hyperv: hyperv_fb: Obtain screen resolution
- from Hyper-V host
-Thread-Topic: [PATCH v2] video: hyperv: hyperv_fb: Obtain screen resolution
- from Hyper-V host
-Thread-Index: AQHVWBETUUvEuW2UmUKx6Ya3YUCalKcGQnDwgAhoIAA=
-Date:   Tue, 27 Aug 2019 08:02:07 +0000
-Message-ID: <KL1P15301MB02644C33CA12E8288C4B9AD4BBA00@KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM>
-References: <20190821111007.3490-1-weh@microsoft.com>
- <DM5PR21MB01370CB55C3011582F6F8C5CD7AA0@DM5PR21MB0137.namprd21.prod.outlook.com>
-In-Reply-To: <DM5PR21MB01370CB55C3011582F6F8C5CD7AA0@DM5PR21MB0137.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-21T23:48:40.2987691Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=61cf0715-0dfe-4344-9bb2-ea23cdedd11a;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=weh@microsoft.com; 
-x-originating-ip: [167.220.255.45]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 16efc23d-08d5-49d3-b1db-08d72ac4dbaa
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:KL1P15301MB0263;
-x-ms-traffictypediagnostic: KL1P15301MB0263:|KL1P15301MB0263:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <KL1P15301MB0263D2B67CA43E97BC584ED4BBA00@KL1P15301MB0263.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:1923;
-x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(136003)(346002)(396003)(39860400002)(199004)(189003)(13464003)(256004)(8676002)(6636002)(229853002)(52536014)(486006)(8936002)(476003)(5660300002)(22452003)(2906002)(71190400001)(316002)(4744005)(76176011)(4326008)(107886003)(6246003)(25786009)(71200400001)(9686003)(110136005)(305945005)(55016002)(74316002)(10290500003)(53936002)(7736002)(6436002)(66946007)(3846002)(6116002)(1511001)(7696005)(2201001)(6506007)(53546011)(10090500001)(76116006)(64756008)(66556008)(66476007)(2501003)(478600001)(66446008)(33656002)(8990500004)(446003)(186003)(11346002)(26005)(14454004)(81156014)(99286004)(102836004)(86362001)(81166006)(66066001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:KL1P15301MB0263;H:KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lEnybJio6oP08aDT8HP6lkkKdXqA1cIm8YV9P8sD4r/Yeh+yC3CAic0tJEv01cuOUBoALGu0U5QlZ6F4IQgE6XZyKLK90FMG36514qkb/fJXjp4ljDg0B04ATOsMYJ9T+14oBm+9SyrKAx61oFhn+m8Ir9sV9nzIo0aoT052ArMn26tVT+5gwdGUihPwwmcYpCjaLr9VMVPH/LR6e9NUcjpvEKhfgcn4CooC7FoljHFwFO1Yu1eNKvp36Y6brUy+nu5jj8A53MwOiPEZOpoLo6lNuAHwNK8FL7fBwqd1LdPAD9KrSaCSGGGPoYjLUEObZVtogC32gcRG8+SeKRI9DdujDSvhelIZm6hi06bo4XPmNne4dAmXbi20svjYZKoe614RIReUE6UrWVVan7VUyI2lMQB4flXjfZsozaZP54I=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 27 Aug 2019 04:11:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731770AbfH0IB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:01:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25B742186A;
+        Tue, 27 Aug 2019 08:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566892888;
+        bh=KVeVnzVN+7zWwaCz8UpfKAGtCgoVXGcS7K3bV7aItGk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FBwAqaJXCsmcW6CXbuyoC1PtFCHQ+9/6gKBksivCIHrg1FrZH6jDYZlUeBmcNnZ+l
+         F29Oq/am2nJ3HpxZK+RzLP70oGMUFvVC3sbLSciXj5W1VBnVier+DS0EDtXawTk+iC
+         fmjSR4oB0g9Otoe1qwwIUXN3Fgv9VezWyyoiS0RE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 048/162] mac80211_hwsim: Fix possible null-pointer dereferences in hwsim_dump_radio_nl()
+Date:   Tue, 27 Aug 2019 09:49:36 +0200
+Message-Id: <20190827072739.899320014@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
+References: <20190827072738.093683223@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16efc23d-08d5-49d3-b1db-08d72ac4dbaa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 08:02:07.8091
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4XiuqOUh7UROa6e9NjxCNKSUZuLHegLSyGcOfBNIXb+4aElRap1ERP7XM1N0+kXb7uQGaGmv6NS58a457kbvsQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1P15301MB0263
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Michael Kelley <mikelley@microsoft.com>
-> Sent: Thursday, August 22, 2019 7:49 AM
-> To: Wei Hu <weh@microsoft.com>; b.zolnierkie@samsung.com; linux-
-> hyperv@vger.kernel.org; dri-devel@lists.freedesktop.org; linux-
-> fbdev@vger.kernel.org; linux-kernel@vger.kernel.org; sashal@kernel.org;
-> Stephen Hemminger <sthemmin@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Dexuan Cui
-> <decui@microsoft.com>
-> Cc: Iouri Tarassov <iourit@microsoft.com>
-> > +
-> > +struct synthvid_supported_resolution_resp {
-> > +	u8 edid_block[SYNTHVID_EDID_BLOCK_SIZE];
-> > +	u8 resolution_count;
-> > +	u8 default_resolution_index;
-> > +	u8 is_standard;
-> > +	struct hvd_screen_info
-> > +		supported_resolution[SYNTHVID_MAX_RESOLUTION_COUNT];
->=20
-> Is there extra whitespace on this line?  Just wondering why it doesn't
-> line up.
->=20
-[Wei Hu]=20
-No extra whitespace. It would be over 80 characters if I had put them in on=
-e line.
+[ Upstream commit b55f3b841099e641bdb2701d361a4c304e2dbd6f ]
+
+In hwsim_dump_radio_nl(), when genlmsg_put() on line 3617 fails, hdr is
+assigned to NULL. Then hdr is used on lines 3622 and 3623:
+    genl_dump_check_consistent(cb, hdr);
+    genlmsg_end(skb, hdr);
+
+Thus, possible null-pointer dereferences may occur.
+
+To fix these bugs, hdr is used here when it is not NULL.
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Link: https://lore.kernel.org/r/20190729082332.28895-1-baijiaju1990@gmail.com
+[put braces on all branches]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/mac80211_hwsim.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
+index 1c699a9fa8661..faec05ab42754 100644
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -3615,10 +3615,12 @@ static int hwsim_dump_radio_nl(struct sk_buff *skb,
+ 		hdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid,
+ 				  cb->nlh->nlmsg_seq, &hwsim_genl_family,
+ 				  NLM_F_MULTI, HWSIM_CMD_GET_RADIO);
+-		if (!hdr)
++		if (hdr) {
++			genl_dump_check_consistent(cb, hdr);
++			genlmsg_end(skb, hdr);
++		} else {
+ 			res = -EMSGSIZE;
+-		genl_dump_check_consistent(cb, hdr);
+-		genlmsg_end(skb, hdr);
++		}
+ 	}
+ 
+ done:
+-- 
+2.20.1
+
+
+
