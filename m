@@ -2,80 +2,129 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC825C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B150AC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD26A2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87DB92173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:50:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bhjl/ew8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730293AbfH0NuC (ORCPT
+        id S1730303AbfH0NuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:50:02 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56910 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726596AbfH0NuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:50:01 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4594A793FE86C1EFFE65;
-        Tue, 27 Aug 2019 21:49:55 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Tue, 27 Aug 2019
- 21:49:45 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <khilman@baylibre.com>
-CC:     <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] phy: mdio-mux-meson-g12a: use devm_platform_ioremap_resource() to simplify code
-Date:   Tue, 27 Aug 2019 21:49:40 +0800
-Message-ID: <20190827134940.14944-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 27 Aug 2019 09:50:16 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:38455 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727784AbfH0NuQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:50:16 -0400
+Received: by mail-vs1-f66.google.com with SMTP id 62so13477722vsl.5
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 06:50:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nPR2CQfWmgZTkvcpGyqAZkf0myEhVejsZD6gsIT8RYg=;
+        b=bhjl/ew8Pdmkn2py/fJ8FKDq4d1wSwcKFwpAqCni+esZ62NP1wDMuTrPNmksJfOg+Y
+         My7X+wD93QUDR0E3hIw3E1A8iE7iMuv3TRRMCS3eIOphYFDZF6fKOzuCq2zdoUxjVHh6
+         3+WsdoF0ZGK3YXkZHXokWSPcVEecQW0K0NSoyk88GKCLv84yCim1xpARfVciR67DTXNJ
+         KbB7KkvbrM16nS6EQSKVHuZdTISASCfdZ4mJetpH93xPtPxg9o2VfQdTvVIiIslYhgQa
+         G0PTMTp7ZX6VsTVAGrRDF/zQd9Z+fdlvN31tSNuTNgvkcvZSwUdXdRF7/PPw9J8ppeB9
+         VJWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nPR2CQfWmgZTkvcpGyqAZkf0myEhVejsZD6gsIT8RYg=;
+        b=bCl1fAL68TX8tJNyj/6037E9SPitu9Jcj9M9LiUmmojySYPgoxytZMupTUNT6uOan4
+         aAMhf4SpjfN6ja4ZG0z9bAFYzdTRlsSgLsAVJk3l7u8VmbNUK3HaIgpggeTmyiXUlrDz
+         r9JtCblgsgJeT90dGQZZDjOHZIjQnkqwlaQNxa3/1cXH2PcIGghMDtrn3MQzkpeR3nij
+         nO5M0dgDc0gJyNcRU2OUqGLAXHRZ6MDtnyFZRl1+K63caumdC+L7zBa232s18UuGYiaS
+         bUP4YaeHmdeNw9kd00vrFFoNt5otcs+bdPto99Kfk6+uHaMDUiDCk8Q6Dq1z42GE/G7F
+         tQEw==
+X-Gm-Message-State: APjAAAXFHugLZIdwTOadztEIkURPAUERHDx87B8Cct2T/IMxLYXgphzC
+        DhzjCplm2sNq/6hciibEIUhcydb84RfWjYhzPDtbiQ==
+X-Google-Smtp-Source: APXvYqzQ8I7Ep8k3tduFMMa8uUTlPd+Xy5TxZlq8ti8zHd5KPR80iTc/2sx/Oh/nNRZf59jUJo5lhvjPC3uSaxWvRL4=
+X-Received: by 2002:a67:fe4e:: with SMTP id m14mr14252340vsr.34.1566913815413;
+ Tue, 27 Aug 2019 06:50:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+References: <20190826021620.11915-1-andrew@aj.id.au>
+In-Reply-To: <20190826021620.11915-1-andrew@aj.id.au>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 27 Aug 2019 15:49:39 +0200
+Message-ID: <CAPDyKFroS-Z+4QYitmYrCugPV_f4u1MDJiRkDxGWvVjsU=9RgA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: mmc: aspeed: Update example ranges property
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On Mon, 26 Aug 2019 at 04:15, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> The example node in the binding uses the AST2500 compatible string for
+> the SD controller with a 64kiB ranges property, but the SD controller is
+> allocated 128kiB of MMIO space according to the AST2500 datasheet. Fix
+> the example to correctly reflect the hardware in the AST2500, however it
+> should be noted that the MMIO region is reduced to 64kiB in the AST2600
+> where a second SD controller block has been introduced into the address
+> space.
+>
+> Also add the IBM copyright header that I left out of the initial patch.
+>
+> Suggested-by: Joel Stanley <joel@jms.id.au>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/phy/mdio-mux-meson-g12a.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Applied for next, thanks!
 
-diff --git a/drivers/net/phy/mdio-mux-meson-g12a.c b/drivers/net/phy/mdio-mux-meson-g12a.c
-index 6644762..7a9ad54 100644
---- a/drivers/net/phy/mdio-mux-meson-g12a.c
-+++ b/drivers/net/phy/mdio-mux-meson-g12a.c
-@@ -302,7 +302,6 @@ static int g12a_mdio_mux_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct g12a_mdio_mux *priv;
--	struct resource *res;
- 	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-@@ -311,8 +310,7 @@ static int g12a_mdio_mux_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, priv);
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->regs = devm_ioremap_resource(dev, res);
-+	priv->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->regs))
- 		return PTR_ERR(priv->regs);
- 
--- 
-2.7.4
+FYI, I took the liberty to amend all aspeed patches, by putting
+"sdhci-of-aspeed" as the prefix of the commit message header.
+
+Kind regards
+Uffe
 
 
+> ---
+> Hi Ulf, this is the follow-up fix as discussed here:
+>
+> http://patchwork.ozlabs.org/patch/1143090/
+>
+>  Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> index 570f8c72662b..200de9396036 100644
+> --- a/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0-or-later
+> +# Copyright 2019 IBM Corp.
+>  %YAML 1.2
+>  ---
+>  $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+> @@ -84,7 +85,7 @@ examples:
+>              reg = <0x1e740000 0x100>;
+>              #address-cells = <1>;
+>              #size-cells = <1>;
+> -            ranges = <0 0x1e740000 0x10000>;
+> +            ranges = <0 0x1e740000 0x20000>;
+>              clocks = <&syscon ASPEED_CLK_GATE_SDCLK>;
+>
+>              sdhci0: sdhci@100 {
+> --
+> 2.20.1
+>
