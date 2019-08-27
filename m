@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58140C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FD7C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5CB206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B559120828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892640;
-	bh=mKN8NkU+RhB2RiHZtLiYR0I3+S/6LCmoDMZtQW2ExWk=;
+	s=default; t=1566892644;
+	bh=LTa3tZMT1QUFsCBlez5QP3OhTvVIfcoJeWsBe+YjZis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gewtSur6nx0wzNHVSAVby2prwFEzSdMJLjjpr4BUhi3w+zHtlMnu5IYFOLxmTWQlE
-	 wSoLNgpBHkBj2Z5l4hH28BG1Dp4ekBcsmNjLVEho/O0o06FsBtL0RKXUCWHaHQqObo
-	 hvShkCWnqWPNf3kngZ8FB7riAzqK2EDaO503q3MI=
+	b=i0Lb8jlsm97uQlZUHbn4gm9m2W2BVrtg8xyjS3GRT6Q3X9TRwWUsyFRenPfR+vMli
+	 Nb3n9bqy01y9DNa/ygqjPHjKebOqdn4vW+rrIYJTqu5ZOSwYkrN+ekzoAfe5acLBpA
+	 xx7jpcYFeDHv8v/CNs0xfJtLl4aWahGiRLk/THfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730780AbfH0H5T (ORCPT
+        id S1730796AbfH0H5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:57:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49432 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:57:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729763AbfH0H5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:57:13 -0400
+        id S1729971AbfH0H5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:57:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CCCF20828;
-        Tue, 27 Aug 2019 07:57:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FFBC206BF;
+        Tue, 27 Aug 2019 07:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892632;
-        bh=mKN8NkU+RhB2RiHZtLiYR0I3+S/6LCmoDMZtQW2ExWk=;
+        s=default; t=1566892638;
+        bh=LTa3tZMT1QUFsCBlez5QP3OhTvVIfcoJeWsBe+YjZis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZAW/1pNEm2kAe9TNNP8CQs/ECFXj/ndQ2W1J3E7wouVqUlVWTfPn/rUcSNhLhF3DZ
-         DvBlcB15Ur3iEwdM7OZ7tf1mvjCZ6y7Ht524mu8/2FDFLbErMf6z1h9vuqKs8XOLju
-         W6hUx/CkXhomEX2h5ipQsPrX6mPGGg7q7KwgjkSM=
+        b=o0jPqbr2/0ieBloThJS0MqVuGlBUJXPx9glP9m/mqq9YqgZbmiHuU0S9Zx+5NnWFb
+         yipwoPr8V78rxfxV/BkaOY0WAeGlbWIcKrZOXKRzTTnwcyAz4GEDmB2EDpgv2NwSAQ
+         a0vPQew4yRDxgWTO3l4PE/y7bgC6GMsg7bzmwEfA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.19 61/98] Revert "dm bufio: fix deadlock with loop device"
-Date:   Tue, 27 Aug 2019 09:50:40 +0200
-Message-Id: <20190827072721.522960868@linuxfoundation.org>
+        stable@vger.kernel.org, Erqi Chen <chenerqi@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 4.19 63/98] ceph: clear page dirty before invalidate page
+Date:   Tue, 27 Aug 2019 09:50:42 +0200
+Message-Id: <20190827072721.603745088@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -59,61 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Erqi Chen <chenerqi@gmail.com>
 
-commit cf3591ef832915892f2499b7e54b51d4c578b28c upstream.
+commit c95f1c5f436badb9bb87e9b30fd573f6b3d59423 upstream.
 
-Revert the commit bd293d071ffe65e645b4d8104f9d8fe15ea13862. The proper
-fix has been made available with commit d0a255e795ab ("loop: set
-PF_MEMALLOC_NOIO for the worker thread").
+clear_page_dirty_for_io(page) before mapping->a_ops->invalidatepage().
+invalidatepage() clears page's private flag, if dirty flag is not
+cleared, the page may cause BUG_ON failure in ceph_set_page_dirty().
 
-Note that the fix offered by commit bd293d071ffe doesn't really prevent
-the deadlock from occuring - if we look at the stacktrace reported by
-Junxiao Bi, we see that it hangs in bit_wait_io and not on the mutex -
-i.e. it has already successfully taken the mutex. Changing the mutex
-from mutex_lock to mutex_trylock won't help with deadlocks that happen
-afterwards.
-
-PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
-   #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
-   #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
-   #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
-   #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
-   #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
-   #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
-   #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
-   #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
-   #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
-   #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
-  #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
-  #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
-  #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
-  #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
-  #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 Cc: stable@vger.kernel.org
-Fixes: bd293d071ffe ("dm bufio: fix deadlock with loop device")
-Depends-on: d0a255e795ab ("loop: set PF_MEMALLOC_NOIO for the worker thread")
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Link: https://tracker.ceph.com/issues/40862
+Signed-off-by: Erqi Chen <chenerqi@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-bufio.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/ceph/addr.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm-bufio.c
-+++ b/drivers/md/dm-bufio.c
-@@ -1602,7 +1602,9 @@ dm_bufio_shrink_scan(struct shrinker *sh
- 	unsigned long freed;
- 
- 	c = container_of(shrink, struct dm_bufio_client, shrinker);
--	if (!dm_bufio_trylock(c))
-+	if (sc->gfp_mask & __GFP_FS)
-+		dm_bufio_lock(c);
-+	else if (!dm_bufio_trylock(c))
- 		return SHRINK_STOP;
- 
- 	freed  = __scan(c, sc->nr_to_scan, sc->gfp_mask);
+--- a/fs/ceph/addr.c
++++ b/fs/ceph/addr.c
+@@ -913,8 +913,9 @@ get_more_pages:
+ 			if (page_offset(page) >= ceph_wbc.i_size) {
+ 				dout("%p page eof %llu\n",
+ 				     page, ceph_wbc.i_size);
+-				if (ceph_wbc.size_stable ||
+-				    page_offset(page) >= i_size_read(inode))
++				if ((ceph_wbc.size_stable ||
++				    page_offset(page) >= i_size_read(inode)) &&
++				    clear_page_dirty_for_io(page))
+ 					mapping->a_ops->invalidatepage(page,
+ 								0, PAGE_SIZE);
+ 				unlock_page(page);
 
 
