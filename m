@@ -2,87 +2,111 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDC4C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA834C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA7A02064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9142B2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566944670;
-	bh=oixX6KuRujFMeX2OPQsYTU2rzNOfXO5xB8JaYvDRRqo=;
+	s=default; t=1566944781;
+	bh=WxsPqxwQqNgTqPk38Z9Y6qGp2PFrZZcHZX/om942SqM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h7J9C1Ix1A7+KkG6u/Ddw2VH3nOrBaklole8E7jwAeMD5EDhkMMOsEc9Ly69Uwn5l
-	 X1zbBC2ClX04VlRJgfGj8kG0DakFVVFmCWuhNBQPj6tiF9BU0wxN64UiCtAhU8HBBF
-	 Ah9tGONnVqovBG3tNZRg/lfgXupIao3qJoZL2iHQ=
+	b=IE/gTYoN3wctrqInuvb8bIrvzmIvvBAwPQWsM76qd17QRRnfM4TkuJKC3RnXIf+uo
+	 HoTLL0QYTU8WkwIEvcfJH08OyV1yo7pvSVIv4an5kXSBB10xtIvP9apM7hKXEoxnWt
+	 EITG9qmrl047k/I1QZDfUjhIUDrTo3SW3sudup0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfH0WY3 (ORCPT
+        id S1726342AbfH0W0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 18:24:29 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38120 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfH0WY3 (ORCPT
+        Tue, 27 Aug 2019 18:26:20 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35683 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbfH0W0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 18:24:29 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r20so778519ota.5;
-        Tue, 27 Aug 2019 15:24:28 -0700 (PDT)
+        Tue, 27 Aug 2019 18:26:20 -0400
+Received: by mail-oi1-f195.google.com with SMTP id a127so558674oii.2;
+        Tue, 27 Aug 2019 15:26:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mjdVVMQDkqNGF0eOBZhI/HxQmymiMnbH3eAi/1SeQc4=;
-        b=WSE2LCreLFoxO4tp1I7WE7b67w6kzvZUD3LROkETpJIqdTHsP9sZB+agvo4ACaRv7S
-         SBCQBEakvOo9UYxYA1Sr5u8h/EcsE8lT60t6V6TRz18XiJ5e/ITLZLyC5SXN5Ic4nkrY
-         oj0Zzj1LSpVfkHd1u6cIKRS0SngELA/wM6f39AbfkQp6eP3aaVJvRH32Gn/QudSxPoq+
-         HxGEW5HhvcTpZhrEyZ/B/vlu5+3yEf9YRvdKEszlH585DAm3pfr6vZ6y2Cv3f+EKG5YG
-         3gP2ZBuGfH8rAjfjlgRqkaOgqV0bNlHfN+F7pGPkuAu6nHjkfcpQ+ZjSku5m8i/OMZ2l
-         97AA==
-X-Gm-Message-State: APjAAAWpvd/FUYn79eBWrDgwgvu+8IpS/MPEZbzVNthLwBKFvpS08fbh
-        Wy3NaGSpVcMdMmhFdT9Blg==
-X-Google-Smtp-Source: APXvYqwk+lluzv6pKjU/kkkAdMVAJPZi8mAQRb45qY3E88UmalXi1rmX7cue6EBW5ApX5eQDaCXD7w==
-X-Received: by 2002:a9d:7092:: with SMTP id l18mr749674otj.217.1566944668217;
-        Tue, 27 Aug 2019 15:24:28 -0700 (PDT)
+        bh=RsXxLyUlV4lqdtFyyPSn3Dwod1DhrS1XN9CvxX7CGqs=;
+        b=C8mpG63dWOlEiKu6hilMe9sVJUxe1BkVD7yflVJCwiwOZ92OwZmC38t/375DSC3VyB
+         NVt86o1ybhn0H+x0rK4PhoJMxAbtEquzHcw9GbklF2CXCjBOLD5+NsMwhR+/enk65JZw
+         NBw+uUtfmNPDsKeGShXzBVMsQGd9zT+gzEqSlrJZsmKw3dAvHk7i+paaLNrcpNDCBVr2
+         7nVsui81+vtMOxxvWQmWbJQh+MZ9e04XqwhG1DdZ3YsZkSAMLRAP8hS2TFNN3HA0pJzi
+         LMyEoWXs+LymKfYnKsZo9pWeimzQnTckO4ziKansoPTDxgjw1nEDYJSa9bvsrwnU6Yla
+         bekg==
+X-Gm-Message-State: APjAAAUOlPlmK1o9+zfEtfushrDqWpa3+G+lhua7heuOh322KFRKfbVH
+        1hpsZsRtWta+H60vIePpNg==
+X-Google-Smtp-Source: APXvYqy3XTy77RRAsfzmCAwhDWWJujML7UeMVZxJl+o+X2Va2w3R8MESfCjhk2TLGcKIC236QGmbgA==
+X-Received: by 2002:aca:4b83:: with SMTP id y125mr712264oia.25.1566944779068;
+        Tue, 27 Aug 2019 15:26:19 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g93sm269906otb.39.2019.08.27.15.24.27
+        by smtp.gmail.com with ESMTPSA id k12sm170734oij.21.2019.08.27.15.26.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 15:24:27 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 17:24:27 -0500
+        Tue, 27 Aug 2019 15:26:18 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 17:26:18 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v2 05/20] dt-bindings: phy-mmp3-usb: Add bindings
-Message-ID: <20190827222427.GA16221@bogus>
-References: <20190822092643.593488-1-lkundrak@v3.sk>
- <20190822092643.593488-6-lkundrak@v3.sk>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     bhelgaas@google.com, mark.rutland@arm.com, shawnguo@kernel.org,
+        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.co,
+        arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, roy.zang@nxp.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, andrew.murray@arm.com
+Subject: Re: [PATCH v2 04/10] dt-bindings: pci: layerscape-pci: add
+ compatible strings for ls1088a and ls2088a
+Message-ID: <20190827222617.GA16361@bogus>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-4-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190822092643.593488-6-lkundrak@v3.sk>
+In-Reply-To: <20190822112242.16309-4-xiaowei.bao@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 22 Aug 2019 11:26:28 +0200, Lubomir Rintel wrote:
-> This is the PHY chip for USB OTG on MMP3 platform.
+On Thu, Aug 22, 2019 at 07:22:36PM +0800, Xiaowei Bao wrote:
+> Add compatible strings for ls1088a and ls2088a.
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 > ---
-> Changes since v1:
-> - s/usbphy@/usb-phy@/
-> - Dropped a reference to Documentation/phy.txt
+> v2:
+>  - No change.
 > 
->  .../devicetree/bindings/phy/phy-mmp3-usb.txt        | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-mmp3-usb.txt
+>  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> index e20ceaa..16f592e 100644
+> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> @@ -22,7 +22,10 @@ Required properties:
+>          "fsl,ls1043a-pcie"
+>          "fsl,ls1012a-pcie"
+>    EP mode:
+> -	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
+> +	"fsl,ls-pcie-ep"
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Wasn't this a fallback? Each line should be one valid combination of 
+compatible strings.
+
+> +	"fsl,ls1046a-pcie-ep"
+> +	"fsl,ls1088a-pcie-ep"
+> +	"fsl,ls2088a-pcie-ep"
+>  - reg: base addresses and lengths of the PCIe controller register blocks.
+>  - interrupts: A list of interrupt outputs of the controller. Must contain an
+>    entry for each entry in the interrupt-names property.
+> -- 
+> 2.9.5
+> 
