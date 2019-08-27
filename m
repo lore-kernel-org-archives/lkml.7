@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E46D5C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3368FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F662339E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F202622CF8
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:36:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uDCe1MHZ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VXRycNKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfH0Hf0 (ORCPT
+        id S1728620AbfH0Hgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:35:26 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35474 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfH0Hf0 (ORCPT
+        Tue, 27 Aug 2019 03:36:46 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47772 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbfH0Hgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:35:26 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7R7ZAHa007452;
-        Tue, 27 Aug 2019 02:35:10 -0500
+        Tue, 27 Aug 2019 03:36:45 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7R7aZOB115578;
+        Tue, 27 Aug 2019 02:36:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566891311;
-        bh=hNVhNHj8qHC8UmvonFDQOIu7WE6IQ22VBVLwAPXCF0c=;
+        s=ti-com-17Q1; t=1566891395;
+        bh=rabRdcGKKXk+rI54LrxDrK1WyVh94dphJ3IbIT41bu4=;
         h=Subject:To:References:From:Date:In-Reply-To;
-        b=uDCe1MHZXlQy8p82J0dM21jwBV8H6bNt9n8hCJ8OSxCPONCHvogCn5RPtBNKMf5Th
-         2KAQGd32S8nCg9fwCTQm1kQFOZ7+OREaa6IHY7JZY02+PBJ/aGfl+kH6xBtAUBVEhB
-         ZnnCF0pY6VXliuD3jD0Pe0++rjO3qnS0aEsHsoC0=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7R7ZAeH098299
+        b=VXRycNKGQXkAgoosfTFixNw3RyXk2jqekFV7a9mr9NA9HaB284o4u5x/DlwopOBgB
+         rXMc/oOm5F8+KKQqhUeGttDSaQrfw7S+vL0hIyRPxNu1xMCUIeYug2Jf1tPUzoBHVm
+         XxYrw7pqHTRy+GpHmJ0MFCOH7+jAnqRjE4xNKUik=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7R7aY0v128167
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 27 Aug 2019 02:35:10 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 27
- Aug 2019 02:35:10 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
+        Tue, 27 Aug 2019 02:36:35 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE105.ent.ti.com
  (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 27
+ Aug 2019 02:36:34 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 27 Aug 2019 02:35:10 -0500
+ Frontend Transport; Tue, 27 Aug 2019 02:36:34 -0500
 Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7R7Z6Nw071178;
-        Tue, 27 Aug 2019 02:35:07 -0500
-Subject: Re: [RESEND PATCH v3 17/20] mtd: spi-nor: Bring flash params init
- together
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7R7aVST072874;
+        Tue, 27 Aug 2019 02:36:32 -0500
+Subject: Re: [RESEND PATCH v3 18/20] mtd: spi_nor: Introduce
+ spi_nor_set_addr_width()
 To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>,
         <marek.vasut@gmail.com>, <miquel.raynal@bootlin.com>,
         <richard@nod.at>, <linux-mtd@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
 References: <20190826120821.16351-1-tudor.ambarus@microchip.com>
- <20190826120821.16351-18-tudor.ambarus@microchip.com>
+ <20190826120821.16351-19-tudor.ambarus@microchip.com>
 From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <ac7d3f7d-b396-f011-a045-98f85819c968@ti.com>
-Date:   Tue, 27 Aug 2019 13:05:44 +0530
+Message-ID: <61c0950b-6c1b-00da-bc8c-4d26d630d57b@ti.com>
+Date:   Tue, 27 Aug 2019 13:07:09 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190826120821.16351-18-tudor.ambarus@microchip.com>
+In-Reply-To: <20190826120821.16351-19-tudor.ambarus@microchip.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -77,8 +77,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On 26/08/19 5:39 PM, Tudor.Ambarus@microchip.com wrote:
 > From: Tudor Ambarus <tudor.ambarus@microchip.com>
 > 
-> Bring all flash parameters default initialization in
-> spi_nor_legacy_params_init().
+> Parsing of flash parameters were interleaved with setting of the
+> nor addr width. Dedicate a function for setting nor addr width.
 > 
 > Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 > Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
@@ -89,78 +89,82 @@ Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
 Regards
 Vignesh
 
-
-> v3: collect R-b
+> v3: no changes
 > 
->  drivers/mtd/spi-nor/spi-nor.c | 29 +++++++++++------------------
->  1 file changed, 11 insertions(+), 18 deletions(-)
+>  drivers/mtd/spi-nor/spi-nor.c | 50 ++++++++++++++++++++++++++-----------------
+>  1 file changed, 30 insertions(+), 20 deletions(-)
 > 
 > diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index 2699e999d21a..dcda96a20f6c 100644
+> index dcda96a20f6c..d13317d1f372 100644
 > --- a/drivers/mtd/spi-nor/spi-nor.c
 > +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -4453,6 +4453,7 @@ static void spi_nor_info_init_params(struct spi_nor *nor)
->  	struct spi_nor_flash_parameter *params = &nor->params;
->  	struct spi_nor_erase_map *map = &params->erase_map;
->  	const struct flash_info *info = nor->info;
-> +	struct device_node *np = spi_nor_get_flash_node(nor);
->  	u8 i, erase_mask;
+> @@ -4739,6 +4739,33 @@ static const struct flash_info *spi_nor_match_id(const char *name)
+>  	return NULL;
+>  }
 >  
->  	/* Initialize legacy flash parameters and settings. */
-> @@ -4464,18 +4465,25 @@ static void spi_nor_info_init_params(struct spi_nor *nor)
->  	params->size = (u64)info->sector_size * info->n_sectors;
->  	params->page_size = info->page_size;
->  
-> +	if (!(info->flags & SPI_NOR_NO_FR)) {
-> +		/* Default to Fast Read for DT and non-DT platform devices. */
-> +		params->hwcaps.mask |= SNOR_HWCAPS_READ_FAST;
-> +
-> +		/* Mask out Fast Read if not requested at DT instantiation. */
-> +		if (np && !of_property_read_bool(np, "m25p,fast-read"))
-> +			params->hwcaps.mask &= ~SNOR_HWCAPS_READ_FAST;
+> +static int spi_nor_set_addr_width(struct spi_nor *nor)
+> +{
+> +	if (nor->addr_width) {
+> +		/* already configured from SFDP */
+> +	} else if (nor->info->addr_width) {
+> +		nor->addr_width = nor->info->addr_width;
+> +	} else if (nor->mtd.size > 0x1000000) {
+> +		/* enable 4-byte addressing if the device exceeds 16MiB */
+> +		nor->addr_width = 4;
+> +	} else {
+> +		nor->addr_width = 3;
 > +	}
 > +
->  	/* (Fast) Read settings. */
->  	params->hwcaps.mask |= SNOR_HWCAPS_READ;
->  	spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ],
->  				  0, 0, SPINOR_OP_READ,
->  				  SNOR_PROTO_1_1_1);
+> +	if (nor->addr_width > SPI_NOR_MAX_ADDR_WIDTH) {
+> +		dev_err(nor->dev, "address width is too large: %u\n",
+> +			nor->addr_width);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Set 4byte opcodes when possible. */
+> +	if (nor->addr_width == 4 && nor->flags & SNOR_F_4B_OPCODES &&
+> +	    !(nor->flags & SNOR_F_HAS_4BAIT))
+> +		spi_nor_set_4byte_opcodes(nor);
+> +
+> +	return 0;
+> +}
+> +
+>  int spi_nor_scan(struct spi_nor *nor, const char *name,
+>  		 const struct spi_nor_hwcaps *hwcaps)
+>  {
+> @@ -4885,29 +4912,12 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
+>  	if (ret)
+>  		return ret;
 >  
-> -	if (!(info->flags & SPI_NOR_NO_FR)) {
-> -		params->hwcaps.mask |= SNOR_HWCAPS_READ_FAST;
-> +	if (params->hwcaps.mask & SNOR_HWCAPS_READ_FAST)
->  		spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_FAST],
->  					  0, 8, SPINOR_OP_READ_FAST,
->  					  SNOR_PROTO_1_1_1);
-> -	}
->  
->  	if (info->flags & SPI_NOR_DUAL_READ) {
->  		params->hwcaps.mask |= SNOR_HWCAPS_READ_1_1_2;
-> @@ -4864,24 +4872,9 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
->  	nor->page_size = params->page_size;
->  	mtd->writebufsize = nor->page_size;
->  
-> -	if (np) {
-> -		/* If we were instantiated by DT, use it */
-> -		if (of_property_read_bool(np, "m25p,fast-read"))
-> -			params->hwcaps.mask |= SNOR_HWCAPS_READ_FAST;
-> -		else
-> -			params->hwcaps.mask &= ~SNOR_HWCAPS_READ_FAST;
+> -	if (nor->addr_width) {
+> -		/* already configured from SFDP */
+> -	} else if (info->addr_width) {
+> -		nor->addr_width = info->addr_width;
+> -	} else if (mtd->size > 0x1000000) {
+> -		/* enable 4-byte addressing if the device exceeds 16MiB */
+> -		nor->addr_width = 4;
 > -	} else {
-> -		/* If we weren't instantiated by DT, default to fast-read */
-> -		params->hwcaps.mask |= SNOR_HWCAPS_READ_FAST;
+> -		nor->addr_width = 3;
 > -	}
 > -
->  	if (of_property_read_bool(np, "broken-flash-reset"))
->  		nor->flags |= SNOR_F_BROKEN_RESET;
+>  	if (info->flags & SPI_NOR_4B_OPCODES)
+>  		nor->flags |= SNOR_F_4B_OPCODES;
 >  
-> -	/* Some devices cannot do fast-read, no matter what DT tells us */
-> -	if (info->flags & SPI_NOR_NO_FR)
-> -		params->hwcaps.mask &= ~SNOR_HWCAPS_READ_FAST;
+> -	if (nor->addr_width == 4 && nor->flags & SNOR_F_4B_OPCODES &&
+> -	    !(nor->flags & SNOR_F_HAS_4BAIT))
+> -		spi_nor_set_4byte_opcodes(nor);
 > -
->  	/*
->  	 * Configure the SPI memory:
->  	 * - select op codes for (Fast) Read, Page Program and Sector Erase.
+> -	if (nor->addr_width > SPI_NOR_MAX_ADDR_WIDTH) {
+> -		dev_err(dev, "address width is too large: %u\n",
+> -			nor->addr_width);
+> -		return -EINVAL;
+> -	}
+> +	ret = spi_nor_set_addr_width(nor);
+> +	if (ret)
+> +		return ret;
+>  
+>  	/* Send all the required SPI flash commands to initialize device */
+>  	ret = spi_nor_init(nor);
 > 
 
 -- 
