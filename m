@@ -2,167 +2,183 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A115DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300B7C3A59F
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D052173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0296620850
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:13:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PKzN5Duf"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="H9Kk7EsS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfH0AMl (ORCPT
+        id S1727555AbfH0AN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 20:12:41 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:32961 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbfH0AMl (ORCPT
+        Mon, 26 Aug 2019 20:13:26 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41181 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfH0ANZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 20:12:41 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p77so1125250wme.0;
-        Mon, 26 Aug 2019 17:12:40 -0700 (PDT)
+        Mon, 26 Aug 2019 20:13:25 -0400
+Received: by mail-pg1-f195.google.com with SMTP id x15so11574403pgg.8
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 17:13:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bB0HYsROX648Uz+NeihK0Ak7qHb0HK/01IOFw0GVKwo=;
-        b=PKzN5DufXA7Ct1IDcxOhX7tqJGNftDV5c19iyHf0keiVZOByinTOISi8MWXzsc0/Au
-         cotRan7k06FtNeSUszMvYxdqhOtLCX+AH2qUlNQb5VUnhvvvDaN2dwc4dfplPaJ5rJxv
-         qNG/uvcCP1zn0QtTlKdBxos6XkGqWN9Ehupn5BNL/YIX8KaQ+nJp3S9jqHNd4h+ylFFt
-         jhDKLm80SiZ4jCkxavL6Z+gnZ1vJuuPKaoUw3kq1OayjUoNFXeUjq8OrQHARqzgXHldv
-         X8aWaNXhp+00OyFGHEXUpdvBj05j6ca0c3O18zH6FiSDp64nbpg1X3WqH6P78nF/02c4
-         jiLQ==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Iw6JNWRP3igEjjbsY2DrjeSufzb3AiZwDl6GtE2wNmQ=;
+        b=H9Kk7EsSWtOGwDBBXZTaiLDAh5a1CmQ5esXABzmC/dKl4QkDAHnLeMUeqiCnWxa1gP
+         6B3Etsb8xeqdUYbeTB7DjXOuVflwu03YeST4etZacSsHDo0XzcX5F5cZ8v4LMjVAsMyh
+         yWsZ1SqONunlv2fYuisr0dDHh2luMguN3vfvwun6XlvEWS6XKjzAR8YIY/eqdbEdKAzX
+         o8bBrWJbnScDvU/btyFAiwrxjQZs91OpmUD4fP5cKTGM1SPVth8BuZUhCrAHQKcZOnSC
+         Cm/TTNqRq1j9Iyk0UY+5dl2/QIG4arHrAKczc5/DteCLRIeccmm+6pywJNCEYYZOoSfT
+         zwJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bB0HYsROX648Uz+NeihK0Ak7qHb0HK/01IOFw0GVKwo=;
-        b=oEf7URLuMHEnd7O90G6rRleiLFEhKWP6hqXHav8INpNToGkqKuYWRhWumbZc1Dnpbb
-         wv8n7S5AWnB8EW0l6GKoFP35UalaE65Vj5u5afUjeCaGQszFUFIHMj2FnYt6MuqxDaKF
-         3F88m/wyocHJsVLNnplYUk4cnXV6zjko9dbPoodZ/4tyOAyQX30Oqgr9SlcDG+OSNfD8
-         hBO1hufqnHWco2/oAhqbcs1aF+Xz/jZVvUZTjLfkZoIq5zvlsR0us9MSMJT0zXbSsuMc
-         aQIP19CewA1MvgQutAXc9JwvKKAb5tiLIYUyfVklDOLUqd7YsvnuPEbfNp4hjmYI8ZwJ
-         OsAg==
-X-Gm-Message-State: APjAAAXXHbFvWBXpPPMstpL0g3XC/xV9wVHiLFotjdKM2U2wOVdgputk
-        +H4fEGZnnQ0SzlQ5bbyo8kU=
-X-Google-Smtp-Source: APXvYqyeY/xd32/iOyMHcAPpAemahrY1NRnemcT8nKVRjwvjJ4BTl2OgNqWlmhqh/tMRPElrW3KXjQ==
-X-Received: by 2002:a1c:f106:: with SMTP id p6mr22529010wmh.148.1566864759283;
-        Mon, 26 Aug 2019 17:12:39 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id r17sm34516156wrg.93.2019.08.26.17.12.38
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Iw6JNWRP3igEjjbsY2DrjeSufzb3AiZwDl6GtE2wNmQ=;
+        b=sIBBZKLnuDEvdBPuXDGOJrbp0uYTWOz/b8A004/VRzlydT709XZlejL3Y0dWE5SgqA
+         X197nnAxS8tt2VSh45bHUwndOaqQXM+UdtLJyUivYPd9F94HweZMTp9VZTXawfaqwKq3
+         9cIUEuMnZVZN9wEyrrag6CknbrT7W59uBByToN1DYa/U327dBZtaivUqEF1HMU85jH85
+         LyLiJMMAT/a/5BPcB/eFRpETqQGVYKCM3EzAQ77FaHr87ZRMtjh4SXW+xOuHJLVZw1gH
+         GT36xp31fCf963+jwp1qJs4D82Ed/rQOKvx53yLhKz1n2ne4ZNqaxnbFSrGVgFDDOF+D
+         mk/Q==
+X-Gm-Message-State: APjAAAUtBs/1yEcEfNk6V5sbNuJVx7dT/63okHkvKi+go+rUdmJWzjO/
+        koWIUZlOOrlXRVz/M6pfpYJw1g==
+X-Google-Smtp-Source: APXvYqx6u1wwF4tgUg81853PTvaK/j5q0KHWzOBzXOEEHdr0Jg/DZ7R06Oea/jeHX1iyLYWkTf4fMw==
+X-Received: by 2002:a65:5a8c:: with SMTP id c12mr18420410pgt.73.1566864804459;
+        Mon, 26 Aug 2019 17:13:24 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id j11sm566443pjb.11.2019.08.26.17.13.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 17:12:38 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 17:12:37 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, stable@vger.kernel.org
-Subject: Re: [PATCH] powerpc: Avoid clang warnings around setjmp and longjmp
-Message-ID: <20190827001237.GA117465@archlinux-threadripper>
-References: <20190812023214.107817-1-natechancellor@gmail.com>
+        Mon, 26 Aug 2019 17:13:23 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 17:13:23 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Anup Patel <Anup.Patel@wdc.com>
+cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] RISC-V: Fix FIXMAP area corruption on RV32 systems
+In-Reply-To: <20190819051345.81097-1-anup.patel@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1908261704500.10109@viisi.sifive.com>
+References: <20190819051345.81097-1-anup.patel@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812023214.107817-1-natechancellor@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 07:32:15PM -0700, Nathan Chancellor wrote:
-> Commit aea447141c7e ("powerpc: Disable -Wbuiltin-requires-header when
-> setjmp is used") disabled -Wbuiltin-requires-header because of a warning
-> about the setjmp and longjmp declarations.
+Hello Anup,
+
+On Mon, 19 Aug 2019, Anup Patel wrote:
+
+> Currently, various virtual memory areas of Linux RISC-V are organized
+> in increasing order of their virtual addresses is as follows:
+> 1. User space area (This is lowest area and starts at 0x0)
+> 2. FIXMAP area
+> 3. VMALLOC area
+> 4. Kernel area (This is highest area and starts at PAGE_OFFSET)
 > 
-> r367387 in clang added another diagnostic around this, complaining that
-> there is no jmp_buf declaration.
+> The maximum size of user space aread is represented by TASK_SIZE.
 > 
-> In file included from ../arch/powerpc/xmon/xmon.c:47:
-> ../arch/powerpc/include/asm/setjmp.h:10:13: error: declaration of
-> built-in function 'setjmp' requires the declaration of the 'jmp_buf'
-> type, commonly provided in the header <setjmp.h>.
-> [-Werror,-Wincomplete-setjmp-declaration]
-> extern long setjmp(long *);
->             ^
-> ../arch/powerpc/include/asm/setjmp.h:11:13: error: declaration of
-> built-in function 'longjmp' requires the declaration of the 'jmp_buf'
-> type, commonly provided in the header <setjmp.h>.
-> [-Werror,-Wincomplete-setjmp-declaration]
-> extern void longjmp(long *, long);
->             ^
-> 2 errors generated.
+> On RV32 systems, TASK_SIZE is defined as VMALLOC_START which causes the
+> user space area to overlap the FIXMAP area. This allows user space apps
+> to potentially corrupt the FIXMAP area and kernel OF APIs will crash
+> whenever they access corrupted FDT in the FIXMAP area.
 > 
-> Take the same approach as the above commit by disabling the warning for
-> the same reason, we provide our own longjmp/setjmp function.
+> On RV64 systems, TASK_SIZE is set to fixed 256GB and no other areas
+> happen to overlap so we don't see any FIXMAP area corruptions.
 > 
-> Cc: stable@vger.kernel.org # 4.19+
-> Link: https://github.com/ClangBuiltLinux/linux/issues/625
-> Link: https://github.com/llvm/llvm-project/commit/3be25e79477db2d31ac46493d97eca8c20592b07
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> This patch fixes FIXMAP area corruption on RV32 systems by setting
+> TASK_SIZE to FIXADDR_START. 
+
+This part -- the TASK_SIZE change -- makes sense to me.  
+
+However, the patch also changes FIXADDR_SIZE to be defined in terms of 
+page table-related constants.  Previously, FIXADDR_SIZE was based on 
+__end_of_fixed_addresses, as it is for most other architectures. The part 
+of the patch that changes FIXADDR_SIZE seems unrelated to the actual fix.
+
+If that's indeed the case -- that the change to FIXADDR_SIZE is unrelated 
+from the fix -- could you please split that into a separate patch, with a 
+description of the rationale?  I think I understand why you're proposing 
+it, but it seems odd to explicitly connect it to page table-related 
+constants, rather than the contents of "enum fixed_addresses", and I'm 
+reluctant to merge that part of this patch without a bit more discussion.
+
+
+> We also move FIXADDR_TOP, FIXADDR_SIZE, and FIXADDR_START defines to 
+> asm/pgtable.h so that we can avoid cyclic header includes.
+> 
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> Tested-by: Alistair Francis <alistair.francis@wdc.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 > ---
+> Changes since v1:
+> - Drop braces from "#define FIXADDR_TOP"
+> ---
+>  arch/riscv/include/asm/fixmap.h  |  4 ----
+>  arch/riscv/include/asm/pgtable.h | 12 ++++++++++--
+>  2 files changed, 10 insertions(+), 6 deletions(-)
 > 
-> It may be worth using -fno-builtin-setjmp and -fno-builtin-longjmp
-> instead as it makes it clear to clang that we are not using the builtin
-> longjmp and setjmp functions, which I think is why these warnings are
-> appearing (at least according to the commit that introduced this waring).
+> diff --git a/arch/riscv/include/asm/fixmap.h b/arch/riscv/include/asm/fixmap.h
+> index 9c66033c3a54..161f28d04a07 100644
+> --- a/arch/riscv/include/asm/fixmap.h
+> +++ b/arch/riscv/include/asm/fixmap.h
+> @@ -30,10 +30,6 @@ enum fixed_addresses {
+>  	__end_of_fixed_addresses
+>  };
 > 
-> Sample patch:
-> https://github.com/ClangBuiltLinux/linux/issues/625#issuecomment-519251372
+> -#define FIXADDR_SIZE		(__end_of_fixed_addresses * PAGE_SIZE)
+> -#define FIXADDR_TOP		(VMALLOC_START)
+> -#define FIXADDR_START		(FIXADDR_TOP - FIXADDR_SIZE)
+> -
+>  #define FIXMAP_PAGE_IO		PAGE_KERNEL
 > 
-> However, this is the most conservative approach, as I have already had
-> someone notice this error when building LLVM with PGO on tip of tree
-> LLVM.
+>  #define __early_set_fixmap	__set_fixmap
+> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+> index a364aba23d55..c24a083b3e12 100644
+> --- a/arch/riscv/include/asm/pgtable.h
+> +++ b/arch/riscv/include/asm/pgtable.h
+> @@ -420,14 +420,22 @@ static inline void pgtable_cache_init(void)
+>  #define VMALLOC_END      (PAGE_OFFSET - 1)
+>  #define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
 > 
->  arch/powerpc/kernel/Makefile | 5 +++--
->  arch/powerpc/xmon/Makefile   | 5 +++--
->  2 files changed, 6 insertions(+), 4 deletions(-)
+> +#define FIXADDR_TOP      VMALLOC_START
+> +#ifdef CONFIG_64BIT
+> +#define FIXADDR_SIZE     PMD_SIZE
+> +#else
+> +#define FIXADDR_SIZE     PGDIR_SIZE
+> +#endif
+> +#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
+> +
+>  /*
+> - * Task size is 0x4000000000 for RV64 or 0xb800000 for RV32.
+> + * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
+>   * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
+>   */
+>  #ifdef CONFIG_64BIT
+>  #define TASK_SIZE (PGDIR_SIZE * PTRS_PER_PGD / 2)
+>  #else
+> -#define TASK_SIZE VMALLOC_START
+> +#define TASK_SIZE FIXADDR_START
+>  #endif
 > 
-> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-> index ea0c69236789..44e340ed4722 100644
-> --- a/arch/powerpc/kernel/Makefile
-> +++ b/arch/powerpc/kernel/Makefile
-> @@ -5,8 +5,9 @@
->  
->  CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
->  
-> -# Disable clang warning for using setjmp without setjmp.h header
-> -CFLAGS_crash.o		+= $(call cc-disable-warning, builtin-requires-header)
-> +# Avoid clang warnings about longjmp and setjmp built-ins (inclusion of setjmp.h and declaration of jmp_buf type)
-> +CFLAGS_crash.o		+= $(call cc-disable-warning, builtin-requires-header) \
-> +			   $(call cc-disable-warning, incomplete-setjmp-declaration)
->  
->  ifdef CONFIG_PPC64
->  CFLAGS_prom_init.o	+= $(NO_MINIMAL_TOC)
-> diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
-> index f142570ad860..53f341391210 100644
-> --- a/arch/powerpc/xmon/Makefile
-> +++ b/arch/powerpc/xmon/Makefile
-> @@ -1,8 +1,9 @@
->  # SPDX-License-Identifier: GPL-2.0
->  # Makefile for xmon
->  
-> -# Disable clang warning for using setjmp without setjmp.h header
-> -subdir-ccflags-y := $(call cc-disable-warning, builtin-requires-header)
-> +# Avoid clang warnings about longjmp and setjmp built-ins (inclusion of setjmp.h and declaration of jmp_buf type)
-> +subdir-ccflags-y := $(call cc-disable-warning, builtin-requires-header) \
-> +		    $(call cc-disable-warning, incomplete-setjmp-declaration)
->  
->  GCOV_PROFILE := n
->  KCOV_INSTRUMENT := n
-> -- 
-> 2.23.0.rc2
+>  #include <asm-generic/pgtable.h>
+> --
+> 2.17.1
 > 
 
-Did any of the maintainers have any comment on this patch?
 
-Cheers,
-Nathan
+- Paul
