@@ -2,63 +2,107 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7487C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE5CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D97206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E89206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:57:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbfH0M5H (ORCPT
+        id S1729859AbfH0M5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:57:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42044 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726584AbfH0M5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:57:07 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ED55910F23EB;
-        Tue, 27 Aug 2019 12:57:06 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 856E8104B4ED;
-        Tue, 27 Aug 2019 12:57:05 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190824.143533.1547411490171696760.davem@davemloft.net>
-References: <20190824.143533.1547411490171696760.davem@davemloft.net> <156647679816.11606.13713532963081370001.stgit@warthog.procyon.org.uk>
-To:     David Miller <davem@davemloft.net>
-Cc:     dhowells@redhat.com, netdev@vger.kernel.org,
-        marc.dionne@auristor.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] rxrpc: Fix lack of conn cleanup when local endpoint is cleaned up
+        Tue, 27 Aug 2019 08:57:48 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41296 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726278AbfH0M5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 08:57:48 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A1D90A53E12960B49B43;
+        Tue, 27 Aug 2019 20:57:44 +0800 (CST)
+Received: from localhost (10.47.86.181) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 27 Aug 2019
+ 20:57:35 +0800
+Date:   Tue, 27 Aug 2019 13:57:22 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Mao Wenan <maowenan@huawei.com>
+CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <wangzhou1@hisilicon.com>, <liguozhu@hisilicon.com>,
+        <john.garry@huawei.com>, <linux-crypto@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH -next] crypto: hisilicon: select CRYPTO_LIB_DES while
+ compiling SEC driver
+Message-ID: <20190827135722.00000e6a@huawei.com>
+In-Reply-To: <20190826115914.182700-1-maowenan@huawei.com>
+References: <20190826115914.182700-1-maowenan@huawei.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <23573.1566910624.1@warthog.procyon.org.uk>
-Date:   Tue, 27 Aug 2019 13:57:04 +0100
-Message-ID: <23574.1566910624@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Tue, 27 Aug 2019 12:57:07 +0000 (UTC)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.86.181]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Miller <davem@davemloft.net> wrote:
+On Mon, 26 Aug 2019 19:59:14 +0800
+Mao Wenan <maowenan@huawei.com> wrote:
 
-> Once you've removed the entries from the globally visible idle_client_comms
-> list, and put them on the local garbage list, they cannot be seen in any way
-> by external threads of control outside of this function.
+> When CRYPTO_DEV_HISI_SEC=y, below compilation error is found after 
+> 'commit 894b68d8be4b ("crypto: hisilicon/des - switch to new verification routines")':
+> 
+> drivers/crypto/hisilicon/sec/sec_algs.o: In function `sec_alg_skcipher_setkey_des_cbc':
+> sec_algs.c:(.text+0x11f0): undefined reference to `des_expand_key'
+> drivers/crypto/hisilicon/sec/sec_algs.o: In function `sec_alg_skcipher_setkey_des_ecb':
+> sec_algs.c:(.text+0x1390): undefined reference to `des_expand_key'
+> make: *** [vmlinux] Error 1
+> 
+> This because DES library has been moved to lib/crypto in this commit 
+> '04007b0e6cbb ("crypto: des - split off DES library from generic DES cipher driver")'.
+> Fix this by selecting CRYPTO_LIB_DES in CRYPTO_DEV_HISI_SEC.
+> 
+> Fixes: 915e4e8413da ("crypto: hisilicon - SEC security accelerator driver")
+> Fixes: 04007b0e6cbb ("crypto: des - split off DES library from generic DES cipher driver")
+> Fixes: 894b68d8be4b ("crypto: hisilicon/des - switch to new verification routines")
+> 
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
 
-Yeah, I think you're right.  I was thinking that it might race with
-rxrpc_discard_expired_client_conns() but that takes the locks too, so it
-shouldn't.
+Ah. It's that that third one that really introduced the dependency so possibly
+only that one should be listed with a fixes tag.  However the right fix
+at that point was to select CRYPTO_DES which then changed to CRYPTO_LIB_DES
+only after the second patch.
 
-David
+It's not a fix for the first patch so that should probably not be there.
+
+Otherwise, looks correct to me.
+
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+thanks,
+
+Jonathan
+
+
+
+> ---
+>  drivers/crypto/hisilicon/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/crypto/hisilicon/Kconfig b/drivers/crypto/hisilicon/Kconfig
+> index fa8aa06..ebaf91e 100644
+> --- a/drivers/crypto/hisilicon/Kconfig
+> +++ b/drivers/crypto/hisilicon/Kconfig
+> @@ -4,6 +4,7 @@ config CRYPTO_DEV_HISI_SEC
+>  	tristate "Support for Hisilicon SEC crypto block cipher accelerator"
+>  	select CRYPTO_BLKCIPHER
+>  	select CRYPTO_ALGAPI
+> +	select CRYPTO_LIB_DES
+>  	select SG_SPLIT
+>  	depends on ARM64 || COMPILE_TEST
+>  	depends on HAS_IOMEM
+
+
