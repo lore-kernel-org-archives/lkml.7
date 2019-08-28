@@ -2,92 +2,233 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB480C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA6AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D31D20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F339822CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbfH1TvD (ORCPT
+        id S1726851AbfH1TyT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 15:51:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58370 "EHLO mx1.redhat.com"
+        Wed, 28 Aug 2019 15:54:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33664 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbfH1TvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 15:51:03 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726725AbfH1TyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 15:54:19 -0400
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com [209.85.167.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 371FA8B5FF0;
-        Wed, 28 Aug 2019 19:51:03 +0000 (UTC)
-Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A06C25DC18;
-        Wed, 28 Aug 2019 19:51:02 +0000 (UTC)
-Date:   Wed, 28 Aug 2019 14:51:00 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-Subject: Re: next-20190826 - objtool fails to build.
-Message-ID: <20190828195100.tbkvphzhjtflrp66@treble>
-References: <133250.1566965715@turing-police>
- <20190828151003.3px5plk4tp2s5s5c@treble>
- <23345.1567020600@turing-police>
+        by mx1.redhat.com (Postfix) with ESMTPS id C60845AFDE
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 19:54:18 +0000 (UTC)
+Received: by mail-lf1-f70.google.com with SMTP id b30so116051lfq.6
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 12:54:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=y8b+VQlMQkntqtzRJkYxCkt06xbQtLJ+059ETXIVBcY=;
+        b=I64CcZHBgszeZAoHgdCGQ2Vv86VT8otGHmC5r4Hl4HeR3d0gwTR2JkptTERimJfbLB
+         JADjy4UfvxXAxDKI5r2HKM679onQEL3QOifQUF4VCQpxRhYE8qnj6Ipyx+6PzBl9HOlz
+         B/omHgmhyOb4Ji7+2D6Ue9XmHnZPafEbQhFKgRnYJraf3DTMHfAlNaMzdIi4bWXU9PSB
+         rcGQXrOIXeTYUnyhYVhtAwsquDPn6x6Zo772PF4DtGHma3UXtPY0BbpFhtNhTiZlsq6X
+         o4CQybByVqlyYJqTDU2bFyXkjJs0dRdIWtwTlldeXx6uid+yJxuANUmEoWkypx9XmK52
+         4tzA==
+X-Gm-Message-State: APjAAAWrTNOp0sWlHQurowj6h0UHbkNlfJ2esuPl/kBthuHiAF8ENZnP
+        h8R+Pl3yMtwj/ok/dCa48fufU9wrOZnpDh/bWtjpDHtAY1TYLl+s0HnFLx2Wm1g66t/E3zwmpCp
+        WWMs3xcfU32mwcuvFSaVO3yTLNjyzRP2em9NkdSHW
+X-Received: by 2002:a19:f019:: with SMTP id p25mr2331030lfc.9.1567022056772;
+        Wed, 28 Aug 2019 12:54:16 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyK3ic1OLaVZh6w6r7sNWEw00SCGMigLXTbl6Ig4OQ18KJAPtcKKQ+iM9aDamQ1WHItNelFJFkeuL9Ga2H31LU=
+X-Received: by 2002:a19:f019:: with SMTP id p25mr2331013lfc.9.1567022056438;
+ Wed, 28 Aug 2019 12:54:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <23345.1567020600@turing-police>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Wed, 28 Aug 2019 19:51:03 +0000 (UTC)
+References: <c42060b0-12ae-d170-9ad4-03d85919948c@molgen.mpg.de> <b208dccd-63d9-e902-28e1-3a6cb44f082f@molgen.mpg.de>
+In-Reply-To: <b208dccd-63d9-e902-28e1-3a6cb44f082f@molgen.mpg.de>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Thu, 29 Aug 2019 01:24:05 +0530
+Message-ID: <CACi5LpNOyLd9598Ks05t14+Mrc0YNRmmbTML5CmLAODOJQkzFA@mail.gmail.com>
+Subject: Re: /proc/vmcore and wrong PAGE_OFFSET
+To:     Donald Buczek <buczek@molgen.mpg.de>
+Cc:     iommu <iommu@lists.linux-foundation.org>,
+        linux-pci@vger.kernel.org, x86@kernel.org,
+        kexec mailing list <kexec@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Simon Horman <horms@verge.net.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 03:30:00PM -0400, Valdis Klētnieks wrote:
-> On Wed, 28 Aug 2019 10:10:04 -0500, Josh Poimboeuf said:
-> 
-> > But I don't see how those warnings could get enabled: -Wsign-compare
-> > -Wunused-parameter.
+Hi Donald,
+
+On Wed, Aug 28, 2019 at 8:38 PM Donald Buczek <buczek@molgen.mpg.de> wrote:
+>
+> On 8/20/19 11:21 PM, Donald Buczek wrote:
+> > Dear Linux folks,
 > >
-> > Can you "make clean" and do "make V=1 tools/objtool" to show the actual
-> > flags?
-> 
-> And that tells me those warnings in fact don't get specifically enabled.
-> (I've added some line breaks for sanity)
-> 
->   gcc -Wp,-MD,/usr/src/linux-next/tools/objtool/.special.o.d -Wp,-MT,/usr/src/linux-next/tools/objtool/special.o -O2 -D_FORTIFY_SOURCE=2 -Wall -Wextra -Wbad-function-cast
-> 
-> Found the cause of the mystery - I changed something in a bash profile, and
-> as a result...
-> 
-> export CFLAGS="-O2 -D_FORTIFY_SOURCE=2 -Wall -Wextra"
-> 
-> And -Wextra pulls in the things that cause problems. So this is mostly
-> self-inflicted.
-> 
-> The real question then becomes - should the Makefile sanitize CFLAGS or just
-> append to whatever the user supplied as it does currently? The rest of the tree
-> sanitizes CFLAG, because I don't get deluged in -Wsign-compare warnings all
-> over the place...
+> > I'm investigating a problem, that the crash utility fails to work with our crash dumps:
+> >
+> >      buczek@kreios:/mnt$ crash vmlinux crash.vmcore
+> >      crash 7.2.6
+> >      Copyright (C) 2002-2019  Red Hat, Inc.
+> >      Copyright (C) 2004, 2005, 2006, 2010  IBM Corporation
+> >      Copyright (C) 1999-2006  Hewlett-Packard Co
+> >      Copyright (C) 2005, 2006, 2011, 2012  Fujitsu Limited
+> >      Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
+> >      Copyright (C) 2005, 2011  NEC Corporation
+> >      Copyright (C) 1999, 2002, 2007  Silicon Graphics, Inc.
+> >      Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
+> >      This program is free software, covered by the GNU General Public License,
+> >      and you are welcome to change it and/or distribute copies of it under
+> >      certain conditions.  Enter "help copying" to see the conditions.
+> >      This program has absolutely no warranty.  Enter "help warranty" for details.
+> >      GNU gdb (GDB) 7.6
+> >      Copyright (C) 2013 Free Software Foundation, Inc.
+> >      License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+> >      This is free software: you are free to change and redistribute it.
+> >      There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+> >      and "show warranty" for details.
+> >      This GDB was configured as "x86_64-unknown-linux-gnu"...
+> >      crash: read error: kernel virtual address: ffff89807ff77000  type: "memory section root table"
+> >
+> > The crash file is a copy of /dev/vmcore taken by a crashkernel after a sysctl-forced panic.
+> >
+> > It looks to me, that  0xffff89807ff77000 is not readable, because the virtual addresses stored in the elf header of the dump file are off by 0x0000008000000000:
+> >
+> >      buczek@kreios:/mnt$ readelf -a crash.vmcore | grep LOAD | perl -lane 'printf "%s (%016x)\n",$_,hex($F[2])-hex($F[3])'
+> >        LOAD           0x000000000000d000 0xffffffff81000000 0x000001007d000000 (fffffeff04000000)
+> >        LOAD           0x0000000001c33000 0xffff880000001000 0x0000000000001000 (ffff880000000000)
+> >        LOAD           0x0000000001cc1000 0xffff880000090000 0x0000000000090000 (ffff880000000000)
+> >        LOAD           0x0000000001cd1000 0xffff880000100000 0x0000000000100000 (ffff880000000000)
+> >        LOAD           0x0000000001cd2070 0xffff880000100070 0x0000000000100070 (ffff880000000000)
+> >        LOAD           0x0000000019bd2000 0xffff880038000000 0x0000000038000000 (ffff880000000000)
+> >        LOAD           0x000000004e6a1000 0xffff88006ffff000 0x000000006ffff000 (ffff880000000000)
+> >        LOAD           0x000000004e6a2000 0xffff880100000000 0x0000000100000000 (ffff880000000000)
+> >        LOAD           0x0000001fcda22000 0xffff882080000000 0x0000002080000000 (ffff880000000000)
+> >        LOAD           0x0000003fcd9a2000 0xffff884080000000 0x0000004080000000 (ffff880000000000)
+> >        LOAD           0x0000005fcd922000 0xffff886080000000 0x0000006080000000 (ffff880000000000)
+> >        LOAD           0x0000007fcd8a2000 0xffff888080000000 0x0000008080000000 (ffff880000000000)
+> >        LOAD           0x0000009fcd822000 0xffff88a080000000 0x000000a080000000 (ffff880000000000)
+> >        LOAD           0x000000bfcd7a2000 0xffff88c080000000 0x000000c080000000 (ffff880000000000)
+> >        LOAD           0x000000dfcd722000 0xffff88e080000000 0x000000e080000000 (ffff880000000000)
+> >        LOAD           0x000000fc4d722000 0xffff88fe00000000 0x000000fe00000000 (ffff880000000000)
+> >
+> > (Columns are File offset, Virtual Address, Physical Address and computed offset).
+> >
+> > I would expect the offset between the virtual and the physical address to be PAGE_OFFSET, which is 0xffff88800000000 on x86_64, not 0xffff880000000000. Unlike /proc/vmcore, /proc/kcore shows the same physical memory (of the last memory section above) with a correct offset:
+> >
+> >      buczek@kreios:/mnt$ sudo readelf -a /proc/kcore | grep 0x000000fe00000000 | perl -lane 'printf "%s (%016x)\n",$_,hex($F[2])-hex($F[3])'
+> >        LOAD           0x0000097e00004000 0xffff897e00000000 0x000000fe00000000 (ffff888000000000)
+> >
+> > The failing address 0xffff89807ff77000 happens to be at the end of the last memory section. It is the mem_section array, which crash wants to load and which is visible in the running system:
+> >
+> >      buczek@kreios:/mnt$ sudo gdb vmlinux /proc/kcore
+> >      [...]
+> >      (gdb) print mem_section
+> >      $1 = (struct mem_section **) 0xffff89807ff77000
+> >      (gdb) print *mem_section
+> >      $2 = (struct mem_section *) 0xffff88a07f37b000
+> >      (gdb) print **mem_section
+> >      $3 = {section_mem_map = 18446719884453740551, pageblock_flags = 0xffff88a07f36f040}
+> >
+> > I can read the same information from the crash dump, if I account for the 0x0000008000000000 error:
+> >
+> >      buczek@kreios:/mnt$ gdb vmlinux crash.vmcore
+> >      [...]
+> >      (gdb) print mem_section
+> >      $1 = (struct mem_section **) 0xffff89807ff77000
+> >      (gdb) print *mem_section
+> >      Cannot access memory at address 0xffff89807ff77000
+> >      (gdb) set $t=(struct mem_section **) ((char *)mem_section - 0x0000008000000000)
+> >      (gdb) print *$t
+> >      $2 = (struct mem_section *) 0xffff88a07f37b000
+> >      (gdb) set $s=(struct mem_section *)((char *)*$t - 0x0000008000000000 )
+> >      (gdb) print *$s
+> >      $3 = {section_mem_map = 18446719884453740551, pageblock_flags = 0xffff88a07f36f040}
+> >
+> > In the above example, the running kernel, the crashed kernel and the crashkernel are all the same 4.19.57 compilation. But I've tried with several other versions ( crashkernel 4.4, running kernel from 4.0 to linux master) with the same result.
+> >
+> > The machine in the above example has several numa nodes (this is why there are so many LOAD headers). But I've tried this with a small kvm virtual machine and got the same result.
+> >
+> >      buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep RANDOMIZE_BASE .config
+> >      # CONFIG_RANDOMIZE_BASE is not set
+> >      buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep SPARSEMEM .config
+> >      CONFIG_ARCH_SPARSEMEM_ENABLE=y
+> >      CONFIG_ARCH_SPARSEMEM_DEFAULT=y
+> >      CONFIG_SPARSEMEM_MANUAL=y
+> >      CONFIG_SPARSEMEM=y
+> >      CONFIG_SPARSEMEM_EXTREME=y
+> >      CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
+> >      CONFIG_SPARSEMEM_VMEMMAP=y
+> >      buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep PAGE_TABLE_ISOLATION .config
+> >      CONFIG_PAGE_TABLE_ISOLATION=y
+> >
+> > Any ideas?
+> >
+> > Donald
+>
+> To answer my own question for the records:
 
-Agreed.  I assume this fixes it?
+Thanks for the update.
 
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index 88158239622b..20f67fcf378d 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -35,7 +35,7 @@ INCLUDES := -I$(srctree)/tools/include \
- 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
- 	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include
- WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
--CFLAGS   += -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
-+CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
- LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
- 
- # Allow old libelf to be used:
+I think Paul (may be from your organization?) posted a similar issue
+and I had enquired about a few environment details from him for
+helping debug this issue (see <https://lkml.org/lkml/2019/8/19/938>).
+But he seems to be  OOO..
+
+> Our kexec command line is
+>
+>      /usr/sbin/kexec -p /boot/bzImage.crash --initrd=/boot/grub/initramfs.igz --command-line="root=LABEL=root ro console=ttyS1,115200n8 console=tty0 irqpoll nr_cpus=1 reset_devices panic=5 CRASH"
+>
+> So we neither gave -s (--kexec-file-syscall) nor -a ( --kexec-syscall-auto ). For this reason, kexec used the kexec_load() syscall instead of the newer kexec_file_load syscall.
+
+'-p' flag is for indicating a kdump operation (i.e you want to load a
+crash kernel and want to execute it if the primary kernel crashes) and
+different from the kexec load ('-l' or '-s' operation where you want
+to load and execute another kernel).
+
+> With kexec_load(), the elf headers for the crash, which include program header for the old system ram, are not computed by the kernel, but by the userspace program from kexec-tools.
+
+See above, kdump and kexec-load are completely different operation and
+I am not sure how using kdump options seem to help your case when
+kexec_load() / kexec_file_load() don't seem to work.
+
+However looking at your and Paul's original email, I can decipher that
+you are able to generate a vmcore (although an incomplete one), so I
+am pretty sure you are using the kexec -p (i.e. kdump) feature rather
+than kexec to another kernel :)
+
+> Linux kernel commit d52888aa ("x86/mm: Move LDT remap out of KASLR region on 5-level paging") changed the base of the direct mapping from 0xffff880000000000 to 0xffff888000000000. This was merged into v4.20-rc2.
+>
+> kexec-tools, however, still has the old address hard coded:
+
+>      buczek@avaritia:/scratch/cluster/buczek/kexec-tools (master)$ git grep X86_64_PAGE_OFFSET
+>      kexec/arch/i386/crashdump-x86.c:                        elf_info->page_offset = X86_64_PAGE_OFFSET_PRE_2_6_27;
+>      kexec/arch/i386/crashdump-x86.c:                        elf_info->page_offset = X86_64_PAGE_OFFSET;
+>      kexec/arch/i386/crashdump-x86.h:#define X86_64_PAGE_OFFSET_PRE_2_6_27   0xffff810000000000ULL
+>      kexec/arch/i386/crashdump-x86.h:#define X86_64_PAGE_OFFSET              0xffff880000000000ULL
+
+Good catch.
+I see, while other user-space tools (for e.g. makedumpfile have
+migrated to using the available PT_LOADs for example in the
+'/proc/kcore' file (see [0] for reference) to determine the correct
+PAGE_OFFSET value, it seems kexec-tools is still using MACRO values
+for the same - which probably are not maintainable and need to be
+updated with changes in the kernel.
+
+I will try to reproduce this at my end (I think it should be easy to
+do so on Qemu) and send a kexec-tools fix shortly. I will Cc you for
+the fix patch.
+
+Please feel free to test the same and let me know in case you face any
+further issues.
+
+Thanks,
+Bhupesh
