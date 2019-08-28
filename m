@@ -2,123 +2,117 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2036C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 05:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F4EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 05:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5D622DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 05:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B9C22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 05:48:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A4qO+TJ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbfH1Fr6 (ORCPT
+        id S1726285AbfH1FsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 01:47:58 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46932 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725613AbfH1Fr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 01:47:57 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AE68D3FF867C41A3AA02;
-        Wed, 28 Aug 2019 13:47:55 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 28 Aug 2019
- 13:47:45 +0800
-Subject: Re: [PATCH -next] crypto: hisilicon: select CRYPTO_LIB_DES while
- compiling SEC driver
-To:     Jonathan Cameron <jonathan.cameron@huawei.com>
-References: <20190826115914.182700-1-maowenan@huawei.com>
- <20190827135722.00000e6a@huawei.com>
-CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <wangzhou1@hisilicon.com>, <liguozhu@hisilicon.com>,
-        <john.garry@huawei.com>, <linux-crypto@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <affd8de1-ae35-a1d0-534a-d9cdfac90de8@huawei.com>
-Date:   Wed, 28 Aug 2019 13:47:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Wed, 28 Aug 2019 01:48:19 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45838 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725613AbfH1FsS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 01:48:18 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7S5m72M090170;
+        Wed, 28 Aug 2019 00:48:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566971287;
+        bh=5iPmxBNFAmOe0sdDGNM9TCYJMd88VRMWnVdbR8bUhvg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=A4qO+TJ0Jq9LOoJtcXrrEA6nfYdOBINWyppibfvcLKE6u6lwXaqYXu+6p1wbl4BFs
+         Mcna+9Kd7RlNkazujE6sMel6xxI7mgmQBY8y3hK/KpmEiuJdWG5ralYZyhoCoZjZIa
+         IvdNY5LZeOcPfoIt/asrRgHR92q9JO2Kz0EKCr0Q=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7S5m7Lo094179
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 28 Aug 2019 00:48:07 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 28
+ Aug 2019 00:48:06 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 28 Aug 2019 00:48:06 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7S5m4AD011070;
+        Wed, 28 Aug 2019 00:48:05 -0500
+Subject: Re: [PATCH] drm/bridge: tc358767: Expose test mode functionality via
+ debugfs
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190826182524.5064-1-andrew.smirnov@gmail.com>
+ <20190826220807.GK5031@pendragon.ideasonboard.com>
+ <CAHQ1cqHuJNTH=HDfEP9de0Df_D45VV034riH4J3+ix23v=aM4Q@mail.gmail.com>
+ <20190827080644.GF5054@pendragon.ideasonboard.com>
+ <CAHQ1cqHqKvjB51UUbAHcm-=vp1O2-ncE23H8UuOz5gUJDP1wXQ@mail.gmail.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <75c9c9b2-b5b2-44bc-3ffa-e69e069cf2bd@ti.com>
+Date:   Wed, 28 Aug 2019 08:48:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190827135722.00000e6a@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CAHQ1cqHqKvjB51UUbAHcm-=vp1O2-ncE23H8UuOz5gUJDP1wXQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 28/08/2019 01:51, Andrey Smirnov wrote:
 
-
-On 2019/8/27 20:57, Jonathan Cameron wrote:
-> On Mon, 26 Aug 2019 19:59:14 +0800
-> Mao Wenan <maowenan@huawei.com> wrote:
-> 
->> When CRYPTO_DEV_HISI_SEC=y, below compilation error is found after 
->> 'commit 894b68d8be4b ("crypto: hisilicon/des - switch to new verification routines")':
+>> The whole point of a
+>> driver is to avoid needing detailed knowledge of the device's internals
+>> in userspace.
 >>
->> drivers/crypto/hisilicon/sec/sec_algs.o: In function `sec_alg_skcipher_setkey_des_cbc':
->> sec_algs.c:(.text+0x11f0): undefined reference to `des_expand_key'
->> drivers/crypto/hisilicon/sec/sec_algs.o: In function `sec_alg_skcipher_setkey_des_ecb':
->> sec_algs.c:(.text+0x1390): undefined reference to `des_expand_key'
->> make: *** [vmlinux] Error 1
->>
->> This because DES library has been moved to lib/crypto in this commit 
->> '04007b0e6cbb ("crypto: des - split off DES library from generic DES cipher driver")'.
->> Fix this by selecting CRYPTO_LIB_DES in CRYPTO_DEV_HISI_SEC.
->>
->> Fixes: 915e4e8413da ("crypto: hisilicon - SEC security accelerator driver")
->> Fixes: 04007b0e6cbb ("crypto: des - split off DES library from generic DES cipher driver")
->> Fixes: 894b68d8be4b ("crypto: hisilicon/des - switch to new verification routines")
->>
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
 > 
-> Ah. It's that that third one that really introduced the dependency so possibly
-> only that one should be listed with a fixes tag.  However the right fix
-> at that point was to select CRYPTO_DES which then changed to CRYPTO_LIB_DES
-> only after the second patch.
+> You won't avoid needing detailed knowledge of the device's internals
+> if you don't have a priori knowledge in the form of a agreed upon/well
+> known abstraction you are exposing from the driver. There is no such
+> abstraction in this case. Whether you present "tstctl" that takes a
+> magic value or "red", "green", "blue" and "pattern" taking numbers and
+> special strings, as a user, you still would have to go read the driver
+> code in order to figure out how that stuff works.
 > 
-> It's not a fix for the first patch so that should probably not be there.
+> Given how this is an obscure _debug_ feature for a niche part, I think
+> exposing raw register and leaving a comment in the driver source code
+> explaining how it works is reasonably user-friendly (for all 10 - 15
+> unique users that this feature would ever have).
+> 
+> To avoid any further back and forth of this subject, how about the
+> following. If this is up to me, then I'd like to move forward to v2
+> with the interface as is. If you feel strongly about this and insist
+> on your vision of the interface, please let me know what it looks like
+> (e.g. is what I described above good enough) and I'll rework v2 to
+> have that.
 
-Thanks， that's right, I will send v2 and keep two fixes,
-Fixes: 04007b0e6cbb ("crypto: des - split off DES library from generic DES cipher driver")
-Fixes: 894b68d8be4b ("crypto: hisilicon/des - switch to new verification routines")
+I agree, I don't see a point in adding a pile of code to make a device 
+specific debug feature to hide the device internals. If someone is going 
+to use this feature, most likely he either has the datasheet or he has 
+been asked by someone with the datasheet to try the feature.
 
-then remove fix tag because it only introduces one driver:
-Fixes: 915e4e8413da ("crypto: hisilicon - SEC security accelerator driver")
+  Tomi
 
-> 
-> Otherwise, looks correct to me.
-> 
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> thanks,
-> 
-> Jonathan
-> 
-> 
-> 
->> ---
->>  drivers/crypto/hisilicon/Kconfig | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/crypto/hisilicon/Kconfig b/drivers/crypto/hisilicon/Kconfig
->> index fa8aa06..ebaf91e 100644
->> --- a/drivers/crypto/hisilicon/Kconfig
->> +++ b/drivers/crypto/hisilicon/Kconfig
->> @@ -4,6 +4,7 @@ config CRYPTO_DEV_HISI_SEC
->>  	tristate "Support for Hisilicon SEC crypto block cipher accelerator"
->>  	select CRYPTO_BLKCIPHER
->>  	select CRYPTO_ALGAPI
->> +	select CRYPTO_LIB_DES
->>  	select SG_SPLIT
->>  	depends on ARM64 || COMPILE_TEST
->>  	depends on HAS_IOMEM
-> 
-> 
-> 
-> .
-> 
-
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
