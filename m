@@ -2,120 +2,181 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A51C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2A3C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF43122CF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 185502173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:07:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbfH1GGm (ORCPT
+        id S1726347AbfH1GHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 02:06:42 -0400
-Received: from mga04.intel.com ([192.55.52.120]:22063 "EHLO mga04.intel.com"
+        Wed, 28 Aug 2019 02:07:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43486 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbfH1GGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 02:06:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 23:06:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
-   d="scan'208";a="185518929"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga006.jf.intel.com with ESMTP; 27 Aug 2019 23:06:39 -0700
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     akpm@linux-foundation.org, vbabka@suse.cz,
-        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: [RESEND [PATCH] 1/2] mm/mmap.c: update *next* gap after itself
-Date:   Wed, 28 Aug 2019 14:06:13 +0800
-Message-Id: <20190828060614.19535-2-richardw.yang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190828060614.19535-1-richardw.yang@linux.intel.com>
-References: <20190828060614.19535-1-richardw.yang@linux.intel.com>
+        id S1726100AbfH1GHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 02:07:45 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C64DEA53264;
+        Wed, 28 Aug 2019 06:07:44 +0000 (UTC)
+Received: from thuth.com (ovpn-116-90.ams2.redhat.com [10.36.116.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D85581001956;
+        Wed, 28 Aug 2019 06:07:41 +0000 (UTC)
+From:   Thomas Huth <thuth@redhat.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Subject: [PATCH] powerpc: Replace GPL boilerplate with SPDX identifiers
+Date:   Wed, 28 Aug 2019 08:07:37 +0200
+Message-Id: <20190828060737.32531-1-thuth@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 28 Aug 2019 06:07:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we link a vma to the leaf of a rb_tree, *next* must be a parent of
-vma if *next* is not NULL. This means if we update *next* gap first, it
-will be re-update again if vma's gap is bigger.
+The FSF does not reside in "675 Mass Ave, Cambridge" anymore...
+let's simply use proper SPDX identifiers instead.
 
-For example, we have a vma tree like this:
-
-                a
-                [0x9000, 0x10000]
-            /            \
-        b                 c
-        [0x8000, 0x9000]  [0x10000, 0x11000]
-
-The gap for each node is:
-
-  a's gap = 0x8000
-  b's gap = 0x8000
-  c's gap = 0x0
-
-Now we want to insert d [0x6000, 0x7000], then the tree look like this:
-
-                a
-                [0x9000, 0x10000]
-            /            \
-        b                 c
-        [0x8000, 0x9000]  [0x10000, 0x11000]
-     /
-    d
-    [0x6000, 0x7000]
-
-b is the *next* of d. If we update b's gap first, it would be 0x1000 and
-propagate to a. And then when update d's gap, which is 0x6000 and
-propagate through b to a again.
-
-If we update d's gap first, the un-consistent gap 0x1000 will not be
-propagated.
-
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+Signed-off-by: Thomas Huth <thuth@redhat.com>
 ---
- mm/mmap.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/powerpc/include/uapi/asm/spu_info.h   | 14 --------------
+ arch/powerpc/kernel/eeh_driver.c           | 18 +-----------------
+ arch/powerpc/kernel/eeh_sysfs.c            | 18 +-----------------
+ arch/powerpc/platforms/pseries/pci_dlpar.c | 18 +-----------------
+ 4 files changed, 3 insertions(+), 65 deletions(-)
 
-diff --git a/mm/mmap.c b/mm/mmap.c
-index aa66753b175e..672ad7dc6b3c 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -587,12 +587,6 @@ static unsigned long count_vma_pages_range(struct mm_struct *mm,
- void __vma_link_rb(struct mm_struct *mm, struct vm_area_struct *vma,
- 		struct rb_node **rb_link, struct rb_node *rb_parent)
- {
--	/* Update tracking information for the gap following the new vma. */
--	if (vma->vm_next)
--		vma_gap_update(vma->vm_next);
--	else
--		mm->highest_vm_end = vm_end_gap(vma);
--
- 	/*
- 	 * vma->vm_prev wasn't known when we followed the rbtree to find the
- 	 * correct insertion point for that vma. As a result, we could not
-@@ -605,6 +599,13 @@ void __vma_link_rb(struct mm_struct *mm, struct vm_area_struct *vma,
- 	rb_link_node(&vma->vm_rb, rb_parent, rb_link);
- 	vma->rb_subtree_gap = 0;
- 	vma_gap_update(vma);
-+
-+	/* Update tracking information for the gap following the new vma. */
-+	if (vma->vm_next)
-+		vma_gap_update(vma->vm_next);
-+	else
-+		mm->highest_vm_end = vm_end_gap(vma);
-+
- 	vma_rb_insert(vma, &mm->mm_rb);
- }
+diff --git a/arch/powerpc/include/uapi/asm/spu_info.h b/arch/powerpc/include/uapi/asm/spu_info.h
+index cabfcbba9eac..45f97150587b 100644
+--- a/arch/powerpc/include/uapi/asm/spu_info.h
++++ b/arch/powerpc/include/uapi/asm/spu_info.h
+@@ -5,20 +5,6 @@
+  * (C) Copyright 2006 IBM Corp.
+  *
+  * Author: Dwayne Grant McConnell <decimal@us.ibm.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2, or (at your option)
+- * any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+  */
  
+ #ifndef _UAPI_SPU_INFO_H
+diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
+index 89623962c727..3bb27ded9daa 100644
+--- a/arch/powerpc/kernel/eeh_driver.c
++++ b/arch/powerpc/kernel/eeh_driver.c
+@@ -1,25 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+  * PCI Error Recovery Driver for RPA-compliant PPC64 platform.
+  * Copyright IBM Corp. 2004 2005
+  * Copyright Linas Vepstas <linas@linas.org> 2004, 2005
+  *
+- * All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or (at
+- * your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
+- * NON INFRINGEMENT.  See the GNU General Public License for more
+- * details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+- *
+  * Send comments and feedback to Linas Vepstas <linas@austin.ibm.com>
+  */
+ #include <linux/delay.h>
+diff --git a/arch/powerpc/kernel/eeh_sysfs.c b/arch/powerpc/kernel/eeh_sysfs.c
+index 3fa04dda1737..ab44d965a53c 100644
+--- a/arch/powerpc/kernel/eeh_sysfs.c
++++ b/arch/powerpc/kernel/eeh_sysfs.c
+@@ -1,25 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+  * Sysfs entries for PCI Error Recovery for PAPR-compliant platform.
+  * Copyright IBM Corporation 2007
+  * Copyright Linas Vepstas <linas@austin.ibm.com> 2007
+  *
+- * All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or (at
+- * your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
+- * NON INFRINGEMENT.  See the GNU General Public License for more
+- * details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+- *
+  * Send comments and feedback to Linas Vepstas <linas@austin.ibm.com>
+  */
+ #include <linux/pci.h>
+diff --git a/arch/powerpc/platforms/pseries/pci_dlpar.c b/arch/powerpc/platforms/pseries/pci_dlpar.c
+index 561917fa54a8..361986e4354e 100644
+--- a/arch/powerpc/platforms/pseries/pci_dlpar.c
++++ b/arch/powerpc/platforms/pseries/pci_dlpar.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+  * PCI Dynamic LPAR, PCI Hot Plug and PCI EEH recovery code
+  * for RPA-compliant PPC64 platform.
+@@ -6,23 +7,6 @@
+  *
+  * Updates, 2005, John Rose <johnrose@austin.ibm.com>
+  * Updates, 2005, Linas Vepstas <linas@austin.ibm.com>
+- *
+- * All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or (at
+- * your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
+- * NON INFRINGEMENT.  See the GNU General Public License for more
+- * details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+  */
+ 
+ #include <linux/pci.h>
 -- 
-2.17.1
+2.18.1
 
