@@ -2,100 +2,130 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD630C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1AFC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF68023403
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA10823403
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:42:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="j8m0k44h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfH1Imi (ORCPT
+        id S1726462AbfH1Imu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:42:38 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:51253 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfH1Imi (ORCPT
+        Wed, 28 Aug 2019 04:42:50 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40829 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbfH1Imu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:42:38 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 02B8782362; Wed, 28 Aug 2019 10:42:22 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 10:42:36 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] leds: lm3532: Avoid potentially unpaired regulator calls
-Message-ID: <20190828084235.GA2923@amd>
-References: <20190827215205.59677-1-tony@atomide.com>
+        Wed, 28 Aug 2019 04:42:50 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c34so1979777otb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 01:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=c8fecw86J07eB4LvzHZSjgLTopCBN6rGZGCm6LT9KYk=;
+        b=j8m0k44hNvtBhHkdFNyBM4k4CKNzvYygcr+rqWFYJ/9qSdwDrpwc7MuMmzfPcYrKBy
+         eOGx7CFi3DvWmgbY5E6qALmlwiaPqk6g7jdpDauxXx1bACuV2f0Ul7YylmznGzNAxTuz
+         re/9Hom6HwxhfVuhBcEOxVAA+j+44xn3Sshls0yD7DB0FPwRbbod2TnJsEiIAnZ2ES/g
+         jB4Zu2r0MGVnUTmuT9Ro8ec3ntNRvBq8DVF6MOf6j5JBsFWo80VoLUpY0cxcWfnfvN9H
+         d/aS82wmMnHV3jmD0qT81gxlKeB0d0A8PsI8Uf6r8nOokfwN9MBIRAKG1cr3EsIeeqJU
+         +aAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=c8fecw86J07eB4LvzHZSjgLTopCBN6rGZGCm6LT9KYk=;
+        b=FwSDIARnkfi9db2i5DhG5b60P/yLOcmwzAvmbU90RPbi4/ozps8s7cj/VmpjFoy/SY
+         w/K+QKC5f5sX4/I0+Ir3d13gsFPKiBaPfz9ZjJuOfLQchuw4RC4HNWKygdhuVs3b4aF3
+         +QYrD3ohbnOohacmExDOdKA1e4TxAcnBD5WVPcp/RSPwoplBigBFKRJWHAhz76qv7Ut9
+         1hTCOGhxJwXYYo3NDODel+lNbCqt5lpK+a2So/tHkzh2VtofdjV0EKL98TKZgaDht2Js
+         QelGIa627KC9OR5SLTPbOHz19SqLoFVYDW8DG7fk/j3l/mTxi46uYV0xUtRXu2ptbeDs
+         YakA==
+X-Gm-Message-State: APjAAAVw4gzT59Jm+g5h9PdTJUBJJXQpDakc/IJbO04DKZA91IzqtTzU
+        Q9pfK915xnnilFh+GRs5RsA4iW+54uulwxlnyVY8xA==
+X-Google-Smtp-Source: APXvYqz33PyKdXoPG0wmO7YgVnqTjlN/YD1cQFqLD8Kfa1u3zVYFk8lWAtdcOvzmZLiWNB/w1vnORI9wF+Q0ecI0HyM=
+X-Received: by 2002:a9d:68c5:: with SMTP id i5mr2280538oto.250.1566981769311;
+ Wed, 28 Aug 2019 01:42:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
-Content-Disposition: inline
-In-Reply-To: <20190827215205.59677-1-tony@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190827064629.90214-1-david@protonic.nl> <20190827064629.90214-2-david@protonic.nl>
+In-Reply-To: <20190827064629.90214-2-david@protonic.nl>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 28 Aug 2019 10:42:38 +0200
+Message-ID: <CAMpxmJWyZV48zxwk0bCGV1eSbHvAimi38=vX3xq9qRpQ6ENtCw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: pca953x.c: Use pca953x_read_regs instead of regmap_bulk_read
+To:     David Jander <david@protonic.nl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+wt., 27 sie 2019 o 08:47 David Jander <david@protonic.nl> napisa=C5=82(a):
+>
+> The register number needs to be translated for chips with more than 8
+> ports. This patch fixes a bug causing all chips with more than 8 GPIO pin=
+s
+> to not work correctly.
+>
+> Signed-off-by: David Jander <david@protonic.nl>
+> ---
+>  drivers/gpio/gpio-pca953x.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index 30072a570bc2..48fea4c68e8d 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -606,8 +606,7 @@ static void pca953x_irq_bus_sync_unlock(struct irq_da=
+ta *d)
+>         u8 invert_irq_mask[MAX_BANK];
+>         u8 reg_direction[MAX_BANK];
+>
+> -       regmap_bulk_read(chip->regmap, chip->regs->direction, reg_directi=
+on,
+> -                        NBANK(chip));
+> +       pca953x_read_regs(chip, chip->regs->direction, reg_direction);
+>
+>         if (chip->driver_data & PCA_PCAL) {
+>                 /* Enable latch on interrupt-enabled inputs */
+> @@ -710,8 +709,7 @@ static bool pca953x_irq_pending(struct pca953x_chip *=
+chip, u8 *pending)
+>                 return false;
+>
+>         /* Remove output pins from the equation */
+> -       regmap_bulk_read(chip->regmap, chip->regs->direction, reg_directi=
+on,
+> -                        NBANK(chip));
+> +       pca953x_read_regs(chip, chip->regs->direction, reg_direction);
+>         for (i =3D 0; i < NBANK(chip); i++)
+>                 cur_stat[i] &=3D reg_direction[i];
+>
+> @@ -789,8 +787,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chi=
+p,
+>          * interrupt.  We have to rely on the previous read for
+>          * this purpose.
+>          */
+> -       regmap_bulk_read(chip->regmap, chip->regs->direction, reg_directi=
+on,
+> -                        NBANK(chip));
+> +       pca953x_read_regs(chip, chip->regs->direction, reg_direction);
+>         for (i =3D 0; i < NBANK(chip); i++)
+>                 chip->irq_stat[i] &=3D reg_direction[i];
+>         mutex_init(&chip->irq_lock);
+> --
+> 2.19.1
+>
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to fixes. Thanks!
 
-Hi!
-
-> We may currently get unpaired regulator calls when configuring the LED
-> brightness via sysfs in case of regulator calls producing errors. Let's
-> fix this by maintaining local state for enabled.
->=20
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
-> +++ b/drivers/leds/leds-lm3532.c
-> @@ -127,6 +127,7 @@ struct lm3532_als_data {
->   * @num_leds - Number of LED strings are supported in this array
->   * @full_scale_current - The full-scale current setting for the current =
-sink.
->   * @led_strings - The LED strings supported in this array
-> + * @enabled - Enabled status
->   * @label - LED label
->   */
->  struct lm3532_led {
-> @@ -138,6 +139,7 @@ struct lm3532_led {
->  	int ctrl_brt_pointer;
->  	int num_leds;
->  	int full_scale_current;
-> +	int enabled:1;
->  	u32 led_strings[LM3532_MAX_CONTROL_BANKS];
->  	char label[LED_MAX_NAME_SIZE];
->  };
-
-I'd do bool enabled, but this version is good, too.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1mPnsACgkQMOfwapXb+vISdACcD9PUur9GQedFWTo1hoxyghuV
-f+YAnRELhy1q8FoKORsTbYCHO6jj8GI1
-=1P7e
------END PGP SIGNATURE-----
-
---qMm9M+Fa2AknHoGS--
+Bart
