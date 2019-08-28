@@ -2,138 +2,234 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E7BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B52C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1905208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4B8217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:30:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YPeGmbRV"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="HpYnOvau";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DWggFqvh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfH1J23 (ORCPT
+        id S1726554AbfH1JaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:28:29 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41043 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfH1J22 (ORCPT
+        Wed, 28 Aug 2019 05:30:08 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:36321 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726340AbfH1JaI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:28:28 -0400
-Received: by mail-pg1-f195.google.com with SMTP id x15so1141370pgg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 02:28:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HZx5QFMA3ykkKGmHMbJA9Au62IZ9SSb+Y6psbhqhgAw=;
-        b=YPeGmbRVPwD/7g2CmOmiMzsT4L5WWOv2r2bNBnmdYXYUdM7lfCheB+6UIEIkeIvhEE
-         nWz906pKGcRMJtzH7+G1GdPbcCIER8yDS+oiQMyDRgunWHj5gQbyKVBqevudyuYkLrVB
-         MVCDZfupL8I2v3rMh/EGJlRTAlOJ4Dze4TAnERGZCR8hbRuoba/hp+nPLK1N1v8vbDq5
-         wwFgokuSoEMJMX0Uvn4cMIcj993z0hs7OxnZA//OflzG+fzN2UNZtkUZDyiPiqNkmVb7
-         MhybdIIXRC+qvwcxNC7+jWWg7KyDMxRYSC3XFT9QUdqEhFZM/5qKag3vjguBt5cNVd7R
-         aH0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HZx5QFMA3ykkKGmHMbJA9Au62IZ9SSb+Y6psbhqhgAw=;
-        b=F1kzfpEdPhwE5TQwrVvtCgt5LjZzIOZ8H/URun1cQhflIZ9TS2BZa4AiL+OaH8qTjW
-         VutGw5frk1HF1iYlf99DBu5fy/VxX6kWjPGNqkhLVof8TkNju28YpVXCs011Lc7o38RP
-         GWeCQAiZt/g41m4gCOGkNpMZyBulorBACCU+qcBT5j7TZ4+zPcIda+wBJO4v9dnk+H3/
-         g9GF0MDyxfg3VfYASZU5iT73qQlEChBMyEfkAkYijE6yhVEEkqpVJpOugklYVGOG68YV
-         2LRmzGQOUCL2bDsOkc4zEauH3CrLiQaV48TVN3m5V4+SeGfv93ESXFVXLZ04NFSFbtwC
-         CR5w==
-X-Gm-Message-State: APjAAAUJhdYknNJA9e3JdU2oI29XMvf15DlfvgTNwv6RILSr7H9i+1vt
-        6RIt13bUkeYPPfTs97epQcH5AwNrWlOiF8kP7LOs2w==
-X-Google-Smtp-Source: APXvYqz0WqpF7fj08ZtVZkh5HfCpm8kVU1XmTLvg2tS/TEiLZHZzWWuukt700aOKth9QMBIx7YzEEiet/r/7g7OMqgc=
-X-Received: by 2002:a63:b919:: with SMTP id z25mr2563361pge.201.1566984507452;
- Wed, 28 Aug 2019 02:28:27 -0700 (PDT)
+        Wed, 28 Aug 2019 05:30:08 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 760E65A6;
+        Wed, 28 Aug 2019 05:30:06 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Wed, 28 Aug 2019 05:30:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=P8J9s2s8eH7Ar5wyBE89/+UKWMN
+        ppv9j293pWFZo1Yg=; b=HpYnOvau8zH3WqEcR/mx7lCU2Id+FHhUM084nNAPzee
+        XakZbK7BRuxW4w+rwluC5mi0LWlr34FaGlkEzAI3Zw6yxM131YJYP8pmB8yWONuV
+        oVdPVg3YLUlwMByM/rZPLsNf5acgjctfsa+qRYgaJMhbukWFaQwAkny+tjyIXr3R
+        0eWn6/85MzSEUhDvr2eljBHNQSKyl47jL0x/5kWW2A51XPD7j2hLCXtc5VEqycpi
+        R7fFFP17XpUvLyrMmJUQqD/Wre9DH73fm0XcVMnf8DtzkImtUaNK4RWRrPdio//l
+        lB2XVz24W56jpUmbRtvwXZGf0DRbrCrES2f4Sk8J99Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=P8J9s2
+        s8eH7Ar5wyBE89/+UKWMNppv9j293pWFZo1Yg=; b=DWggFqvhmPOa2rzdhiAREY
+        i5BOfDGYG70ClWrNzP1xpr38UChGoqCqz5/aefbYgQVGSvxOXaLUiumS3Fbf07K3
+        buifKTlirlWK8tBYLUdMQOJhrusxWsfGDJiReZEk1t3D8kRKjYi0lrgkm73c5EMF
+        YJ9X8L957ZyzzJ0WQugNHfydF7sZOT69c1+BPC5RLNNQ9pGhuZNc7ORkvbMCvuEb
+        3Nrl+8nTtVrrpL8lFHJqkLSFr8bz4h7Dt2zVxnPwIKiNEyaLW0xb2vV0KdK0UWop
+        OTbd4gjBVzaEMLx9zjXeMdoQ9ueFgNSeWMNfrALEeOxsaG8ozGKVL8Nh+++5pIrw
+        ==
+X-ME-Sender: <xms:nUlmXX-lZUmG2di96mKAMnSXwtpyi1p3Rbz-9imqfJrhKFhyUVSSug>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeitddgudeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuffhomhgrihhnpehlkhhmlhdroh
+    hrghenucfkphepkeefrdekiedrkeelrddutdejnecurfgrrhgrmhepmhgrihhlfhhrohhm
+    pehgrhgvgheskhhrohgrhhdrtghomhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:nUlmXYxfDTMg8P0aGyJKcgsBWVXWB_PNLz5YjEXOmlkT_2q61uNIbQ>
+    <xmx:nUlmXSC8vygScdf3ZeQzc-z3lIhIYgl6-Vig8b7fF0Xtfmwc_vuWwA>
+    <xmx:nUlmXRJ7Vj-VTAQ4hsRBNkb46UxZjtTXP5R378zrwajcfSNM7Stggw>
+    <xmx:nklmXUd6Y1kv2dgVhrJ_Ym7WVg4XpfaUMzjAEUvYKQ3-zPBXxNTJwA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8F038D6005E;
+        Wed, 28 Aug 2019 05:30:05 -0400 (EDT)
+Date:   Wed, 28 Aug 2019 11:30:04 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     gregkh@linuxfoundation.com, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rajatxjain@gmail.com
+Subject: Re: [PATCH v3 2/2] PCI/AER: Split the AER stats into multiple sysfs
+ attributes
+Message-ID: <20190828093004.GC23192@kroah.com>
+References: <20190827062309.GA30987@kroah.com>
+ <20190827222145.32642-1-rajatja@google.com>
+ <20190827222145.32642-2-rajatja@google.com>
 MIME-Version: 1.0
-References: <20190827234835.234473-1-brendanhiggins@google.com>
- <20190828030231.GA24069@jagdpanzerIV> <20190828044529.GA30152@google.com> <20190828052405.GA526@jagdpanzerIV>
-In-Reply-To: <20190828052405.GA526@jagdpanzerIV>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 28 Aug 2019 02:28:16 -0700
-Message-ID: <CAFd5g44U_DcCKtNOBKXiqsNuQbhKSTyr=jLRjNnKUxj8S0ZDrw@mail.gmail.com>
-Subject: Re: [PATCH v1] printk: add dummy vprintk_emit for when CONFIG_PRINTK=n
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     shuah <shuah@kernel.org>, Petr Mladek <pmladek@suse.com>,
-        sergey.senozhatsky@gmail.com, Steven Rostedt <rostedt@goodmis.org>,
-        kunit-dev@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827222145.32642-2-rajatja@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 10:24 PM Sergey Senozhatsky
-<sergey.senozhatsky.work@gmail.com> wrote:
->
-> On (08/27/19 21:45), Brendan Higgins wrote:
-> [..]
-> > I actually use it in a very similar way as dev_printk() does. I am using
-> > it to define an equivalent kunit_printk(), which takes a log level, and
-> > adds its own test information to the log.
-> >
-> > What I have now is:
-> >
-> > static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
-> > {
-> >       return vprintk_emit(0, level, NULL, 0, fmt, args);
-> > }
-> >
-> > static int kunit_printk_emit(int level, const char *fmt, ...)
-> > {
-> >       va_list args;
-> >       int ret;
-> >
-> >       va_start(args, fmt);
-> >       ret = kunit_vprintk_emit(level, fmt, args);
-> >       va_end(args);
-> >
-> >       return ret;
-> > }
-> >
-> > static void kunit_vprintk(const struct kunit *test,
-> >                         const char *level,
-> >                         struct va_format *vaf)
-> > {
-> >       kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
-> > }
->
-> Basically, for prefixes we have pr_fmt().
->
-> #define pr_fmt(fmt) "module name: " fmt
->
-> but pr_fmt() is mostly for static prefixes. If that doesn't work for
-> you, then maybe you can tweak kunit_foo() macros?
+On Tue, Aug 27, 2019 at 03:21:45PM -0700, Rajat Jain wrote:
+> Split the AER stats into multiple sysfs atributes. Note that
+> this changes the ABI of the AER stats, but hopefully, there
+> aren't active users that need to change. This is how the AERs
+> are being exposed now:
+> 
+> localhost /sys/devices/pci0000:00/0000:00:1c.0/aer_stats # ls -l
+> total 0
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit0_RxErr
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit12_Timeout
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit13_NonFatalErr
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit14_CorrIntErr
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit15_HeaderOF
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit6_BadTLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit7_BadDLLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit8_Rollover
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit0_Undefined
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit12_TLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit13_FCP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit14_CmpltTO
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit15_CmpltAbrt
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit16_UnxCmplt
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit17_RxOF
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit18_MalfTLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit19_ECRC
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit20_UnsupReq
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit21_ACSViol
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit22_UncorrIntErr
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit23_BlockedTLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit24_AtomicOpBlocked
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit25_TLPBlockedErr
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit26_PoisonTLPBlocked
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit4_DLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit5_SDES
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit0_Undefined
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit12_TLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit13_FCP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit14_CmpltTO
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit15_CmpltAbrt
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit16_UnxCmplt
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit17_RxOF
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit18_MalfTLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit19_ECRC
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit20_UnsupReq
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit21_ACSViol
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit22_UncorrIntErr
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit23_BlockedTLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit24_AtomicOpBlocked
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit25_TLPBlockedErr
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit26_PoisonTLPBlocked
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit4_DLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit5_SDES
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_device_err_cor
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_device_err_fatal
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_device_err_nonfatal
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_rootport_err_cor
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_rootport_err_fatal
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_rootport_err_nonfatal
+> localhost /sys/devices/pci0000:00/0000:00:1c.0/aer_stats #
+> 
+> Each file is has a single counter value. Single file containing all
+> stats was frowned upon and discussed here:
+> https://lkml.org/lkml/2019/6/28/220
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+> v3: indent the sysfs attribute names in documentation.
+> v2: Also change the Documentation
+> 
+>  .../testing/sysfs-bus-pci-devices-aer_stats   | 160 ++++++++---------
+>  drivers/pci/pcie/aer.c                        | 166 +++++++++++++-----
+>  2 files changed, 191 insertions(+), 135 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> index 3c9a8c4a25eb..8cd93acddf76 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> @@ -9,89 +9,72 @@ errors may be "seen" / reported by the link partner and not the
+>  problematic endpoint itself (which may report all counters as 0 as it never
+>  saw any problems).
+>  
+> -What:		/sys/bus/pci/devices/<dev>/aer_dev_correctable
+> -Date:		July 2018
+> -KernelVersion: 4.19.0
+> +What: Following files in /sys/bus/pci/devices/<dev>/aer_stats/
+> +	correctable_bit0_RxErr
+> +	correctable_bit12_Timeout
+> +	correctable_bit13_NonFatalErr
+> +	correctable_bit14_CorrIntErr
+> +	correctable_bit15_HeaderOF
+> +	correctable_bit6_BadTLP
+> +	correctable_bit7_BadDLLP
+> +	correctable_bit8_Rollover
+> +	fatal_bit0_Undefined
+> +	fatal_bit12_TLP
+> +	fatal_bit13_FCP
+> +	fatal_bit14_CmpltTO
+> +	fatal_bit15_CmpltAbrt
+> +	fatal_bit16_UnxCmplt
+> +	fatal_bit17_RxOF
+> +	fatal_bit18_MalfTLP
+> +	fatal_bit19_ECRC
+> +	fatal_bit20_UnsupReq
+> +	fatal_bit21_ACSViol
+> +	fatal_bit22_UncorrIntErr
+> +	fatal_bit23_BlockedTLP
+> +	fatal_bit24_AtomicOpBlocked
+> +	fatal_bit25_TLPBlockedErr
+> +	fatal_bit26_PoisonTLPBlocked
+> +	fatal_bit4_DLP
+> +	fatal_bit5_SDES
+> +	nonfatal_bit0_Undefined
+> +	nonfatal_bit12_TLP
+> +	nonfatal_bit13_FCP
+> +	nonfatal_bit14_CmpltTO
+> +	nonfatal_bit15_CmpltAbrt
+> +	nonfatal_bit16_UnxCmplt
+> +	nonfatal_bit17_RxOF
+> +	nonfatal_bit18_MalfTLP
+> +	nonfatal_bit19_ECRC
+> +	nonfatal_bit20_UnsupReq
+> +	nonfatal_bit21_ACSViol
+> +	nonfatal_bit22_UncorrIntErr
+> +	nonfatal_bit23_BlockedTLP
+> +	nonfatal_bit24_AtomicOpBlocked
+> +	nonfatal_bit25_TLPBlockedErr
+> +	nonfatal_bit26_PoisonTLPBlocked
+> +	nonfatal_bit4_DLP
+> +	nonfatal_bit5_SDES
 
-That doesn't work. The prefix is dynamic.
+{sigh}
 
-> E.g. something like this
->
-> #define kunit_info(test, fmt, ...)                                   \
->         printk(KERN_INFO "\t# %s: " pr_fmt(fmt), (test)->name, ##__VA_ARGS__)
->
-> #define kunit_err(test, fmt, ...)                                    \
->         printk(KERN_ERR "\t# %s: " pr_fmt(fmt), (test)->name, ##__VA_ARGS__)
->
-> #define kunit_debug(test, fmt, ...)                                  \
->         printk(KERN_DEBUG "\t# %s: " pr_fmt(fmt), (test)->name, ##__VA_ARGS__)
->
-> Would that do the trick? Am I missing something?
+Does this look good to you?  There's a whole lot of alignment in the
+original tags here, and you are not doing that here at all.
 
-This appears to work. I will send out a patch that incorporates this.
+Yes, this is a trivial complaint, but please, these should be easy to
+read and understand, and you aren't makeing it that here...
 
-Thanks!
+
+> +Date:		Aug 2019
+> +KernelVersion:  5.3.0
+
+I do not think this will hit 5.3, right?
+
+thanks,
+
+greg k-h
