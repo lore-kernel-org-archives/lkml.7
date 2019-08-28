@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADC0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A47C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CCE022CF4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D122189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:00:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbfH1GAZ (ORCPT
+        id S1726320AbfH1GAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 02:00:25 -0400
+        Wed, 28 Aug 2019 02:00:32 -0400
 Received: from mga12.intel.com ([192.55.52.136]:22123 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726052AbfH1GAX (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 02:00:23 -0400
+        id S1726052AbfH1GAc (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 02:00:32 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 23:00:23 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 23:00:30 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
-   d="scan'208";a="181924747"
+   d="scan'208";a="181924789"
 Received: from kbl.sh.intel.com ([10.239.159.163])
-  by fmsmga007.fm.intel.com with ESMTP; 27 Aug 2019 23:00:21 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 27 Aug 2019 23:00:28 -0700
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v1 1/4] perf util: Change convert_scale from static to global
-Date:   Wed, 28 Aug 2019 13:59:29 +0800
-Message-Id: <20190828055932.8269-2-yao.jin@linux.intel.com>
+Subject: [PATCH v1 4/4] perf util: Support multiple events for metricgroup
+Date:   Wed, 28 Aug 2019 13:59:32 +0800
+Message-Id: <20190828055932.8269-5-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190828055932.8269-1-yao.jin@linux.intel.com>
 References: <20190828055932.8269-1-yao.jin@linux.intel.com>
@@ -45,66 +45,287 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function convert_scale() can be used to convert string
-to unit and scale. For example,
+Some uncore metrics don't work as expected. For example, on cascadelakex,
 
-s = "6000000000ns";
-convert_scale(s, &unit, &scale);
+root@lkp-csl-2sp2:~# perf stat -M UNC_M_PMM_BANDWIDTH.TOTAL -a -- sleep 1
 
-unit = "ns", scale = 6000000000.
+ Performance counter stats for 'system wide':
 
-Currently this function is static. This patch renames the function
-to perf_pmu__convert_scale and changes the function to global.
-No functional change.
+           1841092      unc_m_pmm_rpq_inserts
+           3680816      unc_m_pmm_wpq_inserts
+
+       1.001775055 seconds time elapsed
+
+root@lkp-csl-2sp2:~# perf stat -M UNC_M_PMM_READ_LATENCY -a -- sleep 1
+
+ Performance counter stats for 'system wide':
+
+         860649746      unc_m_pmm_rpq_occupancy.all
+           1840557      unc_m_pmm_rpq_inserts
+       12790627455      unc_m_clockticks
+
+       1.001773348 seconds time elapsed
+
+No metrics 'UNC_M_PMM_BANDWIDTH.TOTAL' or 'UNC_M_PMM_READ_LATENCY' are
+reported.
+
+The issue is, the case of an alias expanding to mulitple events is
+not supported, typically the uncore events.
+(see comments in find_evsel_group()).
+
+For UNC_M_PMM_BANDWIDTH.TOTAL in above example, the expanded event
+group is '{unc_m_pmm_rpq_inserts,unc_m_pmm_wpq_inserts}:W', but the actual
+events passed to find_evsel_group are:
+
+unc_m_pmm_rpq_inserts
+unc_m_pmm_rpq_inserts
+unc_m_pmm_rpq_inserts
+unc_m_pmm_rpq_inserts
+unc_m_pmm_rpq_inserts
+unc_m_pmm_rpq_inserts
+unc_m_pmm_wpq_inserts
+unc_m_pmm_wpq_inserts
+unc_m_pmm_wpq_inserts
+unc_m_pmm_wpq_inserts
+unc_m_pmm_wpq_inserts
+unc_m_pmm_wpq_inserts
+
+For this multiple events case, it's not supported well.
+
+This patch introduces a new field 'metric_leader' in struct evsel. The first
+event is considered as a metric leader. For the rest of same events, they
+point to the first event via it's metric_leader field in struct evsel.
+
+This design is for adding the counting results of all same events to the
+first event in group (the metric_leader).
+
+With this patch,
+
+root@lkp-csl-2sp2:~# perf stat -M UNC_M_PMM_BANDWIDTH.TOTAL -a -- sleep 1
+
+ Performance counter stats for 'system wide':
+
+           1842108      unc_m_pmm_rpq_inserts     #    337.2 MB/sec  UNC_M_PMM_BANDWIDTH.TOTAL
+           3682209      unc_m_pmm_wpq_inserts
+
+       1.001819706 seconds time elapsed
+
+root@lkp-csl-2sp2:~# perf stat -M UNC_M_PMM_READ_LATENCY -a -- sleep 1
+
+ Performance counter stats for 'system wide':
+
+         861970685      unc_m_pmm_rpq_occupancy.all #    219.4 ns  UNC_M_PMM_READ_LATENCY
+           1842772      unc_m_pmm_rpq_inserts
+       12790196356      unc_m_clockticks
+
+       1.001749103 seconds time elapsed
+
+Now we can see the correct metrics 'UNC_M_PMM_BANDWIDTH.TOTAL' and
+'UNC_M_PMM_READ_LATENCY'.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/util/pmu.c | 6 +++---
- tools/perf/util/pmu.h | 2 ++
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ tools/perf/util/evsel.h       |  1 +
+ tools/perf/util/metricgroup.c | 84 ++++++++++++++++++-----------------
+ tools/perf/util/stat-shadow.c | 27 +++++++++--
+ 3 files changed, 68 insertions(+), 44 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 9807be6f09bb..8e35e97ecf90 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -101,7 +101,7 @@ static int pmu_format(const char *name, struct list_head *format)
- 	return 0;
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index fd60caced4fc..68321d10eb2d 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -168,6 +168,7 @@ struct evsel {
+ 	const char *		metric_expr;
+ 	const char *		metric_name;
+ 	struct evsel		**metric_events;
++	struct evsel		*metric_leader;
+ 	bool			collect_stat;
+ 	bool			weak_group;
+ 	bool			percore;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 4036ed9ba942..90b5690e5bbc 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -88,57 +88,61 @@ struct egroup {
+ 	const char *metric_unit;
+ };
+ 
+-static bool record_evsel(int *ind, struct evsel **start,
+-			 int idnum,
+-			 struct evsel **metric_events,
+-			 struct evsel *ev)
+-{
+-	metric_events[*ind] = ev;
+-	if (*ind == 0)
+-		*start = ev;
+-	if (++*ind == idnum) {
+-		metric_events[*ind] = NULL;
+-		return true;
+-	}
+-	return false;
+-}
+-
+ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 				      const char **ids,
+ 				      int idnum,
+ 				      struct evsel **metric_events)
+ {
+-	struct evsel *ev, *start = NULL;
+-	int ind = 0;
++	struct evsel *ev;
++	int i = 0;
++	bool leader_found;
+ 
+ 	evlist__for_each_entry (perf_evlist, ev) {
+-		if (ev->collect_stat)
+-			continue;
+-		if (!strcmp(ev->name, ids[ind])) {
+-			if (record_evsel(&ind, &start, idnum,
+-					 metric_events, ev))
+-				return start;
++		if (!strcmp(ev->name, ids[i])) {
++			if (!metric_events[i])
++				metric_events[i] = ev;
+ 		} else {
+-			/*
+-			 * We saw some other event that is not
+-			 * in our list of events. Discard
+-			 * the whole match and start again.
+-			 */
+-			ind = 0;
+-			start = NULL;
+-			if (!strcmp(ev->name, ids[ind])) {
+-				if (record_evsel(&ind, &start, idnum,
+-						 metric_events, ev))
+-					return start;
++			if (++i == idnum) {
++				/* Discard the whole match and start again */
++				i = 0;
++				memset(metric_events, 0,
++				       sizeof(struct evsel *) * idnum);
++				continue;
++			}
++
++			if (!strcmp(ev->name, ids[i]))
++				metric_events[i] = ev;
++			else {
++				/* Discard the whole match and start again */
++				i = 0;
++				memset(metric_events, 0,
++				       sizeof(struct evsel *) * idnum);
++				continue;
+ 			}
+ 		}
+ 	}
+-	/*
+-	 * This can happen when an alias expands to multiple
+-	 * events, like for uncore events.
+-	 * We don't support this case for now.
+-	 */
+-	return NULL;
++
++	if (i != idnum - 1) {
++		/* Not whole match */
++		return NULL;
++	}
++
++	metric_events[idnum] = NULL;
++
++	for (i = 0; i < idnum; i++) {
++		leader_found = false;
++		evlist__for_each_entry(perf_evlist, ev) {
++			if (!leader_found && (ev == metric_events[i]))
++				leader_found = true;
++
++			if (leader_found &&
++			    !strcmp(ev->name, metric_events[i]->name)) {
++				ev->metric_leader = metric_events[i];
++			}
++		}
++	}
++
++	return metric_events[0];
  }
  
--static int convert_scale(const char *scale, char **end, double *sval)
-+int perf_pmu__convert_scale(const char *scale, char **end, double *sval)
+ static int metricgroup__setup_events(struct list_head *groups,
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 696d263f6eb6..70c87fdb2a43 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -31,6 +31,8 @@ struct saved_value {
+ 	int cpu;
+ 	struct runtime_stat *stat;
+ 	struct stats stats;
++	u64 metric_total;
++	int metric_other;
+ };
+ 
+ static int saved_value_cmp(struct rb_node *rb_node, const void *entry)
+@@ -212,6 +214,7 @@ void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
  {
- 	char *lc;
- 	int ret = 0;
-@@ -164,7 +164,7 @@ static int perf_pmu__parse_scale(struct perf_pmu_alias *alias, char *dir, char *
- 	else
- 		scale[sret] = '\0';
+ 	int ctx = evsel_context(counter);
+ 	u64 count_ns = count;
++	struct saved_value *v;
  
--	ret = convert_scale(scale, NULL, &alias->scale);
-+	ret = perf_pmu__convert_scale(scale, NULL, &alias->scale);
- error:
- 	close(fd);
- 	return ret;
-@@ -372,7 +372,7 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
- 				desc ? strdup(desc) : NULL;
- 	alias->topic = topic ? strdup(topic) : NULL;
- 	if (unit) {
--		if (convert_scale(unit, &unit, &alias->scale) < 0)
-+		if (perf_pmu__convert_scale(unit, &unit, &alias->scale) < 0)
- 			return -1;
- 		snprintf(alias->unit, sizeof(alias->unit), "%s", unit);
+ 	count *= counter->scale;
+ 
+@@ -266,9 +269,15 @@ void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
+ 		update_runtime_stat(st, STAT_APERF, ctx, cpu, count);
+ 
+ 	if (counter->collect_stat) {
+-		struct saved_value *v = saved_value_lookup(counter, cpu, true,
+-							   STAT_NONE, 0, st);
++		v = saved_value_lookup(counter, cpu, true, STAT_NONE, 0, st);
+ 		update_stats(&v->stats, count);
++		if (counter->metric_leader)
++			v->metric_total += count;
++	} else if (counter->metric_leader) {
++		v = saved_value_lookup(counter->metric_leader,
++				       cpu, true, STAT_NONE, 0, st);
++		v->metric_total += count;
++		v->metric_other++;
  	}
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 3f8b79b1dd85..f36ade6df76d 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -96,4 +96,6 @@ struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu);
+ }
  
- struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
+@@ -729,10 +738,10 @@ static void generic_metric(struct perf_stat_config *config,
+ 	char *n, *pn;
  
-+int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
+ 	expr__ctx_init(&pctx);
+-	expr__add_id(&pctx, name, avg);
+ 	for (i = 0; metric_events[i]; i++) {
+ 		struct saved_value *v;
+ 		struct stats *stats;
++		u64 metric_total = 0;
+ 
+ 		if (!strcmp(metric_events[i]->name, "duration_time")) {
+ 			stats = &walltime_nsecs_stats;
+@@ -744,6 +753,9 @@ static void generic_metric(struct perf_stat_config *config,
+ 				break;
+ 			stats = &v->stats;
+ 			scale = 1.0;
 +
- #endif /* __PMU_H */
++			if (v->metric_other)
++				metric_total = v->metric_total;
+ 		}
+ 
+ 		n = strdup(metric_events[i]->name);
+@@ -757,8 +769,15 @@ static void generic_metric(struct perf_stat_config *config,
+ 		pn = strchr(n, ' ');
+ 		if (pn)
+ 			*pn = 0;
+-		expr__add_id(&pctx, n, avg_stats(stats)*scale);
++
++		if (metric_total)
++			expr__add_id(&pctx, n, metric_total);
++		else
++			expr__add_id(&pctx, n, avg_stats(stats)*scale);
+ 	}
++
++	expr__add_id(&pctx, name, avg);
++
+ 	if (!metric_events[i]) {
+ 		const char *p = metric_expr;
+ 
 -- 
 2.17.1
 
