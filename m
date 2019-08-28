@@ -4,191 +4,345 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F1AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FF3C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEAB22CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62AF82077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:08:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfH1NFp (ORCPT
+        id S1726437AbfH1NIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:05:45 -0400
-Received: from mga02.intel.com ([134.134.136.20]:60001 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfH1NFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:05:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 06:05:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
-   d="scan'208";a="197552902"
-Received: from deyangko-mobl.ccr.corp.intel.com ([10.249.168.35])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Aug 2019 06:05:41 -0700
-Message-ID: <961b814b345ee765408b85861ec3c37d01857c0a.camel@intel.com>
-Subject: Re: [PATCH] drivers: thermal: qcom: tsens: Fix memory leak from
- qfprom read
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Linux PM list <linux-pm@vger.kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 28 Aug 2019 21:05:51 +0800
-In-Reply-To: <CAP245DVf9fZNVEaYS39_NZ133LbwuZ77i=2fHUs-u_r-5EK-3Q@mail.gmail.com>
-References: <20190823093835.32655-1-srinivas.kandagatla@linaro.org>
-         <CAP245DVf9fZNVEaYS39_NZ133LbwuZ77i=2fHUs-u_r-5EK-3Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 28 Aug 2019 09:08:06 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42182 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfH1NIG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:08:06 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1i2xg8-0004cW-U1; Wed, 28 Aug 2019 13:08:01 +0000
+Date:   Wed, 28 Aug 2019 15:08:00 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Hridya Valsaraju <hridya@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH 4/4] binder: Add binder_proc logging to binderfs
+Message-ID: <20190828130759.4b4gtzf2jpi5c46y@wittgenstein>
+References: <20190827204152.114609-1-hridya@google.com>
+ <20190827204152.114609-5-hridya@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190827204152.114609-5-hridya@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-23 at 17:29 +0530, Amit Kucheria wrote:
-> On Fri, Aug 23, 2019 at 3:08 PM Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
-> > 
-> > memory returned as part of nvmem_read via qfprom_read should be
-> > freed by the consumer once done.
-> > Existing code is not doing it so fix it.
-> > 
-> > Below memory leak detected by kmemleak
-> >    [<ffffff80088b7658>] kmemleak_alloc+0x50/0x84
-> >     [<ffffff80081df120>] __kmalloc+0xe8/0x168
-> >     [<ffffff80086db350>] nvmem_cell_read+0x30/0x80
-> >     [<ffffff8008632790>] qfprom_read+0x4c/0x7c
-> >     [<ffffff80086335a4>] calibrate_v1+0x34/0x204
-> >     [<ffffff8008632518>] tsens_probe+0x164/0x258
-> >     [<ffffff80084e0a1c>] platform_drv_probe+0x80/0xa0
-> >     [<ffffff80084de4f4>] really_probe+0x208/0x248
-> >     [<ffffff80084de2c4>] driver_probe_device+0x98/0xc0
-> >     [<ffffff80084dec54>] __device_attach_driver+0x9c/0xac
-> >     [<ffffff80084dca74>] bus_for_each_drv+0x60/0x8c
-> >     [<ffffff80084de634>] __device_attach+0x8c/0x100
-> >     [<ffffff80084de6c8>] device_initial_probe+0x20/0x28
-> >     [<ffffff80084dcbb8>] bus_probe_device+0x34/0x7c
-> >     [<ffffff80084deb08>] deferred_probe_work_func+0x6c/0x98
-> >     [<ffffff80080c3da8>] process_one_work+0x160/0x2f8
-> > 
-> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Tue, Aug 27, 2019 at 01:41:52PM -0700, Hridya Valsaraju wrote:
+> Currently /sys/kernel/debug/binder/proc contains
+> the debug data for every binder_proc instance.
+> This patch makes this information also available
+> in a binderfs instance mounted with a mount option
+> "stats=global" in addition to debugfs. The patch does
+> not affect the presence of the file in debugfs.
 > 
-> Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
-
-patch applied.
-
-thanks,
-rui
+> If a binderfs instance is mounted at path /dev/binderfs,
+> this file would be present at /dev/binderfs/binder_logs/proc.
+> This change provides an alternate way to access this file when debugfs
+> is not mounted.
 > 
-> > ---
-> >  drivers/thermal/qcom/tsens-8960.c |  2 ++
-> >  drivers/thermal/qcom/tsens-v0_1.c | 12 ++++++++++--
-> >  drivers/thermal/qcom/tsens-v1.c   |  1 +
-> >  drivers/thermal/qcom/tsens.h      |  1 +
-> >  4 files changed, 14 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/thermal/qcom/tsens-8960.c
-> > b/drivers/thermal/qcom/tsens-8960.c
-> > index 8d9b721dadb6..e46a4e3f25c4 100644
-> > --- a/drivers/thermal/qcom/tsens-8960.c
-> > +++ b/drivers/thermal/qcom/tsens-8960.c
-> > @@ -229,6 +229,8 @@ static int calibrate_8960(struct tsens_priv
-> > *priv)
-> >         for (i = 0; i < num_read; i++, s++)
-> >                 s->offset = data[i];
-> > 
-> > +       kfree(data);
-> > +
-> >         return 0;
-> >  }
-> > 
-> > diff --git a/drivers/thermal/qcom/tsens-v0_1.c
-> > b/drivers/thermal/qcom/tsens-v0_1.c
-> > index 6f26fadf4c27..055647bcee67 100644
-> > --- a/drivers/thermal/qcom/tsens-v0_1.c
-> > +++ b/drivers/thermal/qcom/tsens-v0_1.c
-> > @@ -145,8 +145,10 @@ static int calibrate_8916(struct tsens_priv
-> > *priv)
-> >                 return PTR_ERR(qfprom_cdata);
-> > 
-> >         qfprom_csel = (u32 *)qfprom_read(priv->dev, "calib_sel");
-> > -       if (IS_ERR(qfprom_csel))
-> > +       if (IS_ERR(qfprom_csel)) {
-> > +               kfree(qfprom_cdata);
-> >                 return PTR_ERR(qfprom_csel);
-> > +       }
-> > 
-> >         mode = (qfprom_csel[0] & MSM8916_CAL_SEL_MASK) >>
-> > MSM8916_CAL_SEL_SHIFT;
-> >         dev_dbg(priv->dev, "calibration mode is %d\n", mode);
-> > @@ -181,6 +183,8 @@ static int calibrate_8916(struct tsens_priv
-> > *priv)
-> >         }
-> > 
-> >         compute_intercept_slope(priv, p1, p2, mode);
-> > +       kfree(qfprom_cdata);
-> > +       kfree(qfprom_csel);
-> > 
-> >         return 0;
-> >  }
-> > @@ -198,8 +202,10 @@ static int calibrate_8974(struct tsens_priv
-> > *priv)
-> >                 return PTR_ERR(calib);
-> > 
-> >         bkp = (u32 *)qfprom_read(priv->dev, "calib_backup");
-> > -       if (IS_ERR(bkp))
-> > +       if (IS_ERR(bkp)) {
-> > +               kfree(calib);
-> >                 return PTR_ERR(bkp);
-> > +       }
-> > 
-> >         calib_redun_sel =  bkp[1] & BKP_REDUN_SEL;
-> >         calib_redun_sel >>= BKP_REDUN_SHIFT;
-> > @@ -313,6 +319,8 @@ static int calibrate_8974(struct tsens_priv
-> > *priv)
-> >         }
-> > 
-> >         compute_intercept_slope(priv, p1, p2, mode);
-> > +       kfree(calib);
-> > +       kfree(bkp);
-> > 
-> >         return 0;
-> >  }
-> > diff --git a/drivers/thermal/qcom/tsens-v1.c
-> > b/drivers/thermal/qcom/tsens-v1.c
-> > index 10b595d4f619..870f502f2cb6 100644
-> > --- a/drivers/thermal/qcom/tsens-v1.c
-> > +++ b/drivers/thermal/qcom/tsens-v1.c
-> > @@ -138,6 +138,7 @@ static int calibrate_v1(struct tsens_priv
-> > *priv)
-> >         }
-> > 
-> >         compute_intercept_slope(priv, p1, p2, mode);
-> > +       kfree(qfprom_cdata);
-> > 
-> >         return 0;
-> >  }
-> > diff --git a/drivers/thermal/qcom/tsens.h
-> > b/drivers/thermal/qcom/tsens.h
-> > index 2fd94997245b..b89083b61c38 100644
-> > --- a/drivers/thermal/qcom/tsens.h
-> > +++ b/drivers/thermal/qcom/tsens.h
-> > @@ -17,6 +17,7 @@
-> > 
-> >  #include <linux/thermal.h>
-> >  #include <linux/regmap.h>
-> > +#include <linux/slab.h>
-> > 
-> >  struct tsens_priv;
-> > 
-> > --
-> > 2.21.0
-> > 
+> Signed-off-by: Hridya Valsaraju <hridya@google.com>
 
+I'm still wondering whether there's a nicer way to create those debuf
+files per-process without doing it in binder_open() but it has worked
+fine for a long time with debugfs.
+
+Also, one minor question below. Otherwise
+
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+
+> ---
+>  drivers/android/binder.c          | 38 ++++++++++++++++++-
+>  drivers/android/binder_internal.h | 46 ++++++++++++++++++++++
+>  drivers/android/binderfs.c        | 63 ++++++++++++++-----------------
+>  3 files changed, 111 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> index bed217310197..37189838f32a 100644
+> --- a/drivers/android/binder.c
+> +++ b/drivers/android/binder.c
+> @@ -481,6 +481,7 @@ struct binder_priority {
+>   * @inner_lock:           can nest under outer_lock and/or node lock
+>   * @outer_lock:           no nesting under innor or node lock
+>   *                        Lock order: 1) outer, 2) node, 3) inner
+> + * @binderfs_entry:       process-specific binderfs log file
+>   *
+>   * Bookkeeping structure for binder processes
+>   */
+> @@ -510,6 +511,7 @@ struct binder_proc {
+>  	struct binder_context *context;
+>  	spinlock_t inner_lock;
+>  	spinlock_t outer_lock;
+> +	struct dentry *binderfs_entry;
+>  };
+>  
+>  enum {
+> @@ -5347,6 +5349,8 @@ static int binder_open(struct inode *nodp, struct file *filp)
+>  {
+>  	struct binder_proc *proc;
+>  	struct binder_device *binder_dev;
+> +	struct binderfs_info *info;
+> +	struct dentry *binder_binderfs_dir_entry_proc = NULL;
+>  
+>  	binder_debug(BINDER_DEBUG_OPEN_CLOSE, "%s: %d:%d\n", __func__,
+>  		     current->group_leader->pid, current->pid);
+> @@ -5368,11 +5372,14 @@ static int binder_open(struct inode *nodp, struct file *filp)
+>  	}
+>  
+>  	/* binderfs stashes devices in i_private */
+> -	if (is_binderfs_device(nodp))
+> +	if (is_binderfs_device(nodp)) {
+>  		binder_dev = nodp->i_private;
+> -	else
+> +		info = nodp->i_sb->s_fs_info;
+> +		binder_binderfs_dir_entry_proc = info->proc_log_dir;
+> +	} else {
+>  		binder_dev = container_of(filp->private_data,
+>  					  struct binder_device, miscdev);
+> +	}
+>  	proc->context = &binder_dev->context;
+>  	binder_alloc_init(&proc->alloc);
+>  
+> @@ -5403,6 +5410,27 @@ static int binder_open(struct inode *nodp, struct file *filp)
+>  			&proc_fops);
+>  	}
+>  
+> +	if (binder_binderfs_dir_entry_proc) {
+> +		char strbuf[11];
+> +		struct dentry *binderfs_entry;
+> +
+> +		snprintf(strbuf, sizeof(strbuf), "%u", proc->pid);
+> +		/*
+> +		 * Similar to debugfs, the process specific log file is shared
+> +		 * between contexts. If the file has already been created for a
+> +		 * process, the following binderfs_create_file() call will
+> +		 * fail if another context of the same process invoked
+> +		 * binder_open(). This is ok since same as debugfs,
+> +		 * the log file will contain information on all contexts of a
+> +		 * given PID.
+> +		 */
+> +		binderfs_entry = binderfs_create_file(binder_binderfs_dir_entry_proc,
+> +			strbuf, &proc_fops, (void *)(unsigned long)proc->pid);
+> +		if (!IS_ERR(binderfs_entry))
+> +			proc->binderfs_entry = binderfs_entry;
+
+You are sure that you don't want to fail the open, when the debug file
+cannot be created in the binderfs instance? I'm not objecting at all, I
+just want to make sure that this is the semantics you want because it
+would be easy to differentiate between the non-fail-debugfs and the new
+binderfs case.
+
+> +
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -5442,6 +5470,12 @@ static int binder_release(struct inode *nodp, struct file *filp)
+>  	struct binder_proc *proc = filp->private_data;
+>  
+>  	debugfs_remove(proc->debugfs_entry);
+> +
+> +	if (proc->binderfs_entry) {
+> +		binderfs_remove_file(proc->binderfs_entry);
+> +		proc->binderfs_entry = NULL;
+> +	}
+> +
+>  	binder_defer_work(proc, BINDER_DEFERRED_RELEASE);
+>  
+>  	return 0;
+> diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_internal.h
+> index b9be42d9464c..bd47f7f72075 100644
+> --- a/drivers/android/binder_internal.h
+> +++ b/drivers/android/binder_internal.h
+> @@ -35,17 +35,63 @@ struct binder_device {
+>  	struct inode *binderfs_inode;
+>  };
+>  
+> +/**
+> + * binderfs_mount_opts - mount options for binderfs
+> + * @max: maximum number of allocatable binderfs binder devices
+> + * @stats_mode: enable binder stats in binderfs.
+> + */
+> +struct binderfs_mount_opts {
+> +	int max;
+> +	int stats_mode;
+> +};
+> +
+> +/**
+> + * binderfs_info - information about a binderfs mount
+> + * @ipc_ns:         The ipc namespace the binderfs mount belongs to.
+> + * @control_dentry: This records the dentry of this binderfs mount
+> + *                  binder-control device.
+> + * @root_uid:       uid that needs to be used when a new binder device is
+> + *                  created.
+> + * @root_gid:       gid that needs to be used when a new binder device is
+> + *                  created.
+> + * @mount_opts:     The mount options in use.
+> + * @device_count:   The current number of allocated binder devices.
+> + * @proc_log_dir:   Pointer to the directory dentry containing process-specific
+> + *                  logs.
+> + */
+> +struct binderfs_info {
+> +	struct ipc_namespace *ipc_ns;
+> +	struct dentry *control_dentry;
+> +	kuid_t root_uid;
+> +	kgid_t root_gid;
+> +	struct binderfs_mount_opts mount_opts;
+> +	int device_count;
+> +	struct dentry *proc_log_dir;
+> +};
+> +
+>  extern const struct file_operations binder_fops;
+>  
+>  extern char *binder_devices_param;
+>  
+>  #ifdef CONFIG_ANDROID_BINDERFS
+>  extern bool is_binderfs_device(const struct inode *inode);
+> +extern struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
+> +					   const struct file_operations *fops,
+> +					   void *data);
+> +extern void binderfs_remove_file(struct dentry *dentry);
+>  #else
+>  static inline bool is_binderfs_device(const struct inode *inode)
+>  {
+>  	return false;
+>  }
+> +static inline struct dentry *binderfs_create_file(struct dentry *dir,
+> +					   const char *name,
+> +					   const struct file_operations *fops,
+> +					   void *data)
+> +{
+> +	return NULL;
+> +}
+> +static inline void binderfs_remove_file(struct dentry *dentry) {}
+>  #endif
+>  
+>  #ifdef CONFIG_ANDROID_BINDERFS
+> diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+> index dc25a7d759c9..c386a3738290 100644
+> --- a/drivers/android/binderfs.c
+> +++ b/drivers/android/binderfs.c
+> @@ -48,16 +48,6 @@ static dev_t binderfs_dev;
+>  static DEFINE_MUTEX(binderfs_minors_mutex);
+>  static DEFINE_IDA(binderfs_minors);
+>  
+> -/**
+> - * binderfs_mount_opts - mount options for binderfs
+> - * @max: maximum number of allocatable binderfs binder devices
+> - * @stats_mode: enable binder stats in binderfs.
+> - */
+> -struct binderfs_mount_opts {
+> -	int max;
+> -	int stats_mode;
+> -};
+> -
+>  enum {
+>  	Opt_max,
+>  	Opt_stats_mode,
+> @@ -75,27 +65,6 @@ static const match_table_t tokens = {
+>  	{ Opt_err, NULL     }
+>  };
+>  
+> -/**
+> - * binderfs_info - information about a binderfs mount
+> - * @ipc_ns:         The ipc namespace the binderfs mount belongs to.
+> - * @control_dentry: This records the dentry of this binderfs mount
+> - *                  binder-control device.
+> - * @root_uid:       uid that needs to be used when a new binder device is
+> - *                  created.
+> - * @root_gid:       gid that needs to be used when a new binder device is
+> - *                  created.
+> - * @mount_opts:     The mount options in use.
+> - * @device_count:   The current number of allocated binder devices.
+> - */
+> -struct binderfs_info {
+> -	struct ipc_namespace *ipc_ns;
+> -	struct dentry *control_dentry;
+> -	kuid_t root_uid;
+> -	kgid_t root_gid;
+> -	struct binderfs_mount_opts mount_opts;
+> -	int device_count;
+> -};
+> -
+>  static inline struct binderfs_info *BINDERFS_I(const struct inode *inode)
+>  {
+>  	return inode->i_sb->s_fs_info;
+> @@ -535,7 +504,22 @@ static struct dentry *binderfs_create_dentry(struct dentry *dir,
+>  	return dentry;
+>  }
+>  
+> -static struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
+> +void binderfs_remove_file(struct dentry *dentry)
+> +{
+> +	struct inode *dir;
+> +
+> +	dir = d_inode(dentry->d_parent);
+> +	inode_lock(dir);
+> +	if (simple_positive(dentry)) {
+> +		dget(dentry);
+> +		simple_unlink(dir, dentry);
+> +		d_delete(dentry);
+> +		dput(dentry);
+> +	}
+> +	inode_unlock(dir);
+> +}
+> +
+> +struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
+>  				    const struct file_operations *fops,
+>  				    void *data)
+>  {
+> @@ -604,7 +588,8 @@ static struct dentry *binderfs_create_dir(struct dentry *parent,
+>  
+>  static int init_binder_logs(struct super_block *sb)
+>  {
+> -	struct dentry *binder_logs_root_dir, *file_dentry;
+> +	struct dentry *binder_logs_root_dir, *file_dentry, *proc_log_dir;
+> +	struct binderfs_info *info;
+>  	int ret = 0;
+>  
+>  	binder_logs_root_dir = binderfs_create_dir(sb->s_root,
+> @@ -648,8 +633,18 @@ static int init_binder_logs(struct super_block *sb)
+>  					   "failed_transaction_log",
+>  					   &binder_transaction_log_fops,
+>  					   &binder_transaction_log_failed);
+> -	if (IS_ERR(file_dentry))
+> +	if (IS_ERR(file_dentry)) {
+>  		ret = PTR_ERR(file_dentry);
+> +		goto out;
+> +	}
+> +
+> +	proc_log_dir = binderfs_create_dir(binder_logs_root_dir, "proc");
+> +	if (IS_ERR(proc_log_dir)) {
+> +		ret = PTR_ERR(proc_log_dir);
+> +		goto out;
+> +	}
+> +	info = sb->s_fs_info;
+> +	info->proc_log_dir = proc_log_dir;
+>  
+>  out:
+>  	return ret;
+> -- 
+> 2.23.0.187.g17f5b7556c-goog
+> 
