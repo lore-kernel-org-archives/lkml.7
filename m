@@ -2,118 +2,145 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95265C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4403DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69AE122CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567011629;
-	bh=ZARfaWUbuLbc3qSHosG2JV2Bb68PSz+bxh+2v5STyvE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zNqiwtkRswg8KLyXSEMBcTIlLE0Ycgq3ifPINKUb+4wNaYOn1GwQ6UmrfobnTlVUc
-	 HwPNCXgf3BDBdVaecqGYUy8kbacQP1l5upBmfZBnK/yosUZ6v9I6sWa8k0j1xAVy07
-	 kPz6RK3kFQx+i6nBiMl+mJiOQu19vepgQCopYKmE=
+	by mail.kernel.org (Postfix) with ESMTP id 0B8AF2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:02:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="t4Tflww+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfH1RA2 (ORCPT
+        id S1726657AbfH1RC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:00:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726415AbfH1RA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:00:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B558722CF5;
-        Wed, 28 Aug 2019 17:00:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567011627;
-        bh=ZARfaWUbuLbc3qSHosG2JV2Bb68PSz+bxh+2v5STyvE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NKOLjK5d8Reg2OCHJ7+BY+Soq9RzU45DRx1kt7HEjJh1xMM3xK6nV+vW2+x/phyrW
-         ycEkdZZ83X7aBD85usZseHdXFSXPtrdcly0vuTdCJsbPN8oc7gPUjYYl3ykxZiPR2K
-         PHxqq0tuLFk6VS7lIxXJP6/HVcchTp8df/yM7jv0=
-Date:   Wed, 28 Aug 2019 19:00:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     devel@driverdev.osuosl.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20190828170022.GA7873@kroah.com>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+        Wed, 28 Aug 2019 13:02:58 -0400
+Received: from mail-eopbgr140095.outbound.protection.outlook.com ([40.107.14.95]:48192
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726415AbfH1RC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 13:02:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Knncb2YGp6rFvcdaawkryp+agerdZcF18Dl5W/D4nBUC3YAe7HYI4wroIxD1FO8Rqgu/cH0J7Rt5vDDuE8uMfOpIg1FutT3RiMU81MrzKa8CVXOYAVCml7EuY5iC9memyy59p4QTrZTTNbmGOvBaa7o6eVqpWBcuwUPKDfbsBaK0wcFdZWvsi2lwpLIDw8u7zmOm8scmgYLDRmec2u1MWPQEYQOLKe6ePve9qQbszkS9xQ1+UjgpRtrLHTD/V+2oqCKmeICbf2+AS9WnVpRl3fbNer5/QqonMBQQfXwVg/1x/kuKNOnypFYqCkjV0CiG66qz43o1jdvyWHzqBRWr3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=myWY8g9AcvfNu6dTIgirU2weQVxzebMvrt7vFKAVqN8=;
+ b=K9Kdb36XGBVnu7GCpYci+OEwCkKEreTZnqts7ptOZvPc07piIeIHpbBdagG9Dmfw71ic9GFFrcyg7F+9hYD84mWy251J5ih1vHmtneyoY+PYwf7dVNw2JU7GKije7OD+JSSSXSu0fMHk13Hr8VLpxsb33WB4i+NgDPDWKME34Lb2BYrPKvFUc1XHweFoCbv4Gm+DyXKDYadP+ISRtzvcZXV8wa3sVDwcfQ+nDjRu/KrTlZZKKaTYUYHmy7THmNigl8Eu53qaExr7BabpvmX+Qy2vzBNo07wC6e5JgnDdvV2fvhRSzSGawFvhwGwItlhI/XBrVIww3+WGP8pY/Ckdsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=myWY8g9AcvfNu6dTIgirU2weQVxzebMvrt7vFKAVqN8=;
+ b=t4Tflww+IlKSAoWnRrSKLe+hHs/oDBwsaGcCjQodWO6mtkZn98SMAKrIlmg6hWNKUCzx2nKdVy6fnZYfrePbbIql68gEshwgEuH0SzG/MJLWcMrMbme2wNAFJDsoRNAjdrBV7x9AqMKGdYoilnBb65FSLbv/eleK8HkMImF8I4k=
+Received: from VI1PR08MB2782.eurprd08.prod.outlook.com (10.170.236.143) by
+ VI1PR08MB3181.eurprd08.prod.outlook.com (52.133.15.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.19; Wed, 28 Aug 2019 17:02:53 +0000
+Received: from VI1PR08MB2782.eurprd08.prod.outlook.com
+ ([fe80::2969:e370:fb70:71a]) by VI1PR08MB2782.eurprd08.prod.outlook.com
+ ([fe80::2969:e370:fb70:71a%3]) with mapi id 15.20.2178.023; Wed, 28 Aug 2019
+ 17:02:53 +0000
+From:   Jan Dakinevich <jan.dakinevich@virtuozzo.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Jan Dakinevich <jan.dakinevich@virtuozzo.com>,
+        Denis Lunev <den@virtuozzo.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?iso-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: [PATCH v2 0/3] fix emulation error on Windows bootup
+Thread-Topic: [PATCH v2 0/3] fix emulation error on Windows bootup
+Thread-Index: AQHVXcJt7Trak7Eg4E+dkRqxYyQrAg==
+Date:   Wed, 28 Aug 2019 17:02:52 +0000
+Message-ID: <1567011759-9969-1-git-send-email-jan.dakinevich@virtuozzo.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR05CA0154.eurprd05.prod.outlook.com
+ (2603:10a6:7:28::41) To VI1PR08MB2782.eurprd08.prod.outlook.com
+ (2603:10a6:802:19::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jan.dakinevich@virtuozzo.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.1.4
+x-originating-ip: [185.231.240.5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2962f05b-6e34-4746-f882-08d72bd99058
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR08MB3181;
+x-ms-traffictypediagnostic: VI1PR08MB3181:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR08MB3181E67F2E4DBE1B129C3BB58AA30@VI1PR08MB3181.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 014304E855
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(346002)(39850400004)(136003)(396003)(189003)(199004)(478600001)(26005)(4326008)(8936002)(186003)(102836004)(3846002)(256004)(476003)(44832011)(6486002)(66066001)(6512007)(305945005)(2906002)(2501003)(86362001)(6436002)(6116002)(66446008)(8676002)(66946007)(966005)(64756008)(66556008)(66476007)(316002)(7736002)(81156014)(52116002)(25786009)(81166006)(71190400001)(71200400001)(6506007)(486006)(386003)(14454004)(53936002)(99286004)(2616005)(5660300002)(6916009)(2351001)(54906003)(5640700003)(36756003)(6306002)(50226002)(7416002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR08MB3181;H:VI1PR08MB2782.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: virtuozzo.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 21WDfx4epCOmOonbGEuydhJUzYXUkuFmmNJwodILZGSk45HcS1WNwfPGgJvuOq/zzmg0WsS+ykBZMQnqY/fZLB6PZ0kUBe5NoUTNlv00An6zRlImMBRW2SYpgEOrz9K/hi4jTpwqwm3MkGyofhhVLzJ1nh05Y1jKNGdIlrFUFRE7vfVIgIFXSsIc/1QC98nOTZ4AY9zC+DE3V3SU2a3mTtiYrp3gC70i+2dMDUYq/U4xQaHcSwFc8rHKDgriL/Fwcb7FIdeonzJgBkNpAm99k8+Hle/GKp9deLJW96f6T9+hrrY7wZNfpEfAJvggMPpMXpvDqwAchJ3yAAVyBh1tC0qUxt0CECWrQjilha07KJ+2aIwJXBrVzwsmeqW/UZ05TiJK31nWkfEeTvvSD2QUJlEGpAZq28rar3ggiBsrykw=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190828160817.6250-1-gregkh@linuxfoundation.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2962f05b-6e34-4746-f882-08d72bd99058
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 17:02:53.1128
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: POViCxvypt4B415UZXJeNOZ9/xUg8bkP0RA4CThLLT02RtWw9k69UP9uM50yzkiJM+5Oe7H68SWx1JwtaoIWbAmfb2tCQCYAtAjSm1e3EkA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 06:08:17PM +0200, Greg Kroah-Hartman wrote:
-> From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
-> 
-> The exfat code needs a lot of work to get it into "real" shape for
-> the fs/ part of the kernel, so put it into drivers/staging/ for now so
-> that it can be worked on by everyone in the community.
-> 
-> The full specification of the filesystem can be found at:
->   https://docs.microsoft.com/en-us/windows/win32/fileio/exfat-specification
-> 
-> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  MAINTAINERS                          |    5 +
->  drivers/staging/Kconfig              |    2 +
->  drivers/staging/Makefile             |    1 +
->  drivers/staging/exfat/Kconfig        |   39 +
->  drivers/staging/exfat/Makefile       |   10 +
->  drivers/staging/exfat/TODO           |   12 +
->  drivers/staging/exfat/exfat.h        |  973 ++++++
->  drivers/staging/exfat/exfat_blkdev.c |  136 +
->  drivers/staging/exfat/exfat_cache.c  |  722 +++++
->  drivers/staging/exfat/exfat_core.c   | 3704 +++++++++++++++++++++++
->  drivers/staging/exfat/exfat_nls.c    |  404 +++
->  drivers/staging/exfat/exfat_super.c  | 4137 ++++++++++++++++++++++++++
->  drivers/staging/exfat/exfat_upcase.c |  740 +++++
->  13 files changed, 10885 insertions(+)
->  create mode 100644 drivers/staging/exfat/Kconfig
->  create mode 100644 drivers/staging/exfat/Makefile
->  create mode 100644 drivers/staging/exfat/TODO
->  create mode 100644 drivers/staging/exfat/exfat.h
->  create mode 100644 drivers/staging/exfat/exfat_blkdev.c
->  create mode 100644 drivers/staging/exfat/exfat_cache.c
->  create mode 100644 drivers/staging/exfat/exfat_core.c
->  create mode 100644 drivers/staging/exfat/exfat_nls.c
->  create mode 100644 drivers/staging/exfat/exfat_super.c
->  create mode 100644 drivers/staging/exfat/exfat_upcase.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e3242687cd19..a484b36e5117 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6097,6 +6097,11 @@ F:	include/trace/events/mdio.h
->  F:	include/uapi/linux/mdio.h
->  F:	include/uapi/linux/mii.h
->  
-> +EXFAT FILE SYSTEM
-> +M:	Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> +S:	Maintained
-> +F:	fs/exfat/
+This series intended to fix (again) a bug that was a subject of the=20
+following change:
 
-Oops, I messed this line up.  I moved this to drivers/staging/ and I
-forgot to update this line.  I'll do it in a follow-on patch.
+  6ea6e84 ("KVM: x86: inject exceptions produced by x86_decode_insn")
 
-thanks,
+Suddenly, that fix had a couple mistakes. First, ctxt->have_exception was=20
+not set if fault happened during instruction decoding. Second, returning=20
+value of inject_emulated_instruction was used to make the decision to=20
+reenter guest, but this could happen iff on nested page fault, that is not=
+=20
+the scope where this bug could occur.
 
-greg k-h
+v1:
+  https://lkml.org/lkml/2019/8/27/881
+
+v2
+  - reorder commits, rebase on top kvm/queue
+  - add sanity check for exception value of exception vector
+
+Jan Dakinevich (3):
+  KVM: x86: always stop emulation on page fault
+  KVM: x86: make exception_class() and exception_type() globally visible
+  KVM: x86: set ctxt->have_exception in x86_decode_insn()
+
+ arch/x86/kvm/emulate.c |  5 +++++
+ arch/x86/kvm/x86.c     | 50 +++-------------------------------------------=
+----
+ arch/x86/kvm/x86.h     | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 54 insertions(+), 47 deletions(-)
+
+--=20
+2.1.4
+
