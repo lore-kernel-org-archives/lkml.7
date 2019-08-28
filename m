@@ -2,178 +2,119 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A706C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 05:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C8BC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 05:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1393F22CF4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 05:00:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="itwtnkWI"
+	by mail.kernel.org (Postfix) with ESMTP id 3B4D022DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 05:00:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566968442;
+	bh=Twq2yQQW1kb+CdWAXLUhBkn41nTMmiL4dInftsa3ZCQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tY1FGGXe/BuPvdDsgwLsRd9DXTaEL4NU9dsllY6lBPJSpdQaV/KoM15brLDaEi+UF
+	 csacE1eXnP/rpAsWfHLozsB2qLMrjK5mLL4Vd8W1kV8OizDmshKsfH7K2HDEUaKZpL
+	 4ADB4IMgFn9AAxwfobILnxkvN1BZIkFwohc6EAtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbfH1FAX (ORCPT
+        id S1726290AbfH1FAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 01:00:23 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42346 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbfH1FAW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 01:00:22 -0400
-Received: by mail-lj1-f195.google.com with SMTP id l14so1301776ljj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 22:00:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qf5g/tYp3YFrTIzqEBilUnxPZLxUd4p7Te79zHq65DQ=;
-        b=itwtnkWIWqG+1NxMjL0TcmCSJeOj/xX1vwvpmYbTf0yIf08TMYWlhLpVuN/kzjVpXz
-         c54xuxP1iVa1MpONtKFpWaHIVTpWbJzR9gkJ0GhuWlxYBD8SidnNP6VDIYhB5BEMRhRI
-         +/gsah0hHpwSIM0zF9YjtcWWHKga2oLbTpG+Uz6GCbhSe7u0pkYmvgSYWKMO4X3RBLzQ
-         zTJfGXDFdb0Af7ASMAB0ciGQ2rEQ+3xezuIyQdHis9CSJKw4uwiX6LUA2AJkL7j05BHH
-         cVkG4jy6DZyKzaYMcLgZEAikOLZe8/zpVO0JBZNPgWXYRWRw4b+j7NOhXR2U8dM7UJAz
-         ZHNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qf5g/tYp3YFrTIzqEBilUnxPZLxUd4p7Te79zHq65DQ=;
-        b=BjExBWC308lvMEBPFztHlN95JFOHTqRuD96InMCDHh2rWYq7m4/MnOzO4LoZFjkLJi
-         noolOKcjLGE6FQ6QpAUScbMtmK3Odjsu5r5HkNdJsgaK1TYGMb6yZeBy1Z2IRPUKLJI+
-         ZjyXmlfz5g7NpopNDsQwn6Z5jERyaPcYkmWJQORfEm4iBCO6t2dYqAzTlHtVV2rVloAO
-         L5yOiupyt2s8/PecsVjpd66xpZ4cSeQ3CW+CUP9/LHcQBIKnZCkYsDg1qKKumYitkAqj
-         XzZA8p56Jj8UH1Pn+ZqIqWQOzSxt5BXGb8R2UT3JNTnUDK5pUBK1Hc0mS03kX61IbGEA
-         z2vA==
-X-Gm-Message-State: APjAAAWv+ELEgG4L7KZGONms8YW8gF4er430Npicuxm32XMTJR9Ffpru
-        v7eurD33/PZfrSu+VQyTj/0LE6h57sPqJR2PTPq5Cg==
-X-Google-Smtp-Source: APXvYqx0uanWUxL9fw4n+GU/fNME8gQB50Kpu7FBsrzLpXxZP5UcNrwnA49fDGbqmxH6IA+7KZmO+TQ2+iHHE0CETgM=
-X-Received: by 2002:a2e:800a:: with SMTP id j10mr922530ljg.137.1566968420829;
- Tue, 27 Aug 2019 22:00:20 -0700 (PDT)
+        Wed, 28 Aug 2019 01:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726052AbfH1FAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 01:00:40 -0400
+Received: from localhost (unknown [77.137.115.125])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1C7122CF4;
+        Wed, 28 Aug 2019 05:00:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566968439;
+        bh=Twq2yQQW1kb+CdWAXLUhBkn41nTMmiL4dInftsa3ZCQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WZljqAGWZT4g8A0yMdejOLzv1u7W2uhfFa5rqORxiArnhe3swrP+m7icxDTO0aneI
+         RZd1YgueeJJ/2oUlEJMf2CtPEW+yE08MKFWkXyGlXgAe6Ox6vOQf+5ARKOiSByUK1h
+         jOMxty5Y4iECjQjc+E+TbCaIOBanmLGjjeliin+M=
+Date:   Wed, 28 Aug 2019 08:00:09 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Doug Ledford <dledford@redhat.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH] IB/mlx5: Convert to use vm_map_pages_zero()
+Message-ID: <20190828050009.GB4725@mtr-leonro.mtl.com>
+References: <1566713247-23873-1-git-send-email-jrdr.linux@gmail.com>
+ <20190825194354.GC21239@ziepe.ca>
+ <CAFqt6za5uUSKLMn0E25M1tYG853tpdE-kcoUYHdmby5s4d0JKg@mail.gmail.com>
+ <20190826122055.GA27349@ziepe.ca>
+ <CAFqt6zbTm7jA692-Ta9c5rxKoJyMUz2UPBpYGGs69wRtU=itpw@mail.gmail.com>
+ <20190827154935.GD7149@ziepe.ca>
+ <CAFqt6zb3VzXXnooowpQpTqhvmkB6qxhFHT1C87=3XcwaoP6V5w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190827072738.093683223@linuxfoundation.org>
-In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 28 Aug 2019 10:30:09 +0530
-Message-ID: <CA+G9fYtmHsr8XWvmSLy9QKvF37KfZ4v+T1VnRy2uhpE0HB4Ggg@mail.gmail.com>
-Subject: Re: [PATCH 5.2 000/162] 5.2.11-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFqt6zb3VzXXnooowpQpTqhvmkB6qxhFHT1C87=3XcwaoP6V5w@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019 at 13:30, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Wed, Aug 28, 2019 at 08:57:19AM +0530, Souptick Joarder wrote:
+> On Tue, Aug 27, 2019 at 9:19 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >
+> > On Tue, Aug 27, 2019 at 01:48:57AM +0530, Souptick Joarder wrote:
+> > > On Mon, Aug 26, 2019 at 5:50 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > >
+> > > > On Mon, Aug 26, 2019 at 01:32:09AM +0530, Souptick Joarder wrote:
+> > > > > On Mon, Aug 26, 2019 at 1:13 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > > > >
+> > > > > > On Sun, Aug 25, 2019 at 11:37:27AM +0530, Souptick Joarder wrote:
+> > > > > > > First, length passed to mmap is checked explicitly against
+> > > > > > > PAGE_SIZE.
+> > > > > > >
+> > > > > > > Second, if vma->vm_pgoff is passed as non zero, it would return
+> > > > > > > error. It appears like driver is expecting vma->vm_pgoff to
+> > > > > > > be passed as 0 always.
+> > > > > >
+> > > > > > ? pg_off is not zero
+> > > > >
+> > > > > Sorry, I mean, driver has a check against non zero to return error -EOPNOTSUPP
+> > > > > which means in true scenario driver is expecting vma->vm_pgoff should be passed
+> > > > > as 0.
+> > > >
+> > > > get_index is masking vm_pgoff, it is not 0
+> > >
+> > > Sorry, I missed this part. Further looking into code,
+> > > in mlx5_ib_mmap(), vma_vm_pgoff is used to get command and
+> > > inside mlx5_ib_mmap_clock_info_page() entire *dev->mdev->clock_info*
+> > > is mapped.
+> > >
+> > > Consider that, the below modification will only take care of vma length
+> > > error check inside vm_map_pages_zero() and an extra check for vma
+> > > length is not needed.
+> >
+> > What is the point of vm_map_pages_zero() Is there some reason we should
+> > prefer it for mapping a single page?
 >
-> This is the start of the stable review cycle for the 5.2.11 release.
-> There are 162 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> vm_map_pages_zero() can be used to map single/ multiple pages both.
+> There were drivers previously which either check length and pg_off explicitly
+> or didn't check for incorrect value of length /pg_off passed to it at
+> all. Calling
+> vm_map_pages_zero() in those places were more appropriate as it has
+> internal check for both.
 >
-> Responses should be made by Thu 29 Aug 2019 07:25:02 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.2.11-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.2.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+> Now considering this patch, avoiding an extra check for length
+> explicitly is the only
+> part which can be avoided if converted to use vm_map_pages_zero()
+> because pg_off
+> is used in different context ( to identify command). So yes,
+> improvement wise convert
+> to use vm_map_pages_zero() is not making much difference here.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+So let's drop it, please.
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.2.11-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.2.y
-git commit: 9f631715ffe68666bbe4c5f7ad0dfc1ed387e1a1
-git describe: v5.2.10-163-g9f631715ffe6
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.2-oe/bui=
-ld/v5.2.10-163-g9f631715ffe6
-
-
-No regressions (compared to build v5.2.9-135-gf7d5b3dc4792)
-
-No fixes (compared to build v5.2.9-135-gf7d5b3dc4792)
-
-
-Ran 24414 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Thanks
