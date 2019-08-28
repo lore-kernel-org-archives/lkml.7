@@ -2,38 +2,41 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC01C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F12BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4772080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C52623404
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfH1OZk (ORCPT
+        id S1726990AbfH1OZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:25:40 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5233 "EHLO huawei.com"
+        Wed, 28 Aug 2019 10:25:46 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50138 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726397AbfH1OZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:25:39 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1C7947BC4F351F1B1D10;
-        Wed, 28 Aug 2019 22:25:36 +0800 (CST)
+        id S1726711AbfH1OZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:25:44 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 20AF8B2662C5AD952F02;
+        Wed, 28 Aug 2019 22:25:41 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 28 Aug 2019 22:25:29 +0800
+ 14.3.439.0; Wed, 28 Aug 2019 22:25:31 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 00/12] net: hns3: add some cleanups and optimizations
-Date:   Wed, 28 Aug 2019 22:23:04 +0800
-Message-ID: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Guojia Liao <liaoguojia@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 07/12] net: hns3: fix incorrect type in assignment.
+Date:   Wed, 28 Aug 2019 22:23:11 +0800
+Message-ID: <1567002196-63242-8-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
+References: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.212.132]
@@ -43,74 +46,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set includes cleanups, optimizations and bugfix for
-the HNS3 ethernet controller driver.
+From: Guojia Liao <liaoguojia@huawei.com>
 
-[patch 01/12] adds code optimization for debugfs command "dump reg".
+This patch fixes some incorrect type in assignment reported by sparse.
+Those sparse warning as below:
+- warning : restricted __le16 degrades to integer
+- warning : cast from restricted __le32
+- warning : expected restricted __le32
+- warning : cast from restricted __be32
+- warning : cast from restricted __be16
+- warning : cast to restricted __le16
 
-[patch 02/12] fixes magic number issues.
+Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
+Reviewed-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 38 ++++++++++++++--------
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c   | 10 +++---
+ 2 files changed, 30 insertions(+), 18 deletions(-)
 
-[patch 03/12] modifies some parameters about hclge_dbg_dump_tm_map().
-
-[patch 04/12] removes some unused parameters.
-
-[patch 05/12] refactors some logs to make them more readable.
-
-[patch 06/12] makes some resusable codes into functions.
-
-[patch 07/12] fixes some type errors.
-
-[patch 08/12] reduces the waiting time for per TQP reset.
-
-[patch 09/12] implements .process_hw_error for hns3 client.
-
-[patch 10/12] adds phy selftest for HNS3 driver.
-
-[patch 11/12] adds checking for reset interrupt status when reset fails.
-
-[patch 12/12] prevents SSU loopback when running ethtool -t.
-
-Guojia Liao (2):
-  net: hns3: reduce the parameters of some functions
-  net: hns3: fix incorrect type in assignment.
-
-Huazhong Tan (3):
-  net: hns3: use macro instead of magic number
-  net: hns3: modify base parameter of kstrtouint in
-    hclge_dbg_dump_tm_map
-  net: hns3: check reset interrupt status when reset fails
-
-Weihang Li (1):
-  net: hns3: implement .process_hw_error for hns3 client
-
-Yonglong Liu (1):
-  net: hns3: make some reusable codes into a function
-
-Yufeng Mo (3):
-  net: hns3: optimize some log printings
-  net: hns3: add phy selftest function
-  net: hns3: not allow SSU loopback while execute ethtool -t dev
-
-Zhongzhu Liu (2):
-  net: hns3: code optimization for debugfs related to "dump reg"
-  net: hns3: optimize waiting time for TQP reset
-
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   9 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c |  25 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |  24 ++
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |   5 +
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  16 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  28 +++
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c |  54 ++--
- .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 271 +++++++++++----------
- .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h |  19 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c |  42 ++--
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |   1 +
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 268 ++++++++++++++++----
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   9 +-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c   |  10 +-
- 14 files changed, 546 insertions(+), 235 deletions(-)
-
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+index 2425b3f..d986c36 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+@@ -930,32 +930,44 @@ static int hclge_config_ppu_error_interrupts(struct hclge_dev *hdev, u32 cmd,
+ 	/* configure PPU error interrupts */
+ 	if (cmd == HCLGE_PPU_MPF_ECC_INT_CMD) {
+ 		hclge_cmd_setup_basic_desc(&desc[0], cmd, false);
+-		desc[0].flag |= HCLGE_CMD_FLAG_NEXT;
++		desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
+ 		hclge_cmd_setup_basic_desc(&desc[1], cmd, false);
+ 		if (en) {
+-			desc[0].data[0] = HCLGE_PPU_MPF_ABNORMAL_INT0_EN;
+-			desc[0].data[1] = HCLGE_PPU_MPF_ABNORMAL_INT1_EN;
+-			desc[1].data[3] = HCLGE_PPU_MPF_ABNORMAL_INT3_EN;
+-			desc[1].data[4] = HCLGE_PPU_MPF_ABNORMAL_INT2_EN;
++			desc[0].data[0] =
++				cpu_to_le32(HCLGE_PPU_MPF_ABNORMAL_INT0_EN);
++			desc[0].data[1] =
++				cpu_to_le32(HCLGE_PPU_MPF_ABNORMAL_INT1_EN);
++			desc[1].data[3] =
++				cpu_to_le32(HCLGE_PPU_MPF_ABNORMAL_INT3_EN);
++			desc[1].data[4] =
++				cpu_to_le32(HCLGE_PPU_MPF_ABNORMAL_INT2_EN);
+ 		}
+ 
+-		desc[1].data[0] = HCLGE_PPU_MPF_ABNORMAL_INT0_EN_MASK;
+-		desc[1].data[1] = HCLGE_PPU_MPF_ABNORMAL_INT1_EN_MASK;
+-		desc[1].data[2] = HCLGE_PPU_MPF_ABNORMAL_INT2_EN_MASK;
+-		desc[1].data[3] |= HCLGE_PPU_MPF_ABNORMAL_INT3_EN_MASK;
++		desc[1].data[0] =
++			cpu_to_le32(HCLGE_PPU_MPF_ABNORMAL_INT0_EN_MASK);
++		desc[1].data[1] =
++			cpu_to_le32(HCLGE_PPU_MPF_ABNORMAL_INT1_EN_MASK);
++		desc[1].data[2] =
++			cpu_to_le32(HCLGE_PPU_MPF_ABNORMAL_INT2_EN_MASK);
++		desc[1].data[3] |=
++			cpu_to_le32(HCLGE_PPU_MPF_ABNORMAL_INT3_EN_MASK);
+ 		desc_num = 2;
+ 	} else if (cmd == HCLGE_PPU_MPF_OTHER_INT_CMD) {
+ 		hclge_cmd_setup_basic_desc(&desc[0], cmd, false);
+ 		if (en)
+-			desc[0].data[0] = HCLGE_PPU_MPF_ABNORMAL_INT2_EN2;
++			desc[0].data[0] =
++				cpu_to_le32(HCLGE_PPU_MPF_ABNORMAL_INT2_EN2);
+ 
+-		desc[0].data[2] = HCLGE_PPU_MPF_ABNORMAL_INT2_EN2_MASK;
++		desc[0].data[2] =
++			cpu_to_le32(HCLGE_PPU_MPF_ABNORMAL_INT2_EN2_MASK);
+ 	} else if (cmd == HCLGE_PPU_PF_OTHER_INT_CMD) {
+ 		hclge_cmd_setup_basic_desc(&desc[0], cmd, false);
+ 		if (en)
+-			desc[0].data[0] = HCLGE_PPU_PF_ABNORMAL_INT_EN;
++			desc[0].data[0] =
++				cpu_to_le32(HCLGE_PPU_PF_ABNORMAL_INT_EN);
+ 
+-		desc[0].data[2] = HCLGE_PPU_PF_ABNORMAL_INT_EN_MASK;
++		desc[0].data[2] =
++			cpu_to_le32(HCLGE_PPU_PF_ABNORMAL_INT_EN_MASK);
+ 	} else {
+ 		dev_err(dev, "Invalid cmd to configure PPU error interrupts\n");
+ 		return -EINVAL;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+index 6a96987..a108191 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+@@ -277,9 +277,9 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
+ 
+ 		switch (msg_q[0]) {
+ 		case HCLGE_MBX_LINK_STAT_CHANGE:
+-			link_status = le16_to_cpu(msg_q[1]);
++			link_status = msg_q[1];
+ 			memcpy(&speed, &msg_q[2], sizeof(speed));
+-			duplex = (u8)le16_to_cpu(msg_q[4]);
++			duplex = (u8)msg_q[4];
+ 
+ 			/* update upper layer with new link link status */
+ 			hclgevf_update_link_status(hdev, link_status);
+@@ -287,7 +287,7 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
+ 
+ 			break;
+ 		case HCLGE_MBX_LINK_STAT_MODE:
+-			idx = (u8)le16_to_cpu(msg_q[1]);
++			idx = (u8)msg_q[1];
+ 			if (idx)
+ 				memcpy(&hdev->hw.mac.supported, &msg_q[2],
+ 				       sizeof(unsigned long));
+@@ -301,14 +301,14 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
+ 			 * has been completely reset. After this stack should
+ 			 * eventually be re-initialized.
+ 			 */
+-			reset_type = le16_to_cpu(msg_q[1]);
++			reset_type = (enum hnae3_reset_type)msg_q[1];
+ 			set_bit(reset_type, &hdev->reset_pending);
+ 			set_bit(HCLGEVF_RESET_PENDING, &hdev->reset_state);
+ 			hclgevf_reset_task_schedule(hdev);
+ 
+ 			break;
+ 		case HCLGE_MBX_PUSH_VLAN_INFO:
+-			state = le16_to_cpu(msg_q[1]);
++			state = msg_q[1];
+ 			vlan_info = &msg_q[1];
+ 			hclgevf_update_port_base_vlan_info(hdev, state,
+ 							   (u8 *)vlan_info, 8);
 -- 
 2.7.4
 
