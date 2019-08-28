@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B5CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF21C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF1162189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04E902189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V/w56ls6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CsodN8Ty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfH1IV6 (ORCPT
+        id S1726619AbfH1IWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:21:58 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36271 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbfH1IVx (ORCPT
+        Wed, 28 Aug 2019 04:22:09 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46073 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbfH1IVz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:21:53 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w2so1231513pfi.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 01:21:53 -0700 (PDT)
+        Wed, 28 Aug 2019 04:21:55 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y8so868732plr.12
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 01:21:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kznkhzmN9JbxPn8XUCQRZKmUtSzS9jvDsbj/mMs4NBw=;
-        b=V/w56ls6Ay3QOsjzTzGMPhv5Vyszl4x1jFxXn9EJH/k56sAYTvaFi10tNPzVtMJSbH
-         /gRA3fNGWlxLv54fYDaWsHXL1FNteIaSVyG7vptX6wPRDbK3MP567XC2Mt6eaSZ83eZ7
-         baYS0udHyP0c38OrnkQzU1Vn1pP/iczxU/Q+A=
+        bh=zBHpNvufe28nLemPiNmtcBO4lsWCA9oHO3YETBlFgi4=;
+        b=CsodN8TyIXBUvJIf8wrH4ECCazW4cHFoHhyOesxNpaIdhZoxOUHWaSA10IQOlNTD0D
+         KbfLc9iTL244E3wQojl7eL/NeLFhWUCi/ZHveyHaByH30l7mTy1SWPjz7Jq1OUr1w5cb
+         5+jMzeIpWl9EsbExUX8qKFs55sslZwFuXnIKI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kznkhzmN9JbxPn8XUCQRZKmUtSzS9jvDsbj/mMs4NBw=;
-        b=U2w4xbH4hQrTvJcK1k31ZEly4G58Uzs5L5xAR+riFAzmDt9jDopMnf3sfTqadgzvAh
-         VdogXhY0Cx2i7j/6L84E81KTTMBlG0D4BzD/Fpm/nM3bufuHi9zfjaLw41l+eebvcMpB
-         4hr6CAjSnwsDnw1Hi/82b9Zla4nEB9EjejIgyT83s2mAS13STfjobSvx6oyvVv5jlqel
-         Hl4tpMku8xVmsODFIUomX6IXxMW3JmuNrWp+R2z2zHVKkPolRE0kuIJSk3qtUNFN4zJv
-         vyz7a20gIKPnYZCVSE0lITeWTHNfjAU3PANIrAOYOZb1nyEKREOJL6sMUWlBij5q7Yxz
-         KiIw==
-X-Gm-Message-State: APjAAAWDNFfiC31DySZ2RqXjny/rOBVRIs0PkNIeg2JxDkpCX78irrHG
-        kOyFbhxnhGYy8gtpHqUTkm1IJg==
-X-Google-Smtp-Source: APXvYqxWNOyFreSUkBxhGLUQ4zpSt5YnnHrl0WCgaMOGDT4bhiCpMhx0tCx5KBolsLoPKxdcz8/NNg==
-X-Received: by 2002:a63:2043:: with SMTP id r3mr2397965pgm.311.1566980512951;
-        Wed, 28 Aug 2019 01:21:52 -0700 (PDT)
+        bh=zBHpNvufe28nLemPiNmtcBO4lsWCA9oHO3YETBlFgi4=;
+        b=goTYH5MOF6n2Bw+b///InS0mFlhniSEiDoGhXs0MldRAAMW8dl77ZN0AZhwD6+7kBY
+         as30oJ0t/bPcet3zxi5Mbu64wodywsgr+6pnEBIil4ush9AqsO+LzZfisR9pqQWxRz0A
+         06Jt4GJ/NO7zsYmtiSJRoInY7EhmYrBoQq02E6/axqYWtaZWdboL4zONc/kJoR+aGPqQ
+         fFWghP2ZMo8BayUMatNqHb+dQITNctVovvPTE01g15QEhHQlTWr3YvABB2rU8guZBdQq
+         pALXqSI1rWh531znHg0h0WrWT/w5ddLsBXU+/m24Vy32qE9PHhzGMdXAan4blPjuo4m6
+         7fKw==
+X-Gm-Message-State: APjAAAV5jjrDA72b7xWh1FCKi/dIl8N2G1PtF8Kd1O/QM4pcexkdRBtL
+        qZm4y+SXX6DcHSjsbdnLZg3RQQ==
+X-Google-Smtp-Source: APXvYqxNfuZcG+FCfxCwwXrymGrrC78fPo1dlzMiQr2RsEW1DtIZgFw5mh5ldb74v70RfnvZ/HcTuQ==
+X-Received: by 2002:a17:902:1024:: with SMTP id b33mr3126228pla.325.1566980514791;
+        Wed, 28 Aug 2019 01:21:54 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id y10sm1296959pjp.27.2019.08.28.01.21.51
+        by smtp.gmail.com with ESMTPSA id y10sm1296959pjp.27.2019.08.28.01.21.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 01:21:52 -0700 (PDT)
+        Wed, 28 Aug 2019 01:21:54 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     Peter Huewe <peterhuewe@gmx.de>,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
+Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>,
         Duncan Laurie <dlaurie@chromium.org>,
         Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Guenter Roeck <groeck@chromium.org>,
         Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v5 1/4] dt-bindings: tpm: document properties for cr50
-Date:   Wed, 28 Aug 2019 01:21:47 -0700
-Message-Id: <20190828082150.42194-2-swboyd@chromium.org>
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v5 3/4] tpm: tpm_tis_spi: Introduce a flow control callback
+Date:   Wed, 28 Aug 2019 01:21:49 -0700
+Message-Id: <20190828082150.42194-4-swboyd@chromium.org>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 In-Reply-To: <20190828082150.42194-1-swboyd@chromium.org>
 References: <20190828082150.42194-1-swboyd@chromium.org>
@@ -77,10 +77,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Pronin <apronin@chromium.org>
-
-Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
-firmware.
+Cr50 firmware has a different flow control protocol than the one used by
+this TPM PTP SPI driver. Introduce a flow control callback so we can
+override the standard sequence with the custom one that Cr50 uses.
 
 Cc: Andrey Pronin <apronin@chromium.org>
 Cc: Duncan Laurie <dlaurie@chromium.org>
@@ -90,39 +89,110 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Guenter Roeck <groeck@chromium.org>
 Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
 Cc: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Andrey Pronin <apronin@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- .../bindings/security/tpm/google,cr50.txt     | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+ drivers/char/tpm/tpm_tis_spi.c | 62 ++++++++++++++++++++++------------
+ 1 file changed, 41 insertions(+), 21 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.txt b/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
-new file mode 100644
-index 000000000000..cd69c2efdd37
---- /dev/null
-+++ b/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
-@@ -0,0 +1,19 @@
-+* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
+diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
+index 19513e622053..b3ed85671dd8 100644
+--- a/drivers/char/tpm/tpm_tis_spi.c
++++ b/drivers/char/tpm/tpm_tis_spi.c
+@@ -42,6 +42,8 @@
+ struct tpm_tis_spi_phy {
+ 	struct tpm_tis_data priv;
+ 	struct spi_device *spi_device;
++	int (*flow_control)(struct tpm_tis_spi_phy *phy,
++			    struct spi_transfer *xfer);
+ 	u8 *iobuf;
+ };
+ 
+@@ -50,12 +52,46 @@ static inline struct tpm_tis_spi_phy *to_tpm_tis_spi_phy(struct tpm_tis_data *da
+ 	return container_of(data, struct tpm_tis_spi_phy, priv);
+ }
+ 
++/*
++ * TCG SPI flow control is documented in section 6.4 of the spec[1]. In short,
++ * keep trying to read from the device until MISO goes high indicating the
++ * wait state has ended.
++ *
++ * [1] https://trustedcomputinggroup.org/resource/pc-client-platform-tpm-profile-ptp-specification/
++ */
++static int tpm_tis_spi_flow_control(struct tpm_tis_spi_phy *phy,
++				    struct spi_transfer *spi_xfer)
++{
++	struct spi_message m;
++	int ret, i;
 +
-+H1 Secure Microcontroller running Cr50 firmware provides several
-+functions, including TPM-like functionality. It communicates over
-+SPI using the FIFO protocol described in the PTP Spec, section 6.
++	if ((phy->iobuf[3] & 0x01) == 0) {
++		// handle SPI wait states
++		phy->iobuf[0] = 0;
 +
-+Required properties:
-+- compatible: Should be "google,cr50".
-+- spi-max-frequency: Maximum SPI frequency.
++		for (i = 0; i < TPM_RETRY; i++) {
++			spi_xfer->len = 1;
++			spi_message_init(&m);
++			spi_message_add_tail(spi_xfer, &m);
++			ret = spi_sync_locked(phy->spi_device, &m);
++			if (ret < 0)
++				return ret;
++			if (phy->iobuf[0] & 0x01)
++				break;
++		}
 +
-+Example:
++		if (i == TPM_RETRY)
++			return -ETIMEDOUT;
++	}
 +
-+&spi0 {
-+	tpm@0 {
-+		compatible = "google,cr50";
-+		reg = <0>;
-+		spi-max-frequency = <800000>;
-+	};
-+};
++	return 0;
++}
++
+ static int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
+ 				u8 *in, const u8 *out)
+ {
+ 	struct tpm_tis_spi_phy *phy = to_tpm_tis_spi_phy(data);
+ 	int ret = 0;
+-	int i;
+ 	struct spi_message m;
+ 	struct spi_transfer spi_xfer;
+ 	u8 transfer_len;
+@@ -82,26 +118,9 @@ static int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
+ 		if (ret < 0)
+ 			goto exit;
+ 
+-		if ((phy->iobuf[3] & 0x01) == 0) {
+-			// handle SPI wait states
+-			phy->iobuf[0] = 0;
+-
+-			for (i = 0; i < TPM_RETRY; i++) {
+-				spi_xfer.len = 1;
+-				spi_message_init(&m);
+-				spi_message_add_tail(&spi_xfer, &m);
+-				ret = spi_sync_locked(phy->spi_device, &m);
+-				if (ret < 0)
+-					goto exit;
+-				if (phy->iobuf[0] & 0x01)
+-					break;
+-			}
+-
+-			if (i == TPM_RETRY) {
+-				ret = -ETIMEDOUT;
+-				goto exit;
+-			}
+-		}
++		ret = phy->flow_control(phy, &spi_xfer);
++		if (ret < 0)
++			goto exit;
+ 
+ 		spi_xfer.cs_change = 0;
+ 		spi_xfer.len = transfer_len;
+@@ -207,6 +226,7 @@ static int tpm_tis_spi_probe(struct spi_device *dev)
+ 	phy->iobuf = devm_kmalloc(&dev->dev, MAX_SPI_FRAMESIZE, GFP_KERNEL);
+ 	if (!phy->iobuf)
+ 		return -ENOMEM;
++	phy->flow_control = tpm_tis_spi_flow_control;
+ 
+ 	/* If the SPI device has an IRQ then use that */
+ 	if (dev->irq > 0)
 -- 
 Sent by a computer through tubes
 
