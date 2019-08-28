@@ -2,106 +2,127 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FABC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5803EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F31602077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D07E2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:22:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFysR3J8"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UEaOy375"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfH1PWY (ORCPT
+        id S1726909AbfH1PW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:22:24 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46232 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfH1PWX (ORCPT
+        Wed, 28 Aug 2019 11:22:28 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38068 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfH1PWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:22:23 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q139so1916580pfc.13;
-        Wed, 28 Aug 2019 08:22:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=K1Wo1uryMad+JJHaOOhI3eSiwsKm2WkRf/8nzV4iG5o=;
-        b=GFysR3J8M2/ErxWakUhYzi+sSNmBeOJsqfZEFYbxE1KjTRbEdMgPJwDSY2sfWBF4M7
-         m554SzdeYG0q9h/3O3YP6S2ney8bZM6NSUhhOs+BcEYtnRmLb27/zrn1sJZtev1TbNe8
-         Ai8qsV+khBr3j4Yeyz+kBWE8P0eeENZ+6OFFzS80tsvOSrP0xUaSlO1uH6C13cFJ1009
-         cxRzDP706pd2EsdANnd/MK7GNAPYq8p3tpJ8PjWaOCxXwYlQQGvYBgvVjchn42TnWe65
-         11Wwhjjeaz6joh+i8Sr2d4JPadlNYYU7M2Bgrc23JlOSFDz4XSx0ovXC/EBXU/ZO9zLX
-         +74A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K1Wo1uryMad+JJHaOOhI3eSiwsKm2WkRf/8nzV4iG5o=;
-        b=mA55HSv0Se57jG3Smf8xcDnDsb55Wi8iZw7c1XJAxvmvFayCRQsdNxWOG89H1wLmsl
-         /jjAqiPQGxWTtzEfkz8MB/i1FcWdv5DTmoP/3Ya2Y4hlYKRcX2y+u3bg6j2yyC6O9AS+
-         D3QQh00Mtg+mtPzYIkNYUT1glDoXzIkL+pgpmNgSLw55p4jFtg3oKm9i4yDeSOS227ob
-         /tYbZzngkVcMssFlFWmn+Jm5awiaTSCdkfQGzpvZ618+k7PNyx1ywOxAmZqvmmOzUijF
-         JVs5vtv/X41IjG2NKM5d7uFqvWtIGBiRVWkEFBecpBuMaXxKMsPB6Xb4JHYcTVDURxa0
-         mZ5A==
-X-Gm-Message-State: APjAAAWadgk1gS3+qg177cxjmyai4lXba9L1Y+ER5UGbkiKb+TTHDTg2
-        d+Cy+LwWKxVe7Tcn+4PxG443nPPb
-X-Google-Smtp-Source: APXvYqwMulwQmSKyJYZ5XStrF/EheQfqT2YR1ENZMg7+TqRcL/vGToHCYNsXooYGBikFTAvDL3sR0g==
-X-Received: by 2002:a17:90a:bc06:: with SMTP id w6mr5002407pjr.130.1567005743009;
-        Wed, 28 Aug 2019 08:22:23 -0700 (PDT)
-Received: from [10.69.69.102] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id g1sm3330822pgg.27.2019.08.28.08.22.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 08:22:22 -0700 (PDT)
-Subject: Re: [linux-next][BUG][driver/scsi/lpfc][10541f] Kernel panics when
- booting next kernel on my Power 9 box
-To:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc:     linux-next <linux-next@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        sachinp <sachinp@linux.vnet.ibm.com>,
-        manvanth <manvanth@linux.vnet.ibm.com>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        dick.kennedy@broadcom.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        dougmill <dougmill@linux.vnet.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>
-References: <1566968536.23670.9.camel@abdul>
-From:   James Smart <jsmart2021@gmail.com>
-Message-ID: <601365f6-c753-96f6-5d61-481f54d95440@gmail.com>
-Date:   Wed, 28 Aug 2019 08:22:17 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 11:22:25 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7SFMKTC117468;
+        Wed, 28 Aug 2019 10:22:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1567005740;
+        bh=7IGgI698zMF/+s89pWm3Pcl96yqo3HGlbNGLfaQySdY=;
+        h=From:To:CC:Subject:Date;
+        b=UEaOy375IM8Zc52bptNfiBPLq8fFfh9vY/h54ozDOihtFo9koAzGiqXkZPYYJdVLX
+         8ze0Tw2g23PvEXeBMonrE+Pe5N9W0iDBTPIU5e8edaoXx2PNUwo7bdjd4kqXAwAFd9
+         2g90DP4npjy8ooU2E5wk71nHX4mn7erQJKmlj30g=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7SFMKai029873
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 28 Aug 2019 10:22:20 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 28
+ Aug 2019 10:22:20 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 28 Aug 2019 10:22:20 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7SFMKH2047280;
+        Wed, 28 Aug 2019 10:22:20 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v2] leds: ti-lmu-common: Fix coccinelle issue in TI LMU
+Date:   Wed, 28 Aug 2019 10:22:19 -0500
+Message-ID: <20190828152219.27640-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 MIME-Version: 1.0
-In-Reply-To: <1566968536.23670.9.camel@abdul>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/2019 10:02 PM, Abdul Haleem wrote:
-> Greetings,
-> 
-> linux-next kernel 5.3.0-rc1 failed to boot with kernel Oops on Power 9
-> box
-> 
-> I see a recent changes to lpfc code was from commit
-> 10541f03 scsi: lpfc: Update lpfc version to 12.4.0.0
-> 
-> Recent boot logs:
-> 
-> [..snip..]
+Fix the coccinelle issues found in the TI LMU common code
 
-see  https://www.spinics.net/lists/linux-scsi/msg133343.html
+drivers/leds/leds-ti-lmu-common.c:97:20-29: WARNING: Unsigned expression compared with zero: ramp_down < 0
+drivers/leds/leds-ti-lmu-common.c:97:5-12: WARNING: Unsigned expression compared with zero: ramp_up < 0
 
-It hasn't been tested yet, but appears to be the issue.
+Fixes: f717460ba4d7 ("leds: TI LMU: Add common code for TI LMU devices")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/leds/leds-ti-lmu-common.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
--- james
+diff --git a/drivers/leds/leds-ti-lmu-common.c b/drivers/leds/leds-ti-lmu-common.c
+index adc7293004f1..e294a0b097e3 100644
+--- a/drivers/leds/leds-ti-lmu-common.c
++++ b/drivers/leds/leds-ti-lmu-common.c
+@@ -11,10 +11,10 @@
+ 
+ #include <linux/leds-ti-lmu-common.h>
+ 
+-const static int ramp_table[16] = {2048, 262000, 524000, 1049000, 2090000,
+-				4194000, 8389000, 16780000, 33550000, 41940000,
+-				50330000, 58720000, 67110000, 83880000,
+-				100660000, 117440000};
++const static unsigned int ramp_table[16] = {2048, 262000, 524000, 1049000,
++				2090000, 4194000, 8389000, 16780000, 33550000,
++				41940000, 50330000, 58720000, 67110000,
++				83880000, 100660000, 117440000};
+ 
+ static int ti_lmu_common_update_brightness(struct ti_lmu_bank *lmu_bank,
+ 					   int brightness)
+@@ -54,7 +54,7 @@ int ti_lmu_common_set_brightness(struct ti_lmu_bank *lmu_bank, int brightness)
+ }
+ EXPORT_SYMBOL(ti_lmu_common_set_brightness);
+ 
+-static int ti_lmu_common_convert_ramp_to_index(unsigned int usec)
++static unsigned int ti_lmu_common_convert_ramp_to_index(unsigned int usec)
+ {
+ 	int size = ARRAY_SIZE(ramp_table);
+ 	int i;
+@@ -78,7 +78,7 @@ static int ti_lmu_common_convert_ramp_to_index(unsigned int usec)
+ 		}
+ 	}
+ 
+-	return -EINVAL;
++	return 0;
+ }
+ 
+ int ti_lmu_common_set_ramp(struct ti_lmu_bank *lmu_bank)
+@@ -94,9 +94,6 @@ int ti_lmu_common_set_ramp(struct ti_lmu_bank *lmu_bank)
+ 		ramp_down = ti_lmu_common_convert_ramp_to_index(lmu_bank->ramp_down_usec);
+ 	}
+ 
+-	if (ramp_up < 0 || ramp_down < 0)
+-		return -EINVAL;
+-
+ 	ramp = (ramp_up << 4) | ramp_down;
+ 
+ 	return regmap_write(regmap, lmu_bank->runtime_ramp_reg, ramp);
+-- 
+2.22.0.214.g8dca754b1e
+
