@@ -2,56 +2,91 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944BAC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69950C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 760FB214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44DCA22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbfH1JGo (ORCPT
+        id S1726457AbfH1JHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:06:44 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:56300 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbfH1JGo (ORCPT
+        Wed, 28 Aug 2019 05:07:24 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:30971 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726273AbfH1JHX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:06:44 -0400
-Received: from 79.184.255.249.ipv4.supernova.orange.pl (79.184.255.249) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 454af4f2b3dfb6e0; Wed, 28 Aug 2019 11:06:41 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     myungjoo.ham@gmail.com
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: linux-next: build warning after merge of the devfreq tree
-Date:   Wed, 28 Aug 2019 11:06:41 +0200
-Message-ID: <1642617.PhSKYY5FVN@kreacher>
-In-Reply-To: <CAJ0PZbRvDMW2EApVJ1aaP4O9P3SQTs6Urysm3g-89NrfvVqP-g@mail.gmail.com>
-References: <20190826215017.02ab0d34@canb.auug.org.au> <CAJ0PZbRvDMW2EApVJ1aaP4O9P3SQTs6Urysm3g-89NrfvVqP-g@mail.gmail.com>
+        Wed, 28 Aug 2019 05:07:23 -0400
+X-UUID: c78317828a0b4ae18c00e6d6b0cc0b2d-20190828
+X-UUID: c78317828a0b4ae18c00e6d6b0cc0b2d-20190828
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <yong.mao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1799987658; Wed, 28 Aug 2019 17:07:18 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 28 Aug 2019 17:07:24 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 28 Aug 2019 17:07:24 +0800
+From:   Yong Mao <yong.mao@mediatek.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-mmc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        yong mao <yong.mao@mediatek.com>
+Subject: [PATCH] mmc: mediatek: enable SDIO IRQ low level trigger function
+Date:   Wed, 28 Aug 2019 17:07:10 +0800
+Message-ID: <1566983230-22481-1-git-send-email-yong.mao@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, August 26, 2019 2:46:08 PM CEST MyungJoo Ham wrote:
-> Thank you for pointing this out!
-> 
-> I've added a fix to the tree:
-> https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/log/?h=for-next
-> (and shared the patch in a previous reply)
-> 
-> Rafael, could you please pull the fix from the git repo above?
+From: yong mao <yong.mao@mediatek.com>
 
-Done, thanks!
+SDIO IRQ is not defaultly triggered by low level,
+but by falling edge. It needs to set related register
+to enable SDIO IRQ low level trigger function.
+Otherwise the SDIO IRQ may be lost in some specail condition.
 
+Signed-off-by: Yong Mao <yong.mao@mediatek.com>
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+---
+ drivers/mmc/host/mtk-sd.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index 33f4b63..2444268 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -192,6 +192,7 @@
+ #define SDC_STS_CMDBUSY         (0x1 << 1)	/* RW */
+ #define SDC_STS_SWR_COMPL       (0x1 << 31)	/* RW */
+ 
++#define SDC_DAT1_IRQ_TRIGGER	(0x1 << 20)	/* RW */
+ /* SDC_ADV_CFG0 mask */
+ #define SDC_RX_ENHANCE_EN	(0x1 << 20)	/* RW */
+ 
+@@ -1568,6 +1569,7 @@ static void msdc_init_hw(struct msdc_host *host)
+ 
+ 	/* Config SDIO device detect interrupt function */
+ 	sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
++	sdr_set_bits(host->base + SDC_ADV_CFG0, SDC_DAT1_IRQ_TRIGGER);
+ 
+ 	/* Configure to default data timeout */
+ 	sdr_set_field(host->base + SDC_CFG, SDC_CFG_DTOC, 3);
+-- 
+1.9.1
 
