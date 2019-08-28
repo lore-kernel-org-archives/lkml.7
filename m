@@ -2,153 +2,115 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C888FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C61F5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D422189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986F02189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="syWVlYNg"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="pc2FgNUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfH1OKE (ORCPT
+        id S1726554AbfH1OMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:10:04 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44067 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfH1OKC (ORCPT
+        Wed, 28 Aug 2019 10:12:02 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52479 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfH1OMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:10:02 -0400
-Received: by mail-lj1-f193.google.com with SMTP id e24so2690095ljg.11
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 07:10:01 -0700 (PDT)
+        Wed, 28 Aug 2019 10:12:02 -0400
+Received: by mail-wm1-f68.google.com with SMTP id t17so231489wmi.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 07:12:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bKt821ZOo8b4wunZdO5Tqq/lepKvMI98la3oRAg9cpY=;
-        b=syWVlYNgyF0AL8fpECZjp/ozllB/yxhtEUFeqG68NY9/b4WeLLUgS3JpqM+L+lU6pD
-         c4Z7WbQEHAiY7XHtqIzEkU8le2+KZI9mpjdu9z4JrFodapFqSMQMQSAB/K9E7RKwfvWQ
-         XbYJlxKlAw6eW3qkmNMwzIOcW2reyqMkeajNHdfZ3b6Yov+9P5tlmdqM0Aau/NmHnqDR
-         6lPtKac+htOL3D21fR0eRolm2Jrm5Sr0eEg6oEKUixX1h/0PrZCxZOMwFaC9AoKgxzNT
-         F2tN3y0nvd27MvJ1w9dE+gDVTH5edhFMqJ+BY0FysImafsg6J68YqKtywwiRP+dH17qd
-         M+ZQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f1KAv8pKi0AoAgvfh+n5R42Iglf6I+wQt55KJGFF0fM=;
+        b=pc2FgNUQUjmKwzqDzFdyQRbg8Pz0IJ1f67uI8PAy3R+CZy+hUqM5zfcBwGGC0RoBeZ
+         +R0k3wlkOb2mxbERi6LKxTZZzNQu4F02boiRkENQKTIvk9fBBLIYpfPbgaADkVqMgSCJ
+         V1snUwxahhr3Mra0ax3jiesoRcDHZvl5OdK0wonGTm//SQCKQWwaX+n1REV0O+KdfyqD
+         mn8DjWAWkOKYSfHlaRQ7tEDhtYXRekb7UhNMdiz86p8XFnanbwHRSK/wRzlX3zjD0yAi
+         rSgrbYyRggylCIaxeMZ2SQxHL6BiJv3ReBDfNsga+HY/LeH7EXiW/l97aHRxzYH7MkP2
+         j4OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bKt821ZOo8b4wunZdO5Tqq/lepKvMI98la3oRAg9cpY=;
-        b=PF0UyYANR8XOHZow6FbtagCovnM3GzlsKwaDkzrddyKF9/WxUu23i2peOd8V6oqfVf
-         dWxLpeWvoBK3HnjZNgAjLOOsDNyyyqn8rzANHH+/uG5Nu5b+NcaMiRjykeiDB3nCNjlp
-         DeNm8Mn9rzveQks+d+dw2hiM+cTNS1nHHS6mUdmGJo3ZLWqAqkAX8tpNL5uRCxdyW+PZ
-         19GgipPK1L7LYLsOd6Sa2bHzMtJxAMennq3aXUkvxsq+TSkq6S6hb87KUwKzLZdbdpRZ
-         4Lu94yyFBw5WjmVRfO4/Sjs9SuOA3McTIelH09AJa/7RLfcNcx1nQj03F7yLE1yy7v5z
-         gsjA==
-X-Gm-Message-State: APjAAAVkWCbXSHGzGHBYFokxc2NHxZh+JVMAhFUQYhqfXCsED2TnQ44F
-        0wTiqv1WVDjixvPSfg46jaUG/uf8vk6ulWROfWQ4tQ==
-X-Google-Smtp-Source: APXvYqx1HYdaOVRgR53coEk7YAqre/jCVJ11CH7izTFp08UzGAn+yD4ntT2znZqIPvgIrvqUHKd4MxoMSalqcOzpP8M=
-X-Received: by 2002:a2e:97cc:: with SMTP id m12mr2181891ljj.24.1567001400206;
- Wed, 28 Aug 2019 07:10:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f1KAv8pKi0AoAgvfh+n5R42Iglf6I+wQt55KJGFF0fM=;
+        b=DUTCOiJnDSiVGkar2EYncXhc8GIUV3jYdeaQlXCuMRauUL9H2dGKXEoN0UZ9dd0uq3
+         ii3YbuCnH6U2RCtRfEsUc4kGojS+AxL++dktSlISv7rVMC3ue2ifG9ackKWfyW2+eE4d
+         6HGdJuWtr1dMz8b/GkLIhRXSa4Nl+SVUlATBBT/lH0KptJdeiylRbw4qzF1TZwAHnMDh
+         ZDnFg0bu4xWRPFS3XMMPOSbAJfjjdH/AbpeZsJW5jnJaQnUffZxGYovwZJPrsnTmqwBT
+         nnOs5wED3YqzXHqeJydw9z3WpiJ6T95wDo54B1KiQDVhWlF0adphDnpwCDXvDrqOCutg
+         6hRQ==
+X-Gm-Message-State: APjAAAX4S6K2AQyUEs2k53lBXasnbiu1/NegurToXOpzAAT7MJuwvKJt
+        FkyGu0jnJzry8nw7BjrYExhMMayDWBOikQ==
+X-Google-Smtp-Source: APXvYqz96TmPPVEmMTQIWd5o34VAawuoSnxOtUnJnMiSj9qw7YFhgfiDwSSFrKcnrJG3/uC29Gpqlg==
+X-Received: by 2002:a1c:a503:: with SMTP id o3mr4911436wme.37.1567001519544;
+        Wed, 28 Aug 2019 07:11:59 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id a11sm2774838wrx.59.2019.08.28.07.11.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 07:11:58 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] arm64: meson-sm1: add support for the SM1 based VIM3L
+Date:   Wed, 28 Aug 2019 16:11:54 +0200
+Message-Id: <20190828141157.15503-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20190822021740.15554-1-riel@surriel.com> <20190822021740.15554-6-riel@surriel.com>
-In-Reply-To: <20190822021740.15554-6-riel@surriel.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 28 Aug 2019 16:09:49 +0200
-Message-ID: <CAKfTPtAoZwmZXthcaP6VQO-0oEOtPfTWwDPtgHfKwBt=+TO2XA@mail.gmail.com>
-Subject: Re: [PATCH 05/15] sched,fair: remove cfs_rqs from leaf_cfs_rq_list
- bottom up
-To:     Rik van Riel <riel@surriel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>, Paul Turner <pjt@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mel Gorman <mgorman@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 22 Aug 2019 at 04:18, Rik van Riel <riel@surriel.com> wrote:
->
-> Reducing the overhead of the CPU controller is achieved by not walking
-> all the sched_entities every time a task is enqueued or dequeued.
->
-> One of the things being checked every single time is whether the cfs_rq
-> is on the rq->leaf_cfs_rq_list.
->
-> By only removing a cfs_rq from the list once it no longer has children
-> on the list, we can avoid walking the sched_entity hierarchy if the bottom
-> cfs_rq is on the list, once the runqueues have been flattened.
->
-> Signed-off-by: Rik van Riel <riel@surriel.com>
-> Suggested-by: Vincent Guittot <vincent.guittot@linaro.org>
+This patchset adds support for the Amlogic SM1 based Khadas VIM3L variant.
 
-Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
+The S903D3 package variant of SM1 is pin-to-pin compatible with the
+S922X and A311d, so only internal DT changes are needed :
+- DVFS support is different
+- Audio support not yet available for SM1
 
-> ---
->  kernel/sched/fair.c | 35 ++++++++++++++++++++++++++++++++++-
->  1 file changed, 34 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index a48d0dbfc232..04b216234265 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -369,6 +369,39 @@ static inline void assert_list_leaf_cfs_rq(struct rq *rq)
->         SCHED_WARN_ON(rq->tmp_alone_branch != &rq->leaf_cfs_rq_list);
->  }
->
-> +/*
-> + * Because list_add_leaf_cfs_rq always places a child cfs_rq on the list
-> + * immediately before a parent cfs_rq, and cfs_rqs are removed from the list
-> + * bottom-up, we only have to test whether the cfs_rq before us on the list
-> + * is our child.
-> + */
-> +static inline bool child_cfs_rq_on_list(struct cfs_rq *cfs_rq)
-> +{
-> +       struct cfs_rq *prev_cfs_rq;
-> +       struct list_head *prev;
-> +
-> +       prev = cfs_rq->leaf_cfs_rq_list.prev;
-> +       prev_cfs_rq = container_of(prev, struct cfs_rq, leaf_cfs_rq_list);
-> +
-> +       return (prev_cfs_rq->tg->parent == cfs_rq->tg);
-> +}
-> +
-> +/*
-> + * Remove a cfs_rq from the list if it has no children on the list.
-> + * The scheduler iterates over the list regularly; if conditions for
-> + * removal are still true, we'll get to this cfs_rq in the future.
-> + */
-> +static inline void list_del_leaf_cfs_rq_bottom(struct cfs_rq *cfs_rq)
-> +{
-> +       if (!cfs_rq->on_list)
-> +               return;
-> +
-> +       if (child_cfs_rq_on_list(cfs_rq))
-> +               return;
-> +
-> +       list_del_leaf_cfs_rq(cfs_rq);
-> +}
-> +
->  /* Iterate thr' all leaf cfs_rq's on a runqueue */
->  #define for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos)                     \
->         list_for_each_entry_safe(cfs_rq, pos, &rq->leaf_cfs_rq_list,    \
-> @@ -7723,7 +7756,7 @@ static void update_blocked_averages(int cpu)
->                  * decayed cfs_rqs linger on the list.
->                  */
->                 if (cfs_rq_is_decayed(cfs_rq))
-> -                       list_del_leaf_cfs_rq(cfs_rq);
-> +                       list_del_leaf_cfs_rq_bottom(cfs_rq);
->
->                 /* Don't need periodic decay once load/util_avg are null */
->                 if (cfs_rq_has_blocked(cfs_rq))
-> --
-> 2.20.1
->
+This patchset moved all the non-g12b nodes to meson-khadas-vim3.dtsi
+and add the sm1 specific nodes into meson-sm1-khadas-vim3l.dts.
+
+Display has a color conversion bug on SM1 by using a more recent vendor
+bootloader on the SM1 based VIM3, this is out of scope of this patchset
+and will be fixed in the drm/meson driver.
+
+Dependencies:
+- patch 1,2: None
+- patch 3: Depends on the "arm64: meson-sm1: add support for DVFS" patchset at [1]
+
+Changes since v1:
+- renamed compatible to khadas,vim3l
+- renamed DT file to meson-sm1-khadas-vim3l.dts
+
+[1] https://patchwork.kernel.org/cover/11109411/
+
+Neil Armstrong (3):
+  arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi
+  amlogic: arm: add Amlogic SM1 based Khadas VIM3L bindings
+  arm64: dts: khadas-vim3: add support for the SM1 based VIM3L
+
+ .../devicetree/bindings/arm/amlogic.yaml      |   3 +-
+ arch/arm64/boot/dts/amlogic/Makefile          |   1 +
+ .../amlogic/meson-g12b-a311d-khadas-vim3.dts  |   1 +
+ .../dts/amlogic/meson-g12b-khadas-vim3.dtsi   | 355 -----------------
+ .../amlogic/meson-g12b-s922x-khadas-vim3.dts  |   1 +
+ .../boot/dts/amlogic/meson-khadas-vim3.dtsi   | 360 ++++++++++++++++++
+ .../dts/amlogic/meson-sm1-khadas-vim3l.dts    |  70 ++++
+ 7 files changed, 435 insertions(+), 356 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+
+-- 
+2.22.0
+
