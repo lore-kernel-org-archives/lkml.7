@@ -2,139 +2,168 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF16C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F0FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEAF233FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:46:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Rm8Ri2tE"
+	by mail.kernel.org (Postfix) with ESMTP id CDF47206BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfH1TqO (ORCPT
+        id S1726866AbfH1TsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 15:46:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60686 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbfH1TqO (ORCPT
+        Wed, 28 Aug 2019 15:48:08 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:39928 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbfH1TsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 15:46:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=hgz1R5QUT/3HwdqWiBoXJEjgsTAkIAv2dRGNBsyqnxk=; b=Rm8Ri2tEMBapDNdB3tS8NGKJBM
-        z5Rq8Hj5vRSAxcFpyrTIzaG/+MT4NsQnvWV7/mV2hJF6gRa7y6uflXN/pKocPsEW3+1uIDcqhDT/d
-        nVn5GK/ST6ZnS4k1deCvzxjlhOzDyvPUBhbmsaCbiqSy4yWGM5TlmlSbxvkYeV7PUGjKfq11w4O6d
-        B6K21kFHA5FEY7Y5poC9Rbup6llyf0SFLQyUZGcPNKUtyKUUKmtqXMwj9rmC4ynL+BB6is1FCaG0v
-        5RDdSskGb5hOH0jTQ1cq94H/Lpm3HBF4RN3Hl/sqRH3RcAUqISgadxnEhq3e2+jm9c50kgmalm08Y
-        v6mF9MJw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i33tQ-0004Z6-3n; Wed, 28 Aug 2019 19:46:08 +0000
-Date:   Wed, 28 Aug 2019 12:46:08 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christopher Lameter <cl@linux.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
- kmalloc(power-of-two)
-Message-ID: <20190828194607.GB6590@bombadil.infradead.org>
-References: <20190826111627.7505-1-vbabka@suse.cz>
- <20190826111627.7505-3-vbabka@suse.cz>
- <0100016cd98bb2c1-a2af7539-706f-47ba-a68e-5f6a91f2f495-000000@email.amazonses.com>
+        Wed, 28 Aug 2019 15:48:07 -0400
+Received: by mail-io1-f72.google.com with SMTP id g12so974731iok.6
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 12:48:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=7ghtGp5J+PmV7Tcxs0OU6gXbW9w20QxLS/lDebvWWVc=;
+        b=GgnzxMeXAFa34A0e8PLOnjX4fTBjtJHkJ7g9LABijz7/2YWUn9nAChvVAOhFJkQZUC
+         R7624+jfTeCjepmjMCYjKbe7N34oVHebyJ0TCr6XcKabSJwN53pFd4/pssFdtDktlaFM
+         12jdBjLiZoFN2VPX9mKj8ruTo3CvjCT7hGbbTcYJMqrR468BDcPv9ENYbaOJzy12C5Fr
+         /T/PBfonMxi6qSFFCBYsGXtLoX9pgDjWk8inoVkZnLVB+v6yTrUK9SaEvMvh4D5QzG8n
+         3Yobq9MdWICa1qXlW0MZoYFK9cNze8HEXtkXO22YFQZz5O6XHL0V5qp2q6FITmQT8kB/
+         P1hQ==
+X-Gm-Message-State: APjAAAXxWr4HiaMGL/CKD7xDlZVKMmWqgb/fZylkRXqwFFe4Nvr5fosv
+        LqSo0nu4G4lFAm1Mn4nuOQg3Cp1zqU4H80acTW/wfxiPIi8f
+X-Google-Smtp-Source: APXvYqy8422xexpBhNrHpDudiBE5UkQQ/lRD82sxQxtDjUp+UsY2P2Ciy7ys5i7Hzf6S0o6iyyWU+ZFdd0o7xQeYDGZHqXX9YFzp
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0100016cd98bb2c1-a2af7539-706f-47ba-a68e-5f6a91f2f495-000000@email.amazonses.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Received: by 2002:a02:4881:: with SMTP id p123mr6348414jaa.69.1567021686233;
+ Wed, 28 Aug 2019 12:48:06 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 12:48:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f6a13b059132aa6c@google.com>
+Subject: KASAN: use-after-free Read in rxrpc_put_peer
+From:   syzbot <syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dhowells@redhat.com,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 06:45:07PM +0000, Christopher Lameter wrote:
-> > Ideally we should provide to mm users what they need without difficult
-> > workarounds or own reimplementations, so let's make the kmalloc() alignment to
-> > size explicitly guaranteed for power-of-two sizes under all configurations.
-> 
-> The objection remains that this will create exceptions for the general
-> notion that all kmalloc caches are aligned to KMALLOC_MINALIGN which may
+Hello,
 
-Hmm?  kmalloc caches will be aligned to both KMALLOC_MINALIGN and the
-natural alignment of the object.
+syzbot found the following crash on:
 
-> be suprising and it limits the optimizations that slab allocators may use
-> for optimizing data use. The SLOB allocator was designed in such a way
-> that data wastage is limited. The changes here sabotage that goal and show
-> that future slab allocators may be similarly constrained with the
-> exceptional alignents implemented. Additional debugging features etc etc
-> must all support the exceptional alignment requirements.
+HEAD commit:    ed2393ca Add linux-next specific files for 20190827
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11b4a79c600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2ef5940a07ed45f4
+dashboard link: https://syzkaller.appspot.com/bug?extid=b9be979c55f2bea8ed30
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13c73066600000
 
-While I sympathise with the poor programmer who has to write the
-fourth implementation of the sl*b interface, it's more for the pain of
-picking a new letter than the pain of needing to honour the alignment
-of allocations.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com
 
-There are many places in the kernel which assume alignment.  They break
-when it's not supplied.  I believe we have a better overall system if
-the MM developers provide stronger guarantees than the MM consumers have
-to work around only weak guarantees.
+==================================================================
+BUG: KASAN: use-after-free in __rxrpc_put_peer net/rxrpc/peer_object.c:411  
+[inline]
+BUG: KASAN: use-after-free in rxrpc_put_peer+0x685/0x6a0  
+net/rxrpc/peer_object.c:435
+Read of size 8 at addr ffff8880a05bd218 by task ksoftirqd/1/16
 
-> > * SLOB has no implicit alignment so this patch adds it explicitly for
-> >   kmalloc(). The potential downside is increased fragmentation. While
-> >   pathological allocation scenarios are certainly possible, in my testing,
-> >   after booting a x86_64 kernel+userspace with virtme, around 16MB memory
-> >   was consumed by slab pages both before and after the patch, with difference
-> >   in the noise.
-> 
-> This change to slob will cause a significant additional use of memory. The
-> advertised advantage of SLOB is that *minimal* memory will be used since
-> it is targeted for embedded systems. Different types of slab objects of
-> varying sizes can be allocated in the same memory page to reduce
-> allocation overhead.
+CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.3.0-rc6-next-20190827 #74
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:634
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  __rxrpc_put_peer net/rxrpc/peer_object.c:411 [inline]
+  rxrpc_put_peer+0x685/0x6a0 net/rxrpc/peer_object.c:435
+  rxrpc_rcu_destroy_call+0x5e/0x140 net/rxrpc/call_object.c:566
+  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
+  rcu_do_batch kernel/rcu/tree.c:2157 [inline]
+  rcu_core+0x581/0x1560 kernel/rcu/tree.c:2377
+  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2386
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
+  run_ksoftirqd kernel/softirq.c:603 [inline]
+  run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
+  smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-Did you not read the part where he said the difference was in the noise?
+Allocated by task 17189:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
+  kmalloc include/linux/slab.h:552 [inline]
+  kzalloc include/linux/slab.h:686 [inline]
+  rxrpc_alloc_local net/rxrpc/local_object.c:79 [inline]
+  rxrpc_lookup_local+0x562/0x1ba0 net/rxrpc/local_object.c:277
+  rxrpc_sendmsg+0x379/0x5f0 net/rxrpc/af_rxrpc.c:566
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:657
+  ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
+  __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
+  __do_sys_sendmmsg net/socket.c:2442 [inline]
+  __se_sys_sendmmsg net/socket.c:2439 [inline]
+  __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-> The result of this patch is just to use more memory to be safe from
-> certain pathologies where one subsystem was relying on an alignment that
-> was not specified. That is why this approach should not be called
-> �natural" but "implicit alignment". The one using the slab cache is not
-> aware that the slab allocator provides objects aligned in a special way
-> (which is in general not needed. There seems to be a single pathological
-> case that needs to be addressed and I thought that was due to some
-> brokenness in the hardware?).
+Freed by task 9:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3756
+  rxrpc_local_rcu+0x62/0x80 net/rxrpc/local_object.c:499
+  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
+  rcu_do_batch kernel/rcu/tree.c:2157 [inline]
+  rcu_core+0x581/0x1560 kernel/rcu/tree.c:2377
+  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2386
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
 
-It turns out there are lots of places which assume this, including the
-pmem driver, the ramdisk driver and a few other similar drivers.
+The buggy address belongs to the object at ffff8880a05bd200
+  which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 24 bytes inside of
+  1024-byte region [ffff8880a05bd200, ffff8880a05bd600)
+The buggy address belongs to the page:
+page:ffffea0002816f00 refcount:1 mapcount:0 mapping:ffff8880aa400c40  
+index:0xffff8880a05bcd80 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea00027c4588 ffffea0002381088 ffff8880aa400c40
+raw: ffff8880a05bcd80 ffff8880a05bc000 0000000100000006 0000000000000000
+page dumped because: kasan: bad access detected
 
-> It is better to ensure that subsystems that require special alignment
-> explicitly tell the allocator about this.
+Memory state around the buggy address:
+  ffff8880a05bd100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a05bd180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff8880a05bd200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                             ^
+  ffff8880a05bd280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a05bd300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
-But it's not the subsystems which have this limitation which do the
-allocation; it's the subsystems who allocate the memory that they then
-pass to the subsystems.  So you're forcing communication of these limits
-up & down the stack.
 
-> I still think implicit exceptions to alignments are a bad idea. Those need
-> to be explicity specified and that is possible using kmem_cache_create().
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-I swear we covered this last time the topic came up, but XFS would need
-to create special slab caches for each size between 512 and PAGE_SIZE.
-Potentially larger, depending on whether the MM developers are willing to
-guarantee that kmalloc(PAGE_SIZE * 2, GFP_KERNEL) will return a PAGE_SIZE
-aligned block of memory indefinitely.
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
