@@ -2,235 +2,223 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCF5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E82C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307152064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD57E22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfH1Mn2 (ORCPT
+        id S1726447AbfH1MpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:43:28 -0400
-Received: from mga02.intel.com ([134.134.136.20]:58350 "EHLO mga02.intel.com"
+        Wed, 28 Aug 2019 08:45:18 -0400
+Received: from mga02.intel.com ([134.134.136.20]:58478 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726253AbfH1Mn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:43:27 -0400
+        id S1726368AbfH1MpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 08:45:18 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 05:43:27 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 05:45:17 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
-   d="scan'208";a="185611611"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga006.jf.intel.com with ESMTP; 28 Aug 2019 05:43:24 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     kishon@ti.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh@kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        peter.harliman.liem@intel.com,
-        vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: [PATCH v2 2/2] phy: intel-lgm-sdxc: Add support for SDXC PHY
-Date:   Wed, 28 Aug 2019 20:43:15 +0800
-Message-Id: <20190828124315.48448-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+   d="scan'208";a="197548308"
+Received: from deyangko-mobl.ccr.corp.intel.com ([10.249.168.35])
+  by fmsmga001.fm.intel.com with ESMTP; 28 Aug 2019 05:45:13 -0700
+Message-ID: <6665337688eb070af04d47e6fdd979350783d9f9.camel@intel.com>
+Subject: Re: [PATCH v5 09/18] thermal: sun8i: rework for ths calibrate func
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        nicolas.ferre@microchip.com
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Wed, 28 Aug 2019 20:45:22 +0800
+In-Reply-To: <20190810052829.6032-10-tiny.windzz@gmail.com>
+References: <20190810052829.6032-1-tiny.windzz@gmail.com>
+         <20190810052829.6032-10-tiny.windzz@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Sat, 2019-08-10 at 05:28 +0000, Yangtao Li wrote:
+> Here, we do something to prepare for the subsequent
+> support of multiple platforms.
+> 
+> 1) rename sun50i_ths_calibrate to sun8i_ths_calibrate, because
+>    this function should be suitable for all platforms now.
+> 
+> 2) introduce calibrate callback to mask calibration method
+>    differences.
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
-Add support for SDXC PHY on Intel's Lightning Mountain SoC.
+IMO, patch 4/18 to patch 9/18 are all changes to a new file introduced
+in patch 1/18, so why not have a prettier patch 1/18 instead of
+separate patches?
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
----
- drivers/phy/intel/Kconfig          |   6 ++
- drivers/phy/intel/Makefile         |   1 +
- drivers/phy/intel/phy-intel-sdxc.c | 144 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 151 insertions(+)
- create mode 100644 drivers/phy/intel/phy-intel-sdxc.c
+thanks,
+rui
 
-diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
-index 4ea6a8897cd7..d6356c762a6b 100644
---- a/drivers/phy/intel/Kconfig
-+++ b/drivers/phy/intel/Kconfig
-@@ -7,3 +7,9 @@ config PHY_INTEL_EMMC
- 	select GENERIC_PHY
- 	help
- 	  Enable this to support the Intel EMMC PHY
-+
-+config PHY_INTEL_SDXC
-+       tristate "Intel SDXC PHY driver"
-+       select GENERIC_PHY
-+       help
-+         Enable this to support the Intel SDXC PHY driver
-diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
-index 6b876a75599d..3c6e7523200c 100644
---- a/drivers/phy/intel/Makefile
-+++ b/drivers/phy/intel/Makefile
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PHY_INTEL_EMMC)            += phy-intel-emmc.o
-+obj-$(CONFIG_PHY_INTEL_SDXC)            += phy-intel-sdxc.o
-diff --git a/drivers/phy/intel/phy-intel-sdxc.c b/drivers/phy/intel/phy-intel-sdxc.c
-new file mode 100644
-index 000000000000..7e13fd9ced5b
---- /dev/null
-+++ b/drivers/phy/intel/phy-intel-sdxc.c
-@@ -0,0 +1,144 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel SDXC PHY driver
-+ * Copyright (C) 2019 Intel, Corp.
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/* SDXC PHY register definitions */
-+#define SDXC_PHYCTRL_REG	0x88
-+#define OTAPDLYENA_MASK		BIT(14)
-+#define OTAPDLYSEL(x)		((x) << 10)
-+#define OTAPDLYSEL_ALL		OTAPDLYSEL(GENMASK(3, 0))
-+
-+struct intel_sdxc_phy {
-+	struct regmap *syscfg;
-+	struct clk *sdxcclk;
-+};
-+
-+static int intel_sdxc_phy_init(struct phy *phy)
-+{
-+	struct intel_sdxc_phy *priv = phy_get_drvdata(phy);
-+
-+	/*
-+	 * We purposely get the clock here and not in probe to avoid the
-+	 * circular dependency problem.  We expect:
-+	 * - PHY driver to probe
-+	 * - SDHCI driver to start probe
-+	 * - SDHCI driver to register it's clock
-+	 * - SDHCI driver to get the PHY
-+	 * - SDHCI driver to init the PHY
-+	 *
-+	 * The clock is optional, so upon any error just return it like
-+	 * any other error to user.
-+	 */
-+	priv->sdxcclk = clk_get_optional(&phy->dev, "sdxcclk");
-+	if (IS_ERR(priv->sdxcclk)) {
-+		dev_err(&phy->dev, "Error getting sdxcclk\n");
-+		return PTR_ERR(priv->sdxcclk);
-+	}
-+
-+	return 0;
-+}
-+
-+static int intel_sdxc_phy_exit(struct phy *phy)
-+{
-+	struct intel_sdxc_phy *priv = phy_get_drvdata(phy);
-+
-+	clk_put(priv->sdxcclk);
-+
-+	return 0;
-+}
-+
-+static int intel_sdxc_phy_power_on(struct phy *phy)
-+{
-+	struct intel_sdxc_phy *priv = phy_get_drvdata(phy);
-+
-+	/* Output tap delay: disable */
-+	regmap_update_bits(priv->syscfg, SDXC_PHYCTRL_REG, OTAPDLYENA_MASK, 0);
-+
-+	/* Output tap delay */
-+	regmap_update_bits(priv->syscfg, SDXC_PHYCTRL_REG, OTAPDLYSEL_ALL,
-+			   OTAPDLYSEL_ALL);
-+
-+	return 0;
-+}
-+
-+static int intel_sdxc_phy_power_off(struct phy *phy)
-+{
-+	/* Do nothing */
-+	return 0;
-+}
-+
-+static const struct phy_ops ops = {
-+	.init		= intel_sdxc_phy_init,
-+	.exit		= intel_sdxc_phy_exit,
-+	.power_on	= intel_sdxc_phy_power_on,
-+	.power_off	= intel_sdxc_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int intel_sdxc_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct intel_sdxc_phy *priv;
-+	struct phy *generic_phy;
-+	struct phy_provider *phy_provider;
-+
-+	if (!dev->parent || !dev->parent->of_node)
-+		return -ENODEV;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	/* Get SDXC phy (accessed via chiptop) regmap */
-+	priv->syscfg = syscon_regmap_lookup_by_phandle(dev->of_node,
-+						       "intel,syscon");
-+	if (IS_ERR(priv->syscfg)) {
-+		dev_err(dev, "No syscon phandle for chiptop\n");
-+		return PTR_ERR(priv->syscfg);
-+	}
-+
-+	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
-+	if (IS_ERR(generic_phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(generic_phy);
-+	}
-+
-+	phy_set_drvdata(generic_phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id intel_sdxc_phy_dt_ids[] = {
-+	{ .compatible = "intel,lgm-sdxc-phy" },
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, intel_sdxc_phy_dt_ids);
-+
-+static struct platform_driver intel_sdxc_driver = {
-+	.probe		= intel_sdxc_phy_probe,
-+	.driver		= {
-+		.name	= "intel-sdxc-phy",
-+		.of_match_table = intel_sdxc_phy_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(intel_sdxc_driver);
-+
-+MODULE_AUTHOR("Peter Harliman Liem <peter.harliman.liem@intel.com>");
-+MODULE_DESCRIPTION("Intel SDXC PHY driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+> ---
+>  drivers/thermal/sun8i_thermal.c | 86 ++++++++++++++++++-------------
+> --
+>  1 file changed, 48 insertions(+), 38 deletions(-)
+> 
+> diff --git a/drivers/thermal/sun8i_thermal.c
+> b/drivers/thermal/sun8i_thermal.c
+> index 6f4294c2aba7..47c20c4c69e7 100644
+> --- a/drivers/thermal/sun8i_thermal.c
+> +++ b/drivers/thermal/sun8i_thermal.c
+> @@ -60,6 +60,8 @@ struct ths_thermal_chip {
+>  	int		scale;
+>  	int		ft_deviation;
+>  	int		temp_data_base;
+> +	int		(*calibrate)(struct ths_device *tmdev,
+> +				     u16 *caldata, int callen);
+>  	int		(*init)(struct ths_device *tmdev);
+>  	int             (*irq_ack)(struct ths_device *tmdev);
+>  };
+> @@ -152,45 +154,14 @@ static irqreturn_t sun8i_irq_thread(int irq,
+> void *data)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> -static int sun50i_ths_calibrate(struct ths_device *tmdev)
+> +static int sun50i_h6_ths_calibrate(struct ths_device *tmdev,
+> +				   u16 *caldata, int callen)
+>  {
+> -	struct nvmem_cell *calcell;
+>  	struct device *dev = tmdev->dev;
+> -	u16 *caldata;
+> -	size_t callen;
+> -	int ft_temp;
+> -	int i, ret = 0;
+> -
+> -	calcell = devm_nvmem_cell_get(dev, "calib");
+> -	if (IS_ERR(calcell)) {
+> -		if (PTR_ERR(calcell) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
+> -		/*
+> -		 * Even if the external calibration data stored in sid
+> is
+> -		 * not accessible, the THS hardware can still work,
+> although
+> -		 * the data won't be so accurate.
+> -		 *
+> -		 * The default value of calibration register is 0x800
+> for
+> -		 * every sensor, and the calibration value is usually
+> 0x7xx
+> -		 * or 0x8xx, so they won't be away from the default
+> value
+> -		 * for a lot.
+> -		 *
+> -		 * So here we do not return error if the calibartion
+> data is
+> -		 * not available, except the probe needs deferring.
+> -		 */
+> -		goto out;
+> -	}
+> +	int i, ft_temp;
+>  
+> -	caldata = nvmem_cell_read(calcell, &callen);
+> -	if (IS_ERR(caldata)) {
+> -		ret = PTR_ERR(caldata);
+> -		goto out;
+> -	}
+> -
+> -	if (!caldata[0] || callen < 2 + 2 * tmdev->chip->sensor_num) {
+> -		ret = -EINVAL;
+> -		goto out_free;
+> -	}
+> +	if (!caldata[0] || callen < 2 + 2 * tmdev->chip->sensor_num)
+> +		return -EINVAL;
+>  
+>  	/*
+>  	 * efuse layout:
+> @@ -245,7 +216,45 @@ static int sun50i_ths_calibrate(struct
+> ths_device *tmdev)
+>  				   cdata << offset);
+>  	}
+>  
+> -out_free:
+> +	return 0;
+> +}
+> +
+> +static int sun8i_ths_calibrate(struct ths_device *tmdev)
+> +{
+> +	struct nvmem_cell *calcell;
+> +	struct device *dev = tmdev->dev;
+> +	u16 *caldata;
+> +	size_t callen;
+> +	int ret = 0;
+> +
+> +	calcell = devm_nvmem_cell_get(dev, "calib");
+> +	if (IS_ERR(calcell)) {
+> +		if (PTR_ERR(calcell) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +		/*
+> +		 * Even if the external calibration data stored in sid
+> is
+> +		 * not accessible, the THS hardware can still work,
+> although
+> +		 * the data won't be so accurate.
+> +		 *
+> +		 * The default value of calibration register is 0x800
+> for
+> +		 * every sensor, and the calibration value is usually
+> 0x7xx
+> +		 * or 0x8xx, so they won't be away from the default
+> value
+> +		 * for a lot.
+> +		 *
+> +		 * So here we do not return error if the calibartion
+> data is
+> +		 * not available, except the probe needs deferring.
+> +		 */
+> +		goto out;
+> +	}
+> +
+> +	caldata = nvmem_cell_read(calcell, &callen);
+> +	if (IS_ERR(caldata)) {
+> +		ret = PTR_ERR(caldata);
+> +		goto out;
+> +	}
+> +
+> +	tmdev->chip->calibrate(tmdev, caldata, callen);
+> +
+>  	kfree(caldata);
+>  out:
+>  	return ret;
+> @@ -294,7 +303,7 @@ static int sun8i_ths_resource_init(struct
+> ths_device *tmdev)
+>  	if (ret)
+>  		goto bus_disable;
+>  
+> -	ret = sun50i_ths_calibrate(tmdev);
+> +	ret = sun8i_ths_calibrate(tmdev);
+>  	if (ret)
+>  		goto mod_disable;
+>  
+> @@ -422,6 +431,7 @@ static const struct ths_thermal_chip
+> sun50i_h6_ths = {
+>  	.scale = -67,
+>  	.ft_deviation = SUN50I_H6_FT_DEVIATION,
+>  	.temp_data_base = SUN50I_H6_THS_TEMP_DATA,
+> +	.calibrate = sun50i_h6_ths_calibrate,
+>  	.init = sun50i_h6_thermal_init,
+>  	.irq_ack = sun50i_h6_irq_ack,
+>  };
 
