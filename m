@@ -2,167 +2,96 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2B1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4CEC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD7520856
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E1420856
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:14:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="PIAg8Lbv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfH1JOK (ORCPT
+        id S1726599AbfH1JOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:14:10 -0400
-Received: from mga14.intel.com ([192.55.52.115]:44648 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbfH1JOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:14:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 02:14:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
-   d="scan'208";a="381218667"
-Received: from deyangko-mobl.ccr.corp.intel.com ([10.249.168.35])
-  by fmsmga006.fm.intel.com with ESMTP; 28 Aug 2019 02:14:00 -0700
-Message-ID: <ff3fd0ab2ba659e98070760be8e7c0f223e921f9.camel@intel.com>
-Subject: Re: [PATCH V15 1/5] dt-bindings: fsl: scu: add thermal binding
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "edubezval@gmail.com" <edubezval@gmail.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-Date:   Wed, 28 Aug 2019 17:14:09 +0800
-In-Reply-To: <DB3PR0402MB39162EB555CD7AE75D58C582F5C60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190618021820.14885-1-Anson.Huang@nxp.com>
-         <DB3PR0402MB39162C5B5AF828B127DD871EF5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-         <DB3PR0402MB39162EB555CD7AE75D58C582F5C60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        Wed, 28 Aug 2019 05:14:44 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45242 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbfH1JOn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 05:14:43 -0400
+Received: by mail-lf1-f67.google.com with SMTP id o11so1476636lfb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 02:14:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=W/FAvQVJWH8hNDqsZxVjsvHGWQ4cwiHioyZRXaiwuH4=;
+        b=PIAg8LbvLk6D0489+QlpDRqaNqGp/RCZ4+jhKkMhIiBc2/Dd3RlrzlBuLBC/HxydEC
+         QowWxlIXSFCcvN/jGvd5Yg34idYzc6aCxnbN9klxRc2JGYBnbpeUz9ypAbTiLWzJQDRT
+         iBK3ZNZNyvZkdpdEu8eEdu99LWq66flJeWzenx7xEGLkUp88abcmEZKA6dk+/iar2gLY
+         H1vbyG5EMg0ssZr0n/1cAP/1YrdQoleL/mzP+YJhRVJIZOX1DwxNN4fN/b7cb7tU4B8r
+         JOis9BEPUMSlTEBN92wV0/IvRHOioQfaupKTQCtVIOfksaLch4G9E2qhx7HKkD9eQG+S
+         G+Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=W/FAvQVJWH8hNDqsZxVjsvHGWQ4cwiHioyZRXaiwuH4=;
+        b=EGIIEAww/mTMUBehggzHiX5QTvWas6+sY/KQ8IpdPZT/AXY59FCB4M0bvDrtxtM2lR
+         9kp0FE+snFYHXN3nDdldt9ur5areV2Lkdg/7OudAp/5Tf1TZSyAycCFnIqIyf4WRqGR4
+         FWBPZQV7hauLtmxHkUcSbz3Z279KZRGNjklixzNl941tQxwy0rxHBhwa3bQvsl1mO6Ho
+         hhVGxwV1r/2GeLvDtKybCT/ozjJItbGAcaKGCYkXzPKewA9HSLs0tgghqA2S15vHpCVi
+         BL/lsbZVIb14kkPXMnX1LVdGP3BjJ+vbo2TkxSErQP5zLjFMEMo4xxNG854P+XSwC0He
+         GlPQ==
+X-Gm-Message-State: APjAAAUo+aRXH5bYUgBU/1lT3fFbF99ME7O3kp7UFdj7cz6MLkvecLNO
+        KkFXJVQ4iU8y+6e86OBKj48KpB8hQFs=
+X-Google-Smtp-Source: APXvYqyxt6ENbz8kd9XK40+sRsJvEZ4lHaMldtpiGWZ4JbUMbRrBUe5f2u6ARgH7OgzyukMvezH8qQ==
+X-Received: by 2002:ac2:43ad:: with SMTP id t13mr2097116lfl.66.1566983681773;
+        Wed, 28 Aug 2019 02:14:41 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:43c:79c5:cc63:c37e:a616:212b? ([2a00:1fa0:43c:79c5:cc63:c37e:a616:212b])
+        by smtp.gmail.com with ESMTPSA id h15sm498484ljl.64.2019.08.28.02.14.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 28 Aug 2019 02:14:41 -0700 (PDT)
+Subject: Re: [PATCH] arcnet: capmode: remove redundant assignment to pointer
+ pkt
+To:     Colin King <colin.king@canonical.com>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190827112954.26677-1-colin.king@canonical.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <1e784ee7-c049-1155-ab7e-a90f1f20f3dd@cogentembedded.com>
+Date:   Wed, 28 Aug 2019 12:14:31 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190827112954.26677-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Anson,
+Hello!
 
-We're missing ACK from the maintainers for patch 4/5 and 5/5, if we
-want to shipped the patch via thermal tree.
+On 27.08.2019 14:29, Colin King wrote:
 
-For patch 2/5, as it introduces a new API for OF_THERMAL, I'd like to
-get Eduardo' feedback before taking them.
-
-thanks,
-rui
-
-On Wed, 2019-07-24 at 03:16 +0000, Anson Huang wrote:
-> Ping...
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> > Hi, Daniel/Rui/Eduardo
-> > 	Could you please take a look at this patch series?
-> > 
-> > Anson
-> > 
-> > > From: Anson Huang <Anson.Huang@nxp.com>
-> > > 
-> > > NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-> > > system
-> > > controller, the system controller is in charge of system power,
-> > > clock
-> > > and thermal sensors etc. management, Linux kernel has to
-> > > communicate
-> > > with system controller via MU (message unit) IPC to get
-> > > temperature
-> > > from thermal sensors, this patch adds binding doc for i.MX system
-> > > controller thermal driver.
-> > > 
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-> > > ---
-> > > No change.
-> > > ---
-> > >  .../devicetree/bindings/arm/freescale/fsl,scu.txt        | 16
-> > 
-> > ++++++++++++++++
-> > >  1 file changed, 16 insertions(+)
-> > > 
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > > b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > > index a575e42..fc3844e 100644
-> > > --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > > @@ -155,6 +155,17 @@ Required properties:
-> > >  Optional properties:
-> > >  - timeout-sec: contains the watchdog timeout in seconds.
-> > > 
-> > > +Thermal bindings based on SCU Message Protocol
-> > > +------------------------------------------------------------
-> > > +
-> > > +Required properties:
-> > > +- compatible:			Should be :
-> > > +				  "fsl,imx8qxp-sc-thermal"
-> > > +				followed by "fsl,imx-sc-thermal";
-> > > +
-> > > +- #thermal-sensor-cells:	See
-> > > Documentation/devicetree/bindings/thermal/thermal.txt
-> > > +				for a description.
-> > > +
-> > >  Example (imx8qxp):
-> > >  -------------
-> > >  aliases {
-> > > @@ -222,6 +233,11 @@ firmware {
-> > >  			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-
-> > > wdt";
-> > >  			timeout-sec = <60>;
-> > >  		};
-> > > +
-> > > +		tsens: thermal-sensor {
-> > > +			compatible = "fsl,imx8qxp-sc-thermal",
-> > > "fsl,imx-sc-
-> > > thermal";
-> > > +			#thermal-sensor-cells = <1>;
-> > > +		};
-> > >  	};
-> > >  };
-> > > 
-> > > --
-> > > 2.7.4
-> 
-> 
+> Pointer pkt is being initialized with a value that is never read
+> and pkg is being re-assigned a little later on. The assignment is
+       ^^^ pkt
 
+> redundant and hence can be removed.
+> 
+> Addresses-Coverity: ("Ununsed value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+[...]
+
+MBR, Sergei
