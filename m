@@ -2,242 +2,368 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DD1C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E4DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36EC22DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 388F822DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566999076;
+	bh=8tL/BwaMTgaHn8IHnFMvKIx3ug7jMnEVbHbcYLAdxW4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j5GDOP39f+2J2AaA8X/fhZcYoORd4DCA6fNhm+gpMe+SOa36LBOg4xhy3W43RoatE
+	 VhjKtLb4Fb5vAKze8YcADDoBvPzegqWbaLkoZzr6ozw5sVYqnr+uLow0E0nhCBcWcq
+	 +DZSu+vDGAt1XyXGoH91+Ia4sK+Ch4yNRTRKnRPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfH1NbH (ORCPT
+        id S1726860AbfH1NbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:31:07 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47264 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbfH1NbE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:31:04 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2y2J-0004MS-5C; Wed, 28 Aug 2019 15:30:55 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C55241C07D2;
-        Wed, 28 Aug 2019 15:30:54 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 13:30:54 -0000
-From:   "tip-bot2 for Thomas Hellstrom" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/vmware] x86/vmware: Update platform detection code for
- VMCALL/VMMCALL hypercalls
-Cc:     Doug Covelli <dcovelli@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-graphics-maintainer@vmware.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        virtualization@lists.linux-foundation.org, <pv-drivers@vmware.com>,
-        "x86-ml" <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20190828080353.12658-2-thomas_os@shipmail.org>
-References: <20190828080353.12658-2-thomas_os@shipmail.org>
+        Wed, 28 Aug 2019 09:31:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726397AbfH1NbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:31:06 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0783322DA7;
+        Wed, 28 Aug 2019 13:31:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566999065;
+        bh=8tL/BwaMTgaHn8IHnFMvKIx3ug7jMnEVbHbcYLAdxW4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g+LTaOFEVrs4cfjga+T9CcPJG0KwVRlkDWGhI+aoFYodkIKUkQgLTVWay5WFUPKM4
+         N2wxfgzW4kLHghyA/FASQ7WaBAvlVa25efCoEydHchkZMfLQSFkf7dR1dVM8r33ASn
+         cK5lgQHVdUAjQTLRxoIjPs5flyjifhqrV3r6buso=
+Date:   Wed, 28 Aug 2019 08:31:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof Wilczynski <kw@linux.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Move PCI Express ASPM function prototypes and
+ definitions to pci.h
+Message-ID: <20190828133103.GC4550@google.com>
+References: <20190827095620.11213-1-kw@linux.com>
 MIME-Version: 1.0
-Message-ID: <156699905467.5310.17325936546223421628.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827095620.11213-1-kw@linux.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/vmware branch of tip:
+On Tue, Aug 27, 2019 at 11:56:20AM +0200, Krzysztof Wilczynski wrote:
+> Merge PCI Express ASPM function prototypes and definitions
+> from include/linux/pci-aspm.h into include/linux/pci.h.
+> 
+> Function prototypes to move are pci_disable_link_state(),
+> pci_disable_link_state_locked(), pcie_no_aspm() and
+> pcie_aspm_support_enabled(), and definitions to move
+> are PCIE_LINK_STATE_L0S, PCIE_LINK_STATE_L1 and
+> PCIE_LINK_STATE_CLKPM.
+> 
+> There are no functional changes.
+> 
+> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
 
-Commit-ID:     bac7b4e843232a3a49a042410cf743341eb0887e
-Gitweb:        https://git.kernel.org/tip/bac7b4e843232a3a49a042410cf743341eb0887e
-Author:        Thomas Hellstrom <thellstrom@vmware.com>
-AuthorDate:    Wed, 28 Aug 2019 10:03:50 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 28 Aug 2019 10:48:30 +02:00
+I replaced the leading spaces in the copyright lines with tabs to
+match the others and applied to pci/aspm for v5.4, thanks!
 
-x86/vmware: Update platform detection code for VMCALL/VMMCALL hypercalls
-
-Vmware has historically used an INL instruction for this, but recent
-hardware versions support using VMCALL/VMMCALL instead, so use this
-method if supported at platform detection time. Explicitly code separate
-macro versions since the alternatives self-patching has not been
-performed at platform detection time.
-
-Also put tighter constraints on the assembly input parameters.
-
-Co-developed-by: Doug Covelli <dcovelli@vmware.com>
-Signed-off-by: Doug Covelli <dcovelli@vmware.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Doug Covelli <dcovelli@vmware.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-graphics-maintainer@vmware.com
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: virtualization@lists.linux-foundation.org
-Cc: <pv-drivers@vmware.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190828080353.12658-2-thomas_os@shipmail.org
----
- arch/x86/kernel/cpu/vmware.c | 88 ++++++++++++++++++++++++++++-------
- 1 file changed, 71 insertions(+), 17 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index 3c64847..757dded 100644
---- a/arch/x86/kernel/cpu/vmware.c
-+++ b/arch/x86/kernel/cpu/vmware.c
-@@ -34,30 +34,65 @@
- #undef pr_fmt
- #define pr_fmt(fmt)	"vmware: " fmt
- 
--#define CPUID_VMWARE_INFO_LEAF	0x40000000
-+#define CPUID_VMWARE_INFO_LEAF               0x40000000
-+#define CPUID_VMWARE_FEATURES_LEAF           0x40000010
-+#define CPUID_VMWARE_FEATURES_ECX_VMMCALL    BIT(0)
-+#define CPUID_VMWARE_FEATURES_ECX_VMCALL     BIT(1)
-+
- #define VMWARE_HYPERVISOR_MAGIC	0x564D5868
- #define VMWARE_HYPERVISOR_PORT	0x5658
- 
--#define VMWARE_PORT_CMD_GETVERSION	10
--#define VMWARE_PORT_CMD_GETHZ		45
--#define VMWARE_PORT_CMD_GETVCPU_INFO	68
--#define VMWARE_PORT_CMD_LEGACY_X2APIC	3
--#define VMWARE_PORT_CMD_VCPU_RESERVED	31
-+#define VMWARE_CMD_GETVERSION    10
-+#define VMWARE_CMD_GETHZ         45
-+#define VMWARE_CMD_GETVCPU_INFO  68
-+#define VMWARE_CMD_LEGACY_X2APIC  3
-+#define VMWARE_CMD_VCPU_RESERVED 31
- 
- #define VMWARE_PORT(cmd, eax, ebx, ecx, edx)				\
- 	__asm__("inl (%%dx)" :						\
--			"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :	\
--			"0"(VMWARE_HYPERVISOR_MAGIC),			\
--			"1"(VMWARE_PORT_CMD_##cmd),			\
--			"2"(VMWARE_HYPERVISOR_PORT), "3"(UINT_MAX) :	\
--			"memory");
-+		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
-+		"a"(VMWARE_HYPERVISOR_MAGIC),				\
-+		"c"(VMWARE_CMD_##cmd),					\
-+		"d"(VMWARE_HYPERVISOR_PORT), "b"(UINT_MAX) :		\
-+		"memory")
-+
-+#define VMWARE_VMCALL(cmd, eax, ebx, ecx, edx)				\
-+	__asm__("vmcall" :						\
-+		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
-+		"a"(VMWARE_HYPERVISOR_MAGIC),				\
-+		"c"(VMWARE_CMD_##cmd),					\
-+		"d"(0), "b"(UINT_MAX) :					\
-+		"memory")
-+
-+#define VMWARE_VMMCALL(cmd, eax, ebx, ecx, edx)                         \
-+	__asm__("vmmcall" :						\
-+		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
-+		"a"(VMWARE_HYPERVISOR_MAGIC),				\
-+		"c"(VMWARE_CMD_##cmd),					\
-+		"d"(0), "b"(UINT_MAX) :					\
-+		"memory")
-+
-+#define VMWARE_CMD(cmd, eax, ebx, ecx, edx) do {		\
-+	switch (vmware_hypercall_mode) {			\
-+	case CPUID_VMWARE_FEATURES_ECX_VMCALL:			\
-+		VMWARE_VMCALL(cmd, eax, ebx, ecx, edx);		\
-+		break;						\
-+	case CPUID_VMWARE_FEATURES_ECX_VMMCALL:			\
-+		VMWARE_VMMCALL(cmd, eax, ebx, ecx, edx);	\
-+		break;						\
-+	default:						\
-+		VMWARE_PORT(cmd, eax, ebx, ecx, edx);		\
-+		break;						\
-+	}							\
-+	} while (0)
- 
- static unsigned long vmware_tsc_khz __ro_after_init;
-+static u8 vmware_hypercall_mode     __ro_after_init;
- 
- static inline int __vmware_platform(void)
- {
- 	uint32_t eax, ebx, ecx, edx;
--	VMWARE_PORT(GETVERSION, eax, ebx, ecx, edx);
-+	VMWARE_CMD(GETVERSION, eax, ebx, ecx, edx);
- 	return eax != (uint32_t)-1 && ebx == VMWARE_HYPERVISOR_MAGIC;
- }
- 
-@@ -136,7 +171,7 @@ static void __init vmware_platform_setup(void)
- 	uint32_t eax, ebx, ecx, edx;
- 	uint64_t lpj, tsc_khz;
- 
--	VMWARE_PORT(GETHZ, eax, ebx, ecx, edx);
-+	VMWARE_CMD(GETHZ, eax, ebx, ecx, edx);
- 
- 	if (ebx != UINT_MAX) {
- 		lpj = tsc_khz = eax | (((uint64_t)ebx) << 32);
-@@ -174,10 +209,21 @@ static void __init vmware_platform_setup(void)
- 	vmware_set_capabilities();
- }
- 
-+static u8 vmware_select_hypercall(void)
-+{
-+	int eax, ebx, ecx, edx;
-+
-+	cpuid(CPUID_VMWARE_FEATURES_LEAF, &eax, &ebx, &ecx, &edx);
-+	return (ecx & (CPUID_VMWARE_FEATURES_ECX_VMMCALL |
-+		       CPUID_VMWARE_FEATURES_ECX_VMCALL));
-+}
-+
- /*
-  * While checking the dmi string information, just checking the product
-  * serial key should be enough, as this will always have a VMware
-  * specific string when running under VMware hypervisor.
-+ * If !boot_cpu_has(X86_FEATURE_HYPERVISOR), vmware_hypercall_mode
-+ * intentionally defaults to 0.
-  */
- static uint32_t __init vmware_platform(void)
- {
-@@ -187,8 +233,16 @@ static uint32_t __init vmware_platform(void)
- 
- 		cpuid(CPUID_VMWARE_INFO_LEAF, &eax, &hyper_vendor_id[0],
- 		      &hyper_vendor_id[1], &hyper_vendor_id[2]);
--		if (!memcmp(hyper_vendor_id, "VMwareVMware", 12))
-+		if (!memcmp(hyper_vendor_id, "VMwareVMware", 12)) {
-+			if (eax >= CPUID_VMWARE_FEATURES_LEAF)
-+				vmware_hypercall_mode =
-+					vmware_select_hypercall();
-+
-+			pr_info("hypercall mode: 0x%02x\n",
-+				(unsigned int) vmware_hypercall_mode);
-+
- 			return CPUID_VMWARE_INFO_LEAF;
-+		}
- 	} else if (dmi_available && dmi_name_in_serial("VMware") &&
- 		   __vmware_platform())
- 		return 1;
-@@ -200,9 +254,9 @@ static uint32_t __init vmware_platform(void)
- static bool __init vmware_legacy_x2apic_available(void)
- {
- 	uint32_t eax, ebx, ecx, edx;
--	VMWARE_PORT(GETVCPU_INFO, eax, ebx, ecx, edx);
--	return (eax & (1 << VMWARE_PORT_CMD_VCPU_RESERVED)) == 0 &&
--	       (eax & (1 << VMWARE_PORT_CMD_LEGACY_X2APIC)) != 0;
-+	VMWARE_CMD(GETVCPU_INFO, eax, ebx, ecx, edx);
-+	return (eax & (1 << VMWARE_CMD_VCPU_RESERVED)) == 0 &&
-+	       (eax & (1 << VMWARE_CMD_LEGACY_X2APIC)) != 0;
- }
- 
- const __initconst struct hypervisor_x86 x86_hyper_vmware = {
+> ---
+>  drivers/acpi/pci_root.c                       |  1 -
+>  drivers/char/xillybus/xillybus_pcie.c         |  1 -
+>  drivers/net/ethernet/intel/e1000e/e1000.h     |  1 -
+>  drivers/net/ethernet/jme.c                    |  1 -
+>  drivers/net/ethernet/realtek/r8169_main.c     |  1 -
+>  drivers/net/wireless/ath/ath5k/pci.c          |  1 -
+>  .../net/wireless/intel/iwlegacy/3945-mac.c    |  1 -
+>  .../net/wireless/intel/iwlegacy/4965-mac.c    |  1 -
+>  .../net/wireless/intel/iwlwifi/pcie/trans.c   |  1 -
+>  drivers/pci/pci-acpi.c                        |  1 -
+>  drivers/pci/pcie/aspm.c                       |  1 -
+>  drivers/pci/quirks.c                          |  1 -
+>  drivers/scsi/aacraid/linit.c                  |  1 -
+>  drivers/scsi/hpsa.c                           |  1 -
+>  drivers/scsi/mpt3sas/mpt3sas_scsih.c          |  1 -
+>  include/linux/pci-aspm.h                      | 36 -------------------
+>  include/linux/pci.h                           | 18 ++++++++++
+>  17 files changed, 18 insertions(+), 51 deletions(-)
+>  delete mode 100644 include/linux/pci-aspm.h
+> 
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index 314a187ed572..d1e666ef3fcc 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -15,7 +15,6 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/pci.h>
+>  #include <linux/pci-acpi.h>
+> -#include <linux/pci-aspm.h>
+>  #include <linux/dmar.h>
+>  #include <linux/acpi.h>
+>  #include <linux/slab.h>
+> diff --git a/drivers/char/xillybus/xillybus_pcie.c b/drivers/char/xillybus/xillybus_pcie.c
+> index 02c15952b103..18b0c392bc93 100644
+> --- a/drivers/char/xillybus/xillybus_pcie.c
+> +++ b/drivers/char/xillybus/xillybus_pcie.c
+> @@ -9,7 +9,6 @@
+>  
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> -#include <linux/pci-aspm.h>
+>  #include <linux/slab.h>
+>  #include "xillybus.h"
+>  
+> diff --git a/drivers/net/ethernet/intel/e1000e/e1000.h b/drivers/net/ethernet/intel/e1000e/e1000.h
+> index 34cd67951aec..6c51b1bad8c4 100644
+> --- a/drivers/net/ethernet/intel/e1000e/e1000.h
+> +++ b/drivers/net/ethernet/intel/e1000e/e1000.h
+> @@ -13,7 +13,6 @@
+>  #include <linux/io.h>
+>  #include <linux/netdevice.h>
+>  #include <linux/pci.h>
+> -#include <linux/pci-aspm.h>
+>  #include <linux/crc32.h>
+>  #include <linux/if_vlan.h>
+>  #include <linux/timecounter.h>
+> diff --git a/drivers/net/ethernet/jme.c b/drivers/net/ethernet/jme.c
+> index 0b668357db4d..57e8aea98969 100644
+> --- a/drivers/net/ethernet/jme.c
+> +++ b/drivers/net/ethernet/jme.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/module.h>
+>  #include <linux/kernel.h>
+>  #include <linux/pci.h>
+> -#include <linux/pci-aspm.h>
+>  #include <linux/netdevice.h>
+>  #include <linux/etherdevice.h>
+>  #include <linux/ethtool.h>
+> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+> index e1dd6ea60d67..a8f373e49505 100644
+> --- a/drivers/net/ethernet/realtek/r8169_main.c
+> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> @@ -28,7 +28,6 @@
+>  #include <linux/dma-mapping.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/prefetch.h>
+> -#include <linux/pci-aspm.h>
+>  #include <linux/ipv6.h>
+>  #include <net/ip6_checksum.h>
+>  
+> diff --git a/drivers/net/wireless/ath/ath5k/pci.c b/drivers/net/wireless/ath/ath5k/pci.c
+> index c6156cc38940..d5ee32ce9eb3 100644
+> --- a/drivers/net/wireless/ath/ath5k/pci.c
+> +++ b/drivers/net/wireless/ath/ath5k/pci.c
+> @@ -18,7 +18,6 @@
+>  
+>  #include <linux/nl80211.h>
+>  #include <linux/pci.h>
+> -#include <linux/pci-aspm.h>
+>  #include <linux/etherdevice.h>
+>  #include <linux/module.h>
+>  #include "../ath.h"
+> diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+> index b82da75a9ae3..4fbcc7fba3cc 100644
+> --- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+> +++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+> @@ -18,7 +18,6 @@
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/pci.h>
+> -#include <linux/pci-aspm.h>
+>  #include <linux/slab.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/delay.h>
+> diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> index fa2c02881939..ffb705b18fb1 100644
+> --- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> +++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> @@ -18,7 +18,6 @@
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/pci.h>
+> -#include <linux/pci-aspm.h>
+>  #include <linux/slab.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/delay.h>
+> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+> index f5df5b370d78..4c308e33ee21 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+> @@ -62,7 +62,6 @@
+>   *
+>   *****************************************************************************/
+>  #include <linux/pci.h>
+> -#include <linux/pci-aspm.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/sched.h>
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 45049f558860..dd520fe927db 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/msi.h>
+>  #include <linux/pci_hotplug.h>
+>  #include <linux/module.h>
+> -#include <linux/pci-aspm.h>
+>  #include <linux/pci-acpi.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/pm_qos.h>
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index e44af7f4d37f..ad6259ec51a6 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -18,7 +18,6 @@
+>  #include <linux/slab.h>
+>  #include <linux/jiffies.h>
+>  #include <linux/delay.h>
+> -#include <linux/pci-aspm.h>
+>  #include "../pci.h"
+>  
+>  #ifdef MODULE_PARAM_PREFIX
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 208aacf39329..9ac1a7564c9e 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -20,7 +20,6 @@
+>  #include <linux/delay.h>
+>  #include <linux/acpi.h>
+>  #include <linux/dmi.h>
+> -#include <linux/pci-aspm.h>
+>  #include <linux/ioport.h>
+>  #include <linux/sched.h>
+>  #include <linux/ktime.h>
+> diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
+> index 644f7f5c61a2..4a858789e6c5 100644
+> --- a/drivers/scsi/aacraid/linit.c
+> +++ b/drivers/scsi/aacraid/linit.c
+> @@ -27,7 +27,6 @@
+>  #include <linux/moduleparam.h>
+>  #include <linux/pci.h>
+>  #include <linux/aer.h>
+> -#include <linux/pci-aspm.h>
+>  #include <linux/slab.h>
+>  #include <linux/mutex.h>
+>  #include <linux/spinlock.h>
+> diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+> index 1bb6aada93fa..ac39ed79ccaa 100644
+> --- a/drivers/scsi/hpsa.c
+> +++ b/drivers/scsi/hpsa.c
+> @@ -21,7 +21,6 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/types.h>
+>  #include <linux/pci.h>
+> -#include <linux/pci-aspm.h>
+>  #include <linux/kernel.h>
+>  #include <linux/slab.h>
+>  #include <linux/delay.h>
+> diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+> index 717ba0845a2a..27fdbc165446 100644
+> --- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+> +++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+> @@ -51,7 +51,6 @@
+>  #include <linux/workqueue.h>
+>  #include <linux/delay.h>
+>  #include <linux/pci.h>
+> -#include <linux/pci-aspm.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/aer.h>
+>  #include <linux/raid_class.h>
+> diff --git a/include/linux/pci-aspm.h b/include/linux/pci-aspm.h
+> deleted file mode 100644
+> index 67064145d76e..000000000000
+> --- a/include/linux/pci-aspm.h
+> +++ /dev/null
+> @@ -1,36 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -/*
+> - *	aspm.h
+> - *
+> - *	PCI Express ASPM defines and function prototypes
+> - *
+> - *	Copyright (C) 2007 Intel Corp.
+> - *		Zhang Yanmin (yanmin.zhang@intel.com)
+> - *		Shaohua Li (shaohua.li@intel.com)
+> - *
+> - *	For more information, please consult the following manuals (look at
+> - *	http://www.pcisig.com/ for how to get them):
+> - *
+> - *	PCI Express Specification
+> - */
+> -
+> -#ifndef LINUX_ASPM_H
+> -#define LINUX_ASPM_H
+> -
+> -#include <linux/pci.h>
+> -
+> -#define PCIE_LINK_STATE_L0S	1
+> -#define PCIE_LINK_STATE_L1	2
+> -#define PCIE_LINK_STATE_CLKPM	4
+> -
+> -#ifdef CONFIG_PCIEASPM
+> -int pci_disable_link_state(struct pci_dev *pdev, int state);
+> -int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
+> -void pcie_no_aspm(void);
+> -#else
+> -static inline int pci_disable_link_state(struct pci_dev *pdev, int state)
+> -{ return 0; }
+> -static inline void pcie_no_aspm(void) { }
+> -#endif
+> -
+> -#endif /* LINUX_ASPM_H */
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 9e700d9f9f28..f07f52175606 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -6,12 +6,18 @@
+>   *	Copyright 1994, Drew Eckhardt
+>   *	Copyright 1997--1999 Martin Mares <mj@ucw.cz>
+>   *
+> + *      PCI Express ASPM defines and function prototypes
+> + *      Copyright (c) 2007 Intel Corp.
+> + *              Zhang Yanmin (yanmin.zhang@intel.com)
+> + *              Shaohua Li (shaohua.li@intel.com)
+> + *
+>   *	For more information, please consult the following manuals (look at
+>   *	http://www.pcisig.com/ for how to get them):
+>   *
+>   *	PCI BIOS Specification
+>   *	PCI Local Bus Specification
+>   *	PCI to PCI Bridge Specification
+> + *	PCI Express Specification
+>   *	PCI System Design Guide
+>   */
+>  #ifndef LINUX_PCI_H
+> @@ -1565,9 +1571,21 @@ extern bool pcie_ports_native;
+>  #define pcie_ports_native	false
+>  #endif
+>  
+> +#define PCIE_LINK_STATE_L0S	1
+> +#define PCIE_LINK_STATE_L1	2
+> +#define PCIE_LINK_STATE_CLKPM	4
+> +
+>  #ifdef CONFIG_PCIEASPM
+> +int pci_disable_link_state(struct pci_dev *pdev, int state);
+> +int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
+> +void pcie_no_aspm(void);
+>  bool pcie_aspm_support_enabled(void);
+>  #else
+> +static inline int pci_disable_link_state(struct pci_dev *pdev, int state)
+> +{ return 0; }
+> +static inline int pci_disable_link_state_locked(struct pci_dev *pdev, int state)
+> +{ return 0; }
+> +static inline void pcie_no_aspm(void) { }
+>  static inline bool pcie_aspm_support_enabled(void) { return false; }
+>  #endif
+>  
+> -- 
+> 2.22.1
+> 
