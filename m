@@ -2,97 +2,106 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2788C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FABC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0DF422DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567005725;
-	bh=ZJhc4Bf5xGC50rybksdzOKNk41SFLjFvVE7vxDePzbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FsphoLqQGThS0coGDpb+hgK7Q/YfM3dU71lVfY2nyMsGmKHeQUnYYl4rwKokkERZW
-	 r7N5anVSbZcnpGOjWmCnM/E1QOJQFsTvkT0tyc2ApDOD7qKF0htaWTm9O8GqMtnjsz
-	 T4ZAGed3nmzyAkxGAkhvHsda+ZEFUrtoSdL8jnD8=
+	by mail.kernel.org (Postfix) with ESMTP id F31602077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:22:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFysR3J8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfH1PWF (ORCPT
+        id S1726836AbfH1PWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:22:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbfH1PWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:22:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D8E122CED;
-        Wed, 28 Aug 2019 15:22:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567005723;
-        bh=ZJhc4Bf5xGC50rybksdzOKNk41SFLjFvVE7vxDePzbM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LRnwzFqeI14acCU9fWPLHIN5Uv+JP94U+v5H1SosVPVcOju1qL7QqnmbuhxXFlWAh
-         xmX6PlsOABM4P5p/1fD1aH+L8FKCvW2zx3ZFGOZUDqKAWlbue93u0yu/whus7FlAdz
-         3JGqIAHgRxw0FvAIBccauvHCwOOm4VC63xVxvvkk=
-Date:   Wed, 28 Aug 2019 17:22:01 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, jonathan.cameron@huawei.com,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        Zaibo Xu <xuzaibo@huawei.com>
-Subject: Re: [PATCH v2 2/2] uacce: add uacce driver
-Message-ID: <20190828152201.GA10163@kroah.com>
-References: <1566998876-31770-1-git-send-email-zhangfei.gao@linaro.org>
- <1566998876-31770-3-git-send-email-zhangfei.gao@linaro.org>
+        Wed, 28 Aug 2019 11:22:24 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46232 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfH1PWX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 11:22:23 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q139so1916580pfc.13;
+        Wed, 28 Aug 2019 08:22:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K1Wo1uryMad+JJHaOOhI3eSiwsKm2WkRf/8nzV4iG5o=;
+        b=GFysR3J8M2/ErxWakUhYzi+sSNmBeOJsqfZEFYbxE1KjTRbEdMgPJwDSY2sfWBF4M7
+         m554SzdeYG0q9h/3O3YP6S2ney8bZM6NSUhhOs+BcEYtnRmLb27/zrn1sJZtev1TbNe8
+         Ai8qsV+khBr3j4Yeyz+kBWE8P0eeENZ+6OFFzS80tsvOSrP0xUaSlO1uH6C13cFJ1009
+         cxRzDP706pd2EsdANnd/MK7GNAPYq8p3tpJ8PjWaOCxXwYlQQGvYBgvVjchn42TnWe65
+         11Wwhjjeaz6joh+i8Sr2d4JPadlNYYU7M2Bgrc23JlOSFDz4XSx0ovXC/EBXU/ZO9zLX
+         +74A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K1Wo1uryMad+JJHaOOhI3eSiwsKm2WkRf/8nzV4iG5o=;
+        b=mA55HSv0Se57jG3Smf8xcDnDsb55Wi8iZw7c1XJAxvmvFayCRQsdNxWOG89H1wLmsl
+         /jjAqiPQGxWTtzEfkz8MB/i1FcWdv5DTmoP/3Ya2Y4hlYKRcX2y+u3bg6j2yyC6O9AS+
+         D3QQh00Mtg+mtPzYIkNYUT1glDoXzIkL+pgpmNgSLw55p4jFtg3oKm9i4yDeSOS227ob
+         /tYbZzngkVcMssFlFWmn+Jm5awiaTSCdkfQGzpvZ618+k7PNyx1ywOxAmZqvmmOzUijF
+         JVs5vtv/X41IjG2NKM5d7uFqvWtIGBiRVWkEFBecpBuMaXxKMsPB6Xb4JHYcTVDURxa0
+         mZ5A==
+X-Gm-Message-State: APjAAAWadgk1gS3+qg177cxjmyai4lXba9L1Y+ER5UGbkiKb+TTHDTg2
+        d+Cy+LwWKxVe7Tcn+4PxG443nPPb
+X-Google-Smtp-Source: APXvYqwMulwQmSKyJYZ5XStrF/EheQfqT2YR1ENZMg7+TqRcL/vGToHCYNsXooYGBikFTAvDL3sR0g==
+X-Received: by 2002:a17:90a:bc06:: with SMTP id w6mr5002407pjr.130.1567005743009;
+        Wed, 28 Aug 2019 08:22:23 -0700 (PDT)
+Received: from [10.69.69.102] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id g1sm3330822pgg.27.2019.08.28.08.22.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 28 Aug 2019 08:22:22 -0700 (PDT)
+Subject: Re: [linux-next][BUG][driver/scsi/lpfc][10541f] Kernel panics when
+ booting next kernel on my Power 9 box
+To:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc:     linux-next <linux-next@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        sachinp <sachinp@linux.vnet.ibm.com>,
+        manvanth <manvanth@linux.vnet.ibm.com>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        dick.kennedy@broadcom.com,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        dougmill <dougmill@linux.vnet.ibm.com>,
+        Brian King <brking@linux.vnet.ibm.com>
+References: <1566968536.23670.9.camel@abdul>
+From:   James Smart <jsmart2021@gmail.com>
+Message-ID: <601365f6-c753-96f6-5d61-481f54d95440@gmail.com>
+Date:   Wed, 28 Aug 2019 08:22:17 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566998876-31770-3-git-send-email-zhangfei.gao@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1566968536.23670.9.camel@abdul>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 09:27:56PM +0800, Zhangfei Gao wrote:
-> +struct uacce {
-> +	const char *drv_name;
-> +	const char *algs;
-> +	const char *api_ver;
-> +	unsigned int flags;
-> +	unsigned long qf_pg_start[UACCE_QFRT_MAX];
-> +	struct uacce_ops *ops;
-> +	struct device *pdev;
-> +	bool is_vf;
-> +	u32 dev_id;
-> +	struct cdev cdev;
-> +	struct device dev;
-> +	void *priv;
-> +	atomic_t state;
-> +	int prot;
-> +	struct mutex q_lock;
-> +	struct list_head qs;
-> +};
+On 8/27/2019 10:02 PM, Abdul Haleem wrote:
+> Greetings,
+> 
+> linux-next kernel 5.3.0-rc1 failed to boot with kernel Oops on Power 9
+> box
+> 
+> I see a recent changes to lpfc code was from commit
+> 10541f03 scsi: lpfc: Update lpfc version to 12.4.0.0
+> 
+> Recent boot logs:
+> 
+> [..snip..]
 
-At a quick glance, this problem really stood out to me.  You CAN NOT
-have two different objects within a structure that have different
-lifetime rules and reference counts.  You do that here with both a
-'struct cdev' and a 'struct device'.  Pick one or the other, but never
-both.
+see  https://www.spinics.net/lists/linux-scsi/msg133343.html
 
-I would recommend using a 'struct device' and then a 'struct cdev *'.
-That way you get the advantage of using the driver model properly, and
-then just adding your char device node pointer to "the side" which
-interacts with this device.
+It hasn't been tested yet, but appears to be the issue.
 
-Then you might want to call this "struct uacce_device" :)
-
-thanks,
-
-greg k-h
+-- james
