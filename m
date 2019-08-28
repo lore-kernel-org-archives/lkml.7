@@ -2,31 +2,32 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-14.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B6DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775D8C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2727122DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560A4233FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfH1Vyi (ORCPT
+        id S1727125AbfH1Vyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:54:38 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:46434 "EHLO ale.deltatee.com"
+        Wed, 28 Aug 2019 17:54:40 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:46438 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726583AbfH1Vyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:54:37 -0400
+        id S1726400AbfH1Vyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 17:54:38 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1i35tj-00071o-NI; Wed, 28 Aug 2019 15:54:36 -0600
+        id 1i35tj-00071g-NO; Wed, 28 Aug 2019 15:54:37 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1i35tj-0001DJ-Bh; Wed, 28 Aug 2019 15:54:35 -0600
+        id 1i35ti-0001Cv-I1; Wed, 28 Aug 2019 15:54:34 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
@@ -35,18 +36,19 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 28 Aug 2019 15:54:29 -0600
-Message-Id: <20190828215429.4572-14-logang@deltatee.com>
+Date:   Wed, 28 Aug 2019 15:54:21 -0600
+Message-Id: <20190828215429.4572-6-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190828215429.4572-1-logang@deltatee.com>
 References: <20190828215429.4572-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v8 13/13] nvmet-passthru: support block accounting
+Subject: [PATCH v8 05/13] nvmet-passthru: update KConfig with config passthru option
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,40 +56,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support block disk accounting by setting the RQF_IO_STAT flag
-and gendisk in the request.
+From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 
-After this change, IO counts will be reflected correctly in
-/proc/diskstats for drives being used by passthru.
+This patch updates KConfig file for the NVMeOF target where we add new
+option so that user can selectively enable/disable passthru code.
 
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+[logang@deltatee.com: fixed some of the wording in the help message]
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
 ---
- drivers/nvme/target/io-cmd-passthru.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/nvme/target/Kconfig | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/nvme/target/io-cmd-passthru.c b/drivers/nvme/target/io-cmd-passthru.c
-index 7557927a3451..63f12750a80d 100644
---- a/drivers/nvme/target/io-cmd-passthru.c
-+++ b/drivers/nvme/target/io-cmd-passthru.c
-@@ -410,6 +410,9 @@ static struct request *nvmet_passthru_blk_make_request(struct nvmet_req *req,
- 	if (unlikely(IS_ERR(rq)))
- 		return rq;
+diff --git a/drivers/nvme/target/Kconfig b/drivers/nvme/target/Kconfig
+index d7f48c0fb311..2478cb5a932d 100644
+--- a/drivers/nvme/target/Kconfig
++++ b/drivers/nvme/target/Kconfig
+@@ -15,6 +15,16 @@ config NVME_TARGET
+ 	  To configure the NVMe target you probably want to use the nvmetcli
+ 	  tool from http://git.infradead.org/users/hch/nvmetcli.git.
  
-+	if (blk_queue_io_stat(q) && cmd->common.opcode != nvme_cmd_flush)
-+		rq->rq_flags |= RQF_IO_STAT;
++config NVME_TARGET_PASSTHRU
++	bool "NVMe Target Passthrough support"
++	depends on NVME_CORE
++	depends on NVME_TARGET
++	help
++	  This enables target side NVMe passthru controller support for the
++	  NVMe Over Fabrics protocol. It allows for hosts to manage and
++	  directly access an actual NVMe controller residing on the target
++	  side, incuding executing Vendor Unique Commands.
 +
- 	if (req->sg_cnt) {
- 		ret = nvmet_passthru_map_sg(req, rq);
- 		if (unlikely(ret)) {
-@@ -474,7 +477,7 @@ static void nvmet_passthru_execute_cmd(struct nvmet_req *req)
- 
- 	rq->end_io_data = req;
- 	if (req->sq->qid != 0) {
--		blk_execute_rq_nowait(rq->q, NULL, rq, 0,
-+		blk_execute_rq_nowait(rq->q, ns->disk, rq, 0,
- 				      nvmet_passthru_req_done);
- 	} else {
- 		req->p.rq = rq;
+ config NVME_TARGET_LOOP
+ 	tristate "NVMe loopback device support"
+ 	depends on NVME_TARGET
 -- 
 2.20.1
 
