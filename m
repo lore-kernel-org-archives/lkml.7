@@ -2,148 +2,108 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7166C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F23C8C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C0220679
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C831920828
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:23:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfH1IWj (ORCPT
+        id S1726521AbfH1IXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:22:39 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:39870 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726292AbfH1IWg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:22:36 -0400
-X-UUID: e5c8508b7fe1438aac5d7a5d0f03f01c-20190828
-X-UUID: e5c8508b7fe1438aac5d7a5d0f03f01c-20190828
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1574006817; Wed, 28 Aug 2019 16:22:32 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 28 Aug 2019 16:22:37 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 28 Aug 2019 16:22:36 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Erin Lo <erin.lo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v2 2/2] clk: mediatek: add pericfg clocks for MT8183
-Date:   Wed, 28 Aug 2019 16:22:13 +0800
-Message-ID: <1566980533-28282-2-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1566980533-28282-1-git-send-email-chunfeng.yun@mediatek.com>
-References: <1566980533-28282-1-git-send-email-chunfeng.yun@mediatek.com>
+        Wed, 28 Aug 2019 04:23:39 -0400
+Received: from mga07.intel.com ([134.134.136.100]:36809 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbfH1IXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:23:39 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 01:23:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
+   d="asc'?scan'208";a="174838527"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga008.jf.intel.com with ESMTP; 28 Aug 2019 01:23:37 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Joe Perches <joe@perches.com>,
+        Richard Cochran <richardcochran@gmail.com>
+Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] PTP: introduce new versions of IOCTLs
+In-Reply-To: <0f1487356ae2e9ff185ede2359381630007538c7.camel@perches.com>
+References: <20190814074712.10684-1-felipe.balbi@linux.intel.com> <20190817155927.GA1540@localhost> <a146c1356b4272c481e5cc63666c6e58b8442407.camel@perches.com> <20190818201150.GA1316@localhost> <83075553a61ede1de9cbf77b90a5acdeab5aacbf.camel@perches.com> <20190819154320.GB2883@localhost> <0f1487356ae2e9ff185ede2359381630007538c7.camel@perches.com>
+Date:   Wed, 28 Aug 2019 11:23:33 +0300
+Message-ID: <87k1axwvei.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 6DC754C66BDCD856598D92120E25C2ECC60FDFB513228A16B278547B46FB24CC2000:8
-X-MTK:  N
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add pericfg clocks for MT8183, it's used when support USB
-remote wakeup
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Weiyi Lu <weiyi.lu@mediatek.com>
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
-v2:
-   use GATE_MTK to define GATE_PERI suggested by Weiyi
----
- drivers/clk/mediatek/clk-mt8183.c      | 30 ++++++++++++++++++++++++++
- include/dt-bindings/clock/mt8183-clk.h |  4 ++++
- 2 files changed, 34 insertions(+)
 
-diff --git a/drivers/clk/mediatek/clk-mt8183.c b/drivers/clk/mediatek/clk-mt8183.c
-index 1aa5f4059251..f3765bbdbe85 100644
---- a/drivers/clk/mediatek/clk-mt8183.c
-+++ b/drivers/clk/mediatek/clk-mt8183.c
-@@ -999,6 +999,20 @@ static const struct mtk_gate infra_clks[] = {
- 		"msdc50_0_sel", 24),
- };
- 
-+static const struct mtk_gate_regs peri_cg_regs = {
-+	.set_ofs = 0x20c,
-+	.clr_ofs = 0x20c,
-+	.sta_ofs = 0x20c,
-+};
-+
-+#define GATE_PERI(_id, _name, _parent, _shift)			\
-+	GATE_MTK(_id, _name, _parent, &peri_cg_regs, _shift,	\
-+		&mtk_clk_gate_ops_no_setclr_inv)
-+
-+static const struct mtk_gate peri_clks[] = {
-+	GATE_PERI(CLK_PERI_AXI, "peri_axi", "axi_sel", 31),
-+};
-+
- static const struct mtk_gate_regs apmixed_cg_regs = {
- 	.set_ofs = 0x20,
- 	.clr_ofs = 0x20,
-@@ -1194,6 +1208,19 @@ static int clk_mt8183_infra_probe(struct platform_device *pdev)
- 	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
- }
- 
-+static int clk_mt8183_peri_probe(struct platform_device *pdev)
-+{
-+	struct clk_onecell_data *clk_data;
-+	struct device_node *node = pdev->dev.of_node;
-+
-+	clk_data = mtk_alloc_clk_data(CLK_PERI_NR_CLK);
-+
-+	mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks),
-+			       clk_data);
-+
-+	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+}
-+
- static int clk_mt8183_mcu_probe(struct platform_device *pdev)
- {
- 	struct clk_onecell_data *clk_data;
-@@ -1223,6 +1250,9 @@ static const struct of_device_id of_match_clk_mt8183[] = {
- 	}, {
- 		.compatible = "mediatek,mt8183-infracfg",
- 		.data = clk_mt8183_infra_probe,
-+	}, {
-+		.compatible = "mediatek,mt8183-pericfg",
-+		.data = clk_mt8183_peri_probe,
- 	}, {
- 		.compatible = "mediatek,mt8183-mcucfg",
- 		.data = clk_mt8183_mcu_probe,
-diff --git a/include/dt-bindings/clock/mt8183-clk.h b/include/dt-bindings/clock/mt8183-clk.h
-index 0046506eb24c..a7b470b0ec8a 100644
---- a/include/dt-bindings/clock/mt8183-clk.h
-+++ b/include/dt-bindings/clock/mt8183-clk.h
-@@ -284,6 +284,10 @@
- #define CLK_INFRA_FBIST2FPC		100
- #define CLK_INFRA_NR_CLK		101
- 
-+/* PERICFG */
-+#define CLK_PERI_AXI			0
-+#define CLK_PERI_NR_CLK			1
-+
- /* MFGCFG */
- #define CLK_MFG_BG3D			0
- #define CLK_MFG_NR_CLK			1
--- 
-2.23.0
+Hi,
 
+Joe Perches <joe@perches.com> writes:
+
+> On Mon, 2019-08-19 at 08:43 -0700, Richard Cochran wrote:
+>> On Sun, Aug 18, 2019 at 03:07:18PM -0700, Joe Perches wrote:
+>> > Also the original patch deletes 2 case entries for
+>> > PTP_PIN_GETFUNC and PTP_PIN_SETFUNC and converts them to
+>> > PTP_PIN_GETFUNC2 and PTP_PIN_SETFUNC2 but still uses tests
+>> > for the deleted case label entries making part of the case
+>> > code block unreachable.
+>> >=20
+>> > That's at least a defect:
+>> >=20
+>> > -	case PTP_PIN_GETFUNC:
+>> > +	case PTP_PIN_GETFUNC2:
+>> >=20
+>> > and
+>> >=20=20
+>> > -	case PTP_PIN_SETFUNC:
+>> > +	case PTP_PIN_SETFUNC2:
+>>=20
+>> Good catch.  Felipe, please fix that!
+>>=20
+>> (Regarding Joe's memset suggestion, I'll leave that to your discretion.)
+>
+> Not just how declarations are done or memset.
+>
+> Minimizing unnecessary stack consumption is generally good.
+
+Originally I had memset only on the three cases where they were
+needed. Richard, which do you prefer? I don't mind changing it back.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1mOgUACgkQzL64meEa
+mQbvrhAAnskbpsrzKMjJ/1NPI5lhfGtbshqfMbi5e24sbZdcqYSprnBNv/0/KPiK
+NGCYILncPi4PsTZ8bLoFG2/9vFhf0YqMgQ9q4MN/KolTaNxoq/IdNrr4CppyQ8Sb
+H4LKPsjD9T+E24J2RcyTmZRiVvDvYgO3LwYL7iCuIWQuIgOLxsPZ1ZgCmw4pnwsh
+/Yp/qCfSvWco2mdldjP6mw9SBFl0zidTBzHxI1re4evPPOmNb0P7Fsf0WrDNG3fU
+WhP9bqQvs8r5INyiYLnSgcZVhyEMpK/N7J/jtW7wVmqT39794cystaelpVRQVUGr
+Z6/YgWtvY9zuYsd4kCcR431beg4uK7KgXcvTKyqf4N1WBrOAZcg1nJ/XKSqJM7tA
+iKPBm/3hVrM2iRfe71tCfzH/QbopMoIZSVKwm2ir4u5bia1H9hyir5VBWJWAa++v
+yR+LC2/Ur+w+uzNn2DocxHDWhfFXshpZ2k8sDep+5kCJ9dqA4hvXjEe4POVTNaaH
+dTxQjTu8VjVVqzOtJUB0xjF/zlzrPrSXD43Uudynhkh7O1RUJkMc2hH0B4Nc2Xk+
+FnAg2swx2u96sKty34KGcjxNVwWYMmVvqNKbVPXxxX4RfCvO/2YNOIF6qHF1qkuB
+DOqA0wQ/IY/vJnwUksrL6kjN2P7uTzTsHwDIjwU61/C+oTDnBEo=
+=0XCJ
+-----END PGP SIGNATURE-----
+--=-=-=--
