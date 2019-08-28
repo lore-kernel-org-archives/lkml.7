@@ -2,109 +2,98 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3E9C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC2DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4409214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:46:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566989168;
-	bh=xEk+7C1PeYR/dQCDWZ88puZD6TYZGeKl16GGfqOsMlE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UPk+BmqTefIC7IuShSUqp0JGF/HYnvOFEIeqkNBt97fUMU8BR3jwZ74I02CjsTlfz
-	 7FMiJJQTqTrZo8pRklnL0FZrjmsYX0S303I4Gk9zLqX+3SxcdVXH6+ICZcaubbKLg8
-	 8PCk8So4m7HVdxv9SC4GFpIDG4WaJJJ6MLoD+zXs=
+	by mail.kernel.org (Postfix) with ESMTP id B6E46214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:47:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kraav.com header.i=@kraav.com header.b="dXbBqNAW";
+	dkim=pass (1024-bit key) header.d=kraav.com header.i=@kraav.com header.b="dXbBqNAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfH1KqI (ORCPT
+        id S1726444AbfH1KrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:46:08 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43754 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfH1KqH (ORCPT
+        Wed, 28 Aug 2019 06:47:21 -0400
+Received: from mail-out.elkdata.ee ([185.7.252.64]:31339 "EHLO
+        mail-out.elkdata.ee" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfH1KrV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:46:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xEk+7C1PeYR/dQCDWZ88puZD6TYZGeKl16GGfqOsMlE=; b=YaK6OBCmH+nTMmCNTe5KwcsNc
-        K1AaF0EoXYG4wJvyp20sq3QK0qUrshXEZza54GLmgqgJzISgbukntzkkGcFkiZd1PZidUbIiFPT6Z
-        +xK8S/7o5ZRs/0bzt49bTUqU4kDOVR9qc5/obE+R4dAJbpPy54r+L7eF8agGPv2N9eT+0=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i2vSe-0003cz-AO; Wed, 28 Aug 2019 10:45:56 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 894632742A55; Wed, 28 Aug 2019 11:45:55 +0100 (BST)
-Date:   Wed, 28 Aug 2019 11:45:55 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
-Subject: Re: [PATCH v5 07/10] regulator: mt6358: Add support for MT6358
- regulator
-Message-ID: <20190828104555.GE4298@sirena.co.uk>
-References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1566531931-9772-8-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Wed, 28 Aug 2019 06:47:21 -0400
+Received: from mail-relay2.elkdata.ee (unknown [185.7.252.69])
+        by mail-out.elkdata.ee (Postfix) with ESMTP id 8F5A4372F99
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 13:47:16 +0300 (EEST)
+Received: from mail-relay2.elkdata.ee (unknown [185.7.252.69])
+        by mail-relay2.elkdata.ee (Postfix) with ESMTP id 8DCE4830881
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 13:47:16 +0300 (EEST)
+X-Virus-Scanned: amavisd-new at elkdata.ee
+Received: from mail-relay2.elkdata.ee ([185.7.252.69])
+        by mail-relay2.elkdata.ee (mail-relay2.elkdata.ee [185.7.252.69]) (amavisd-new, port 10024)
+        with ESMTP id f6fMxR7F8B_F for <linux-kernel@vger.kernel.org>;
+        Wed, 28 Aug 2019 13:47:13 +0300 (EEST)
+Received: from mail.elkdata.ee (unknown [185.7.252.68])
+        by mail-relay2.elkdata.ee (Postfix) with ESMTP id ABDFD83088C
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 13:47:13 +0300 (EEST)
+Received: from mail.meie.biz (21-182-190-90.sta.estpak.ee [90.190.182.21])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: leho@jaanalind.ee)
+        by mail.elkdata.ee (Postfix) with ESMTPSA id A6D6760BF3B
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 13:47:13 +0300 (EEST)
+Received: by mail.meie.biz (Postfix, from userid 500)
+        id 88F3EA83EC6; Wed, 28 Aug 2019 13:47:13 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kraav.com; s=mail;
+        t=1566989233; bh=9Go7CWmyKZXk3qBxkNYiEELDakRvGKjVtCVkhs1F/+Q=;
+        h=Date:From:To:Subject:References:In-Reply-To;
+        b=dXbBqNAWOPE2KKQjUZ9tueT/ZrK0KBIg1tjBYiy2HULunLcxoaimi9Mt6VlY92PsV
+         CZ6l7dXNVjHAnVPRKhrjtr+4NR/3D2DeLnBpyWwri2i7N44tXaEItL0ebwmOpP76Db
+         qKtgv9JWOUFTgH1/08nctfHHqZVtleXH9SNPytu8=
+Received: from papaya (papaya-vpn.meie.biz [192.168.48.157])
+        by mail.meie.biz (Postfix) with ESMTPA id 5E3B7A83EC4
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 13:47:13 +0300 (EEST)
+Authentication-Results: mail.meie.biz; dmarc=fail (p=none dis=none) header.from=kraav.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kraav.com; s=mail;
+        t=1566989233; bh=9Go7CWmyKZXk3qBxkNYiEELDakRvGKjVtCVkhs1F/+Q=;
+        h=Date:From:To:Subject:References:In-Reply-To;
+        b=dXbBqNAWOPE2KKQjUZ9tueT/ZrK0KBIg1tjBYiy2HULunLcxoaimi9Mt6VlY92PsV
+         CZ6l7dXNVjHAnVPRKhrjtr+4NR/3D2DeLnBpyWwri2i7N44tXaEItL0ebwmOpP76Db
+         qKtgv9JWOUFTgH1/08nctfHHqZVtleXH9SNPytu8=
+Received: (nullmailer pid 3392 invoked by uid 1000);
+        Wed, 28 Aug 2019 10:47:13 -0000
+Date:   Wed, 28 Aug 2019 13:47:13 +0300
+From:   Leho Kraav <leho@kraav.com>
+To:     linux-kernel@vger.kernel.org
+Subject: Re: 5.3.0-rc6: i915 fails at typec_displayport 5120x1440
+Message-ID: <20190828104713.GA3319@papaya>
+References: <20190827080834.GB4124@papaya>
+ <20190827082043.GC4124@papaya>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="PPYy/fEw/8QCHSq3"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1566531931-9772-8-git-send-email-hsin-hsiung.wang@mediatek.com>
-X-Cookie: Oatmeal raisin.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190827082043.GC4124@papaya>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Bogosity: Unsure, tests=bogofilter, spamicity=0.500000, version=1.2.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 27, 2019 at 11:20:44AM +0300, Leho Kraav wrote:
+> On Tue, Aug 27, 2019 at 11:08:34AM +0300, Leho Kraav wrote:
+> > Hardware: Dell Latitude 7400 2-in-1, Whiskey Lake, Intel 620
+> > 
+> > 5120x1440 fails to display.
+> 
+> Looks like I'm not alone, either
+> 
+> https://www.reddit.com/r/linuxquestions/comments/cddpne/linux_and_ultrawide/
 
---PPYy/fEw/8QCHSq3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Solved via https://bugs.freedesktop.org/show_bug.cgi?id=111501#c5
 
-On Fri, Aug 23, 2019 at 11:45:28AM +0800, Hsin-Hsiung Wang wrote:
-> The MT6358 is a regulator found on boards based on MediaTek MT8183 and
-> probably other SoCs. It is a so called pmic and connects as a slave to
-> SoC using SPI, wrapped inside the pmic-wrapper.
+This is probably due to commit 372b9ffb5799 ("drm/i915: Fix skl+ max plane width")
 
-This looks good - since there was only one small issue with the example
-in the binding document I'll apply both patches, please send a followup
-fixing the binding document.
-
---PPYy/fEw/8QCHSq3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1mW2IACgkQJNaLcl1U
-h9BSkwf/dn5XU4gEVNtDS9XFnqmJE1/jcGPItKtO0MNfD3jrB/hUyBWMYoBhI+sU
-Vm45cGP+4DM/3BcJrj6qrmvgSmYZtpf6vn0RljmVuFlo5SOk4y4/HI8i+gdjcrER
-26tolRdFTgR3sbVDa2Wyzz6eCdz0UhoC69q4qQccEjgetw8GuXQHwGARR3NeXxVp
-4PCsUEKX5IxcOIKr2/1Y50W4HThACHgvoNAp/GK6zjSuyH17HKgZfSwh+p1sNZ4N
-a83mggDEu1rOgsiptGPtO/U+y2pNNnXNqX/+Xsnna6jkCkbM4hnGMLqvvMJlsGaC
-iVNyYaPdnO7o3Tqq6wzJbpXH6eKI+g==
-=VmT8
------END PGP SIGNATURE-----
-
---PPYy/fEw/8QCHSq3--
+Tyvm Ville.
