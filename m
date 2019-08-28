@@ -2,247 +2,187 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D92C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF63C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A99EC22CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C712339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:14:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="PRSEgBAK"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="bLaKXsQ3";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SjyPgHo+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfH1POc (ORCPT
+        id S1726923AbfH1PO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:14:32 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33374 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfH1PO3 (ORCPT
+        Wed, 28 Aug 2019 11:14:57 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:53357 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726315AbfH1PO5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:14:29 -0400
-Received: by mail-wr1-f65.google.com with SMTP id u16so228695wrr.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 08:14:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:subject:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=CxGTUahJN2mM1Rm5O90rTtaK5X6lZOBkH0dKQJB6nxs=;
-        b=PRSEgBAKriPA7rmeceu8jCXy7cRD461/bPXl7TRzdUaXhioFwYMiFFqpJi1HSYwL4m
-         5e+TP39ZwFsZQ+shNPOrv6ecFGIxGWcnUBmYn/ScM1M2H1Zuqw7l0aCz5+LIzrq7iQvR
-         9grqNfdSP4Yl4aC0+Dy0f4sgRit27QrsujZYTId/G3hGbJzQVj6x7bRVYraAFhaNRqzC
-         CkZFCsMDwki3392DCEKHIWOxYrQhO0+GyV+ObXaSGxbFUtecB78jQJ8pguu1GiWATFcR
-         3tax3c5AdKrrVCKThQBGH+tZrzax7XSpNzn4ljHzcnTi1uxRp9PMMcVKYLlhoEH1wXHz
-         9Ubg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=CxGTUahJN2mM1Rm5O90rTtaK5X6lZOBkH0dKQJB6nxs=;
-        b=hSGdfV7hvao+uJ8KaJeeuDdb1l1q/DNxXt3SL7a5I3snnDNrA3iqtwukVh4XfU+Qs5
-         4y3m+jNKzq/+lUjbo91Mk8ZOYKs6FVYuZv9KsiYe4/QAVnaKbiFdivaA8mOMB2QEW+/+
-         xiekVJjRfePsPqKfSQUB+v+F/u1UZJyVFX+4G4fE63FuX9yAMRmnSQwPCb9NrhEIvHoF
-         I2nGXyCx5e8oG8jqG5P3vU/CLqMzDgA1FkP8Tlkc9JBkGfL01nbneB1q+mYF62hH0ZK+
-         qEQGUxEeRc4GVm6k3puJ0Le7k37eSUSqRJfMw+nmB0YIj6YdC8BqZp3J91O6eP4LTCAI
-         khHw==
-X-Gm-Message-State: APjAAAUpAFRS5/DqYoLwHnRu7kdOy5rkiwkkHrg7uW4dqynOqkzhXBWB
-        XQQFdzbI2Ch+XCQuBlNovFE0ewAU
-X-Google-Smtp-Source: APXvYqyjiVfUOziWjPbBVlvEWT3EI60KGz1U0uEbx1tdZn8IKK1Vga5HJ3djcIQkDAWqC3a7pM5PwA==
-X-Received: by 2002:a05:6000:12c9:: with SMTP id l9mr4517773wrx.163.1567005265956;
-        Wed, 28 Aug 2019 08:14:25 -0700 (PDT)
-Received: from [192.168.1.20] (host109-153-59-46.range109-153.btcentralplus.com. [109.153.59.46])
-        by smtp.googlemail.com with ESMTPSA id t8sm6915144wra.73.2019.08.28.08.14.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Aug 2019 08:14:25 -0700 (PDT)
-From:   Chris Clayton <chris2553@googlemail.com>
-X-Google-Original-From: Chris Clayton <chris2553@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Subject: Workqueue - warning splat
-Cc:     tj@kernel.org, intel-gfx@lists.freedesktop.org
-Message-ID: <c2706468-6f88-7276-b791-e9573394aa18@gmail.com>
-Date:   Wed, 28 Aug 2019 16:14:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 11:14:57 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 745D15ED;
+        Wed, 28 Aug 2019 11:14:56 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Wed, 28 Aug 2019 11:14:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=UzPHBfLAzVPcvFoQrMGEUfMi0HG
+        clZnPUVz97BwDOS4=; b=bLaKXsQ3P0YckRoi/LQCpjASi0hmHRDVgTvSC1s7UVS
+        CycfOyz3tdX5PDYhUBTqNES6pCGmhAVF/72BRZ0j2e5I4BjMCrGDKC7dpdn+2O62
+        z2Eq/1I/phsRAQvHsgY40NyV3PPLSh0Pu8lsY4xHpB8rLN010CSbb+675BEl8rud
+        vl30Q1x//Vyh/HL9J9oilKoIH3WC4FyQaCC5TymJieYSvqz4RTCq6heIsMjf6fZi
+        K4MESHIWSTkVrU04Y0a2NeTndm9k377aejnrAlhtpg7iFH4U31/2ymCRpOqSInbA
+        R1zQE+rwtmxBKv0EP4NNhffBpQxYBXtxgftjFw+hP0A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=UzPHBf
+        LAzVPcvFoQrMGEUfMi0HGclZnPUVz97BwDOS4=; b=SjyPgHo+Gi5Pu2hpMp/m8/
+        YdRZXGWl7Xupb7bIboIqhApeN2xg4UZ1FZMrHPshWxSHNNCn2x/kxu+JTjTxSGO1
+        pxEKHvwzl0MEoSoGQ050MAl1pmjlXogOA6MYTrDGxrSu+juZEoi/SHjggYByIft0
+        OU8fKq64PP+BXrIUBcmHfMBmB8W3v2W611LUL3uQ/kWx3dZUyH8Yy7GL5+ilvP/U
+        EvDyAB0nQ7kUT9GBRsvcTqT9JGUMEhChYlLerw/TuL0tdSVn83wnIuPKkXRalrtm
+        YyGViO+OmA4iKIAIr6KDh9gyPLinqjZFpvlv2a57KFR/HQoGG4YwMxdOiR8+xwZw
+        ==
+X-ME-Sender: <xms:b5pmXYJksW9YqcKJ_B6n8j55BKk1sDp8UXHvJgWhyp81AM_B0SD8Cw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeitddgkeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuffhomhgrihhnpehkvghrnhgvlh
+    drohhrghenucfkphepkeefrdekiedrkeelrddutdejnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehgrhgvgheskhhrohgrhhdrtghomhenucevlhhushhtvghrufhiiigvpedu
+X-ME-Proxy: <xmx:b5pmXcaM0fPYF_KLc3nA2oPNYUkUcJWaPeDtA91dhop7C4AADTnatg>
+    <xmx:b5pmXTvB5VBEgPpAmyW5sxPMASTUv3SfIyvDYlCs2XrKMIIO9Rf7sw>
+    <xmx:b5pmXZtR0TiCPBeWmr3c6zncYrxnHz-88sVh-a09Jfi_KQuxxH3iPA>
+    <xmx:cJpmXTNgdGDhckdctU3q1L7ZfLrRiFqv88yp1Nso3i2jv8E7pBaMcQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 57461D60063;
+        Wed, 28 Aug 2019 11:14:55 -0400 (EDT)
+Date:   Wed, 28 Aug 2019 17:14:54 +0200
+From:   Greg KH <greg@kroah.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Yu Chen <yu.c.chen@intel.com>, stable-commits@vger.kernel.org
+Subject: Re: Patch "x86/pm: Introduce quirk framework to save/restore extra
+ MSR registers around suspend/resume" has been added to the 4.4-stable tree
+Message-ID: <20190828151454.GB9673@kroah.com>
+References: <20190828041240.12F5221883@mail.kernel.org>
+ <20190828084351.GC29927@kroah.com>
+ <20190828090043.GA7589@chenyu-office.sh.intel.com>
+ <20190828091155.GA32011@kroah.com>
+ <20190828111323.GA5281@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828111323.GA5281@sasha-vm>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Aug 28, 2019 at 07:13:23AM -0400, Sasha Levin wrote:
+> On Wed, Aug 28, 2019 at 11:11:55AM +0200, Greg KH wrote:
+> > On Wed, Aug 28, 2019 at 05:00:44PM +0800, Yu Chen wrote:
+> > > On Wed, Aug 28, 2019 at 10:43:51AM +0200, Greg KH wrote:
+> > > > On Wed, Aug 28, 2019 at 12:12:39AM -0400, Sasha Levin wrote:
+> > > > > This is a note to let you know that I've just added the patch titled
+> > > > >
+> > > > >     x86/pm: Introduce quirk framework to save/restore extra MSR registers around suspend/resume
+> > > > >
+> > > > > to the 4.4-stable tree which can be found at:
+> > > > >     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+> > > > >
+> > > > > The filename of the patch is:
+> > > > >      x86-pm-introduce-quirk-framework-to-save-restore-ext.patch
+> > > > > and it can be found in the queue-4.4 subdirectory.
+> > > > >
+> > > > > If you, or anyone else, feels it should not be added to the stable tree,
+> > > > > please let <stable@vger.kernel.org> know about it.
+> > > > >
+> > > > >
+> > > > >
+> > > > > commit d63273440aa0fdebc30d0c931f15f79beb213134
+> > > > > Author: Chen Yu <yu.c.chen@intel.com>
+> > > > > Date:   Wed Nov 25 01:03:41 2015 +0800
+> > > > >
+> > > > >     x86/pm: Introduce quirk framework to save/restore extra MSR registers around suspend/resume
+> > > > >
+> > > > >     A bug was reported that on certain Broadwell platforms, after
+> > > > >     resuming from S3, the CPU is running at an anomalously low
+> > > > >     speed.
+> > > > >
+> > > > >     It turns out that the BIOS has modified the value of the
+> > > > >     THERM_CONTROL register during S3, and changed it from 0 to 0x10,
+> > > > >     thus enabled clock modulation(bit4), but with undefined CPU Duty
+> > > > >     Cycle(bit1:3) - which causes the problem.
+> > > > >
+> > > > >     Here is a simple scenario to reproduce the issue:
+> > > > >
+> > > > >      1. Boot up the system
+> > > > >      2. Get MSR 0x19a, it should be 0
+> > > > >      3. Put the system into sleep, then wake it up
+> > > > >      4. Get MSR 0x19a, it shows 0x10, while it should be 0
+> > > > >
+> > > > >     Although some BIOSen want to change the CPU Duty Cycle during
+> > > > >     S3, in our case we don't want the BIOS to do any modification.
+> > > > >
+> > > > >     Fix this issue by introducing a more generic x86 framework to
+> > > > >     save/restore specified MSR registers(THERM_CONTROL in this case)
+> > > > >     for suspend/resume. This allows us to fix similar bugs in a much
+> > > > >     simpler way in the future.
+> > > > >
+> > > > >     When the kernel wants to protect certain MSRs during suspending,
+> > > > >     we simply add a quirk entry in msr_save_dmi_table, and customize
+> > > > >     the MSR registers inside the quirk callback, for example:
+> > > > >
+> > > > >       u32 msr_id_need_to_save[] = {MSR_ID0, MSR_ID1, MSR_ID2...};
+> > > > >
+> > > > >     and the quirk mechanism ensures that, once resumed from suspend,
+> > > > >     the MSRs indicated by these IDs will be restored to their
+> > > > >     original, pre-suspend values.
+> > > > >
+> > > > >     Since both 64-bit and 32-bit kernels are affected, this patch
+> > > > >     covers the common 64/32-bit suspend/resume code path. And
+> > > > >     because the MSRs specified by the user might not be available or
+> > > > >     readable in any situation, we use rdmsrl_safe() to safely save
+> > > > >     these MSRs.
+> > > > >
+> > > > >     Reported-and-tested-by: Marcin Kaszewski <marcin.kaszewski@intel.com>
+> > > > >     Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> > > > >     Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > >     Acked-by: Pavel Machek <pavel@ucw.cz>
+> > > > >     Cc: Andy Lutomirski <luto@amacapital.net>
+> > > > >     Cc: Borislav Petkov <bp@alien8.de>
+> > > > >     Cc: Brian Gerst <brgerst@gmail.com>
+> > > > >     Cc: Denys Vlasenko <dvlasenk@redhat.com>
+> > > > >     Cc: H. Peter Anvin <hpa@zytor.com>
+> > > > >     Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > > > >     Cc: Peter Zijlstra <peterz@infradead.org>
+> > > > >     Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > >     Cc: bp@suse.de
+> > > > >     Cc: len.brown@intel.com
+> > > > >     Cc: linux@horizon.com
+> > > > >     Cc: luto@kernel.org
+> > > > >     Cc: rjw@rjwysocki.net
+> > > > >     Link: http://lkml.kernel.org/r/c9abdcbc173dd2f57e8990e304376f19287e92ba.1448382971.git.yu.c.chen@intel.com
+> > > > >     [ More edits to the naming of data structures. ]
+> > > > >     Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > > >
+> > > > No git id of the patch in Linus's tree, or your signed-off-by?
+> > > >
+> > > I think the commit id in Linus'tree should be 7a9c2dd08eadd5c6943115dbbec040c38d2e0822
+> > 
+> > Ah, and Sasha added it because a later patch needed it :(
+> > 
+> > Sasha, can you fix this patch's headers up to be in the "proper" format?
+> 
+> Yes, I brought it in as a dependency but cherry picked instead of using
+> my scripts by mistake. I'll fix up the patch in the queue.
 
-I've just copying 319G of data from a partition on one USB-attached (/dev/sdb3) to a partition on another USB-attached
-drive (/dev/sdc1). It's not quite finished but as it's progressed, I have been reading email and browsing web sites, so
-switching between windows from time to time.
-
-I found the splat below at the end the output from dmesg:
-
-[ 1578.086588] usb 2-5: new SuperSpeed Gen 1 USB device number 3 using xhci_hcd
-[ 1578.107688] usb 2-5: New USB device found, idVendor=0080, idProduct=a001, bcdDevice= 2.04
-[ 1578.107691] usb 2-5: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-[ 1578.107691] usb 2-5: Product: External USB 3.0
-[ 1578.107692] usb 2-5: Manufacturer: TOSHIBA
-[ 1578.107693] usb 2-5: SerialNumber: 201503310007F
-[ 1578.111610] scsi host5: uas
-[ 1578.111951] scsi 5:0:0:0: Direct-Access     TO Exter nal USB 3.0      0204 PQ: 0 ANSI: 6
-[ 1578.112422] sd 5:0:0:0: Attached scsi generic sg1 type 0
-[ 1578.113132] sd 5:0:0:0: [sdb] 3907029168 512-byte logical blocks: (2.00 TB/1.82 TiB)
-[ 1578.113133] sd 5:0:0:0: [sdb] 4096-byte physical blocks
-[ 1578.113280] sd 5:0:0:0: [sdb] Write Protect is off
-[ 1578.113281] sd 5:0:0:0: [sdb] Mode Sense: 53 00 00 08
-[ 1578.113570] sd 5:0:0:0: [sdb] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[ 1578.113846] sd 5:0:0:0: [sdb] Optimal transfer size 33553920 bytes not a multiple of physical block size (4096 bytes)
-[ 1578.192462]  sdb: sdb1 sdb2 sdb3
-[ 1578.195765] sd 5:0:0:0: [sdb] Attached SCSI disk
-[ 1579.080448] EXT4-fs (sdb1): mounted filesystem with ordered data mode. Opts: (null)
-[ 1579.588368] EXT4-fs (sdb3): mounted filesystem with ordered data mode. Opts: (null)
-[ 1639.062480] usb 1-1: new high-speed USB device number 6 using xhci_hcd
-[ 1639.314611] usb 1-1: New USB device found, idVendor=152d, idProduct=0578, bcdDevice= 5.08
-[ 1639.314613] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-[ 1639.314614] usb 1-1: Product: USB to ATA/ATAPI Bridge
-[ 1639.314615] usb 1-1: Manufacturer: JMicron
-[ 1639.314615] usb 1-1: SerialNumber: 0123456789ABCDEF
-[ 1639.341742] scsi host6: uas
-[ 1639.352633] scsi 6:0:0:0: Direct-Access     JMicron  Generic          0508 PQ: 0 ANSI: 6
-[ 1639.353140] sd 6:0:0:0: Attached scsi generic sg2 type 0
-[ 1642.388518] sd 6:0:0:0: [sdc] 1953525168 512-byte logical blocks: (1.00 TB/932 GiB)
-[ 1642.388520] sd 6:0:0:0: [sdc] 4096-byte physical blocks
-[ 1642.388801] sd 6:0:0:0: [sdc] Write Protect is off
-[ 1642.388802] sd 6:0:0:0: [sdc] Mode Sense: 5f 00 00 08
-[ 1642.389117] sd 6:0:0:0: [sdc] Disabling FUA
-[ 1642.389118] sd 6:0:0:0: [sdc] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[ 1642.389342] sd 6:0:0:0: [sdc] Optimal transfer size 33553920 bytes not a multiple of physical block size (4096 bytes)
-[ 1642.418255]  sdc: sdc1
-[ 1642.421158] sd 6:0:0:0: [sdc] Attached SCSI disk
-[ 1643.970443] EXT4-fs (sdc1): mounted filesystem with ordered data mode. Opts: (null)
-[ 6048.070133] ------------[ cut here ]------------
-[ 6048.070148] workqueue: PF_MEMALLOC task 148(kswapd0) is flushing !WQ_MEM_RECLAIM events:gen6_pm_rps_work [i915]
-[ 6048.070152] WARNING: CPU: 6 PID: 148 at kernel/workqueue.c:2598 check_flush_dependency+0x105/0x120
-[ 6048.070152] Modules linked in: uas rfcomm bnep iptable_filter xt_conntrack iptable_nat xt_MASQUERADE nf_nat
-nf_conntrack nf_defrag_ipv4 coretemp hwmon snd_hda_codec_hdmi snd_hda_codec_generic iwlmvm mac80211 uvcvideo
-videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videobuf2_common snd_hda_intel iwlwifi usbhid snd_hda_codec btusb
-btintel snd_hwdep x86_pkg_temp_thermal snd_hda_core cfg80211 i915
-[ 6048.070162] CPU: 6 PID: 148 Comm: kswapd0 Tainted: G     U            5.3.0-rc6+ #40
-[ 6048.070163] Hardware name: PC Specialist LTD N8xxEZ                         /N8xxEZ                         , BIOS
-1.07.08 10/04/2018
-[ 6048.070165] RIP: 0010:check_flush_dependency+0x105/0x120
-[ 6048.070166] Code: 8d 8a c0 05 00 00 49 89 e8 48 c7 c7 90 61 b5 b0 48 8d 8b b0 00 00 00 4c 89 ca 48 89 04 24 c6 05 02
-8f 00 01 01 e8 b2 97 fe ff <0f> 0b 48 8b 04 24 e9 63 ff ff ff 80 3d eb 8e 00 01 00 0f 85 56 ff
-[ 6048.070167] RSP: 0018:ffffa6e4003679a0 EFLAGS: 00010086
-[ 6048.070167] RAX: 0000000000000000 RBX: ffff8a188d414000 RCX: 0000000000000000
-[ 6048.070168] RDX: 0000000000000063 RSI: ffffffffb125f723 RDI: ffffffffb125d28c
-[ 6048.070169] RBP: ffffffffc0466390 R08: 000005802d12a057 R09: 0000000000000063
-[ 6048.070169] R10: ffffffffb125faa0 R11: 00000000b125f70b R12: ffff8a188c809a80
-[ 6048.070170] R13: ffff8a1890a23e00 R14: 0000000000000001 R15: 0000000000000000
-[ 6048.070170] FS:  0000000000000000(0000) GS:ffff8a1890b80000(0000) knlGS:0000000000000000
-[ 6048.070171] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 6048.070172] CR2: 00000000025d1fa0 CR3: 00000004d700a004 CR4: 00000000003606e0
-[ 6048.070172] Call Trace:
-[ 6048.070175]  __flush_work+0x8d/0x1d0
-[ 6048.070176]  ? try_to_wake_up+0x1b9/0x3b0
-[ 6048.070177]  __cancel_work_timer+0xfb/0x180
-[ 6048.070179]  ? synchronize_irq+0x30/0xa0
-[ 6048.070204]  ? fwtable_write32+0xf1/0x180 [i915]
-[ 6048.070212]  gen6_disable_rps_interrupts+0x79/0xa0 [i915]
-[ 6048.070220]  gen6_rps_idle+0xe/0xd0 [i915]
-[ 6048.070230]  intel_gt_park+0x4f/0x60 [i915]
-[ 6048.070239]  __intel_wakeref_put_last+0x12/0x40 [i915]
-[ 6048.070248]  __engine_park+0xb7/0xc0 [i915]
-[ [ 1578.086588] usb 2-5: new SuperSpeed Gen 1 USB device number 3 using xhci_hcd
-[ 1578.107688] usb 2-5: New USB device found, idVendor=0080, idProduct=a001, bcdDevice= 2.04
-[ 1578.107691] usb 2-5: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-[ 1578.107691] usb 2-5: Product: External USB 3.0
-[ 1578.107692] usb 2-5: Manufacturer: TOSHIBA
-[ 1578.107693] usb 2-5: SerialNumber: 201503310007F
-[ 1578.111610] scsi host5: uas
-[ 1578.111951] scsi 5:0:0:0: Direct-Access     TO Exter nal USB 3.0      0204 PQ: 0 ANSI: 6
-[ 1578.112422] sd 5:0:0:0: Attached scsi generic sg1 type 0
-[ 1578.113132] sd 5:0:0:0: [sdb] 3907029168 512-byte logical blocks: (2.00 TB/1.82 TiB)
-[ 1578.113133] sd 5:0:0:0: [sdb] 4096-byte physical blocks
-[ 1578.113280] sd 5:0:0:0: [sdb] Write Protect is off
-[ 1578.113281] sd 5:0:0:0: [sdb] Mode Sense: 53 00 00 08
-[ 1578.113570] sd 5:0:0:0: [sdb] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[ 1578.113846] sd 5:0:0:0: [sdb] Optimal transfer size 33553920 bytes not a multiple of physical block size (4096 bytes)
-[ 1578.192462]  sdb: sdb1 sdb2 sdb3
-[ 1578.195765] sd 5:0:0:0: [sdb] Attached SCSI disk
-[ 1579.080448] EXT4-fs (sdb1): mounted filesystem with ordered data mode. Opts: (null)
-[ 1579.588368] EXT4-fs (sdb3): mounted filesystem with ordered data mode. Opts: (null)
-[ 1639.062480] usb 1-1: new high-speed USB device number 6 using xhci_hcd
-[ 1639.314611] usb 1-1: New USB device found, idVendor=152d, idProduct=0578, bcdDevice= 5.08
-[ 1639.314613] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-[ 1639.314614] usb 1-1: Product: USB to ATA/ATAPI Bridge
-[ 1639.314615] usb 1-1: Manufacturer: JMicron
-[ 1639.314615] usb 1-1: SerialNumber: 0123456789ABCDEF
-[ 1639.341742] scsi host6: uas
-[ 1639.352633] scsi 6:0:0:0: Direct-Access     JMicron  Generic          0508 PQ: 0 ANSI: 6
-[ 1639.353140] sd 6:0:0:0: Attached scsi generic sg2 type 0
-[ 1642.388518] sd 6:0:0:0: [sdc] 1953525168 512-byte logical blocks: (1.00 TB/932 GiB)
-[ 1642.388520] sd 6:0:0:0: [sdc] 4096-byte physical blocks
-[ 1642.388801] sd 6:0:0:0: [sdc] Write Protect is off
-[ 1642.388802] sd 6:0:0:0: [sdc] Mode Sense: 5f 00 00 08
-[ 1642.389117] sd 6:0:0:0: [sdc] Disabling FUA
-[ 1642.389118] sd 6:0:0:0: [sdc] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[ 1642.389342] sd 6:0:0:0: [sdc] Optimal transfer size 33553920 bytes not a multiple of physical block size (4096 bytes)
-[ 1642.418255]  sdc: sdc1
-[ 1642.421158] sd 6:0:0:0: [sdc] Attached SCSI disk
-[ 1643.970443] EXT4-fs (sdc1): mounted filesystem with ordered data mode. Opts: (null)
-[ 6048.070133] ------------[ cut here ]------------
-[ 6048.070148] workqueue: PF_MEMALLOC task 148(kswapd0) is flushing !WQ_MEM_RECLAIM events:gen6_pm_rps_work [i915]
-[ 6048.070152] WARNING: CPU: 6 PID: 148 at kernel/workqueue.c:2598 check_flush_dependency+0x105/0x120
-[ 6048.070152] Modules linked in: uas rfcomm bnep iptable_filter xt_conntrack iptable_nat xt_MASQUERADE nf_nat
-nf_conntrack nf_defrag_ipv4 coretemp hwmon snd_hda_codec_hdmi snd_hda_codec_generic iwlmvm mac80211 uvcvideo
-videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videobuf2_common snd_hda_intel iwlwifi usbhid snd_hda_codec btusb
-btintel snd_hwdep x86_pkg_temp_thermal snd_hda_core cfg80211 i915
-[ 6048.070162] CPU: 6 PID: 148 Comm: kswapd0 Tainted: G     U            5.3.0-rc6+ #40
-[ 6048.070163] Hardware name: PC Specialist LTD N8xxEZ                         /N8xxEZ                         , BIOS
-1.07.08 10/04/2018
-[ 6048.070165] RIP: 0010:check_flush_dependency+0x105/0x120
-[ 6048.070166] Code: 8d 8a c0 05 00 00 49 89 e8 48 c7 c7 90 61 b5 b0 48 8d 8b b0 00 00 00 4c 89 ca 48 89 04 24 c6 05 02
-8f 00 01 01 e8 b2 97 fe ff <0f> 0b 48 8b 04 24 e9 63 ff ff ff 80 3d eb 8e 00 01 00 0f 85 56 ff
-[ 6048.070167] RSP: 0018:ffffa6e4003679a0 EFLAGS: 00010086
-[ 6048.070167] RAX: 0000000000000000 RBX: ffff8a188d414000 RCX: 0000000000000000
-[ 6048.070168] RDX: 0000000000000063 RSI: ffffffffb125f723 RDI: ffffffffb125d28c
-[ 6048.070169] RBP: ffffffffc0466390 R08: 000005802d12a057 R09: 0000000000000063
-[ 6048.070169] R10: ffffffffb125faa0 R11: 00000000b125f70b R12: ffff8a188c809a80
-[ 6048.070170] R13: ffff8a1890a23e00 R14: 0000000000000001 R15: 0000000000000000
-[ 6048.070170] FS:  0000000000000000(0000) GS:ffff8a1890b80000(0000) knlGS:0000000000000000
-[ 6048.070171] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 6048.070172] CR2: 00000000025d1fa0 CR3: 00000004d700a004 CR4: 00000000003606e0
-[ 6048.070172] Call Trace:
-[ 6048.070175]  __flush_work+0x8d/0x1d0
-[ 6048.070176]  ? try_to_wake_up+0x1b9/0x3b0
-[ 6048.070177]  __cancel_work_timer+0xfb/0x180
-[ 6048.070179]  ? synchronize_irq+0x30/0xa0
-[ 6048.070204]  ? fwtable_write32+0xf1/0x180 [i915]
-[ 6048.070212]  gen6_disable_rps_interrupts+0x79/0xa0 [i915]
-[ 6048.070220]  gen6_rps_idle+0xe/0xd0 [i915]
-[ 6048.070230]  intel_gt_park+0x4f/0x60 [i915]
-[ 6048.070239]  __intel_wakeref_put_last+0x12/0x40 [i915]
-[ 6048.070248]  __engine_park+0xb7/0xc0 [i915]
-[ 6048.070256]  __intel_wakeref_put_last+0x12/0x40 [i915]
-[ 6048.070267]  i915_request_retire+0x260/0x2f0 [i915]
-[ 6048.070278]  ring_retire_requests+0x49/0x50 [i915]
-[ 6048.070288]  i915_retire_requests+0x3e/0x80 [i915]
-[ 6048.070298]  i915_gem_shrink+0xc2/0x450 [i915]
-[ 6048.070309]  i915_gem_shrinker_scan+0x5e/0x110 [i915]
-[ 6048.070311]  shrink_slab.constprop.0+0x1ab/0x260
-[ 6048.070313]  shrink_node+0x6f/0x1d0
-[ 6048.070314]  balance_pgdat+0x215/0x470
-[ 6048.070316]  kswapd+0x153/0x2e0
-[ 6048.070317]  ? wait_woken+0x70/0x70
-[ 6048.070318]  kthread+0xf1/0x130
-[ 6048.070320]  ? balance_pgdat+0x470/0x470
-[ 6048.070321]  ? kthread_park+0x70/0x70
-[ 6048.070322]  ret_from_fork+0x1f/0x40
-[ 6048.070323] ---[ end trace 5178932352001727 ]---
-
-It might be difficult to create it again, but I guess a heads up might be useful.
-
-Chris
-
-
+I think you forgot to push your changes to kernel.org :)
