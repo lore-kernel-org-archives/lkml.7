@@ -2,78 +2,127 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BD0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D01C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1943208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A5A6208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:17:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbfH1IP4 (ORCPT
+        id S1726454AbfH1IRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:15:56 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:21798 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726292AbfH1IPz (ORCPT
+        Wed, 28 Aug 2019 04:17:12 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44245 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbfH1IRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:15:55 -0400
-X-IronPort-AV: E=Sophos;i="5.64,440,1559491200"; 
-   d="scan'208";a="74441648"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 28 Aug 2019 16:15:53 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id BC9584CE032B;
-        Wed, 28 Aug 2019 16:15:52 +0800 (CST)
-Received: from [10.167.226.60] (10.167.226.60) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Wed, 28 Aug 2019 16:16:00 +0800
-Subject: Re: [PATCH] x86/cpufeature: explicit comments for duplicate macro
-To:     Borislav Petkov <bp@alien8.de>
-CC:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>
-References: <20190828061100.27032-1-caoj.fnst@cn.fujitsu.com>
- <20190828064231.GB4920@zn.tnic>
-From:   Cao jin <caoj.fnst@cn.fujitsu.com>
-Message-ID: <9077662c-aaba-29f1-e6a2-dbaacc0758cc@cn.fujitsu.com>
-Date:   Wed, 28 Aug 2019 16:16:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 28 Aug 2019 04:17:11 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j11so690459wrp.11;
+        Wed, 28 Aug 2019 01:17:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=elcDxralvab5BCLPwy6aNqNRddh9yUrA4hJ16xi48PI=;
+        b=KsERq02pyOdSj8DPaDZ0SanJNIq3WnXBJWhH4yeuGICKoNdcG/9JkmJnkyKaf1Bs5E
+         wySG6bGoQYTgWbP1BBBPPmK3AKu5ZToZxtlj7LomlVhH+QBpvbXmcflr7LwXDdObalFd
+         hSmRWdwk1tYK+9e6k+wmNKw8P1diniRId/9fYsbaongF4Icrao+lOa4pR5iNMV+FOwpF
+         y8WVPgwaYs9swp9fsTSOlYtsQ3x2DH6w52xLLsUIa68bBQF0bQZ9lFTaB4gQaRAlOTcZ
+         bt7stDAHzHBNx4o7yDZTvAUOBi51FLw1hnC/SQmGIh4o+1QWQr9PMIJ6EmJzWX5c/fZL
+         i1Pw==
+X-Gm-Message-State: APjAAAW+awAfq6FaYJpF9ifkLDUanahXWBdAMWQLz/BYvXvU5GUH0ppN
+        l1W7RG5o7oa1xsl7OGIiyuc=
+X-Google-Smtp-Source: APXvYqwmhv7I8k483ahGnEjGNmo4amPeyJahnDXrjCmOd75ub2Hi+25Drc0PFsP+jngUCzaAGvF4IQ==
+X-Received: by 2002:adf:efd2:: with SMTP id i18mr2910751wrp.145.1566980229213;
+        Wed, 28 Aug 2019 01:17:09 -0700 (PDT)
+Received: from 1aq-andre ([77.107.218.170])
+        by smtp.gmail.com with ESMTPSA id p19sm1406467wmg.31.2019.08.28.01.17.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 01:17:08 -0700 (PDT)
+Message-ID: <bc6247cdd51d7a7b28c52a186d4975ecbeaa602d.camel@andred.net>
+Subject: Re: [PATCH 2/2] dt-bindings: imx6q-pcie: add
+ "fsl,pcie-phy-refclk-internal" for i.MX7D
+From:   =?ISO-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org
+Date:   Wed, 28 Aug 2019 09:17:07 +0100
+In-Reply-To: <20190827155626.GA29948@bogus>
+References: <20190813103759.38358-1-git@andred.net>
+         <20190813103759.38358-2-git@andred.net> <20190827155626.GA29948@bogus>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <20190828064231.GB4920@zn.tnic>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.226.60]
-X-yoursite-MailScanner-ID: BC9584CE032B.A912F
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/28/19 2:42 PM, Borislav Petkov wrote:
-> On Wed, Aug 28, 2019 at 02:11:00PM +0800, Cao jin wrote:
-> 
-> For the future:
-> 
->> Subject: Re: [PATCH] x86/cpufeature: explicit comments for duplicate macro
-> 
-> your subject needs to have a verb and start with a capital letter after
-> the subsystem/path prefix. In this case, something like this, for
-> example:
-> 
-> Subject: [PATCH] x86/cpufeature: Explain the macro duplication
-> 
+Hi Rob,
 
-Kept that in mind. Thanks very much!
+On Tue, 2019-08-27 at 10:56 -0500, Rob Herring wrote:
+> On Tue, Aug 13, 2019 at 11:37:59AM +0100, André Draszik wrote:
+> > The i.MX7D variant of the IP can use either an external
+> > crystal oscillator input or an internal clock input as
+> > a reference clock input for the PCIe PHY.
+> > 
+> > Document the optional property 'fsl,pcie-phy-refclk-internal'
+> > 
+> > Signed-off-by: André Draszik <git@andred.net>
+> > Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> > Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> > Cc: Fabio Estevam <festevam@gmail.com>
+> > Cc: NXP Linux Team <linux-imx@nxp.com>
+> > Cc: linux-pci@vger.kernel.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> > b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> > index a7f5f5afa0e6..985d7083df9f 100644
+> > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> > @@ -56,6 +56,11 @@ Additional required properties for imx7d-pcie and imx8mq-pcie:
+> >  	       - "turnoff"
+> >  - fsl,imx7d-pcie-phy: A phandle to an fsl,imx7d-pcie-phy node.
+> 
+> Not sure how this got in, but why is the phy binding not used here?
+> 
+> >  
+> > +Additional optional properties for imx7d-pcie:
+> > +- fsl,pcie-phy-refclk-internal: If present then an internal PLL input is used
+> > +  as PCIe PHY reference clock source. By default an external ocsillator input
+> > +  is used.
+> 
+> Can't the clock binding and maybe 'assigned-clocks' be used here? 
+> 
+> Also, this is a property of the PHY, so it belongs in the PHY's node.
 
--- 
-Sincerely,
-Cao jin
+Thanks for pointing this out. I'll have a look.
+
+Andre'
 
 
