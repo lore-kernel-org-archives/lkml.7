@@ -2,233 +2,170 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8165AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF1CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 433602189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 751C12339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="DCAIATWk";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="sdAjT1YF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QarfX3x0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfH1ITV (ORCPT
+        id S1726396AbfH1IVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:19:21 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:44682 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726534AbfH1ITU (ORCPT
+        Wed, 28 Aug 2019 04:21:53 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35901 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbfH1IVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:19:20 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7S8Epoe018694;
-        Wed, 28 Aug 2019 01:19:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=kw7HypEog7DYOQDqUjjZ6aH9XaBxbXk3gKMhcnaoJ1A=;
- b=DCAIATWkcj7dNZdv3MoE9wyGNtv5uPfH94J1imp0uw8IhLb+hNhdgoLRasn+e9imZwFQ
- smNq10/0Knl0l5uLMzTX23BipfZ+OuK4aMIcsUOX7rYCTuZC1COHPmlp8dzc+lSOA5yK
- hoixvXHVMe9BiOyPNYUKuah8rMme7glLxg4gS6t1WPnd35UIkGEyrfR25unBYjYVmXga
- sqdnfoYYTP93tGFGm+lGEqbP6upV0m2SynHwRCN3wFHlqf8cRw/RVDa3VLSSZpJkKDHI
- 8cXaKdj1J8CSJJrSy8kKV2n6gu/8mSBB1b/mZKV0LgsQh6l1jKraZ8wPNYwJZUwmeN1z vQ== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2uk4rkp68a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 28 Aug 2019 01:19:03 -0700
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 28 Aug
- 2019 01:19:01 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (104.47.50.54) by
- SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 28 Aug 2019 01:19:01 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=enlvT94JTSoQjDJPBEmeN58hJKFUUef8DlIbDXPOA4jwk/UlhILtO1c9bhK4KB9g3HvOfVzldtV0eZal0csUtTyYkP5SjjH6wdeKcq/cFzk7xrZJfCq5MeIhIs8EQqeLhBUwW4fnVlUdAcV7ZafVJPXuiS6kMb66fLFFqG7lqOFZGn3VbG2JkqNcF+yAyZmf0hGce+044c/NEXee0BddCbBzXExXu+qyGiAEHv/HDHCZjK+GZyOM8twl+q7iEn5q9xZS1p2uD4sZZK3bJx3oMUYXZD7hixliq4lIVaWBXnBSsolC/3ALW1eDlKBuaGsjhWzAYM8+mfTaDhW+Y79YLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kw7HypEog7DYOQDqUjjZ6aH9XaBxbXk3gKMhcnaoJ1A=;
- b=WoJ9l7xiWI51ozNTVNJpd6tDiGHTTE/lkIIMtMIBWN9z1Z+FZjf3nQCVia0o3NOIF5tdu222SuMiqcgvul08AlIfqbfKBuJVeoFtaNTIrIJhbFUtL2G7B33HeOXB9nEzC6ZG8/xgEF+E4mC7WVz+b2YZfvbAv+LTmOkeqGMKjklvrF4CCQMfcwaEDpwyepctJoV8b+lFsXjCqL5yAtJI71Z7UiP8J1SKLhw2UOWWR4YYaPfIg6xF+gLxzEQBz84UOUqSHuwtvEUurqjNiYiqWzINm8sUnbhLLDoQzWnyylmf6m0/ptV4VPDNxWrVpSTP+ZLa8PG1+ccHsjkh3GzjAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        Wed, 28 Aug 2019 04:21:53 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l21so1056029pgm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 01:21:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kw7HypEog7DYOQDqUjjZ6aH9XaBxbXk3gKMhcnaoJ1A=;
- b=sdAjT1YFPdqEHVIgTehI5TJzIITNuUOHF30QdqATjB1belgY1cVGZTApAV9Bof6Ljyp2lhVOuJ3UWlH4704yYbY8U8edzyDDVlmWRF0laVeQBv0EN1h1pfQnm1mGM3MewD+PKPp0fXm3RNyFh1WiDNZx8YDWyMnkJ5575SnEVsA=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
- MN2PR18MB2479.namprd18.prod.outlook.com (20.179.82.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.20; Wed, 28 Aug 2019 08:18:57 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::8162:62e8:aeeb:ec7b]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::8162:62e8:aeeb:ec7b%3]) with mapi id 15.20.2220.013; Wed, 28 Aug 2019
- 08:18:57 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 08/24] EDAC: Introduce mci_for_each_dimm() iterator
-Thread-Topic: [PATCH v2 08/24] EDAC: Introduce mci_for_each_dimm() iterator
-Thread-Index: AQHVXXk8O9FaCqNi1UGTsoT9yxk98Q==
-Date:   Wed, 28 Aug 2019 08:18:56 +0000
-Message-ID: <20190828081849.xwbfgro6dfrrtdac@rric.localdomain>
-References: <20190624150758.6695-1-rrichter@marvell.com>
- <20190624150758.6695-9-rrichter@marvell.com> <20190814151824.GB1841@zn.tnic>
-In-Reply-To: <20190814151824.GB1841@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0701CA0043.eurprd07.prod.outlook.com
- (2603:10a6:3:9e::11) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:16c::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 175d6b4a-1ef7-425d-7023-08d72b905efc
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2479;
-x-ms-traffictypediagnostic: MN2PR18MB2479:
-x-microsoft-antispam-prvs: <MN2PR18MB2479A079E059831403C7996CD9A30@MN2PR18MB2479.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 014304E855
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(39860400002)(366004)(396003)(199004)(189003)(229853002)(6916009)(3846002)(81156014)(81166006)(6116002)(8676002)(476003)(486006)(9686003)(6512007)(8936002)(54906003)(66556008)(478600001)(316002)(71200400001)(66066001)(66446008)(66476007)(66946007)(64756008)(71190400001)(6436002)(99286004)(26005)(305945005)(76176011)(2906002)(4326008)(5660300002)(7736002)(53546011)(6506007)(14454004)(1076003)(386003)(6486002)(25786009)(11346002)(446003)(14444005)(102836004)(6246003)(186003)(53936002)(86362001)(52116002)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2479;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WYKA7ujOZJUwFHf7iTYsaAEAowj9rhlc6n6JfxpqlF7ZFHEM6KqlukDfKsv3e7vmld+PFBPnI/K3HmW35q8SmXjexE2bWSTLHVrOWOeIOjxgvdx6pb3o9Kgs2q20lzuZL4UtEMcCmad73utnSpfoeS6dEze9IY9eHhInMUriSj4BVoZvmDY58fL7t8aDJnwomOzpu/asxMlZoB8BcubtYXzshH0Nz2LcOZOYDNyNv14P6Y6LoB5Wdzp6lVp0HrucoCkhECd7pt7PvAnO8Sp5JDxY+7P3/a7vVnOwqulN/Bh+MWZkkm0KEnlWhHnB4tAGrNe5cW8eU1rxEp5BFWM7z9dNVltpCh2nmb7iTipiBoknnQ4HQqMjygAceBWoOeYwGtGrZyovM0FnnKLE9K1pGB+gcg8+3puJrGiQwVfEDCA=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4D7470063D0414459A3EBA9A3D923573@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hf45YlPIP8ddQ+9IgXrDwMOTvaQuW/eJTBteOBX/I9Q=;
+        b=QarfX3x0RNlBXL5Ags3BPwGvEk2tmhISwqTlgLs+nnJdfUu8v9vBXxkfDrfYh5Vya2
+         43ggcvc2Mg3BdWJKUmTultr306gJ7l1jxLSgEWbl0YLd0GQhdtcp08Eq8UP045Ut/ZxD
+         gmwm6WnDGUw8iXqz+gmKwdYiT0w/Y19bKqw8k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hf45YlPIP8ddQ+9IgXrDwMOTvaQuW/eJTBteOBX/I9Q=;
+        b=pUBhji3Jo8A7qzH7Ld3TlQjuE6sNXipuMEys+ilgMeCQpovAHBn9QUN1dbj7nXWHpG
+         BOKpgd04yv1v8sYhwM8sjrmjpqFtIFcyvucr+Mzt2f0J4HZzh0MuQkEOCRKx2ybb7ru4
+         8fXxy5ITjC5S+B2X1CAe6fMfUydYNsS3HxnrkqoKZTX2m2gBfcoaFJecoiwm9ItZE0mR
+         nj7ypP8UF/7AYzeVHZEJr4rn6V7D8DgqU7R/2kwonvt+0VwrVp6zBOLoLmkrkWavBtqw
+         JNo5wtmJoRwCybZN40rH5Lr4fzyDqm/u5PrvtOzxURBjcRlzae5fazRDqdsdld0Cjojq
+         OuMQ==
+X-Gm-Message-State: APjAAAXxsHKlPpWTgndCCF1gFcRStOUYf8CnmA96N8E6EuR3M/Y6wmjx
+        IVWyRKbtaFzafvNjYgfxNHe2Lw==
+X-Google-Smtp-Source: APXvYqxCPCA1MOy9GycrKtPgCXdfjpa6uXiu0S0qmGw9WCDhKe6OzRKVoCmqWF8RYpNk1oM4LDzfcw==
+X-Received: by 2002:a17:90a:32a3:: with SMTP id l32mr3126610pjb.14.1566980511903;
+        Wed, 28 Aug 2019 01:21:51 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id y10sm1296959pjp.27.2019.08.28.01.21.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 01:21:51 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v5 0/4] tpm: Add driver for cr50
+Date:   Wed, 28 Aug 2019 01:21:46 -0700
+Message-Id: <20190828082150.42194-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 175d6b4a-1ef7-425d-7023-08d72b905efc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 08:18:57.1707
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3iEyVCfrvTAc6PlI/TssNfAektTO+e4zZasTY92OAiQI5JqS6HOUMlHt6oETTXQmeWu9vu6Ccg90w5oiRn0L/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2479
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
- definitions=2019-08-28_02:2019-08-27,2019-08-28 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.08.19 17:18:24, Borislav Petkov wrote:
-> On Mon, Jun 24, 2019 at 03:09:11PM +0000, Robert Richter wrote:
-> > Make code more readable by introducing a mci_for_each_dimm() iterator.
-> > Now, we just get a pointer to a struct dimm_info. Direct array access
-> > using an index is no longer needed to iterate.
-> >=20
-> > Signed-off-by: Robert Richter <rrichter@marvell.com>
-> > ---
-> >  drivers/edac/edac_mc.c       | 18 ++++++++++--------
-> >  drivers/edac/edac_mc_sysfs.c | 34 +++++++++++++++-------------------
-> >  drivers/edac/ghes_edac.c     |  8 ++++----
-> >  drivers/edac/i5100_edac.c    | 11 +++++------
-> >  include/linux/edac.h         |  7 +++++++
-> >  5 files changed, 41 insertions(+), 37 deletions(-)
-> >=20
-> > diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-> > index c44bc83e8502..27277ca46ab3 100644
-> > --- a/drivers/edac/edac_mc.c
-> > +++ b/drivers/edac/edac_mc.c
-> > @@ -145,15 +145,18 @@ static void edac_mc_dump_channel(struct rank_info=
- *chan)
-> >  	edac_dbg(4, "    channel->dimm =3D %p\n", chan->dimm);
-> >  }
-> > =20
-> > -static void edac_mc_dump_dimm(struct dimm_info *dimm, int number)
-> > +static void edac_mc_dump_dimm(struct dimm_info *dimm)
-> >  {
-> >  	char location[80];
-> > =20
-> > +	if (!dimm->nr_pages)
-> > +		return;
-> > +
->=20
-> What's that for?
+This patch series adds support for the the H1 secure microcontroller
+running cr50 firmware found on various recent Chromebooks. This driver
+is necessary to boot into a ChromeOS userspace environment. It
+implements support for several functions, including TPM-like
+functionality over a SPI interface.
 
-This is moved from the iterator loop below to here. It limits the dump
-to only populated dimm slots.
+The last time this was series sent looks to be [1]. I've looked over the
+patches and review comments and tried to address any feedback that
+Andrey didn't address (really minor things like newlines). I've reworked
+the patches from the last version to layer on top of the existing TPM
+TIS SPI implementation in tpm_tis_spi.c. Hopefully this is more
+palatable than combining the two drivers together into one file.
 
->=20
-> >  	edac_dimm_info_location(dimm, location, sizeof(location));
-> > =20
-> >  	edac_dbg(4, "%s%i: %smapped as virtual row %d, chan %d\n",
-> >  		 dimm->mci->csbased ? "rank" : "dimm",
-> > -		 number, location, dimm->csrow, dimm->cschannel);
-> > +		 dimm->idx, location, dimm->csrow, dimm->cschannel);
-> >  	edac_dbg(4, "  dimm =3D %p\n", dimm);
-> >  	edac_dbg(4, "  dimm->label =3D '%s'\n", dimm->label);
-> >  	edac_dbg(4, "  dimm->nr_pages =3D 0x%x\n", dimm->nr_pages);
+Note, I wasn't sure exactly what was wanted in v4, so I've combined
+the two files but I wasn't able to avoid adding a bool indicating
+the phy is cr50 or not, because suspend/resume is a hook that attaches
+to the driver and not the device.
 
-> > diff --git a/drivers/edac/i5100_edac.c b/drivers/edac/i5100_edac.c
-> > index 39ba7f2414ae..7ec42b26a716 100644
-> > --- a/drivers/edac/i5100_edac.c
-> > +++ b/drivers/edac/i5100_edac.c
-> > @@ -846,14 +846,13 @@ static void i5100_init_interleaving(struct pci_de=
-v *pdev,
-> > =20
-> >  static void i5100_init_csrows(struct mem_ctl_info *mci)
-> >  {
-> > -	int i;
-> >  	struct i5100_priv *priv =3D mci->pvt_info;
-> > +	struct dimm_info *dimm;
-> > =20
-> > -	for (i =3D 0; i < mci->tot_dimms; i++) {
-> > -		struct dimm_info *dimm;
-> > -		const unsigned long npages =3D i5100_npages(mci, i);
-> > -		const unsigned chan =3D i5100_csrow_to_chan(mci, i);
-> > -		const unsigned rank =3D i5100_csrow_to_rank(mci, i);
-> > +	mci_for_each_dimm(mci, dimm) {
-> > +		const unsigned long npages =3D i5100_npages(mci, dimm->idx);
-> > +		const unsigned chan =3D i5100_csrow_to_chan(mci, dimm->idx);
-> > +		const unsigned rank =3D i5100_csrow_to_rank(mci, dimm->idx);
-> > =20
-> >  		if (!npages)
-> >  			continue;
->=20
-> This cannot be right: the code here under this does now:
->=20
-> 	dimm =3D edac_get_dimm(mci, chan, rank, 0);
->=20
-> but dimm is already set. It used to get the DIMM using chan and rank but
-> now you're iterating over the already initialized pointers. So I think
-> you don't need the edac_get_dimm() anymore.
+Please review so we can get the approach to supporting this device
+sorted out.
 
-Right, it should calculate to the same pointer we already have and can
-be removed. Good catch.
+[1] https://lkml.kernel.org/r/1469757314-116169-1-git-send-email-apronin@chromium.org
 
->=20
-> Also fix those up too, while at it pls:
->=20
-> WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-> #235: FILE: drivers/edac/i5100_edac.c:854:
-> +               const unsigned chan =3D i5100_csrow_to_chan(mci, dimm->id=
-x);
->=20
-> WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-> #236: FILE: drivers/edac/i5100_edac.c:855:
-> +               const unsigned rank =3D i5100_csrow_to_rank(mci, dimm->id=
-x);
+TODO:
+ * Add a patch to spit out WARN_ON() when TPM is suspended and some
+   kernel code attempts to use it
+ * Rework the i2c driver per Alexander's comments on v2
 
-I am going to fix this is a separate patch, though I will exclude
-rework of struct i5100_priv.
+Changes from v4 (https://lkml.kernel.org/r/20190812223622.73297-1-swboyd@chromium.org):
+ * Dropped the 'pre-transfer' hook patch and added a 'ready' member instead
+ * Combined cr50_spi and tpm_tis_spi into one kernel module
+ * Introduced a swizzle in tpm_tis_spi probe routine to jump to cr50
+   probe path
+ * Moved binding to start of the thread
+ * Picked up Jarkko reviewed-by tag on new flag for suspend/resume
+ * Added a comment to flow control patch indicating what it's all about
 
-I have reworked the patch according to all your other comments.
+Changes from v3:
+ * Split out hooks into separate patches
+ * Update commit text to not say "libify"
+ * Collapse if statement into one for first patch
+ * Update commit text on first patch to mention flag
+ * Drop TIS_IS_CR50 as it's unused
 
-Thanks for review.
+Changes from v2:
+ * Sent khwrng thread patch separately
+ * New patch to expose TPM SPI functionality from tpm_tis_spi.c
+ * Usage of that new patch in cr50 SPI driver
+ * Drop i2c version of cr50 SPI driver for now (will resend later)
+ * New patch to add a TPM chip flag indicating TPM shouldn't be reset
+   over suspend. Allows us to get rid of the cr50 suspend/resume functions
+   that are mostly generic
 
--Robert
+Changes from v1:
+ * Dropped symlink and sysfs patches
+ * Removed 'is_suspended' bits
+ * Added new patch to freeze khwrng thread
+ * Moved binding to google,cr50.txt and added Reviewed-by tag from Rob
+
+Cc: Andrey Pronin <apronin@chromium.org>
+Cc: Duncan Laurie <dlaurie@chromium.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Guenter Roeck <groeck@chromium.org>
+Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
+Cc: Heiko Stuebner <heiko@sntech.de>
+
+Andrey Pronin (1):
+  dt-bindings: tpm: document properties for cr50
+
+Stephen Boyd (3):
+  tpm: Add a flag to indicate TPM power is managed by firmware
+  tpm: tpm_tis_spi: Introduce a flow control callback
+  tpm: tpm_tis_spi: Support cr50 devices
+
+ .../bindings/security/tpm/google,cr50.txt     |  19 +
+ drivers/char/tpm/Kconfig                      |   7 +
+ drivers/char/tpm/Makefile                     |   4 +-
+ drivers/char/tpm/cr50_spi.c                   | 327 ++++++++++++++++++
+ drivers/char/tpm/tpm-interface.c              |   8 +-
+ drivers/char/tpm/tpm.h                        |   1 +
+ drivers/char/tpm/tpm_tis_spi.c                | 110 +++---
+ drivers/char/tpm/tpm_tis_spi.h                |  54 +++
+ 8 files changed, 486 insertions(+), 44 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+ create mode 100644 drivers/char/tpm/cr50_spi.c
+ create mode 100644 drivers/char/tpm/tpm_tis_spi.h
+
+
+base-commit: 0ecfebd2b52404ae0c54a878c872bb93363ada36
+-- 
+Sent by a computer through tubes
+
