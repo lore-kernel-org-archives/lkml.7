@@ -2,100 +2,145 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC32C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA5EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D759620679
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92D7422CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:53:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b8Su07oo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gkbV6uEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfH1Rwr (ORCPT
+        id S1726899AbfH1Rx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:52:47 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34603 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbfH1Rwq (ORCPT
+        Wed, 28 Aug 2019 13:53:27 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34452 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbfH1Rx1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:52:46 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b24so290456pfp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:52:46 -0700 (PDT)
+        Wed, 28 Aug 2019 13:53:27 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s18so727662wrn.1;
+        Wed, 28 Aug 2019 10:53:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=Px8LkhnvRWF4dwuD/m3pQWcRskg4hOcGMoEJQEofQZ8=;
-        b=b8Su07oogeUnBWJ/0tg5akVGMO8eE2d43UCFFCgBPKGffQgjBkuv7y3A9eC/T4EjRA
-         i7cHOOuL3iwYyhXeVmkunHv4h61+Sh5KbLMZW3NkZo6fBsNGuzL8yykC9A1ECMrI54y1
-         ORagwvll1OSa52p8t4TebQyKcuNvQJi3NpzNA=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ctwr+81XjxtZjBI+RKeebPhdkGvaIWpze3WikDHHYro=;
+        b=gkbV6uEU80/diE3++JDNmX1wcMIg3kYn/u9jPDs8Lhf5QPmsb5N6z0ooqMV3C+kpM8
+         8FtT53NgimT5aZUXjLp1BwSgHcC7Q2cHRXkXYjV0j8NKoNsI0tGqWcE7eQJMoShNIjJ8
+         LDFsg7n9maVJZnMFor0FW0veP3QDr/0xKq0qRPSBoFp2W5UnMs1SyKUHGYiAhP1HNXxk
+         c94GVISeezBd/TmOpNFCv9Jgye3BlaMNBceUSmyYvBWlKxVHsoi11aRaRosRvWM4tDnV
+         hE5x8uQ/TyqHmLMw2a4ULrvqtKy4zkP2WzHNAThRIeZ3/7fQx12SVS0jzSK8V8XRC0yK
+         B0xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=Px8LkhnvRWF4dwuD/m3pQWcRskg4hOcGMoEJQEofQZ8=;
-        b=EtORdbvSIBY9cJUMmrMXQASA/4/3Vqw3xnxHUHzoBMPPKpjdsvx3PEjvC5ll42iYyU
-         3+lr99toHVZ3gK25UuuxJk1pJKnqHq38eOJnCcSarS0Bsw/0nfdTAjxlmGCesmUbOTQW
-         HwjDYgE32wUEceKROSaj2ABCQWgMhN1wYNc95Xxi2k3yJkBYxIo4OwlUmM6F/o8UST5A
-         oGkVhSFB7tnk+N3YpKK8seJ/4ugnZIbC1J7BK9w4fqJmsJnUXHPX/0v0blmyuCMoHyby
-         rr7D9Cakud2taA8MInceME5mpFUG1K0VslpmZygE06Y2P/fDxbeBed4P9snGjD/YT+M8
-         ErCg==
-X-Gm-Message-State: APjAAAV0Bm4A170GQpkF93HWL6FWc5ggdfTqeVsduWGsUwCUEpYlg0Kz
-        MfxBh1n5s97CXvRFUShAZrzkZg==
-X-Google-Smtp-Source: APXvYqxCTQjvm1BM9NXD/WyFjJvnpm9d045wXvVon/BZtschRXgyy8tL19nyMEwFqWDkx1/sIvisKw==
-X-Received: by 2002:a65:6815:: with SMTP id l21mr4618991pgt.146.1567014766012;
-        Wed, 28 Aug 2019 10:52:46 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id e21sm3512214pfi.13.2019.08.28.10.52.45
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ctwr+81XjxtZjBI+RKeebPhdkGvaIWpze3WikDHHYro=;
+        b=Sog6KFf8vABo9Wwv8TT7rOwo2P8q60hgL+IhhJH7dcNXYwLCs100l2dLTxCSHVJTRi
+         iKA+gHT+0dz+eZ+8uydy50WPO+YmtR4cFTIIA05h4OH3BFdzrdzMM3P7hqlmDwGUW2X8
+         j49lZb9L57kFLE+mBTFi0z1qyMUV8i37XOvTGAkThaX2U34l9FD6vUB8BggXLs+cCvbM
+         klFqrso/++27NaLhw6FanHdljU4sg9s90ldpPips4LbJKZbZdNMKYF2UUl8bAjrfP564
+         Lo8+/l2afzCQhtROjmNR02NeAQvEwl7EVxvqa8pXFTQB4hMZslXLivZGOV/SEeKEeYpp
+         HzSQ==
+X-Gm-Message-State: APjAAAWWK6iCETtTxNNzPATLaXVXfBMH4XCIkvb+40ORiDJS320mcmen
+        HjQ5ojfUK/Nnkg1HYdOofh8=
+X-Google-Smtp-Source: APXvYqxvNmDaH1yjem5r4S/83Vg1D2RbeIF+UfqytUPsvepRWyCtZKp6p6ALBQ0zWevb7HBr1Ivsog==
+X-Received: by 2002:adf:c803:: with SMTP id d3mr6529921wrh.130.1567014804807;
+        Wed, 28 Aug 2019 10:53:24 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id w8sm10456031wmc.1.2019.08.28.10.53.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 10:52:45 -0700 (PDT)
-Message-ID: <5d66bf6d.1c69fb81.c7b73.8fdb@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 28 Aug 2019 10:53:23 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 10:53:22 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com, stable@vger.kernel.org
+Subject: Re: [PATCH] powerpc: Avoid clang warnings around setjmp and longjmp
+Message-ID: <20190828175322.GA121833@archlinux-threadripper>
+References: <20190812023214.107817-1-natechancellor@gmail.com>
+ <878srdv206.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190822102723.GB8494@centauri>
-References: <20190725104144.22924-7-niklas.cassel@linaro.org> <20190819100957.17095-1-niklas.cassel@linaro.org> <5d5ae389.1c69fb81.cb730.3225@mx.google.com> <20190822102723.GB8494@centauri>
-Cc:     Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Viresh Kumar <vireshk@kernel.org>,
-        linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
-        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
-        Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 06/14] dt-bindings: cpufreq: qcom-nvmem: Support pstates provided by a power domain
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 28 Aug 2019 10:52:44 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <878srdv206.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Niklas Cassel (2019-08-22 03:27:23)
-> On Mon, Aug 19, 2019 at 10:59:36AM -0700, Stephen Boyd wrote:
-> > Quoting Niklas Cassel (2019-08-19 03:09:57)
-> > > +
-> > > +soc {
-> > > +....
-> > > +       cprpd: cpr@b018000 {
-> >=20
-> > Maybe node name should be 'avs' for the industry standard adaptive
-> > voltage scaling acronym?
->=20
-> I see where this is coming from, but "git grep avs" gives a single result.
->=20
-> Also, since the label is cprpd, it doesn't make sense to simply rename the
-> node name, and I don't think that avspd would be a good name, since it is
-> less correct.
->=20
-> So if you don't insist, I would prefer to leave it as it is.
->=20
+On Wed, Aug 28, 2019 at 11:43:53PM +1000, Michael Ellerman wrote:
+> Nathan Chancellor <natechancellor@gmail.com> writes:
+> 
+> > Commit aea447141c7e ("powerpc: Disable -Wbuiltin-requires-header when
+> > setjmp is used") disabled -Wbuiltin-requires-header because of a warning
+> > about the setjmp and longjmp declarations.
+> >
+> > r367387 in clang added another diagnostic around this, complaining that
+> > there is no jmp_buf declaration.
+> >
+> > In file included from ../arch/powerpc/xmon/xmon.c:47:
+> > ../arch/powerpc/include/asm/setjmp.h:10:13: error: declaration of
+> > built-in function 'setjmp' requires the declaration of the 'jmp_buf'
+> > type, commonly provided in the header <setjmp.h>.
+> > [-Werror,-Wincomplete-setjmp-declaration]
+> > extern long setjmp(long *);
+> >             ^
+> > ../arch/powerpc/include/asm/setjmp.h:11:13: error: declaration of
+> > built-in function 'longjmp' requires the declaration of the 'jmp_buf'
+> > type, commonly provided in the header <setjmp.h>.
+> > [-Werror,-Wincomplete-setjmp-declaration]
+> > extern void longjmp(long *, long);
+> >             ^
+> > 2 errors generated.
+> >
+> > Take the same approach as the above commit by disabling the warning for
+> > the same reason, we provide our own longjmp/setjmp function.
+> >
+> > Cc: stable@vger.kernel.org # 4.19+
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/625
+> > Link: https://github.com/llvm/llvm-project/commit/3be25e79477db2d31ac46493d97eca8c20592b07
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > ---
+> >
+> > It may be worth using -fno-builtin-setjmp and -fno-builtin-longjmp
+> > instead as it makes it clear to clang that we are not using the builtin
+> > longjmp and setjmp functions, which I think is why these warnings are
+> > appearing (at least according to the commit that introduced this waring).
+> >
+> > Sample patch:
+> > https://github.com/ClangBuiltLinux/linux/issues/625#issuecomment-519251372
+> 
+> Couldn't we just add those flags to CFLAGS for the whole kernel? Rather
+> than making them per-file.
 
-How about 'power-controller'?=20
+Yes, I don't think this would be unreasonable. Are you referring to the
+cc-disable-warning flags or the -fno-builtin flags? I personally think
+the -fno-builtin flags convey to clang what the kernel is intending to
+do better than disabling the warnings outright.
 
+> I mean there's no kernel code that wants to use clang's builtin
+> setjmp/longjmp implementation at all right?
+> 
+> cheers
+
+I did a quick search of the tree and it looks like powerpc and x86/um
+are the only architectures that do anything with setjmp/longjmp. x86/um
+avoids this by using a define flag to change setjmp to kernel_setjmp:
+
+arch/um/Makefile: -Dlongjmp=kernel_longjmp -Dsetjmp=kernel_setjmp \
+
+Seems like adding those flags should be safe.
+
+Cheers,
+Nathan
