@@ -2,226 +2,143 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809F0C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E08AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D942339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DB702339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567027179;
-	bh=XjxB11eHI7IkLFo16zN1tnfl5noViw+MqDSW0zxAxVc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=oCPKZn2yBgmkwTvhr3F7ZWOscR40DLaKLSFvaIzvAV8Vc2qA2qGZuE+XVCohv2Uea
-	 kuqBS5d02RXtA0IqTkplXfAT8Vw7juegXVoVAsHHIUQYGkSxXwd/879PLxMT9OIMXX
-	 tHjTYFexYAnnTO72dJ6R9xOvS+S7Og1MlRPhvFSg=
+	s=default; t=1567027243;
+	bh=YceyYfDGJl0Jv5nLsUOXDemAxHm4t3i3FMzpt/Jxt8k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZQ4ooj9cAlGO6CApRGAgpvuoMorh3Pb1qlz/x0ZPOckO8fqz2kwWipWO8ZhlnZh9K
+	 rMp8lV8iysncQmsc04vv8UNEUUjihnbbWyzFqtlbjKwAlE/dSqhpTb8JNDjFmadbIv
+	 +qplWOGPLS5a+7skrudG+zB03FzdvI6z7y4Lo+S4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfH1VTi (ORCPT
+        id S1726943AbfH1VUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:19:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2594 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726400AbfH1VTh (ORCPT
+        Wed, 28 Aug 2019 17:20:42 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37670 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfH1VUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:19:37 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SL8CRI118716;
-        Wed, 28 Aug 2019 17:19:04 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2unycmbyy7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Aug 2019 17:19:04 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7SL9cgk123731;
-        Wed, 28 Aug 2019 17:19:04 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2unycmbyxu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Aug 2019 17:19:04 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7SL4sW4027009;
-        Wed, 28 Aug 2019 21:19:03 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma05wdc.us.ibm.com with ESMTP id 2ujvv78a3r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Aug 2019 21:19:03 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7SLJ2W747120800
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Aug 2019 21:19:02 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B5C42B205F;
-        Wed, 28 Aug 2019 21:19:02 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 875C1B2064;
-        Wed, 28 Aug 2019 21:19:02 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 28 Aug 2019 21:19:02 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 57B7F16C65C1; Wed, 28 Aug 2019 14:19:04 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 14:19:04 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC v1 2/2] rcu/tree: Remove dynticks_nmi_nesting counter
-Message-ID: <20190828211904.GX26530@linux.ibm.com>
-Reply-To: paulmck@kernel.org
-References: <5d648897.1c69fb81.5e60a.fc70@mx.google.com>
- <20190828202330.GS26530@linux.ibm.com>
- <20190828210525.GB75931@google.com>
+        Wed, 28 Aug 2019 17:20:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JKvFxTaIw4ze+wFQy7JhepfnKnFczjcF0kqC/gORddo=; b=Y0IjVu63m32RBVFGgH6347V27
+        tNPXsKKoVfddMUlISVN20mfIjblfY/rA6KlKAY0Yw/+oVIPv5RWkB/l8PjQ5W13duFays3zME33dv
+        mn90cdqw1gwngc2ST4iELesX9720zL+411xNqPytuzgZcExfq1C0E3feQaF0vkLEcDbeA=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i35Mr-0006js-0u; Wed, 28 Aug 2019 21:20:37 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 9FB9A2742B61; Wed, 28 Aug 2019 22:20:34 +0100 (BST)
+Date:   Wed, 28 Aug 2019 22:20:34 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Ashish Kumar <ashish.kumar@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        Kuldeep Singh <kuldeep.singh@nxp.com>
+Subject: Re: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add
+ ls2080a compatibility string to bindings
+Message-ID: <20190828212034.GL4298@sirena.co.uk>
+References: <1565691791-26167-1-git-send-email-Ashish.Kumar@nxp.com>
+ <20190821110640.GC5128@sirena.co.uk>
+ <VI1PR04MB401528B4F92DAD98385EF53395AA0@VI1PR04MB4015.eurprd04.prod.outlook.com>
+ <VI1PR04MB4015474B3086AE99354FE65395A50@VI1PR04MB4015.eurprd04.prod.outlook.com>
+ <20190822184927.GH23391@sirena.co.uk>
+ <20190827155005.GA18581@bogus>
+ <20190827195606.GA28879@sirena.org.uk>
+ <CAL_JsqKnY1ucejpaSUYu_dGZ=uHMybsW4ryJAtEgimUXB+ozbg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="V3eawNQxI9TAjvgi"
 Content-Disposition: inline
-In-Reply-To: <20190828210525.GB75931@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908280206
+In-Reply-To: <CAL_JsqKnY1ucejpaSUYu_dGZ=uHMybsW4ryJAtEgimUXB+ozbg@mail.gmail.com>
+X-Cookie: Oatmeal raisin.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 05:05:25PM -0400, Joel Fernandes wrote:
-> On Wed, Aug 28, 2019 at 01:23:30PM -0700, Paul E. McKenney wrote:
-> > On Mon, Aug 26, 2019 at 09:33:54PM -0400, Joel Fernandes (Google) wrote:
-> > > The dynticks_nmi_nesting counter serves 4 purposes:
-> > > 
-> > >       (a) rcu_is_cpu_rrupt_from_idle() needs to be able to detect first
-> > >           interrupt nesting level.
-> > > 
-> > >       (b) We need to detect half-interrupts till we are sure they're not an
-> > >           issue. However, change the comparison to DYNTICK_IRQ_NONIDLE with 0.
-> > > 
-> > >       (c) When a quiescent state report is needed from a nohz_full CPU.
-> > >           The nesting counter detects we are a first level interrupt.
-> > > 
-> > > For (a) we can just use dyntick_nesting == 1 to determine this. Only the
-> > > outermost interrupt that interrupted an RCU-idle state can set it to 1.
-> > > 
-> > > For (b), this warning condition has not occurred for several kernel
-> > > releases.  But we still keep the warning but change it to use
-> > > in_interrupt() instead of the nesting counter. In a later year, we can
-> > > remove the warning.
-> > > 
-> > > For (c), the nest check is not really necessary since forced_tick would
-> > > have been set to true in the outermost interrupt, so the nested/NMI
-> > > interrupts will check forced_tick anyway, and bail.
-> > 
-> > Skipping the commit log and documentation for this pass.
-> [snip] 
-> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > index 255cd6835526..1465a3e406f8 100644
-> > > --- a/kernel/rcu/tree.c
-> > > +++ b/kernel/rcu/tree.c
-> > > @@ -81,7 +81,6 @@
-> > >  
-> > >  static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
-> > >  	.dynticks_nesting = 1,
-> > > -	.dynticks_nmi_nesting = 0,
-> > 
-> > This should be in the previous patch, give or take naming.
-> 
-> Done.
-> 
-> > >  	.dynticks = ATOMIC_INIT(RCU_DYNTICK_CTRL_CTR),
-> > >  };
-> > >  struct rcu_state rcu_state = {
-> > > @@ -392,15 +391,9 @@ static int rcu_is_cpu_rrupt_from_idle(void)
-> > >  	/* Check for counter underflows */
-> > >  	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) < 0,
-> > >  			 "RCU dynticks_nesting counter underflow!");
-> > > -	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 0,
-> > > -			 "RCU dynticks_nmi_nesting counter underflow/zero!");
-> > >  
-> > > -	/* Are we at first interrupt nesting level? */
-> > > -	if (__this_cpu_read(rcu_data.dynticks_nmi_nesting) != 1)
-> > > -		return false;
-> > > -
-> > > -	/* Does CPU appear to be idle from an RCU standpoint? */
-> > > -	return __this_cpu_read(rcu_data.dynticks_nesting) == 0;
-> > > +	/* Are we the outermost interrupt that arrived when RCU was idle? */
-> > > +	return __this_cpu_read(rcu_data.dynticks_nesting) == 1;
-> > >  }
-> > >  
-> > >  #define DEFAULT_RCU_BLIMIT 10     /* Maximum callbacks per rcu_do_batch ... */
-> > > @@ -564,11 +557,10 @@ static void rcu_eqs_enter(bool user)
-> > >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
-> > >  
-> > >  	/* Entering usermode/idle from interrupt is not handled. These would
-> > > -	 * mean usermode upcalls or idle entry happened from interrupts. But,
-> > > -	 * reset the counter if we warn.
-> > > +	 * mean usermode upcalls or idle exit happened from interrupts. Remove
-> > > +	 * the warning by 2020.
-> > >  	 */
-> > > -	if (WARN_ON_ONCE(rdp->dynticks_nmi_nesting != 0))
-> > > -		WRITE_ONCE(rdp->dynticks_nmi_nesting, 0);
-> > > +	WARN_ON_ONCE(in_interrupt());
-> > 
-> > And this is a red flag.  Bad things happen should some common code
-> > that disables BH be invoked from the idle loop.  This might not be
-> > happening now, but we need to avoid this sort of constraint.
-> > How about instead merging ->dyntick_nesting into the low-order bits
-> > of ->dyntick_nmi_nesting?
-> > 
-> > Yes, this assumes that we don't enter process level twice, but it should
-> > be easy to add a WARN_ON() to test for that.  Except that we don't have
-> > to because there is already this near the end of rcu_eqs_exit():
-> > 
-> > 	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
-> > 
-> > So the low-order bit of the combined counter could indicate process-level
-> > non-idle, the next three bits could be unused to make interpretation
-> > of hex printouts easier, and then the rest of the bits could be used in
-> > the same way as currently.
-> > 
-> > This would allow a single read to see the full state, so that 0x1 means
-> > at process level in the kernel, 0x11 is interrupt (or NMI) from process
-> > level, 0x10 is interrupt/NMI from idle/user, and so on.
-> > 
-> > What am I missing here?  Why wouldn't this work, and without adding yet
-> > another RCU-imposed constraint on some other subsystem?
-> 
-> What about replacing the warning with a WARN_ON_ONCE(in_irq()), would that
-> address your concern?
-> 
-> Also, considering this warning condition is most likely never occurring as we
-> know it, and we are considering deleting it soon enough, is it really worth
-> reimplementing the whole mechanism with a complex bit-sharing scheme just
-> because of the BH-disable condition you mentioned, which likely doesn't
-> happen today? In my implementation, this is just a simple counter. I feel
-> combining bits in the same counter will just introduce more complexity that
-> this patch tries to address/avoid.
-> 
-> OTOH, I also don't mind with just deleting the warning altogether if you are
-> Ok with that.
 
-The big advantage of combining the counters is that all of the state is
-explicit and visible in one place.  Plus it can be accessed atomically.
-And it avoids setting a time bomb for some poor guys just trying to get
-their idle-loop jobs done some time in the dim distant future.
+--V3eawNQxI9TAjvgi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Besides, this pair of patches already makes a large change from a
-conceptual viewpoint.  If we are going to make a large change, let's
-get our money's worth out of that change!
+On Wed, Aug 28, 2019 at 03:01:15PM -0500, Rob Herring wrote:
+> On Tue, Aug 27, 2019 at 2:56 PM Mark Brown <broonie@kernel.org> wrote:
+> > On Tue, Aug 27, 2019 at 10:50:05AM -0500, Rob Herring wrote:
 
-							Thanx, Paul
+> > Well, you have been pushing people to change over to using
+> > dt-bindings: so I guess you do care :(
+
+> Well, yes. In the absence of any sort of pattern, I have pushed for
+> some consistency. And to get rid of subjects like this:
+
+> Documentation/devicetree/bindings: Add the DT binding documentation for foo-bar
+
+> If subsystems are consistent with their own standard as you are, then
+> as a maintainer I don't really care. My point was in regard to what
+> submitters need to know and follow.
+
+I agree that things should be more consistent.
+
+> > It really does cause me
+> > to miss stuff, especially where people don't even include the
+> > subsystem name in the header.  I get quite a lot of CCs for
+
+> I can't imagine filtering on subjects will ever be that reliable
+> unless we add subject prefixes to MAINTAINERS and have checkpatch
+> check commits against those. Filtering on the diffstat is the only
+> thing that's kept things to a sane list for me (MAINTAINERS for DT
+> used to tag of_* functions which just meant getting copied on *every*
+> driver). This is done on the patchwork server side for me, but I
+> imagine one could do it on the client side too.
+
+Part of the problem for me here is that stuff that's flagged as just a
+binding has a very high chance of being misdirected, I'm unlikely to
+have much input unless it's for a driver or subsystem I maintain and I
+get a lot of bindings docs for things like other bits of MFDs that have
+a regulator on them or where there was some interesting interaction with
+one of my subsystems that hasn't yet filtered out of get_maintainers'
+view.
+
+The other trick here is that sometimes I am actually being asked about
+the thing that I'm getting CCed on so I don't want to actually filter
+stuff out of my inbox, it's more of a scoring system thing with lots of
+guessing going on.  I say filtering but it's more a strong signal than
+strictly a filter.
+
+--V3eawNQxI9TAjvgi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1m8CEACgkQJNaLcl1U
+h9CrLwf/X5MQzBfb7KpPjUp6dJEyGZqPZF7kgvsPjAMXkY9IjIBIuCqeYj1aNCdU
+iRKUACgqSXfN6cFrlsx4tINlbMoQA7I9QrDjEULrM92Q+ScjIlbBVfNc0tPNjNXW
+jWoXqK0qjVkHC7A1IppMEU3Z8VtLCIe0pE51MSWl/IcLh0PlMNZBpnvOFz+M9LA+
+dUnF9/4/oA4smOQ9rSH0iLi9ceXsag2Hva5dSDkbwmYC7+QavIK5fGWxvM7sCMgF
+NMhlBwLZBjD1NWix97vbA2laF1unnRFEdxswTym4bmo/yMwSdgPUbryI0mtgiKtj
+AEcGfuhWCTX9uZEBJOhs9d8+oA8RQw==
+=uj8w
+-----END PGP SIGNATURE-----
+
+--V3eawNQxI9TAjvgi--
