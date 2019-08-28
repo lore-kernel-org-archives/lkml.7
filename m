@@ -2,106 +2,192 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61176C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9DAC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 363E022CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567000122;
-	bh=ia/i3B6LslmqZ9PUzT9PKV9D9hFu7MqfMZOZlxF+AXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZiB3kuY5KZ7FH81ISDXqEac7E3VE8gvrLswc7Oh7Br1MQyDPKgBoxBFfBEfY4oZ7c
-	 6JSda+BZSPhX2K18p/FysK4usQtN9gds+kwUXzwXnQJ3lhQPbmdJHlkOoz7sB2AYfB
-	 xMsloW6iNG8J4DsHcPn3m8iLdTFsRMTub0ZEMOvY=
+	by mail.kernel.org (Postfix) with ESMTP id 5622120856
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:49:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfH1Nsl (ORCPT
+        id S1726599AbfH1NtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:48:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50550 "EHLO mail.kernel.org"
+        Wed, 28 Aug 2019 09:49:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:59844 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726400AbfH1Nsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:48:40 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C79D420856;
-        Wed, 28 Aug 2019 13:48:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567000119;
-        bh=ia/i3B6LslmqZ9PUzT9PKV9D9hFu7MqfMZOZlxF+AXk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZDVPniNNs/k7E/b/ZWu712xjswU+vuIx+goS5L31ocFDW6FsHqgCBQEFNLI3GflWb
-         7OUMf7LllWNlmzexZKc028kS2UAnlQgqdz2DE/jyjFlyaQe47L5LEgcJfKopOyTDg3
-         JXrRFGdPt9zfa2N0wMlgnba/5Mxd9oc51cYPYUx4=
-Date:   Wed, 28 Aug 2019 15:48:36 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-tip-commits@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
-Subject: Re: [tip: timers/core] tick: Mark sched_timer to expire in hard
- interrupt context
-Message-ID: <20190828134835.GA11560@lenoir>
-References: <20190823113845.12125-3-bigeasy@linutronix.de>
- <156699021381.13479.1712414321907002833.tip-bot2@tip-bot2>
+        id S1726400AbfH1NtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:49:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F43828;
+        Wed, 28 Aug 2019 06:49:02 -0700 (PDT)
+Received: from localhost (c02w217fhv2r.copenhagen.arm.com [10.32.148.24])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1DA13F246;
+        Wed, 28 Aug 2019 06:49:01 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 15:49:00 +0200
+From:   Christoffer Dall <christoffer.dall@arm.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 01/10] KVM: arm64: Document PV-time interface
+Message-ID: <20190828134900.GA2113@lvm>
+References: <20190821153656.33429-1-steven.price@arm.com>
+ <20190821153656.33429-2-steven.price@arm.com>
+ <20190827085706.GB6541@e113682-lin.lund.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156699021381.13479.1712414321907002833.tip-bot2@tip-bot2>
+In-Reply-To: <20190827085706.GB6541@e113682-lin.lund.arm.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 11:03:33AM -0000, tip-bot2 for Sebastian Andrzej Siewior wrote:
-> The following commit has been merged into the timers/core branch of tip:
+On Tue, Aug 27, 2019 at 10:57:06AM +0200, Christoffer Dall wrote:
+> On Wed, Aug 21, 2019 at 04:36:47PM +0100, Steven Price wrote:
+> > Introduce a paravirtualization interface for KVM/arm64 based on the
+> > "Arm Paravirtualized Time for Arm-Base Systems" specification DEN 0057A.
+> > 
+> > This only adds the details about "Stolen Time" as the details of "Live
+> > Physical Time" have not been fully agreed.
+> > 
+> > User space can specify a reserved area of memory for the guest and
+> > inform KVM to populate the memory with information on time that the host
+> > kernel has stolen from the guest.
+> > 
+> > A hypercall interface is provided for the guest to interrogate the
+> > hypervisor's support for this interface and the location of the shared
+> > memory structures.
+> > 
+> > Signed-off-by: Steven Price <steven.price@arm.com>
+> > ---
+> >  Documentation/virt/kvm/arm/pvtime.txt | 100 ++++++++++++++++++++++++++
+> >  1 file changed, 100 insertions(+)
+> >  create mode 100644 Documentation/virt/kvm/arm/pvtime.txt
+> > 
+> > diff --git a/Documentation/virt/kvm/arm/pvtime.txt b/Documentation/virt/kvm/arm/pvtime.txt
+> > new file mode 100644
+> > index 000000000000..1ceb118694e7
+> > --- /dev/null
+> > +++ b/Documentation/virt/kvm/arm/pvtime.txt
+> > @@ -0,0 +1,100 @@
+> > +Paravirtualized time support for arm64
+> > +======================================
+> > +
+> > +Arm specification DEN0057/A defined a standard for paravirtualised time
+> > +support for AArch64 guests:
+> > +
+> > +https://developer.arm.com/docs/den0057/a
+> > +
+> > +KVM/arm64 implements the stolen time part of this specification by providing
+> > +some hypervisor service calls to support a paravirtualized guest obtaining a
+> > +view of the amount of time stolen from its execution.
+> > +
+> > +Two new SMCCC compatible hypercalls are defined:
+> > +
+> > +PV_FEATURES 0xC5000020
+> > +PV_TIME_ST  0xC5000022
+> > +
+> > +These are only available in the SMC64/HVC64 calling convention as
+> > +paravirtualized time is not available to 32 bit Arm guests. The existence of
+> > +the PV_FEATURES hypercall should be probed using the SMCCC 1.1 ARCH_FEATURES
+> > +mechanism before calling it.
+> > +
+> > +PV_FEATURES
+> > +    Function ID:  (uint32)  : 0xC5000020
+> > +    PV_func_id:   (uint32)  : Either PV_TIME_LPT or PV_TIME_ST
+> > +    Return value: (int32)   : NOT_SUPPORTED (-1) or SUCCESS (0) if the relevant
+> > +                              PV-time feature is supported by the hypervisor.
+> > +
+> > +PV_TIME_ST
+> > +    Function ID:  (uint32)  : 0xC5000022
+> > +    Return value: (int64)   : IPA of the stolen time data structure for this
+> > +                              (V)CPU. On failure:
+> > +                              NOT_SUPPORTED (-1)
+> > +
+> > +The IPA returned by PV_TIME_ST should be mapped by the guest as normal memory
+> > +with inner and outer write back caching attributes, in the inner shareable
+> > +domain. A total of 16 bytes from the IPA returned are guaranteed to be
+> > +meaningfully filled by the hypervisor (see structure below).
+> > +
+> > +PV_TIME_ST returns the structure for the calling VCPU.
+> > +
+> > +Stolen Time
+> > +-----------
+> > +
+> > +The structure pointed to by the PV_TIME_ST hypercall is as follows:
+> > +
+> > +  Field       | Byte Length | Byte Offset | Description
+> > +  ----------- | ----------- | ----------- | --------------------------
+> > +  Revision    |      4      |      0      | Must be 0 for version 0.1
+> > +  Attributes  |      4      |      4      | Must be 0
+> > +  Stolen time |      8      |      8      | Stolen time in unsigned
+> > +              |             |             | nanoseconds indicating how
+> > +              |             |             | much time this VCPU thread
+> > +              |             |             | was involuntarily not
+> > +              |             |             | running on a physical CPU.
+> > +
+> > +The structure will be updated by the hypervisor prior to scheduling a VCPU. It
+> > +will be present within a reserved region of the normal memory given to the
+> > +guest. The guest should not attempt to write into this memory. There is a
+> > +structure per VCPU of the guest.
+> > +
+> > +User space interface
+> > +====================
+> > +
+> > +User space can request that KVM provide the paravirtualized time interface to
+> > +a guest by creating a KVM_DEV_TYPE_ARM_PV_TIME device, for example:
+> > +
+> > +    struct kvm_create_device pvtime_device = {
+> > +            .type = KVM_DEV_TYPE_ARM_PV_TIME,
+> > +            .attr = 0,
+> > +            .flags = 0,
+> > +    };
+> > +
+> > +    pvtime_fd = ioctl(vm_fd, KVM_CREATE_DEVICE, &pvtime_device);
+> > +
+> > +Creation of the device should be done after creating the vCPUs of the virtual
+> > +machine.
+> > +
+> > +The IPA of the structures must be given to KVM. This is the base address
+> > +of an array of stolen time structures (one for each VCPU). The base address
+> > +must be page aligned. The size must be at least 64 * number of VCPUs and be a
+> > +multiple of PAGE_SIZE.
+> > +
+> > +The memory for these structures should be added to the guest in the usual
+> > +manner (e.g. using KVM_SET_USER_MEMORY_REGION).
+> > +
+> > +For example:
+> > +
+> > +    struct kvm_dev_arm_st_region region = {
+> > +            .gpa = <IPA of guest base address>,
+> > +            .size = <size in bytes>
+> > +    };
 > 
-> Commit-ID:     71fed982d63cb2bb88db6f36059e3b14a7913846
-> Gitweb:        https://git.kernel.org/tip/71fed982d63cb2bb88db6f36059e3b14a7913846
-> Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> AuthorDate:    Fri, 23 Aug 2019 13:38:45 +02:00
-> Committer:     Thomas Gleixner <tglx@linutronix.de>
-> CommitterDate: Wed, 28 Aug 2019 13:01:26 +02:00
+> This feel fragile; how are you handling userspace creating VCPUs after
+> setting this up, the GPA overlapping guest memory, etc.  Is the
+> philosophy here that the VMM can mess up the VM if it wants, but that
+> this should never lead attacks on the host (we better hope not) and so
+> we don't care?
 > 
-> tick: Mark sched_timer to expire in hard interrupt context
+> It seems to me setting the IPA per vcpu throught the VCPU device would
+> avoid a lot of these issues.  See
+> Documentation/virt/kvm/devices/vcpu.txt.
 > 
-> sched_timer must be initialized with the _HARD mode suffix to ensure expiry
-> in hard interrupt context on RT.
 > 
-> The previous conversion to HARD expiry mode missed on one instance in
-> tick_nohz_switch_to_nohz(). Fix it up.
-> 
-> Fixes: 902a9f9c50905 ("tick: Mark tick related hrtimers to expiry in hard interrupt context")
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Link: https://lkml.kernel.org/r/20190823113845.12125-3-bigeasy@linutronix.de
-> 
-> ---
->  kernel/time/tick-sched.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-> index 01ff32a..9558517 100644
-> --- a/kernel/time/tick-sched.c
-> +++ b/kernel/time/tick-sched.c
-> @@ -1233,7 +1233,7 @@ static void tick_nohz_switch_to_nohz(void)
->  	 * Recycle the hrtimer in ts, so we can share the
->  	 * hrtimer_forward with the highres code.
->  	 */
-> -	hrtimer_init(&ts->sched_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
-> +	hrtimer_init(&ts->sched_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_HARD);
+I discussed this with Marc the other day, and we realized that if we
+make the configuration of the IPA per-PE, then a VMM can construct a VM
+where these data structures are distributed within the IPA space of a
+VM, which could lead to a lower TLB pressure for some
+configurations/workloads.
 
-That said, this instance only uses hrtimer for time computing. The backend is
-clockevent directly.
+Thanks,
 
->  	/* Get the next period */
->  	next = tick_init_jiffy_update();
->  
+    Christoffer
