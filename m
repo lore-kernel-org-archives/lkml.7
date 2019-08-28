@@ -2,368 +2,144 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3B3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A1BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0299320856
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA25233A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:53:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Va6yPQwZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfH1Nv4 (ORCPT
+        id S1726497AbfH1Nx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:51:56 -0400
-Received: from mga02.intel.com ([134.134.136.20]:63657 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726397AbfH1Nvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:51:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 06:51:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
-   d="scan'208";a="197562353"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Aug 2019 06:51:54 -0700
-Received: from [10.254.95.196] (kliang2-mobl.ccr.corp.intel.com [10.254.95.196])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id E8AC6580409;
-        Wed, 28 Aug 2019 06:51:52 -0700 (PDT)
-Subject: Re: [RESEND PATCH V3 2/8] perf/x86/intel: Basic support for metrics
- counters
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-References: <20190826144740.10163-1-kan.liang@linux.intel.com>
- <20190826144740.10163-3-kan.liang@linux.intel.com>
- <20190828084416.GC2369@hirez.programming.kicks-ass.net>
- <20190828090217.GN2386@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <0798b310-3337-cc5f-99fb-73ce5849f7d4@linux.intel.com>
-Date:   Wed, 28 Aug 2019 09:51:51 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 09:53:27 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53795 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfH1Nx0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:53:26 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 10so145750wmp.3;
+        Wed, 28 Aug 2019 06:53:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=plD+U4OvjrYOKzQ6oSYh9TJp58BExko+i26dUsMFbeg=;
+        b=Va6yPQwZ+88Bvnq4I3HEtLD3cD9u04oSgJCgRuznJEvMXVPKfJ7HkDxyRYJ55VNbR0
+         UQ7vkk9bF0R+zmiLb0D4/V8YyLYkD2/soBEWfZxLzn2UyzZsr+IOjAGv7mc7C2E7UZgb
+         eXCzjD+iU2yN/WLv1gSzaN7jCYD78pAz34IHdGYwWhzjVkIUryBqKxyjUU31QJjijfcy
+         +OtVMP3r6nK509N+eJUkoQ+wcMvycU+mE3AqcdONpfm73bsvhxy1fGYBLQeVlKZwTXQC
+         MCONnGZzLXV4/O5kIAeVT2O0pJU9o3qyJKn8Xl4ATKofhFTSSjpETwbOJ0ygMi3linXO
+         Tb9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=plD+U4OvjrYOKzQ6oSYh9TJp58BExko+i26dUsMFbeg=;
+        b=NNAi6Ez7J3Y39QzU7Vn6R96d8xl67HMDtfxenqiHxRDIR897bLuCP1243hYs3+afgJ
+         3zp0Znmw5oJS0jGPFXp25mVNcdOJgWfQcR7fpnt7X0gTuFar9FTFCoYzVFJcz8Fz9NEe
+         cPqQDE4K4McoplxlkyhPMNgAi4pKdSLWDVr6gatl5boNRly1Jw4FTrYqbrDtPz3eVvKB
+         Yd3QzErDX8aMr5UyFc1n2DObWxU1RxcWNfMdgyk/h+ClJXNzkkkm+CP72h0NyQtCKjT8
+         5wYGBdgEDmfVLNwiCbmp2H/aR2W3M8a1I+vj+IwpS3FVHdyOU6+5sTz7STeLmL4Gya3v
+         0IrQ==
+X-Gm-Message-State: APjAAAUK4jtwQRLfRYS/Zn956RynS5kyH9U68vEWvincEvWcT3jeE0Kv
+        I70g7vLdVV/ErtuZcZJ7ZLnqYMgc1bM9Og==
+X-Google-Smtp-Source: APXvYqzSIvLd0r1JejO7RzegjYLYXNJNBpoNkCrdhViUbUydhzpfXu5seZgNG09JGaJ5eQxktoFUpw==
+X-Received: by 2002:a05:600c:48b:: with SMTP id d11mr5180877wme.55.1567000404508;
+        Wed, 28 Aug 2019 06:53:24 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id f13sm624529wrq.3.2019.08.28.06.53.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 06:53:23 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Daniel J Blueman <daniel@numascale.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] x86/PCI: Correct warnings about missing or incorrect SPDX license headers.
+Date:   Wed, 28 Aug 2019 15:53:22 +0200
+Message-Id: <20190828135322.10370-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20190819060624.17305-1-kw@linux.com>
+References: <20190819060624.17305-1-kw@linux.com>
 MIME-Version: 1.0
-In-Reply-To: <20190828090217.GN2386@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add the missing "SPDX-License-Identifier" license header
+to the arch/x86/pci/numachip.c (use the GPL-2.0 identifier
+derived using the comment mentioning license from the
+top of the file), and remove license boilerplate as per
+a similar commit 8cfab3cf63cf ("PCI: Add SPDX GPL-2.0 to
+replace GPL v2 boilerplate").
 
+Correct existing SPDX license header in the files
+drivers/pci/controller/pcie-cadence.h and
+drivers/pci/controller/pcie-rockchip.h to use
+correct comment style as per the section 2 "Style"
+of the "Linux kernel licensing rules" (see:
+Documentation/process/license-rules.rst).
 
-On 8/28/2019 5:02 AM, Peter Zijlstra wrote:
-> On Wed, Aug 28, 2019 at 10:44:16AM +0200, Peter Zijlstra wrote:
-> 
->> Let me clean up this mess for you.
-> 
-> Here, how's that. Now we don't check is_metric_idx() _3_ times on the
-> enable/disable path and all the topdown crud is properly placed in the
-> fixed counter functions.
+Both changes will resolve the following checkpatch.pl
+script warning:
 
-Thank you very much for the cleanup. The new code is more efficient.
-I will prepare V4 with this code and to address other comments.
+WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
 
-Thanks,
-Kan
-> 
-> Please think; don't tinker.
-> 
-> ---
-> 
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -1033,22 +1033,34 @@ static inline void x86_assign_hw_event(s
->   				struct cpu_hw_events *cpuc, int i)
->   {
->   	struct hw_perf_event *hwc = &event->hw;
-> +	int idx;
->   
-> -	hwc->idx = cpuc->assign[i];
-> +	idx = hwc->idx = cpuc->assign[i];
->   	hwc->last_cpu = smp_processor_id();
->   	hwc->last_tag = ++cpuc->tags[i];
->   
-> -	if (hwc->idx == INTEL_PMC_IDX_FIXED_BTS) {
-> +	switch (hwc->idx) {
-> +	case INTEL_PMC_IDX_FIXED_BTS:
->   		hwc->config_base = 0;
->   		hwc->event_base	= 0;
-> -	} else if (hwc->idx >= INTEL_PMC_IDX_FIXED) {
-> +		break;
-> +
-> +	case INTEL_PMC_IDX_FIXED_METRIC_BASE ... INTEL_PMC_IDX_FIXED_METRIC_BASE+3:
-> +		/* All METRIC events are mapped onto the fixed SLOTS event */
-> +		idx = INTEL_PMC_IDX_FIXED_SLOTS;
-> +
-> +	case INTEL_PMC_IDX_FIXED ... INTEL_PMC_IDX_FIXED_BTS-1:
->   		hwc->config_base = MSR_ARCH_PERFMON_FIXED_CTR_CTRL;
-> -		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 + (hwc->idx - INTEL_PMC_IDX_FIXED);
-> -		hwc->event_base_rdpmc = (hwc->idx - INTEL_PMC_IDX_FIXED) | 1<<30;
-> -	} else {
-> +		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 +
-> +				  (idx - INTEL_PMC_IDX_FIXED);
-> +		hwc->event_base_rdpmc = (idx - INTEL_PMC_IDX_FIXED) | 1<<30;
-> +		break;
-> +
-> +	default:
->   		hwc->config_base = x86_pmu_config_addr(hwc->idx);
->   		hwc->event_base  = x86_pmu_event_addr(hwc->idx);
->   		hwc->event_base_rdpmc = x86_pmu_rdpmc_index(hwc->idx);
-> +		break;
->   	}
->   }
->   
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -2128,27 +2128,61 @@ static inline void intel_pmu_ack_status(
->   	wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, ack);
->   }
->   
-> -static void intel_pmu_disable_fixed(struct hw_perf_event *hwc)
-> +static inline bool event_is_checkpointed(struct perf_event *event)
-> +{
-> +	return unlikely(event->hw.config & HSW_IN_TX_CHECKPOINTED) != 0;
-> +}
-> +
-> +static inline void intel_set_masks(struct perf_event *event, int idx)
-> +{
-> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +
-> +	if (event->attr.exclude_host)
-> +		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_guest_mask);
-> +	if (event->attr.exclude_guest)
-> +		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_host_mask);
-> +	if (event_is_checkpointed(event))
-> +		__set_bit(idx, (unsigned long *)&cpuc->intel_cp_status);
-> +}
-> +
-> +static inline void intel_clear_masks(struct perf_event *event, int idx)
->   {
-> -	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
-> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +
-> +	__clear_bit(idx, (unsigned long *)&cpuc->intel_ctrl_guest_mask);
-> +	__clear_bit(idx, (unsigned long *)&cpuc->intel_ctrl_host_mask);
-> +	__clear_bit(idx, (unsigned long *)&cpuc->intel_cp_status);
-> +}
-> +
-> +static void intel_pmu_disable_fixed(struct perf_event *event)
-> +{
-> +	struct hw_perf_event *hwc = &event->hw;
->   	u64 ctrl_val, mask;
-> +	int idx = hwc->idx;
->   
-> -	mask = 0xfULL << (idx * 4);
-> +	if (is_topdown_idx(idx)) {
-> +		struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +		/*
-> +		 * When there are other Top-Down events still active; don't
-> +		 * disable the SLOTS counter.
-> +		 */
-> +		if (*(u64 *)cpuc->active_mask & INTEL_PMC_OTHER_TOPDOWN_BITS(idx))
-> +			return;
-> +
-> +		idx = INTEL_PMC_IDX_FIXED_SLOTS;
-> +	}
->   
-> +	intel_clear_masks(event, idx);
-> +
-> +	mask = 0xfULL << ((idx - INTEL_PMC_IDX_FIXED) * 4);
->   	rdmsrl(hwc->config_base, ctrl_val);
->   	ctrl_val &= ~mask;
->   	wrmsrl(hwc->config_base, ctrl_val);
->   }
->   
-> -static inline bool event_is_checkpointed(struct perf_event *event)
-> -{
-> -	return (event->hw.config & HSW_IN_TX_CHECKPOINTED) != 0;
-> -}
-> -
->   static void intel_pmu_disable_event(struct perf_event *event)
->   {
->   	struct hw_perf_event *hwc = &event->hw;
-> -	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->   
->   	if (unlikely(hwc->idx == INTEL_PMC_IDX_FIXED_BTS)) {
->   		intel_pmu_disable_bts();
-> @@ -2156,18 +2190,19 @@ static void intel_pmu_disable_event(stru
->   		return;
->   	}
->   
-> -	cpuc->intel_ctrl_guest_mask &= ~(1ull << hwc->idx);
-> -	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->idx);
-> -	cpuc->intel_cp_status &= ~(1ull << hwc->idx);
-> -
-> -	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL))
-> -		intel_pmu_disable_fixed(hwc);
-> -	else
-> +	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
-> +		intel_pmu_disable_fixed(event);
-> +	} else {
-> +		intel_clear_masks(event, hwc->idx);
->   		x86_pmu_disable_event(event);
-> +	}
->   
->   	/*
->   	 * Needs to be called after x86_pmu_disable_event,
->   	 * so we don't trigger the event without PEBS bit set.
-> +	 *
-> +	 * Metric stuff doesn't do PEBS (I hope?); and so the early exit from
-> +	 * intel_pmu_disable_fixed() is OK.
->   	 */
->   	if (unlikely(event->attr.precise_ip))
->   		intel_pmu_pebs_disable(event);
-> @@ -2192,8 +2227,22 @@ static void intel_pmu_read_event(struct
->   static void intel_pmu_enable_fixed(struct perf_event *event)
->   {
->   	struct hw_perf_event *hwc = &event->hw;
-> -	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
->   	u64 ctrl_val, mask, bits = 0;
-> +	int idx = hwc->idx;
-> +
-> +	if (is_topdown_idx(idx)) {
-> +		struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +		/*
-> +		 * When there are other Top-Down events already active; don't
-> +		 * enable the SLOTS counter.
-> +		 */
-> +		if (*(u64 *)cpuc->active_mask & INTEL_PMC_OTHER_TOPDOWN_BITS(idx))
-> +			return;
-> +
-> +		idx = INTEL_PMC_IDX_FIXED_SLOTS;
-> +	}
-> +
-> +	intel_set_masks(event, hwc->idx);
->   
->   	/*
->   	 * Enable IRQ generation (0x8), if not PEBS,
-> @@ -2213,6 +2262,7 @@ static void intel_pmu_enable_fixed(struc
->   	if (x86_pmu.version > 2 && hwc->config & ARCH_PERFMON_EVENTSEL_ANY)
->   		bits |= 0x4;
->   
-> +	idx -= INTEL_PMC_IDX_FIXED;
->   	bits <<= (idx * 4);
->   	mask = 0xfULL << (idx * 4);
->   
-> @@ -2230,7 +2280,6 @@ static void intel_pmu_enable_fixed(struc
->   static void intel_pmu_enable_event(struct perf_event *event)
->   {
->   	struct hw_perf_event *hwc = &event->hw;
-> -	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->   
->   	if (unlikely(hwc->idx == INTEL_PMC_IDX_FIXED_BTS)) {
->   		if (!__this_cpu_read(cpu_hw_events.enabled))
-> @@ -2240,23 +2289,16 @@ static void intel_pmu_enable_event(struc
->   		return;
->   	}
->   
-> -	if (event->attr.exclude_host)
-> -		cpuc->intel_ctrl_guest_mask |= (1ull << hwc->idx);
-> -	if (event->attr.exclude_guest)
-> -		cpuc->intel_ctrl_host_mask |= (1ull << hwc->idx);
-> -
-> -	if (unlikely(event_is_checkpointed(event)))
-> -		cpuc->intel_cp_status |= (1ull << hwc->idx);
->   
->   	if (unlikely(event->attr.precise_ip))
->   		intel_pmu_pebs_enable(event);
->   
->   	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
->   		intel_pmu_enable_fixed(event);
-> -		return;
-> +	} else {
-> +		intel_set_masks(event, hwc->idx);
-> +		__x86_pmu_enable_event(hwc, ARCH_PERFMON_EVENTSEL_ENABLE);
->   	}
-> -
-> -	__x86_pmu_enable_event(hwc, ARCH_PERFMON_EVENTSEL_ENABLE);
->   }
->   
->   static void intel_pmu_add_event(struct perf_event *event)
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -349,6 +349,20 @@ struct cpu_hw_events {
->   	EVENT_CONSTRAINT(c, (1ULL << (32+n)), FIXED_EVENT_FLAGS)
->   
->   /*
-> + * Special metric counters do not actually exist, but get remapped
-> + * to a combination of FxCtr3 + MSR_PERF_METRICS
-> + *
-> + * This allocates them to a dummy offset for the scheduler.
-> + * This does not allow sharing of multiple users of the same
-> + * metric without multiplexing, even though the hardware supports that
-> + * in principle.
-> + */
-> +
-> +#define METRIC_EVENT_CONSTRAINT(c, n)					\
-> +	EVENT_CONSTRAINT(c, (1ULL << (INTEL_PMC_IDX_FIXED_METRIC_BASE+n)), \
-> +			 FIXED_EVENT_FLAGS)
-> +
-> +/*
->    * Constraint on the Event code + UMask
->    */
->   #define INTEL_UEVENT_CONSTRAINT(c, n)	\
-> --- a/arch/x86/include/asm/msr-index.h
-> +++ b/arch/x86/include/asm/msr-index.h
-> @@ -795,6 +795,7 @@
->   #define MSR_CORE_PERF_FIXED_CTR0	0x00000309
->   #define MSR_CORE_PERF_FIXED_CTR1	0x0000030a
->   #define MSR_CORE_PERF_FIXED_CTR2	0x0000030b
-> +#define MSR_CORE_PERF_FIXED_CTR3	0x0000030c
->   #define MSR_CORE_PERF_FIXED_CTR_CTRL	0x0000038d
->   #define MSR_CORE_PERF_GLOBAL_STATUS	0x0000038e
->   #define MSR_CORE_PERF_GLOBAL_CTRL	0x0000038f
-> --- a/arch/x86/include/asm/perf_event.h
-> +++ b/arch/x86/include/asm/perf_event.h
-> @@ -175,11 +175,39 @@ struct x86_pmu_capability {
->   /*
->    * We model BTS tracing as another fixed-mode PMC.
->    *
-> - * We choose a value in the middle of the fixed event range, since lower
-> + * We choose value 47 for the fixed index of BTS, since lower
->    * values are used by actual fixed events and higher values are used
->    * to indicate other overflow conditions in the PERF_GLOBAL_STATUS msr.
->    */
-> -#define INTEL_PMC_IDX_FIXED_BTS				(INTEL_PMC_IDX_FIXED + 16)
-> +#define INTEL_PMC_IDX_FIXED_BTS				(INTEL_PMC_IDX_FIXED + 15)
-> +
-> +/*
-> + * We model PERF_METRICS as more magic fixed-mode PMCs, one for each metric
-> + *
-> + * Internally they all map to Fixed Ctr 3 (SLOTS), and allocate PERF_METRICS
-> + * as an extra_reg. PERF_METRICS has no own configuration, but we fill in
-> + * the configuration of FxCtr3 to enforce that all the shared users of SLOTS
-> + * have the same configuration.
-> + */
-> +#define INTEL_PMC_IDX_FIXED_METRIC_BASE		(INTEL_PMC_IDX_FIXED + 16)
-> +#define INTEL_PMC_IDX_TD_RETIRING		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 0)
-> +#define INTEL_PMC_IDX_TD_BAD_SPEC		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 1)
-> +#define INTEL_PMC_IDX_TD_FE_BOUND		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 2)
-> +#define INTEL_PMC_IDX_TD_BE_BOUND		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 3)
-> +#define INTEL_PMC_MSK_TOPDOWN			((0xfull << INTEL_PMC_IDX_FIXED_METRIC_BASE) | \
-> +						 INTEL_PMC_MSK_FIXED_SLOTS)
-> +
-> +static inline bool is_metric_idx(int idx)
-> +{
-> +	return (unsigned)(idx - INTEL_PMC_IDX_FIXED_METRIC_BASE) < 4;
-> +}
-> +
-> +static inline bool is_topdown_idx(int idx)
-> +{
-> +	return is_metric_idx(idx) || idx == INTEL_PMC_IDX_FIXED_SLOTS;
-> +}
-> +
-> +#define INTEL_PMC_OTHER_TOPDOWN_BITS(bit)	(~(0x1ull << bit) & INTEL_PMC_MSK_TOPDOWN)
->   
->   #define GLOBAL_STATUS_COND_CHG				BIT_ULL(63)
->   #define GLOBAL_STATUS_BUFFER_OVF			BIT_ULL(62)
-> 
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+Changes in v2:
+  Update wording and mention checkpatch.pl script warnings.
+  Add two C header files to which the fix also applies.
+
+ arch/x86/pci/numachip.c                | 5 +----
+ drivers/pci/controller/pcie-cadence.h  | 2 +-
+ drivers/pci/controller/pcie-rockchip.h | 2 +-
+ 3 files changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/pci/numachip.c b/arch/x86/pci/numachip.c
+index 2e565e65c893..01a085d9135a 100644
+--- a/arch/x86/pci/numachip.c
++++ b/arch/x86/pci/numachip.c
+@@ -1,8 +1,5 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+  * Numascale NumaConnect-specific PCI code
+  *
+  * Copyright (C) 2012 Numascale AS. All rights reserved.
+diff --git a/drivers/pci/controller/pcie-cadence.h b/drivers/pci/controller/pcie-cadence.h
+index ae6bf2a2b3d3..f1cba3931b99 100644
+--- a/drivers/pci/controller/pcie-cadence.h
++++ b/drivers/pci/controller/pcie-cadence.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ // Copyright (c) 2017 Cadence
+ // Cadence PCIe controller driver.
+ // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+index 8e87a059ce73..53e4f9e59624 100644
+--- a/drivers/pci/controller/pcie-rockchip.h
++++ b/drivers/pci/controller/pcie-rockchip.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Rockchip AXI PCIe controller driver
+  *
+-- 
+2.22.1
+
