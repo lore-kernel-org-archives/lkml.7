@@ -2,399 +2,158 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BFAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4E2C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF492189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D99482339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:45:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a9LWQsxV"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="vRQNC0Lz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbfH1Umz (ORCPT
+        id S1727001AbfH1UpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 16:42:55 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37267 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbfH1Umz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 16:42:55 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f17so1203607otq.4
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 13:42:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gyXGeGM3qNFrB5NaUrrtvt6KfxMRkmPmPa7zh7Lf/Ws=;
-        b=a9LWQsxVfm6q156CbfV6/AA8rNqpUHcDWtN7LJ05uIdu6lelSnWM/l5JALpLmF6SKj
-         bGz8NqfVAHgIhYlIUFMImNUhFxzHE5TfQ7//B/9iq2tEBDlJAblaAq1G4cW9bqTvHryo
-         7cukJbsO3AhEt2Lt3zmPAyxc7EBMlxjgFBy1ItRx/ipdrnC6dPnOLpy2PgkhF8ExUjyU
-         LP0HACfxuBtreGtMkdTCWfAZyVOb5iT49oq583JsDyXuxY/HuQWsoogGK4qoUmbEZ1TL
-         H9nfiepJfXRZfSRns7XTV4GC+dnaM98FoQ7qBhSEPxfFNT4fOqmTYfVZzulK2gkGY/Nd
-         xuUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gyXGeGM3qNFrB5NaUrrtvt6KfxMRkmPmPa7zh7Lf/Ws=;
-        b=kLmTGNYjR6xZmJJ6uCzpgM9VLOUJUZdRLqShw3j3Va9itl5QtA1sbb61UnSAs1L39Q
-         lXDc89befljvpG7kOofWCoNrm8QQIXcI8ONUtVhkNk43l5LR/Xw98ccnA9SsGxxiBKqw
-         QB/78ELTq9NKGxCUIIbCF/nL+TR6otm0ZOyTogQcy7sukuc8kB9HQD7YqAfYwi6CpuMn
-         A649smebw/oEmcWw3lv0TnUFP1BOzJXPKmHvivbm+sKyOdzXMWLGWNlfBUfKc8bRbJt9
-         uxW5UwNQ4sBoO1YUynv3HKEUsEN+ENgsIpZVuydia4LyHpGm7XiqO2hJX9y7srYx7bGd
-         Wa3g==
-X-Gm-Message-State: APjAAAV8kqmxqVdZU3a82Ch7lMMxBxwqWMrEO9LBb8HXnN1wT0hxhIgf
-        NUpSFYEV8iAxFEin6SqZzraM6UpSIP7SFmZ+c/GN3g==
-X-Google-Smtp-Source: APXvYqwZYnf+72BEPbxaq/j3biRONIoTPQdoZMBdfJ8oeckRqbO07vVfI+WCzSYnYEbDCEPZNAwBVtZyZLWQjvysFII=
-X-Received: by 2002:a9d:3b3:: with SMTP id f48mr5004135otf.35.1567024973722;
- Wed, 28 Aug 2019 13:42:53 -0700 (PDT)
+        Wed, 28 Aug 2019 16:45:25 -0400
+Received: from mail-eopbgr810104.outbound.protection.outlook.com ([40.107.81.104]:62802
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726583AbfH1UpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 16:45:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YgQTKWzvO5NKofd7DuWbhrmgUwT+2nTQZ6VQ3W4chM4ogkPCBAN8Wj3z6MEyRyMOMXkKX7Ixyk3yCNBi6QBjtRTP/5ixytOCMyNC/mdbXQTlHlePDz/inggcLoA1OTH6/ZH5XidwX8zShFUkHIgOMAIJAc8O9b8dml8VW53TixYp5ilmTl+JxNwgDfJ9CqFOkIRo86nl9PCpCy1HeLd9O4hk0gla/ISjfmuCsuJnarziaEPEtFBHZh6cF4B7VPB3MSjb96zexd2Rz8zdiNAH4kGIvI9QDPj0MiPIbdHI4ANsA6sqQtKy+trm4UtkpDCRjozdjOoPu9eQw90Y4PSxNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d4N8A8bK/JhU8eCUwoWU2R06EJ46Fxom2YRtMZl+TkA=;
+ b=JIao8v6/X0JB9r9fJBdj0FGXDZwpP30LgDPeeExNKqb+cEk2ONCfe842FDHexrfvi8/AezXCt9uoG3vmY3/AgQB2Aabwe8UPKxorR5tzr3/0QqPR5YlKkfj5xJhnRwE6Zub9kUEtslbFLo1CBdenUrRiOdO0XZkVvZj0hHO2h8Z4LfbZjidM5TUJTn/5g0t+9iJlV4lXQIaa8buDXNAxIFjyMSFKQJb0pcIsWGBHyDzKw7zW3gX1pZIveKmuJki8aO6RUscqL9RKiGHkyfjGZsLT9yCrt/8uShs6rIQk2L3Z//dh5JBEqhBYJCpzzCovRufQiKBAwqFAM1MKUb5LDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
+ dkim=pass header.d=mips.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d4N8A8bK/JhU8eCUwoWU2R06EJ46Fxom2YRtMZl+TkA=;
+ b=vRQNC0LzAdzBLegpXFNx58GLwRXXNgKx2KEfGsCYgBF4sotBkWlB+i8F6j6KeRacNj9AvWEJTF4Pg5caopMiPis1LCcCDhMgvd5bLx2PWoSF35annp2tYhucFZeQQYMMr1siAU2EW1axmcb2wFrKKcnhr4DjvILKqP0x1gwHY0U=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1405.namprd22.prod.outlook.com (10.174.162.143) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.20; Wed, 28 Aug 2019 20:45:20 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::f9e8:5e8c:7194:fad3]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::f9e8:5e8c:7194:fad3%11]) with mapi id 15.20.2199.021; Wed, 28 Aug
+ 2019 20:45:20 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH net-next 01/15] MIPS: SGI-IP27: remove ioc3 ethernet init
+Thread-Topic: [PATCH net-next 01/15] MIPS: SGI-IP27: remove ioc3 ethernet init
+Thread-Index: AQHVXeGCj7Utd268IUuam0Km7Mn5KQ==
+Date:   Wed, 28 Aug 2019 20:45:20 +0000
+Message-ID: <20190828204515.mz4ijqrey624vnzd@pburton-laptop>
+References: <20190828140315.17048-1-tbogendoerfer@suse.de>
+ <20190828140315.17048-2-tbogendoerfer@suse.de>
+In-Reply-To: <20190828140315.17048-2-tbogendoerfer@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0115.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:c::31) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+user-agent: NeoMutt/20180716
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2a02:c7f:5e65:9900:8519:dc48:d16b:70fc]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 599d0ae8-f952-4ee6-958e-08d72bf8a471
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1405;
+x-ms-traffictypediagnostic: MWHPR2201MB1405:
+x-microsoft-antispam-prvs: <MWHPR2201MB1405662F76D2ABA5183EDA69C1A30@MWHPR2201MB1405.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 014304E855
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(136003)(366004)(376002)(396003)(39850400004)(346002)(199004)(189003)(9686003)(6512007)(6116002)(25786009)(46003)(33716001)(4326008)(42882007)(14454004)(6246003)(5660300002)(53936002)(6436002)(508600001)(186003)(6486002)(386003)(6506007)(256004)(99286004)(102836004)(76176011)(52116002)(229853002)(8936002)(476003)(71190400001)(66476007)(64756008)(71200400001)(316002)(58126008)(54906003)(8676002)(66946007)(81156014)(2906002)(305945005)(7736002)(1076003)(81166006)(66556008)(44832011)(6916009)(66446008)(486006)(446003)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1405;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ALEpe80iBTaMp63ei/h0t1u8+Tdkgm46kfcUZYEZd1mmJQ1s4X6dcySM99FCoq8J38Vcl7kFa8+KSXEpvVc2bFZVaYw8LXTkDef80rsq48f0bFB69vECQEaxXihu525B9ocytGRpEo9HcRZXcv/Q04ftTm4gPFx17NJcZUqA62q3kzD702u06P6CtfQz/Bsz+d5v/guXei0NdKVObjKAA+oo6zcqtDmja8KmY5oaertCJYwsEL2C77DvVEiyXAiP3sROPgL9CtG4dWfpL98kcQDjBq33HgnL5PTwFVbzI/zSxZi0ulDB6YYOwy+da4mBkUZryIO0ZfMACYFjnnopAuGqgiRVRHwWiRu+aOm4ZMRwCBrZjzIfzwZXyf8nW35eezcRK2KVXUUS2hBsi8k5oXxMGZKBuFzldnwS6X4Ej/I=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <5D32B5F4B3FFAC489CA16FBD9A6C3145@namprd22.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190827204152.114609-1-hridya@google.com> <20190827204152.114609-5-hridya@google.com>
- <20190828130759.4b4gtzf2jpi5c46y@wittgenstein> <CAHRSSEw3Z6Wg1dsXmJei-o=FRj1U0Ys9_WHRbB4KTCCwjntjeQ@mail.gmail.com>
-In-Reply-To: <CAHRSSEw3Z6Wg1dsXmJei-o=FRj1U0Ys9_WHRbB4KTCCwjntjeQ@mail.gmail.com>
-From:   Hridya Valsaraju <hridya@google.com>
-Date:   Wed, 28 Aug 2019 13:42:17 -0700
-Message-ID: <CA+wgaPOSkzkQyYwgXMwZxwNadqNR7z3wibABG=6wRtQ4spbeWA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] binder: Add binder_proc logging to binderfs
-To:     Todd Kjos <tkjos@google.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 599d0ae8-f952-4ee6-958e-08d72bf8a471
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 20:45:20.8504
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZYqVflqZfl7zHKFhEumx3vWgVshaxdvJI6toVkuWKjd/EJ0uP02+GUM2nG2uPl6bIfEu25uiDyF+yJz8KmS2QQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1405
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 9:21 AM Todd Kjos <tkjos@google.com> wrote:
->
-> On Wed, Aug 28, 2019 at 6:08 AM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > On Tue, Aug 27, 2019 at 01:41:52PM -0700, Hridya Valsaraju wrote:
-> > > Currently /sys/kernel/debug/binder/proc contains
-> > > the debug data for every binder_proc instance.
-> > > This patch makes this information also available
-> > > in a binderfs instance mounted with a mount option
-> > > "stats=global" in addition to debugfs. The patch does
-> > > not affect the presence of the file in debugfs.
-> > >
-> > > If a binderfs instance is mounted at path /dev/binderfs,
-> > > this file would be present at /dev/binderfs/binder_logs/proc.
-> > > This change provides an alternate way to access this file when debugfs
-> > > is not mounted.
-> > >
-> > > Signed-off-by: Hridya Valsaraju <hridya@google.com>
-> >
-> > I'm still wondering whether there's a nicer way to create those debuf
-> > files per-process without doing it in binder_open() but it has worked
-> > fine for a long time with debugfs.
-> >
-> > Also, one minor question below. Otherwise
-> >
-> > Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
->
-> Acked-by: Todd Kjos <tkjos@google.com>
->
-> >
-> > > ---
-> > >  drivers/android/binder.c          | 38 ++++++++++++++++++-
-> > >  drivers/android/binder_internal.h | 46 ++++++++++++++++++++++
-> > >  drivers/android/binderfs.c        | 63 ++++++++++++++-----------------
-> > >  3 files changed, 111 insertions(+), 36 deletions(-)
-> > >
-> > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> > > index bed217310197..37189838f32a 100644
-> > > --- a/drivers/android/binder.c
-> > > +++ b/drivers/android/binder.c
-> > > @@ -481,6 +481,7 @@ struct binder_priority {
-> > >   * @inner_lock:           can nest under outer_lock and/or node lock
-> > >   * @outer_lock:           no nesting under innor or node lock
-> > >   *                        Lock order: 1) outer, 2) node, 3) inner
-> > > + * @binderfs_entry:       process-specific binderfs log file
-> > >   *
-> > >   * Bookkeeping structure for binder processes
-> > >   */
-> > > @@ -510,6 +511,7 @@ struct binder_proc {
-> > >       struct binder_context *context;
-> > >       spinlock_t inner_lock;
-> > >       spinlock_t outer_lock;
-> > > +     struct dentry *binderfs_entry;
-> > >  };
-> > >
-> > >  enum {
-> > > @@ -5347,6 +5349,8 @@ static int binder_open(struct inode *nodp, struct file *filp)
-> > >  {
-> > >       struct binder_proc *proc;
-> > >       struct binder_device *binder_dev;
-> > > +     struct binderfs_info *info;
-> > > +     struct dentry *binder_binderfs_dir_entry_proc = NULL;
-> > >
-> > >       binder_debug(BINDER_DEBUG_OPEN_CLOSE, "%s: %d:%d\n", __func__,
-> > >                    current->group_leader->pid, current->pid);
-> > > @@ -5368,11 +5372,14 @@ static int binder_open(struct inode *nodp, struct file *filp)
-> > >       }
-> > >
-> > >       /* binderfs stashes devices in i_private */
-> > > -     if (is_binderfs_device(nodp))
-> > > +     if (is_binderfs_device(nodp)) {
-> > >               binder_dev = nodp->i_private;
-> > > -     else
-> > > +             info = nodp->i_sb->s_fs_info;
-> > > +             binder_binderfs_dir_entry_proc = info->proc_log_dir;
-> > > +     } else {
-> > >               binder_dev = container_of(filp->private_data,
-> > >                                         struct binder_device, miscdev);
-> > > +     }
-> > >       proc->context = &binder_dev->context;
-> > >       binder_alloc_init(&proc->alloc);
-> > >
-> > > @@ -5403,6 +5410,27 @@ static int binder_open(struct inode *nodp, struct file *filp)
-> > >                       &proc_fops);
-> > >       }
-> > >
-> > > +     if (binder_binderfs_dir_entry_proc) {
-> > > +             char strbuf[11];
-> > > +             struct dentry *binderfs_entry;
-> > > +
-> > > +             snprintf(strbuf, sizeof(strbuf), "%u", proc->pid);
-> > > +             /*
-> > > +              * Similar to debugfs, the process specific log file is shared
-> > > +              * between contexts. If the file has already been created for a
-> > > +              * process, the following binderfs_create_file() call will
-> > > +              * fail if another context of the same process invoked
-> > > +              * binder_open(). This is ok since same as debugfs,
-> > > +              * the log file will contain information on all contexts of a
-> > > +              * given PID.
-> > > +              */
-> > > +             binderfs_entry = binderfs_create_file(binder_binderfs_dir_entry_proc,
-> > > +                     strbuf, &proc_fops, (void *)(unsigned long)proc->pid);
-> > > +             if (!IS_ERR(binderfs_entry))
-> > > +                     proc->binderfs_entry = binderfs_entry;
-> >
-> > You are sure that you don't want to fail the open, when the debug file
-> > cannot be created in the binderfs instance? I'm not objecting at all, I
-> > just want to make sure that this is the semantics you want because it
-> > would be easy to differentiate between the non-fail-debugfs and the new
-> > binderfs case.
->
-> I don't think we should fail the open, but it would be nice to have
-> some indication that it failed -- maybe a pr_warn() ?
+Hi Thomas,
 
-Thanks for taking a look Christian and Todd! The reason I do not fail
-binder_open() on an error here is because once the file has been
-created for a process, if the same process invokes binder_open() again
-from a different context, the binderfs_create_file() call would fail
-with the EEXIST error code. This is expected behaviour since the log
-file is shared between all contexts of a process(same as the behaviour
-of the file in debugfs today). I can add a pr_warn() statement in v2
-as Todd suggested so that the failure would be logged.
+On Wed, Aug 28, 2019 at 04:03:00PM +0200, Thomas Bogendoerfer wrote:
+> Removed not needed disabling of ethernet interrupts in IP27 platform code=
+.
+>=20
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-> >
-> > > +
-> > > +     }
-> > > +
-> > >       return 0;
-> > >  }
-> > >
-> > > @@ -5442,6 +5470,12 @@ static int binder_release(struct inode *nodp, struct file *filp)
-> > >       struct binder_proc *proc = filp->private_data;
-> > >
-> > >       debugfs_remove(proc->debugfs_entry);
-> > > +
-> > > +     if (proc->binderfs_entry) {
-> > > +             binderfs_remove_file(proc->binderfs_entry);
-> > > +             proc->binderfs_entry = NULL;
-> > > +     }
-> > > +
-> > >       binder_defer_work(proc, BINDER_DEFERRED_RELEASE);
-> > >
-> > >       return 0;
-> > > diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_internal.h
-> > > index b9be42d9464c..bd47f7f72075 100644
-> > > --- a/drivers/android/binder_internal.h
-> > > +++ b/drivers/android/binder_internal.h
-> > > @@ -35,17 +35,63 @@ struct binder_device {
-> > >       struct inode *binderfs_inode;
-> > >  };
-> > >
-> > > +/**
-> > > + * binderfs_mount_opts - mount options for binderfs
-> > > + * @max: maximum number of allocatable binderfs binder devices
-> > > + * @stats_mode: enable binder stats in binderfs.
-> > > + */
-> > > +struct binderfs_mount_opts {
-> > > +     int max;
-> > > +     int stats_mode;
-> > > +};
-> > > +
-> > > +/**
-> > > + * binderfs_info - information about a binderfs mount
-> > > + * @ipc_ns:         The ipc namespace the binderfs mount belongs to.
-> > > + * @control_dentry: This records the dentry of this binderfs mount
-> > > + *                  binder-control device.
-> > > + * @root_uid:       uid that needs to be used when a new binder device is
-> > > + *                  created.
-> > > + * @root_gid:       gid that needs to be used when a new binder device is
-> > > + *                  created.
-> > > + * @mount_opts:     The mount options in use.
-> > > + * @device_count:   The current number of allocated binder devices.
-> > > + * @proc_log_dir:   Pointer to the directory dentry containing process-specific
-> > > + *                  logs.
-> > > + */
-> > > +struct binderfs_info {
-> > > +     struct ipc_namespace *ipc_ns;
-> > > +     struct dentry *control_dentry;
-> > > +     kuid_t root_uid;
-> > > +     kgid_t root_gid;
-> > > +     struct binderfs_mount_opts mount_opts;
-> > > +     int device_count;
-> > > +     struct dentry *proc_log_dir;
-> > > +};
-> > > +
-> > >  extern const struct file_operations binder_fops;
-> > >
-> > >  extern char *binder_devices_param;
-> > >
-> > >  #ifdef CONFIG_ANDROID_BINDERFS
-> > >  extern bool is_binderfs_device(const struct inode *inode);
-> > > +extern struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
-> > > +                                        const struct file_operations *fops,
-> > > +                                        void *data);
-> > > +extern void binderfs_remove_file(struct dentry *dentry);
-> > >  #else
-> > >  static inline bool is_binderfs_device(const struct inode *inode)
-> > >  {
-> > >       return false;
-> > >  }
-> > > +static inline struct dentry *binderfs_create_file(struct dentry *dir,
-> > > +                                        const char *name,
-> > > +                                        const struct file_operations *fops,
-> > > +                                        void *data)
-> > > +{
-> > > +     return NULL;
-> > > +}
-> > > +static inline void binderfs_remove_file(struct dentry *dentry) {}
-> > >  #endif
-> > >
-> > >  #ifdef CONFIG_ANDROID_BINDERFS
-> > > diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-> > > index dc25a7d759c9..c386a3738290 100644
-> > > --- a/drivers/android/binderfs.c
-> > > +++ b/drivers/android/binderfs.c
-> > > @@ -48,16 +48,6 @@ static dev_t binderfs_dev;
-> > >  static DEFINE_MUTEX(binderfs_minors_mutex);
-> > >  static DEFINE_IDA(binderfs_minors);
-> > >
-> > > -/**
-> > > - * binderfs_mount_opts - mount options for binderfs
-> > > - * @max: maximum number of allocatable binderfs binder devices
-> > > - * @stats_mode: enable binder stats in binderfs.
-> > > - */
-> > > -struct binderfs_mount_opts {
-> > > -     int max;
-> > > -     int stats_mode;
-> > > -};
-> > > -
-> > >  enum {
-> > >       Opt_max,
-> > >       Opt_stats_mode,
-> > > @@ -75,27 +65,6 @@ static const match_table_t tokens = {
-> > >       { Opt_err, NULL     }
-> > >  };
-> > >
-> > > -/**
-> > > - * binderfs_info - information about a binderfs mount
-> > > - * @ipc_ns:         The ipc namespace the binderfs mount belongs to.
-> > > - * @control_dentry: This records the dentry of this binderfs mount
-> > > - *                  binder-control device.
-> > > - * @root_uid:       uid that needs to be used when a new binder device is
-> > > - *                  created.
-> > > - * @root_gid:       gid that needs to be used when a new binder device is
-> > > - *                  created.
-> > > - * @mount_opts:     The mount options in use.
-> > > - * @device_count:   The current number of allocated binder devices.
-> > > - */
-> > > -struct binderfs_info {
-> > > -     struct ipc_namespace *ipc_ns;
-> > > -     struct dentry *control_dentry;
-> > > -     kuid_t root_uid;
-> > > -     kgid_t root_gid;
-> > > -     struct binderfs_mount_opts mount_opts;
-> > > -     int device_count;
-> > > -};
-> > > -
-> > >  static inline struct binderfs_info *BINDERFS_I(const struct inode *inode)
-> > >  {
-> > >       return inode->i_sb->s_fs_info;
-> > > @@ -535,7 +504,22 @@ static struct dentry *binderfs_create_dentry(struct dentry *dir,
-> > >       return dentry;
-> > >  }
-> > >
-> > > -static struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
-> > > +void binderfs_remove_file(struct dentry *dentry)
-> > > +{
-> > > +     struct inode *dir;
-> > > +
-> > > +     dir = d_inode(dentry->d_parent);
-> > > +     inode_lock(dir);
-> > > +     if (simple_positive(dentry)) {
-> > > +             dget(dentry);
-> > > +             simple_unlink(dir, dentry);
-> > > +             d_delete(dentry);
-> > > +             dput(dentry);
-> > > +     }
-> > > +     inode_unlock(dir);
-> > > +}
-> > > +
-> > > +struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
-> > >                                   const struct file_operations *fops,
-> > >                                   void *data)
-> > >  {
-> > > @@ -604,7 +588,8 @@ static struct dentry *binderfs_create_dir(struct dentry *parent,
-> > >
-> > >  static int init_binder_logs(struct super_block *sb)
-> > >  {
-> > > -     struct dentry *binder_logs_root_dir, *file_dentry;
-> > > +     struct dentry *binder_logs_root_dir, *file_dentry, *proc_log_dir;
-> > > +     struct binderfs_info *info;
-> > >       int ret = 0;
-> > >
-> > >       binder_logs_root_dir = binderfs_create_dir(sb->s_root,
-> > > @@ -648,8 +633,18 @@ static int init_binder_logs(struct super_block *sb)
-> > >                                          "failed_transaction_log",
-> > >                                          &binder_transaction_log_fops,
-> > >                                          &binder_transaction_log_failed);
-> > > -     if (IS_ERR(file_dentry))
-> > > +     if (IS_ERR(file_dentry)) {
-> > >               ret = PTR_ERR(file_dentry);
-> > > +             goto out;
-> > > +     }
-> > > +
-> > > +     proc_log_dir = binderfs_create_dir(binder_logs_root_dir, "proc");
-> > > +     if (IS_ERR(proc_log_dir)) {
-> > > +             ret = PTR_ERR(proc_log_dir);
-> > > +             goto out;
-> > > +     }
-> > > +     info = sb->s_fs_info;
-> > > +     info->proc_log_dir = proc_log_dir;
-> > >
-> > >  out:
-> > >       return ret;
-> > > --
-> > > 2.23.0.187.g17f5b7556c-goog
-> > >
-> >
-> > --
-> > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
-> >
+Acked-by: Paul Burton <paul.burton@mips.com>
+
+Thanks,
+    Paul
+
+> ---
+>  arch/mips/sgi-ip27/ip27-init.c | 13 -------------
+>  1 file changed, 13 deletions(-)
+>=20
+> diff --git a/arch/mips/sgi-ip27/ip27-init.c b/arch/mips/sgi-ip27/ip27-ini=
+t.c
+> index 066b33f50bcc..59d5375c9021 100644
+> --- a/arch/mips/sgi-ip27/ip27-init.c
+> +++ b/arch/mips/sgi-ip27/ip27-init.c
+> @@ -130,17 +130,6 @@ cnodeid_t get_compact_nodeid(void)
+>  	return NASID_TO_COMPACT_NODEID(get_nasid());
+>  }
+> =20
+> -static inline void ioc3_eth_init(void)
+> -{
+> -	struct ioc3 *ioc3;
+> -	nasid_t nid;
+> -
+> -	nid =3D get_nasid();
+> -	ioc3 =3D (struct ioc3 *) KL_CONFIG_CH_CONS_INFO(nid)->memory_base;
+> -
+> -	ioc3->eier =3D 0;
+> -}
+> -
+>  extern void ip27_reboot_setup(void);
+> =20
+>  void __init plat_mem_setup(void)
+> @@ -182,8 +171,6 @@ void __init plat_mem_setup(void)
+>  		panic("Kernel compiled for N mode.");
+>  #endif
+> =20
+> -	ioc3_eth_init();
+> -
+>  	ioport_resource.start =3D 0;
+>  	ioport_resource.end =3D ~0UL;
+>  	set_io_port_base(IO_BASE);
+> --=20
+> 2.13.7
+>=20
