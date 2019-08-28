@@ -2,128 +2,86 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A03CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E09C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66BF1208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A5E217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfH1KKD (ORCPT
+        id S1726382AbfH1KMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:10:03 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46912 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbfH1KKD (ORCPT
+        Wed, 28 Aug 2019 06:12:54 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:51235 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfH1KMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:10:03 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 2392928A204
-Subject: Re: [PATCH] arm/arm64: defconfig: Update configs to use the new
- CROS_EC options
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     SoC Team <soc@kernel.org>, Gwendal Grignou <gwendal@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <groeck@chromium.org>, kernel@collabora.com,
-        Lee Jones <lee.jones@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Yannick Fertr? <yannick.fertre@st.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-References: <20190827154851.10486-1-enric.balletbo@collabora.com>
- <20190827161045.GC26807@tuxbook-pro>
- <CAK8P3a2h2gUhxcVgD5JhR1Uo4qUSuG5yp4RCrAxevNmyD4ZRTA@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <2db6cde1-9e7f-8b1c-f2e4-80bdd2478d28@collabora.com>
-Date:   Wed, 28 Aug 2019 12:09:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Wed, 28 Aug 2019 06:12:53 -0400
+Received: from fsav403.sakura.ne.jp (fsav403.sakura.ne.jp [133.242.250.102])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7SACp1l077983;
+        Wed, 28 Aug 2019 19:12:51 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav403.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp);
+ Wed, 28 Aug 2019 19:12:51 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7SACigC077678
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Wed, 28 Aug 2019 19:12:51 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH 00/10] OOM Debug print selection and additional
+ information
+To:     Michal Hocko <mhocko@kernel.org>, Edward Chron <echron@arista.com>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
+References: <20190826193638.6638-1-echron@arista.com>
+ <1566909632.5576.14.camel@lca.pw>
+ <CAM3twVQEMGWMQEC0dduri0JWt3gH6F2YsSqOmk55VQz+CZDVKg@mail.gmail.com>
+ <79FC3DA1-47F0-4FFC-A92B-9A7EBCE3F15F@lca.pw>
+ <CAM3twVSdxJaEpmWXu2m_F1MxFMB58C6=LWWCDYNn5yT3Ns+0sQ@mail.gmail.com>
+ <2A1D8FFC-9E9E-4D86-9A0E-28F8263CC508@lca.pw>
+ <CAM3twVR5TVuuZSLM2qRJYnkCEKVZmA3XDNREaB+wdKH2Ne9vVA@mail.gmail.com>
+ <20190828070845.GC7386@dhcp22.suse.cz>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <2e816b05-7b5b-4bc0-8d38-8415daea920d@i-love.sakura.ne.jp>
+Date:   Wed, 28 Aug 2019 19:12:41 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2h2gUhxcVgD5JhR1Uo4qUSuG5yp4RCrAxevNmyD4ZRTA@mail.gmail.com>
+In-Reply-To: <20190828070845.GC7386@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn, Arnd,
-
-On 27/8/19 18:12, Arnd Bergmann wrote:
-> On Tue, Aug 27, 2019 at 6:08 PM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
->>
->> On Tue 27 Aug 08:48 PDT 2019, Enric Balletbo i Serra wrote:
->>
->>> Recently we refactored the CrOS EC drivers moving part of the code from
->>> the MFD subsystem to the platform chrome subsystem. During this change
->>> we needed to rename some config options, so, update the defconfigs
->>> accordingly.
->>>
->>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->>> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
->>> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
->>> Tested-by: Gwendal Grignou <gwendal@chromium.org>
->>
->> Can we make the entries in the generic arm64 defconfig modules?
+On 2019/08/28 16:08, Michal Hocko wrote:
+> On Tue 27-08-19 19:47:22, Edward Chron wrote:
+>> For production systems installing and updating EBPF scripts may someday
+>> be very common, but I wonder how data center managers feel about it now?
+>> Developers are very excited about it and it is a very powerful tool but can I
+>> get permission to add or replace an existing EBPF on production systems?
 > 
-> Good idea.
-> 
-> Actually I would prefer to have all of them as modules for consistency,
-> if at all possible.
+> I am not sure I understand. There must be somebody trusted to take care
+> of systems, right?
 > 
 
-It is very common boot Chromebooks from an USB device, the EC needs to be
-built-in in order to boot from these devices, otherwise you should use an
-initramfs. I'd like to avoid forcing people to build an initramfs just to boot
-from these devices if possible, in fact, my usual workflow is without initramfs,
-and knowing that with the default defconfig just should boot helps a lot sometimes.
+Speak of my cases, those who take care of their systems are not developers.
+And they afraid changing code that runs in kernel mode. They unlikely give
+permission to install SystemTap/eBPF scripts. As a result, in many cases,
+the root cause cannot be identified.
 
-Note that, it's not the case for EC subdevices, these are already build as modules.
-
-BTW, Lee asked if this patch should be squashed with the patches that really
-renames the config options to help bisect ability, I don't have a hard opinion
-as I don't usually run the config option between bisection steps, so please let
-me know what do you prefer and I'll respin the patches ASAP if that's the case.
-
-Thanks,
-Enric
-
->        Arnd
-> 
+Moreover, we are talking about OOM situations, where we can't expect userspace
+processes to work properly. We need to dump information we want, without
+counting on userspace processes, before sending SIGKILL.
