@@ -2,148 +2,105 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880A6C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F96C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E45208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B922064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:55:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfH1PzE (ORCPT
+        id S1726911AbfH1PzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:55:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59943 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbfH1PzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:55:04 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 97C663007C30;
-        Wed, 28 Aug 2019 15:55:03 +0000 (UTC)
-Received: from x1.home (ovpn-116-131.phx2.redhat.com [10.3.116.131])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C30A31001B14;
-        Wed, 28 Aug 2019 15:55:02 +0000 (UTC)
-Date:   Wed, 28 Aug 2019 09:55:01 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Ben Luo <luoben@linux.alibaba.com>
-Cc:     cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH v2] vfio/type1: avoid redundant PageReserved checking
-Message-ID: <20190828095501.12e71bd3@x1.home>
-In-Reply-To: <3517844d6371794cff59b13bf9c2baf1dcbe571c.1566966365.git.luoben@linux.alibaba.com>
-References: <20190827124041.4f986005@x1.home>
-        <3517844d6371794cff59b13bf9c2baf1dcbe571c.1566966365.git.luoben@linux.alibaba.com>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 28 Aug 2019 11:55:25 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18766 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726513AbfH1PzY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 11:55:24 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SFqPgs127386
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 11:55:23 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2unu52mgrs-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 11:55:23 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 28 Aug 2019 16:55:21 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 28 Aug 2019 16:55:19 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7SFsuJp38339040
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 28 Aug 2019 15:54:56 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 19B194C040;
+        Wed, 28 Aug 2019 15:55:18 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BB5384C04E;
+        Wed, 28 Aug 2019 15:55:16 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.129.156])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 28 Aug 2019 15:55:16 +0000 (GMT)
+Subject: Re: [PATCH v1] sefltest/ima: support appended signatures (modsig)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     shuah <shuah@kernel.org>, linux-integrity@vger.kernel.org
+Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Petr Vorel <pvorel@suse.cz>, Jessica Yu <jeyu@kernel.org>,
+        Dave Young <dyoung@redhat.com>,
+        linux-kselftest@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 28 Aug 2019 11:55:16 -0400
+In-Reply-To: <4a9f9cd3-c550-98e4-1513-14ef161c34c2@kernel.org>
+References: <1567005240-12912-1-git-send-email-zohar@linux.ibm.com>
+         <4a9f9cd3-c550-98e4-1513-14ef161c34c2@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 28 Aug 2019 15:55:03 +0000 (UTC)
+X-TM-AS-GCONF: 00
+x-cbid: 19082815-0008-0000-0000-0000030E4D8A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082815-0009-0000-0000-00004A2C8E74
+Message-Id: <1567007716.6115.59.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=933 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908280161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 28 Aug 2019 12:28:04 +0800
-Ben Luo <luoben@linux.alibaba.com> wrote:
-
-> currently, if the page is not a tail of compound page, it will be
-> checked twice for the same thing.
+On Wed, 2019-08-28 at 09:53 -0600, shuah wrote:
+> On 8/28/19 9:14 AM, Mimi Zohar wrote:
+> > In addition to the PE/COFF and IMA xattr signatures, the kexec kernel
+> > image can be signed with an appended signature, using the same
+> > scripts/sign-file tool that is used to sign kernel modules.
+> > 
+> > This patch adds support for detecting a kernel image signed with an
+> > appended signature and updates the existing test messages
+> > appropriately.
+> > 
+> > Reviewed-by: Petr Vorel <pvorel@suse.cz>
+> > Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> > ---
 > 
-> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Thanks Mimi. This commit log looks good. My Ack for the patch
+> to go through the IMA tree.
 > 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 054391f..d0f7346 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -291,11 +291,10 @@ static int vfio_lock_acct(struct vfio_dma *dma, long npage, bool async)
->  static bool is_invalid_reserved_pfn(unsigned long pfn)
->  {
->  	if (pfn_valid(pfn)) {
-> -		bool reserved;
->  		struct page *tail = pfn_to_page(pfn);
->  		struct page *head = compound_head(tail);
-> -		reserved = !!(PageReserved(head));
->  		if (head != tail) {
-> +			bool reserved = PageReserved(head);
->  			/*
->  			 * "head" is not a dangling pointer
->  			 * (compound_head takes care of that)
+> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 
-Thinking more about this, the code here was originally just a copy of
-kvm_is_mmio_pfn() which was simplified in v3.12 with the commit below.
-Should we instead do the same thing here?  Thanks,
+Thanks!
 
-Alex
+Mimi
 
-commit 11feeb498086a3a5907b8148bdf1786a9b18fc55
-Author: Andrea Arcangeli <aarcange@redhat.com>
-Date:   Thu Jul 25 03:04:38 2013 +0200
-
-    kvm: optimize away THP checks in kvm_is_mmio_pfn()
-    
-    The checks on PG_reserved in the page structure on head and tail pages
-    aren't necessary because split_huge_page wouldn't transfer the
-    PG_reserved bit from head to tail anyway.
-    
-    This was a forward-thinking check done in the case PageReserved was
-    set by a driver-owned page mapped in userland with something like
-    remap_pfn_range in a VM_PFNMAP region, but using hugepmds (not
-    possible right now). It was meant to be very safe, but it's overkill
-    as it's unlikely split_huge_page could ever run without the driver
-    noticing and tearing down the hugepage itself.
-    
-    And if a driver in the future will really want to map a reserved
-    hugepage in userland using an huge pmd it should simply take care of
-    marking all subpages reserved too to keep KVM safe. This of course
-    would require such a hypothetical driver to tear down the huge pmd
-    itself and splitting the hugepage itself, instead of relaying on
-    split_huge_page, but that sounds very reasonable, especially
-    considering split_huge_page wouldn't currently transfer the reserved
-    bit anyway.
-    
-    Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-    Signed-off-by: Gleb Natapov <gleb@redhat.com>
-
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index d2836788561e..0fc25aed79a8 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -102,28 +102,8 @@ static bool largepages_enabled = true;
- 
- bool kvm_is_mmio_pfn(pfn_t pfn)
- {
--       if (pfn_valid(pfn)) {
--               int reserved;
--               struct page *tail = pfn_to_page(pfn);
--               struct page *head = compound_trans_head(tail);
--               reserved = PageReserved(head);
--               if (head != tail) {
--                       /*
--                        * "head" is not a dangling pointer
--                        * (compound_trans_head takes care of that)
--                        * but the hugepage may have been splitted
--                        * from under us (and we may not hold a
--                        * reference count on the head page so it can
--                        * be reused before we run PageReferenced), so
--                        * we've to check PageTail before returning
--                        * what we just read.
--                        */
--                       smp_rmb();
--                       if (PageTail(tail))
--                               return reserved;
--               }
--               return PageReserved(tail);
--       }
-+       if (pfn_valid(pfn))
-+               return PageReserved(pfn_to_page(pfn));
- 
-        return true;
- }
