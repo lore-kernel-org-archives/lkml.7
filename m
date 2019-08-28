@@ -6,34 +6,36 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F416DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3BCC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA51622CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D62F7233A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfH1O0F (ORCPT
+        id S1727171AbfH1O0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:26:05 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50134 "EHLO huawei.com"
+        Wed, 28 Aug 2019 10:26:04 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41714 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726857AbfH1OZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726832AbfH1OZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 28 Aug 2019 10:25:44 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2A0C48B96A2FB2AA8AF1;
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4F62DF1709B426F24BEF;
         Wed, 28 Aug 2019 22:25:41 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 28 Aug 2019 22:25:32 +0800
+ 14.3.439.0; Wed, 28 Aug 2019 22:25:30 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Weihang Li <liweihang@hisilicon.com>,
+        <linuxarm@huawei.com>, Guojia Liao <liaoguojia@huawei.com>,
+        Yufeng Mo <moyufeng@huawei.com>,
+        Guangbin Huang <huangguangbin2@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 09/12] net: hns3: implement .process_hw_error for hns3 client
-Date:   Wed, 28 Aug 2019 22:23:13 +0800
-Message-ID: <1567002196-63242-10-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 04/12] net: hns3: reduce the parameters of some functions
+Date:   Wed, 28 Aug 2019 22:23:08 +0800
+Message-ID: <1567002196-63242-5-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
 References: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,211 +48,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weihang Li <liweihang@hisilicon.com>
+From: Guojia Liao <liaoguojia@huawei.com>
 
-When hardware or IMP get specified error it may need the client
-to take some special operations.
+This patch simplifies parameters of some functions by deleting
+unused parameter.
 
-This patch implements the hns3 client's process_hw_errorx.
-
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
+Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
+Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Reviewed-by: Peng Li <lipeng321@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  9 +++++-
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 24 ++++++++++++++++
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |  5 ++++
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c |  4 ++-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |  1 +
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 33 ++++++++++++++++++++++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  4 +++
- 7 files changed, 78 insertions(+), 2 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 28 +++++++++++-----------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index 3e21533..c4b7bf8 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -146,6 +146,12 @@ enum hnae3_reset_notify_type {
- 	HNAE3_RESTORE_CLIENT,
- };
- 
-+enum hnae3_hw_error_type {
-+	HNAE3_PPU_POISON_ERROR,
-+	HNAE3_CMDQ_ECC_ERROR,
-+	HNAE3_IMP_RD_POISON_ERROR,
-+};
-+
- enum hnae3_reset_type {
- 	HNAE3_VF_RESET,
- 	HNAE3_VF_FUNC_RESET,
-@@ -210,7 +216,8 @@ struct hnae3_client_ops {
- 	int (*setup_tc)(struct hnae3_handle *handle, u8 tc);
- 	int (*reset_notify)(struct hnae3_handle *handle,
- 			    enum hnae3_reset_notify_type type);
--	enum hnae3_reset_type (*process_hw_error)(struct hnae3_handle *handle);
-+	void (*process_hw_error)(struct hnae3_handle *handle,
-+				 enum hnae3_hw_error_type);
- };
- 
- #define HNAE3_CLIENT_NAME_LENGTH 16
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index a11d514..9f3f8e3 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -4470,12 +4470,36 @@ int hns3_set_channels(struct net_device *netdev,
- 	return hns3_reset_notify(h, HNAE3_UP_CLIENT);
- }
- 
-+static const struct hns3_hw_error_info hns3_hw_err[] = {
-+	{ .type = HNAE3_PPU_POISON_ERROR,
-+	  .msg = "PPU poison" },
-+	{ .type = HNAE3_CMDQ_ECC_ERROR,
-+	  .msg = "IMP CMDQ error" },
-+	{ .type = HNAE3_IMP_RD_POISON_ERROR,
-+	  .msg = "IMP RD poison" },
-+};
-+
-+static void hns3_process_hw_error(struct hnae3_handle *handle,
-+				  enum hnae3_hw_error_type type)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(hns3_hw_err); i++) {
-+		if (hns3_hw_err[i].type == type) {
-+			dev_err(&handle->pdev->dev, "Detected %s!\n",
-+				hns3_hw_err[i].msg);
-+			break;
-+		}
-+	}
-+}
-+
- static const struct hnae3_client_ops client_ops = {
- 	.init_instance = hns3_client_init,
- 	.uninit_instance = hns3_client_uninit,
- 	.link_status_change = hns3_link_status_change,
- 	.setup_tc = hns3_client_setup_tc,
- 	.reset_notify = hns3_reset_notify,
-+	.process_hw_error = hns3_process_hw_error,
- };
- 
- /* hns3_init_module - Driver registration routine
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index e37e64e..2110fa3 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -552,6 +552,11 @@ union l4_hdr_info {
- 	unsigned char *hdr;
- };
- 
-+struct hns3_hw_error_info {
-+	enum hnae3_hw_error_type type;
-+	const char *msg;
-+};
-+
- static inline int ring_space(struct hns3_enet_ring *ring)
- {
- 	/* This smp_load_acquire() pairs with smp_store_release() in
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-index d986c36..58c6231 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-@@ -1325,10 +1325,12 @@ static int hclge_handle_pf_ras_error(struct hclge_dev *hdev,
- 	/* log PPU(RCB) errors */
- 	desc_data = (__le32 *)&desc[3];
- 	status = le32_to_cpu(*desc_data) & HCLGE_PPU_PF_INT_RAS_MASK;
--	if (status)
-+	if (status) {
- 		hclge_log_error(dev, "PPU_PF_ABNORMAL_INT_ST0",
- 				&hclge_ppu_pf_abnormal_int[0], status,
- 				&ae_dev->hw_err_reset_req);
-+		hclge_report_hw_error(hdev, HNAE3_PPU_POISON_ERROR);
-+	}
- 
- 	/* clear all PF RAS errors */
- 	hclge_cmd_reuse_desc(&desc[0], false);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-index 7ea8bb2..876fd81a 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-@@ -5,6 +5,7 @@
- #define __HCLGE_ERR_H
- 
- #include "hclge_main.h"
-+#include "hnae3.h"
- 
- #define HCLGE_MPF_RAS_INT_MIN_BD_NUM	10
- #define HCLGE_PF_RAS_INT_MIN_BD_NUM	4
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index f43c298..9ef1f468 100644
+index dde17be..fa85d9e 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -3265,6 +3265,38 @@ static int hclge_func_reset_sync_vf(struct hclge_dev *hdev)
- 	return -ETIME;
+@@ -7342,7 +7342,7 @@ static void hclge_enable_vlan_filter(struct hnae3_handle *handle, bool enable)
  }
  
-+void hclge_report_hw_error(struct hclge_dev *hdev,
-+			   enum hnae3_hw_error_type type)
-+{
-+	struct hnae3_client *client = hdev->nic_client;
-+	u16 i;
-+
-+	if (!client || !client->ops->process_hw_error ||
-+	    !test_bit(HCLGE_STATE_NIC_REGISTERED, &hdev->state))
-+		return;
-+
-+	for (i = 0; i < hdev->num_vmdq_vport + 1; i++)
-+		client->ops->process_hw_error(&hdev->vport[i].nic, type);
-+}
-+
-+static void hclge_handle_imp_error(struct hclge_dev *hdev)
-+{
-+	u32 reg_val;
-+
-+	reg_val = hclge_read_dev(&hdev->hw, HCLGE_PF_OTHER_INT_REG);
-+	if (reg_val & BIT(HCLGE_VECTOR0_IMP_RD_POISON_B)) {
-+		hclge_report_hw_error(hdev, HNAE3_IMP_RD_POISON_ERROR);
-+		reg_val &= ~BIT(HCLGE_VECTOR0_IMP_RD_POISON_B);
-+		hclge_write_dev(&hdev->hw, HCLGE_PF_OTHER_INT_REG, reg_val);
-+	}
-+
-+	if (reg_val & BIT(HCLGE_VECTOR0_IMP_CMDQ_ERR_B)) {
-+		hclge_report_hw_error(hdev, HNAE3_CMDQ_ECC_ERROR);
-+		reg_val &= ~BIT(HCLGE_VECTOR0_IMP_CMDQ_ERR_B);
-+		hclge_write_dev(&hdev->hw, HCLGE_PF_OTHER_INT_REG, reg_val);
-+	}
-+}
-+
- int hclge_func_reset_cmd(struct hclge_dev *hdev, int func_id)
+ static int hclge_set_vf_vlan_common(struct hclge_dev *hdev, u16 vfid,
+-				    bool is_kill, u16 vlan, u8 qos,
++				    bool is_kill, u16 vlan,
+ 				    __be16 proto)
  {
- 	struct hclge_desc desc;
-@@ -3471,6 +3503,7 @@ static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
- 		hdev->rst_stats.flr_rst_cnt++;
- 		break;
- 	case HNAE3_IMP_RESET:
-+		hclge_handle_imp_error(hdev);
- 		reg_val = hclge_read_dev(&hdev->hw, HCLGE_PF_OTHER_INT_REG);
- 		hclge_write_dev(&hdev->hw, HCLGE_PF_OTHER_INT_REG,
- 				BIT(HCLGE_VECTOR0_IMP_RESET_INT_B) | reg_val);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 00c07f8..a3bc382 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -178,6 +178,8 @@ enum HLCGE_PORT_TYPE {
- #define HCLGE_VECTOR0_RX_CMDQ_INT_B	1
+ #define HCLGE_MAX_VF_BYTES  16
+@@ -7453,7 +7453,7 @@ static int hclge_set_port_vlan_filter(struct hclge_dev *hdev, __be16 proto,
+ }
  
- #define HCLGE_VECTOR0_IMP_RESET_INT_B	1
-+#define HCLGE_VECTOR0_IMP_CMDQ_ERR_B	4U
-+#define HCLGE_VECTOR0_IMP_RD_POISON_B	5U
+ static int hclge_set_vlan_filter_hw(struct hclge_dev *hdev, __be16 proto,
+-				    u16 vport_id, u16 vlan_id, u8 qos,
++				    u16 vport_id, u16 vlan_id,
+ 				    bool is_kill)
+ {
+ 	u16 vport_idx, vport_num = 0;
+@@ -7463,7 +7463,7 @@ static int hclge_set_vlan_filter_hw(struct hclge_dev *hdev, __be16 proto,
+ 		return 0;
  
- #define HCLGE_MAC_DEFAULT_FRAME \
- 	(ETH_HLEN + ETH_FCS_LEN + 2 * VLAN_HLEN + ETH_DATA_LEN)
-@@ -986,4 +988,6 @@ int hclge_push_vf_port_base_vlan_info(struct hclge_vport *vport, u8 vfid,
- void hclge_task_schedule(struct hclge_dev *hdev, unsigned long delay_time);
- int hclge_query_bd_num_cmd_send(struct hclge_dev *hdev,
- 				struct hclge_desc *desc);
-+void hclge_report_hw_error(struct hclge_dev *hdev,
-+			   enum hnae3_hw_error_type type);
- #endif
+ 	ret = hclge_set_vf_vlan_common(hdev, vport_id, is_kill, vlan_id,
+-				       0, proto);
++				       proto);
+ 	if (ret) {
+ 		dev_err(&hdev->pdev->dev,
+ 			"Set %d vport vlan filter config fail, ret =%d.\n",
+@@ -7750,7 +7750,7 @@ static int hclge_add_vport_all_vlan_table(struct hclge_vport *vport)
+ 		if (!vlan->hd_tbl_status) {
+ 			ret = hclge_set_vlan_filter_hw(hdev, htons(ETH_P_8021Q),
+ 						       vport->vport_id,
+-						       vlan->vlan_id, 0, false);
++						       vlan->vlan_id, false);
+ 			if (ret) {
+ 				dev_err(&hdev->pdev->dev,
+ 					"restore vport vlan list failed, ret=%d\n",
+@@ -7776,7 +7776,7 @@ static void hclge_rm_vport_vlan_table(struct hclge_vport *vport, u16 vlan_id,
+ 				hclge_set_vlan_filter_hw(hdev,
+ 							 htons(ETH_P_8021Q),
+ 							 vport->vport_id,
+-							 vlan_id, 0,
++							 vlan_id,
+ 							 true);
+ 
+ 			list_del(&vlan->node);
+@@ -7796,7 +7796,7 @@ void hclge_rm_vport_all_vlan_table(struct hclge_vport *vport, bool is_del_list)
+ 			hclge_set_vlan_filter_hw(hdev,
+ 						 htons(ETH_P_8021Q),
+ 						 vport->vport_id,
+-						 vlan->vlan_id, 0,
++						 vlan->vlan_id,
+ 						 true);
+ 
+ 		vlan->hd_tbl_status = false;
+@@ -7843,7 +7843,7 @@ static void hclge_restore_vlan_table(struct hnae3_handle *handle)
+ 
+ 		if (state != HNAE3_PORT_BASE_VLAN_DISABLE) {
+ 			hclge_set_vlan_filter_hw(hdev, htons(vlan_proto),
+-						 vport->vport_id, vlan_id, qos,
++						 vport->vport_id, vlan_id,
+ 						 false);
+ 			continue;
+ 		}
+@@ -7853,7 +7853,7 @@ static void hclge_restore_vlan_table(struct hnae3_handle *handle)
+ 				hclge_set_vlan_filter_hw(hdev,
+ 							 htons(ETH_P_8021Q),
+ 							 vport->vport_id,
+-							 vlan->vlan_id, 0,
++							 vlan->vlan_id,
+ 							 false);
+ 		}
+ 	}
+@@ -7893,12 +7893,12 @@ static int hclge_update_vlan_filter_entries(struct hclge_vport *vport,
+ 						 htons(new_info->vlan_proto),
+ 						 vport->vport_id,
+ 						 new_info->vlan_tag,
+-						 new_info->qos, false);
++						 false);
+ 	}
+ 
+ 	ret = hclge_set_vlan_filter_hw(hdev, htons(old_info->vlan_proto),
+ 				       vport->vport_id, old_info->vlan_tag,
+-				       old_info->qos, true);
++				       true);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -7925,7 +7925,7 @@ int hclge_update_port_base_vlan_cfg(struct hclge_vport *vport, u16 state,
+ 					       htons(vlan_info->vlan_proto),
+ 					       vport->vport_id,
+ 					       vlan_info->vlan_tag,
+-					       vlan_info->qos, false);
++					       false);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -7934,7 +7934,7 @@ int hclge_update_port_base_vlan_cfg(struct hclge_vport *vport, u16 state,
+ 					       htons(old_vlan_info->vlan_proto),
+ 					       vport->vport_id,
+ 					       old_vlan_info->vlan_tag,
+-					       old_vlan_info->qos, true);
++					       true);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -8055,7 +8055,7 @@ int hclge_set_vlan_filter(struct hnae3_handle *handle, __be16 proto,
+ 	 */
+ 	if (handle->port_base_vlan_state == HNAE3_PORT_BASE_VLAN_DISABLE) {
+ 		ret = hclge_set_vlan_filter_hw(hdev, proto, vport->vport_id,
+-					       vlan_id, 0, is_kill);
++					       vlan_id, is_kill);
+ 		writen_to_tbl = true;
+ 	}
+ 
+@@ -8091,7 +8091,7 @@ static void hclge_sync_vlan_filter(struct hclge_dev *hdev)
+ 		while (vlan_id != VLAN_N_VID) {
+ 			ret = hclge_set_vlan_filter_hw(hdev, htons(ETH_P_8021Q),
+ 						       vport->vport_id, vlan_id,
+-						       0, true);
++						       true);
+ 			if (ret && ret != -EINVAL)
+ 				return;
+ 
 -- 
 2.7.4
 
