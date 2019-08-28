@@ -2,221 +2,177 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEE4C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A756C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B62A20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F73B20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:12:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="UqVo5Swi"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DhWZXgsS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfH1JMk (ORCPT
+        id S1727020AbfH1JMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:12:40 -0400
-Received: from mail-eopbgr1310123.outbound.protection.outlook.com ([40.107.131.123]:1680
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        Wed, 28 Aug 2019 05:12:42 -0400
+Received: from mail-eopbgr30053.outbound.protection.outlook.com ([40.107.3.53]:26176
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726975AbfH1JMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:12:37 -0400
+        id S1726983AbfH1JMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 05:12:38 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AQkTe3PhcOVnvrN3XfNyKztTDHh4JuQpYg1CyZsr7jQWufm4yx3sE4V58wZ/u0/rUf1TodDuGoxK78MMmY/A4LwVrxmehi+/clj0qxbEDu7aBIohmoMC0ovri8sfweowCp5kvUl+hDK/VcwEtPvgTt3DmKsbP8RvFO2875DVPL5nuFDc9KyKlEbpcC1UlQM5VJ99J01RtKXfpCIjK99WbsR7zY9faPbtVeVdksTkceM9tcJWbCG0SFv+NZ00xuBgvG79f0idhE47u8FCJ35eX0/e/j37joOZs8xlYbThZY1OF8VEt23i6e/+YgyTl53JMgaKGVgVNgk0Zwht/Ua2QA==
+ b=ZXEQiDCPM5eRjIN4jPdalfIrHuIBlQ9LFxjR6QX8Z5PPrZYSFsFHJOEIcOaJ+Ttg+Dqdi5v6lDx5ZfOFtzXJ1yMD65kAU52x2Ief2JjyWPU/RhH32j32B4E6mBh+2mLgzPx4Sb18pYD2kCplDU5X6pSPO5AwBZJTFuJ5+QGSWzO8x5Zfyc17vCl3ssYLcZyLGb7xT/fLvc42r5i2vrpUkLcYtXlZA2B5qFCVWlQx3lovZ3wouieqLhoWeZYtIw25/cK3oSKxN9PE803g+w3WBz1l4dw0ex8aKqvvMCIgMbWYczyaP6ur3aBbxz+106OYSihspgRphdHol4WH1q8dFA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JkoVukJyoJ+Behl1JHtmxjroUKALx6RWAo09tW5ko3E=;
- b=E2M6cAE92PdvMxTbvazzRPIeKvFGE89shPLbyYtum6ayM5k0P5C+wFRF9WlcmtoxuvZ8imEE8hVbMNvEIBMd4ChrZXHCOJq1HF0mha4XdpXhTwWlPSVcnyN0nOJdhTqCOnDKW2DqS4SmtMg6wsDy1rIZlJiBbvbqUq+r0fOXvWcYERTaBu3uV0tjM1MrGdM4VAaLo/IQU+Bu+hZOABnKq28S2uO9k5qm8RfHJkHajgnIBpvDow5vx/Iuh3o4+w6tR6PgIDjzDI5noThyb65TaAg9gDQGABDpgYwrrNpt2h0027A36Ij6Jdg2qPjTxS/hJr5NTOcRP0D2ndXp/bN9/g==
+ bh=k8nfwSFdl5bo7Lgolsj/3mJaPQbspqMCWU1wo3aT+YY=;
+ b=cfNyGOavtIVq2Aes4e2vgJCxXcWuG0kuOjmGzo97WKb1RJRprY4XJ84owlm2vO6EeM6OeaNFlWz52AA5IsXczm1FCHHdaE+A74powAEowK3ogPM7vrtMx+ZUuydxkwVV1GeX4+91AYKrZ7hOS32pbKTgn/SHUv9rKIJ9XD5tItV12snsMDixZc0DD1+lLFVX1dDLeFCxSWmwgzbWV57LQpkfEVZeE2F3aGbrtyZs7xH5vCdnZT0iZ6Gu3muTONULD/y3aMtxOGNHF2UD3ITC/B7SwOwJoEO9bJge0KMPAjyy7XTvj9XfxbUjE4Nuq2LkUQx8SqYSfhoB2wQyPvTPqw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JkoVukJyoJ+Behl1JHtmxjroUKALx6RWAo09tW5ko3E=;
- b=UqVo5Swiq2fmGbXvk85uZ4VsHGAheV4ooehxHl89XQb63WGhuF6ZzQCI/R//Rqep/7u4eoJtxU9CsUv4sP2hw9jIYmjLt2LsyPUcbMnggYSClmZxL1Bj1kNd2StWVYBbi7UEPdqwYvE+f6bfOG6r9qtDvB7TK/Py9CGqjBSal/I=
-Received: from KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM (52.132.240.17) by
- KL1P15301MB0006.APCP153.PROD.OUTLOOK.COM (10.170.167.17) with Microsoft SMTP
+ bh=k8nfwSFdl5bo7Lgolsj/3mJaPQbspqMCWU1wo3aT+YY=;
+ b=DhWZXgsSUVVNV+WI3sEsxBQdBzeYJq8Le8J7q/N1+utanCL8JMrM5q68CKJo42c+StW9it03pwa2NUNwXNp3kG310D6dRMgU+OHX20xkAU9pr8+22yHwgyLN6hDX38rjrZXLDg3GtSY+NIqb65N2sqN9XrM0DPRT5Oj4Rop7Vy4=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3817.eurprd04.prod.outlook.com (52.134.73.14) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.3; Wed, 28 Aug 2019 09:12:31 +0000
-Received: from KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM
- ([fe80::c402:2ce2:cafa:8b1e]) by KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM
- ([fe80::c402:2ce2:cafa:8b1e%9]) with mapi id 15.20.2241.000; Wed, 28 Aug 2019
- 09:12:31 +0000
-From:   Wei Hu <weh@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "shc_work@mail.ru" <shc_work@mail.ru>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
-        "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>,
-        "info@metux.net" <info@metux.net>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+ 15.20.2199.21; Wed, 28 Aug 2019 09:12:33 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8958:299c:bc54:2a38]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8958:299c:bc54:2a38%7]) with mapi id 15.20.2199.021; Wed, 28 Aug 2019
+ 09:12:33 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+CC:     Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: RE: [PATHC v2] video: hyperv: hyperv_fb: Support deferred IO for
- Hyper-V frame buffer driver
-Thread-Topic: [PATHC v2] video: hyperv: hyperv_fb: Support deferred IO for
- Hyper-V frame buffer driver
-Thread-Index: AQHVXMoQkghsJmF5GU+6GBoMEWqB8KcPrJWwgACTu4A=
-Date:   Wed, 28 Aug 2019 09:12:30 +0000
-Message-ID: <KL1P15301MB026463D9F94CE517E7A63216BBA30@KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM>
-References: <20190827112421.2770-1-weh@microsoft.com>
- <DM5PR21MB0137969B8EB3146160C86A2DD7A30@DM5PR21MB0137.namprd21.prod.outlook.com>
-In-Reply-To: <DM5PR21MB0137969B8EB3146160C86A2DD7A30@DM5PR21MB0137.namprd21.prod.outlook.com>
+        dl-linux-imx <linux-imx@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: RE: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Thread-Topic: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Thread-Index: AQHVRn7U0xGc5nAWcEuPNmwDSS0IiacQaSEAgAAA+YCAAAF2wIAABb+AgAACp/A=
+Date:   Wed, 28 Aug 2019 09:12:33 +0000
+Message-ID: <DB3PR0402MB3916C79F8FB5002ED76BB82FF5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190730022126.17883-1-Anson.Huang@nxp.com>
+         <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+         <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+         <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
+         <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
+         <afb235bf7390fb6fbd723c34b08feddd771d1f6c.camel@intel.com>
+         <DB3PR0402MB3916045AFDDF4EFA9AD50842F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <48e367965797001409b66f1f65d7bc4df2e927a5.camel@intel.com>
+In-Reply-To: <48e367965797001409b66f1f65d7bc4df2e927a5.camel@intel.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-28T00:07:19.1202362Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=87e41fa5-44a0-4c5f-8eea-bba2bafd67f3;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=weh@microsoft.com; 
-x-originating-ip: [167.220.255.109]
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a55a85ca-4de8-4418-e6d4-08d72b97db33
+x-ms-office365-filtering-correlation-id: 817d7f4f-76e0-4e84-a87b-08d72b97dc36
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:KL1P15301MB0006;
-x-ms-traffictypediagnostic: KL1P15301MB0006:|KL1P15301MB0006:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3817;
+x-ms-traffictypediagnostic: DB3PR0402MB3817:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <KL1P15301MB0006D942EF1C5940189987B3BBA30@KL1P15301MB0006.APCP153.PROD.OUTLOOK.COM>
+x-microsoft-antispam-prvs: <DB3PR0402MB3817326839B57B5C72639B0CF5A30@DB3PR0402MB3817.eurprd04.prod.outlook.com>
 x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 014304E855
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(39860400002)(376002)(346002)(136003)(199004)(13464003)(189003)(81166006)(81156014)(8676002)(476003)(76116006)(229853002)(2201001)(7736002)(76176011)(26005)(256004)(22452003)(2501003)(14444005)(7696005)(7416002)(66066001)(2906002)(99286004)(1250700005)(186003)(66946007)(8936002)(66476007)(110136005)(64756008)(66556008)(1511001)(66446008)(316002)(33656002)(6246003)(71190400001)(53936002)(6636002)(25786009)(10090500001)(305945005)(5660300002)(52536014)(6506007)(102836004)(3846002)(6116002)(55016002)(9686003)(446003)(11346002)(478600001)(10290500003)(6436002)(486006)(86362001)(71200400001)(74316002)(14454004)(8990500004)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:KL1P15301MB0006;H:KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(396003)(366004)(346002)(189003)(199004)(14444005)(7696005)(966005)(256004)(99286004)(53546011)(66946007)(66066001)(66446008)(71200400001)(66476007)(9686003)(64756008)(6246003)(71190400001)(7736002)(478600001)(6306002)(55016002)(66556008)(102836004)(25786009)(186003)(4326008)(26005)(305945005)(6436002)(81166006)(5660300002)(3846002)(81156014)(44832011)(110136005)(316002)(8676002)(76176011)(8936002)(53936002)(2906002)(74316002)(33656002)(6506007)(7416002)(14454004)(76116006)(11346002)(52536014)(6116002)(446003)(86362001)(229853002)(476003)(486006)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3817;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EMGJr0HT1ZjAsHGeY+xTzfgsDBKvoish+//9quWFPXjVJhY/c6RKr3wVcx/CBtG5Q/QyqpFOjaZQaVOtOJZZw7AoF80Blo5NqpHEGAMstCG7CRoqSjP/iXNTRW/N5BPUrL8KEVijNnZnNxHNqLXm8htNFYNJFOui+6VP2jRq6hhiMPTy3RNhFTnvZzMEUffQUKJt+KSkA5020P67pWpB5t2Ez3XezUHe9NECQhEinA7Dgnl2fTqoohTYg5t5HtoKhecLK6+uZNp4hyxEJOC5uOeqd2kFGRN44hmHx4XnDTvP8RGueRTZaEyW+HVYmQtvnGW1dxd0AaCJ67AkZ0vE+DQAeOI4autDDP4ADohezIf5j9chI6oMVw6M4YHptqU5QDYdqBYujzaxSru/lq9BgUmRq2oQf7hOeOYvwsPJEkE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: Dfj5go3ebxcU/A4V3VeIU6X/s0hG7UCM92v385Vmv2Lb/6l2r/X5530K4d5824N1ShhADCZZ6tP5AXo786BSTufOqjudoUBBB3N7yIfMWR5yl5S4KF2NxpzlFq1BRbcA0uYfMhzcrdXo/0bGDYtB5umX5Z/gUoUwC5fBBZZYQytp7K/88AqTflLyi6rE1ng81wwyPkRANwy7yfdsS5DWeRBLHzrU0QJI2CDtZu8GVPxc94Z4P2B4UkuYqPQRLi/FG5Su+oWUnHVwEOrjv3EPXi0fC8XofngFE17w78KDUhELSnBHPt6eImAhCwYPFFn8fjDL9QHBUX3tybpXywLaNIFCsiL3U+/8WAJmtm+jTcfOfmI3OvYDYpifo9GEwUIlltMvDzTiAs/N6nD7REZEVF0GJqPmZW2s/eqzsTnoiH0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a55a85ca-4de8-4418-e6d4-08d72b97db33
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 09:12:30.8395
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 817d7f4f-76e0-4e84-a87b-08d72b97dc36
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 09:12:33.0570
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LTcwVsIBhSYKpv4IoWzcxEm7m1WoYrBwJjA5CxLGYptNMR6T/8Qp/Ztg2rmQE/vGNrvBgvteSSPLcZwt4qzSxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1P15301MB0006
+X-MS-Exchange-CrossTenant-userprincipalname: ecvQq1MFtZnLOyIGCy1L8hJ8urqhUKEQWJ3FoWvBh66ULy6icNzHvM/KGzQHEc02171ShtVTDMeI2h0vZkVoHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3817
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Michael Kelley <mikelley@microsoft.com>
->=20
-> From: Wei Hu <weh@microsoft.com>  Sent: Tuesday, August 27, 2019 4:25 AM
-> >
-> > Without deferred IO support, hyperv_fb driver informs the host to refre=
-sh
-> > the entire guest frame buffer at fixed rate, e.g. at 20Hz, no matter th=
-ere
-> > is screen update or not. This patch supports deferred IO for screens in
-> > graphics mode and also enables the frame buffer on-demand refresh. The
-> > highest refresh rate is still set at 20Hz.
-> >
-> > Currently Hyper-V only takes a physical address from guest as the start=
-ing
-> > address of frame buffer. This implies the guest must allocate contiguou=
-s
-> > physical memory for frame buffer. In addition, Hyper-V Gen 2 VMs only
-> > accept address from MMIO region as frame buffer address. Due to these
-> > limitations on Hyper-V host, we keep a shadow copy of frame buffer
-> > in the guest. This means one more copy of the dirty rectangle inside
-> > guest when doing the on-demand refresh. This can be optimized in the
-> > future with help from host. For now the host performance gain from defe=
-rred
-> > IO outweighs the shadow copy impact in the guest.
-> >
-> > v2: Incorporated review comments from Michael Kelley
-> > - Increased dirty rectangle by one row in deferred IO case when sending
-> > to Hyper-V.
-> > - Corrected the dirty rectangle size in the text mode.
-> > - Added more comments.
-> > - Other minor code cleanups.
->=20
-> Version history should go after the "---" below so it is not included in
-> the commit message.
->=20
-[Wei Hu]=20
-I saw version history in the commit logs.=20
-
-> >
-> > Signed-off-by: Wei Hu <weh@microsoft.com>
-> > ---
-> >  drivers/video/fbdev/Kconfig     |   1 +
-> >  drivers/video/fbdev/hyperv_fb.c | 221 +++++++++++++++++++++++++++++---
-> >  2 files changed, 202 insertions(+), 20 deletions(-)
-> >
-> > +/* Deferred IO callback */
-> > +static void synthvid_deferred_io(struct fb_info *p,
-> > +				 struct list_head *pagelist)
-> > +{
-> > +	struct hvfb_par *par =3D p->par;
-> > +	struct page *page;
-> > +	unsigned long start, end;
-> > +	int y1, y2, miny, maxy;
-> > +	unsigned long flags;
-> > +
-> > +	miny =3D INT_MAX;
-> > +	maxy =3D 0;
-> > +
-> > +	/*
-> > +	 * Merge dirty pages. It is possible that last page cross
-> > +	 * over the end of frame buffer row yres. This is taken care of
-> > +	 * in synthvid_update function by clamping the y2
-> > +	 * value to yres.
-> > +	 */
-> > +	list_for_each_entry(page, pagelist, lru) {
-> > +		start =3D page->index << PAGE_SHIFT;
-> > +		end =3D start + PAGE_SIZE - 1;
-> > +		y1 =3D start / p->fix.line_length;
-> > +		y2 =3D end / p->fix.line_length;
-> > +		if (y2 > p->var.yres)
-> > +			y2 =3D p->var.yres;
->=20
-> The above test seems contradictory to the comment that
-> says the clamping is done in synthvid_update().  Also, since
-> the above calculation of y2 is "inclusive", the clamping should
-> be done to yres - 1 in order to continue to be inclusive.  Then
-> when maxy + 1 is passed to synthvid_update() everything works
-> out correctly.
->
-[Wei Hu]=20
-Actually the original code I sent out just works correctly.  It always get
-the inclusive rectangle in the above loop, and only send one more extra
-line (if y2 =3D=3D yres) to sythvid_update() and it is clamped inside that=
-=20
-function. Changing it to yres -1 and sending maxy + 1 to sytnvid_update()
-makes it the same as the original code in this case, and would end up=20
-always copy and refresh one extra row when y2 < yres.
-
-The comment I added was according to your last review comment asking
-to add some comments explaining it. Maybe I mis-understood. I thought
-since you wanted me to change to maxy + 1, the code could reach yres + 1
-so it will be clamped in synthvid_update() to yres.
-
- Wei
-
+SGksIFJ1aQ0KDQo+IE9uIFdlZCwgMjAxOS0wOC0yOCBhdCAwODo0OSArMDAwMCwgQW5zb24gSHVh
+bmcgd3JvdGU6DQo+ID4gSGksIFJ1aQ0KPiA+DQo+ID4gPiBPbiBXZWQsIDIwMTktMDgtMjggYXQg
+MTY6MzIgKzA4MDAsIFpoYW5nIFJ1aSB3cm90ZToNCj4gPiA+ID4gT24gVHVlLCAyMDE5LTA4LTI3
+IGF0IDEyOjQxICswMDAwLCBMZW9uYXJkIENyZXN0ZXogd3JvdGU6DQo+ID4gPiA+ID4gT24gMjcu
+MDguMjAxOSAwNDo1MSwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gPiA+ID4gPiA+IEluIGFuIGVh
+cmxpZXIgc2VyaWVzIHRoZSBDTEtfSVNfQ1JJVElDQUwgZmxhZ3Mgd2FzIHJlbW92ZWQNCj4gPiA+
+ID4gPiA+ID4gZnJvbSB0aGUgVE1VIGNsb2NrIHNvIGlmIHRoZSB0aGVybWFsIGRyaXZlciBkb2Vz
+bid0DQo+ID4gPiA+ID4gPiA+IGV4cGxpY2l0bHkgZW5hYmxlIGl0IHRoZSBzeXN0ZW0gd2lsbCBo
+YW5nIG9uIHByb2JlLiBUaGlzIGlzDQo+ID4gPiA+ID4gPiA+IHdoYXQgaGFwcGVucyBpbiBsaW51
+eC1uZXh0IHJpZ2h0IG5vdyENCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBUaGUgdGhlcm1hbCBk
+cml2ZXIgc2hvdWxkIGJlIGJ1aWx0IHdpdGggbW9kdWxlLCBzbyBkZWZhdWx0DQo+ID4gPiA+ID4g
+PiBrZXJuZWwgc2hvdWxkIGNhbiBib290IHVwLCBkbyB5b3UgbW9kaWZ5IHRoZSB0aGVybWFsIGRy
+aXZlciBhcw0KPiA+ID4gPiA+ID4gYnVpbHQtaW4/DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
+PiBVbmxlc3MgdGhpcyBwYXRjaGVzIGlzIG1lcmdlZCBzb29uIHdlJ2xsIGVuZCB1cCB3aXRoIGEg
+NS40LQ0KPiA+ID4gPiA+ID4gPiByYzENCj4gPiA+ID4gPiA+ID4gdGhhdCBkb2Vzbid0IGJvb3Qg
+b24gaW14OG1xLiBBbiBlYXN5IGZpeCB3b3VsZCBiZSB0bw0KPiA+ID4gPiA+ID4gPiBkcm9wL3Jl
+dmVydCBjb21taXQNCj4gPiA+ID4gPiA+ID4gOTUxYzFhZWY5NjkxICgiY2xrOiBpbXg4bXE6IFJl
+bW92ZSBDTEtfSVNfQ1JJVElDQUwgZmxhZyBmb3INCj4gPiA+ID4gPiA+ID4gSU1YOE1RX0NMS19U
+TVVfUk9PVCIpIHVudGlsIHRoZSB0aGVybWFsIHBhdGNoZXMgYXJlDQo+ID4gPiA+ID4gPiA+IGFj
+Y2VwdGVkLg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IElmIHRoZSB0aGVybWFsIGRyaXZlciBp
+cyBidWlsdCBhcyBtb2R1bGUsIEkgdGhpbmsgbm8gbmVlZCB0bw0KPiA+ID4gPiA+ID4gcmV2ZXJ0
+IHRoZSBjb21taXQsIGJ1dCBpZiBieSBkZWZhdWx0IHRoZXJtYWwgZHJpdmVyIGlzIGJ1aWx0LQ0K
+PiA+ID4gPiA+ID4gaW4gb3IgbW9kIHByb2JlZCwgdGhlbiB5ZXMsIGl0IHNob3VsZCBOT1QgYnJl
+YWsga2VybmVsIGJvb3QNCj4gPiA+ID4gPiA+IHVwLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gVGhl
+IHFvcmlxX3RoZXJtYWwgZHJpdmVyIGlzIGJ1aWx0IGFzIGEgbW9kdWxlIGluIGRlZmNvbmZpZyBh
+bmQNCj4gPiA+ID4gPiB3aGVuIG1vZHVsZXMgYXJlIHByb3Blcmx5IGluc3RhbGxlZCBpbiByb290
+ZnMgdGhleSB3aWxsIGJlDQo+ID4gPiA+ID4gYXV0b21hdGljYWxseSBiZSBwcm9iZWQgb24gYm9v
+dCBhbmQgY2F1c2UgYSBoYW5nLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gSSB1c3VhbGx5IHJ1biBu
+ZnNyb290IHdpdGggbW9kdWxlczoNCj4gPiA+ID4gPg0KPiA+ID4gPiA+ICAgICAgbWFrZSBtb2R1
+bGVzX2luc3RhbGwgSU5TVEFMTF9NT0RfUEFUSD0vc3J2L25mcy9pbXg4LXJvb3QNCj4gPiA+ID4N
+Cj4gPiA+ID4gc28gd2UgbmVlZCB0aGlzIHBhdGNoIHNoaXBwZWQgaW4gdGhlIGJlZ2lubmluZyBv
+ZiB0aGUgbWVyZ2UNCj4gPiA+ID4gd2luZG93LCByaWdodD8NCj4gPiA+ID4gaWYgdGhlcmUgaXMg
+aGFyZCBkZXBlbmRlbmN5IGJldHdlZW4gcGF0Y2hlcywgaXQncyBiZXR0ZXIgdG8gc2VuZA0KPiA+
+ID4gPiB0aGVtIGluIG9uZSBzZXJpZXMsIGFuZCBnZXQgc2hpcHBlZCB2aWEgZWl0aGVyIHRyZWUu
+DQo+ID4gPiA+DQo+ID4gPiA+IEJUVywgd2hvIGlzIG1haW50YWluaW5nIHFvcmlxIGRyaXZlciBm
+cm9tIE5YUD8gSWYgQW5zb24gaXMNCj4gPiA+ID4gbWFpbnRhaW5pbmcgYW5kIGRldmVsb3Bpbmcg
+dGhpcyBkcml2ZXIsIGl0J3MgYmV0dGVyIHRvIHVwZGF0ZSB0aGlzDQo+ID4gPiA+IGluIHRoZSBk
+cml2ZXIgb3IgdGhlIE1BSU5UQUlORVIgZmlsZSwgSSB3aWxsIHRha2UgdGhlIGRyaXZlcg0KPiA+
+ID4gPiBzcGVjaWZpYyBwYXRjaGVzIGFzIGxvbmcgYXMgd2UgaGF2ZSBBQ0svUmV2aWV3ZWQtQnkg
+ZnJvbSB0aGUNCj4gPiA+ID4gZHJpdmVyIG1haW50YWluZXIuDQo+ID4NCj4gPiBJIGFtIE5PVCBz
+dXJlIHdobyBpcyB0aGUgcW9yaXEgZHJpdmVyIGZyb20gTlhQLCBzb21lIG9mIG91ciBpLk1YIFNv
+Q3MNCj4gPiB1c2UgcW9yaXEgdGhlcm1hbCBJUCwgc28gSSBoYXZlIHRvIGFkZCBzdXBwb3J0IGZv
+ciB0aGVtLiAgVGhlIGZpcnN0DQo+ID4gbWFpbnRhaW5lciBmb3IgdGhpcyBkcml2ZXIgaXMgaG9u
+Z3Rhby5qaWFAbnhwLmNvbSwgYnV0IEkgY2FuIE5PVCBmaW5kDQo+ID4gaXQgZnJvbSBOWFAncyBt
+YWlsIHN5c3RlbSwgTk9UIHN1cmUgaWYgaGUgaXMgc3RpbGwgaW4gTlhQLiBUaGUNCj4gPiBNQUlO
+VEFJTkVSIGZpbGUgZG9lcyBOT1QgaGF2ZSBpbmZvIGZvciB0aGlzIERyaXZlcidzIG1haW50YWlu
+ZXIsIHNvDQo+ID4gaG93IHRvIHVwZGF0ZSBpdD8gSnVzdCBjaGFuZ2UgdGhlIG5hbWUgaW4gZHJp
+dmVyPyBPciBsZWF2ZSBpdCBhcyB3aGF0DQo+ID4gaXQgaXM/DQo+ID4NCj4gPiAgTU9EVUxFX0FV
+VEhPUigiSmlhIEhvbmd0YW8gPGhvbmd0YW8uamlhQG54cC5jb20+Iik7DQo+ID4gTU9EVUxFX0RF
+U0NSSVBUSU9OKCJRb3JJUSBUaGVybWFsIE1vbml0b3JpbmcgVW5pdCBkcml2ZXIiKTsNCj4gPiBN
+T0RVTEVfTElDRU5TRSgiR1BMIHYyIik7DQo+ID4NCj4gSSBzZWUgc2V2ZXJhbCBwZW9wbGUgYXJl
+IGFjdGl2ZWx5IHdvcmtpbmcgb24gdGhpcyBkcml2ZXIgZnJvbSBOWFAuDQo+IElmIHlvdSdyZSBv
+a2F5LCBJJ2QgbGlrZSB0byBnZXQgeW91ciBjb21tZW50cyBvbiBhbGwgdGhlIHBhdGNoZXMgZm9y
+IHRoaXMgZHJpdmVyDQo+IGJlZm9yZSBJIHRha2UgdGhlbSwgYW5kIEkgY2FuIHVwZGF0ZSB0aGUg
+TUFJTlRBSU5FUiBmaWxlIGxhdGVyIHNvIHRoYXQgeW91J3JlDQo+IENDZWQgZm9yIGFsbCB0aGUg
+cW9yaXEgdGhlcm1hbCBkcml2ZXIgY2hhbmdlcy4NCg0KSSBhbSBPSywgYnV0IGl0IG1heSB0YWtl
+IG1lIHNvbWUgZGF5cyB0byBkbyBpdCwgSSB3aWxsIG1ha2UgaXQgQVNBUCwgdGhhbmtzLg0KDQpB
+bnNvbg0KDQo+IA0KPiA+ID4NCj4gPiA+IEFuZCBhbHNvLCBjYW4geW91IHByb3ZpZGUgeW91ciBm
+ZWVkYmFjayBmb3IgdGhpcyBvbmU/DQo+ID4gPg0KPiBodHRwczovL3BhdGNoDQo+ID4gPg0KPiB3
+b3JrLmtlcm5lbC5vcmclMkZwYXRjaCUyRjEwOTc0MTQ3JTJGJmFtcDtkYXRhPTAyJTdDMDElN0Nh
+bnNvbi5oDQo+ID4gPg0KPiB1YW5nJTQwbnhwLmNvbSU3Qzg4N2U3YzkwZjdjOTQzZmYwZDliMDhk
+NzJiOTJhZWExJTdDNjg2ZWExZDNiYzINCj4gPiA+DQo+IGI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3
+QzAlN0MwJTdDNjM3MDI1NzgxMzI1MjAzMzg0JmFtcDtzZGF0YT1YZw0KPiA+ID4NCj4gdFg2bVBk
+QTUwTmJiJTJGbW5TMm9tMmJKTmVwVGQxdGg2SG1md0d1VTlIdyUzRCZhbXA7cmVzZXJ2ZQ0KPiA+
+ID4gZD0wDQo+ID4NCj4gPiBJIGNhbiB0YWtlIGEgbG9vayBhdCBpdCBsYXRlci4NCj4gPg0KPiB0
+aGFua3MhDQo+IA0KPiAtcnVpDQo+ID4gVGhhbmtzLA0KPiA+IEFuc29uDQoNCg==
