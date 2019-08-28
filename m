@@ -2,153 +2,115 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9288C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C690C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9032B20644
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:48:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=labbott.name header.i=@labbott.name header.b="MU2Fx7Kh"
+	by mail.kernel.org (Postfix) with ESMTP id D166D20644
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567014493;
+	bh=8GZQLEfu4KdTxRtz2C1/HIab9yozYv4ALIIMVqjcjQ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pxMl8RqxvhaW4TnNMgYR801qvl/DeIBJCuzKS02wzaA2FkQrLCEsZo+rvWsU8EnYv
+	 6tfdTdtfoLndyWiJRzg7U2WJzM3djhcSSWfqOnmZeoZHk40ySZrywsw1HYmK74mAKk
+	 oCLk13++PkRtZq/eQyL8z80T4prT1UBcXmx3eAN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfH1RsH (ORCPT
+        id S1727102AbfH1RsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:48:07 -0400
-Received: from mail-qk1-f170.google.com ([209.85.222.170]:33900 "EHLO
-        mail-qk1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbfH1RsG (ORCPT
+        Wed, 28 Aug 2019 13:48:12 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38167 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbfH1RsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:48:06 -0400
-Received: by mail-qk1-f170.google.com with SMTP id m10so546796qkk.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:48:05 -0700 (PDT)
+        Wed, 28 Aug 2019 13:48:10 -0400
+Received: by mail-wr1-f68.google.com with SMTP id e16so687801wro.5;
+        Wed, 28 Aug 2019 10:48:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=labbott.name; s=google;
-        h=from:content-transfer-encoding:mime-version:subject:date:references
-         :to:in-reply-to:message-id;
-        bh=D35SbGBlWhYpn/u3ldUwUJb3Qfls9S5/WWeqF78nIBA=;
-        b=MU2Fx7Kh07hEmhYLkOxosPfDPS27ERORbzqZ3eh5zCEc40yvbWT0Eb/zAZ7tOPVDF7
-         4wdqF9OfBG8XpmsWqEBtfdjO3gyN4vVk3DZuepW66EFBceqKQ0zPNR1kMoAX1fytqor3
-         UD3XMN7oWyzOzHa26Z8DADGpGQZf7V3ujGSi8=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HvZagx7jvNM6KY8AxfC5tlWqGThqPd8JeCEOU1rlNEY=;
+        b=OvefXXdF67oN1ve7spB9g8oHbJcSYfACOpG8lblvcpBe7Lh7kdShyRKdzgsL910ePa
+         B5Fr92MPfmSf7dl7UHZDNopidSabiq3zZqM3KSWTcxI0BWcljpiZMqmk4PFSfDMHv1rH
+         k6zhx1/jTDVPj9TFLo/ZVyDtpJNH3iRqzQPjv6rCcTgJ6wAeGyNOrlYQ45lyunFZW83l
+         4kwAVMCReFGM3kGeoJp+yqlbV90ALRb/t6Ask5GaT+bo2KbW5/V3vVYJTkAdrdp4iVND
+         GeSQ0LmWWctlFVsTCxgPv+rlE8tIpnaqhTa2k71QmauiXGvKzVojz/+Cawu1Byj8TEFc
+         xolQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version
-         :subject:date:references:to:in-reply-to:message-id;
-        bh=D35SbGBlWhYpn/u3ldUwUJb3Qfls9S5/WWeqF78nIBA=;
-        b=LOl9rJwJR/GsklNF+ch6g8AMkAsWDMpBd3O8CEeaXmenYa5wyrX05zQa7TMTkxe9tS
-         j5FZjOidvRZuNM683qi5KiK0iDmYUczZacGHs3BhnapWUGJmoWkhI7uGBmR8mJc2I0iu
-         k57Ez05tF45psW32mosKYE0s+qWAS0ZbIAR9/HYcUZD6O9Ktyv4H8OSdHPtZ90rGoEH9
-         YPk4Pfl+j5kq8nF48b3soi2nHKMYQ3nLCLZ0gKWDSJPdO0D46a1Yrb0FLcyFJGE0Qf+2
-         a3uesqplMxx1RHSQEofTr+5n3tEBkIqzLxHJ+nv5R3aXrCooio+KwPNqLU+PkAnUq+Av
-         0Z7A==
-X-Gm-Message-State: APjAAAWdxH0vDmoafbCRZYR5cX4sVyOY2MWWvw5i7PNHjsEhsBbAzBFJ
-        SrSh5aNfX4TiGlfavorTQQATe/VEUC1aeg==
-X-Google-Smtp-Source: APXvYqz9EtQEqzKRuk6DumXxdoKYmYWyg/8RdLUxpT4MSieRi5RPzW54mGUcYvGjuNmodytnXQtTbw==
-X-Received: by 2002:a05:620a:12af:: with SMTP id x15mr75546qki.131.1567014484373;
-        Wed, 28 Aug 2019 10:48:04 -0700 (PDT)
-Received: from lauras-mbp.fios-router.home (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
-        by smtp.gmail.com with ESMTPSA id m9sm1398646qtp.27.2019.08.28.10.48.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 10:48:03 -0700 (PDT)
-From:   Laura Abbott <laura@labbott.name>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HvZagx7jvNM6KY8AxfC5tlWqGThqPd8JeCEOU1rlNEY=;
+        b=bjtTaHK2YrHhg/mS+I05DJWlfsLPQtSei1CBMOTLpVo2iPypgvzgEXhNalLWP2x0Gk
+         9zCr20uiUTLOKiNElrP9VFuaexLf0+GJ4OFwt30RgQaNce2TZsNHmEVJSMe2TcMPY7lF
+         JsrD4EeS4vJ1lavShiUF0MsUqB/qjgX3mj20Q/V7mX7YggLSyzTWjewV/knd98YQscEZ
+         kxW54HXGcmT5hqu/zxQThwyjzFO95j6JDTFV9KOXKNtUVmFWO7k18nrS+53UQA3hDFS7
+         Wcu/ZnKbIN62jHxUUJJ4nMc3ygkaF1jlIhm83DGlrKdKPbsovhgEcOIOoNNLt7wAdsxp
+         HZBA==
+X-Gm-Message-State: APjAAAWdaKA4BMWMLQbv9QKr6EVB02tzfX0YX/iWnwmfeATJqhRXXnlT
+        fk8yKg6S2huExIO/24C9y5I=
+X-Google-Smtp-Source: APXvYqzsgycsBiPbj0M7dIus4k509ElpquCfjEnXq1G43Yk0i2y0vAowaLgwLoA9RbGXk8TpueNRRg==
+X-Received: by 2002:a5d:4589:: with SMTP id p9mr5964621wrq.276.1567014488447;
+        Wed, 28 Aug 2019 10:48:08 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id w7sm4298079wrn.11.2019.08.28.10.48.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 10:48:07 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 19:48:05 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
+Subject: Re: [GIT PULL rcu/next] Supplementary RCU commits for 5.4
+Message-ID: <20190828174805.GA77166@gmail.com>
+References: <20190828172557.GA30541@linux.ibm.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: Linux Foundation Technical Advisory Board Elections -- Call for
- nominations
-Date:   Wed, 28 Aug 2019 13:48:03 -0400
-References: <DD187286-CEBE-44B3-A992-F84FC9C9CD26@labbott.name>
-To:     linux-kernel@vger.kernel.org
-In-Reply-To: <DD187286-CEBE-44B3-A992-F84FC9C9CD26@labbott.name>
-Message-Id: <EDD7B30A-8A0D-45BF-BBD5-4AEFA5625FA1@labbott.name>
-X-Mailer: Apple Mail (2.3273)
+Content-Disposition: inline
+In-Reply-To: <20190828172557.GA30541@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> On Aug 9, 2019, at 2:26 AM, Laura Abbott <laura@labbott.name> wrote:
->=20
-> Hello everyone,
->=20
-> Friendly reminder that the TAB elections are coming soon:
->=20
-> The Linux Foundation Technical Advisory Board (TAB) serves as the
-> interface between the kernel development community and the Linux
-> Foundation. The TAB advises the Foundation on kernel-related matters,
-> helps member companies learn to work with the community, and works to
-> resolve community-related problems before they get out of hand.  We
-> also support the Code of Conduct committee in their mission.
->=20
-> The board has ten members, one of whom sits on the Linux Foundation
-> board of directors.
->=20
-> The election to select five TAB members will be held at the 2019 =
-Kernel Summit
-> in Lisbon, Portugal September 9-11. As has been announced[2], we are =
-moving to
-> an electronic voting system this year. Further details about the exact =
-voting
-> procedures will be coming soon. Anyone is eligible to stand for =
-election,
-> simply send your nomination to:
->=20
-> tech-board-discuss at lists.linux-foundation.org
->=20
-> With your nomination, please include a short candidate statement. This =
-candidate
-> statement should focus on why you are running and what you hope to =
-accomplish
-> on the TAB. We will be collecting these statements and making them =
-publicly=20
-> available.
->=20
-> The deadline for receiving nominations is 9am GMT+1 on September 9th =
-(the first
-> day of Kernel Summit). Due to the use of electronic voting, this will =
-be a hard
-> deadline!
->=20
-> Current TAB members, and their election year:
->=20
-> Jon Corbet		2017
-> Greg Kroah-Hartman	2017
-> Steven Rostedt		2017
-> Ted Tso			2017
-> Tim Bird		2017
->=20
-> Chris Mason		2018
-> Laura Abbott		2018
-> Olof Johansson		2018
-> Kees Cook		2018
-> Dan Williams		2018
->=20
-> The five slots from 2017 are all up for election.  As always, please
-> let us know if you have questions, and please do consider running.
->=20
-> Thanks,
-> Laura
->=20
-> [1] TAB members sit for a term of two years, and half of the board is
-> up for election every year. Five of the seats are up for election now.
-> The other five are halfway through their term and will be up for
-> election next year.
->=20
-> [2] =
-https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2019-July/0065=
-82.html
+* Paul E. McKenney <paulmck@kernel.org> wrote:
 
-Reminder to send in your candidate statements, the current ones are
-available at=20
+> Hello, Ingo,
+> 
+> This pull request contains the following changes:
+> 
+> 1.	A one-line change that affects only Tiny RCU that is needed
+> 	by the RISC-V guys, courtesy of Christoph Hellwig.
+> 
+> 2.	An update to my email address.	The old one still works, at
+> 	least most of the time.
+> 
+> All of these changes have been subjected to 0day Test Robot and -next
+> testing, and are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git for-mingo
+> 
+> for you to fetch changes up to 049b405029c00f3fd9e4ffa269bdd29b429c4672:
+> 
+>   MAINTAINERS: Update from paulmck@linux.ibm.com to paulmck@kernel.org (2019-08-26 16:27:08 -0700)
+> 
+> ----------------------------------------------------------------
+> Christoph Hellwig (1):
+>       rcu: Don't include <linux/ktime.h> in rcutiny.h
+> 
+> Paul E. McKenney (1):
+>       MAINTAINERS: Update from paulmck@linux.ibm.com to paulmck@kernel.org
+> 
+>  MAINTAINERS             | 14 +++++++-------
+>  include/linux/rcutiny.h |  2 +-
+>  2 files changed, 8 insertions(+), 8 deletions(-)
 
-=
-https://docs.google.com/document/d/1E3_W1c-xJMx9o2PCnKiGt3vqs-mPh77yNO4GSq=
-NipOQ
+Pulled, thanks a lot Paul!
 
-Thanks,
-Laura
-
+	Ingo
