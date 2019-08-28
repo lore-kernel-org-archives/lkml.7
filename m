@@ -2,166 +2,233 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9296C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1AEC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB13221883
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC90D208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:32:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TpkXszfq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TswDkIrT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfH1JcN (ORCPT
+        id S1726529AbfH1Jc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:32:13 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43081 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfH1JcN (ORCPT
+        Wed, 28 Aug 2019 05:32:29 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:41465 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfH1Jc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:32:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y8so1736932wrn.10;
-        Wed, 28 Aug 2019 02:32:11 -0700 (PDT)
+        Wed, 28 Aug 2019 05:32:29 -0400
+Received: by mail-pf1-f202.google.com with SMTP id 191so1622908pfz.8
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 02:32:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8YZMPrk4taIfd9lhqFUp5xwJn0FNidcXhT7fTedt7cc=;
-        b=TpkXszfqgchu4JhwM4l26r9kQzmiJ25FKVEV4NRDkanYqou5TF2iXz2qfMLdVgKxc8
-         kFUoM5rwlaLnSYpfJgYhffezbf53NAluAXWDX4pZxlGeQQCMnGgQMCbyDDVy+u49+GNi
-         6A6pGixrU89g/irZKbir08mxb86Znnu0Nn3RDFHSUyKlLfdhFKYR/kalfdNWelkgmuEX
-         5CdmNWfJH2GjPZvW0FOaJPoL+UZqHKLu9+dzCXGbcM5BEbU8D7PJQW+IrmNNe9nosojO
-         ECD/zG+ulrxNYTEgNIAhdsAtyq6NykWgKpJfD/oRIaRbgytEOwwl8rkmpwFxDLgfxReE
-         rG2w==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=VrSJG1qLRq08HkXyX6gIPsC7lVivMGhOydit43IGTq0=;
+        b=TswDkIrTQgaJ9VzvD3+btGc/S/jYumeJyyBCresMJXTAFmHnVLJIYuxlphFpG9cpkx
+         YqoDwWn2KVpKJJFzEPaWccZJzcNr7Is9Ezzxvv+cOfG38aUZp9XhIEbUEi46oN7zIskx
+         P45XYZYD66WGu4AToy9tKGMS4XF5PcDcYEmOMJi9GRd8LzmGfoDY2cmEJ1wW18EjEToo
+         GAkIVBe//tJiaOqHSTjHHJuxJ/q71ULikLsNnL3ZD1k/TEjMUQ90IJpydHIwx0GzQsjk
+         dYWN0Y466D3C68ALXrcbyc87W4gd8f8yoL47v2flto9Gyu9tokI5tvQZIa9u9ue10lh5
+         rfew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8YZMPrk4taIfd9lhqFUp5xwJn0FNidcXhT7fTedt7cc=;
-        b=FtHkCVE0wLha+fQh3z2K/HDFyempnIQfSYwbHcuriLYQjmY0E4AwfjymkHUZifpJYD
-         Dpvy82xe83WYLGQRXokYt0w/9D3diY+Zg4cFWAfBP3Lj8ZE/xFmh+kcASfy4AL/Xldv5
-         /FOhSR8OySTCAwEwT6GQWC9fneMQw1JZG2gNkTyD1RuY2sYw9TL2H3V0AHESaAPSTkd4
-         c63WmYh7KYo2HsGrsACUB13GIEYkUBaxMnZD8HHSDKJK1C4rDYHTRafZYewrZGqtpK/T
-         k0q7mhDqTLpYW966mJawgwZPZFkMPEG0xVHqoebWJ5zVWG/mhxtEEWE85PXcf2oAJarh
-         EtPA==
-X-Gm-Message-State: APjAAAUh66BkdBrX/6KCuqVGAWGfX7z4g2mOP0EOo9BY/9oBvyyKsaBF
-        Et8zvuqqZLBvf2U1W6GKo371IfHc
-X-Google-Smtp-Source: APXvYqzBKn5uq8Z/LSmYy1vCSMHdQAKtE9a0raqpTeuGSXHKKnSz0po7mYOh1BmKRa3SxJCjrM6vWA==
-X-Received: by 2002:a5d:4250:: with SMTP id s16mr3400811wrr.318.1566984730627;
-        Wed, 28 Aug 2019 02:32:10 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id f10sm1988058wrs.22.2019.08.28.02.32.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 02:32:09 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 11:32:08 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] driver core: platform: Introduce
- platform_get_irq_optional()
-Message-ID: <20190828093208.GC2917@ulmo>
-References: <20190828083411.2496-1-thierry.reding@gmail.com>
- <20190828085724.GA31055@kroah.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jousvV0MzM2p6OtC"
-Content-Disposition: inline
-In-Reply-To: <20190828085724.GA31055@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=VrSJG1qLRq08HkXyX6gIPsC7lVivMGhOydit43IGTq0=;
+        b=rgsz3eO/39Yxv/tvybaNe9/ONqR67k7XSeB4kLiOhuPCWha0DUJRypULkVVXTrEzgM
+         CPYqefAh5UVAPHEGBV3BV/pDZKTajKsn+4egeLsmtgcMspH7FJ1Ffy7tQ/JRniBXwf6x
+         MuhkEpD0H3q4uSilVE/yf+dL6hyL6dYHYJD6YWQGO8Qlw8Cmosh7MNyHxVX2aE07oOVM
+         dHp9YBXwG7QehY4RNmnlwxMRClOgYcHb5hSBEeijrdS+aaHZQVhM8QgOvOaQKBcKHxzt
+         Z/LP3csQ/XlnFGOx98NzsE6D0dUSoyecUIKI9AswGpBAt16a4bgp5skvFXY2TwX0FfhO
+         +xeA==
+X-Gm-Message-State: APjAAAXzlAO0lNFwrCR+W4M3YOTNVVqz3KZtd4OHRN3vZHHIL+dnQGau
+        Wxa9KKpXf7gPd61kSDNKRengx4B44VPLubYrP6c9fA==
+X-Google-Smtp-Source: APXvYqyxnVF5mIbgiG1foc/RCXqDGnGXSIO4sJTjhf3Wj3DelUEERcjYM4JOBTHkNaE8vNKDz5SDoKCiBCP732mfcWYyAg==
+X-Received: by 2002:a65:5c02:: with SMTP id u2mr2613932pgr.367.1566984747724;
+ Wed, 28 Aug 2019 02:32:27 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 02:31:43 -0700
+Message-Id: <20190828093143.163302-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+Subject: [PATCH v2] kunit: fix failure to build without printk
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     shuah@kernel.org
+Cc:     kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, frowand.list@gmail.com,
+        sboyd@kernel.org, pmladek@suse.com, sergey.senozhatsky@gmail.com,
+        rostedt@goodmis.org, Brendan Higgins <brendanhiggins@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Previously KUnit assumed that printk would always be present, which is
+not a valid assumption to make. Fix that by removing call to
+vprintk_emit, and calling printk directly.
 
---jousvV0MzM2p6OtC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ include/kunit/test.h | 11 ++++-----
+ kunit/test.c         | 57 +++++---------------------------------------
+ 2 files changed, 11 insertions(+), 57 deletions(-)
 
-On Wed, Aug 28, 2019 at 10:57:24AM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Aug 28, 2019 at 10:34:10AM +0200, Thierry Reding wrote:
-> > From: Thierry Reding <treding@nvidia.com>
-> >=20
-> > In some cases the interrupt line of a device is optional. Introduce a
-> > new platform_get_irq_optional() that works much like platform_get_irq()
-> > but does not output an error on failure to find the interrupt.
-> >=20
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > ---
-> >  drivers/base/platform.c         | 22 ++++++++++++++++++++++
-> >  include/linux/platform_device.h |  1 +
-> >  2 files changed, 23 insertions(+)
-> >=20
-> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> > index 8ad701068c11..0dda6ade50fd 100644
-> > --- a/drivers/base/platform.c
-> > +++ b/drivers/base/platform.c
-> > @@ -192,6 +192,28 @@ int platform_get_irq(struct platform_device *dev, =
-unsigned int num)
-> >  }
-> >  EXPORT_SYMBOL_GPL(platform_get_irq);
-> > =20
-> > +/**
-> > + * platform_get_irq_optional - get an optional IRQ for a device
-> > + * @dev: platform device
-> > + * @num: IRQ number index
-> > + *
-> > + * Gets an IRQ for a platform device. Device drivers should check the =
-return
-> > + * value for errors so as to not pass a negative integer value to the
-> > + * request_irq() APIs. This is the same as platform_get_irq(), except =
-that it
-> > + * does not print an error message if an IRQ can not be obtained.
->=20
-> Kind of funny that the work people did to put error messages in a
-> central place needs to be worked around at times :)
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index 8b7eb03d4971..efad2eacd6ba 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -339,9 +339,8 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
+ 
+ void kunit_cleanup(struct kunit *test);
+ 
+-void __printf(3, 4) kunit_printk(const char *level,
+-				 const struct kunit *test,
+-				 const char *fmt, ...);
++#define kunit_print_level(KERN_LEVEL, test, fmt, ...) \
++	printk(KERN_LEVEL "\t# %s: " fmt, (test)->name, ##__VA_ARGS__)
+ 
+ /**
+  * kunit_info() - Prints an INFO level message associated with @test.
+@@ -353,7 +352,7 @@ void __printf(3, 4) kunit_printk(const char *level,
+  * Takes a variable number of format parameters just like printk().
+  */
+ #define kunit_info(test, fmt, ...) \
+-	kunit_printk(KERN_INFO, test, fmt, ##__VA_ARGS__)
++	kunit_print_level(KERN_INFO, test, fmt, ##__VA_ARGS__)
+ 
+ /**
+  * kunit_warn() - Prints a WARN level message associated with @test.
+@@ -364,7 +363,7 @@ void __printf(3, 4) kunit_printk(const char *level,
+  * Prints a warning level message.
+  */
+ #define kunit_warn(test, fmt, ...) \
+-	kunit_printk(KERN_WARNING, test, fmt, ##__VA_ARGS__)
++	kunit_print_level(KERN_WARNING, test, fmt, ##__VA_ARGS__)
+ 
+ /**
+  * kunit_err() - Prints an ERROR level message associated with @test.
+@@ -375,7 +374,7 @@ void __printf(3, 4) kunit_printk(const char *level,
+  * Prints an error level message.
+  */
+ #define kunit_err(test, fmt, ...) \
+-	kunit_printk(KERN_ERR, test, fmt, ##__VA_ARGS__)
++	kunit_print_level(KERN_ERR, test, fmt, ##__VA_ARGS__)
+ 
+ /**
+  * KUNIT_SUCCEED() - A no-op expectation. Only exists for code clarity.
+diff --git a/kunit/test.c b/kunit/test.c
+index b2ca9b94c353..c83c0fa59cbd 100644
+--- a/kunit/test.c
++++ b/kunit/test.c
+@@ -16,36 +16,12 @@ static void kunit_set_failure(struct kunit *test)
+ 	WRITE_ONCE(test->success, false);
+ }
+ 
+-static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
+-{
+-	return vprintk_emit(0, level, NULL, 0, fmt, args);
+-}
+-
+-static int kunit_printk_emit(int level, const char *fmt, ...)
+-{
+-	va_list args;
+-	int ret;
+-
+-	va_start(args, fmt);
+-	ret = kunit_vprintk_emit(level, fmt, args);
+-	va_end(args);
+-
+-	return ret;
+-}
+-
+-static void kunit_vprintk(const struct kunit *test,
+-			  const char *level,
+-			  struct va_format *vaf)
+-{
+-	kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
+-}
+-
+ static void kunit_print_tap_version(void)
+ {
+ 	static bool kunit_has_printed_tap_version;
+ 
+ 	if (!kunit_has_printed_tap_version) {
+-		kunit_printk_emit(LOGLEVEL_INFO, "TAP version 14\n");
++		pr_info("TAP version 14\n");
+ 		kunit_has_printed_tap_version = true;
+ 	}
+ }
+@@ -64,10 +40,8 @@ static size_t kunit_test_cases_len(struct kunit_case *test_cases)
+ static void kunit_print_subtest_start(struct kunit_suite *suite)
+ {
+ 	kunit_print_tap_version();
+-	kunit_printk_emit(LOGLEVEL_INFO, "\t# Subtest: %s\n", suite->name);
+-	kunit_printk_emit(LOGLEVEL_INFO,
+-			  "\t1..%zd\n",
+-			  kunit_test_cases_len(suite->test_cases));
++	pr_info("\t# Subtest: %s\n", suite->name);
++	pr_info("\t1..%zd\n", kunit_test_cases_len(suite->test_cases));
+ }
+ 
+ static void kunit_print_ok_not_ok(bool should_indent,
+@@ -87,9 +61,7 @@ static void kunit_print_ok_not_ok(bool should_indent,
+ 	else
+ 		ok_not_ok = "not ok";
+ 
+-	kunit_printk_emit(LOGLEVEL_INFO,
+-			  "%s%s %zd - %s\n",
+-			  indent, ok_not_ok, test_number, description);
++	pr_info("%s%s %zd - %s\n", indent, ok_not_ok, test_number, description);
+ }
+ 
+ static bool kunit_suite_has_succeeded(struct kunit_suite *suite)
+@@ -133,11 +105,11 @@ static void kunit_print_string_stream(struct kunit *test,
+ 		kunit_err(test,
+ 			  "Could not allocate buffer, dumping stream:\n");
+ 		list_for_each_entry(fragment, &stream->fragments, node) {
+-			kunit_err(test, fragment->fragment);
++			kunit_err(test, "%s", fragment->fragment);
+ 		}
+ 		kunit_err(test, "\n");
+ 	} else {
+-		kunit_err(test, buf);
++		kunit_err(test, "%s", buf);
+ 		kunit_kfree(test, buf);
+ 	}
+ }
+@@ -504,20 +476,3 @@ void kunit_cleanup(struct kunit *test)
+ 		kunit_resource_free(test, resource);
+ 	}
+ }
+-
+-void kunit_printk(const char *level,
+-		  const struct kunit *test,
+-		  const char *fmt, ...)
+-{
+-	struct va_format vaf;
+-	va_list args;
+-
+-	va_start(args, fmt);
+-
+-	vaf.fmt = fmt;
+-	vaf.va = &args;
+-
+-	kunit_vprintk(test, level, &vaf);
+-
+-	va_end(args);
+-}
+-- 
+2.23.0.187.g17f5b7556c-goog
 
-Indeed. I think it does make sense in this case to have the error
-message in a central place, because it really does seem like the vast
-majority of users really do want that IRQ. Having the _optional variant
-makes it really explicit in the cases where it's fine to continue
-without the IRQ.
-
-> Anyway, I have no objection to this, but it looks like it has to go in
-> through my tree.  I can take the hwmon patch as well through my tree if
-> the hwmon maintainer(s) say it is ok to do so.
-
-I suppose we could technically make this go through the driver core and
-hwmon trees separately with a bit of timing, but the hwmon patch is so
-trivial that it would indeed be simplest to take it through the driver
-core tree as well.
-
-Thierry
-
---jousvV0MzM2p6OtC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1mShUACgkQ3SOs138+
-s6FNhhAAwVNhp6Fie+ky5QepEPYXddUP7qI5ou4FIufzN/u8+VgqfHNaNuli1BT5
-uJgWDNTwyOYVmPCC29QZ+bQpDEauGkkg5bXKaewkp1omnir84EsWRSZfNrR8m24C
-T6W4DuGrqNWhvrFeqyZjzqVmcgksUAZ2Uqiy4c8qtSAMGZwRkZxzMwpDnWyLFShB
-40OpgxqWCx/GqjJnCwBwlNNI9JqPhblu09znMo9oHXoELubago8/L0R7vfSWmMqN
-KBSZ+Qak0vnRWrbVZpKDQTyHgiiNpRQ7M/pmblktEWgwwAH1OJLR9buWwPkePoOE
-dJldWRKmbORp7hGkHQSQ8UkdTLfOkEr70WcH73BChPWTIdvPOJ2zkhDFehVoFLkU
-SkoNwma5NSvIb4r5xvnVfRWYbKEas1ijO6LeVzMBBsEYoEsXBL04OF7w4waEH+R9
-7yBBasVSqdTmDdZXpP69f9kwjS/giwNX29/hq+6FPQNbrWjv7pumKaWQp3FB9K9U
-eS4ceCw32/XUyyor2gTSonZg11jHAzTc/GhvS0r6Z+RwJL3Ih90OCfLjYXe8/s+0
-ydGtUJSFQv+HX0ZUNWZo5u2il6POcxQuToEQFBw5uxSFysIlK0YcdTlxHqf2aswG
-mYuvMvLq7+R5yRm9nHxKZWQQhteQX6mBSIHjLBv3/FQO/NvPUo4=
-=u2KZ
------END PGP SIGNATURE-----
-
---jousvV0MzM2p6OtC--
