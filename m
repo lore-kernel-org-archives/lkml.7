@@ -2,116 +2,171 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B955C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51F8C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5232B22CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:14:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pu+eR5Jt"
+	by mail.kernel.org (Postfix) with ESMTP id 9708922CED
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfH1POU (ORCPT
+        id S1726833AbfH1POY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:14:20 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37904 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbfH1POR (ORCPT
+        Wed, 28 Aug 2019 11:14:24 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26934 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726315AbfH1POS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:14:17 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7SFA1Jg139042;
-        Wed, 28 Aug 2019 15:14:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=7OsfILsJ324WhSDhv525JAzDSJSVRDykiAtgENUlDnM=;
- b=Pu+eR5JtqeTfUOYp93UXzX6l0JLDPiz+3usE/LeVNATF/fIx7QANF0htcOPn45g7+Ci6
- 3g3vtnGz7xtPcM7RpUPTF78FZZXmrxWElaaramylkBqAIQkqidm2DYQTvkoG0rp1+/BR
- fXs+1IBHuXPEvCBeNPD+K6cYqQbbr4IV1OF9GYcUqwjpdQSCqDCr+UONnCK26IKsUdnE
- d+9dhzlAm8qEpoHShKH8ydkFCsj0jPrgsSE2RgDYXzFund0pi+eqlEompqt8xpUZOolF
- u6Yj3HAQ46f6SPYtWpIYNWDCjuOGrkLd6GPr07uxnZwIkgWWljUH7a5PAdtlEaigFtLb 4A== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2unv0s0107-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Aug 2019 15:14:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7SEwkGe103649;
-        Wed, 28 Aug 2019 15:14:14 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2undw7jryr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Aug 2019 15:14:14 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7SFECIk006700;
-        Wed, 28 Aug 2019 15:14:12 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 28 Aug 2019 08:14:12 -0700
-Date:   Wed, 28 Aug 2019 08:14:11 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Austin Kim <austindh.kim@gmail.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Use WARN_ON rather than BUG() for bailout
- mount-operation
-Message-ID: <20190828151411.GC1037350@magnolia>
-References: <20190828064749.GA165571@LGEARND20B15>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828064749.GA165571@LGEARND20B15>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9363 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908280156
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9363 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908280156
+        Wed, 28 Aug 2019 11:14:18 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SF18OA091241
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 11:14:17 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2unsw56e3j-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 11:14:17 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 28 Aug 2019 16:14:15 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 28 Aug 2019 16:14:12 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7SFDmeI17301832
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 28 Aug 2019 15:13:48 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D1E6E5204E;
+        Wed, 28 Aug 2019 15:14:10 +0000 (GMT)
+Received: from localhost.ibm.com (unknown [9.85.129.156])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 771A452050;
+        Wed, 28 Aug 2019 15:14:09 +0000 (GMT)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Petr Vorel <pvorel@suse.cz>, Jessica Yu <jeyu@kernel.org>,
+        Dave Young <dyoung@redhat.com>, shuah <shuah@kernel.org>,
+        linux-kselftest@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] sefltest/ima: support appended signatures (modsig)
+Date:   Wed, 28 Aug 2019 11:14:00 -0400
+X-Mailer: git-send-email 2.7.5
+X-TM-AS-GCONF: 00
+x-cbid: 19082815-0020-0000-0000-00000364EE75
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082815-0021-0000-0000-000021BA4256
+Message-Id: <1567005240-12912-1-git-send-email-zohar@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=702 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908280156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 03:47:49PM +0900, Austin Kim wrote:
-> If the CONFIG_BUG is enabled, BUG() is executed and then system is crashed.
-> However, the bailout for mount is no longer proceeding.
-> 
-> For this reason, using WARN_ON rather than BUG() could prevent this situation.
-> ---
->  fs/xfs/xfs_mount.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-> index 322da69..10fe000 100644
-> --- a/fs/xfs/xfs_mount.c
-> +++ b/fs/xfs/xfs_mount.c
-> @@ -213,8 +213,7 @@ xfs_initialize_perag(
->  			goto out_hash_destroy;
->  
->  		spin_lock(&mp->m_perag_lock);
-> -		if (radix_tree_insert(&mp->m_perag_tree, index, pag)) {
-> -			BUG();
-> +		if (WARN_ON(radix_tree_insert(&mp->m_perag_tree, index, pag))){
+In addition to the PE/COFF and IMA xattr signatures, the kexec kernel
+image can be signed with an appended signature, using the same
+scripts/sign-file tool that is used to sign kernel modules.
 
-Need a space before the brace.
+This patch adds support for detecting a kernel image signed with an
+appended signature and updates the existing test messages
+appropriately.
 
-Will fix on import,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Petr Vorel <pvorel@suse.cz>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+---
+ .../selftests/kexec/test_kexec_file_load.sh        | 38 +++++++++++++++++++---
+ 1 file changed, 34 insertions(+), 4 deletions(-)
 
---D
+diff --git a/tools/testing/selftests/kexec/test_kexec_file_load.sh b/tools/testing/selftests/kexec/test_kexec_file_load.sh
+index fa7c24e8eefb..2ff600388c30 100755
+--- a/tools/testing/selftests/kexec/test_kexec_file_load.sh
++++ b/tools/testing/selftests/kexec/test_kexec_file_load.sh
+@@ -37,11 +37,20 @@ is_ima_sig_required()
+ 	# sequentially.  As a result, a policy rule may be defined, but
+ 	# might not necessarily be used.  This test assumes if a policy
+ 	# rule is specified, that is the intent.
++
++	# First check for appended signature (modsig), then xattr
+ 	if [ $ima_read_policy -eq 1 ]; then
+ 		check_ima_policy "appraise" "func=KEXEC_KERNEL_CHECK" \
+-			"appraise_type=imasig"
++			"appraise_type=imasig|modsig"
+ 		ret=$?
+-		[ $ret -eq 1 ] && log_info "IMA signature required";
++		if [ $ret -eq 1 ]; then
++			log_info "IMA or appended(modsig) signature required"
++		else
++			check_ima_policy "appraise" "func=KEXEC_KERNEL_CHECK" \
++				"appraise_type=imasig"
++			ret=$?
++			[ $ret -eq 1 ] && log_info "IMA signature required";
++		fi
+ 	fi
+ 	return $ret
+ }
+@@ -84,6 +93,22 @@ check_for_imasig()
+ 	return $ret
+ }
+ 
++# Return 1 for appended signature (modsig) found and 0 for not found.
++check_for_modsig()
++{
++	local module_sig_string="~Module signature appended~"
++	local sig="$(tail --bytes $((${#module_sig_string} + 1)) $KERNEL_IMAGE)"
++	local ret=0
++
++	if [ "$sig" == "$module_sig_string" ]; then
++		ret=1
++		log_info "kexec kernel image modsig signed"
++	else
++		log_info "kexec kernel image not modsig signed"
++	fi
++	return $ret
++}
++
+ kexec_file_load_test()
+ {
+ 	local succeed_msg="kexec_file_load succeeded"
+@@ -98,7 +123,8 @@ kexec_file_load_test()
+ 		# In secureboot mode with an architecture  specific
+ 		# policy, make sure either an IMA or PE signature exists.
+ 		if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ] && \
+-			[ $ima_signed -eq 0 ] && [ $pe_signed -eq 0 ]; then
++			[ $ima_signed -eq 0 ] && [ $pe_signed -eq 0 ] \
++			  && [ $ima_modsig -eq 0 ]; then
+ 			log_fail "$succeed_msg (missing sig)"
+ 		fi
+ 
+@@ -107,7 +133,8 @@ kexec_file_load_test()
+ 			log_fail "$succeed_msg (missing PE sig)"
+ 		fi
+ 
+-		if [ $ima_sig_required -eq 1 ] && [ $ima_signed -eq 0 ]; then
++		if [ $ima_sig_required -eq 1 ] && [ $ima_signed -eq 0 ] \
++		     && [ $ima_modsig -eq 0 ]; then
+ 			log_fail "$succeed_msg (missing IMA sig)"
+ 		fi
+ 
+@@ -204,5 +231,8 @@ pe_signed=$?
+ check_for_imasig
+ ima_signed=$?
+ 
++check_for_modsig
++ima_modsig=$?
++
+ # Test loading the kernel image via kexec_file_load syscall
+ kexec_file_load_test
+-- 
+2.7.5
 
->  			spin_unlock(&mp->m_perag_lock);
->  			radix_tree_preload_end();
->  			error = -EEXIST;
-> -- 
-> 2.6.2
-> 
