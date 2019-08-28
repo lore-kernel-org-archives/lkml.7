@@ -2,134 +2,87 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BF6C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A56BAC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E287A208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:45:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="jfuvoZov"
+	by mail.kernel.org (Postfix) with ESMTP id 717F2208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:45:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfH1SpJ (ORCPT
+        id S1726875AbfH1SpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:45:09 -0400
-Received: from a9-34.smtp-out.amazonses.com ([54.240.9.34]:55110 "EHLO
-        a9-34.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726563AbfH1SpI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:45:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1567017907;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=fJm0E0W8D/Ih72kYyGNG7xR38hRVhDF2+dGEhyCLpNo=;
-        b=jfuvoZovM5la8e5cNSplwMxmwZS/RBqS1wOZQJXGe9DNLIYMj6qyuUXkj9vP1t4V
-        TTY8HsoyS11RSsbJiIbcvr/I97cjjAXSpwxxCI0LUZQ9vs5Ukl1F2BJ2hCc8jiwT+mf
-        Ev2y1vC/94piZjsxt9npj2LnwOHeeE3wIb9bT/aE=
-Date:   Wed, 28 Aug 2019 18:45:07 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     Vlastimil Babka <vbabka@suse.cz>
-cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
- kmalloc(power-of-two)
-In-Reply-To: <20190826111627.7505-3-vbabka@suse.cz>
-Message-ID: <0100016cd98bb2c1-a2af7539-706f-47ba-a68e-5f6a91f2f495-000000@email.amazonses.com>
-References: <20190826111627.7505-1-vbabka@suse.cz> <20190826111627.7505-3-vbabka@suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 28 Aug 2019 14:45:16 -0400
+Received: from muru.com ([72.249.23.125]:59038 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726515AbfH1SpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 14:45:15 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 77A1A80C5;
+        Wed, 28 Aug 2019 18:45:43 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 11:45:11 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 14/22] ARM: omap1: use pci_ioremap_io() for omap_cf
+Message-ID: <20190828184511.GF52127@atomide.com>
+References: <CAK8P3a0E+QUn9wcP5Obv-FitWyXCFwcp+oPConeO2p-NV1rqsw@mail.gmail.com>
+ <20190813181158.GA26798@darkstar.musicnaut.iki.fi>
+ <CAK8P3a0LjKrc+7c5Ht9OL7LfYyLnG9=y7u+w24ujA1xAid_yCQ@mail.gmail.com>
+ <20190814074918.GA52127@atomide.com>
+ <CAK8P3a3k_HOGqzMGjtc+7NSaK0Bsa_vxxRFLzY8aP6ev4wa9iA@mail.gmail.com>
+ <20190816083403.GB1952@darkstar.musicnaut.iki.fi>
+ <CAK8P3a3jqNxoihQ+UFvOZMg=AcF2yzHXs5ay6X1TZX8L3zQ3rg@mail.gmail.com>
+ <20190827190453.GJ30291@darkstar.musicnaut.iki.fi>
+ <CAK8P3a1PeBMRuweAmzrTQC85CmwdZPirG3HPg9aJ99p2U7zknQ@mail.gmail.com>
+ <20190828182318.GL30291@darkstar.musicnaut.iki.fi>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-457157129-1567017905=:17409"
-X-SES-Outgoing: 2019.08.28-54.240.9.34
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828182318.GL30291@darkstar.musicnaut.iki.fi>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+* Aaro Koskinen <aaro.koskinen@iki.fi> [190828 18:23]:
+> On Wed, Aug 28, 2019 at 03:02:36PM +0200, Arnd Bergmann wrote:
+> > I assume you checked that the uart output wasn't already broken
+> > by one of the earlier patches, right?
+> 
+> Correct, it's only with the mapping change patch it hangs.
+> 
+> > Also, looking at arch/arm/mach-omap1/include/mach/uncompress.h
+> > it seems that SX1 normally uses UART3, not UART1.
+> > Is that different in qemu?
+> 
+> In QEMU all uarts can be used, trying with UART3 as early console
+> hangs as well. (It prints Uncompressing... done. but I guess that's
+> done with the physical address.)
 
---8323329-457157129-1567017905=:17409
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+Hmm maybe we now need to get rid of the machine based
+detection code for DEBUGLL like we did for mach-omap2.
 
-On Mon, 26 Aug 2019, Vlastimil Babka wrote:
+Just get rid of arch_decomp_setup() in mach-omap1
+uncompress.h file and make sure the assembly code
+only relies on the the Kconfig options only.
 
-> The topic has been discussed at LSF/MM 2019 [3]. Adding a 'kmalloc_aligned()'
-> variant would not help with code unknowingly relying on the implicit alignment.
-> For slab implementations it would either require creating more kmalloc caches,
-> or allocate a larger size and only give back part of it. That would be
-> wasteful, especially with a generic alignment parameter (in contrast with a
-> fixed alignment to size).
+That needs to be done at least for device tree based
+support since we use a generic machine ID. But maybe
+with multiarch support we need to rely on generic
+uncompress.h and assembly.
 
-The additional caches will be detected if similar to existing ones and
-merged into one. So the overhead is not that significant.
+Regards,
 
-> Ideally we should provide to mm users what they need without difficult
-> workarounds or own reimplementations, so let's make the kmalloc() alignment to
-> size explicitly guaranteed for power-of-two sizes under all configurations.
-
-The objection remains that this will create exceptions for the general
-notion that all kmalloc caches are aligned to KMALLOC_MINALIGN which may
-be suprising and it limits the optimizations that slab allocators may use
-for optimizing data use. The SLOB allocator was designed in such a way
-that data wastage is limited. The changes here sabotage that goal and show
-that future slab allocators may be similarly constrained with the
-exceptional alignents implemented. Additional debugging features etc etc
-must all support the exceptional alignment requirements.
-
-> * SLUB layout is also unchanged unless redzoning is enabled through
->   CONFIG_SLUB_DEBUG and boot parameter for the particular kmalloc cache. With
->   this patch, explicit alignment is guaranteed with redzoning as well. This
->   will result in more memory being wasted, but that should be acceptable in a
->   debugging scenario.
-
-Well ok. That sounds fine (apart from breaking the rules for slab object
-alignment).
-
-> * SLOB has no implicit alignment so this patch adds it explicitly for
->   kmalloc(). The potential downside is increased fragmentation. While
->   pathological allocation scenarios are certainly possible, in my testing,
->   after booting a x86_64 kernel+userspace with virtme, around 16MB memory
->   was consumed by slab pages both before and after the patch, with difference
->   in the noise.
-
-This change to slob will cause a significant additional use of memory. The
-advertised advantage of SLOB is that *minimal* memory will be used since
-it is targeted for embedded systems. Different types of slab objects of
-varying sizes can be allocated in the same memory page to reduce
-allocation overhead.
-
-Having these exceptional rules for aligning power of two sizes caches
-will significantly increase the memory wastage in SLOB.
-
-The result of this patch is just to use more memory to be safe from
-certain pathologies where one subsystem was relying on an alignment that
-was not specified. That is why this approach should not be called
-�natural" but "implicit alignment". The one using the slab cache is not
-aware that the slab allocator provides objects aligned in a special way
-(which is in general not needed. There seems to be a single pathological
-case that needs to be addressed and I thought that was due to some
-brokenness in the hardware?).
-
-It is better to ensure that subsystems that require special alignment
-explicitly tell the allocator about this.
-
-I still think implicit exceptions to alignments are a bad idea. Those need
-to be explicity specified and that is possible using kmem_cache_create().
-
-
---8323329-457157129-1567017905=:17409--
+Tony
