@@ -2,264 +2,457 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E61FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357C7C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0215022CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C1422DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="R3prp1MW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VXSNQdT9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfH1Vhg (ORCPT
+        id S1727020AbfH1Vhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:37:36 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44649 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfH1Vhf (ORCPT
+        Wed, 28 Aug 2019 17:37:45 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40066 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfH1Vhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:37:35 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i18so386009pgl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 14:37:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y5CgfqiMSShVcJIHPwChoaUI5jnbFihdLP9y/3LJuNE=;
-        b=R3prp1MWTGHinnPidcl7VICFaEI8rvZssimKcVm5/NyNxNjrU8S48iPqPHOLyPTXvS
-         5ORMOZw1CqRZKS8QMvSf/zU9dxga/BXHvfF49dBcQko6DZz5nu8ZdPLQqDAuFmlsdrfO
-         pVPkXZSt+VQQW8jwhuA7J+J7ikakmI1kgWIQfyDcayYPgm6DtCDRXjptreKSscQP7eyS
-         fwLNFZgxVp8zFccHJJkWKBZqPJRY160eNzNK5YsmSGeJzvRWHCrrGZr8dE4gAA/WWqQb
-         g4Rl5HKQiylJQsMv/g/dwJPMbM7R/6cAQi2R4t+Ryp4BtYQu0o1obBoqCie8iI/wrmu6
-         EIJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=Y5CgfqiMSShVcJIHPwChoaUI5jnbFihdLP9y/3LJuNE=;
-        b=TB597ptMQyq8IpFm/HFP20AoyL4eMa/tI9XgEhSGzfWgcCYd7SapcZnwLSLT3vd9bj
-         Ob/V3AJBDkODSkHKRADtYZT6NQ2uQnB4iRiQCVrr28Mgqim3hQiectIt5KzHOVaTVl1d
-         Yw0TnGYZEc0P1z8nOHgJv2c6xLB6yb6EZ8gonz70ngGcwtOxeDfVDSdrEc3IuA4YdBQy
-         w7MNv+Bwe0/14FI1sg/Ze7tOgcvsqw5rZPw7iF8dv7AgEMELcJJPrUoAdpQOOhU6RHUU
-         ZyIIIJ7C+XuClCIDftsj4nSiolOs8ZRjiHDCjEL+oyE14kKY55P/+YoRPXgqrX85L3T0
-         i0dQ==
-X-Gm-Message-State: APjAAAUFDXyM/6hHRs+fsNXiViifKBH6Hd+zepnoFUzKP2wwqCcWjnfN
-        mB2zbGMWGyoFmVt8jmRA0a7qmQ==
-X-Google-Smtp-Source: APXvYqwjqk2RLXwbcIxDHoQOIkaEut6i7nG3Qo/gpY2k8JRUenwbpENdFGpse+imvvjq/h5Ig70C9A==
-X-Received: by 2002:aa7:9edc:: with SMTP id r28mr6994148pfq.219.1567028254664;
-        Wed, 28 Aug 2019 14:37:34 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id u24sm122218pgk.31.2019.08.28.14.37.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 14:37:33 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 14:37:33 -0700 (PDT)
-X-Google-Original-Date: Wed, 28 Aug 2019 14:35:23 PDT (-0700)
-Subject:     Re: [RFC PATCH 1/2] RISC-V: Mark existing SBI as legacy SBI.
-In-Reply-To: <20190827083700.GF682@rapoport-lnx>
-CC:     anup@brainfault.org, aou@eecs.berkeley.edu, alankao@andestech.com,
-        alexios.zavras@intel.com, Greg KH <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
-        gary@garyguo.net, Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, tglx@linutronix.de
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     rppt@linux.ibm.com
-Message-ID: <mhng-fbf98ed7-3965-43d2-a816-ee1922bd4df1@palmer-si-x1c4>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 28 Aug 2019 17:37:45 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7SLbdka094266;
+        Wed, 28 Aug 2019 16:37:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1567028259;
+        bh=pArZ5Rs2Z2fF33UIiB1eww/Vj/p59a0ykfdwOu7vvzw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VXSNQdT9IR9HJk7YR5TJWE+aIljBU8wlO0k9iI64n2M/TjJY/BRBCgK8dNxAPj8sK
+         ZANzDGDedaBy4VgY/NZFDnyEa1n4/vPHHFimLdTBBFAfyGEYKaUXj1+UN+2j8lyQpk
+         KyrPXdtDK6xVWde+4Wa7tP7u7A0doK8dOLygjm6k=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7SLbdrB103744
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 28 Aug 2019 16:37:39 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 28
+ Aug 2019 16:37:39 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 28 Aug 2019 16:37:39 -0500
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7SLbco5076503;
+        Wed, 28 Aug 2019 16:37:38 -0500
+Subject: Re: [PATCH v2] rpmsg: add a description field
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Tero Kristo <t-kristo@ti.com>
+References: <20190815231448.10100-1-s-anna@ti.com>
+ <3d70ae75-4c62-f310-37fa-8c57bfc09dc1@st.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <351bbba8-e2c6-a195-93fe-d6ed87a9fe79@ti.com>
+Date:   Wed, 28 Aug 2019 16:37:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <3d70ae75-4c62-f310-37fa-8c57bfc09dc1@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019 01:37:00 PDT (-0700), rppt@linux.ibm.com wrote:
-> On Tue, Aug 27, 2019 at 01:58:03PM +0530, Anup Patel wrote:
->> On Tue, Aug 27, 2019 at 1:21 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
->> >
->> > On Mon, Aug 26, 2019 at 04:32:55PM -0700, Atish Patra wrote:
->> > > As per the new SBI specification, current SBI implementation is
->> > > defined as legacy and will be removed/replaced in future.
->> > >
->> > > Rename existing implementation to reflect that. This patch is just
->> > > a preparatory patch for SBI v0.2 and doesn't introduce any functional
->> > > changes.
->> > >
->> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
->> > > ---
->> > >  arch/riscv/include/asm/sbi.h | 61 +++++++++++++++++++-----------------
->> > >  1 file changed, 33 insertions(+), 28 deletions(-)
->> > >
->> > > diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
->> > > index 21134b3ef404..7f5ecaaaa0d7 100644
->> > > --- a/arch/riscv/include/asm/sbi.h
->> > > +++ b/arch/riscv/include/asm/sbi.h
->> > > @@ -8,17 +8,18 @@
->> > >
->> > >  #include <linux/types.h>
->> > >
->> > > -#define SBI_SET_TIMER 0
->> > > -#define SBI_CONSOLE_PUTCHAR 1
->> > > -#define SBI_CONSOLE_GETCHAR 2
->> > > -#define SBI_CLEAR_IPI 3
->> > > -#define SBI_SEND_IPI 4
->> > > -#define SBI_REMOTE_FENCE_I 5
->> > > -#define SBI_REMOTE_SFENCE_VMA 6
->> > > -#define SBI_REMOTE_SFENCE_VMA_ASID 7
->> > > -#define SBI_SHUTDOWN 8
->> > > -
->> > > -#define SBI_CALL(which, arg0, arg1, arg2, arg3) ({           \
->> > > +
->> > > +#define SBI_EXT_LEGACY_SET_TIMER 0x0
->> > > +#define SBI_EXT_LEGACY_CONSOLE_PUTCHAR 0x1
->> > > +#define SBI_EXT_LEGACY_CONSOLE_GETCHAR 0x2
->> > > +#define SBI_EXT_LEGACY_CLEAR_IPI 0x3
->> > > +#define SBI_EXT_LEGACY_SEND_IPI 0x4
->> > > +#define SBI_EXT_LEGACY_REMOTE_FENCE_I 0x5
->> > > +#define SBI_EXT_LEGACY_REMOTE_SFENCE_VMA 0x6
->> > > +#define SBI_EXT_LEGACY_REMOTE_SFENCE_VMA_ASID 0x7
->> > > +#define SBI_EXT_LEGACY_SHUTDOWN 0x8
->> >
->> > I can't say I'm closely following RISC-V development, but what will happen
->> > when SBI v0.3 will come out and will render v0.2 legacy?
->> > Won't we need another similar renaming then?
->>
->> Going forward with SBI v0.3 and higher, we won't see any calling
->> convention changes.
->>
->> The SBI spec will be maintained and improved by RISC-V UNIX
->> platform spec working group.
->>
->> My best guess is that, all future SBI releases (v0.3 or higher) will
->> include more optional SBI extensions (hart hotplug, power management, etc).
->
-> Thanks for the clarification!
+Hi Arnaud,
 
-Specifically the issue is that 0.1 didn't include any mechanism for probing the 
-existence of a function, but since that has been added in 0.2 it's possible to 
-maintain compatible with future versions.
+On 8/27/19 8:58 AM, Arnaud Pouliquen wrote:
+> Hi Suman,
+> 
+> On 8/16/19 1:14 AM, Suman Anna wrote:
+>> From: Ohad Ben-Cohen <ohad@wizery.com>
+>>
+>> Add a new description field to the rpmsg bus infrastructure
+>> that can be passed onto the rpmsg client drivers for additional
+>> information. The current rpmsg bus client drivers need to have
+>> a fixed id_table for proper matching, this new field can allow
+>> flexibility for the client drivers (eg: like creating unique
+>> cdevs).
+>>
+>> The description field is published through an enhanced name
+>> service announcement message structure. The name service
+>> message processing logic is updated to maintain backward
+>> compatibility with the previous message structure.
+> 
+> Could you give some concrete use cases associated with your need?.
+> I'm not sure I'm interpreting it correctly...
 
->
->> Regards,
->> Anup
+I have a generic rpmsg-rpc driver that allows userspace to execute any
+of a set of remote functions provided by a service. And we can have the
+same set of functions exported from different rprocs, or different
+services presenting different sets of functions. And the same service is
+used by multiple applications through their own fds. I use the desc
+field to differentiate between the services.
+
+> 
+> Your patch seems to me a way to create a kind of sub-service. Why not
+> simply concatenate this in the name services, i.e creating several name
+> services ("service-0", "service-1"...)?
+
+Every-time a new service is added, it requires a driver update adding
+the new service name to the compatible list, or a corresponding udev
+rule. It is really upto the individual rpmsg driver as to how it uses
+the desc field, so it is optional as far as a rpmsg driver is concerned
+(since this didn't exist previously, and so all existing drivers will
+continue to work as before).
+
+> 
+> Regarding your implementation, the descriptor field seems used to:
+> - instantiate a rpmsg service
+> - retrieve the instance from the userland based on the descriptor.
+> 
+> What not just use this descriptor to provide information to userland via
+> sysfs, but not use it as a criteria to find the rpmsg device?
+
+The rpmsg device logic for actually probing a rpmsg driver still relies
+on the name field. I added the additional check against desc to just
+ensure that there are no name clashes on the desc field. Do you have any
+concerns with this check?
+
+> 
+> In this case you can use the remote endpoint address(dst addr) to
+> instantiate the service. The descriptor field could just be an
+> information to help application to retrieve the good instance of the
+> service.
+> 
 >>
->> >
->> > > +#define SBI_CALL_LEGACY(which, arg0, arg1, arg2, arg3) ({             \
->> > >       register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);   \
->> > >       register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);   \
->> > >       register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);   \
->> > > @@ -32,58 +33,61 @@
->> > >  })
->> > >
->> > >  /* Lazy implementations until SBI is finalized */
->> > > -#define SBI_CALL_0(which) SBI_CALL(which, 0, 0, 0, 0)
->> > > -#define SBI_CALL_1(which, arg0) SBI_CALL(which, arg0, 0, 0, 0)
->> > > -#define SBI_CALL_2(which, arg0, arg1) SBI_CALL(which, arg0, arg1, 0, 0)
->> > > -#define SBI_CALL_3(which, arg0, arg1, arg2) \
->> > > -             SBI_CALL(which, arg0, arg1, arg2, 0)
->> > > -#define SBI_CALL_4(which, arg0, arg1, arg2, arg3) \
->> > > -             SBI_CALL(which, arg0, arg1, arg2, arg3)
->> > > +#define SBI_CALL_LEGACY_0(which) SBI_CALL_LEGACY(which, 0, 0, 0, 0)
->> > > +#define SBI_CALL_LEGACY_1(which, arg0) SBI_CALL_LEGACY(which, arg0, 0, 0, 0)
->> > > +#define SBI_CALL_LEGACY_2(which, arg0, arg1) \
->> > > +             SBI_CALL_LEGACY(which, arg0, arg1, 0, 0)
->> > > +#define SBI_CALL_LEGACY_3(which, arg0, arg1, arg2) \
->> > > +             SBI_CALL_LEGACY(which, arg0, arg1, arg2, 0)
->> > > +#define SBI_CALL_LEGACY_4(which, arg0, arg1, arg2, arg3) \
->> > > +             SBI_CALL_LEGACY(which, arg0, arg1, arg2, arg3)
->> > >
->> > >  static inline void sbi_console_putchar(int ch)
->> > >  {
->> > > -     SBI_CALL_1(SBI_CONSOLE_PUTCHAR, ch);
->> > > +     SBI_CALL_LEGACY_1(SBI_EXT_LEGACY_CONSOLE_PUTCHAR, ch);
->> > >  }
->> > >
->> > >  static inline int sbi_console_getchar(void)
->> > >  {
->> > > -     return SBI_CALL_0(SBI_CONSOLE_GETCHAR);
->> > > +     return SBI_CALL_LEGACY_0(SBI_EXT_LEGACY_CONSOLE_GETCHAR);
->> > >  }
->> > >
->> > >  static inline void sbi_set_timer(uint64_t stime_value)
->> > >  {
->> > >  #if __riscv_xlen == 32
->> > > -     SBI_CALL_2(SBI_SET_TIMER, stime_value, stime_value >> 32);
->> > > +     SBI_CALL_LEGACY_2(SBI_EXT_LEGACY_SET_TIMER, stime_value,
->> > > +                       stime_value >> 32);
->> > >  #else
->> > > -     SBI_CALL_1(SBI_SET_TIMER, stime_value);
->> > > +     SBI_CALL_LEGACY_1(SBI_EXT_LEGACY_SET_TIMER, stime_value);
->> > >  #endif
->> > >  }
->> > >
->> > >  static inline void sbi_shutdown(void)
->> > >  {
->> > > -     SBI_CALL_0(SBI_SHUTDOWN);
->> > > +     SBI_CALL_LEGACY_0(SBI_EXT_LEGACY_SHUTDOWN);
->> > >  }
->> > >
->> > >  static inline void sbi_clear_ipi(void)
->> > >  {
->> > > -     SBI_CALL_0(SBI_CLEAR_IPI);
->> > > +     SBI_CALL_LEGACY_0(SBI_EXT_LEGACY_CLEAR_IPI);
->> > >  }
->> > >
->> > >  static inline void sbi_send_ipi(const unsigned long *hart_mask)
->> > >  {
->> > > -     SBI_CALL_1(SBI_SEND_IPI, hart_mask);
->> > > +     SBI_CALL_LEGACY_1(SBI_EXT_LEGACY_SEND_IPI, hart_mask);
->> > >  }
->> > >
->> > >  static inline void sbi_remote_fence_i(const unsigned long *hart_mask)
->> > >  {
->> > > -     SBI_CALL_1(SBI_REMOTE_FENCE_I, hart_mask);
->> > > +     SBI_CALL_LEGACY_1(SBI_EXT_LEGACY_REMOTE_FENCE_I, hart_mask);
->> > >  }
->> > >
->> > >  static inline void sbi_remote_sfence_vma(const unsigned long *hart_mask,
->> > >                                        unsigned long start,
->> > >                                        unsigned long size)
->> > >  {
->> > > -     SBI_CALL_3(SBI_REMOTE_SFENCE_VMA, hart_mask, start, size);
->> > > +     SBI_CALL_LEGACY_3(SBI_EXT_LEGACY_REMOTE_SFENCE_VMA, hart_mask,
->> > > +                       start, size);
->> > >  }
->> > >
->> > >  static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
->> > > @@ -91,7 +95,8 @@ static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
->> > >                                             unsigned long size,
->> > >                                             unsigned long asid)
->> > >  {
->> > > -     SBI_CALL_4(SBI_REMOTE_SFENCE_VMA_ASID, hart_mask, start, size, asid);
->> > > +     SBI_CALL_LEGACY_4(SBI_EXT_LEGACY_REMOTE_SFENCE_VMA_ASID, hart_mask,
->> > > +                       start, size, asid);
->> > >  }
->> > >
->> > >  #endif
->> > > --
->> > > 2.21.0
->> > >
->> > >
->> > > _______________________________________________
->> > > linux-riscv mailing list
->> > > linux-riscv@lists.infradead.org
->> > > http://lists.infradead.org/mailman/listinfo/linux-riscv
->> > >
->> >
->> > --
->> > Sincerely yours,
->> > Mike.
->> >
->> >
->> > _______________________________________________
->> > linux-riscv mailing list
->> > linux-riscv@lists.infradead.org
->> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+>> Based on an initial patch from Ohad Ben-Cohen.
 >>
->> _______________________________________________
->> linux-riscv mailing list
->> linux-riscv@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>> Signed-off-by: Ohad Ben-Cohen <ohad@wizery.com>
+>> [s-anna@ti.com: forward port, add sysfs documentation, fixup qcom
+>> drivers]
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> [t-kristo@ti.com: reworked to support both rpmsg with/without the desc
+>> field]
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>> v2:
+>>   - Localized the desc match check to virtio-rpmsg-bus
+>>   - Enforced NULL termination of desc similar to name
+>> v1: https://patchwork.kernel.org/patch/11087717/
+>>   Documentation/ABI/testing/sysfs-bus-rpmsg | 29 ++++++++++
+>>   drivers/rpmsg/qcom_glink_native.c         |  1 +
+>>   drivers/rpmsg/qcom_smd.c                  |  1 +
+>>   drivers/rpmsg/rpmsg_char.c                |  1 +
+>>   drivers/rpmsg/rpmsg_core.c                |  2 +
+>>   drivers/rpmsg/virtio_rpmsg_bus.c          | 67 +++++++++++++++++++++--
+>>   drivers/soc/qcom/wcnss_ctrl.c             |  1 +
+>>   include/linux/rpmsg.h                     |  4 ++
+>>   8 files changed, 101 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-rpmsg
+>> b/Documentation/ABI/testing/sysfs-bus-rpmsg
+>> index 990fcc420935..7f1b09ecc64d 100644
+>> --- a/Documentation/ABI/testing/sysfs-bus-rpmsg
+>> +++ b/Documentation/ABI/testing/sysfs-bus-rpmsg
+>> @@ -93,3 +93,32 @@ Description:
+>>           This sysfs entry allows the rpmsg driver for a rpmsg device
+>>           to be specified which will override standard OF, ID table
+>>           and name matching.
+>> +
+>> +What:        /sys/bus/rpmsg/devices/.../desc
+>> +Date:        August 2019
+>> +KernelVersion:    5.4
+>> +Contact:    Bjorn Andersson <bjorn.andersson@linaro.org>
+>> +Description:
+>> +        Every rpmsg device is a communication channel with a remote
+>> +        processor. Channels are identified by a textual name (see
+>> +        /sys/bus/rpmsg/devices/.../name above) and have a local
+>> +        ("source") rpmsg address, and remote ("destination") rpmsg
+>> +        address.
+>> +
+>> +        A channel is first created when an entity, whether local
+>> +        or remote, starts listening on it for messages (and is thus
+>> +        called an rpmsg server). When that happens, a "name service"
+>> +        announcement is sent to the other processor, in order to let
+>> +        it know about the creation of the channel (this way remote
+>> +        clients know they can start sending messages).
+>> +
+>> +        The listening entity (or client) which communicates with a
+>> +        remote processor is referred as rpmsg driver. The rpmsg device
+>> +        and rpmsg driver are matched based on rpmsg device name (see
+>> +        /sys/bus/rpmsg/devices/.../name above) and rpmsg driver ID
+>> table.
+>> +
+>> +        This sysfs entry contains an additional optional description of
+>> +        the rpmsg device that can be optionally included as part of the
+>> +        "name service" announcement. This description is then passed on
+>> +        to the corresponding rpmsg drivers to further distinguish
+>> multiple
+>> +        devices associated with the same rpmsg driver.
+>> diff --git a/drivers/rpmsg/qcom_glink_native.c
+>> b/drivers/rpmsg/qcom_glink_native.c
+>> index f46c787733e8..cfdabddc15ac 100644
+>> --- a/drivers/rpmsg/qcom_glink_native.c
+>> +++ b/drivers/rpmsg/qcom_glink_native.c
+>> @@ -1456,6 +1456,7 @@ static void qcom_glink_rx_close(struct
+>> qcom_glink *glink, unsigned int rcid)
+>>           strncpy(chinfo.name, channel->name, sizeof(chinfo.name));
+>>           chinfo.src = RPMSG_ADDR_ANY;
+>>           chinfo.dst = RPMSG_ADDR_ANY;
+>> +        chinfo.desc[0] = '\0';
+>>             rpmsg_unregister_device(glink->dev, &chinfo);
+>>       }
+>> diff --git a/drivers/rpmsg/qcom_smd.c b/drivers/rpmsg/qcom_smd.c
+>> index 4abbeea782fa..7cd6b9c47065 100644
+>> --- a/drivers/rpmsg/qcom_smd.c
+>> +++ b/drivers/rpmsg/qcom_smd.c
+>> @@ -1307,6 +1307,7 @@ static void qcom_channel_state_worker(struct
+>> work_struct *work)
+>>           strncpy(chinfo.name, channel->name, sizeof(chinfo.name));
+>>           chinfo.src = RPMSG_ADDR_ANY;
+>>           chinfo.dst = RPMSG_ADDR_ANY;
+>> +        chinfo.desc[0] = '\0';
+>>           rpmsg_unregister_device(&edge->dev, &chinfo);
+>>           channel->registered = false;
+>>           spin_lock_irqsave(&edge->channels_lock, flags);
+>> diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
+>> index eea5ebbb5119..4bd91445a2fd 100644
+>> --- a/drivers/rpmsg/rpmsg_char.c
+>> +++ b/drivers/rpmsg/rpmsg_char.c
+>> @@ -442,6 +442,7 @@ static long rpmsg_ctrldev_ioctl(struct file *fp,
+>> unsigned int cmd,
+>>       chinfo.name[RPMSG_NAME_SIZE-1] = '\0';
+>>       chinfo.src = eptinfo.src;
+>>       chinfo.dst = eptinfo.dst;
+>> +    chinfo.desc[0] = '\0';
+>>         return rpmsg_eptdev_create(ctrldev, chinfo);
+>>   };
+>> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+>> index ea88fd4e2a6e..ba0f2c1a7fa4 100644
+>> --- a/drivers/rpmsg/rpmsg_core.c
+>> +++ b/drivers/rpmsg/rpmsg_core.c
+>> @@ -365,6 +365,7 @@ static DEVICE_ATTR_RW(field)
+>>     /* for more info, see Documentation/ABI/testing/sysfs-bus-rpmsg */
+>>   rpmsg_show_attr(name, id.name, "%s\n");
+>> +rpmsg_show_attr(desc, desc, "%s\n");
+>>   rpmsg_show_attr(src, src, "0x%x\n");
+>>   rpmsg_show_attr(dst, dst, "0x%x\n");
+>>   rpmsg_show_attr(announce, announce ? "true" : "false", "%s\n");
+>> @@ -386,6 +387,7 @@ static DEVICE_ATTR_RO(modalias);
+>>     static struct attribute *rpmsg_dev_attrs[] = {
+>>       &dev_attr_name.attr,
+>> +    &dev_attr_desc.attr,
+>>       &dev_attr_modalias.attr,
+>>       &dev_attr_dst.attr,
+>>       &dev_attr_src.attr,
+>> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c
+>> b/drivers/rpmsg/virtio_rpmsg_bus.c
+>> index 5d3685bd76a2..b42277cd7759 100644
+>> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+>> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+>> @@ -110,6 +110,23 @@ struct rpmsg_ns_msg {
+>>       u32 flags;
+>>   } __packed;
+>>   +/**
+>> + * struct rpmsg_ns_msg_ext - dynamic name service announcement
+>> message v2
+>> + * @name: name of remote service that is published
+>> + * @desc: description of remote service
+>> + * @addr: address of remote service that is published
+>> + * @flags: indicates whether service is created or destroyed
+>> + *
+>> + * Interchangeable nameservice message with rpmsg_ns_msg. This one has
+>> + * the addition of the desc field for extra flexibility.
+>> + */
+>> +struct rpmsg_ns_msg_ext {
+>> +    char name[RPMSG_NAME_SIZE];
+>> +    char desc[RPMSG_NAME_SIZE];
+>> +    u32 addr;
+>> +    u32 flags;
+>> +} __packed;
+>> +
+>>   /**
+>>    * enum rpmsg_ns_flags - dynamic name service announcement flags
+>>    *
+>> @@ -384,6 +401,24 @@ static void virtio_rpmsg_release_device(struct
+>> device *dev)
+>>       kfree(vch);
+>>   }
+>>   +static int virtio_rpmsg_desc_match(struct device *dev, void *data)
+>> +{
+>> +    struct rpmsg_channel_info *chinfo = data;
+>> +    struct rpmsg_device *rpdev = to_rpmsg_device(dev);
+>> +
+>> +    if (!*chinfo->desc)
+>> +        return 0;
+>> +
+>> +    if (strncmp(chinfo->name, rpdev->id.name, RPMSG_NAME_SIZE))
+>> +        return 0;
+>> +
+>> +    if (strncmp(chinfo->desc, rpdev->desc, RPMSG_NAME_SIZE))
+>> +        return 0;
+>> +
+>> +    /* found a match ! */
+>> +    return 1;
+>> +}
+>> +
+>>   /*
+>>    * create an rpmsg channel using its name and address info.
+>>    * this function will be used to create both static and dynamic
+>> @@ -407,6 +442,15 @@ static struct rpmsg_device
+>> *rpmsg_create_channel(struct virtproc_info *vrp,
+>>           return NULL;
+>>       }
+>>   +    tmp = device_find_child(dev, chinfo, virtio_rpmsg_desc_match);
+>> +    if (tmp) {
+>> +        /* decrement the matched device's refcount back */
+>> +        put_device(tmp);
+>> +        dev_err(dev, "channel %s:%x:%x failed, desc '%s' already
+>> exists\n",
+>> +            chinfo->name, chinfo->src, chinfo->dst, chinfo->desc);
+>> +        return NULL;
+>> +    }
+>> +
+>>       vch = kzalloc(sizeof(*vch), GFP_KERNEL);
+>>       if (!vch)
+>>           return NULL;
+>> @@ -419,6 +463,7 @@ static struct rpmsg_device
+>> *rpmsg_create_channel(struct virtproc_info *vrp,
+>>       rpdev->src = chinfo->src;
+>>       rpdev->dst = chinfo->dst;
+>>       rpdev->ops = &virtio_rpmsg_ops;
+>> +    strncpy(rpdev->desc, chinfo->desc, RPMSG_NAME_SIZE);
+>>         /*
+>>        * rpmsg server channels has predefined local address (for now),
+>> @@ -816,18 +861,30 @@ static int rpmsg_ns_cb(struct rpmsg_device
+>> *rpdev, void *data, int len,
+>>                  void *priv, u32 src)
+>>   {
+>>       struct rpmsg_ns_msg *msg = data;
+>> +    struct rpmsg_ns_msg_ext *msg_ext = data;
+>>       struct rpmsg_device *newch;
+>>       struct rpmsg_channel_info chinfo;
+>>       struct virtproc_info *vrp = priv;
+>>       struct device *dev = &vrp->vdev->dev;
+>>       int ret;
+>> +    u32 addr;
+>> +    u32 flags;
+>>     #if defined(CONFIG_DYNAMIC_DEBUG)
+>>       dynamic_hex_dump("NS announcement: ", DUMP_PREFIX_NONE, 16, 1,
+>>                data, len, true);
+>>   #endif
+>>   -    if (len != sizeof(*msg)) {
+>> +    if (len == sizeof(*msg)) {
+>> +        addr = msg->addr;
+>> +        flags = msg->flags;
+>> +        chinfo.desc[0] = '\0';
+>> +    } else if (len == sizeof(*msg_ext)) {
+>> +        addr = msg_ext->addr;
+>> +        flags = msg_ext->flags;
+>> +        msg_ext->desc[RPMSG_NAME_SIZE - 1] = '\0';
+>> +        strncpy(chinfo.desc, msg_ext->desc, sizeof(chinfo.desc));
+>> +    } else {
+>>           dev_err(dev, "malformed ns msg (%d)\n", len);
+>>           return -EINVAL;
+>>       }
+>> @@ -847,14 +904,14 @@ static int rpmsg_ns_cb(struct rpmsg_device
+>> *rpdev, void *data, int len,
+>>       msg->name[RPMSG_NAME_SIZE - 1] = '\0';
+>>         dev_info(dev, "%sing channel %s addr 0x%x\n",
+>> -         msg->flags & RPMSG_NS_DESTROY ? "destroy" : "creat",
+>> -         msg->name, msg->addr);
+>> +         flags & RPMSG_NS_DESTROY ? "destroy" : "creat",
+>> +         msg->name, addr);
+>>         strncpy(chinfo.name, msg->name, sizeof(chinfo.name));
+>>       chinfo.src = RPMSG_ADDR_ANY;
+>> -    chinfo.dst = msg->addr;
+>> +    chinfo.dst = addr;
+>>   -    if (msg->flags & RPMSG_NS_DESTROY) {
+>> +    if (flags & RPMSG_NS_DESTROY) {
+>>           ret = rpmsg_unregister_device(&vrp->vdev->dev, &chinfo);
+>>           if (ret)
+>>               dev_err(dev, "rpmsg_destroy_channel failed: %d\n", ret);
+>> diff --git a/drivers/soc/qcom/wcnss_ctrl.c
+>> b/drivers/soc/qcom/wcnss_ctrl.c
+>> index e5c68051fb17..ad9f28dc13f1 100644
+>> --- a/drivers/soc/qcom/wcnss_ctrl.c
+>> +++ b/drivers/soc/qcom/wcnss_ctrl.c
+>> @@ -276,6 +276,7 @@ struct rpmsg_endpoint
+>> *qcom_wcnss_open_channel(void *wcnss, const char *name, rp
+>>       strscpy(chinfo.name, name, sizeof(chinfo.name));
+>>       chinfo.src = RPMSG_ADDR_ANY;
+>>       chinfo.dst = RPMSG_ADDR_ANY;
+>> +    chinfo.desc[0] = '\0';
+>>         return rpmsg_create_ept(_wcnss->channel->rpdev, cb, priv,
+>> chinfo);
+
+> There is another way to create a service, by registering an RPMsg
+> drivers (e.g.
+> https://elixir.bootlin.com/linux/v5.3-rc6/source/samples/rpmsg/rpmsg_client_sample.c)
+
+I am not sure I understand, you obviously need a rpmsg driver for a
+rpmsg device to probe.
+
+> 
+> In this case the descriptor can not be used, right?
+> To be compliant probably need to extend the rpmsg_device_id struct...
+
+As I mentioned above, it is optional for backward compatibility, and the
+rpmsg client sample doesn't have any use for it atm, even if a firmware
+publishes a desc field alongside the "rpmsg-client-sample" name. That is
+why, I haven't extended the rpmsg_device_id.
+
+regards
+Suman
+
+> 
+> Regards,
+> Arnaud
+>>   }
+>> diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+>> index 9fe156d1c018..436faf04ba1c 100644
+>> --- a/include/linux/rpmsg.h
+>> +++ b/include/linux/rpmsg.h
+>> @@ -28,11 +28,13 @@ struct rpmsg_endpoint_ops;
+>>   /**
+>>    * struct rpmsg_channel_info - channel info representation
+>>    * @name: name of service
+>> + * @desc: description of service
+>>    * @src: local address
+>>    * @dst: destination address
+>>    */
+>>   struct rpmsg_channel_info {
+>>       char name[RPMSG_NAME_SIZE];
+>> +    char desc[RPMSG_NAME_SIZE];
+>>       u32 src;
+>>       u32 dst;
+>>   };
+>> @@ -42,6 +44,7 @@ struct rpmsg_channel_info {
+>>    * @dev: the device struct
+>>    * @id: device id (used to match between rpmsg drivers and devices)
+>>    * @driver_override: driver name to force a match
+>> + * @desc: description of remote service
+>>    * @src: local address
+>>    * @dst: destination address
+>>    * @ept: the rpmsg endpoint of this channel
+>> @@ -51,6 +54,7 @@ struct rpmsg_device {
+>>       struct device dev;
+>>       struct rpmsg_device_id id;
+>>       char *driver_override;
+>> +    char desc[RPMSG_NAME_SIZE];
+>>       u32 src;
+>>       u32 dst;
+>>       struct rpmsg_endpoint *ept;
+>>
+
