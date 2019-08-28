@@ -2,137 +2,199 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BC3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A694C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 062E12054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 517DB2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:00:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2qOK8B5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfH1J5G (ORCPT
+        id S1726429AbfH1KAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:57:06 -0400
-Received: from mga18.intel.com ([134.134.136.126]:7349 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbfH1J5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:57:05 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 02:57:05 -0700
-X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
-   d="scan'208";a="356062968"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 02:57:03 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 28B9620ABC; Wed, 28 Aug 2019 12:57:01 +0300 (EEST)
-Date:   Wed, 28 Aug 2019 12:57:01 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/5] ACPI: Enable driver and firmware hints to control
- power at probe time
-Message-ID: <20190828095701.GC7657@paasikivi.fi.intel.com>
-References: <20190826083112.8888-1-sakari.ailus@linux.intel.com>
- <20190826083112.8888-2-sakari.ailus@linux.intel.com>
- <20190826084343.GA1095@kroah.com>
- <20190826103200.GQ31967@paasikivi.fi.intel.com>
- <20190826133439.GA13275@kroah.com>
- <CAJZ5v0jmsPO5m2zBV3_j8LgqQ2Uj6euXUCJgT74L93hZP9nP_A@mail.gmail.com>
+        Wed, 28 Aug 2019 06:00:00 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46975 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbfH1J77 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 05:59:59 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z1so1812790wru.13
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 02:59:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=Nz++kIJqul0wPSRdmkNJtLbYUtvatvDKV4U+pZdOE0E=;
+        b=T2qOK8B5cENn8IcBsun1X2SLnMxW124L/fEq9S+YoGCnGJn1pztFayUK6kIrC69oD5
+         CXNvDbc/oX9+12cns5eDBKnlrJ0dhdrpB2lpGNEWknF61CYC7b4rRQH/7L130Gf/Kk5y
+         N+T+58J5s7k5qEUfszb3AhUsFrTGRStbYHYDr+6hSESObpHhUv7na8Y0ReyRJt2Ale0p
+         ocNxuxVV7rGRaBdYvnjPF1vHC6W3pOuuGWw9ZsVB9K3MgVu0v93yYrSKLc+5is2isqNr
+         T7MjXqtEytn8JnLbYTHGpawkof1ICiM+F0ghkuaJ5V3PuL6o+lGDdamrIwjdJ62ld4Iy
+         owog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=Nz++kIJqul0wPSRdmkNJtLbYUtvatvDKV4U+pZdOE0E=;
+        b=rPZ1+3ka8RtIl+AwH4ZpyLNPn9HIFThfHK1UPaKHb3KbJnOguGA26FgkGdtlul2X6H
+         9nk23Bf8ddCw49uCHkk/Qdyfxrq71llXi0jbhXIUyT7OL1cmzh28N+tuaqEDxAlq0IzE
+         xAa8XyMKP0RKMUqn44fT51SMXDeMMTdkW2WGPoKZb3nDxqQMMba8o3A2pwn8GjzrSnv3
+         g/EhvWBEFMC7OYAvZFBCUjzE5H6UgYx05mB3va7BNl9g9IGI764rW5vMHuAbAndVz5aA
+         02vgYPOi+tw9pGkfGNg0jOPvnxjbIJlW4bRWFm7bhZ3PvIO0EizNIaUvtbNS3Y5putjU
+         GHUQ==
+X-Gm-Message-State: APjAAAUxyBjSLG2NwpHy99sUG3hdOuBAYnWxl33BC0a4kUE/k0AUNOmP
+        GZkGpLiMl6bmvRpL7lEwCc53Pav4rbWiTCMMJfU=
+X-Google-Smtp-Source: APXvYqxEMobkHphgNzEjtUwGaUgd4aS652PWaGrihjiEjENA35PF48nfug7PVU3eGUTYKxnsAbulOXR+9my5R6v9K/s=
+X-Received: by 2002:adf:a54d:: with SMTP id j13mr3425130wrb.261.1566986397568;
+ Wed, 28 Aug 2019 02:59:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0jmsPO5m2zBV3_j8LgqQ2Uj6euXUCJgT74L93hZP9nP_A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190827204007.201890-1-ndesaulniers@google.com>
+In-Reply-To: <20190827204007.201890-1-ndesaulniers@google.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 28 Aug 2019 11:59:46 +0200
+Message-ID: <CA+icZUVT8GJCPSSB=jLKLu=-OrWAj5W3Rkbx1ar0SGcEq0-D0g@mail.gmail.com>
+Subject: Re: [PATCH v2 00/14] treewide: prefer __section from compiler_attributes.h
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, will@kernel.org,
+        jpoimboe@redhat.com, naveen.n.rao@linux.vnet.ibm.com,
+        davem@davemloft.net, paul.burton@mips.com,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+On Tue, Aug 27, 2019 at 10:40 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> GCC unescapes escaped string section names while Clang does not. Because
+> __section uses the `#` stringification operator for the section name, it
+> doesn't need to be escaped.
+>
+> This fixes an Oops observed in distro's that use systemd and not
+> net.core.bpf_jit_enable=1, when their kernels are compiled with Clang.
+>
+> Instead, we should:
+> 1. Prefer __section(.section_name_no_quotes).
+> 2. Only use __attribute__((__section(".section"))) when creating the
+> section name via C preprocessor (see the definition of __define_initcall
+> in arch/um/include/shared/init.h).
+>
+> This antipattern was found with:
+> $ grep -e __section\(\" -e __section__\(\" -r
+>
 
-On Wed, Aug 28, 2019 at 10:55:42AM +0200, Rafael J. Wysocki wrote:
-> On Mon, Aug 26, 2019 at 3:34 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Aug 26, 2019 at 01:32:00PM +0300, Sakari Ailus wrote:
-> > > Hi Greg,
-> > >
-> > > On Mon, Aug 26, 2019 at 10:43:43AM +0200, Greg Kroah-Hartman wrote:
-> > >
-> > > ...
-> > >
-> > > > > diff --git a/include/linux/device.h b/include/linux/device.h
-> > > > > index 6717adee33f01..4bc0ea4a3201a 100644
-> > > > > --- a/include/linux/device.h
-> > > > > +++ b/include/linux/device.h
-> > > > > @@ -248,6 +248,12 @@ enum probe_type {
-> > > > >   * @owner:       The module owner.
-> > > > >   * @mod_name:    Used for built-in modules.
-> > > > >   * @suppress_bind_attrs: Disables bind/unbind via sysfs.
-> > > > > + * @probe_low_power: The driver supports its probe function being called while
-> > > > > + *                    the device is in a low power state, independently of the
-> > > > > + *                    expected behaviour on combination of a given bus and
-> > > > > + *                    firmware interface etc. The driver is responsible for
-> > > > > + *                    powering the device on using runtime PM in such case.
-> > > > > + *                    This configuration has no effect if CONFIG_PM is disabled.
-> > > > >   * @probe_type:  Type of the probe (synchronous or asynchronous) to use.
-> > > > >   * @of_match_table: The open firmware table.
-> > > > >   * @acpi_match_table: The ACPI match table.
-> > > > > @@ -285,6 +291,7 @@ struct device_driver {
-> > > > >   const char              *mod_name;      /* used for built-in modules */
-> > > > >
-> > > > >   bool suppress_bind_attrs;       /* disables bind/unbind via sysfs */
-> > > > > + bool probe_low_power;
-> > > >
-> > > > Ick, no, this should be a bus-specific thing to handle such messed up
-> > > > hardware.  Why polute this in the driver core?
-> > >
-> > > The alternative could be to make it I²C specific indeed; the vast majority
-> > > of camera sensors are I²C devices these days.
-> >
-> > Why is this even needed to be a bus/device attribute at all?  You are
-> > checking the firmware property in the probe function, just do the logic
-> > there as you are, what needs to be saved to the bus's logic?
-> 
-> The situation today is that all devices are put into D0 by the ACPI
-> layer before driver probing since drivers generally expect devices to
-> be in D0 when their probe routines run.  If the driver is prepared to
-> cope with devices in low-power states, though, powering them up before
-> probing for a driver may not be necessary, but still the core (or
-> generally the code invoking the driver probe) needs to know that the
-> driver really is prepared for that.  Hence the driver flag AFAICS.
-> 
-> Now, in theory there may be some platform requirements regarding the
-> power states of devices during driver probe, although admittedly it is
-> not entirely clear to me why that would be the case) and hence the
+Hi Nick,
 
-Please see the cover page of the set (also here):
+thanks for the v2 of your patch-series.
 
-<URL:https://lkml.org/lkml/2019/8/26/175>
+I just checked v2 on top of Linux v5.3-rc6...
 
-> property.  I would think that if the driver could cope with devices in
-> low-power states during probe, the platform wouldn't need to worry
-> about that.
+sdi@iniza:~/src/linux-kernel/linux$ grep -e __section\(\" -e __section__\(\" -r
+include/linux/compiler_attributes.h: *        __section(".foo")
+include/linux/compiler_attributes.h: *        verbose
+__attribute__((__section__(".foo" x))) should be preferred.
 
-I understand this as driver deciding whether it'd power on the device
-during probe.
+OK: Description of the problem ^^
 
-That way there's no way to judge whether the device is accessible, and
-probe would succeed without an error, which then manifests itself on the
-first access of the device. Such as on the at24 EEPROM driver, the error
-would take place on first read of the contents, not in probe.
+arch/sh/include/asm/cache.h:#define __read_mostly
+__attribute__((__section__(".data..read_mostly")))
 
-Somebody might consider that as a driver bug.
+PATCH next-20190827 ^^
+sh: prefer __section from compiler_attributes.h
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20190827&id=baf58858e8b6d853a7a8308901fcdd438e92a522
 
--- 
-Kind regards,
+arch/arm64/kernel/smp_spin_table.c:volatile unsigned long
+__section(".mmuoff.data.read")
+arch/arm64/include/asm/cache.h:#define __read_mostly
+__attribute__((__section__(".data..read_mostly")))
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+PATCH next-20190827 ^^
+arm64: prefer __section from compiler_attributes.h
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20190827&id=80d838122643a09a9f99824adea4b4261e4451e6
+
+arch/um/include/shared/init.h:  __attribute__((__section__(".initcall"
+level ".init"))) = fn
+
+??? ^^
+
+> See the discussions in:
+> https://bugs.llvm.org/show_bug.cgi?id=42950
+> https://marc.info/?l=linux-netdev&m=156412960619946&w=2
+>
+
+List CBL issue tracker to discussions:
+https://github.com/ClangBuiltLinux/linux/issues/619
+
+- Sedat -
+
+> Changes V1 -> V2:
+> * drop arm64, arc, and sh patches as they were picked up by their
+>   maintainers.
+> * Split the previous V1 hunk from include/linux that touched
+>   include/linux/compiler.h off into its own patch for inclusion in
+>   stable, as it fixes a user visible issue.
+> * Collect Acks and Tested by tags.
+>
+> Nick Desaulniers (14):
+>   s390/boot: prefer __section from compiler_attributes.h
+>   include/linux/compiler.h: prefer __section from compiler_attributes.h
+>   parisc: prefer __section from compiler_attributes.h
+>   um: prefer __section from compiler_attributes.h
+>   ia64: prefer __section from compiler_attributes.h
+>   arm: prefer __section from compiler_attributes.h
+>   mips: prefer __section from compiler_attributes.h
+>   sparc: prefer __section from compiler_attributes.h
+>   powerpc: prefer __section and __printf from compiler_attributes.h
+>   x86: prefer __section from compiler_attributes.h
+>   include/asm-generic: prefer __section from compiler_attributes.h
+>   include/linux: prefer __section from compiler_attributes.h
+>   include/linux/compiler.h: remove unused KENTRY macro
+>   compiler_attributes.h: add note about __section
+>
+>  arch/arm/include/asm/cache.h          |  2 +-
+>  arch/arm/include/asm/mach/arch.h      |  4 ++--
+>  arch/arm/include/asm/setup.h          |  2 +-
+>  arch/ia64/include/asm/cache.h         |  2 +-
+>  arch/mips/include/asm/cache.h         |  2 +-
+>  arch/parisc/include/asm/cache.h       |  2 +-
+>  arch/parisc/include/asm/ldcw.h        |  2 +-
+>  arch/powerpc/boot/main.c              |  3 +--
+>  arch/powerpc/boot/ps3.c               |  6 ++----
+>  arch/powerpc/include/asm/cache.h      |  2 +-
+>  arch/powerpc/kernel/btext.c           |  2 +-
+>  arch/s390/boot/startup.c              |  2 +-
+>  arch/sparc/include/asm/cache.h        |  2 +-
+>  arch/sparc/kernel/btext.c             |  2 +-
+>  arch/um/kernel/um_arch.c              |  6 +++---
+>  arch/x86/include/asm/cache.h          |  2 +-
+>  arch/x86/include/asm/intel-mid.h      |  2 +-
+>  arch/x86/include/asm/iommu_table.h    |  5 ++---
+>  arch/x86/include/asm/irqflags.h       |  2 +-
+>  arch/x86/include/asm/mem_encrypt.h    |  2 +-
+>  arch/x86/kernel/cpu/cpu.h             |  3 +--
+>  include/asm-generic/error-injection.h |  2 +-
+>  include/asm-generic/kprobes.h         |  5 ++---
+>  include/linux/cache.h                 |  6 +++---
+>  include/linux/compiler.h              | 31 ++++-----------------------
+>  include/linux/compiler_attributes.h   | 10 +++++++++
+>  include/linux/cpu.h                   |  2 +-
+>  include/linux/export.h                |  2 +-
+>  include/linux/init_task.h             |  4 ++--
+>  include/linux/interrupt.h             |  5 ++---
+>  include/linux/sched/debug.h           |  2 +-
+>  include/linux/srcutree.h              |  2 +-
+>  32 files changed, 54 insertions(+), 74 deletions(-)
+>
+> --
+> 2.23.0.187.g17f5b7556c-goog
+>
