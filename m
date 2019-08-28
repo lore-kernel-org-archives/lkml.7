@@ -6,42 +6,45 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A50C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EC0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDD5B208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE74C208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfH1ShL (ORCPT
+        id S1726541AbfH1ShU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:37:11 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:45272 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727069AbfH1ShK (ORCPT
+        Wed, 28 Aug 2019 14:37:20 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:43079 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727101AbfH1ShT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:37:10 -0400
+        Wed, 28 Aug 2019 14:37:19 -0400
 X-IronPort-AV: E=Sophos;i="5.64,442,1559487600"; 
-   d="scan'208";a="25166341"
+   d="scan'208";a="24947705"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 29 Aug 2019 03:37:08 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 29 Aug 2019 03:37:17 +0900
 Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id AFEA04004953;
-        Thu, 29 Aug 2019 03:37:05 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id D752E400A896;
+        Thu, 29 Aug 2019 03:37:13 +0900 (JST)
 From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
 Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>,
+        Simon Horman <horms@verge.net.au>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Chris Paterson <Chris.Paterson2@renesas.com>,
         Biju Das <biju.das@bp.renesas.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>, sam@ravnborg.org
-Subject: [PATCH v3 4/8] drm: rcar-du: lvds: Add dual-LVDS panels support
-Date:   Wed, 28 Aug 2019 19:36:38 +0100
-Message-Id: <1567017402-5895-5-git-send-email-fabrizio.castro@bp.renesas.com>
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>, sam@ravnborg.org,
+        xu_shunji@hoperun.com, ebiharaml@si-linux.co.jp
+Subject: [PATCH v3 6/8] arm64: dts: renesas: Add EK874 board with idk-2121wr display support
+Date:   Wed, 28 Aug 2019 19:36:40 +0100
+Message-Id: <1567017402-5895-7-git-send-email-fabrizio.castro@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
@@ -50,231 +53,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver doesn't support dual-link LVDS displays, and the way
-it identifies bridges won't allow for dual-LVDS displays to be
-connected. Also, it's not possible to swap even and odd pixels
-around in case the wiring isn't taking advantage of the default
-hardware configuration. Further more, the "mode" of the companion
-encoder should be same as the mode of the primary encoder.
-
-Rework the driver to improve all of the above, so that it can
-support dual-LVDS displays.
+The EK874 is advertised as compatible with panel IDK-2121WR from
+Advantech, however the panel isn't sold alongside the board.
+A new dts, adding everything that's required to get the panel to
+to work with the EK874, is the most convenient way to support the
+EK874 when it's connected to the IDK-2121WR.
 
 Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
 ---
+v1->v2:
+* Added comment for lvds-connector-en-gpio
+* Renamed &lvds0_panel_in to panel_in0
+* Renamed &lvds1_panel_in to panel_in1
+
 v2->v3:
-* reworked to take advantange of the new dt-bindings
-* squashed in the patche for fixing the companion's mode
+* removed renesas,swap-data property
+* added dual-lvds-odd-pixels and dual-lvds-even-pixels properties
 
-Laurent,
+Geert,
 
-unfortunately the best way to get the companion encoder to use
-the same mode as the primary encoder is setting the mode directly
-without calling into rcar_lvds_mode_set for the companion encoder,
-as the below test fails for the companion encoder in
-rcar_lvds_get_lvds_mode:
-if (!info->num_bus_formats || !info->bus_formats)
-
-Anyhow, setting the mode for the companion encoder doesn't seem
-to be mandary according to the experiments I have been running,
-but the HW User's Manual doesn't really say much about this,
-therefore I think the safest option is still to set the mode for
-the companion encoder.
+no need to review this patch unless they like the idea behind this
+series.
 
 Thanks,
 Fab
----
- drivers/gpu/drm/rcar-du/rcar_lvds.c | 110 +++++++++++++++++++++---------------
- 1 file changed, 65 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-index 3fe0b86..dfec5e7 100644
---- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-@@ -20,6 +20,8 @@
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_bridge.h>
-+#include <drm/drm_bus_timings.h>
-+#include <drm/drm_of.h>
- #include <drm/drm_panel.h>
- #include <drm/drm_probe_helper.h>
- 
-@@ -69,6 +71,7 @@ struct rcar_lvds {
- 
- 	struct drm_bridge *companion;
- 	bool dual_link;
-+	bool stripe_swap_data;
- };
- 
- #define bridge_to_rcar_lvds(b) \
-@@ -439,12 +442,20 @@ static void rcar_lvds_enable(struct drm_bridge *bridge)
- 	rcar_lvds_write(lvds, LVDCHCR, lvdhcr);
- 
- 	if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK) {
--		/*
--		 * Configure vertical stripe based on the mode of operation of
--		 * the connected device.
--		 */
--		rcar_lvds_write(lvds, LVDSTRIPE,
--				lvds->dual_link ? LVDSTRIPE_ST_ON : 0);
-+		u32 lvdstripe = 0;
+---
+ arch/arm64/boot/dts/renesas/Makefile               |   3 +-
+ .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 116 +++++++++++++++++++++
+ 2 files changed, 118 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index 42b74c2..ce48478 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -1,7 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m.dtb
+ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
+-dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb
++dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
++			       r8a774c0-ek874-idk-2121wr.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-h3ulcb-kf.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-xs.dtb
+diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+new file mode 100644
+index 0000000..a7b27d0
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+@@ -0,0 +1,116 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the Silicon Linux RZ/G2E evaluation kit (EK874),
++ * connected to an Advantech IDK-2121WR 21.5" LVDS panel
++ *
++ * Copyright (C) 2019 Renesas Electronics Corp.
++ */
 +
-+		if (lvds->dual_link)
-+			/*
-+			 * Configure vertical stripe based on the mode of
-+			 * operation of the connected device.
-+			 *
-+			 * ST_SWAP from LVD1STRIPE is reserved, do not set
-+			 * in the companion LVDS
-+			 */
-+			lvdstripe = LVDSTRIPE_ST_ON |
-+				(lvds->companion && lvds->stripe_swap_data ?
-+				 LVDSTRIPE_ST_SWAP : 0);
-+		rcar_lvds_write(lvds, LVDSTRIPE, lvdstripe);
- 	}
- 
- 	/*
-@@ -603,6 +614,11 @@ static void rcar_lvds_mode_set(struct drm_bridge *bridge,
- 	lvds->display_mode = *adjusted_mode;
- 
- 	rcar_lvds_get_lvds_mode(lvds);
-+	if (lvds->companion) {
-+		struct rcar_lvds *companion_lvds = bridge_to_rcar_lvds(
-+							lvds->companion);
-+		companion_lvds->mode = lvds->mode;
-+	}
- }
- 
- static int rcar_lvds_attach(struct drm_bridge *bridge)
-@@ -667,9 +683,10 @@ EXPORT_SYMBOL_GPL(rcar_lvds_dual_link);
- static int rcar_lvds_parse_dt_companion(struct rcar_lvds *lvds)
- {
- 	const struct of_device_id *match;
--	struct device_node *companion;
-+	struct device_node *companion, *p0 = NULL, *p1 = NULL;
- 	struct device *dev = lvds->dev;
--	int ret = 0;
-+	struct rcar_lvds *companion_lvds;
-+	int ret = 0, dual_link;
- 
- 	/* Locate the companion LVDS encoder for dual-link operation, if any. */
- 	companion = of_parse_phandle(dev->of_node, "renesas,companion", 0);
-@@ -687,16 +704,50 @@ static int rcar_lvds_parse_dt_companion(struct rcar_lvds *lvds)
- 		goto done;
- 	}
- 
-+	/*
-+	 * We need to work out if the sink is expecting us to function in
-+	 * dual-link mode. We do this by looking at the DT port nodes we are
-+	 * connected to, if they are marked as expecting even pixels and
-+	 * odd pixels than we need to enable vertical stripe output
-+	 */
-+	p0 = of_graph_get_port_by_id(dev->of_node, 1);
-+	p1 = of_graph_get_port_by_id(companion, 1);
-+	dual_link = drm_of_lvds_get_dual_link_configuration(p0, p1);
-+	if (dual_link >= DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS) {
-+		dev_dbg(dev, "Dual-link configuration detected\n");
-+		lvds->dual_link = true;
-+	} else {
-+		/* dual-link mode is not required */
-+		dev_dbg(dev, "Single-link configuration detected\n");
-+		goto done;
-+	}
-+	/*
-+	 * We may need to swap even and odd pixels around in case the wiring
-+	 * doesn't match the default configuration.
-+	 * By default we generate even pixels from this encoder and odd pixels
-+	 * from the companion encoder, but if p0 is connected to the port
-+	 * expecting ood pixels, and p1 is connected to the port expecting even
-+	 * pixels, then we need to swap even and odd pixels around
-+	 */
-+	if (dual_link == DRM_LVDS_DUAL_LINK_ODD_EVEN_PIXELS) {
-+		dev_dbg(dev, "Data swapping required\n");
-+		lvds->stripe_swap_data = true;
-+	}
++#include "r8a774c0-ek874.dts"
 +
- 	lvds->companion = of_drm_find_bridge(companion);
- 	if (!lvds->companion) {
- 		ret = -EPROBE_DEFER;
- 		goto done;
- 	}
-+	companion_lvds = bridge_to_rcar_lvds(lvds->companion);
-+	companion_lvds->dual_link = lvds->dual_link;
- 
- 	dev_dbg(dev, "Found companion encoder %pOF\n", companion);
- 
- done:
- 	of_node_put(companion);
-+	of_node_put(p0);
-+	of_node_put(p1);
- 
- 	return ret;
- }
-@@ -704,10 +755,7 @@ static int rcar_lvds_parse_dt_companion(struct rcar_lvds *lvds)
- static int rcar_lvds_parse_dt(struct rcar_lvds *lvds)
- {
- 	struct device_node *local_output = NULL;
--	struct device_node *remote_input = NULL;
- 	struct device_node *remote = NULL;
--	struct device_node *node;
--	bool is_bridge = false;
- 	int ret = 0;
- 
- 	local_output = of_graph_get_endpoint_by_regs(lvds->dev->of_node, 1, 0);
-@@ -735,45 +783,17 @@ static int rcar_lvds_parse_dt(struct rcar_lvds *lvds)
- 		goto done;
- 	}
- 
--	remote_input = of_graph_get_remote_endpoint(local_output);
--
--	for_each_endpoint_of_node(remote, node) {
--		if (node != remote_input) {
--			/*
--			 * We've found one endpoint other than the input, this
--			 * must be a bridge.
--			 */
--			is_bridge = true;
--			of_node_put(node);
--			break;
--		}
--	}
--
--	if (is_bridge) {
--		lvds->next_bridge = of_drm_find_bridge(remote);
--		if (!lvds->next_bridge) {
--			ret = -EPROBE_DEFER;
--			goto done;
--		}
--
--		if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK)
--			lvds->dual_link = lvds->next_bridge->timings
--					? lvds->next_bridge->timings->dual_link
--					: false;
--	} else {
--		lvds->panel = of_drm_find_panel(remote);
--		if (IS_ERR(lvds->panel)) {
--			ret = PTR_ERR(lvds->panel);
--			goto done;
--		}
-+	ret = drm_of_find_panel_or_bridge(lvds->dev->of_node, 1, 0,
-+					  &lvds->panel, &lvds->next_bridge);
-+	if (ret) {
-+		ret = -EPROBE_DEFER;
-+		goto done;
- 	}
--
--	if (lvds->dual_link)
-+	if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK)
- 		ret = rcar_lvds_parse_dt_companion(lvds);
- 
- done:
- 	of_node_put(local_output);
--	of_node_put(remote_input);
- 	of_node_put(remote);
- 
- 	/*
++/ {
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm5 0 50000>;
++
++		brightness-levels = <0 4 8 16 32 64 128 255>;
++		default-brightness-level = <6>;
++
++		power-supply = <&reg_12p0v>;
++		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
++	};
++
++	panel-lvds {
++		compatible = "advantech,idk-2121wr", "panel-lvds";
++
++		width-mm = <476>;
++		height-mm = <268>;
++
++		data-mapping = "vesa-24";
++
++		panel-timing {
++			clock-frequency = <148500000>;
++			hactive = <1920>;
++			vactive = <1080>;
++			hsync-len = <44>;
++			hfront-porch = <88>;
++			hback-porch = <148>;
++			vfront-porch = <4>;
++			vback-porch = <36>;
++			vsync-len = <5>;
++		};
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				dual-lvds-odd-pixels;
++				panel_in0: endpoint {
++					remote-endpoint = <&lvds0_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				dual-lvds-even-pixels;
++				panel_in1: endpoint {
++					remote-endpoint = <&lvds1_out>;
++				};
++			};
++		};
++	};
++};
++
++&gpio0 {
++	/*
++	 * When GP0_17 is low LVDS[01] are connected to the LVDS connector
++	 * When GP0_17 is high LVDS[01] are connected to the LT8918L
++	 */
++	lvds-connector-en-gpio{
++		gpio-hog;
++		gpios = <17 GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "lvds-connector-en-gpio";
++	};
++};
++
++&lvds0 {
++	ports {
++		port@1 {
++			lvds0_out: endpoint {
++				remote-endpoint = <&panel_in0>;
++			};
++		};
++	};
++};
++
++&lvds1 {
++	status = "okay";
++
++	clocks = <&cpg CPG_MOD 727>, <&x13_clk>, <&extal_clk>;
++	clock-names = "fck", "dclkin.0", "extal";
++
++	ports {
++		port@1 {
++			lvds1_out: endpoint {
++				remote-endpoint = <&panel_in1>;
++			};
++		};
++	};
++};
++
++&pfc {
++	pwm5_pins: pwm5 {
++		groups = "pwm5_a";
++		function = "pwm5";
++	};
++};
++
++&pwm5 {
++	pinctrl-0 = <&pwm5_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
 -- 
 2.7.4
 
