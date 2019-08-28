@@ -2,344 +2,202 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1E6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4CFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0BE923406
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A981C208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:36:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AkKK/XBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfH1Jgh (ORCPT
+        id S1726575AbfH1Jgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:36:37 -0400
-Received: from mga18.intel.com ([134.134.136.126]:6016 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbfH1Jgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:36:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 02:36:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
-   d="scan'208";a="381226739"
-Received: from deyangko-mobl.ccr.corp.intel.com ([10.249.168.35])
-  by fmsmga006.fm.intel.com with ESMTP; 28 Aug 2019 02:36:29 -0700
-Message-ID: <36f8f79c1353622bf0bb109296cd6229ac23e648.camel@intel.com>
-Subject: Re: [PATCH] thermal: mediatek: add suspend/resume callback
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     michael.kao@mediatek.com, Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Louis Yu <louis.yu@mediatek.com>
-Date:   Wed, 28 Aug 2019 17:36:38 +0800
-In-Reply-To: <1562058985-27538-1-git-send-email-michael.kao@mediatek.com>
-References: <1562058985-27538-1-git-send-email-michael.kao@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 28 Aug 2019 05:36:51 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37491 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfH1Jgv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 05:36:51 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z11so1776471wrt.4;
+        Wed, 28 Aug 2019 02:36:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BBuzzof8zZMyC5cBUE8nZgFa0hb+Dbo0Ym4NPdlUc3Q=;
+        b=AkKK/XBjEHizNiJ0Mj63NeQtn6moijs4nu2RBhf9x/eWwd3J1lopIwY4zV3tZb+DlO
+         VC1dkwGi6ZSir6f/+ks3upVkVmfQKQ/cXJrNsCN+aTEz+mRJVwWYgi3rYePyMm2RvE9j
+         3qnk9AeZ8xfZLnF6DjVPsWQAFYOkNBcRtTpJWBH9cchiNlzlIMbgBP12imyY+hr9aYZ5
+         t9tMP+KW/dg3PMxhk5hACbAMfCVA62KpV5VGG6ltn+2wJ93KW9PIQBhVBShrduA+AXBH
+         tXW4qH/k7bWNbB1oKBPgy/GOrsYydl/ocG53Qu31310stSFGjfFDyU0i2MZy3jurV7Wn
+         cHaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BBuzzof8zZMyC5cBUE8nZgFa0hb+Dbo0Ym4NPdlUc3Q=;
+        b=RL4Pof4s3fTDp1bHzDrnutHYwjnJncazMYH/Ozn/nWP1sZiO5SLwmxvHQGqZ2/aEUV
+         Kyx5DVcDK+zXWfO1kmeFQDQZhgLi7PFe8aNb2pqmy8r8n2CyME5m0wp7GlzGYG2FssVW
+         Nxt2RkMYu3MNM75k3uwdYkYK2CJiHuHHetNWRVhCNSSBHYf33tGdP38yhYYXIlkfDxNe
+         UOPFSl+nuVACO/wiSeofd4m5V26bKdQ4neiBxrWf8rBlizMPwb1vEzVUlnX7rstFPu4S
+         UpG1gVI2bQWz512sIykRLvv7yeETVFQKTj9laDvU/W+GZGlNyKCiZmLmYpuHGP4aET0Y
+         GZdA==
+X-Gm-Message-State: APjAAAWZZkrCbjBtCCZ7CsGCxTcHNOcij7BVoNIVV4pCTgzA97jMbMd8
+        66VQcxEJ/rcGfZrehXfXaYs=
+X-Google-Smtp-Source: APXvYqwMQnUB0YswPXCDQ17rfO0T99SGjGKn1T19r6B1/gAj6ortuQOoWuNkvCua17xNq8CJRLTJuQ==
+X-Received: by 2002:a5d:610d:: with SMTP id v13mr3553458wrt.249.1566985007828;
+        Wed, 28 Aug 2019 02:36:47 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id j20sm4464767wre.65.2019.08.28.02.36.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 02:36:46 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 11:36:45 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dariusz Marcinkiewicz <darekm@google.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        hverkuil-cisco@xs4all.nl, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 7/9] drm: tegra: use cec_notifier_conn_(un)register
+Message-ID: <20190828093645.GD2917@ulmo>
+References: <20190814104520.6001-1-darekm@google.com>
+ <20190814104520.6001-8-darekm@google.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="DrWhICOqskFTAXiy"
+Content-Disposition: inline
+In-Reply-To: <20190814104520.6001-8-darekm@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-07-02 at 17:16 +0800, michael.kao@mediatek.com wrote:
-> From: Louis Yu <louis.yu@mediatek.com>
-> 
-> Add suspend/resume callback to disable/enable Mediatek thermal sensor
-> respectively. Since thermal power domain is off in suspend, thermal
-> driver
-> needs re-initialization during resume.
-> 
-> Signed-off-by: Louis Yu <louis.yu@mediatek.com>
-> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+
+--DrWhICOqskFTAXiy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Aug 14, 2019 at 12:45:05PM +0200, Dariusz Marcinkiewicz wrote:
+> Use the new cec_notifier_conn_(un)register() functions to
+> (un)register the notifier for the HDMI connector, and fill in
+> the cec_connector_info.
+>=20
+> Changes since v4:
+> 	- only create a CEC notifier for HDMI connectors
+>=20
+> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+> Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 > ---
-> This patch series base on these patches [1][2][3].
-> 
-> [1]thermal: mediatek: mt8183: fix bank number settings (
-> https://patchwork.kernel.org/patch/10938817/)
-> [2]thermal: mediatek: add another get_temp ops for thermal sensors (
-> https://patchwork.kernel.org/patch/10938829/)
-> [3]thermal: mediatek: use spinlock to protect PTPCORESEL (
-> https://patchwork.kernel.org/patch/10938841/)
-> 
-all these patches are not sent to linux-pm mailing list, thus they
-never got chance to get merged. please resend them to linux-pm.
-
-I don't know what the first part of the patch set do, so I'm wondering
-if there is any dependency?
-
-thanks,
-rui
-
->  drivers/thermal/mtk_thermal.c | 134
-> +++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 125 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/thermal/mtk_thermal.c
-> b/drivers/thermal/mtk_thermal.c
-> index 3d01153..61d4114 100644
-> --- a/drivers/thermal/mtk_thermal.c
-> +++ b/drivers/thermal/mtk_thermal.c
-> @@ -30,6 +30,7 @@
->  #include <linux/thermal.h>
->  #include <linux/reset.h>
->  #include <linux/types.h>
-> +#include <linux/iopoll.h>
->  
->  /* AUXADC Registers */
->  #define AUXADC_CON1_SET_V	0x008
-> @@ -39,6 +40,8 @@
->  
->  #define APMIXED_SYS_TS_CON1	0x604
->  
-> +#define APMIXED_SYS_TS_CON1_BUFFER_OFF	0x30
-> +
->  /* Thermal Controller Registers */
->  #define TEMP_MONCTL0		0x000
->  #define TEMP_MONCTL1		0x004
-> @@ -46,6 +49,7 @@
->  #define TEMP_MONIDET0		0x014
->  #define TEMP_MONIDET1		0x018
->  #define TEMP_MSRCTL0		0x038
-> +#define TEMP_MSRCTL1		0x03c
->  #define TEMP_AHBPOLL		0x040
->  #define TEMP_AHBTO		0x044
->  #define TEMP_ADCPNP0		0x048
-> @@ -95,6 +99,9 @@
->  #define TEMP_ADCVALIDMASK_VALID_HIGH		BIT(5)
->  #define TEMP_ADCVALIDMASK_VALID_POS(bit)	(bit)
->  
-> +#define TEMP_MSRCTL1_BUS_STA	(BIT(0) | BIT(7))
-> +#define TEMP_MSRCTL1_SENSING_POINTS_PAUSE	0x10E
-> +
->  /* MT8173 thermal sensors */
->  #define MT8173_TS1	0
->  #define MT8173_TS2	1
-> @@ -266,6 +273,10 @@ struct mtk_thermal_data {
->  struct mtk_thermal {
->  	struct device *dev;
->  	void __iomem *thermal_base;
-> +	void __iomem *apmixed_base;
-> +	void __iomem *auxadc_base;
-> +	u64 apmixed_phys_base;
-> +	u64 auxadc_phys_base;
->  
->  	struct clk *clk_peri_therm;
->  	struct clk *clk_auxadc;
-> @@ -795,6 +806,42 @@ static void mtk_thermal_init_bank(struct
-> mtk_thermal *mt, int num,
->  	mtk_thermal_put_bank(bank);
->  }
->  
-> +static int mtk_thermal_disable_sensing(struct mtk_thermal *mt, int
-> num)
-> +{
-> +	struct mtk_thermal_bank *bank = &mt->banks[num];
-> +	u32 val;
-> +	unsigned long timeout;
-> +	void __iomem *addr;
-> +	int ret = 0;
-> +
-> +	bank->id = num;
-> +	bank->mt = mt;
-> +
-> +	mtk_thermal_get_bank(bank);
-> +
-> +	val = readl(mt->thermal_base + TEMP_MSRCTL1);
-> +	/* pause periodic temperature measurement for sensing points */
-> +	writel(val | TEMP_MSRCTL1_SENSING_POINTS_PAUSE,
-> +	       mt->thermal_base + TEMP_MSRCTL1);
-> +
-> +	/* wait until temperature measurement bus idle */
-> +	timeout = jiffies + HZ;
-> +	addr = mt->thermal_base + TEMP_MSRCTL1;
-> +
-> +	ret = readl_poll_timeout(addr, val, (val &
-> TEMP_MSRCTL1_BUS_STA) == 0x0,
-> +				 0, timeout);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	/* disable periodic temperature meausrement on sensing points
-> */
-> +	writel(0x0, mt->thermal_base + TEMP_MONCTL0);
-> +
-> +out:
-> +	mtk_thermal_put_bank(bank);
-> +
-> +	return ret;
-> +}
-> +
->  static u64 of_get_phys_base(struct device_node *np)
+>  drivers/gpu/drm/tegra/output.c | 28 +++++++++++++++++++++-------
+>  1 file changed, 21 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/outpu=
+t.c
+> index bdcaa4c7168cf..34373734ff689 100644
+> --- a/drivers/gpu/drm/tegra/output.c
+> +++ b/drivers/gpu/drm/tegra/output.c
+> @@ -70,6 +70,11 @@ tegra_output_connector_detect(struct drm_connector *co=
+nnector, bool force)
+> =20
+>  void tegra_output_connector_destroy(struct drm_connector *connector)
 >  {
->  	u64 size64;
-> @@ -917,7 +964,6 @@ static int mtk_thermal_probe(struct
-> platform_device *pdev)
->  	struct device_node *auxadc, *apmixedsys, *np = pdev-
-> >dev.of_node;
->  	struct mtk_thermal *mt;
->  	struct resource *res;
-> -	u64 auxadc_phys_base, apmixed_phys_base;
->  	struct thermal_zone_device *tzdev;
->  	struct mtk_thermal_zone *tz;
->  
-> @@ -954,11 +1000,11 @@ static int mtk_thermal_probe(struct
-> platform_device *pdev)
->  		return -ENODEV;
+> +	struct tegra_output *output =3D connector_to_output(connector);
+> +
+> +	if (output->cec)
+> +		cec_notifier_conn_unregister(output->cec);
+> +
+>  	drm_connector_unregister(connector);
+>  	drm_connector_cleanup(connector);
+>  }
+> @@ -163,18 +168,11 @@ int tegra_output_probe(struct tegra_output *output)
+>  		disable_irq(output->hpd_irq);
 >  	}
->  
-> -	auxadc_phys_base = of_get_phys_base(auxadc);
-> +	mt->auxadc_phys_base = of_get_phys_base(auxadc);
->  
->  	of_node_put(auxadc);
->  
-> -	if (auxadc_phys_base == OF_BAD_ADDR) {
-> +	if (mt->auxadc_phys_base == OF_BAD_ADDR) {
->  		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
->  		return -EINVAL;
->  	}
-> @@ -969,11 +1015,12 @@ static int mtk_thermal_probe(struct
-> platform_device *pdev)
->  		return -ENODEV;
->  	}
->  
-> -	apmixed_phys_base = of_get_phys_base(apmixedsys);
-> +	mt->apmixed_phys_base = of_get_phys_base(apmixedsys);
-> +	mt->apmixed_base = of_iomap(apmixedsys, 0);
->  
->  	of_node_put(apmixedsys);
->  
-> -	if (apmixed_phys_base == OF_BAD_ADDR) {
-> +	if (mt->apmixed_phys_base == OF_BAD_ADDR) {
->  		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
->  		return -EINVAL;
->  	}
-> @@ -985,19 +1032,19 @@ static int mtk_thermal_probe(struct
-> platform_device *pdev)
->  	ret = clk_prepare_enable(mt->clk_auxadc);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n",
-> ret);
-> -		return ret;
-> +		goto err_disable_clk_auxadc;
->  	}
->  
->  	ret = clk_prepare_enable(mt->clk_peri_therm);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Can't enable peri clk: %d\n",
-> ret);
-> -		goto err_disable_clk_auxadc;
-> +		goto err_disable_clk_peri_therm;
->  	}
->  
->  	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ;
-> ctrl_id++)
->  		for (i = 0; i < mt->conf->num_banks; i++)
-> -			mtk_thermal_init_bank(mt, i, apmixed_phys_base,
-> -					      auxadc_phys_base,
-> ctrl_id);
-> +			mtk_thermal_init_bank(mt, i, mt-
-> >apmixed_phys_base,
-> +					      mt->auxadc_phys_base,
-> ctrl_id);
->  
->  	platform_set_drvdata(pdev, mt);
->  
-> @@ -1041,11 +1088,80 @@ static int mtk_thermal_remove(struct
-> platform_device *pdev)
+> =20
+> -	output->cec =3D cec_notifier_get(output->dev);
+> -	if (!output->cec)
+> -		return -ENOMEM;
+> -
 >  	return 0;
 >  }
->  
-> +static int __maybe_unused mtk_thermal_suspend(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct mtk_thermal *mt = platform_get_drvdata(pdev);
-> +	int i, ret;
+> =20
+>  void tegra_output_remove(struct tegra_output *output)
+>  {
+> -	if (output->cec)
+> -		cec_notifier_put(output->cec);
+> -
+>  	if (output->hpd_gpio)
+>  		free_irq(output->hpd_irq, output);
+> =20
+> @@ -184,6 +182,7 @@ void tegra_output_remove(struct tegra_output *output)
+> =20
+>  int tegra_output_init(struct drm_device *drm, struct tegra_output *outpu=
+t)
+>  {
+> +	int connector_type;
+>  	int err;
+> =20
+>  	if (output->panel) {
+> @@ -199,6 +198,21 @@ int tegra_output_init(struct drm_device *drm, struct=
+ tegra_output *output)
+>  	if (output->hpd_gpio)
+>  		enable_irq(output->hpd_irq);
+> =20
+> +	connector_type =3D output->connector.connector_type;
+> +	/*
+> +	 * Create a CEC notifier for HDMI connector.
+> +	 */
+> +	if (connector_type =3D=3D DRM_MODE_CONNECTOR_HDMIA ||
+> +	    connector_type =3D=3D DRM_MODE_CONNECTOR_HDMIB) {
+> +		struct cec_connector_info conn_info;
 > +
-> +	for (i = 0; i < mt->conf->num_banks; i++) {
-> +		ret = mtk_thermal_disable_sensing(mt, i);
-> +		if (ret)
-> +			goto out;
+> +		cec_fill_conn_info_from_drm(&conn_info, &output->connector);
+> +		output->cec =3D cec_notifier_conn_register(output->dev, NULL,
+> +							 &conn_info);
+> +		if (!output->cec)
+> +			return -ENOMEM;
 > +	}
 > +
-> +	/* disable buffer */
-> +	writel(readl(mt->apmixed_base + APMIXED_SYS_TS_CON1) |
-> +	       APMIXED_SYS_TS_CON1_BUFFER_OFF,
-> +	       mt->apmixed_base + APMIXED_SYS_TS_CON1);
-> +
-> +	clk_disable_unprepare(mt->clk_peri_therm);
-> +	clk_disable_unprepare(mt->clk_auxadc);
-> +
-> +	return 0;
-> +
-> +out:
-> +	dev_err(&pdev->dev, "Failed to wait until bus idle\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static int __maybe_unused mtk_thermal_resume(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct mtk_thermal *mt = platform_get_drvdata(pdev);
-> +	int i, ret, ctrl_id;
-> +
-> +	ret = device_reset(&pdev->dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(mt->clk_auxadc);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n",
-> ret);
-> +		goto err_disable_clk_auxadc;
-> +	}
-> +
-> +	ret = clk_prepare_enable(mt->clk_peri_therm);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Can't enable peri clk: %d\n",
-> ret);
-> +		goto err_disable_clk_peri_therm;
-> +	}
-> +
-> +	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ;
-> ctrl_id++)
-> +		for (i = 0; i < mt->conf->num_banks; i++)
-> +			mtk_thermal_init_bank(mt, i, mt-
-> >apmixed_phys_base,
-> +					      mt->auxadc_phys_base,
-> ctrl_id);
-> +
-> +	return 0;
-> +
-> +err_disable_clk_peri_therm:
-> +	clk_disable_unprepare(mt->clk_peri_therm);
-> +err_disable_clk_auxadc:
-> +	clk_disable_unprepare(mt->clk_auxadc);
-> +
-> +	return ret;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(mtk_thermal_pm_ops,
-> +			 mtk_thermal_suspend, mtk_thermal_resume);
-> +
->  static struct platform_driver mtk_thermal_driver = {
->  	.probe = mtk_thermal_probe,
->  	.remove = mtk_thermal_remove,
->  	.driver = {
->  		.name = "mtk-thermal",
-> +		.pm = &mtk_thermal_pm_ops,
->  		.of_match_table = mtk_thermal_of_match,
->  	},
->  };
+>  	return 0;
+>  }
+> =20
 
+It might be slightly cleaner to move this into the HDMI drivers
+themselves, although that'd mean a bit of duplication. That could be
+mitigated by moving the code into a separate helper that could be called
+by the HDMI drivers.
+
+Then again, I don't feel strongly about it, and that could always be
+done as part of some later refactoring, so I think this is fine.
+
+Thierry
+
+--DrWhICOqskFTAXiy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1mSy0ACgkQ3SOs138+
+s6H4gg/+OuMLV5fIj7+uzWlp1gQO6V43RpNGjpFS9gndEosOfV/QTOEip16Efq1p
+ZegaEk1ibqDX7dIwQ2m48uFRJw+qKyYVIJoxBhFDgcUk5uwnAtHF7qMTRnQJGcVP
+LDjQ2Lxw4PmpdO8SQxUc/xDOlmTWPcqGpv7XzqB+ZbwK7ACCce5Cw080B/5kp1Z1
+4D4dttwjpVdtO0/dx3nhFYpjeDAwyH/u8kWJLFAt+cbVgyNap8drgrSNlAArVXD3
+R5R5Ge3iouXUuY+juQRv4uwC86F6WAOfKU8VQaENjRof5jCyL/BJrv9t4JGYbVte
+QQnAi9FJvwbpra04AkpFG2nib/nnX/8m3OGiRrMp29l7TRpD9QptRDIaSKkPkw4n
+BpySuAXUIh05zS8xNNZNDxW3BygkZQHoK50tW0RNwhYmI4LTfOrkDT3E6ZyWLx9E
+j4+CwkemwwRijP8yX3eegsC8gYreS1ERPNuAehIghf95X3b6KExZQb4/yj/qxW/E
+cpXn24r3PT45Y7GZVXuIEyMIeLWIz+2YOxCgXwYjzEkRau8NHBA/UIRPzWLiuovO
+JXJyeT7d7J9rNm0YE9A45jNnG4qpN1ruV919nABZ9Qgq7jVFDP83bWp1ywKZQtTO
+be1SyPh01yjDg3/H7mRqkLFU3WXO+Uz82JwNG1RN9A0aE0Us3Qo=
+=st98
+-----END PGP SIGNATURE-----
+
+--DrWhICOqskFTAXiy--
