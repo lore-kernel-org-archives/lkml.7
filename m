@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF2AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 01:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6530C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 01:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A9E21883
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 01:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844C6214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 01:34:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbfH1BdT (ORCPT
+        id S1726385AbfH1BeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 21:33:19 -0400
-Received: from mga03.intel.com ([134.134.136.65]:12709 "EHLO mga03.intel.com"
+        Tue, 27 Aug 2019 21:34:21 -0400
+Received: from mga02.intel.com ([134.134.136.20]:7077 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbfH1BdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 21:33:18 -0400
+        id S1726096AbfH1BeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 21:34:21 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 18:33:18 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 18:34:19 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,439,1559545200"; 
-   d="scan'208";a="355955307"
+   d="scan'208";a="209956217"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 27 Aug 2019 18:33:18 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 27 Aug 2019 18:34:19 -0700
 Received: from [10.226.38.21] (vramuthx-mobl1.gar.corp.intel.com [10.226.38.21])
-        by linux.intel.com (Postfix) with ESMTP id 484585800BD;
-        Tue, 27 Aug 2019 18:33:15 -0700 (PDT)
-Subject: Re: [PATCH v1 1/2] dt-bindings: mmc: sdhci-of-arasan: Add new
- compatible for Intel LGM eMMC
+        by linux.intel.com (Postfix) with ESMTP id 90C1E580375;
+        Tue, 27 Aug 2019 18:34:16 -0700 (PDT)
+Subject: Re: [PATCH v1 2/2] mmc: sdhci-of-arasan: Add Support for Intel LGM
+ eMMC
 To:     Ulf Hansson <ulf.hansson@linaro.org>
 Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -45,15 +45,16 @@ Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
         qi-ming.wu@intel.com
 References: <20190826072800.38413-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAPDyKFpsvZ+LEwY91LiSExgm=4g=BhWNpkkJMniBNff+qch-QA@mail.gmail.com>
+ <20190826072800.38413-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAPDyKFrPoPqnh3_23P=wGO+QrUE9ogJzC6xgzy+0QeyuyeO=HQ@mail.gmail.com>
 From:   "Ramuthevar, Vadivel MuruganX" 
         <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <32e50682-9f5a-e0d2-f2d4-a72d0bb35f17@linux.intel.com>
-Date:   Wed, 28 Aug 2019 09:33:14 +0800
+Message-ID: <373e55ab-c76b-7657-bd47-1a5efc75a062@linux.intel.com>
+Date:   Wed, 28 Aug 2019 09:34:15 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFpsvZ+LEwY91LiSExgm=4g=BhWNpkkJMniBNff+qch-QA@mail.gmail.com>
+In-Reply-To: <CAPDyKFrPoPqnh3_23P=wGO+QrUE9ogJzC6xgzy+0QeyuyeO=HQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -67,58 +68,69 @@ Hi Ulf,
 On 27/8/2019 9:49 PM, Ulf Hansson wrote:
 > On Mon, 26 Aug 2019 at 09:28, Ramuthevar,Vadivel MuruganX
 > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> From: Ramuthevar Vadivel Muruganx <vadivel.muruganx.ramuthevar@linux.intel.com>
 >>
->> Add a new compatible to use the sdhc-arasan host controller driver
->> with the eMMC PHY on Intel's Lightning Mountain SoC.
+>> The current arasan sdhci PHY configuration isn't compatible
+>> with the PHY on Intel's LGM(Lightning Mountain) SoC devices.
 >>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> Therefore, add a new compatible, to adapt the Intel's LGM
+>> eMMC PHY with arasan-sdhc controller to configure the PHY.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Muruganx <vadivel.muruganx.ramuthevar@linux.intel.com>
+>
 > Applied for next, thanks!
 >
 > Kind regards
 > Uffe
-
+>
 Thank you so much for review and applied for next.
 
 Best Regards
 Vadivel
->
 >> ---
->>   Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 17 +++++++++++++++++
->>   1 file changed, 17 insertions(+)
+>>   drivers/mmc/host/sdhci-of-arasan.c | 15 +++++++++++++++
+>>   1 file changed, 15 insertions(+)
 >>
->> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->> index 1edbb049cccb..7ca0aa7ccc0b 100644
->> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->> @@ -17,6 +17,8 @@ Required Properties:
->>         For this device it is strongly suggested to include arasan,soc-ctl-syscon.
->>       - "ti,am654-sdhci-5.1", "arasan,sdhci-5.1": TI AM654 MMC PHY
->>          Note: This binding has been deprecated and moved to [5].
->> +    - "intel,lgm-sdhci-5.1-emmc", "arasan,sdhci-5.1": Intel LGM eMMC PHY
->> +      For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+>> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+>> index b12abf9b15f2..7023cbec4017 100644
+>> --- a/drivers/mmc/host/sdhci-of-arasan.c
+>> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+>> @@ -114,6 +114,12 @@ static const struct sdhci_arasan_soc_ctl_map rk3399_soc_ctl_map = {
+>>          .hiword_update = true,
+>>   };
 >>
->>     [5] Documentation/devicetree/bindings/mmc/sdhci-am654.txt
->>
->> @@ -80,3 +82,18 @@ Example:
->>                  phy-names = "phy_arasan";
->>                  #clock-cells = <0>;
->>          };
+>> +static const struct sdhci_arasan_soc_ctl_map intel_lgm_emmc_soc_ctl_map = {
+>> +       .baseclkfreq = { .reg = 0xa0, .width = 8, .shift = 2 },
+>> +       .clockmultiplier = { .reg = 0, .width = -1, .shift = -1 },
+>> +       .hiword_update = false,
+>> +};
 >> +
->> +       emmc: sdhci@ec700000 {
->> +               compatible = "intel,lgm-sdhci-5.1-emmc", "arasan,sdhci-5.1";
->> +               reg = <0xec700000 0x300>;
->> +               interrupt-parent = <&ioapic1>;
->> +               interrupts = <44 1>;
->> +               clocks = <&cgu0 LGM_CLK_EMMC5>, <&cgu0 LGM_CLK_NGI>,
->> +                        <&cgu0 LGM_GCLK_EMMC>;
->> +               clock-names = "clk_xin", "clk_ahb", "gate";
->> +               clock-output-names = "emmc_cardclock";
->> +               #clock-cells = <0>;
->> +               phys = <&emmc_phy>;
->> +               phy-names = "phy_arasan";
->> +               arasan,soc-ctl-syscon = <&sysconf>;
->> +       };
+>>   /**
+>>    * sdhci_arasan_syscon_write - Write to a field in soc_ctl registers
+>>    *
+>> @@ -373,6 +379,11 @@ static struct sdhci_arasan_of_data sdhci_arasan_rk3399_data = {
+>>          .pdata = &sdhci_arasan_cqe_pdata,
+>>   };
+>>
+>> +static struct sdhci_arasan_of_data intel_lgm_emmc_data = {
+>> +       .soc_ctl_map = &intel_lgm_emmc_soc_ctl_map,
+>> +       .pdata = &sdhci_arasan_cqe_pdata,
+>> +};
+>> +
+>>   #ifdef CONFIG_PM_SLEEP
+>>   /**
+>>    * sdhci_arasan_suspend - Suspend method for the driver
+>> @@ -474,6 +485,10 @@ static const struct of_device_id sdhci_arasan_of_match[] = {
+>>                  .compatible = "rockchip,rk3399-sdhci-5.1",
+>>                  .data = &sdhci_arasan_rk3399_data,
+>>          },
+>> +       {
+>> +               .compatible = "intel,lgm-sdhci-5.1-emmc",
+>> +               .data = &intel_lgm_emmc_data,
+>> +       },
+>>          /* Generic compatible below here */
+>>          {
+>>                  .compatible = "arasan,sdhci-8.9a",
 >> --
 >> 2.11.0
 >>
