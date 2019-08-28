@@ -2,347 +2,149 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FF3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626E6C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62AF82077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3981922CED
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:08:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Y5B6obTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfH1NIG (ORCPT
+        id S1726513AbfH1NIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:08:06 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42182 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfH1NIG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:08:06 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1i2xg8-0004cW-U1; Wed, 28 Aug 2019 13:08:01 +0000
-Date:   Wed, 28 Aug 2019 15:08:00 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Hridya Valsaraju <hridya@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH 4/4] binder: Add binder_proc logging to binderfs
-Message-ID: <20190828130759.4b4gtzf2jpi5c46y@wittgenstein>
-References: <20190827204152.114609-1-hridya@google.com>
- <20190827204152.114609-5-hridya@google.com>
+        Wed, 28 Aug 2019 09:08:51 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:11462 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726440AbfH1NIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:08:51 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46JQzg3kGdz9txhj;
+        Wed, 28 Aug 2019 15:08:47 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Y5B6obTo; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id r64Uwv1Lynu4; Wed, 28 Aug 2019 15:08:47 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46JQzg2ZmBz9txgj;
+        Wed, 28 Aug 2019 15:08:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566997727; bh=+Ru/YcnPxN7Wge10zCE6AYHla18pP5X9f7nBPFpgkac=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Y5B6obToOkjP4Ff8if0UsMGPSgW6lRVj2736s0QlPDJjUckmNBtKUkIgZmSvatPsf
+         aoDQdtUuVkVJG2eHXxen8MfR7pCBI9lp7oZu2we1qegqNLnervO1Mhyx7wIC5Gngxa
+         +EiYZAfDaYDJx0IMzSlW5C003iNTDs411BdWYf88=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C02748B895;
+        Wed, 28 Aug 2019 15:08:48 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id nx4I442IqYD8; Wed, 28 Aug 2019 15:08:48 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.105])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5FFB28B885;
+        Wed, 28 Aug 2019 15:08:48 +0200 (CEST)
+Subject: Re: [PATCH v2 0/4] Disable compat cruft on ppc64le v2
+To:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Breno Leitao <leitao@debian.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Allison Randal <allison@lohutok.net>,
+        Michael Neuling <mikey@neuling.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <cover.1566987936.git.msuchanek@suse.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <dbc5abde-ea15-be43-1fdb-d16052c19e03@c-s.fr>
+Date:   Wed, 28 Aug 2019 13:08:48 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190827204152.114609-5-hridya@google.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <cover.1566987936.git.msuchanek@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 01:41:52PM -0700, Hridya Valsaraju wrote:
-> Currently /sys/kernel/debug/binder/proc contains
-> the debug data for every binder_proc instance.
-> This patch makes this information also available
-> in a binderfs instance mounted with a mount option
-> "stats=global" in addition to debugfs. The patch does
-> not affect the presence of the file in debugfs.
+
+
+On 08/28/2019 10:30 AM, Michal Suchanek wrote:
+> With endian switch disabled by default the ppc64le compat supports
+> ppc32le only which is something next to nobody has binaries for.
 > 
-> If a binderfs instance is mounted at path /dev/binderfs,
-> this file would be present at /dev/binderfs/binder_logs/proc.
-> This change provides an alternate way to access this file when debugfs
-> is not mounted.
+> Less code means less bugs so drop the compat stuff.
 > 
-> Signed-off-by: Hridya Valsaraju <hridya@google.com>
-
-I'm still wondering whether there's a nicer way to create those debuf
-files per-process without doing it in binder_open() but it has worked
-fine for a long time with debugfs.
-
-Also, one minor question below. Otherwise
-
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-
-> ---
->  drivers/android/binder.c          | 38 ++++++++++++++++++-
->  drivers/android/binder_internal.h | 46 ++++++++++++++++++++++
->  drivers/android/binderfs.c        | 63 ++++++++++++++-----------------
->  3 files changed, 111 insertions(+), 36 deletions(-)
+> I am not particularly sure about the best way to resolve the llseek
+> situation. I don't see anything in the syscal tables making it
+> 32bit-only so I suppose it should be available on 64bit as well.
 > 
-> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> index bed217310197..37189838f32a 100644
-> --- a/drivers/android/binder.c
-> +++ b/drivers/android/binder.c
-> @@ -481,6 +481,7 @@ struct binder_priority {
->   * @inner_lock:           can nest under outer_lock and/or node lock
->   * @outer_lock:           no nesting under innor or node lock
->   *                        Lock order: 1) outer, 2) node, 3) inner
-> + * @binderfs_entry:       process-specific binderfs log file
->   *
->   * Bookkeeping structure for binder processes
->   */
-> @@ -510,6 +511,7 @@ struct binder_proc {
->  	struct binder_context *context;
->  	spinlock_t inner_lock;
->  	spinlock_t outer_lock;
-> +	struct dentry *binderfs_entry;
->  };
->  
->  enum {
-> @@ -5347,6 +5349,8 @@ static int binder_open(struct inode *nodp, struct file *filp)
->  {
->  	struct binder_proc *proc;
->  	struct binder_device *binder_dev;
-> +	struct binderfs_info *info;
-> +	struct dentry *binder_binderfs_dir_entry_proc = NULL;
->  
->  	binder_debug(BINDER_DEBUG_OPEN_CLOSE, "%s: %d:%d\n", __func__,
->  		     current->group_leader->pid, current->pid);
-> @@ -5368,11 +5372,14 @@ static int binder_open(struct inode *nodp, struct file *filp)
->  	}
->  
->  	/* binderfs stashes devices in i_private */
-> -	if (is_binderfs_device(nodp))
-> +	if (is_binderfs_device(nodp)) {
->  		binder_dev = nodp->i_private;
-> -	else
-> +		info = nodp->i_sb->s_fs_info;
-> +		binder_binderfs_dir_entry_proc = info->proc_log_dir;
-> +	} else {
->  		binder_dev = container_of(filp->private_data,
->  					  struct binder_device, miscdev);
-> +	}
->  	proc->context = &binder_dev->context;
->  	binder_alloc_init(&proc->alloc);
->  
-> @@ -5403,6 +5410,27 @@ static int binder_open(struct inode *nodp, struct file *filp)
->  			&proc_fops);
->  	}
->  
-> +	if (binder_binderfs_dir_entry_proc) {
-> +		char strbuf[11];
-> +		struct dentry *binderfs_entry;
-> +
-> +		snprintf(strbuf, sizeof(strbuf), "%u", proc->pid);
-> +		/*
-> +		 * Similar to debugfs, the process specific log file is shared
-> +		 * between contexts. If the file has already been created for a
-> +		 * process, the following binderfs_create_file() call will
-> +		 * fail if another context of the same process invoked
-> +		 * binder_open(). This is ok since same as debugfs,
-> +		 * the log file will contain information on all contexts of a
-> +		 * given PID.
-> +		 */
-> +		binderfs_entry = binderfs_create_file(binder_binderfs_dir_entry_proc,
-> +			strbuf, &proc_fops, (void *)(unsigned long)proc->pid);
-> +		if (!IS_ERR(binderfs_entry))
-> +			proc->binderfs_entry = binderfs_entry;
+> This is tested on ppc64le top of
 
-You are sure that you don't want to fail the open, when the debug file
-cannot be created in the binderfs instance? I'm not objecting at all, I
-just want to make sure that this is the semantics you want because it
-would be easy to differentiate between the non-fail-debugfs and the new
-binderfs case.
+Really ?
 
-> +
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -5442,6 +5470,12 @@ static int binder_release(struct inode *nodp, struct file *filp)
->  	struct binder_proc *proc = filp->private_data;
->  
->  	debugfs_remove(proc->debugfs_entry);
-> +
-> +	if (proc->binderfs_entry) {
-> +		binderfs_remove_file(proc->binderfs_entry);
-> +		proc->binderfs_entry = NULL;
-> +	}
-> +
->  	binder_defer_work(proc, BINDER_DEFERRED_RELEASE);
->  
->  	return 0;
-> diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_internal.h
-> index b9be42d9464c..bd47f7f72075 100644
-> --- a/drivers/android/binder_internal.h
-> +++ b/drivers/android/binder_internal.h
-> @@ -35,17 +35,63 @@ struct binder_device {
->  	struct inode *binderfs_inode;
->  };
->  
-> +/**
-> + * binderfs_mount_opts - mount options for binderfs
-> + * @max: maximum number of allocatable binderfs binder devices
-> + * @stats_mode: enable binder stats in binderfs.
-> + */
-> +struct binderfs_mount_opts {
-> +	int max;
-> +	int stats_mode;
-> +};
-> +
-> +/**
-> + * binderfs_info - information about a binderfs mount
-> + * @ipc_ns:         The ipc namespace the binderfs mount belongs to.
-> + * @control_dentry: This records the dentry of this binderfs mount
-> + *                  binder-control device.
-> + * @root_uid:       uid that needs to be used when a new binder device is
-> + *                  created.
-> + * @root_gid:       gid that needs to be used when a new binder device is
-> + *                  created.
-> + * @mount_opts:     The mount options in use.
-> + * @device_count:   The current number of allocated binder devices.
-> + * @proc_log_dir:   Pointer to the directory dentry containing process-specific
-> + *                  logs.
-> + */
-> +struct binderfs_info {
-> +	struct ipc_namespace *ipc_ns;
-> +	struct dentry *control_dentry;
-> +	kuid_t root_uid;
-> +	kgid_t root_gid;
-> +	struct binderfs_mount_opts mount_opts;
-> +	int device_count;
-> +	struct dentry *proc_log_dir;
-> +};
-> +
->  extern const struct file_operations binder_fops;
->  
->  extern char *binder_devices_param;
->  
->  #ifdef CONFIG_ANDROID_BINDERFS
->  extern bool is_binderfs_device(const struct inode *inode);
-> +extern struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
-> +					   const struct file_operations *fops,
-> +					   void *data);
-> +extern void binderfs_remove_file(struct dentry *dentry);
->  #else
->  static inline bool is_binderfs_device(const struct inode *inode)
->  {
->  	return false;
->  }
-> +static inline struct dentry *binderfs_create_file(struct dentry *dir,
-> +					   const char *name,
-> +					   const struct file_operations *fops,
-> +					   void *data)
-> +{
-> +	return NULL;
-> +}
-> +static inline void binderfs_remove_file(struct dentry *dentry) {}
->  #endif
->  
->  #ifdef CONFIG_ANDROID_BINDERFS
-> diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-> index dc25a7d759c9..c386a3738290 100644
-> --- a/drivers/android/binderfs.c
-> +++ b/drivers/android/binderfs.c
-> @@ -48,16 +48,6 @@ static dev_t binderfs_dev;
->  static DEFINE_MUTEX(binderfs_minors_mutex);
->  static DEFINE_IDA(binderfs_minors);
->  
-> -/**
-> - * binderfs_mount_opts - mount options for binderfs
-> - * @max: maximum number of allocatable binderfs binder devices
-> - * @stats_mode: enable binder stats in binderfs.
-> - */
-> -struct binderfs_mount_opts {
-> -	int max;
-> -	int stats_mode;
-> -};
-> -
->  enum {
->  	Opt_max,
->  	Opt_stats_mode,
-> @@ -75,27 +65,6 @@ static const match_table_t tokens = {
->  	{ Opt_err, NULL     }
->  };
->  
-> -/**
-> - * binderfs_info - information about a binderfs mount
-> - * @ipc_ns:         The ipc namespace the binderfs mount belongs to.
-> - * @control_dentry: This records the dentry of this binderfs mount
-> - *                  binder-control device.
-> - * @root_uid:       uid that needs to be used when a new binder device is
-> - *                  created.
-> - * @root_gid:       gid that needs to be used when a new binder device is
-> - *                  created.
-> - * @mount_opts:     The mount options in use.
-> - * @device_count:   The current number of allocated binder devices.
-> - */
-> -struct binderfs_info {
-> -	struct ipc_namespace *ipc_ns;
-> -	struct dentry *control_dentry;
-> -	kuid_t root_uid;
-> -	kgid_t root_gid;
-> -	struct binderfs_mount_opts mount_opts;
-> -	int device_count;
-> -};
-> -
->  static inline struct binderfs_info *BINDERFS_I(const struct inode *inode)
->  {
->  	return inode->i_sb->s_fs_info;
-> @@ -535,7 +504,22 @@ static struct dentry *binderfs_create_dentry(struct dentry *dir,
->  	return dentry;
->  }
->  
-> -static struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
-> +void binderfs_remove_file(struct dentry *dentry)
-> +{
-> +	struct inode *dir;
-> +
-> +	dir = d_inode(dentry->d_parent);
-> +	inode_lock(dir);
-> +	if (simple_positive(dentry)) {
-> +		dget(dentry);
-> +		simple_unlink(dir, dentry);
-> +		d_delete(dentry);
-> +		dput(dentry);
-> +	}
-> +	inode_unlock(dir);
-> +}
-> +
-> +struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
->  				    const struct file_operations *fops,
->  				    void *data)
->  {
-> @@ -604,7 +588,8 @@ static struct dentry *binderfs_create_dir(struct dentry *parent,
->  
->  static int init_binder_logs(struct super_block *sb)
->  {
-> -	struct dentry *binder_logs_root_dir, *file_dentry;
-> +	struct dentry *binder_logs_root_dir, *file_dentry, *proc_log_dir;
-> +	struct binderfs_info *info;
->  	int ret = 0;
->  
->  	binder_logs_root_dir = binderfs_create_dir(sb->s_root,
-> @@ -648,8 +633,18 @@ static int init_binder_logs(struct super_block *sb)
->  					   "failed_transaction_log",
->  					   &binder_transaction_log_fops,
->  					   &binder_transaction_log_failed);
-> -	if (IS_ERR(file_dentry))
-> +	if (IS_ERR(file_dentry)) {
->  		ret = PTR_ERR(file_dentry);
-> +		goto out;
-> +	}
-> +
-> +	proc_log_dir = binderfs_create_dir(binder_logs_root_dir, "proc");
-> +	if (IS_ERR(proc_log_dir)) {
-> +		ret = PTR_ERR(proc_log_dir);
-> +		goto out;
-> +	}
-> +	info = sb->s_fs_info;
-> +	info->proc_log_dir = proc_log_dir;
->  
->  out:
->  	return ret;
-> -- 
-> 2.23.0.187.g17f5b7556c-goog
+I get a build failure with ppc64_defconfig + LITTLE_ENDIAN :
+
+   CC      arch/powerpc/kernel/signal.o
+arch/powerpc/kernel/signal.c: In function 'do_signal':
+arch/powerpc/kernel/signal.c:250:6: error: unused variable 'is32' 
+[-Werror=unused-variable]
+   int is32 = is_32bit_task();
+       ^~~~
+cc1: all warnings being treated as errors
+make[3]: *** [arch/powerpc/kernel/signal.o] Error 1
+
+Christophe
+
+> 
+> https://patchwork.ozlabs.org/cover/1153556/
+> 
+> Changes in v2: saner CONFIG_COMPAT ifdefs
+> 
+> Thanks
+> 
+> Michal
+> 
+> Michal Suchanek (4):
+>    fs: always build llseek.
+>    powerpc: move common register copy functions from signal_32.c to
+>      signal.c
+>    powerpc/64: make buildable without CONFIG_COMPAT
+>    powerpc/64: Disable COMPAT if littleendian.
+> 
+>   arch/powerpc/Kconfig               |   2 +-
+>   arch/powerpc/include/asm/syscall.h |   2 +
+>   arch/powerpc/kernel/Makefile       |  15 ++-
+>   arch/powerpc/kernel/entry_64.S     |   2 +
+>   arch/powerpc/kernel/signal.c       | 146 ++++++++++++++++++++++++++++-
+>   arch/powerpc/kernel/signal_32.c    | 140 ---------------------------
+>   arch/powerpc/kernel/syscall_64.c   |   5 +-
+>   arch/powerpc/kernel/vdso.c         |   4 +-
+>   arch/powerpc/perf/callchain.c      |  14 ++-
+>   fs/read_write.c                    |   2 -
+>   10 files changed, 177 insertions(+), 155 deletions(-)
 > 
