@@ -2,159 +2,92 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD52CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 393DDC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81435217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3DBD20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:37:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iBjfAYPX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfH1Jhe (ORCPT
+        id S1726787AbfH1Jhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:37:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:56340 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726340AbfH1Jhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:37:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1004337;
-        Wed, 28 Aug 2019 02:37:33 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CC133F59C;
-        Wed, 28 Aug 2019 02:37:33 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 10:37:31 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, robh+dt@kernel.org, jonathanh@nvidia.com,
-        kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH 6/6] PCI: tegra: Add support to enable slot regulators
-Message-ID: <20190828093731.GT14582@e119886-lin.cambridge.arm.com>
-References: <20190826073143.4582-1-vidyas@nvidia.com>
- <20190826073143.4582-7-vidyas@nvidia.com>
- <20190827154725.GP14582@e119886-lin.cambridge.arm.com>
- <91f8914a-22a9-8b7c-bc00-c309a21d83db@nvidia.com>
- <20190827171333.GQ14582@e119886-lin.cambridge.arm.com>
- <20190828090757.GA2917@ulmo>
+        Wed, 28 Aug 2019 05:37:40 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:46048 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbfH1Jhi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 05:37:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lzDU24rr69reVb104Pce2/xUV/b2psIODNqgf8Q5hjI=; b=iBjfAYPXlHB+XqPH4DdhAmFHg
+        774im8ZAEvMqDXaAEYklM8RcJWo5UVzucK9HxzyKPZJ6OV8nnQLepb8gDr88OQ4+5KC8eTFY3Ni+V
+        uuEcZB4odylEURWjWNICBuIVepn+vIpCwV5XLVsUeXcAiYcv4ziu9IsrrCdz5a1GFW75gATruMEkx
+        skbNQeXW+IzpYaQPQyIbUX00xi0D3NuICIvHDIPLCkHL0/6yRLs4u10v9MAGukNVvcAnFRUkj1zuF
+        /q2+KXFaRnWTtLE59wyUu/0Urdt/3UeKnmHc/7ubh8vEOOmJ4TRKpw/I91uLlfxKVRixTwPrVRvUs
+        3y1Nf2anQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i2uOT-0008Q7-JY; Wed, 28 Aug 2019 09:37:33 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C51B4300B83;
+        Wed, 28 Aug 2019 11:36:57 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A8D5720230B03; Wed, 28 Aug 2019 11:37:31 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 11:37:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [RESEND PATCH V3 2/8] perf/x86/intel: Basic support for metrics
+ counters
+Message-ID: <20190828093731.GO2386@hirez.programming.kicks-ass.net>
+References: <20190826144740.10163-1-kan.liang@linux.intel.com>
+ <20190826144740.10163-3-kan.liang@linux.intel.com>
+ <20190828084416.GC2369@hirez.programming.kicks-ass.net>
+ <20190828090217.GN2386@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828090757.GA2917@ulmo>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20190828090217.GN2386@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 11:07:57AM +0200, Thierry Reding wrote:
-> On Tue, Aug 27, 2019 at 06:13:34PM +0100, Andrew Murray wrote:
-> > On Tue, Aug 27, 2019 at 09:54:17PM +0530, Vidya Sagar wrote:
-> > > On 8/27/2019 9:17 PM, Andrew Murray wrote:
-> > > > On Mon, Aug 26, 2019 at 01:01:43PM +0530, Vidya Sagar wrote:
-> > > > > Add support to get regulator information of 3.3V and 12V supplies of a PCIe
-> > > > > slot from the respective controller's device-tree node and enable those
-> > > > > supplies. This is required in platforms like p2972-0000 where the supplies
-> > > > > to x16 slot owned by C5 controller need to be enabled before attempting to
-> > > > > enumerate the devices.
-> > > > > 
-> > > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > > > ---
-> > > > >   drivers/pci/controller/dwc/pcie-tegra194.c | 65 ++++++++++++++++++++++
-> > > > >   1 file changed, 65 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > > index 8a27b25893c9..97de2151a738 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > > @@ -278,6 +278,8 @@ struct tegra_pcie_dw {
-> > > > >   	u32 aspm_l0s_enter_lat;
-> > > > >   	struct regulator *pex_ctl_supply;
-> > > > > +	struct regulator *slot_ctl_3v3;
-> > > > > +	struct regulator *slot_ctl_12v;
-> > > > >   	unsigned int phy_count;
-> > > > >   	struct phy **phys;
-> > > > > @@ -1047,6 +1049,59 @@ static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
-> > > > >   	}
-> > > > >   }
-> > > > > +static void tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
-> > > > > +{
-> > > > > +	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
-> > > > > +	if (IS_ERR(pcie->slot_ctl_3v3))
-> > > > > +		pcie->slot_ctl_3v3 = NULL;
-> > > > > +
-> > > > > +	pcie->slot_ctl_12v = devm_regulator_get_optional(pcie->dev, "vpcie12v");
-> > > > > +	if (IS_ERR(pcie->slot_ctl_12v))
-> > > > > +		pcie->slot_ctl_12v = NULL;
-> > > > 
-> > > > Do these need to take into consideration -EPROBE_DEFER?
-> > > Since these are devm_* APIs, isn't it taken care of automatically?
-> > 
-> > devm_regulator_get_optional can still return -EPROBE_DEFER - for times when
-> > "lookup could succeed in the future".
-> > 
-> > It's probably helpful here for your driver to distinguish between there not
-> > being a regulator specified in the DT, and there being a regulator but there
-> > is no device for it yet. For the latter case - your driver would probe but
-> > nothing would enumerate.
-> > 
-> > See pcie-rockchip-host.c for an example of where this is handled.
-> > 
-> > Of course if, for whatever reason it is unlikely you'll ever get -EPROBE_DEFER
-> > then maybe it's OK as it is.
-> 
-> Let's not assume that. We've just recently encountered a case where we
-> did not handle -EPROBE_DEFER because we had assumed too much, and that
-> turned into a bit of a hassle to fix.
-> 
-> Vidya, I think what Andrew is saying is that you need to propagate the
-> -EPROBE_DEFER error to the caller (i.e. the ->probe() callback) so that
-> the PCI controller driver can be properly added to the defer queue in
-> case the regulator isn't ready yet.
+On Wed, Aug 28, 2019 at 11:02:17AM +0200, Peter Zijlstra wrote:
+> @@ -2192,8 +2227,22 @@ static void intel_pmu_read_event(struct
+>  static void intel_pmu_enable_fixed(struct perf_event *event)
+>  {
+>  	struct hw_perf_event *hwc = &event->hw;
+> -	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
+>  	u64 ctrl_val, mask, bits = 0;
+> +	int idx = hwc->idx;
+> +
+> +	if (is_topdown_idx(idx)) {
+> +		struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> +		/*
+> +		 * When there are other Top-Down events already active; don't
+> +		 * enable the SLOTS counter.
+> +		 */
+> +		if (*(u64 *)cpuc->active_mask & INTEL_PMC_OTHER_TOPDOWN_BITS(idx))
+> +			return;
+> +
+> +		idx = INTEL_PMC_IDX_FIXED_SLOTS;
+> +	}
+> +
+> +	intel_set_masks(event, hwc->idx);
 
-Indeed.
-
-> 
-> I think what we want here is something like:
-> 
-> 	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
-> 	if (IS_ERR(pcie->slot_ctl_3v3)) {
-> 		if (PTR_ERR(pcie->slot_ctl_3v3) != -ENODEV)
-> 			return PTR_ERR(pcie->slot_ctl_3v3);
-> 
-> 		pcie->slot_ctl_3v3 = NULL;
-> 	}
-> 
-> Andrew, I'm not sure the handling in rockchip_pcie_parse_host_dt() is
-> correct. It singles out -EPROBE_DEFER, which I think is the wrong way
-> around. We should be special-casing -ENODEV, because regulator_get()
-> can return a wide array of error cases, not all of which we actually
-> want to consider successes. For example we could be getting -ENOMEM,
-> which, I would argue, is something that we should propagate.
-
-Yes I completely agree, given that the regulator is optional: we only want
-to proceed if we find the regulator or if a regulator wasn't specified in the
-DT. We should fail upon any other error, in case a regulator was specified
-but the error prevented it from being returned.
-
-> I think
-> it'd be very confusing to take that as meaning "optional regulator
-> wasn't specified", because in that case the DTS file would've had the
-> regulator hooked up (we have to assume that it is needed in that case)
-> but we won't be enabling it, so it's unlikely that devices will
-> enumerate.
-
-Thanks,
-
-Andrew Murray
-
-> 
-> Thierry
-
-
+That wants to be idx, not hwc->idx.
