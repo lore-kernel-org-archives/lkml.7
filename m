@@ -6,50 +6,49 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68C3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7BCC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B5A22CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8D022CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfH1Vvt (ORCPT
+        id S1727255AbfH1Vvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:51:49 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:37532 "EHLO
+        Wed, 28 Aug 2019 17:51:53 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:37552 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbfH1Vvq (ORCPT
+        with ESMTP id S1727108AbfH1Vvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:51:46 -0400
+        Wed, 28 Aug 2019 17:51:50 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1A863153A6688;
-        Wed, 28 Aug 2019 14:51:45 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 14:51:44 -0700 (PDT)
-Message-Id: <20190828.145144.1235001906800173904.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0C01B153A6680;
+        Wed, 28 Aug 2019 14:51:50 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 14:51:49 -0700 (PDT)
+Message-Id: <20190828.145149.1714741890607735212.davem@davemloft.net>
 To:     yuehaibing@huawei.com
 Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        khilman@baylibre.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] phy: mdio-mux-meson-g12a: use
+        mripard@kernel.org, wens@csie.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] phy: mdio-sun4i: use
  devm_platform_ioremap_resource() to simplify code
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190827134940.14944-1-yuehaibing@huawei.com>
-References: <20190827134940.14944-1-yuehaibing@huawei.com>
+In-Reply-To: <20190827135032.14620-1-yuehaibing@huawei.com>
+References: <20190827135032.14620-1-yuehaibing@huawei.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 28 Aug 2019 14:51:45 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 28 Aug 2019 14:51:50 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: YueHaibing <yuehaibing@huawei.com>
-Date: Tue, 27 Aug 2019 21:49:40 +0800
+Date: Tue, 27 Aug 2019 21:50:32 +0800
 
 > Use devm_platform_ioremap_resource() to simplify the code a bit.
 > This is detected by coccinelle.
