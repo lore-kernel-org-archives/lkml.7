@@ -2,235 +2,124 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D174C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75F9C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05FD723404
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F370208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbfH1T2E (ORCPT
+        id S1726865AbfH1TaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 15:28:04 -0400
-Received: from mga04.intel.com ([192.55.52.120]:25308 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbfH1T2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 15:28:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 12:28:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="380519016"
-Received: from amathu3-mobl1.amr.corp.intel.com (HELO [10.254.179.245]) ([10.254.179.245])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Aug 2019 12:28:01 -0700
-Subject: Re: mmotm 2019-08-27-20-39 uploaded (sound/hda/intel-nhlt.c)
-To:     Randy Dunlap <rdunlap@infradead.org>, akpm@linux-foundation.org,
-        broonie@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        moderated for non-subscribers <alsa-devel@alsa-project.org>
-References: <20190828034012.sBvm81sYK%akpm@linux-foundation.org>
- <274054ef-8611-2661-9e67-4aabae5a7728@infradead.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <5ac8a7a7-a9b4-89a5-e0a6-7c97ec1fabc6@linux.intel.com>
-Date:   Wed, 28 Aug 2019 14:28:01 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <274054ef-8611-2661-9e67-4aabae5a7728@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 28 Aug 2019 15:30:10 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:50858 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726617AbfH1TaK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 15:30:10 -0400
+Received: from mr2.cc.vt.edu (mr2.cc.vt.edu [IPv6:2607:b400:92:8400:0:90:e077:bf22])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x7SJU8D8032035
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 15:30:08 -0400
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x7SJU311014487
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 15:30:08 -0400
+Received: by mail-qt1-f200.google.com with SMTP id k47so812573qtc.16
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 12:30:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=WWW7WkQ7EM9h2Nw/XK0xhQGrzY4/gIDQbxY5oyv/Mws=;
+        b=mEIBCv7M61gCErnxANDe6Zlxk8qwSlzbnsIQ+uum/wWirseX7CrU8BXm73IOPP5C8i
+         PJ2ihUgLIIoms+N17Cszy2Deh03ivVLQHckzWaB5ZrFwDM/02dyb6I2jLXHhjH08/+wC
+         cINA9TScnTiwwCGfru5bL3Ns3aGIbO/CuB1q7pB0PHSSVkPnLs+NrCKLVMWEbhCJxHYH
+         pFmFB+AtR3y08+DNl5mbL8WyHXs/g8aNfbdENnQiI8j412gmIxExC/JHCYq/UJNp9vs/
+         6eL4uFad85sitjJdLQkuErlcCy5j9Mhfw5vvzUHDR8+l+lNCIaXIoPjYXHvo4A+WeZfI
+         HdRQ==
+X-Gm-Message-State: APjAAAUfgqiFinrIRU9jFEFIZmze7QNqkDhC2UhtaAuKb8skur2Z0yTu
+        QJSmUmvZK/V7uuGmy8lFzMJuJdQXWBSe2nZNnaBfDgu8eiyowY3a05ESWdj1GHpNqB/djw1f7oB
+        GmhC2K62PBXCCRG0hj4rJabo3lHGYtutqoqc=
+X-Received: by 2002:ac8:2c5c:: with SMTP id e28mr6257958qta.159.1567020603153;
+        Wed, 28 Aug 2019 12:30:03 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzimlreE7q4z4u6OLfGtwoudD0qGMHFO4+Ipo+SEHkkQj5YeFnjYv0q5nl0Y8iNK5fXi8B4aQ==
+X-Received: by 2002:ac8:2c5c:: with SMTP id e28mr6257930qta.159.1567020602873;
+        Wed, 28 Aug 2019 12:30:02 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4340::ba0])
+        by smtp.gmail.com with ESMTPSA id o18sm86309qtb.53.2019.08.28.12.30.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 12:30:01 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+Subject: Re: next-20190826 - objtool fails to build.
+In-Reply-To: <20190828151003.3px5plk4tp2s5s5c@treble>
+References: <133250.1566965715@turing-police>
+ <20190828151003.3px5plk4tp2s5s5c@treble>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1567020600_4251P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 28 Aug 2019 15:30:00 -0400
+Message-ID: <23345.1567020600@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--==_Exmh_1567020600_4251P
+Content-Type: text/plain; charset=us-ascii
+
+On Wed, 28 Aug 2019 10:10:04 -0500, Josh Poimboeuf said:
+
+> But I don't see how those warnings could get enabled: -Wsign-compare
+> -Wunused-parameter.
+>
+> Can you "make clean" and do "make V=1 tools/objtool" to show the actual
+> flags?
+
+And that tells me those warnings in fact don't get specifically enabled.
+(I've added some line breaks for sanity)
+
+  gcc -Wp,-MD,/usr/src/linux-next/tools/objtool/.special.o.d -Wp,-MT,/usr/src/linux-next/tools/objtool/special.o -O2 -D_FORTIFY_SOURCE=2 -Wall -Wextra -Wbad-function-cast
+
+Found the cause of the mystery - I changed something in a bash profile, and
+as a result...
+
+export CFLAGS="-O2 -D_FORTIFY_SOURCE=2 -Wall -Wextra"
+
+And -Wextra pulls in the things that cause problems. So this is mostly
+self-inflicted.
+
+The real question then becomes - should the Makefile sanitize CFLAGS or just
+append to whatever the user supplied as it does currently? The rest of the tree
+sanitizes CFLAG, because I don't get deluged in -Wsign-compare warnings all
+over the place...
 
 
-On 8/28/19 1:30 PM, Randy Dunlap wrote:
-> On 8/27/19 8:40 PM, akpm@linux-foundation.org wrote:
->> The mm-of-the-moment snapshot 2019-08-27-20-39 has been uploaded to
->>
->>     http://www.ozlabs.org/~akpm/mmotm/
->>
->> mmotm-readme.txt says
->>
->> README for mm-of-the-moment:
->>
->> http://www.ozlabs.org/~akpm/mmotm/
->>
->> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
->> more than once a week.
->>
->> You will need quilt to apply these patches to the latest Linus release (5.x
->> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
->> http://ozlabs.org/~akpm/mmotm/series
->>
->> The file broken-out.tar.gz contains two datestamp files: .DATE and
->> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
->> followed by the base kernel version against which this patch series is to
->> be applied.
-> 
-> (from linux-next tree, but problem found/seen in mmotm)
-> 
-> Sorry, I don't know who is responsible for this driver.
+--==_Exmh_1567020600_4251P
+Content-Type: application/pgp-signature
 
-That would be me.
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
 
-I just checked with Mark Brown's for-next tree 
-8aceffa09b4b9867153bfe0ff6f40517240cee12
-and things are fine in i386 mode, see below.
+iQIVAwUBXWbWNwdmEQWDXROgAQLpHBAAsvfurUruTCbQcjtDzRBtVO67OqU69uoN
+274Tlz95DjQjMyZONImT3QYaMo16f65MSmkNoxjsyBHAgSANhU/ZG4dsmFkKn3fR
+You9kBjuSIVinxvdbrSqVJ/r5kBPItbbDVq4PaS/X4hv6bF1kjb5q+pkTWUqlUUS
+XQG5FnwC/040j8CmC/dFo+49NTCbpT7f2rytF2H3i58DPDbhonsnv16ii++MSAZh
+Ba0Tqdn6Ay6sCgd2WSPkge7/RV1ChZm/UhoR9Tb/1USp3ZWSW7365BcxAJksoNvY
+78fpVa56jz4thtK/7oeZsWrCbRr+oYxiLLHWKMF8o7tc9orh0iF61DAzusA4Eine
+EIi8mZFaMtmGWsJ9o9p5Z1ZM0fUgTlyatmnqb/jp8saSqag3TwoMp39OgzzdNMm+
+QNohp4XMN47jdHuKB5qRBw7Ebqwvn34+rC39nWJmlaM1xggDVYuLrNrVWCMSOe8N
+Jrnxz5IL6lWiFpcZCbPljLvPN0hTkpuyD0hyyaggrcrdwUGqXTBPVF49se2UR8bO
+GTL8KSidHnZ3+oD9hKI4bSKa+TiXjJUbjUW0AYzQ8ws0zWcyhjMWgUQAPO1rJ0Du
+4PX5AY528uqoJnfp7Q31K+JDb4wUwZhDaWa+bzxoP8JvFfmCgdH/oz8rTUqsgFcj
+p18xqip4Xqs=
+=nPp4
+-----END PGP SIGNATURE-----
 
-next-20190828 also works fine for me in i386 mode.
-
-if you can point me to a tree and configuration that don't work I'll 
-look into this, I'd need more info to progress.
-
-make ARCH=i386
-   Using /data/pbossart/ktest/broonie-next as source for kernel
-   GEN     Makefile
-   CALL    /data/pbossart/ktest/broonie-next/scripts/checksyscalls.sh
-   CALL    /data/pbossart/ktest/broonie-next/scripts/atomic/check-atomics.sh
-   CHK     include/generated/compile.h
-   CC [M]  sound/hda/ext/hdac_ext_bus.o
-   CC [M]  sound/hda/ext/hdac_ext_controller.o
-   CC [M]  sound/hda/ext/hdac_ext_stream.o
-   LD [M]  sound/hda/ext/snd-hda-ext-core.o
-   CC [M]  sound/hda/hda_bus_type.o
-   CC [M]  sound/hda/hdac_bus.o
-   CC [M]  sound/hda/hdac_device.o
-   CC [M]  sound/hda/hdac_sysfs.o
-   CC [M]  sound/hda/hdac_regmap.o
-   CC [M]  sound/hda/hdac_controller.o
-   CC [M]  sound/hda/hdac_stream.o
-   CC [M]  sound/hda/array.o
-   CC [M]  sound/hda/hdmi_chmap.o
-   CC [M]  sound/hda/trace.o
-   CC [M]  sound/hda/hdac_component.o
-   CC [M]  sound/hda/hdac_i915.o
-   LD [M]  sound/hda/snd-hda-core.o
-   CC [M]  sound/hda/intel-nhlt.o
-   LD [M]  sound/hda/snd-intel-nhlt.o
-Kernel: arch/x86/boot/bzImage is ready  (#18)
-   Building modules, stage 2.
-   MODPOST 156 modules
-   CC      sound/hda/ext/snd-hda-ext-core.mod.o
-   LD [M]  sound/hda/ext/snd-hda-ext-core.ko
-   CC      sound/hda/snd-hda-core.mod.o
-   LD [M]  sound/hda/snd-hda-core.ko
-   CC      sound/hda/snd-intel-nhlt.mod.o
-   LD [M]  sound/hda/snd-intel-nhlt.ko
-
-
-> 
-> ~~~~~~~~~~~~~~~~~~~~~~
-> on i386:
-> 
->    CC      sound/hda/intel-nhlt.o
-> ../sound/hda/intel-nhlt.c:14:25: error: redefinition of ‘intel_nhlt_init’
->   struct nhlt_acpi_table *intel_nhlt_init(struct device *dev)
->                           ^~~~~~~~~~~~~~~
-> In file included from ../sound/hda/intel-nhlt.c:5:0:
-> ../include/sound/intel-nhlt.h:134:39: note: previous definition of ‘intel_nhlt_init’ was here
->   static inline struct nhlt_acpi_table *intel_nhlt_init(struct device *dev)
->                                         ^~~~~~~~~~~~~~~
-> ../sound/hda/intel-nhlt.c: In function ‘intel_nhlt_init’:
-> ../sound/hda/intel-nhlt.c:39:14: error: dereferencing pointer to incomplete type ‘struct nhlt_resource_desc’
->    if (nhlt_ptr->length)
->                ^~
-> ../sound/hda/intel-nhlt.c:41:4: error: implicit declaration of function ‘memremap’; did you mean ‘ioremap’? [-Werror=implicit-function-declaration]
->      memremap(nhlt_ptr->min_addr, nhlt_ptr->length,
->      ^~~~~~~~
->      ioremap
-> ../sound/hda/intel-nhlt.c:42:6: error: ‘MEMREMAP_WB’ undeclared (first use in this function)
->        MEMREMAP_WB);
->        ^~~~~~~~~~~
-> ../sound/hda/intel-nhlt.c:42:6: note: each undeclared identifier is reported only once for each function it appears in
-> ../sound/hda/intel-nhlt.c:45:25: error: dereferencing pointer to incomplete type ‘struct nhlt_acpi_table’
->        (strncmp(nhlt_table->header.signature,
->                           ^~
-> ../sound/hda/intel-nhlt.c:48:3: error: implicit declaration of function ‘memunmap’; did you mean ‘vunmap’? [-Werror=implicit-function-declaration]
->     memunmap(nhlt_table);
->     ^~~~~~~~
->     vunmap
-> ../sound/hda/intel-nhlt.c: At top level:
-> ../sound/hda/intel-nhlt.c:56:6: error: redefinition of ‘intel_nhlt_free’
->   void intel_nhlt_free(struct nhlt_acpi_table *nhlt)
->        ^~~~~~~~~~~~~~~
-> In file included from ../sound/hda/intel-nhlt.c:5:0:
-> ../include/sound/intel-nhlt.h:139:20: note: previous definition of ‘intel_nhlt_free’ was here
->   static inline void intel_nhlt_free(struct nhlt_acpi_table *addr)
->                      ^~~~~~~~~~~~~~~
-> ../sound/hda/intel-nhlt.c:62:5: error: redefinition of ‘intel_nhlt_get_dmic_geo’
->   int intel_nhlt_get_dmic_geo(struct device *dev, struct nhlt_acpi_table *nhlt)
->       ^~~~~~~~~~~~~~~~~~~~~~~
-> In file included from ../sound/hda/intel-nhlt.c:5:0:
-> ../include/sound/intel-nhlt.h:143:19: note: previous definition of ‘intel_nhlt_get_dmic_geo’ was here
->   static inline int intel_nhlt_get_dmic_geo(struct device *dev,
->                     ^~~~~~~~~~~~~~~~~~~~~~~
-> ../sound/hda/intel-nhlt.c: In function ‘intel_nhlt_get_dmic_geo’:
-> ../sound/hda/intel-nhlt.c:76:11: error: dereferencing pointer to incomplete type ‘struct nhlt_endpoint’
->     if (epnt->linktype == NHLT_LINK_DMIC) {
->             ^~
-> ../sound/hda/intel-nhlt.c:76:25: error: ‘NHLT_LINK_DMIC’ undeclared (first use in this function)
->     if (epnt->linktype == NHLT_LINK_DMIC) {
->                           ^~~~~~~~~~~~~~
-> ../sound/hda/intel-nhlt.c:79:15: error: dereferencing pointer to incomplete type ‘struct nhlt_dmic_array_config’
->      switch (cfg->array_type) {
->                 ^~
-> ../sound/hda/intel-nhlt.c:80:9: error: ‘NHLT_MIC_ARRAY_2CH_SMALL’ undeclared (first use in this function)
->      case NHLT_MIC_ARRAY_2CH_SMALL:
->           ^~~~~~~~~~~~~~~~~~~~~~~~
-> ../sound/hda/intel-nhlt.c:81:9: error: ‘NHLT_MIC_ARRAY_2CH_BIG’ undeclared (first use in this function); did you mean ‘NHLT_MIC_ARRAY_2CH_SMALL’?
->      case NHLT_MIC_ARRAY_2CH_BIG:
->           ^~~~~~~~~~~~~~~~~~~~~~
->           NHLT_MIC_ARRAY_2CH_SMALL
-> ../sound/hda/intel-nhlt.c:82:16: error: ‘MIC_ARRAY_2CH’ undeclared (first use in this function); did you mean ‘NHLT_MIC_ARRAY_2CH_BIG’?
->       dmic_geo = MIC_ARRAY_2CH;
->                  ^~~~~~~~~~~~~
->                  NHLT_MIC_ARRAY_2CH_BIG
-> ../sound/hda/intel-nhlt.c:85:9: error: ‘NHLT_MIC_ARRAY_4CH_1ST_GEOM’ undeclared (first use in this function); did you mean ‘NHLT_MIC_ARRAY_2CH_BIG’?
->      case NHLT_MIC_ARRAY_4CH_1ST_GEOM:
->           ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->           NHLT_MIC_ARRAY_2CH_BIG
-> ../sound/hda/intel-nhlt.c:86:9: error: ‘NHLT_MIC_ARRAY_4CH_L_SHAPED’ undeclared (first use in this function); did you mean ‘NHLT_MIC_ARRAY_4CH_1ST_GEOM’?
->      case NHLT_MIC_ARRAY_4CH_L_SHAPED:
->           ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->           NHLT_MIC_ARRAY_4CH_1ST_GEOM
->    AR      sound/i2c/other/built-in.a
-> ../sound/hda/intel-nhlt.c:87:9: error: ‘NHLT_MIC_ARRAY_4CH_2ND_GEOM’ undeclared (first use in this function); did you mean ‘NHLT_MIC_ARRAY_4CH_1ST_GEOM’?
->      case NHLT_MIC_ARRAY_4CH_2ND_GEOM:
->           ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->           NHLT_MIC_ARRAY_4CH_1ST_GEOM
-> ../sound/hda/intel-nhlt.c:88:16: error: ‘MIC_ARRAY_4CH’ undeclared (first use in this function); did you mean ‘MIC_ARRAY_2CH’?
->       dmic_geo = MIC_ARRAY_4CH;
->                  ^~~~~~~~~~~~~
->                  MIC_ARRAY_2CH
->    AR      sound/i2c/built-in.a
->    CC      drivers/bluetooth/btmtksdio.o
-> ../sound/hda/intel-nhlt.c:90:9: error: ‘NHLT_MIC_ARRAY_VENDOR_DEFINED’ undeclared (first use in this function); did you mean ‘NHLT_MIC_ARRAY_4CH_L_SHAPED’?
->      case NHLT_MIC_ARRAY_VENDOR_DEFINED:
->           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->           NHLT_MIC_ARRAY_4CH_L_SHAPED
-> ../sound/hda/intel-nhlt.c:92:26: error: dereferencing pointer to incomplete type ‘struct nhlt_vendor_dmic_array_config’
->       dmic_geo = cfg_vendor->nb_mics;
->                            ^~
-> ../sound/hda/intel-nhlt.c: At top level:
-> ../sound/hda/intel-nhlt.c:106:16: error: expected declaration specifiers or ‘...’ before string constant
->   MODULE_LICENSE("GPL v2");
->                  ^~~~~~~~
-> ../sound/hda/intel-nhlt.c:107:20: error: expected declaration specifiers or ‘...’ before string constant
->   MODULE_DESCRIPTION("Intel NHLT driver");
->                      ^~~~~~~~~~~~~~~~~~~
-> cc1: some warnings being treated as errors
-> make[3]: *** [../scripts/Makefile.build:266: sound/hda/intel-nhlt.o] Error 1
-> 
-> 
-> 
+--==_Exmh_1567020600_4251P--
