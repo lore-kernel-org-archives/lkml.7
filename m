@@ -2,125 +2,194 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ACCC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDF5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E072B22CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:26:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567031183;
-	bh=nh/Cp1V3gNlbWJY+TFHAxN8PnPYse/LGeF2iYlhuYr0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x9lij5sZ45sfE0MGw8/TiYVi3D3yNEgyWyaxJiggcI4kVcUKd5+fTM93mp/z926Mp
-	 OwbURQevi7obC4fIkyjy6fvJnbHhE/wOXYFNelucC/REZM4B7YIUiiGtOZLy9tUU2M
-	 qLLfftb77qtKjQZuYhqP7lst5bnwdXErOFv2pSdQ=
+	by mail.kernel.org (Postfix) with ESMTP id 34F92217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:26:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="bF70Avyn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfH1W0W (ORCPT
+        id S1727066AbfH1W0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 18:26:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726828AbfH1W0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 18:26:21 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6580A217F5;
-        Wed, 28 Aug 2019 22:26:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567031180;
-        bh=nh/Cp1V3gNlbWJY+TFHAxN8PnPYse/LGeF2iYlhuYr0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y19PaU3SJXWC5Jbbcdbffp+tIBXD/MaU3idWNPVC1i9/TYyH5mH3cGqpAhUPTgQB6
-         z/VKY/ron/skTmRO6tRYfYvUNLQMpKkEGmit8DxkT7py4vHms/0/79RjxNGBRJImT8
-         BHfPqMmItT6H6/p8Vo6LWWdZk6cj0ZJX9dzDxhBc=
-Date:   Wed, 28 Aug 2019 17:26:18 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH] PCI: hv: Make functions only used locally static in
- pci-hyperv.c
-Message-ID: <20190828222618.GE7013@google.com>
-References: <20190826154159.9005-1-kw@linux.com>
+        Wed, 28 Aug 2019 18:26:42 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45581 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfH1W0l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 18:26:41 -0400
+Received: by mail-ed1-f68.google.com with SMTP id x19so1685726eda.12
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 15:26:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=ePoJ33Wu/icAvNqWpNFENY9LYrP4c2t65btHAa+RjrE=;
+        b=bF70Avyn4DwRjJdfn6Nbjw+PVDiW17xek6/F9luxsSGrjM7XrjyLbCNMz9T8/mQ5VE
+         qD/00YM36KvgtJluIgSioCgBGb7oHDDYXdcaIgAbGB579NS1O/jGWnS8LVU2roupZ16X
+         yXxzQ7s8c+VHG6XP7O0Dp11/uo4BDjTFzhNt3khIPx3bv5j19hlB7aPJznezcwUUDRID
+         cXWdEaorJXviipYteiSz8JNSXswmk75S7EXiDuAIS4Ka/kORCVA+qoCoNwlZ6hQkVD/p
+         qp+swzgy8a04x2TJwT2v1jMNXlrTHp2FU5c0q7BwpcaGm/fxZ6Am7rrUuI48li9/bisi
+         j6gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=ePoJ33Wu/icAvNqWpNFENY9LYrP4c2t65btHAa+RjrE=;
+        b=X32l3dXgh81QjLKgWuoopeACgqn/cDN1emWkvmghx4elOCvxU5o+/OMPOgM8Eyj08/
+         y0iC7erazQu6HErnDkIhcbwYnudTLcOvNSmESPc5Qh900nQs9W/qdd/iB9eN163f00dk
+         db2NQMmpSsuW81g0lUd2oKzgdSjjdQi3aqcjjocqmRN2v2xB7dmetKM0Hhj7zT45/8se
+         qP30NB9Uvgcd81kQ5BA5NaVieVfR+1HD9IiRaSLC6h+Q7ulCu2KhJRBPrxn21O+gaXmx
+         KOOX6dbu2kr6cslVLzC/lHwNOqXydJICI3SjfvW9QDUyyu+wKkvRxekxCmSQoovaqmbe
+         g2Yw==
+X-Gm-Message-State: APjAAAUwyy+UstfEwR2KX4/Q/IbqF8BQpCiykUa1rsRqG7EZY8tS8j+Q
+        bp0ao7xqzc0oXsALZTkQdfBsAw==
+X-Google-Smtp-Source: APXvYqzNhEn8jZKHAI0X43Hc8CLziEYTiZbEqayyGqBhGAO4VEfnYtddX1fP+F0k30CIMbj01IdrRw==
+X-Received: by 2002:a17:906:5e50:: with SMTP id b16mr5377019eju.254.1567031199536;
+        Wed, 28 Aug 2019 15:26:39 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id x11sm91676eju.26.2019.08.28.15.26.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 15:26:39 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 15:26:15 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     john.fastabend@gmail.com
+Cc:     syzbot <syzbot+7a6ee4d0078eac6bf782@syzkaller.appspotmail.com>,
+        aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
+        davejwatson@fb.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: general protection fault in tls_sk_proto_close (2)
+Message-ID: <20190828152615.0fec59b2@cakuba.netronome.com>
+In-Reply-To: <000000000000c3c461059127a1c4@google.com>
+References: <000000000000c3c461059127a1c4@google.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826154159.9005-1-kw@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maybe just:
-
-  PCI: hv: Make functions static
-
-since we already know it's in pci-hyperv.c, and it's obvious that you
-can only do this for functions that are only used locally.
-
-On Mon, Aug 26, 2019 at 05:41:59PM +0200, Krzysztof Wilczynski wrote:
-> Functions hv_read_config_block(), hv_write_config_block()
-> and hv_register_block_invalidate() are not used anywhere
-> else and are local to drivers/pci/controller/pci-hyperv.c,
-> and do not need to be in global scope, so make these static.
+On Tue, 27 Aug 2019 23:38:07 -0700, syzbot wrote:
+> Hello,
 > 
-> Resolve compiler warning that can be seen when building with
-> warnings enabled (W=1).
+> syzbot found the following crash on:
+> 
+> HEAD commit:    a55aa89a Linux 5.3-rc6
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16c26ebc600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=2a6a2b9826fdadf9
+> dashboard link: https://syzkaller.appspot.com/bug?extid=7a6ee4d0078eac6bf782
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1112a4de600000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+7a6ee4d0078eac6bf782@syzkaller.appspotmail.com
 
-Rewrap commit log to fill 75 columns.
+Hi John!
 
-Does this fix all the similar warnings in drivers/pci/?  If there are
-more, maybe we could fix them all in a single patch or at least a
-single series?
+This is a loop where TLS calls it's own close function recursively.
+It seems we must have gotten BPF installed on top of TLS, and then 
+it handed TLS TLS'es own sk_proto via tcp_update_ulp().
 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+Can BPF on top of TLS be prevented somehow?
+
+Quick fix should probably be something like:
+
+diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
+index 43252a801c3f..3f4962756fa4 100644
+--- a/net/tls/tls_main.c
++++ b/net/tls/tls_main.c
+@@ -816,6 +816,9 @@ static void tls_update(struct sock *sk, struct proto *p)
+ 
+        ctx = tls_get_ctx(sk);
+        if (likely(ctx)) {
++               if (p->setsockopt == tls_setsockopt)
++                       return;
++
+                ctx->sk_proto_close = p->close;
+                ctx->sk_proto = p;
+        } else {
+
+> kasan: CONFIG_KASAN_INLINE enabled
+> kasan: GPF could be caused by NULL-ptr deref or user memory access
+> general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 1 PID: 10290 Comm: syz-executor.0 Not tainted 5.3.0-rc6 #120
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> RIP: 0010:tls_sk_proto_close+0xe5/0x990 net/tls/tls_main.c:298
+> Code: 0f 85 3f 08 00 00 49 8b 84 24 c0 02 00 00 4d 8d 75 14 4c 89 f2 48 c1  
+> ea 03 48 89 85 50 ff ff ff 48 b8 00 00 00 00 00 fc ff df <0f> b6 04 02 4c  
+> 89 f2 83 e2 07 38 d0 7f 08 84 c0 0f 85 2e 06 00 00
+> RSP: 0018:ffff88809b23fb90 EFLAGS: 00010203
+> RAX: dffffc0000000000 RBX: dffffc0000000000 RCX: ffffffff862cb8db
+> RDX: 0000000000000002 RSI: ffffffff862cb639 RDI: ffff8880a155ef00
+> RBP: ffff88809b23fc48 R08: ffff888094344640 R09: ffffed10142abd9a
+> R10: ffffed10142abd99 R11: ffff8880a155eccb R12: ffff8880a155ec40
+> R13: 0000000000000000 R14: 0000000000000014 R15: 0000000000000001
+> FS:  00005555556a8940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f353458e000 CR3: 00000000a9174000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   tls_sk_proto_close+0x35b/0x990 net/tls/tls_main.c:321
+>   tcp_bpf_close+0x17c/0x390 net/ipv4/tcp_bpf.c:582
+>   inet_release+0xed/0x200 net/ipv4/af_inet.c:427
+>   inet6_release+0x53/0x80 net/ipv6/af_inet6.c:470
+>   __sock_release+0xce/0x280 net/socket.c:590
+>   sock_close+0x1e/0x30 net/socket.c:1268
+>   __fput+0x2ff/0x890 fs/file_table.c:280
+>   ____fput+0x16/0x20 fs/file_table.c:313
+>   task_work_run+0x145/0x1c0 kernel/task_work.c:113
+>   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+>   exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
+>   prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+>   syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+>   do_syscall_64+0x5a9/0x6a0 arch/x86/entry/common.c:299
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x413540
+> Code: 01 f0 ff ff 0f 83 30 1b 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
+> 44 00 00 83 3d 4d 2d 66 00 00 75 14 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
+> ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff
+> RSP: 002b:00007fff5d481778 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+> RAX: 0000000000000000 RBX: 0000000000000006 RCX: 0000000000413540
+> RDX: 0000001b2e520000 RSI: 0000000000000000 RDI: 0000000000000005
+> RBP: 0000000000000001 R08: 0000000000000000 R09: ffffffffffffffff
+> R10: 0000000000000000 R11: 0000000000000246 R12: 000000000075bf20
+> R13: 0000000000000003 R14: 0000000000761220 R15: ffffffffffffffff
+> Modules linked in:
+> ---[ end trace bdfd4385a0f1f76d ]---
+> RIP: 0010:tls_sk_proto_close+0xe5/0x990 net/tls/tls_main.c:298
+> Code: 0f 85 3f 08 00 00 49 8b 84 24 c0 02 00 00 4d 8d 75 14 4c 89 f2 48 c1  
+> ea 03 48 89 85 50 ff ff ff 48 b8 00 00 00 00 00 fc ff df <0f> b6 04 02 4c  
+> 89 f2 83 e2 07 38 d0 7f 08 84 c0 0f 85 2e 06 00 00
+> RSP: 0018:ffff88809b23fb90 EFLAGS: 00010203
+> RAX: dffffc0000000000 RBX: dffffc0000000000 RCX: ffffffff862cb8db
+> RDX: 0000000000000002 RSI: ffffffff862cb639 RDI: ffff8880a155ef00
+> RBP: ffff88809b23fc48 R08: ffff888094344640 R09: ffffed10142abd9a
+> R10: ffffed10142abd99 R11: ffff8880a155eccb R12: ffff8880a155ec40
+> R13: 0000000000000000 R14: 0000000000000014 R15: 0000000000000001
+> FS:  00005555556a8940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f353458e000 CR3: 00000000a9174000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 
+> 
 > ---
->  drivers/pci/controller/pci-hyperv.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
 > 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index f1f300218fab..c9642e429c2d 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -930,7 +930,7 @@ static void hv_pci_read_config_compl(void *context, struct pci_response *resp,
->   *
->   * Return: 0 on success, -errno on failure
->   */
-> -int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
-> +static int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
->  			 unsigned int block_id, unsigned int *bytes_returned)
->  {
->  	struct hv_pcibus_device *hbus =
-> @@ -1010,7 +1010,7 @@ static void hv_pci_write_config_compl(void *context, struct pci_response *resp,
->   *
->   * Return: 0 on success, -errno on failure
->   */
-> -int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
-> +static int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
->  			  unsigned int block_id)
->  {
->  	struct hv_pcibus_device *hbus =
-> @@ -1079,7 +1079,7 @@ int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
->   *
->   * Return: 0 on success, -errno on failure
->   */
-> -int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
-> +static int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
->  				 void (*block_invalidate)(void *context,
->  							  u64 block_mask))
->  {
-> -- 
-> 2.22.1
-> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+
