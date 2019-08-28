@@ -2,106 +2,175 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D1CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB14C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00BAF217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F78D2341E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:51:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfH1Wt2 (ORCPT
+        id S1727051AbfH1Wvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 18:49:28 -0400
-Received: from mail.rationali.st ([13.54.121.199]:51354 "EHLO
-        mail.rationali.st" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726844AbfH1Wt1 (ORCPT
+        Wed, 28 Aug 2019 18:51:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5870 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726828AbfH1Wvi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 18:49:27 -0400
-Received: from ppp167-208-210.static.internode.on.net ([59.167.208.210] helo=t460s.rationali.st)
-        by mail.rationali.st with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <acooks@rationali.st>)
-        id 1i36kG-0001AW-Qp; Wed, 28 Aug 2019 22:49:08 +0000
-Reply-To: acooks@rationali.st
-Subject: Re: [PATCH v5 0/3] Enable ACPI-defined peripherals on i2c-piix4 SMBus
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Jean Delvare <jdelvare@suse.de>,
-        Linux I2C <linux-i2c@vger.kernel.org>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, platypus-sw@opengear.com,
-        "Tobin C . Harding" <me@tobin.cc>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Will Wagner <willw@carallon.com>
-References: <20190802145109.38dd4045@endymion>
- <b013c33b-da11-ce5e-08d4-0b24a8575109@metux.net>
- <db725a3b-7b6e-ac79-ef1c-e601ff45c0f2@rationali.st>
- <9019cce9-837f-97fc-0f3b-7503b8fc3717@metux.net>
-From:   Andrew Cooks <acooks@rationali.st>
-Message-ID: <086642c8-547c-ca95-3475-3ef05c77ada6@rationali.st>
-Date:   Thu, 29 Aug 2019 08:48:51 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <9019cce9-837f-97fc-0f3b-7503b8fc3717@metux.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Wed, 28 Aug 2019 18:51:38 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SMlXMX108629;
+        Wed, 28 Aug 2019 18:51:34 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2up1m3hwb2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 18:51:33 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7SMn8s5112837;
+        Wed, 28 Aug 2019 18:51:33 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2up1m3hwap-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 18:51:33 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7SMj48P018800;
+        Wed, 28 Aug 2019 22:51:32 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma05wdc.us.ibm.com with ESMTP id 2ujvv78pdn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 22:51:32 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7SMpVPD49021352
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 28 Aug 2019 22:51:31 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0DFEEC6070;
+        Wed, 28 Aug 2019 22:51:31 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 735CBC6062;
+        Wed, 28 Aug 2019 22:51:30 +0000 (GMT)
+Received: from oc5348122405.ibm.com.austin.ibm.com (unknown [9.53.179.215])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 28 Aug 2019 22:51:30 +0000 (GMT)
+From:   David Dai <zdai@linux.vnet.ibm.com>
+To:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     zdai@us.ibm.com, zdai@linux.vnet.ibm.com
+Subject: [v1] net_sched: act_police: add 2 new attributes to support police 64bit rate and peakrate
+Date:   Wed, 28 Aug 2019 17:51:27 -0500
+Message-Id: <1567032687-973-1-git-send-email-zdai@linux.vnet.ibm.com>
+X-Mailer: git-send-email 1.7.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908280218
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For high speed adapter like Mellanox CX-5 card, it can reach upto
+100 Gbits per second bandwidth. Currently htb already supports 64bit rate
+in tc utility. However police action rate and peakrate are still limited
+to 32bit value (upto 32 Gbits per second). Add 2 new attributes
+TCA_POLICE_RATE64 and TCA_POLICE_RATE64 in kernel for 64bit support
+so that tc utility can use them for 64bit rate and peakrate value to
+break the 32bit limit, and still keep the backward binary compatibility.
 
-On 8/20/19 4:30 AM, Enrico Weigelt, metux IT consult wrote:
-> On 11.08.19 04:52, Andrew Cooks wrote:
->
-> Hi,
->
->> My initial work is based on a board that is similar to the APU2, but has additional peripherals connected to the smbus, including a NCT7491 thermal monitor/fan controller and PCA6524 GPIO controller. These are simply peripherals on a board variant, not 'platform' devices, so I didn't want to follow the platform driver approach that the APU2 GPIO driver uses.
-> Why are they not platform devices ?
->
-> IMHO, a platform device is something not on a bus that can do the
-> probing/enumeration (like eg. pci or usb does).
->
-> Can these devices be probed directly by the bus they're connected to,
-> or do you have a different definition of the term "platform device" ?
+Tested-by: David Dai <zdai@linux.vnet.ibm.com>
+Signed-off-by: David Dai <zdai@linux.vnet.ibm.com>
+---
+ include/uapi/linux/pkt_cls.h |    2 ++
+ net/sched/act_police.c       |   27 +++++++++++++++++++++++----
+ 2 files changed, 25 insertions(+), 4 deletions(-)
 
-ACPI was created to provide the PNP mechanism for buses that do not support enumeration, like SMBus. SMBus is similar to I2C, and can be routed to expansion cards, like Ethernet NICs. A system with expansion card Foo is not a different platform from a system with expansion card Bar, and you wouldn't necessarily want to support both Foo and Bar in the same platform driver.
+diff --git a/include/uapi/linux/pkt_cls.h b/include/uapi/linux/pkt_cls.h
+index b057aee..eb4ea4d 100644
+--- a/include/uapi/linux/pkt_cls.h
++++ b/include/uapi/linux/pkt_cls.h
+@@ -159,6 +159,8 @@ enum {
+ 	TCA_POLICE_AVRATE,
+ 	TCA_POLICE_RESULT,
+ 	TCA_POLICE_TM,
++	TCA_POLICE_RATE64,
++	TCA_POLICE_PEAKRATE64,
+ 	TCA_POLICE_PAD,
+ 	__TCA_POLICE_MAX
+ #define TCA_POLICE_RESULT TCA_POLICE_RESULT
+diff --git a/net/sched/act_police.c b/net/sched/act_police.c
+index 49cec3e..ed5372e 100644
+--- a/net/sched/act_police.c
++++ b/net/sched/act_police.c
+@@ -40,6 +40,8 @@ static int tcf_police_walker(struct net *net, struct sk_buff *skb,
+ 	[TCA_POLICE_PEAKRATE]	= { .len = TC_RTAB_SIZE },
+ 	[TCA_POLICE_AVRATE]	= { .type = NLA_U32 },
+ 	[TCA_POLICE_RESULT]	= { .type = NLA_U32 },
++	[TCA_POLICE_RATE64]     = { .type = NLA_U64 },
++	[TCA_POLICE_PEAKRATE64] = { .type = NLA_U64 },
+ };
+ 
+ static int tcf_police_init(struct net *net, struct nlattr *nla,
+@@ -58,6 +60,7 @@ static int tcf_police_init(struct net *net, struct nlattr *nla,
+ 	struct tcf_police_params *new;
+ 	bool exists = false;
+ 	u32 index;
++	u64 rate64, prate64;
+ 
+ 	if (nla == NULL)
+ 		return -EINVAL;
+@@ -155,14 +158,18 @@ static int tcf_police_init(struct net *net, struct nlattr *nla,
+ 	}
+ 	if (R_tab) {
+ 		new->rate_present = true;
+-		psched_ratecfg_precompute(&new->rate, &R_tab->rate, 0);
++		rate64 = tb[TCA_POLICE_RATE64] ?
++			 nla_get_u64(tb[TCA_POLICE_RATE64]) : 0;
++		psched_ratecfg_precompute(&new->rate, &R_tab->rate, rate64);
+ 		qdisc_put_rtab(R_tab);
+ 	} else {
+ 		new->rate_present = false;
+ 	}
+ 	if (P_tab) {
+ 		new->peak_present = true;
+-		psched_ratecfg_precompute(&new->peak, &P_tab->rate, 0);
++		prate64 = tb[TCA_POLICE_PEAKRATE64] ?
++			  nla_get_u64(tb[TCA_POLICE_PEAKRATE64]) : 0;
++		psched_ratecfg_precompute(&new->peak, &P_tab->rate, prate64);
+ 		qdisc_put_rtab(P_tab);
+ 	} else {
+ 		new->peak_present = false;
+@@ -313,10 +320,22 @@ static int tcf_police_dump(struct sk_buff *skb, struct tc_action *a,
+ 				      lockdep_is_held(&police->tcf_lock));
+ 	opt.mtu = p->tcfp_mtu;
+ 	opt.burst = PSCHED_NS2TICKS(p->tcfp_burst);
+-	if (p->rate_present)
++	if (p->rate_present) {
+ 		psched_ratecfg_getrate(&opt.rate, &p->rate);
+-	if (p->peak_present)
++		if ((police->params->rate.rate_bytes_ps >= (1ULL << 32)) &&
++		    nla_put_u64_64bit(skb, TCA_POLICE_RATE64,
++				      police->params->rate.rate_bytes_ps,
++				      TCA_POLICE_PAD))
++			goto nla_put_failure;
++	}
++	if (p->peak_present) {
+ 		psched_ratecfg_getrate(&opt.peakrate, &p->peak);
++		if ((police->params->peak.rate_bytes_ps >= (1ULL << 32)) &&
++		    nla_put_u64_64bit(skb, TCA_POLICE_PEAKRATE64,
++				      police->params->peak.rate_bytes_ps,
++				      TCA_POLICE_PAD))
++			goto nla_put_failure;
++	}
+ 	if (nla_put(skb, TCA_POLICE_TBF, sizeof(opt), &opt))
+ 		goto nla_put_failure;
+ 	if (p->tcfp_result &&
+-- 
+1.7.1
 
->
-> :O
->
->> SMBus (and I2C) peripherals can generally not be enumerated without some firmware support. It is possible to probe for specific devices on the bus (eg sensors-detect) but in general it is not feasible to let every supported device driver probe the bus for its device. ACPI and Devicetree provides the kernel with metadata for the device: type, address, calibrated set points for temperature, etc.
-> Yes, I know. My question was whether these particular devices - if
-> they're in the SoC itself - do need some extra support in BIOS
-> (acpi entries, etc), that's not already in aegesa. Or in other words:
-> do I need to patch my BIOS ?
->
-> I was assuming these devices are in the SoC itself - correct me if
-> I'm wrong.
-
-This patch is about adding a mechanism to describe peripherals that are not in the SoC, but attached to the SMBus. I also provided examples of the kinds of devices that need this support (eg. NCT7491).
-
->
->> Since the peripherals are not standard platform devices, they are not described by the ACPI tables provided by Coreboot or AMD, but it's not too difficult to create supplementary device description tables (ACPI) for non-standard devices. These can be added to coreboot, supplied to qemu as additional firmware files (see -acpitable arg), or built into the kernel (see https://www.kernel.org/doc/Documentation/acpi/ssdt-overlays.txt)
-> Oh, I didn't know about SSDT overlays yet. That's interesting.
->
-> Is it also possible to describe things like leds-gpio or gpio-keyboard ?
-> Could be a nice idea to trim down my apu2 driver to not much more than
-> a piece of configuration (just like we'd do on a DT-based system)
-Yes and maybe. The extra ACPI layer is inconvenient and more complex than a platform driver, as should be evident from the patch history and this discussion.
->
->> ACPI may be an ugly abomination, but it's what we're stuck with on x86 and it can only improve when more people get their hands on it.
-> hmm, I'm planning to introduce DT to x86 (also patch up apu'2 coreboot
-> do deliver a DT to the kernel) ... but just lacking time to get my hands
-> dirty on this topic.
->
->> You might find it helpful to look at the coreboot source for the APU2 (src/mainboard/pcengines/apu2/gpio_ftns.h)
-> In which version ?
->
->
-> --mtx
->
