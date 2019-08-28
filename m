@@ -2,239 +2,228 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1BCC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32ADAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8ED622DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:18:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lZTMkDlh"
+	by mail.kernel.org (Postfix) with ESMTP id 09E9723403
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:20:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfH1WS5 (ORCPT
+        id S1727014AbfH1WUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 18:18:57 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40564 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfH1WS4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 18:18:56 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7SMHIY2115541;
-        Wed, 28 Aug 2019 22:18:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=q8UPrkMM/CujGokBaxFV4506SVYZkFz/veRW9ukkyvA=;
- b=lZTMkDlh6Dr2ZxANHoruFlDG3UO6nz6SA2jvkXZX2kksbMz1s9ypxfP2yHnA/ov4gUIm
- gQWGTTSm5TSZ6Ok6vL+7cQU7Cw8dib2QvT42jBC2ezuAlGr6W76WQMYgyzOD6cyC3bHZ
- UVfPu1+BE5jKGWozX9KbPDEvq6G8LmBN6MhIE1n+VnGOVs7V8v69r3uXmBWWKnLlDrXK
- z4laFGxF6GxmCTLAXad8ak0JZYkBbYOpOUyMKpVzoHOBbAYtiNCNUmZEFKTB6XLnnj7Z
- imZAdWncEZ8fYWV1DBoPgTIOtkzsSfTFp2vFneMw5RsTGtiTjqqvgVQU8CLJzrFLTqQo Qg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2up296g0h1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Aug 2019 22:18:32 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7SMDOiP007293;
-        Wed, 28 Aug 2019 22:16:32 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2untetyqh2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Aug 2019 22:16:31 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7SMGU3i020531;
-        Wed, 28 Aug 2019 22:16:30 GMT
-Received: from zissou.us.oracle.com (/10.152.34.58)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 28 Aug 2019 15:16:30 -0700
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: [PATCH v2 1/5] padata: make flushing work with async users
-Date:   Wed, 28 Aug 2019 18:14:21 -0400
-Message-Id: <20190828221425.22701-2-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190828221425.22701-1-daniel.m.jordan@oracle.com>
-References: <20190828221425.22701-1-daniel.m.jordan@oracle.com>
+        Wed, 28 Aug 2019 18:20:49 -0400
+Received: from mga05.intel.com ([192.55.52.43]:37028 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726828AbfH1WUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 18:20:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 15:20:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
+   d="scan'208";a="380561193"
+Received: from amathu3-mobl1.amr.corp.intel.com (HELO [10.254.179.245]) ([10.254.179.245])
+  by fmsmga005.fm.intel.com with ESMTP; 28 Aug 2019 15:20:46 -0700
+Subject: Re: mmotm 2019-08-27-20-39 uploaded (sound/hda/intel-nhlt.c)
+To:     Randy Dunlap <rdunlap@infradead.org>, akpm@linux-foundation.org,
+        broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>
+References: <20190828034012.sBvm81sYK%akpm@linux-foundation.org>
+ <274054ef-8611-2661-9e67-4aabae5a7728@infradead.org>
+ <5ac8a7a7-a9b4-89a5-e0a6-7c97ec1fabc6@linux.intel.com>
+ <98ada795-4700-7fcc-6d14-fcc1ab25d509@infradead.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <f0a62b08-cba9-d944-5792-8eac0ea39df1@linux.intel.com>
+Date:   Wed, 28 Aug 2019 17:20:46 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <98ada795-4700-7fcc-6d14-fcc1ab25d509@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9363 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908280214
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9363 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908280214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-padata_flush_queues() is broken for an async ->parallel() function
-because flush_work() can't wait on it:
 
-  # modprobe tcrypt alg="pcrypt(cryptd(rfc4106(gcm_base(ctr(aes-generic),ghash-generic))))" type=3
-  # modprobe tcrypt mode=215 sec=1 &
-  # sleep 5; echo 7 > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
 
-  kernel BUG at kernel/padata.c:473!
-  invalid opcode: 0000 [#1] SMP PTI
-  CPU: 0 PID: 282 Comm: sh Not tainted 5.3.0-rc5-padata-base+ #3
-  RIP: 0010:padata_flush_queues+0xa7/0xb0
-  Call Trace:
-   padata_replace+0xa1/0x110
-   padata_set_cpumask+0xae/0x130
-   store_cpumask+0x75/0xa0
-   padata_sysfs_store+0x20/0x30
-   ...
+On 8/28/19 4:06 PM, Randy Dunlap wrote:
+> On 8/28/19 12:28 PM, Pierre-Louis Bossart wrote:
+>>
+>>
+>> On 8/28/19 1:30 PM, Randy Dunlap wrote:
+> 
+>>>
+>>> (from linux-next tree, but problem found/seen in mmotm)
+>>>
+>>> Sorry, I don't know who is responsible for this driver.
+>>
+>> That would be me.
+>>
+>> I just checked with Mark Brown's for-next tree 8aceffa09b4b9867153bfe0ff6f40517240cee12
+>> and things are fine in i386 mode, see below.
+>>
+>> next-20190828 also works fine for me in i386 mode.
+>>
+>> if you can point me to a tree and configuration that don't work I'll look into this, I'd need more info to progress.
+> 
+> Please try the attached randconfig file.
+> 
+> Thanks for looking.
 
-Wait instead for the parallel_data (pd) object's refcount to drop to
-zero.
+Ack, I see some errors as well with this config. Likely a missing 
+dependency somewhere, working on this now.
 
-Simplify by taking an initial reference on a pd when allocating an
-instance.  That ref is dropped during flushing, which allows calling
-wait_for_completion() unconditionally.
-
-If the initial ref weren't used, the only other alternative I could
-think of is that complete() would be conditional on !PADATA_INIT or
-PADATA_REPLACE (in addition to zero pd->refcnt), and
-wait_for_completion() on nonzero pd->refcnt.  But then complete() could
-be called without a matching wait:
-
-completer                     waiter
----------                     ------
-DEC pd->refcnt    // 0
-                              pinst->flags |= PADATA_REPLACE
-LOAD pinst->flags // REPLACE
-                              LOAD pd->refcnt // 0
-                              /* return without wait_for_completion() */
-complete()
-
-No more flushing per-CPU work items, so no more CPU hotplug lock in
-__padata_stop.
-
-Fixes: 2b73b07ab8a4 ("padata: Flush the padata queues actively")
-Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
-Suggested-by: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- include/linux/padata.h |  3 +++
- kernel/padata.c        | 32 ++++++++++++--------------------
- 2 files changed, 15 insertions(+), 20 deletions(-)
-
-diff --git a/include/linux/padata.h b/include/linux/padata.h
-index 8da673861d99..1c73f9cc7b72 100644
---- a/include/linux/padata.h
-+++ b/include/linux/padata.h
-@@ -14,6 +14,7 @@
- #include <linux/list.h>
- #include <linux/notifier.h>
- #include <linux/kobject.h>
-+#include <linux/completion.h>
- 
- #define PADATA_CPU_SERIAL   0x01
- #define PADATA_CPU_PARALLEL 0x02
-@@ -104,6 +105,7 @@ struct padata_cpumask {
-  * @squeue: percpu padata queues used for serialuzation.
-  * @reorder_objects: Number of objects waiting in the reorder queues.
-  * @refcnt: Number of objects holding a reference on this parallel_data.
-+ * @flushing_done: Wait for all objects to be sent out.
-  * @max_seq_nr:  Maximal used sequence number.
-  * @cpu: Next CPU to be processed.
-  * @cpumask: The cpumasks in use for parallel and serial workers.
-@@ -116,6 +118,7 @@ struct parallel_data {
- 	struct padata_serial_queue	__percpu *squeue;
- 	atomic_t			reorder_objects;
- 	atomic_t			refcnt;
-+	struct completion		flushing_done;
- 	atomic_t			seq_nr;
- 	int				cpu;
- 	struct padata_cpumask		cpumask;
-diff --git a/kernel/padata.c b/kernel/padata.c
-index b60cc3dcee58..958166e23123 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -301,7 +301,8 @@ static void padata_serial_worker(struct work_struct *serial_work)
- 		list_del_init(&padata->list);
- 
- 		padata->serial(padata);
--		atomic_dec(&pd->refcnt);
-+		if (atomic_dec_return(&pd->refcnt) == 0)
-+			complete(&pd->flushing_done);
- 	}
- 	local_bh_enable();
- }
-@@ -423,7 +424,9 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
- 	padata_init_squeues(pd);
- 	atomic_set(&pd->seq_nr, -1);
- 	atomic_set(&pd->reorder_objects, 0);
--	atomic_set(&pd->refcnt, 0);
-+	/* Initial ref dropped in padata_flush_queues. */
-+	atomic_set(&pd->refcnt, 1);
-+	init_completion(&pd->flushing_done);
- 	pd->pinst = pinst;
- 	spin_lock_init(&pd->lock);
- 	pd->cpu = cpumask_first(pd->cpumask.pcpu);
-@@ -453,24 +456,15 @@ static void padata_free_pd(struct parallel_data *pd)
- /* Flush all objects out of the padata queues. */
- static void padata_flush_queues(struct parallel_data *pd)
- {
--	int cpu;
--	struct padata_parallel_queue *pqueue;
--	struct padata_serial_queue *squeue;
--
--	for_each_cpu(cpu, pd->cpumask.pcpu) {
--		pqueue = per_cpu_ptr(pd->pqueue, cpu);
--		flush_work(&pqueue->work);
--	}
--
--	if (atomic_read(&pd->reorder_objects))
--		padata_reorder(pd);
-+	if (!(pd->pinst->flags & PADATA_INIT))
-+		return;
- 
--	for_each_cpu(cpu, pd->cpumask.cbcpu) {
--		squeue = per_cpu_ptr(pd->squeue, cpu);
--		flush_work(&squeue->work);
--	}
-+	if (atomic_dec_return(&pd->refcnt) == 0)
-+		complete(&pd->flushing_done);
- 
--	BUG_ON(atomic_read(&pd->refcnt) != 0);
-+	wait_for_completion(&pd->flushing_done);
-+	reinit_completion(&pd->flushing_done);
-+	atomic_set(&pd->refcnt, 1);
- }
- 
- static void __padata_start(struct padata_instance *pinst)
-@@ -487,9 +481,7 @@ static void __padata_stop(struct padata_instance *pinst)
- 
- 	synchronize_rcu();
- 
--	get_online_cpus();
- 	padata_flush_queues(pinst->pd);
--	put_online_cpus();
- }
- 
- /* Replace the internal control structure with a new one. */
--- 
-2.23.0
-
+> 
+>> make ARCH=i386
+>>    Using /data/pbossart/ktest/broonie-next as source for kernel
+>>    GEN     Makefile
+>>    CALL    /data/pbossart/ktest/broonie-next/scripts/checksyscalls.sh
+>>    CALL    /data/pbossart/ktest/broonie-next/scripts/atomic/check-atomics.sh
+>>    CHK     include/generated/compile.h
+>>    CC [M]  sound/hda/ext/hdac_ext_bus.o
+>>    CC [M]  sound/hda/ext/hdac_ext_controller.o
+>>    CC [M]  sound/hda/ext/hdac_ext_stream.o
+>>    LD [M]  sound/hda/ext/snd-hda-ext-core.o
+>>    CC [M]  sound/hda/hda_bus_type.o
+>>    CC [M]  sound/hda/hdac_bus.o
+>>    CC [M]  sound/hda/hdac_device.o
+>>    CC [M]  sound/hda/hdac_sysfs.o
+>>    CC [M]  sound/hda/hdac_regmap.o
+>>    CC [M]  sound/hda/hdac_controller.o
+>>    CC [M]  sound/hda/hdac_stream.o
+>>    CC [M]  sound/hda/array.o
+>>    CC [M]  sound/hda/hdmi_chmap.o
+>>    CC [M]  sound/hda/trace.o
+>>    CC [M]  sound/hda/hdac_component.o
+>>    CC [M]  sound/hda/hdac_i915.o
+>>    LD [M]  sound/hda/snd-hda-core.o
+>>    CC [M]  sound/hda/intel-nhlt.o
+>>    LD [M]  sound/hda/snd-intel-nhlt.o
+>> Kernel: arch/x86/boot/bzImage is ready  (#18)
+>>    Building modules, stage 2.
+>>    MODPOST 156 modules
+>>    CC      sound/hda/ext/snd-hda-ext-core.mod.o
+>>    LD [M]  sound/hda/ext/snd-hda-ext-core.ko
+>>    CC      sound/hda/snd-hda-core.mod.o
+>>    LD [M]  sound/hda/snd-hda-core.ko
+>>    CC      sound/hda/snd-intel-nhlt.mod.o
+>>    LD [M]  sound/hda/snd-intel-nhlt.ko
+>>
+>>
+>>>
+>>> ~~~~~~~~~~~~~~~~~~~~~~
+>>> on i386:
+>>>
+>>>     CC      sound/hda/intel-nhlt.o
+>>> ../sound/hda/intel-nhlt.c:14:25: error: redefinition of ‘intel_nhlt_init’
+>>>    struct nhlt_acpi_table *intel_nhlt_init(struct device *dev)
+>>>                            ^~~~~~~~~~~~~~~
+>>> In file included from ../sound/hda/intel-nhlt.c:5:0:
+>>> ../include/sound/intel-nhlt.h:134:39: note: previous definition of ‘intel_nhlt_init’ was here
+>>>    static inline struct nhlt_acpi_table *intel_nhlt_init(struct device *dev)
+>>>                                          ^~~~~~~~~~~~~~~
+>>> ../sound/hda/intel-nhlt.c: In function ‘intel_nhlt_init’:
+>>> ../sound/hda/intel-nhlt.c:39:14: error: dereferencing pointer to incomplete type ‘struct nhlt_resource_desc’
+>>>     if (nhlt_ptr->length)
+>>>                 ^~
+>>> ../sound/hda/intel-nhlt.c:41:4: error: implicit declaration of function ‘memremap’; did you mean ‘ioremap’? [-Werror=implicit-function-declaration]
+>>>       memremap(nhlt_ptr->min_addr, nhlt_ptr->length,
+>>>       ^~~~~~~~
+>>>       ioremap
+>>> ../sound/hda/intel-nhlt.c:42:6: error: ‘MEMREMAP_WB’ undeclared (first use in this function)
+>>>         MEMREMAP_WB);
+>>>         ^~~~~~~~~~~
+>>> ../sound/hda/intel-nhlt.c:42:6: note: each undeclared identifier is reported only once for each function it appears in
+>>> ../sound/hda/intel-nhlt.c:45:25: error: dereferencing pointer to incomplete type ‘struct nhlt_acpi_table’
+>>>         (strncmp(nhlt_table->header.signature,
+>>>                            ^~
+>>> ../sound/hda/intel-nhlt.c:48:3: error: implicit declaration of function ‘memunmap’; did you mean ‘vunmap’? [-Werror=implicit-function-declaration]
+>>>      memunmap(nhlt_table);
+>>>      ^~~~~~~~
+>>>      vunmap
+>>> ../sound/hda/intel-nhlt.c: At top level:
+>>> ../sound/hda/intel-nhlt.c:56:6: error: redefinition of ‘intel_nhlt_free’
+>>>    void intel_nhlt_free(struct nhlt_acpi_table *nhlt)
+>>>         ^~~~~~~~~~~~~~~
+>>> In file included from ../sound/hda/intel-nhlt.c:5:0:
+>>> ../include/sound/intel-nhlt.h:139:20: note: previous definition of ‘intel_nhlt_free’ was here
+>>>    static inline void intel_nhlt_free(struct nhlt_acpi_table *addr)
+>>>                       ^~~~~~~~~~~~~~~
+>>> ../sound/hda/intel-nhlt.c:62:5: error: redefinition of ‘intel_nhlt_get_dmic_geo’
+>>>    int intel_nhlt_get_dmic_geo(struct device *dev, struct nhlt_acpi_table *nhlt)
+>>>        ^~~~~~~~~~~~~~~~~~~~~~~
+>>> In file included from ../sound/hda/intel-nhlt.c:5:0:
+>>> ../include/sound/intel-nhlt.h:143:19: note: previous definition of ‘intel_nhlt_get_dmic_geo’ was here
+>>>    static inline int intel_nhlt_get_dmic_geo(struct device *dev,
+>>>                      ^~~~~~~~~~~~~~~~~~~~~~~
+>>> ../sound/hda/intel-nhlt.c: In function ‘intel_nhlt_get_dmic_geo’:
+>>> ../sound/hda/intel-nhlt.c:76:11: error: dereferencing pointer to incomplete type ‘struct nhlt_endpoint’
+>>>      if (epnt->linktype == NHLT_LINK_DMIC) {
+>>>              ^~
+>>> ../sound/hda/intel-nhlt.c:76:25: error: ‘NHLT_LINK_DMIC’ undeclared (first use in this function)
+>>>      if (epnt->linktype == NHLT_LINK_DMIC) {
+>>>                            ^~~~~~~~~~~~~~
+>>> ../sound/hda/intel-nhlt.c:79:15: error: dereferencing pointer to incomplete type ‘struct nhlt_dmic_array_config’
+>>>       switch (cfg->array_type) {
+>>>                  ^~
+>>> ../sound/hda/intel-nhlt.c:80:9: error: ‘NHLT_MIC_ARRAY_2CH_SMALL’ undeclared (first use in this function)
+>>>       case NHLT_MIC_ARRAY_2CH_SMALL:
+>>>            ^~~~~~~~~~~~~~~~~~~~~~~~
+>>> ../sound/hda/intel-nhlt.c:81:9: error: ‘NHLT_MIC_ARRAY_2CH_BIG’ undeclared (first use in this function); did you mean ‘NHLT_MIC_ARRAY_2CH_SMALL’?
+>>>       case NHLT_MIC_ARRAY_2CH_BIG:
+>>>            ^~~~~~~~~~~~~~~~~~~~~~
+>>>            NHLT_MIC_ARRAY_2CH_SMALL
+>>> ../sound/hda/intel-nhlt.c:82:16: error: ‘MIC_ARRAY_2CH’ undeclared (first use in this function); did you mean ‘NHLT_MIC_ARRAY_2CH_BIG’?
+>>>        dmic_geo = MIC_ARRAY_2CH;
+>>>                   ^~~~~~~~~~~~~
+>>>                   NHLT_MIC_ARRAY_2CH_BIG
+>>> ../sound/hda/intel-nhlt.c:85:9: error: ‘NHLT_MIC_ARRAY_4CH_1ST_GEOM’ undeclared (first use in this function); did you mean ‘NHLT_MIC_ARRAY_2CH_BIG’?
+>>>       case NHLT_MIC_ARRAY_4CH_1ST_GEOM:
+>>>            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>            NHLT_MIC_ARRAY_2CH_BIG
+>>> ../sound/hda/intel-nhlt.c:86:9: error: ‘NHLT_MIC_ARRAY_4CH_L_SHAPED’ undeclared (first use in this function); did you mean ‘NHLT_MIC_ARRAY_4CH_1ST_GEOM’?
+>>>       case NHLT_MIC_ARRAY_4CH_L_SHAPED:
+>>>            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>            NHLT_MIC_ARRAY_4CH_1ST_GEOM
+>>>     AR      sound/i2c/other/built-in.a
+>>> ../sound/hda/intel-nhlt.c:87:9: error: ‘NHLT_MIC_ARRAY_4CH_2ND_GEOM’ undeclared (first use in this function); did you mean ‘NHLT_MIC_ARRAY_4CH_1ST_GEOM’?
+>>>       case NHLT_MIC_ARRAY_4CH_2ND_GEOM:
+>>>            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>            NHLT_MIC_ARRAY_4CH_1ST_GEOM
+>>> ../sound/hda/intel-nhlt.c:88:16: error: ‘MIC_ARRAY_4CH’ undeclared (first use in this function); did you mean ‘MIC_ARRAY_2CH’?
+>>>        dmic_geo = MIC_ARRAY_4CH;
+>>>                   ^~~~~~~~~~~~~
+>>>                   MIC_ARRAY_2CH
+>>>     AR      sound/i2c/built-in.a
+>>>     CC      drivers/bluetooth/btmtksdio.o
+>>> ../sound/hda/intel-nhlt.c:90:9: error: ‘NHLT_MIC_ARRAY_VENDOR_DEFINED’ undeclared (first use in this function); did you mean ‘NHLT_MIC_ARRAY_4CH_L_SHAPED’?
+>>>       case NHLT_MIC_ARRAY_VENDOR_DEFINED:
+>>>            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>            NHLT_MIC_ARRAY_4CH_L_SHAPED
+>>> ../sound/hda/intel-nhlt.c:92:26: error: dereferencing pointer to incomplete type ‘struct nhlt_vendor_dmic_array_config’
+>>>        dmic_geo = cfg_vendor->nb_mics;
+>>>                             ^~
+>>> ../sound/hda/intel-nhlt.c: At top level:
+>>> ../sound/hda/intel-nhlt.c:106:16: error: expected declaration specifiers or ‘...’ before string constant
+>>>    MODULE_LICENSE("GPL v2");
+>>>                   ^~~~~~~~
+>>> ../sound/hda/intel-nhlt.c:107:20: error: expected declaration specifiers or ‘...’ before string constant
+>>>    MODULE_DESCRIPTION("Intel NHLT driver");
+>>>                       ^~~~~~~~~~~~~~~~~~~
+>>> cc1: some warnings being treated as errors
+>>> make[3]: *** [../scripts/Makefile.build:266: sound/hda/intel-nhlt.o] Error 1
+>>>
+>>>
+>>>
+> 
+> 
