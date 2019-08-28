@@ -2,279 +2,125 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0823DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED6AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F42208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:39:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567035577;
-	bh=bcYVHlxQDD95rF+oC/ZBOpaMreAMLv4ImZqxEMvs9Mw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hWW0IVWpf4rXz+50Pr333CjLuJJDNSBIf11aHkjexOQ9PM28/K35CTeEeYpgST1yR
-	 9QhiNS0irO2lI90M77UdWuqKOhpVH1vHY1Lsh5j4P2ZzEU1vb/6dr0NZYJvjARtiJH
-	 VqDu9eG/MAU0g7cADlC6I/IwxSHiTKwTl8TxNzP8=
+	by mail.kernel.org (Postfix) with ESMTP id D4541208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:41:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWxS12FO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfH1Xjh (ORCPT
+        id S1727223AbfH1Xlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 19:39:37 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43785 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfH1Xjg (ORCPT
+        Wed, 28 Aug 2019 19:41:51 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33867 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbfH1Xlu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 19:39:36 -0400
-Received: by mail-oi1-f193.google.com with SMTP id y8so1105136oih.10;
-        Wed, 28 Aug 2019 16:39:36 -0700 (PDT)
+        Wed, 28 Aug 2019 19:41:50 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n9so556255pgc.1;
+        Wed, 28 Aug 2019 16:41:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LEwbl1nqNHBHcJacD9dfeICHgcsBE/f/ceNiyU0uO2c=;
+        b=kWxS12FOGo7kRO8bUZisQdbdPaD7m90liBO1DJILGgor5och3M3Y8ixQUrLiOlvUAQ
+         KSCAKzPOIhK4qh4mkp723yecDQTzrNvHfSo5O2PLFMUzPr9tFIvttGdACmQk3GcLv9I5
+         cjYvi8Gr7ER3JMRMI2IeaYoSEzfDVilJaC9VvUum/aPr5t4C5xA5idz5lFsS5zANKFcg
+         337AY91x4TvIwnn1y9efIs3f4w9SNmURv9K2dvAIcHu0ypgbd+SQV2CIW7BfJIlZApXq
+         u8dQIG+K1EEA2/INmvvXiOQePA1oy0eoOgbrzRogC4V4vLfCANYJbRnPt4/hj/mnM9HJ
+         IDqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PKOOEDeU92y+0iSa7impzejPm6WlaT2B+UMpIRPhzco=;
-        b=lz+U0sp7q612XYEhoMz7ofk4POq9xhQizNvGKF9KfA6aocv0TXZ7xTteQcHUNnvjCj
-         Y+xn47ALWeb2xtMHdhtPgtvIAjLk8gfp5L2ScJe/0oJwlYKePDDsgovOS4nYiVwOwvl/
-         HVfwV2KT8/KnY7Eufe1dDyRNZcB/wFXCvd/+2qdGDJtrpfAjOfhRp6+xJTzL8+3plmYh
-         SWHcOr/7Rx/PiM8Qe1Tv0USnF6TwCyE/Kx5iVNcJ31n0BHQk2R4Qja47BT00hOjkTP9k
-         k9r8NDwACSI51Dx/kpA1wXjFuIBbtVjSN9yVMIGUJKKmZ3LfgYhZzE5FEjUuficewWQu
-         DtbA==
-X-Gm-Message-State: APjAAAVcY34puRVJQyU1Yu3JNHLoAmgGmM3bBoxbjxT9w1sUDDQn2R67
-        EcRK66FT/q4OflJXL6pSPT3nryKpLWwCDRRR7jwGsQ==
-X-Google-Smtp-Source: APXvYqyV0aVPxEJSi1pCuxgzvJqctjmeNgzDPWDh/UeVn441IgCiQykIpHgv/ZEDkhabEALJqRLLuH/n91dgIUjbtio=
-X-Received: by 2002:aca:d586:: with SMTP id m128mr4813386oig.110.1567035575766;
- Wed, 28 Aug 2019 16:39:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LEwbl1nqNHBHcJacD9dfeICHgcsBE/f/ceNiyU0uO2c=;
+        b=Dm6bK6YON5/uJ6yGcjawkadlawzzNOu4QZ/dxM4e/ZS6ZOM3weqTqSHAvvlNt+4cL7
+         bfMuHglY8fX44F7wMu5Uf+A2h+OmwcsvFW2+nAo0QTUypU2F05WBVXbfmfG12cdnTxLE
+         YxzDQVlpF3VYifP8YunGgnh/0FC5P4ztnlFbuVoVeoC8PBmvCF6NJhcEO/VLuKRH3jad
+         lW9WvNVzgtm1BzUDWfto0zH+/2zs7qlDbjLdIRqSGrZUaJcfUkoypEApUU3MDT7PmzEg
+         70pt2B7Lsp7vPBaA40BcYnebuANLTbT8ggelkPlPmEwP+BR2lzk7ji4HI2uDK82fopA3
+         MxXA==
+X-Gm-Message-State: APjAAAUYMvbDkleLX03ySndy5ert+il4kq9FkW6y9/LZBMEyqWPezMyX
+        nhDQRuq3AquMzIHDlmudKKjAzF9up37YUg==
+X-Google-Smtp-Source: APXvYqyltBUmIDPff9MzOKVsnLKdLLLDhQKStB24jbwVvtjezQpxtP9BLXnDENuon3HqazilZSGjqw==
+X-Received: by 2002:a17:90a:32a3:: with SMTP id l32mr7061863pjb.14.1567035708956;
+        Wed, 28 Aug 2019 16:41:48 -0700 (PDT)
+Received: from mail.google.com ([149.28.153.17])
+        by smtp.gmail.com with ESMTPSA id g1sm270497pgg.27.2019.08.28.16.41.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 28 Aug 2019 16:41:48 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 23:41:34 +0000
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jessica Yu <jeyu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        "John F . Reiser" <jreiser@BitWagon.com>,
+        Matt Helsley <mhelsley@vmware.com>
+Subject: Re: [PATCH 01/11] ftrace: move recordmcount tools to scripts/ftrace
+Message-ID: <20190828234133.quir3ptl4kidnxud@mail.google.com>
+References: <20190825132330.5015-1-changbin.du@gmail.com>
+ <20190825132330.5015-2-changbin.du@gmail.com>
+ <20190826184444.09334ae9@gandalf.local.home>
 MIME-Version: 1.0
-References: <20190828185650.16923-1-joao.m.martins@oracle.com>
-In-Reply-To: <20190828185650.16923-1-joao.m.martins@oracle.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 29 Aug 2019 01:39:23 +0200
-Message-ID: <CAJZ5v0hBgMBSES541FBdZDbZWHOOhuy5JuY+UamOPrCYzNCPmA@mail.gmail.com>
-Subject: Re: [PATCH v1] cpuidle-haltpoll: vcpu hotplug support
-To:     Joao Martins <joao.m.martins@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm-devel <kvm@vger.kernel.org>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826184444.09334ae9@gandalf.local.home>
+User-Agent: NeoMutt/20180716-508-7c9a6d
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 8:58 PM Joao Martins <joao.m.martins@oracle.com> wrote:
->
-> When cpus != maxcpus cpuidle-haltpoll will fail to register all vcpus
-> past the online ones and thus fail to register the idle driver.
-> This is because cpuidle_add_sysfs() will return with -ENODEV as a
-> consequence from get_cpu_device() return no device for a non-existing
-> CPU.
->
-> Instead switch to cpuidle_register_driver() and manually register each
-> of the present cpus through cpuhp_setup_state() and future ones that
-> get onlined. This mimics similar logic as intel_idle.
->
-> Fixes: fa86ee90eb11 ("add cpuidle-haltpoll driver")
-> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
-> Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+On Mon, Aug 26, 2019 at 06:44:44PM -0400, Steven Rostedt wrote:
+> On Sun, 25 Aug 2019 21:23:20 +0800
+> Changbin Du <changbin.du@gmail.com> wrote:
+> 
+> > Move ftrace tools to its own directory. We will add another tool later.
+> > 
+> > Cc: John F. Reiser <jreiser@BitWagon.com>
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  scripts/.gitignore                   |  1 -
+> >  scripts/Makefile                     |  2 +-
+> >  scripts/Makefile.build               | 10 +++++-----
+> >  scripts/ftrace/.gitignore            |  4 ++++
+> >  scripts/ftrace/Makefile              |  4 ++++
+> >  scripts/{ => ftrace}/recordmcount.c  |  0
+> >  scripts/{ => ftrace}/recordmcount.h  |  0
+> >  scripts/{ => ftrace}/recordmcount.pl |  0
+> >  8 files changed, 14 insertions(+), 7 deletions(-)
+> >  create mode 100644 scripts/ftrace/.gitignore
+> >  create mode 100644 scripts/ftrace/Makefile
+> >  rename scripts/{ => ftrace}/recordmcount.c (100%)
+> >  rename scripts/{ => ftrace}/recordmcount.h (100%)
+> >  rename scripts/{ => ftrace}/recordmcount.pl (100%)
+> >  mode change 100755 => 100644
+> 
+> Note, we are in the process of merging recordmcount with objtool. It
+> would be better to continue from that work.
+> 
+>  http://lkml.kernel.org/r/2767f55f4a5fbf30ba0635aed7a9c5ee92ac07dd.1563992889.git.mhelsley@vmware.com
+> 
+> -- Steve
+Thanks for reminding. Let me check if prototype tool can merge into
+objtool easily after above work.
 
-Paolo, what do you think?
-
-> ---
->  arch/x86/include/asm/cpuidle_haltpoll.h |  4 +-
->  arch/x86/kernel/kvm.c                   | 18 +++----
->  drivers/cpuidle/cpuidle-haltpoll.c      | 65 +++++++++++++++++++++++--
->  include/linux/cpuidle_haltpoll.h        |  4 +-
->  4 files changed, 70 insertions(+), 21 deletions(-)
->
-> diff --git a/arch/x86/include/asm/cpuidle_haltpoll.h b/arch/x86/include/asm/cpuidle_haltpoll.h
-> index ff8607d81526..c8b39c6716ff 100644
-> --- a/arch/x86/include/asm/cpuidle_haltpoll.h
-> +++ b/arch/x86/include/asm/cpuidle_haltpoll.h
-> @@ -2,7 +2,7 @@
->  #ifndef _ARCH_HALTPOLL_H
->  #define _ARCH_HALTPOLL_H
->
-> -void arch_haltpoll_enable(void);
-> -void arch_haltpoll_disable(void);
-> +void arch_haltpoll_enable(unsigned int cpu);
-> +void arch_haltpoll_disable(unsigned int cpu);
->
->  #endif
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 8d150e3732d9..a9b6c4e2446d 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -880,32 +880,26 @@ static void kvm_enable_host_haltpoll(void *i)
->         wrmsrl(MSR_KVM_POLL_CONTROL, 1);
->  }
->
-> -void arch_haltpoll_enable(void)
-> +void arch_haltpoll_enable(unsigned int cpu)
->  {
->         if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL)) {
-> -               printk(KERN_ERR "kvm: host does not support poll control\n");
-> -               printk(KERN_ERR "kvm: host upgrade recommended\n");
-> +               pr_err_once("kvm: host does not support poll control\n");
-> +               pr_err_once("kvm: host upgrade recommended\n");
->                 return;
->         }
->
-> -       preempt_disable();
->         /* Enable guest halt poll disables host halt poll */
-> -       kvm_disable_host_haltpoll(NULL);
-> -       smp_call_function(kvm_disable_host_haltpoll, NULL, 1);
-> -       preempt_enable();
-> +       smp_call_function_single(cpu, kvm_disable_host_haltpoll, NULL, 1);
->  }
->  EXPORT_SYMBOL_GPL(arch_haltpoll_enable);
->
-> -void arch_haltpoll_disable(void)
-> +void arch_haltpoll_disable(unsigned int cpu)
->  {
->         if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL))
->                 return;
->
-> -       preempt_disable();
->         /* Enable guest halt poll disables host halt poll */
-> -       kvm_enable_host_haltpoll(NULL);
-> -       smp_call_function(kvm_enable_host_haltpoll, NULL, 1);
-> -       preempt_enable();
-> +       smp_call_function_single(cpu, kvm_enable_host_haltpoll, NULL, 1);
->  }
->  EXPORT_SYMBOL_GPL(arch_haltpoll_disable);
->  #endif
-> diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-> index 9ac093dcbb01..0d1853a7185e 100644
-> --- a/drivers/cpuidle/cpuidle-haltpoll.c
-> +++ b/drivers/cpuidle/cpuidle-haltpoll.c
-> @@ -11,12 +11,15 @@
->   */
->
->  #include <linux/init.h>
-> +#include <linux/cpu.h>
->  #include <linux/cpuidle.h>
->  #include <linux/module.h>
->  #include <linux/sched/idle.h>
->  #include <linux/kvm_para.h>
->  #include <linux/cpuidle_haltpoll.h>
->
-> +static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
-> +
->  static int default_enter_idle(struct cpuidle_device *dev,
->                               struct cpuidle_driver *drv, int index)
->  {
-> @@ -46,6 +49,48 @@ static struct cpuidle_driver haltpoll_driver = {
->         .state_count = 2,
->  };
->
-> +static int haltpoll_cpu_online(unsigned int cpu)
-> +{
-> +       struct cpuidle_device *dev;
-> +
-> +       dev = per_cpu_ptr(haltpoll_cpuidle_devices, cpu);
-> +       if (!dev->registered) {
-> +               dev->cpu = cpu;
-> +               if (cpuidle_register_device(dev)) {
-> +                       pr_notice("cpuidle_register_device %d failed!\n", cpu);
-> +                       return -EIO;
-> +               }
-> +               arch_haltpoll_enable(cpu);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static void haltpoll_uninit(void)
-> +{
-> +       unsigned int cpu;
-> +
-> +       cpus_read_lock();
-> +
-> +       for_each_online_cpu(cpu) {
-> +               struct cpuidle_device *dev =
-> +                       per_cpu_ptr(haltpoll_cpuidle_devices, cpu);
-> +
-> +               if (!dev->registered)
-> +                       continue;
-> +
-> +               arch_haltpoll_disable(cpu);
-> +               cpuidle_unregister_device(dev);
-> +       }
-> +
-> +       cpuidle_unregister(&haltpoll_driver);
-> +
-> +       free_percpu(haltpoll_cpuidle_devices);
-> +       haltpoll_cpuidle_devices = NULL;
-> +
-> +       cpus_read_unlock();
-> +}
-> +
->  static int __init haltpoll_init(void)
->  {
->         int ret;
-> @@ -56,17 +101,27 @@ static int __init haltpoll_init(void)
->         if (!kvm_para_available())
->                 return 0;
->
-> -       ret = cpuidle_register(&haltpoll_driver, NULL);
-> -       if (ret == 0)
-> -               arch_haltpoll_enable();
-> +       ret = cpuidle_register_driver(drv);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       haltpoll_cpuidle_devices = alloc_percpu(struct cpuidle_device);
-> +       if (haltpoll_cpuidle_devices == NULL) {
-> +               cpuidle_unregister_driver(drv);
-> +               return -ENOMEM;
-> +       }
-> +
-> +       ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "idle/haltpoll:online",
-> +                               haltpoll_cpu_online, NULL);
-> +       if (ret < 0)
-> +               haltpoll_uninit();
->
->         return ret;
->  }
->
->  static void __exit haltpoll_exit(void)
->  {
-> -       arch_haltpoll_disable();
-> -       cpuidle_unregister(&haltpoll_driver);
-> +       haltpoll_uninit();
->  }
->
->  module_init(haltpoll_init);
-> diff --git a/include/linux/cpuidle_haltpoll.h b/include/linux/cpuidle_haltpoll.h
-> index fe5954c2409e..d50c1e0411a2 100644
-> --- a/include/linux/cpuidle_haltpoll.h
-> +++ b/include/linux/cpuidle_haltpoll.h
-> @@ -5,11 +5,11 @@
->  #ifdef CONFIG_ARCH_CPUIDLE_HALTPOLL
->  #include <asm/cpuidle_haltpoll.h>
->  #else
-> -static inline void arch_haltpoll_enable(void)
-> +static inline void arch_haltpoll_enable(unsigned int cpu)
->  {
->  }
->
-> -static inline void arch_haltpoll_disable(void)
-> +static inline void arch_haltpoll_disable(unsigned int cpu)
->  {
->  }
->  #endif
-> --
-> 2.17.1
->
+-- 
+Cheers,
+Changbin Du
