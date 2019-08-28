@@ -2,121 +2,97 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD7BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DB8C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6682080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9AB22080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:25:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfH1OXn (ORCPT
+        id S1726763AbfH1OZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:23:43 -0400
-Received: from mga12.intel.com ([192.55.52.136]:63432 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbfH1OXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:23:43 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 07:23:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
-   d="scan'208";a="210181730"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Aug 2019 07:23:40 -0700
-Date:   Wed, 28 Aug 2019 07:23:40 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jan Dakinevich <jan.dakinevich@virtuozzo.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Denis Lunev <den@virtuozzo.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Yi Wang <wang.yi59@zte.com.cn>, Peng Hao <peng.hao2@zte.com.cn>
-Subject: Re: [PATCH 3/3] KVM: x86: always stop emulation on page fault
-Message-ID: <20190828142340.GA21651@linux.intel.com>
-References: <1566911210-30059-1-git-send-email-jan.dakinevich@virtuozzo.com>
- <1566911210-30059-4-git-send-email-jan.dakinevich@virtuozzo.com>
- <20190827145030.GC27459@linux.intel.com>
- <20190828131948.cb67f97cab502b9f5f63b1b8@virtuozzo.com>
+        Wed, 28 Aug 2019 10:25:39 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5232 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726341AbfH1OZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:25:39 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 20AAF72F76A31012F689;
+        Wed, 28 Aug 2019 22:25:36 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 28 Aug 2019 22:25:30 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 02/12] net: hns3: use macro instead of magic number
+Date:   Wed, 28 Aug 2019 22:23:06 +0800
+Message-ID: <1567002196-63242-3-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
+References: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828131948.cb67f97cab502b9f5f63b1b8@virtuozzo.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 10:19:51AM +0000, Jan Dakinevich wrote:
-> On Tue, 27 Aug 2019 07:50:30 -0700
-> Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> > Yikes, this patch and the previous have quite the sordid history.
-> > 
-> > 
-> > The non-void return from inject_emulated_exception() was added by commit
-> > 
-> >   ef54bcfeea6c ("KVM: x86: skip writeback on injection of nested exception")
-> > 
-> > for the purpose of skipping writeback.  At the time, the above blob in the
-> > decode flow didn't exist.
-> > 
-> > 
-> > Decode exception handling was added by commit
-> > 
-> >   6ea6e84309ca ("KVM: x86: inject exceptions produced by x86_decode_insn")
-> > 
-> > but it was dead code even then.  The patch discussion[1] even point out that
-> > it was dead code, i.e. the change probably should have been reverted.
-> > 
-> > 
-> > Peng Hao and Yi Wang later ran into what appears to be the same bug you're
-> > hitting[2][3], and even had patches temporarily queued[4][5], but the
-> > patches never made it to mainline as they broke kvm-unit-tests.  Fun side
-> > note, Radim even pointed out[4] the bug fixed by patch 1/3.
-> > 
-> > So, the patches look correct, but there's the open question of why the
-> > hypercall test was failing for Paolo.  
-> 
-> Sorry, I'm little confused. Could you please, point me which test or tests 
-> were broken? I've just run kvm-unit-test and I see same results with and 
-> without my changes.
-> 
-> > I've tried to reproduce the #DF to
-> > no avail.
+This patch uses macro to replace some magic number.
 
-Aha!  The #DF occurs if patch 2/3, but not patch 3/3, is applied, and the
-VMware backdoor is enabled.  The backdoor is off by default, which is why
-only Paolo was seeing the #DF.
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 6 ++++--
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h | 3 ++-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-To handle the VMware backdoor, KVM intercepts #GP faults, which includes
-the non-canonical #GP from the hypercall unit test.  With only patch 2/3
-applied, x86_emulate_instruction() injects a #GP for the non-canonical RIP
-but returns EMULATE_FAIL instead of EMULATE_DONE.   EMULATE_FAIL causes
-handle_exception_nmi() (or gp_interception() for SVM) to re-inject the
-original #GP because it thinks emulation failed due to a non-VMware opcode.
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+index a56f388..3b4cd23 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+@@ -774,7 +774,8 @@ static void hclge_dbg_dump_qos_buf_cfg(struct hclge_dev *hdev)
+ 	rx_priv_wl = (struct hclge_rx_priv_wl_buf *)desc[1].data;
+ 	for (i = 0; i < HCLGE_TC_NUM_ONE_DESC; i++)
+ 		dev_info(&hdev->pdev->dev,
+-			 "rx_priv_wl_tc_%d: high: 0x%x, low: 0x%x\n", i + 4,
++			 "rx_priv_wl_tc_%d: high: 0x%x, low: 0x%x\n",
++			 i + HCLGE_TC_NUM_ONE_DESC,
+ 			 rx_priv_wl->tc_wl[i].high, rx_priv_wl->tc_wl[i].low);
+ 
+ 	cmd = HCLGE_OPC_RX_COM_THRD_ALLOC;
+@@ -796,7 +797,8 @@ static void hclge_dbg_dump_qos_buf_cfg(struct hclge_dev *hdev)
+ 	rx_com_thrd = (struct hclge_rx_com_thrd *)desc[1].data;
+ 	for (i = 0; i < HCLGE_TC_NUM_ONE_DESC; i++)
+ 		dev_info(&hdev->pdev->dev,
+-			 "rx_com_thrd_tc_%d: high: 0x%x, low: 0x%x\n", i + 4,
++			 "rx_com_thrd_tc_%d: high: 0x%x, low: 0x%x\n",
++			 i + HCLGE_TC_NUM_ONE_DESC,
+ 			 rx_com_thrd->com_thrd[i].high,
+ 			 rx_com_thrd->com_thrd[i].low);
+ 	return;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
+index 80e5cc2..38b7932 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
+@@ -72,9 +72,10 @@ struct hclge_dbg_reg_common_msg {
+ 	enum hclge_opcode_type cmd;
+ };
+ 
++#define	HCLGE_DBG_MAX_DFX_MSG_LEN	60
+ struct hclge_dbg_dfx_message {
+ 	int flag;
+-	char message[60];
++	char message[HCLGE_DBG_MAX_DFX_MSG_LEN];
+ };
+ 
+ #define HCLGE_DBG_MAC_REG_TYPE_LEN	32
+-- 
+2.7.4
 
-Applying patch 3/3 resolves the issue as x86_emulate_instruction() returns
-EMULATE_DONE after injecting the #GP.
-
-
-TL;DR:
-
-Swap the order of patches and everything should be hunky dory.  Please
-rebase to the latest kvm/queue, which has an equivalent to patch 1/3.
