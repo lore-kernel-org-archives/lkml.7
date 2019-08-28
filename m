@@ -2,103 +2,97 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616DFC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5794FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B4C422DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 363C922DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfH1Vyy (ORCPT
+        id S1727562AbfH1VzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:54:54 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:46492 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727348AbfH1Vyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:54:47 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1i35tj-00071f-NO; Wed, 28 Aug 2019 15:54:41 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1i35ti-0001Cs-F3; Wed, 28 Aug 2019 15:54:34 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Date:   Wed, 28 Aug 2019 15:54:20 -0600
-Message-Id: <20190828215429.4572-5-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190828215429.4572-1-logang@deltatee.com>
-References: <20190828215429.4572-1-logang@deltatee.com>
+        Wed, 28 Aug 2019 17:55:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48588 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727385AbfH1Vy6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 17:54:58 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i35u4-0005EZ-59; Wed, 28 Aug 2019 23:54:56 +0200
+Date:   Wed, 28 Aug 2019 23:54:55 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+cc:     x86@kernel.org, Song Liu <songliubraving@fb.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>
+Subject: [patch V3 1/2] x86/mm/pti: Handle unaligned address gracefully in
+ pti_clone_pagetable()
+In-Reply-To: <alpine.DEB.2.21.1908282252170.1938@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1908282352470.1938@nanos.tec.linutronix.de>
+References: <20190828142445.454151604@linutronix.de> <20190828143123.971884723@linutronix.de> <alpine.DEB.2.21.1908282252170.1938@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v8 04/13] nvmet: make nvmet_copy_ns_identifier() non-static
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function will be needed by the upcoming passthru code.
+From: Song Liu <songliubraving@fb.com>
 
-Passthru will need an emulated version of identify_desclist which
-copies the eui64, uuid and nguid from the passed-thru controller into
-the request SGL.
+pti_clone_pmds() assumes that the supplied address is either:
 
-[chaitanya.kulkarni@wdc.com: this was factored out of a patch
- originally authored by Chaitanya]
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+ - properly PUD/PMD aligned
+or
+ - the address is actually mapped which means that independently
+   of the mapping level (PUD/PMD/PTE) the next higher mapping
+   exists.
+
+If that's not the case the unaligned address can be incremented by PUD or
+PMD size incorrectly. All callers supply mapped and/or aligned addresses,
+but for the sake of robustness it's better to handle that case properly and
+to emit a warning.
+
+[ tglx: Rewrote changelog and added WARN_ON_ONCE() ]
+
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- drivers/nvme/target/admin-cmd.c | 4 ++--
- drivers/nvme/target/nvmet.h     | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+V2: Negate P[UM]D_MASK for checking whether the offset part is 0
+V3: Fix changelog
+---
+ arch/x86/mm/pti.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-index 4dc12ea52f23..eeb24f606d00 100644
---- a/drivers/nvme/target/admin-cmd.c
-+++ b/drivers/nvme/target/admin-cmd.c
-@@ -506,8 +506,8 @@ static void nvmet_execute_identify_nslist(struct nvmet_req *req)
- 	nvmet_req_complete(req, status);
- }
+--- a/arch/x86/mm/pti.c
++++ b/arch/x86/mm/pti.c
+@@ -330,13 +330,15 @@ pti_clone_pgtable(unsigned long start, u
  
--static u16 nvmet_copy_ns_identifier(struct nvmet_req *req, u8 type, u8 len,
--				    void *id, off_t *off)
-+u16 nvmet_copy_ns_identifier(struct nvmet_req *req, u8 type, u8 len,
-+			     void *id, off_t *off)
- {
- 	struct nvme_ns_id_desc desc = {
- 		.nidt = type,
-diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
-index 3d313a6452cc..5dfd4e0ae096 100644
---- a/drivers/nvme/target/nvmet.h
-+++ b/drivers/nvme/target/nvmet.h
-@@ -489,6 +489,8 @@ u16 nvmet_bdev_flush(struct nvmet_req *req);
- u16 nvmet_file_flush(struct nvmet_req *req);
- void nvmet_ns_changed(struct nvmet_subsys *subsys, u32 nsid);
+ 		pud = pud_offset(p4d, addr);
+ 		if (pud_none(*pud)) {
+-			addr += PUD_SIZE;
++			WARN_ON_ONCE(addr & ~PUD_MASK);
++			addr = round_up(addr + 1, PUD_SIZE);
+ 			continue;
+ 		}
  
-+u16 nvmet_copy_ns_identifier(struct nvmet_req *req, u8 type, u8 len,
-+			     void *id, off_t *off);
- static inline u32 nvmet_rw_len(struct nvmet_req *req)
- {
- 	return ((u32)le16_to_cpu(req->cmd->rw.length) + 1) <<
--- 
-2.20.1
-
+ 		pmd = pmd_offset(pud, addr);
+ 		if (pmd_none(*pmd)) {
+-			addr += PMD_SIZE;
++			WARN_ON_ONCE(addr & ~PMD_MASK);
++			addr = round_up(addr + 1, PMD_SIZE);
+ 			continue;
+ 		}
+ 
