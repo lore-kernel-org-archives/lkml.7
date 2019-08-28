@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727ECC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55923C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5AE208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D8B6208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:46:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="QPb03lPd"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="PRQAWcyl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfH1QpR (ORCPT
+        id S1726764AbfH1Qqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:45:17 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:30370 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbfH1QpQ (ORCPT
+        Wed, 28 Aug 2019 12:46:30 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:43944 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbfH1Qq3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:45:16 -0400
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x7SGjBde015936;
-        Thu, 29 Aug 2019 01:45:11 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x7SGjBde015936
+        Wed, 28 Aug 2019 12:46:29 -0400
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x7SGkQZQ013997;
+        Thu, 29 Aug 2019 01:46:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x7SGkQZQ013997
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567010712;
-        bh=BNuxKHSLybVA12f+ywCNukk32ucTqOKdIKBZ/5+ichk=;
+        s=dec2015msa; t=1567010787;
+        bh=HOoxEV5QjxBwDEPSU4jmSes5ralaQsiXm8xTi86Ofig=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QPb03lPdO0QCthf2wUwmX6jYBnrxx4FJhio6VjpnItRPD4U2b+pWb9+DVWhFuIY0o
-         65LUSFJArDYHuvLvGlz5QQKDwIJyjVqFD807T1j6uIrPpthMRqoBV9S0JcBin/X2mS
-         sclonJv730gXQdZ+tWtEs0RgH0m88TkT6SX46AgaeyAHXKmIVwUOlnLQupvjxc6qtr
-         cOsnI5+lHy618NzDoghuHEohLpTNNi9NuxO2+WzoxFsytiG6zQDAHxoLobrFqvrrB5
-         brU4NdoTdz8k2FF5K+ZhzSI6NcOPlwOueS3Ax9JpJbTG0JbE/2EfsJ+ARxYcY0qEur
-         sQJSPA+wt9DDQ==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id q16so437083vsm.2;
-        Wed, 28 Aug 2019 09:45:11 -0700 (PDT)
-X-Gm-Message-State: APjAAAXBxeqYLuXrIYy+7Y2uhuCFkodu2SmS/vubuBarK5mpdqYZgtfc
-        3fdIPuqBdNAMDDBJg1XfzTs8rDAf7fFe5QGNw88=
-X-Google-Smtp-Source: APXvYqz8f1WeeabHuCBoPty5s4JUQfpYOWRdzGih76IDQDViYi/G6mM1rML+Jt5hJ0xIyOfT5mG7CauGE9TTs+vRZ/U=
-X-Received: by 2002:a67:fd97:: with SMTP id k23mr2902393vsq.179.1567010710588;
- Wed, 28 Aug 2019 09:45:10 -0700 (PDT)
+        b=PRQAWcylUz71r/KDOxVv53LjTlDoqzf00X4et5egiwwKnBE3ejOBM2IX4KyfLNqsy
+         +9XFLozfl9yCrbiWVhIGtNxjHjUhzqFO34lnEOi9N+QSDc2fSJaik73naVUHB0awNy
+         kx7s7NTQCW4dKvaKnlFAEN+Dz/veQ7jdkx/WhBo+GLi0VbpnvleOerhAerm337LMv4
+         F0hf/HffMa/AKAQZEE3gyMvEslxOumBTNR4hdOpc/SJE1EllcuKMw6CEMkhRFjyml5
+         olLXBZNIjw9srdXsGGdXeddg8dyIhgdmdfHzn/qioSMlqovwi/KwO42D9NaFaCnoYO
+         bTA58r0rldpdw==
+X-Nifty-SrcIP: [209.85.217.41]
+Received: by mail-vs1-f41.google.com with SMTP id y16so435857vsc.3;
+        Wed, 28 Aug 2019 09:46:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAXJzJek1UmC0vLKUCE5tgACLjjhT5AGhpfxe2/yA8vHo59gnO/o
+        SAYQ9cDCW15DmkXuip57YWpdw5+pNXo1kxWA7/U=
+X-Google-Smtp-Source: APXvYqwWxkXjqW9v46LtN7rTY5NYzmUdBGjyCSq0FCHpIV0AHLMB0nCHL8Yq5A687FFFOHGOFhCjBzS0yA7Bg0QULCg=
+X-Received: by 2002:a67:fe12:: with SMTP id l18mr2943065vsr.54.1567010786102;
+ Wed, 28 Aug 2019 09:46:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190819085843.3554-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190819085843.3554-1-yamada.masahiro@socionext.com>
+References: <20190822035911.23478-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190822035911.23478-1-yamada.masahiro@socionext.com>
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 29 Aug 2019 01:44:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQq_P9eFOOhR_vA+YzgVdoOigCdiqufJBssoOO-Q5X8ig@mail.gmail.com>
-Message-ID: <CAK7LNAQq_P9eFOOhR_vA+YzgVdoOigCdiqufJBssoOO-Q5X8ig@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: move modkern_{c,a}flags to Makefile.lib from Makefile.build
+Date:   Thu, 29 Aug 2019 01:45:50 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT6kTyhfx7X0Bqr9unsychfu2T91ZJuqM4jqOnWoV81VA@mail.gmail.com>
+Message-ID: <CAK7LNAT6kTyhfx7X0Bqr9unsychfu2T91ZJuqM4jqOnWoV81VA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: get rid of $(realpath ...) from scripts/mkmakefile
 To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 Cc:     Michal Marek <michal.lkml@markovi.net>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
@@ -62,99 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 5:59 PM Masahiro Yamada
+On Thu, Aug 22, 2019 at 12:59 PM Masahiro Yamada
 <yamada.masahiro@socionext.com> wrote:
 >
-> Makefile.lib is included by Makefile.modfinal as well as Makefile.build.
+> Both relative path and absolute path have pros and cons. For example,
+> we can move the source and objtree around together by using the
+> relative path to the source tree.
 >
-> Move modkern_cflags to Makefile.lib in order to simplify cmd_cc_o_c
-> in Makefile.modfinal. Move modkern_cflags as well for consistency.
+> Do not force the absolute path to the source tree. If you prefer the
+> absolute path, you can specify KBUILD_ABS_SRCTREE=1.
 >
 > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
 
 Applied to linux-kbuild.
 
+>  scripts/mkmakefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
->  scripts/Makefile.build    | 13 -------------
->  scripts/Makefile.lib      | 12 ++++++++++++
->  scripts/Makefile.modfinal |  6 +++---
->  3 files changed, 15 insertions(+), 16 deletions(-)
+> diff --git a/scripts/mkmakefile b/scripts/mkmakefile
+> index 4d0faebb1719..1cb174751429 100755
+> --- a/scripts/mkmakefile
+> +++ b/scripts/mkmakefile
+> @@ -12,6 +12,6 @@ if [ "${quiet}" != "silent_" ]; then
+>  fi
 >
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 10adf3b558de..b46e608f9931 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -92,15 +92,6 @@ endif
->  # Compile C sources (.c)
->  # ---------------------------------------------------------------------------
->
-> -# Default is built-in, unless we know otherwise
-> -part-of-module = $(if $(filter $(basename $@).o, $(real-obj-m)),y)
-> -
-> -modkern_cflags =                                          \
-> -       $(if $(part-of-module),                           \
-> -               $(KBUILD_CFLAGS_MODULE) $(CFLAGS_MODULE), \
-> -               $(KBUILD_CFLAGS_KERNEL) $(CFLAGS_KERNEL))
-> -quiet_modtag = $(if $(part-of-module),[M],   )
-> -
->  quiet_cmd_cc_s_c = CC $(quiet_modtag)  $@
->        cmd_cc_s_c = $(CC) $(filter-out $(DEBUG_CFLAGS), $(c_flags)) $(DISABLE_LTO) -fverbose-asm -S -o $@ $<
->
-> @@ -304,10 +295,6 @@ $(obj)/%.h.s: $(src)/%.h FORCE
->  # Compile assembler sources (.S)
->  # ---------------------------------------------------------------------------
->
-> -modkern_aflags = $(if $(part-of-module),                               \
-> -                       $(KBUILD_AFLAGS_MODULE) $(AFLAGS_MODULE),       \
-> -                       $(KBUILD_AFLAGS_KERNEL) $(AFLAGS_KERNEL))
-> -
->  # .S file exports must have their C prototypes defined in asm/asm-prototypes.h
->  # or a file that it includes, in order to get versioned symbols. We build a
->  # dummy C file that includes asm-prototypes and the EXPORT_SYMBOL lines from
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 264611972c4a..888e5c830646 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -159,6 +159,18 @@ _cpp_flags += -I $(srctree)/$(src) -I $(objtree)/$(obj)
->  endif
->  endif
->
-> +part-of-module = $(if $(filter $(basename $@).o, $(real-obj-m)),y)
-> +quiet_modtag = $(if $(part-of-module),[M],   )
-> +
-> +modkern_cflags =                                          \
-> +       $(if $(part-of-module),                           \
-> +               $(KBUILD_CFLAGS_MODULE) $(CFLAGS_MODULE), \
-> +               $(KBUILD_CFLAGS_KERNEL) $(CFLAGS_KERNEL))
-> +
-> +modkern_aflags = $(if $(part-of-module),                               \
-> +                       $(KBUILD_AFLAGS_MODULE) $(AFLAGS_MODULE),       \
-> +                       $(KBUILD_AFLAGS_KERNEL) $(AFLAGS_KERNEL))
-> +
->  c_flags        = -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(LINUXINCLUDE)     \
->                  -include $(srctree)/include/linux/compiler_types.h       \
->                  $(_c_flags) $(modkern_cflags)                           \
-> diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-> index 2e49d536a9b3..059dbcf5ae77 100644
-> --- a/scripts/Makefile.modfinal
-> +++ b/scripts/Makefile.modfinal
-> @@ -17,12 +17,12 @@ modules := $(sort $(shell cat $(MODORDER)))
->  __modfinal: $(modules)
->         @:
->
-> -# modname is set to make c_flags define KBUILD_MODNAME
-> +# modname and part-of-module are set to make c_flags define proper module flags
->  modname = $(notdir $(@:.mod.o=))
-> +part-of-module = y
->
->  quiet_cmd_cc_o_c = CC [M]  $@
-> -      cmd_cc_o_c = $(CC) $(c_flags) $(KBUILD_CFLAGS_MODULE) $(CFLAGS_MODULE) \
-> -                  -c -o $@ $<
-> +      cmd_cc_o_c = $(CC) $(c_flags) -c -o $@ $<
->
->  %.mod.o: %.mod.c FORCE
->         $(call if_changed_dep,cc_o_c)
+>  cat << EOF > Makefile
+> -# Automatically generated by $(realpath $0): don't edit
+> -include $(realpath $1/Makefile)
+> +# Automatically generated by $0: don't edit
+> +include $1/Makefile
+>  EOF
 > --
 > 2.17.1
 >
