@@ -2,290 +2,141 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0D2C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C4CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC1C020856
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB0A20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:21:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WRrAvkH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfH1JQC (ORCPT
+        id S1726457AbfH1JVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:16:02 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59705 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfH1JQB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:16:01 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1i2u3T-0004Lz-Hh; Wed, 28 Aug 2019 11:15:51 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1i2u3S-000616-ES; Wed, 28 Aug 2019 11:15:50 +0200
-Date:   Wed, 28 Aug 2019 11:15:50 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Robin van der Gracht <robin@protonic.nl>
-Cc:     Robin Gong <yibin.gong@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-arm-kernel @ lists . infradead . org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 1/2] input: keyboard: snvs_pwrkey: Send key events for
- i.MX6 S, DL and Q
-Message-ID: <20190828091550.pdc57wanu6twew5p@pengutronix.de>
-References: <20190827123216.32728-1-robin@protonic.nl>
+        Wed, 28 Aug 2019 05:21:43 -0400
+Received: from mail-eopbgr150058.outbound.protection.outlook.com ([40.107.15.58]:43590
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726370AbfH1JVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 05:21:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HpgXS7uP0ghnmwTpy80fa1m9mXzW8qi80M7jw4tmMcFqUj3pj2dqNA8IY+P6EDsniyl752X/+A70fUz30ok06y/LLIZZ8a2f1VLKWwxpzGYMx6lFin2H7sKC7xlgoc2e8svPdhuZXnc+9dUHVvR3Fkj+1NbB3XhW+X8yW0fjg7fJCHoxBd4ZmcDMAmG0Y6GvJY9Ri4PNoXIhByqBictj6du+eVLX6NT+ipQkcSsQUE87xXFVEGyV7WY79YElT0y1Y3JvZpqZbsmcp3lbi4NSuGYgJJCiJ71ruhkERviIqUV7z9irI+H1nR+n5iCyJPEa8F64OWIO0SO1sSG+CzB8gQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xKL2IsxJZOdhH7Q0shhslGeeIbmY3oWF+h7HeDZwG1U=;
+ b=d8OaJWWrXmasbeaAyxM609zsQ1kBpxZs+scDnMRrK9Pwj8hjSty2aaj5sTTiVLcZGctMdPf+b4tC/hqEHAM0yUi8H4uUMDPTj/D/Oje4H74ijP23bozljoJqF88sBCGCYd4916dvRslaU5/Tx9vXxtAORIYJSIW5O+F/+y6Rb/eQG6LABjvJL36nM7C1RlcpnsD/aTFzU52j+hDjGwu80akrrBRTbTQi42ZdliyRv5ZO8bkL8fCEbDe1XXpoVt6oZ8cn+9Tua5lDGmyg26vG7PX1zdc4MFw2+U7enGeql/IZmq1ExbBQrRPZ7vAqhFLvvWeILbsKj8+bDsFUuIw4Jw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xKL2IsxJZOdhH7Q0shhslGeeIbmY3oWF+h7HeDZwG1U=;
+ b=WRrAvkH53Qk/fBvXka1c1dRKONpYZdaWaf83mH+TARAdcCZpbNkHeMVKo/InqYR/scu+VGu/5L8j5ml61caOADky/Bh/ZyhUtI5KPy0+OgK4GTuEahq/zCS4KyXwwGvZBkbGUkJDAcVCL5uXC2LrcuCHtfSwDgeFyQo0wACftuA=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3947.eurprd04.prod.outlook.com (52.134.67.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.19; Wed, 28 Aug 2019 09:20:58 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8958:299c:bc54:2a38]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8958:299c:bc54:2a38%7]) with mapi id 15.20.2199.021; Wed, 28 Aug 2019
+ 09:20:58 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V15 1/5] dt-bindings: fsl: scu: add thermal binding
+Thread-Topic: [PATCH V15 1/5] dt-bindings: fsl: scu: add thermal binding
+Thread-Index: AQHVJXvnLQPj9qjL2U2LZTWuyBDONqaqeq9ggC7WvJCAN2WDgIAAARuQ
+Date:   Wed, 28 Aug 2019 09:20:58 +0000
+Message-ID: <DB3PR0402MB3916DF85E27F417C0A0BD93CF5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190618021820.14885-1-Anson.Huang@nxp.com>
+         <DB3PR0402MB39162C5B5AF828B127DD871EF5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+         <DB3PR0402MB39162EB555CD7AE75D58C582F5C60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <ff3fd0ab2ba659e98070760be8e7c0f223e921f9.camel@intel.com>
+In-Reply-To: <ff3fd0ab2ba659e98070760be8e7c0f223e921f9.camel@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9a2f4b00-a6c0-4126-97ed-08d72b990989
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3947;
+x-ms-traffictypediagnostic: DB3PR0402MB3947:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3947D6264273B572F855CA76F5A30@DB3PR0402MB3947.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 014304E855
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(39860400002)(136003)(366004)(189003)(199004)(476003)(2906002)(66446008)(64756008)(9686003)(74316002)(2501003)(486006)(6246003)(44832011)(66556008)(55016002)(5660300002)(66476007)(11346002)(66946007)(478600001)(53936002)(316002)(71190400001)(71200400001)(102836004)(305945005)(7736002)(186003)(26005)(76116006)(446003)(7696005)(2201001)(81166006)(81156014)(14444005)(256004)(8676002)(66066001)(110136005)(6436002)(25786009)(52536014)(33656002)(7416002)(4326008)(86362001)(4744005)(3846002)(6506007)(229853002)(8936002)(6116002)(14454004)(99286004)(76176011)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3947;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: MXQzO9/Z9glsvEFDq0wUK3RvqHgIDcxt9tAn+zmWV0ewXQTVm5IoryLxlf72KGBeemctx8rEOdTmKalVc61JgItnwW6JxPo0ZT1NZAZoBLvBnuM4HMDUYVop8w1+O8xIToAaFVWd85agJMdK3cuDCZjgSbuVzqgqPxYjxZOnjfmXvoXZc9dn2OKNnVvCkTaYLY64gKBGxf2Mi7hZjyYwqSCNHJ09eZ+QpI7VsIOw8AiX+E9Y1y1LOsKiEDCjm+ihXD/QeX3CowHph2qXyUlQkIhZHyJeu1RexozYuvl7dShiVWfGFbRzIfC3QXz0P8LA7QXtdFrAhXqfTtHCW7FOUwFa7a8i2nos9TYsfDJ83d6nIVC9YKeT4B/pUhOHuA9Ht7tesMcJh+GD/Yl0HNkTKnd9gqTQrh275tRM7Ssfolg=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827123216.32728-1-robin@protonic.nl>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:06:38 up 102 days, 14:24, 64 users,  load average: 0.12, 0.14,
- 0.08
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a2f4b00-a6c0-4126-97ed-08d72b990989
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 09:20:58.5188
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KavFyoMBK0926nykUjpW50qdbm5X/xiArMNLBsTzpiN2+05y/+Muk25/Z30UmuKQMlyo7NoSZlk6rMyOE2nHyg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3947
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
-
-thanks for the patch.
-
-On 19-08-27 14:32, Robin van der Gracht wrote:
-> The first generation i.MX6 processors does not send an interrupt when the
-> power key is pressed. It sends a power down request interrupt if the key is
-> released before a hard shutdown (5 second press). This should allow
-> software to bring down the SoC safely.
-> 
-> For this driver to work as a regular power key with the older SoCs, we need
-> to send a keypress AND release when we get the power down request irq.
-> 
-> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
-> ---
->  .../devicetree/bindings/crypto/fsl-sec4.txt   | 16 ++++--
->  drivers/input/keyboard/Kconfig                |  2 +-
->  drivers/input/keyboard/snvs_pwrkey.c          | 52 ++++++++++++++++---
-
-Can we split this so the dt-bindings are a standalone patch? IMHO this
-is the usual way because the maintainer can squash them on there needs.
-Also it would be cool to document the changes. A common place for
-changes is after the '---' or on the cover-letter.
-
->  3 files changed, 57 insertions(+), 13 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> index 2fe245ca816a..e4fbb9797082 100644
-> --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> @@ -420,14 +420,22 @@ EXAMPLE
->  =====================================================================
->  System ON/OFF key driver
->  
-> -  The snvs-pwrkey is designed to enable POWER key function which controlled
-> -  by SNVS ONOFF, the driver can report the status of POWER key and wakeup
-> -  system if pressed after system suspend.
-> +  The snvs-pwrkey is designed to enable POWER key function which is controlled
-> +  by SNVS ONOFF. It can wakeup the system if pressed after system suspend.
-> +
-> +  There are two generations of SVNS pwrkey hardware. The first generation is
-> +  included in i.MX6 Solo, DualLite and Quad processors. The second generation
-> +  is included in i.MX6 SoloX and newer SoCs.
-> +
-> +  Second generation SNVS can detect and report the status of POWER key, but the
-> +  first generation can only detect a key release and so emits an instantaneous
-> +  press and release event when the key is released.
->  
->    - compatible:
->        Usage: required
->        Value type: <string>
-> -      Definition: Mush include "fsl,sec-v4.0-pwrkey".
-> +      Definition: Must include "fsl,sec-v4.0-pwrkey" for i.MX6 SoloX and newer
-> +	   or "fsl,imx6qdl-snvs-pwrkey" for older SoCs.
->  
->    - interrupts:
->        Usage: required
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index 7c4f19dab34f..937e58da5ce1 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -436,7 +436,7 @@ config KEYBOARD_SNVS_PWRKEY
->  	depends on OF
->  	help
->  	  This is the snvs powerkey driver for the Freescale i.MX application
-> -	  processors that are newer than i.MX6 SX.
-> +	  processors.
->  
->  	  To compile this driver as a module, choose M here; the
->  	  module will be called snvs_pwrkey.
-> diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
-> index 5342d8d45f81..d71c44733103 100644
-> --- a/drivers/input/keyboard/snvs_pwrkey.c
-> +++ b/drivers/input/keyboard/snvs_pwrkey.c
-> @@ -29,6 +29,11 @@
->  #define DEBOUNCE_TIME 30
->  #define REPEAT_INTERVAL 60
->  
-> +enum imx_snvs_hwtype {
-> +	IMX6SX_SNVS,	/* i.MX6 SoloX and newer */
-> +	IMX6QDL_SNVS,	/* i.MX6 Solo, DualLite and Quad */
-> +};
-> +
->  struct pwrkey_drv_data {
->  	struct regmap *snvs;
->  	int irq;
-> @@ -37,14 +42,41 @@ struct pwrkey_drv_data {
->  	int wakeup;
->  	struct timer_list check_timer;
->  	struct input_dev *input;
-> +	enum imx_snvs_hwtype hwtype;
->  };
->  
-> +static const struct of_device_id imx_snvs_pwrkey_ids[] = {
-> +	{
-> +		.compatible = "fsl,sec-v4.0-pwrkey",
-> +		.data = (const void *)IMX6SX_SNVS,
-> +	},
-> +	{
-> +		.compatible = "fsl,imx6qdl-snvs-pwrkey",
-> +		.data = (const void *)IMX6QDL_SNVS,
-> +	},
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, imx_snvs_pwrkey_ids);
-
-Can we keep this on the original place if you are using ...
-
-> +
->  static void imx_imx_snvs_check_for_events(struct timer_list *t)
->  {
->  	struct pwrkey_drv_data *pdata = from_timer(pdata, t, check_timer);
->  	struct input_dev *input = pdata->input;
->  	u32 state;
->  
-> +	if (pdata->hwtype == IMX6QDL_SNVS) {
-> +		/*
-> +		 * The first generation i.MX6 SoCs only sends an interrupt on
-> +		 * button release. To mimic power-key usage, we'll prepend a
-> +		 * press event.
-> +		 */
-> +		input_report_key(input, pdata->keycode, 1);
-
-Missing input_sync() here?
-
-> +		input_report_key(input, pdata->keycode, 0);
-> +		input_sync(input);
-> +		pm_relax(input->dev.parent);
-> +		return;
-> +	}
-> +
->  	regmap_read(pdata->snvs, SNVS_HPSR_REG, &state);
->  	state = state & SNVS_HPSR_BTN ? 1 : 0;
->  
-> @@ -67,13 +99,17 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
->  {
->  	struct platform_device *pdev = dev_id;
->  	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
-> +	unsigned long expire = jiffies;
->  	u32 lp_status;
->  
->  	pm_wakeup_event(pdata->input->dev.parent, 0);
->  
->  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
-> -	if (lp_status & SNVS_LPSR_SPO)
-> -		mod_timer(&pdata->check_timer, jiffies + msecs_to_jiffies(DEBOUNCE_TIME));
-> +	if (lp_status & SNVS_LPSR_SPO) {
-> +		if (pdata->hwtype == IMX6SX_SNVS)
-> +			expire += msecs_to_jiffies(DEBOUNCE_TIME);
-> +		mod_timer(&pdata->check_timer, expire);
-
-Is this desired because the timer gets triggered earlier.
-
-> +	}
->  
->  	/* clear SPO status */
->  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
-> @@ -93,6 +129,7 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
->  	struct pwrkey_drv_data *pdata = NULL;
->  	struct input_dev *input = NULL;
->  	struct device_node *np;
-> +	const struct of_device_id *match;
->  	int error;
->  
->  	/* Get SNVS register Page */
-> @@ -100,6 +137,10 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
->  	if (!np)
->  		return -ENODEV;
->  
-> +	match = of_match_node(imx_snvs_pwrkey_ids, np);
-> +	if (!match)
-> +		return -ENODEV;
-
-... of_device_get_match_data() here. While reading the rm it seems that
-the snvs block has a dedicated version register. IMHO this could be a
-better way to apply the change also to existing devices with old
-firmware.
-
-Regards,
-  Marco
-
-
-> +
->  	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
->  	if (!pdata)
->  		return -ENOMEM;
-> @@ -115,6 +156,7 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
->  		dev_warn(&pdev->dev, "KEY_POWER without setting in dts\n");
->  	}
->  
-> +	pdata->hwtype = (enum imx_snvs_hwtype)match->data;
->  	pdata->wakeup = of_property_read_bool(np, "wakeup-source");
->  
->  	pdata->irq = platform_get_irq(pdev, 0);
-> @@ -175,12 +217,6 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static const struct of_device_id imx_snvs_pwrkey_ids[] = {
-> -	{ .compatible = "fsl,sec-v4.0-pwrkey" },
-> -	{ /* sentinel */ }
-> -};
-> -MODULE_DEVICE_TABLE(of, imx_snvs_pwrkey_ids);
-> -
->  static struct platform_driver imx_snvs_pwrkey_driver = {
->  	.driver = {
->  		.name = "snvs_pwrkey",
-> -- 
-> 2.20.1
-> 
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+SGksIFJ1aQ0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjE1IDEvNV0gZHQtYmluZGluZ3M6IGZz
+bDogc2N1OiBhZGQgdGhlcm1hbCBiaW5kaW5nDQo+IA0KPiBIaSwgQW5zb24sDQo+IA0KPiBXZSdy
+ZSBtaXNzaW5nIEFDSyBmcm9tIHRoZSBtYWludGFpbmVycyBmb3IgcGF0Y2ggNC81IGFuZCA1LzUs
+IGlmIHdlIHdhbnQgdG8NCj4gc2hpcHBlZCB0aGUgcGF0Y2ggdmlhIHRoZXJtYWwgdHJlZS4NCg0K
+SSB0aGluayA0LzUgYW5kIDUvNSBjYW4gYmUgdGFrZW4gYnkgU2hhd24gR3VvIG9uY2UgdGhlIGRy
+aXZlciBwYXJ0IGlzIHRha2VuLCBoZQ0Kbm9ybWFsbHkgZG8gaXQgaW4gdGhpcyB3YXksIG9uY2Ug
+ZHJpdmVyIGFuZCBkdC1iaW5kaW5nIGFyZSB0YWtlbiwgSSB3aWxsIG5vdGlmeSBoaW0uDQoNCj4g
+DQo+IEZvciBwYXRjaCAyLzUsIGFzIGl0IGludHJvZHVjZXMgYSBuZXcgQVBJIGZvciBPRl9USEVS
+TUFMLCBJJ2QgbGlrZSB0byBnZXQNCj4gRWR1YXJkbycgZmVlZGJhY2sgYmVmb3JlIHRha2luZyB0
+aGVtLg0KDQpPSywgTk9UIHN1cmUgd2hlbiBoZSBjYW4gdGFrZSBhIGxvb2sgYXQgaXQsIHdlIGFy
+ZSBraW5kIG9mIHBlbmRpbmcgb24gdGhpcyBmb3Igc29tZQ0KdGltZSwgbGV0J3Mgd2FpdC4gSWYg
+eW91IGhhdmUgY2hhbmNlIHRvIHRhbGsgdG8gaGltLCBwbGVhc2UgaGVscCBhc2sgZm9yIGhlbHAg
+ZnJvbSBoaW0gYWJvdXQNCnRoaXMgcGF0Y2ggc2VyaWVzLCB0aGFua3MgYSBsb3QhDQoNCnRoYW5r
+cywNCkFuc29uDQoNCg0K
