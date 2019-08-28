@@ -2,128 +2,99 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAA0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92279C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8218A2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D6F22CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:03:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W/EQ3G5B"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BRdtncww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfH1IDL (ORCPT
+        id S1726508AbfH1IDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:03:11 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:45282 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbfH1IDL (ORCPT
+        Wed, 28 Aug 2019 04:03:16 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36433 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbfH1IDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:03:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=X8NAp/0+k3yUu9F7t1wR4sHl+yZyZQ5B/4oEW32AXWg=; b=W/EQ3G5BB1zRMFZI/y4P7qBWr
-        Zp8xbHHFbkrDr/4b6Q+5JqoQ2+jfdwelIwQ3yQqEGnfS2EUU1UFO6HBLQ/OG0cGMsy5XoK/unxRSC
-        5c3+k3gdgYA7XE7uy0cyb3LDd2asRdIx1TfIElR4/w5oHIYFbrsGmuD84kBEEP84d082ZieFuOiIy
-        cVacYt7vnnsXnwnJxs+0cFCjLwLV37OU30lm1vXyi4cs8LYs+FiqhcqbEhJNJjUo5wd8zfKN5Lr7S
-        njIVeYc5AE1/rWxHymdnPtbhgAVPcvMkLcojLalg6v3mwl32CKCH88DcSEmRykAeGvMehZNSNAGWS
-        SZLxF8EWw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2suz-0007KT-81; Wed, 28 Aug 2019 08:03:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 968273070F4;
-        Wed, 28 Aug 2019 10:02:25 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8129820230B0A; Wed, 28 Aug 2019 10:02:59 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 10:02:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kim Phillips <kim.phillips@amd.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/amd/ibs: Fix sample bias for dispatched
- micro-ops
-Message-ID: <20190828080259.GM2332@hirez.programming.kicks-ass.net>
-References: <20190826195730.30614-1-kim.phillips@amd.com>
+        Wed, 28 Aug 2019 04:03:14 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p13so1559727wmh.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 01:03:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=20Jn2+dCC+I8w6FtFfD0vbMvlgqMeEqx0r5JGNJSXvw=;
+        b=BRdtncww57yR+oh9ioHww1AygNYE9lSkqU2mG//XHwzTsagVjR4YsA8HZLgV0wx8f7
+         MGD8CF1vTBltWRC04ALXWMJqPiuhNcXA/dhIWF5i2SqNeYztB0T8jnz2K4A6VzLd+ddc
+         YEpKr2fG5TixL2Xdu17BHvZgY600WF8v6JoftyobJhEdPNmnGwssFAydMClk+OSjNdH2
+         /htwt76aoWHuRaxE0qDXMFOwIZwwxCT8fPe129GAv6C3axxfjNmENgSKz8MMSU5skxWO
+         kFSMKYMxXvF+2P8J0wsa+XECHfZG9888WhVvnCG/iRlUy9lIbkqUYzBAiy/dd1pHDumy
+         gjvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=20Jn2+dCC+I8w6FtFfD0vbMvlgqMeEqx0r5JGNJSXvw=;
+        b=PawJmeBG8Ffje5yUbO2ZHZCyFVIDr50pteMAIRWVQglx7N0TL+Ce+umJN9ECE3PJJp
+         1Jcf7FRl710OOTecICE7gKUePpWoBBWKMdf2M6rmlqiZbvpmLgVG1gU2hX1q1KwTGxVG
+         4lHrPb/ttEkmBMDc3f7K0YKEQFBY0KG3/e4NDMK7UGjtA/GWMQYN0IcZ8hHJGIUsB4W3
+         esoUQIuAWjYdXC53EXewF6RJlFKxZiQitMIvdsLrbrOMjYLOxUn4qcQc4aGxeGitJElb
+         ZGh7FrzhtVwS+pmy4y+RGM3r+EoAzS8n884XMMbu8MNU6OQXR5tQTK/9BETcIox1c3eo
+         97rw==
+X-Gm-Message-State: APjAAAX0YkH55XOdQKha6j+iw6cBQktgU4fSTaYl1ZpO1Yrve33anGF4
+        A2ARyClZ5GPfZORwLEOJV/J0eA==
+X-Google-Smtp-Source: APXvYqxmqwViJF2WTLIOMiRFCef/fmmO9N41vOJh+ND/giymLdwj+196F+O+dvCn+JoNQAz/G4CsdA==
+X-Received: by 2002:a05:600c:352:: with SMTP id u18mr3102630wmd.141.1566979392301;
+        Wed, 28 Aug 2019 01:03:12 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id a11sm1330229wrx.59.2019.08.28.01.03.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 01:03:11 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] arm64: dts: meson: g12a: add tdm resets
+In-Reply-To: <7hh862tbt2.fsf@baylibre.com>
+References: <20190820121551.18398-1-jbrunet@baylibre.com> <7hh862tbt2.fsf@baylibre.com>
+Date:   Wed, 28 Aug 2019 10:03:10 +0200
+Message-ID: <1j4l217m4h.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826195730.30614-1-kim.phillips@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 02:57:30PM -0500, Kim Phillips wrote:
+On Tue 27 Aug 2019 at 16:42, Kevin Hilman <khilman@baylibre.com> wrote:
 
-> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> index 62f317c9113a..f2625b4a5a8b 100644
-> --- a/arch/x86/events/amd/ibs.c
-> +++ b/arch/x86/events/amd/ibs.c
-> @@ -663,8 +663,15 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
->  out:
->  	if (throttle)
->  		perf_ibs_stop(event, 0);
-> -	else
-> -		perf_ibs_enable_event(perf_ibs, hwc, period >> 4);
-> +	else {
+> Jerome Brunet <jbrunet@baylibre.com> writes:
+>
+>> This patchset adds the dedicated reset of the tdm formatters which
+>> have been added on the g12a SoC family. Using these help with the channel
+>> mapping when the formatter uses more than 1 i2s lane.
+>
+> Because I forgot^W waited on this, we did the meson-g12a-common split,
+> so this no longer applies cleanly.  Could you rebase this on current v5.4/dt64
+> and I'll queue it for v5.4/dt64.
 
-Coding Style requires braces on both legs of a conditional.
+Acutally it was already not applying when I sent this v1 ...
+.. which is why I sent a v2 [0] ;)
 
-> +		period >>= 4;
-> +
-> +		if ((ibs_caps & IBS_CAPS_RDWROPCNT) &&
-> +		    (*config & IBS_OP_CNT_CTL))
-> +			period |= *config & IBS_OP_CUR_CNT_RAND;
-> +
-> +		perf_ibs_enable_event(perf_ibs, hwc, period);
-> +	}
->  
->  	perf_event_update_userpage(event);
->  
-> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-> index 1392d5e6e8d6..67d94696a1d6 100644
-> --- a/arch/x86/include/asm/perf_event.h
-> +++ b/arch/x86/include/asm/perf_event.h
-> @@ -259,9 +259,12 @@ struct pebs_lbr {
->  #define IBS_FETCH_CNT		0xFFFF0000ULL
->  #define IBS_FETCH_MAX_CNT	0x0000FFFFULL
->  
-> -/* ibs op bits/masks */
-> -/* lower 4 bits of the current count are ignored: */
-> -#define IBS_OP_CUR_CNT		(0xFFFF0ULL<<32)
-> +/* ibs op bits/masks
-> + * The lower 7 bits of the current count are random bits
-> + * preloaded by hardware and ignored in software
-> + */
+[0]: https://lkml.kernel.org/r/20190823154432.16268-1-jbrunet@baylibre.com
 
-Malformed comment style.
-
-> +#define IBS_OP_CUR_CNT		(0xFFF80ULL<<32)
-> +#define IBS_OP_CUR_CNT_RAND	(0x0007FULL<<32)
->  #define IBS_OP_CNT_CTL		(1ULL<<19)
->  #define IBS_OP_VAL		(1ULL<<18)
->  #define IBS_OP_ENABLE		(1ULL<<17)
-
-Fixed up both issues and applied.
-
-Thanks!
+>
+>> Kevin, please note that to build, this patchset depends on the new reset
+>> bindings of the audio clock controller. I've prepared a tag for you [0]
+>>
+>> [0]: git://github.com/BayLibre/clk-meson.git - clk-meson-dt-v5.4-2
+>
+> Thanks for the tag.  This is now included in v5.4/dt64.
+>
+> Kevin
