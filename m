@@ -2,124 +2,122 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645D7C41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE35C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6722189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:06:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dbs47XKy"
+	by mail.kernel.org (Postfix) with ESMTP id 2ABB822CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfH1PGG (ORCPT
+        id S1726975AbfH1PHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:06:06 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40846 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbfH1PGF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:06:05 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w10so1620751pgj.7;
-        Wed, 28 Aug 2019 08:06:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uQEfLMG3TnQ4c27LmLDMotrBwLZwv24Uyoxsstmog3Q=;
-        b=dbs47XKylRv5PUp5OgY8YWS8zONTkSXbHA9wmBWV2s2rOs0LjaSevk8oDjSs/vA+Iz
-         F3XtgUgrrit4fTDtzZAXbwO+xBrKIVPK+2dZbSN6BqEQUzdDeWnTy85E0DtagWKOunbG
-         sMrPu3K6CHA7Z7eQGwKml7IikFgEhi4T1fp5S8DBCiIQzsNjg+lPU62Bc82hyGrSoPmC
-         69dpdLXh2cLqLceBzZz/q4AaKOoh+jAOIdmDvgzjzCZ+40bQfoU8hp+F6YpB+90oNEU7
-         ZvplHvpZC9fSd1FHtpIXFpknz5eNIrNWEDuDAUw0t367ZKvuq8N7Uv1iWHTZ1zORjrqZ
-         lq4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uQEfLMG3TnQ4c27LmLDMotrBwLZwv24Uyoxsstmog3Q=;
-        b=Jai1vVaIOMtiUbJ4Ijg2P3LbRDtWtmSxnrHOOezKvuHBwF2ByVqlXVD69Hfw0/X+9t
-         Aln3e1GLn1q3JwtFEqOJ+pM2m4vaHIiDT6COQ/jItHK6mkV5dTAZxGLBO6R0WfLBx457
-         UQcXYvpxywiEYWqZR6poOFJJt3xnhIiEVglRdsctsuU73g3Gm17vAxqFh0hJpjuDPGBv
-         Fh/EmrzPHm+MSsBFrVroAR8RwrbjPf4SvynDtvl0ViYXckHpJsz0Q4c313ctSMmlbVDB
-         neA26FGt4PKlD3N1G2nvNTv2hDM3yudpF5k2oTVscLy8RirL2iSz9TYKvt0dK9riuLb7
-         j9rg==
-X-Gm-Message-State: APjAAAWsUsv8nYyF7+cRXu9+YOQqO1CXgWTWgt6BuatO7q7euk+/Tbq2
-        1dMXW4fKGuIZongzIqtaikU=
-X-Google-Smtp-Source: APXvYqyufDB4Uzqc91b/XtEIhS/sG3zG9APdnUA0Phsv3Vm1mGuepsBDdFEDeiwFuSa8c90GTsECSw==
-X-Received: by 2002:a63:2ec9:: with SMTP id u192mr3806345pgu.16.1567004764285;
-        Wed, 28 Aug 2019 08:06:04 -0700 (PDT)
-Received: from localhost (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
-        by smtp.gmail.com with ESMTPSA id l68sm3103530pfl.11.2019.08.28.08.06.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 08:06:03 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 08:06:02 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] driver core: platform: Introduce
- platform_get_irq_optional()
-Message-ID: <20190828150602.GB21494@roeck-us.net>
-References: <20190828083411.2496-1-thierry.reding@gmail.com>
- <20190828085724.GA31055@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828085724.GA31055@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 28 Aug 2019 11:07:03 -0400
+Received: from mga02.intel.com ([134.134.136.20]:6091 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726440AbfH1PHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 11:07:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 08:07:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
+   d="scan'208";a="380429742"
+Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
+  by fmsmga005.fm.intel.com with ESMTP; 28 Aug 2019 08:06:59 -0700
+Message-ID: <29e6afa9cd7a7b0069ec6b999a2830cbbbe50a56.camel@intel.com>
+Subject: Re: [PATCH v8 11/27] x86/mm: Introduce _PAGE_DIRTY_SW
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Wed, 28 Aug 2019 07:57:41 -0700
+In-Reply-To: <20190828070308.GJ2332@hirez.programming.kicks-ass.net>
+References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
+         <20190813205225.12032-12-yu-cheng.yu@intel.com>
+         <20190823140233.GC2332@hirez.programming.kicks-ass.net>
+         <6c3dc33e16c8bbb6d45c0a6ec7c684de197fa065.camel@intel.com>
+         <20190828070308.GJ2332@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 10:57:24AM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Aug 28, 2019 at 10:34:10AM +0200, Thierry Reding wrote:
-> > From: Thierry Reding <treding@nvidia.com>
+On Wed, 2019-08-28 at 09:03 +0200, Peter Zijlstra wrote:
+> On Tue, Aug 27, 2019 at 03:37:12PM -0700, Yu-cheng Yu wrote:
+> > On Fri, 2019-08-23 at 16:02 +0200, Peter Zijlstra wrote:
+> > > On Tue, Aug 13, 2019 at 01:52:09PM -0700, Yu-cheng Yu wrote:
+> > > 
+> > > > +static inline pte_t pte_move_flags(pte_t pte, pteval_t from, pteval_t
+> > > > to)
+> > > > +{
+> > > > +	if (pte_flags(pte) & from)
+> > > > +		pte = pte_set_flags(pte_clear_flags(pte, from), to);
+> > > > +	return pte;
+> > > > +}
+> > > 
+> > > Aside of the whole conditional thing (I agree it would be better to have
+> > > this unconditionally); the function doesn't really do as advertised.
+> > > 
+> > > That is, if @from is clear, it doesn't endeavour to make sure @to is
+> > > also clear.
+> > > 
+> > > Now it might be sufficient, but in that case it really needs a comment
+> > > and or different name.
+> > > 
+> > > An implementation that actually moves the bit is something like:
+> > > 
+> > > 	pteval_t a,b;
+> > > 
+> > > 	a = native_pte_value(pte);
+> > > 	b = (a >> from_bit) & 1;
+> > > 	a &= ~((1ULL << from_bit) | (1ULL << to_bit));
+> > > 	a |= b << to_bit;
+> > > 	return make_native_pte(a);
 > > 
-> > In some cases the interrupt line of a device is optional. Introduce a
-> > new platform_get_irq_optional() that works much like platform_get_irq()
-> > but does not output an error on failure to find the interrupt.
-> > 
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > ---
-> >  drivers/base/platform.c         | 22 ++++++++++++++++++++++
-> >  include/linux/platform_device.h |  1 +
-> >  2 files changed, 23 insertions(+)
-> > 
-> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> > index 8ad701068c11..0dda6ade50fd 100644
-> > --- a/drivers/base/platform.c
-> > +++ b/drivers/base/platform.c
-> > @@ -192,6 +192,28 @@ int platform_get_irq(struct platform_device *dev, unsigned int num)
-> >  }
-> >  EXPORT_SYMBOL_GPL(platform_get_irq);
-> >  
-> > +/**
-> > + * platform_get_irq_optional - get an optional IRQ for a device
-> > + * @dev: platform device
-> > + * @num: IRQ number index
-> > + *
-> > + * Gets an IRQ for a platform device. Device drivers should check the return
-> > + * value for errors so as to not pass a negative integer value to the
-> > + * request_irq() APIs. This is the same as platform_get_irq(), except that it
-> > + * does not print an error message if an IRQ can not be obtained.
+> > There can be places calling pte_wrprotect() on a PTE that is already RO +
+> > DIRTY_SW.  Then in pte_move_flags(pte, _PAGE_DIRTY_HW, _PAGE_DIRTY_SW) we do
+> > not
+> >  want to clear _PAGE_DIRTY_SW.  But, I will look into this and make it more
+> > obvious.
 > 
-> Kind of funny that the work people did to put error messages in a
-> central place needs to be worked around at times :)
+> Well, then the name 'move' is just wrong, because that is not the
+> semantics you're looking for.
 > 
-> Anyway, I have no objection to this, but it looks like it has to go in
-> through my tree.  I can take the hwmon patch as well through my tree if
-> the hwmon maintainer(s) say it is ok to do so.
-> 
-Ok with me.
+> So the thing is; if you provide a generic function that 'munges' two
+> bits, then it's name had better be accurate. But AFAICT you only ever
+> used this for the DIRTY bits, so it might be better to have a function
+> specifically for that and with a comment that spells out the exact
+> semantics and reasons for them.
 
-Guenter
+Yes, I will work on that.
+
+Yu-cheng
