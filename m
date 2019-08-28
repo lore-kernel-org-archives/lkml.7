@@ -2,291 +2,150 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2361CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A4DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E110322CF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:58:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dXBgCddk"
+	by mail.kernel.org (Postfix) with ESMTP id 2199522CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567018718;
+	bh=CBKtnFW9ZlO6IHgvOEUpDHqoVFzVyfWY/nzaZe5pyGU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s6xKRmRNjQSK4NC2UcYOvXEtHqf4d+RmHzPH3gAOHnN+/E3NGsWds6xc0zNiVAdLy
+	 0JJJHVS9w7K0bDk7zLXcXEgZHbfu3fDBpJ5wah2gKVVv+OABtCWQgswCiAOw7ldyzk
+	 AWEd7LOo6FtYAcHwP/hOwyClKaUgJSC9mTRRt1wA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfH1S63 (ORCPT
+        id S1727075AbfH1S6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:58:29 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:48026 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbfH1S62 (ORCPT
+        Wed, 28 Aug 2019 14:58:37 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35137 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbfH1S6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:58:28 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7SIsNP5149828;
-        Wed, 28 Aug 2019 18:57:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=DHX8EJq2diorjBQuEzBHm3f716yk934EjUN3J/yyUPg=;
- b=dXBgCddkZg8k1DcUxkjdn2QHj5PC0AAUl8Shme2Czg6WA6JlI0V6DjX/DU7/eY+GXYt3
- MndMKu3XtjVYkorOuwMwwuHBL4b1IZp2upEPibEP+nZxNJH2mQ0oWtqjfeRuvAvwBUMw
- 74PrOROBxNCO7UhZVXceXMAvD1FJTEb2or665ZbdB6Vn1pN0dykOMAxa8X+0wTIcqNpV
- QeB/Jr+mh79lni7WuMkJk1nVeLZhmgVxy5oMbS/O588EMssnJ/VL4upf+W7t5179e0MK
- 5kvldr9OoY7TJEwxSW4cJUW5/pd9R8g03d/htQBzK8xAM+CzJhfGcrC2iYc2vJD/e6wu jA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2uny3903yh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Aug 2019 18:57:10 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7SIrLqI078794;
-        Wed, 28 Aug 2019 18:57:09 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2unvtxq6kf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Aug 2019 18:57:09 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7SIv7gv030518;
-        Wed, 28 Aug 2019 18:57:07 GMT
-Received: from paddy.uk.oracle.com (/10.175.206.216)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 28 Aug 2019 11:57:06 -0700
-From:   Joao Martins <joao.m.martins@oracle.com>
-To:     kvm@vger.kernel.org
-Cc:     Joao Martins <joao.m.martins@oracle.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [PATCH v1] cpuidle-haltpoll: vcpu hotplug support
-Date:   Wed, 28 Aug 2019 19:56:50 +0100
-Message-Id: <20190828185650.16923-1-joao.m.martins@oracle.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 28 Aug 2019 14:58:36 -0400
+Received: by mail-wr1-f67.google.com with SMTP id g7so896957wrx.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 11:58:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Rg266ysErRfz6Q6O8ZllDkT8j1Yu9RGIuCA6YHrmQ3E=;
+        b=MUFabnk2H7YdNK5dqt8E6WFFJM/SNvgpRDY0fhZ7ln9Owbgr6VYnG30ClwbkprR8Ui
+         wKeABdrdLQ21ZhDOX9wAW+uiNRqS/tiw4FPmeJ7DpIHl4bYKXvmuRyJhMn/3Nhug5Urd
+         uDyDofZgEJEGvVexPuFc/c1Cnl669csAMi/k9OyhPzjG8cupcQ85nKx2Evxa1yigM8fU
+         fF8WxyOGaO+zBYmLdGG+IZyu8qRLHcSqs4Yeu4/zS5eyzEiUJ3mD3rVs4W+s0lW/Jnz/
+         Dip87USG4/VB9tzICrUsCbSJRSco9+UV0p/dg0e3EXT6flb/W91heLtI0oD7qiyyxRdN
+         My7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Rg266ysErRfz6Q6O8ZllDkT8j1Yu9RGIuCA6YHrmQ3E=;
+        b=MHawzNkbPZz4HlOdgkq2jWguBKei+AlyuN8E4T+qCxYZqXJus7GkR3105GyuWwlxZ1
+         C26if+8kfj+ACwxuMjGJQe5P+cNZzZE7bRTJo6lCaelo6FH1LehImXZkRlOTnepzVIyy
+         jods1wwu5AUkweop2GNWyzoTRewri9ADGjoD5Whi6yh5kYy7lTsbaGux5Ij5VxvT5agh
+         lCH23dgae1tl8Wk6a/vrkptCqR/fXArcxiYMqzSTNqJ+yDbrq3ywqJA7FgDYSVbWUIUc
+         1KwMDBH2AbdcfaNvduCL5l69lfyvDTDIdG0qqdnBIyA8SMF6Zr2OzOskToHM30Qx5IYi
+         aeLg==
+X-Gm-Message-State: APjAAAWKFOEOpx/mXfsyPTGDEPVe3CD4TOd9WQ9MHZHJ8Sr8N59e30t5
+        26ARQ0XblGb+dSSDRspLla4=
+X-Google-Smtp-Source: APXvYqxd2oSRFERYqJrydmXOODNBPiWPvPWQ3BDeSyRdvtZQWbvckCCBAYbd/zBjdSVehTRzuQhdNQ==
+X-Received: by 2002:adf:ab18:: with SMTP id q24mr6027144wrc.354.1567018714860;
+        Wed, 28 Aug 2019 11:58:34 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id h125sm147104wmf.31.2019.08.28.11.58.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 11:58:34 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 20:58:32 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Song Liu <songliubraving@fb.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>
+Subject: Re: [patch 1/2] x86/mm/pti: Handle unaligned address gracefully in
+ pti_clone_pagetable()
+Message-ID: <20190828185832.GA77809@gmail.com>
+References: <20190828142445.454151604@linutronix.de>
+ <20190828143123.971884723@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9363 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=992
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908280184
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9363 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908280184
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828143123.971884723@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When cpus != maxcpus cpuidle-haltpoll will fail to register all vcpus
-past the online ones and thus fail to register the idle driver.
-This is because cpuidle_add_sysfs() will return with -ENODEV as a
-consequence from get_cpu_device() return no device for a non-existing
-CPU.
 
-Instead switch to cpuidle_register_driver() and manually register each
-of the present cpus through cpuhp_setup_state() and future ones that
-get onlined. This mimics similar logic as intel_idle.
+* Thomas Gleixner <tglx@linutronix.de> wrote:
 
-Fixes: fa86ee90eb11 ("add cpuidle-haltpoll driver")
-Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
----
- arch/x86/include/asm/cpuidle_haltpoll.h |  4 +-
- arch/x86/kernel/kvm.c                   | 18 +++----
- drivers/cpuidle/cpuidle-haltpoll.c      | 65 +++++++++++++++++++++++--
- include/linux/cpuidle_haltpoll.h        |  4 +-
- 4 files changed, 70 insertions(+), 21 deletions(-)
+> From: Song Liu <songliubraving@fb.com>
+> 
+> pti_clone_pmds() assumes that the supplied address is either:
+> 
+>  - properly PUD/PMD aligned
+> or
+>  - the address is actually mapped which means that independent
+>    of the mapping level (PUD/PMD/PTE) the next higher mapping
+>    exist.
 
-diff --git a/arch/x86/include/asm/cpuidle_haltpoll.h b/arch/x86/include/asm/cpuidle_haltpoll.h
-index ff8607d81526..c8b39c6716ff 100644
---- a/arch/x86/include/asm/cpuidle_haltpoll.h
-+++ b/arch/x86/include/asm/cpuidle_haltpoll.h
-@@ -2,7 +2,7 @@
- #ifndef _ARCH_HALTPOLL_H
- #define _ARCH_HALTPOLL_H
- 
--void arch_haltpoll_enable(void);
--void arch_haltpoll_disable(void);
-+void arch_haltpoll_enable(unsigned int cpu);
-+void arch_haltpoll_disable(unsigned int cpu);
- 
- #endif
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 8d150e3732d9..a9b6c4e2446d 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -880,32 +880,26 @@ static void kvm_enable_host_haltpoll(void *i)
- 	wrmsrl(MSR_KVM_POLL_CONTROL, 1);
- }
- 
--void arch_haltpoll_enable(void)
-+void arch_haltpoll_enable(unsigned int cpu)
- {
- 	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL)) {
--		printk(KERN_ERR "kvm: host does not support poll control\n");
--		printk(KERN_ERR "kvm: host upgrade recommended\n");
-+		pr_err_once("kvm: host does not support poll control\n");
-+		pr_err_once("kvm: host upgrade recommended\n");
- 		return;
- 	}
- 
--	preempt_disable();
- 	/* Enable guest halt poll disables host halt poll */
--	kvm_disable_host_haltpoll(NULL);
--	smp_call_function(kvm_disable_host_haltpoll, NULL, 1);
--	preempt_enable();
-+	smp_call_function_single(cpu, kvm_disable_host_haltpoll, NULL, 1);
- }
- EXPORT_SYMBOL_GPL(arch_haltpoll_enable);
- 
--void arch_haltpoll_disable(void)
-+void arch_haltpoll_disable(unsigned int cpu)
- {
- 	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL))
- 		return;
- 
--	preempt_disable();
- 	/* Enable guest halt poll disables host halt poll */
--	kvm_enable_host_haltpoll(NULL);
--	smp_call_function(kvm_enable_host_haltpoll, NULL, 1);
--	preempt_enable();
-+	smp_call_function_single(cpu, kvm_enable_host_haltpoll, NULL, 1);
- }
- EXPORT_SYMBOL_GPL(arch_haltpoll_disable);
- #endif
-diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-index 9ac093dcbb01..0d1853a7185e 100644
---- a/drivers/cpuidle/cpuidle-haltpoll.c
-+++ b/drivers/cpuidle/cpuidle-haltpoll.c
-@@ -11,12 +11,15 @@
-  */
- 
- #include <linux/init.h>
-+#include <linux/cpu.h>
- #include <linux/cpuidle.h>
- #include <linux/module.h>
- #include <linux/sched/idle.h>
- #include <linux/kvm_para.h>
- #include <linux/cpuidle_haltpoll.h>
- 
-+static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
-+
- static int default_enter_idle(struct cpuidle_device *dev,
- 			      struct cpuidle_driver *drv, int index)
- {
-@@ -46,6 +49,48 @@ static struct cpuidle_driver haltpoll_driver = {
- 	.state_count = 2,
- };
- 
-+static int haltpoll_cpu_online(unsigned int cpu)
-+{
-+	struct cpuidle_device *dev;
-+
-+	dev = per_cpu_ptr(haltpoll_cpuidle_devices, cpu);
-+	if (!dev->registered) {
-+		dev->cpu = cpu;
-+		if (cpuidle_register_device(dev)) {
-+			pr_notice("cpuidle_register_device %d failed!\n", cpu);
-+			return -EIO;
-+		}
-+		arch_haltpoll_enable(cpu);
-+	}
-+
-+	return 0;
-+}
-+
-+static void haltpoll_uninit(void)
-+{
-+	unsigned int cpu;
-+
-+	cpus_read_lock();
-+
-+	for_each_online_cpu(cpu) {
-+		struct cpuidle_device *dev =
-+			per_cpu_ptr(haltpoll_cpuidle_devices, cpu);
-+
-+		if (!dev->registered)
-+			continue;
-+
-+		arch_haltpoll_disable(cpu);
-+		cpuidle_unregister_device(dev);
-+	}
-+
-+	cpuidle_unregister(&haltpoll_driver);
-+
-+	free_percpu(haltpoll_cpuidle_devices);
-+	haltpoll_cpuidle_devices = NULL;
-+
-+	cpus_read_unlock();
-+}
-+
- static int __init haltpoll_init(void)
- {
- 	int ret;
-@@ -56,17 +101,27 @@ static int __init haltpoll_init(void)
- 	if (!kvm_para_available())
- 		return 0;
- 
--	ret = cpuidle_register(&haltpoll_driver, NULL);
--	if (ret == 0)
--		arch_haltpoll_enable();
-+	ret = cpuidle_register_driver(drv);
-+	if (ret < 0)
-+		return ret;
-+
-+	haltpoll_cpuidle_devices = alloc_percpu(struct cpuidle_device);
-+	if (haltpoll_cpuidle_devices == NULL) {
-+		cpuidle_unregister_driver(drv);
-+		return -ENOMEM;
-+	}
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "idle/haltpoll:online",
-+				haltpoll_cpu_online, NULL);
-+	if (ret < 0)
-+		haltpoll_uninit();
- 
- 	return ret;
- }
- 
- static void __exit haltpoll_exit(void)
- {
--	arch_haltpoll_disable();
--	cpuidle_unregister(&haltpoll_driver);
-+	haltpoll_uninit();
- }
- 
- module_init(haltpoll_init);
-diff --git a/include/linux/cpuidle_haltpoll.h b/include/linux/cpuidle_haltpoll.h
-index fe5954c2409e..d50c1e0411a2 100644
---- a/include/linux/cpuidle_haltpoll.h
-+++ b/include/linux/cpuidle_haltpoll.h
-@@ -5,11 +5,11 @@
- #ifdef CONFIG_ARCH_CPUIDLE_HALTPOLL
- #include <asm/cpuidle_haltpoll.h>
- #else
--static inline void arch_haltpoll_enable(void)
-+static inline void arch_haltpoll_enable(unsigned int cpu)
- {
- }
- 
--static inline void arch_haltpoll_disable(void)
-+static inline void arch_haltpoll_disable(unsigned int cpu)
- {
- }
- #endif
--- 
-2.17.1
+s/independent
+ /independently
 
+s/exist
+ /exists
+
+> If that's not the case the unaligned address can be incremented by PUD or
+> PMD size wrongly. All callers supply mapped and/or aligned addresses, but
+> for robustness sake, it's better to handle that case proper and to emit a
+> warning.
+
+s/wrongly
+ /incorrectly
+
+s/robustness sake
+ /robustness's sake
+
+s/proper
+ /properly
+
+With that:
+
+>  		pud = pud_offset(p4d, addr);
+>  		if (pud_none(*pud)) {
+> -			addr += PUD_SIZE;
+> +			WARN_ON_ONCE(addr & PUD_MASK);
+> +			addr = round_up(addr + 1, PUD_SIZE);
+>  			continue;
+>  		}
+>  
+>  		pmd = pmd_offset(pud, addr);
+>  		if (pmd_none(*pmd)) {
+> -			addr += PMD_SIZE;
+> +			WARN_ON_ONCE(addr & PMD_MASK);
+> +			addr = round_up(addr + 1, PMD_SIZE);
+
+So given that PUD_MASK and PMD_MASK are masking out the *offset*:
+
+ arch/x86/include/asm/pgtable_64_types.h:#define PMD_MASK	(~(PMD_SIZE - 1))
+
+Didn't we want something like:
+
+			WARN_ON_ONCE(addr & ~PUD_MASK);
+
+			WARN_ON_ONCE(addr & ~PMD_MASK);
+
+to warn about an unaligned 'addr', or am I misreading the intent here?
+
+Thanks,
+
+	Ingo
