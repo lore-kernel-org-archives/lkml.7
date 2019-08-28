@@ -2,99 +2,95 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBD7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69494C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4198D2189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:32:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDEmsUc7"
+	by mail.kernel.org (Postfix) with ESMTP id 32A0C22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:32:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566988336;
+	bh=j1S9ga7k8HKOx5cyyvxNMrX2d5olmQ9B03a2BJKS/i4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rB1pj1FAnU1ldodBXpaUVEdQeSZY1Y0++N1I7/L9DAOyh5EwzlNpMhpfRcAvib7Nr
+	 fZc8uTggzgwPUtPFIKRvMgSurVsvdTs27hSKs1nXh469TNz7IZigB0kT8o2lEA8ATh
+	 mmlneVN0D3kjJPhoYuit0x0q6CDHBQiEYZ5FL2+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfH1KcF (ORCPT
+        id S1726843AbfH1KcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:32:05 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37266 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfH1KcF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:32:05 -0400
-Received: by mail-wm1-f65.google.com with SMTP id d16so2279259wme.2;
-        Wed, 28 Aug 2019 03:32:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:message-id:in-reply-to:references
-         :mime-version;
-        bh=O9bYm+nsJ9IvBpQO/QVMQi2zV67cEqyaEMQRFcxhnAU=;
-        b=KDEmsUc7HCO4dnB3WwF+eR0XWJULy/HSWbfq6Tzib2PecM+pX4J6XeWbdR6mjPog9b
-         Ivvpck44TaTTQ88e6kzk5BIzV3aGTcfV+jHkRIACnbsSGdhJJYpNE4fUoBV7JmTYJH/x
-         3PuFcT9XKiY2PT9bZWU9YXuLac7a6zw2ek+r21S0ag7wljteE2tfDlsrDhgBrCtjo/TF
-         qxtkftZKlHDSTtpSfO20GNCGMaIuNktI2tIE5uaDf0vnbWYedZKz+hptfGASywIY/2Xx
-         1SgwzHnJP6NG0CjrG88b8xJLV3Qm7RR2aJ8tzXybOVx2m1nfoJaCv9OelAixySM29TFg
-         8jFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
-         :references:mime-version;
-        bh=O9bYm+nsJ9IvBpQO/QVMQi2zV67cEqyaEMQRFcxhnAU=;
-        b=M0LEbs/4gMjjXK0/Zc5+R597cxzpQk3FyuvyoZPzchUs3vDPvmUZXowyl+bgPzRMpF
-         yZCDhrvap5hDoZ1JN4AJuiEqRrQ2ubP/BzawhccnCWPkSqkIva8xUjOAWISSW/oQe9lN
-         AAcxwYegsOo5/T6Zabhtu9CcYdl88IOM4iBUAsu0IsPoPbDm3bGxeWR0ajHxyCp2H0tR
-         Bbi4yBTrdWTN19cyA4JcVP9Ns/Nyr70nHtP88445UDees4A1g+O6Jv3QU2eL6yB5XDRs
-         GY1e+kW7Rh0e51FDzPrIRtRQ9JrZLIZfHg43VI71AP9O1vhNY5ZebCuv7FHshlOUevkN
-         LW2g==
-X-Gm-Message-State: APjAAAUTPQ2dYSXupWlMjGVv7Dah0dkPNWuaeqWmyG6Qh7QwTj7Aolcz
-        7SXIBY7/ftEpyURX/3PtKQM=
-X-Google-Smtp-Source: APXvYqyd0950RxmumVL/1HKXnIl5wEhYU7GYA8pBokTHKVTP81dK9Zni52g5XauBTsmBAWhtjDXIKw==
-X-Received: by 2002:a7b:c8c1:: with SMTP id f1mr3628820wml.87.1566988323034;
-        Wed, 28 Aug 2019 03:32:03 -0700 (PDT)
-Received: from [192.168.1.105] (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id g13sm2819125wrw.87.2019.08.28.03.32.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 03:32:02 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 12:32:00 +0200
-From:   Krzysztof Wilczynski <kswilczynski@gmail.com>
-Subject: Re: [PATCH] x86/PCI: Add missing SPDX license header.
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Krzysztof Wilczynski <kw@linux.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Daniel J Blueman <daniel@numascale.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <1566988320.26704.1@gmail.com>
-In-Reply-To: <20190827232457.GI9987@google.com>
-References: <20190819060624.17305-1-kw@linux.com>
-        <20190827232457.GI9987@google.com>
-X-Mailer: geary/3.32.0
+        Wed, 28 Aug 2019 06:32:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40416 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726328AbfH1KcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 06:32:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 434A7AFBE;
+        Wed, 28 Aug 2019 10:32:13 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 12:32:11 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Edward Chron <echron@arista.com>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
+Subject: Re: [PATCH 00/10] OOM Debug print selection and additional
+ information
+Message-ID: <20190828103211.GD28313@dhcp22.suse.cz>
+References: <20190826193638.6638-1-echron@arista.com>
+ <1566909632.5576.14.camel@lca.pw>
+ <CAM3twVQEMGWMQEC0dduri0JWt3gH6F2YsSqOmk55VQz+CZDVKg@mail.gmail.com>
+ <79FC3DA1-47F0-4FFC-A92B-9A7EBCE3F15F@lca.pw>
+ <CAM3twVSdxJaEpmWXu2m_F1MxFMB58C6=LWWCDYNn5yT3Ns+0sQ@mail.gmail.com>
+ <2A1D8FFC-9E9E-4D86-9A0E-28F8263CC508@lca.pw>
+ <CAM3twVR5TVuuZSLM2qRJYnkCEKVZmA3XDNREaB+wdKH2Ne9vVA@mail.gmail.com>
+ <20190828070845.GC7386@dhcp22.suse.cz>
+ <2e816b05-7b5b-4bc0-8d38-8415daea920d@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2e816b05-7b5b-4bc0-8d38-8415daea920d@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Bjorn,
-
-Thank you for the feedback.
-
-[...]
->>  +// SPDX-License-Identifier: GPL-2.0
->>   /*
->>    * This file is subject to the terms and conditions of the GNU 
->> General Public
->>    * License.  See the file "COPYING" in the main directory of this 
->> archive
+On Wed 28-08-19 19:12:41, Tetsuo Handa wrote:
+> On 2019/08/28 16:08, Michal Hocko wrote:
+> > On Tue 27-08-19 19:47:22, Edward Chron wrote:
+> >> For production systems installing and updating EBPF scripts may someday
+> >> be very common, but I wonder how data center managers feel about it now?
+> >> Developers are very excited about it and it is a very powerful tool but can I
+> >> get permission to add or replace an existing EBPF on production systems?
+> > 
+> > I am not sure I understand. There must be somebody trusted to take care
+> > of systems, right?
+> > 
 > 
-> You can remove this license text at the same time as in 8cfab3cf63cf
-> ("PCI: Add SPDX GPL-2.0 to replace GPL v2 boilerplate").
+> Speak of my cases, those who take care of their systems are not developers.
+> And they afraid changing code that runs in kernel mode. They unlikely give
+> permission to install SystemTap/eBPF scripts. As a result, in many cases,
+> the root cause cannot be identified.
 
-Will do. I am going to send an updated v2 that takes care about this.
+Which is something I would call a process problem more than a kernel
+one. Really if you need to debug a problem you really have to trust
+those who can debug that for you. We are not going to take tons of code
+to the kernel just because somebody is afraid to run a diagnostic.
 
-Krzysztof
+> Moreover, we are talking about OOM situations, where we can't expect userspace
+> processes to work properly. We need to dump information we want, without
+> counting on userspace processes, before sending SIGKILL.
 
+Yes, this is an inherent assumption I was making and that means that
+whatever dynamic hooks would have to be registered in advance.
 
+-- 
+Michal Hocko
+SUSE Labs
