@@ -2,105 +2,104 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3744C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B55C9C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA22233A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:55:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567007752;
-	bh=tm23iPOHz5qNiVmbKBRthv6o0H14qpr8dY7bd4MTQKs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=YC2pKKFsJoyaZV8qJQHSTPwJ4aicyv3srDSJiU/MILTBvG9EUdqVgtwQRt9iJgdRR
-	 c8FCDIxDi2IcRAzh7SYsumB6MVFf/vh50lCzD0fEdmKBXS5E3ccX//NXmlwa+bgI+H
-	 QK6bg+rZhPhlMSZGPDY6iC9OpC50UHx2hQ6JXSv8=
+	by mail.kernel.org (Postfix) with ESMTP id 7BA9C22CED
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:57:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Rgg4PAM6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfH1Pzw (ORCPT
+        id S1726603AbfH1P5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:55:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbfH1Pzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:55:50 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 765322064A;
-        Wed, 28 Aug 2019 15:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567007749;
-        bh=tm23iPOHz5qNiVmbKBRthv6o0H14qpr8dY7bd4MTQKs=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=pqTccn5JcnucNCAhPvukewbhK7LnqfZiA1JhrrT1FDFY4mCrVB8AZyQ8GN7mLjP8y
-         7s9EDdOPkKuIVFWDEaVrPbihjrm8teyPYUCsz+WciUJXkEpW4kr0ySk55f/ASUGrn8
-         zpEFoJeA5Hy5XDMtaE0vrkdWUVKHa2wWQhJO2xxg=
-Message-ID: <4da231cd52880991d8a038adb8fbb2ef3d724db9.camel@kernel.org>
-Subject: Re: [PATCH RESEND v11 7/8] open: openat2(2) syscall
-From:   Jeff Layton <jlayton@kernel.org>
-To:     sbaugh@catern.com, linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@ozlabs.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org
-Date:   Wed, 28 Aug 2019 11:55:47 -0400
-In-Reply-To: <854l2366zp.fsf@catern.com>
-References: <20190820033406.29796-1-cyphar@cyphar.com>
-         <20190820033406.29796-8-cyphar@cyphar.com> <854l2366zp.fsf@catern.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Wed, 28 Aug 2019 11:57:02 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:18234 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfH1P5B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 11:57:01 -0400
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x7SFutn8020060;
+        Thu, 29 Aug 2019 00:56:55 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x7SFutn8020060
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567007815;
+        bh=1zfiZPgyDqL3dFNX7cMApkyvuuIX0Y+mSKUgw2oFgkA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Rgg4PAM6eKih7DlAbzzK41eFR85Yh03qNNGz/pWjAFrDNH0JWQso70PgO45TdBwLT
+         0zFw84hFhfbTomB5p7CiOQBZ3WGwNFdGmjAPYo+mdr43nu/MujaFW64tpA7SXuD1Nh
+         CMSLA7tiPGRCtqi7pK3JBTniBmWVSF6EbYmcUUAnrr8fi5BW05ieD0eBcLmPlBPIKP
+         iBbn5HVVvuI8iaU70u9ENqWNsszRkE7LceauCSjqs7pXtPqYW5i3UB8zr+pgWudjbg
+         ggIvdpumI7W9t6tz1/yWV2pzE4yluqZ4/zE6tByq/E/FxGJICAG2PxygUDPuMhSFNl
+         4nBNFeFjzYXNA==
+X-Nifty-SrcIP: [209.85.217.51]
+Received: by mail-vs1-f51.google.com with SMTP id b187so290292vsc.9;
+        Wed, 28 Aug 2019 08:56:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAVELGYsXE67LAajNWHmd1hUUvpcKtJxai38VVR0fYtkhum7eZPo
+        t5TNutSVwP0V57IP4JgU61y4jLkjXk+rN9iYrOY=
+X-Google-Smtp-Source: APXvYqz34EYEqF2Ov4AgCxvswtZRN8G1hqm1RtWktexnO9jaNrstBb2UHWinp2Chp4+UeI7obetk4Y/gz+19+Lv40Zk=
+X-Received: by 2002:a67:fd97:: with SMTP id k23mr2746020vsq.179.1567007814489;
+ Wed, 28 Aug 2019 08:56:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190827111437.22000-1-heikki.krogerus@linux.intel.com>
+In-Reply-To: <20190827111437.22000-1-heikki.krogerus@linux.intel.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 29 Aug 2019 00:56:18 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARoy_Q40zdr7YSkJSV_N8WcMpL8Zunwnf16QTCYUbessg@mail.gmail.com>
+Message-ID: <CAK7LNARoy_Q40zdr7YSkJSV_N8WcMpL8Zunwnf16QTCYUbessg@mail.gmail.com>
+Subject: Re: [PATCH] modpost: add guid_t type definition
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-26 at 19:50 +0000, sbaugh@catern.com wrote:
-> Aleksa Sarai <cyphar@cyphar.com> writes:
-> > To this end, we introduce the openat2(2) syscall. It provides all of the
-> > features of openat(2) through the @how->flags argument, but also
-> > also provides a new @how->resolve argument which exposes RESOLVE_* flags
-> > that map to our new LOOKUP_* flags. It also eliminates the long-standing
-> > ugliness of variadic-open(2) by embedding it in a struct.
-> 
-> I don't like this usage of a structure in memory to pass arguments that
-> would fit in registers. This would be quite inconvenient for me as a
-> userspace developer.
-> 
-> Others have brought up issues with this: the issue of seccomp, and the
-> issue of mismatch between the userspace interface and the kernel
-> interface, are the most important for me. I want to add another,
-> admittedly somewhat niche, concern.
-> 
-> This interfaces requires a program to allocate memory (even on the
-> stack) just to pass arguments to the kernel which could be passed
-> without allocating that memory. That makes it more difficult and less
-> efficient to use this syscall in any case where memory is not so easily
-> allocatable: such as early program startup or assembly, where the stack
-> may be limited in size or not even available yet, or when injecting a
-> syscall while ptracing.
-> 
-> A struct-passing interface was needed for clone, since we ran out of
-> registers; but we have not run out of registers yet for openat, so it
-> would be nice to avoid this if we can. We can always expand later...
-> 
+On Tue, Aug 27, 2019 at 8:14 PM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> Since guid_t is the recommended data type for UUIDs in
+> kernel (and I guess uuid_le is meant to be ultimately
+> replaced with it), it should be made available here as
+> well.
+>
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
 
-We can't really expand later like you suggest.
+Applied to linux-kbuild. Thanks.
 
-Suppose in a couple of years that we need to add some new argument to
-openat2 that isn't just a new flag. If all these values are passed by
-individual arguments, you can't add one later without adding yet another
-syscall.
 
-Using a struct for this allows this to be extended later, OTOH. You can
-extend it, and add a flag that tells the kernel that it can access the
-new field. No new syscall required.
+>  scripts/mod/file2alias.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+> index e17a29ae2e97..c91eba751804 100644
+> --- a/scripts/mod/file2alias.c
+> +++ b/scripts/mod/file2alias.c
+> @@ -34,6 +34,11 @@ typedef Elf64_Addr   kernel_ulong_t;
+>  typedef uint32_t       __u32;
+>  typedef uint16_t       __u16;
+>  typedef unsigned char  __u8;
+> +typedef struct {
+> +       __u8 b[16];
+> +} guid_t;
+> +
+> +/* backwards compatibility, don't use in new code */
+>  typedef struct {
+>         __u8 b[16];
+>  } uuid_le;
+> --
+> 2.23.0.rc1
+>
+
+
 -- 
-Jeff Layton <jlayton@kernel.org>
-
+Best Regards
+Masahiro Yamada
