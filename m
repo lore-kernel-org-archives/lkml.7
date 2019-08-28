@@ -2,133 +2,231 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C397EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C784AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9216522DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 890482189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:28:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="IKaQgq0y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/v42Aqa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfH1V05 (ORCPT
+        id S1726991AbfH1V2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:26:57 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46874 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbfH1V05 (ORCPT
+        Wed, 28 Aug 2019 17:28:04 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45227 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbfH1V2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:26:57 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q139so569114pfc.13
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 14:26:56 -0700 (PDT)
+        Wed, 28 Aug 2019 17:28:04 -0400
+Received: by mail-io1-f68.google.com with SMTP id t3so2466293ioj.12
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 14:28:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DZE+I17WUXfulNqloPBEY+WzSfcCoyev0zgQpc73LBs=;
-        b=IKaQgq0yAWh7Vz5wXXFT87FaFZA6kr424RlcH++fA892HsLcwSdYQxjywwnsgGiwus
-         /Nwol9uU25m9aZ7BNiQ1rLQL9YbTF2wmgJ9OjrzpJfZFrNPQtwgjSJJpGb8F1HnRcynj
-         0zNtvHwjeWoAWwn0Hprajeqh8zULN4yt5WmlA=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pJSmOOGXQE2jhcsJ3xN49XimOe54yldyhDrabvf9aK8=;
+        b=k/v42AqaHAf/iP3wyYv0z3pbHwt5b1AktZJOvBGpVZzLU5pAf1sRIix5Q9+UZAHhBP
+         ec/9luZcCMy4SV8B3JVvtzJaqGHhfVe5lt/BADb1OE5gs1ObEQ7gdUtQTL6gl7QBNP5R
+         KDKVhF0Esxkhid2Ru74RVTOeRLHStIpvI2eJXxKzmfnFpAZL++DyY8q2ZAj9RwHk90Q4
+         SpsqUyu9e0pKnIpFr4HHCWpUBea7ACexvG0wSyQs5iIEGVfVK9CxWxuMmMIFAIDavMR1
+         W5fcsm23La8kSlSWi9s0zeo9y5Snp3kdgKxisPfuDaZjCkAAp7EP1TxgHYuupkg1/915
+         cl6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DZE+I17WUXfulNqloPBEY+WzSfcCoyev0zgQpc73LBs=;
-        b=PbX8Wy82N7bmKX7FiSHOQ46zYD3EIQwMxSmigB6fnr0576YdWTyEJljYFh5JeY8pBf
-         KoiG0bkQr0OfAt/j6hJ78XMuhhTsr1/yDea9iYJL+0vDL+GtlMlFJBLDFAIUfIiQ488/
-         sTQa+7ebCezBP5dYflbimI/nkFzQUcECvmwMY4zy+2njd/221ElKeWi1daL8bxwgJbGb
-         MGB1zjBHy2gsgWLMKammQP0l1CIvvyBY9MI8LlUlHty3nPjKCH8dsXTd3w2N6weBjNoS
-         L3h0AhEINuOPjYx5tVcqSkdH3qkaajehYAzcP9GryMe2GxbxWvXIzsexxYB2WnjI2pMv
-         LuGg==
-X-Gm-Message-State: APjAAAU6V5wg3aUkS57zegEushe5eKh9CrSEnde1DuTCWYGAkJb6YXhD
-        RgvYZ/Ta5xjj9kKHtCZ1VSrdBpXYIis=
-X-Google-Smtp-Source: APXvYqxBUeHTOJvoVs0XvB3oXfVECNxjlY8Tvz8jW8mB/fE4F3TwQSIHFH8bxkDvgf6CdOPX7Y+YKQ==
-X-Received: by 2002:a17:90a:cc11:: with SMTP id b17mr6240846pju.136.1567027616235;
-        Wed, 28 Aug 2019 14:26:56 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 138sm335018pfw.78.2019.08.28.14.26.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 14:26:55 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 17:26:54 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, byungchul.park@lge.com,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        kernel-team@android.com
-Subject: Re: [PATCH 0/5] kfree_rcu() additions for -rcu
-Message-ID: <20190828212654.GC75931@google.com>
-References: <5d657e30.1c69fb81.54250.01dc@mx.google.com>
- <20190828202808.GT26530@linux.ibm.com>
- <20190828203458.GA75931@google.com>
- <20190828204624.GV26530@linux.ibm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pJSmOOGXQE2jhcsJ3xN49XimOe54yldyhDrabvf9aK8=;
+        b=naNZHBMQ0cusFj4rO8c61uootjiFTX0k0PFwCjsu9n7UqG3Jg5mCQxvuoaCz6sCHC5
+         I0cMDtFVbLTUotOzWS3UUnAA5bqH7GBjjoI48m7KuQsUHWhtceoYRlusWP8JUCIhSCFV
+         IDwpTrlAcb5yLQ1vdzVMvmlUM21Y4vJQnXCgPBLj4wMAg8cTF50CWFfGjwH4adqpDX54
+         v/9+07lK+aoWkp29E17NPVJdbB4upPGkIQHxJNFp2X1TYIt/ORzr2AArAxLduPffWaKb
+         60uxqmy4SWPZf+fNs/ao4IIIkJfzZ4RKvntQzxj+4PHpJEAA27czAZntN7INTJOoN58v
+         uPYA==
+X-Gm-Message-State: APjAAAUxlduL51vkWJw9pZxgHF7AeKIUdnXNnkndLLx5fVvoKcUkyPKz
+        BR5y1WF0VorTWmQIIysDD5MZpct1GBshg1PFq+0=
+X-Google-Smtp-Source: APXvYqxkKCeT4BaeHP6brbncMHNHe9V9f4UosnXis3x+V0ZD1tdls9NsC/dLZHd1Qosy/ywgq9p4AsGnl/r013yo7p0=
+X-Received: by 2002:a6b:6f06:: with SMTP id k6mr1998685ioc.232.1567027683094;
+ Wed, 28 Aug 2019 14:28:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828204624.GV26530@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190823095503.2261-1-kraxel@redhat.com> <20190823095503.2261-8-kraxel@redhat.com>
+In-Reply-To: <20190823095503.2261-8-kraxel@redhat.com>
+From:   Chia-I Wu <olvaffe@gmail.com>
+Date:   Wed, 28 Aug 2019 14:27:52 -0700
+Message-ID: <CAPaKu7QbPeSMQGm+37hUVcSMyjjgYTs5YPKLZtoTn_J13WCeVQ@mail.gmail.com>
+Subject: Re: [PATCH v8 07/18] drm/virtio: add virtio_gpu_object_array & helpers
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Gurchetan Singh <gurchetansingh@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 01:46:24PM -0700, Paul E. McKenney wrote:
-> On Wed, Aug 28, 2019 at 04:34:58PM -0400, Joel Fernandes wrote:
-> > On Wed, Aug 28, 2019 at 01:28:08PM -0700, Paul E. McKenney wrote:
-> > > On Tue, Aug 27, 2019 at 03:01:54PM -0400, Joel Fernandes (Google) wrote:
-> > > > Hi,
-> > > > 
-> > > > This is a series on top of the patch "rcu/tree: Add basic support for kfree_rcu() batching".
-> > > > 
-> > > > Link: http://lore.kernel.org/r/20190814160411.58591-1-joel@joelfernandes.org
-> > > > 
-> > > > It adds performance tests, some clean ups and removal of "lazy" RCU callbacks.
-> > > > 
-> > > > Now that kfree_rcu() is handled separately from call_rcu(), we also get rid of
-> > > > kfree "lazy" handling from tree RCU as suggested by Paul which will be unused.
-> > > > This also results in a nice negative delta as well.
-> > > > 
-> > > > Joel Fernandes (Google) (5):
-> > > > rcu/rcuperf: Add kfree_rcu() performance Tests
-> > > > rcu/tree: Add multiple in-flight batches of kfree_rcu work
-> > > > rcu/tree: Add support for debug_objects debugging for kfree_rcu()
-> > > > rcu: Remove kfree_rcu() special casing and lazy handling
-> > > > rcu: Remove kfree_call_rcu_nobatch()
-> > > > 
-> > > > Documentation/RCU/stallwarn.txt               |  13 +-
-> > > > .../admin-guide/kernel-parameters.txt         |  13 ++
-> > > > include/linux/rcu_segcblist.h                 |   2 -
-> > > > include/linux/rcutiny.h                       |   5 -
-> > > > include/linux/rcutree.h                       |   1 -
-> > > > include/trace/events/rcu.h                    |  32 ++--
-> > > > kernel/rcu/rcu.h                              |  27 ---
-> > > > kernel/rcu/rcu_segcblist.c                    |  25 +--
-> > > > kernel/rcu/rcu_segcblist.h                    |  25 +--
-> > > > kernel/rcu/rcuperf.c                          | 173 +++++++++++++++++-
-> > > > kernel/rcu/srcutree.c                         |   4 +-
-> > > > kernel/rcu/tiny.c                             |  29 ++-
-> > > > kernel/rcu/tree.c                             | 145 ++++++++++-----
-> > > > kernel/rcu/tree.h                             |   1 -
-> > > > kernel/rcu/tree_plugin.h                      |  42 +----
-> > > > kernel/rcu/tree_stall.h                       |   6 +-
-> > > > 16 files changed, 337 insertions(+), 206 deletions(-)
-> > > 
-> > > Looks like a 131-line positive delta to me.  ;-)
-> > 
-> > Not if you overlook the rcuperf changes which is just test code. :-D ;-)
-> 
-> Which suggests that you should move the "nice negative delta" comment
-> to the commits that actually have nice negative deltas.  ;-)
-
-Will do!
-
-thanks,
-
- - Joel
-
+On Fri, Aug 23, 2019 at 2:55 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> Some helper functions to manage an array of gem objects.
+>
+> v6:
+>  - add ticket to struct virtio_gpu_object_array.
+>  - add virtio_gpu_array_{lock,unlock}_resv helpers.
+>  - add virtio_gpu_array_add_fence helper.
+> v5: some small optimizations (Chia-I Wu).
+> v4: make them virtio-private instead of generic helpers.
+>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_drv.h | 17 +++++
+>  drivers/gpu/drm/virtio/virtgpu_gem.c | 93 ++++++++++++++++++++++++++++
+>  2 files changed, 110 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> index db57bbb36216..b6bd2b1141fb 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> @@ -84,6 +84,12 @@ struct virtio_gpu_object {
+>  #define gem_to_virtio_gpu_obj(gobj) \
+>         container_of((gobj), struct virtio_gpu_object, gem_base)
+>
+> +struct virtio_gpu_object_array {
+> +       struct ww_acquire_ctx ticket;
+> +       u32 nents, total;
+> +       struct drm_gem_object *objs[];
+> +};
+> +
+>  struct virtio_gpu_vbuffer;
+>  struct virtio_gpu_device;
+>
+> @@ -251,6 +257,17 @@ int virtio_gpu_mode_dumb_mmap(struct drm_file *file_priv,
+>                               struct drm_device *dev,
+>                               uint32_t handle, uint64_t *offset_p);
+>
+> +struct virtio_gpu_object_array *virtio_gpu_array_alloc(u32 nents);
+> +struct virtio_gpu_object_array*
+> +virtio_gpu_array_from_handles(struct drm_file *drm_file, u32 *handles, u32 nents);
+> +void virtio_gpu_array_add_obj(struct virtio_gpu_object_array *objs,
+> +                             struct drm_gem_object *obj);
+> +int virtio_gpu_array_lock_resv(struct virtio_gpu_object_array *objs);
+> +void virtio_gpu_array_unlock_resv(struct virtio_gpu_object_array *objs);
+> +void virtio_gpu_array_add_fence(struct virtio_gpu_object_array *objs,
+> +                               struct dma_fence *fence);
+> +void virtio_gpu_array_put_free(struct virtio_gpu_object_array *objs);
+> +
+>  /* virtio vg */
+>  int virtio_gpu_alloc_vbufs(struct virtio_gpu_device *vgdev);
+>  void virtio_gpu_free_vbufs(struct virtio_gpu_device *vgdev);
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_gem.c b/drivers/gpu/drm/virtio/virtgpu_gem.c
+> index 6fe6f72f64d1..f3799f2e97cb 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_gem.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_gem.c
+> @@ -171,3 +171,96 @@ void virtio_gpu_gem_object_close(struct drm_gem_object *obj,
+>                                                 qobj->hw_res_handle);
+>         virtio_gpu_object_unreserve(qobj);
+>  }
+> +
+> +struct virtio_gpu_object_array *virtio_gpu_array_alloc(u32 nents)
+> +{
+> +       struct virtio_gpu_object_array *objs;
+> +       size_t size = sizeof(*objs) + sizeof(objs->objs[0]) * nents;
+> +
+> +       objs = kmalloc(size, GFP_KERNEL);
+> +       if (!objs)
+> +               return NULL;
+> +
+> +       objs->nents = 0;
+> +       objs->total = nents;
+> +       return objs;
+> +}
+> +
+> +static void virtio_gpu_array_free(struct virtio_gpu_object_array *objs)
+> +{
+> +       kfree(objs);
+> +}
+> +
+> +struct virtio_gpu_object_array*
+> +virtio_gpu_array_from_handles(struct drm_file *drm_file, u32 *handles, u32 nents)
+> +{
+> +       struct virtio_gpu_object_array *objs;
+> +       u32 i;
+> +
+> +       objs = virtio_gpu_array_alloc(nents);
+> +       if (!objs)
+> +               return NULL;
+> +
+> +       for (i = 0; i < nents; i++) {
+> +               objs->objs[i] = drm_gem_object_lookup(drm_file, handles[i]);
+> +               if (!objs->objs[i]) {
+> +                       objs->nents = i;
+> +                       virtio_gpu_array_put_free(objs);
+> +                       return NULL;
+> +               }
+> +       }
+> +       objs->nents = i;
+> +       return objs;
+> +}
+> +
+> +void virtio_gpu_array_add_obj(struct virtio_gpu_object_array *objs,
+> +                             struct drm_gem_object *obj)
+> +{
+> +       if (WARN_ON_ONCE(objs->nents == objs->total))
+> +               return;
+> +
+> +       drm_gem_object_get(obj);
+> +       objs->objs[objs->nents] = obj;
+> +       objs->nents++;
+> +}
+> +
+> +int virtio_gpu_array_lock_resv(struct virtio_gpu_object_array *objs)
+> +{
+> +       int ret;
+> +
+> +       if (objs->nents == 1) {
+> +               ret = dma_resv_lock(objs->objs[0]->resv, NULL);
+dma_resv_lock_interruptible to match what drm_gem_lock_reservations uses.
+> +       } else {
+> +               ret = drm_gem_lock_reservations(objs->objs, objs->nents,
+> +                                               &objs->ticket);
+> +       }
+> +       return ret;
+> +}
+> +
+> +void virtio_gpu_array_unlock_resv(struct virtio_gpu_object_array *objs)
+> +{
+> +       if (objs->nents == 1) {
+> +               dma_resv_unlock(objs->objs[0]->resv);
+> +       } else {
+> +               drm_gem_unlock_reservations(objs->objs, objs->nents,
+> +                                           &objs->ticket);
+> +       }
+> +}
+> +
+> +void virtio_gpu_array_add_fence(struct virtio_gpu_object_array *objs,
+> +                               struct dma_fence *fence)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < objs->nents; i++)
+> +               dma_resv_add_excl_fence(objs->objs[i]->resv, fence);
+> +}
+> +
+> +void virtio_gpu_array_put_free(struct virtio_gpu_object_array *objs)
+> +{
+> +       u32 i;
+> +
+> +       for (i = 0; i < objs->nents; i++)
+> +               drm_gem_object_put_unlocked(objs->objs[i]);
+> +       virtio_gpu_array_free(objs);
+> +}
+> --
+> 2.18.1
+>
