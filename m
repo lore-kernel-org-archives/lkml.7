@@ -2,118 +2,104 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E5BC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 01:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 504F9C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 01:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B26820856
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 01:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FAF7214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 01:28:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QRMhGeFp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NL0QwD9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfH1BTI (ORCPT
+        id S1726256AbfH1B17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 21:19:08 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41244 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfH1BTG (ORCPT
+        Tue, 27 Aug 2019 21:27:59 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59318 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfH1B17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 21:19:06 -0400
-Received: by mail-qt1-f196.google.com with SMTP id i4so1146667qtj.8;
-        Tue, 27 Aug 2019 18:19:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fD7GsM1ydbBIc5H/Xp89rOJflMYNEvnB2/MRHbI69S8=;
-        b=QRMhGeFp8E+iLwoI4p4NieVsiHbGPCo+Y/WZdZIiecEjiLHKHq6IvH/pwedv027qGP
-         0I0k1SYUvI0/Mr0bGTI79m4D0moX7yCHUaUjDYV5Xer9U9A4VZd7VoftRtW7gMF2X2aK
-         IfkVWSafj1h8bZc+aFSNCG+1N0JMw3/Pt9fG6J/i5ooL4xiG4FiKKzdesXfRSJCIK/aJ
-         1YHiM+By1mADl21uaRELp0K9H9C//q3ByfPg6Zl9wUG1LtPobhSMIDK29zFcewDlY90U
-         L5/jRIdBXu/wXv/rt7Io7/fQ0YCtApK7PQ1VwZrelvXiHgfRrmQ4lrbzat04cghI0TwY
-         5FIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fD7GsM1ydbBIc5H/Xp89rOJflMYNEvnB2/MRHbI69S8=;
-        b=S1F6ocrg4ECVOYbr1xAsGZqrs55vNJrdBZvRvTXb1gLiVKdVM5Y/h/7EPcIa5D0Lbf
-         s1IlMOE1217nryE0mcjp6qKmniZXW2xJsXAyOrX6WD70eux55WqxapFY7Ni2FuR89k0/
-         lN7dpM4DdVtS4dr06udd4zLQYX8OiTUyfO/k2LaQEMpfKyDpuqmou2B2K0ExuPPr8ibX
-         kp6s1vbhFjEAlT7dYUwG7sgtVjt6Ad31jtPX8mN/vz3gSCTgYzIcHh2Oo7vq14s5j6oZ
-         02/XIScGBRPbjjp3UH6YAMui5chRhirwLCf1oWiQQa6iM2J1yLyqm1rM8ltyiaNcdDjM
-         y97w==
-X-Gm-Message-State: APjAAAX8llslBXXAEp2+63JWNKDJC2dZoEaHgUSB62CtRx3jMTq3eaTI
-        ojpbFglH9oXsbzUa7kbNQXcwmB9a+FY=
-X-Google-Smtp-Source: APXvYqzMv3pK2nJ5k3zebxy6Wpcd7cSlAdka0+OqyFn3RmJu8WTFta9pUnfB6ybI37jNk6VVbCcXXQ==
-X-Received: by 2002:a05:6214:1447:: with SMTP id b7mr1191403qvy.89.1566955145144;
-        Tue, 27 Aug 2019 18:19:05 -0700 (PDT)
-Received: from localhost.localdomain ([186.212.48.84])
-        by smtp.gmail.com with ESMTPSA id c201sm499231qke.128.2019.08.27.18.19.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 18:19:04 -0700 (PDT)
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        axboe@kernel.dk
-Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        Hannes Reinecke <hare@suse.com>
-Subject: [RESEND PATCH 4/4] Documentation:kernel-per-CPU-kthreads.txt: Remove reference to elevator=
-Date:   Tue, 27 Aug 2019 22:19:30 -0300
-Message-Id: <20190828011930.29791-5-marcos.souza.org@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190828011930.29791-1-marcos.souza.org@gmail.com>
-References: <20190828011930.29791-1-marcos.souza.org@gmail.com>
+        Tue, 27 Aug 2019 21:27:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SsIBUUgqWoBft4g1qjISTKId449C/sPPvMGvzOhucFA=; b=NL0QwD9+KL+vnxXxnHD22icys
+        mAORzuHaSIFUSHIhL3+yR6+3Kw+Qw6J/6PoYN0NLBELIl+FOSjq3AKOVb+iL+oSavoNWl9TEY6MtG
+        ER7D89Yy16NJQ0AGslo98M6jwxfxiSGSs7N2/iUCcAJuhq0XUj+Cql+pHW58ej07QMxahlx7gxTr3
+        bZgEBi9/26cO2G+efQVHUSRUCfF2WAZ3RT2cIoL7eQvyTkU+ay4lxFe38y0ds4WEwvDUppyReQeiK
+        2/B425Y0hB/FAL3qGJg25iXIW4jLLKzEd7qJOMUDbQ5Jbav0vEpQGjFjIXP+Tn6sROyOQ47FbLVNk
+        zNEYwo2fg==;
+Received: from [2601:1c0:6200:6e8::4f71]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i2mkf-00068z-5y; Wed, 28 Aug 2019 01:27:57 +0000
+Subject: Re: mmotm 2019-08-24-16-02 uploaded (intel_drv.h header check)
+To:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+References: <20190824230323.REILuVBbY%akpm@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <b08dbe92-8e10-aa3a-7f92-12b53ee5b368@infradead.org>
+Date:   Tue, 27 Aug 2019 18:27:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190824230323.REILuVBbY%akpm@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This argument was not being considered since blk-mq was set by default,
-so removed this documentation to avoid confusion.
+On 8/24/19 4:03 PM, akpm@linux-foundation.org wrote:
+> The mm-of-the-moment snapshot 2019-08-24-16-02 has been uploaded to
+> 
+>    http://www.ozlabs.org/~akpm/mmotm/
+> 
+> mmotm-readme.txt says
+> 
+> README for mm-of-the-moment:
+> 
+> http://www.ozlabs.org/~akpm/mmotm/
+> 
+> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> more than once a week.
+> 
+> You will need quilt to apply these patches to the latest Linus release (5.x
+> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> http://ozlabs.org/~akpm/mmotm/series
+> 
+> The file broken-out.tar.gz contains two datestamp files: .DATE and
+> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> followed by the base kernel version against which this patch series is to
+> be applied.
+> 
+> This tree is partially included in linux-next.  To see which patches are
+> included in linux-next, consult the `series' file.  Only the patches
+> within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+> linux-next.
 
-Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
----
- Documentation/kernel-per-CPU-kthreads.txt | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+on x86_64 or i386:
 
-diff --git a/Documentation/kernel-per-CPU-kthreads.txt b/Documentation/kernel-per-CPU-kthreads.txt
-index 5623b9916411..c68c6c8c26a4 100644
---- a/Documentation/kernel-per-CPU-kthreads.txt
-+++ b/Documentation/kernel-per-CPU-kthreads.txt
-@@ -274,9 +274,7 @@ To reduce its OS jitter, do any of the following:
- 		(based on an earlier one from Gilad Ben-Yossef) that
- 		reduces or even eliminates vmstat overhead for some
- 		workloads at https://lkml.org/lkml/2013/9/4/379.
--	e.	Boot with "elevator=noop" to avoid workqueue use by
--		the block layer.
--	f.	If running on high-end powerpc servers, build with
-+	e.	If running on high-end powerpc servers, build with
- 		CONFIG_PPC_RTAS_DAEMON=n.  This prevents the RTAS
- 		daemon from running on each CPU every second or so.
- 		(This will require editing Kconfig files and will defeat
-@@ -284,12 +282,12 @@ To reduce its OS jitter, do any of the following:
- 		due to the rtas_event_scan() function.
- 		WARNING:  Please check your CPU specifications to
- 		make sure that this is safe on your particular system.
--	g.	If running on Cell Processor, build your kernel with
-+	f.	If running on Cell Processor, build your kernel with
- 		CBE_CPUFREQ_SPU_GOVERNOR=n to avoid OS jitter from
- 		spu_gov_work().
- 		WARNING:  Please check your CPU specifications to
- 		make sure that this is safe on your particular system.
--	h.	If running on PowerMAC, build your kernel with
-+	g.	If running on PowerMAC, build your kernel with
- 		CONFIG_PMAC_RACKMETER=n to disable the CPU-meter,
- 		avoiding OS jitter from rackmeter_do_timer().
- 
+  CC      drivers/gpu/drm/i915/intel_drv.h.s
+In file included from <command-line>:0:0:
+./../drivers/gpu/drm/i915/intel_drv.h:402:24: error: field ‘force_audio’ has incomplete type
+  enum hdmi_force_audio force_audio;
+                        ^~~~~~~~~~~
+./../drivers/gpu/drm/i915/intel_drv.h:1228:20: error: field ‘tc_type’ has incomplete type
+  enum tc_port_type tc_type;
+                    ^~~~~~~
+
+
 -- 
-2.22.0
-
+~Randy
