@@ -2,140 +2,115 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F639C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E8FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3602722CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5772189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:05:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="qy6MoR0+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2V5yl56"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfH1PFY (ORCPT
+        id S1726887AbfH1PF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:05:24 -0400
-Received: from mail-eopbgr50049.outbound.protection.outlook.com ([40.107.5.49]:24819
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726428AbfH1PFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:05:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dNqjLMjCDMmDZgertpkEYrH2ZZTj30EK7OTb4gCyFxkMizUgiLXRUJqd7FPpOlIMBA5gS5/i32XtJ+vZwkuCyoh3MXt0zmFAMOz23auWPJpdee0L87Bk7W4hO8iczUbNoYxz+uPa1j1xutuk8IOf7xVLErJbdw9Rsv/yHAM8iKqldRAGBePxxmpS+sWPYcnP0scG/CWtyR/SLaODjbEnMN0fCbHjmQwJGvTMVLnzA5k08zf/4vZvXIiG2HefH92OkwyVVbDStJdFvMqluu+JoB7+R4CxXCobd2SOlln8N6H9YH7zTQd7QAo7dPzL0rDdmlpRFhbMdu/eacvuj2fOvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NIzqAZC+Rv88aklpUKo1hI3j0zYPDkUYxyeG0hug2Q8=;
- b=Yf1fm1t+LWT6niJYNqgb+JYUkLpWhfIXRYPAsC3Oqk0eil5LWZlBVM98jghU0d5nsYq84ZvxhPYabJbn2nv6PMM8T85ShMG+nI64PVJiZCg17BBlq24KaGMDe+ie6wDGtf7sZ3N/3wSteYsK4SlyyrmS5H/VgUNwQMQOLd3T4Z6Gb/NzIfTBMdcAQAuqOu2B1vOKZqVTTLHz6hq7H7IaMFQAm4yMWttia4raJlJrXVeBzJs/OEaEDLs8JxEe/Pb4INJ1yQ81KlzcemIuZoZvx/85HIRxf5Ss8fz0O4pVe+COyCeweqnizF7J+o7CPsd/FSaFt+5bSPY/F17GCAXpcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NIzqAZC+Rv88aklpUKo1hI3j0zYPDkUYxyeG0hug2Q8=;
- b=qy6MoR0+pM8E0nm63mmJ9dyC+hzr0lEPkqUiTxuJQgKvkVkBjQUkQEj6MkK/Dtp4U3dQUydOkc+L8LDCe/6JPyEdr1rpclixnztXPFEmLEPj8E0R6GnLRIx0LgaD87ujWo5jUwk2VKNe6CHdimhN3yZw9w5TYIzTKCARvQiMr+8=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB3231.eurprd05.prod.outlook.com (10.170.238.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Wed, 28 Aug 2019 15:05:19 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2199.021; Wed, 28 Aug 2019
- 15:05:19 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?iso-8859-1?Q?Thomas_Hellstr=F6m?= <thomas@shipmail.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Steven Price <steven.price@arm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>
-Subject: Re: [PATCH 2/3] pagewalk: separate function pointers from iterator
- data
-Thread-Topic: [PATCH 2/3] pagewalk: separate function pointers from iterator
- data
-Thread-Index: AQHVXauzoOyMGt/Rm0+/Xu8LAWoHTqcQqKUA
-Date:   Wed, 28 Aug 2019 15:05:19 +0000
-Message-ID: <20190828150514.GN914@mellanox.com>
-References: <20190828141955.22210-1-hch@lst.de>
- <20190828141955.22210-3-hch@lst.de>
-In-Reply-To: <20190828141955.22210-3-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTOPR0101CA0021.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:15::34) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.167.216.168]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3295f98e-30c0-4093-39a4-08d72bc9242d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB3231;
-x-ms-traffictypediagnostic: VI1PR05MB3231:
-x-microsoft-antispam-prvs: <VI1PR05MB32317232C381B96F37FC9D96CFA30@VI1PR05MB3231.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 014304E855
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(39860400002)(366004)(346002)(189003)(199004)(6436002)(6506007)(8676002)(6116002)(81166006)(4744005)(2906002)(3846002)(81156014)(71190400001)(71200400001)(99286004)(66946007)(1076003)(66556008)(66476007)(6486002)(86362001)(229853002)(186003)(8936002)(33656002)(305945005)(256004)(7736002)(386003)(446003)(2616005)(26005)(478600001)(102836004)(64756008)(4326008)(476003)(14454004)(6512007)(5660300002)(66446008)(6246003)(76176011)(25786009)(11346002)(486006)(53936002)(66066001)(52116002)(6916009)(316002)(54906003)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3231;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: E7BYcxFP7SiBLFAtPEHGeII1iE4OE6fy2y/FGTKw7uWZEbuSSaVkTeiyvjgWFtZuGrSqGVTqNn1Ro7kmPJtrxd03+NUVCgmxbbgtufwKhxS3tbdUvPxsva9iVfumFozyzNfaR+E7/2i4dYSHmIZRvxOkUVckkoql9q2GMaR8O7NIr1vBYCjq9WdW9Xoq/nqYcrug+Y/lXr/XDE2y+rkg9eS1ON48aiMTuqDgtG4hUpUW/Bx88mcazNgne7yeRLi+A/JoV1vRIwaIQULCl7rlduBRLmMK7rzhVc2hyxp0IYbcP7rjdgIo7dwsc+of9RO3mbEAlxW3eDT2m0v6YS4dSYdFSI9AGoxdfMXMttebx1gltiCGCdGzzda8AdnVxCzOijOD5QtqqUBiLPUN79P9MhhdlPMVhZ27E+tnVk9QTLg=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <DDF7F470CEE7F54BB9E26C59705027BE@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 28 Aug 2019 11:05:28 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39191 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbfH1PFZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 11:05:25 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u17so1621662pgi.6;
+        Wed, 28 Aug 2019 08:05:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oT6JHQLY2bffi/RBYzy1DC4j9md0DkvSeKobvsL7S6I=;
+        b=b2V5yl56Br0rzlMxOh8a2JL6Q3YHC7a+2eceZeZ5iSIXeTSdtWLVKi60tN4ZD1l/Nw
+         Krivg6Xad6xKXQAVI+OSwIpL8i+ZKZStBOgLI3JiWB3rJqJO9EqokRgzkpsa082DAdWL
+         a0YbJ7qe7ONQm+dz6OwURGdPXBeeDe7XpoM0ISj46E2YQInSJek+SXjOqcEfAneEaqOI
+         Ni1uXbAtBHF4AqPi61uaOrhotRsqkWXG/8+z4gOnpEVnh6hsfuw1QLo+eqEG+C+BmKOE
+         bL80idkIvD5wlg87m2s4wwPWpt7yOgctNLUEPzMaEnaBL07t3vJSN7BDG5y+pPeA0GhA
+         bJDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oT6JHQLY2bffi/RBYzy1DC4j9md0DkvSeKobvsL7S6I=;
+        b=JDanV17tD7CxeTSNCBDZrkQkVCVB+XuZVMPe01bMZi7YjEeEUePQPKenCSlUjFJZse
+         RaoZ1RT42tZFexnQjVjXX/SGrzPMTNqbRgzwkpq8YjFHl+PPE9Xq7lv7CNeF1QWA2qjz
+         GSjKG24iB8Cj/tjRxPXNrktViVqY2XWSi9zet8K8As3IQ3UMRM+KVMqMNijEFwixMBez
+         0wPFi79GUUfVuYzkbq+YcuRUU5vXo0xPjNvHyGANssuT6Ohfo6Sc6WTfTVboz7bgiYWg
+         1bvyRAa7N19kt8gNg/IOUbG4kuG232XkPI0WHwXoU2AO6Oz3JeBZ9E9/t7gPRLrwcUJV
+         5NaA==
+X-Gm-Message-State: APjAAAUzAE14pM+ssVaeD7CUBawNPorYfjg/7IskB7KQVn7hxAAaMuMJ
+        29II3OtHwuBcW83/n9zujJM=
+X-Google-Smtp-Source: APXvYqy0pQWuSH+y/3S9KH2yu5f5undYzAePy+CL4gYdsrM0Cj6LIR0/bgA+F/eftp9a5nXjs63f4Q==
+X-Received: by 2002:a17:90a:256d:: with SMTP id j100mr4691011pje.126.1567004724572;
+        Wed, 28 Aug 2019 08:05:24 -0700 (PDT)
+Received: from localhost (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
+        by smtp.gmail.com with ESMTPSA id 4sm4363397pfe.76.2019.08.28.08.05.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 28 Aug 2019 08:05:23 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 08:05:22 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] hwmon: pwm-fan: Use platform_get_irq_optional()
+Message-ID: <20190828150522.GA21494@roeck-us.net>
+References: <20190828083411.2496-1-thierry.reding@gmail.com>
+ <20190828083411.2496-2-thierry.reding@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3295f98e-30c0-4093-39a4-08d72bc9242d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 15:05:19.4037
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: O795HJkDcQRFlxtnNpleCnYMo3hHxkSGwUwGhbBn2nXvFu9AkNpuHYux6GE2iL2taTQfYNMw9dKTcFp70mbILA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3231
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828083411.2496-2-thierry.reding@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 04:19:54PM +0200, Christoph Hellwig wrote:
-> @@ -2546,7 +2542,7 @@ int s390_enable_sie(void)
->  	mm->context.has_pgste =3D 1;
->  	/* split thp mappings and disable thp for future mappings */
->  	thp_split_mm(mm);
-> -	zap_zero_pages(mm);
-> +	walk_page_range(mm, 0, TASK_SIZE, &zap_zero_walk_ops, NULL);
->  	up_write(&mm->mmap_sem);
->  	return 0;
->  }
+On Wed, Aug 28, 2019 at 10:34:11AM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> The PWM fan interrupt is optional, so we don't want an error message in
+> the kernel log if it wasn't specified.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-[..]
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-> @@ -1217,7 +1222,8 @@ static ssize_t clear_refs_write(struct file *file, =
-const char __user *buf,
->  						0, NULL, mm, 0, -1UL);
->  			mmu_notifier_invalidate_range_start(&range);
->  		}
-> -		walk_page_range(0, mm->highest_vm_end, &clear_refs_walk);
-> +		walk_page_range(mm, 0, mm->highest_vm_end, &clear_refs_walk_ops,
-> +				&cp);
+I assume that Greg will pick up this patch.
 
-Is the difference between TASK_SIZE and 'highest_vm_end' deliberate,
-or should we add a 'walk_all_pages'() mini helper for this? I see most
-of the users are using one or the other variant.
+Guenter
 
-Otherwise the mechanical transformation looked OK to me
-
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-
-Jason
+> ---
+>  drivers/hwmon/pwm-fan.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 54c0ff00d67f..42ffd2e5182d 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -304,7 +304,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, ctx);
+>  
+> -	ctx->irq = platform_get_irq(pdev, 0);
+> +	ctx->irq = platform_get_irq_optional(pdev, 0);
+>  	if (ctx->irq == -EPROBE_DEFER)
+>  		return ctx->irq;
+>  
+> -- 
+> 2.22.0
+> 
