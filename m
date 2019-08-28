@@ -2,295 +2,142 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630F9C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE67BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F862189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:09:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xwk3COLl"
+	by mail.kernel.org (Postfix) with ESMTP id 9BE922189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfH1IJX (ORCPT
+        id S1726520AbfH1IJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:09:23 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35089 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbfH1IJW (ORCPT
+        Wed, 28 Aug 2019 04:09:37 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:57293 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726273AbfH1IJh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:09:22 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 100so1925946otn.2;
-        Wed, 28 Aug 2019 01:09:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3IBZx4mGOlN1FcM7wUQT1/lDwwQM1SgASfqzyxkV/zg=;
-        b=Xwk3COLlX7RcEpVTG5XSZocKEbubrLq+N6qZ8/KmmB1etad6detY97GZPfyMPobIz+
-         oxeBH72dKvOz84pU+b/o7bl2vXNi5IqlF9/H7d3hWBRENYS74BJWSNSuTS8BkP/ZAhtc
-         8fg90rYz5cCi8GRcDlzvvGw2XjsQnGh+UdG4b+rBLEeB/ATuXP0h7cjRaVd1UjHQX6Bw
-         gbyLrpuNXD3vb1BdV3nWdeyvMq9+IJnvBh/lIFAFhS0PyZE31iSiILWD53ZZ9V8FaG9F
-         +jxf1fWEYAFp2RF7zSdilpViBIZ+3S6nI0JeoJSJwc/KR4ckKsj9vfwUjOEqIv8RIpn5
-         78lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3IBZx4mGOlN1FcM7wUQT1/lDwwQM1SgASfqzyxkV/zg=;
-        b=AP94b1yL/BbtjNsQCFr6yR/sz6nsOeK77mOA9zK6QWDqpDkdCXmHrcuyG+eND/4v2K
-         Hx0Ba3I8JKOBtdll1nxVgBJehXdgXQJvnZSQjp0Uc3Ps82AGtQ/EL5Cpo69EmgeTOTUy
-         nrpkBjfkUbsIZR9vyLd2Jl6Ko7SE522g1O3UOnND6Tm4c6NgTVV8nVKtmxWOHwinryHR
-         XswaJ+hTRkwbtJHk5yTd+ATT51cHEnM8nqHbWtAnbmahcmk5AO57Ou7QhxPIgWKXyXbK
-         hLoO3CRVurHOB7bsHMkBKkBChBBHhrJ4hSs2x9H+zDMPXNd5TSqBbrNiVbGscM1Zk6Of
-         NhyA==
-X-Gm-Message-State: APjAAAXfVV9pRlZBmsZ/2tkO+qb+Za27LgKbMvFzGYfdgg+46n0sKDX2
-        r3M426fAXHWUHuJ2/KyV8gRtHUgZVVH170m3+Tc=
-X-Google-Smtp-Source: APXvYqzwae2GgrfGJlv2VRaP63sFgjWDxePv13XYHlVO3K4T5KyB24C02CVMCA/Ll4etXYDvjMLBgB6YWT8Oe6XPgf4=
-X-Received: by 2002:a9d:6c53:: with SMTP id g19mr2054804otq.254.1566979761301;
- Wed, 28 Aug 2019 01:09:21 -0700 (PDT)
+        Wed, 28 Aug 2019 04:09:37 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 2t1Gi8eHbzaKO2t1KiK1Bx; Wed, 28 Aug 2019 10:09:34 +0200
+Subject: Re: [PATCH v7 7/9] drm: tegra: use cec_notifier_conn_(un)register
+To:     Dariusz Marcinkiewicz <darekm@google.com>,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190814104520.6001-1-darekm@google.com>
+ <20190814104520.6001-8-darekm@google.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <f0e99db8-3329-f272-e139-a7c713f200ea@xs4all.nl>
+Date:   Wed, 28 Aug 2019 10:09:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1565841817-25982-1-git-send-email-wanpengli@tencent.com> <20190827174717.GB65641@flask>
-In-Reply-To: <20190827174717.GB65641@flask>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 28 Aug 2019 16:09:58 +0800
-Message-ID: <CANRm+Cy++Gt-kag+k0EydbFdzfDPT7-CwJOj95kM5UTnipr0qA@mail.gmail.com>
-Subject: Re: [PATCH v2] KVM: LAPIC: Periodically revaluate to get conservative lapic_timer_advance_ns
-To:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190814104520.6001-8-darekm@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfN2SLzcWSOO1TeYiDuWm3FiX75qjJsGvgXoX1pwPRTKZ/cG5yJC28sXJWwAO+I967Ki1N2UQLkv9Ajgm/7RLCTZ9ACBucApyEtW22Ly1VAyxQ/KV/WCF
+ 5r5SuQzzIKC3C1WbZjkWinhnRCPWVNAN/cqva4ufTNqnxjdKSi29ppikdazMh+fnPBUReNX2sZq9SGXKw9b3P1Y+MTPOzbpYmWOqW7fLECZDwx22emctIrrd
+ I/2RwIBJqahb8GPFnLhxsAVnGjlbZ+nZnkdST6qJ9GIrsvaAneBjPHDFhcuWoFUhV01bwAx5aVyK0VNf8ro7HFUQc6tO4gjQnybN0zq2Q3On14YmJcQiCqkP
+ gUjs4Yf9o00VJzP0OpX7ErBDaCqTxjkDMJ2Lgyu4ab+Djk2Pj8qnu67wbh3i3J9c+pHUf7ElNPpSf/MPR32H19IZ+2DDDALRZnS+WRbgyBGt8Yci/GU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 28 Aug 2019 at 01:47, Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.c=
-om> wrote:
->
-> 2019-08-15 12:03+0800, Wanpeng Li:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Even if for realtime CPUs, cache line bounces, frequency scaling, prese=
-nce
-> > of higher-priority RT tasks, etc can still cause different response. Th=
-ese
-> > interferences should be considered and periodically revaluate whether
-> > or not the lapic_timer_advance_ns value is the best, do nothing if it i=
-s,
-> > otherwise recaluate again. Set lapic_timer_advance_ns to the minimal
-> > conservative value from all the estimated values.
->
-> IIUC, this patch is looking for the minimal timer_advance_ns because it
-> provides the best throughput:
-> When every code path ran as fast as possible and we don't have to wait
-> for the timer to expire, but still arrive exactly at the point when it
-> would have expired.
-> We always arrive late late if something delayed the execution, which
-> means higher latencies, but RT shouldn't be using an adaptive algorithm
-> anyway, so that is not an issue.
->
-> The computed conservative timer_advance_ns will converge to the minimal
-> measured timer_advance_ns as time progresses, because it can only go
-> down and will do so repeatedly by small steps as even one smaller
-> measurement sufficiently close is enough to decrease it.
->
-> With that in mind, wouldn't the following patch (completely untested)
-> give you about the same numbers?
->
-> The idea is that if we have to wait, we are wasting time and therefore
-> decrease timer_advance_ns to eliminate the time spent waiting.
->
-> The first run is special and just sets timer_advance_ns to the latency
-> we measured, regardless of what it is -- it deals with the possibility
-> that the default was too low.
->
-> This algorithm is also likely prone to turbo boost making few runs
-> faster than what is then achieved during a more common workload, but
-> we'd need to have a sliding window or some other more sophisticated
-> algorithm in order to deal with that.
->
-> I also like Paolo's idea of a smoothing -- if we use a moving average
-> based on advance_expire_delta, we wouldn't even have to convert it into
-> ns unless it reached a given threshold, which could make decently fast
-> to be run every time.
->
-> Something like
->
->    moving_average =3D (apic->lapic_timer.moving_average * (weight - 1) + =
-advance_expire_delta) / weight
->
->    if (moving_average > threshold)
->       recompute timer_advance_ns
->
->    apic->lapic_timer.moving_average =3D moving_average
->
-> where weight would be a of 2 to make the operation fast.
->
-> This kind of moving average gives less value to old inputs and the
-> weight allows us to control the reaction speed of the approximation.
-> (A small number like 4 or 8 seems about right.)
->
-> I don't have any information on the latency, though.
-> Do you think that the added overhead isn't worth the smoothing?
->
-> Thanks.
->
-> ---8<---
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index e904ff06a83d..d7f2af2eb3ce 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1491,23 +1491,20 @@ static inline void adjust_lapic_timer_advance(str=
-uct kvm_vcpu *vcpu,
->         if (advance_expire_delta < 0) {
->                 ns =3D -advance_expire_delta * 1000000ULL;
->                 do_div(ns, vcpu->arch.virtual_tsc_khz);
-> -               timer_advance_ns -=3D min((u32)ns,
-> -                       timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STE=
-P);
-> +               timer_advance_ns -=3D (u32)ns;
->         } else {
->         /* too late */
-> +               /* This branch can only be taken on the initial calibrati=
-on. */
-> +               if (apic->lapic_timer.timer_advance_adjust_done)
-> +                       pr_err_once("kvm: broken expectation in lapic tim=
-er_advance_ns");
+Thierry,
+
+Can you review this patch?
+
+Thanks!
+
+	Hans
+
+On 8/14/19 12:45 PM, Dariusz Marcinkiewicz wrote:
+> Use the new cec_notifier_conn_(un)register() functions to
+> (un)register the notifier for the HDMI connector, and fill in
+> the cec_connector_info.
+> 
+> Changes since v4:
+> 	- only create a CEC notifier for HDMI connectors
+> 
+> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+> Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> ---
+>  drivers/gpu/drm/tegra/output.c | 28 +++++++++++++++++++++-------
+>  1 file changed, 21 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
+> index bdcaa4c7168cf..34373734ff689 100644
+> --- a/drivers/gpu/drm/tegra/output.c
+> +++ b/drivers/gpu/drm/tegra/output.c
+> @@ -70,6 +70,11 @@ tegra_output_connector_detect(struct drm_connector *connector, bool force)
+>  
+>  void tegra_output_connector_destroy(struct drm_connector *connector)
+>  {
+> +	struct tegra_output *output = connector_to_output(connector);
 > +
->                 ns =3D advance_expire_delta * 1000000ULL;
->                 do_div(ns, vcpu->arch.virtual_tsc_khz);
-> -               timer_advance_ns +=3D min((u32)ns,
-> -                       timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STE=
-P);
-> +               timer_advance_ns +=3D (u32)ns;
->         }
->
-> -       if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
-> -               apic->lapic_timer.timer_advance_adjust_done =3D true;
-> -       if (unlikely(timer_advance_ns > 5000)) {
-> -               timer_advance_ns =3D LAPIC_TIMER_ADVANCE_ADJUST_INIT;
-> -               apic->lapic_timer.timer_advance_adjust_done =3D false;
-> -       }
->         apic->lapic_timer.timer_advance_ns =3D timer_advance_ns;
-> +       apic->lapic_timer.timer_advance_adjust_done =3D true;
+> +	if (output->cec)
+> +		cec_notifier_conn_unregister(output->cec);
+> +
+>  	drm_connector_unregister(connector);
+>  	drm_connector_cleanup(connector);
 >  }
->
->  static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
-> @@ -1526,7 +1523,7 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu=
- *vcpu)
->         if (guest_tsc < tsc_deadline)
->                 __wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
->
-> -       if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
-> +       if (unlikely(!apic->lapic_timer.timer_advance_adjust_done) || gue=
-st_tsc < tsc_deadline)
->                 adjust_lapic_timer_advance(vcpu, apic->lapic_timer.advanc=
-e_expire_delta);
+> @@ -163,18 +168,11 @@ int tegra_output_probe(struct tegra_output *output)
+>  		disable_irq(output->hpd_irq);
+>  	}
+>  
+> -	output->cec = cec_notifier_get(output->dev);
+> -	if (!output->cec)
+> -		return -ENOMEM;
+> -
+>  	return 0;
 >  }
->
+>  
+>  void tegra_output_remove(struct tegra_output *output)
+>  {
+> -	if (output->cec)
+> -		cec_notifier_put(output->cec);
+> -
+>  	if (output->hpd_gpio)
+>  		free_irq(output->hpd_irq, output);
+>  
+> @@ -184,6 +182,7 @@ void tegra_output_remove(struct tegra_output *output)
+>  
+>  int tegra_output_init(struct drm_device *drm, struct tegra_output *output)
+>  {
+> +	int connector_type;
+>  	int err;
+>  
+>  	if (output->panel) {
+> @@ -199,6 +198,21 @@ int tegra_output_init(struct drm_device *drm, struct tegra_output *output)
+>  	if (output->hpd_gpio)
+>  		enable_irq(output->hpd_irq);
+>  
+> +	connector_type = output->connector.connector_type;
+> +	/*
+> +	 * Create a CEC notifier for HDMI connector.
+> +	 */
+> +	if (connector_type == DRM_MODE_CONNECTOR_HDMIA ||
+> +	    connector_type == DRM_MODE_CONNECTOR_HDMIB) {
+> +		struct cec_connector_info conn_info;
+> +
+> +		cec_fill_conn_info_from_drm(&conn_info, &output->connector);
+> +		output->cec = cec_notifier_conn_register(output->dev, NULL,
+> +							 &conn_info);
+> +		if (!output->cec)
+> +			return -ENOMEM;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> 
 
-Something like below, the result is not as good as we expected. How
-about v3? I use moving average to be smooth and filter out drastic
-fluctuation which prevents it before.
-
-(testing on Skylake server, the lapic_timer_advance_ns is around
-1500ns for my v2 patch)
-# cat vcpu*/lapic_timer_advance_ns
-483
-263
-211
-15
-
----8<---
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index e904ff0..bdc0702 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1485,29 +1485,50 @@ static inline void
-adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
- {
-     struct kvm_lapic *apic =3D vcpu->arch.apic;
-     u32 timer_advance_ns =3D apic->lapic_timer.timer_advance_ns;
-+    s64 moving_average;
-     u64 ns;
-
-+    if (abs(advance_expire_delta) > 10000)
-+        /* filter out drastic flunctuations */
-+        return;
-+
-+    if (apic->lapic_timer.timer_advance_adjust_done) {
-+        moving_average =3D (apic->lapic_timer.moving_average *
-+            (LAPIC_TIMER_ADVANCE_ADJUST_STEP - 1) +
-+            advance_expire_delta) / LAPIC_TIMER_ADVANCE_ADJUST_STEP;
-+
-+        if (abs(moving_average) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
-+            /* no update for random fluctuations */
-+            return;
-+
-+        apic->lapic_timer.moving_average =3D moving_average;
-+        advance_expire_delta =3D moving_average;
-+    } else
-+        apic->lapic_timer.moving_average =3D advance_expire_delta;
-+
-     /* too early */
-     if (advance_expire_delta < 0) {
-         ns =3D -advance_expire_delta * 1000000ULL;
-         do_div(ns, vcpu->arch.virtual_tsc_khz);
--        timer_advance_ns -=3D min((u32)ns,
--            timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
-+        timer_advance_ns -=3D (u32)ns;
-     } else {
-     /* too late */
-+        /* This branch can only be taken on the initial calibration. */
-+        if (apic->lapic_timer.timer_advance_adjust_done)
-+            pr_err_once("kvm: broken expectation in lapic timer_advance_ns=
-");
-+
-         ns =3D advance_expire_delta * 1000000ULL;
-         do_div(ns, vcpu->arch.virtual_tsc_khz);
--        timer_advance_ns +=3D min((u32)ns,
--            timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
-+        timer_advance_ns +=3D (u32)ns;
-     }
-
--    if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
--        apic->lapic_timer.timer_advance_adjust_done =3D true;
-     if (unlikely(timer_advance_ns > 5000)) {
-         timer_advance_ns =3D LAPIC_TIMER_ADVANCE_ADJUST_INIT;
-         apic->lapic_timer.timer_advance_adjust_done =3D false;
-     }
-+
-     apic->lapic_timer.timer_advance_ns =3D timer_advance_ns;
-+    apic->lapic_timer.timer_advance_adjust_done =3D true;
- }
-
- static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
-@@ -1526,7 +1547,8 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *=
-vcpu)
-     if (guest_tsc < tsc_deadline)
-         __wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
-
--    if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
-+    if (unlikely(!apic->lapic_timer.timer_advance_adjust_done) ||
-+        guest_tsc < tsc_deadline)
-         adjust_lapic_timer_advance(vcpu,
-apic->lapic_timer.advance_expire_delta);
- }
-
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index 50053d2..2e6e499 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -33,6 +33,7 @@ struct kvm_timer {
-     u64 expired_tscdeadline;
-     u32 timer_advance_ns;
-     s64 advance_expire_delta;
-+    s64 moving_average;
-     atomic_t pending;            /* accumulated triggered timers */
-     bool hv_timer_in_use;
-     bool timer_advance_adjust_done;
