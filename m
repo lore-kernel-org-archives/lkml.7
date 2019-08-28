@@ -2,81 +2,87 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5763BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB3CC41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2002C22CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:16:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pWWEOSGT"
+	by mail.kernel.org (Postfix) with ESMTP id BC0AB22CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:16:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567005392;
+	bh=TygLUFJxilcn9+OVuMoKHM9pHCCkpYXpvBLmeO3ZXdg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BnNHga2hwFsHFIy4M1TcEPtaUEIvzfcH5oFDFbuiLxfWowUr1VLgfjznkZ3v+5RrA
+	 rMWunivgiblbNS28VldqlZm0/42Kwe7Se5Ju9EKUs80TxiBWLN4QyDDOicBIAdePRP
+	 KJhbA/xSdvM8L5evufylarlOX8Uh7H5x398HlpSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbfH1PQW (ORCPT
+        id S1726945AbfH1PQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:16:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38542 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfH1PQV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:16:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8K7w75RPW6v4R35r6JmgUfk3dHW0nTr/NpQB6sJf4qo=; b=pWWEOSGTyudk/6A10hR6Rlhjw
-        A4Sphe4p05lJ/Hb8GVFUvYM1J6Jd9a+5Nsc4/cOPgWOGDKCeIMBRHYi6Is72mY5VWXV7d/+EG1nh7
-        uMdv+ItX2xYd6/5PvNkTgEuRCp56CX+LySr6Y2AgZ87P4cmObrP9U0L15xxANZr/uKRJlC73WP6oX
-        nMqlGIWRngHtKm7S+mfZ1p3YdpzPuTr+nyl8Ui4PbkslY7s+e1rS0bWwBeA+P4UY10THQRCzLRrwZ
-        iWQDqh0cG3c0OqOwh53z3Tvoj/ml9ig9cP2h39LohZszaL18S5oYgdA1y/3trV8EeMZYE0eLe7Z5r
-        OgCLEFGZQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2zfs-0000aY-9Y; Wed, 28 Aug 2019 15:15:52 +0000
-Date:   Wed, 28 Aug 2019 08:15:52 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Michal Suchanek <msuchanek@suse.de>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        David Hildenbrand <david@redhat.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Breno Leitao <leitao@debian.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH 1/4] fs: always build llseek.
-Message-ID: <20190828151552.GA16855@infradead.org>
-References: <cover.1566936688.git.msuchanek@suse.de>
- <80b1955b86fb81e4642881d498068b5a540ef029.1566936688.git.msuchanek@suse.de>
+        Wed, 28 Aug 2019 11:16:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726395AbfH1PQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 11:16:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 987B222CED;
+        Wed, 28 Aug 2019 15:16:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567005391;
+        bh=TygLUFJxilcn9+OVuMoKHM9pHCCkpYXpvBLmeO3ZXdg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2ChWSEFvSEFY8f1u9YH6DnWrey07XYAbSKLLY16bV6exNSfi264pW877VDhFFCuGr
+         moi1F8qMNoAGDRgfRzf942zgVB0qurA7jciba3phcFs33TEZ4w1qePgh62nA1aZlbI
+         qTdMUzzsEgRibbOwDT2iFn5Ft5jUvP/bo4IX3xwE=
+Date:   Wed, 28 Aug 2019 17:16:28 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.2 000/162] 5.2.11-stable review
+Message-ID: <20190828151628.GD9673@kroah.com>
+References: <20190827072738.093683223@linuxfoundation.org>
+ <af4552f9-6321-dd61-2264-3f3e793aaf61@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <80b1955b86fb81e4642881d498068b5a540ef029.1566936688.git.msuchanek@suse.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <af4552f9-6321-dd61-2264-3f3e793aaf61@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 10:21:06PM +0200, Michal Suchanek wrote:
-> 64bit !COMPAT does not build because the llseek syscall is in the tables.
+On Tue, Aug 27, 2019 at 01:09:21PM -0600, shuah wrote:
+> On 8/27/19 1:48 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.2.11 release.
+> > There are 162 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu 29 Aug 2019 07:25:02 AM UTC.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.11-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> Compiled and booted on my test system. No dmesg regressions.
 
-Well, this will bloat thinkgs like 64-bit RISC-V for no good reason.
-Please introduce a WANT_LSEEK like symbol that ppc64 can select instead.
+Thanks for testing all of these and letting me know.
+
+greg k-h
