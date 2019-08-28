@@ -2,173 +2,115 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E89C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7553AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C304923403
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:45:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="iu8FTBfX"
+	by mail.kernel.org (Postfix) with ESMTP id 493B323404
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:45:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566981957;
+	bh=SYNMMq01znmSNj5G0W+PjKmwx9zN78KMh0tsuO4IhcY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NsaqQNjueUrXKqB4l0U14RjLagebP6mN6ZAlHoAY/rSwiqaSMF652d8JUsAFvdi++
+	 nmWd1mGPjnVQ5jiK/rW06w82y2y77H1JxLTT2VsjeTjabMteAKnB5errMQSt7WlfOP
+	 CGuPshaBIIv5NuXC+1SCOfXlTz+lngQumBg98470=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfH1IpU (ORCPT
+        id S1726506AbfH1Ip4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:45:20 -0400
-Received: from mail-eopbgr1320122.outbound.protection.outlook.com ([40.107.132.122]:64096
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726232AbfH1IpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:45:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cTb6stk3X4DFfo9UJ7121oqn142FoaLUQKr+5HbglGzidLrH4kSC+9K7ertZXuGpCqwSjmpC7JH09Dk1YO1yB4Jf0quZmcgAdhnEr3x6xs0Gk6rLs/ccAGUOhJZdjfQJRe2MD2Zy03mNQ4izLzQcW0RMD0KjfQOuXCQs42HPMGqnB1pt7rXNwvXTEu7vLq5JBUn3usjx9XydR8sMQyGzEhqqgUwmrdfJHNN0uhAS1UZPqgBDg8zt0FtBPEQkcviGmRR37+5b5RHmlcU8L8dTHMF+9PuTh6GWjPlcZll2nuqxtYsTH7BnGSnfbvSVuvbTNQqOUvNAmxzqs1//1b1nJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0mpp4gY0hdl3enDz7UuGaAhzM9ufS5hhjJ0x9zT22R8=;
- b=Qz3pqgIjzg32r8yH4W4t3bja332jfJ7eDI/d+BQGXTcBLa/D+z898Zrxvpq/+9LemE/Da/hMise+VFlPxGG5EtHoXdUxuij/rd/XnOmWEMV6gcBYUtWyyUM5RkafKG45aCZo031KZJnd4Pr76BReZ07mc14rcZteea+wwl9AEx2CCR8MGojfURQsBNHmAtq8Rrx98ZpSJBCYyuF2GfpgBAn54lwrXlXUBZCZ1iXFgRrBcRAeEM3FW100JIsU5HGXA1bsBnnsmGGMlbBlf7yFkaZ1vPl3UL9iRAA6PsITyGf3RPrRhB40P6K0WuxhvaZCpEEmamYOw5GtUByWhF4E3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0mpp4gY0hdl3enDz7UuGaAhzM9ufS5hhjJ0x9zT22R8=;
- b=iu8FTBfXmnMgy8eoZ+/wiYhIFL+hrTcSqBitowRk+pq/D3GQxVPZhZ/tyHWGbmCTcfgKJRRBhudx0UJHdJHmmsFGN6PVVrTPJYeMkX2zP0mkJ7dLCOFr0ZFw9no4p9Yyfrl7iB9Pd1xYSibL+qEDk+mMTT/j9xLHEPOxM9nEWi4=
-Received: from KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM (52.132.240.17) by
- KL1P15301MB0294.APCP153.PROD.OUTLOOK.COM (52.132.240.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.1; Wed, 28 Aug 2019 08:45:14 +0000
-Received: from KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM
- ([fe80::c402:2ce2:cafa:8b1e]) by KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM
- ([fe80::c402:2ce2:cafa:8b1e%9]) with mapi id 15.20.2241.000; Wed, 28 Aug 2019
- 08:45:14 +0000
-From:   Wei Hu <weh@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>
-CC:     Iouri Tarassov <iourit@microsoft.com>
-Subject: RE: [PATCH v3] video: hyperv: hyperv_fb: Obtain screen resolution
- from Hyper-V host
-Thread-Topic: [PATCH v3] video: hyperv: hyperv_fb: Obtain screen resolution
- from Hyper-V host
-Thread-Index: AQHVXMfGJ3Qba7Bfm06iN/QPH/c1OqcPqo/wgACSKZA=
-Date:   Wed, 28 Aug 2019 08:45:13 +0000
-Message-ID: <KL1P15301MB026421E7481BBC5B28E3E468BBA30@KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM>
-References: <20190827110755.2707-1-weh@microsoft.com>
- <DM5PR21MB013709ADC5CB4B48CE752048D7A00@DM5PR21MB0137.namprd21.prod.outlook.com>
-In-Reply-To: <DM5PR21MB013709ADC5CB4B48CE752048D7A00@DM5PR21MB0137.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-27T23:56:41.1284187Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=22d3c610-3ee8-44bd-b8c5-5b9a2554642b;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=weh@microsoft.com; 
-x-originating-ip: [167.220.255.109]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 68437d0d-9ae1-4a06-c492-08d72b940b82
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:KL1P15301MB0294;
-x-ms-traffictypediagnostic: KL1P15301MB0294:|KL1P15301MB0294:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <KL1P15301MB0294F66D3EF1D660E5DD9FB0BBA30@KL1P15301MB0294.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 014304E855
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(39860400002)(366004)(396003)(346002)(13464003)(199004)(189003)(54534003)(4326008)(6436002)(55016002)(33656002)(316002)(476003)(14454004)(486006)(22452003)(66946007)(5660300002)(25786009)(11346002)(446003)(3846002)(53936002)(107886003)(9686003)(6116002)(10290500003)(6246003)(2906002)(66446008)(64756008)(66556008)(66476007)(76116006)(76176011)(2201001)(186003)(102836004)(81156014)(71200400001)(71190400001)(6506007)(256004)(10090500001)(26005)(2501003)(478600001)(81166006)(8676002)(110136005)(52536014)(66066001)(8936002)(6636002)(86362001)(305945005)(1511001)(74316002)(7696005)(99286004)(229853002)(8990500004)(7736002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:KL1P15301MB0294;H:KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hxahiCa7gvgFhdyN4nvl6A9E45qjUuoRHZabTDCTdIhE18d4qakWG7mu0cyhLK29O4bXJTIoHVEqcvsBYRehY8VWYLyqWzYr8QBMdhLBQdfWSFZ9siwsJ/odMu+vKLSfPPAlNZjtaEdhdzvvoWL2DLrLUYhMaqxgrQuNUOlwKUkGB2X37ybU5/zAQBDx6dJ/BpINZSCL7wg4Y1Vu4Gpy6dMRtwNwRt7e9USqlw4ZHoGhZZvHV5mL8P23T/wVIuo71utvsJwNveGn1oUNJNJsgWljj6Dews8pPU0cWfC4G+Bb2pnO8Z4sVt4u78EMuARWOpsO/l8ZQryY8rjLRpsTWCspwJ4h/MHmkDWsPHwypLCdLnTP6AIKzu+6DSz7HefAP6sjYbre7X/PecNzVzLaQugQ2DZ42o8o9NqTiHdXCBU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 28 Aug 2019 04:45:56 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35245 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfH1Ip4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:45:56 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 100so2011748otn.2;
+        Wed, 28 Aug 2019 01:45:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jCxOMA9aKz6SC3UYzcS/O/Ome5CiEdeSa8P16zSjLyw=;
+        b=mtVHIfLz2MYDqKv0z90pu/NAxxsgLVfBebaj1h8GhPpQgKlrIlsg8u8mUkghB++9fI
+         oLpjzcJRRMJoVtnSGMP/RPDDBfgNOvBeFjshTz5xysC07a4jM+ar64+qL296DyRNRixz
+         VZ/jstryf8mbnGy6rTiR95G4PylRZmca3c8dC9Mp8cqs3xg7Yf9gXSgX5j7xINpRPe0G
+         rrmHviLz1RW/VgsOVOExvP/CZcdMgFChLEkLlxTSC1/uQ4giWB3cDCMfKAWPkGTHP8xa
+         eyGP7GwdjfLiBYfTa/tRkcI/bSUj8wAGAxkjb9/6tBks6NzWM7Wf9NW2Qu+GHMz16yMa
+         1hhw==
+X-Gm-Message-State: APjAAAUeU1eWcnyuWHx4caEqL9izF/CcxyzK13zSVq2qdwv24nYzyRkN
+        HoNKcGSDkK1TaZzZe8av1ufPhVukX0zYYIctdlI=
+X-Google-Smtp-Source: APXvYqwC2lZkwr9YxZ3bcwcAf22d6yK/9b2s9wjSflhVJcF8c3Hu86klsU+hStpBZP/K4omckicJLzQ8jSi7GQLdnp8=
+X-Received: by 2002:a05:6830:154:: with SMTP id j20mr2381058otp.266.1566981954882;
+ Wed, 28 Aug 2019 01:45:54 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68437d0d-9ae1-4a06-c492-08d72b940b82
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 08:45:13.9800
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6YazZyzDnT19aTQFX0p+DswxF7CDKpVf1U/JjXQLDFcAPNPHmmsJ45yyCg1W0Lk5PF56hzQtIHtNwPutrzm5Dw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1P15301MB0294
+References: <1564643196-7797-1-git-send-email-wanpengli@tencent.com>
+ <7b1e3025-f513-7068-32ac-4830d67b65ac@intel.com> <c3fe182f-627f-88ad-cb4d-a4189202b438@redhat.com>
+ <20190803202058.GA9316@amt.cnet> <CANRm+CwtHBOVWFcn+6Z3Ds7dEcNL2JP+b6hLRS=oeUW98A24MQ@mail.gmail.com>
+ <20190826204045.GA24697@amt.cnet> <CANRm+Cx0+V67Ek7FhSs61ZqZL3MgV88Wdy17Q6UA369RH7=dgQ@mail.gmail.com>
+ <CANRm+CxqYMzgvxYyhZLmEzYd6SLTyHdRzKVaSiHO-4SV+OwZUQ@mail.gmail.com>
+In-Reply-To: <CANRm+CxqYMzgvxYyhZLmEzYd6SLTyHdRzKVaSiHO-4SV+OwZUQ@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 28 Aug 2019 10:45:44 +0200
+Message-ID: <CAJZ5v0iQc0-WzqeyAh-6m5O-BLraRMj+Z7sqvRgGwh2u2Hp7cg@mail.gmail.com>
+Subject: Re: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when dedicated
+ physical CPUs are available
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     Marcelo Tosatti <mtosatti@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Michael Kelley <mikelley@microsoft.com>
+On Wed, Aug 28, 2019 at 10:34 AM Wanpeng Li <kernellwp@gmail.com> wrote:
+>
+> On Tue, 27 Aug 2019 at 08:43, Wanpeng Li <kernellwp@gmail.com> wrote:
 > >
-> > Beginning from Windows 10 RS5+, VM screen resolution is obtained from h=
-ost.
-> > The "video=3Dhyperv_fb" boot time option is not needed, but still can b=
-e
-> > used to overwrite what the host specifies. The VM resolution on the hos=
-t
-> > could be set by executing the powershell "set-vmvideo" command.
-> >
-> > v2:
-> > - Implemented fallback when version negotiation failed.
-> > - Defined full size for supported_resolution array.
-> >
-> > v3:
-> > - Corrected the synthvid major and minor version comparison problem.
->=20
-> The changelog for v2 and v3 should actually go after the "---" below so
-> that the changelog does not end up as part of the commit message.  Take
-> a look at other postings to LKML for an example.
->=20
-[Wei Hu]=20
-I saw people putting v2 and vN in commit message. The git log of this file =
-also=20
-contains similar lines like v2. But if you prefer I can move it after ---.=
-=20
+> > Cc Michael S. Tsirkin,
+> > On Tue, 27 Aug 2019 at 04:42, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> > >
+> > > On Tue, Aug 13, 2019 at 08:55:29AM +0800, Wanpeng Li wrote:
+> > > > On Sun, 4 Aug 2019 at 04:21, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> > > > >
+> > > > > On Thu, Aug 01, 2019 at 06:54:49PM +0200, Paolo Bonzini wrote:
+> > > > > > On 01/08/19 18:51, Rafael J. Wysocki wrote:
+> > > > > > > On 8/1/2019 9:06 AM, Wanpeng Li wrote:
+> > > > > > >> From: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > >>
+> > > > > > >> The downside of guest side polling is that polling is performed even
+> > > > > > >> with other runnable tasks in the host. However, even if poll in kvm
+> > > > > > >> can aware whether or not other runnable tasks in the same pCPU, it
+> > > > > > >> can still incur extra overhead in over-subscribe scenario. Now we can
+> > > > > > >> just enable guest polling when dedicated pCPUs are available.
+> > > > > > >>
+> > > > > > >> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > > >> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > > > > > >> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> > > > > > >> Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> > > > > > >> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > >
+> > > > > > > Paolo, Marcelo, any comments?
+> > > > > >
+> > > > > > Yes, it's a good idea.
+> > > > > >
+> > > > > > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+>
+> Hi Marcelo,
+>
+> If you don't have more concern, I guess Rafael can apply this patch
+> now since the merge window is not too far.
 
+I will likely queue it up later today and it will go to linux-next
+early next week.
 
-> >
-> > Signed-off-by: Iouri Tarassov <iourit@microsoft.com>
-> > Signed-off-by: Wei Hu <weh@microsoft.com>
-> > ---
-> >  drivers/video/fbdev/hyperv_fb.c | 159 +++++++++++++++++++++++++++++---
-> >  1 file changed, 147 insertions(+), 12 deletions(-)
-> >
-> >
-> > +/* Check if the ver1 version is equal or greater than ver2 */
-> > +static inline bool synthvid_ver_eg(u32 ver1, u32 ver2)
->=20
-> I'm being picky here, but I would call this synthvid_ver_ge().   In my
-> experience "ge" is the shorthand for "greater than or equal", rather
-> than the "eg" you have used.
->=20
-[Wei Hu]=20
-Okay.
-
-Thanks,
-Wei
-
-
-> Michael
->=20
-
+Thanks!
