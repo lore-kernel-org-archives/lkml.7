@@ -2,119 +2,133 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79145C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE69C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5676222CF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D00A822CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:52:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="V2OPbXgg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbfH1Muq (ORCPT
+        id S1726441AbfH1Mwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:50:46 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47039 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbfH1Muq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:50:46 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2xPE-0003LC-8j; Wed, 28 Aug 2019 14:50:32 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D6F2C1C07D2;
-        Wed, 28 Aug 2019 14:50:31 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 12:50:31 -0000
-From:   "tip-bot2 for Neil Horman" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/apic] x86/apic/vector: Warn when vector space exhaustion
- breaks affinity
-Cc:     djuran@redhat.com, Neil Horman <nhorman@tuxdriver.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190822143421.9535-1-nhorman@tuxdriver.com>
-References: <20190822143421.9535-1-nhorman@tuxdriver.com>
-MIME-Version: 1.0
-Message-ID: <156699663175.31014.3746755502169958579.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+        Wed, 28 Aug 2019 08:52:32 -0400
+Received: from mail-eopbgr740120.outbound.protection.outlook.com ([40.107.74.120]:45865
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726270AbfH1Mwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 08:52:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gV599gjr3A2YMbHrgRAdPrU/yTMhDY6IckREUSooVMzqkT9DGoP+20jAxe97SjPryitoSZpnlAXDFDAmxeHHPGNdPmT4yIfH1HJiv031LHoYInqCVkFIpnt9k6dN2poJu5uQ+8bpILfGi48+KOXNamW8d+tFn/yEz+JoumsMqaIOXHCDSS2MZ73DYtskfvM8vgk3io11/F0nCOBmM20/xIaDlFLRXRl6AT74Dn1rxKgkxHfCwMqR/HrJ1HO3PIeJJheY0crugtDjiFhpwI0dkRv8EnPNi9+8oUJgmMKMDEmezjQbAEaXKzkwe6hJZYzq0noN42lw0MA7o0UPqPBoEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X9MIHDMRoMz44LEOBX5QDjiXX73X+daZpQFl3XHlZpk=;
+ b=ZxjsAwUFSuZpF6kGPOKJcRMv6L9nvZMo11dQfdClfb4kdeweRtf5b588rFXFph8BckOZ47DsGzTGFIABWZgsnXtmtnrdR9PdZGKILeEiojDmu9PLZ9fwROH/DzKPqwhlhN+yw6Rj511xyEKh3gyGIU2nv65PC7qIRKEIDPboG8rDbYUQrUkZ3cEV2ykl9ZKFYPSiBrOcjaqR1PKO4z+K5+LetYn5syW2hcyDRFo/7W2ya4dfXi2avd6C50gcLqTcW6mRyFnaLCk+f+neT0KRQhe0uw4FpvyxYzVAENsvqFvMkCdMQ0jyvETOtbOX2K1aob0eSNBZzNKYltOj0bvENQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X9MIHDMRoMz44LEOBX5QDjiXX73X+daZpQFl3XHlZpk=;
+ b=V2OPbXggnfOkO4flfZenpkPYiftpmK8XgjOcWc67zVTXfoPxXac7lI+RD8vgj66rFmAqpJKR3ibWbpOotu+SDioqi99ClVZayj7w/96DnlCUcJMNR3xRGrRGEIzIfjuaF13JyHMq6VAn2nxRa8ejnf96LIfpSeccNAXtIo621Y4=
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
+ DM5PR13MB0940.namprd13.prod.outlook.com (10.168.235.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.14; Wed, 28 Aug 2019 12:52:26 +0000
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::5d60:e645:84a2:be75]) by DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::5d60:e645:84a2:be75%7]) with mapi id 15.20.2220.013; Wed, 28 Aug 2019
+ 12:52:26 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "pavel@denx.de" <pavel@denx.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "sashal@kernel.org" <sashal@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "steved@redhat.com" <steved@redhat.com>,
+        "dhowells@redhat.com" <dhowells@redhat.com>
+Subject: Re: [PATCH 4.19 35/98] NFS: Fix regression whereby fscache errors are
+ appearing on nofsc mounts
+Thread-Topic: [PATCH 4.19 35/98] NFS: Fix regression whereby fscache errors
+ are appearing on nofsc mounts
+Thread-Index: AQHVXKziyHqrtc8PHE+Fi6jwj3T596cQJjqAgABfTYA=
+Date:   Wed, 28 Aug 2019 12:52:26 +0000
+Message-ID: <ff035228b9fa6a332645124393a035ae80588243.camel@hammerspace.com>
+References: <20190827072718.142728620@linuxfoundation.org>
+         <20190827072720.043818271@linuxfoundation.org> <20190828071119.GA10462@amd>
+In-Reply-To: <20190828071119.GA10462@amd>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3b3bb7a5-8f1f-40e3-2983-08d72bb69438
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB0940;
+x-ms-traffictypediagnostic: DM5PR13MB0940:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM5PR13MB0940AB436BA9D5FD68485CB5B8A30@DM5PR13MB0940.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 014304E855
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(136003)(39840400004)(376002)(189003)(199004)(25786009)(4326008)(256004)(6512007)(6506007)(6486002)(86362001)(14444005)(81166006)(99286004)(26005)(71200400001)(71190400001)(66446008)(53936002)(6436002)(476003)(5660300002)(486006)(2616005)(316002)(76176011)(6246003)(66476007)(11346002)(76116006)(91956017)(66946007)(446003)(66556008)(110136005)(2501003)(3846002)(6116002)(102836004)(186003)(14454004)(118296001)(8936002)(305945005)(7736002)(15974865002)(66066001)(478600001)(64756008)(229853002)(81156014)(8676002)(36756003)(54906003)(2906002)(3714002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB0940;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: GgW/yclxv7VIEGspKEWZO2prAndSYNNBYY+/iDagTBKS3MjcMNRjX3PWUzcSHSpXgRb8Nbs6o3OyMfDwPk73l+jy8vLyqwj7HKeXVhKOebwQ37Xls7UWNxXphHYvIpuCQ93/z4NQEHq+9pM05fsvZ/9t4waG2hw/aHlgz9fVADF3b6gWC1NSDlE1gmTeZgbFA9Igy8VNhCK5/peCimW2yYJg26ILOwxRt6PipuEJq8qF8bUbb9dklUnKFOCYHFixSZdgVKAiuRWN3pmU9LaTk3NFSi2D7h553ZF63FENB0y61yDoSOio4dnVScdg3T/GTW135RTcWMbIoa5rEzMzWi75xV/Ldp4Kb7cE2ogeMTF4LmXUn6GdPKV+TFA5k+N/3TAwoTD5Fprcd/8eVj8JEaDJsxsZuYMmI+eurl2Nv5w=
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-ID: <3C31544B208EE442B1B3FD66A53C00C9@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b3bb7a5-8f1f-40e3-2983-08d72bb69438
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 12:52:26.5605
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CmQleDZUibva/6QfwUeYlpMiyg/N58W2f48pdk21keqxar96DT25NbOdt9alr9TGBndoi6GTLmmXb88Ibp42jA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB0940
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/apic branch of tip:
-
-Commit-ID:     743dac494d61d991967ebcfab92e4f80dc7583b3
-Gitweb:        https://git.kernel.org/tip/743dac494d61d991967ebcfab92e4f80dc7583b3
-Author:        Neil Horman <nhorman@tuxdriver.com>
-AuthorDate:    Thu, 22 Aug 2019 10:34:21 -04:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 28 Aug 2019 14:44:08 +02:00
-
-x86/apic/vector: Warn when vector space exhaustion breaks affinity
-
-On x86, CPUs are limited in the number of interrupts they can have affined
-to them as they only support 256 interrupt vectors per CPU. 32 vectors are
-reserved for the CPU and the kernel reserves another 22 for internal
-purposes. That leaves 202 vectors for assignement to devices.
-
-When an interrupt is set up or the affinity is changed by the kernel or the
-administrator, the vector assignment code attempts to honor the requested
-affinity mask. If the vector space on the CPUs in that affinity mask is
-exhausted the code falls back to a wider set of CPUs and assigns a vector
-on a CPU outside of the requested affinity mask silently.
-
-While the effective affinity is reflected in the corresponding
-/proc/irq/$N/effective_affinity* files the silent breakage of the requested
-affinity can lead to unexpected behaviour for administrators.
-
-Add a pr_warn() when this happens so that adminstrators get at least
-informed about it in the syslog.
-
-[ tglx: Massaged changelog and made the pr_warn() more informative ]
-
-Reported-by: djuran@redhat.com
-Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: djuran@redhat.com
-Link: https://lkml.kernel.org/r/20190822143421.9535-1-nhorman@tuxdriver.com
----
- arch/x86/kernel/apic/vector.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index fdacb86..2c5676b 100644
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -398,6 +398,17 @@ static int activate_reserved(struct irq_data *irqd)
- 		if (!irqd_can_reserve(irqd))
- 			apicd->can_reserve = false;
- 	}
-+
-+	/*
-+	 * Check to ensure that the effective affinity mask is a subset
-+	 * the user supplied affinity mask, and warn the user if it is not
-+	 */
-+	if (!cpumask_subset(irq_data_get_effective_affinity_mask(irqd),
-+			    irq_data_get_affinity_mask(irqd))) {
-+		pr_warn("irq %u: Affinity broken due to vector space exhaustion.\n",
-+			irqd->irq);
-+	}
-+
- 	return ret;
- }
- 
+T24gV2VkLCAyMDE5LTA4LTI4IGF0IDA5OjExICswMjAwLCBQYXZlbCBNYWNoZWsgd3JvdGU6DQo+
+IE9uIFR1ZSAyMDE5LTA4LTI3IDA5OjUwOjE0LCBHcmVnIEtyb2FoLUhhcnRtYW4gd3JvdGU6DQo+
+ID4gWyBVcHN0cmVhbSBjb21taXQgZGVhMWJiMzVjNWYzNWUwNTc3Y2ZjNjFmNzkyNjFkODBiODcx
+NTIyMSBdDQo+ID4gDQo+ID4gUGVvcGxlIGFyZSByZXBvcmluZyBzZWVpbmcgZnNjYWNoZSBlcnJv
+cnMgYmVpbmcgcmVwb3J0ZWQgY29uY2VybmluZw0KPiA+IGR1cGxpY2F0ZSBjb29raWVzIGV2ZW4g
+aW4gY2FzZXMgd2hlcmUgdGhleSBhcmUgbm90IHNldHRpbmcgdXANCj4gPiBmc2NhY2hlDQo+ID4g
+YXQgYWxsLiBUaGUgcnVsZSBuZWVkcyB0byBiZSB0aGF0IGlmIGZzY2FjaGUgaXMgbm90IGVuYWJs
+ZWQsIHRoZW4NCj4gPiBpdA0KPiA+IHNob3VsZCBoYXZlIG5vIHNpZGUgZWZmZWN0cyBhdCBhbGwu
+DQo+ID4gDQo+ID4gVG8gZW5zdXJlIHRoaXMgaXMgdGhlIGNhc2UsIHdlIGRpc2FibGUgZnNjYWNo
+ZSBjb21wbGV0ZWx5IG9uIGFsbA0KPiA+IHN1cGVyYmxvY2tzDQo+ID4gZm9yIHdoaWNoIHRoZSAn
+ZnNjJyBtb3VudCBvcHRpb24gd2FzIG5vdCBzZXQuIEluIG9yZGVyIHRvIGF2b2lkDQo+ID4gaXNz
+dWVzDQo+ID4gd2l0aCAnLW9yZW1vdW50Jywgd2UgYWxzbyBkaXNhYmxlIHRoZSBhYmlsaXR5IHRv
+IHR1cm4gZnNjYWNoZSBvbg0KPiA+IHZpYQ0KPiA+IHJlbW91bnQuDQo+IA0KPiBBY3R1YWxseSwg
+dGhlIGNvZGUgc2VlbXMgdG8gc3VnZ2VzdCB0aGF0IHlvdSBkaXNhYmxlIHRoZSBhYmlsaXR5IHRv
+DQo+IHR1cm4gZnNjYWNoZSBfb2ZmXyB2aWEgcmVtb3VudCwgdG9vLg0KPiANCj4gSXMgdGhhdCBp
+bnRlbnRpb25hbD8NCj4gDQoNClllcy4gVGhhdCBpcyBpbnRlbnRpb25hbC4gT3RoZXJ3aXNlIHdl
+IHdvdWxkIGhhdmUgdG8gY2xlYXIgYWxsIHRoZQ0KZnNjYWNoZSBjb29raWVzIGZyb20gdGhlIGlu
+b2Rlcy4NCg0KPiBCZXN0IHJlZ2FyZHMsDQo+IAkJCQkJCQkJUGF2ZWwNCj4gDQo+ID4gQEAgLTIy
+MzksNiArMjIzOSw3IEBAIG5mc19jb21wYXJlX3JlbW91bnRfZGF0YShzdHJ1Y3QgbmZzX3NlcnZl
+cg0KPiA+ICpuZnNzLA0KPiA+ICAJICAgIGRhdGEtPmFjZGlybWluICE9IG5mc3MtPmFjZGlybWlu
+IC8gSFogfHwNCj4gPiAgCSAgICBkYXRhLT5hY2Rpcm1heCAhPSBuZnNzLT5hY2Rpcm1heCAvIEha
+IHx8DQo+ID4gIAkgICAgZGF0YS0+dGltZW8gIT0gKDEwVSAqIG5mc3MtPmNsaWVudC0+Y2xfdGlt
+ZW91dC0+dG9faW5pdHZhbA0KPiA+IC8gSFopIHx8DQo+ID4gKwkgICAgKGRhdGEtPm9wdGlvbnMg
+JiBORlNfT1BUSU9OX0ZTQ0FDSEUpICE9IChuZnNzLT5vcHRpb25zICYNCj4gPiBORlNfT1BUSU9O
+X0ZTQ0FDSEUpIHx8DQo+ID4gIAkgICAgZGF0YS0+bmZzX3NlcnZlci5wb3J0ICE9IG5mc3MtPnBv
+cnQgfHwNCj4gPiAgCSAgICBkYXRhLT5uZnNfc2VydmVyLmFkZHJsZW4gIT0gbmZzcy0+bmZzX2Ns
+aWVudC0+Y2xfYWRkcmxlbiB8fA0KPiA+ICAJICAgICFycGNfY21wX2FkZHIoKHN0cnVjdCBzb2Nr
+YWRkciAqKSZkYXRhLT5uZnNfc2VydmVyLmFkZHJlc3MsDQotLSANClRyb25kIE15a2xlYnVzdA0K
+Q1RPLCBIYW1tZXJzcGFjZSBJbmMNCjQzMDAgRWwgQ2FtaW5vIFJlYWwsIFN1aXRlIDEwNQ0KTG9z
+IEFsdG9zLCBDQSA5NDAyMg0Kd3d3LmhhbW1lci5zcGFjZQ0KDQoNCg==
