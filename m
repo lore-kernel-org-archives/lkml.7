@@ -2,113 +2,73 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2140BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67928C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0202423403
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4852120828
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfH1NhR (ORCPT
+        id S1726924AbfH1Nja convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:37:17 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:40944 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfH1NhR (ORCPT
+        Wed, 28 Aug 2019 09:39:30 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:53103 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfH1Nja (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:37:17 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id C98C982573; Wed, 28 Aug 2019 15:37:00 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 15:37:13 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Pavel Machek <pavel@denx.de>, Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chen Yu <yu.c.chen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 4.19 72/98] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD
- family 15h/16h
-Message-ID: <20190828133713.GF8052@amd>
-References: <20190827113604.GB18218@amd>
- <alpine.DEB.2.21.1908271525480.1939@nanos.tec.linutronix.de>
- <20190828103113.GA14677@amd>
- <alpine.DEB.2.21.1908281231480.1869@nanos.tec.linutronix.de>
- <20190828114947.GC8052@amd>
- <20190828120024.GF4920@zn.tnic>
- <20190828120935.GD8052@amd>
- <20190828121628.GG4920@zn.tnic>
- <20190828122913.GE8052@amd>
- <20190828124621.GI4920@zn.tnic>
+        Wed, 28 Aug 2019 09:39:30 -0400
+X-Originating-IP: 90.30.228.116
+Received: from windsurf.home (atoulouse-659-1-185-116.w90-30.abo.wanadoo.fr [90.30.228.116])
+        (Authenticated sender: thomas.petazzoni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id E361220009;
+        Wed, 28 Aug 2019 13:39:27 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 15:39:26 +0200
+From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To:     Krzysztof Wilczynski <kw@linux.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Move static keyword to the front of
+ declarations in pci-bridge-emul.c
+Message-ID: <20190828153926.1d8d9d7b@windsurf.home>
+In-Reply-To: <20190828131733.5817-1-kw@linux.com>
+References: <20190826151436.4672-1-kw@linux.com>
+        <20190828131733.5817-1-kw@linux.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="KJY2Ze80yH5MUxol"
-Content-Disposition: inline
-In-Reply-To: <20190828124621.GI4920@zn.tnic>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---KJY2Ze80yH5MUxol
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 28 Aug 2019 15:17:33 +0200
+Krzysztof Wilczynski <kw@linux.com> wrote:
 
-On Wed 2019-08-28 14:46:21, Borislav Petkov wrote:
-> On Wed, Aug 28, 2019 at 02:29:13PM +0200, Pavel Machek wrote:
-> > This is not a way to have an inteligent conversation.
->=20
-> No, this *is* the way to keep the conversation sane, without veering
-> off into some absurd claims.
->=20
-> So, to cut to the chase: you can simply add "rdrand=3Dforce" to your
-> cmdline parameters and get back to using RDRAND.
->=20
-> And yet if you still feel this fix does not meet your expectations,
-> you were told already to either produce patches or who to contact. I'm
-> afraid complaining on this thread won't get you anywhere but that's your
-> call.
+> Move the static keyword to the front of declarations of
+> pci_regs_behavior and pcie_cap_regs_behavior, and resolve
+> the following compiler warning that can be seen when
+> building with warnings enabled (W=1):
+> 
+> drivers/pci/pci-bridge-emul.c:41:1: warning: ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+>  const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
+>  ^
+> drivers/pci/pci-bridge-emul.c:176:1: warning: ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+>  const static struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
+>  ^
+> 
+> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
 
-No, this does not meet my expectations, it violates stable kernel
-rules, and will cause regression to some users, while better solution
-is known to be available.
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 
-Best regards,
-
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---KJY2Ze80yH5MUxol
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1mg4kACgkQMOfwapXb+vJ5lQCfe67ZQO1KqO+Emi7h3sVMu+RT
-SAEAn1oFIuqthMNyVQDSzzirRUHxxId7
-=FeXY
------END PGP SIGNATURE-----
-
---KJY2Ze80yH5MUxol--
+Thomas
+-- 
+Thomas Petazzoni, CTO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
