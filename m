@@ -2,127 +2,89 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5803EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC10BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D07E2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:22:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UEaOy375"
+	by mail.kernel.org (Postfix) with ESMTP id CED4C22CED
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:22:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfH1PW2 (ORCPT
+        id S1726983AbfH1PWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:22:28 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38068 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfH1PWZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:22:25 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7SFMKTC117468;
-        Wed, 28 Aug 2019 10:22:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1567005740;
-        bh=7IGgI698zMF/+s89pWm3Pcl96yqo3HGlbNGLfaQySdY=;
-        h=From:To:CC:Subject:Date;
-        b=UEaOy375IM8Zc52bptNfiBPLq8fFfh9vY/h54ozDOihtFo9koAzGiqXkZPYYJdVLX
-         8ze0Tw2g23PvEXeBMonrE+Pe5N9W0iDBTPIU5e8edaoXx2PNUwo7bdjd4kqXAwAFd9
-         2g90DP4npjy8ooU2E5wk71nHX4mn7erQJKmlj30g=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7SFMKai029873
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 28 Aug 2019 10:22:20 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 28
- Aug 2019 10:22:20 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 28 Aug 2019 10:22:20 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7SFMKH2047280;
-        Wed, 28 Aug 2019 10:22:20 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v2] leds: ti-lmu-common: Fix coccinelle issue in TI LMU
-Date:   Wed, 28 Aug 2019 10:22:19 -0500
-Message-ID: <20190828152219.27640-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+        Wed, 28 Aug 2019 11:22:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53828 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726440AbfH1PW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 11:22:29 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D58423C92D;
+        Wed, 28 Aug 2019 15:22:28 +0000 (UTC)
+Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 313D25DA8B;
+        Wed, 28 Aug 2019 15:22:28 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 10:22:26 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: objtool warning "uses BP as a scratch register" with clang-9
+Message-ID: <20190828152226.r6pl64ij5kol6d4p@treble>
+References: <CAK8P3a3G=GCpLtNztuoLR4BuugAB=zpa_Jrz5BSft6Yj-nok1g@mail.gmail.com>
+ <20190827145102.p7lmkpytf3mngxbj@treble>
+ <CAHFW8PRsmmCR6TWoXpQ9gyTA7azX9YOerPErCMggcQX-=fAqng@mail.gmail.com>
+ <CAK8P3a2TeaMc_tWzzjuqO-eQjZwJdpbR1yH8yzSQbbVKdWCwSg@mail.gmail.com>
+ <20190827192255.wbyn732llzckmqmq@treble>
+ <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
+ <CAKwvOdnD1mEd-G9sWBtnzfe9oGTeZYws6zNJA7opS69DN08jPg@mail.gmail.com>
+ <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
+ <CAK8P3a0bY9QfamCveE3P4H+Nrs1e6CTqWVgiY+MCd9hJmgMQZg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0bY9QfamCveE3P4H+Nrs1e6CTqWVgiY+MCd9hJmgMQZg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 28 Aug 2019 15:22:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the coccinelle issues found in the TI LMU common code
+On Wed, Aug 28, 2019 at 05:13:59PM +0200, Arnd Bergmann wrote:
+> On Wed, Aug 28, 2019 at 11:00 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Tue, Aug 27, 2019 at 11:22 PM 'Nick Desaulniers' via Clang Built Linux <clang-built-linux@googlegroups.com> wrote:
+> I figured this one out as well:
+> 
+> > http://paste.ubuntu.com/p/XjdDsypRxX/
+> > 0x5BA1B7A1:arch/x86/ia32/ia32_signal.o: warning: objtool:
+> > ia32_setup_rt_frame()+0x238: call to memset() with UACCESS enabled
+> > 0x5BA1B7A1:arch/x86/kernel/signal.o: warning: objtool:
+> > __setup_rt_frame()+0x5b8: call to memset() with UACCESS enabled
+> 
+> When CONFIG_KASAN is set, clang decides to use memset() to set
+> the first two struct members in this function:
+> 
+>  static inline void sas_ss_reset(struct task_struct *p)
+>  {
+>         p->sas_ss_sp = 0;
+>         p->sas_ss_size = 0;
+>         p->sas_ss_flags = SS_DISABLE;
+>  }
+> 
+> and that is called from save_altstack_ex(). Adding a barrier() after
+> the sas_ss_sp() works around the issue, but is certainly not the
+> best solution. Any other ideas?
 
-drivers/leds/leds-ti-lmu-common.c:97:20-29: WARNING: Unsigned expression compared with zero: ramp_down < 0
-drivers/leds/leds-ti-lmu-common.c:97:5-12: WARNING: Unsigned expression compared with zero: ramp_up < 0
+Wow, is the compiler allowed to insert memset calls like that?  Seems a
+bit overbearing, at least in a kernel context.  I don't recall GCC ever
+doing it.
 
-Fixes: f717460ba4d7 ("leds: TI LMU: Add common code for TI LMU devices")
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/leds/leds-ti-lmu-common.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/leds/leds-ti-lmu-common.c b/drivers/leds/leds-ti-lmu-common.c
-index adc7293004f1..e294a0b097e3 100644
---- a/drivers/leds/leds-ti-lmu-common.c
-+++ b/drivers/leds/leds-ti-lmu-common.c
-@@ -11,10 +11,10 @@
- 
- #include <linux/leds-ti-lmu-common.h>
- 
--const static int ramp_table[16] = {2048, 262000, 524000, 1049000, 2090000,
--				4194000, 8389000, 16780000, 33550000, 41940000,
--				50330000, 58720000, 67110000, 83880000,
--				100660000, 117440000};
-+const static unsigned int ramp_table[16] = {2048, 262000, 524000, 1049000,
-+				2090000, 4194000, 8389000, 16780000, 33550000,
-+				41940000, 50330000, 58720000, 67110000,
-+				83880000, 100660000, 117440000};
- 
- static int ti_lmu_common_update_brightness(struct ti_lmu_bank *lmu_bank,
- 					   int brightness)
-@@ -54,7 +54,7 @@ int ti_lmu_common_set_brightness(struct ti_lmu_bank *lmu_bank, int brightness)
- }
- EXPORT_SYMBOL(ti_lmu_common_set_brightness);
- 
--static int ti_lmu_common_convert_ramp_to_index(unsigned int usec)
-+static unsigned int ti_lmu_common_convert_ramp_to_index(unsigned int usec)
- {
- 	int size = ARRAY_SIZE(ramp_table);
- 	int i;
-@@ -78,7 +78,7 @@ static int ti_lmu_common_convert_ramp_to_index(unsigned int usec)
- 		}
- 	}
- 
--	return -EINVAL;
-+	return 0;
- }
- 
- int ti_lmu_common_set_ramp(struct ti_lmu_bank *lmu_bank)
-@@ -94,9 +94,6 @@ int ti_lmu_common_set_ramp(struct ti_lmu_bank *lmu_bank)
- 		ramp_down = ti_lmu_common_convert_ramp_to_index(lmu_bank->ramp_down_usec);
- 	}
- 
--	if (ramp_up < 0 || ramp_down < 0)
--		return -EINVAL;
--
- 	ramp = (ramp_up << 4) | ramp_down;
- 
- 	return regmap_write(regmap, lmu_bank->runtime_ramp_reg, ramp);
 -- 
-2.22.0.214.g8dca754b1e
-
+Josh
