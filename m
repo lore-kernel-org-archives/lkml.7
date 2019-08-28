@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5829BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC82FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C86217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC0C5217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfH1KRe (ORCPT
+        id S1726923AbfH1KQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:17:34 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46456 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbfH1KQl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 28 Aug 2019 06:16:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46428 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbfH1KQf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 06:16:35 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2v0E-0000H2-VR; Wed, 28 Aug 2019 12:16:35 +0200
+        id 1i2v0D-0000Fk-7E; Wed, 28 Aug 2019 12:16:33 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2F6841C07D2;
-        Wed, 28 Aug 2019 12:16:28 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 10:16:28 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C34041C0DE6;
+        Wed, 28 Aug 2019 12:16:26 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 10:16:26 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-cpu-timers: Simplify timer queueing
+Subject: [tip: timers/core] sched: Move struct task_cputime to types.h
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190821192921.212129449@linutronix.de>
-References: <20190821192921.212129449@linutronix.de>
+In-Reply-To: <20190821192920.909530418@linutronix.de>
+References: <20190821192920.909530418@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <156698738809.5750.8972136364385252748.tip-bot2@tip-bot2>
+Message-ID: <156698738671.5740.12669290463759417859.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,105 +56,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     3b495b22d04df3220ccae829bf7c5cadb3059ccf
-Gitweb:        https://git.kernel.org/tip/3b495b22d04df3220ccae829bf7c5cadb3059ccf
+Commit-ID:     9eacb5c7e6607aba00a7322b21cad83fc8b101c8
+Gitweb:        https://git.kernel.org/tip/9eacb5c7e6607aba00a7322b21cad83fc8b101c8
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 21 Aug 2019 21:09:08 +02:00
+AuthorDate:    Wed, 21 Aug 2019 21:09:05 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 28 Aug 2019 11:50:36 +02:00
+CommitterDate: Wed, 28 Aug 2019 11:50:34 +02:00
 
-posix-cpu-timers: Simplify timer queueing
+sched: Move struct task_cputime to types.h
 
-Now that the expiry cache can be accessed as an array, the per clock
-checking can be reduced to just comparing the corresponding array elements.
+For upcoming posix-timer changes to avoid include recursion hell.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lkml.kernel.org/r/20190821192921.212129449@linutronix.de
+Link: https://lkml.kernel.org/r/20190821192920.909530418@linutronix.de
 
 ---
- kernel/time/posix-cpu-timers.c | 55 ++++++++++++---------------------
- 1 file changed, 21 insertions(+), 34 deletions(-)
+ include/linux/sched.h       | 17 +----------------
+ include/linux/sched/types.h | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+), 16 deletions(-)
+ create mode 100644 include/linux/sched/types.h
 
-diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index a38b6d0..b132417 100644
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -456,20 +456,20 @@ static inline int expires_gt(u64 expires, u64 new_exp)
-  */
- static void arm_timer(struct k_itimer *timer)
- {
-+	struct cpu_timer_list *const nt = &timer->it.cpu;
-+	int clkidx = CPUCLOCK_WHICH(timer->it_clock);
-+	u64 *cpuexp, newexp = timer->it.cpu.expires;
- 	struct task_struct *p = timer->it.cpu.task;
- 	struct list_head *head, *listpos;
--	struct task_cputime *cputime_expires;
--	struct cpu_timer_list *const nt = &timer->it.cpu;
- 	struct cpu_timer_list *next;
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index fde844a..37c39df 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -25,6 +25,7 @@
+ #include <linux/resource.h>
+ #include <linux/latencytop.h>
+ #include <linux/sched/prio.h>
++#include <linux/sched/types.h>
+ #include <linux/signal_types.h>
+ #include <linux/mm_types_task.h>
+ #include <linux/task_io_accounting.h>
+@@ -245,22 +246,6 @@ struct prev_cputime {
+ #endif
+ };
  
- 	if (CPUCLOCK_PERTHREAD(timer->it_clock)) {
--		head = p->posix_cputimers.cpu_timers;
--		cputime_expires = &p->posix_cputimers.cputime_expires;
-+		head = p->posix_cputimers.cpu_timers + clkidx;
-+		cpuexp = p->posix_cputimers.expiries + clkidx;
- 	} else {
--		head = p->signal->posix_cputimers.cpu_timers;
--		cputime_expires = &p->signal->posix_cputimers.cputime_expires;
-+		head = p->signal->posix_cputimers.cpu_timers + clkidx;
-+		cpuexp = p->signal->posix_cputimers.expiries + clkidx;
- 	}
--	head += CPUCLOCK_WHICH(timer->it_clock);
- 
- 	listpos = head;
- 	list_for_each_entry(next, head, entry) {
-@@ -479,35 +479,22 @@ static void arm_timer(struct k_itimer *timer)
- 	}
- 	list_add(&nt->entry, listpos);
- 
--	if (listpos == head) {
--		u64 exp = nt->expires;
-+	if (listpos != head)
-+		return;
- 
--		/*
--		 * We are the new earliest-expiring POSIX 1.b timer, hence
--		 * need to update expiration cache. Take into account that
--		 * for process timers we share expiration cache with itimers
--		 * and RLIMIT_CPU and for thread timers with RLIMIT_RTTIME.
--		 */
-+	/*
-+	 * We are the new earliest-expiring POSIX 1.b timer, hence
-+	 * need to update expiration cache. Take into account that
-+	 * for process timers we share expiration cache with itimers
-+	 * and RLIMIT_CPU and for thread timers with RLIMIT_RTTIME.
-+	 */
-+	if (expires_gt(*cpuexp, newexp))
-+		*cpuexp = newexp;
- 
--		switch (CPUCLOCK_WHICH(timer->it_clock)) {
--		case CPUCLOCK_PROF:
--			if (expires_gt(cputime_expires->prof_exp, exp))
--				cputime_expires->prof_exp = exp;
--			break;
--		case CPUCLOCK_VIRT:
--			if (expires_gt(cputime_expires->virt_exp, exp))
--				cputime_expires->virt_exp = exp;
--			break;
--		case CPUCLOCK_SCHED:
--			if (expires_gt(cputime_expires->sched_exp, exp))
--				cputime_expires->sched_exp = exp;
--			break;
--		}
--		if (CPUCLOCK_PERTHREAD(timer->it_clock))
--			tick_dep_set_task(p, TICK_DEP_BIT_POSIX_TIMER);
--		else
--			tick_dep_set_signal(p->signal, TICK_DEP_BIT_POSIX_TIMER);
--	}
-+	if (CPUCLOCK_PERTHREAD(timer->it_clock))
-+		tick_dep_set_task(p, TICK_DEP_BIT_POSIX_TIMER);
-+	else
-+		tick_dep_set_signal(p->signal, TICK_DEP_BIT_POSIX_TIMER);
- }
- 
- /*
+-/**
+- * struct task_cputime - collected CPU time counts
+- * @utime:		time spent in user mode, in nanoseconds
+- * @stime:		time spent in kernel mode, in nanoseconds
+- * @sum_exec_runtime:	total time spent on the CPU, in nanoseconds
+- *
+- * This structure groups together three kinds of CPU time that are tracked for
+- * threads and thread groups.  Most things considering CPU time want to group
+- * these counts together and treat all three of them in parallel.
+- */
+-struct task_cputime {
+-	u64				utime;
+-	u64				stime;
+-	unsigned long long		sum_exec_runtime;
+-};
+-
+ /* Alternate field names when used on cache expirations: */
+ #define virt_exp			utime
+ #define prof_exp			stime
+diff --git a/include/linux/sched/types.h b/include/linux/sched/types.h
+new file mode 100644
+index 0000000..2c5c28d
+--- /dev/null
++++ b/include/linux/sched/types.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_SCHED_TYPES_H
++#define _LINUX_SCHED_TYPES_H
++
++#include <linux/types.h>
++
++/**
++ * struct task_cputime - collected CPU time counts
++ * @utime:		time spent in user mode, in nanoseconds
++ * @stime:		time spent in kernel mode, in nanoseconds
++ * @sum_exec_runtime:	total time spent on the CPU, in nanoseconds
++ *
++ * This structure groups together three kinds of CPU time that are tracked for
++ * threads and thread groups.  Most things considering CPU time want to group
++ * these counts together and treat all three of them in parallel.
++ */
++struct task_cputime {
++	u64				utime;
++	u64				stime;
++	unsigned long long		sum_exec_runtime;
++};
++
++#endif
