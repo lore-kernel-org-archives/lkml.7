@@ -2,82 +2,96 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56053C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06251C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27DB2217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:53:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567025626;
-	bh=L658Uoi5wgh1LJ4svG0zhq44VhHlSp/4XyccC4WYsYw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=svcO6JdyNQFgOcpjA0P4lLdeZh/4NREEDMPhZX38WPTU/6Zyhdn+/pupSsrPl6AOB
-	 rYRo+0jqaBYg88LgEu3eijUq4txdmedUGiBUBj9XEV2wpH6hFqz1lLMdSmgVC3Oqld
-	 LOy10uLTJc0M1kXD9J9phDmH/8iiA0skjvEZILns=
+	by mail.kernel.org (Postfix) with ESMTP id CE5372070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfH1Uxp (ORCPT
+        id S1727086AbfH1UyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 16:53:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbfH1Uxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 16:53:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDBD62070B;
-        Wed, 28 Aug 2019 20:53:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567025624;
-        bh=L658Uoi5wgh1LJ4svG0zhq44VhHlSp/4XyccC4WYsYw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pXJTObT0GlU3fnn9CrEggvS9W+JfyefwiglkaD8sMY+w5maq2PPbTDdJqguMbjJzX
-         0K5K9854MN8vMr3z07rThNpEc9GsUJFipR7JyqpSpW4Xo/Ng6ZNpkFTEQJ90Y6eFYg
-         HkVrsXked6N2YBJKUrXqElk+iJdMynkTVDhKx4xs=
-Date:   Wed, 28 Aug 2019 22:53:41 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     arnd@arndb.de, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mayank Chopra <mak.chopra@codeaurora.org>,
-        Abhinav Asati <asatiabhi@codeaurora.org>,
-        Vamsi Singamsetty <vamssi@codeaurora.org>
-Subject: Re: [PATCH 1/5] misc: fastrpc: Reference count channel context
-Message-ID: <20190828205341.GA13049@kroah.com>
-References: <20190823100622.3892-1-srinivas.kandagatla@linaro.org>
- <20190823100622.3892-2-srinivas.kandagatla@linaro.org>
+        Wed, 28 Aug 2019 16:54:18 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48508 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbfH1UyQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 16:54:16 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i34xI-0004Oa-0l; Wed, 28 Aug 2019 22:54:12 +0200
+Date:   Wed, 28 Aug 2019 22:54:11 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+cc:     x86@kernel.org, Song Liu <songliubraving@fb.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>
+Subject: [patch V2 1/2] x86/mm/pti: Handle unaligned address gracefully in
+ pti_clone_pagetable()
+In-Reply-To: <20190828143123.971884723@linutronix.de>
+Message-ID: <alpine.DEB.2.21.1908282252170.1938@nanos.tec.linutronix.de>
+References: <20190828142445.454151604@linutronix.de> <20190828143123.971884723@linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190823100622.3892-2-srinivas.kandagatla@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 11:06:18AM +0100, Srinivas Kandagatla wrote:
-> From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
-> The channel context is referenced from the fastrpc user and might as
-> user space holds the file descriptor open outlive the fastrpc device,
-> which is removed when the remote processor is shutting down.
-> 
-> Reference count the channel context in order to retain this object until
-> all references has been relinquished.
-> 
-> TEST=stop and start remote proc1 using sysfs
+From: Song Liu <songliubraving@fb.com>
 
-What is this for?
+pti_clone_pmds() assumes that the supplied address is either:
 
-Please fix up the series and resend so that I do not have to hand-edit
-the changelog text.
+ - properly PUD/PMD aligned
+or
+ - the address is actually mapped which means that independent
+   of the mapping level (PUD/PMD/PTE) the next higher mapping
+   exist.
 
-thanks,
+If that's not the case the unaligned address can be incremented by PUD or
+PMD size wrongly. All callers supply mapped and/or aligned addresses, but
+for robustness sake, it's better to handle that case proper and to emit a
+warning.
 
-greg k-h
+[ tglx: Rewrote changelog and added WARN_ON_ONCE() ]
+
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+V2: Negate P[UM]D_MASK for checking whether the offset part is 0
+---
+ arch/x86/mm/pti.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+--- a/arch/x86/mm/pti.c
++++ b/arch/x86/mm/pti.c
+@@ -330,13 +330,15 @@ pti_clone_pgtable(unsigned long start, u
+ 
+ 		pud = pud_offset(p4d, addr);
+ 		if (pud_none(*pud)) {
+-			addr += PUD_SIZE;
++			WARN_ON_ONCE(addr & ~PUD_MASK);
++			addr = round_up(addr + 1, PUD_SIZE);
+ 			continue;
+ 		}
+ 
+ 		pmd = pmd_offset(pud, addr);
+ 		if (pmd_none(*pmd)) {
+-			addr += PMD_SIZE;
++			WARN_ON_ONCE(addr & ~PMD_MASK);
++			addr = round_up(addr + 1, PMD_SIZE);
+ 			continue;
+ 		}
+ 
