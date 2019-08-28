@@ -2,307 +2,154 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3697C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9E7C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC282173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02B72173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:21:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCOO+UNR"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="UkCaK5W8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfH1QUG (ORCPT
+        id S1726880AbfH1QVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:20:06 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46162 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfH1QUF (ORCPT
+        Wed, 28 Aug 2019 12:21:02 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:46782 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbfH1QVC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:20:05 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z1so361250wru.13;
-        Wed, 28 Aug 2019 09:20:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=6CPxEzCPe+o9sMen7nYO3ZlJyfdH9Q3b+f/rFJ1T2pI=;
-        b=QCOO+UNRCCvVuf4EKPxQXeLZNKvq6i7ZUgCu4UpsHCrkUUPaF1N3SfADgtadxUiTq/
-         AFQhnV52+KXMbzRxV/MvikLx7u5un+e99BgMaguyHcPqwrUQ/845bFI6VWRlih9yxs0w
-         yZ4Fd/mYo+9ZZ5APmZMTW0c6nn7vXi9QjlUEyItj6mx8HCpvXzMQZjKQHjjNu9AqXv/v
-         mWNGRmsBieyMGSTstp1SEC3FlbPxh5pJeMLl0Tyr/9r4KPlNQuwN5yLIpYeBPrHmw95/
-         /kxJzPkTd5OV3mWd3UIIfvrxeSxjXP0LbFn7I5zLwQq+9icQDqlHiymtR8D24jPUef9q
-         hl7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=6CPxEzCPe+o9sMen7nYO3ZlJyfdH9Q3b+f/rFJ1T2pI=;
-        b=OLIq/Pu3RjYblN57KXIHLDuKPhE6ZUL3i9dTJfQ46eI6zX9Y6hNahkRTl+9LSVvDgb
-         6LDoov1LH6V89z2qdXN0ZXFC/gQbEFed6ZX0bNYi73VPuxVinM5pvsU1PlJTmYzTiUWF
-         QBcLnj8ILBAruPBwLfNytDKUvW6hVzVadxjySikULxMRyBjC7TtEp2GIAgjE3bbYMMg9
-         i50xtQ/dfux6Dz86JcLZyaYL4qnhH6mgsLehM7oU9f1LHxjUjXsk0yL2gURAR9A7ed3E
-         qxEhPkHqceV/wG3Ord6UZQTY2NS/CaHdrz3eKD26bPawB9ITKX6cGhMRGszBYkVI4Ysr
-         zerA==
-X-Gm-Message-State: APjAAAVTpguyANDv5Dn0XEblXaShYohwvjfqCNvBlF9kM5g35cDl3pRm
-        9tmjIY72eeB1S2zXfcIPEiQ=
-X-Google-Smtp-Source: APXvYqz4mvANLqBJ6iYHhOnO7VYRJGveLbT37oi03HXIbLORmhrAG/UL+NaIAThvSHk2ydukz4ZAcw==
-X-Received: by 2002:adf:efd2:: with SMTP id i18mr5591882wrp.145.1567009202563;
-        Wed, 28 Aug 2019 09:20:02 -0700 (PDT)
-Received: from localhost ([31.16.217.87])
-        by smtp.gmail.com with ESMTPSA id c21sm1927627wml.48.2019.08.28.09.20.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 09:20:01 -0700 (PDT)
-From:   Oliver Graute <oliver.graute@gmail.com>
-To:     shawnguo@kernel.org
-Cc:     oliver.graute@gmail.com, narmstrong@baylibre.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCHv5 2/2] ARM: dts: Add support for i.MX6 UltraLite DART Variscite Customboard
-Date:   Wed, 28 Aug 2019 18:19:18 +0200
-Message-Id: <1567009160-21965-3-git-send-email-oliver.graute@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567009160-21965-1-git-send-email-oliver.graute@gmail.com>
-References: <1567009160-21965-1-git-send-email-oliver.graute@gmail.com>
+        Wed, 28 Aug 2019 12:21:02 -0400
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x7SGKwWr032555;
+        Thu, 29 Aug 2019 01:20:58 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x7SGKwWr032555
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567009258;
+        bh=gLFsc4GoaKSP2blYoRMPLmZqDOXVyUGvyhVsoSy7tug=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UkCaK5W8/HC7ydYopRcA4en5nWKsFmKqbSKJp9oK21bX2H06tR9nl9dHrNfyObGvh
+         is4V+7oNJazKp1A6YNn+xiH8UxkoBKLuCUktUiLDOkdTdhW9Zebr630SBUJb9S98ky
+         RSCqGlhu8eaFkQQ16Gw9HpVYOIYc6ssDAsN81AVAymmeN0SLgKc+KupvmJ2iLKS2rv
+         YJMVJ3VSm7pT9S9shNhZUoILI0ydRy78d7idJOANrOWHVppD2c5dZK4eVFusmpFGwo
+         6mDJ3ad0qWFf1T09eYOveiXmW/G+Ac9EoysRn+iJYXNlKLHAEA64Tvkhkyw2KkPI7d
+         4L7DepLRaKhVg==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id f9so175898uaj.4;
+        Wed, 28 Aug 2019 09:20:58 -0700 (PDT)
+X-Gm-Message-State: APjAAAWicYO1dAgErUkeAssot+HKphHGVExSuusKQDx+Ga/rMocrPPnx
+        RKN7hpLMzjBJaD6Z4YfLfuUag+wVBN7op3xSJRI=
+X-Google-Smtp-Source: APXvYqx0AiCoT1Nj6qNzrL4eY7yrUbBwb44z2Gqdj7kuBZooLZlGmtWqmGPjhiDk6h/Wjp4X3ddsAWdyEpa1sklEZD0=
+X-Received: by 2002:ab0:32d8:: with SMTP id f24mr2475802uao.121.1567009256901;
+ Wed, 28 Aug 2019 09:20:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190815225844.145726-1-nhuck@google.com> <20190827004155.11366-1-natechancellor@gmail.com>
+In-Reply-To: <20190827004155.11366-1-natechancellor@gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 29 Aug 2019 01:20:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATHj5KrnFa0fvHjuC-=5mV8VBT14vrpPMfuNKWw7wabag@mail.gmail.com>
+Message-ID: <CAK7LNATHj5KrnFa0fvHjuC-=5mV8VBT14vrpPMfuNKWw7wabag@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Do not enable -Wimplicit-fallthrough for clang
+ for now
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Huckleberry <nhuck@google.com>,
+        Joe Perches <joe@perches.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds DeviceTree Source for the i.MX6 UltraLite DART NAND/WIFI
+On Tue, Aug 27, 2019 at 9:42 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> This functionally reverts commit bfd77145f35c ("Makefile: Convert
+> -Wimplicit-fallthrough=3 to just -Wimplicit-fallthrough for clang").
+>
+> clang enabled support for -Wimplicit-fallthrough in C in r369414 [1],
+> which causes a lot of warnings when building the kernel for two reasons:
+>
+> 1. Clang does not support the /* fall through */ comments. There seems
+>    to be a general consensus in the LLVM community that this is not
+>    something they want to support. Joe Perches wrote a script to convert
+>    all of the comments to a "fallthrough" keyword that will be added to
+>    compiler_attributes.h [2] [3], which catches the vast majority of the
+>    comments. There doesn't appear to be any consensus in the kernel
+>    community when to do this conversion.
+>
+> 2. Clang and GCC disagree about falling through to final case statements
+>    with no content or cases that simply break:
+>
+>    https://godbolt.org/z/c8csDu
+>
+>    This difference contributes at least 50 warnings in an allyesconfig
+>    build for x86, not considering other architectures. This difference
+>    will need to be discussed to see which compiler is right [4] [5].
+>
+> [1]: https://github.com/llvm/llvm-project/commit/1e0affb6e564b7361b0aadb38805f26deff4ecfc
+> [2]: https://lore.kernel.org/lkml/61ddbb86d5e68a15e24ccb06d9b399bbf5ce2da7.camel@perches.com/
+> [3]: https://lore.kernel.org/lkml/1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com/
+> [4]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91432
+> [5]: https://github.com/ClangBuiltLinux/linux/issues/636
+>
+> Given these two problems need discussion and coordination, do not enable
+> -Wimplicit-fallthrough with clang right now. Add a comment to explain
+> what is going on as well. This commit should be reverted once these two
+> issues are fully flushed out and resolved.
+>
+> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
 
-Signed-off-by: Oliver Graute <oliver.graute@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm/boot/dts/Makefile                      |   1 +
- arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts | 196 ++++++++++++++++++++++++
- 2 files changed, 197 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
+Applied to linux-kbuild. Thanks.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a24a6a1..a2a69e4 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -579,6 +579,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-tx6ul-0010.dtb \
- 	imx6ul-tx6ul-0011.dtb \
- 	imx6ul-tx6ul-mainboard.dtb \
-+	imx6ul-var-6ulcustomboard.dtb \
- 	imx6ull-14x14-evk.dtb \
- 	imx6ull-colibri-eval-v3.dtb \
- 	imx6ull-colibri-wifi-eval-v3.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-new file mode 100644
-index 00000000..1861b34
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-@@ -0,0 +1,196 @@
-+// SPDX-License-Identifier: (GPL-2.0)
-+/*
-+ * Support for Variscite DART-6UL Module
-+ *
-+ * Copyright (C) 2015 Freescale Semiconductor, Inc.
-+ * Copyright (C) 2015-2016 Variscite Ltd. - http://www.variscite.com
-+ * Copyright (C) 2018-2019 Oliver Graute <oliver.graute@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include "imx6ul-imx6ull-var-dart-common.dtsi"
-+
-+/ {
-+	model = "Variscite i.MX6 UltraLite Carrier-board";
-+	compatible = "variscite,6ulcustomboard", "fsl,imx6ul";
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm1 0 20000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+		status = "okay";
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		user {
-+			gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_BACK>;
-+			gpio-key,wakeup;
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+
-+		d16-led {
-+			gpios = <&gpio4 20 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "wm8731audio";
-+		simple-audio-card,widgets =
-+			"Headphone", "Headphone Jack",
-+			"Line", "Line Jack",
-+			"Microphone", "Mic Jack";
-+		simple-audio-card,routing =
-+			"Headphone Jack", "RHPOUT",
-+			"Headphone Jack", "LHPOUT",
-+			"LLINEIN", "Line Jack",
-+			"RLINEIN", "Line Jack",
-+			"MICIN", "Mic Bias",
-+			"Mic Bias", "Mic Jack";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&sound_master>;
-+		simple-audio-card,frame-master = <&sound_master>;
-+
-+		sound_master: simple-audio-card,cpu {
-+				sound-dai = <&sai2>;
-+		};
-+	};
-+};
-+
-+&can1 {
-+	status = "okay";
-+};
-+
-+&can2 {
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	phy-mode = "rgmii";
-+	phy-reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-+	phy-handle = <&ethphy0>;
-+	status = "okay";
-+};
-+
-+&fec2 {
-+	phy-mode = "rgmii";
-+	phy-reset-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
-+	phy-handle = <&ethphy1>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	clock_frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+
-+	wm8731: audio-codec@1a {
-+		#sound-dai-cells = <0>;
-+		compatible = "wlf,wm8731";
-+		reg = <0x1a>;
-+		clocks = <&clks IMX6UL_CLK_SAI2>;
-+		clock-names = "mclk";
-+	};
-+
-+	touchscreen@38 {
-+		compatible = "edt,edt-ft5x06";
-+		reg = <0x38>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <4 0>;
-+		touchscreen-size-x = <800>;
-+		touchscreen-size-y = <480>;
-+		touchscreen-inverted-x;
-+		touchscreen-inverted-y;
-+		wakeup-source;
-+	};
-+
-+	rtc@68 {
-+		compatible = "dallas,ds1337";
-+		reg = <0x68>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_rtc>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-+	};
-+};
-+
-+&lcdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lcdif>;
-+	display = <&display0>;
-+	status = "okay";
-+
-+	display0: display0 {
-+		bits-per-pixel = <16>;
-+		bus-width = <24>;
-+
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: timing0 {
-+				clock-frequency =<35000000>;
-+				hactive = <800>;
-+				vactive = <480>;
-+				hfront-porch = <40>;
-+				hback-porch = <40>;
-+				hsync-len = <48>;
-+				vback-porch = <29>;
-+				vfront-porch = <13>;
-+				vsync-len = <3>;
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				de-active = <1>;
-+				pixelclk-active = <0>;
-+			};
-+		};
-+	};
-+};
-+
-+&pwm1 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_rtc: rtcgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0
-+		>;
-+	};
-+};
+(If other clang folks give tags, I will add them later.)
+
+
+
+>  Makefile | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index f125625efd60..6007a56bdbee 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -751,6 +751,11 @@ else
+>  # These warnings generated too much noise in a regular build.
+>  # Use make W=1 to enable them (see scripts/Makefile.extrawarn)
+>  KBUILD_CFLAGS += -Wno-unused-but-set-variable
+> +
+> +# Warn about unmarked fall-throughs in switch statement.
+> +# Disabled for clang while comment to attribute conversion happens and
+> +# https://github.com/ClangBuiltLinux/linux/issues/636 is discussed.
+> +KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
+>  endif
+>
+>  KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
+> @@ -845,9 +850,6 @@ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
+>  # warn about C99 declaration after statement
+>  KBUILD_CFLAGS += -Wdeclaration-after-statement
+>
+> -# Warn about unmarked fall-throughs in switch statement.
+> -KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
+> -
+>  # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
+>  KBUILD_CFLAGS += -Wvla
+>
+> --
+> 2.23.0
+>
+
+
 -- 
-2.7.4
-
+Best Regards
+Masahiro Yamada
