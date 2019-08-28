@@ -2,101 +2,78 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DF5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E95FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 035F82189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 215AE23407
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:09:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567001382;
+	bh=NbxD37/YZywxtJEqp4Mp+jtxWAYcea3eBo2cQaaKeG8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qANatjNz3HwNsOkaFvCZyAeVBworM9vMHPZxXTuYmyMdlmM+CJqAkvx+c1UQEVvNM
+	 x2OYjjw7hzQ8OvZzj+/HSQf8y5jDArWBuCO1cJO/VmDfdrp4DbC3dfUqA6BVemLqTU
+	 CiFZc92SJcTDeiHuxJXTt/gPMe4hMylKUBFAKBug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfH1OH7 (ORCPT
+        id S1726719AbfH1OJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:07:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47429 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbfH1OH6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:07:58 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i2ybc-0005Vf-Ga; Wed, 28 Aug 2019 16:07:24 +0200
-Date:   Wed, 28 Aug 2019 16:07:19 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ming Lei <ming.lei@redhat.com>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.com>,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-In-Reply-To: <20190828135054.GA23861@ming.t460p>
-Message-ID: <alpine.DEB.2.21.1908281605190.23149@nanos.tec.linutronix.de>
-References: <20190827085344.30799-1-ming.lei@redhat.com> <20190827085344.30799-2-ming.lei@redhat.com> <alpine.DEB.2.21.1908271633450.1939@nanos.tec.linutronix.de> <20190827225827.GA5263@ming.t460p> <alpine.DEB.2.21.1908280104330.1939@nanos.tec.linutronix.de>
- <20190828110633.GC15524@ming.t460p> <alpine.DEB.2.21.1908281316230.1869@nanos.tec.linutronix.de> <20190828135054.GA23861@ming.t460p>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 28 Aug 2019 10:09:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42882 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726515AbfH1OJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:09:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 50EFEAE92;
+        Wed, 28 Aug 2019 14:09:39 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 16:09:38 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Dan Williams <dan.j.williams@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+Subject: Re: [PATCH v2] fs/proc/page: Skip uninitialized page when iterating
+ page structures
+Message-ID: <20190828140938.GL28313@dhcp22.suse.cz>
+References: <20190826124336.8742-1-longman@redhat.com>
+ <20190827142238.GB10223@dhcp22.suse.cz>
+ <20190828080006.GG7386@dhcp22.suse.cz>
+ <8363a4ba-e26f-f88c-21fc-5dd1fe64f646@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8363a4ba-e26f-f88c-21fc-5dd1fe64f646@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 28 Aug 2019, Ming Lei wrote:
-> On Wed, Aug 28, 2019 at 01:23:06PM +0200, Thomas Gleixner wrote:
-> > On Wed, 28 Aug 2019, Ming Lei wrote:
-> > > On Wed, Aug 28, 2019 at 01:09:44AM +0200, Thomas Gleixner wrote:
-> > > > > > Also how is that supposed to work when sched_clock is jiffies based?
-> > > > > 
-> > > > > Good catch, looks ktime_get_ns() is needed.
-> > > > 
-> > > > And what is ktime_get_ns() returning when the only available clocksource is
-> > > > jiffies?
-> > > 
-> > > IMO, it isn't one issue. If the only clocksource is jiffies, we needn't to
-> > > expect high IO performance. Then it is fine to always handle the irq in
-> > > interrupt context or thread context.
-> > > 
-> > > However, if it can be recognized runtime, irq_flood_detected() can
-> > > always return true or false.
-> > 
-> > Right. The clocksource is determined at runtime. And if there is no high
-> > resolution clocksource then that function will return crap.
+On Wed 28-08-19 09:46:21, Waiman Long wrote:
+> On 8/28/19 4:00 AM, Michal Hocko wrote:
+> > On Tue 27-08-19 16:22:38, Michal Hocko wrote:
+> >> Dan, isn't this something we have discussed recently?
+> > This was http://lkml.kernel.org/r/20190725023100.31141-3-t-fukasawa@vx.jp.nec.com
+> > and talked about /proc/kpageflags but this is essentially the same thing
+> > AFAIU. I hope we get a consistent solution for both issues.
+> >
+> Yes, it is the same problem. The uninitialized page structure problem
+> affects all the 3 /proc/kpage{cgroup,count,flags) files.
 > 
-> This patch still works even though the only clocksource is jiffies.
+> Toshiki's patch seems to fix it just for /proc/kpageflags, though.
 
-Works by some definition of works, right?
-
-> > Well, yes. But it's trivial enough to utilize parts of it for your
-> > purposes.
-> 
-> >From the code of kernel/irq/timing.c:
-> 
-> 1) record_irq_time() only records the start time of one irq, and not
-> consider the time taken in interrupt handler, so we can't figure out
-> the real interval between two do_IRQ() on one CPU
-
-I said utilize and that means that the infrastructure can be used and
-extended. I did not say that it solves your problem, right?
-
-> 2) irq/timing doesn't cover softirq
-
-That's solvable, right?
- 
-> Daniel, could you take a look and see if irq flood detection can be
-> implemented easily by irq/timing.c?
-
-I assume you can take a look as well, right?
-
-Thanks,
-
-	tglx
+Yup. I was arguing that whacking a mole kinda fix is far from good. Dan
+had some arguments on why initializing those struct pages is a problem.
+The discussion had a half open end though. I hoped that Dan would try
+out the initialization side but I migh have misunderstood.
+-- 
+Michal Hocko
+SUSE Labs
