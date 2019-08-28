@@ -2,142 +2,120 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 186E9C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEBAC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBFEC22CF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:20:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cjH5XczQ"
+	by mail.kernel.org (Postfix) with ESMTP id 9CC1520644
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfH1SUW (ORCPT
+        id S1726617AbfH1SXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:20:22 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34526 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfH1SUW (ORCPT
+        Wed, 28 Aug 2019 14:23:24 -0400
+Received: from emh04.mail.saunalahti.fi ([62.142.5.110]:41908 "EHLO
+        emh04.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfH1SXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:20:22 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s18so800301wrn.1;
-        Wed, 28 Aug 2019 11:20:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FmZWuyzXgdUwXVfXnARqmGSbKSR4TizqVD3AQkgzi7A=;
-        b=cjH5XczQkjoLXAo9dkBLhKq20RtyY9fv4ghF7e1qpWBvIxybqCfhA3qCAMgUQ8Rzkn
-         pj7rROP+H8jD6TarciOB4LYpgmkEzXuUHzYkXX/FBKSkQLUpDwvLuaEwYWFHNWIPENLi
-         lMySAoseWH5KlSvhgzeK+H7mwd0wRm8trpKfCft25wz8Lc3AWAAJR8YSoup0hJzj8P3d
-         uFM434Z3y9YdIy8LSeKV7dgtGAM7Dkr7xaixS2/Lstv6kHusOCLDM1a41mX+rTQYEz1t
-         GHVPbubqLxnLNltylFQ0ZaKbwS+WJhaWN46v4YL1fOBiKRBnlOfNM69poca9rpSyMUfI
-         qUhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FmZWuyzXgdUwXVfXnARqmGSbKSR4TizqVD3AQkgzi7A=;
-        b=snbQoSkZzK8C73sMt3xjpfJ9eMBK+udYtfnVe6gYIxIkjuNUINw++gmNGhG/smp+/F
-         nnabEDa5ysdi6fcGCTuIRUDYziRP1X0+LMvklKx+Af05JcrYp1A05DxeJS2ZavdekyRD
-         H+zQTA2HCYkS9xzQd0rrh7j+tt06w16v2AOnHKVm1P6ZmjX9gKAWfpawH/1Sb8G6BZPj
-         c+hWiq2Y5QUh6gFRbLAid0fa5190x561t/4NMofOZWSdEV2JNYB17XaOdFFB4gKp1Adx
-         6q+gj9E8ofEdcvqVd7BAYV0CTDofehjFx+sczg2hUuAlp0JnbFJsPUS7OsTagW/4L9hH
-         5u+A==
-X-Gm-Message-State: APjAAAU8m/SyT6AM8SYx81iYteOgdiH/XHZF7cIsYGwocYtWT7KzFWOI
-        81Si+iLp98dVRnrNb9awVvSG1GkR02iWSw==
-X-Google-Smtp-Source: APXvYqzyOhe5pZadZXuOughj4gdOcbLgb4B8mNrBuAbb8eqeqiyJQ+8aOy7wZdznJj6DwYHsBsMFuw==
-X-Received: by 2002:adf:8541:: with SMTP id 59mr6357653wrh.298.1567016419538;
-        Wed, 28 Aug 2019 11:20:19 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id o3sm2017589wrv.90.2019.08.28.11.20.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 11:20:18 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 11:20:17 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Sven Schnelle <svens@stackframe.org>,
-        Xiaozhou Liu <liuxiaozhou@bytedance.com>,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] kbuild: allow Clang to find unused static inline
- functions for W=1 build
-Message-ID: <20190828182017.GB127646@archlinux-threadripper>
-References: <20190828055425.24765-1-yamada.masahiro@socionext.com>
- <20190828055425.24765-2-yamada.masahiro@socionext.com>
+        Wed, 28 Aug 2019 14:23:23 -0400
+Received: from darkstar.musicnaut.iki.fi (85-76-76-175-nat.elisa-mobile.fi [85.76.76.175])
+        by emh04.mail.saunalahti.fi (Postfix) with ESMTP id 40CF5300A0;
+        Wed, 28 Aug 2019 21:23:19 +0300 (EEST)
+Date:   Wed, 28 Aug 2019 21:23:19 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 14/22] ARM: omap1: use pci_ioremap_io() for omap_cf
+Message-ID: <20190828182318.GL30291@darkstar.musicnaut.iki.fi>
+References: <20190813103605.GL52127@atomide.com>
+ <CAK8P3a0E+QUn9wcP5Obv-FitWyXCFwcp+oPConeO2p-NV1rqsw@mail.gmail.com>
+ <20190813181158.GA26798@darkstar.musicnaut.iki.fi>
+ <CAK8P3a0LjKrc+7c5Ht9OL7LfYyLnG9=y7u+w24ujA1xAid_yCQ@mail.gmail.com>
+ <20190814074918.GA52127@atomide.com>
+ <CAK8P3a3k_HOGqzMGjtc+7NSaK0Bsa_vxxRFLzY8aP6ev4wa9iA@mail.gmail.com>
+ <20190816083403.GB1952@darkstar.musicnaut.iki.fi>
+ <CAK8P3a3jqNxoihQ+UFvOZMg=AcF2yzHXs5ay6X1TZX8L3zQ3rg@mail.gmail.com>
+ <20190827190453.GJ30291@darkstar.musicnaut.iki.fi>
+ <CAK8P3a1PeBMRuweAmzrTQC85CmwdZPirG3HPg9aJ99p2U7zknQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828055425.24765-2-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAK8P3a1PeBMRuweAmzrTQC85CmwdZPirG3HPg9aJ99p2U7zknQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 02:54:25PM +0900, Masahiro Yamada wrote:
-> GCC and Clang have different policy for -Wunused-function; GCC does not
-> warn unused static inline functions at all whereas Clang does if they
-> are defined in source files instead of included headers although it has
-> been suppressed since commit abb2ea7dfd82 ("compiler, clang: suppress
-> warning for unused static inline functions").
-> 
-> We often miss to delete unused functions where 'static inline' is used
-> in *.c files since there is no tool to detect them. Unused code remains
-> until somebody notices. For example, commit 075ddd75680f ("regulator:
-> core: remove unused rdev_get_supply()").
-> 
-> Let's remove __maybe_unused from the inline macro to allow Clang to
-> start finding unused static inline functions. For now, we do this only
-> for W=1 build since it is not a good idea to sprinkle warnings for the
-> normal build.
-> 
-> My initial attempt was to add -Wno-unused-function for no W=1 build
-> (https://lore.kernel.org/patchwork/patch/1120594/)
-> 
-> Nathan Chancellor pointed out that would weaken Clang's checks since
-> we would no longer get -Wunused-function without W=1. It is true GCC
-> would detect unused static non-inline functions, but it would weaken
-> Clang as a standalone compiler at least.
-> 
-> Here is a counter implementation. The current problem is, W=... only
-> controls compiler flags, which are globally effective. There is no way
-> to narrow the scope to only 'static inline' functions.
-> 
-> This commit defines KBUILD_EXTRA_WARN[123] corresponding to W=[123].
-> When KBUILD_EXTRA_WARN1 is defined, __maybe_unused is omitted from
-> the 'inline' macro.
-> 
-> This makes the code a bit uglier, so personally I do not want to carry
-> this forever. If we can manage to fix most of the warnings, we can
-> drop this entirely, then enable -Wunused-function all the time.
-> 
-> If you contribute to code clean-up, please run "make CC=clang W=1"
-> and check -Wunused-function warnings. You will find lots of unused
-> functions.
-> 
-> Some of them are false-positives because the call-sites are disabled
-> by #ifdef. I do not like to abuse the inline keyword for suppressing
-> unused-function warnings because it is intended to be a hint for the
-> compiler optimization. I prefer #ifdef around the definition, or
-> __maybe_unused if #ifdef would make the code too ugly.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Hi,
 
-I can still see warnings from static unused functions and with W=1, I
-see plenty more. I agree that this is uglier because of the
-__inline_maybe_unused but I think this is better for regular developers.
-I will try to work on these unused-function warnings!
+On Wed, Aug 28, 2019 at 03:02:36PM +0200, Arnd Bergmann wrote:
+> On Tue, Aug 27, 2019 at 9:05 PM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
+> > On Tue, Aug 27, 2019 at 06:33:01PM +0200, Arnd Bergmann wrote:
+> > > On Fri, Aug 16, 2019 at 10:34 AM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
+> > > > However with earlyprintk it seems to hang as soon as kernel tries to print
+> > > > something. So something goes wrong with early DEBUG_LL mapping code when
+> > > > CONFIG_DEBUG_UART_VIRT=0xff000000 is used?
+> > >
+> > > I just redid the calculation and came out with the same address, so I
+> > > don't think I put the wrong one there. The address also does not
+> > > conflict with the PCI mapping, and the address is the same one that
+> > > is installed later, so that should also be fine.
+> > >
+> > > Are you sure you used the correct address in the .config file? If you
+> > > ran 'make oldconfig', the virtual address would not be changed here
+> > > as I just modify the default for a fresh 'make omap1_defconfig'
+> > > run or similar.
+> >
+> > Yes... You should be able to try this out also in QEMU to see the hang:
+> 
+> Haven't tried yet, but I took a look at the dump:
+> 
+> > $ qemu-system-arm -M sx1 -kernel sx1-zImage -nographic
+> >
+> > [ Hangs silently, press Ctrl-a c to enter monitor. ]
+> >
+> > QEMU 4.1.0 monitor - type 'help' for more information
+> > (qemu) info registers
+> > R00=c0379de1 R01=0000005b R02=00000000 R03=ff000000
+> > R04=00000000 R05=00000031 R06=c038f119 R07=00000000
+> > R08=00000000 R09=c038f50e R10=600001d3 R11=00000001
+> > R12=00000010 R13=c0379de0 R14=c000e07c R15=c000dfcc
+> > PSR=000001d3 ---- A svc32
+> > FPSCR: 00000000
+> >
+> > from System.map:
+> > c000df7c T printascii
+> > c000dfe0 T printch
+> 
+> Ok, that is clearly the "busyloop" macro in
+> arch/arm/include/debug/8250.S, checking if the data got sent.
+> 
+> The 'r2' register contains zero, so UART_LSR_TEMT and
+> UART_LSR_THRE are not set, but presumably the mapping
+> was installed right since you did not get a page fault.
+> 
+> I assume you checked that the uart output wasn't already broken
+> by one of the earlier patches, right?
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Correct, it's only with the mapping change patch it hangs.
+
+> Also, looking at arch/arm/mach-omap1/include/mach/uncompress.h
+> it seems that SX1 normally uses UART3, not UART1.
+> Is that different in qemu?
+
+In QEMU all uarts can be used, trying with UART3 as early console
+hangs as well. (It prints Uncompressing... done. but I guess that's
+done with the physical address.)
+
+A.
