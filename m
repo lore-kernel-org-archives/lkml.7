@@ -5,72 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E306FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892ACC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B615F214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52589214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:18:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gIkfOOHw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AFwFkCbw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfH1TSI (ORCPT
+        id S1726986AbfH1TSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 15:18:08 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43401 "EHLO
+        Wed, 28 Aug 2019 15:18:07 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:32782 "EHLO
         mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfH1TSG (ORCPT
+        with ESMTP id S1726887AbfH1TSE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 15:18:06 -0400
-Received: by mail-pl1-f193.google.com with SMTP id 4so401292pld.10
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 12:18:05 -0700 (PDT)
+        Wed, 28 Aug 2019 15:18:04 -0400
+Received: by mail-pl1-f193.google.com with SMTP id go14so424471plb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 12:18:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ghCpY+y6/zHXzyCjEkOv9HdWtkfIKriljN3CuQ2vN7I=;
-        b=gIkfOOHwl7BqS0e4VHItR/uqSvyUDNI3+RSRs2zrqGfiLQR5FSvABE25i1mqnfpk7g
-         y0eBHViEkJaT0IC/jdoqwk6pOreS8xwUzz9VQowGD1SPCkKJtjL4ALNydQPz9VgN7vex
-         l4Ya1gJUCfjsK9KF3fvDvFOj7BBoiRXuGu9OAK5GcXJUuDK6SwZPpobCv1bxmbtwEWbH
-         K0O9EWJceoDUlTmJjrb15akMKNtOxq5bsz3ha/IVXMHiSKbVvegkhgvh2KnPfVXT8GYn
-         l6At1155+F39nc1TNcQTOLyKku3Pzya7IufeMAUPbFfSaY+KJtIihYeQoVixi1Ao/2p8
-         f1qQ==
+        bh=peYkc8bpnDp6jFbXtkwKHOUEOwA9yyWEoa4Q9aEgSqo=;
+        b=AFwFkCbwz63sJkbk32teOrITW/PxPxz4IF3E60WGCC6OIkYgPjzJSp1x7aiVGloV89
+         A4uKhTR4+72TgIhhMk3aWziPHvzqP0HeYcmoHdfilhX66Y1mMr9h8pFru1N4BoVW+TI3
+         0bTriWTQ9pTYyp4T40Ovwi8X0YboAI2w8vwO3wVWVR2ZmNP1uTjxRccGoZGnvCOI1tQN
+         N184XnZqBtgT/eO0a37h7hSBchxRf+7/0PDYYjjmHqzqGjtfC8/8HN6mpqOE9jpA3smd
+         5X1x8XQLUJXnd8RDqF7+6RztHUb74CDvTbltYi6eRQjdu2uciJ+H5xMQqgc26X9PQt2d
+         79pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ghCpY+y6/zHXzyCjEkOv9HdWtkfIKriljN3CuQ2vN7I=;
-        b=FqRSAuRyEtHCoKivrb3CminGy6AJqHZzJI5qdcFNLGcvxEPgiI2QYgKPsgfyKLA1Ya
-         FNMBEPMbrHgMXXmL8ZI9xHXNTgmMFYwLA2mDfBfJ4rjN6J6i4Xa1w8LHmaqplJjkIHxx
-         c6cG4SI3wLqLcvO3YBgvxopm/KzijuSf2WHvELB6gB93fprpixi04csi5sRnNmtMl/+V
-         HU15jsKId7vKnLKCTeu1INPrPw2furZrgfNMpJPkoWso+DwETHvEN8uH80ry6hAC04yy
-         URnp7bnYwYqucgKMUYR3+NckV/Wo+D/gg6BoMsEHd/fqCUnh8cuXxNHGV+jnZVR0V0Vz
-         T/OA==
-X-Gm-Message-State: APjAAAUJCnVb8QK+bbgTIokuIv64URphskUIRSSNcGyH07dmecj4J8sV
-        o2EbJYkGqiKspaiIhcHnCo9k3A==
-X-Google-Smtp-Source: APXvYqweUkSpujhznWWsjbo7W9NutoibxGctqpJROZn6FFW2KuU2nTQetzLVpiSsVTWgo1ehZ5uwYw==
-X-Received: by 2002:a17:902:1e8:: with SMTP id b95mr5971800plb.28.1567019885123;
-        Wed, 28 Aug 2019 12:18:05 -0700 (PDT)
+        bh=peYkc8bpnDp6jFbXtkwKHOUEOwA9yyWEoa4Q9aEgSqo=;
+        b=PYZraEYHoSM+gAsVKAUwQUMz189OZJ9saG4i8SdnDXapxycgzuxCCVroqoMA63IlDg
+         lMi3Ji0XVW3i0aUU32KpPjNYfYlbmZoXwfDnLDNLV4WgG2Eo/snwzmdro1w5WPQOhVJB
+         VSi1r4q1g0HmbOb2dVYROhv564rggpuMbazdLlK7t/Bh+I4An9ZpfXh0z8ZBodtlFomD
+         hNclI9yjMr0A7xakBTUc1anoJtvCy7mReeF1ei9BdsZ2qfxmBqKh6zqR69X5yHyDEJOx
+         hsgizfd/TIS0SJxZ9s/oetuDKFURFdKP2PxdcwXqLrMA/0iDM5tlpVFcyFqtAU/8SK7A
+         X/YQ==
+X-Gm-Message-State: APjAAAXIBaJz7FcicymxsjsHFc3ZAOP7ix4SjWz8lnRC+oo2+UK5jop9
+        mTTkZxihkjeK3969QDnFl8CvPg==
+X-Google-Smtp-Source: APXvYqybIMSlWnXZB7dwowyvH/Nncyh1fSLknh4G6/YETH495I0ZI/Wu7VCVHUtdSGq+TuI+zjgunA==
+X-Received: by 2002:a17:902:96a:: with SMTP id 97mr5909479plm.264.1567019883819;
+        Wed, 28 Aug 2019 12:18:03 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id n128sm122717pfn.46.2019.08.28.12.18.03
+        by smtp.gmail.com with ESMTPSA id n128sm122717pfn.46.2019.08.28.12.18.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 12:18:04 -0700 (PDT)
+        Wed, 28 Aug 2019 12:18:03 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
         Avri Altman <avri.altman@wdc.com>,
         Pedro Sousa <pedrom.sousa@synopsys.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-scsi@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Andy Gross <agross@kernel.org>, Bean Huo <beanhuo@micron.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v4 3/3] arm64: dts: qcom: sdm845: Specify UFS device-reset GPIO
-Date:   Wed, 28 Aug 2019 12:17:56 -0700
-Message-Id: <20190828191756.24312-4-bjorn.andersson@linaro.org>
+Subject: [PATCH v4 2/3] scsi: ufs-qcom: Implement device_reset vops
+Date:   Wed, 28 Aug 2019 12:17:55 -0700
+Message-Id: <20190828191756.24312-3-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190828191756.24312-1-bjorn.andersson@linaro.org>
 References: <20190828191756.24312-1-bjorn.andersson@linaro.org>
@@ -79,47 +78,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Specify the UFS device-reset gpio for db845c and mtp, so that the
-controller will issue a reset of the UFS device.
+The UFS_RESET pin on Qualcomm SoCs are controlled by TLMM and exposed
+through the GPIO framework. Acquire the device-reset GPIO and use this
+to implement the device_reset vops, to allow resetting the attached
+memory.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Based on downstream support implemented by Subhash Jadavani
+<subhashj@codeaurora.org>.
+
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v3:
-- Renamed property
-- Added property to db845c
+- Renamed device-reset-gpios to just reset-gpios.
+- Explicitly bail on !host->device_reset, to not rely on passing NULL to
+  gpiod_set_value_cansleep()
 
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 2 ++
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts    | 2 ++
- 2 files changed, 4 insertions(+)
+ .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |  2 ++
+ drivers/scsi/ufs/ufs-qcom.c                   | 36 +++++++++++++++++++
+ drivers/scsi/ufs/ufs-qcom.h                   |  4 +++
+ 3 files changed, 42 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index 71bd717a4251..f5a85caff1a3 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -497,6 +497,8 @@
- &ufs_mem_hc {
- 	status = "okay";
+diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+index a74720486ee2..d78ef63935f9 100644
+--- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
++++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+@@ -54,6 +54,8 @@ Optional properties:
+ 			  PHY reset from the UFS controller.
+ - resets            : reset node register
+ - reset-names       : describe reset node register, the "rst" corresponds to reset the whole UFS IP.
++- reset-gpios       : A phandle and gpio specifier denoting the GPIO connected
++		      to the RESET pin of the UFS memory device.
  
-+	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
-+
- 	vcc-supply = <&vreg_l20a_2p95>;
- 	vcc-max-microamp = <800000>;
- };
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index 2e78638eb73b..c57548b7b250 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -388,6 +388,8 @@
- &ufs_mem_hc {
- 	status = "okay";
+ Note: If above properties are not defined it can be assumed that the supply
+ regulators or clocks are always on.
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index 4473f339cbc0..2200c8434ef3 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -8,6 +8,7 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/phy/phy.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/reset-controller.h>
  
-+	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
+ #include "ufshcd.h"
+@@ -1140,6 +1141,15 @@ static int ufs_qcom_init(struct ufs_hba *hba)
+ 		}
+ 	}
+ 
++	host->device_reset = devm_gpiod_get_optional(dev, "reset",
++						     GPIOD_OUT_HIGH);
++	if (IS_ERR(host->device_reset)) {
++		err = PTR_ERR(host->device_reset);
++		if (err != -EPROBE_DEFER)
++			dev_err(dev, "failed to acquire reset gpio: %d\n", err);
++		goto out_variant_clear;
++	}
 +
- 	vcc-supply = <&vreg_l20a_2p95>;
- 	vcc-max-microamp = <600000>;
+ 	err = ufs_qcom_bus_register(host);
+ 	if (err)
+ 		goto out_variant_clear;
+@@ -1545,6 +1555,31 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
+ 	usleep_range(1000, 1100);
+ }
+ 
++/**
++ * ufs_qcom_device_reset() - toggle the (optional) device reset line
++ * @hba: per-adapter instance
++ *
++ * Toggles the (optional) reset line to reset the attached device.
++ */
++static void ufs_qcom_device_reset(struct ufs_hba *hba)
++{
++	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
++
++	/* reset gpio is optional */
++	if (!host->device_reset)
++		return;
++
++	/*
++	 * The UFS device shall detect reset pulses of 1us, sleep for 10us to
++	 * be on the safe side.
++	 */
++	gpiod_set_value_cansleep(host->device_reset, 1);
++	usleep_range(10, 15);
++
++	gpiod_set_value_cansleep(host->device_reset, 0);
++	usleep_range(10, 15);
++}
++
+ /**
+  * struct ufs_hba_qcom_vops - UFS QCOM specific variant operations
+  *
+@@ -1565,6 +1600,7 @@ static const struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
+ 	.suspend		= ufs_qcom_suspend,
+ 	.resume			= ufs_qcom_resume,
+ 	.dbg_register_dump	= ufs_qcom_dump_dbg_regs,
++	.device_reset		= ufs_qcom_device_reset,
  };
+ 
+ /**
+diff --git a/drivers/scsi/ufs/ufs-qcom.h b/drivers/scsi/ufs/ufs-qcom.h
+index 001915d1e0e4..d401f174bb70 100644
+--- a/drivers/scsi/ufs/ufs-qcom.h
++++ b/drivers/scsi/ufs/ufs-qcom.h
+@@ -195,6 +195,8 @@ struct ufs_qcom_testbus {
+ 	u8 select_minor;
+ };
+ 
++struct gpio_desc;
++
+ struct ufs_qcom_host {
+ 	/*
+ 	 * Set this capability if host controller supports the QUniPro mode
+@@ -232,6 +234,8 @@ struct ufs_qcom_host {
+ 	struct ufs_qcom_testbus testbus;
+ 
+ 	struct reset_controller_dev rcdev;
++
++	struct gpio_desc *device_reset;
+ };
+ 
+ static inline u32
 -- 
 2.18.0
 
