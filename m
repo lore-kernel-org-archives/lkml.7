@@ -2,138 +2,173 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D879DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518F8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB472080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:07:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="VcAGSi/1"
+	by mail.kernel.org (Postfix) with ESMTP id 258A522CED
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:08:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfH1PHt (ORCPT
+        id S1726925AbfH1PIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:07:49 -0400
-Received: from mail-eopbgr20064.outbound.protection.outlook.com ([40.107.2.64]:54766
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        Wed, 28 Aug 2019 11:08:12 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:48217 "EHLO mx1.molgen.mpg.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726719AbfH1PHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:07:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GRoplw5uBj36u9PLD5KkJ52YVI4IKi8C06Kzgm7c/hZK/dpQ9OO+g8uQXlQBoz/tDQPywxRxLh8hgEEKZh/Oatm6DFGPa+Qc87LN6fyLnuVpIY+XbX/z19Cp+buLjlSj02dhrI4KDNAeZH3oZ6umbuaQXPFPzOU4Zx0O+o8okYTzsL90gKYXshi/Pdn7sGKZbXznZ00dhHZ61gf6tUoFgJ85UmPLCk+aN2qRs2mDSdZLlknpvojZUj78GpEu9KLXgmHklV4F2kNGdggsEFwWL936DWFTOcV9mLsoXWM0bM7wcSWVjBDIr8wFHwtP+Xt0kVsEiGLbAD3JgA63tSTuCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NzBO9v2P7cavA82+WvAK7mNHOh6Ht/b4uZLcBSgNBbM=;
- b=cvvqtfCH6kOfWqPAUWsQxY76d4RPhOMGyiaCl+oE511JoApSfW4cpX1yzZtlrVpHsrlf6qDo29kFVsrRG8CV5MbYZSD8Wxcok7d/gjHiOiTpHKXuT0Jqb4qZQY/QZJYlVRn/Qzk4E6g0/X5Gikph/s9GwmGbkkSjOmT4+y8Huu3HTTmqtY6pP7+mracfY2gFBOaqschcfLIIR6zjje24JrGFTVsYhvkubv5O/xV0oJn9sJPeEmpHz6uIirvOfXn7GuhTBBMRx/j05yve4jlUotw+X20CNeYY5X03OJO6v0CmA+M2rDEjTjIahLkWm18aolvhxcTzDyK1HqMKhZrDyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NzBO9v2P7cavA82+WvAK7mNHOh6Ht/b4uZLcBSgNBbM=;
- b=VcAGSi/1Yzpex313BdXg92GMZpRQkVgY0HOd1XC7febfqIkL+E+Lul+fvydZw/EalIJA+pu03ScaLjUerbL7zPoJ3Yw2w8pCZHHRy20w0Ez6zILDqN1DHAqVADN0s/o6getzPceW8p/5jbTm2JWCAanoChlhnzKHXdbHiJJNQrQ=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6030.eurprd05.prod.outlook.com (20.178.127.208) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Wed, 28 Aug 2019 15:07:44 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2199.021; Wed, 28 Aug 2019
- 15:07:44 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?iso-8859-1?Q?Thomas_Hellstr=F6m?= <thomas@shipmail.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Steven Price <steven.price@arm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: cleanup the walk_page_range interface v2
-Thread-Topic: cleanup the walk_page_range interface v2
-Thread-Index: AQHVXauu1eDDLACvPUOFLhngSurTPqcQqVMA
-Date:   Wed, 28 Aug 2019 15:07:44 +0000
-Message-ID: <20190828150740.GO914@mellanox.com>
-References: <20190828141955.22210-1-hch@lst.de>
-In-Reply-To: <20190828141955.22210-1-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTOPR0101CA0008.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:15::21) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.167.216.168]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1424d360-cdf3-447e-757a-08d72bc97ab7
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6030;
-x-ms-traffictypediagnostic: VI1PR05MB6030:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR05MB6030AF2912F13769D3C023E6CFA30@VI1PR05MB6030.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 014304E855
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(396003)(346002)(39860400002)(189003)(199004)(53754006)(2906002)(25786009)(6512007)(478600001)(4326008)(8936002)(3846002)(6116002)(14454004)(6246003)(6306002)(4744005)(66476007)(66946007)(81166006)(966005)(26005)(81156014)(53936002)(54906003)(33656002)(229853002)(316002)(8676002)(5660300002)(64756008)(66446008)(6916009)(66556008)(1076003)(2616005)(6436002)(86362001)(476003)(7736002)(11346002)(446003)(66066001)(36756003)(76176011)(186003)(52116002)(71190400001)(99286004)(305945005)(71200400001)(486006)(14444005)(386003)(256004)(6506007)(102836004)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6030;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: y8rs7KENIxHeRdBbHhnXun9UrH9UOt2TmPKWNiTm8ebQnT5TH+UgGKyfcrMQgrCOKEvPMhSjJRVoRZ9s+qH9nN+YW+PVfrJTs0Suqm8QEBkRdhgEC+K8dE73Ug9LPR8BI/8cmxxGZfcvAG66koX5iiPeNZ1VOZuyw02Zu3IpP0CYXI939CQVmscdHa2Z9l5thGukA2Nmoj3tOnKekTluMCD9aMZoLK+ndTd4Nj90lCQoBeyQTuVinKZ5G7e+pfkmfXDJFPDXVH2WovMoK2M7zNI6n/WUQdoWPiPcdEvAbRR/QLf9H9KTC1NO+DMjhIJ7quruP6WBxbLiwtEYIOBC1VT4Oxm6QsviVMbtJz6Y062vl1kfg5VHxoF79h30AWPy3OUx3eaXs+lTtOsLSMsM8lGjjlK/LHTDM0m/wab8Mhs=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <A699024BC38C89458FBFDF76B13C61F7@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1726415AbfH1PIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 11:08:12 -0400
+Received: from theinternet.molgen.mpg.de (theinternet.molgen.mpg.de [141.14.31.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: buczek)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id C528920225535;
+        Wed, 28 Aug 2019 17:08:08 +0200 (CEST)
+Subject: Re: /proc/vmcore and wrong PAGE_OFFSET
+From:   Donald Buczek <buczek@molgen.mpg.de>
+To:     iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>
+References: <c42060b0-12ae-d170-9ad4-03d85919948c@molgen.mpg.de>
+Cc:     horms@verge.net.au, kexec@lists.infradead.org
+Message-ID: <b208dccd-63d9-e902-28e1-3a6cb44f082f@molgen.mpg.de>
+Date:   Wed, 28 Aug 2019 17:08:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1424d360-cdf3-447e-757a-08d72bc97ab7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 15:07:44.5068
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1nDZ5jISFlz+xXAbpUSiWxvwNeX1XH90U5g5qBMGTd1N5zTnruNgQWjepaGlXEJoWmCbGDCtqdlnF014mm7iFQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6030
+In-Reply-To: <c42060b0-12ae-d170-9ad4-03d85919948c@molgen.mpg.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 04:19:52PM +0200, Christoph Hellwig wrote:
-> Hi all,
->=20
-> this series is based on a patch from Linus to split the callbacks
-> passed to walk_page_range and walk_page_vma into a separate structure
-> that can be marked const, with various cleanups from me on top.
->=20
-> This series is also available as a git tre here:
->=20
->     git://git.infradead.org/users/hch/misc.git pagewalk-cleanup
->=20
-> Gitweb:
->=20
->     http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/pagew=
-alk-cleanup
->=20
->=20
-> Diffstat:
->=20
->     14 files changed, 291 insertions(+), 273 deletions(-)
->=20
-> Changes since v1:
->  - minor comment typo and checkpatch fixes
->  - fix a compile failure for !CONFIG_SHMEM
->  - rebased to the wip/jgg-hmm branch
+On 8/20/19 11:21 PM, Donald Buczek wrote:
+> Dear Linux folks,
+> 
+> I'm investigating a problem, that the crash utility fails to work with our crash dumps:
+> 
+>      buczek@kreios:/mnt$ crash vmlinux crash.vmcore
+>      crash 7.2.6
+>      Copyright (C) 2002-2019  Red Hat, Inc.
+>      Copyright (C) 2004, 2005, 2006, 2010  IBM Corporation
+>      Copyright (C) 1999-2006  Hewlett-Packard Co
+>      Copyright (C) 2005, 2006, 2011, 2012  Fujitsu Limited
+>      Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
+>      Copyright (C) 2005, 2011  NEC Corporation
+>      Copyright (C) 1999, 2002, 2007  Silicon Graphics, Inc.
+>      Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
+>      This program is free software, covered by the GNU General Public License,
+>      and you are welcome to change it and/or distribute copies of it under
+>      certain conditions.  Enter "help copying" to see the conditions.
+>      This program has absolutely no warranty.  Enter "help warranty" for details.
+>      GNU gdb (GDB) 7.6
+>      Copyright (C) 2013 Free Software Foundation, Inc.
+>      License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+>      This is free software: you are free to change and redistribute it.
+>      There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+>      and "show warranty" for details.
+>      This GDB was configured as "x86_64-unknown-linux-gnu"...
+>      crash: read error: kernel virtual address: ffff89807ff77000  type: "memory section root table"
+> 
+> The crash file is a copy of /dev/vmcore taken by a crashkernel after a sysctl-forced panic.
+> 
+> It looks to me, that  0xffff89807ff77000 is not readable, because the virtual addresses stored in the elf header of the dump file are off by 0x0000008000000000:
+> 
+>      buczek@kreios:/mnt$ readelf -a crash.vmcore | grep LOAD | perl -lane 'printf "%s (%016x)\n",$_,hex($F[2])-hex($F[3])'
+>        LOAD           0x000000000000d000 0xffffffff81000000 0x000001007d000000 (fffffeff04000000)
+>        LOAD           0x0000000001c33000 0xffff880000001000 0x0000000000001000 (ffff880000000000)
+>        LOAD           0x0000000001cc1000 0xffff880000090000 0x0000000000090000 (ffff880000000000)
+>        LOAD           0x0000000001cd1000 0xffff880000100000 0x0000000000100000 (ffff880000000000)
+>        LOAD           0x0000000001cd2070 0xffff880000100070 0x0000000000100070 (ffff880000000000)
+>        LOAD           0x0000000019bd2000 0xffff880038000000 0x0000000038000000 (ffff880000000000)
+>        LOAD           0x000000004e6a1000 0xffff88006ffff000 0x000000006ffff000 (ffff880000000000)
+>        LOAD           0x000000004e6a2000 0xffff880100000000 0x0000000100000000 (ffff880000000000)
+>        LOAD           0x0000001fcda22000 0xffff882080000000 0x0000002080000000 (ffff880000000000)
+>        LOAD           0x0000003fcd9a2000 0xffff884080000000 0x0000004080000000 (ffff880000000000)
+>        LOAD           0x0000005fcd922000 0xffff886080000000 0x0000006080000000 (ffff880000000000)
+>        LOAD           0x0000007fcd8a2000 0xffff888080000000 0x0000008080000000 (ffff880000000000)
+>        LOAD           0x0000009fcd822000 0xffff88a080000000 0x000000a080000000 (ffff880000000000)
+>        LOAD           0x000000bfcd7a2000 0xffff88c080000000 0x000000c080000000 (ffff880000000000)
+>        LOAD           0x000000dfcd722000 0xffff88e080000000 0x000000e080000000 (ffff880000000000)
+>        LOAD           0x000000fc4d722000 0xffff88fe00000000 0x000000fe00000000 (ffff880000000000)
+> 
+> (Columns are File offset, Virtual Address, Physical Address and computed offset).
+> 
+> I would expect the offset between the virtual and the physical address to be PAGE_OFFSET, which is 0xffff88800000000 on x86_64, not 0xffff880000000000. Unlike /proc/vmcore, /proc/kcore shows the same physical memory (of the last memory section above) with a correct offset:
+> 
+>      buczek@kreios:/mnt$ sudo readelf -a /proc/kcore | grep 0x000000fe00000000 | perl -lane 'printf "%s (%016x)\n",$_,hex($F[2])-hex($F[3])'
+>        LOAD           0x0000097e00004000 0xffff897e00000000 0x000000fe00000000 (ffff888000000000)
+> 
+> The failing address 0xffff89807ff77000 happens to be at the end of the last memory section. It is the mem_section array, which crash wants to load and which is visible in the running system:
+> 
+>      buczek@kreios:/mnt$ sudo gdb vmlinux /proc/kcore
+>      [...]
+>      (gdb) print mem_section
+>      $1 = (struct mem_section **) 0xffff89807ff77000
+>      (gdb) print *mem_section
+>      $2 = (struct mem_section *) 0xffff88a07f37b000
+>      (gdb) print **mem_section
+>      $3 = {section_mem_map = 18446719884453740551, pageblock_flags = 0xffff88a07f36f040}
+> 
+> I can read the same information from the crash dump, if I account for the 0x0000008000000000 error:
+> 
+>      buczek@kreios:/mnt$ gdb vmlinux crash.vmcore
+>      [...]
+>      (gdb) print mem_section
+>      $1 = (struct mem_section **) 0xffff89807ff77000
+>      (gdb) print *mem_section
+>      Cannot access memory at address 0xffff89807ff77000
+>      (gdb) set $t=(struct mem_section **) ((char *)mem_section - 0x0000008000000000)
+>      (gdb) print *$t
+>      $2 = (struct mem_section *) 0xffff88a07f37b000
+>      (gdb) set $s=(struct mem_section *)((char *)*$t - 0x0000008000000000 )
+>      (gdb) print *$s
+>      $3 = {section_mem_map = 18446719884453740551, pageblock_flags = 0xffff88a07f36f040}
+> 
+> In the above example, the running kernel, the crashed kernel and the crashkernel are all the same 4.19.57 compilation. But I've tried with several other versions ( crashkernel 4.4, running kernel from 4.0 to linux master) with the same result.
+> 
+> The machine in the above example has several numa nodes (this is why there are so many LOAD headers). But I've tried this with a small kvm virtual machine and got the same result.
+> 
+>      buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep RANDOMIZE_BASE .config
+>      # CONFIG_RANDOMIZE_BASE is not set
+>      buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep SPARSEMEM .config
+>      CONFIG_ARCH_SPARSEMEM_ENABLE=y
+>      CONFIG_ARCH_SPARSEMEM_DEFAULT=y
+>      CONFIG_SPARSEMEM_MANUAL=y
+>      CONFIG_SPARSEMEM=y
+>      CONFIG_SPARSEMEM_EXTREME=y
+>      CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
+>      CONFIG_SPARSEMEM_VMEMMAP=y
+>      buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep PAGE_TABLE_ISOLATION .config
+>      CONFIG_PAGE_TABLE_ISOLATION=y
+> 
+> Any ideas?
+> 
+> Donald
 
-Applied to hmm.git, thanks
+To answer my own question for the records:
 
-I will push it toward linux-next after 0-day completes
+Our kexec command line is
 
-Jason
+     /usr/sbin/kexec -p /boot/bzImage.crash --initrd=/boot/grub/initramfs.igz --command-line="root=LABEL=root ro console=ttyS1,115200n8 console=tty0 irqpoll nr_cpus=1 reset_devices panic=5 CRASH"
+
+So we neither gave -s (--kexec-file-syscall) nor -a ( --kexec-syscall-auto ). For this reason, kexec used the kexec_load() syscall instead of the newer kexec_file_load syscall.
+
+With kexec_load(), the elf headers for the crash, which include program header for the old system ram, are not computed by the kernel, but by the userspace program from kexec-tools.
+
+Linux kernel commit d52888aa ("x86/mm: Move LDT remap out of KASLR region on 5-level paging") changed the base of the direct mapping from 0xffff880000000000 to 0xffff888000000000. This was merged into v4.20-rc2.
+
+kexec-tools, however, still has the old address hard coded:
+
+     buczek@avaritia:/scratch/cluster/buczek/kexec-tools (master)$ git grep X86_64_PAGE_OFFSET
+     kexec/arch/i386/crashdump-x86.c:                        elf_info->page_offset = X86_64_PAGE_OFFSET_PRE_2_6_27;
+     kexec/arch/i386/crashdump-x86.c:                        elf_info->page_offset = X86_64_PAGE_OFFSET;
+     kexec/arch/i386/crashdump-x86.h:#define X86_64_PAGE_OFFSET_PRE_2_6_27   0xffff810000000000ULL
+     kexec/arch/i386/crashdump-x86.h:#define X86_64_PAGE_OFFSET              0xffff880000000000ULL
+
+Best
+   Donald
