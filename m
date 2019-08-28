@@ -2,112 +2,141 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D03C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF45C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD10208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2040208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:39:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="O2uxCK58"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfH1QjS (ORCPT
+        id S1726775AbfH1Qjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:39:18 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:42407 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfH1QjR (ORCPT
+        Wed, 28 Aug 2019 12:39:48 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:34508 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbfH1Qjs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:39:17 -0400
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 49B5F100008;
-        Wed, 28 Aug 2019 16:39:12 +0000 (UTC)
-Date:   Wed, 28 Aug 2019 18:40:44 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v3 0/7] backlight: gpio: simplify the driver
-Message-ID: <20190828164044.ku3xozmp7wlipn5d@uno.localdomain>
-References: <20190724082508.27617-1-brgl@bgdev.pl>
- <CAMRc=Mex_Ricd+C4F7nGLmpBggO-hWwJDB6duX8kFpPEeaTDjQ@mail.gmail.com>
- <CAMRc=Mci4ncbDmns=0uL8hsAGz1Wvd5bgK4yxTF8QQQitXDv0g@mail.gmail.com>
- <CAMRc=McUEgm6yH7enwHuHxVTL41dmb5KAY_pxTmSr3vctCs2xg@mail.gmail.com>
- <CAMuHMdV3obGtQ7qohNedQNgpvZvyL9xjH0HUiBKD6b8Ou5F+XA@mail.gmail.com>
- <CACRpkdbgZhgSvicq2XG0n2hiKA9K8VFmvCPn3W9oXgSLrZiw=w@mail.gmail.com>
+        Wed, 28 Aug 2019 12:39:48 -0400
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x7SGddci009079;
+        Thu, 29 Aug 2019 01:39:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x7SGddci009079
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567010380;
+        bh=KKMXcx4MZH2tCnMUy9VJb4+KWRBKpdSFPmo+egKRxug=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=O2uxCK584KDa5zjAS1KvztgnLko5ByIMMxnbQtPcP1hlrzFJCm1wP27yqIoM+63ab
+         YIdcSXXIflc8oS7IwRZujUG2qSlqdiIxeP4tEdFHN/kPFz1vg4U1+Zd/413eTBVerO
+         SERzzCmQ6jGmYdhKFnDCHN1IB+B6dkAft1e9YQayJqDvTdtJPW4+fT0yLSZMSbvmNc
+         7HfdRjXaXNOS4XaLXANWYACBNmzm3W4SB9GsO8NfKR8opwN+XN0uc/20MYyMixiEru
+         bitspcYt5sRKS4x5eWyxFQ5RJ+lbFCtKNVi4EaiOixUZqYy/x2Lr1ExCIHxai5nDw+
+         NvUFhIdvyEaYQ==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id q16so424573vsm.2;
+        Wed, 28 Aug 2019 09:39:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAWWE3ooCyuYu5CT1uN75dPWWRM+39mFsm9G1eQ8QXKYJfCDYyhg
+        bTBAAyK2OT1xiH08EI6orgIziuyud0xfTTqi/aA=
+X-Google-Smtp-Source: APXvYqylJxRgovoI/FO2he+HZEc0MINZbZg6vw5PL1+Sf9uToYVyptIgY5ZQcKCGC9u4cLt8HneBpiSVqlx1lIRj/MM=
+X-Received: by 2002:a05:6102:20c3:: with SMTP id i3mr3028094vsr.155.1567010379424;
+ Wed, 28 Aug 2019 09:39:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ootzxk2uvromcpqa"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbgZhgSvicq2XG0n2hiKA9K8VFmvCPn3W9oXgSLrZiw=w@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20190814105400.1339-1-yamada.masahiro@socionext.com> <20190814105400.1339-2-yamada.masahiro@socionext.com>
+In-Reply-To: <20190814105400.1339-2-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 29 Aug 2019 01:39:03 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASwnqxT6fyv+qHTVzx_7-vZX7Rk+9D1f219Yvw1hwrZgA@mail.gmail.com>
+Message-ID: <CAK7LNASwnqxT6fyv+qHTVzx_7-vZX7Rk+9D1f219Yvw1hwrZgA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] docs: kbuild: fix invalid ReST syntax
+To:     Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---ootzxk2uvromcpqa
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Geert,
-
-On Wed, Aug 28, 2019 at 06:31:19PM +0200, Linus Walleij wrote:
-> On Wed, Aug 28, 2019 at 10:36 AM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
+On Wed, Aug 14, 2019 at 7:54 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 >
-> > CC the pour soul with the ecovec board.
+> I see the following warnings when I open this document with a ReST
+> viewer, retext:
 >
-I'm sorry, Eco what ? :)
-
-> With great power comes great responsibility ;)
+> /home/masahiro/ref/linux/Documentation/kbuild/makefiles.rst:1142: (WARNING/2) Inline emphasis start-string without end-string.
+> /home/masahiro/ref/linux/Documentation/kbuild/makefiles.rst:1152: (WARNING/2) Inline emphasis start-string without end-string.
+> /home/masahiro/ref/linux/Documentation/kbuild/makefiles.rst:1154: (WARNING/2) Inline emphasis start-string without end-string.
+>
+> These hunks were added by commit e846f0dc57f4 ("kbuild: add support
+> for ensuring headers are self-contained") and commit 1e21cbfada87
+> ("kbuild: support header-test-pattern-y"), respectively. They were
+> written not for ReST but for the plain text, and merged via the
+> kbuild tree.
+>
+> In the same development cycle, this document was converted to ReST
+> by commit cd238effefa2 ("docs: kbuild: convert docs to ReST and rename
+> to *.rst"), and merged via the doc sub-system.
+>
+> Merging them together into Linus' tree resulted in the current situation.
+>
+> To fix the syntax, surround the asterisks with back-quotes, and
+> use :: for the code sample.
+>
+> Fixes: 39ceda5ce1b0 ("Merge tag 'kbuild-v5.3' of git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild")
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 >
 
-Yeah, that's -exactly- a 'great powers' board :)
 
-I'll try to resurect it from the deads again and get back eventually
-with a tested-by.
+Both applied to linux-kbuild.
 
-I only briefly looked at the series and I don't have any LCD to test
-the backlight with, I hope I can sample the backlight GPIO value from
-some test point, if I ever find the schematics...
 
-> Yours,
-> Linus Walleij
 
---ootzxk2uvromcpqa
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1mrowACgkQcjQGjxah
-VjxtAA//YCv1S5V4Y+U+KJqq8uhB+Cs4NqedH2fC45FFxMAz/ze/UnG4XixNT9x1
-UP3xPgozXZeOzJyfM9w4bRC8yLTq6/t4kazDK0jjr/defxi1YpHCARTEw4/ioEkb
-FJ9K2FolNzhcQbTQNqNQNYqCtXPsUwzOR701cZkf2eE5PE/1DJi17wsYfycbi/1/
-HDrnrjDXnjla5CMrObPmvJ5rxPDHSHo3Le+SpBflzwvEWIktFKSwCMiNYUj2z9/x
-N71lKRlTS4jr//BURsomOt6i5Qzr6X2DroQ+VFLzsoToSVRleS/UMiY/ADnNori6
-xB9brM1ua/98Go61pIGXkhwOztB880f1dsyNygtyqxssWBUsWFEKsKcxQC5uAaeA
-iWY68EcVHFRKipu0CzJCNTh/mWrEbKZznDQPrXO4PIS8KlZuTlhKvrrTZAQL0knN
-zgTETUPOD4Yo27IvaNfxZKXWvfJbdywvPXOfV5i7lnMyYo17nfNQ3ZGeNcI+7oMA
-mgSi7zzNyOn1Rrag82vAytbXehRLkBq6vY7CpiCL6Cnh9J+NySiqOwpm/j1RBpek
-6rb2rbdu2kYUICirp9Fij8Ii1fkV4maFrRSxqe3Zig4Vr+swUl2Rc00Alz0Rj2y9
-I6CVuwpecgOeEmGst6RgEZ6R5ZyS5sO93znoz/ux6lbxW6UcYCE=
-=s/MY
------END PGP SIGNATURE-----
+>  Documentation/kbuild/makefiles.rst | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
+> index f4f0f7ffde2b..b4c28c543d72 100644
+> --- a/Documentation/kbuild/makefiles.rst
+> +++ b/Documentation/kbuild/makefiles.rst
+> @@ -1139,7 +1139,7 @@ When kbuild executes, the following steps are followed (roughly):
+>
+>      header-test-y
+>
+> -       header-test-y specifies headers (*.h) in the current directory that
+> +       header-test-y specifies headers (`*.h`) in the current directory that
+>         should be compile tested to ensure they are self-contained,
+>         i.e. compilable as standalone units. If CONFIG_HEADER_TEST is enabled,
+>         this builds them as part of extra-y.
+> @@ -1147,11 +1147,11 @@ When kbuild executes, the following steps are followed (roughly):
+>      header-test-pattern-y
+>
+>         This works as a weaker version of header-test-y, and accepts wildcard
+> -       patterns. The typical usage is:
+> +       patterns. The typical usage is::
+>
+> -                 header-test-pattern-y += *.h
+> +               header-test-pattern-y += *.h
+>
+> -       This specifies all the files that matches to '*.h' in the current
+> +       This specifies all the files that matches to `*.h` in the current
+>         directory, but the files in 'header-test-' are excluded.
+>
+>  6.7 Commands useful for building a boot image
+> --
+> 2.17.1
+>
 
---ootzxk2uvromcpqa--
+
+-- 
+Best Regards
+Masahiro Yamada
