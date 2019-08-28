@@ -2,141 +2,92 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E6EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BECC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58BA122DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B64A5214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfH1Ixm (ORCPT
+        id S1726566AbfH1Ixq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:53:42 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52922 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbfH1Ixm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:53:42 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 40846825C1; Wed, 28 Aug 2019 10:53:26 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 10:53:39 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>,
-        kernel list <linux-kernel@vger.kernel.org>, sre@kernel.org,
-        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
-Subject: [FYI] lm3532: right registration to work with LED-backlight
-Message-ID: <20190828085339.GB2923@amd>
-References: <20190827215205.59677-1-tony@atomide.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="/NkBOFFp2J2Af1nK"
-Content-Disposition: inline
-In-Reply-To: <20190827215205.59677-1-tony@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Wed, 28 Aug 2019 04:53:46 -0400
+Received: from mga12.intel.com ([192.55.52.136]:36181 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbfH1Ixn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:53:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 01:53:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
+   d="scan'208";a="332095289"
+Received: from deyangko-mobl.ccr.corp.intel.com ([10.249.168.35])
+  by orsmga004.jf.intel.com with ESMTP; 28 Aug 2019 01:53:40 -0700
+Message-ID: <b94af6b2101f436c1bdeec744e164c78ee7c2682.camel@intel.com>
+Subject: Re: [PATCH] thermal: armada: Fix -Wshift-negative-value
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>, edubezval@gmail.com,
+        linux-pm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Huckleberry <nhuck@google.com>
+Date:   Wed, 28 Aug 2019 16:53:49 +0800
+In-Reply-To: <20190819102131.41da667b@xps13>
+References: <20190613184923.245935-1-nhuck@google.com>
+         <27428324-129e-ee37-304a-0da2ed3810a0@linaro.org>
+         <CAJkfWY4X-YwuansL1R5w0rQNmE_hVJZKrMBJmOLp9G2DJPkNow@mail.gmail.com>
+         <CAKwvOdkEp=q+2B_iqqyHJLwwUaFH2jnO+Ey8t-hn=x4shTbdoA@mail.gmail.com>
+         <c2b821f2-545a-9839-3de6-d68dfee5b5dc@linaro.org>
+         <20190819102131.41da667b@xps13>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2019-08-19 at 10:21 +0200, Miquel Raynal wrote:
+> Hello,
+> 
+> Daniel Lezcano <daniel.lezcano@linaro.org> wrote on Thu, 15 Aug 2019
+> 01:06:21 +0200:
+> 
+> > On 15/08/2019 00:12, Nick Desaulniers wrote:
+> > > On Tue, Aug 13, 2019 at 10:28 AM 'Nathan Huckleberry' via Clang
+> > > Built
+> > > Linux <clang-built-linux@googlegroups.com> wrote:  
+> > > > 
+> > > > Following up to see if this patch is going to be accepted.  
+> > > 
+> > > Miquel is listed as the maintainer of this file in MAINTAINERS.
+> > > Miquel, can you please pick this up?  Otherwise Zhang, Eduardo,
+> > > and
+> > > Daniel are listed as maintainers for drivers/thermal/.  
+> > 
+> > I'm listed as reviewer, it is up to Zhang or Eduardo to take the
+> > patches.
+> > 
+> > 
+> 
+> Sorry for the delay, I don't manage a tree for this driver, I'll let
+> Zhang or Eduardo take the patch with my
+> 
+> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> 
 
---/NkBOFFp2J2Af1nK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Patch applied.
 
-Hi!
+thanks,
+rui
+> 
+> Thanks,
+> Miquèl
 
-Eventually, these will be needed.
-
-Best regards,
-								Pavel
-
-commit 38d956977a7d6cbdc811676f9b4033da7487e045
-Author: Pavel <pavel@ucw.cz>
-Date:   Wed Aug 7 12:43:52 2019 +0200
-
-    d4: lm3532 needs to use right register function for backlight to work.
-
-diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
-index 365a22a5..f98e657 100644
---- a/drivers/leds/leds-lm3532.c
-+++ b/drivers/leds/leds-lm3532.c
-@@ -629,7 +629,7 @@ static int lm3532_parse_node(struct lm3532_data *priv)
-=20
- 		lm3532_init_registers(led);
-=20
--		ret =3D devm_led_classdev_register(priv->dev, &led->led_dev);
-+		ret =3D devm_of_led_classdev_register(priv->dev, to_of_node(child), &led=
-->led_dev);
- 		if (ret) {
- 			dev_err(&priv->client->dev, "led register err: %d\n",
- 				ret);
-
-
-diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/o=
-map4-droid4-xt894.dts
-index 4454449..64abe87 100644
---- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
-+++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-@@ -185,6 +185,14 @@
- 		pwm-names =3D "enable", "direction";
- 		direction-duty-cycle-ns =3D <10000000>;
- 	};
-+
-+	backlight: backlight {
-+	         compatible =3D "led-backlight";
-+
-+		 leds =3D <&backlight_led>;
-+		 brightness-levels =3D <0 4 8 16 32 64 128 255>;
-+		 default-brightness-level =3D <6>;
-+	};
- };
-=20
- &dss {
-@@ -208,6 +216,8 @@
- 		vddi-supply =3D <&lcd_regulator>;
- 		reset-gpios =3D <&gpio4 5 GPIO_ACTIVE_HIGH>;	/* gpio101 */
-=20
-+		backlight =3D <&backlight>;
-+
- 		width-mm =3D <50>;
- 		height-mm =3D <89>;
-=20
-@@ -389,12 +427,11 @@
- 		ramp-up-us =3D <1024>;
- 		ramp-down-us =3D <8193>;
-=20
--		led@0 {
-+		backlight_led: led@0 {
- 			reg =3D <0>;
- 			led-sources =3D <2>;
- 			ti,led-mode =3D <0>;
- 			label =3D ":backlight";
--			linux,default-trigger =3D "backlight";
- 		};
-=20
- 		led@1 {
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---/NkBOFFp2J2Af1nK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1mQRMACgkQMOfwapXb+vK0hACgtFoq2r7pDwvtVDCnYsULvPVW
-SPwAoIFNH+S+vjvcv++0lWkyUU92tEma
-=aEUJ
------END PGP SIGNATURE-----
-
---/NkBOFFp2J2Af1nK--
