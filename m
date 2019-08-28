@@ -2,150 +2,118 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2533C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 05:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0130AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3BBE22CF4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 05:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20832189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:00:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfH1F42 (ORCPT
+        id S1726187AbfH1GAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 01:56:28 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:62854 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726100AbfH1F40 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 01:56:26 -0400
-X-UUID: 79903e6fb6d5485bbdf2686359156612-20190828
-X-UUID: 79903e6fb6d5485bbdf2686359156612-20190828
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1421000632; Wed, 28 Aug 2019 13:56:20 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 28 Aug 2019 13:56:27 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 28 Aug 2019 13:56:26 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Erin Lo <erin.lo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH 2/2] clk: mediatek: add pericfg clocks for MT8183
-Date:   Wed, 28 Aug 2019 13:55:55 +0800
-Message-ID: <1566971755-21217-2-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1566971755-21217-1-git-send-email-chunfeng.yun@mediatek.com>
-References: <1566971755-21217-1-git-send-email-chunfeng.yun@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: D64A18BE0E67B75CFF0178547373DF7B913A420C3974F69A674CFB0CE0B7E9842000:8
-X-MTK:  N
+        Wed, 28 Aug 2019 02:00:22 -0400
+Received: from mga12.intel.com ([192.55.52.136]:22123 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726052AbfH1GAV (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 02:00:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 23:00:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
+   d="scan'208";a="181924727"
+Received: from kbl.sh.intel.com ([10.239.159.163])
+  by fmsmga007.fm.intel.com with ESMTP; 27 Aug 2019 23:00:19 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v1 0/4] perf: Fix uncore metric issue
+Date:   Wed, 28 Aug 2019 13:59:28 +0800
+Message-Id: <20190828055932.8269-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add pericfg clocks for MT8183, it's used when support USB
-remote wakeup
+Some uncore metrics don't work as expected. For example, on cascadelakex,
 
-Cc: Weiyi Lu <weiyi.lu@mediatek.com>
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- drivers/clk/mediatek/clk-mt8183.c      | 35 ++++++++++++++++++++++++++
- include/dt-bindings/clock/mt8183-clk.h |  4 +++
- 2 files changed, 39 insertions(+)
+root@lkp-csl-2sp2:~# perf stat -M UNC_M_PMM_BANDWIDTH.TOTAL -a -- sleep 1
 
-diff --git a/drivers/clk/mediatek/clk-mt8183.c b/drivers/clk/mediatek/clk-mt8183.c
-index 1aa5f4059251..b19221bad0c9 100644
---- a/drivers/clk/mediatek/clk-mt8183.c
-+++ b/drivers/clk/mediatek/clk-mt8183.c
-@@ -999,6 +999,25 @@ static const struct mtk_gate infra_clks[] = {
- 		"msdc50_0_sel", 24),
- };
- 
-+static const struct mtk_gate_regs peri_cg_regs = {
-+	.set_ofs = 0x20c,
-+	.clr_ofs = 0x20c,
-+	.sta_ofs = 0x20c,
-+};
-+
-+#define GATE_PERI(_id, _name, _parent, _shift) {	\
-+	.id = _id,				\
-+	.name = _name,				\
-+	.parent_name = _parent,			\
-+	.regs = &peri_cg_regs,			\
-+	.shift = _shift,			\
-+	.ops = &mtk_clk_gate_ops_no_setclr_inv,	\
-+}
-+
-+static const struct mtk_gate peri_clks[] = {
-+	GATE_PERI(CLK_PERI_AXI, "periaxi", "axi_sel", 31),
-+};
-+
- static const struct mtk_gate_regs apmixed_cg_regs = {
- 	.set_ofs = 0x20,
- 	.clr_ofs = 0x20,
-@@ -1194,6 +1213,19 @@ static int clk_mt8183_infra_probe(struct platform_device *pdev)
- 	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
- }
- 
-+static int clk_mt8183_peri_probe(struct platform_device *pdev)
-+{
-+	struct clk_onecell_data *clk_data;
-+	struct device_node *node = pdev->dev.of_node;
-+
-+	clk_data = mtk_alloc_clk_data(CLK_PERI_NR_CLK);
-+
-+	mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks),
-+			       clk_data);
-+
-+	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+}
-+
- static int clk_mt8183_mcu_probe(struct platform_device *pdev)
- {
- 	struct clk_onecell_data *clk_data;
-@@ -1223,6 +1255,9 @@ static const struct of_device_id of_match_clk_mt8183[] = {
- 	}, {
- 		.compatible = "mediatek,mt8183-infracfg",
- 		.data = clk_mt8183_infra_probe,
-+	}, {
-+		.compatible = "mediatek,mt8183-pericfg",
-+		.data = clk_mt8183_peri_probe,
- 	}, {
- 		.compatible = "mediatek,mt8183-mcucfg",
- 		.data = clk_mt8183_mcu_probe,
-diff --git a/include/dt-bindings/clock/mt8183-clk.h b/include/dt-bindings/clock/mt8183-clk.h
-index 0046506eb24c..a7b470b0ec8a 100644
---- a/include/dt-bindings/clock/mt8183-clk.h
-+++ b/include/dt-bindings/clock/mt8183-clk.h
-@@ -284,6 +284,10 @@
- #define CLK_INFRA_FBIST2FPC		100
- #define CLK_INFRA_NR_CLK		101
- 
-+/* PERICFG */
-+#define CLK_PERI_AXI			0
-+#define CLK_PERI_NR_CLK			1
-+
- /* MFGCFG */
- #define CLK_MFG_BG3D			0
- #define CLK_MFG_NR_CLK			1
+ Performance counter stats for 'system wide':
+
+           1841092      unc_m_pmm_rpq_inserts
+           3680816      unc_m_pmm_wpq_inserts
+
+       1.001775055 seconds time elapsed
+
+root@lkp-csl-2sp2:~# perf stat -M UNC_M_PMM_READ_LATENCY -a -- sleep 1
+
+ Performance counter stats for 'system wide':
+
+         860649746      unc_m_pmm_rpq_occupancy.all
+           1840557      unc_m_pmm_rpq_inserts
+       12790627455      unc_m_clockticks
+
+       1.001773348 seconds time elapsed
+
+No metrics 'UNC_M_PMM_BANDWIDTH.TOTAL' or 'UNC_M_PMM_READ_LATENCY' are
+reported.
+
+The issue is, the case of an alias expanding to mulitple events is
+not supported, typically the uncore events.
+(see comments in find_evsel_group()). For detail, please check the
+description in patch 'perf util: Support multiple events for metricgroup'.
+
+With this patch set,
+
+root@lkp-csl-2sp2:~# perf stat -M UNC_M_PMM_BANDWIDTH.TOTAL -a -- sleep 1
+
+ Performance counter stats for 'system wide':
+
+           1842108      unc_m_pmm_rpq_inserts     #    337.2 MB/sec  UNC_M_PMM_BANDWIDTH.TOTAL
+           3682209      unc_m_pmm_wpq_inserts
+
+       1.001819706 seconds time elapsed
+
+root@lkp-csl-2sp2:~# perf stat -M UNC_M_PMM_READ_LATENCY -a -- sleep 1
+
+ Performance counter stats for 'system wide':
+
+         861970685      unc_m_pmm_rpq_occupancy.all #    219.4 ns  UNC_M_PMM_READ_LATENCY
+           1842772      unc_m_pmm_rpq_inserts
+       12790196356      unc_m_clockticks
+
+       1.001749103 seconds time elapsed
+
+Now we can see the correct metrics 'UNC_M_PMM_BANDWIDTH.TOTAL' and
+'UNC_M_PMM_READ_LATENCY'.
+
+Haiyan Song (1):
+  perf vendor events intel: Update cascadelakex uncore events to v1.04
+
+Jin Yao (3):
+  perf util: Change convert_scale from static to global
+  perf util: Scale the metric result
+  perf util: Support multiple events for metricgroup
+
+ .../arch/x86/cascadelakex/uncore-memory.json  |  191 ++
+ .../arch/x86/cascadelakex/uncore-other.json   | 1809 ++++++++++++++++-
+ tools/perf/util/evsel.h                       |    1 +
+ tools/perf/util/metricgroup.c                 |   87 +-
+ tools/perf/util/metricgroup.h                 |    1 +
+ tools/perf/util/pmu.c                         |    6 +-
+ tools/perf/util/pmu.h                         |    2 +
+ tools/perf/util/stat-shadow.c                 |   65 +-
+ 8 files changed, 2075 insertions(+), 87 deletions(-)
+
 -- 
-2.23.0
+2.17.1
 
