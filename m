@@ -2,208 +2,163 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B04C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F04C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04041208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4466822CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfH1SfZ (ORCPT
+        id S1726941AbfH1Sg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:35:25 -0400
-Received: from mga11.intel.com ([192.55.52.93]:7081 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726567AbfH1SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:35:24 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 11:35:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="197623038"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Aug 2019 11:35:23 -0700
-Date:   Wed, 28 Aug 2019 11:35:23 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jan Dakinevich <jan.dakinevich@virtuozzo.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Denis Lunev <den@virtuozzo.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] KVM: x86: make exception_class() and
- exception_type() globally visible
-Message-ID: <20190828183523.GC21651@linux.intel.com>
-References: <1567011759-9969-1-git-send-email-jan.dakinevich@virtuozzo.com>
- <1567011759-9969-3-git-send-email-jan.dakinevich@virtuozzo.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567011759-9969-3-git-send-email-jan.dakinevich@virtuozzo.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 28 Aug 2019 14:36:56 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:45272 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726711AbfH1Sgz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 14:36:55 -0400
+X-IronPort-AV: E=Sophos;i="5.64,442,1559487600"; 
+   d="scan'208";a="25166320"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 29 Aug 2019 03:36:52 +0900
+Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id D013D400A897;
+        Thu, 29 Aug 2019 03:36:46 +0900 (JST)
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        xu_shunji@hoperun.com, ebiharaml@si-linux.co.jp
+Subject: [PATCH v3 0/8] Add dual-LVDS panel support to EK874
+Date:   Wed, 28 Aug 2019 19:36:34 +0100
+Message-Id: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 05:02:57PM +0000, Jan Dakinevich wrote:
-> exception_type() function was moved for upcoming sanity check in
-> emulation code. exceptions_class() function is not supposed to be used
-> right now, but it was moved as well to keep things together.
+Dear All,
 
-Doh, I didn't realize exception_type() was confined to x86.c when I
-suggested the sanity check.  It'd probably be better to add the check
-in x86_emulate_instruction and forego this patch, e.g.:
+this series adds support for dual-LVDS panel IDK-2121WR
+from Advantech:
+https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
 
-	if (ctxt->have_exception) {
-		WARN_ON_ONCE(...);
-		inject_emulated_exception(vcpu));
-		return EMULATE_DONE;
-	}
+V3 approaches the problem in a completely different way, we now
+have two new properties to mark the ports in the DT as receiving
+even pixels and odd pixels: dual-lvds-even-pixels and dual-lvds-odd-pixels,
+which means device drivers should not use bridge specific or panel
+specific dual_link flags. Also, in this case the DT describes the
+connection fully.
 
-Arguably we shouldn't WARN on an unexpected vector until we actually try
-to inject it anyways.
+In order for the solution to be generic, I have exported a new helper
+(drm_of_lvds_get_dual_link_configuration) to walk the device tree,
+and figure out if the connection is dual-LVDS. The same helper gives
+information about the configuration of the connection. If Px is connected
+to a port expecting even pixels and Py is connected to a port expecting
+odd pixels, then the helper returns DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS
+(like in the example below), otherwise it returns
+DRM_LVDS_DUAL_LINK_ODD_EVEN_PIXELS.
 
-Sorry for the thrash.
 
-> 
-> Cc: Denis Lunev <den@virtuozzo.com>
-> Cc: Roman Kagan <rkagan@virtuozzo.com>
-> Cc: Denis Plotnikov <dplotnikov@virtuozzo.com>
-> Signed-off-by: Jan Dakinevich <jan.dakinevich@virtuozzo.com>
-> ---
->  arch/x86/kvm/x86.c | 46 ----------------------------------------------
->  arch/x86/kvm/x86.h | 46 ++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 46 insertions(+), 46 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 903fb7c..2b69ae0 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -364,52 +364,6 @@ asmlinkage __visible void kvm_spurious_fault(void)
->  }
->  EXPORT_SYMBOL_GPL(kvm_spurious_fault);
->  
-> -#define EXCPT_BENIGN		0
-> -#define EXCPT_CONTRIBUTORY	1
-> -#define EXCPT_PF		2
-> -
-> -static int exception_class(int vector)
-> -{
-> -	switch (vector) {
-> -	case PF_VECTOR:
-> -		return EXCPT_PF;
-> -	case DE_VECTOR:
-> -	case TS_VECTOR:
-> -	case NP_VECTOR:
-> -	case SS_VECTOR:
-> -	case GP_VECTOR:
-> -		return EXCPT_CONTRIBUTORY;
-> -	default:
-> -		break;
-> -	}
-> -	return EXCPT_BENIGN;
-> -}
-> -
-> -#define EXCPT_FAULT		0
-> -#define EXCPT_TRAP		1
-> -#define EXCPT_ABORT		2
-> -#define EXCPT_INTERRUPT		3
-> -
-> -static int exception_type(int vector)
-> -{
-> -	unsigned int mask;
-> -
-> -	if (WARN_ON(vector > 31 || vector == NMI_VECTOR))
-> -		return EXCPT_INTERRUPT;
-> -
-> -	mask = 1 << vector;
-> -
-> -	/* #DB is trap, as instruction watchpoints are handled elsewhere */
-> -	if (mask & ((1 << DB_VECTOR) | (1 << BP_VECTOR) | (1 << OF_VECTOR)))
-> -		return EXCPT_TRAP;
-> -
-> -	if (mask & ((1 << DF_VECTOR) | (1 << MC_VECTOR)))
-> -		return EXCPT_ABORT;
-> -
-> -	/* Reserved exceptions will result in fault */
-> -	return EXCPT_FAULT;
-> -}
-> -
->  void kvm_deliver_exception_payload(struct kvm_vcpu *vcpu)
->  {
->  	unsigned nr = vcpu->arch.exception.nr;
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index b5274e2..2b66347 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -369,4 +369,50 @@ static inline bool kvm_pat_valid(u64 data)
->  void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu);
->  void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu);
->  
-> +#define EXCPT_BENIGN		0
-> +#define EXCPT_CONTRIBUTORY	1
-> +#define EXCPT_PF		2
-> +
-> +static inline int exception_class(int vector)
-> +{
-> +	switch (vector) {
-> +	case PF_VECTOR:
-> +		return EXCPT_PF;
-> +	case DE_VECTOR:
-> +	case TS_VECTOR:
-> +	case NP_VECTOR:
-> +	case SS_VECTOR:
-> +	case GP_VECTOR:
-> +		return EXCPT_CONTRIBUTORY;
-> +	default:
-> +		break;
-> +	}
-> +	return EXCPT_BENIGN;
-> +}
-> +
-> +#define EXCPT_FAULT		0
-> +#define EXCPT_TRAP		1
-> +#define EXCPT_ABORT		2
-> +#define EXCPT_INTERRUPT		3
-> +
-> +static inline int exception_type(int vector)
-> +{
-> +	unsigned int mask;
-> +
-> +	if (WARN_ON(vector > 31 || vector == NMI_VECTOR))
-> +		return EXCPT_INTERRUPT;
-> +
-> +	mask = 1 << vector;
-> +
-> +	/* #DB is trap, as instruction watchpoints are handled elsewhere */
-> +	if (mask & ((1 << DB_VECTOR) | (1 << BP_VECTOR) | (1 << OF_VECTOR)))
-> +		return EXCPT_TRAP;
-> +
-> +	if (mask & ((1 << DF_VECTOR) | (1 << MC_VECTOR)))
-> +		return EXCPT_ABORT;
-> +
-> +	/* Reserved exceptions will result in fault */
-> +	return EXCPT_FAULT;
-> +}
-> +
->  #endif
-> -- 
-> 2.1.4
-> 
+ --------            dual-lvds-even-pixels  --------
+|        |----                         ----|        |
+|        | Px |---------------------->| Pn |        |
+|        |----                         ----|        |
+| SOURCE |           dual-lvds-odd-pixels  |  SINK  |
+|        |----                         ----|        |
+|        | Py |---------------------->| Pm |        |
+|        |----                         ----|        |
+ --------                                   --------
+
+The device driver for the encoder then will work out if with the current
+wiring the pixels need swapping or not.
+
+The same solution works for both panels and bridges.
+
+Since the DT describes the connection fully, driver
+drivers/gpu/drm/panel/panel-lvds.c works out-of-the-box, no changes
+required, however, this implementation opens up a problem with the
+dt-bindings.
+Driver drivers/gpu/drm/panel/panel-lvds.c can still be pleased by
+a port node, but also by a ports node.
+I have created Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
+with the idea of including it from panels and bridges dt-bindings
+supporting dual-LVDS (and of course the dt-bindings for the specific
+devices should say which port should be marked as what), but file
+Documentation/devicetree/bindings/display/panel/lvds.yaml formally
+requires property "port", while with this implementation it should require
+OneOf "port" and "ports", and unfortunately I can't seem to find a neat way
+aroud that, other than creating a new compatible string
+(e.g. "panel-dual-lvds"), a new dt-binding document for it, and of course adding
+support for the new compatible string to drivers/gpu/drm/panel/panel-lvds.c.
+As a result, this series is missing (at least) a patch necessary to fully
+document the new implementation within
+Documentation/devicetree/bindings/display/panel/lvds.yaml
+
+Rob, do you have any suggestions? Do you think this idea works ok from a
+documentation point of view? By the way, I don't really know what I am doing
+with the yaml dt-bindings, I hope you won't be horrified by this series :-P
+
+I hope I was able to deliver the concept clearly, if not please just ask.
+
+Comments are very much appreciated.
+
+Thanks,
+Fab
+
+Fabrizio Castro (8):
+  dt-bindings: display: Add bindings for LVDS bus-timings
+  dt-bindings: display: Add idk-2121wr binding
+  drm: Add bus timings helper
+  drm: rcar-du: lvds: Add dual-LVDS panels support
+  drm: bridge: thc63: Do not report input bus mode through bridge
+    timings
+  arm64: dts: renesas: Add EK874 board with idk-2121wr display support
+  [HACK] arm64: dts: renesas: draak: Enable LVDS
+  [HACK] arm64: dts: renesas: draak: Enable LVDS dual-link operation
+
+ .../bindings/display/bus-timings/lvds.yaml         |  38 +++++++
+ .../display/panel/advantech,idk-2121wr.yaml        |  90 ++++++++++++++++
+ arch/arm64/boot/dts/renesas/Makefile               |   3 +-
+ .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 116 +++++++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts     |  21 +++-
+ arch/arm64/boot/dts/renesas/r8a77995-draak.dts     |  26 +++--
+ drivers/gpu/drm/Makefile                           |   3 +-
+ drivers/gpu/drm/bridge/thc63lvd1024.c              |   9 +-
+ drivers/gpu/drm/drm_bus_timings.c                  |  97 +++++++++++++++++
+ drivers/gpu/drm/rcar-du/rcar_lvds.c                | 110 +++++++++++--------
+ include/drm/drm_bridge.h                           |   8 --
+ include/drm/drm_bus_timings.h                      |  21 ++++
+ 12 files changed, 473 insertions(+), 69 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+ create mode 100644 drivers/gpu/drm/drm_bus_timings.c
+ create mode 100644 include/drm/drm_bus_timings.h
+
+-- 
+2.7.4
+
