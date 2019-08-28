@@ -2,141 +2,108 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF0EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE14AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111FE20828
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C08872173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfH1IZR (ORCPT
+        id S1726400AbfH1I1v convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:25:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34375 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbfH1IZQ (ORCPT
+        Wed, 28 Aug 2019 04:27:51 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:37394 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726253AbfH1I1v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:25:16 -0400
-Received: from mail-pg1-f200.google.com ([209.85.215.200])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1i2tGT-0005iL-W0
-        for linux-kernel@vger.kernel.org; Wed, 28 Aug 2019 08:25:14 +0000
-Received: by mail-pg1-f200.google.com with SMTP id b18so1216289pgg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 01:25:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=yDQMhkjBqvMckIaETJ30I1V3/odVpy6UAuG1t5GavCg=;
-        b=tML5X8vxcJZ6Gv7QiheNOdmvQp1bVXfMH2vkH8GGkOsqG7Up5RcYC8ie6pGM5rn9kV
-         yDgfUpcCTzTJSBWboGOhy4FyCWVtIDGNDihqhNe9veVjBhPyvP7ouWrstpW2TGrOOkRx
-         Lu0gPk49Z6GT7SCH65G+pNebufLcWBRyUpX3186SLU3wIfdHMx9qogpPF8ZumExqWSrz
-         a27z5ivJjMbsuyMsM8Octx7rX6WSluQ3zuuDkYutq/fM3qTTHKmCH05LCG7GcK5tFi8r
-         iAZ+gU5XZDcEWURSYjHvjAvS3xvmNuETI/dQ3o4NT9sjIQrSWAae/Rk4ZxvnpGUbvPwV
-         K1jA==
-X-Gm-Message-State: APjAAAWpdph3YhKXmCB2VKWH6JiP2L54ZOuRGB2rrL4wHtoRrqlzUGEe
-        UqLvRMUkWFxP3siP/tF+/0K/EKslzEN5vg2elwl+FIgZNnUnr7nve3l8PkEsKsNGPkvLYhQNbIk
-        60dJtjnJ8f2owc3WzxshQ1vJA5bmllpkzyrCpaKG6aQ==
-X-Received: by 2002:a17:902:6b81:: with SMTP id p1mr3053419plk.91.1566980712710;
-        Wed, 28 Aug 2019 01:25:12 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyg3xPhlxpHv0Jw3q47+NdHNvNzyyatg4MSCzNk9Lkvz07TQuVYjHaH9aQx5W+/tAUeIxm73Q==
-X-Received: by 2002:a17:902:6b81:: with SMTP id p1mr3053407plk.91.1566980712363;
-        Wed, 28 Aug 2019 01:25:12 -0700 (PDT)
-Received: from 2001-b011-380f-3c42-f8f8-a260-49a8-d1ed.dynamic-ip6.hinet.net (2001-b011-380f-3c42-f8f8-a260-49a8-d1ed.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:f8f8:a260:49a8:d1ed])
-        by smtp.gmail.com with ESMTPSA id y9sm1820302pfn.152.2019.08.28.01.25.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 01:25:11 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 2/2] ALSA: hda: Allow HDA to be runtime suspended when
- dGPU is not bound
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20190827223125.GB9987@google.com>
-Date:   Wed, 28 Aug 2019 16:25:08 +0800
-Cc:     tiwai@suse.com, linux-pci@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8bit
-Message-Id: <66C43B81-0A08-437F-B099-1C757A42E912@canonical.com>
-References: <20190827134756.10807-1-kai.heng.feng@canonical.com>
- <20190827134756.10807-2-kai.heng.feng@canonical.com>
- <20190827223125.GB9987@google.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Wed, 28 Aug 2019 04:27:51 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-44-7Eyd5yFUMV6GmCf8-LeV7A-1; Wed, 28 Aug 2019 09:27:48 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 28 Aug 2019 09:27:46 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 28 Aug 2019 09:27:46 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Joe Perches' <joe@perches.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] RDMA/siw: Fix compiler warnings on 32-bit due to
+ u64/pointer abuse
+Thread-Topic: [PATCH] RDMA/siw: Fix compiler warnings on 32-bit due to
+ u64/pointer abuse
+Thread-Index: AQHVXQXl4BhhBlFhpEW57H2RBHAQPacQOptA
+Date:   Wed, 28 Aug 2019 08:27:45 +0000
+Message-ID: <ab04933a7dea42049d20597cb65d84f1@AcuMS.aculab.com>
+References: <20190819100526.13788-1-geert@linux-m68k.org>
+         <581e7d79ed75484beb227672b2695ff14e1f1e34.camel@perches.com>
+         <CAMuHMdVh8dwd=77mHTqG80_D8DK+EtVGewRUJuaJzK1qRYrB+w@mail.gmail.com>
+         <dbc03b4ac1ef4ba2a807409676cf8066@AcuMS.aculab.com>
+         <CAMuHMdWHGTMwK+PO_BgsNZMpqRat1SHE-_CP0UqxEALA_OJeNg@mail.gmail.com>
+         <20190827174639.GT1131@ZenIV.linux.org.uk>
+         <CAMuHMdW0jEpE3YrA5Znq8O9e4eswARwYYerEhRLSLWxeXMbsEQ@mail.gmail.com>
+ <b0fe444622e32af6c34f3326e5dce3513adf5113.camel@perches.com>
+In-Reply-To: <b0fe444622e32af6c34f3326e5dce3513adf5113.camel@perches.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: 7Eyd5yFUMV6GmCf8-LeV7A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+From: Joe Perches
+> Sent: 27 August 2019 19:33
+> On Tue, 2019-08-27 at 19:59 +0200, Geert Uytterhoeven wrote:
+> > On Tue, Aug 27, 2019 at 7:46 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > > On Tue, Aug 27, 2019 at 07:29:52PM +0200, Geert Uytterhoeven wrote:
+> > > > On Tue, Aug 27, 2019 at 4:17 PM David Laight <David.Laight@aculab.com> wrote:
+> > > > > From: Geert Uytterhoeven
+> > > > > > Sent: 19 August 2019 18:15
+> > > > > ...
+> > > > > > > I think a cast to unsigned long is rather more common.
+> > > > > > >
+> > > > > > > uintptr_t is used ~1300 times in the kernel.
+> > > > > > > I believe a cast to unsigned long is much more common.
+> 
+> btw: apparently that's not true.
+> 
+> This grep may be incomplete but it seems there are fewer
+> kernel uses of a cast to unsigned long then pointer:
+> 
+> $ git grep -P '\(\s*\w+(\s+\w+){0,3}(\s*\*)+\s*\)\s*\(\s*unsigned\s+long\s*\)'|wc -l
+> 423
+> 
+> Maybe add a cast_to_ptr macro like
+> 
+> #define cast_to_ptr(type, val)	((type)(uintptr_t)(val))
+> 
+> though that may not save any horizontal space
 
-at 06:31, Bjorn Helgaas <helgaas@kernel.org> wrote:
+And it is another bit of pointless obfuscation....
 
-> On Tue, Aug 27, 2019 at 09:47:56PM +0800, Kai-Heng Feng wrote:
->> It's a common practice to let dGPU unbound and use PCI port PM to
->> disable its power through _PR3. When the dGPU comes with an HDA
->> function, the HDA won't be suspended if the dGPU is unbound, so the dGPU
->> power can't be disabled.
->
-> Just a terminology question:
->
-> I thought "using PCI port PM" meant using the PCI Power Management
-> Capability in config space to directly change the device's power
-> state, e.g., in pci_raw_set_power_state().
+	David
 
-What I meant is to use pcieport.ko directly.
-
->
-> And I thought using _PS3, _PR3, etc would be part of "platform power
-> management”?
-
-Ok, will update the wording.
-
->
-> And AFAICT, _PR3 merely returns a list of power resources; it doesn't
-> disable power itself.
-
-Yes, through its _PS3 and _OFF. I’ll update the wording.
-
-Kai-Heng
-
->
->> Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
->> discrete GPU") only allows HDA to be runtime-suspended once GPU is
->> bound, to keep APU's HDA working.
->>
->> However, HDA on dGPU isn't that useful if dGPU is unbound. So let relax
->> the runtime suspend requirement for dGPU's HDA function, to save lots of
->> power.
->>
->> BugLink: https://bugs.launchpad.net/bugs/1840835
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> ---
->>  sound/pci/hda/hda_intel.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
->> index 99fc0917339b..d4ee070e1a29 100644
->> --- a/sound/pci/hda/hda_intel.c
->> +++ b/sound/pci/hda/hda_intel.c
->> @@ -1285,7 +1285,8 @@ static void init_vga_switcheroo(struct azx *chip)
->>  		dev_info(chip->card->dev,
->>  			 "Handle vga_switcheroo audio client\n");
->>  		hda->use_vga_switcheroo = 1;
->> -		hda->need_eld_notify_link = 1; /* cleared in gpu_bound op */
->> +		/* cleared in gpu_bound op */
->> +		hda->need_eld_notify_link = !pci_pr3_present(p);
->>  		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
->>  		pci_dev_put(p);
->>  	}
->> -- 
->> 2.17.1
-
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
