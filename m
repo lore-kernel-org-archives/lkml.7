@@ -2,100 +2,98 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDCEC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCD9C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305282077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:49:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567003758;
-	bh=fR/ztIRXPzU6vlU9yJlvpD2RgJvZELM1Z5RZ8BfCv8Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sZgwDPdQNc+8gOFMsVLRBY8yBZMdFPzUOra85V2qd/QcXFE2UZ/wGbCO+tV+l2U97
-	 vNSAUDZ+wwUvGO+MewNSIf+b95DlJX1H6K08wPvXjJzlx9pZtkn5/tT2vHKLoeGHCx
-	 ulSJ18M7vtutYcq9DxL0KFPw/FbIl+1TZTW+xRKU=
+	by mail.kernel.org (Postfix) with ESMTP id 5B9952077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:49:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfH1OtR (ORCPT
+        id S1726909AbfH1OtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 28 Aug 2019 10:49:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51982 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726867AbfH1OtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 28 Aug 2019 10:49:17 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:47018 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfH1OtO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:49:14 -0400
-Received: by mail-qk1-f193.google.com with SMTP id p13so2580385qkg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 07:49:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Skr6+/WM/15QADtYsTq1qtD4lhvb4OfddpIr+Z5H48M=;
-        b=jdlIZ73CSe8MQXbkN4N2K7jjg+FjjLbLc7Y3KKPGoe5+eenPGJ+D8cSUaiKmGsyj+y
-         Xl3Gv5piIx1tldyOm5iBryZhyj+bMRfK4OCkviVm7QivONLNPs7P6EPF4CS4qLLijXQV
-         XbPkPG+JwuQefzTaVnHI45iaFZq3rmav7NnBqplHDPnDIYKKaJwUgAVNYL+73gndu+GN
-         ejcdf9uAj4gzqBKhGf+/uTGQxu4IB2vbyUa2o5uj5NR+8PYkPUMr/FIavAtMW1j7Cr1K
-         hHcjfX68GXW2HNquppSsW0EygjRtYBY6xkmdkd1WIDZBBvSe13LHRfD6NTUz8qdjPQ10
-         +XMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Skr6+/WM/15QADtYsTq1qtD4lhvb4OfddpIr+Z5H48M=;
-        b=RNe4MSY0OdfAyn6pjA92IMHGAKTa+zGXHDSjx/OWA5TNJgy0TrbNQ+ykaSiG2Ide9L
-         cMkETl/aSc0pFmRL7gI9uc6Hn5/aQ2mnvJ57ilF07VPFBPRgndNUEWWaMVf8KJaWWThs
-         Ebmozzxqu5kQKqNJFvIYbU5ImFGVlPL9E9XCn/gjx4/Le6IyAhN3VaoeeNbWvaRAxZwR
-         KftjgEcBxZENeOuiJPZscN5hw85q4l/C/GeuymAHPzf+aqzy7/8B0ctzugYI/1RaTqRt
-         PsFsUKVeNiBz+At+bDSoudx0BiyKZaXOFSeUCh+KWVE48gszqxckPVk+jINLSs13rP8s
-         Tz5g==
-X-Gm-Message-State: APjAAAWxKIwWVpl0RkIO3lK773vf90jk8QRV9lW9TWYqxeiZ+87VjJNm
-        9kwQPUTXnbm9HZaOZSSXpgBsvGdn
-X-Google-Smtp-Source: APXvYqyyPL1/AqqqWGv0ttXyuRfyRRv1U5GVoK6C0oWQCWAkQZD1B0JSp1wJOqjkXVxdFCwzeugGdA==
-X-Received: by 2002:a37:af82:: with SMTP id y124mr4324345qke.311.1567003753497;
-        Wed, 28 Aug 2019 07:49:13 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:c231])
-        by smtp.gmail.com with ESMTPSA id q6sm1105576qtr.23.2019.08.28.07.49.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 07:49:12 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 07:49:11 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH 2/9] perf/core: Add PERF_SAMPLE_CGROUP feature
-Message-ID: <20190828144911.GR2263813@devbig004.ftw2.facebook.com>
-References: <20190828073130.83800-1-namhyung@kernel.org>
- <20190828073130.83800-3-namhyung@kernel.org>
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6E6A02A09A7;
+        Wed, 28 Aug 2019 14:49:17 +0000 (UTC)
+Received: from amt.cnet (ovpn-112-8.gru2.redhat.com [10.97.112.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 73B811001B00;
+        Wed, 28 Aug 2019 14:49:14 +0000 (UTC)
+Received: from amt.cnet (localhost [127.0.0.1])
+        by amt.cnet (Postfix) with ESMTP id 2ED72105139;
+        Wed, 28 Aug 2019 11:49:00 -0300 (BRT)
+Received: (from marcelo@localhost)
+        by amt.cnet (8.14.7/8.14.7/Submit) id x7SEmxv8014289;
+        Wed, 28 Aug 2019 11:48:59 -0300
+Date:   Wed, 28 Aug 2019 11:48:58 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when
+ dedicated physical CPUs are available
+Message-ID: <20190828144858.GA14215@amt.cnet>
+References: <1564643196-7797-1-git-send-email-wanpengli@tencent.com>
+ <7b1e3025-f513-7068-32ac-4830d67b65ac@intel.com>
+ <c3fe182f-627f-88ad-cb4d-a4189202b438@redhat.com>
+ <20190803202058.GA9316@amt.cnet>
+ <CANRm+CwtHBOVWFcn+6Z3Ds7dEcNL2JP+b6hLRS=oeUW98A24MQ@mail.gmail.com>
+ <20190826204045.GA24697@amt.cnet>
+ <CANRm+Cx0+V67Ek7FhSs61ZqZL3MgV88Wdy17Q6UA369RH7=dgQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828073130.83800-3-namhyung@kernel.org>
+In-Reply-To: <CANRm+Cx0+V67Ek7FhSs61ZqZL3MgV88Wdy17Q6UA369RH7=dgQ@mail.gmail.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 28 Aug 2019 14:49:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 04:31:23PM +0900, Namhyung Kim wrote:
-> @@ -958,6 +958,7 @@ struct perf_sample_data {
->  	u64				stack_user_size;
->  
->  	u64				phys_addr;
-> +	u64				cgroup;
+On Tue, Aug 27, 2019 at 08:43:13AM +0800, Wanpeng Li wrote:
+> > > kvm adaptive halt-polling will compete with
+> > > vhost-kthreads, however, poll in guest unaware other runnable tasks in
+> > > the host which will defeat vhost-kthreads.
+> >
+> > It depends on how much work vhost-kthreads needs to do, how successful
+> > halt-poll in the guest is, and what improvement halt-polling brings.
+> > The amount of polling will be reduced to zero if polling
+> > is not successful.
+> 
+> We observe vhost-kthreads compete with vCPUs adaptive halt-polling in
+> kvm, it hurt performance in over-subscribe product environment,
+> polling in guest can make it worse.
+> 
+> Regards,
+> Wanpeng Li
 
-Ditto, please use fhandle as the identifier.
+Wanpeng,
 
-Thanks.
+Polling should not be performed if there is other work to do. For
+example, halt-polling could check a host/guest shared memory 
+region indicating whether there are other runnable tasks in the host.
 
--- 
-tejun
+Disabling polling means you will not achieve the improvement 
+even in the transitional periods where the system is not
+overcommitted (which should be frequent given that idling 
+is common).
+
+Again, about your patch: it brings no benefit to anyone. 
+
+Guest halt polling should be already disabled by default
+(the driver has to be loaded for guest polling to take place).
+
