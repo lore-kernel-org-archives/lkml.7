@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9918DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16951C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 775D822CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D57B422CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:30:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfH1Kas (ORCPT
+        id S1726767AbfH1Kaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:30:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39830 "EHLO mx1.suse.de"
+        Wed, 28 Aug 2019 06:30:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39718 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726395AbfH1Kao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:30:44 -0400
+        id S1726315AbfH1Kan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 06:30:43 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 19769AFF2;
-        Wed, 28 Aug 2019 10:30:43 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 2B26FB07D;
+        Wed, 28 Aug 2019 10:30:41 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
@@ -48,9 +48,9 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         David Hildenbrand <david@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 4/4] powerpc/64: Disable COMPAT if littleendian.
-Date:   Wed, 28 Aug 2019 12:30:29 +0200
-Message-Id: <b61dba35d1b255d9eb2c503127b015a5cf479150.1566987936.git.msuchanek@suse.de>
+Subject: [PATCH v2 2/4] powerpc: move common register copy functions from signal_32.c to signal.c
+Date:   Wed, 28 Aug 2019 12:30:27 +0200
+Message-Id: <82c373db60620978e0f128ca79dce8b2ff4b3de3.1566987936.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <cover.1566987936.git.msuchanek@suse.de>
 References: <cover.1566987936.git.msuchanek@suse.de>
@@ -61,27 +61,323 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ppc32le was never really a thing. Endian swap is already disabled by
-default so this 32bit support is kind of useless on ppc64le.
+These functions are required for 64bit as well.
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- arch/powerpc/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/signal.c    | 141 ++++++++++++++++++++++++++++++++
+ arch/powerpc/kernel/signal_32.c | 140 -------------------------------
+ 2 files changed, 141 insertions(+), 140 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 5bab0bb6b833..67cd1c4d1bae 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -265,7 +265,7 @@ config PANIC_TIMEOUT
+diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
+index e6c30cee6abf..60436432399f 100644
+--- a/arch/powerpc/kernel/signal.c
++++ b/arch/powerpc/kernel/signal.c
+@@ -18,12 +18,153 @@
+ #include <linux/syscalls.h>
+ #include <asm/hw_breakpoint.h>
+ #include <linux/uaccess.h>
++#include <asm/switch_to.h>
+ #include <asm/unistd.h>
+ #include <asm/debug.h>
+ #include <asm/tm.h>
  
- config COMPAT
- 	bool
--	default y if PPC64
-+	default y if PPC64 && !CPU_LITTLE_ENDIAN
- 	select COMPAT_BINFMT_ELF
- 	select ARCH_WANT_OLD_COMPAT_IPC
- 	select COMPAT_OLD_SIGACTION
+ #include "signal.h"
+ 
++#ifdef CONFIG_VSX
++unsigned long copy_fpr_to_user(void __user *to,
++			       struct task_struct *task)
++{
++	u64 buf[ELF_NFPREG];
++	int i;
++
++	/* save FPR copy to local buffer then write to the thread_struct */
++	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
++		buf[i] = task->thread.TS_FPR(i);
++	buf[i] = task->thread.fp_state.fpscr;
++	return __copy_to_user(to, buf, ELF_NFPREG * sizeof(double));
++}
++
++unsigned long copy_fpr_from_user(struct task_struct *task,
++				 void __user *from)
++{
++	u64 buf[ELF_NFPREG];
++	int i;
++
++	if (__copy_from_user(buf, from, ELF_NFPREG * sizeof(double)))
++		return 1;
++	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
++		task->thread.TS_FPR(i) = buf[i];
++	task->thread.fp_state.fpscr = buf[i];
++
++	return 0;
++}
++
++unsigned long copy_vsx_to_user(void __user *to,
++			       struct task_struct *task)
++{
++	u64 buf[ELF_NVSRHALFREG];
++	int i;
++
++	/* save FPR copy to local buffer then write to the thread_struct */
++	for (i = 0; i < ELF_NVSRHALFREG; i++)
++		buf[i] = task->thread.fp_state.fpr[i][TS_VSRLOWOFFSET];
++	return __copy_to_user(to, buf, ELF_NVSRHALFREG * sizeof(double));
++}
++
++unsigned long copy_vsx_from_user(struct task_struct *task,
++				 void __user *from)
++{
++	u64 buf[ELF_NVSRHALFREG];
++	int i;
++
++	if (__copy_from_user(buf, from, ELF_NVSRHALFREG * sizeof(double)))
++		return 1;
++	for (i = 0; i < ELF_NVSRHALFREG ; i++)
++		task->thread.fp_state.fpr[i][TS_VSRLOWOFFSET] = buf[i];
++	return 0;
++}
++
++#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
++unsigned long copy_ckfpr_to_user(void __user *to,
++				  struct task_struct *task)
++{
++	u64 buf[ELF_NFPREG];
++	int i;
++
++	/* save FPR copy to local buffer then write to the thread_struct */
++	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
++		buf[i] = task->thread.TS_CKFPR(i);
++	buf[i] = task->thread.ckfp_state.fpscr;
++	return __copy_to_user(to, buf, ELF_NFPREG * sizeof(double));
++}
++
++unsigned long copy_ckfpr_from_user(struct task_struct *task,
++					  void __user *from)
++{
++	u64 buf[ELF_NFPREG];
++	int i;
++
++	if (__copy_from_user(buf, from, ELF_NFPREG * sizeof(double)))
++		return 1;
++	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
++		task->thread.TS_CKFPR(i) = buf[i];
++	task->thread.ckfp_state.fpscr = buf[i];
++
++	return 0;
++}
++
++unsigned long copy_ckvsx_to_user(void __user *to,
++				  struct task_struct *task)
++{
++	u64 buf[ELF_NVSRHALFREG];
++	int i;
++
++	/* save FPR copy to local buffer then write to the thread_struct */
++	for (i = 0; i < ELF_NVSRHALFREG; i++)
++		buf[i] = task->thread.ckfp_state.fpr[i][TS_VSRLOWOFFSET];
++	return __copy_to_user(to, buf, ELF_NVSRHALFREG * sizeof(double));
++}
++
++unsigned long copy_ckvsx_from_user(struct task_struct *task,
++					  void __user *from)
++{
++	u64 buf[ELF_NVSRHALFREG];
++	int i;
++
++	if (__copy_from_user(buf, from, ELF_NVSRHALFREG * sizeof(double)))
++		return 1;
++	for (i = 0; i < ELF_NVSRHALFREG ; i++)
++		task->thread.ckfp_state.fpr[i][TS_VSRLOWOFFSET] = buf[i];
++	return 0;
++}
++#endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
++#else
++inline unsigned long copy_fpr_to_user(void __user *to,
++				      struct task_struct *task)
++{
++	return __copy_to_user(to, task->thread.fp_state.fpr,
++			      ELF_NFPREG * sizeof(double));
++}
++
++inline unsigned long copy_fpr_from_user(struct task_struct *task,
++					void __user *from)
++{
++	return __copy_from_user(task->thread.fp_state.fpr, from,
++			      ELF_NFPREG * sizeof(double));
++}
++
++#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
++inline unsigned long copy_ckfpr_to_user(void __user *to,
++					 struct task_struct *task)
++{
++	return __copy_to_user(to, task->thread.ckfp_state.fpr,
++			      ELF_NFPREG * sizeof(double));
++}
++
++inline unsigned long copy_ckfpr_from_user(struct task_struct *task,
++						 void __user *from)
++{
++	return __copy_from_user(task->thread.ckfp_state.fpr, from,
++				ELF_NFPREG * sizeof(double));
++}
++#endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
++#endif
++
+ /* Log an error when sending an unhandled signal to a process. Controlled
+  * through debug.exception-trace sysctl.
+  */
+diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
+index 98600b276f76..c93c937ea568 100644
+--- a/arch/powerpc/kernel/signal_32.c
++++ b/arch/powerpc/kernel/signal_32.c
+@@ -235,146 +235,6 @@ struct rt_sigframe {
+ 	int			abigap[56];
+ };
+ 
+-#ifdef CONFIG_VSX
+-unsigned long copy_fpr_to_user(void __user *to,
+-			       struct task_struct *task)
+-{
+-	u64 buf[ELF_NFPREG];
+-	int i;
+-
+-	/* save FPR copy to local buffer then write to the thread_struct */
+-	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
+-		buf[i] = task->thread.TS_FPR(i);
+-	buf[i] = task->thread.fp_state.fpscr;
+-	return __copy_to_user(to, buf, ELF_NFPREG * sizeof(double));
+-}
+-
+-unsigned long copy_fpr_from_user(struct task_struct *task,
+-				 void __user *from)
+-{
+-	u64 buf[ELF_NFPREG];
+-	int i;
+-
+-	if (__copy_from_user(buf, from, ELF_NFPREG * sizeof(double)))
+-		return 1;
+-	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
+-		task->thread.TS_FPR(i) = buf[i];
+-	task->thread.fp_state.fpscr = buf[i];
+-
+-	return 0;
+-}
+-
+-unsigned long copy_vsx_to_user(void __user *to,
+-			       struct task_struct *task)
+-{
+-	u64 buf[ELF_NVSRHALFREG];
+-	int i;
+-
+-	/* save FPR copy to local buffer then write to the thread_struct */
+-	for (i = 0; i < ELF_NVSRHALFREG; i++)
+-		buf[i] = task->thread.fp_state.fpr[i][TS_VSRLOWOFFSET];
+-	return __copy_to_user(to, buf, ELF_NVSRHALFREG * sizeof(double));
+-}
+-
+-unsigned long copy_vsx_from_user(struct task_struct *task,
+-				 void __user *from)
+-{
+-	u64 buf[ELF_NVSRHALFREG];
+-	int i;
+-
+-	if (__copy_from_user(buf, from, ELF_NVSRHALFREG * sizeof(double)))
+-		return 1;
+-	for (i = 0; i < ELF_NVSRHALFREG ; i++)
+-		task->thread.fp_state.fpr[i][TS_VSRLOWOFFSET] = buf[i];
+-	return 0;
+-}
+-
+-#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
+-unsigned long copy_ckfpr_to_user(void __user *to,
+-				  struct task_struct *task)
+-{
+-	u64 buf[ELF_NFPREG];
+-	int i;
+-
+-	/* save FPR copy to local buffer then write to the thread_struct */
+-	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
+-		buf[i] = task->thread.TS_CKFPR(i);
+-	buf[i] = task->thread.ckfp_state.fpscr;
+-	return __copy_to_user(to, buf, ELF_NFPREG * sizeof(double));
+-}
+-
+-unsigned long copy_ckfpr_from_user(struct task_struct *task,
+-					  void __user *from)
+-{
+-	u64 buf[ELF_NFPREG];
+-	int i;
+-
+-	if (__copy_from_user(buf, from, ELF_NFPREG * sizeof(double)))
+-		return 1;
+-	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
+-		task->thread.TS_CKFPR(i) = buf[i];
+-	task->thread.ckfp_state.fpscr = buf[i];
+-
+-	return 0;
+-}
+-
+-unsigned long copy_ckvsx_to_user(void __user *to,
+-				  struct task_struct *task)
+-{
+-	u64 buf[ELF_NVSRHALFREG];
+-	int i;
+-
+-	/* save FPR copy to local buffer then write to the thread_struct */
+-	for (i = 0; i < ELF_NVSRHALFREG; i++)
+-		buf[i] = task->thread.ckfp_state.fpr[i][TS_VSRLOWOFFSET];
+-	return __copy_to_user(to, buf, ELF_NVSRHALFREG * sizeof(double));
+-}
+-
+-unsigned long copy_ckvsx_from_user(struct task_struct *task,
+-					  void __user *from)
+-{
+-	u64 buf[ELF_NVSRHALFREG];
+-	int i;
+-
+-	if (__copy_from_user(buf, from, ELF_NVSRHALFREG * sizeof(double)))
+-		return 1;
+-	for (i = 0; i < ELF_NVSRHALFREG ; i++)
+-		task->thread.ckfp_state.fpr[i][TS_VSRLOWOFFSET] = buf[i];
+-	return 0;
+-}
+-#endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
+-#else
+-inline unsigned long copy_fpr_to_user(void __user *to,
+-				      struct task_struct *task)
+-{
+-	return __copy_to_user(to, task->thread.fp_state.fpr,
+-			      ELF_NFPREG * sizeof(double));
+-}
+-
+-inline unsigned long copy_fpr_from_user(struct task_struct *task,
+-					void __user *from)
+-{
+-	return __copy_from_user(task->thread.fp_state.fpr, from,
+-			      ELF_NFPREG * sizeof(double));
+-}
+-
+-#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
+-inline unsigned long copy_ckfpr_to_user(void __user *to,
+-					 struct task_struct *task)
+-{
+-	return __copy_to_user(to, task->thread.ckfp_state.fpr,
+-			      ELF_NFPREG * sizeof(double));
+-}
+-
+-inline unsigned long copy_ckfpr_from_user(struct task_struct *task,
+-						 void __user *from)
+-{
+-	return __copy_from_user(task->thread.ckfp_state.fpr, from,
+-				ELF_NFPREG * sizeof(double));
+-}
+-#endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
+-#endif
+-
+ /*
+  * Save the current user registers on the user stack.
+  * We only save the altivec/spe registers if the process has used
 -- 
 2.22.0
 
