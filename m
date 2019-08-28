@@ -2,120 +2,76 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C73AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41118C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0203C2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:17:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOCTjKm4"
+	by mail.kernel.org (Postfix) with ESMTP id 17B6522CED
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:19:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfH1NRi (ORCPT
+        id S1726457AbfH1NTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:17:38 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38503 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbfH1NRh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:17:37 -0400
-Received: by mail-wr1-f66.google.com with SMTP id e16so2482691wro.5;
-        Wed, 28 Aug 2019 06:17:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eeQmuRlJii9blLs3gsvZZwNMRSX9X8xvwY0ILQq50Ac=;
-        b=XOCTjKm46R75ZeTeiDtsqqXNciUbDOs/OsFliD4+CAEV8CYSdRwZUNhV6+OdOymVgq
-         KYB/jUKzaX6AIPrhdzKoKL/Ngt25jxRZqAhwLUtXounHnT28vq37iuyre+GaTkbUIzWQ
-         DaAh6wDdlc0jzJQl107Rp/iX4IWkcia3Z8XolH4JNtGY9vWuCMxNtJEsA/MLG+x0y0/j
-         uVAk3qhj65pWYDd5PCn2e69n+4e2l9JkLxIqGg2ZbVu7TmXWjou3Gq5Hs8S9VzZyxaOC
-         8V+W1fzXdeSBIkEpTAt5d7jAtyyQyhbqpAdHToXdn0HHdiRYcLTZhJuhg0tTlzJ4AcEd
-         pHHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=eeQmuRlJii9blLs3gsvZZwNMRSX9X8xvwY0ILQq50Ac=;
-        b=Yp6XNsBfJKhNkIWKqhqhPD+avVJVKNBKQH7SmcVd6sTobklcknZzaj8ovDqvH0EjUS
-         qTScbcVla4ACzr2v3sHzYa4M8hCRT/Ln7yCIY2YDYvSlPVeskAZslhOdokbUKSHQ2iTI
-         XnXP6PyljSi2Xu2YlMp8xozMTv9kPO7NceRkfe0Tfgc6Gny8Sp+5A/eEEh788zFGohxy
-         qicBOdRrhtk7HhjlQJE6piW/HwPjeiq7KhshQHmx/CVLb1scMYS7fbzmEO4FgsYHpiGU
-         rBtrIv5WPtr2HPrOW4AmcxmANxfJuEuPAPONiNjWIt9yaB0fbxvXVEGzGQJuyHvP59x6
-         D0Ow==
-X-Gm-Message-State: APjAAAVkYyao2/Eh/VQRXFPC8qZsS0WE7+s2OmH7UIdkRaEdDifWUEnt
-        opo0TFsE+fDjWP3rWrNj7iI=
-X-Google-Smtp-Source: APXvYqy5Qy3waAJF/k854RzuCCkef9hGw6sTkPYxOmArG8eDMvyktKS8ytB9OU/0bnJpuSY2i3SvmQ==
-X-Received: by 2002:adf:cd8e:: with SMTP id q14mr2194051wrj.187.1566998255405;
-        Wed, 28 Aug 2019 06:17:35 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id w7sm3114987wrn.11.2019.08.28.06.17.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 06:17:34 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PCI: Move static keyword to the front of declarations in pci-bridge-emul.c
-Date:   Wed, 28 Aug 2019 15:17:33 +0200
-Message-Id: <20190828131733.5817-1-kw@linux.com>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20190826151436.4672-1-kw@linux.com>
-References: <20190826151436.4672-1-kw@linux.com>
+        Wed, 28 Aug 2019 09:19:48 -0400
+Received: from mga06.intel.com ([134.134.136.31]:61722 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbfH1NTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:19:47 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 06:19:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
+   d="scan'208";a="197556912"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 28 Aug 2019 06:19:44 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 28 Aug 2019 16:19:43 +0300
+Date:   Wed, 28 Aug 2019 16:19:43 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Brad Campbell <lists2009@fnarfbargle.com>
+Cc:     linux-kernel@vger.kernel.org, michael.jamet@intel.com,
+        YehezkelShB@gmail.com
+Subject: Re: Thunderbolt DP oddity on v5.2.9 on iMac 12,2
+Message-ID: <20190828131943.GZ3177@lahna.fi.intel.com>
+References: <472bee84-d62b-bfcb-eb83-db881165756b@fnarfbargle.com>
+ <20190828073302.GO3177@lahna.fi.intel.com>
+ <7c9474d2-d948-4d1d-6f7b-94335b8b1f15@fnarfbargle.com>
+ <20190828102342.GT3177@lahna.fi.intel.com>
+ <e3a8fa91-2cfd-76a4-641c-610c32122833@fnarfbargle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e3a8fa91-2cfd-76a4-641c-610c32122833@fnarfbargle.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the static keyword to the front of declarations of
-pci_regs_behavior and pcie_cap_regs_behavior, and resolve
-the following compiler warning that can be seen when
-building with warnings enabled (W=1):
+On Wed, Aug 28, 2019 at 06:43:35PM +0800, Brad Campbell wrote:
+> On 28/8/19 6:23 pm, Mika Westerberg wrote:
+> 
+> > On Wed, Aug 28, 2019 at 05:12:00PM +0800, Brad Campbell wrote:
+> > 
+> > Apart from the warning in the log (which is not fatal, I'll look into
+> > it) to me the second path setup looks fine.
+> > 
+> > Can you do one more experiment? Boot the system up without anything
+> > connected and then plug both monitors. Does it work?
+> > 
+> 
+> Aside from head ordering issues in X it works just fine.
+> I've attached the dmesg. Boot with nothing plugged in, then plug in 0-1 and
+> 0-3 in that order.
 
-drivers/pci/pci-bridge-emul.c:41:1: warning: ‘static’ is not at beginning of declaration [-Wold-style-declaration]
- const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
- ^
-drivers/pci/pci-bridge-emul.c:176:1: warning: ‘static’ is not at beginning of declaration [-Wold-style-declaration]
- const static struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
- ^
+OK, thanks for checking. So when Linux is in complete control both DP
+tunnels get created properly. I suspect there is something different
+what the firmware does compared to other Macs I've been using and that
+causes the driver to fail to discover all the paths. I will take a look
+at this but I'm away tomorrow and friday so it goes to next week.
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
----
-Changes in v2:
-  Update commit message to include compiler warning.
-
- drivers/pci/pci-bridge-emul.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-index 06083b86d4f4..5fd90105510d 100644
---- a/drivers/pci/pci-bridge-emul.c
-+++ b/drivers/pci/pci-bridge-emul.c
-@@ -38,7 +38,7 @@ struct pci_bridge_reg_behavior {
- 	u32 rsvd;
- };
- 
--const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
-+static const struct pci_bridge_reg_behavior pci_regs_behavior[] = {
- 	[PCI_VENDOR_ID / 4] = { .ro = ~0 },
- 	[PCI_COMMAND / 4] = {
- 		.rw = (PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
-@@ -173,7 +173,7 @@ const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
- 	},
- };
- 
--const static struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
-+static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
- 	[PCI_CAP_LIST_ID / 4] = {
- 		/*
- 		 * Capability ID, Next Capability Pointer and
--- 
-2.22.1
-
+BTW, have you tried to chain the two monitors?
