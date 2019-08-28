@@ -2,109 +2,374 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0969DC41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A882FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC60F22CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F77322CED
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567004215;
+	bh=ocUoAce5ZZaFNR62sOcRYzKz9K9Hwbn+5znsPQxfoYs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cNqHU4aZa8RpoAXRRESt0kIksEYiUshw1avdHFEja4ltzllYH2xW2j2MXSlnA2z45
+	 5W50HUIEvHjmGXtfEuZtfhp6w42J06Os2EX+O08iraQ4BVFy4gc80pbFMwzJ4RAPVd
+	 RSt1QrfLtYK1PiAQ9XDxzGNju3CPKF6+Y0JU4TKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfH1Oww (ORCPT
+        id S1726605AbfH1O4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:52:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59846 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbfH1Owv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:52:51 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 902B3A53271;
-        Wed, 28 Aug 2019 14:52:51 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-8.gru2.redhat.com [10.97.112.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B2126060D;
-        Wed, 28 Aug 2019 14:52:49 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id 8D696105139;
-        Wed, 28 Aug 2019 11:52:31 -0300 (BRT)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id x7SEqVZx014465;
-        Wed, 28 Aug 2019 11:52:31 -0300
-Date:   Wed, 28 Aug 2019 11:52:31 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when
- dedicated physical CPUs are available
-Message-ID: <20190828145231.GA14426@amt.cnet>
-References: <1564643196-7797-1-git-send-email-wanpengli@tencent.com>
- <7b1e3025-f513-7068-32ac-4830d67b65ac@intel.com>
- <c3fe182f-627f-88ad-cb4d-a4189202b438@redhat.com>
- <20190803202058.GA9316@amt.cnet>
- <CANRm+CwtHBOVWFcn+6Z3Ds7dEcNL2JP+b6hLRS=oeUW98A24MQ@mail.gmail.com>
- <20190826204045.GA24697@amt.cnet>
- <CANRm+Cx0+V67Ek7FhSs61ZqZL3MgV88Wdy17Q6UA369RH7=dgQ@mail.gmail.com>
- <20190828144858.GA14215@amt.cnet>
+        Wed, 28 Aug 2019 10:56:54 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40327 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfH1O4x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:56:53 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u29so2430806lfk.7;
+        Wed, 28 Aug 2019 07:56:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4msxB+UbIJYyNA6xXQj3YNqPZ79E+SHoUJgVUP/Phn8=;
+        b=lrT7z3MApfHeSTbHHw+0gB4fDP7Cxwh5FhIL93/zL3G0CugKuLlBUWPS/IPxzHRLcE
+         50CM44GyZ1MGwCprEVVCNjQG6ZrUbUruPJElvlGrHQaOSGQUkbPMjcvyZxWNUFLi91a5
+         u6TOjvhohdOdWTCvo3LP6tzY1+f5I1RpvicvOvHAF7z8eCfrFa0vz5oA4TmV6ddbtxWV
+         FlFgvTRIYNk08pzmE1wcyrRR6xraLQwBpFcjSOPdM+LSmpO4GbBV6EBc8AxqMt/6mkKS
+         0BSbFX5k67J895PbSC92s/a2roBM14b7jA0dEL8S8qVofiwk/IMzhazBSWg97KMRXYK3
+         bshQ==
+X-Gm-Message-State: APjAAAXop0lfWDRuVhoGmEcvIg24avgOu6KZIFaXKjw0O/97DEtVvWhr
+        +5eMgxshF5UsnOpJcqcJtjY=
+X-Google-Smtp-Source: APXvYqx1Cz42VxOrRDnB4OzraidNFWBdo0cx+wctwMb9as7qxgylxMURf588p50shHRdE4zkEd5D2Q==
+X-Received: by 2002:a19:c20b:: with SMTP id l11mr2896160lfc.106.1567004211516;
+        Wed, 28 Aug 2019 07:56:51 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id z128sm888495lfa.1.2019.08.28.07.56.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 28 Aug 2019 07:56:50 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92)
+        (envelope-from <johan@kernel.org>)
+        id 1i2zNP-0008DY-Fk; Wed, 28 Aug 2019 16:56:47 +0200
+Date:   Wed, 28 Aug 2019 16:56:47 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
+Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peter_hong@fintek.com.tw,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+Subject: Re: [PATCH V1 1/6] USB: serial: f81232: Add F81534A support
+Message-ID: <20190828145647.GH13017@localhost>
+References: <1559789656-15847-1-git-send-email-hpeter+linux_kernel@gmail.com>
+ <1559789656-15847-2-git-send-email-hpeter+linux_kernel@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828144858.GA14215@amt.cnet>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 28 Aug 2019 14:52:51 +0000 (UTC)
+In-Reply-To: <1559789656-15847-2-git-send-email-hpeter+linux_kernel@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 11:48:58AM -0300, Marcelo Tosatti wrote:
-> On Tue, Aug 27, 2019 at 08:43:13AM +0800, Wanpeng Li wrote:
-> > > > kvm adaptive halt-polling will compete with
-> > > > vhost-kthreads, however, poll in guest unaware other runnable tasks in
-> > > > the host which will defeat vhost-kthreads.
-> > >
-> > > It depends on how much work vhost-kthreads needs to do, how successful
-> > > halt-poll in the guest is, and what improvement halt-polling brings.
-> > > The amount of polling will be reduced to zero if polling
-> > > is not successful.
-> > 
-> > We observe vhost-kthreads compete with vCPUs adaptive halt-polling in
-> > kvm, it hurt performance in over-subscribe product environment,
-> > polling in guest can make it worse.
-> > 
-> > Regards,
-> > Wanpeng Li
+On Thu, Jun 06, 2019 at 10:54:11AM +0800, Ji-Ze Hong (Peter Hong) wrote:
+> The Fintek F81532A/534A/535/536 is USB-to-2/4/8/12 serial ports device.
+> It's most same with F81232, the UART device is difference as follow:
+> 	1. TX/RX bulk size is 128/512bytes
+> 	2. RX bulk layout change:
+> 		F81232: [LSR(1Byte)+DATA(1Byte)][LSR(1Byte)+DATA(1Byte)]...
+> 		F81534A:[LEN][Data.....][LSR]
 > 
-> Wanpeng,
+> Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+> ---
+>  drivers/usb/serial/f81232.c | 153 +++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 144 insertions(+), 9 deletions(-)
 > 
-> Polling should not be performed if there is other work to do. For
-> example, halt-polling could check a host/guest shared memory 
-> region indicating whether there are other runnable tasks in the host.
-> 
-> Disabling polling means you will not achieve the improvement 
-> even in the transitional periods where the system is not
-> overcommitted (which should be frequent given that idling 
-> is common).
-> 
-> Again, about your patch: it brings no benefit to anyone. 
-> 
-> Guest halt polling should be already disabled by default
-> (the driver has to be loaded for guest polling to take place).
+> diff --git a/drivers/usb/serial/f81232.c b/drivers/usb/serial/f81232.c
+> index 43fa1f0716b7..84efcc66aa56 100644
+> --- a/drivers/usb/serial/f81232.c
+> +++ b/drivers/usb/serial/f81232.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * Fintek F81232 USB to serial adaptor driver
+> + * Fintek F81532A/534A/535/536 USB to 2/4/8/12 serial adaptor driver
+>   *
+>   * Copyright (C) 2012 Greg Kroah-Hartman (gregkh@linuxfoundation.org)
+>   * Copyright (C) 2012 Linux Foundation
+> @@ -22,7 +23,20 @@
+>  #include <linux/serial_reg.h>
+>  
+>  static const struct usb_device_id id_table[] = {
+> +	/* F81232 */
+>  	{ USB_DEVICE(0x1934, 0x0706) },
+> +
+> +	/* F81532A/534A/535/536 */
+> +	{ USB_DEVICE(0x2c42, 0x1602) },		/* In-Box 2 port UART device */
+> +	{ USB_DEVICE(0x2c42, 0x1604) },		/* In-Box 4 port UART device */
+> +	{ USB_DEVICE(0x2c42, 0x1605) },		/* In-Box 8 port UART device */
+> +	{ USB_DEVICE(0x2c42, 0x1606) },		/* In-Box 12 port UART device */
+> +	{ USB_DEVICE(0x2c42, 0x1608) },		/* Non-Flash type */
+> +
+> +	{ USB_DEVICE(0x2c42, 0x1632) },		/* 2 port UART device */
+> +	{ USB_DEVICE(0x2c42, 0x1634) },		/* 4 port UART device */
+> +	{ USB_DEVICE(0x2c42, 0x1635) },		/* 8 port UART device */
+> +	{ USB_DEVICE(0x2c42, 0x1636) },		/* 12 port UART device */
+>  	{ }					/* Terminating entry */
+>  };
+>  MODULE_DEVICE_TABLE(usb, id_table);
+> @@ -61,15 +75,25 @@ MODULE_DEVICE_TABLE(usb, id_table);
+>  #define F81232_CLK_14_77_MHZ		(BIT(1) | BIT(0))
+>  #define F81232_CLK_MASK			GENMASK(1, 0)
+>  
+> +#define F81534A_MODE_CONF_REG		0x107
+> +#define F81534A_TRIGGER_MASK		GENMASK(3, 2)
+> +#define F81534A_TRIGGER_MULTPILE_4X	BIT(3)
+> +#define F81534A_FIFO_128BYTE		(BIT(1) | BIT(0))
+> +
+> +#define F81232_F81232_TYPE		1
+> +#define F81232_F81534A_TYPE		2
+> +
+>  struct f81232_private {
+>  	struct mutex lock;
+>  	u8 modem_control;
+>  	u8 modem_status;
+>  	u8 shadow_lcr;
+> +	u8 device_type;
+>  	speed_t baud_base;
+>  	struct work_struct lsr_work;
+>  	struct work_struct interrupt_work;
+>  	struct usb_serial_port *port;
+> +	void (*process_read_urb)(struct urb *urb);
+>  };
+>  
+>  static u32 const baudrate_table[] = { 115200, 921600, 1152000, 1500000 };
+> @@ -376,6 +400,78 @@ static void f81232_process_read_urb(struct urb *urb)
+>  	tty_flip_buffer_push(&port->port);
+>  }
+>  
+> +static void f81534a_process_read_urb(struct urb *urb)
+> +{
+> +	struct usb_serial_port *port = urb->context;
+> +	struct f81232_private *priv = usb_get_serial_port_data(port);
+> +	unsigned char *data = urb->transfer_buffer;
+> +	char tty_flag;
+> +	unsigned int i;
+> +	u8 lsr;
+> +	u8 len;
+> +
+> +	if (urb->status) {
+> +		dev_err(&port->dev, "urb->status: %d\n", urb->status);
 
-The most efficient solution would be to mwait on a memory 
-region that both host and guest would write to.
+Please use proper error messages in English (not C) here and throughout.
 
-No cpu cycles burned, full efficiency.
+But this one isn't needed since it should have been checked by the
+completion handler.
 
-However both host and guest would have to write to this region, which
-brings security concerns.
+> +		return;
+> +	}
+> +
+> +	if (!urb->actual_length) {
+> +		dev_err(&port->dev, "urb->actual_length == 0\n");
+> +		return;
+> +	}
+> +
+> +	len = data[0];
+> +	if (len != urb->actual_length) {
+> +		dev_err(&port->dev, "len(%d) != urb->actual_length(%d)\n", len,
+> +				urb->actual_length);
+> +		return;
+> +	}
+> +
+> +	/* bulk-in data: [LEN][Data.....][LSR] */
+> +	tty_flag = TTY_NORMAL;
+> +
+> +	lsr = data[len - 1];
 
+What if len == 1?
 
+> +	if (lsr & UART_LSR_BRK_ERROR_BITS) {
+> +		if (lsr & UART_LSR_BI) {
+> +			tty_flag = TTY_BREAK;
+> +			port->icount.brk++;
+> +			usb_serial_handle_break(port);
+> +		} else if (lsr & UART_LSR_PE) {
+> +			tty_flag = TTY_PARITY;
+> +			port->icount.parity++;
+> +		} else if (lsr & UART_LSR_FE) {
+> +			tty_flag = TTY_FRAME;
+> +			port->icount.frame++;
+> +		}
+> +
+> +		if (lsr & UART_LSR_OE) {
+> +			port->icount.overrun++;
+> +			schedule_work(&priv->lsr_work);
+> +			tty_insert_flip_char(&port->port, 0, TTY_OVERRUN);
+> +		}
+> +	}
+
+Isn't this something mostly shared with f81232r? Refactor?
+
+> +
+> +	for (i = 1; i < urb->actual_length - 1; i++) {
+> +		if (port->port.console && port->sysrq) {
+> +			if (usb_serial_handle_sysrq_char(port, data[i]))
+> +				continue;
+> +		}
+> +
+> +		tty_insert_flip_char(&port->port, data[i], tty_flag);
+
+Use tty_insert_flip_string_fixed_char() when not a console.
+
+> +	}
+> +
+> +	tty_flip_buffer_push(&port->port);
+> +}
+> +
+> +static void f81232_read_urb_proxy(struct urb *urb)
+> +{
+> +	struct usb_serial_port *port = urb->context;
+> +	struct f81232_private *priv = usb_get_serial_port_data(port);
+> +
+> +	if (priv->process_read_urb)
+> +		priv->process_read_urb(urb);
+> +}
+
+No, please add a proper usb-serial subdriver (to this file) rather
+than reimplement this type abstraction yourself.
+
+> +
+>  static void f81232_break_ctl(struct tty_struct *tty, int break_state)
+>  {
+>  	struct usb_serial_port *port = tty->driver_data;
+> @@ -487,13 +583,28 @@ static void f81232_set_baudrate(struct tty_struct *tty,
+>  
+>  static int f81232_port_enable(struct usb_serial_port *port)
+>  {
+> +	struct f81232_private *port_priv = usb_get_serial_port_data(port);
+>  	u8 val;
+>  	int status;
+>  
+> -	/* fifo on, trigger8, clear TX/RX*/
+> -	val = UART_FCR_TRIGGER_8 | UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR |
+> -			UART_FCR_CLEAR_XMIT;
+> +	if (port_priv->device_type != F81232_F81232_TYPE) {
+> +		val = F81534A_TRIGGER_MULTPILE_4X | F81534A_FIFO_128BYTE;
+> +		status = f81232_set_mask_register(port, F81534A_MODE_CONF_REG,
+> +				F81534A_TRIGGER_MASK | F81534A_FIFO_128BYTE,
+> +				val);
+> +		if (status) {
+> +			dev_err(&port->dev, "failed to set MODE_CONF_REG: %d\n",
+> +					status);
+> +			return status;
+> +		}
+> +
+> +		val = UART_FCR_TRIGGER_14;
+> +	} else {
+> +		val = UART_FCR_TRIGGER_8;
+> +	}
+>  
+> +	/* fifo on, clear TX/RX */
+> +	val |= UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR | UART_FCR_CLEAR_XMIT;
+>  	status = f81232_set_register(port, FIFO_CONTROL_REGISTER, val);
+>  	if (status) {
+>  		dev_err(&port->dev, "%s failed to set FCR: %d\n",
+> @@ -631,6 +742,16 @@ static int f81232_tiocmset(struct tty_struct *tty,
+>  	return f81232_set_mctrl(port, set, clear);
+>  }
+>  
+> +static void f81232_detect_device_type(struct usb_serial_port *port)
+> +{
+> +	struct f81232_private *port_priv = usb_get_serial_port_data(port);
+> +
+> +	if (port->serial->dev->descriptor.idProduct == 0x0706)
+
+Missing le16_to_cpu()
+
+Customers cannot set their own device ids?
+
+Not needed with subdriver anyway.
+
+> +		port_priv->device_type = F81232_F81232_TYPE;
+> +	else
+> +		port_priv->device_type = F81232_F81534A_TYPE;
+> +}
+> +
+>  static int f81232_open(struct tty_struct *tty, struct usb_serial_port *port)
+>  {
+>  	int result;
+> @@ -731,6 +852,7 @@ static void f81232_lsr_worker(struct work_struct *work)
+>  static int f81232_port_probe(struct usb_serial_port *port)
+>  {
+>  	struct f81232_private *priv;
+> +	int status = 0;
+>  
+>  	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+>  	if (!priv)
+> @@ -741,11 +863,26 @@ static int f81232_port_probe(struct usb_serial_port *port)
+>  	INIT_WORK(&priv->lsr_work, f81232_lsr_worker);
+>  
+>  	usb_set_serial_port_data(port, priv);
+> +	f81232_detect_device_type(port);
+>  
+>  	port->port.drain_delay = 256;
+>  	priv->port = port;
+>  
+> -	return 0;
+> +	switch (priv->device_type) {
+> +	case F81232_F81534A_TYPE:
+> +		priv->process_read_urb = f81534a_process_read_urb;
+> +		break;
+> +
+> +	case F81232_F81232_TYPE:
+> +		priv->process_read_urb = f81232_process_read_urb;
+> +		break;
+> +
+> +	default:
+> +		status = -ENODEV;
+> +		break;
+> +	}
+> +
+> +	return status;
+>  }
+>  
+>  static int f81232_port_remove(struct usb_serial_port *port)
+> @@ -797,12 +934,10 @@ static int f81232_resume(struct usb_serial *serial)
+>  static struct usb_serial_driver f81232_device = {
+>  	.driver = {
+>  		.owner =	THIS_MODULE,
+> -		.name =		"f81232",
+> +		.name =		"f81232/f81534a",
+>  	},
+>  	.id_table =		id_table,
+>  	.num_ports =		1,
+> -	.bulk_in_size =		256,
+> -	.bulk_out_size =	256,
+
+Why change this?
+
+>  	.open =			f81232_open,
+>  	.close =		f81232_close,
+>  	.dtr_rts =		f81232_dtr_rts,
+> @@ -813,7 +948,7 @@ static struct usb_serial_driver f81232_device = {
+>  	.tiocmget =		f81232_tiocmget,
+>  	.tiocmset =		f81232_tiocmset,
+>  	.tiocmiwait =		usb_serial_generic_tiocmiwait,
+> -	.process_read_urb =	f81232_process_read_urb,
+> +	.process_read_urb =	f81232_read_urb_proxy,
+>  	.read_int_callback =	f81232_read_int_callback,
+>  	.port_probe =		f81232_port_probe,
+>  	.port_remove =		f81232_port_remove,
+> @@ -828,7 +963,7 @@ static struct usb_serial_driver * const serial_drivers[] = {
+>  
+>  module_usb_serial_driver(serial_drivers, id_table);
+>  
+> -MODULE_DESCRIPTION("Fintek F81232 USB to serial adaptor driver");
+> +MODULE_DESCRIPTION("Fintek F81232/532A/534A/535/536 USB to serial driver");
+>  MODULE_AUTHOR("Greg Kroah-Hartman <gregkh@linuxfoundation.org>");
+>  MODULE_AUTHOR("Peter Hong <peter_hong@fintek.com.tw>");
+>  MODULE_LICENSE("GPL v2");
+
+Johan
