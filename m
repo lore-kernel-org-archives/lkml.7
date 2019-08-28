@@ -2,92 +2,216 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393DDC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 068AFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3DBD20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD6520856
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:38:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iBjfAYPX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mHCK2iBP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfH1Jhk (ORCPT
+        id S1726617AbfH1JiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:37:40 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:46048 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbfH1Jhi (ORCPT
+        Wed, 28 Aug 2019 05:38:25 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44359 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbfH1JiZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:37:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lzDU24rr69reVb104Pce2/xUV/b2psIODNqgf8Q5hjI=; b=iBjfAYPXlHB+XqPH4DdhAmFHg
-        774im8ZAEvMqDXaAEYklM8RcJWo5UVzucK9HxzyKPZJ6OV8nnQLepb8gDr88OQ4+5KC8eTFY3Ni+V
-        uuEcZB4odylEURWjWNICBuIVepn+vIpCwV5XLVsUeXcAiYcv4ziu9IsrrCdz5a1GFW75gATruMEkx
-        skbNQeXW+IzpYaQPQyIbUX00xi0D3NuICIvHDIPLCkHL0/6yRLs4u10v9MAGukNVvcAnFRUkj1zuF
-        /q2+KXFaRnWTtLE59wyUu/0Urdt/3UeKnmHc/7ubh8vEOOmJ4TRKpw/I91uLlfxKVRixTwPrVRvUs
-        3y1Nf2anQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2uOT-0008Q7-JY; Wed, 28 Aug 2019 09:37:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C51B4300B83;
-        Wed, 28 Aug 2019 11:36:57 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A8D5720230B03; Wed, 28 Aug 2019 11:37:31 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 11:37:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-Subject: Re: [RESEND PATCH V3 2/8] perf/x86/intel: Basic support for metrics
- counters
-Message-ID: <20190828093731.GO2386@hirez.programming.kicks-ass.net>
-References: <20190826144740.10163-1-kan.liang@linux.intel.com>
- <20190826144740.10163-3-kan.liang@linux.intel.com>
- <20190828084416.GC2369@hirez.programming.kicks-ass.net>
- <20190828090217.GN2386@hirez.programming.kicks-ass.net>
+        Wed, 28 Aug 2019 05:38:25 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a21so2227585edt.11;
+        Wed, 28 Aug 2019 02:38:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=flt9IxTDXpAAINorBs+AmhNQPGibX4knZjBXudoTqJ4=;
+        b=mHCK2iBPcn4RtNqJIa+r3p4rW5ZGIZOZvbTBwUB3Rmirj/XeHZinLNpDMorcZRMk1n
+         VS9CVZ6FmYUTjw9dlo5SJ5r2jpYufzwgYIFxtkiNCQ+4C7TRGeOj7jb7p2a9Klzo+HZC
+         w84j1JjGM9b0NJJ1KKKwBxQFeSw51ULZx+inQhieR6vZFbBbWfBxcAyh5pMVQzJFcgZo
+         IMbJ5AnDJDOYBEpRsXnPfkwV2ESCRS0UxYBzfwXpJhRfRAYIPJssFuY03qL33u3Vx1l4
+         g9Ny+1jNBQ8S9IuMMb3R8rRoaXS9IhA+FjWZ44n8lYeIXd1PRnzYWB46lbDq3LeX3I9F
+         2aVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=flt9IxTDXpAAINorBs+AmhNQPGibX4knZjBXudoTqJ4=;
+        b=F3cjbKQi3B7LGrNSnPrf+AjhUpeOMJiRZz1QI3JjlgmA+EzyRscqs6sq99E2WfiA/v
+         7QI5mDPgryY2XlKwIZf8Cph9Znt3eM/kE3PzrYBonvsTbetuapzYday8epDm3mx7539x
+         5lBKOSBOpJyzQRSqYdD/EBUVOKEbtnEcmG6VFPuV5pOj6AJleYBP0ft2atFBpVGLwBpf
+         EgR/mESYN4TrfyijEFekA1hKFDQtSVZvgO4BqS3/KdZ7tryhgbnjnJAb01RgFElrSEzT
+         /MwQXNIHQedkUepfu+xdgAufs9NC4985gxUHL9pboz/ooejIPNjhAbj9EezGvF+iQTSz
+         pRXg==
+X-Gm-Message-State: APjAAAXcfIjAIuv3AZWuEmGfC6Vo2NmFY9zF24tDMuoKBl7Jdk+QuVUQ
+        5Z9VMg8yFM4siEpcRFw08JPyNug+
+X-Google-Smtp-Source: APXvYqxRLGxga0d1nTuNK8TzJOX1G7Yg77gfwljepMJBzvd+Kbne+6dSBmtKBoGGAAZDPD+0b4iOMQ==
+X-Received: by 2002:a50:ea8d:: with SMTP id d13mr2949950edo.83.1566985102474;
+        Wed, 28 Aug 2019 02:38:22 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id gs21sm303630ejb.40.2019.08.28.02.38.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 02:38:21 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 11:38:20 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Dariusz Marcinkiewicz <darekm@google.com>,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 7/9] drm: tegra: use cec_notifier_conn_(un)register
+Message-ID: <20190828093820.GE2917@ulmo>
+References: <20190814104520.6001-1-darekm@google.com>
+ <20190814104520.6001-8-darekm@google.com>
+ <f0e99db8-3329-f272-e139-a7c713f200ea@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="y2zxS2PfCDLh6JVG"
 Content-Disposition: inline
-In-Reply-To: <20190828090217.GN2386@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f0e99db8-3329-f272-e139-a7c713f200ea@xs4all.nl>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 11:02:17AM +0200, Peter Zijlstra wrote:
-> @@ -2192,8 +2227,22 @@ static void intel_pmu_read_event(struct
->  static void intel_pmu_enable_fixed(struct perf_event *event)
->  {
->  	struct hw_perf_event *hwc = &event->hw;
-> -	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
->  	u64 ctrl_val, mask, bits = 0;
-> +	int idx = hwc->idx;
-> +
-> +	if (is_topdown_idx(idx)) {
-> +		struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +		/*
-> +		 * When there are other Top-Down events already active; don't
-> +		 * enable the SLOTS counter.
-> +		 */
-> +		if (*(u64 *)cpuc->active_mask & INTEL_PMC_OTHER_TOPDOWN_BITS(idx))
-> +			return;
-> +
-> +		idx = INTEL_PMC_IDX_FIXED_SLOTS;
-> +	}
-> +
-> +	intel_set_masks(event, hwc->idx);
 
-That wants to be idx, not hwc->idx.
+--y2zxS2PfCDLh6JVG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Aug 28, 2019 at 10:09:30AM +0200, Hans Verkuil wrote:
+> Thierry,
+>=20
+> Can you review this patch?
+>=20
+> Thanks!
+>=20
+> 	Hans
+
+Did you want me to pick this up into the drm/tegra tree? Or do you want
+to pick it up into your tree?
+
+We're just past the DRM subsystem deadline, so it'll have to wait until
+the next cycle if we go that way. If you're in a hurry you may want to
+pick it up yourself, in which case:
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+> On 8/14/19 12:45 PM, Dariusz Marcinkiewicz wrote:
+> > Use the new cec_notifier_conn_(un)register() functions to
+> > (un)register the notifier for the HDMI connector, and fill in
+> > the cec_connector_info.
+> >=20
+> > Changes since v4:
+> > 	- only create a CEC notifier for HDMI connectors
+> >=20
+> > Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+> > Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> > ---
+> >  drivers/gpu/drm/tegra/output.c | 28 +++++++++++++++++++++-------
+> >  1 file changed, 21 insertions(+), 7 deletions(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/out=
+put.c
+> > index bdcaa4c7168cf..34373734ff689 100644
+> > --- a/drivers/gpu/drm/tegra/output.c
+> > +++ b/drivers/gpu/drm/tegra/output.c
+> > @@ -70,6 +70,11 @@ tegra_output_connector_detect(struct drm_connector *=
+connector, bool force)
+> > =20
+> >  void tegra_output_connector_destroy(struct drm_connector *connector)
+> >  {
+> > +	struct tegra_output *output =3D connector_to_output(connector);
+> > +
+> > +	if (output->cec)
+> > +		cec_notifier_conn_unregister(output->cec);
+> > +
+> >  	drm_connector_unregister(connector);
+> >  	drm_connector_cleanup(connector);
+> >  }
+> > @@ -163,18 +168,11 @@ int tegra_output_probe(struct tegra_output *outpu=
+t)
+> >  		disable_irq(output->hpd_irq);
+> >  	}
+> > =20
+> > -	output->cec =3D cec_notifier_get(output->dev);
+> > -	if (!output->cec)
+> > -		return -ENOMEM;
+> > -
+> >  	return 0;
+> >  }
+> > =20
+> >  void tegra_output_remove(struct tegra_output *output)
+> >  {
+> > -	if (output->cec)
+> > -		cec_notifier_put(output->cec);
+> > -
+> >  	if (output->hpd_gpio)
+> >  		free_irq(output->hpd_irq, output);
+> > =20
+> > @@ -184,6 +182,7 @@ void tegra_output_remove(struct tegra_output *outpu=
+t)
+> > =20
+> >  int tegra_output_init(struct drm_device *drm, struct tegra_output *out=
+put)
+> >  {
+> > +	int connector_type;
+> >  	int err;
+> > =20
+> >  	if (output->panel) {
+> > @@ -199,6 +198,21 @@ int tegra_output_init(struct drm_device *drm, stru=
+ct tegra_output *output)
+> >  	if (output->hpd_gpio)
+> >  		enable_irq(output->hpd_irq);
+> > =20
+> > +	connector_type =3D output->connector.connector_type;
+> > +	/*
+> > +	 * Create a CEC notifier for HDMI connector.
+> > +	 */
+> > +	if (connector_type =3D=3D DRM_MODE_CONNECTOR_HDMIA ||
+> > +	    connector_type =3D=3D DRM_MODE_CONNECTOR_HDMIB) {
+> > +		struct cec_connector_info conn_info;
+> > +
+> > +		cec_fill_conn_info_from_drm(&conn_info, &output->connector);
+> > +		output->cec =3D cec_notifier_conn_register(output->dev, NULL,
+> > +							 &conn_info);
+> > +		if (!output->cec)
+> > +			return -ENOMEM;
+> > +	}
+> > +
+> >  	return 0;
+> >  }
+> > =20
+> >=20
+>=20
+
+--y2zxS2PfCDLh6JVG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1mS4wACgkQ3SOs138+
+s6Hukw/8DvWhMV7uYDCsZIDHgnNF+l4WXu+x1XIy9XFt57KVfkbBW6YyYhAos1rx
+4JSvHvWIdlB1AdTJacEqnxYynrMmfDrBNikG+0kFuUUwIeOdT+wRuOODFzGg7gZC
+OvN+cADPyEDP0XyPZjv29B5+heSJnnLV6ziIENuVQaJA3QECOyx+K1hBheCLUXjE
+fBUH9B6CpuGHvYtAqNu5i10kkL5sGIG/xjnHresWTHxrxwDHEIVBeryREjPdaYV7
+fpafk17crGKST65cyIU0Be7h6WPEzCuybE5653TI4qM71ISJvhEsPnWY4ZSHBZXk
+QWaKd8FtIuSuh6T/zkhzkfCBRAMyD3hluP2lPKOQLrw/oZqRTtyu4hyTFhxAIema
+OeQeVY7aQyawoT3bSfWvhruPZ4r0wDxXCu0j2eD3so2AgGYBz/5WadYsCoZxGOS0
+hzQayaCick670ZmDPJV/CiyzybkDN21gKpRzp/0+DXB837yCBlCK34bU76b9rd0e
+J4Gy5wy32ja6KK2TxqiHBuPKyASjadwW5dYxDH2iNnSJxWbg82z15/ZBaUpYeIvF
+mDhLxA6Cz49/iFXDsfTZcUpVf5JTADqNYYa0Yy1kBjFNXw/pwvgvp6wL0N5x20eL
+mItPhPmbflgIE0KJvBp0S0h/sgJ4dxUTjPsEVFKD2KFLn7xbYJY=
+=2whG
+-----END PGP SIGNATURE-----
+
+--y2zxS2PfCDLh6JVG--
