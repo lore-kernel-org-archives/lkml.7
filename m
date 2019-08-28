@@ -8,58 +8,59 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978D9C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31342C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 561DD20828
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E23F420856
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzsDqW68"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SB3JDaho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfH1JkA (ORCPT
+        id S1726400AbfH1JnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:40:00 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45902 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfH1JkA (ORCPT
+        Wed, 28 Aug 2019 05:43:21 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39449 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbfH1JnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:40:00 -0400
-Received: by mail-ed1-f68.google.com with SMTP id x19so2228619eda.12
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 02:39:58 -0700 (PDT)
+        Wed, 28 Aug 2019 05:43:20 -0400
+Received: by mail-ed1-f65.google.com with SMTP id g8so2279469edm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 02:43:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=qpWJuimo1UkdpeTs/cFgoexJzT3ErJ/D/0Izb7sGGbE=;
-        b=TzsDqW68ycsXwxSHhm3gZ8DWu2+c1RfQjxC1R+5xmHwMGx+yVE+j59tHHW1KPNgHJw
-         Oc5UJFbWtMXrpPE41DqYDItg+V66nAlJx3N2T9IAGkrFaUrHJ49SX6HHMNmEb3QneKDN
-         Wqj6wXZ+Txbb2Ygo5cG7qftzLXkVxhVwYgx8H5uGvk2N+TV4DXxranl8Tp3Z/2yN87zl
-         K6wrZWkLuQI7/6TC8hjlrmWfwrh3woSDFdqk21Vuqh6ldVfLXStd+clNLfVE0HFElpi0
-         DcZIhELHVJW3wOI73IvWt2oO76b0uv6tuEvcKhusQ/n/I6iNuZN2AtXLvq5Tqa1+bPAz
-         kUhA==
+        bh=KX41i1WhIYhU45WlM2JOv87y3yDnNDkdr2vkLR1ngbA=;
+        b=SB3JDahoi8GaaB4kIiKflxk1L51N5jZfRIeMe01Pjq+Qs2y7JQ2pBZ9/nccRo0RG8F
+         SDk30PIbA0a5XxTct2e9gvzWEKYcNVyfnpZn4YeC2q+G1SgO5oRbYNn+b2kRWbjyQUZo
+         ZppdV3tXyqnBQ0/pI8x/i7vnEX07IUGkDwVtJwllhOsbLRpUJ2W5pp01OC4/18+VQtg+
+         R72PuTITZ1aJza22jD5Aj1WL9jum0LD0kyynA3U2xUrF6cpOogL4Y0ZHV9hzABNi8eCh
+         3seYMvqlZdfehKTyxuylfrG0PR/z01bG+FCtKpOiU8pKWUAZ+SFOGwHZi4rCaNbrmBui
+         94eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=qpWJuimo1UkdpeTs/cFgoexJzT3ErJ/D/0Izb7sGGbE=;
-        b=H2F5eD4RmE1GnrXFH8INbuZ8/J7tf2aqhDyTMKjiALq4xCsMk2muVoQe8gwXE+zi2K
-         hB56w7l55u70DinRi98wTPSLnpzfqDAGePUFSDmvkgPkQozExn2eA3pS8GeESXITb+fC
-         2SXZCkx0VvRi9kYW5rDDz8Ldos++RX2ikuA56897OpcT/Mw6EUDXVq6vMvp2wivzfHCN
-         sq8tNBOnx6ZUoK8eXnkTE71JzBFiaEFaETDFFVjQPv4ryEmAjbWxJ6V0/hI0FlGraNU4
-         GSvV+eIgdd72huvIbh+LFhVUAEYwO+SRvV7p1vs30g3HIKYGd9YHV7FfPs0EKIYyKJ7k
-         9H2w==
-X-Gm-Message-State: APjAAAX6I042sQenZv/2VrRdP+z47a+hXgN/aY8bPb9x8QCUM5qzJjOz
-        esPYdA4jTrem+aKZ0ERbenQ=
-X-Google-Smtp-Source: APXvYqyEP6AADeWqJE+Z9XdysXYYdZcUwI5pb5uMEaNRCKJP2pZ62zUPRbYF3b+HVHk4/gW9AekJFQ==
-X-Received: by 2002:aa7:c1da:: with SMTP id d26mr2881472edp.208.1566985197620;
-        Wed, 28 Aug 2019 02:39:57 -0700 (PDT)
+        bh=KX41i1WhIYhU45WlM2JOv87y3yDnNDkdr2vkLR1ngbA=;
+        b=ibp3F0wbvk/fTcL3oIK1FWd0MQFPcNYpL5lYQ7ahWMVPqlw1ySzY0nEroMCdWSI+dc
+         7XI3SBafvmUyX7Tnd4foMnFU8ZujGkEiK0hA9BN4jYH2H1+50QJtghl87aU7V6ebDDxx
+         2fBxjtD7eCdR92IxLz3BSKZ/XtMDuSL9cUlQal9WILl8cE1NgfmtbsM07Z/VvDiM0D99
+         B7+3aqnvPA6lixIOUlcGILibtSSFn4PvkxvrkLBK6WYImTnP3Am2ww5eX7vYs+Pe8mr1
+         0eiGiH0fK3nRRqWJkyAlDUOYFX29unbfNJeWOwsenNNpTQQo8KU5l669uKvfkhOVTYuR
+         v1QQ==
+X-Gm-Message-State: APjAAAVTNsuGV8ZCcJwBgKiOz5vIilW4ikpBQ93W6OHubvY04TsbJdI7
+        i6srybMrUiG80vfoHTYAjG4=
+X-Google-Smtp-Source: APXvYqzwZCKKNWRU1mM2pi8xbeB4p8qn84OZzLqOAVp+hd/sZUqHKipqA29FwjPpJ8CzIoWQ9hNuUQ==
+X-Received: by 2002:a17:906:4b44:: with SMTP id j4mr2274810ejv.139.1566985398311;
+        Wed, 28 Aug 2019 02:43:18 -0700 (PDT)
 Received: from ziggy.stardust ([95.169.228.146])
-        by smtp.gmail.com with ESMTPSA id e6sm343019eds.91.2019.08.28.02.39.56
+        by smtp.gmail.com with ESMTPSA id a3sm300500eje.90.2019.08.28.02.43.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Aug 2019 02:39:56 -0700 (PDT)
-Subject: Re: [PATCH v7 02/13] dt-bindings: soc: Add MT8183 power dt-bindings
+        Wed, 28 Aug 2019 02:43:17 -0700 (PDT)
+Subject: Re: [PATCH v7 03/13] soc: mediatek: Refactor polling timeout and
+ documentation
 To:     Weiyi Lu <weiyi.lu@mediatek.com>,
         Nicolas Boichat <drinkcat@chromium.org>,
         Rob Herring <robh@kernel.org>
@@ -69,7 +70,7 @@ Cc:     James Liao <jamesjj.liao@mediatek.com>,
         linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
         Yong Wu <yong.wu@mediatek.com>
 References: <1566983506-26598-1-git-send-email-weiyi.lu@mediatek.com>
- <1566983506-26598-3-git-send-email-weiyi.lu@mediatek.com>
+ <1566983506-26598-4-git-send-email-weiyi.lu@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
@@ -165,12 +166,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  pac005PuhxCWkKTJz3gCmznnoat4GCnL5gy/m0Qk45l4PFqwWXVLo9AQg2Kp3mlIFZ6fsEKI
  AN5hxlbNvNb9V2Zo5bFZjPWPFTxOteM0omUAS+QopwU0yPLLGJVf2iCmItHcUXI+r2JwH1CJ
  jrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <48655b84-fd20-f417-529c-b81a7d64d63d@gmail.com>
-Date:   Wed, 28 Aug 2019 11:39:55 +0200
+Message-ID: <3a61ccce-1c88-5e7f-77ad-afce071a656b@gmail.com>
+Date:   Wed, 28 Aug 2019 11:43:16 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1566983506-26598-3-git-send-email-weiyi.lu@mediatek.com>
+In-Reply-To: <1566983506-26598-4-git-send-email-weiyi.lu@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -182,100 +183,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 28/08/2019 11:11, Weiyi Lu wrote:
-> Add power dt-bindings of MT8183 and introduces "BASIC" and
-> "SUBSYS" clock types in binding document.
-> The "BASIC" type is compatible to the original power control with
-> clock name [a-z]+[0-9]*, e.g. mm, vpu1.
-> The "SUBSYS" type is used for bus protection control with clock
-> name [a-z]+-[0-9]+, e.g. isp-0, cam-1.
+> Use USEC_PER_SEC to indicate the polling timeout directly.
+> And add documentation of scp_domain_data.
 > 
 > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
 > ---
->  .../devicetree/bindings/soc/mediatek/scpsys.txt    | 14 ++++++++++++
->  include/dt-bindings/power/mt8183-power.h           | 26 ++++++++++++++++++++++
->  2 files changed, 40 insertions(+)
->  create mode 100644 include/dt-bindings/power/mt8183-power.h
+
+Queued for v5.4-next/soc
+Thanks!
+
+>  drivers/soc/mediatek/mtk-scpsys.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> index 876693a..00eab7e 100644
-> --- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> +++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> @@ -14,6 +14,7 @@ power/power_domain.txt. It provides the power domains defined in
->  - include/dt-bindings/power/mt2701-power.h
->  - include/dt-bindings/power/mt2712-power.h
->  - include/dt-bindings/power/mt7622-power.h
-> +- include/dt-bindings/power/mt8183-power.h
+> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+> index 503222d..e97fc0e 100644
+> --- a/drivers/soc/mediatek/mtk-scpsys.c
+> +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> @@ -21,7 +21,7 @@
+>  #include <dt-bindings/power/mt8173-power.h>
 >  
->  Required properties:
->  - compatible: Should be one of:
-> @@ -25,18 +26,31 @@ Required properties:
->  	- "mediatek,mt7623a-scpsys": For MT7623A SoC
->  	- "mediatek,mt7629-scpsys", "mediatek,mt7622-scpsys": For MT7629 SoC
->  	- "mediatek,mt8173-scpsys"
-> +	- "mediatek,mt8183-scpsys"
->  - #power-domain-cells: Must be 1
->  - reg: Address range of the SCPSYS unit
->  - infracfg: must contain a phandle to the infracfg controller
->  - clock, clock-names: clocks according to the common clock binding.
->                        These are clocks which hardware needs to be
->                        enabled before enabling certain power domains.
-> +                      The new clock type "BASIC" belongs to the type above.
-> +                      As to the new clock type "SUBSYS" needs to be
-> +                      enabled before releasing bus protection.
-
-The new clock type won't be new in a couple of month, better reword this. E.g.:
-Some SoCs have to groups of clocks. BASIC clocks need to be enabled before
-enabling the corresponding power domain. SUBSYS clocks need to be enabled before
-releasing the bus protection.
-
->  	Required clocks for MT2701 or MT7623: "mm", "mfg", "ethif"
->  	Required clocks for MT2712: "mm", "mfg", "venc", "jpgdec", "audio", "vdec"
->  	Required clocks for MT6797: "mm", "mfg", "vdec"
->  	Required clocks for MT7622 or MT7629: "hif_sel"
->  	Required clocks for MT7623A: "ethif"
->  	Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
-> +	Required clocks for MT8183: BASIC: "audio", "mfg", "mm", "cam", "isp",
-> +					   "vpu", "vpu1", "vpu2", "vpu3"
-> +				    SUBSYS: "mm-0", "mm-1", "mm-2", "mm-3",
-> +					    "mm-4", "mm-5", "mm-6", "mm-7",
-> +					    "mm-8", "mm-9", "isp-0", "isp-1",
-> +					    "cam-0", "cam-1", "cam-2", "cam-3",
-> +					    "cam-4", "cam-5", "cam-6", "vpu-0",
-> +					    "vpu-1", "vpu-2", "vpu-3", "vpu-4",
-> +					    "vpu-5"
+>  #define MTK_POLL_DELAY_US   10
+> -#define MTK_POLL_TIMEOUT    (jiffies_to_usecs(HZ))
+> +#define MTK_POLL_TIMEOUT    USEC_PER_SEC
 >  
->  Optional properties:
->  - vdec-supply: Power supply for the vdec power domain
-> diff --git a/include/dt-bindings/power/mt8183-power.h b/include/dt-bindings/power/mt8183-power.h
-> new file mode 100644
-> index 0000000..5c0c8c7
-> --- /dev/null
-> +++ b/include/dt-bindings/power/mt8183-power.h
-> @@ -0,0 +1,26 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + *
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Weiyi Lu <weiyi.lu@mediatek.com>
+>  #define MTK_SCPD_ACTIVE_WAKEUP		BIT(0)
+>  #define MTK_SCPD_FWAIT_SRAM		BIT(1)
+> @@ -108,6 +108,17 @@ enum clk_id {
+>  
+>  #define MAX_CLKS	3
+>  
+> +/**
+> + * struct scp_domain_data - scp domain data for power on/off flow
+> + * @name: The domain name.
+> + * @sta_mask: The mask for power on/off status bit.
+> + * @ctl_offs: The offset for main power control register.
+> + * @sram_pdn_bits: The mask for sram power control bits.
+> + * @sram_pdn_ack_bits: The mask for sram power control acked bits.
+> + * @bus_prot_mask: The mask for single step bus protection.
+> + * @clk_id: The basic clocks required by this power domain.
+> + * @caps: The flag for active wake-up action.
 > + */
-> +
-> +#ifndef _DT_BINDINGS_POWER_MT8183_POWER_H
-> +#define _DT_BINDINGS_POWER_MT8183_POWER_H
-> +
-> +#define MT8183_POWER_DOMAIN_AUDIO	0
-> +#define MT8183_POWER_DOMAIN_CONN	1
-> +#define MT8183_POWER_DOMAIN_MFG_ASYNC	2
-> +#define MT8183_POWER_DOMAIN_MFG		3
-> +#define MT8183_POWER_DOMAIN_MFG_CORE0	4
-> +#define MT8183_POWER_DOMAIN_MFG_CORE1	5
-> +#define MT8183_POWER_DOMAIN_MFG_2D	6
-> +#define MT8183_POWER_DOMAIN_DISP	7
-> +#define MT8183_POWER_DOMAIN_CAM		8
-> +#define MT8183_POWER_DOMAIN_ISP		9
-> +#define MT8183_POWER_DOMAIN_VDEC	10
-> +#define MT8183_POWER_DOMAIN_VENC	11
-> +#define MT8183_POWER_DOMAIN_VPU_TOP	12
-> +#define MT8183_POWER_DOMAIN_VPU_CORE0	13
-> +#define MT8183_POWER_DOMAIN_VPU_CORE1	14
-> +
-> +#endif /* _DT_BINDINGS_POWER_MT8183_POWER_H */
+>  struct scp_domain_data {
+>  	const char *name;
+>  	u32 sta_mask;
 > 
