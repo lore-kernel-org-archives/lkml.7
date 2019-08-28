@@ -2,150 +2,152 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773D5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E77C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54CF32064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90732064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567000749;
+	bh=b3HLUC0/dCbwiDgbTP2m8cw9QOFK9dnAVJDx+N/Ne/0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iiRUgC3K/7y5jhosz79MQjZfPWDGGpFpfcKtgafGjTVt7LBG6LrhmjDKFkRQzfEXQ
+	 fZjDObS40Fm97kpoyQ1fb76NaGbEX9OVXyiNCpjx7P4IGeLvr2u6i50bUabC0qM9Zd
+	 Y6+pjjCQOSkUtXDuz7gVcdmBu/DfeWLdf0ES+6zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfH1N7G (ORCPT
+        id S1726706AbfH1N5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:59:06 -0400
-Received: from mga18.intel.com ([134.134.136.126]:26741 "EHLO mga18.intel.com"
+        Wed, 28 Aug 2019 09:57:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51048 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726603AbfH1N7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:59:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 06:59:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
-   d="scan'208";a="332168480"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 28 Aug 2019 06:59:04 -0700
-Received: from [10.254.95.196] (kliang2-mobl.ccr.corp.intel.com [10.254.95.196])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726548AbfH1N50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:57:26 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 663C3580409;
-        Wed, 28 Aug 2019 06:59:03 -0700 (PDT)
-Subject: Re: [RESEND PATCH V3 2/8] perf/x86/intel: Basic support for metrics
- counters
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-References: <20190826144740.10163-1-kan.liang@linux.intel.com>
- <20190826144740.10163-3-kan.liang@linux.intel.com>
- <20190828075213.GB2369@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <ae6e095a-d041-4cde-b9e1-fd950160abfd@linux.intel.com>
-Date:   Wed, 28 Aug 2019 09:59:02 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mx1.redhat.com (Postfix) with ESMTPS id 3C39C800DF6;
+        Wed, 28 Aug 2019 13:57:26 +0000 (UTC)
+Received: from krava.brq.redhat.com (unknown [10.43.17.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9434A1001B00;
+        Wed, 28 Aug 2019 13:57:24 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: [PATCH 03/23] libperf: Add PERF_RECORD_EVENT_UPDATE 'struct event_update_event' to perf/event.h
+Date:   Wed, 28 Aug 2019 15:56:57 +0200
+Message-Id: <20190828135717.7245-4-jolsa@kernel.org>
+In-Reply-To: <20190828135717.7245-1-jolsa@kernel.org>
+References: <20190828135717.7245-1-jolsa@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190828075213.GB2369@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Wed, 28 Aug 2019 13:57:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Move the PERF_RECORD_EVENT_UPDATE event definition to libperf's event.h.
 
+In order to keep libperf simple, we switch 'u64/u32/u16/u8'
+types used events to their generic '__u*' versions.
 
-On 8/28/2019 3:52 AM, Peter Zijlstra wrote:
-> On Mon, Aug 26, 2019 at 07:47:34AM -0700, kan.liang@linux.intel.com wrote:
-> 
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index 81b005e4c7d9..54534ff00940 100644
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
->> @@ -1033,18 +1033,30 @@ static inline void x86_assign_hw_event(struct perf_event *event,
->>   				struct cpu_hw_events *cpuc, int i)
->>   {
->>   	struct hw_perf_event *hwc = &event->hw;
->> +	int reg_idx;
->>   
->>   	hwc->idx = cpuc->assign[i];
->>   	hwc->last_cpu = smp_processor_id();
->>   	hwc->last_tag = ++cpuc->tags[i];
->>   
->> +	/*
->> +	 * Metrics counters use different indexes in the scheduler
->> +	 * versus the hardware.
->> +	 *
->> +	 * Map metrics to fixed counter 3 (which is the base count),
->> +	 * but the update event callback reads the extra metric register
->> +	 * and converts to the right metric.
->> +	 */
->> +	reg_idx = get_reg_idx(hwc->idx);
->> +
->>   	if (hwc->idx == INTEL_PMC_IDX_FIXED_BTS) {
->>   		hwc->config_base = 0;
->>   		hwc->event_base	= 0;
->>   	} else if (hwc->idx >= INTEL_PMC_IDX_FIXED) {
->>   		hwc->config_base = MSR_ARCH_PERFMON_FIXED_CTR_CTRL;
->> -		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 + (hwc->idx - INTEL_PMC_IDX_FIXED);
->> -		hwc->event_base_rdpmc = (hwc->idx - INTEL_PMC_IDX_FIXED) | 1<<30;
->> +		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 +
->> +				  (reg_idx - INTEL_PMC_IDX_FIXED);
->> +		hwc->event_base_rdpmc = (reg_idx - INTEL_PMC_IDX_FIXED) | 1<<30;
->>   	} else {
->>   		hwc->config_base = x86_pmu_config_addr(hwc->idx);
->>   		hwc->event_base  = x86_pmu_event_addr(hwc->idx);
-> 
-> That reg_idx is a pointless unconditional branch; better to write it
-> like:
-> 
-> static inline void x86_assign_hw_event(struct perf_event *event,
-> 				struct cpu_hw_events *cpuc, int i)
-> {
-> 	struct hw_perf_event *hwc = &event->hw;
-> 	int idx;
-> 
-> 	idx = hwc->idx = cpuc->assign[i];
-> 	hwc->last_cpu = smp_processor_id();
-> 	hwc->last_tag = ++cpuc->tags[i];
-> 
-> 	switch (hwc->idx) {
-> 	case INTEL_PMC_IDX_FIXED_BTS:
-> 		hwc->config_base = 0;
-> 		hwc->event_base	= 0;
-> 		break;
-> 
-> 	case INTEL_PMC_IDX_FIXED_METRIC_BASE ... INTEL_PMC_IDX_FIXED_METRIC_BASE+3:
-> 		/* All METRIC events are mapped onto the fixed SLOTS counter */
-> 		idx = INTEL_PMC_IDX_FIXED_SLOTS;
-> 
-> 	case INTEL_PMC_IDX_FIXED ... INTEL_PMC_IDX_FIXED_METRIC_BASE-1:
-> 		hwc->config_base = MSR_ARCH_PERFMON_FIXED_CTR_CTRL;
-> 		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 +
-> 				  (idx - INTEL_PMC_IDX_FIXED);
-> 		hwc->event_base_rdpmc = (idx - INTEL_PMC_IDX_FIXED) | 1<<30;
-> 		break;
-> 
-> 	default:
-> 		hwc->config_base = x86_pmu_config_addr(hwc->idx);
-> 		hwc->event_base = x86_pmu_event_addr(hwc->idx);
-> 		hwc->event_base_rdpmc = x86_pmu_rdpmc_index(hwc->idx);
-> 		break;
-> 	}
-> }
-> 
-> On that; wth does this to the RDPMC userspace support!? Does that even
-> work with these counters?
-> 
+Link: http://lkml.kernel.org/n/tip-evb1r0gk2usfnby0b9dxlzfs@git.kernel.org
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/lib/include/perf/event.h | 22 ++++++++++++++++++++++
+ tools/perf/util/event.h             | 23 -----------------------
+ tools/perf/util/header.c            |  2 +-
+ 3 files changed, 23 insertions(+), 24 deletions(-)
 
-The event_base_rdpmc is only for kernel usage now.
-But it seems we can update x86_pmu_event_idx() to use it as well.
-
-Thanks,
-Kan
-
+diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
+index 469be778fdc1..3d99818077d8 100644
+--- a/tools/perf/lib/include/perf/event.h
++++ b/tools/perf/lib/include/perf/event.h
+@@ -141,4 +141,26 @@ struct cpu_map_event {
+ 	struct cpu_map_data	 data;
+ };
+ 
++enum {
++	PERF_EVENT_UPDATE__UNIT  = 0,
++	PERF_EVENT_UPDATE__SCALE = 1,
++	PERF_EVENT_UPDATE__NAME  = 2,
++	PERF_EVENT_UPDATE__CPUS  = 3,
++};
++
++struct event_update_event_cpus {
++	struct cpu_map_data	 cpus;
++};
++
++struct event_update_event_scale {
++	double			 scale;
++};
++
++struct event_update_event {
++	struct perf_event_header header;
++	__u64			 type;
++	__u64			 id;
++	char			 data[];
++};
++
+ #endif /* __LIBPERF_EVENT_H */
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 84bf67353635..a579e6b439d6 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -337,29 +337,6 @@ struct events_stats {
+ 	u32 nr_proc_map_timeout;
+ };
+ 
+-enum {
+-	PERF_EVENT_UPDATE__UNIT  = 0,
+-	PERF_EVENT_UPDATE__SCALE = 1,
+-	PERF_EVENT_UPDATE__NAME  = 2,
+-	PERF_EVENT_UPDATE__CPUS  = 3,
+-};
+-
+-struct event_update_event_cpus {
+-	struct cpu_map_data cpus;
+-};
+-
+-struct event_update_event_scale {
+-	double scale;
+-};
+-
+-struct event_update_event {
+-	struct perf_event_header header;
+-	u64 type;
+-	u64 id;
+-
+-	char data[];
+-};
+-
+ #define MAX_EVENT_NAME 64
+ 
+ struct perf_trace_event_type {
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 1f2965a07bef..cc4998fcf4ee 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3892,7 +3892,7 @@ size_t perf_event__fprintf_event_update(union perf_event *event, FILE *fp)
+ 	struct perf_cpu_map *map;
+ 	size_t ret;
+ 
+-	ret = fprintf(fp, "\n... id:    %" PRIu64 "\n", ev->id);
++	ret = fprintf(fp, "\n... id:    %" PRI_lu64 "\n", ev->id);
+ 
+ 	switch (ev->type) {
+ 	case PERF_EVENT_UPDATE__SCALE:
+-- 
+2.21.0
 
