@@ -2,73 +2,73 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFB5C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A7DC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59183233A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26BD23405
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567030008;
-	bh=P59Flu29mJ1XWFzdjDlFw7loZGNw0WO6bsVIy2z9moE=;
+	s=default; t=1567030013;
+	bh=t9x9rbzNvp7ynlcpOVCqDS91TRnSExLwxkklh7/+s1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gzocoq4QWpybovtngrCjbxu8+lUqdDOJ3qTZMQ4FhdAAEp7GSCThJoGPI5Yx7ZRKQ
-	 aAeNDTlI6n9HcsBxV/cn87a/21s5WXBeGF1ULf+kpj4MF2tv7bKdbc/BdWKxZCyK21
-	 fUAGZDN/Wkf96YyITaMyJdLjv3tWcdFuzuVVMYpc=
+	b=QmUdR9yV/H2WPo92fAu3JEbmZY3C6N0zc5xrgHZYzu5+9RHRcR2Gqxe6qZ/2xoxJz
+	 bWIu2BbMo9VZJTFFPinu5nXKf/H3J2Wgv9pt9vr/BjRy5Cg69gS0sMbcqscKLUbKRI
+	 YJo+tcAiwD8+UBGjqFysHXq5Ql8yEYNSIblySwL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbfH1WGr (ORCPT
+        id S1727222AbfH1WGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 18:06:47 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44258 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfH1WG0 (ORCPT
+        Wed, 28 Aug 2019 18:06:21 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46115 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbfH1WGP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 18:06:26 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 44so1352708qtg.11;
-        Wed, 28 Aug 2019 15:06:26 -0700 (PDT)
+        Wed, 28 Aug 2019 18:06:15 -0400
+Received: by mail-qk1-f195.google.com with SMTP id p13so1151746qkg.13;
+        Wed, 28 Aug 2019 15:06:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=dTmjeJb8iUEUofnVcMj/ipLT+t1T3/xUlVFZHBWwEns=;
-        b=BqCjjelmwZ1phoBX2LjjySinujpZy0jSFpOMtyn/ogKUnBZ8mn7D0YkG36e7tYu4Qo
-         V/qBtOTQbe+dzfDVAK5NjQ0e5zep2Ong//miVsrbsy4IgGVT6n9xjNMyXZ58uEFoWeBl
-         KO9P6YCigIeZWdBvEZB+c09GnlSa5djgN7Mtt45j/jtc2jF+VO0zKvIfB0sRpUhcAbqO
-         SoVgP/QjmyjbG25cNhG7E+xFCo5/EGmJCail+cdiyx4i1/9VCN5QNrhr8YPxp8AXhZ0C
-         dwmt4XiIh6ihCF+Wo6FxUhTfQcRAahXs9uEZ8QTEMQ7PHHVfgX7MoUZ+lwDnHN+dSI8O
-         UrdA==
+        bh=85wyZs3HMu6iXK+wZ0W8BFNcrkDk5YmJ/FXIK4MM3S8=;
+        b=cG+3/ed+q1RdEnqmWH4ftRcuxyp4xnZQof6cm/OxQXjNXAi+nZbBEnX10Jw0NfVdM/
+         O9nEbP/1s2E7IfITAwQTVpdRRflbD/FAQK83XRL36CN8o8HwKTzka1Sny7JjJYreVXbA
+         4rYCz2XdATy2L/df9Y743cFRjramsvYTkyDu5QoTrZTrpylaHzR4hB9NVfaoGSKfD+ME
+         7iVYTTPjGExBhPoYs5HYXOjn5qKYoYoM1cj95smDJWQKRv4ztSF8H2y0h3fz7iVw2QFh
+         7DJ1YBNI3TTW9LtcBctjZ7kYYWKeOwe8cWb3EhhKI82e/f3cST1zRbpMzdMyfE7I15fU
+         hJdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=dTmjeJb8iUEUofnVcMj/ipLT+t1T3/xUlVFZHBWwEns=;
-        b=rS4mF+epUvxNxZ7dYdW8hu4BSqt/ZIuiUBCxqks4DXl7RMMMhvEiB9ekujD+2uGoA+
-         pwC5E8PC0W4+zBzrKMeeYUXah0xbZoEnU38U8vDX7MCWp5BtpoKkmLOP0HrzodJURirM
-         u12U63aJ5nDiTssMV3k4cFehfETbZj2L8Tc2DqfIK8zHOF7QAfXk+yMAivpmRjDT0qgj
-         eWUS3RNNxeYakPe91X9/AmzXoQv5Fiun8AcXqYODFwKTwZV0AkvZXQ0HBYLAp6pBwdBY
-         PsjqpeoptF5Gl1+CC28EEJBf5/xGMdtDpOHWLnGtpF24fCJO5U2axIXpEKg7XTCDvUZw
-         eBvA==
-X-Gm-Message-State: APjAAAXI9NXdTBnmOM5dxct2T5jeNWaK7kF54a1bSneVusHcZdRnzvnU
-        dHaNQDd5DkfshPEM+q3wGjU=
-X-Google-Smtp-Source: APXvYqwBcGVRz2vji6hXxr5w+lpqVF+OFFRXRzZtVNtGO4jNsT8kl0I1MhKtq6l0Vx5WWyyQ9blUog==
-X-Received: by 2002:aed:22d5:: with SMTP id q21mr6688474qtc.199.1567029985597;
-        Wed, 28 Aug 2019 15:06:25 -0700 (PDT)
+        bh=85wyZs3HMu6iXK+wZ0W8BFNcrkDk5YmJ/FXIK4MM3S8=;
+        b=b5lX1435WIterR4643kS06/mWyWCF944aWMKGdBZSFIfVksuaLTHS3QLNODfOB6Wv1
+         R0qhG+H2o0Cpp2cs+5/3TyG0mDj5b1+SaivRibIt1JnpmpD5+e+KvSPh8danb4CmGbyV
+         01oUtlZBIBbOCcsdq81NGRQe6mU1QGL8LX46PoTMsb6bi+0YZSqI/xS9yeDTVn3zPGQU
+         rR6SSNjbi6T2iedRZBVCNhbVyvPxk0GrLzYZYVDlxuwpl22Gvmh8g2tRrzcsaS2wcXNk
+         Jujr+13718a8m7lCQdyndz8tl8R12/tHTpGI0KRUMIwc/uUO/urdYL464X3lB0yvm2x3
+         fZLQ==
+X-Gm-Message-State: APjAAAUmrkSY4ydGjYfOxEs9ncQLGy5iHeJIMX5F7+I3oqLXnR6PL6f7
+        d6KnvVBAR+Nl7FrP1cdbF4I=
+X-Google-Smtp-Source: APXvYqy7/z2dUjl+mXRhpdeons/i/EZxNOJzaBdfT9TxPNEFa74lslcRCiGyFc6x+EqwdYa9bPooPA==
+X-Received: by 2002:a05:620a:1134:: with SMTP id p20mr6459763qkk.434.1567029974498;
+        Wed, 28 Aug 2019 15:06:14 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:500::1:c231])
-        by smtp.gmail.com with ESMTPSA id h4sm212215qkf.126.2019.08.28.15.06.24
+        by smtp.gmail.com with ESMTPSA id c26sm19949qtk.93.2019.08.28.15.06.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 15:06:24 -0700 (PDT)
+        Wed, 28 Aug 2019 15:06:13 -0700 (PDT)
 From:   Tejun Heo <tj@kernel.org>
 To:     axboe@kernel.dk, newella@fb.com, clm@fb.com, josef@toxicpanda.com,
         dennisz@fb.com, lizefan@huawei.com, hannes@cmpxchg.org
 Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
         kernel-team@fb.com, cgroups@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>, Omar Sandoval <osandov@fb.com>
-Subject: [PATCH 09/10] blkcg: add tools/cgroup/iocost_monitor.py
-Date:   Wed, 28 Aug 2019 15:05:59 -0700
-Message-Id: <20190828220600.2527417-10-tj@kernel.org>
+        Tejun Heo <tj@kernel.org>
+Subject: [PATCH 04/10] block/rq_qos: add rq_qos_merge()
+Date:   Wed, 28 Aug 2019 15:05:54 -0700
+Message-Id: <20190828220600.2527417-5-tj@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190828220600.2527417-1-tj@kernel.org>
 References: <20190828220600.2527417-1-tj@kernel.org>
@@ -77,325 +77,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of mucking with debugfs and ->pd_stat(), add drgn based
-monitoring script.
+Add a merge hook for rq_qos.  This will be used by io.weight.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Omar Sandoval <osandov@fb.com>
 ---
- block/blk-iocost.c             |  21 +++
- tools/cgroup/iocost_monitor.py | 270 +++++++++++++++++++++++++++++++++
- 2 files changed, 291 insertions(+)
- create mode 100644 tools/cgroup/iocost_monitor.py
+ block/blk-core.c   | 4 ++++
+ block/blk-rq-qos.c | 9 +++++++++
+ block/blk-rq-qos.h | 9 +++++++++
+ 3 files changed, 22 insertions(+)
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 680815620095..3208d2fdc55e 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -149,6 +149,27 @@
-  * donate and should take back how much requires hweight propagations
-  * anyway making it easier to implement and understand as a separate
-  * mechanism.
-+ *
-+ * 3. Monitoring
-+ *
-+ * Instead of debugfs or other clumsy monitoring mechanisms, this
-+ * controller uses a drgn based monitoring script -
-+ * tools/cgroup/iocost_monitor.py.  For details on drgn, please see
-+ * https://github.com/osandov/drgn.  The ouput looks like the following.
-+ *
-+ *  sdb RUN   per=300ms cur_per=234.218:v203.695 busy= +1 vrate= 62.12%
-+ *                 active      weight      hweight% inflt% del_ms usages%
-+ *  test/a              *    50/   50  33.33/ 33.33  27.65  0*041 033:033:033
-+ *  test/b              *   100/  100  66.67/ 66.67  17.56  0*000 066:079:077
-+ *
-+ * - per	: Timer period
-+ * - cur_per	: Internal wall and device vtime clock
-+ * - vrate	: Device virtual time rate against wall clock
-+ * - weight	: Surplus-adjusted and configured weights
-+ * - hweight	: Surplus-adjusted and configured hierarchical weights
-+ * - inflt	: The percentage of in-flight IO cost at the end of last period
-+ * - del_ms	: Deferred issuer delay induction level and duration
-+ * - usages	: Usage history
-  */
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 77807a5d7f9e..875e8d105067 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -604,6 +604,7 @@ bool bio_attempt_back_merge(struct request *req, struct bio *bio,
+ 		return false;
  
- #include <linux/kernel.h>
-diff --git a/tools/cgroup/iocost_monitor.py b/tools/cgroup/iocost_monitor.py
-new file mode 100644
-index 000000000000..2c9445e966d8
---- /dev/null
-+++ b/tools/cgroup/iocost_monitor.py
-@@ -0,0 +1,270 @@
-+#!/usr/bin/env drgn
-+#
-+# Copyright (C) 2019 Tejun Heo <tj@kernel.org>
-+# Copyright (C) 2019 Facebook
+ 	trace_block_bio_backmerge(req->q, req, bio);
++	rq_qos_merge(req->q, req, bio);
+ 
+ 	if ((req->cmd_flags & REQ_FAILFAST_MASK) != ff)
+ 		blk_rq_set_mixed_merge(req);
+@@ -625,6 +626,7 @@ bool bio_attempt_front_merge(struct request *req, struct bio *bio,
+ 		return false;
+ 
+ 	trace_block_bio_frontmerge(req->q, req, bio);
++	rq_qos_merge(req->q, req, bio);
+ 
+ 	if ((req->cmd_flags & REQ_FAILFAST_MASK) != ff)
+ 		blk_rq_set_mixed_merge(req);
+@@ -650,6 +652,8 @@ bool bio_attempt_discard_merge(struct request_queue *q, struct request *req,
+ 	    blk_rq_get_max_sectors(req, blk_rq_pos(req)))
+ 		goto no_merge;
+ 
++	rq_qos_merge(q, req, bio);
 +
-+desc = """
-+This is a drgn script to monitor the blk-iocost cgroup controller.
-+See the comment at the top of block/blk-iocost.c for more details.
-+For drgn, visit https://github.com/osandov/drgn.
-+"""
-+
-+import sys
-+import re
-+import time
-+import json
-+
-+import drgn
-+from drgn import container_of
-+from drgn.helpers.linux.list import list_for_each_entry,list_empty
-+from drgn.helpers.linux.radixtree import radix_tree_for_each,radix_tree_lookup
-+
-+import argparse
-+parser = argparse.ArgumentParser(description=desc,
-+                                 formatter_class=argparse.RawTextHelpFormatter)
-+parser.add_argument('devname', metavar='DEV',
-+                    help='Target block device name (e.g. sda)')
-+parser.add_argument('--cgroup', action='append', metavar='REGEX',
-+                    help='Regex for target cgroups, ')
-+parser.add_argument('--interval', '-i', metavar='SECONDS', type=float, default=1,
-+                    help='Monitoring interval in seconds')
-+parser.add_argument('--json', action='store_true',
-+                    help='Output in json')
-+args = parser.parse_args()
-+
-+def err(s):
-+    print(s, file=sys.stderr, flush=True)
-+    sys.exit(1)
-+
-+try:
-+    blkcg_root = prog['blkcg_root']
-+    plid = prog['blkcg_policy_iocost'].plid.value_()
-+except:
-+    err('The kernel does not have iocost enabled')
-+
-+IOC_RUNNING     = prog['IOC_RUNNING'].value_()
-+NR_USAGE_SLOTS  = prog['NR_USAGE_SLOTS'].value_()
-+HWEIGHT_WHOLE   = prog['HWEIGHT_WHOLE'].value_()
-+VTIME_PER_SEC   = prog['VTIME_PER_SEC'].value_()
-+VTIME_PER_USEC  = prog['VTIME_PER_USEC'].value_()
-+AUTOP_SSD_FAST  = prog['AUTOP_SSD_FAST'].value_()
-+AUTOP_SSD_DFL   = prog['AUTOP_SSD_DFL'].value_()
-+AUTOP_SSD_QD1   = prog['AUTOP_SSD_QD1'].value_()
-+AUTOP_HDD       = prog['AUTOP_HDD'].value_()
-+
-+autop_names = {
-+    AUTOP_SSD_FAST:        'ssd_fast',
-+    AUTOP_SSD_DFL:         'ssd_dfl',
-+    AUTOP_SSD_QD1:         'ssd_qd1',
-+    AUTOP_HDD:             'hdd',
+ 	req->biotail->bi_next = bio;
+ 	req->biotail = bio;
+ 	req->__data_len += bio->bi_iter.bi_size;
+diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
+index 3954c0dc1443..f4eea78f5cc1 100644
+--- a/block/blk-rq-qos.c
++++ b/block/blk-rq-qos.c
+@@ -83,6 +83,15 @@ void __rq_qos_track(struct rq_qos *rqos, struct request *rq, struct bio *bio)
+ 	} while (rqos);
+ }
+ 
++void __rq_qos_merge(struct rq_qos *rqos, struct request *rq, struct bio *bio)
++{
++	do {
++		if (rqos->ops->merge)
++			rqos->ops->merge(rqos, rq, bio);
++		rqos = rqos->next;
++	} while (rqos);
 +}
 +
-+class BlkgIterator:
-+    def blkcg_name(blkcg):
-+        return blkcg.css.cgroup.kn.name.string_().decode('utf-8')
+ void __rq_qos_done_bio(struct rq_qos *rqos, struct bio *bio)
+ {
+ 	do {
+diff --git a/block/blk-rq-qos.h b/block/blk-rq-qos.h
+index 2300e038b9fa..8e426a8505b6 100644
+--- a/block/blk-rq-qos.h
++++ b/block/blk-rq-qos.h
+@@ -35,6 +35,7 @@ struct rq_qos {
+ struct rq_qos_ops {
+ 	void (*throttle)(struct rq_qos *, struct bio *);
+ 	void (*track)(struct rq_qos *, struct request *, struct bio *);
++	void (*merge)(struct rq_qos *, struct request *, struct bio *);
+ 	void (*issue)(struct rq_qos *, struct request *);
+ 	void (*requeue)(struct rq_qos *, struct request *);
+ 	void (*done)(struct rq_qos *, struct request *);
+@@ -135,6 +136,7 @@ void __rq_qos_issue(struct rq_qos *rqos, struct request *rq);
+ void __rq_qos_requeue(struct rq_qos *rqos, struct request *rq);
+ void __rq_qos_throttle(struct rq_qos *rqos, struct bio *bio);
+ void __rq_qos_track(struct rq_qos *rqos, struct request *rq, struct bio *bio);
++void __rq_qos_merge(struct rq_qos *rqos, struct request *rq, struct bio *bio);
+ void __rq_qos_done_bio(struct rq_qos *rqos, struct bio *bio);
+ 
+ static inline void rq_qos_cleanup(struct request_queue *q, struct bio *bio)
+@@ -185,6 +187,13 @@ static inline void rq_qos_track(struct request_queue *q, struct request *rq,
+ 		__rq_qos_track(q->rq_qos, rq, bio);
+ }
+ 
++static inline void rq_qos_merge(struct request_queue *q, struct request *rq,
++				struct bio *bio)
++{
++	if (q->rq_qos)
++		__rq_qos_merge(q->rq_qos, rq, bio);
++}
 +
-+    def walk(self, blkcg, q_id, parent_path):
-+        if not self.include_dying and \
-+           not (blkcg.css.flags.value_() & prog['CSS_ONLINE'].value_()):
-+            return
-+
-+        name = BlkgIterator.blkcg_name(blkcg)
-+        path = parent_path + '/' + name if parent_path else name
-+        blkg = drgn.Object(prog, 'struct blkcg_gq',
-+                           address=radix_tree_lookup(blkcg.blkg_tree, q_id))
-+        if not blkg.address_:
-+            return
-+
-+        self.blkgs.append((path if path else '/', blkg))
-+
-+        for c in list_for_each_entry('struct blkcg',
-+                                     blkcg.css.children.address_of_(), 'css.sibling'):
-+            self.walk(c, q_id, path)
-+
-+    def __init__(self, root_blkcg, q_id, include_dying=False):
-+        self.include_dying = include_dying
-+        self.blkgs = []
-+        self.walk(root_blkcg, q_id, '')
-+
-+    def __iter__(self):
-+        return iter(self.blkgs)
-+
-+class IocStat:
-+    def __init__(self, ioc):
-+        global autop_names
-+
-+        self.enabled = ioc.enabled.value_()
-+        self.running = ioc.running.value_() == IOC_RUNNING
-+        self.period_ms = round(ioc.period_us.value_() / 1_000)
-+        self.period_at = ioc.period_at.value_() / 1_000_000
-+        self.vperiod_at = ioc.period_at_vtime.value_() / VTIME_PER_SEC
-+        self.vrate_pct = ioc.vtime_rate.counter.value_() * 100 / VTIME_PER_USEC
-+        self.busy_level = ioc.busy_level.value_()
-+        self.autop_idx = ioc.autop_idx.value_()
-+        self.user_cost_model = ioc.user_cost_model.value_()
-+        self.user_qos_params = ioc.user_qos_params.value_()
-+
-+        if self.autop_idx in autop_names:
-+            self.autop_name = autop_names[self.autop_idx]
-+        else:
-+            self.autop_name = '?'
-+
-+    def dict(self, now):
-+        return { 'device'               : devname,
-+                 'timestamp'            : now,
-+                 'enabled'              : self.enabled,
-+                 'running'              : self.running,
-+                 'period_ms'            : self.period_ms,
-+                 'period_at'            : self.period_at,
-+                 'period_vtime_at'      : self.vperiod_at,
-+                 'busy_level'           : self.busy_level,
-+                 'vrate_pct'            : self.vrate_pct, }
-+
-+    def table_preamble_str(self):
-+        state = ('RUN' if self.running else 'IDLE') if self.enabled else 'OFF'
-+        output = f'{devname} {state:4} ' \
-+                 f'per={self.period_ms}ms ' \
-+                 f'cur_per={self.period_at:.3f}:v{self.vperiod_at:.3f} ' \
-+                 f'busy={self.busy_level:+3} ' \
-+                 f'vrate={self.vrate_pct:6.2f}% ' \
-+                 f'params={self.autop_name}'
-+        if self.user_cost_model or self.user_qos_params:
-+            output += f'({"C" if self.user_cost_model else ""}{"Q" if self.user_qos_params else ""})'
-+        return output
-+
-+    def table_header_str(self):
-+        return f'{"":25} active {"weight":>9} {"hweight%":>13} {"inflt%":>6} ' \
-+               f'{"del_ms":>6} {"usages%"}'
-+
-+class IocgStat:
-+    def __init__(self, iocg):
-+        ioc = iocg.ioc
-+        blkg = iocg.pd.blkg
-+
-+        self.is_active = not list_empty(iocg.active_list.address_of_())
-+        self.weight = iocg.weight.value_()
-+        self.active = iocg.active.value_()
-+        self.inuse = iocg.inuse.value_()
-+        self.hwa_pct = iocg.hweight_active.value_() * 100 / HWEIGHT_WHOLE
-+        self.hwi_pct = iocg.hweight_inuse.value_() * 100 / HWEIGHT_WHOLE
-+
-+        vdone = iocg.done_vtime.counter.value_()
-+        vtime = iocg.vtime.counter.value_()
-+        vrate = ioc.vtime_rate.counter.value_()
-+        period_vtime = ioc.period_us.value_() * vrate
-+        if period_vtime:
-+            self.inflight_pct = (vtime - vdone) * 100 / period_vtime
-+        else:
-+            self.inflight_pct = 0
-+
-+        self.use_delay = min(blkg.use_delay.counter.value_(), 99)
-+        self.delay_ms = min(round(blkg.delay_nsec.counter.value_() / 1_000_000), 999)
-+
-+        usage_idx = iocg.usage_idx.value_()
-+        self.usages = []
-+        self.usage = 0
-+        for i in range(NR_USAGE_SLOTS):
-+            usage = iocg.usages[(usage_idx + i) % NR_USAGE_SLOTS].value_()
-+            upct = min(usage * 100 / HWEIGHT_WHOLE, 999)
-+            self.usages.append(upct)
-+            self.usage = max(self.usage, upct)
-+
-+    def dict(self, now, path):
-+        out = { 'cgroup'                : path,
-+                'timestamp'             : now,
-+                'is_active'             : self.is_active,
-+                'weight'                : self.weight,
-+                'weight_active'         : self.active,
-+                'weight_inuse'          : self.inuse,
-+                'hweight_active_pct'    : self.hwa_pct,
-+                'hweight_inuse_pct'     : self.hwi_pct,
-+                'inflight_pct'          : self.inflight_pct,
-+                'use_delay'             : self.use_delay,
-+                'delay_ms'              : self.delay_ms,
-+                'usage_pct'             : self.usage }
-+        for i in range(len(self.usages)):
-+            out[f'usage_pct_{i}'] = f'{self.usages[i]}'
-+        return out
-+
-+    def table_row_str(self, path):
-+        out = f'{path[-28:]:28} ' \
-+              f'{"*" if self.is_active else " "} ' \
-+              f'{self.inuse:5}/{self.active:5} ' \
-+              f'{self.hwi_pct:6.2f}/{self.hwa_pct:6.2f} ' \
-+              f'{self.inflight_pct:6.2f} ' \
-+              f'{self.use_delay:2}*{self.delay_ms:03} '
-+        for u in self.usages:
-+            out += f'{round(u):03d}:'
-+        out = out.rstrip(':')
-+        return out
-+
-+# handle args
-+table_fmt = not args.json
-+interval = args.interval
-+devname = args.devname
-+
-+if args.json:
-+    table_fmt = False
-+
-+re_str = None
-+if args.cgroup:
-+    for r in args.cgroup:
-+        if re_str is None:
-+            re_str = r
-+        else:
-+            re_str += '|' + r
-+
-+filter_re = re.compile(re_str) if re_str else None
-+
-+# Locate the roots
-+q_id = None
-+root_iocg = None
-+ioc = None
-+
-+for i, ptr in radix_tree_for_each(blkcg_root.blkg_tree):
-+    blkg = drgn.Object(prog, 'struct blkcg_gq', address=ptr)
-+    try:
-+        if devname == blkg.q.kobj.parent.name.string_().decode('utf-8'):
-+            q_id = blkg.q.id.value_()
-+            if blkg.pd[plid]:
-+                root_iocg = container_of(blkg.pd[plid], 'struct ioc_gq', 'pd')
-+                ioc = root_iocg.ioc
-+            break
-+    except:
-+        pass
-+
-+if ioc is None:
-+    err(f'Could not find ioc for {devname}');
-+
-+# Keep printing
-+while True:
-+    now = time.time()
-+    iocstat = IocStat(ioc)
-+    output = ''
-+
-+    if table_fmt:
-+        output += '\n' + iocstat.table_preamble_str()
-+        output += '\n' + iocstat.table_header_str()
-+    else:
-+        output += json.dumps(iocstat.dict(now))
-+
-+    for path, blkg in BlkgIterator(blkcg_root, q_id):
-+        if filter_re and not filter_re.match(path):
-+            continue
-+        if not blkg.pd[plid]:
-+            continue
-+
-+        iocg = container_of(blkg.pd[plid], 'struct ioc_gq', 'pd')
-+        iocg_stat = IocgStat(iocg)
-+
-+        if not filter_re and not iocg_stat.is_active:
-+            continue
-+
-+        if table_fmt:
-+            output += '\n' + iocg_stat.table_row_str(path)
-+        else:
-+            output += '\n' + json.dumps(iocg_stat.dict(now, path))
-+
-+    print(output)
-+    sys.stdout.flush()
-+    time.sleep(interval)
+ void rq_qos_exit(struct request_queue *);
+ 
+ #endif
 -- 
 2.17.1
 
