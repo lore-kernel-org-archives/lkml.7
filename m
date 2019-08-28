@@ -2,374 +2,155 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9ECC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 03:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D931C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 03:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF7422CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 03:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1466320854
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 03:38:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="GFLoDzeZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbfH1DfI (ORCPT
+        id S1726339AbfH1Die (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 23:35:08 -0400
-Received: from mga01.intel.com ([192.55.52.88]:4125 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbfH1DfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 23:35:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 20:35:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,439,1559545200"; 
-   d="scan'208";a="332025708"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 27 Aug 2019 20:35:05 -0700
-Received: from [10.226.39.5] (leichuan-mobl.gar.corp.intel.com [10.226.39.5])
-        by linux.intel.com (Postfix) with ESMTP id B58895800BD;
-        Tue, 27 Aug 2019 20:35:02 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     eswara.kota@linux.intel.com, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
-        gustavo.pimentel@synopsys.com, hch@infradead.org,
-        jingoohan1@gmail.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, qi-ming.wu@intel.com, kishon@ti.com
-References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
- <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
- <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com>
- <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
- <9ba19f08-e25a-4d15-8854-8dc4f9b6faca@linux.intel.com>
- <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
-From:   "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
-Message-ID: <7c0fd56f-ecc5-40c2-c435-3805ca1f97c7@linux.intel.com>
-Date:   Wed, 28 Aug 2019 11:35:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
-MIME-Version: 1.0
-In-Reply-To: <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Tue, 27 Aug 2019 23:38:34 -0400
+Received: from mail-eopbgr700074.outbound.protection.outlook.com ([40.107.70.74]:3073
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726227AbfH1Did (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 23:38:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KP9dU7BuAdHIudrQUgeUId9HFYlModRndIwX56WUY5pC31T4NjzBXJzZp8KwmG/S7VPDJ1dSEuOzCmx2mwmg/qs4zAluP/+Bvr3hvw7Omtmz51g2udqqjw/ij6yEyo8AK1aHtDa4ZMwB5OS1ozcvL8Uft7SyykBQ3+6diy4l+mj1Ga0B+8N20yaCSM0NWCPQL/yu76GxKzZ/au9ZBonVYC+MRYvdueGYybueceWT9pS3sxDi+FfAasVvKUMK6cdJ5Un5xUQxGHY4JPVF+ihXo8/U1km25s+L/3TMUpdJ8D0M4bJ2XYf6lHmUPW3XBeiCLLnqJH87soxRc7N/oiBWiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Di8bz63uCvj3ZDVdNqPcyFRfow4gNvt4T85knoDt/ro=;
+ b=nJCJX8SBQShzq34TE3+/bxHhcm4mvE+SZwC7ZldtTnki7MzxS8isNY+W8GRSzGisSJLHzmjmzMT65Y+SPsN2Kr1raVzTcibiO+UamWSy95EmzNy633VzAgGZIbZW+j1GmflUy+MQAyOaKwUfV0EIDitwsf4buUvo6c8Gb6yHofFb97HIFDZ2LLcEdHIGM1TbnOp1nultncI/g68Hrv4gYywi6C9iu2xCsvScNL1UnkEJfW3q1qhTmUw0xHmLpjvg94W5u5xKWywV+gONby5wSFIo8Vq+A8ZCh6CCwfLWlFl+LCZsOw60/H9j6zPs8JJ+Br7sniQR+gCLIDZGhCB5cA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Di8bz63uCvj3ZDVdNqPcyFRfow4gNvt4T85knoDt/ro=;
+ b=GFLoDzeZaDkD5NNJQPy+s4UnA2ZTDtUhYFLWSIS1X9qTlFvROjyj3GSQv8LDvwb5573Wgke8D737wNkU8WsTY1e+Kb9/SBCKXphyovmx7F9CbfeJvIRQskMDqx30+CtFz8ipqMraCXPc7p9AcE9n87aHJcoEmM0IwW9yFJbdTvc=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB3735.namprd03.prod.outlook.com (52.135.214.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.20; Wed, 28 Aug 2019 03:38:29 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::b050:60f8:d275:e9f4]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::b050:60f8:d275:e9f4%7]) with mapi id 15.20.2199.021; Wed, 28 Aug 2019
+ 03:38:29 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 2/8] regulator: add support for SY8824C regulator
+Thread-Topic: [PATCH 2/8] regulator: add support for SY8824C regulator
+Thread-Index: AQHVXLPE86z8PZfejUaXlIn4vcy6TacPZk+AgACBN4A=
+Date:   Wed, 28 Aug 2019 03:38:29 +0000
+Message-ID: <20190828112705.5e683693@xhacker.debian>
+References: <20190827163252.4982af95@xhacker.debian>
+        <20190827163418.1a32fc48@xhacker.debian>
+        <20190827194437.GO23391@sirena.co.uk>
+In-Reply-To: <20190827194437.GO23391@sirena.co.uk>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TYAPR03CA0020.apcprd03.prod.outlook.com
+ (2603:1096:404:14::32) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0b2a0e52-40d8-4ed9-47c4-08d72b6930f0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB3735;
+x-ms-traffictypediagnostic: BYAPR03MB3735:
+x-microsoft-antispam-prvs: <BYAPR03MB37353BB293E74EF89087F134EDA30@BYAPR03MB3735.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 014304E855
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(396003)(136003)(376002)(366004)(199004)(189003)(11346002)(446003)(478600001)(5660300002)(14454004)(229853002)(6512007)(9686003)(6436002)(2906002)(1076003)(25786009)(6246003)(54906003)(4744005)(7736002)(64756008)(66946007)(66476007)(66446008)(305945005)(6116002)(3846002)(4326008)(66556008)(6916009)(316002)(256004)(76176011)(71190400001)(71200400001)(14444005)(81166006)(81156014)(8676002)(486006)(50226002)(8936002)(66066001)(52116002)(26005)(6486002)(86362001)(186003)(102836004)(99286004)(386003)(6506007)(476003)(53936002)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3735;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 87GBs5McoHxpm74jLkMppfYOeEx/uytH5n+39I/UK2XksAyWMSw/bneVLslL7if7c8tWhF1TRZ8iocJm13Gl13bkqFTu2jxcieZEm9c5EpMqA/uQGvQTjh+HAfjEQdUQ3sJubnWM/EtiRoozYG4dRJU9h75QzHw+nAcbRgASpuEoonmM8j0iINgr397eMKsiHvmbJLVZVpFmEHN1jAm44eK4EJfUYhKnqtrOlsthJMbQrp4QcM+KshTjNIYa9GWPBJLXHvt4K0yX1XoWUNK7HYkw22bilq58fUo2j15XgP+BqvKdVsK0+3PnYz4/swFYxXb/X5eAd70C1/FIjCmfpsfMdIQ4Y1Cumgi45F12cYIEjI3kLZvU8XQjvAEgcBPcI2EPyUYK2Pd7gH99814VrC4izWBW8ibpRdDLATpxJGk=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E9DFA9C38EA3734C8B469BDB78ED2444@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b2a0e52-40d8-4ed9-47c4-08d72b6930f0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 03:38:29.0937
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wNmMag5bgmTKIftAJCC3+eRmuh/b3YKvU4ddUwZ3u5Ch15yjoCPyRYtq0GFaX2C5ZsG74RdiXkk3Vtcl6EZj3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3735
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
+Hi Mark,
 
-Thanks for your comment.
+On Tue, 27 Aug 2019 20:44:37 +0100 Mark Brown wrote:
 
-On 8/28/2019 4:38 AM, Martin Blumenstingl wrote:
-> Hello,
->
-> On Tue, Aug 27, 2019 at 5:09 AM Chuan Hua, Lei
-> <chuanhua.lei@linux.intel.com> wrote:
->> Hi Martin,
->>
->> Thanks for your feedback. Please check the comments below.
->>
->> On 8/27/2019 5:15 AM, Martin Blumenstingl wrote:
->>> Hello,
->>>
->>> On Mon, Aug 26, 2019 at 5:31 AM Chuan Hua, Lei
->>> <chuanhua.lei@linux.intel.com> wrote:
->>>> Hi Martin,
->>>>
->>>> Thanks for your valuable comments. I reply some of them as below.
->>> you're welcome
->>>
->>> [...]
->>>>>> +config PCIE_INTEL_AXI
->>>>>> +        bool "Intel AHB/AXI PCIe host controller support"
->>>>> I believe that this is mostly the same IP block as it's used in Lantiq
->>>>> (xDSL) VRX200 SoCs (with MIPS cores) which was introduced in 2010
->>>>> (before Intel acquired Lantiq).
->>>>> This is why I would have personally called the driver PCIE_LANTIQ
->>>> VRX200 SoC(internally called VR9) was the first PCIe SoC product which
->>>> was using synopsys
->>>>
->>>> controller v3.30a. It only supports PCIe Gen1.1/1.0. The phy is internal
->>>> phy from infineon.
->>> thank you for these details
->>> I wasn't aware that the PCIe PHY on these SoCs was developed by
->>> Infineon nor is the DWC version documented anywhere
->> VRX200/ARX300 PHY is internal value. There are a lot of hardcode which was
->> from hardware people. From XRX500, we switch to synopsis PHY. However, later
->> comboPHY is coming to the picture. Even though we have one same controller
->> with different versions, we most likely will have three different phy
->> drivers.
-> that is a good argument for using a separate PHY driver and
-> integrating that using the PHY subsystem (which is already the case in
-> this patch revision)
-Right. CombonPHY(PRX300/Lighting Mountain) and SlimPHY 
-driver(XRX350/550) are in the way to upstream.
->
->>> [...]
->>>>>> +#define PCIE_CCRID                          0x8
->>>>>> +
->>>>>> +#define PCIE_LCAP                           0x7C
->>>>>> +#define PCIE_LCAP_MAX_LINK_SPEED            GENMASK(3, 0)
->>>>>> +#define PCIE_LCAP_MAX_LENGTH_WIDTH          GENMASK(9, 4)
->>>>>> +
->>>>>> +/* Link Control and Status Register */
->>>>>> +#define PCIE_LCTLSTS                                0x80
->>>>>> +#define PCIE_LCTLSTS_ASPM_ENABLE            GENMASK(1, 0)
->>>>>> +#define PCIE_LCTLSTS_RCB128                 BIT(3)
->>>>>> +#define PCIE_LCTLSTS_LINK_DISABLE           BIT(4)
->>>>>> +#define PCIE_LCTLSTS_COM_CLK_CFG            BIT(6)
->>>>>> +#define PCIE_LCTLSTS_HW_AW_DIS                      BIT(9)
->>>>>> +#define PCIE_LCTLSTS_LINK_SPEED                     GENMASK(19, 16)
->>>>>> +#define PCIE_LCTLSTS_NEGOTIATED_LINK_WIDTH  GENMASK(25, 20)
->>>>>> +#define PCIE_LCTLSTS_SLOT_CLK_CFG           BIT(28)
->>>>>> +
->>>>>> +#define PCIE_LCTLSTS2                               0xA0
->>>>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED                GENMASK(3, 0)
->>>>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_25GT   0x1
->>>>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_5GT    0x2
->>>>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_8GT    0x3
->>>>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_16GT   0x4
->>>>>> +#define PCIE_LCTLSTS2_HW_AUTO_DIS           BIT(5)
->>>>>> +
->>>>>> +/* Ack Frequency Register */
->>>>>> +#define PCIE_AFR                            0x70C
->>>>>> +#define PCIE_AFR_FTS_NUM                    GENMASK(15, 8)
->>>>>> +#define PCIE_AFR_COM_FTS_NUM                        GENMASK(23, 16)
->>>>>> +#define PCIE_AFR_GEN12_FTS_NUM_DFT          (SZ_128 - 1)
->>>>>> +#define PCIE_AFR_GEN3_FTS_NUM_DFT           180
->>>>>> +#define PCIE_AFR_GEN4_FTS_NUM_DFT           196
->>>>>> +
->>>>>> +#define PCIE_PLCR_DLL_LINK_EN                       BIT(5)
->>>>>> +#define PCIE_PORT_LOGIC_FTS                 GENMASK(7, 0)
->>>>>> +#define PCIE_PORT_LOGIC_DFT_FTS_NUM         (SZ_128 - 1)
->>>>>> +
->>>>>> +#define PCIE_MISC_CTRL                              0x8BC
->>>>>> +#define PCIE_MISC_CTRL_DBI_RO_WR_EN         BIT(0)
->>>>>> +
->>>>>> +#define PCIE_MULTI_LANE_CTRL                        0x8C0
->>>>>> +#define PCIE_UPCONFIG_SUPPORT                       BIT(7)
->>>>>> +#define PCIE_DIRECT_LINK_WIDTH_CHANGE               BIT(6)
->>>>>> +#define PCIE_TARGET_LINK_WIDTH                      GENMASK(5, 0)
->>>>>> +
->>>>>> +#define PCIE_IOP_CTRL                               0x8C4
->>>>>> +#define PCIE_IOP_RX_STANDBY_CTRL            GENMASK(6, 0)
->>>> no need for IOP
->>> with "are you sure that you need any of the registers above?" I really
->>> meant all registers above (including, but not limited to IOP)
->>>
->>> [...]
->>>> As I mentioned, VRX200 was a very old PCIe Gen1.1 product. In our latest
->>>> SoC Lightning
->>>>
->>>> Mountain, we are using synopsys controller 5.20/5.50a. We support
->>>> Gen2(XRX350/550),
->>>>
->>>> Gen3(PRX300) and GEN4(X86 based SoC). We also supported dual lane and
->>>> single lane.
->>>>
->>>> Some of the above registers are needed to control FTS, link width and
->>>> link speed.
->>> only now I noticed that I didn't explain why I was asking whether all
->>> these registers are needed
->>> my understanding of the DWC PCIe controller driver "library" is that:
->>> - all functionality which is provided by the DesignWare PCIe core
->>> should be added to drivers/pci/controller/dwc/pcie-designware*
->>> - functionality which is built on top/around the DWC PCIe core should
->>> be added to <vendor specific driver>
->>>
->>> the link width and link speed settings (I don't know about "FTS")
->>> don't seem Intel/Lantiq controller specific to me
->>> so the register setup for these bits should be moved to
->>> drivers/pci/controller/dwc/pcie-designware*
->> FTS means fast training sequence. Different generations will have
->> different FTS. Common DWC drivers have default number for all generations
->> which are not optimized.
-> I am not a DWC PCIe driver expert, but it seems to me that this is
-> exactly the reason why struct dw_pcie has a "version" field (which
-> you're also filling).
-> same as below: I'm interested in the DWC PCIe maintainer's opinion
->
->> DWC driver handles link speed and link width during the initialization.
->> Then left link speed change and link width to device (EP) according to
->> PCIe spec. Not sure if other vendors or customers have this kind of
->> requirement. We implemented this due to customer's requirement.
->>
->> We can check with DWC maintainer about this.
-> thank you for the explanation.
-> I am also interested in hearing the DWC PCIe maintainer's opinion on this topic
->
-> [...]
->>> now I am wondering:
->>> - if we don't have to disable the interrupt line (once it is enabled),
->>> why can't we enable all of these interrupts at initialization time
->>> (instead of doing it on-demand)?
->> Good point! we even can remote map_irq patch, directly call
->> of_irq_parse_and_map_pci as other drivers do.
->>
->>> - if the interrupts do have to be disabled again (that is what I
->>> assumed so far) then where is this supposed to happen? (my solution
->>> for this was to implement a simple interrupt controller within the
->>> PCIe driver which only supports enable/disable. disclaimer: I didn't
->>> ask the PCI or interrupt maintainers for feedback on this yet)
->>>
->>> [...]
->> We can implement one interrupt controller, but personally, it has too
->> much overhead. If we follow this way, almost all modules of all old
->> lantiq SoCs can implement one interrupt controller. Maybe you can check
->> with PCI maintainer for their comments.
-> if we can enable the PCI_INTA/B/C/D interrupts unconditionally then
-> you can switch to the standard of_irq_parse_and_map_pci implementation
-> (as you already noted above).
-> in that case the extra interrupt controller won't be needed.
->
-> I have no idea how to test whether unconditionally enabling these
-> interrupts (in the APP registers that is) causes any problems though.
-> that's why I went the interrupt-controller route in my experiment.
-> if the hardware works with a simplified version then I'm more than
-> happy to use that
-We will enable these interrupts. simple is more easy to handle.
->
-> [...]
->>>>>> +static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
->>>>>> +{
->>>>>> +    struct device *dev = lpp->pci->dev;
->>>>>> +    int ret = 0;
->>>>>> +
->>>>>> +    lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
->>>>>> +    if (IS_ERR(lpp->reset_gpio)) {
->>>>>> +            ret = PTR_ERR(lpp->reset_gpio);
->>>>>> +            if (ret != -EPROBE_DEFER)
->>>>>> +                    dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
->>>>>> +            return ret;
->>>>>> +    }
->>>>>> +    /* Make initial reset last for 100ms */
->>>>>> +    msleep(100);
->>>>> why is there lpp->rst_interval when you hardcode 100ms here?
->>>> There are different purpose. rst_interval is purely for asserted reset
->>>> pulse.
->>>>
->>>> Here 100ms is to make sure the initial state keeps at least 100ms, then we
->>>> can reset.
->>> my interpretation is that it totally depends on the board design or
->>> the bootloader setup.
->> Partially, you are right. However, we should not add some dependency
->> here from
->> bootloader and board. rst_interval is just to make sure the pulse (low
->> active or high active)
->> lasts the specified the time.
-> +Cc Kishon
->
-> he recently added support for a GPIO reset line to the
-> pcie-cadence-host.c [0] and I believe he's also maintaining
-> pci-keystone.c which are both using a 100uS delay (instead of 100ms).
-> I don't know the PCIe spec so maybe Kishon can comment on the values
-> that should be used according to the spec.
-> if there's then a reason why values other than the ones from the spec
-> are needed then there should be a comment explaining why different
-> values are needed (what problem does it solve).
+> On Tue, Aug 27, 2019 at 08:45:33AM +0000, Jisheng Zhang wrote:
+>=20
+> This looks mostly good and I'll apply it, a couple of small
+> things though:
+>=20
+> > @@ -0,0 +1,192 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * SY8824C regulator driver
+> > + * =20
+>=20
+> Please send a patch which updates the entire comment block to be
+> C++ style so it looks consistent.
 
-spec doesn't guide this part. It is a board or SoC specific setting. 
-100us also should work. spec only requirs reset duration should last 
-100ms. The idea is that before reset assert and deassert, make sure the 
-default deassert status keeps some time. We take this value from 
-hardware suggestion long time back. We can reduce this value to 100us, 
-but we need to test on the board.
+Do you mean update the following style
 
->
->>> on a board where the bootloader initializes the GPIO to logical "0"
->>> the devm_gpiod_get() call will not change the GPIO output.
->>> in this case a 100ms delay may be OK (based on your description)
->>>
->>> however, if the GPIO was a logical "1" (for example if the bootloader
->>> set it to that value - and considering the GPIOD_OUT_LOW flag) then it
->>> will be set to "0" with the devm_gpiod_get() call above.
->>> now there is a transition from "deasserted" to "asserted" which does
->>> not honor lpp->rst_interval
->>>
->>> I'm not sure if this is a problem or not - all I know is that I don't
->>> fully understand the problem yet
->>>>> [...]
->>>>>> +static int intel_pcie_setup_irq(struct intel_pcie_port *lpp)
->>>>>> +{
->>>>>> +    struct device *dev = lpp->pci->dev;
->>>>>> +    struct platform_device *pdev;
->>>>>> +    char *irq_name;
->>>>>> +    int irq, ret;
->>>>>> +
->>>>>> +    pdev = to_platform_device(dev);
->>>>>> +    irq = platform_get_irq(pdev, 0);
->>>>>> +    if (irq < 0) {
->>>>>> +            dev_err(dev, "missing sys integrated irq resource\n");
->>>>>> +            return irq;
->>>>>> +    }
->>>>>> +
->>>>>> +    irq_name = devm_kasprintf(dev, GFP_KERNEL, "pcie_misc%d", lpp->id);
->>>>>> +    if (!irq_name) {
->>>>>> +            dev_err(dev, "failed to alloc irq name\n");
->>>>>> +            return -ENOMEM;
->>>>> you are only requesting one IRQ line for the whole driver. personally
->>>>> I would drop the custom irq_name and pass NULL to devm_request_irq
->>>>> because that will then fall-back to auto-generating an IRQ name based
->>>>> on the devicetree node. I assume it's the same for ACPI but I haven't
->>>>> tried that yet.
->>>> Not sure I understand what you mean.  As you know from the code, we have
->>>> lpp->id which means
->>>>
->>>> we have multiple instances of Root Complex(1,2,3,4,8), so we need this
->>>> for identification.
->>> sorry, I was wrong with my original statement, the name cannot be NULL
->>>
->>> I checked the other drivers (meson-gx-mmc and meson-saradc) I had in
->>> mind and they use dev_name(&pdev->dev);
->>> that will give a unique interrupt name (derived from the devicetree)
->>> in /proc/interrupts, for example: c1108680.adc, d0070000.mmc,
->>> d0072000.mmc, ...
->>>
->>> [...]
->> Right. We also use dev_name in our code. However, some people like numbering
->> the interface which is easier for them to remember and discuss. I link id to
->> domain so that we can easily know what is wrong once we have issues. When we
->> tell the address to hardware people and support staff, they are totally
->> lost.
-> ah, this also explains why linux,pci-domain is a mandatory property
-> (while it's optional for any other PCIe controller driver that I have
-> seen so far)
-Right. Imagine if you have 8 RCs on the board, how should we communicate 
-with hardware /support people:)
->
->> Again, it is ok to switch to dev_name.
-> both ways will work, I just wanted to point out that you can achieve a
-> similar goal with less code.
-> if the current solution works best for your support team then I'm fine
-> with that as well
->
-> [...]
->>>>>> +static void __intel_pcie_remove(struct intel_pcie_port *lpp)
->>>>>> +{
->>>>>> +    pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER,
->>>>>> +                        0, PCI_COMMAND);
->>>>> I expect logic like this to be part of the PCI subsystem in Linux.
->>>>> why is this needed?
->>>>>
->>>>> [...]
->>>> bind/unbind case we use this. For extreme cases, we use unbind and bind
->>>> to reset
->>>> PCI instead of rebooting.
->>> OK, but this does not seem Intel/Lantiq specific at all
->>> why isn't this managed by either pcie-designware-host.c or the generic
->>> PCI/PCIe subsystem in Linux?
->> I doubt if other RC driver will support bind/unbind. We do have this
->> requirement due to power management from WiFi devices.
-> pcie-designware-host.c will gain .remove() support in Linux 5.4
-> I don't understand how .remove() and then .probe() again is different
-> from .unbind() followed by a .bind()
-Good. If this is the case, bind/unbind eventually goes to probe/remove, 
-so we can remove this.
->
->
-> Martin
->
-> [0] https://lkml.org/lkml/2019/6/4/626
+A:
+
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * SY8824C regulator driver
+ * ...
+
+
+as B:
+
+// SPDX-License-Identifier: GPL-2.0
+// SY8824C regulator driver
+// ...
+
+I'm not sure which style is correct. But I see B is commonly used
+in lots .c source files in other dirs, such as kernel/ mm/ etc.
+
+Could you please clarify?
+
+Thanks
+
+>=20
+> > +#define BUCK_EN		(1 << 7)
+> > +#define MODE		(1 << 6)
+> > + =20
+>=20
+> Please also add prefixes to these to namespace them, especially
+> MODE is likely to collide with something later.
+
+good idea. Will do in newer version
