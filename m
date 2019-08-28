@@ -2,86 +2,117 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 195C0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2BDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E926E22CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1C52064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:39:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfH1OiA (ORCPT
+        id S1726618AbfH1Ojx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:38:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52820 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726315AbfH1OiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:38:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1DBC8ABED;
-        Wed, 28 Aug 2019 14:37:59 +0000 (UTC)
-Date:   Wed, 28 Aug 2019 16:37:57 +0200
-From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Breno Leitao <leitao@debian.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Allison Randal <allison@lohutok.net>,
-        Michael Neuling <mikey@neuling.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] Disable compat cruft on ppc64le v2
-Message-ID: <20190828163757.123e0eba@naga>
-In-Reply-To: <dbc5abde-ea15-be43-1fdb-d16052c19e03@c-s.fr>
-References: <cover.1566987936.git.msuchanek@suse.de>
-        <dbc5abde-ea15-be43-1fdb-d16052c19e03@c-s.fr>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Wed, 28 Aug 2019 10:39:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34520 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbfH1Ojx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:39:53 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 47863111A3D2;
+        Wed, 28 Aug 2019 14:39:52 +0000 (UTC)
+Received: from amt.cnet (ovpn-112-8.gru2.redhat.com [10.97.112.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BB330601AC;
+        Wed, 28 Aug 2019 14:39:49 +0000 (UTC)
+Received: from amt.cnet (localhost [127.0.0.1])
+        by amt.cnet (Postfix) with ESMTP id 039CE105139;
+        Wed, 28 Aug 2019 11:39:23 -0300 (BRT)
+Received: (from marcelo@localhost)
+        by amt.cnet (8.14.7/8.14.7/Submit) id x7SEdJ7Q013745;
+        Wed, 28 Aug 2019 11:39:19 -0300
+Date:   Wed, 28 Aug 2019 11:39:18 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Wanpeng Li <kernellwp@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when
+ dedicated physical CPUs are available
+Message-ID: <20190828143916.GA13725@amt.cnet>
+References: <1564643196-7797-1-git-send-email-wanpengli@tencent.com>
+ <7b1e3025-f513-7068-32ac-4830d67b65ac@intel.com>
+ <c3fe182f-627f-88ad-cb4d-a4189202b438@redhat.com>
+ <20190803202058.GA9316@amt.cnet>
+ <CANRm+CwtHBOVWFcn+6Z3Ds7dEcNL2JP+b6hLRS=oeUW98A24MQ@mail.gmail.com>
+ <20190826204045.GA24697@amt.cnet>
+ <CANRm+Cx0+V67Ek7FhSs61ZqZL3MgV88Wdy17Q6UA369RH7=dgQ@mail.gmail.com>
+ <CANRm+CxqYMzgvxYyhZLmEzYd6SLTyHdRzKVaSiHO-4SV+OwZUQ@mail.gmail.com>
+ <CAJZ5v0iQc0-WzqeyAh-6m5O-BLraRMj+Z7sqvRgGwh2u2Hp7cg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0iQc0-WzqeyAh-6m5O-BLraRMj+Z7sqvRgGwh2u2Hp7cg@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Wed, 28 Aug 2019 14:39:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 28 Aug 2019 13:08:48 +0000
-Christophe Leroy <christophe.leroy@c-s.fr> wrote:
-
-> On 08/28/2019 10:30 AM, Michal Suchanek wrote:
-> > With endian switch disabled by default the ppc64le compat supports
-> > ppc32le only which is something next to nobody has binaries for.
-> > 
-> > Less code means less bugs so drop the compat stuff.
-> > 
-> > I am not particularly sure about the best way to resolve the llseek
-> > situation. I don't see anything in the syscal tables making it
-> > 32bit-only so I suppose it should be available on 64bit as well.
-> > 
-> > This is tested on ppc64le top of  
+On Wed, Aug 28, 2019 at 10:45:44AM +0200, Rafael J. Wysocki wrote:
+> On Wed, Aug 28, 2019 at 10:34 AM Wanpeng Li <kernellwp@gmail.com> wrote:
+> >
+> > On Tue, 27 Aug 2019 at 08:43, Wanpeng Li <kernellwp@gmail.com> wrote:
+> > >
+> > > Cc Michael S. Tsirkin,
+> > > On Tue, 27 Aug 2019 at 04:42, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> > > >
+> > > > On Tue, Aug 13, 2019 at 08:55:29AM +0800, Wanpeng Li wrote:
+> > > > > On Sun, 4 Aug 2019 at 04:21, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> > > > > >
+> > > > > > On Thu, Aug 01, 2019 at 06:54:49PM +0200, Paolo Bonzini wrote:
+> > > > > > > On 01/08/19 18:51, Rafael J. Wysocki wrote:
+> > > > > > > > On 8/1/2019 9:06 AM, Wanpeng Li wrote:
+> > > > > > > >> From: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > > >>
+> > > > > > > >> The downside of guest side polling is that polling is performed even
+> > > > > > > >> with other runnable tasks in the host. However, even if poll in kvm
+> > > > > > > >> can aware whether or not other runnable tasks in the same pCPU, it
+> > > > > > > >> can still incur extra overhead in over-subscribe scenario. Now we can
+> > > > > > > >> just enable guest polling when dedicated pCPUs are available.
+> > > > > > > >>
+> > > > > > > >> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > > > >> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > > > > > > >> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> > > > > > > >> Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> > > > > > > >> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > > >
+> > > > > > > > Paolo, Marcelo, any comments?
+> > > > > > >
+> > > > > > > Yes, it's a good idea.
+> > > > > > >
+> > > > > > > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> >
+> > Hi Marcelo,
+> >
+> > If you don't have more concern, I guess Rafael can apply this patch
+> > now since the merge window is not too far.
 > 
-> Really ?
+> I will likely queue it up later today and it will go to linux-next
+> early next week.
+> 
+> Thanks!
 
-Really. It boots with the unused variable. It might depend on some
-config options or gcc features if unused variables are fatal.
+NACK patch.
 
-Thanks
+Just don't load the haltpoll driver.
 
-Michal
