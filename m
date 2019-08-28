@@ -2,128 +2,275 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D00C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C5BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65BB322CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:40:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hP0eYnVn"
+	by mail.kernel.org (Postfix) with ESMTP id 8FCFA22CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfH1Vki (ORCPT
+        id S1727007AbfH1VlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:40:38 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52191 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726787AbfH1Vki (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:40:38 -0400
-Received: by mail-wm1-f68.google.com with SMTP id k1so1564156wmi.1;
-        Wed, 28 Aug 2019 14:40:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fl6SJhDThIzLVktnxnUQoR6p6jMmSRZeGxNzVfHmfGc=;
-        b=hP0eYnVngg0lq1hP3JK2h2x4x8ZP/LkgNSObaO5dsLMMR2EJ6hZWoQU0HSs2LYhSsb
-         jZvfF3tenLWEI+TfyOXld/nC78gwghtTXq74BisZRBq370GK9BohnQcL+QB/VOVBzyRN
-         sHUYswv7Krf01vNRoTte5Qv63es97SoJOsPRRwu8NnmyqYX+eL8ro9JYWEOuONfzdNxp
-         QKIKfpzf935Zo9T1KzQ35aqV+s9JSs1l9PnjjYCoAWY3soLZBXfPod0i/RQpPZVAIXjn
-         8cFh1mpvHFd7YJpzBB7JyY2kJ8UTY+oxj5b63/JZLCRI08fYwRk3aBygjrSbuM3d0PUe
-         pxqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fl6SJhDThIzLVktnxnUQoR6p6jMmSRZeGxNzVfHmfGc=;
-        b=YNXpt4eB6VwcugyOGFb7TBGkTRpMiV6Eij6/QBPawPfbSMWm8Ylf/iHoqbjsQHtLx+
-         s6Pm6xdzw1HsLzPt+e7Y8aAOMB/B/oI2utPUEMe5b7U2gaX+wCXlOZMVM8Ap6oc7MQ5/
-         FyN9KzlU3cohWgH35gxL9Wu7JMi03DoloQSJDUXwFhbtbLFSRGxqbKXudmnnV2EAgBbC
-         +DSH4aSY2wjSxQgjn/E/U/os5UvykxxlWWQ8EYywMHRJNxf4tGK+WFylb2W8Ycvl6i32
-         t9XlAH0Wk89AesBjHtjcUFeG2Jz4mWYtVKM6V/m21j+nEhDqWPkknfGmmYUVHHvA1jDr
-         1pRQ==
-X-Gm-Message-State: APjAAAVJfKpy4x9H1738j3Ed277aysixvBMMmuYZL84pr1PnpDnm2np4
-        bqITU1mP4l/115T9di2E4jynp3yWTukebMXfK34=
-X-Google-Smtp-Source: APXvYqxOcImQNzypGFeVWXGp9py8wxlKFKPpz27tdDyzrs1uINU6LbYMgXisOoMzDrWVf3NaJrKHA50+j9kgwxhzJro=
-X-Received: by 2002:a7b:c3d4:: with SMTP id t20mr7052016wmj.71.1567028435172;
- Wed, 28 Aug 2019 14:40:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190822205533.4877-1-david.abdurachmanov@sifive.com>
- <alpine.DEB.2.21.9999.1908231717550.25649@viisi.sifive.com> <201908251446.04BCB8C@keescook>
-In-Reply-To: <201908251446.04BCB8C@keescook>
-From:   David Abdurachmanov <david.abdurachmanov@gmail.com>
-Date:   Wed, 28 Aug 2019 14:39:59 -0700
-Message-ID: <CAEn-LTpSPV6NDQ+J3GJxS=rtNMS384uQmq_EuR3ZN_qCGSbyww@mail.gmail.com>
-Subject: Re: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Palmer Dabbelt <palmer@sifive.com>,
+        Wed, 28 Aug 2019 17:41:00 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:46120 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726787AbfH1VlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 17:41:00 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1i35gX-0006pE-NZ; Wed, 28 Aug 2019 15:40:59 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1i35gW-0000wB-3e; Wed, 28 Aug 2019 15:40:56 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>
+Cc:     Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Vincent Chen <vincentc@andestech.com>,
-        Alan Kao <alankao@andestech.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, me@carlosedp.com
-Content-Type: text/plain; charset="UTF-8"
+        Andrew Waterman <andrew@sifive.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Clark <michaeljclark@mac.com>,
+        Rob Herring <robh@kernel.org>, Zong Li <zong@andestech.com>
+Date:   Wed, 28 Aug 2019 15:40:54 -0600
+Message-Id: <20190828214054.3562-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, sbates@raithlin.com, hch@lst.de, rppt@linux.ibm.com, logang@deltatee.com, aou@eecs.berkeley.edu, palmer@sifive.com, greentime.hu@sifive.com, andrew@sifive.com, olof@lixom.net, michaeljclark@mac.com, robh@kernel.org, zong@andestech.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v6] RISC-V: Implement sparsemem
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 10:36 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Fri, Aug 23, 2019 at 05:30:53PM -0700, Paul Walmsley wrote:
-> > On Thu, 22 Aug 2019, David Abdurachmanov wrote:
-> >
-> > > There is one failing kernel selftest: global.user_notification_signal
-> >
-> > Is this the only failing test?  Or are the rest of the selftests skipped
-> > when this test fails, and no further tests are run, as seems to be shown
-> > here:
-> >
-> >   https://lore.kernel.org/linux-riscv/CADnnUqcmDMRe1f+3jG8SPR6jRrnBsY8VVD70VbKEm0NqYeoicA@mail.gmail.com/
-> >
-> > For example, looking at the source, I'd naively expect to see the
-> > user_notification_closed_listener test result -- which follows right
-> > after the failing test in the selftest source.  But there aren't any
-> > results?
-> >
-> > Also - could you follow up with the author of this failing test to see if
-> > we can get some more clarity about what might be going wrong here?  It
-> > appears that the failing test was added in commit 6a21cc50f0c7f ("seccomp:
-> > add a return code to trap to userspace") by Tycho Andersen
-> > <tycho@tycho.ws>.
->
-> So, the original email says the riscv series is tested on top of 5.2-rc7,
-> but just for fun, can you confirm that you're building a tree that includes
-> 9dd3fcb0ab73 ("selftests/seccomp: Handle namespace failures gracefully")? I
-> assume it does, but I suspect something similar is happening, where the
-> environment is slightly different than expected and the test stalls.
->
-> Does it behave the same way under emulation (i.e. can I hope to
-> reproduce this myself?)
+Implement sparsemem support for Risc-v which helps pave the
+way for memory hotplug and eventually P2P support.
 
-This was tested in 5.2-rc7 and later in 5.3-rc with the same behavior.
-Also VM or physical HW doesn't matter, same result.
+Introduce Kconfig options for virtual and physical address bits which
+are used to calculate the size of the vmemmap and set the
+MAX_PHYSMEM_BITS.
 
->
-> --
-> Kees Cook
+The vmemmap is located directly before the VMALLOC region and sized
+such that we can allocate enough pages to populate all the virtual
+address space in the system (similar to the way it's done in arm64).
+
+During initialization, call memblocks_present() and sparse_init(),
+and provide a stub for vmemmap_populate() (all of which is similar to
+arm64).
+
+[greentime.hu@sifive.com:
+  fixed pfn_valid, FIXADDR_TOP and fixed a bug rebasing onto v5.3]
+Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Andrew Waterman <andrew@sifive.com>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Michael Clark <michaeljclark@mac.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Zong Li <zong@andestech.com>
+---
+ arch/riscv/Kconfig                 | 21 +++++++++++++++++++++
+ arch/riscv/include/asm/fixmap.h    |  2 +-
+ arch/riscv/include/asm/page.h      |  2 ++
+ arch/riscv/include/asm/pgtable.h   | 21 +++++++++++++++++----
+ arch/riscv/include/asm/sparsemem.h | 11 +++++++++++
+ arch/riscv/mm/init.c               | 10 ++++++++++
+ 6 files changed, 62 insertions(+), 5 deletions(-)
+ create mode 100644 arch/riscv/include/asm/sparsemem.h
+
+Changes in v6:
+ * Rebased onto v5.3-rc6 (no changes)
+ * Fixed up commit message wording (per Mike's feedback)
+ * Set SPARSEMEM_STATIC for 32BIT builds (per Mike)
+
+Changes in v5:
+ * Rebased onto v5.3-rc5 (required moving the initialization to
+   after setup_vm_final() in paging_init())
+ * Fixed FIXADDR_TOP value (per Greentime)
+ * Use generic pfn_valid() function for sparsemem to fix a bug
+   with having holes in memory (also Greentime)
+
+Changes in v4:
+ * Rebased onto v5.0-rc1
+ * Changed the SECTION_SIZE_BITS to 27, per Nick Kossifidis
+
+Changes in v3 (only sent the common patches):
+ * Rebased on v4.20-rc1
+ * Minor fixups
+ * Collected Ack from Will Deacon
+
+Changes in v2:
+ * Rebase on v4.19-rc8
+ * Move the STRUCT_PAGE_MAX_SHIFT define into a common header (near
+   the definition of struct page). As suggested by Christoph.
+ * Clean up the unnecessary nid variable in the memblocks_present()
+   function, per Christoph.
+ * Collected tags from Palmer and Catalin.
+
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 59a4727ecd6c..53b7556beb4a 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -54,6 +54,7 @@ config RISCV
+ 	select EDAC_SUPPORT
+ 	select ARCH_HAS_GIGANTIC_PAGE
+ 	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
++	select SPARSEMEM_STATIC if 32BIT
+
+ config MMU
+ 	def_bool y
+@@ -62,12 +63,32 @@ config ZONE_DMA32
+ 	bool
+ 	default y if 64BIT
+
++config VA_BITS
++	int
++	default 32 if 32BIT
++	default 39 if 64BIT
++
++config PA_BITS
++	int
++	default 34 if 32BIT
++	default 56 if 64BIT
++
+ config PAGE_OFFSET
+ 	hex
+ 	default 0xC0000000 if 32BIT && MAXPHYSMEM_2GB
+ 	default 0xffffffff80000000 if 64BIT && MAXPHYSMEM_2GB
+ 	default 0xffffffe000000000 if 64BIT && MAXPHYSMEM_128GB
+
++config ARCH_FLATMEM_ENABLE
++	def_bool y
++
++config ARCH_SPARSEMEM_ENABLE
++	def_bool y
++	select SPARSEMEM_VMEMMAP_ENABLE
++
++config ARCH_SELECT_MEMORY_MODEL
++	def_bool ARCH_SPARSEMEM_ENABLE
++
+ config ARCH_WANT_GENERAL_HUGETLB
+ 	def_bool y
+
+diff --git a/arch/riscv/include/asm/fixmap.h b/arch/riscv/include/asm/fixmap.h
+index 9c66033c3a54..7b0259c044c9 100644
+--- a/arch/riscv/include/asm/fixmap.h
++++ b/arch/riscv/include/asm/fixmap.h
+@@ -31,7 +31,7 @@ enum fixed_addresses {
+ };
+
+ #define FIXADDR_SIZE		(__end_of_fixed_addresses * PAGE_SIZE)
+-#define FIXADDR_TOP		(VMALLOC_START)
++#define FIXADDR_TOP		(VMEMMAP_START)
+ #define FIXADDR_START		(FIXADDR_TOP - FIXADDR_SIZE)
+
+ #define FIXMAP_PAGE_IO		PAGE_KERNEL
+diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
+index 707e00a8430b..3db261c4810f 100644
+--- a/arch/riscv/include/asm/page.h
++++ b/arch/riscv/include/asm/page.h
+@@ -110,8 +110,10 @@ extern unsigned long min_low_pfn;
+ #define page_to_bus(page)	(page_to_phys(page))
+ #define phys_to_page(paddr)	(pfn_to_page(phys_to_pfn(paddr)))
+
++#ifdef CONFIG_FLATMEM
+ #define pfn_valid(pfn) \
+ 	(((pfn) >= pfn_base) && (((pfn)-pfn_base) < max_mapnr))
++#endif
+
+ #define ARCH_PFN_OFFSET		(pfn_base)
+
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index a364aba23d55..dbc19e61ee66 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -83,6 +83,23 @@ extern pgd_t swapper_pg_dir[];
+ #define __S110	PAGE_SHARED_EXEC
+ #define __S111	PAGE_SHARED_EXEC
+
++#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
++#define VMALLOC_END      (PAGE_OFFSET - 1)
++#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
++
++/*
++ * Roughly size the vmemmap space to be large enough to fit enough
++ * struct pages to map half the virtual address space. Then
++ * position vmemmap directly below the VMALLOC region.
++ */
++#define VMEMMAP_SHIFT \
++	(CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
++#define VMEMMAP_SIZE	(1UL << VMEMMAP_SHIFT)
++#define VMEMMAP_END	(VMALLOC_START - 1)
++#define VMEMMAP_START	(VMALLOC_START - VMEMMAP_SIZE)
++
++#define vmemmap		((struct page *)VMEMMAP_START)
++
+ /*
+  * ZERO_PAGE is a global shared page that is always zero,
+  * used for zero-mapped memory areas, etc.
+@@ -416,10 +433,6 @@ static inline void pgtable_cache_init(void)
+ 	/* No page table caches to initialize */
+ }
+
+-#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
+-#define VMALLOC_END      (PAGE_OFFSET - 1)
+-#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
+-
+ /*
+  * Task size is 0x4000000000 for RV64 or 0xb800000 for RV32.
+  * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
+diff --git a/arch/riscv/include/asm/sparsemem.h b/arch/riscv/include/asm/sparsemem.h
+new file mode 100644
+index 000000000000..b58ba2d9ed6e
+--- /dev/null
++++ b/arch/riscv/include/asm/sparsemem.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef __ASM_SPARSEMEM_H
++#define __ASM_SPARSEMEM_H
++
++#ifdef CONFIG_SPARSEMEM
++#define MAX_PHYSMEM_BITS	CONFIG_PA_BITS
++#define SECTION_SIZE_BITS	27
++#endif /* CONFIG_SPARSEMEM */
++
++#endif /* __ASM_SPARSEMEM_H */
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 42bf939693d3..73f40c9d3dee 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -442,6 +442,16 @@ static void __init setup_vm_final(void)
+ void __init paging_init(void)
+ {
+ 	setup_vm_final();
++	memblocks_present();
++	sparse_init();
+ 	setup_zero_page();
+ 	zone_sizes_init();
+ }
++
++#ifdef CONFIG_SPARSEMEM
++int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
++			       struct vmem_altmap *altmap)
++{
++	return vmemmap_populate_basepages(start, end, node);
++}
++#endif
+--
+2.20.1
