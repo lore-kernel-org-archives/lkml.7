@@ -2,556 +2,223 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB551C41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6206C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8972C22CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CA99233A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:42:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="la7r9TLX"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="K48LnXHo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfH1Vmb (ORCPT
+        id S1727045AbfH1Vmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:42:31 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33039 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbfH1Vmb (ORCPT
+        Wed, 28 Aug 2019 17:42:44 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40131 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfH1Vmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:42:31 -0400
-Received: by mail-pl1-f194.google.com with SMTP id go14so576372plb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 14:42:30 -0700 (PDT)
+        Wed, 28 Aug 2019 17:42:44 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so403774pgj.7
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 14:42:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=LDrJN78swrMMxTHINo5awtlZAwquYmUFK4yMD7VkcMU=;
-        b=la7r9TLXU+NDtIhY6O2OLWmlqu7Ah++Y6piSXx6+5+y7QwV+VBB7SEbswo04eZOKkY
-         wQcxcJPYaQTA989uD0BEaak/osFdHOvZVWOCBYmRgAYeghsrk/5i046m3KTDsHGhhP3T
-         ZUrRfJPb2z4d8YWLscAlaafnVLRvldlH+/OZI=
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VHj/7Xc7AZNEtqOsbdv6KAsLFQaEQgnNcSSw1bNmvu8=;
+        b=K48LnXHoeU/Up/JMswu2L8t1RmfEP+y4NouF8fvesMwB6bm0RrUwkGSNzSs5BcLyuo
+         nL1yy+LvneGE27b/JU9hlBesZcsD95pzgt8gaTPYvtHPeHDHMnVii7DOY1Fo5g5uhGlh
+         5ZXEy2eURhdOh5cA9c8l29SK9HcFF3qXaGqNs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=LDrJN78swrMMxTHINo5awtlZAwquYmUFK4yMD7VkcMU=;
-        b=qKmop1nipv46M/20/syStEYsDYg3aTEqwUyNJH6dF6ifohu75Qkv4v3PZstnhLMsLK
-         pVlXBbsSItzF85fjErvUkQ6c0hALFwQbHdL4Hdicu/bAybfkzn5Ua/O0ZFRgYPp6M/Vr
-         OW3/na22HMSnoQiAdsKd4P1P8l1vn4jN311sWuZrCaB9LZgxKfMR1450fq3X4FZAjDdM
-         N/qY+rfHrgC/KH30zl7hi0+UnkQ8BEctpx5YJbdpj2/vCHAXWPr3kqq8xMqjB6AQvRqf
-         K2Hur0G9ZrW8jFw9QHKC5mYUfI+VExcsiSrvCeZtng2Z0xh0enDMnRYdUIXc2a8wfQlH
-         BGtA==
-X-Gm-Message-State: APjAAAVFfBDNcRGvdt/ZzTnbhUqkxedJrnTsPKZCcs0/ds7sq0wVhENl
-        o0HfmCeWolxJKQaRsjOmosF97Q==
-X-Google-Smtp-Source: APXvYqwYTeDAowzlzAkDxZz7oOto4rbnQgH/GzVolQqHURmi9UIsX3deKmGnPugpIKq7tg206io/5Q==
-X-Received: by 2002:a17:902:fe0f:: with SMTP id g15mr6146828plj.2.1567028550008;
-        Wed, 28 Aug 2019 14:42:30 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id j187sm313829pfg.178.2019.08.28.14.42.29
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VHj/7Xc7AZNEtqOsbdv6KAsLFQaEQgnNcSSw1bNmvu8=;
+        b=A4DeK2TnBB0zXrH371JuOTX2O5qRSA+4BmHHBDb7zt2G/ZpgJ74WmxcGb/bL9r28sh
+         U7rFAFnO73rWGCEaBBfpO6WPHqRP7tbRu8owdNpQmb/l+cJ6nWgWKWGIgr6hGDiiU6di
+         xXX//b9E2BJQINvEmStBrVibljfYGAVQbV/wVALYTK0x6g6eA4NivK95R3WBQDjoXvIH
+         5fIcwIllfoasF0ldWUOXppnf1JLBC/pCxPXy8LUuEIkFXV3aZjc9/PrwEpO6vhkKY5c4
+         BarUb8LaQJrNRNn9ax0NJnt6rSIDi0SrXMwkLXP9/2pX9eD8b6coVqJ5zoy15RTBz5lD
+         5Vbw==
+X-Gm-Message-State: APjAAAXcfIghDoroWqrqAletCsMPe0kMDs2gBqwCyN+8MNuGuuRrtfxQ
+        mtIMaBOxB2tDJ7QE/7kqT+ZnPg==
+X-Google-Smtp-Source: APXvYqwXUU+GV69dbCTTy88wZb4JUL8Ck6An9gAIkhF3gZBR/nsSnBOcwR8JRO+BofqEZ3y9RwTkLA==
+X-Received: by 2002:a63:3c5:: with SMTP id 188mr5183303pgd.394.1567028563099;
+        Wed, 28 Aug 2019 14:42:43 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id l68sm369626pfl.11.2019.08.28.14.42.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 14:42:29 -0700 (PDT)
-Message-ID: <5d66f545.1c69fb81.3663f.129d@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 28 Aug 2019 14:42:42 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 17:42:41 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC v1 2/2] rcu/tree: Remove dynticks_nmi_nesting counter
+Message-ID: <20190828214241.GD75931@google.com>
+References: <5d648897.1c69fb81.5e60a.fc70@mx.google.com>
+ <20190828202330.GS26530@linux.ibm.com>
+ <20190828210525.GB75931@google.com>
+ <20190828211904.GX26530@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <a4666f8afa39471658602e06758b04a991f80828.1566907161.git.amit.kucheria@linaro.org>
-References: <cover.1566907161.git.amit.kucheria@linaro.org> <a4666f8afa39471658602e06758b04a991f80828.1566907161.git.amit.kucheria@linaro.org>
-Cc:     linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 15/15] drivers: thermal: tsens: Add interrupt support
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, agross@kernel.org,
-        bjorn.andersson@linaro.org, edubezval@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marc.w.gonzalez@free.fr, masneyb@onstation.org
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 28 Aug 2019 14:42:28 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828211904.GX26530@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Amit Kucheria (2019-08-27 05:14:11)
-> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/t=
-sens-common.c
-> index 06b44cfd5eab9..c549f8e1488ba 100644
-> --- a/drivers/thermal/qcom/tsens-common.c
-> +++ b/drivers/thermal/qcom/tsens-common.c
-> @@ -114,6 +146,314 @@ static int tsens_hw_to_mC(struct tsens_sensor *s, i=
-nt field)
->         return sign_extend32(temp, priv->tempres) * 100;
->  }
-> =20
-> +/**
-> + * tsens_mC_to_hw - Return correct value to be written to threshold
-> + * registers, whether in ADC code or deciCelsius depending on IP version
+On Wed, Aug 28, 2019 at 02:19:04PM -0700, Paul E. McKenney wrote:
+> On Wed, Aug 28, 2019 at 05:05:25PM -0400, Joel Fernandes wrote:
+> > On Wed, Aug 28, 2019 at 01:23:30PM -0700, Paul E. McKenney wrote:
+> > > On Mon, Aug 26, 2019 at 09:33:54PM -0400, Joel Fernandes (Google) wrote:
+> > > > The dynticks_nmi_nesting counter serves 4 purposes:
+> > > > 
+> > > >       (a) rcu_is_cpu_rrupt_from_idle() needs to be able to detect first
+> > > >           interrupt nesting level.
+> > > > 
+> > > >       (b) We need to detect half-interrupts till we are sure they're not an
+> > > >           issue. However, change the comparison to DYNTICK_IRQ_NONIDLE with 0.
+> > > > 
+> > > >       (c) When a quiescent state report is needed from a nohz_full CPU.
+> > > >           The nesting counter detects we are a first level interrupt.
+> > > > 
+> > > > For (a) we can just use dyntick_nesting == 1 to determine this. Only the
+> > > > outermost interrupt that interrupted an RCU-idle state can set it to 1.
+> > > > 
+> > > > For (b), this warning condition has not occurred for several kernel
+> > > > releases.  But we still keep the warning but change it to use
+> > > > in_interrupt() instead of the nesting counter. In a later year, we can
+> > > > remove the warning.
+> > > > 
+> > > > For (c), the nest check is not really necessary since forced_tick would
+> > > > have been set to true in the outermost interrupt, so the nested/NMI
+> > > > interrupts will check forced_tick anyway, and bail.
+> > > 
+> > > Skipping the commit log and documentation for this pass.
+> > [snip] 
+> > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > index 255cd6835526..1465a3e406f8 100644
+> > > > --- a/kernel/rcu/tree.c
+> > > > +++ b/kernel/rcu/tree.c
+> > > > @@ -81,7 +81,6 @@
+> > > >  
+> > > >  static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
+> > > >  	.dynticks_nesting = 1,
+> > > > -	.dynticks_nmi_nesting = 0,
+> > > 
+> > > This should be in the previous patch, give or take naming.
+> > 
+> > Done.
+> > 
+> > > >  	.dynticks = ATOMIC_INIT(RCU_DYNTICK_CTRL_CTR),
+> > > >  };
+> > > >  struct rcu_state rcu_state = {
+> > > > @@ -392,15 +391,9 @@ static int rcu_is_cpu_rrupt_from_idle(void)
+> > > >  	/* Check for counter underflows */
+> > > >  	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) < 0,
+> > > >  			 "RCU dynticks_nesting counter underflow!");
+> > > > -	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 0,
+> > > > -			 "RCU dynticks_nmi_nesting counter underflow/zero!");
+> > > >  
+> > > > -	/* Are we at first interrupt nesting level? */
+> > > > -	if (__this_cpu_read(rcu_data.dynticks_nmi_nesting) != 1)
+> > > > -		return false;
+> > > > -
+> > > > -	/* Does CPU appear to be idle from an RCU standpoint? */
+> > > > -	return __this_cpu_read(rcu_data.dynticks_nesting) == 0;
+> > > > +	/* Are we the outermost interrupt that arrived when RCU was idle? */
+> > > > +	return __this_cpu_read(rcu_data.dynticks_nesting) == 1;
+> > > >  }
+> > > >  
+> > > >  #define DEFAULT_RCU_BLIMIT 10     /* Maximum callbacks per rcu_do_batch ... */
+> > > > @@ -564,11 +557,10 @@ static void rcu_eqs_enter(bool user)
+> > > >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> > > >  
+> > > >  	/* Entering usermode/idle from interrupt is not handled. These would
+> > > > -	 * mean usermode upcalls or idle entry happened from interrupts. But,
+> > > > -	 * reset the counter if we warn.
+> > > > +	 * mean usermode upcalls or idle exit happened from interrupts. Remove
+> > > > +	 * the warning by 2020.
+> > > >  	 */
+> > > > -	if (WARN_ON_ONCE(rdp->dynticks_nmi_nesting != 0))
+> > > > -		WRITE_ONCE(rdp->dynticks_nmi_nesting, 0);
+> > > > +	WARN_ON_ONCE(in_interrupt());
+> > > 
+> > > And this is a red flag.  Bad things happen should some common code
+> > > that disables BH be invoked from the idle loop.  This might not be
+> > > happening now, but we need to avoid this sort of constraint.
+> > > How about instead merging ->dyntick_nesting into the low-order bits
+> > > of ->dyntick_nmi_nesting?
+> > > 
+> > > Yes, this assumes that we don't enter process level twice, but it should
+> > > be easy to add a WARN_ON() to test for that.  Except that we don't have
+> > > to because there is already this near the end of rcu_eqs_exit():
+> > > 
+> > > 	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
+> > > 
+> > > So the low-order bit of the combined counter could indicate process-level
+> > > non-idle, the next three bits could be unused to make interpretation
+> > > of hex printouts easier, and then the rest of the bits could be used in
+> > > the same way as currently.
+> > > 
+> > > This would allow a single read to see the full state, so that 0x1 means
+> > > at process level in the kernel, 0x11 is interrupt (or NMI) from process
+> > > level, 0x10 is interrupt/NMI from idle/user, and so on.
+> > > 
+> > > What am I missing here?  Why wouldn't this work, and without adding yet
+> > > another RCU-imposed constraint on some other subsystem?
+> > 
+> > What about replacing the warning with a WARN_ON_ONCE(in_irq()), would that
+> > address your concern?
+> > 
+> > Also, considering this warning condition is most likely never occurring as we
+> > know it, and we are considering deleting it soon enough, is it really worth
+> > reimplementing the whole mechanism with a complex bit-sharing scheme just
+> > because of the BH-disable condition you mentioned, which likely doesn't
+> > happen today? In my implementation, this is just a simple counter. I feel
+> > combining bits in the same counter will just introduce more complexity that
+> > this patch tries to address/avoid.
+> > 
+> > OTOH, I also don't mind with just deleting the warning altogether if you are
+> > Ok with that.
+> 
+> The big advantage of combining the counters is that all of the state is
+> explicit and visible in one place.  Plus it can be accessed atomically.
+> And it avoids setting a time bomb for some poor guys just trying to get
+> their idle-loop jobs done some time in the dim distant future.
 
-Document arguments and return value? Maybe summary can be 'convert
-tsens temperature to hardware register value'?
+I could try the approach you're suggesting but I didn't actually see an issue
+with the patch in its current state other than the WARN_ON_ONCE which I could
+change to WARN_ON_ONCE(in_irq()) to remove the concern. AFAICS, we don't
+detect "half soft-interrupts" in this code in anyway.
 
-> + */
-> +static int tsens_mC_to_hw(struct tsens_sensor *s, int temp)
-> +{
-> +       struct tsens_priv *priv =3D s->priv;
-> +
-> +       if (priv->feat->adc) {
-> +               /* milliC to C to adc code */
-> +               return degc_to_code(temp / 1000, s);
-> +       }
-> +
-> +       /* milliC to deciC */
-> +       return temp / 100;
-> +}
-> +
-> +static inline unsigned int tsens_ver(struct tsens_priv *priv)
+I do feel the approach you're suggesting can be a follow up, these 2 patches
+just focus on deleting dynticks_nmi_nesting counter and we can test this
+approach thoroughly for a release or so.
 
-Can this return the enum instead of unsigned int?
+> Besides, this pair of patches already makes a large change from a
+> conceptual viewpoint.  If we are going to make a large change, let's
+> get our money's worth out of that change!
 
-> +{
-> +       return priv->feat->ver_major;
-> +}
-> +
-> +/**
-> + * tsens_set_interrupt_v1 - Disable an interrupt (enable =3D false)
-> + *                          Re-enable an interrupt (enable =3D true)
-> + */
-> +static void tsens_set_interrupt_v1(struct tsens_priv *priv, u32 hw_id,
-> +                                  enum tsens_irq_type irq_type, bool ena=
-ble)
-> +{
-> +       u32 index;
-> +
-> +       if (enable) {
-> +               switch (irq_type) {
-> +               case UPPER:
-> +                       index =3D UP_INT_CLEAR_0 + hw_id;
-> +                       break;
-> +               case LOWER:
-> +                       index =3D LOW_INT_CLEAR_0 + hw_id;
-> +                       break;
-> +               }
-> +               regmap_field_write(priv->rf[index], 0);
-> +       } else {
-> +               switch (irq_type) {
-> +               case UPPER:
-> +                       index =3D UP_INT_CLEAR_0 + hw_id;
-> +                       break;
-> +               case LOWER:
-> +                       index =3D LOW_INT_CLEAR_0 + hw_id;
-> +                       break;
-> +               }
-> +               regmap_field_write(priv->rf[index], 1);
-> +       }
+IMHO, most of the changes are to code comments, the actual code change is
+very little and is just removal of dynticks_nmi_nesting and simplification;
+its not really an introduction of a new mechanism.
 
-De-dup the switch statement and have
+thanks,
 
-	regmap_field_write(priv->rf[index], enable ? 1 : 0);
+ - Joel
 
-> +}
-> +
-> +/**
-> + * tsens_set_interrupt_v2 - Disable an interrupt (enable =3D false)
-> + *                          Re-enable an interrupt (enable =3D true)
-> + */
-> +static void tsens_set_interrupt_v2(struct tsens_priv *priv, u32 hw_id,
-> +                                  enum tsens_irq_type irq_type, bool ena=
-ble)
-> +{
-> +       u32 index_mask, index_clear;
-> +
-> +       if (enable) {
-> +               switch (irq_type) {
-> +               case UPPER:
-> +                       index_mask =3D UP_INT_MASK_0 + hw_id;
-> +                       break;
-> +               case LOWER:
-> +                       index_mask =3D LOW_INT_MASK_0 + hw_id;
-> +                       break;
-> +               }
-> +               regmap_field_write(priv->rf[index_mask], 0);
-> +       } else {
-> +               /* To disable the interrupt flag for a sensor:
-
-Nitpick: Wrong comment style.
-
-> +                *  1. Mask further interrupts for this sensor
-> +                *  2. Write 1 followed by 0 to clear the interrupt
-> +                */
-> +               switch (irq_type) {
-> +               case UPPER:
-> +                       index_mask  =3D UP_INT_MASK_0 + hw_id;
-> +                       index_clear =3D UP_INT_CLEAR_0 + hw_id;
-> +                       break;
-> +               case LOWER:
-> +                       index_mask  =3D LOW_INT_MASK_0 + hw_id;
-> +                       index_clear =3D LOW_INT_CLEAR_0 + hw_id;
-> +                       break;
-> +               }
-
-Please extract index_mask and index_clear assignments to one switch
-statement and then change the sequence to an if/else
-
-	if (enable) {
-               regmap_field_write(priv->rf[index_mask], 1);
-               regmap_field_write(priv->rf[index_clear], 1);
-               regmap_field_write(priv->rf[index_clear], 0);
-       } else {
-               regmap_field_write(priv->rf[index_mask], 0);
-       }
-
-> +}
-> +
-> +/**
-> + * tsens_set_interrupt - Disable an interrupt (enable =3D false)
-> + *                       Re-enable an interrupt (enable =3D true)
-> + */
-> +static void tsens_set_interrupt(struct tsens_priv *priv, u32 hw_id,
-> +                               enum tsens_irq_type irq_type, bool enable)
-> +{
-> +       dev_dbg(priv->dev, "[%u] %s: %s -> %s\n", hw_id, __func__,
-> +               irq_type ? ((irq_type =3D=3D 1) ? "UP" : "CRITICAL") : "L=
-OW",
-> +               enable ? "en" : "dis");
-> +       if (tsens_ver(priv) > VER_1_X)
-> +               tsens_set_interrupt_v2(priv, hw_id, irq_type, enable);
-> +       else
-> +               tsens_set_interrupt_v1(priv, hw_id, irq_type, enable);
-> +}
-> +
-> +/**
-> + * tsens_threshold_violated - Check if a sensor temperature violated a p=
-reset threshold
-> + *
-
-Document arguments?
-
-> + * Return: 0 if threshold was not violated, 1 if it was violated and neg=
-ative
-> + * errno in case of errors
-> + */
-> +static int tsens_threshold_violated(struct tsens_priv *priv, u32 hw_id,
-> +                                   struct tsens_irq_data *d)
-> +{
-> +       int ret;
-> +
-> +       ret =3D regmap_field_read(priv->rf[UPPER_STATUS_0 + hw_id], &d->u=
-p_viol);
-> +       if (ret)
-> +               return ret;
-> +       ret =3D regmap_field_read(priv->rf[LOWER_STATUS_0 + hw_id], &d->l=
-ow_viol);
-> +       if (ret)
-> +               return ret;
-> +       if (d->up_viol || d->low_viol)
-> +               return 1;
-> +
-> +       return 0;
-> +}
-> +
-> +static int tsens_read_irq_state(struct tsens_priv *priv, u32 hw_id,
-> +                               struct tsens_sensor *s, struct tsens_irq_=
-data *d)
-> +{
-> +       int ret;
-> +
-> +       ret =3D regmap_field_read(priv->rf[UP_INT_CLEAR_0 + hw_id], &d->u=
-p_irq_clear);
-> +       if (ret)
-> +               return ret;
-> +       ret =3D regmap_field_read(priv->rf[LOW_INT_CLEAR_0 + hw_id], &d->=
-low_irq_clear);
-> +       if (ret)
-> +               return ret;
-> +       if (tsens_ver(priv) > VER_1_X) {
-> +               ret =3D regmap_field_read(priv->rf[UP_INT_MASK_0 + hw_id]=
-, &d->up_irq_mask);
-> +               if (ret)
-> +                       return ret;
-> +               ret =3D regmap_field_read(priv->rf[LOW_INT_MASK_0 + hw_id=
-], &d->low_irq_mask);
-> +               if (ret)
-> +                       return ret;
-> +       } else {
-> +               /* No mask register on older TSENS */
-> +               d->up_irq_mask =3D 0;
-> +               d->low_irq_mask =3D 0;
-> +       }
-> +
-> +       d->up_thresh =3D tsens_hw_to_mC(s, UP_THRESH_0 + hw_id);
-> +       d->low_thresh =3D tsens_hw_to_mC(s, LOW_THRESH_0 + hw_id);
-> +
-> +       dev_dbg(priv->dev, "[%u] %s%s: status(%u|%u) | clr(%u|%u) | mask(=
-%u|%u)\n",
-> +               hw_id, __func__, (d->up_viol || d->low_viol) ? "(V)" : "",
-> +               d->low_viol, d->up_viol, d->low_irq_clear, d->up_irq_clea=
-r,
-> +               d->low_irq_mask, d->up_irq_mask);
-> +       dev_dbg(priv->dev, "[%u] %s%s: thresh: (%d:%d)\n", hw_id, __func_=
-_,
-> +               (d->up_viol || d->low_viol) ? "(violation)" : "",
-> +               d->low_thresh, d->up_thresh);
-> +
-> +       return 0;
-> +}
-> +
-> +static inline u32 masked_irq(u32 hw_id, u32 mask, enum tsens_ver ver)
-> +{
-> +       if (ver > VER_1_X)
-> +               return mask & (1 << hw_id);
-> +
-> +       /* v1, v0.1 don't have a irq mask register */
-> +       return 0;
-> +}
-> +
-> +irqreturn_t tsens_irq_thread(int irq, void *data)
-> +{
-> +       struct tsens_priv *priv =3D data;
-> +       struct tsens_irq_data d;
-> +       bool enable =3D true, disable =3D false;
-> +       unsigned long flags;
-> +       int temp, ret, i;
-> +
-> +       /*
-> +        * Check if any sensor raised an IRQ - for each sensor connected =
-to the
-> +        * TSENS block if it set the threshold violation bit.
-> +        */
-> +       for (i =3D 0; i < priv->num_sensors; i++) {
-> +               bool trigger =3D 0;
-
-How about trigger =3D false? It's a bool.
-
-> +               struct tsens_sensor *s =3D &priv->sensor[i];
-> +               u32 hw_id =3D s->hw_id;
-> +
-> +               if (IS_ERR(priv->sensor[i].tzd))
-> +                       continue;
-> +               if (!tsens_threshold_violated(priv, hw_id, &d))
-> +                       continue;
-> +               ret =3D get_temp_tsens_valid(s, &temp);
-> +               if (ret) {
-> +                       dev_err(priv->dev, "[%u] %s: error reading sensor=
-\n", hw_id, __func__);
-
-I hope there isn't an interrupt storm where we're trying to print out
-messages from the irq handler.
-
-> +                       continue;
-> +               }
-> +
-> +               spin_lock_irqsave(&priv->ul_lock, flags);
-> +
-> +               tsens_read_irq_state(priv, hw_id, s, &d);
-> +
-> +               if (d.up_viol &&
-> +                   !masked_irq(hw_id, d.up_irq_mask, tsens_ver(priv))) {
-> +                       tsens_set_interrupt(priv, hw_id, UPPER, disable);
-> +                       if (d.up_thresh > temp) {
-> +                               dev_dbg(priv->dev, "[%u] %s: re-arm upper=
-\n",
-> +                                       priv->sensor[i].hw_id, __func__);
-> +                               /* unmask the interrupt for this sensor */
-> +                               tsens_set_interrupt(priv, hw_id, UPPER, e=
-nable);
-> +                       } else {
-> +                               trigger =3D 1;
-> +                               /* Keep irq masked */
-> +                       }
-> +               } else if (d.low_viol &&
-> +                          !masked_irq(hw_id, d.low_irq_mask, tsens_ver(p=
-riv))) {
-> +                       tsens_set_interrupt(priv, hw_id, LOWER, disable);
-> +                       if (d.low_thresh < temp) {
-> +                               dev_dbg(priv->dev, "[%u] %s: re-arm low\n=
-",
-> +                                       priv->sensor[i].hw_id, __func__);
-> +                               /* unmask the interrupt for this sensor */
-> +                               tsens_set_interrupt(priv, hw_id, LOWER, e=
-nable);
-> +                       } else {
-> +                               trigger =3D 1;
-> +                               /* Keep irq masked */
-> +                       }
-> +               }
-> +
-> +               spin_unlock_irqrestore(&priv->ul_lock, flags);
-> +
-> +               if (trigger) {
-> +                       dev_dbg(priv->dev, "[%u] %s: TZ update trigger (%=
-d mC)\n",
-> +                               hw_id, __func__, temp);
-> +                       thermal_zone_device_update(priv->sensor[i].tzd,
-> +                                                  THERMAL_EVENT_UNSPECIF=
-IED);
-> +               } else {
-> +                       dev_dbg(priv->dev, "[%u] %s: no violation:  %d\n",
-> +                               hw_id, __func__, temp);
-> +               }
-> +       }
-> +
-> +       return IRQ_HANDLED;
-
-Should we return IRQ_NONE in the case that the above for loop didn't
-find anything in those if/else-ifs?
-
-> +}
-> +
-> +int tsens_set_trips(void *_sensor, int low, int high)
-> +{
-> +       struct tsens_sensor *s =3D _sensor;
-> +       struct tsens_priv *priv =3D s->priv;
-> +       struct device *dev =3D priv->dev;
-> +       struct tsens_irq_data d;
-> +       unsigned long flags;
-> +       int high_val, low_val, cl_high, cl_low;
-> +       bool enable =3D true;
-> +       u32 hw_id =3D s->hw_id;
-> +
-> +       dev_dbg(dev, "[%u] %s: proposed thresholds: (%d:%d)\n",
-> +               hw_id, __func__, low, high);
-> +
-> +       cl_high =3D clamp_val(high, -40000, 120000);
-> +       cl_low  =3D clamp_val(low, -40000, 120000);
-> +
-> +       high_val =3D tsens_mC_to_hw(s, cl_high);
-> +       low_val  =3D tsens_mC_to_hw(s, cl_low);
-> +
-> +       spin_lock_irqsave(&priv->ul_lock, flags);
-> +
-> +       tsens_read_irq_state(priv, hw_id, s, &d);
-> +
-> +       /* Write the new thresholds and clear the status */
-> +       regmap_field_write(priv->rf[LOW_THRESH_0 + hw_id], low_val);
-> +       regmap_field_write(priv->rf[UP_THRESH_0 + hw_id], high_val);
-> +       tsens_set_interrupt(priv, hw_id, LOWER, enable);
-> +       tsens_set_interrupt(priv, hw_id, UPPER, enable);
-
-Just pass true? Why is there an enable local variable?
-
-> +
-> +       spin_unlock_irqrestore(&priv->ul_lock, flags);
-> +
-> +       dev_dbg(dev, "[%u] %s: (%d:%d)->(%d:%d)\n",
-> +               s->hw_id, __func__, d.low_thresh, d.up_thresh, cl_low, cl=
-_high);
-> +
-> +       return 0;
-> +}
-> +
-[...]
-> @@ -319,28 +659,31 @@ int __init init_common(struct tsens_priv *priv)
->                 ret =3D PTR_ERR(priv->rf[SENSOR_EN]);
->                 goto err_put_device;
->         }
-> -       /* now alloc regmap_fields in tm_map */
-> -       for (i =3D 0, j =3D LAST_TEMP_0; i < priv->feat->max_sensors; i++=
-, j++) {
-> -               priv->rf[j] =3D devm_regmap_field_alloc(dev, priv->tm_map,
-> -                                                     priv->fields[j]);
-> -               if (IS_ERR(priv->rf[j])) {
-> -                       ret =3D PTR_ERR(priv->rf[j]);
-> -                       goto err_put_device;
-> -               }
-> +       priv->rf[INT_EN] =3D devm_regmap_field_alloc(dev, priv->tm_map,
-> +                                                  priv->fields[INT_EN]);
-> +       if (IS_ERR(priv->rf[INT_EN])) {
-> +               ret =3D PTR_ERR(priv->rf[INT_EN]);
-> +               goto err_put_device;
->         }
-> =20
-> -       /* Save away resolution of signed temperature value for this IP */
-> -       priv->tempres =3D priv->fields[LAST_TEMP_0].msb - priv->fields[LA=
-ST_TEMP_0].lsb;
-> -
-> -       for (i =3D 0, j =3D VALID_0; i < priv->feat->max_sensors; i++, j+=
-+) {
-> -               priv->rf[j] =3D devm_regmap_field_alloc(dev, priv->tm_map,
-> -                                                     priv->fields[j]);
-> -               if (IS_ERR(priv->rf[j])) {
-> -                       ret =3D PTR_ERR(priv->rf[j]);
-> -                       goto err_put_device;
-> +       /* This loop might need changes if enum regfield_ids is reordered=
- */
-> +       for (j =3D LAST_TEMP_0; j <=3D UP_THRESH_15; j +=3D 16) {
-> +               for (i =3D 0; i < priv->feat->max_sensors; i++) {
-> +                       int idx =3D j + i;
-> +
-> +                       priv->rf[idx] =3D devm_regmap_field_alloc(dev, pr=
-iv->tm_map,
-> +                                                               priv->fie=
-lds[idx]);
-> +                       if (IS_ERR(priv->rf[idx])) {
-> +                               ret =3D PTR_ERR(priv->rf[idx]);
-> +                               goto err_put_device;
-> +                       }
->                 }
->         }
-> +       /* Save away resolution of signed temperature value for this IP */
-> +       priv->tempres =3D priv->fields[LAST_TEMP_0].msb - priv->fields[LA=
-ST_TEMP_0].lsb;
-
-Leave this where it was, i.e. before the for loop? Or is that a bug and
-it doesn't actually work unless it's after the for loop? In which case,
-this should go to the previous patch.
-
-> =20
-> +       spin_lock_init(&priv->ul_lock);
-> +       tsens_enable_irq(priv);
->         tsens_debug_init(op);
-> =20
->         return 0;
-> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-> index 772aa76b50e12..a4335717aeede 100644
-> --- a/drivers/thermal/qcom/tsens.c
-> +++ b/drivers/thermal/qcom/tsens.c
-> @@ -96,7 +99,33 @@ static int tsens_register(struct tsens_priv *priv)
->                 if (priv->ops->enable)
->                         priv->ops->enable(priv, i);
->         }
-> +
-> +       pdev =3D of_find_device_by_node(priv->dev->of_node);
-> +       if (!pdev) {
-> +               dev_err(&pdev->dev, "%s: device node not found in DT\n", =
-__func__);
-
-Do we really need this? Maybe just bail out in silence because this
-should never happen?
-
-> +               return -ENODEV;
-> +       }
-> +
-> +       irq =3D platform_get_irq_byname(pdev, "uplow");
-> +       if (irq < 0) {
-> +               dev_err(&pdev->dev, "%s: missing irq in dt: uplow\n", __f=
-unc__);
-
-You can drop the error print. I upstreamed a change to print the error
-generically in the core.
-
-> +               return irq;
-
-Did we need to put_device() here?
-
-> +       }
-> +
-> +       ret =3D devm_request_threaded_irq(&pdev->dev, irq,
-> +                                       NULL, tsens_irq_thread,
-> +                                       IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-> +                                       dev_name(&pdev->dev), priv);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "%s: failed to get irq\n", __func__);
-> +               goto err_put_device;
-> +       }
-> +       enable_irq_wake(irq);
->         return 0;
-> +
-> +err_put_device:
-> +       put_device(&pdev->dev);
-> +       return ret;
