@@ -2,108 +2,141 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23C8C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF0EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C831920828
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 111FE20828
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfH1IXj (ORCPT
+        id S1726413AbfH1IZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:23:39 -0400
-Received: from mga07.intel.com ([134.134.136.100]:36809 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbfH1IXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:23:39 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 01:23:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
-   d="asc'?scan'208";a="174838527"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga008.jf.intel.com with ESMTP; 28 Aug 2019 01:23:37 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Joe Perches <joe@perches.com>,
-        Richard Cochran <richardcochran@gmail.com>
-Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] PTP: introduce new versions of IOCTLs
-In-Reply-To: <0f1487356ae2e9ff185ede2359381630007538c7.camel@perches.com>
-References: <20190814074712.10684-1-felipe.balbi@linux.intel.com> <20190817155927.GA1540@localhost> <a146c1356b4272c481e5cc63666c6e58b8442407.camel@perches.com> <20190818201150.GA1316@localhost> <83075553a61ede1de9cbf77b90a5acdeab5aacbf.camel@perches.com> <20190819154320.GB2883@localhost> <0f1487356ae2e9ff185ede2359381630007538c7.camel@perches.com>
-Date:   Wed, 28 Aug 2019 11:23:33 +0300
-Message-ID: <87k1axwvei.fsf@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        Wed, 28 Aug 2019 04:25:17 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34375 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbfH1IZQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:25:16 -0400
+Received: from mail-pg1-f200.google.com ([209.85.215.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1i2tGT-0005iL-W0
+        for linux-kernel@vger.kernel.org; Wed, 28 Aug 2019 08:25:14 +0000
+Received: by mail-pg1-f200.google.com with SMTP id b18so1216289pgg.8
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 01:25:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=yDQMhkjBqvMckIaETJ30I1V3/odVpy6UAuG1t5GavCg=;
+        b=tML5X8vxcJZ6Gv7QiheNOdmvQp1bVXfMH2vkH8GGkOsqG7Up5RcYC8ie6pGM5rn9kV
+         yDgfUpcCTzTJSBWboGOhy4FyCWVtIDGNDihqhNe9veVjBhPyvP7ouWrstpW2TGrOOkRx
+         Lu0gPk49Z6GT7SCH65G+pNebufLcWBRyUpX3186SLU3wIfdHMx9qogpPF8ZumExqWSrz
+         a27z5ivJjMbsuyMsM8Octx7rX6WSluQ3zuuDkYutq/fM3qTTHKmCH05LCG7GcK5tFi8r
+         iAZ+gU5XZDcEWURSYjHvjAvS3xvmNuETI/dQ3o4NT9sjIQrSWAae/Rk4ZxvnpGUbvPwV
+         K1jA==
+X-Gm-Message-State: APjAAAWpdph3YhKXmCB2VKWH6JiP2L54ZOuRGB2rrL4wHtoRrqlzUGEe
+        UqLvRMUkWFxP3siP/tF+/0K/EKslzEN5vg2elwl+FIgZNnUnr7nve3l8PkEsKsNGPkvLYhQNbIk
+        60dJtjnJ8f2owc3WzxshQ1vJA5bmllpkzyrCpaKG6aQ==
+X-Received: by 2002:a17:902:6b81:: with SMTP id p1mr3053419plk.91.1566980712710;
+        Wed, 28 Aug 2019 01:25:12 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyg3xPhlxpHv0Jw3q47+NdHNvNzyyatg4MSCzNk9Lkvz07TQuVYjHaH9aQx5W+/tAUeIxm73Q==
+X-Received: by 2002:a17:902:6b81:: with SMTP id p1mr3053407plk.91.1566980712363;
+        Wed, 28 Aug 2019 01:25:12 -0700 (PDT)
+Received: from 2001-b011-380f-3c42-f8f8-a260-49a8-d1ed.dynamic-ip6.hinet.net (2001-b011-380f-3c42-f8f8-a260-49a8-d1ed.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:f8f8:a260:49a8:d1ed])
+        by smtp.gmail.com with ESMTPSA id y9sm1820302pfn.152.2019.08.28.01.25.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 28 Aug 2019 01:25:11 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 2/2] ALSA: hda: Allow HDA to be runtime suspended when
+ dGPU is not bound
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20190827223125.GB9987@google.com>
+Date:   Wed, 28 Aug 2019 16:25:08 +0800
+Cc:     tiwai@suse.com, linux-pci@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Message-Id: <66C43B81-0A08-437F-B099-1C757A42E912@canonical.com>
+References: <20190827134756.10807-1-kai.heng.feng@canonical.com>
+ <20190827134756.10807-2-kai.heng.feng@canonical.com>
+ <20190827223125.GB9987@google.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Bjorn,
 
+at 06:31, Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Hi,
-
-Joe Perches <joe@perches.com> writes:
-
-> On Mon, 2019-08-19 at 08:43 -0700, Richard Cochran wrote:
->> On Sun, Aug 18, 2019 at 03:07:18PM -0700, Joe Perches wrote:
->> > Also the original patch deletes 2 case entries for
->> > PTP_PIN_GETFUNC and PTP_PIN_SETFUNC and converts them to
->> > PTP_PIN_GETFUNC2 and PTP_PIN_SETFUNC2 but still uses tests
->> > for the deleted case label entries making part of the case
->> > code block unreachable.
->> >=20
->> > That's at least a defect:
->> >=20
->> > -	case PTP_PIN_GETFUNC:
->> > +	case PTP_PIN_GETFUNC2:
->> >=20
->> > and
->> >=20=20
->> > -	case PTP_PIN_SETFUNC:
->> > +	case PTP_PIN_SETFUNC2:
->>=20
->> Good catch.  Felipe, please fix that!
->>=20
->> (Regarding Joe's memset suggestion, I'll leave that to your discretion.)
+> On Tue, Aug 27, 2019 at 09:47:56PM +0800, Kai-Heng Feng wrote:
+>> It's a common practice to let dGPU unbound and use PCI port PM to
+>> disable its power through _PR3. When the dGPU comes with an HDA
+>> function, the HDA won't be suspended if the dGPU is unbound, so the dGPU
+>> power can't be disabled.
 >
-> Not just how declarations are done or memset.
+> Just a terminology question:
 >
-> Minimizing unnecessary stack consumption is generally good.
+> I thought "using PCI port PM" meant using the PCI Power Management
+> Capability in config space to directly change the device's power
+> state, e.g., in pci_raw_set_power_state().
 
-Originally I had memset only on the three cases where they were
-needed. Richard, which do you prefer? I don't mind changing it back.
+What I meant is to use pcieport.ko directly.
 
-=2D-=20
-balbi
+>
+> And I thought using _PS3, _PR3, etc would be part of "platform power
+> management”?
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Ok, will update the wording.
 
------BEGIN PGP SIGNATURE-----
+>
+> And AFAICT, _PR3 merely returns a list of power resources; it doesn't
+> disable power itself.
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1mOgUACgkQzL64meEa
-mQbvrhAAnskbpsrzKMjJ/1NPI5lhfGtbshqfMbi5e24sbZdcqYSprnBNv/0/KPiK
-NGCYILncPi4PsTZ8bLoFG2/9vFhf0YqMgQ9q4MN/KolTaNxoq/IdNrr4CppyQ8Sb
-H4LKPsjD9T+E24J2RcyTmZRiVvDvYgO3LwYL7iCuIWQuIgOLxsPZ1ZgCmw4pnwsh
-/Yp/qCfSvWco2mdldjP6mw9SBFl0zidTBzHxI1re4evPPOmNb0P7Fsf0WrDNG3fU
-WhP9bqQvs8r5INyiYLnSgcZVhyEMpK/N7J/jtW7wVmqT39794cystaelpVRQVUGr
-Z6/YgWtvY9zuYsd4kCcR431beg4uK7KgXcvTKyqf4N1WBrOAZcg1nJ/XKSqJM7tA
-iKPBm/3hVrM2iRfe71tCfzH/QbopMoIZSVKwm2ir4u5bia1H9hyir5VBWJWAa++v
-yR+LC2/Ur+w+uzNn2DocxHDWhfFXshpZ2k8sDep+5kCJ9dqA4hvXjEe4POVTNaaH
-dTxQjTu8VjVVqzOtJUB0xjF/zlzrPrSXD43Uudynhkh7O1RUJkMc2hH0B4Nc2Xk+
-FnAg2swx2u96sKty34KGcjxNVwWYMmVvqNKbVPXxxX4RfCvO/2YNOIF6qHF1qkuB
-DOqA0wQ/IY/vJnwUksrL6kjN2P7uTzTsHwDIjwU61/C+oTDnBEo=
-=0XCJ
------END PGP SIGNATURE-----
---=-=-=--
+Yes, through its _PS3 and _OFF. I’ll update the wording.
+
+Kai-Heng
+
+>
+>> Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
+>> discrete GPU") only allows HDA to be runtime-suspended once GPU is
+>> bound, to keep APU's HDA working.
+>>
+>> However, HDA on dGPU isn't that useful if dGPU is unbound. So let relax
+>> the runtime suspend requirement for dGPU's HDA function, to save lots of
+>> power.
+>>
+>> BugLink: https://bugs.launchpad.net/bugs/1840835
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> ---
+>>  sound/pci/hda/hda_intel.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+>> index 99fc0917339b..d4ee070e1a29 100644
+>> --- a/sound/pci/hda/hda_intel.c
+>> +++ b/sound/pci/hda/hda_intel.c
+>> @@ -1285,7 +1285,8 @@ static void init_vga_switcheroo(struct azx *chip)
+>>  		dev_info(chip->card->dev,
+>>  			 "Handle vga_switcheroo audio client\n");
+>>  		hda->use_vga_switcheroo = 1;
+>> -		hda->need_eld_notify_link = 1; /* cleared in gpu_bound op */
+>> +		/* cleared in gpu_bound op */
+>> +		hda->need_eld_notify_link = !pci_pr3_present(p);
+>>  		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
+>>  		pci_dev_put(p);
+>>  	}
+>> -- 
+>> 2.17.1
+
+
