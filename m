@@ -2,149 +2,109 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C137C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207E1C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4FF214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBDE8214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:05:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="DFG79O+v"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="QKS3F1l4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VOdXUCyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfH1RDJ (ORCPT
+        id S1726605AbfH1RFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:03:09 -0400
-Received: from mail-eopbgr140095.outbound.protection.outlook.com ([40.107.14.95]:48192
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726837AbfH1RDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:03:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jUJLWoKMmzmjMJ3MYBHkfxkc6oh6SxW4mdmVl7/jWfepDBbb1mEGck+7W1F8nILZCBlio5a/5NjkLqOFyDN2ewASw23W4ybujOkuGwPg7FJumV0iWQYWZyHluMFNYlpr1c3m2QqveYGNt9TzpSpminnLZOd31RQgrPzQcYCJbdZcQ/FxH3u+8N27acrUW25TuXvq1HxKMaHOnFd40SHpv+PQ0XgdV0yBLwfCoQK46FcegviS4k4EW8iSNLa9a7yAjtrN1wQ6FSOhWxkQ722eX1XkSoba3z6tNn7gEVeiTQ1+xTPpA8wfEHN4meXlqdBIUt1fCVDRyRQZUTbSH4lcXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FVE+tKSCP26l93DhJV3K+1nKtyODUHjKA+FnaFcYU5U=;
- b=nVq8w/X5MKOPp65xiQZnNEdvtiTkZ89KGnoP37YAgEZbZHxHLbxfp5ytUK4G/GMtadl4eqoz7Ww2tzbfEKXKtL+Asg6z0EhFZUWAA7PpDy01PVAbwr6MmDuWg2bN2lJwOhUAx5XKhpv43surkZN0wFrM46PYNz/GMCQM/ydlabYDczulHByoEfPrJjpCwJ+cad9H/q+Buq6UB2w0cuCPB6aMgTwPtxp4KZ0tPxq2AxGcrnVJJkAJnTP8ggHHrkcfWCMXgCz9yaZt4fEAPcuo1GjDqYH/kJfSKjYposySjMKII/65gric3npgoK95/AYRo5Cy+6tfyikH4ykJ0Moytg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FVE+tKSCP26l93DhJV3K+1nKtyODUHjKA+FnaFcYU5U=;
- b=DFG79O+vtUwhq+SW1k1JU62KGVHrW7zcVXD46MsVFUTCTG6AN/vTkAj/rvupGzgHGv7BO/hJgOS3d/8QnhIwFt9922/RHtYKKbYEVvVJf3L/ifHB5mhzUw4ia67PC62R+n0IFr0JUm/WekJjkNp9CiY84hixmjdIcZ9uEtVbkYU=
-Received: from VI1PR08MB2782.eurprd08.prod.outlook.com (10.170.236.143) by
- VI1PR08MB3181.eurprd08.prod.outlook.com (52.133.15.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.19; Wed, 28 Aug 2019 17:02:59 +0000
-Received: from VI1PR08MB2782.eurprd08.prod.outlook.com
- ([fe80::2969:e370:fb70:71a]) by VI1PR08MB2782.eurprd08.prod.outlook.com
- ([fe80::2969:e370:fb70:71a%3]) with mapi id 15.20.2178.023; Wed, 28 Aug 2019
- 17:02:59 +0000
-From:   Jan Dakinevich <jan.dakinevich@virtuozzo.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Jan Dakinevich <jan.dakinevich@virtuozzo.com>,
-        Denis Lunev <den@virtuozzo.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?iso-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: [PATCH v2 3/3] KVM: x86: set ctxt->have_exception in
- x86_decode_insn()
-Thread-Topic: [PATCH v2 3/3] KVM: x86: set ctxt->have_exception in
- x86_decode_insn()
-Thread-Index: AQHVXcJxnnwQLIGeYUSYlBg22R5cuw==
-Date:   Wed, 28 Aug 2019 17:02:59 +0000
-Message-ID: <1567011759-9969-4-git-send-email-jan.dakinevich@virtuozzo.com>
-References: <1567011759-9969-1-git-send-email-jan.dakinevich@virtuozzo.com>
-In-Reply-To: <1567011759-9969-1-git-send-email-jan.dakinevich@virtuozzo.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0154.eurprd05.prod.outlook.com
- (2603:10a6:7:28::41) To VI1PR08MB2782.eurprd08.prod.outlook.com
- (2603:10a6:802:19::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jan.dakinevich@virtuozzo.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.1.4
-x-originating-ip: [185.231.240.5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 96a8620c-ffc4-4c78-e996-08d72bd99440
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR08MB3181;
-x-ms-traffictypediagnostic: VI1PR08MB3181:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR08MB3181536D61CFF41CEC2DD7998AA30@VI1PR08MB3181.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2733;
-x-forefront-prvs: 014304E855
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(346002)(39850400004)(136003)(396003)(189003)(199004)(478600001)(26005)(4326008)(8936002)(14444005)(186003)(102836004)(3846002)(256004)(476003)(44832011)(6486002)(66066001)(6512007)(305945005)(4744005)(2906002)(2501003)(446003)(86362001)(6436002)(6116002)(66446008)(8676002)(66946007)(64756008)(66556008)(76176011)(66476007)(316002)(7736002)(81156014)(52116002)(25786009)(81166006)(71190400001)(71200400001)(6506007)(486006)(386003)(14454004)(53936002)(99286004)(2616005)(5660300002)(6916009)(2351001)(54906003)(5640700003)(36756003)(50226002)(11346002)(7416002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR08MB3181;H:VI1PR08MB2782.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: virtuozzo.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2gaLlwxtNvt9Zytn3/lKCmB93uhWT5fkGLpL/GCZDsvhLcNBwrWL0Ym5i5iGfqTuFEOnQDcLUCnvsRlilg8tDECIdHaPlAYdn6xeoVTo7L4fyTeRRkrZRT8MuDM4M0oU/OT/q54ANg99tN+wtcH5shkHatjD2eu5Jo1KPiNzUhkjAOSXu4pMey5Ak7JA9R9UgWsqaecjiJMuX5VMNvi/pSA3FdEp70biURZIv1L9G3r24YdUoxMCKoBv/Lt+hzD1SlrLS9ZH5jHhvS6rFxfYmgPFykQW1F8S5d37eFkvdMYyw/FmYYTtfqBmQBXPkvRSXAIigd00+ZjW2KtFPb4YWuUoqdi9JxhfGCSxDcKL03UrLIqFz+V46SXye1wDpUcjk/n0W6xC/iz5UNuxj1ULrxWMsV2ODQ5mTySAv60U9lk=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 28 Aug 2019 13:05:51 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:56049 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726395AbfH1RFu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 13:05:50 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 682455DD;
+        Wed, 28 Aug 2019 13:05:49 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Wed, 28 Aug 2019 13:05:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=St94MHN5UV1RXYwkQ8jFmrNTF9L
+        FaXFtqhsHG7B3yIk=; b=QKS3F1l4/yfRlYJu7cJda2XaOFJ0Ru7f8T0ZtS7nPGK
+        E3Fqymi/m6R8NxGtRmkt1bAqnt4YzgjPgJqrjW/hO9i7KPdsp8syAT01t3uMwqL2
+        2OfpS+jhyTw5BcW783bZx6eVn7lvUJcn/q4o2eEcbQrpo7BfHHeSDLwsMpcf9c0P
+        J8GRoPV7Znoj6F/YfsrpLYfY+f20Wyihp56yfJqJaWtUVAR5bSGVms4mdxDOUvA3
+        AEJbqQQi6ta6ZGm+nHKFLipHd62Dr1SrNTRWf3LDziQ0xjGzygEX4tL0y5WdRezr
+        LlljtGW0KQF1Jy9EXkXDv6Cx/ci6FrAwWXoz9EM/oOA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=St94MH
+        N5UV1RXYwkQ8jFmrNTF9LFaXFtqhsHG7B3yIk=; b=VOdXUCyUTDVeEUqpNC9CWA
+        3saR+N6pNvM/sm27TGpq3oTIVOGYK0VULnLKII7m/xGx0pSoyyEYAVo+H5d7OTNB
+        rb3jZDhS1rYjQfMU+oPlQipzOYLtMn/HDTXB6Get5y5nMEI8AX6eVkr+EBnB0rB8
+        CX/Rcwts8TPVnXag/mUAJ9J+I7edOJMU+L5GsiKw9SJB8sKT1co3xKG2QywDzyOi
+        dWEx/G4TB+9VRMc2ABJgVUFHqdwwEafQSumV3G+kJlZ2EcCOQewvPhexXn90GKSP
+        hsU9Ctn7w/vfsqMIT86UEcXPDWuxc3cbXU8D2JdUHaERvhvPpmjEUfSHeeYz1RbA
+        ==
+X-ME-Sender: <xms:bLRmXQDu8hPepStpYa_6EmT5zjQm9chhz0uBhfLYC4XPDpzZjnMdbQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeitddguddtkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjfgesth
+    dtredttdervdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtgho
+    mheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrd
+    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:bLRmXemq8QkzM7TamVi1vd3XCpXNck_mVBmIkziU57bU95-o7V7Dyw>
+    <xmx:bLRmXQRqfyunFfgIZMoKIOfzbQcJRTnotElBz0TBTPzrB-6l4DO9AA>
+    <xmx:bLRmXdHpWFNjWabQkyr_Tn0VpEJuWdCD-pUPesgvXNSd_ytLhHyb0Q>
+    <xmx:bbRmXZ9ZxoHqI4c-7odHqZWiVDAP-2H1HoS9t7QPtIQXFFBEAlXk6g>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 77A10D6005F;
+        Wed, 28 Aug 2019 13:05:48 -0400 (EDT)
+Date:   Wed, 28 Aug 2019 19:05:47 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Konstantin Ryabitsev <mricon@kernel.org>
+Cc:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        StableKernel <stable@vger.kernel.org>,
+        LinuxKernel <linux-kernel@vger.kernel.org>
+Subject: Re: Latest kernel version no NOT reflecting on kernel.org
+Message-ID: <20190828170547.GA11688@kroah.com>
+References: <20190828135750.GA5841@Gentoo>
+ <20190828151353.GA9673@kroah.com>
+ <20190828160156.GB26001@chatter.i7.local>
 MIME-Version: 1.0
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96a8620c-ffc4-4c78-e996-08d72bd99440
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 17:02:59.5321
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DPGYn7KqLQz9MV02v8mNpCsTr5LqvI0JLjeycMfdFUq3XfLEMWgvzjFoNz+bLTinRkZBSVE94N3WNzpwBoCLpoLBO+jdycvGm7JZCTl3c7M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3181
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828160156.GB26001@chatter.i7.local>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-x86_emulate_instruction() takes into account ctxt->have_exception flag
-during instruction decoding, but in practice this flag is never set in
-x86_decode_insn().
+On Wed, Aug 28, 2019 at 12:01:56PM -0400, Konstantin Ryabitsev wrote:
+> On Wed, Aug 28, 2019 at 05:13:53PM +0200, Greg KH wrote:
+> > On Wed, Aug 28, 2019 at 07:27:53PM +0530, Bhaskar Chowdhury wrote:
+> > > Am I the only one, who is not seeing it getting reflected on
+> > > kernel.org???
+> > > 
+> > > Well, I have tried it 2 different browsers.....cleared caches several
+> > > times(heck) .....3 different devices .....and importantly 3 different
+> > > networks.
+> > > 
+> > > Wondering!
+> > 
+> > Adding Konstantin.
+> > 
+> > I think there's a way to see which cdn mirror you are hitting when you
+> > ask for "www.kernel.org".  Konstantin, any hints as to see if maybe one
+> > of the mirrors is out of sync?
+> 
+> Looks like the Singapore mirror was feeling out-of-sorts. It'll start
+> feeling better shortly.
 
-Fixes: 6ea6e84 ("KVM: x86: inject exceptions produced by x86_decode_insn")
-Cc: Denis Lunev <den@virtuozzo.com>
-Cc: Roman Kagan <rkagan@virtuozzo.com>
-Cc: Denis Plotnikov <dplotnikov@virtuozzo.com>
-Signed-off-by: Jan Dakinevich <jan.dakinevich@virtuozzo.com>
----
- arch/x86/kvm/emulate.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Great, thanks for looking into this!
 
-diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-index bef3c3c..74b4d79 100644
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -5416,6 +5416,11 @@ int x86_decode_insn(struct x86_emulate_ctxt *ctxt, v=
-oid *insn, int insn_len)
- 					ctxt->memopp->addr.mem.ea + ctxt->_eip);
-=20
- done:
-+	if (rc =3D=3D X86EMUL_PROPAGATE_FAULT) {
-+		WARN_ON_ONCE(ctxt->exception.vector =3D=3D UD_VECTOR ||
-+			     exception_type(ctxt->exception.vector) =3D=3D EXCPT_TRAP);
-+		ctxt->have_exception =3D true;
-+	}
- 	return (rc !=3D X86EMUL_CONTINUE) ? EMULATION_FAILED : EMULATION_OK;
- }
-=20
---=20
-2.1.4
-
+greg k-h
