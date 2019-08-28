@@ -2,269 +2,291 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDD9C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2361CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22EEE2339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567018635;
-	bh=YWRPIo5lY+npq8po6q8Hxw9uV+CVU6RPeUclOwdOxGQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yg9yBOq/zSDG/qH9SJIjc95KY28RLuBHlFVI1XkJOBZOsxOZxiOjILz10Weojkypu
-	 K6jPcZMQX2yzWiyzmCRQYypxDCric5thEBG6ZbbtalHdVFcB6eWsQ4/34FUfx3x3M9
-	 oNcN055fOjmC8b0ygwznanyz9r9sFY8G2OOLG+uw=
+	by mail.kernel.org (Postfix) with ESMTP id E110322CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:58:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dXBgCddk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfH1S5O (ORCPT
+        id S1727063AbfH1S63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:57:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbfH1S5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:57:13 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA58122CF5;
-        Wed, 28 Aug 2019 18:57:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567018632;
-        bh=YWRPIo5lY+npq8po6q8Hxw9uV+CVU6RPeUclOwdOxGQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QLKAwqiTPxwGgomTw1T2reBYMxE7Qpb8aaskA1lf/DvrIxznvfA40Vu2kmRI7kuIs
-         JvipCril8TxoMfqswwzTF1GWO3QE1cZFqFfvz8JF20a8d6Wwu7iFMt2X9knUNCLtNv
-         NCFm8KbORoWgOr7GVaRWUP09VxHmTfQK3HOVdSI4=
-Date:   Wed, 28 Aug 2019 13:57:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com,
+        Wed, 28 Aug 2019 14:58:29 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:48026 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbfH1S62 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 14:58:28 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7SIsNP5149828;
+        Wed, 28 Aug 2019 18:57:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=DHX8EJq2diorjBQuEzBHm3f716yk934EjUN3J/yyUPg=;
+ b=dXBgCddkZg8k1DcUxkjdn2QHj5PC0AAUl8Shme2Czg6WA6JlI0V6DjX/DU7/eY+GXYt3
+ MndMKu3XtjVYkorOuwMwwuHBL4b1IZp2upEPibEP+nZxNJH2mQ0oWtqjfeRuvAvwBUMw
+ 74PrOROBxNCO7UhZVXceXMAvD1FJTEb2or665ZbdB6Vn1pN0dykOMAxa8X+0wTIcqNpV
+ QeB/Jr+mh79lni7WuMkJk1nVeLZhmgVxy5oMbS/O588EMssnJ/VL4upf+W7t5179e0MK
+ 5kvldr9OoY7TJEwxSW4cJUW5/pd9R8g03d/htQBzK8xAM+CzJhfGcrC2iYc2vJD/e6wu jA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2uny3903yh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 28 Aug 2019 18:57:10 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7SIrLqI078794;
+        Wed, 28 Aug 2019 18:57:09 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2unvtxq6kf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 28 Aug 2019 18:57:09 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7SIv7gv030518;
+        Wed, 28 Aug 2019 18:57:07 GMT
+Received: from paddy.uk.oracle.com (/10.175.206.216)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 28 Aug 2019 11:57:06 -0700
+From:   Joao Martins <joao.m.martins@oracle.com>
+To:     kvm@vger.kernel.org
+Cc:     Joao Martins <joao.m.martins@oracle.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v5 4/7] PCI/ATS: Add PRI support for PCIe VF devices
-Message-ID: <20190828185710.GB7013@google.com>
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <827d051ef8c8bbfa815908ce927e607870780cb6.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190815222049.GL253360@google.com>
- <f05eb779-9f78-f20f-7626-16b8bd28af40@linux.intel.com>
- <20190819141500.GQ253360@google.com>
- <20190819225331.GB28404@skuppusw-desk.amr.corp.intel.com>
- <20190819231925.GW253360@google.com>
- <20190828182153.GH28404@skuppusw-desk.amr.corp.intel.com>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH v1] cpuidle-haltpoll: vcpu hotplug support
+Date:   Wed, 28 Aug 2019 19:56:50 +0100
+Message-Id: <20190828185650.16923-1-joao.m.martins@oracle.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828182153.GH28404@skuppusw-desk.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9363 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=992
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908280184
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9363 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908280184
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 11:21:53AM -0700, Kuppuswamy Sathyanarayanan wrote:
-> On Mon, Aug 19, 2019 at 06:19:25PM -0500, Bjorn Helgaas wrote:
-> > On Mon, Aug 19, 2019 at 03:53:31PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> > > On Mon, Aug 19, 2019 at 09:15:00AM -0500, Bjorn Helgaas wrote:
-> > > > On Thu, Aug 15, 2019 at 03:39:03PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> > > > > On 8/15/19 3:20 PM, Bjorn Helgaas wrote:
-> > > > > > [+cc Joerg, David, iommu list: because IOMMU drivers are the only
-> > > > > > callers of pci_enable_pri() and pci_enable_pasid()]
-> > > > > > 
-> > > > > > On Thu, Aug 01, 2019 at 05:06:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > > > > 
-> > > > > > > When IOMMU tries to enable Page Request Interface (PRI) for VF device
-> > > > > > > in iommu_enable_dev_iotlb(), it always fails because PRI support for
-> > > > > > > PCIe VF device is currently broken. Current implementation expects
-> > > > > > > the given PCIe device (PF & VF) to implement PRI capability before
-> > > > > > > enabling the PRI support. But this assumption is incorrect. As per PCIe
-> > > > > > > spec r4.0, sec 9.3.7.11, all VFs associated with PF can only use the
-> > > > > > > PRI of the PF and not implement it. Hence we need to create exception
-> > > > > > > for handling the PRI support for PCIe VF device.
-> > > > > > > 
-> > > > > > > Also, since PRI is a shared resource between PF/VF, following rules
-> > > > > > > should apply.
-> > > > > > > 
-> > > > > > > 1. Use proper locking before accessing/modifying PF resources in VF
-> > > > > > >     PRI enable/disable call.
-> > > > > > > 2. Use reference count logic to track the usage of PRI resource.
-> > > > > > > 3. Disable PRI only if the PRI reference count (pri_ref_cnt) is zero.
-> > > > 
-> > > > > > Wait, why do we need this at all?  I agree the spec says VFs may not
-> > > > > > implement PRI or PASID capabilities and that VFs use the PRI and
-> > > > > > PASID of the PF.
-> > > > > > 
-> > > > > > But why do we need to support pci_enable_pri() and pci_enable_pasid()
-> > > > > > for VFs?  There's nothing interesting we can *do* in the VF, and
-> > > > > > passing it off to the PF adds all this locking mess.  For VFs, can we
-> > > > > > just make them do nothing or return -EINVAL?  What functionality would
-> > > > > > we be missing if we did that?
-> > > > > 
-> > > > > Currently PRI/PASID capabilities are not enabled by default. IOMMU can
-> > > > > enable PRI/PASID for VF first (and not enable it for PF). In this case,
-> > > > > doing nothing for VF device will break the functionality.
-> > > > 
-> > > > What is the path where we can enable PRI/PASID for VF but not for the
-> > > > PF?  The call chains leading to pci_enable_pri() go through the
-> > > > iommu_ops.add_device interface, which makes me think this is part of
-> > > > the device enumeration done by the PCI core, and in that case I would
-> > > > think this it should be done for the PF before VFs.  But maybe this
-> > > > path isn't exercised until a driver does a DMA map or something
-> > > > similar?
-> > 
-> > > AFAIK, this path will only get exercised when the device does DMA and
-> > > hence there is no specific order in which PRI/PASID is enabled in PF/VF.
-> > > In fact, my v2 version of this patch set had a check to ensure PF
-> > > PRI/PASID enable is happened before VF attempts PRI/PASID
-> > > enable/disable. But I had to remove it in later version of this series
-> > > due to failure case reported by one the tester of this code. 
-> > 
-> > What's the path?  And does that path make sense?
-> > 
-> > I got this far before giving up:
-> > 
-> >     iommu_go_to_state                           # AMD
-> >       state_next
-> >         amd_iommu_init_pci
-> >           amd_iommu_init_api
-> >             bus_set_iommu
-> >               iommu_bus_init
-> >                 bus_for_each_dev(..., add_iommu_group)
-> >                   add_iommu_group
-> >                     iommu_probe_device
-> >                       amd_iommu_add_device                      # amd_iommu_ops.add_device
-> >                         init_iommu_group
-> >                           iommu_group_get_for_dev
-> >                             iommu_group_add_device
-> >                               __iommu_attach_device
-> >                                 amd_iommu_attach_device         # amd_iommu_ops.attach_dev
-> >                                   attach_device                 # amd_iommu
-> >                                     pdev_iommuv2_enable
-> >                                       pci_enable_pri
-> > 
-> > 
-> >     iommu_probe_device
-> >       intel_iommu_add_device                    # intel_iommu_ops.add_device
-> >         domain_add_dev_info
-> >           dmar_insert_one_dev_info
-> >             domain_context_mapping
-> >               domain_context_mapping_one
-> >                 iommu_enable_dev_iotlb
-> >                   pci_enable_pri
-> > 
-> > 
-> > These *look* like enumeration paths, not DMA setup paths.  But I could
-> > be wrong, since I gave up before getting to the source.
-> > 
-> > I don't want to add all this complexity because we *think* we need it.
-> > I want to think about whether it makes *sense*.  Maybe it's sensible
-> > for the PF enumeration or a PF driver to enable the hardware it owns.
-> > 
-> > If we leave it to the VFs, then we have issues with coordinating
-> > between VFs that want different settings, etc.
-> > 
-> > If we understand the whole picture and it needs to be in the VFs,
-> > that's fine.  But I don't think we understand the whole picture yet.
-> 
-> After re-analyzing the code paths, I also could not find the use case
-> where PF/VF PRI/PASID is enabled in out of order(VF first and then PF).
-> Also, I had no luck in finding that old bug report email which triggered
-> me to come up with this complicated fix. As per my current analysis, as
-> you have mentioned, PF/VF PRI/PASID enable seems to happen only during
-> device creation time.
-> 
-> Following are some of the possible code paths:
-> 
-> VF PRI/PASID enable path is,
-> 
-> [ 8367.161880]  iommu_enable_dev_iotlb+0x83/0x180
-> [ 8367.168061]  domain_context_mapping_one+0x44f/0x500
-> [ 8367.174264]  ? domain_context_mapping_one+0x500/0x500
-> [ 8367.180429]  pci_for_each_dma_alias+0x30/0x170
-> [ 8367.186368]  dmar_insert_one_dev_info+0x43f/0x4d0
-> [ 8367.192288]  domain_add_dev_info+0x50/0x90
-> [ 8367.197973]  intel_iommu_attach_device+0x9c/0x130
-> [ 8367.203726]  __iommu_attach_device+0x47/0xb0
-> [ 8367.209292]  ? _cond_resched+0x15/0x40
-> [ 8367.214643]  iommu_group_add_device+0x13a/0x2c0
-> [ 8367.220102]  iommu_group_get_for_dev+0xa8/0x220
-> [ 8367.225460]  intel_iommu_add_device+0x61/0x590
-> [ 8367.230708]  iommu_bus_notifier+0xb1/0xe0
-> [ 8367.235768]  notifier_call_chain+0x47/0x70
-> [ 8367.240757]  blocking_notifier_call_chain+0x3e/0x60
-> [ 8367.245854]  device_add+0x3ec/0x690
-> [ 8367.250533]  pci_device_add+0x26b/0x660
-> [ 8367.255207]  pci_iov_add_virtfn+0x1ce/0x3b0
-> [ 8367.259873]  sriov_enable+0x254/0x410
-> [ 8367.264323]  dev_fops_ioctl+0x1378/0x1520 [sad8]
-> [ 8367.322115]  init_fops_ioctl+0x12c/0x150 [sad8]
-> [ 8367.324921]  do_vfs_ioctl+0xa4/0x630
-> [ 8367.327415]  ksys_ioctl+0x70/0x80
-> [ 8367.329822]  __x64_sys_ioctl+0x16/0x20
-> [ 8367.332310]  do_syscall_64+0x5b/0x1a0
-> [ 8367.334771]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> PF PRI/PASID enable path is,
-> 
-> [   11.084005] Call Trace:
-> [   11.084005]  dump_stack+0x5c/0x7b
-> [   11.084005]  iommu_enable_dev_iotlb+0x83/0x180
-> [   11.084005]  domain_context_mapping_one+0x44f/0x500
-> [   11.084005]  ? domain_context_mapping_one+0x500/0x500
-> [   11.084005]  pci_for_each_dma_alias+0x30/0x170
-> [   11.084005]  dmar_insert_one_dev_info+0x43f/0x4d0
-> [   11.084005]  domain_add_dev_info+0x50/0x90
-> [   11.084005]  intel_iommu_attach_device+0x9c/0x130
-> [   11.084005]  __iommu_attach_device+0x47/0xb0
-> [   11.084005]  ? _cond_resched+0x15/0x40
-> [   11.084005]  iommu_group_add_device+0x13a/0x2c0
-> [   11.084005]  iommu_group_get_for_dev+0xa8/0x220
-> [   11.084005]  intel_iommu_add_device+0x61/0x590
-> [   11.084005]  ? iommu_probe_device+0x40/0x40
-> [   11.084005]  add_iommu_group+0xa/0x20
-> [   11.084005]  bus_for_each_dev+0x76/0xc0
-> [   11.084005]  bus_set_iommu+0x85/0xc0
-> [   11.084005]  intel_iommu_init+0xfe5/0x11c1
-> [   11.084005]  ? __fput+0x134/0x220
-> [   11.084005]  ? set_debug_rodata+0x11/0x11
-> [   11.084005]  ? e820__memblock_setup+0x60/0x60
-> [   11.084005]  ? pci_iommu_init+0x16/0x3f
-> [   11.084005]  pci_iommu_init+0x16/0x3f
-> [   11.084005]  do_one_initcall+0x46/0x1f4
-> [   11.084005]  kernel_init_freeable+0x1ba/0x283
-> [   11.084005]  ? rest_init+0xb0/0xb0
-> [   11.084005]  kernel_init+0xa/0x120
-> [   11.084005]  ret_from_fork+0x1f/0x40
-> 
-> Similarly PF/VF PRI/PASID possible disable paths are,
-> 
-> iommu_hotplug_path->disable_dmar_iommu->__dmar_remove_one_dev_info->iommu_disable_dev_iotlb
-> 
-> domain_exit()->domain_remove_dev_info->iommu_disable_dev_iotlb
-> 
-> vfio_iommu_type1_detach_group()->iommu_detach_group()->intel_iommu_detach_device->dmar_remove_one_dev_info
-> 
-> But even in all of these paths, PF/VF PRI/PASID disable have to happen
-> in order (VF first and then PF).
-> 
-> So we can implement the logic of not doing anything for VF when its
-> related PRI/PASID calls. But my questions is, is it safe to go with
-> these assumptions? Since all these dependencies we have found are not
-> explicitly defined, if some one breaks it will also affect PRI/PASID
-> logic. Let me know your comments.
+When cpus != maxcpus cpuidle-haltpoll will fail to register all vcpus
+past the online ones and thus fail to register the idle driver.
+This is because cpuidle_add_sysfs() will return with -ENODEV as a
+consequence from get_cpu_device() return no device for a non-existing
+CPU.
 
-I think we should assume PRI/PASID will be controlled via the PF.
-That's true today because we initialize them via the IOMMU binding
-path.  If the IOMMU path changes so that's no longer feasible, we
-could probably do the initialization in the PCI core.  These features
-are implemented in the PF, so I think the code will be simpler if it
-mirrors that instead of trying to provide the illusion that they're in
-the VF.
+Instead switch to cpuidle_register_driver() and manually register each
+of the present cpus through cpuhp_setup_state() and future ones that
+get onlined. This mimics similar logic as intel_idle.
 
-Bjorn
+Fixes: fa86ee90eb11 ("add cpuidle-haltpoll driver")
+Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+---
+ arch/x86/include/asm/cpuidle_haltpoll.h |  4 +-
+ arch/x86/kernel/kvm.c                   | 18 +++----
+ drivers/cpuidle/cpuidle-haltpoll.c      | 65 +++++++++++++++++++++++--
+ include/linux/cpuidle_haltpoll.h        |  4 +-
+ 4 files changed, 70 insertions(+), 21 deletions(-)
+
+diff --git a/arch/x86/include/asm/cpuidle_haltpoll.h b/arch/x86/include/asm/cpuidle_haltpoll.h
+index ff8607d81526..c8b39c6716ff 100644
+--- a/arch/x86/include/asm/cpuidle_haltpoll.h
++++ b/arch/x86/include/asm/cpuidle_haltpoll.h
+@@ -2,7 +2,7 @@
+ #ifndef _ARCH_HALTPOLL_H
+ #define _ARCH_HALTPOLL_H
+ 
+-void arch_haltpoll_enable(void);
+-void arch_haltpoll_disable(void);
++void arch_haltpoll_enable(unsigned int cpu);
++void arch_haltpoll_disable(unsigned int cpu);
+ 
+ #endif
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 8d150e3732d9..a9b6c4e2446d 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -880,32 +880,26 @@ static void kvm_enable_host_haltpoll(void *i)
+ 	wrmsrl(MSR_KVM_POLL_CONTROL, 1);
+ }
+ 
+-void arch_haltpoll_enable(void)
++void arch_haltpoll_enable(unsigned int cpu)
+ {
+ 	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL)) {
+-		printk(KERN_ERR "kvm: host does not support poll control\n");
+-		printk(KERN_ERR "kvm: host upgrade recommended\n");
++		pr_err_once("kvm: host does not support poll control\n");
++		pr_err_once("kvm: host upgrade recommended\n");
+ 		return;
+ 	}
+ 
+-	preempt_disable();
+ 	/* Enable guest halt poll disables host halt poll */
+-	kvm_disable_host_haltpoll(NULL);
+-	smp_call_function(kvm_disable_host_haltpoll, NULL, 1);
+-	preempt_enable();
++	smp_call_function_single(cpu, kvm_disable_host_haltpoll, NULL, 1);
+ }
+ EXPORT_SYMBOL_GPL(arch_haltpoll_enable);
+ 
+-void arch_haltpoll_disable(void)
++void arch_haltpoll_disable(unsigned int cpu)
+ {
+ 	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL))
+ 		return;
+ 
+-	preempt_disable();
+ 	/* Enable guest halt poll disables host halt poll */
+-	kvm_enable_host_haltpoll(NULL);
+-	smp_call_function(kvm_enable_host_haltpoll, NULL, 1);
+-	preempt_enable();
++	smp_call_function_single(cpu, kvm_enable_host_haltpoll, NULL, 1);
+ }
+ EXPORT_SYMBOL_GPL(arch_haltpoll_disable);
+ #endif
+diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
+index 9ac093dcbb01..0d1853a7185e 100644
+--- a/drivers/cpuidle/cpuidle-haltpoll.c
++++ b/drivers/cpuidle/cpuidle-haltpoll.c
+@@ -11,12 +11,15 @@
+  */
+ 
+ #include <linux/init.h>
++#include <linux/cpu.h>
+ #include <linux/cpuidle.h>
+ #include <linux/module.h>
+ #include <linux/sched/idle.h>
+ #include <linux/kvm_para.h>
+ #include <linux/cpuidle_haltpoll.h>
+ 
++static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
++
+ static int default_enter_idle(struct cpuidle_device *dev,
+ 			      struct cpuidle_driver *drv, int index)
+ {
+@@ -46,6 +49,48 @@ static struct cpuidle_driver haltpoll_driver = {
+ 	.state_count = 2,
+ };
+ 
++static int haltpoll_cpu_online(unsigned int cpu)
++{
++	struct cpuidle_device *dev;
++
++	dev = per_cpu_ptr(haltpoll_cpuidle_devices, cpu);
++	if (!dev->registered) {
++		dev->cpu = cpu;
++		if (cpuidle_register_device(dev)) {
++			pr_notice("cpuidle_register_device %d failed!\n", cpu);
++			return -EIO;
++		}
++		arch_haltpoll_enable(cpu);
++	}
++
++	return 0;
++}
++
++static void haltpoll_uninit(void)
++{
++	unsigned int cpu;
++
++	cpus_read_lock();
++
++	for_each_online_cpu(cpu) {
++		struct cpuidle_device *dev =
++			per_cpu_ptr(haltpoll_cpuidle_devices, cpu);
++
++		if (!dev->registered)
++			continue;
++
++		arch_haltpoll_disable(cpu);
++		cpuidle_unregister_device(dev);
++	}
++
++	cpuidle_unregister(&haltpoll_driver);
++
++	free_percpu(haltpoll_cpuidle_devices);
++	haltpoll_cpuidle_devices = NULL;
++
++	cpus_read_unlock();
++}
++
+ static int __init haltpoll_init(void)
+ {
+ 	int ret;
+@@ -56,17 +101,27 @@ static int __init haltpoll_init(void)
+ 	if (!kvm_para_available())
+ 		return 0;
+ 
+-	ret = cpuidle_register(&haltpoll_driver, NULL);
+-	if (ret == 0)
+-		arch_haltpoll_enable();
++	ret = cpuidle_register_driver(drv);
++	if (ret < 0)
++		return ret;
++
++	haltpoll_cpuidle_devices = alloc_percpu(struct cpuidle_device);
++	if (haltpoll_cpuidle_devices == NULL) {
++		cpuidle_unregister_driver(drv);
++		return -ENOMEM;
++	}
++
++	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "idle/haltpoll:online",
++				haltpoll_cpu_online, NULL);
++	if (ret < 0)
++		haltpoll_uninit();
+ 
+ 	return ret;
+ }
+ 
+ static void __exit haltpoll_exit(void)
+ {
+-	arch_haltpoll_disable();
+-	cpuidle_unregister(&haltpoll_driver);
++	haltpoll_uninit();
+ }
+ 
+ module_init(haltpoll_init);
+diff --git a/include/linux/cpuidle_haltpoll.h b/include/linux/cpuidle_haltpoll.h
+index fe5954c2409e..d50c1e0411a2 100644
+--- a/include/linux/cpuidle_haltpoll.h
++++ b/include/linux/cpuidle_haltpoll.h
+@@ -5,11 +5,11 @@
+ #ifdef CONFIG_ARCH_CPUIDLE_HALTPOLL
+ #include <asm/cpuidle_haltpoll.h>
+ #else
+-static inline void arch_haltpoll_enable(void)
++static inline void arch_haltpoll_enable(unsigned int cpu)
+ {
+ }
+ 
+-static inline void arch_haltpoll_disable(void)
++static inline void arch_haltpoll_disable(unsigned int cpu)
+ {
+ }
+ #endif
+-- 
+2.17.1
+
