@@ -2,206 +2,112 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E77C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF17C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6C6220644
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81E622CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:52:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4fD/Nzk"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="XhlIuiCr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfH1RvZ (ORCPT
+        id S1726981AbfH1RwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:51:25 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41827 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfH1RvZ (ORCPT
+        Wed, 28 Aug 2019 13:52:09 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35853 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbfH1RwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:51:25 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j16so670070wrr.8;
-        Wed, 28 Aug 2019 10:51:23 -0700 (PDT)
+        Wed, 28 Aug 2019 13:52:08 -0400
+Received: by mail-pf1-f194.google.com with SMTP id w2so282023pfi.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:52:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=S+L/L1oviegCq0SEoQs5dxf3RE/Q9qKwwJ9SUpVknSA=;
-        b=f4fD/NzkApqP6ivRI9YR83TuPET49XoCIQhc50e2vdDr1OJvTpDvOT44PALvTY7m5c
-         2mX5P6DhR35z4u0OpGpfzJ+Q0D2Sa+6hsfiM47YeWui2O3tLnqcqLxRcSafLqSO4Wy2L
-         1Xk+VU57K7VUj4SgIyT5bmwR6Zz3x4PfUO9P6BgmjPdthNpe4uM33tlALSUtt5aUxSe9
-         VUcENcVhtqLwJFWd5kL+nNnnaqkuacF7y48b2zIUitPC6ytfDhLeH58tGv7pZVNA6Qq7
-         i8vQnGNjQnxmMql+GQyeBtONBw/uNpcPFHq+t3fkRTlBLrTni/xX+MtLuJ0iNWKpdboJ
-         YYjg==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=jQX3yoLyPfk/0j+lt93BtL/GBDo4w3swgacBIDakXXQ=;
+        b=XhlIuiCrJiPd178mhAYLbMaCFhZdbbqbwaKU3q6uJ30qMagqqTw/bFQdZlNUymLTK8
+         dAlhmcyR3vP0ZtDqdiHYyudCImcd6mGVQj44mv4tr0vwZxX8d6TFobwdN4uxlZ1uDl/t
+         X/kt1Ft483Gh0bH+NGznab4xcFdJ/6TYS+9Yo3rpExBYeqGDHZD6RaHPArHNC3kr2rgJ
+         NxILOLue3/+PKN00bZKV+tNBQ8D4tNvwKWRAPKMbVtIL1UD4Gr4sqUnHjy2NZtrlK7hv
+         Jg6WoKH+rCjRnSUQMig8d9M/n0qExNh5AHuPyAICyXxTEnIuGS65lVHCT01gHzZmPOSt
+         MLHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=S+L/L1oviegCq0SEoQs5dxf3RE/Q9qKwwJ9SUpVknSA=;
-        b=CsfQhPg8TNSXLRIIDbj5M/4RvklHvLqX/SSnxGmdIXUsotBjhs17Y1AnNG+43U4rK+
-         hNvoZbZG/j7fowKeCC58T4nk2KkrENKejZoX3PLi2+3C6GtKHoDMQ1jVsXa2Z2s8HEWy
-         8PpqASIUAhA7FKEKQbZCvislTcQvSBXppQmwJQoBZYy4OVIPh2qQLyDByQbLR37AxYPk
-         /V1nr39bgTFjWmIufdh+W3xTxi5usNSG8BpjDr616tkZigIY6vEM3ftLwrtJdDsJyghr
-         CjDPm18QcI9ijakgeBc8JIrzePg2wRV5rpYh/ZkpzTAnSOL3QfPXHiZStMGq5VSIf1gg
-         uj1Q==
-X-Gm-Message-State: APjAAAXoNNfp31jchnI5KsDF1NL8ORts/ghC8jaXr16ZoBsFQ6k1PzEl
-        6lMnVJaSQpIZGKHnKCRaJNg=
-X-Google-Smtp-Source: APXvYqw/SCzGBcopmvEQlDRIiVbzGRPhwwTlvsSne8NWA4bBf7lxZerjYU3UTwVx/hXdsSWUbkMxWQ==
-X-Received: by 2002:adf:fa0a:: with SMTP id m10mr5266855wrr.174.1567014682368;
-        Wed, 28 Aug 2019 10:51:22 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id i93sm5241437wri.57.2019.08.28.10.51.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 10:51:21 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] x86/PCI: Add missing log facility and move to use pr_ macros in pcbios.c
-Date:   Wed, 28 Aug 2019 19:51:20 +0200
-Message-Id: <20190828175120.22164-1-kw@linux.com>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20190825182557.23260-1-kw@linux.com>
-References: <20190825182557.23260-1-kw@linux.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=jQX3yoLyPfk/0j+lt93BtL/GBDo4w3swgacBIDakXXQ=;
+        b=M6KxcwVxzKNzB4YjqDXpO178R21KXila/DM8EnoK5BUrOtWv5Ja3ofreBu89aV2OB0
+         gg0+tebDTkzK18Svs2lrweXLmpuO6DaodLrtBBglSWDQnKJdfuUr6CVEsmutgxuC3B7D
+         BMuUt0OttrmNE4ndtolqOH3UcLxjt+0JqNhhFjstmSdyVoJH+5da+YiHwybD0J5Vp9qE
+         8hlj8k5u4Vndu3IElEvFHH42AS7sE1eJH6GqKbgqxUVX6/ZLsG2GoXTJ04MruVJTX4U2
+         PJJzIs9652j6enj/R83b1LVUKROb3i/o0oA5ujAfM8oEjpZbtSVDNRBs/lvhPlmHU4Kt
+         siFg==
+X-Gm-Message-State: APjAAAWZPugG34O4CC5bok59X4Au7q0atiIMXKlkgE00j4g8p9hO2Fiy
+        +m3PFsow8Kgdyo/EahVLSG//ug==
+X-Google-Smtp-Source: APXvYqxOrLR3mQwFe9lP+xvQ8UaEwRlRzDb4ILg8zRF5qtKWo+EbZYY96fc4AyXGZBZM2GL8Qh83Qw==
+X-Received: by 2002:a17:90a:9905:: with SMTP id b5mr2493871pjp.117.1567014727512;
+        Wed, 28 Aug 2019 10:52:07 -0700 (PDT)
+Received: from ?IPv6:2600:1012:b023:28ef:14c8:9cc:b602:d8f? ([2600:1012:b023:28ef:14c8:9cc:b602:d8f])
+        by smtp.gmail.com with ESMTPSA id x10sm2728615pjo.4.2019.08.28.10.52.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 28 Aug 2019 10:52:06 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16G77)
+In-Reply-To: <201908251451.73C6812E8@keescook>
+Date:   Wed, 28 Aug 2019 10:52:05 -0700
+Cc:     David Abdurachmanov <david.abdurachmanov@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Vincent Chen <vincentc@andestech.com>,
+        Alan Kao <alankao@andestech.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, me@carlosedp.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <419CB0D1-E51C-49D5-9745-7771C863462F@amacapital.net>
+References: <20190822205533.4877-1-david.abdurachmanov@sifive.com> <201908251451.73C6812E8@keescook>
+To:     Kees Cook <keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing log facility where two instances of printk() that did not
-use any (so it would be using MESSAGE_LOGLEVEL_DEFAULT set in Kconfig)
-to make all the warnings in the arch/x86/pci/pcbios.c to be printed
-consistently at the same log facility.  Also resolve the following
-checkpatch.pl script warning:
 
-WARNING: printk() should include KERN_<LEVEL> facility level
 
-While adding the missing log facility move over to using pr_ macros
-over using printk(KERN_<level> ...) and DBG().
+> On Aug 25, 2019, at 2:59 PM, Kees Cook <keescook@chromium.org> wrote:
+>=20
+>> On Thu, Aug 22, 2019 at 01:55:22PM -0700, David Abdurachmanov wrote:
+>> This patch was extensively tested on Fedora/RISCV (applied by default on
+>> top of 5.2-rc7 kernel for <2 months). The patch was also tested with 5.3-=
+rc
+>> on QEMU and SiFive Unleashed board.
+>=20
+> Oops, I see the mention of QEMU here. Where's the best place to find
+> instructions on creating a qemu riscv image/environment?
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
----
-Changes in v2:
-  Change wording and include checkpatch.pl script warning.
-  Leverage pr_fmt and remove "PCI: " prefix used throught.
-  Move to pr_debug() over using DBG() from arch/x86/include/asm/pci_x86.h.
-
- arch/x86/pci/pcbios.c | 30 ++++++++++++++++--------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
-
-diff --git a/arch/x86/pci/pcbios.c b/arch/x86/pci/pcbios.c
-index 9c97d814125e..ddcefb25c55e 100644
---- a/arch/x86/pci/pcbios.c
-+++ b/arch/x86/pci/pcbios.c
-@@ -3,6 +3,8 @@
-  * BIOS32 and PCI BIOS handling.
-  */
- 
-+#define pr_fmt(fmt) "PCI: " fmt
-+
- #include <linux/pci.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-@@ -47,7 +49,7 @@ static inline void set_bios_x(void)
- 	pcibios_enabled = 1;
- 	set_memory_x(PAGE_OFFSET + BIOS_BEGIN, (BIOS_END - BIOS_BEGIN) >> PAGE_SHIFT);
- 	if (__supported_pte_mask & _PAGE_NX)
--		printk(KERN_INFO "PCI: PCI BIOS area is rw and x. Use pci=nobios if you want it NX.\n");
-+		pr_info("PCI BIOS area is rw and x. Use pci=nobios if you want it NX.\n");
- }
- 
- /*
-@@ -111,10 +113,10 @@ static unsigned long __init bios32_service(unsigned long service)
- 		case 0:
- 			return address + entry;
- 		case 0x80:	/* Not present */
--			printk(KERN_WARNING "bios32_service(0x%lx): not present\n", service);
-+			pr_warn("bios32_service(0x%lx): not present\n", service);
- 			return 0;
- 		default: /* Shouldn't happen */
--			printk(KERN_WARNING "bios32_service(0x%lx): returned 0x%x -- BIOS bug!\n",
-+			pr_warn("bios32_service(0x%lx): returned 0x%x -- BIOS bug!\n",
- 				service, return_code);
- 			return 0;
- 	}
-@@ -160,14 +162,14 @@ static int __init check_pcibios(void)
- 		minor_ver = ebx & 0xff;
- 		if (pcibios_last_bus < 0)
- 			pcibios_last_bus = ecx & 0xff;
--		DBG("PCI: BIOS probe returned s=%02x hw=%02x ver=%02x.%02x l=%02x\n",
-+		pr_debug("BIOS probe returned s=%02x hw=%02x ver=%02x.%02x l=%02x\n",
- 			status, hw_mech, major_ver, minor_ver, pcibios_last_bus);
- 		if (status || signature != PCI_SIGNATURE) {
--			printk (KERN_ERR "PCI: BIOS BUG #%x[%08x] found\n",
-+			pr_err("BIOS BUG #%x[%08x] found\n",
- 				status, signature);
- 			return 0;
- 		}
--		printk(KERN_INFO "PCI: PCI BIOS revision %x.%02x entry at 0x%lx, last bus=%d\n",
-+		pr_info("PCI BIOS revision %x.%02x entry at 0x%lx, last bus=%d\n",
- 			major_ver, minor_ver, pcibios_entry, pcibios_last_bus);
- #ifdef CONFIG_PCI_DIRECT
- 		if (!(hw_mech & PCIBIOS_HW_TYPE1))
-@@ -316,18 +318,18 @@ static const struct pci_raw_ops *__init pci_find_bios(void)
- 		if (sum != 0)
- 			continue;
- 		if (check->fields.revision != 0) {
--			printk("PCI: unsupported BIOS32 revision %d at 0x%p\n",
-+			pr_warn("unsupported BIOS32 revision %d at 0x%p\n",
- 				check->fields.revision, check);
- 			continue;
- 		}
--		DBG("PCI: BIOS32 Service Directory structure at 0x%p\n", check);
-+		pr_debug("BIOS32 Service Directory structure at 0x%p\n", check);
- 		if (check->fields.entry >= 0x100000) {
--			printk("PCI: BIOS32 entry (0x%p) in high memory, "
-+			pr_warn("BIOS32 entry (0x%p) in high memory, "
- 					"cannot use.\n", check);
- 			return NULL;
- 		} else {
- 			unsigned long bios32_entry = check->fields.entry;
--			DBG("PCI: BIOS32 Service Directory entry at 0x%lx\n",
-+			pr_debug("BIOS32 Service Directory entry at 0x%lx\n",
- 					bios32_entry);
- 			bios32_indirect.address = bios32_entry + PAGE_OFFSET;
- 			set_bios_x();
-@@ -366,7 +368,7 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
- 	opt.size = PAGE_SIZE;
- 	opt.segment = __KERNEL_DS;
- 
--	DBG("PCI: Fetching IRQ routing table... ");
-+	pr_debug("Fetching IRQ routing table... ");
- 	__asm__("push %%es\n\t"
- 		"push %%ds\n\t"
- 		"pop  %%es\n\t"
-@@ -384,9 +386,9 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
- 		  "S" (&pci_indirect),
- 		  "m" (opt)
- 		: "memory");
--	DBG("OK  ret=%d, size=%d, map=%x\n", ret, opt.size, map);
-+	pr_debug("OK  ret=%d, size=%d, map=%x\n", ret, opt.size, map);
- 	if (ret & 0xff00)
--		printk(KERN_ERR "PCI: Error %02x when fetching IRQ routing table.\n", (ret >> 8) & 0xff);
-+		pr_err("Error %02x when fetching IRQ routing table.\n", (ret >> 8) & 0xff);
- 	else if (opt.size) {
- 		rt = kmalloc(sizeof(struct irq_routing_table) + opt.size, GFP_KERNEL);
- 		if (rt) {
-@@ -394,7 +396,7 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
- 			rt->size = opt.size + sizeof(struct irq_routing_table);
- 			rt->exclusive_irqs = map;
- 			memcpy(rt->slots, (void *) page, opt.size);
--			printk(KERN_INFO "PCI: Using BIOS Interrupt Routing Table\n");
-+			pr_info("Using BIOS Interrupt Routing Table\n");
- 		}
- 	}
- 	free_page(page);
--- 
-2.22.1
+I don=E2=80=99t suppose one of you riscv folks would like to contribute risc=
+v support to virtme?  virtme-run =E2=80=94arch=3Driscv would be quite nice, a=
+nd the total patch should be just a couple lines.  Unfortunately, it helps a=
+ lot to understand the subtleties of booting the architecture to write those=
+ couple lines :)
 
