@@ -2,87 +2,231 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A5BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80C1C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8CB2339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:04:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="qb/E47jX"
+	by mail.kernel.org (Postfix) with ESMTP id A41BC2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:06:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567033572;
+	bh=VevFdTmrneb97bTzBwEt+HTJ9lyjsz1bagyRpaTTyyk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=sb3SvFtYb8ptJu2a6sleNH14Lx946+M3UBYiBySTS0RFGFaz+D59vjIzoP8F3zAwi
+	 SIX8j9PehiMKdQtW38RYmtpGKbyJ8EQnQWrQDQBKzdtP5azoAQ81pwG8IY2lpO725X
+	 V5ZHjqhgJnHKykmnvdjJYgwZvVujUf7lhUJvWZLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfH1XEx (ORCPT
+        id S1727075AbfH1XGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 19:04:53 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41221 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfH1XEw (ORCPT
+        Wed, 28 Aug 2019 19:06:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:65492 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726400AbfH1XGL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 19:04:52 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w5so1801230edl.8
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 16:04:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=Q7JSnutSKY6xFT4D0TS+NhWVJ0m3aop0mXkuXZwQ1WQ=;
-        b=qb/E47jXOQPuSvEFEgQZ7e41y//cnPauFgA7N4iBWYIFh6wHQFWfYFLNNfbQ4A+sb/
-         /qnFd2EB8mWvqw4vz7E//rOpCQ3J8x7zvsV/DMFXEWxYoTU6ItNXRO0108vKV2kENDnm
-         PpjkDlT2YtJbRTDKhSvJ3U0DqYWwfduFnp0wGBXxvtBMR3xuUQOEiJzP2XVES6qL+WVh
-         ktXbUmgNkTA+t/6QApnEGFEQQq+PkfIKy5urWRJqmlEO+36R3IehsZ3pJ5Mq35rAFzFr
-         vEgFYvHXzZhVXhP/w6b/yicN1Sju0q+zvBG02tORCEgOso/0Ijm9TXar209tRNN25BIs
-         IZUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=Q7JSnutSKY6xFT4D0TS+NhWVJ0m3aop0mXkuXZwQ1WQ=;
-        b=nX6ANc3mHI48Fo9JGNhuEzt3CZHrajx9bElmRHuhL2uIVbKRGZwab0K2OJAHW82djs
-         yGeBV7L6nDE8hpAi2T8CqjH+HhsYeSWmbedpYUZ1QtonjqPPF1U7RvhyOVvRKQy+ykZR
-         v7AhaMetiKV+QhHLIxN13IHlIZOHAr5iH5UaP4OAaB+eczieL2VVeii0/24EdWtSpD4a
-         SbWFhUcmimwnpEK5RUGy4QC3YLZ6wMnr1gAvjyv9HMMKUa94mLXqWrk2gBSDL+DIcP4Q
-         Rh52mEH6SX+NoCsbpRpx+/iIrGZ/Hd7BAmAbYUEWE+Nqak/IapTEs8L+Bq/SgfBoN2JX
-         dOqA==
-X-Gm-Message-State: APjAAAW41aNyMzMm/LW0V8snDFOywjf+qsX3S2AiK9rvL7zfCla6kL+Y
-        m/rlNX4PFmVdkxIILLDi/FBUFQ==
-X-Google-Smtp-Source: APXvYqzv+JrKNf2JDsSOceh0HfkjOXGNKBtr248ZuV0rxGOLR7awEnFCsvsCnef6NT1LwX6c05Rjjg==
-X-Received: by 2002:a17:906:5391:: with SMTP id g17mr5530333ejo.61.1567033491155;
-        Wed, 28 Aug 2019 16:04:51 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id d10sm102967ejd.86.2019.08.28.16.04.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 16:04:50 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 16:04:29 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH net-next 09/15] net: sgi: ioc3-eth: split ring
- cleaning/freeing and allocation
-Message-ID: <20190828160429.6f9abb4e@cakuba.netronome.com>
-In-Reply-To: <20190828140315.17048-10-tbogendoerfer@suse.de>
-References: <20190828140315.17048-1-tbogendoerfer@suse.de>
-        <20190828140315.17048-10-tbogendoerfer@suse.de>
-Organization: Netronome Systems, Ltd.
+        Wed, 28 Aug 2019 19:06:11 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SMl944023628;
+        Wed, 28 Aug 2019 19:05:38 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2unys2dtca-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 19:05:38 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7SMlAfE023744;
+        Wed, 28 Aug 2019 19:05:38 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2unys2dtc2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 19:05:38 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7SMj31Q010154;
+        Wed, 28 Aug 2019 23:05:36 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01wdc.us.ibm.com with ESMTP id 2ujvv6grqh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 23:05:36 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7SN5ap750987338
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 28 Aug 2019 23:05:36 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D51EEB2066;
+        Wed, 28 Aug 2019 23:05:36 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A56DFB2064;
+        Wed, 28 Aug 2019 23:05:36 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 28 Aug 2019 23:05:36 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 9051516C65B8; Wed, 28 Aug 2019 16:05:38 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 16:05:38 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] rcu/dyntick-idle: Add better tracing
+Message-ID: <20190828230538.GD26530@linux.ibm.com>
+Reply-To: paulmck@kernel.org
+References: <20190828001146.GM26530@linux.ibm.com>
+ <20190828182613.37715-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828182613.37715-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908280218
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 28 Aug 2019 16:03:08 +0200, Thomas Bogendoerfer wrote:
-> Do tx ring cleaning and freeing of rx buffers, when chip is shutdown and
-> allocate buffers before bringing chip up.
+On Wed, Aug 28, 2019 at 02:26:13PM -0400, Joel Fernandes (Google) wrote:
+> The dyntick-idle traces are a bit confusing. This patch makes it simpler
+> and adds some missing cases such as EQS-enter because user vs idle mode.
 > 
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> Following are the changes:
+> (1) Add a new context field to trace_rcu_dyntick tracepoint. This
+>     context field can be "USER", "IDLE" or "IRQ".
+> 
+> (2) Remove the "++=" and "--=" strings and replace them with
+>    "StillNonIdle". This is much easier on the eyes, and the -- and ++
+>    are easily apparent in the dynticks_nesting counters we are printing
+>    anyway.
+> 
+> This patch is based on the previous patches to simplify rcu_dyntick
+> counters [1] and with these traces, I have verified the counters are
+> working properly.
+> 
+> [1]
+> Link: https://lore.kernel.org/patchwork/patch/1120021/
+> Link: https://lore.kernel.org/patchwork/patch/1120022/
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Ah, so you are moving the alloc/free to open/close, that's good.
+Looks plausible to me.
+
+							Thanx, Paul
+
+> ---
+>  include/trace/events/rcu.h | 13 ++++++++-----
+>  kernel/rcu/tree.c          | 17 +++++++++++------
+>  2 files changed, 19 insertions(+), 11 deletions(-)
+> 
+> diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+> index 66122602bd08..474c1f7e7104 100644
+> --- a/include/trace/events/rcu.h
+> +++ b/include/trace/events/rcu.h
+> @@ -449,12 +449,14 @@ TRACE_EVENT_RCU(rcu_fqs,
+>   */
+>  TRACE_EVENT_RCU(rcu_dyntick,
+>  
+> -	TP_PROTO(const char *polarity, long oldnesting, long newnesting, atomic_t dynticks),
+> +	TP_PROTO(const char *polarity, const char *context, long oldnesting,
+> +		 long newnesting, atomic_t dynticks),
+>  
+> -	TP_ARGS(polarity, oldnesting, newnesting, dynticks),
+> +	TP_ARGS(polarity, context, oldnesting, newnesting, dynticks),
+>  
+>  	TP_STRUCT__entry(
+>  		__field(const char *, polarity)
+> +		__field(const char *, context)
+>  		__field(long, oldnesting)
+>  		__field(long, newnesting)
+>  		__field(int, dynticks)
+> @@ -462,14 +464,15 @@ TRACE_EVENT_RCU(rcu_dyntick,
+>  
+>  	TP_fast_assign(
+>  		__entry->polarity = polarity;
+> +		__entry->context = context;
+>  		__entry->oldnesting = oldnesting;
+>  		__entry->newnesting = newnesting;
+>  		__entry->dynticks = atomic_read(&dynticks);
+>  	),
+>  
+> -	TP_printk("%s %lx %lx %#3x", __entry->polarity,
+> -		  __entry->oldnesting, __entry->newnesting,
+> -		  __entry->dynticks & 0xfff)
+> +	TP_printk("%s %s %lx %lx %#3x", __entry->polarity,
+> +		__entry->context, __entry->oldnesting, __entry->newnesting,
+> +		__entry->dynticks & 0xfff)
+>  );
+>  
+>  /*
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 1465a3e406f8..1a65919ec800 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -570,7 +570,8 @@ static void rcu_eqs_enter(bool user)
+>  	}
+>  
+>  	lockdep_assert_irqs_disabled();
+> -	trace_rcu_dyntick(TPS("Start"), rdp->dynticks_nesting, 0, rdp->dynticks);
+> +	trace_rcu_dyntick(TPS("Start"), (user ? TPS("USER") : TPS("IDLE")),
+> +			  rdp->dynticks_nesting, 0, rdp->dynticks);
+>  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+>  	rdp = this_cpu_ptr(&rcu_data);
+>  	do_nocb_deferred_wakeup(rdp);
+> @@ -642,15 +643,17 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
+>  	 * leave it in non-RCU-idle state.
+>  	 */
+>  	if (rdp->dynticks_nesting != 1) {
+> -		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nesting,
+> -				  rdp->dynticks_nesting - 2, rdp->dynticks);
+> +		trace_rcu_dyntick(TPS("StillNonIdle"), TPS("IRQ"),
+> +				  rdp->dynticks_nesting, rdp->dynticks_nesting - 2,
+> +				  rdp->dynticks);
+>  		WRITE_ONCE(rdp->dynticks_nesting, /* No store tearing. */
+>  			   rdp->dynticks_nesting - 2);
+>  		return;
+>  	}
+>  
+>  	/* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
+> -	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nesting, 0, rdp->dynticks);
+> +	trace_rcu_dyntick(TPS("Start"), TPS("IRQ"), rdp->dynticks_nesting, 0,
+> +			  rdp->dynticks);
+>  	WRITE_ONCE(rdp->dynticks_nesting, 0); /* Avoid store tearing. */
+>  
+>  	if (irq)
+> @@ -733,7 +736,8 @@ static void rcu_eqs_exit(bool user)
+>  	rcu_dynticks_task_exit();
+>  	rcu_dynticks_eqs_exit();
+>  	rcu_cleanup_after_idle();
+> -	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, rdp->dynticks);
+> +	trace_rcu_dyntick(TPS("End"), (user ? TPS("USER") : TPS("IDLE")),
+> +			  rdp->dynticks_nesting, 1, rdp->dynticks);
+>  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+>  	WRITE_ONCE(rdp->dynticks_nesting, 1);
+>  
+> @@ -825,7 +829,8 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+>  		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+>  	}
+>  
+> -	trace_rcu_dyntick(incby == 1 ? TPS("Endirq") : TPS("++="),
+> +	trace_rcu_dyntick(incby == 1 ? TPS("End") : TPS("StillNonIdle"),
+> +			  TPS("IRQ"),
+>  			  rdp->dynticks_nesting,
+>  			  rdp->dynticks_nesting + incby, rdp->dynticks);
+>  
+> -- 
+> 2.23.0.187.g17f5b7556c-goog
+> 
