@@ -2,91 +2,93 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E609BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C38EC41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA0920644
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:31:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E5GgF7uE"
+	by mail.kernel.org (Postfix) with ESMTP id E311E20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:34:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfH1Qbd (ORCPT
+        id S1726561AbfH1Qei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:31:33 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35495 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfH1Qbd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:31:33 -0400
-Received: by mail-lj1-f193.google.com with SMTP id l14so169721lje.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 09:31:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NjXiz0jtJWGT4cEckFQPpVyw/lRnuMBErWmMi5AhrWA=;
-        b=E5GgF7uEiUS4O03g81yoi6j0NmHdf4h5a677oc0l/9oNnv0vPvwDHY9bBDT7sfZWMO
-         rtsogJ+CsbQsVUNcCCnRHsk9EWzhAL6ZAKvbAkIGd3LbnZ9GbTX5hpb5oa1NrfnQCDQD
-         85jxjR9VZDrJIS3b4zWx5d3/+VcTuqraAY6MfUm0HRhJ88NUTZw3xDXtM5agrv/wXgTK
-         4OEFhl9VwwKoRXdkm56/y0MiVOG/BysRAFp+oFrmld0FBfH7Wc6WzPLGLl/lz1dZz4pY
-         cQR2OdKQ1dpLW+E67rY2iNc+/jXps0kUscsilbRR/9V3g+yKEWUcVcl6Q4w3/v7MaUkX
-         iQqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NjXiz0jtJWGT4cEckFQPpVyw/lRnuMBErWmMi5AhrWA=;
-        b=sUOAC/JvjNv5YmwGWotUkvExmADcRFGfhoNAcPY9us6jnzDaWXYiKwqEXmireNDw8z
-         d5zLPnrIn6aFJA6ZA2RbQAQODLyUfpb6G0jxtr1bY2WNoTyhMwymvP6DLRvIVA3gUPG5
-         No0Pz8F9pIVCoPX2wrnYOP6obQ0AdXgfXmYDJhaBWPJxa5rL999Ilbwi4idLZAJLdPDq
-         HyAkvTaWGICSQX52+dcoM3PA06fvo3rVVB3hqAQ1qteP8QkjyTMifqMJLI5+clAQ4N+8
-         9oAg4ubvba367lHa8GZNGvc7G4ANPuk/uw3x4x1RE0UP7wdpdbI+CXpyRv0WZKDrvWtH
-         Bhgw==
-X-Gm-Message-State: APjAAAU2GY8gQXspJJa5Arc9ZlMwdpWkmsTc7sx/J5xffmP0w+lJSQ9K
-        QVYnD5f3eLTY/U7onMpkUtWcwxQ78YxtXoRuBG2m4w==
-X-Google-Smtp-Source: APXvYqxAHfxii1r8G4uA4TRksDr+gKgKoYBl4Hdl6wuwPpbFwpxiCpD0ZSA802wdhf0b6NWeu0VbqDNspGN9n84/Rjg=
-X-Received: by 2002:a2e:9f0f:: with SMTP id u15mr2559887ljk.54.1567009891738;
- Wed, 28 Aug 2019 09:31:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190724082508.27617-1-brgl@bgdev.pl> <CAMRc=Mex_Ricd+C4F7nGLmpBggO-hWwJDB6duX8kFpPEeaTDjQ@mail.gmail.com>
- <CAMRc=Mci4ncbDmns=0uL8hsAGz1Wvd5bgK4yxTF8QQQitXDv0g@mail.gmail.com>
- <CAMRc=McUEgm6yH7enwHuHxVTL41dmb5KAY_pxTmSr3vctCs2xg@mail.gmail.com> <CAMuHMdV3obGtQ7qohNedQNgpvZvyL9xjH0HUiBKD6b8Ou5F+XA@mail.gmail.com>
-In-Reply-To: <CAMuHMdV3obGtQ7qohNedQNgpvZvyL9xjH0HUiBKD6b8Ou5F+XA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 28 Aug 2019 18:31:19 +0200
-Message-ID: <CACRpkdbgZhgSvicq2XG0n2hiKA9K8VFmvCPn3W9oXgSLrZiw=w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] backlight: gpio: simplify the driver
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
+        Wed, 28 Aug 2019 12:34:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57772 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726395AbfH1Qeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 12:34:37 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 600B65859E;
+        Wed, 28 Aug 2019 16:34:37 +0000 (UTC)
+Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 04FF3194BE;
+        Wed, 28 Aug 2019 16:34:35 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 11:34:33 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Content-Type: text/plain; charset="UTF-8"
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: linux-next: Tree for Aug 27 (objtool)
+Message-ID: <20190828163433.4ltoxmtuujkqspar@treble>
+References: <20190827190526.6f27e763@canb.auug.org.au>
+ <6c42e32f-901d-be78-e69b-cb9ff8703932@infradead.org>
+ <20190827155911.ct2zzo2zhcrauf3z@treble>
+ <2e8b18a0-a09c-b67e-c99f-45066ab9d511@infradead.org>
+ <20190828155147.v6eowc7rr7upr7dr@treble>
+ <f354f4be-99c7-346f-c7c5-ac5ce8a72a16@infradead.org>
+ <20190828161331.kvikro257blxtzu5@treble>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190828161331.kvikro257blxtzu5@treble>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 28 Aug 2019 16:34:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 10:36 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
+On Wed, Aug 28, 2019 at 11:13:31AM -0500, Josh Poimboeuf wrote:
+> Turns out this patch does break something:
+> 
+>   arch/x86/xen/enlighten_pv.o: warning: objtool: xen_cpuid()+0x25: can't find jump dest instruction at .text+0x9c
+> 
+> I'll need to figure out a better way to whitelist that
+> XEN_EMULATE_PREFIX fake instruction thing.  I'll probably just teach
+> the objtool decoder about it.
 
-> CC the pour soul with the ecovec board.
+Hi Masami,
 
-With great power comes great responsibility ;)
+Is it possible for the kernel x86 decoder to recognize the
+XEN_EMULATE_PREFIX prefix?
 
-Yours,
-Linus Walleij
+        asm(XEN_EMULATE_PREFIX "cpuid"
+                : "=a" (*ax),
+                  "=b" (*bx),
+                  "=c" (*cx),
+                  "=d" (*dx)
+                : "0" (*ax), "2" (*cx));
+
+is disassembled to:
+
+      33:       0f 0b                   ud2
+      35:       78 65                   js     9c <xen_store_tr+0xc>
+      37:       6e                      outsb  %ds:(%rsi),(%dx)
+      38:       0f a2                   cpuid
+
+which confuses objtool.  Presumably that would confuse other users of
+the decoder as well.
+
+That's a highly unlikely sequence of instructions, maybe the kernel
+decoder should recognize it as a single instruction.
+
+-- 
+Josh
