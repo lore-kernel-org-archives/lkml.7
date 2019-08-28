@@ -2,102 +2,86 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85843C41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4572C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5819522CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:13:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="n79zycpJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UWWuF1/M"
+	by mail.kernel.org (Postfix) with ESMTP id 7F7F42339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfH1PN5 (ORCPT
+        id S1726569AbfH1POR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:13:57 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:58849 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726315AbfH1PN5 (ORCPT
+        Wed, 28 Aug 2019 11:14:17 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41108 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbfH1POR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:13:57 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id E93395E9;
-        Wed, 28 Aug 2019 11:13:55 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Wed, 28 Aug 2019 11:13:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=Trjj6uF82SKWktxH44/96I+xzA4
-        khHwrYd51jf6tLeQ=; b=n79zycpJC0zNjsbpq5W6O8wNJHvZOKi7mLDI4CoY18M
-        FLBymyzN37E5QxxFZ137o8r4HV++HeEkdj+Ap+MuK68DQRf+ufN5a7H4D0po6DmY
-        0ExI47xsvx7gzI6bkiRq3P8iW9Zn710GbyvlFPXlsZaNcmTH8Ck7eRFmPJqvHpco
-        lCJbav1IIZn2SUApKbWqhTKg1DpKmUx9oR7BmyChiESeiNL0cIX8ypoUvZOob+m/
-        5VnBK744b8u+/2FyFNG/4GPLrXW1rEDRXXtHFDKb5D/Dv7BxZgWFV7P7gAtpOkUt
-        v/IGbEeZmch1nJLymoQMqiHHJOYmYJzz9iBxd8RVN7Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Trjj6u
-        F82SKWktxH44/96I+xzA4khHwrYd51jf6tLeQ=; b=UWWuF1/MvWekwFyNC21lQw
-        LbPKjnIZ4yVlfY7tOigseC/bT9SyPSieABXT2zNjlGkvoUeVIns3RPziIa6AwCxT
-        DK99ohxqpdi1UHk0842JZ15uqdbrzp+5Gt+BkubNzIBtsuxPctOH6+836dU2+MRj
-        gKB/rBH32w7gmLX3/BwtlCCU//a4sCfib5GcNr8QazAAaCpz8ha1HxIo8pkGfWEY
-        Lx26eP4AuglCZfNkGkNvBPe6u62MMq7LerSjN9Q5+ySnaDZzFWiPMheZzfJRgLBM
-        yAHjH+kJS1jpE7mWvxktlZejOj+iOqLjnDRK5n5J1Su8IQBl9TpWkPUGV2ROvA2g
-        ==
-X-ME-Sender: <xms:M5pmXTa_p5trJRy77SXNvc6uxt-SSL_VBRl31rJLGnYoy-Nd9apIvQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeitddgkeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujggfsehttd
-    ertddtredvnecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhm
-    qeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeekfedrkeeirdekledrud
-    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
-    vehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:M5pmXZ-9kGzvlguARsULLr2B2-6353cSIVNX695RViZvQDIOogIKTQ>
-    <xmx:M5pmXVmhPA-0Bwsh6GeX58D7JB2GulgdTebddYjkNm-GvduZ-5L8Pg>
-    <xmx:M5pmXWYIhpUIgWzqS4W7FJD84v1joTleg7SGq4qAIB8L3EEX5Mgb5w>
-    <xmx:M5pmXShpOeUwo1KGiXQSEF9rCWouaJTG8Nm7Vo-GQTMthAZw7xXlaQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0FA69D60063;
-        Wed, 28 Aug 2019 11:13:54 -0400 (EDT)
-Date:   Wed, 28 Aug 2019 17:13:53 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Konstantin Ryabitsev <mricon@kernel.org>
-Cc:     StableKernel <stable@vger.kernel.org>,
-        LinuxKernel <linux-kernel@vger.kernel.org>
-Subject: Re: Latest kernel version no NOT reflecting on kernel.org
-Message-ID: <20190828151353.GA9673@kroah.com>
-References: <20190828135750.GA5841@Gentoo>
+        Wed, 28 Aug 2019 11:14:17 -0400
+Received: by mail-qk1-f195.google.com with SMTP id g17so44596qkk.8
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 08:14:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QQzVgkGastCCZFbFZ7g9sQmtqjgZSo1pYtQrF34ax5w=;
+        b=eyaRKuChPKUi+LBTUrprs6OthuFSyH44lX507bHnP3bS6LkI7bElz3L2jSYUnP/wdz
+         2UAg+c+r3vW/ZJGDXy8adcAubQp1/KPzNoluZRFXVflJUqd7nk8mJpKrLmITAeW20f1F
+         EGdDlAl2chxu7xEOyhZLu+6P8rAVF4ZCs+pvjPMe3z3FKseBl+CPLeyXdaJ3LtMCSwDc
+         0kvGFodXGLUSa/80XhyrHhWYssoluZ8yEZrBS/KUjKpReB7Aos9d7Ph6DUytCIGZ1iBo
+         31IUXTczBhpafaYSmm/KWBseIHDPC0RKNwaZPtDTt/tv+Cwtyc6pZCCAWE2/vcs+b3xD
+         cl8g==
+X-Gm-Message-State: APjAAAVCJnOWz+ZoKUqh4Y7qjsuiqEoJeRn/XZfeMxtRKr826kdud8D1
+        kFuUKPrx1Ns0+AF2lvucgtvtGi+LJp6r8SFk7kE=
+X-Google-Smtp-Source: APXvYqxq6dUQwoGZKS2NIPsvwPigFzVtSoqu+iRQ6eqrGgn5DZd+LVhTJIUy6Ir7QVrBMtq4t0rU/tb49Q0lPh6tNHM=
+X-Received: by 2002:a37:4fcf:: with SMTP id d198mr4454519qkb.394.1567005255266;
+ Wed, 28 Aug 2019 08:14:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828135750.GA5841@Gentoo>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <CAK8P3a3G=GCpLtNztuoLR4BuugAB=zpa_Jrz5BSft6Yj-nok1g@mail.gmail.com>
+ <20190827145102.p7lmkpytf3mngxbj@treble> <CAHFW8PRsmmCR6TWoXpQ9gyTA7azX9YOerPErCMggcQX-=fAqng@mail.gmail.com>
+ <CAK8P3a2TeaMc_tWzzjuqO-eQjZwJdpbR1yH8yzSQbbVKdWCwSg@mail.gmail.com>
+ <20190827192255.wbyn732llzckmqmq@treble> <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
+ <CAKwvOdnD1mEd-G9sWBtnzfe9oGTeZYws6zNJA7opS69DN08jPg@mail.gmail.com> <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
+In-Reply-To: <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 28 Aug 2019 17:13:59 +0200
+Message-ID: <CAK8P3a0bY9QfamCveE3P4H+Nrs1e6CTqWVgiY+MCd9hJmgMQZg@mail.gmail.com>
+Subject: Re: objtool warning "uses BP as a scratch register" with clang-9
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 07:27:53PM +0530, Bhaskar Chowdhury wrote:
-> Am I the only one, who is not seeing it getting reflected on
-> kernel.org???
-> 
-> Well, I have tried it 2 different browsers.....cleared caches several
-> times(heck) .....3 different devices .....and importantly 3 different
-> networks.
-> 
-> Wondering!
+On Wed, Aug 28, 2019 at 11:00 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tue, Aug 27, 2019 at 11:22 PM 'Nick Desaulniers' via Clang Built Linux <clang-built-linux@googlegroups.com> wrote:
+I figured this one out as well:
 
-Adding Konstantin.
+> http://paste.ubuntu.com/p/XjdDsypRxX/
+> 0x5BA1B7A1:arch/x86/ia32/ia32_signal.o: warning: objtool:
+> ia32_setup_rt_frame()+0x238: call to memset() with UACCESS enabled
+> 0x5BA1B7A1:arch/x86/kernel/signal.o: warning: objtool:
+> __setup_rt_frame()+0x5b8: call to memset() with UACCESS enabled
 
-I think there's a way to see which cdn mirror you are hitting when you
-ask for "www.kernel.org".  Konstantin, any hints as to see if maybe one
-of the mirrors is out of sync?
+When CONFIG_KASAN is set, clang decides to use memset() to set
+the first two struct members in this function:
 
-thanks,
+ static inline void sas_ss_reset(struct task_struct *p)
+ {
+        p->sas_ss_sp = 0;
+        p->sas_ss_size = 0;
+        p->sas_ss_flags = SS_DISABLE;
+ }
 
-greg k-h
+and that is called from save_altstack_ex(). Adding a barrier() after
+the sas_ss_sp() works around the issue, but is certainly not the
+best solution. Any other ideas?
+
+       Arnd
