@@ -2,77 +2,108 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0454C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 05:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A4EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 05:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D964214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 05:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C1F217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 05:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbfH1FIm (ORCPT
+        id S1726154AbfH1FVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 01:08:42 -0400
-Received: from baldur.buserror.net ([165.227.176.147]:49262 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfH1FIm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 01:08:42 -0400
-Received: from [2601:449:8400:7293:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1i2qCA-0007Ui-Om; Wed, 28 Aug 2019 00:08:35 -0500
-Message-ID: <827cc152757906a0ebc04bbe56cdf44683721eb4.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
-        yebin10@huawei.com, thunder.leizhen@huawei.com,
-        jingxiangfeng@huawei.com, fanchengyang@huawei.com,
-        zhaohongjiang@huawei.com, Jason Yan <yanaijie@huawei.com>,
-        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
-        christophe.leroy@c-s.fr, benh@kernel.crashing.org,
-        paulus@samba.org, npiggin@gmail.com, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com
-Date:   Wed, 28 Aug 2019 00:08:33 -0500
-In-Reply-To: <878srf4cjk.fsf@concordia.ellerman.id.au>
-References: <20190809100800.5426-1-yanaijie@huawei.com>
-         <ed96199d-715c-3f1c-39db-10a569ba6601@huawei.com>
-         <529fd908-42d6-f96f-daa2-9010f3035879@huawei.com>
-         <878srf4cjk.fsf@concordia.ellerman.id.au>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2601:449:8400:7293:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: mpe@ellerman.id.au, linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com, yebin10@huawei.com, thunder.leizhen@huawei.com, jingxiangfeng@huawei.com, fanchengyang@huawei.com, zhaohongjiang@huawei.com, yanaijie@huawei.com, linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com, christophe.leroy@c-s.fr, benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com, keescook@chromium.org, kernel-hardening@lists.openwall.com
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH v6 00/12] implement KASLR for powerpc/fsl_booke/32
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
+        Wed, 28 Aug 2019 01:21:24 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:41612 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726052AbfH1FVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 01:21:24 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D581C200274;
+        Wed, 28 Aug 2019 07:21:21 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 595BD2001A9;
+        Wed, 28 Aug 2019 07:21:16 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 65E74402C0;
+        Wed, 28 Aug 2019 13:21:09 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: fsl_ssi: Fix clock control issue in master mode
+Date:   Wed, 28 Aug 2019 13:20:17 -0400
+Message-Id: <1567012817-12625-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-27 at 11:33 +1000, Michael Ellerman wrote:
-> Jason Yan <yanaijie@huawei.com> writes:
-> > A polite ping :)
-> > 
-> > What else should I do now?
-> 
-> That's a good question.
-> 
-> Scott, are you still maintaining FSL bits, 
+The test case is
+arecord -Dhw:0 -d 10 -f S16_LE -r 48000 -c 2 temp.wav &
+aplay -Dhw:0 -d 30 -f S16_LE -r 48000 -c 2 test.wav
 
-Sort of... now that it's become very low volume, it's easy to forget when
-something does show up (or miss it if I'm not CCed).  It'd probably help if I
-were to just ack patches instead of thinking "I'll do a pull request for this
-later" when it's just one or two patches per cycle.
+There will be error after end of arecord:
+aplay: pcm_write:2051: write error: Input/output error
 
--Scott
+Capture and Playback work in parallel in master mode, one
+substream stops, the other substream is impacted, the
+reason is that clock is disabled wrongly.
 
+The clock's reference count is not increased when second
+substream starts, the hw_param() function returns in the
+beginning because first substream is enabled, then in end
+of first substream, the hw_free() disables the clock.
+
+This patch is to move the clock enablement to the place
+before checking of the device enablement in hw_param().
+
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/soc/fsl/fsl_ssi.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
+index b0a6fead1a6a..537dc69256f0 100644
+--- a/sound/soc/fsl/fsl_ssi.c
++++ b/sound/soc/fsl/fsl_ssi.c
+@@ -799,15 +799,6 @@ static int fsl_ssi_hw_params(struct snd_pcm_substream *substream,
+ 	u32 wl = SSI_SxCCR_WL(sample_size);
+ 	int ret;
+ 
+-	/*
+-	 * SSI is properly configured if it is enabled and running in
+-	 * the synchronous mode; Note that AC97 mode is an exception
+-	 * that should set separate configurations for STCCR and SRCCR
+-	 * despite running in the synchronous mode.
+-	 */
+-	if (ssi->streams && ssi->synchronous)
+-		return 0;
+-
+ 	if (fsl_ssi_is_i2s_master(ssi)) {
+ 		ret = fsl_ssi_set_bclk(substream, dai, hw_params);
+ 		if (ret)
+@@ -823,6 +814,15 @@ static int fsl_ssi_hw_params(struct snd_pcm_substream *substream,
+ 		}
+ 	}
+ 
++	/*
++	 * SSI is properly configured if it is enabled and running in
++	 * the synchronous mode; Note that AC97 mode is an exception
++	 * that should set separate configurations for STCCR and SRCCR
++	 * despite running in the synchronous mode.
++	 */
++	if (ssi->streams && ssi->synchronous)
++		return 0;
++
+ 	if (!fsl_ssi_is_ac97(ssi)) {
+ 		/*
+ 		 * Keep the ssi->i2s_net intact while having a local variable
+-- 
+2.21.0
 
