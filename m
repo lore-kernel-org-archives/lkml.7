@@ -2,174 +2,596 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D0FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CB1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 708F820828
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:08:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566976131;
-	bh=CSJOaiEqxPXeIBy9J+uSal3FQ2K+71AZ3fojn1oDoag=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zgrIn8fgg/aDEgQ0FYJAWWRomuzYpaHha8MbBsdS/VLni8ZGDWABSrFYg7Zz38Vf8
-	 N5oxMoPztTeqy9/p6gE9IVA5/295gMbWN2NJOFqs1/Moa54b1BMsTbAEue1TiXIwu9
-	 aZoylOvHg+qFnijhaCTdThSnjhqhyMlKTClASJ/s=
+	by mail.kernel.org (Postfix) with ESMTP id EABA120828
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:10:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfH1HIu (ORCPT
+        id S1726410AbfH1HKQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 03:08:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58404 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726232AbfH1HIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:08:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5A944B06B;
-        Wed, 28 Aug 2019 07:08:47 +0000 (UTC)
-Date:   Wed, 28 Aug 2019 09:08:45 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Edward Chron <echron@arista.com>
-Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        David Rientjes <rientjes@google.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
-Subject: Re: [PATCH 00/10] OOM Debug print selection and additional
- information
-Message-ID: <20190828070845.GC7386@dhcp22.suse.cz>
-References: <20190826193638.6638-1-echron@arista.com>
- <1566909632.5576.14.camel@lca.pw>
- <CAM3twVQEMGWMQEC0dduri0JWt3gH6F2YsSqOmk55VQz+CZDVKg@mail.gmail.com>
- <79FC3DA1-47F0-4FFC-A92B-9A7EBCE3F15F@lca.pw>
- <CAM3twVSdxJaEpmWXu2m_F1MxFMB58C6=LWWCDYNn5yT3Ns+0sQ@mail.gmail.com>
- <2A1D8FFC-9E9E-4D86-9A0E-28F8263CC508@lca.pw>
- <CAM3twVR5TVuuZSLM2qRJYnkCEKVZmA3XDNREaB+wdKH2Ne9vVA@mail.gmail.com>
+        Wed, 28 Aug 2019 03:10:16 -0400
+Received: from mga09.intel.com ([134.134.136.24]:22506 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbfH1HKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 03:10:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 00:10:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
+   d="scan'208";a="205252993"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Aug 2019 00:10:14 -0700
+Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 28 Aug 2019 00:10:13 -0700
+Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
+ FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 28 Aug 2019 00:10:13 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.112]) by
+ shsmsx102.ccr.corp.intel.com ([169.254.2.19]) with mapi id 14.03.0439.000;
+ Wed, 28 Aug 2019 15:10:11 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     "Zhang, Tina" <tina.zhang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Yuan, Hang" <hang.yuan@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "kraxel@redhat.com" <kraxel@redhat.com>,
+        "Lu, Kechen" <kechen.lu@intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>
+Subject: RE: [PATCH v5 4/6] drm/i915/gvt: Deliver vGPU refresh event to
+ userspace
+Thread-Topic: [PATCH v5 4/6] drm/i915/gvt: Deliver vGPU refresh event to
+ userspace
+Thread-Index: AQHVU9tfzCY9QQBz3EewK+cNB97iuqcMmYuAgANAiDD//9RcAIAAhutQ
+Date:   Wed, 28 Aug 2019 07:10:10 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D54E299@SHSMSX104.ccr.corp.intel.com>
+References: <20190816023528.30210-1-tina.zhang@intel.com>
+ <20190816023528.30210-5-tina.zhang@intel.com>
+ <20190826075553.GC29455@zhen-hp.sh.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D54DF95@SHSMSX104.ccr.corp.intel.com>
+ <237F54289DF84E4997F34151298ABEBC877030A9@SHSMSX101.ccr.corp.intel.com>
+In-Reply-To: <237F54289DF84E4997F34151298ABEBC877030A9@SHSMSX101.ccr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYTNiMDgzY2YtOWM2MC00OWRmLWFlYTgtOTc2MWFjOGRmYmM1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTXg1UGJCdU5xVm00aFV1MUNOWXlcL3RlXC81ZGFvRDVkQTZvYm92RDl0N2J3QzhLanhpa1AyM0tZMmVyYU1PMlo5In0=
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM3twVR5TVuuZSLM2qRJYnkCEKVZmA3XDNREaB+wdKH2Ne9vVA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 27-08-19 19:47:22, Edward Chron wrote:
-> On Tue, Aug 27, 2019 at 6:32 PM Qian Cai <cai@lca.pw> wrote:
-> >
-> >
-> >
-> > > On Aug 27, 2019, at 9:13 PM, Edward Chron <echron@arista.com> wrote:
-> > >
-> > > On Tue, Aug 27, 2019 at 5:50 PM Qian Cai <cai@lca.pw> wrote:
-> > >>
-> > >>
-> > >>
-> > >>> On Aug 27, 2019, at 8:23 PM, Edward Chron <echron@arista.com> wrote:
-> > >>>
-> > >>>
-> > >>>
-> > >>> On Tue, Aug 27, 2019 at 5:40 AM Qian Cai <cai@lca.pw> wrote:
-> > >>> On Mon, 2019-08-26 at 12:36 -0700, Edward Chron wrote:
-> > >>>> This patch series provides code that works as a debug option through
-> > >>>> debugfs to provide additional controls to limit how much information
-> > >>>> gets printed when an OOM event occurs and or optionally print additional
-> > >>>> information about slab usage, vmalloc allocations, user process memory
-> > >>>> usage, the number of processes / tasks and some summary information
-> > >>>> about these tasks (number runable, i/o wait), system information
-> > >>>> (#CPUs, Kernel Version and other useful state of the system),
-> > >>>> ARP and ND Cache entry information.
-> > >>>>
-> > >>>> Linux OOM can optionally provide a lot of information, what's missing?
-> > >>>> ----------------------------------------------------------------------
-> > >>>> Linux provides a variety of detailed information when an OOM event occurs
-> > >>>> but has limited options to control how much output is produced. The
-> > >>>> system related information is produced unconditionally and limited per
-> > >>>> user process information is produced as a default enabled option. The
-> > >>>> per user process information may be disabled.
-> > >>>>
-> > >>>> Slab usage information was recently added and is output only if slab
-> > >>>> usage exceeds user memory usage.
-> > >>>>
-> > >>>> Many OOM events are due to user application memory usage sometimes in
-> > >>>> combination with the use of kernel resource usage that exceeds what is
-> > >>>> expected memory usage. Detailed information about how memory was being
-> > >>>> used when the event occurred may be required to identify the root cause
-> > >>>> of the OOM event.
-> > >>>>
-> > >>>> However, some environments are very large and printing all of the
-> > >>>> information about processes, slabs and or vmalloc allocations may
-> > >>>> not be feasible. For other environments printing as much information
-> > >>>> about these as possible may be needed to root cause OOM events.
-> > >>>>
-> > >>>
-> > >>> For more in-depth analysis of OOM events, people could use kdump to save a
-> > >>> vmcore by setting "panic_on_oom", and then use the crash utility to analysis the
-> > >>> vmcore which contains pretty much all the information you need.
-> > >>>
-> > >>> Certainly, this is the ideal. A full system dump would give you the maximum amount of
-> > >>> information.
-> > >>>
-> > >>> Unfortunately some environments may lack space to store the dump,
-> > >>
-> > >> Kdump usually also support dumping to a remote target via NFS, SSH etc
-> > >>
-> > >>> let alone the time to dump the storage contents and restart the system. Some
-> > >>
-> > >> There is also “makedumpfile” that could compress and filter unwanted memory to reduce
-> > >> the vmcore size and speed up the dumping process by utilizing multi-threads.
-> > >>
-> > >>> systems can take many minutes to fully boot up, to reset and reinitialize all the
-> > >>> devices. So unfortunately this is not always an option, and we need an OOM Report.
-> > >>
-> > >> I am not sure how the system needs some minutes to reboot would be relevant  for the
-> > >> discussion here. The idea is to save a vmcore and it can be analyzed offline even on
-> > >> another system as long as it having a matching “vmlinux.".
-> > >>
-> > >>
-> > >
-> > > If selecting a dump on an OOM event doesn't reboot the system and if
-> > > it runs fast enough such
-> > > that it doesn't slow processing enough to appreciably effect the
-> > > system's responsiveness then
-> > > then it would be ideal solution. For some it would be over kill but
-> > > since it is an option it is a
-> > > choice to consider or not.
-> >
-> > It sounds like you are looking for more of this,
+> From: Zhang, Tina
+> Sent: Wednesday, August 28, 2019 2:59 PM
 > 
-> If you want to supplement the OOM Report and keep the information
-> together than you could use EBPF to do that. If that really is the
-> preference it might make sense to put the entire report as an EBPF
-> script than you can modify the script however you choose. That would
-> be very flexible. You can change your configuration on the fly. As
-> long as it has access to everything you need it should work.
+> > -----Original Message-----
+> > From: Tian, Kevin
+> > Sent: Wednesday, August 28, 2019 9:50 AM
+> > To: Zhenyu Wang <zhenyuw@linux.intel.com>; Zhang, Tina
+> > <tina.zhang@intel.com>
+> > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org; Yuan, Hang
+> > <hang.yuan@intel.com>; alex.williamson@redhat.com; kraxel@redhat.com;
+> > Lu, Kechen <kechen.lu@intel.com>; intel-gvt-dev@lists.freedesktop.org; Lv,
+> > Zhiyuan <zhiyuan.lv@intel.com>
+> > Subject: RE: [PATCH v5 4/6] drm/i915/gvt: Deliver vGPU refresh event to
+> > userspace
+> >
+> > > From: Zhenyu Wang
+> > > Sent: Monday, August 26, 2019 3:56 PM
+> > >
+> > > On 2019.08.16 10:35:26 +0800, Tina Zhang wrote:
+> > > > Deliver the display refresh events to the user land. Userspace can
+> > > > use the irq mask/unmask mechanism to disable or enable the event
+> > delivery.
+> > > >
+> > > > As we know, delivering refresh event at each vblank safely avoids
+> > > > tearing and unexpected event overwhelming, but there are still
+> > > > spaces to optimize.
+> >
+> > can you move optimization to another patch?
+> OK. I'll try.
+> >
+> > > >
+> > > > For handling the normal case, deliver the page flip refresh event at
+> > > > each vblank, in other words, bounded by vblanks. Skipping some
+> > > > events bring performance enhancement while not hurting user
+> > experience.
+> >
+> > what is the normal case? double buffer? which events are skipped in such
+> > scenario?
+> Here normal case means >= 2 buffers. In this situation, we have to skip the
+> redundant page flip events between two vblanks and notify user space with
+> one display refresh event (i.e. turn those page flip operations between two
+> vblanks into one display refresh event).
 > 
-> Michal would know what direction OOM is headed and if he thinks that fits with
-> where things are headed.
 
-It seems we have landed in the similar thinking here. As mentioned in my
-earlier email in this thread I can see the extensibility to be achieved
-by eBPF. Essentially we would have a base form of the oom report like
-now and scripts would then hook in there to provide whatever a specific
-usecase needs. My practical experience with eBPF is close to zero so I
-have no idea how that would actually work out though.
+"have to" refers to something mandatory, instead of performance 
+enhancement.
 
-[...]
-> For production systems installing and updating EBPF scripts may someday
-> be very common, but I wonder how data center managers feel about it now?
-> Developers are very excited about it and it is a very powerful tool but can I
-> get permission to add or replace an existing EBPF on production systems?
+> >
+> > > >
+> > > > For single framebuffer case, deliver the refresh events to userspace
+> > > > at all vblanks. This heuristic at each vblank leverages
+> > > > pageflip_count
+> >
+> > at all vblanks? later words said the other way i.e. delivering events only
+> after
+> > the threshold is exceeded. Please be consistent in what you try to explain
+> > here.
+> 
+> Actually, there're two steps:
+> 1) single framebuffer case recognition
+> The heuristic needs several vblanks to see if vgpu is working in the single front
+> buffer mode.
+> 
 
-I am not sure I understand. There must be somebody trusted to take care
-of systems, right?
--- 
-Michal Hocko
-SUSE Labs
+
+what is the difference between "single framebuffer" and "single front buffer"?
+
+> 2) deliver the display refresh event at all vblanks.
+> If vgpu is working in single front buffer mode, the display refresh event will be
+> sent at all vblanks.
+
+I didn't get it. why is it OK to not deliver events before you identify the
+single framebuffer mode, while not OK to do so after the identification?
+If the definition of such mode can tolerate misses of vblank events, then
+you don't need deliver at every vblank. Otherwise, the detection itself
+already breaks the guest assumption.
+
+> 
+> >
+> > > > incresements to determine if there is no page flip happens after a
+> > > > certain period and so that the case is regarded as single framebuffer one.
+> > > > Although this heuristic makes incorrect decision sometimes and it
+> > > > depends
+> >
+> > why may the heuristic make incorrect decision? under what condition?
+> 
+> E.g. when guest window manager is waiting for user input and there're no
+> window update requests from the apps in guest. In situation, although guest
+> doesn't work in single front buffer mode, the heuristic will consider it does
+> and send the display refresh event at all vblanks. Ideally, in this situation, as
+> guest window manager is working in multi-buffer mode, gvt-g should only
+> send the refresh event when page flip happens. However, it seems there's no
+> simple way for gvt-g to tell this case and the real single front buffer case apart.
+
+I think you need some background to explain the vblank requirement in
+single vs. multi-buffer mode, before talking about the actual optimization.
+It's not clear to me so far.
+
+> 
+> >
+> > > > on guest behavior, for example, when no cursor movements happen,
+> the
+> > > > user experience does not harm and front buffer is still correctly acquired.
+> > > > Meanwhile, in actual single framebuffer case, the user experience is
+> > > > enhanced compared with page flip events only.
+> >
+> > 'actual' vs. what? a 'faked' single framebuffer case?
+> 
+> I think the 'actual' here means vgpu does work in the single front buffer mode.
+
+then just remove 'actual'
+
+> 
+> >
+> > > >
+> > > > Addtionally, to mitigate the events delivering footprints, one
+> > > > eventfd and
+> > > > 8 byte eventfd counter partition are leveraged.
+> >
+> > footprint? I guess you meant reducing the frequency of delivered events...
+> 
+> Exactly. Thanks.
+> 
+
+there are other comments embedded in the code. You may overlook them.
+
+> BR,
+> Tina
+> >
+> > > >
+> > > > v2:
+> > > > - Support vfio_irq_info_cap_display_plane_events. (Tina)
+> > > >
+> > > > Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+> > > > Signed-off-by: Kechen Lu <kechen.lu@intel.com>
+> > > > ---
+> > > >  drivers/gpu/drm/i915/gvt/display.c |  22 ++++
+> > > >  drivers/gpu/drm/i915/gvt/gvt.h     |   2 +
+> > > >  drivers/gpu/drm/i915/gvt/kvmgt.c   | 159
+> > +++++++++++++++++++++++++++-
+> > > -
+> > > >  3 files changed, 174 insertions(+), 9 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/i915/gvt/display.c
+> > > b/drivers/gpu/drm/i915/gvt/display.c
+> > > > index 1a0a4ae4826e..616285e4a014 100644
+> > > > --- a/drivers/gpu/drm/i915/gvt/display.c
+> > > > +++ b/drivers/gpu/drm/i915/gvt/display.c
+> > > > @@ -34,6 +34,8 @@
+> > > >
+> > > >  #include "i915_drv.h"
+> > > >  #include "gvt.h"
+> > > > +#include <uapi/linux/vfio.h>
+> > > > +#include <drm/drm_plane.h>
+> > > >
+> > > >  static int get_edp_pipe(struct intel_vgpu *vgpu)  { @@ -387,6
+> > > > +389,8 @@ void intel_gvt_check_vblank_emulation(struct
+> > > intel_gvt *gvt)
+> > > >  	mutex_unlock(&gvt->lock);
+> > > >  }
+> > > >
+> > > > +#define PAGEFLIP_DELAY_THR 10
+> > > > +
+> > > >  static void emulate_vblank_on_pipe(struct intel_vgpu *vgpu, int
+> > > > pipe)  {
+> > > >  	struct drm_i915_private *dev_priv = vgpu->gvt->dev_priv; @@ -
+> > 396,7
+> > > > +400,10 @@ static void emulate_vblank_on_pipe(struct
+> > > intel_vgpu *vgpu, int pipe)
+> > > >  		[PIPE_B] = PIPE_B_VBLANK,
+> > > >  		[PIPE_C] = PIPE_C_VBLANK,
+> > > >  	};
+> > > > +	int pri_flip_event = SKL_FLIP_EVENT(pipe, PLANE_PRIMARY);
+> > > >  	int event;
+> > > > +	u64 eventfd_signal_val = 0;
+> > > > +	static int no_pageflip_count;
+> > > >
+> > > >  	if (pipe < PIPE_A || pipe > PIPE_C)
+> > > >  		return;
+> > > > @@ -407,11 +414,26 @@ static void emulate_vblank_on_pipe(struct
+> > > intel_vgpu *vgpu, int pipe)
+> > > >  		if (!pipe_is_enabled(vgpu, pipe))
+> > > >  			continue;
+> > > >
+> > > > +		if (event == pri_flip_event)
+> > > > +			eventfd_signal_val |=
+> > > DISPLAY_PRI_REFRESH_EVENT_VAL;
+> > > > +
+> > > >  		intel_vgpu_trigger_virtual_event(vgpu, event);
+> > > >  	}
+> > > >
+> > > > +	if (eventfd_signal_val)
+> > > > +		no_pageflip_count = 0;
+> > > > +	else if (!eventfd_signal_val && no_pageflip_count >
+> > > PAGEFLIP_DELAY_THR)
+> > >
+> > > extra !eventfd_signal_val
+> > >
+> > > > +		eventfd_signal_val |= DISPLAY_PRI_REFRESH_EVENT_VAL;
+> >
+> > do you need reset the count to zero here?
+> >
+> > > > +	else
+> > > > +		no_pageflip_count++;
+> > >
+> > > no_pageflip_count should be per-vgpu instead of static.
+> > >
+> > > > +
+> > > > +	if (vgpu->vdev.vblank_trigger && !vgpu->vdev.display_event_mask
+> > > &&
+> > > > +		eventfd_signal_val)
+> >
+> > is this mask per vGPU or per plane? If the latter, you need check specific bit
+> > here.
+> >
+> > > > +		eventfd_signal(vgpu->vdev.vblank_trigger,
+> > > eventfd_signal_val);
+> > > > +
+> > > >  	if (pipe_is_enabled(vgpu, pipe)) {
+> > > >  		vgpu_vreg_t(vgpu, PIPE_FRMCOUNT_G4X(pipe))++;
+> > > > +
+> > >
+> > > extra line
+> > >
+> > > >  		intel_vgpu_trigger_virtual_event(vgpu, vblank_event[pipe]);
+> > > >  	}
+> > > >  }
+> > > > diff --git a/drivers/gpu/drm/i915/gvt/gvt.h
+> > > b/drivers/gpu/drm/i915/gvt/gvt.h
+> > > > index cd29ea28d7ed..6c8ed030c30b 100644
+> > > > --- a/drivers/gpu/drm/i915/gvt/gvt.h
+> > > > +++ b/drivers/gpu/drm/i915/gvt/gvt.h
+> > > > @@ -205,6 +205,8 @@ struct intel_vgpu {
+> > > >  		int num_irqs;
+> > > >  		struct eventfd_ctx *intx_trigger;
+> > > >  		struct eventfd_ctx *msi_trigger;
+> > > > +		struct eventfd_ctx *vblank_trigger;
+> > > > +		u32 display_event_mask;
+> > > >
+> > > >  		/*
+> > > >  		 * Two caches are used to avoid mapping duplicated pages
+> > > (eg.
+> > > > diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > > b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > > > index fd1633342e53..9ace1f4ff9eb 100644
+> > > > --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > > > +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > > > @@ -1250,6 +1250,8 @@ static int intel_vgpu_get_irq_count(struct
+> > > intel_vgpu *vgpu, int type)
+> > > >  {
+> > > >  	if (type == VFIO_PCI_INTX_IRQ_INDEX || type ==
+> > > VFIO_PCI_MSI_IRQ_INDEX)
+> > > >  		return 1;
+> > > > +	else if (type < VFIO_PCI_NUM_IRQS + vgpu->vdev.num_irqs)
+> > > > +		return vgpu->vdev.irq[type - VFIO_PCI_NUM_IRQS].count;
+> > > >
+> > > >  	return 0;
+> > > >  }
+> > > > @@ -1297,7 +1299,60 @@ static int intel_vgpu_set_msi_trigger(struct
+> > > intel_vgpu *vgpu,
+> > > >  	return 0;
+> > > >  }
+> > > >
+> > > > -static int intel_vgpu_set_irqs(struct intel_vgpu *vgpu, u32 flags,
+> > > > +static int intel_vgu_set_display_irq_mask(struct intel_vgpu *vgpu,
+> >
+> > vgu -> vgpu
+> >
+> > > > +		unsigned int index, unsigned int start, unsigned int count,
+> > > > +		u32 flags, void *data)
+> > > > +{
+> > > > +	if (start != 0 || count > 2)
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	if (flags & VFIO_IRQ_SET_DATA_NONE)
+> > > > +		vgpu->vdev.display_event_mask |= 1;
+> > >
+> > > see below..
+> > >
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +static int intel_vgu_set_display_irq_unmask(struct intel_vgpu *vgpu,
+> > > > +		unsigned int index, unsigned int start, unsigned int count,
+> > > > +		u32 flags, void *data)
+> > > > +{
+> > > > +	if (start != 0 || count > 2)
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	if (flags & VFIO_IRQ_SET_DATA_NONE)
+> > > > +		vgpu->vdev.display_event_mask &= 0;
+> > >
+> > > looks display_event_mask is used as flag for enable/disable, just write 1 or
+> > 0?
+> >
+> > Do we plan to support per-plane mask in the future? If yes, then use bit
+> > operation but let's define the bit meaning explicitly now.,
+> >
+> > >
+> > >
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +static int intel_vgpu_set_display_event_trigger(struct intel_vgpu *vgpu,
+> > > > +		unsigned int index, unsigned int start, unsigned int count,
+> > > > +		u32 flags, void *data)
+> > > > +{
+> > > > +	struct eventfd_ctx *trigger;
+> > > > +
+> > > > +	if (flags & VFIO_IRQ_SET_DATA_EVENTFD) {
+> > > > +		int fd = *(int *)data;
+> > > > +
+> > > > +		trigger = eventfd_ctx_fdget(fd);
+> > > > +		if (IS_ERR(trigger)) {
+> > > > +			gvt_vgpu_err("eventfd_ctx_fdget failed\n");
+> > > > +			return PTR_ERR(trigger);
+> > > > +		}
+> > > > +		vgpu->vdev.vblank_trigger = trigger;
+> > > > +		vgpu->vdev.display_event_mask = 0;
+> > > > +	} else if ((flags & VFIO_IRQ_SET_DATA_NONE) && !count) {
+> > > > +		trigger = vgpu->vdev.vblank_trigger;
+> > > > +		if (trigger) {
+> > > > +			eventfd_ctx_put(trigger);
+> > > > +			vgpu->vdev.vblank_trigger = NULL;
+> > > > +		}
+> > > > +	}
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +int intel_vgpu_set_irqs(struct intel_vgpu *vgpu, u32 flags,
+> > > >  		unsigned int index, unsigned int start, unsigned int count,
+> > > >  		void *data)
+> > > >  {
+> > > > @@ -1330,6 +1385,35 @@ static int intel_vgpu_set_irqs(struct
+> > > > intel_vgpu
+> > > *vgpu, u32 flags,
+> > > >  			break;
+> > > >  		}
+> > > >  		break;
+> > > > +	default:
+> > > > +	{
+> > > > +		int i;
+> > > > +
+> > > > +		if (index >= VFIO_PCI_NUM_IRQS +
+> > > > +					vgpu->vdev.num_irqs)
+> > > > +			return -EINVAL;
+> > > > +		index =
+> > > > +			array_index_nospec(index,
+> > > > +						VFIO_PCI_NUM_IRQS +
+> > > > +						vgpu->vdev.num_irqs);
+> > > > +
+> > > > +		i = index - VFIO_PCI_NUM_IRQS;
+> > > > +		if (vgpu->vdev.irq[i].type == VFIO_IRQ_TYPE_GFX &&
+> > > > +		    vgpu->vdev.irq[i].subtype ==
+> > > > +		    VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ) {
+> > > > +			switch (flags & VFIO_IRQ_SET_ACTION_TYPE_MASK)
+> > {
+> > > > +			case VFIO_IRQ_SET_ACTION_MASK:
+> > > > +				func = intel_vgu_set_display_irq_mask;
+> > > > +				break;
+> > > > +			case VFIO_IRQ_SET_ACTION_UNMASK:
+> > > > +				func = intel_vgu_set_display_irq_unmask;
+> > > > +				break;
+> > > > +			case VFIO_IRQ_SET_ACTION_TRIGGER:
+> > > > +				func = intel_vgpu_set_display_event_trigger;
+> > > > +				break;
+> > > > +			}
+> > > > +		}
+> > > > +	}
+> > > >  	}
+> > > >
+> > > >  	if (!func)
+> > > > @@ -1361,7 +1445,7 @@ static long intel_vgpu_ioctl(struct
+> > > > mdev_device
+> > > *mdev, unsigned int cmd,
+> > > >  		info.flags |= VFIO_DEVICE_FLAGS_RESET;
+> > > >  		info.num_regions = VFIO_PCI_NUM_REGIONS +
+> > > >  				vgpu->vdev.num_regions;
+> > > > -		info.num_irqs = VFIO_PCI_NUM_IRQS;
+> > > > +		info.num_irqs = VFIO_PCI_NUM_IRQS + vgpu-
+> > >vdev.num_irqs;
+> > > >
+> > > >  		return copy_to_user((void __user *)arg, &info, minsz) ?
+> > > >  			-EFAULT : 0;
+> > > > @@ -1521,32 +1605,88 @@ static long intel_vgpu_ioctl(struct
+> > > > mdev_device
+> > > *mdev, unsigned int cmd,
+> > > >  			-EFAULT : 0;
+> > > >  	} else if (cmd == VFIO_DEVICE_GET_IRQ_INFO) {
+> > > >  		struct vfio_irq_info info;
+> > > > +		struct vfio_info_cap caps = { .buf = NULL, .size = 0 };
+> > > > +		unsigned int i;
+> > > > +		int ret;
+> > > >
+> > > >  		minsz = offsetofend(struct vfio_irq_info, count);
+> > > >
+> > > >  		if (copy_from_user(&info, (void __user *)arg, minsz))
+> > > >  			return -EFAULT;
+> > > >
+> > > > -		if (info.argsz < minsz || info.index >= VFIO_PCI_NUM_IRQS)
+> > > > +		if (info.argsz < minsz)
+> > > >  			return -EINVAL;
+> > > >
+> > > >  		switch (info.index) {
+> > > >  		case VFIO_PCI_INTX_IRQ_INDEX:
+> > > >  		case VFIO_PCI_MSI_IRQ_INDEX:
+> > > > +			info.flags = VFIO_IRQ_INFO_EVENTFD;
+> > > >  			break;
+> > > > -		default:
+> > > > +		case VFIO_PCI_MSIX_IRQ_INDEX:
+> > > > +		case VFIO_PCI_ERR_IRQ_INDEX:
+> > > > +		case VFIO_PCI_REQ_IRQ_INDEX:
+> > > >  			return -EINVAL;
+> > > > -		}
+> > > > +		default:
+> > > > +		{
+> > > > +			struct vfio_irq_info_cap_type cap_type = {
+> > > > +				.header.id = VFIO_IRQ_INFO_CAP_TYPE,
+> > > > +				.header.version = 1 };
+> > > >
+> > > > -		info.flags = VFIO_IRQ_INFO_EVENTFD;
+> > > > +			if (info.index >= VFIO_PCI_NUM_IRQS +
+> > > > +					vgpu->vdev.num_irqs)
+> > > > +				return -EINVAL;
+> > > > +			info.index =
+> > > > +				array_index_nospec(info.index,
+> > > > +						VFIO_PCI_NUM_IRQS +
+> > > > +						vgpu->vdev.num_irqs);
+> > > > +
+> > > > +			i = info.index - VFIO_PCI_NUM_IRQS;
+> > > > +
+> > > > +			info.flags = vgpu->vdev.irq[i].flags;
+> > > > +			cap_type.type = vgpu->vdev.irq[i].type;
+> > > > +			cap_type.subtype = vgpu->vdev.irq[i].subtype;
+> > > > +
+> > > > +			ret = vfio_info_add_capability(&caps,
+> > > > +						&cap_type.header,
+> > > > +						sizeof(cap_type));
+> > > > +			if (ret)
+> > > > +				return ret;
+> > > > +
+> > > > +			if (vgpu->vdev.irq[i].ops->add_capability) {
+> > > > +				ret = vgpu->vdev.irq[i].ops-
+> > > >add_capability(vgpu,
+> > > > +
+> > > &caps);
+> > > > +				if (ret)
+> > > > +					return ret;
+> > > > +			}
+> > > > +		}
+> > > > +		}
+> > > >
+> > > >  		info.count = intel_vgpu_get_irq_count(vgpu, info.index);
+> > > >
+> > > >  		if (info.index == VFIO_PCI_INTX_IRQ_INDEX)
+> > > >  			info.flags |= (VFIO_IRQ_INFO_MASKABLE |
+> > > >  				       VFIO_IRQ_INFO_AUTOMASKED);
+> > > > -		else
+> > > > -			info.flags |= VFIO_IRQ_INFO_NORESIZE;
+> > > > +
+> > > > +		if (caps.size) {
+> > > > +			info.flags |= VFIO_IRQ_INFO_FLAG_CAPS;
+> > > > +			if (info.argsz < sizeof(info) + caps.size) {
+> > > > +				info.argsz = sizeof(info) + caps.size;
+> > > > +				info.cap_offset = 0;
+> > > > +			} else {
+> > > > +				vfio_info_cap_shift(&caps, sizeof(info));
+> > > > +				if (copy_to_user((void __user *)arg +
+> > > > +						  sizeof(info), caps.buf,
+> > > > +						  caps.size)) {
+> > > > +					kfree(caps.buf);
+> > > > +					return -EFAULT;
+> > > > +				}
+> > > > +				info.cap_offset = sizeof(info);
+> > > > +				if (offsetofend(struct vfio_irq_info,
+> > > cap_offset) > minsz)
+> > > > +					minsz = offsetofend(struct
+> > > vfio_irq_info, cap_offset);
+> > > > +			}
+> > > > +
+> > > > +			kfree(caps.buf);
+> > > > +		}
+> > > >
+> > > >  		return copy_to_user((void __user *)arg, &info, minsz) ?
+> > > >  			-EFAULT : 0;
+> > > > @@ -1565,7 +1705,8 @@ static long intel_vgpu_ioctl(struct
+> > > > mdev_device
+> > > *mdev, unsigned int cmd,
+> > > >  			int max = intel_vgpu_get_irq_count(vgpu, hdr.index);
+> > > >
+> > > >  			ret = vfio_set_irqs_validate_and_prepare(&hdr, max,
+> > > > -						VFIO_PCI_NUM_IRQS,
+> > > &data_size);
+> > > > +					VFIO_PCI_NUM_IRQS + vgpu-
+> > > >vdev.num_irqs,
+> > > > +								 &data_size);
+> > > >  			if (ret) {
+> > > >
+> > > 	gvt_vgpu_err("intel:vfio_set_irqs_validate_and_prepare failed\n");
+> > > >  				return -EINVAL;
+> > > > --
+> > > > 2.17.1
+> > > >
+> > > > _______________________________________________
+> > > > intel-gvt-dev mailing list
+> > > > intel-gvt-dev@lists.freedesktop.org
+> > > > https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
+> > >
+> > > --
+> > > Open Source Technology Center, Intel ltd.
+> > >
+> > > $gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
