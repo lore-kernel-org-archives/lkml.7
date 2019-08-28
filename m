@@ -2,128 +2,152 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0D1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E13C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4D822DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE7422CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566996881;
+	bh=/nqD0ViqaewNMKLDngfbrf5k41yE/1O2IaWRem8dmLw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=RTSCZsvff7S8NGLUhKnXDPACQ+0V5RSNM0OHHSq3i5uTHlYz5NxQSe55w3LWko6TP
+	 pJmh16gTe1uFOTODiVq93bQLsYPpXAubxDTsjEKDgaZFDl+0c2nNHPsuuZ6OyO3GhK
+	 p5eJOhFeuIxJW20vR6/y8lJzoATRvQwm2RfPGe+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfH1Mww (ORCPT
+        id S1726444AbfH1Myk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:52:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:15587 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbfH1Mww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:52:52 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EA4F22D0FB7;
-        Wed, 28 Aug 2019 12:52:51 +0000 (UTC)
-Received: from bcodding.csb (ovpn-112-84.rdu2.redhat.com [10.10.112.84])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8AD2219D7A;
-        Wed, 28 Aug 2019 12:52:51 +0000 (UTC)
-Received: by bcodding.csb (Postfix, from userid 24008)
-        id 94486109C550; Wed, 28 Aug 2019 08:52:50 -0400 (EDT)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        rjw@rjwysocki.net, pavel@ucw.cz, len.brown@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: [PATCH] freezer,NFS: add an unsafe schedule_timeout_interruptable freezable helper for NFS
-Date:   Wed, 28 Aug 2019 08:52:50 -0400
-Message-Id: <9cf306ec17800f909f44a3889f52c6818b56bdbb.1566992889.git.bcodding@redhat.com>
+        Wed, 28 Aug 2019 08:54:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59970 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726368AbfH1Myk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 08:54:40 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SCqvWG084245;
+        Wed, 28 Aug 2019 08:54:29 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2unqr3wq1q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 08:54:29 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7SCrx01087890;
+        Wed, 28 Aug 2019 08:54:28 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2unqr3wq0h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 08:54:28 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7SCnmOH004111;
+        Wed, 28 Aug 2019 12:54:27 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02dal.us.ibm.com with ESMTP id 2un65jybhe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 12:54:27 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7SCsQRp15270712
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 28 Aug 2019 12:54:26 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7E57CB2064;
+        Wed, 28 Aug 2019 12:54:26 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C909B205F;
+        Wed, 28 Aug 2019 12:54:26 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.80.209.133])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 28 Aug 2019 12:54:26 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id D011416C15A4; Wed, 28 Aug 2019 05:54:26 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 05:54:26 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Scott Wood <swood@redhat.com>, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v2 2/3] sched: migrate_enable: Use sleeping_lock to
+ indicate involuntary sleep
+Message-ID: <20190828125426.GO26530@linux.ibm.com>
+Reply-To: paulmck@kernel.org
+References: <20190821231906.4224-1-swood@redhat.com>
+ <20190821231906.4224-3-swood@redhat.com>
+ <20190823162024.47t7br6ecfclzgkw@linutronix.de>
+ <433936e4c720e6b81f9b297fefaa592fd8a961ad.camel@redhat.com>
+ <20190824031014.GB2731@google.com>
+ <20190826152523.dcjbsgyyir4zjdol@linutronix.de>
+ <20190826162945.GE28441@linux.ibm.com>
+ <20190827092333.jp3darw7teyyw67g@linutronix.de>
+ <20190827155306.GF26530@linux.ibm.com>
+ <20190828092739.46mrffvzjv6v3de5@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 28 Aug 2019 12:52:52 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828092739.46mrffvzjv6v3de5@linutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908280138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 0688e64bc600 ("NFS: Allow signal interruption of NFS4ERR_DELAYed
-operations") my NFS client dumps lockdep warnings:
+On Wed, Aug 28, 2019 at 11:27:39AM +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-08-27 08:53:06 [-0700], Paul E. McKenney wrote:
+> > > > On the other hand, within a PREEMPT=n kernel, the call to schedule()
+> > > > would split even an rcu_read_lock() critical section.  Which is why I
+> > > > asked earlier if sleeping_lock_inc() and sleeping_lock_dec() are no-ops
+> > > > in !PREEMPT_RT_BASE kernels.  We would after all want the usual lockdep
+> > > > complaints in that case.
+> > > 
+> > > sleeping_lock_inc() +dec() is only RT specific. It is part of RT's
+> > > spin_lock() implementation and used by RCU (rcu_note_context_switch())
+> > > to not complain if invoked within a critical section.
+> > 
+> > Then this is being called when we have something like this, correct?
+> > 
+> > 	DEFINE_SPINLOCK(mylock); // As opposed to DEFINE_RAW_SPINLOCK().
+> > 
+> > 	...
+> > 
+> > 	rcu_read_lock();
+> > 	do_something();
+> > 	spin_lock(&mylock); // Can block in -rt, thus needs sleeping_lock_inc()
+> > 	...
+> > 	rcu_read_unlock();
+> > 
+> > Without sleeping_lock_inc(), lockdep would complain about a voluntary
+> > schedule within an RCU read-side critical section.  But in -rt, voluntary
+> > schedules due to sleeping on a "spinlock" are OK.
+> > 
+> > Am I understanding this correctly?
+> 
+> Everything perfect except that it is not lockdep complaining but the
+> WARN_ON_ONCE() in rcu_note_context_switch().
 
-	====================================
-	WARNING: dir_create.sh/1911 still has locks held!
-	5.3.0-rc6.47364e5cdc #1 Not tainted
-	------------------------------------
-	1 lock held by dir_create.sh/1911:
-	 #0: 000000005345f559 (sb_writers#21){.+.+}, at: mnt_want_write+0x20/0x50
+This one, right?
 
-	stack backtrace:
-	CPU: 1 PID: 1911 Comm: dir_create.sh Not tainted 5.3.0-rc6.47364e5cdc #1
-	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-2.fc27 04/01/2014
-	Call Trace:
-	 dump_stack+0x85/0xcb
-	 nfs4_handle_exception+0x1df/0x250 [nfsv4]
-	 nfs4_do_open+0x38b/0x850 [nfsv4]
-	 ? __filemap_fdatawrite_range+0xc1/0x100
-	 nfs4_atomic_open+0xe7/0x100 [nfsv4]
-	 nfs4_file_open+0x103/0x260 [nfsv4]
-	 ? nfs42_remap_file_range+0x220/0x220 [nfsv4]
-	 do_dentry_open+0x205/0x3c0
-	 path_openat+0x2ba/0xc80
-	 do_filp_open+0x9b/0x110
-	 ? kvm_sched_clock_read+0x14/0x30
-	 ? sched_clock+0x5/0x10
-	 ? sched_clock_cpu+0xc/0xc0
-	 ? _raw_spin_unlock+0x24/0x30
-	 ? do_sys_open+0x1bd/0x260
-	 do_sys_open+0x1bd/0x260
-	 do_syscall_64+0x75/0x320
-	 ? trace_hardirqs_off_thunk+0x1a/0x20
-	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
-	RIP: 0033:0x7fd49b2535ce
+	WARN_ON_ONCE(!preempt && t->rcu_read_lock_nesting > 0);
 
-This patch follows prior art in commit 416ad3c9c006 ("freezer: add unsafe
-versions of freezable helpers for NFS") to skip lock dependency checks for
-NFS.
+Another approach would be to change that WARN_ON_ONCE().  This fix might
+be too extreme, as it would suppress other issues:
 
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
----
- fs/nfs/nfs4proc.c       |  2 +-
- include/linux/freezer.h | 10 ++++++++++
- 2 files changed, 11 insertions(+), 1 deletion(-)
+	WARN_ON_ONCE(IS_ENABLED(CONFIG_PREEMPT_RT_BASE) && !preempt && t->rcu_read_lock_nesting > 0);
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 1406858bae6c..b9c46373da25 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -415,7 +415,7 @@ static int nfs4_delay_interruptible(long *timeout)
- {
- 	might_sleep();
- 
--	freezable_schedule_timeout_interruptible(nfs4_update_delay(timeout));
-+	freezable_schedule_timeout_interruptible_unsafe(nfs4_update_delay(timeout));
- 	if (!signal_pending(current))
- 		return 0;
- 	return __fatal_signal_pending(current) ? -EINTR :-ERESTARTSYS;
-diff --git a/include/linux/freezer.h b/include/linux/freezer.h
-index 21f5aa0b217f..53e66eec837a 100644
---- a/include/linux/freezer.h
-+++ b/include/linux/freezer.h
-@@ -217,6 +217,16 @@ static inline long freezable_schedule_timeout_killable(long timeout)
- 	return __retval;
- }
- 
-+/* DO NOT ADD ANY NEW CALLERS OF THIS FUNCTION */
-+static inline long freezable_schedule_timeout_interruptible_unsafe(long timeout)
-+{
-+	long __retval;
-+	freezer_do_not_count();
-+	__retval = schedule_timeout_interruptible(timeout);
-+	freezer_count_unsafe();
-+	return __retval;
-+}
-+
- /* DO NOT ADD ANY NEW CALLERS OF THIS FUNCTION */
- static inline long freezable_schedule_timeout_killable_unsafe(long timeout)
- {
--- 
-2.20.1
+But maybe what is happening under the covers is that preempt is being
+set when sleeping on a spinlock.  Is that the case?
 
+							Thanx, Paul
