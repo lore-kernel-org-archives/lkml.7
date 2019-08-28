@@ -2,38 +2,40 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AC5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20348C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C970822CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4E922CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfH1O0g (ORCPT
+        id S1727499AbfH1O04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:26:36 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50132 "EHLO huawei.com"
+        Wed, 28 Aug 2019 10:26:56 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5235 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726861AbfH1OZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:25:44 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 24F303983C9A7CD764BC;
-        Wed, 28 Aug 2019 22:25:41 +0800 (CST)
+        id S1726415AbfH1OZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:25:39 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 24CB7192A15C549F711C;
+        Wed, 28 Aug 2019 22:25:36 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 28 Aug 2019 22:25:32 +0800
+ 14.3.439.0; Wed, 28 Aug 2019 22:25:29 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yufeng Mo <moyufeng@huawei.com>,
+        <linuxarm@huawei.com>, Zhongzhu Liu <liuzhongzhu@huawei.com>,
+        Guangbin Huang <huangguangbin2@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 10/12] net: hns3: add phy selftest function
-Date:   Wed, 28 Aug 2019 22:23:14 +0800
-Message-ID: <1567002196-63242-11-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 01/12] net: hns3: code optimization for debugfs related to "dump reg"
+Date:   Wed, 28 Aug 2019 22:23:05 +0800
+Message-ID: <1567002196-63242-2-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
 References: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,259 +48,365 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufeng Mo <moyufeng@huawei.com>
+From: Zhongzhu Liu <liuzhongzhu@huawei.com>
 
-Currently, the loopback test supports only mac selftest and serdes
-selftest. This patch adds phy selftest.
+For making the code more readable, this patch uses a array to
+keep the information about the dumping register, and then uses
+it to parse the parameter cmd_buf which passing into
+hclge_dbg_dump_reg_cmd().
 
-Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Also replaces parameter "base" of kstrtouint with 0 in the
+hclge_dbg_dump_reg_common(), which makes it more flexible.
+
+Signed-off-by: Zhongzhu Liu <liuzhongzhu@huawei.com>
+Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |   7 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 150 ++++++++++++++++++---
- 2 files changed, 138 insertions(+), 19 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 226 +++++++++++----------
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h |  16 ++
+ 2 files changed, 132 insertions(+), 110 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index 0332d6f..e219bb1 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -59,7 +59,7 @@ static const struct hns3_stats hns3_rxq_stats[] = {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+index 025184a..a56f388 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+@@ -4,14 +4,80 @@
+ #include <linux/device.h>
  
- #define HNS3_TQP_STATS_COUNT (HNS3_TXQ_STATS_COUNT + HNS3_RXQ_STATS_COUNT)
+ #include "hclge_debugfs.h"
+-#include "hclge_cmd.h"
+ #include "hclge_main.h"
+ #include "hclge_tm.h"
+ #include "hnae3.h"
  
--#define HNS3_SELF_TEST_TYPE_NUM         3
-+#define HNS3_SELF_TEST_TYPE_NUM         4
- #define HNS3_NIC_LB_TEST_PKT_NUM	1
- #define HNS3_NIC_LB_TEST_RING_ID	0
- #define HNS3_NIC_LB_TEST_PACKET_SIZE	128
-@@ -89,6 +89,7 @@ static int hns3_lp_setup(struct net_device *ndev, enum hnae3_loop loop, bool en)
- 	case HNAE3_LOOP_SERIAL_SERDES:
- 	case HNAE3_LOOP_PARALLEL_SERDES:
- 	case HNAE3_LOOP_APP:
-+	case HNAE3_LOOP_PHY:
- 		ret = h->ae_algo->ops->set_loopback(h, loop, en);
- 		break;
- 	default:
-@@ -330,6 +331,10 @@ static void hns3_self_test(struct net_device *ndev,
- 	st_param[HNAE3_LOOP_PARALLEL_SERDES][1] =
- 			h->flags & HNAE3_SUPPORT_SERDES_PARALLEL_LOOPBACK;
- 
-+	st_param[HNAE3_LOOP_PHY][0] = HNAE3_LOOP_PHY;
-+	st_param[HNAE3_LOOP_PHY][1] =
-+			h->flags & HNAE3_SUPPORT_PHY_LOOPBACK;
++static struct hclge_dbg_reg_type_info hclge_dbg_reg_info[] = {
++	{ .reg_type = "bios common",
++	  .dfx_msg = &hclge_dbg_bios_common_reg[0],
++	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_bios_common_reg),
++		       .offset = HCLGE_DBG_DFX_BIOS_OFFSET,
++		       .cmd = HCLGE_OPC_DFX_BIOS_COMMON_REG } },
++	{ .reg_type = "ssu",
++	  .dfx_msg = &hclge_dbg_ssu_reg_0[0],
++	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_ssu_reg_0),
++		       .offset = HCLGE_DBG_DFX_SSU_0_OFFSET,
++		       .cmd = HCLGE_OPC_DFX_SSU_REG_0 } },
++	{ .reg_type = "ssu",
++	  .dfx_msg = &hclge_dbg_ssu_reg_1[0],
++	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_ssu_reg_1),
++		       .offset = HCLGE_DBG_DFX_SSU_1_OFFSET,
++		       .cmd = HCLGE_OPC_DFX_SSU_REG_1 } },
++	{ .reg_type = "ssu",
++	  .dfx_msg = &hclge_dbg_ssu_reg_2[0],
++	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_ssu_reg_2),
++		       .offset = HCLGE_DBG_DFX_SSU_2_OFFSET,
++		       .cmd = HCLGE_OPC_DFX_SSU_REG_2 } },
++	{ .reg_type = "igu egu",
++	  .dfx_msg = &hclge_dbg_igu_egu_reg[0],
++	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_igu_egu_reg),
++		       .offset = HCLGE_DBG_DFX_IGU_OFFSET,
++		       .cmd = HCLGE_OPC_DFX_IGU_EGU_REG } },
++	{ .reg_type = "rpu",
++	  .dfx_msg = &hclge_dbg_rpu_reg_0[0],
++	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_rpu_reg_0),
++		       .offset = HCLGE_DBG_DFX_RPU_0_OFFSET,
++		       .cmd = HCLGE_OPC_DFX_RPU_REG_0 } },
++	{ .reg_type = "rpu",
++	  .dfx_msg = &hclge_dbg_rpu_reg_1[0],
++	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_rpu_reg_1),
++		       .offset = HCLGE_DBG_DFX_RPU_1_OFFSET,
++		       .cmd = HCLGE_OPC_DFX_RPU_REG_1 } },
++	{ .reg_type = "ncsi",
++	  .dfx_msg = &hclge_dbg_ncsi_reg[0],
++	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_ncsi_reg),
++		       .offset = HCLGE_DBG_DFX_NCSI_OFFSET,
++		       .cmd = HCLGE_OPC_DFX_NCSI_REG } },
++	{ .reg_type = "rtc",
++	  .dfx_msg = &hclge_dbg_rtc_reg[0],
++	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_rtc_reg),
++		       .offset = HCLGE_DBG_DFX_RTC_OFFSET,
++		       .cmd = HCLGE_OPC_DFX_RTC_REG } },
++	{ .reg_type = "ppp",
++	  .dfx_msg = &hclge_dbg_ppp_reg[0],
++	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_ppp_reg),
++		       .offset = HCLGE_DBG_DFX_PPP_OFFSET,
++		       .cmd = HCLGE_OPC_DFX_PPP_REG } },
++	{ .reg_type = "rcb",
++	  .dfx_msg = &hclge_dbg_rcb_reg[0],
++	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_rcb_reg),
++		       .offset = HCLGE_DBG_DFX_RCB_OFFSET,
++		       .cmd = HCLGE_OPC_DFX_RCB_REG } },
++	{ .reg_type = "tqp",
++	  .dfx_msg = &hclge_dbg_tqp_reg[0],
++	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_tqp_reg),
++		       .offset = HCLGE_DBG_DFX_TQP_OFFSET,
++		       .cmd = HCLGE_OPC_DFX_TQP_REG } },
++};
 +
- 	if (if_running)
- 		ndev->netdev_ops->ndo_stop(ndev);
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 9ef1f468..428f7c0 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -53,6 +53,8 @@
- #define HCLGE_DFX_TQP_BD_OFFSET         11
- #define HCLGE_DFX_SSU_2_BD_OFFSET       12
- 
-+#define HCLGE_LINK_STATUS_MS	10
-+
- static int hclge_set_mac_mtu(struct hclge_dev *hdev, int new_mps);
- static int hclge_init_vlan_config(struct hclge_dev *hdev);
- static void hclge_sync_vlan_filter(struct hclge_dev *hdev);
-@@ -742,6 +744,12 @@ static int hclge_get_sset_count(struct hnae3_handle *handle, int stringset)
- 		count += 2;
- 		handle->flags |= HNAE3_SUPPORT_SERDES_SERIAL_LOOPBACK;
- 		handle->flags |= HNAE3_SUPPORT_SERDES_PARALLEL_LOOPBACK;
-+
-+		if (hdev->hw.mac.phydev) {
-+			count += 1;
-+			handle->flags |= HNAE3_SUPPORT_PHY_LOOPBACK;
-+		}
-+
- 	} else if (stringset == ETH_SS_STATS) {
- 		count = ARRAY_SIZE(g_mac_stats_string) +
- 			hclge_tqps_get_sset_count(handle, stringset);
-@@ -6204,6 +6212,65 @@ static void hclge_cfg_mac_mode(struct hclge_dev *hdev, bool enable)
- 			"mac enable fail, ret =%d.\n", ret);
- }
- 
-+static void hclge_phy_link_status_wait(struct hclge_dev *hdev,
-+				       int link_ret)
-+{
-+#define HCLGE_PHY_LINK_STATUS_NUM  200
-+
-+	struct phy_device *phydev = hdev->hw.mac.phydev;
-+	int i = 0;
-+	int ret;
-+
-+	do {
-+		ret = phy_read_status(phydev);
-+		if (ret) {
-+			dev_err(&hdev->pdev->dev,
-+				"phy update link status fail, ret = %d\n", ret);
-+			return;
-+		}
-+
-+		if (phydev->link == link_ret)
-+			break;
-+
-+		msleep(HCLGE_LINK_STATUS_MS);
-+	} while (++i < HCLGE_PHY_LINK_STATUS_NUM);
-+}
-+
-+static int hclge_mac_link_status_wait(struct hclge_dev *hdev, int link_ret)
-+{
-+#define HCLGE_MAC_LINK_STATUS_NUM  100
-+
-+	int i = 0;
-+	int ret;
-+
-+	do {
-+		ret = hclge_get_mac_link_status(hdev);
-+		if (ret < 0)
-+			return ret;
-+		else if (ret == link_ret)
-+			return 0;
-+
-+		msleep(HCLGE_LINK_STATUS_MS);
-+	} while (++i < HCLGE_MAC_LINK_STATUS_NUM);
-+	return -EBUSY;
-+}
-+
-+static int hclge_mac_phy_link_status_wait(struct hclge_dev *hdev, bool en,
-+					  bool is_phy)
-+{
-+#define HCLGE_LINK_STATUS_DOWN 0
-+#define HCLGE_LINK_STATUS_UP   1
-+
-+	int link_ret;
-+
-+	link_ret = en ? HCLGE_LINK_STATUS_UP : HCLGE_LINK_STATUS_DOWN;
-+
-+	if (is_phy)
-+		hclge_phy_link_status_wait(hdev, link_ret);
-+
-+	return hclge_mac_link_status_wait(hdev, link_ret);
-+}
-+
- static int hclge_set_app_loopback(struct hclge_dev *hdev, bool en)
+ static int hclge_dbg_get_dfx_bd_num(struct hclge_dev *hdev, int offset)
  {
- 	struct hclge_config_mac_mode_cmd *req;
-@@ -6246,14 +6313,8 @@ static int hclge_set_serdes_loopback(struct hclge_dev *hdev, bool en,
- #define HCLGE_SERDES_RETRY_MS	10
- #define HCLGE_SERDES_RETRY_NUM	100
+-	struct hclge_desc desc[4];
++#define HCLGE_GET_DFX_REG_TYPE_CNT	4
++
++	struct hclge_desc desc[HCLGE_GET_DFX_REG_TYPE_CNT];
++	int entries_per_desc;
++	int index;
+ 	int ret;
  
--#define HCLGE_MAC_LINK_STATUS_MS   10
--#define HCLGE_MAC_LINK_STATUS_NUM  100
--#define HCLGE_MAC_LINK_STATUS_DOWN 0
--#define HCLGE_MAC_LINK_STATUS_UP   1
--
- 	struct hclge_serdes_lb_cmd *req;
- 	struct hclge_desc desc;
--	int mac_link_ret = 0;
- 	int ret, i = 0;
- 	u8 loop_mode_b;
- 
-@@ -6276,10 +6337,8 @@ static int hclge_set_serdes_loopback(struct hclge_dev *hdev, bool en,
- 	if (en) {
- 		req->enable = loop_mode_b;
- 		req->mask = loop_mode_b;
--		mac_link_ret = HCLGE_MAC_LINK_STATUS_UP;
- 	} else {
- 		req->mask = loop_mode_b;
--		mac_link_ret = HCLGE_MAC_LINK_STATUS_DOWN;
+ 	ret = hclge_query_bd_num_cmd_send(hdev, desc);
+@@ -21,7 +87,9 @@ static int hclge_dbg_get_dfx_bd_num(struct hclge_dev *hdev, int offset)
+ 		return ret;
  	}
  
- 	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
-@@ -6312,18 +6371,70 @@ static int hclge_set_serdes_loopback(struct hclge_dev *hdev, bool en,
- 
- 	hclge_cfg_mac_mode(hdev, en);
- 
--	i = 0;
--	do {
--		/* serdes Internal loopback, independent of the network cable.*/
--		msleep(HCLGE_MAC_LINK_STATUS_MS);
--		ret = hclge_get_mac_link_status(hdev);
--		if (ret == mac_link_ret)
--			return 0;
--	} while (++i < HCLGE_MAC_LINK_STATUS_NUM);
-+	ret = hclge_mac_phy_link_status_wait(hdev, en, FALSE);
-+	if (ret)
-+		dev_err(&hdev->pdev->dev,
-+			"serdes loopback config mac mode timeout\n");
-+
-+	return ret;
-+}
- 
--	dev_err(&hdev->pdev->dev, "config mac mode timeout\n");
-+static int hclge_enable_phy_loopback(struct hclge_dev *hdev,
-+				     struct phy_device *phydev)
-+{
-+	int ret;
- 
--	return -EBUSY;
-+	if (!phydev->suspended) {
-+		ret = phy_suspend(phydev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = phy_resume(phydev);
-+	if (ret)
-+		return ret;
-+
-+	return phy_loopback(phydev, true);
-+}
-+
-+static int hclge_disable_phy_loopback(struct hclge_dev *hdev,
-+				      struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	ret = phy_loopback(phydev, false);
-+	if (ret)
-+		return ret;
-+
-+	return phy_suspend(phydev);
-+}
-+
-+static int hclge_set_phy_loopback(struct hclge_dev *hdev, bool en)
-+{
-+	struct phy_device *phydev = hdev->hw.mac.phydev;
-+	int ret;
-+
-+	if (!phydev)
-+		return -ENOTSUPP;
-+
-+	if (en)
-+		ret = hclge_enable_phy_loopback(hdev, phydev);
-+	else
-+		ret = hclge_disable_phy_loopback(hdev, phydev);
-+	if (ret) {
-+		dev_err(&hdev->pdev->dev,
-+			"set phy loopback fail, ret = %d\n", ret);
-+		return ret;
-+	}
-+
-+	hclge_cfg_mac_mode(hdev, en);
-+
-+	ret = hclge_mac_phy_link_status_wait(hdev, en, TRUE);
-+	if (ret)
-+		dev_err(&hdev->pdev->dev,
-+			"phy loopback config mac mode timeout\n");
-+
-+	return ret;
+-	return (int)desc[offset / 6].data[offset % 6];
++	entries_per_desc = ARRAY_SIZE(desc[0].data);
++	index = offset % entries_per_desc;
++	return (int)desc[offset / entries_per_desc].data[index];
  }
  
- static int hclge_tqp_enable(struct hclge_dev *hdev, unsigned int tqp_id,
-@@ -6363,6 +6474,9 @@ static int hclge_set_loopback(struct hnae3_handle *handle,
- 	case HNAE3_LOOP_PARALLEL_SERDES:
- 		ret = hclge_set_serdes_loopback(hdev, en, loop_mode);
- 		break;
-+	case HNAE3_LOOP_PHY:
-+		ret = hclge_set_phy_loopback(hdev, en);
-+		break;
- 	default:
- 		ret = -ENOTSUPP;
- 		dev_err(&hdev->pdev->dev,
+ static int hclge_dbg_cmd_send(struct hclge_dev *hdev,
+@@ -52,23 +120,28 @@ static int hclge_dbg_cmd_send(struct hclge_dev *hdev,
+ }
+ 
+ static void hclge_dbg_dump_reg_common(struct hclge_dev *hdev,
+-				      struct hclge_dbg_dfx_message *dfx_message,
+-				      const char *cmd_buf, int msg_num,
+-				      int offset, enum hclge_opcode_type cmd)
++				      struct hclge_dbg_reg_type_info *reg_info,
++				      const char *cmd_buf)
+ {
+-#define BD_DATA_NUM       6
++#define IDX_OFFSET	1
+ 
++	const char *s = &cmd_buf[strlen(reg_info->reg_type) + IDX_OFFSET];
++	struct hclge_dbg_dfx_message *dfx_message = reg_info->dfx_msg;
++	struct hclge_dbg_reg_common_msg *reg_msg = &reg_info->reg_msg;
+ 	struct hclge_desc *desc_src;
+ 	struct hclge_desc *desc;
++	int entries_per_desc;
+ 	int bd_num, buf_len;
++	int index = 0;
++	int min_num;
+ 	int ret, i;
+-	int index;
+-	int max;
+ 
+-	ret = kstrtouint(cmd_buf, 10, &index);
+-	index = (ret != 0) ? 0 : index;
++	if (*s) {
++		ret = kstrtouint(s, 0, &index);
++		index = (ret != 0) ? 0 : index;
++	}
+ 
+-	bd_num = hclge_dbg_get_dfx_bd_num(hdev, offset);
++	bd_num = hclge_dbg_get_dfx_bd_num(hdev, reg_msg->offset);
+ 	if (bd_num <= 0)
+ 		return;
+ 
+@@ -80,22 +153,23 @@ static void hclge_dbg_dump_reg_common(struct hclge_dev *hdev,
+ 	}
+ 
+ 	desc = desc_src;
+-	ret  = hclge_dbg_cmd_send(hdev, desc, index, bd_num, cmd);
+-	if (ret != HCLGE_CMD_EXEC_SUCCESS) {
++	ret  = hclge_dbg_cmd_send(hdev, desc, index, bd_num, reg_msg->cmd);
++	if (ret) {
+ 		kfree(desc_src);
+ 		return;
+ 	}
+ 
+-	max = (bd_num * BD_DATA_NUM) <= msg_num ?
+-		(bd_num * BD_DATA_NUM) : msg_num;
++	entries_per_desc = ARRAY_SIZE(desc->data);
++	min_num = min_t(int, bd_num * entries_per_desc, reg_msg->msg_num);
+ 
+ 	desc = desc_src;
+-	for (i = 0; i < max; i++) {
+-		((i > 0) && ((i % BD_DATA_NUM) == 0)) ? desc++ : desc;
++	for (i = 0; i < min_num; i++) {
++		if (i > 0 && (i % entries_per_desc) == 0)
++			desc++;
+ 		if (dfx_message->flag)
+ 			dev_info(&hdev->pdev->dev, "%s: 0x%x\n",
+ 				 dfx_message->message,
+-				 desc->data[i % BD_DATA_NUM]);
++				 desc->data[i % entries_per_desc]);
+ 
+ 		dfx_message++;
+ 	}
+@@ -205,95 +279,25 @@ static void hclge_dbg_dump_dcb(struct hclge_dev *hdev, const char *cmd_buf)
+ 
+ static void hclge_dbg_dump_reg_cmd(struct hclge_dev *hdev, const char *cmd_buf)
+ {
+-	int msg_num;
+-
+-	if (strncmp(&cmd_buf[9], "bios common", 11) == 0) {
+-		msg_num = sizeof(hclge_dbg_bios_common_reg) /
+-			  sizeof(struct hclge_dbg_dfx_message);
+-		hclge_dbg_dump_reg_common(hdev, hclge_dbg_bios_common_reg,
+-					  &cmd_buf[21], msg_num,
+-					  HCLGE_DBG_DFX_BIOS_OFFSET,
+-					  HCLGE_OPC_DFX_BIOS_COMMON_REG);
+-	} else if (strncmp(&cmd_buf[9], "ssu", 3) == 0) {
+-		msg_num = sizeof(hclge_dbg_ssu_reg_0) /
+-			  sizeof(struct hclge_dbg_dfx_message);
+-		hclge_dbg_dump_reg_common(hdev, hclge_dbg_ssu_reg_0,
+-					  &cmd_buf[13], msg_num,
+-					  HCLGE_DBG_DFX_SSU_0_OFFSET,
+-					  HCLGE_OPC_DFX_SSU_REG_0);
+-
+-		msg_num = sizeof(hclge_dbg_ssu_reg_1) /
+-			  sizeof(struct hclge_dbg_dfx_message);
+-		hclge_dbg_dump_reg_common(hdev, hclge_dbg_ssu_reg_1,
+-					  &cmd_buf[13], msg_num,
+-					  HCLGE_DBG_DFX_SSU_1_OFFSET,
+-					  HCLGE_OPC_DFX_SSU_REG_1);
+-
+-		msg_num = sizeof(hclge_dbg_ssu_reg_2) /
+-			  sizeof(struct hclge_dbg_dfx_message);
+-		hclge_dbg_dump_reg_common(hdev, hclge_dbg_ssu_reg_2,
+-					  &cmd_buf[13], msg_num,
+-					  HCLGE_DBG_DFX_SSU_2_OFFSET,
+-					  HCLGE_OPC_DFX_SSU_REG_2);
+-	} else if (strncmp(&cmd_buf[9], "igu egu", 7) == 0) {
+-		msg_num = sizeof(hclge_dbg_igu_egu_reg) /
+-			  sizeof(struct hclge_dbg_dfx_message);
+-		hclge_dbg_dump_reg_common(hdev, hclge_dbg_igu_egu_reg,
+-					  &cmd_buf[17], msg_num,
+-					  HCLGE_DBG_DFX_IGU_OFFSET,
+-					  HCLGE_OPC_DFX_IGU_EGU_REG);
+-	} else if (strncmp(&cmd_buf[9], "rpu", 3) == 0) {
+-		msg_num = sizeof(hclge_dbg_rpu_reg_0) /
+-			  sizeof(struct hclge_dbg_dfx_message);
+-		hclge_dbg_dump_reg_common(hdev, hclge_dbg_rpu_reg_0,
+-					  &cmd_buf[13], msg_num,
+-					  HCLGE_DBG_DFX_RPU_0_OFFSET,
+-					  HCLGE_OPC_DFX_RPU_REG_0);
+-
+-		msg_num = sizeof(hclge_dbg_rpu_reg_1) /
+-			  sizeof(struct hclge_dbg_dfx_message);
+-		hclge_dbg_dump_reg_common(hdev, hclge_dbg_rpu_reg_1,
+-					  &cmd_buf[13], msg_num,
+-					  HCLGE_DBG_DFX_RPU_1_OFFSET,
+-					  HCLGE_OPC_DFX_RPU_REG_1);
+-	} else if (strncmp(&cmd_buf[9], "ncsi", 4) == 0) {
+-		msg_num = sizeof(hclge_dbg_ncsi_reg) /
+-			  sizeof(struct hclge_dbg_dfx_message);
+-		hclge_dbg_dump_reg_common(hdev, hclge_dbg_ncsi_reg,
+-					  &cmd_buf[14], msg_num,
+-					  HCLGE_DBG_DFX_NCSI_OFFSET,
+-					  HCLGE_OPC_DFX_NCSI_REG);
+-	} else if (strncmp(&cmd_buf[9], "rtc", 3) == 0) {
+-		msg_num = sizeof(hclge_dbg_rtc_reg) /
+-			  sizeof(struct hclge_dbg_dfx_message);
+-		hclge_dbg_dump_reg_common(hdev, hclge_dbg_rtc_reg,
+-					  &cmd_buf[13], msg_num,
+-					  HCLGE_DBG_DFX_RTC_OFFSET,
+-					  HCLGE_OPC_DFX_RTC_REG);
+-	} else if (strncmp(&cmd_buf[9], "ppp", 3) == 0) {
+-		msg_num = sizeof(hclge_dbg_ppp_reg) /
+-			  sizeof(struct hclge_dbg_dfx_message);
+-		hclge_dbg_dump_reg_common(hdev, hclge_dbg_ppp_reg,
+-					  &cmd_buf[13], msg_num,
+-					  HCLGE_DBG_DFX_PPP_OFFSET,
+-					  HCLGE_OPC_DFX_PPP_REG);
+-	} else if (strncmp(&cmd_buf[9], "rcb", 3) == 0) {
+-		msg_num = sizeof(hclge_dbg_rcb_reg) /
+-			  sizeof(struct hclge_dbg_dfx_message);
+-		hclge_dbg_dump_reg_common(hdev, hclge_dbg_rcb_reg,
+-					  &cmd_buf[13], msg_num,
+-					  HCLGE_DBG_DFX_RCB_OFFSET,
+-					  HCLGE_OPC_DFX_RCB_REG);
+-	} else if (strncmp(&cmd_buf[9], "tqp", 3) == 0) {
+-		msg_num = sizeof(hclge_dbg_tqp_reg) /
+-			  sizeof(struct hclge_dbg_dfx_message);
+-		hclge_dbg_dump_reg_common(hdev, hclge_dbg_tqp_reg,
+-					  &cmd_buf[13], msg_num,
+-					  HCLGE_DBG_DFX_TQP_OFFSET,
+-					  HCLGE_OPC_DFX_TQP_REG);
+-	} else if (strncmp(&cmd_buf[9], "dcb", 3) == 0) {
+-		hclge_dbg_dump_dcb(hdev, &cmd_buf[13]);
+-	} else {
++	struct hclge_dbg_reg_type_info *reg_info = &hclge_dbg_reg_info[0];
++	bool has_dump = false;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(hclge_dbg_reg_info); i++) {
++		reg_info = &hclge_dbg_reg_info[i];
++		if (!strncmp(cmd_buf, reg_info->reg_type,
++			     strlen(reg_info->reg_type))) {
++			hclge_dbg_dump_reg_common(hdev, reg_info, cmd_buf);
++			has_dump = true;
++		}
++	}
++
++	if (strncmp(cmd_buf, "dcb", 3) == 0) {
++		hclge_dbg_dump_dcb(hdev, &cmd_buf[sizeof("dcb")]);
++		has_dump = true;
++	}
++
++	if (!has_dump) {
+ 		dev_info(&hdev->pdev->dev, "unknown command\n");
+ 		return;
+ 	}
+@@ -1092,6 +1096,8 @@ static void hclge_dbg_dump_mac_tnl_status(struct hclge_dev *hdev)
+ 
+ int hclge_dbg_run_cmd(struct hnae3_handle *handle, const char *cmd_buf)
+ {
++#define DUMP_REG	"dump reg"
++
+ 	struct hclge_vport *vport = hclge_get_vport(handle);
+ 	struct hclge_dev *hdev = vport->back;
+ 
+@@ -1111,8 +1117,8 @@ int hclge_dbg_run_cmd(struct hnae3_handle *handle, const char *cmd_buf)
+ 		hclge_dbg_dump_qos_buf_cfg(hdev);
+ 	} else if (strncmp(cmd_buf, "dump mng tbl", 12) == 0) {
+ 		hclge_dbg_dump_mng_table(hdev);
+-	} else if (strncmp(cmd_buf, "dump reg", 8) == 0) {
+-		hclge_dbg_dump_reg_cmd(hdev, cmd_buf);
++	} else if (strncmp(cmd_buf, DUMP_REG, strlen(DUMP_REG)) == 0) {
++		hclge_dbg_dump_reg_cmd(hdev, &cmd_buf[sizeof(DUMP_REG)]);
+ 	} else if (strncmp(cmd_buf, "dump reset info", 15) == 0) {
+ 		hclge_dbg_dump_rst_info(hdev);
+ 	} else if (strncmp(cmd_buf, "dump m7 info", 12) == 0) {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
+index d055fda..80e5cc2 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
+@@ -4,6 +4,9 @@
+ #ifndef __HCLGE_DEBUGFS_H
+ #define __HCLGE_DEBUGFS_H
+ 
++#include <linux/etherdevice.h>
++#include "hclge_cmd.h"
++
+ #define HCLGE_DBG_BUF_LEN	   256
+ #define HCLGE_DBG_MNG_TBL_MAX	   64
+ 
+@@ -63,11 +66,24 @@ struct hclge_dbg_bitmap_cmd {
+ 	};
+ };
+ 
++struct hclge_dbg_reg_common_msg {
++	int msg_num;
++	int offset;
++	enum hclge_opcode_type cmd;
++};
++
+ struct hclge_dbg_dfx_message {
+ 	int flag;
+ 	char message[60];
+ };
+ 
++#define HCLGE_DBG_MAC_REG_TYPE_LEN	32
++struct hclge_dbg_reg_type_info {
++	const char *reg_type;
++	struct hclge_dbg_dfx_message *dfx_msg;
++	struct hclge_dbg_reg_common_msg reg_msg;
++};
++
+ #pragma pack()
+ 
+ static struct hclge_dbg_dfx_message hclge_dbg_bios_common_reg[] = {
 -- 
 2.7.4
 
