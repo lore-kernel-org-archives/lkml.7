@@ -2,88 +2,88 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2E4C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D1AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B7E208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0591B208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:45:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZnx8sHh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfH1Qo4 (ORCPT
+        id S1727000AbfH1QpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:44:56 -0400
-Received: from baldur.buserror.net ([165.227.176.147]:50714 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfH1Qoz (ORCPT
+        Wed, 28 Aug 2019 12:45:10 -0400
+Received: from mail-lj1-f169.google.com ([209.85.208.169]:32943 "EHLO
+        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfH1QpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:44:55 -0400
-Received: from [2601:449:8400:7293:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1i313y-0002t0-PH; Wed, 28 Aug 2019 11:44:51 -0500
-Message-ID: <457508f39b96caab15ed4bf7ff0d586ffdc850f8.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     wangkefeng.wang@huawei.com, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, thunder.leizhen@huawei.com,
-        linux-kernel@vger.kernel.org, npiggin@gmail.com,
-        jingxiangfeng@huawei.com, diana.craciun@nxp.com, paulus@samba.org,
-        zhaohongjiang@huawei.com, fanchengyang@huawei.com,
-        linuxppc-dev@lists.ozlabs.org, yebin10@huawei.com
-Date:   Wed, 28 Aug 2019 11:44:48 -0500
-In-Reply-To: <de603506-5c4e-4ca3-bd77-e3a69af9faef@huawei.com>
-References: <20190809100800.5426-1-yanaijie@huawei.com>
-         <20190809100800.5426-7-yanaijie@huawei.com>
-         <20190828045454.GB17757@home.buserror.net>
-         <de603506-5c4e-4ca3-bd77-e3a69af9faef@huawei.com>
-Organization: Red Hat
+        Wed, 28 Aug 2019 12:45:09 -0400
+Received: by mail-lj1-f169.google.com with SMTP id z17so225277ljz.0;
+        Wed, 28 Aug 2019 09:45:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TK1f1dl6MjT9oXeqIhsMWlEpHW6Ya5m7lCHOBn6DQcU=;
+        b=WZnx8sHh16J5Y4zbZbjslkEl6sIdCz4pVSyFtQ8xUYOsASGB0g69MA+kfGzo3/PutC
+         yoBLZKf7p5Sjefi8sS+4u7EbMF57hEsZjUp/hgczCkf+mT+pzHW+BBjtSfBJCPax3vbJ
+         Sx3XaT7RGCc0R452V/X0WMlfKcKtYSbmLV+F61faTyVB+DrpJS+9qw5oV82RFMlQe+Le
+         MYw3MxKI+pEul4C5bnkCO8MoxWH2D99IdMqI4ukGFzmA1NpwK+1x7OfQ4jiHZZ9vMIA6
+         OmjKUQZgL7iyiqa/k5yu/jsR4S7iQ6vk091MLj29zKyU0zPTY/b0nlTg2bIwNah46peJ
+         jY3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TK1f1dl6MjT9oXeqIhsMWlEpHW6Ya5m7lCHOBn6DQcU=;
+        b=DImlMeeI0SAsJakVYmRe4K0jopEcF/cXkeZZrBXQn57iTf5pxP8GpROh0H0fdNHZPx
+         5S7/Jz+Ab7lRQTdTWp5hMWr2dGT6+rip0eJkHXhv1AK4fWNib3mcqICGjtGHHu/MKKHQ
+         8kMvXKM6ilwLshjwSsfsHzZXgb+O0LTFABPyEcsa5IJZQG9l5BoYKVna7hYIwe8EUP2p
+         nHJZG43VdsNKnykKLGi2AqMAVZO0BX8C4WlS36fGHGpWAOwNRqAj8mNX7uIddU3Tmzb3
+         A2sBqYB7XjO0g5L0F0Eu9unC6gNDTXJimuqPRMGeFdsQnaj+3dEnPwmgSLQ25OR3GM/3
+         eU7Q==
+X-Gm-Message-State: APjAAAXUfGCP+QEVTXx+Y8K563C51ytA5KaL4mm1htkk+p3SdqFiLDUW
+        HttBk+tyaNtU4HIFbufZSXodgUDlZuru70Dta5Q=
+X-Google-Smtp-Source: APXvYqzdgrwBNgfkGNdYlGMKLKQLO9CJ7KXb64awVxzHUKZepseSqBKftXnP8qj1qSyAWhs53iE8udttMeFhu8cBmmY=
+X-Received: by 2002:a2e:8510:: with SMTP id j16mr2619423lji.174.1567010707090;
+ Wed, 28 Aug 2019 09:45:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190815225844.145726-1-nhuck@google.com> <20190827004155.11366-1-natechancellor@gmail.com>
+ <CAK7LNATHj5KrnFa0fvHjuC-=5mV8VBT14vrpPMfuNKWw7wabag@mail.gmail.com>
+In-Reply-To: <CAK7LNATHj5KrnFa0fvHjuC-=5mV8VBT14vrpPMfuNKWw7wabag@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Wed, 28 Aug 2019 18:44:56 +0200
+Message-ID: <CANiq72ndWZWD-KBT1s-mUxQNa1jaD7oDaCB2+NPiT1chf14Z_g@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Do not enable -Wimplicit-fallthrough for clang
+ for now
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Huckleberry <nhuck@google.com>,
+        Joe Perches <joe@perches.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2601:449:8400:7293:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: yanaijie@huawei.com, wangkefeng.wang@huawei.com, keescook@chromium.org, kernel-hardening@lists.openwall.com, thunder.leizhen@huawei.com, linux-kernel@vger.kernel.org, npiggin@gmail.com, jingxiangfeng@huawei.com, diana.craciun@nxp.com, paulus@samba.org, zhaohongjiang@huawei.com, fanchengyang@huawei.com, linuxppc-dev@lists.ozlabs.org, yebin10@huawei.com
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH v6 06/12] powerpc/fsl_booke/32: implement KASLR
- infrastructure
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-08-28 at 19:03 +0800, Jason Yan wrote:
-> 
-> On 2019/8/28 12:54, Scott Wood wrote:
-> > On Fri, Aug 09, 2019 at 06:07:54PM +0800, Jason Yan wrote:
-> > > +/*
-> > > + * To see if we need to relocate the kernel to a random offset
-> > > + * void *dt_ptr - address of the device tree
-> > > + * phys_addr_t size - size of the first memory block
-> > > + */
-> > > +notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
-> > > +{
-> > > +	unsigned long tlb_virt;
-> > > +	phys_addr_t tlb_phys;
-> > > +	unsigned long offset;
-> > > +	unsigned long kernel_sz;
-> > > +
-> > > +	kernel_sz = (unsigned long)_end - KERNELBASE;
-> > 
-> > Why KERNELBASE and not kernstart_addr?
-> > 
-> 
-> Did you mean kernstart_virt_addr? It should be kernstart_virt_addr.
+On Wed, Aug 28, 2019 at 6:21 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Applied to linux-kbuild. Thanks.
+>
+> (If other clang folks give tags, I will add them later.)
 
-Yes, kernstart_virt_addr.  KERNELBASE will be incorrect if the kernel was
-loaded at a nonzero physical address without CONFIG_PHYSICAL_START being
-adjusted to match.
+Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
--Scott
-
-
+Cheers,
+Miguel
