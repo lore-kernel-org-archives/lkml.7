@@ -2,209 +2,85 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EBDC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75A5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7FA120856
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:24:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567023851;
-	bh=bLage3a1x80mFRO8bi7BYvLaUOQV499319XyPI0AIOo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=qbTHXb+f7geptoHuscnyr1ZOglMhj4YscANX4+7Vp7RZnquz8L0yTelFskl5AwAmm
-	 UWXOex5VIuIvDNRKLWdARqA+ynwpqPLc75MRkEsn1Fgiaygwj/LXrhlK1e2WCzzjm8
-	 kq9IfX2PESEa0ht1NKOoa5EaNetKjNEwH43oboRA=
+	by mail.kernel.org (Postfix) with ESMTP id A3D962189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:24:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfH1UYL (ORCPT
+        id S1727020AbfH1UYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 16:24:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15656 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726687AbfH1UYF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 16:24:05 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SKMbvu107378;
-        Wed, 28 Aug 2019 16:23:32 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2umpb3m8e7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Aug 2019 16:23:32 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7SKMgVt107619;
-        Wed, 28 Aug 2019 16:23:31 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2umpb3m8dk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Aug 2019 16:23:31 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7SKK6Is005782;
-        Wed, 28 Aug 2019 20:23:30 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma01dal.us.ibm.com with ESMTP id 2unb3t0023-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Aug 2019 20:23:30 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7SKNTko39387518
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Aug 2019 20:23:29 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36991B2064;
-        Wed, 28 Aug 2019 20:23:29 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 106F8B2066;
-        Wed, 28 Aug 2019 20:23:29 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 28 Aug 2019 20:23:29 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id C463216C65B8; Wed, 28 Aug 2019 13:23:30 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 13:23:30 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC v1 2/2] rcu/tree: Remove dynticks_nmi_nesting counter
-Message-ID: <20190828202330.GS26530@linux.ibm.com>
-Reply-To: paulmck@kernel.org
-References: <5d648897.1c69fb81.5e60a.fc70@mx.google.com>
+        Wed, 28 Aug 2019 16:24:37 -0400
+Received: from mga01.intel.com ([192.55.52.88]:28046 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726687AbfH1UYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 16:24:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 13:24:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
+   d="scan'208";a="171666831"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga007.jf.intel.com with ESMTP; 28 Aug 2019 13:24:36 -0700
+Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.127]) by
+ FMSMSX103.amr.corp.intel.com ([169.254.2.141]) with mapi id 14.03.0439.000;
+ Wed, 28 Aug 2019 13:24:36 -0700
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+Subject: Re: [PATCH] libnvdimm, region: Use struct_size() in kzalloc()
+Thread-Topic: [PATCH] libnvdimm, region: Use struct_size() in kzalloc()
+Thread-Index: AQHVH9BpuhzKadnSBkOkhqdJ05WiaacR2OoAgAAMuICAAA1MgA==
+Date:   Wed, 28 Aug 2019 20:24:35 +0000
+Message-ID: <7980d0c0b43bc6f377e0daad4a066f7ab37c2258.camel@intel.com>
+References: <20190610210613.GA21989@embeddedor>
+         <3e80b36c86942278ee66aebdd5ea2632f104083a.camel@intel.com>
+         <d940183a-c00d-3a96-37bb-9553583f160a@embeddedor.com>
+In-Reply-To: <d940183a-c00d-3a96-37bb-9553583f160a@embeddedor.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+x-originating-ip: [10.232.112.185]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3847512B969EEA4C94940FD1F358BBD7@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d648897.1c69fb81.5e60a.fc70@mx.google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908280200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 09:33:54PM -0400, Joel Fernandes (Google) wrote:
-> The dynticks_nmi_nesting counter serves 4 purposes:
-> 
->       (a) rcu_is_cpu_rrupt_from_idle() needs to be able to detect first
->           interrupt nesting level.
-> 
->       (b) We need to detect half-interrupts till we are sure they're not an
->           issue. However, change the comparison to DYNTICK_IRQ_NONIDLE with 0.
-> 
->       (c) When a quiescent state report is needed from a nohz_full CPU.
->           The nesting counter detects we are a first level interrupt.
-> 
-> For (a) we can just use dyntick_nesting == 1 to determine this. Only the
-> outermost interrupt that interrupted an RCU-idle state can set it to 1.
-> 
-> For (b), this warning condition has not occurred for several kernel
-> releases.  But we still keep the warning but change it to use
-> in_interrupt() instead of the nesting counter. In a later year, we can
-> remove the warning.
-> 
-> For (c), the nest check is not really necessary since forced_tick would
-> have been set to true in the outermost interrupt, so the nested/NMI
-> interrupts will check forced_tick anyway, and bail.
-
-Skipping the commit log and documentation for this pass.
-
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  .../Data-Structures/Data-Structures.rst       | 31 +++------
->  Documentation/RCU/stallwarn.txt               |  6 +-
->  kernel/rcu/tree.c                             | 64 +++++++------------
->  kernel/rcu/tree.h                             |  4 +-
->  kernel/rcu/tree_stall.h                       |  4 +-
->  5 files changed, 41 insertions(+), 68 deletions(-)
-
-[ . . . ]
-
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 255cd6835526..1465a3e406f8 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -81,7 +81,6 @@
->  
->  static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
->  	.dynticks_nesting = 1,
-> -	.dynticks_nmi_nesting = 0,
-
-This should be in the previous patch, give or take naming.
-
->  	.dynticks = ATOMIC_INIT(RCU_DYNTICK_CTRL_CTR),
->  };
->  struct rcu_state rcu_state = {
-> @@ -392,15 +391,9 @@ static int rcu_is_cpu_rrupt_from_idle(void)
->  	/* Check for counter underflows */
->  	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) < 0,
->  			 "RCU dynticks_nesting counter underflow!");
-> -	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 0,
-> -			 "RCU dynticks_nmi_nesting counter underflow/zero!");
->  
-> -	/* Are we at first interrupt nesting level? */
-> -	if (__this_cpu_read(rcu_data.dynticks_nmi_nesting) != 1)
-> -		return false;
-> -
-> -	/* Does CPU appear to be idle from an RCU standpoint? */
-> -	return __this_cpu_read(rcu_data.dynticks_nesting) == 0;
-> +	/* Are we the outermost interrupt that arrived when RCU was idle? */
-> +	return __this_cpu_read(rcu_data.dynticks_nesting) == 1;
->  }
->  
->  #define DEFAULT_RCU_BLIMIT 10     /* Maximum callbacks per rcu_do_batch ... */
-> @@ -564,11 +557,10 @@ static void rcu_eqs_enter(bool user)
->  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
->  
->  	/* Entering usermode/idle from interrupt is not handled. These would
-> -	 * mean usermode upcalls or idle entry happened from interrupts. But,
-> -	 * reset the counter if we warn.
-> +	 * mean usermode upcalls or idle exit happened from interrupts. Remove
-> +	 * the warning by 2020.
->  	 */
-> -	if (WARN_ON_ONCE(rdp->dynticks_nmi_nesting != 0))
-> -		WRITE_ONCE(rdp->dynticks_nmi_nesting, 0);
-> +	WARN_ON_ONCE(in_interrupt());
-
-And this is a red flag.  Bad things happen should some common code
-that disables BH be invoked from the idle loop.  This might not be
-happening now, but we need to avoid this sort of constraint.
-
-How about instead merging ->dyntick_nesting into the low-order bits
-of ->dyntick_nmi_nesting?
-
-Yes, this assumes that we don't enter process level twice, but it should
-be easy to add a WARN_ON() to test for that.  Except that we don't have
-to because there is already this near the end of rcu_eqs_exit():
-
-	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
-
-So the low-order bit of the combined counter could indicate process-level
-non-idle, the next three bits could be unused to make interpretation
-of hex printouts easier, and then the rest of the bits could be used in
-the same way as currently.
-
-This would allow a single read to see the full state, so that 0x1 means
-at process level in the kernel, 0x11 is interrupt (or NMI) from process
-level, 0x10 is interrupt/NMI from idle/user, and so on.
-
-What am I missing here?  Why wouldn't this work, and without adding yet
-another RCU-imposed constraint on some other subsystem?
-
-							Thanx, Paul
+T24gV2VkLCAyMDE5LTA4LTI4IGF0IDE0OjM2IC0wNTAwLCBHdXN0YXZvIEEuIFIuIFNpbHZhIHdy
+b3RlOg0KDQo+IHN0cnVjdF9zaXplKCkgZG9lcyBub3QgYXBwbHkgdG8gdGhvc2Ugc2NlbmFyaW9z
+LiBTZWUgYmVsb3cuLi4NCj4gDQo+ID4gWzFdOiANCj4gPiBodHRwczovL2dpdC5rZXJuZWwub3Jn
+L3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9udmRpbW0vbnZkaW1tLmdpdC90cmVlL2RyaXZlcnMv
+bnZkaW1tL3JlZ2lvbl9kZXZzLmMjbjEwMzANCj4gDQo+IHN0cnVjdF9zaXplKCkgb25seSBhcHBs
+aWVzIHRvIHN0cnVjdHVyZXMgb2YgdGhlIGZvbGxvd2luZyBraW5kOg0KPiANCj4gc3RydWN0IGZv
+byB7DQo+ICAgIGludCBzdHVmZjsNCj4gICAgc3RydWN0IGJvbyBlbnRyeVtdOw0KPiB9Ow0KPiAN
+Cj4gYW5kIHRoaXMgc2NlbmFyaW8gaW5jbHVkZXMgdHdvIGRpZmZlcmVudCBzdHJ1Y3R1cmVzOg0K
+PiANCj4gc3RydWN0IG5kX3JlZ2lvbiB7DQo+IAkuLi4NCj4gICAgICAgICBzdHJ1Y3QgbmRfbWFw
+cGluZyBtYXBwaW5nWzBdOw0KPiB9Ow0KPiANCj4gc3RydWN0IG5kX2Jsa19yZWdpb24gew0KPiAJ
+Li4uDQo+ICAgICAgICAgc3RydWN0IG5kX3JlZ2lvbiBuZF9yZWdpb247DQo+IH07DQoNClllcCAt
+IEkgbmVnbGVjdGVkIHRvIGFjdHVhbGx5IGxvb2sgYXQgdGhlIHN0cnVjdHVyZXMgaW52b2x2ZWQg
+LSB5b3UncmUNCnJpZ2h0LCBpdCBkb2Vzbid0IGFwcGx5IGhlcmUuDQoNCj4gDQo+ID4gWzJdOiAN
+Cj4gPiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9udmRp
+bW0vbnZkaW1tLmdpdC90cmVlL2RyaXZlcnMvbnZkaW1tL3JlZ2lvbl9kZXZzLmMjbjk2DQo+ID4g
+DQo+IA0KPiBJbiB0aGlzIHNjZW5hcmlvIHN0cnVjdF9zaXplKCkgZG9lcyBub3QgYXBwbHkgZGly
+ZWN0bHkgYmVjYXVzZSBvZiB0aGUNCj4gZm9sbG93aW5nDQo+IGxvZ2ljIGJlZm9yZSB0aGUgY2Fs
+bCB0byBkZXZtX2t6YWxsb2MoKToNCg0KQWdyZWVkLCBJIG1pc3NlZCB0aGF0IHRoZSBjYWxjdWxh
+dGlvbiB3YXMgbW9yZSBpbnZvbHZlZCBoZXJlLg0KDQpUaGFua3MgZm9yIHRoZSBjbGFyaWZpY2F0
+aW9ucywgeW91IGNhbiBhZGQ6DQpSZXZpZXdlZC1ieTogVmlzaGFsIFZlcm1hIDx2aXNoYWwubC52
+ZXJtYUBpbnRlbC5jb20+DQoNCg==
