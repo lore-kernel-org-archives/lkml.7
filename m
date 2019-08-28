@@ -2,93 +2,162 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA577C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800DDC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC480208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B27208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:44:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="edIjBueo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfH1QoI (ORCPT
+        id S1726954AbfH1QoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:44:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34998 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726785AbfH1QoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:44:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 40A84B63B;
-        Wed, 28 Aug 2019 16:44:00 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Michal Suchanek <msuchanek@suse.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Breno Leitao <leitao@debian.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Nicolai Stange <nstange@suse.de>,
-        Michael Neuling <mikey@neuling.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Brauner <christian@brauner.io>,
-        David Howells <dhowells@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] powerpc/64: Make COMPAT user-selectable disabled on littleendian by default.
-Date:   Wed, 28 Aug 2019 18:43:51 +0200
-Message-Id: <0fee1d8d0bc2507b95971d5d55bff53be85fae8b.1567007242.git.msuchanek@suse.de>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1567007242.git.msuchanek@suse.de>
-References: <cover.1567007242.git.msuchanek@suse.de>
+        Wed, 28 Aug 2019 12:44:18 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:50291 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbfH1QoR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 12:44:17 -0400
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x7SGhuDU003279;
+        Thu, 29 Aug 2019 01:43:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x7SGhuDU003279
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567010637;
+        bh=+iR2wGeB3ADz18zgAyOrpJCFTT9CHJCP8dcmnyGJwvs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=edIjBueoXPfrTuXqzqsgCqHEbSZvpndN0QckeBuAvljwoLk3eF/HKsEFosLWl1lwf
+         SZWEgIc4Gg7TLe1DsKovEisZ4srJzndZZpSjIbE9S2fOS9xWnzpfv9J27pujmCdcF/
+         8iJnHGqLELREaxwD8KqtfQuuc3GHfrU0Ivhr/QoIXNjfHMTHcY7B+y15WU+siIJNdE
+         Vbjm6dsaK6C71jybGtONrHYQxZSp5a2p6JzvabrhSGwDK1yjoHIzrSM8S8JmowjrJJ
+         6u3Eyw64fffKzufj55kOqhWRPf727TTH4tHW2+wV/qVz0okZm8pO/oABMJl2zJ4TU5
+         ye/B5PHnsoOGQ==
+X-Nifty-SrcIP: [209.85.222.42]
+Received: by mail-ua1-f42.google.com with SMTP id n13so190570uap.9;
+        Wed, 28 Aug 2019 09:43:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAU2tF1dDZrUlqRpfGR/N0sZBH/9erH5BFtw1/65AtYI6pIMlJWX
+        e5oQXoOQriw1u8wz8rlNZ4ccwAIUNrHDfW3GnZc=
+X-Google-Smtp-Source: APXvYqyvhbTL1chF5Rs/VNuz8fUNUTah+WXWqsLx0PVfEeqgD/rRLDRYEZjhet+JqmEDTXLfIz88NdTZYD+lbygKahQ=
+X-Received: by 2002:ab0:32d8:: with SMTP id f24mr2537777uao.121.1567010636117;
+ Wed, 28 Aug 2019 09:43:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190821070205.8297-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190821070205.8297-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 29 Aug 2019 01:43:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARu+9pdGsTh2tzMvopXXpBYC_BA0y+aQyjfP9nhKtqGDw@mail.gmail.com>
+Message-ID: <CAK7LNARu+9pdGsTh2tzMvopXXpBYC_BA0y+aQyjfP9nhKtqGDw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] kbuild: pkg: clean up package files/dirs from the top Makefile
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On bigendian ppc64 it is common to have 32bit legacy binaries but much
-less so on littleendian.
+On Wed, Aug 21, 2019 at 4:02 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> I am not a big fan of the $(objtree)/ hack for clean-files/clean-dirs.
+>
+> These are created in the top of $(objtree), so let's clean them up
+> from the top Makefile.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
-v3: make configurable
----
- arch/powerpc/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Applied to linux-kbuild.
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 5bab0bb6b833..b0339e892329 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -264,8 +264,9 @@ config PANIC_TIMEOUT
- 	default 180
- 
- config COMPAT
--	bool
--	default y if PPC64
-+	bool "Enable support for 32bit binaries"
-+	depends on PPC64
-+	default y if !CPU_LITTLE_ENDIAN
- 	select COMPAT_BINFMT_ELF
- 	select ARCH_WANT_OLD_COMPAT_IPC
- 	select COMPAT_OLD_SIGACTION
+
+>
+>  Makefile                 | 6 ++++--
+>  scripts/Makefile         | 2 +-
+>  scripts/package/Makefile | 9 ---------
+>  3 files changed, 5 insertions(+), 12 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 5d202ad1481a..e88d4fcd5e87 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1389,12 +1389,14 @@ CLEAN_FILES += modules.builtin.modinfo
+>
+>  # Directories & files removed with 'make mrproper'
+>  MRPROPER_DIRS  += include/config include/generated          \
+> -                 arch/$(SRCARCH)/include/generated .tmp_objdiff
+> +                 arch/$(SRCARCH)/include/generated .tmp_objdiff \
+> +                 debian/ snap/ tar-install/
+>  MRPROPER_FILES += .config .config.old .version \
+>                   Module.symvers \
+>                   signing_key.pem signing_key.priv signing_key.x509     \
+>                   x509.genkey extra_certificates signing_key.x509.keyid \
+> -                 signing_key.x509.signer vmlinux-gdb.py
+> +                 signing_key.x509.signer vmlinux-gdb.py \
+> +                 *.spec
+>
+>  # Directories & files removed with 'make distclean'
+>  DISTCLEAN_DIRS  +=
+> diff --git a/scripts/Makefile b/scripts/Makefile
+> index 16bcb8087899..c42891e10ba3 100644
+> --- a/scripts/Makefile
+> +++ b/scripts/Makefile
+> @@ -36,4 +36,4 @@ subdir-$(CONFIG_MODVERSIONS) += genksyms
+>  subdir-$(CONFIG_SECURITY_SELINUX) += selinux
+>
+>  # Let clean descend into subdirs
+> -subdir-        += basic dtc gdb kconfig mod package
+> +subdir-        += basic dtc gdb kconfig mod
+> diff --git a/scripts/package/Makefile b/scripts/package/Makefile
+> index ca7f46b562a4..a2d8830f54be 100644
+> --- a/scripts/package/Makefile
+> +++ b/scripts/package/Makefile
+> @@ -65,8 +65,6 @@ binrpm-pkg: FORCE
+>         +rpmbuild $(RPMOPTS) --define "_builddir $(objtree)" --target \
+>                 $(UTS_MACHINE) -bb $(objtree)/binkernel.spec
+>
+> -clean-files += $(objtree)/*.spec
+> -
+>  deb-pkg: FORCE
+>         $(MAKE) clean
+>         $(CONFIG_SHELL) $(srctree)/scripts/package/mkdebian
+> @@ -82,8 +80,6 @@ bindeb-pkg: FORCE
+>  intdeb-pkg: FORCE
+>         +$(CONFIG_SHELL) $(srctree)/scripts/package/builddeb
+>
+> -clean-dirs += $(objtree)/debian/
+> -
+>  # snap-pkg
+>  # ---------------------------------------------------------------------------
+>  snap-pkg: FORCE
+> @@ -98,17 +94,12 @@ snap-pkg: FORCE
+>         cd $(objtree)/snap && \
+>         snapcraft --target-arch=$(UTS_MACHINE)
+>
+> -clean-dirs += $(objtree)/snap/
+> -
+>  # tarball targets
+>  # ---------------------------------------------------------------------------
+>  tar%pkg: FORCE
+>         $(MAKE) -f $(srctree)/Makefile
+>         +$(CONFIG_SHELL) $(srctree)/scripts/package/buildtar $@
+>
+> -clean-dirs += $(objtree)/tar-install/
+> -
+> -
+>  # perf-pkg - generate a source tarball with perf source
+>  # ---------------------------------------------------------------------------
+>
+> --
+> 2.17.1
+>
+
+
 -- 
-2.22.0
-
+Best Regards
+Masahiro Yamada
