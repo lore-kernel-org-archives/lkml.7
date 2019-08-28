@@ -2,79 +2,106 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F67AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 447EEC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6CB22CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2122E2189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:51:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfH1Luw (ORCPT
+        id S1726566AbfH1LvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 07:50:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59984 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726253AbfH1Luv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 07:50:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6C28BAF77;
-        Wed, 28 Aug 2019 11:50:50 +0000 (UTC)
-Date:   Wed, 28 Aug 2019 13:50:48 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        frowand.list@gmail.com, sergey.senozhatsky@gmail.com,
-        rostedt@goodmis.org, kunit-dev@googlegroups.com,
-        Randy Dunlap <rdunlap@infradead.org>, sboyd@kernel.org,
-        shuah@kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2] kunit: fix failure to build without printk
-Message-ID: <20190828115048.b4per6j3rw53oc5u@pathway.suse.cz>
-References: <20190828093143.163302-1-brendanhiggins@google.com>
- <20190828094929.GA14038@jagdpanzerIV>
+        Wed, 28 Aug 2019 07:51:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50906 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726465AbfH1LvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 07:51:13 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 88CBB3099F76;
+        Wed, 28 Aug 2019 11:51:13 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 16E941001B0B;
+        Wed, 28 Aug 2019 11:51:08 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 13:51:06 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Huth <thuth@redhat.com>
+Subject: Re: [PATCH 0/4] KVM: selftests: Introduce VM_MODE_PXXV48_4K
+Message-ID: <20190828115106.2j6n7qust7uceds5@kamzik.brq.redhat.com>
+References: <20190827131015.21691-1-peterx@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828094929.GA14038@jagdpanzerIV>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190827131015.21691-1-peterx@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 28 Aug 2019 11:51:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-08-28 18:49:29, Sergey Senozhatsky wrote:
-> On (08/28/19 02:31), Brendan Higgins wrote:
-> [..]
-> > Previously KUnit assumed that printk would always be present, which is
-> > not a valid assumption to make. Fix that by removing call to
-> > vprintk_emit, and calling printk directly.
-> > 
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
-> > Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+On Tue, Aug 27, 2019 at 09:10:11PM +0800, Peter Xu wrote:
+> The work is based on Thomas's s390 port for dirty_log_test.
 > 
-> [..]
+> This series originates from "[PATCH] KVM: selftests: Detect max PA
+> width from cpuid" [1] and one of Drew's comments - instead of keeping
+> the hackish line to overwrite guest_pa_bits all the time, this series
+> introduced the new mode VM_MODE_PXXV48_4K for x86_64 platform.
 > 
-> > -static void kunit_vprintk(const struct kunit *test,
-> > -			  const char *level,
-> > -			  struct va_format *vaf)
-> > -{
-> > -	kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
-> > -}
+> The major issue is that even all the x86_64 kvm selftests are
+> currently using the guest mode VM_MODE_P52V48_4K, many x86_64 hosts
+> are not using 52 bits PA (and in most cases, far less).  If with luck
+> we could be having 48 bits hosts, but it's more adhoc (I've observed 3
+> x86_64 systems, they are having different PA width of 36, 39, 48).  I
+> am not sure whether this is happening to the other archs as well, but
+> it probably makes sense to bring the x86_64 tests to the real world on
+> always using the correct PA bits.
 > 
-> This patch looks good to me. I like the removal of recursive
-> vsprintf() (%pV).
+> A side effect of this series is that it will also fix the crash we've
+> encountered on Xeon E3-1220 as mentioned [1] due to the
+> differenciation of PA width.
+> 
+> With [1], we've observed AMD host issues when with NPT=off.  However a
+> funny fact is that after I reworked into this series, the tests can
+> instead pass on both NPT=on/off.  It could be that the series changes
+> vm->pa_bits or other fields so something was affected.  I didn't dig
+> more on that though, considering we should not lose anything.
+> 
+> Any kind of smoke test would be greatly welcomed (especially on s390
+> or ARM).  Same to comments.  Thanks,
+> 
 
-Same here. And I am happy that we did not add more external
-vprintk_emit() callers. It would be great to rework dev_printk()
-as well.
+The patches didn't apply cleanly for me on 9e8312f5e160, but once I got
+them applied I was able to run the aarch64 tests.
 
-Best Regards,
-Petr
+> [1] https://lkml.org/lkml/2019/8/26/141
+> 
+> Peter Xu (4):
+>   KVM: selftests: Move vm type into _vm_create() internally
+>   KVM: selftests: Create VM earlier for dirty log test
+>   KVM: selftests: Introduce VM_MODE_PXXV48_4K
+>   KVM: selftests: Remove duplicate guest mode handling
+> 
+>  tools/testing/selftests/kvm/dirty_log_test.c  | 78 +++++--------------
+>  .../testing/selftests/kvm/include/kvm_util.h  | 17 +++-
+>  .../selftests/kvm/lib/aarch64/processor.c     |  3 +
+>  tools/testing/selftests/kvm/lib/kvm_util.c    | 77 ++++++++++++++----
+>  .../selftests/kvm/lib/x86_64/processor.c      |  8 +-
+>  5 files changed, 107 insertions(+), 76 deletions(-)
+> 
+> -- 
+> 2.21.0
+>
+
+Thanks,
+drew
