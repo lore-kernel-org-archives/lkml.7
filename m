@@ -2,147 +2,121 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B3CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D8CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD85222CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C4F22CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:40:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SiERiSw5"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kerBQVkW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfH1ViO (ORCPT
+        id S1726925AbfH1VkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:38:14 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34836 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfH1ViN (ORCPT
+        Wed, 28 Aug 2019 17:40:04 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35981 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbfH1VkD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:38:13 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g7so1299638wrx.2;
-        Wed, 28 Aug 2019 14:38:11 -0700 (PDT)
+        Wed, 28 Aug 2019 17:40:03 -0400
+Received: by mail-qk1-f193.google.com with SMTP id d23so1162343qko.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 14:40:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sGjhjuh8luS+aqRBrfS7bHWA5KJ+QKi4i3rS6Cai6WY=;
-        b=SiERiSw553Kaxk/tRLH5J9b4vOVe5PEhITDMHzFEy2/8RX+K5wXHNtNLCnw4SbRJDk
-         JCCiIjdQLrIoZA/CfHjgVs42XEDgAWj4hn7afiVHrFw8LJtdpynYnsoxpBqKbSqTqfJd
-         HNKWuEzo2ini90T5kpyxNSKb+8ForNyAOwc/MVmCzxKfCGPiRbo466ilnhXU68kB1bA3
-         EhqYXDVTNeccNDqqIA7pYJlVX3RC/R8qfQnLNqoxVjSsXOio6D72LFOvsXoI14FflENV
-         wapdyA8ef8PQbXzGRWwhRRf3ISJ1p8DISLOgSWn54ygagD1I+Y5zRELj7YNRL6Zba8BR
-         qYwg==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=EmTT1pcCHOo3mELkDkITKYJZl7OtTPiDcR2k8eCL0AE=;
+        b=kerBQVkWoaLKOuaN5C0EeFfDfBmhedtWjA/6EuWLPDeK0IXyfY3ifMPGc38ncPlDQW
+         1HRTfUaHDM/gL9vDo/Tb2lk6GosB/UH43GB/lzCLwJM8jUtfflf1jxq/KlyMvkcNrrIG
+         up7O5A79KguoaieH5rUwP46b9gyPG2rCb7/hogh41hnfL8U1Ksv2uq9uJUu3EBllYoyt
+         jnKXcZPHVS9ObYNdpC6F7yWv4JvNacVwcEqNvKu2oI8lKZSMhq2LoPExhToVntelF6wj
+         ktwgih9i2yMvsMRjDGSaAebTUhMLA+HeaNiwGMJ2nxBmorGpaeZ/HI13A40SBZMpk5Sw
+         Sq4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sGjhjuh8luS+aqRBrfS7bHWA5KJ+QKi4i3rS6Cai6WY=;
-        b=WRkPN+kakvwxC+mu/Dm1fIbftsBCSl93ykeqz8HlCDQ2py12fYG5XU5czwS17odAHl
-         6nubPsiL0QeNtdwIYBVqeKUJ5GHa7bBvK/rYZ3bQcNna3z7szfsKuYwrmJdtdOtyHjGV
-         vi9h1V20qQKiNeBLR69l9KJ6PTreQqsizPNWhLDgi+pIL7aKvWjTT+4DhlFxV/bilA1t
-         hTDOnmxwEvrYab2Gj237G+lAxFoeNbcn3yZkM7y++jcR+8IjSZRZG0Fuk+hz62DRtskl
-         RKOE5/UNFrAHHVzrEbL0GFEaa3HHcfzBW6kgK6ScL8Rdo2+S33mGq4tQ/h5PGLEb6nwu
-         q0xA==
-X-Gm-Message-State: APjAAAUsCtrsEjw0AWHVyLLyHEen1a3f6LSkyo1vhdNSTKea32LUfQ3O
-        +8gHqwksAnlCevWGbxeY/fV7UWmneQMV++DEwfw=
-X-Google-Smtp-Source: APXvYqy0U65XUAnttf145xEP+EHodRd9s98VxWubDUuMO7oGhPo6lBhmmd2Vbn44BFVHtYxXeHabTrxP5Dn2X0NcIS4=
-X-Received: by 2002:a5d:51c6:: with SMTP id n6mr7299855wrv.206.1567028290871;
- Wed, 28 Aug 2019 14:38:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190822205533.4877-1-david.abdurachmanov@sifive.com> <201908251451.73C6812E8@keescook>
-In-Reply-To: <201908251451.73C6812E8@keescook>
-From:   David Abdurachmanov <david.abdurachmanov@gmail.com>
-Date:   Wed, 28 Aug 2019 14:37:34 -0700
-Message-ID: <CAEn-LToB1atxDvehBanVaxg6sk8zDkMe_CbqeTVgKNzOvD9-Sw@mail.gmail.com>
-Subject: Re: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Vincent Chen <vincentc@andestech.com>,
-        Alan Kao <alankao@andestech.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, me@carlosedp.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EmTT1pcCHOo3mELkDkITKYJZl7OtTPiDcR2k8eCL0AE=;
+        b=YH9GwsuRTel8jvcINN4ZihZEz0wgSf42Gb4TtY37/EYDBC6Pvwrhf9ro9S/avwwmuP
+         SaTz3VrwH8PwgJTcLlSuoKyY9pxXEMa0xc3zST4wDlawTRaMvEETtkVNhqAdBvhxQSyf
+         AA9ZQ+MnpuxSmZW1aePW/JdbVGX2ghkUCbdTqoYQMrsomRNv7WLExYA0ZCCXhA02SYJM
+         ppvrXIWf3d4rHWDEKlxtV+sCf27c/l23cL+DkmrB5CH4UtTjUdrGzQZh+DNbBxqkV30o
+         ivKRUu8AYf7tfssmMkgUNfznmotZ3KHuz028vt3iruxDrqftfKjGP1Z73wPvQf/uzqh+
+         w8PA==
+X-Gm-Message-State: APjAAAWKIhxR5VMiE8rgMI0l+KMxnINRowMe4cB9hzq4VLKngbUdb0ZX
+        eLEQwQb1PCjBdom6DRimjKc2LLqtnrA=
+X-Google-Smtp-Source: APXvYqynvZd1tC0QzKBhqumYU9ToK5PK+egw85h4ro5wfmFlMYgX830omiwHI+ghfNzm9NerCLZRig==
+X-Received: by 2002:a37:a0c2:: with SMTP id j185mr6211520qke.123.1567028402940;
+        Wed, 28 Aug 2019 14:40:02 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id r4sm273053qta.93.2019.08.28.14.40.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 28 Aug 2019 14:40:02 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     jroedel@suse.de
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] iommu/amd: silence warnings under memory pressure
+Date:   Wed, 28 Aug 2019 17:39:43 -0400
+Message-Id: <1567028383-29325-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 10:36 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, Aug 22, 2019 at 01:55:22PM -0700, David Abdurachmanov wrote:
-> > This patch was extensively tested on Fedora/RISCV (applied by default on
-> > top of 5.2-rc7 kernel for <2 months). The patch was also tested with 5.3-rc
-> > on QEMU and SiFive Unleashed board.
->
-> Oops, I see the mention of QEMU here. Where's the best place to find
-> instructions on creating a qemu riscv image/environment?
+When running heavy memory pressure workloads, the system is throwing
+endless warnings,
 
-Examples from what I personally use:
-https://github.com/riscv/meta-riscv
-https://fedoraproject.org/wiki/Architectures/RISC-V/Installing#Boot_with_libvirt
-(might be outdated)
+smartpqi 0000:23:00.0: AMD-Vi: IOMMU mapping error in map_sg (io-pages:
+5 reason: -12)
+Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
+07/10/2019
+swapper/10: page allocation failure: order:0, mode:0xa20(GFP_ATOMIC),
+nodemask=(null),cpuset=/,mems_allowed=0,4
+Call Trace:
+ <IRQ>
+ dump_stack+0x62/0x9a
+ warn_alloc.cold.43+0x8a/0x148
+ __alloc_pages_nodemask+0x1a5c/0x1bb0
+ get_zeroed_page+0x16/0x20
+ iommu_map_page+0x477/0x540
+ map_sg+0x1ce/0x2f0
+ scsi_dma_map+0xc6/0x160
+ pqi_raid_submit_scsi_cmd_with_io_request+0x1c3/0x470 [smartpqi]
+ do_IRQ+0x81/0x170
+ common_interrupt+0xf/0xf
+ </IRQ>
 
-If you are running machine with a properly working libvirt/QEMU setup:
+because the allocation could fail from iommu_map_page(), and the volume
+of this call could be huge which may generate a lot of serial console
+output and cosumes all CPUs.
 
-VIRTBUILDER_IMAGE=fedora-rawhide-developer-20190703n0
-FIRMWARE=fw_payload-uboot-qemu-virt-smode.elf
-wget https://dl.fedoraproject.org/pub/alt/risc-v/disk-images/fedora/rawhide/20190703.n.0/Developer/$FIRMWARE
-echo riscv > /tmp/rootpw
-virt-builder \
-    --verbose \
-    --source https://dl.fedoraproject.org/pub/alt/risc-v/repo/virt-builder-images/images/index
-\
-    --no-check-signature \
-    --arch riscv64 \
-    --size 10G \
-    --format raw \
-    --hostname fedora-riscv \
-    -o disk \
-    --root-password file:/tmp/rootpw \
-    ${VIRTBUILDER_IMAGE}
+Fix it by silencing the warning in this call site, and there is still a
+dev_err() later to notify the failure.
 
-sudo virt-install \
-    --name fedora-riscv \
-    --arch riscv64 \
-    --vcpus 4 \
-    --memory 3048 \
-    --import \
-    --disk path=$PWD/disk \
-    --boot kernel=$PWD/${FIRMWARE} \
-    --network network=default \
-    --graphics none \
-    --serial log.file=/tmp/fedora-riscv.serial.log \
-    --noautoconsole
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ drivers/iommu/amd_iommu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-The following does incl. SECCOMP v2 patch on top of 5.2-rc7 kernel.
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index b607a92791d3..19eef1edf8ed 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2547,7 +2547,9 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
+ 
+ 			bus_addr  = address + s->dma_address + (j << PAGE_SHIFT);
+ 			phys_addr = (sg_phys(s) & PAGE_MASK) + (j << PAGE_SHIFT);
+-			ret = iommu_map_page(domain, bus_addr, phys_addr, PAGE_SIZE, prot, GFP_ATOMIC);
++			ret = iommu_map_page(domain, bus_addr, phys_addr,
++					     PAGE_SIZE, prot,
++					     GFP_ATOMIC | __GFP_NOWARN);
+ 			if (ret)
+ 				goto out_unmap;
+ 
+-- 
+1.8.3.1
 
->
-> > There is one failing kernel selftest: global.user_notification_signal
->
-> This test has been fragile (and is not arch-specific), so as long as
-> everything else is passing, I would call this patch ready to go. :)
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> --
-> Kees Cook
