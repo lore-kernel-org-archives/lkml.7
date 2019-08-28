@@ -2,121 +2,151 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307D2C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16578C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08B462339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA6A822DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:55:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jndXLe5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfH1Vzi (ORCPT
+        id S1727764AbfH1Vzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:55:38 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:46448 "EHLO ale.deltatee.com"
+        Wed, 28 Aug 2019 17:55:41 -0400
+Received: from ozlabs.org ([203.11.71.1]:34413 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbfH1Vyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:54:39 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1i35tj-00071c-NH; Wed, 28 Aug 2019 15:54:38 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1i35ti-0001Cj-5n; Wed, 28 Aug 2019 15:54:34 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 28 Aug 2019 15:54:17 -0600
-Message-Id: <20190828215429.4572-2-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190828215429.4572-1-logang@deltatee.com>
-References: <20190828215429.4572-1-logang@deltatee.com>
+        id S1727103AbfH1Vzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 17:55:40 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46JfgY6xPMz9sN4;
+        Thu, 29 Aug 2019 07:55:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567029338;
+        bh=trV+YGvYxNvB9BN+5qQZbtfhppivJU4cFdm0cDK2+rI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jndXLe5FjeSEkRjdoULkyHRs40O6jzy/1gv+zySqhMHPo56/IUUWPduUfgmD267jV
+         dg23MSc5wU35nhNVI3NOVWeBu7Aw6lDa/FGx53rolllkjK79GWvEfdm6mBE/30ebCu
+         si2tOf5BIfM/aZO4wflvM/PoSyGPsxwUPjiDxxuqKZpr5NZCUTU79/8PYcGGSHbZiQ
+         H9+0iF9SZpmOsja+bCpUvMMcxilqyJnKm7F5BQhU5sFdEd5LfXwEIjtHOx/XDPSsWS
+         IoUJRgd7rvWhyZYjNWmA1oQ6tGEFshmgwWvwVJOm5+mfPrdKF542aD6tPV/19ED4ep
+         23BWBWx3zsz9Q==
+Date:   Thu, 29 Aug 2019 07:55:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: linux-next: Fixes tags need some work in the mmc-fixes tree
+Message-ID: <20190829075530.6fb7341c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v8 01/13] nvme-core: introduce nvme_ctrl_get_by_path()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: multipart/signed; boundary="Sig_/LLJXSgfWPEA/X.PWOIp2sfa";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nvme_ctrl_get_by_path() is analagous to blkdev_get_by_path() except it
-gets a struct nvme_ctrl from the path to its char dev (/dev/nvme0).
-It makes use of filp_open() to open the file and uses the private
-data to obtain a pointer to the struct nvme_ctrl. If the fops of the
-file do not match, -EINVAL is returned.
+--Sig_/LLJXSgfWPEA/X.PWOIp2sfa
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The purpose of this function is to support NVMe-OF target passthru.
+Hi all,
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
----
- drivers/nvme/host/core.c | 24 ++++++++++++++++++++++++
- drivers/nvme/host/nvme.h |  2 ++
- 2 files changed, 26 insertions(+)
+In commit
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index d3d6b7bd6903..776eff8c5ba7 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -2834,6 +2834,30 @@ static const struct file_operations nvme_dev_fops = {
- 	.compat_ioctl	= nvme_dev_ioctl,
- };
- 
-+struct nvme_ctrl *nvme_ctrl_get_by_path(const char *path)
-+{
-+	struct nvme_ctrl *ctrl;
-+	struct file *f;
-+
-+	f = filp_open(path, O_RDWR, 0);
-+	if (IS_ERR(f))
-+		return ERR_CAST(f);
-+
-+	if (f->f_op != &nvme_dev_fops) {
-+		ctrl = ERR_PTR(-EINVAL);
-+		goto out_close;
-+	}
-+
-+	ctrl = f->private_data;
-+	nvme_get_ctrl(ctrl);
-+
-+out_close:
-+	filp_close(f, NULL);
-+
-+	return ctrl;
-+}
-+EXPORT_SYMBOL_GPL(nvme_ctrl_get_by_path);
-+
- static ssize_t nvme_sysfs_reset(struct device *dev,
- 				struct device_attribute *attr, const char *buf,
- 				size_t count)
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 2d678fb968c7..42d59445ae6b 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -489,6 +489,8 @@ int nvme_get_log(struct nvme_ctrl *ctrl, u32 nsid, u8 log_page, u8 lsp,
- extern const struct attribute_group *nvme_ns_id_attr_groups[];
- extern const struct block_device_operations nvme_ns_head_ops;
- 
-+struct nvme_ctrl *nvme_ctrl_get_by_path(const char *path);
-+
- #ifdef CONFIG_NVME_MULTIPATH
- static inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
- {
--- 
-2.20.1
+  f93be8a7a366 ("mmc: sdhci-sprd: clear the UHS-I modes read from registers=
+")
 
+Fixes tag
+
+  Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+In commit
+
+  218258427ce0 ("mms: sdhci-sprd: add SDHCI_QUIRK_BROKEN_CARD_DETECTION")
+
+Fixes tag
+
+  Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+In commit
+
+  1236e62ef8de ("mmc: sdhci-sprd: add SDHCI_QUIRK2_PRESET_VALUE_BROKEN")
+
+Fixes tag
+
+  Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+In commit
+
+  8180519b1be0 ("mmc: sdhci-sprd: add get_ro hook function")
+
+Fixes tag
+
+  Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+In commit
+
+  b4e4296cc206 ("mmc: sdhci-sprd: fixed incorrect clock divider")
+
+Fixes tag
+
+  Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more tha one line - even if the line
+is more than 80 characters.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/LLJXSgfWPEA/X.PWOIp2sfa
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1m+FIACgkQAVBC80lX
+0GyFQwgAgLkGu03CvO/syIVoC1fL7M2HVBIxP6yEF4I4GpW42kfTQ1NLT1weKlt7
+TPLWU2y/smCNKxzs5Z+phI4qO1z4eB1oN5zKSRLjzxwGYwIqHpgcphuPev5/XNoy
+0WZL7O6oMUxRjPGPcTnCF8Kl5Fr2R1IfIVmS0CY8cu6S3buITRNC3+jYNMWPiMQW
+sJGBneMrEQqQ43sK3cOWsIoNoEWxuCMidX00yZM/lthpWjpI90FExQDjPNOQ1jcK
+k+fzfA9qKTSo8N4AtVVDyVsfX0YSstfbQsSZH+kXEf54GfPQmobsY02+aN96i5OM
+D0vEQsO46VUVCT+y94ImOgjWQO0p1w==
+=JjJ1
+-----END PGP SIGNATURE-----
+
+--Sig_/LLJXSgfWPEA/X.PWOIp2sfa--
