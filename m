@@ -2,98 +2,108 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58091C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 00:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CFAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 00:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C3A3208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 00:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40FB7214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 00:45:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Eb5Wlw9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbfH1Aj2 (ORCPT
+        id S1726264AbfH1Apq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 20:39:28 -0400
-Received: from mga04.intel.com ([192.55.52.120]:63039 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbfH1Aj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 20:39:27 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 17:39:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,439,1559545200"; 
-   d="scan'208";a="381112530"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga006.fm.intel.com with ESMTP; 27 Aug 2019 17:39:25 -0700
-Date:   Wed, 28 Aug 2019 08:39:03 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-Cc:     alastair@d-silva.org, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Qian Cai <cai@lca.pw>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm: Don't manually decrement num_poisoned_pages
-Message-ID: <20190828003903.GB15462@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20190827053656.32191-1-alastair@au1.ibm.com>
- <20190827053656.32191-2-alastair@au1.ibm.com>
+        Tue, 27 Aug 2019 20:45:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58538 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfH1App (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 20:45:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zEBHcr/09CEKB955bmxu+097hCT7UUPXb3clVAJ4cus=; b=Eb5Wlw9GoJaa2jLtchp7QDNz1
+        ubFfNEPcGO6aS/hDUCR0aVYgwMjm+a5jrrbJvwCaX1LSGsGWLOBDoPEzC9j8jdw3qRYZdVXR0OO6+
+        E4ayvuE8J++OQiuPWzl7+Tafv3L75zkDwUD6PD3dJVyE48MmxSdh21aqgYkbW8eqzCU2wCH27xrqb
+        EoJdG5GjhfmVxGyLHrCrUN2TttduqU4GKbj7ZPJNfexjyQPO87K9o99U8+35opV16OMnGz7hA3qFy
+        Nyl7cyDxcrx87EPYLseVLUHzHmywzsLq8ER/lMmsRvh6ootGtfvia84Iekntkrc3w2A50PlNx9EVL
+        K70+SEPIA==;
+Received: from [2601:1c0:6200:6e8::4f71]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i2m5m-00034Q-1H; Wed, 28 Aug 2019 00:45:42 +0000
+Subject: Re: [PATCH v1] printk: add dummy vprintk_emit for when
+ CONFIG_PRINTK=n
+To:     Brendan Higgins <brendanhiggins@google.com>, shuah@kernel.org,
+        pmladek@suse.com, sergey.senozhatsky@gmail.com, rostedt@goodmis.org
+Cc:     kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, frowand.list@gmail.com,
+        sboyd@kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20190827234835.234473-1-brendanhiggins@google.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <29c9d723-1f4e-8d58-7adc-cd84431c3fe1@infradead.org>
+Date:   Tue, 27 Aug 2019 17:45:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827053656.32191-2-alastair@au1.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190827234835.234473-1-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 03:36:54PM +1000, Alastair D'Silva wrote:
->From: Alastair D'Silva <alastair@d-silva.org>
->
->Use the function written to do it instead.
->
->Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-
-Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
-
->---
-> mm/sparse.c | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
->
->diff --git a/mm/sparse.c b/mm/sparse.c
->index 72f010d9bff5..e41917a7e844 100644
->--- a/mm/sparse.c
->+++ b/mm/sparse.c
->@@ -11,6 +11,8 @@
-> #include <linux/export.h>
-> #include <linux/spinlock.h>
-> #include <linux/vmalloc.h>
->+#include <linux/swap.h>
->+#include <linux/swapops.h>
+On 8/27/19 4:48 PM, Brendan Higgins wrote:
+> Previously vprintk_emit was only defined when CONFIG_PRINTK=y, this
+> caused a build failure in kunit/test.c when CONFIG_PRINTK was not set.
+> Add a no-op dummy so that callers don't have to ifdef around this.
 > 
-> #include "internal.h"
-> #include <asm/dma.h>
->@@ -898,7 +900,7 @@ static void clear_hwpoisoned_pages(struct page *memmap, int nr_pages)
+> Note: It has been suggested that this go in through the kselftest tree
+> along with the KUnit patches, because KUnit depends on this. See the
+> second link for the discussion on this.
 > 
-> 	for (i = 0; i < nr_pages; i++) {
-> 		if (PageHWPoison(&memmap[i])) {
->-			atomic_long_sub(1, &num_poisoned_pages);
->+			num_poisoned_pages_dec();
-> 			ClearPageHWPoison(&memmap[i]);
-> 		}
-> 	}
->-- 
->2.21.0
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
+> Link: https://lore.kernel.org/linux-kselftest/ECADFF3FD767C149AD96A924E7EA6EAF977A5D82@USCULXMSG01.am.sony.com/
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+Thanks.
+
+> ---
+>  include/linux/printk.h | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/include/linux/printk.h b/include/linux/printk.h
+> index cefd374c47b1..85b7970615a9 100644
+> --- a/include/linux/printk.h
+> +++ b/include/linux/printk.h
+> @@ -206,6 +206,13 @@ extern void printk_safe_init(void);
+>  extern void printk_safe_flush(void);
+>  extern void printk_safe_flush_on_panic(void);
+>  #else
+> +static inline __printf(5, 0)
+> +int vprintk_emit(int facility, int level,
+> +		 const char *dict, size_t dictlen,
+> +		 const char *fmt, va_list args)
+> +{
+> +	return 0;
+> +}
+>  static inline __printf(1, 0)
+>  int vprintk(const char *s, va_list args)
+>  {
+> 
+
 
 -- 
-Wei Yang
-Help you, Help me
+~Randy
