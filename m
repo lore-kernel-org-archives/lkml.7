@@ -2,108 +2,198 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1680C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724A7C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8213222CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39AF122CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:37:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uNDOxqZH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pVECr5uE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfH1Ugi (ORCPT
+        id S1727056AbfH1Uhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 16:36:38 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33112 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbfH1Ugi (ORCPT
+        Wed, 28 Aug 2019 16:37:38 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43966 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfH1Uhi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 16:36:38 -0400
-Received: by mail-qk1-f194.google.com with SMTP id w18so1033153qki.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 13:36:37 -0700 (PDT)
+        Wed, 28 Aug 2019 16:37:38 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y8so1091882wrn.10;
+        Wed, 28 Aug 2019 13:37:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=46Ne7YWhhGVSNBj1PAVeg9+1026jUGq5ei9X7Tyvb8Q=;
-        b=uNDOxqZHC+NV9+n+ZUO+6qv0GU0pO5phsV/KoljwJWoaDKQsKdgx+Rtj/ytcOplT4E
-         XD6jc2avq+9unyF0rEK/ArmURuex07kQl49NAKPXGfgdCZMYjSDsK6RYjPcPzMqfN/IK
-         iTbbXJaDIjpj0A7P6yoSUWij1iU4TLG2pE7kWe03hZwYsnoD8xpQLBX6JtmyiDebxWGE
-         xstZMOrPWjjkP843JA/SIXkH/0qGaE8y6/W6NGWiEyO9LzWf7KSEGVmnxI24mVrid6mY
-         +XCInls2ZjC6XG0MGaCqi6LjlDu3wIqSkdZNg2x7++L/ui5fINW4fwPx7AY0IRYIDpzU
-         QGsw==
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=miPshPOcnrEwVpvxQoK3Ls37y5/pCPaMdY3vQpQnRPk=;
+        b=pVECr5uEbJzJZx8TrmQlLcIWPgLqayJDDotVSoF/PJWjF750XnV9qKxVSiOQQBcVUQ
+         TIvK0sjsvAxn3bsXcXikA6VAAaopwdIMVhSqfSXUAhX8HirmBRylAgRi6S0OmjIlNZGt
+         yLI4oV9YAS/cFofsoU2r6hvZNTZXTV3/VQGglLA1VnZ8COtH+5s22xTnTlpK/X1f1Qjs
+         fP8j33/6i9SwOFSBHDmKih2y4zRIpZagKowInP/EBRT/003CQNqhzoChDTummfoMQm6a
+         NC+YRgrT3579IFYLPW1h17gnjQA9AFBjvrSllaZIv7StH6qLxhU7w2VgLQPZdXw7ULab
+         BH2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=46Ne7YWhhGVSNBj1PAVeg9+1026jUGq5ei9X7Tyvb8Q=;
-        b=OSWZo0o57gpeMSRCIxIV0xhEtd0FEDR28nBhksU4+4gnPTSZ+UhOjkBCa8/LBHGMXe
-         4efAd2Os1MJfsraDsqIrh1NM0o6Iv+PVF/8nJvVyYNNgu+EV6tEPox9yu1qihLMmvf3R
-         ZiLzJwXAOEa05UN2y3mM9PvKDM3ixJpiKy58A72LfIbmLBteA18YsD1uE17yy+cWHtqm
-         fYarg7C8Wb2S9EnWGbFdX3TYC8fWZVwsPRvN7SVOZb5bDSFgtn16pLJE/IWN6aCtX0i+
-         S0pOlhB/dEFteD05+7+Vr7YvZafP4k5sBuBpB9vVICtdcEK4HpZCfdxYHPrfkn23SABH
-         HXZA==
-X-Gm-Message-State: APjAAAVRKQKPK49mPJcShPHh3Yl4mOVvpiRuG1girMufDWZPvS6XHZg0
-        eHl39X/h9kgv5l1l9+eXZ2E=
-X-Google-Smtp-Source: APXvYqyAJKmliA/4EfHD1afxMuBBhrspDELcQQzUK5S8jrmaVq9kWjuXsP9Fc2W61mBvckHsmcHAqQ==
-X-Received: by 2002:a37:8844:: with SMTP id k65mr5766729qkd.77.1567024596354;
-        Wed, 28 Aug 2019 13:36:36 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::b715])
-        by smtp.gmail.com with ESMTPSA id b1sm126411qkk.8.2019.08.28.13.36.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 13:36:35 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-To:     minyard@acm.org
-Cc:     linux-kernel@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net, kernel-team@fb.com
-Subject: [PATCH 1/1] ipmi_si_intf: Fix race in timer shutdown handling
-Date:   Wed, 28 Aug 2019 16:36:25 -0400
-Message-Id: <20190828203625.32093-2-Jes.Sorensen@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190828203625.32093-1-Jes.Sorensen@gmail.com>
-References: <20190828203625.32093-1-Jes.Sorensen@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=miPshPOcnrEwVpvxQoK3Ls37y5/pCPaMdY3vQpQnRPk=;
+        b=djtF/vvEZo9hsF4TvGZHAWuG14vjpbcsQU6nnRViWsFQy3PUoV3eebbSxsXrTeGhR5
+         tnt71bwEn+kf2jN6e+o9w/EM06uxH4VY7731vFKn58u6VVp1alvIwhLHFkwa7nPyv4iS
+         juI7npunucSQZ069zssf0uQDwHsU4+2eMcX3zotZgBi5nr3JMsRNEHPujJgOjM/59GYA
+         v8n4s6VWi6D5j/XSHHy84AmJQlTnFUQJOqlwzgjwxMvdDZJdA0qFkgrJ4DxwcYGQNueP
+         DReXY9u6XZUHX9Z/vKChVJL2GuH8IJeoOoLP7kXWZHan5+ZrumKn5xh6F4IEp45ANbJu
+         sPAA==
+X-Gm-Message-State: APjAAAV0yqyGytCruJgQtTiAcC2d5uKbPYvlgJ5WQeHQMvtivUUsoce6
+        sg9XaO+XpX+wjukKQ1ibBgZRqV0i
+X-Google-Smtp-Source: APXvYqysiWspI267imez/H1iQFU4xLC50QgrXaWgqSu08yzyzn06gYv39rESMMvD0DXx1Sp6XxU+gQ==
+X-Received: by 2002:adf:a2cd:: with SMTP id t13mr6535827wra.251.1567024655268;
+        Wed, 28 Aug 2019 13:37:35 -0700 (PDT)
+Received: from [192.168.1.19] (chg13.neoplus.adsl.tpnet.pl. [83.31.4.13])
+        by smtp.gmail.com with ESMTPSA id 24sm279546wmf.10.2019.08.28.13.37.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 28 Aug 2019 13:37:34 -0700 (PDT)
+Subject: Re: [PATCH v3 1/5] leds: lm3532: Fix brightness control for i2c mode
+To:     Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>,
+        Tony Lindgren <tony@atomide.com>
+Cc:     sre@kernel.org, nekit1000@gmail.com, mpartap@gmx.net,
+        merlijn@wizzup.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190820195307.27590-1-dmurphy@ti.com>
+ <20190826215822.GY52127@atomide.com> <20190826221413.GA19124@amd>
+ <20190826224437.GZ52127@atomide.com> <20190827121818.GB19927@amd>
+ <0eab6f72-ddb7-3da7-e90e-888374531f86@ti.com>
+ <69925382-d8f4-4916-f121-0184a4219354@gmail.com>
+ <84511f1e-5a04-5348-a2b4-1dc2b534a1cb@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
+ eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
+ FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
+ X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
+ 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
+ Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
+ FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
+ osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
+ IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
+ ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
+ emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAlgEEwEIAEICGwMHCwkIBwMC
+ AQYVCAIJCgsDFgIBAh4BAheABQkJZgNMFiEEvx38ClaPBfeVdXCQvWpQHLeLfCYFAl05/9sC
+ GQEACgkQvWpQHLeLfCarMQ/9FN/WqJdN2tf6xkP0RFyS4ft0sT04zkOCFfOMxs8mZ+KZoMU+
+ X3a+fEppDL7xgRFpHyGaEel7lSi1eqtzsqZ5JiHbDS1Ht1G8TtATb8q8id68qeSeW2mfzaLQ
+ 98NPELGfUXFoUqUQkG5z2p92UrGF4Muj1vOIW93pwvE4uDpNsl+jriwHomLtjIUoZtIRjGfZ
+ RCyUQI0vi5LYzXCebuzAjGD7Jh2YAp7fDGrv3qTq8sX+DUJ4H/+I8PiL+jXKkEeppqIhlBJJ
+ l4WcgggMu3c2uljYDuqRYghte33BXyCPAocfO2/sN+yJRUTVuRFlOxUk4srz/W8SQDwOAwtK
+ V7TzdyF1/jOGBxWwS13EjMb4u3XwPMzcPlEQNdIqz76NFmJ99xYEvgkAmFmRioxuBTRv8Fs1
+ c1jQ00WWJ5vezqY6lccdDroPalXWeFzfPjIhKbV3LAYTlqv0It75GW9+0TBhPqdTM15DrCVX
+ B7Ues7UnD5FBtWwewTnwr+cu8te449VDMzN2I+a9YKJ1s6uZmzh5HnuKn6tAfGyQh8MujSOM
+ lZrNHrRsIsLXOjeGVa84Qk/watEcOoyQ7d+YaVosU0OCZl0GldvbGp1z2u8cd2N/HJ7dAgFh
+ Q7dtGXmdXpt2WKQvTvQXhIrCWVQErNYbDZDD2V0TZtlPBaZP4fkUDkvH+Sy5Ag0EVaN9oQEQ
+ AMPNymBNoCWc13U6qOztXrIKBVsLGZXq/yOaR2n7gFbFACD0TU7XuH2UcnwvNR+uQFwSrRqa
+ EczX2V6iIy2CITXKg5Yvg12yn09gTmafuoIyKoU16XvC3aZQQ2Bn3LO2sRP0j/NuMD9GlO37
+ pHCVRpI2DPxFE39TMm1PLbHnDG8+lZql+dpNwWw8dDaRgyXx2Le542CcTBT52VCeeWDtqd2M
+ wOr4LioYlfGfAqmwcwucBdTEBUxklQaOR3VbJQx6ntI2oDOBlNGvjnVDzZe+iREd5l40l+Oj
+ TaiWvBGXkv6OI+wx5TFPp+BM6ATU+6UzFRTUWbj+LqVA/JMqYHQp04Y4H5GtjbHCa8abRvBw
+ IKEvpwTyWZlfXPtp8gRlNmxYn6gQlTyEZAWodXwE7CE+KxNnq7bPHeLvrSn8bLNK682PoTGr
+ 0Y00bguYLfyvEwuDYek1/h9YSXtHaCR3CEj4LU1B561G1j7FVaeYbX9bKBAoy/GxAW8J5O1n
+ mmw7FnkSHuwO/QDe0COoO0QZ620Cf9IBWYHW4m2M2yh5981lUaiMcNM2kPgsJFYloFo2XGn6
+ lWU9BrWjEoNDhHZtF+yaPEuwjZo6x/3E2Tu3E5Jj0VpVcE9U1Zq/fquDY79l2RJn5ENogOs5
+ +Pi0GjVpEYQVWfm0PTCxNPOzOzGR4QB3BNFvABEBAAGJAiUEGAEIAA8FAlWjfaECGwwFCQlm
+ AYAACgkQvWpQHLeLfCZqGxAAlWBWVvjU6xj70GwengiqYZwmW1i8gfS4TNibQT/KRq0zkBnE
+ wgKwXRbVoW38pYVuGa5x/JDQMJDrLAJ0wrCOS3XxbSHCWOl/k2ZD9OaxUeXq6N+OmGTzfrYv
+ PUvWS1Hy04q9AD1dIaMNruZQmvnRfkOk2UDncDIg0166/NTHiYI09H5mpWGpHn/2aT6dmpVw
+ uoM9/rHlF5s5qAAo95tZ0QW2BtIceG9/rbYlL57waSMPF49awvwLQX5RhWoF8mPS5LsBrXXK
+ hmizIsn40tLbi2RtWjzDWgZYitqmmqijeCnDvISN4qJ/nCLO4DjiSGs59w5HR+l0nwePDhOC
+ A4RYZqS1e2Clx1VSkDXFpL3egabcIsqK7CZ6a21r8lXVpo4RnMlQsmXZTnRx4SajFvX7PrRg
+ /02C811fLfh2r5O5if8sKQ6BKKlHpuuioqfj/w9z3B0aQ71e4n1zNJBO1kcdznikPLAbr7jG
+ gkBUXT1yJiwpTfRQr5y2Uo12IJsKxohnNFVYtK8X/R6S0deKPjrZWvAkllgIPcHjMi2Va8yw
+ KTj/JgcpUO5KN906Pf7ywZISe7Kbcc/qnE0YjPPSqFOvoeZvHe6EZCMW9+xZsaipvlqpByQV
+ UHnVg09K9YFvjUBsBPdC8ef6YwgfR9o6AnPmxl0oMUIXkCCC5c99fzJY/k+JAq0EGAEIACAW
+ IQS/HfwKVo8F95V1cJC9alAct4t8JgUCWwqKhgIbAgCBCRC9alAct4t8JnYgBBkWCAAdFiEE
+ FMMcSshOZf56bfAEYhBsURv0pdsFAlsKioYACgkQYhBsURv0pdvELgD/U+y3/hsz0bIjMQJY
+ 0LLxM/rFY9Vz1L43+lQHXjL3MPsA/1lNm5sailsY7aFBVJxAzTa8ZAGWBdVaGo6KCvimDB8G
+ 7joP/jx+oGOmdRogs7mG//H+w9DTnBfPpnfkeiiokGYo/+huWO5V0Ac9tTqZeFc//t/YuYJn
+ wWvS0Rx+KL0fT3eh9BQo47uF4yDiZIiWLNh4Agpup1MUSVsz4MjD0lW6ghtnLcGlIgoVHW0v
+ tPW1m9jATYyJSOG/MC1iDrcYcp9uVYn5tKfkEeQNspuG6iSfS0q3tajPKnT1nJxMTxVOD2RW
+ EIGfaV9Scrou92VD/eC+/8INRsiWS93j3hOKIAV5XRNINFqtzkagPYAP8r6wksjSjh01fSTB
+ p5zxjfsIwWDDzDrqgzwv83CvrLXRV3OlG1DNUDYA52qJr47paH5QMWmHW5TNuoBX8qb6RW/H
+ M3DzPgT+l+r1pPjMPfvL1t7civZUoPuNzoyFpQRj6TvWi2bGGMQKryeYksXG2zi2+avMFnLe
+ lOxGdUZ7jn1SJ6Abba5WL3VrXCP+TUE6bZLgfw8kYa8QSXP3ysyeMI0topHFntBZ8a0KXBNs
+ qqFCBWmTHXfwsfW0VgBmRtPO7eXVBybjJ1VXKR2RZxwSq/GoNXh/yrRXQxbcpZ+QP3/Tttsb
+ FdKciZ4u3ts+5UwYra0BRuvb51RiZR2wRNnUeBnXWagJVTlG7RHBO/2jJOE6wrcdCMjs0Iiw
+ PNWmiVoZA930TvHA5UeGENxdGqo2MvMdRJ54YaIR
+Message-ID: <4f2b2950-2756-67f9-3fde-09fa4b8439ee@gmail.com>
+Date:   Wed, 28 Aug 2019 22:37:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <84511f1e-5a04-5348-a2b4-1dc2b534a1cb@ti.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jes Sorensen <jsorensen@fb.com>
+Dan,
 
-smi_mod_timer() enables the timer before setting timer_running. This
-means the timer can be running when we get to stop_timer_and_thread()
-without timer_running having been set, resulting in del_timer_sync()
-not being called and the timer being left to cause havoc during
-shutdown.
+On 8/28/19 5:28 PM, Dan Murphy wrote:
+> Jacek
+[...]
+>>>>> Or i2c control is somehow broken and only als control now works?
+>>> With only setting CONFIG_LEDS_LM3532=m to the next branch I get full
+>>> brightness with 255.
+>>>
+>>> I also see half brightness at 128 with the ramp down working.
+>>>
+>>> I am not able to reproduce this issue on my device.
+>>>
+>>>> Well, max current led is obviously missing. Plus code does not check
+>>>> the return from reading led-max-microamp.
+>>> led-max-microamp is optional so there is no need to check the return.
+>> It's also ugly to not check it when you have it assigned.
+>> We'll soon receive complaints from static checkers about pointless
+>> assignment.
+>>
+>> I'd distinguish between cases when parsing failed,
+>> and when property has not been provided.
+>>
+>> if (fwnode_property_present(child, "led-max-microamp")) {
+>>     if (fwnode_property_read_u32(child, "led-max-microamp",
+>>                 &led->full_scale_current);
+>>         dev_err(&priv->client->dev,
+>>                           "Failed to parse led-max-microamp property\n")
+> 
+> I am OK with doing this but I think the else case logging is extra.
+> 
+> Again the property is optional and if the user decides not to populate
+> it then there should not
+> 
+> be a log of that it is missing.
 
-Instead just call del_timer_sync() unconditionally
+That's why I used lower log level (info). But it's up to you. I will
+not insist on keeping the logging for missing property case.
 
-Signed-off-by: Jes Sorensen <jsorensen@fb.com>
----
- drivers/char/ipmi/ipmi_si_intf.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> Dan
+> 
+>> } else {
+>>     dev_info(&priv->client->dev,
+>>          led-max-microamp property is missing\n")
+>> }
+>>
+>>> full_scale_current should be 0 if not populated and in the init only if
+>>> this variable is set does
+>>>
+>>> the code program the register otherwise it is default of 20.2 mA.
+> 
 
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index da5b6723329a..53425e25ecf4 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -1828,8 +1828,7 @@ static inline void stop_timer_and_thread(struct smi_info *smi_info)
- 	}
- 
- 	smi_info->timer_can_start = false;
--	if (smi_info->timer_running)
--		del_timer_sync(&smi_info->si_timer);
-+	del_timer_sync(&smi_info->si_timer);
- }
- 
- static struct smi_info *find_dup_si(struct smi_info *info)
 -- 
-2.21.0
-
+Best regards,
+Jacek Anaszewski
