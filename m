@@ -2,141 +2,141 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E39C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25651C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C61B82064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAA2D2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:40:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="MmMr419b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfH1Oj6 (ORCPT
+        id S1726817AbfH1Oka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:39:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27834 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726315AbfH1Oj4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:39:56 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SEciaG122349
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:39:55 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2unuc00jhs-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:39:55 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 28 Aug 2019 15:39:53 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 28 Aug 2019 15:39:50 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7SEdRfs35062130
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Aug 2019 14:39:27 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 13DE64C04A;
-        Wed, 28 Aug 2019 14:39:49 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B006A4C046;
-        Wed, 28 Aug 2019 14:39:48 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.86])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 28 Aug 2019 14:39:48 +0000 (GMT)
-Date:   Wed, 28 Aug 2019 17:39:47 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Guo Ren <guoren@kernel.org>
-Cc:     linux-csky@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] csky: use generic free_initrd_mem()
-References: <1566999319-8151-1-git-send-email-rppt@linux.ibm.com>
- <CAJF2gTTF0W18kPzXP8hOA64FuOx=atxFnCk0syEhP7s7LOm0Kw@mail.gmail.com>
+        Wed, 28 Aug 2019 10:40:30 -0400
+Received: from mail-eopbgr130050.outbound.protection.outlook.com ([40.107.13.50]:17537
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726466AbfH1Oka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:40:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OkRO1UkM2QfgRz43U0yG2LQ8U7lXYH8MPLxMukBx4GseRbAZ7h8DI60HmTgEDcmb9HP6AKWeuClZ8n2pXE6s/14SC4X9Nxxx43r/+v9jnLeqf9FcDi4my7OfAC4HEanTQ6Wdl6+asDiOxNb2r2QeA+rhQ/xDczBrzLsv5a3qeXyL5TbIzhsU1sG0DVgzuApTHa8tlSIeOUJuOUU/UiV3MTah0YTxo03qmx1Df00Pz8VwAlZTF90eLEgrLhEzxXFfebN9eHwfpZrKK5DOKSySs0CiiTfVIhrLTP9nWTCnC6d9N00QMc/uHR4wcxWyYlk+7t7BNAR8yTAVacAnMNCaog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YZZI7TIhNJpTgpmQ3Ym9oRj66GBq3bIwhTuMAednhzk=;
+ b=AxQ93Gt10N08eWQmhxVhoFsBvh9tEzTMUgE/ddKcidodSu9oc8L+CjNpycBzWWZ94gTGnCfkVHXMhAcsQ27Cjl1KvnXMm7yZTC4sjk4Blk+xx2ri6z0OOveUM75UXAZIvOKjKFn5xqFTzOBp9c9MxeZElQwum6bmdRz9HuWWTAWJfK5W8zYn4zPNBMLjB5raAwr5rhtYeLYjRN1qxMUvOrLfPhayVlf661B6MAg+m3p93WG7sBfIU7HPZDJ6ZSRsgqB9SolV8XVweL1csZViSwRc8v4QjLLVFNfcYmgMV+sfJW797nRU9warG2YQCzQ5yIM6nNAebWKkxqzVRzgKYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YZZI7TIhNJpTgpmQ3Ym9oRj66GBq3bIwhTuMAednhzk=;
+ b=MmMr419bfQPRTnvudqYdzRUSIuZdO0F2FE36dx+fttfoDjni8FMfIZWHKJuxHEA9DGPUWiK3elxq75kbK8RSpq84/vpJpn4VzvAsiL96wNTy0XRd+OP1g0lfaeZz8whu1UouTDsXCMOHbiezgwmiPMVDUVSvz4QmUC7h5u7UuD4=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5246.eurprd05.prod.outlook.com (20.178.11.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Wed, 28 Aug 2019 14:40:25 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2199.021; Wed, 28 Aug 2019
+ 14:40:25 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>
+Subject: Re: [PATCH] mm: remove the __mmu_notifier_invalidate_range_start/end
+ exports
+Thread-Topic: [PATCH] mm: remove the __mmu_notifier_invalidate_range_start/end
+ exports
+Thread-Index: AQHVXavZqxXcfLyzmkeft6WFMi/zb6cQobAA
+Date:   Wed, 28 Aug 2019 14:40:25 +0000
+Message-ID: <20190828144020.GI914@mellanox.com>
+References: <20190828142109.29012-1-hch@lst.de>
+In-Reply-To: <20190828142109.29012-1-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YTBPR01CA0036.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::49) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.167.216.168]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e9b0e95d-f896-4947-ddcd-08d72bc5a9b6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5246;
+x-ms-traffictypediagnostic: VI1PR05MB5246:
+x-microsoft-antispam-prvs: <VI1PR05MB524688DFE20EED13B8873181CFA30@VI1PR05MB5246.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 014304E855
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(136003)(396003)(366004)(199004)(189003)(4326008)(446003)(486006)(476003)(6506007)(2616005)(11346002)(4744005)(6486002)(8936002)(6512007)(99286004)(81166006)(102836004)(186003)(26005)(6436002)(2906002)(386003)(316002)(66066001)(52116002)(5660300002)(81156014)(8676002)(478600001)(14454004)(305945005)(66446008)(64756008)(6116002)(54906003)(66556008)(66946007)(7736002)(229853002)(256004)(1076003)(6916009)(71190400001)(71200400001)(53936002)(76176011)(33656002)(25786009)(36756003)(3846002)(66476007)(6246003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5246;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eyNg4HLZ52LGAV0ouvh0lK+YUWuSz+vviASvTi6u4tyfRkS+6crc8iuHsljQ85TIlyyZ2x67UYnb4k+XdopeWbFkEGkqXgOxvsB9Ufc3q8V7xdpca3PlD6/O920ZuL6nACpYjRxCQm83QoQnJaFhYvi2wIIK3EFtmYaDp//b5swB1lHKRzPNPhhd5XyietoaGNUcXcHgTVPfMZPGkV0tuVkq35Ott32oLpI0CEOx5UX34FoNrTC/uwQhZTCWcjLJ4uJ47JyvTE5jMk4KsnY7SSfjYn0GceWcrR2sZl/5shBSBlp4SF42RVQygjf/urBmGf9mEDLHswSEXIGb5+3geGwoHkAO7U6h1M+QmZIuGFAXt/pP/na4omnpj/TmXi9wqlfwgOXy8wjq6nBLEAebiO4wJVpCMiRA7rzg6QhPGLk=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C1EA082325B7104A864499B49ABCE3F5@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJF2gTTF0W18kPzXP8hOA64FuOx=atxFnCk0syEhP7s7LOm0Kw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19082814-0016-0000-0000-000002A3ED62
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082814-0017-0000-0000-000033043E8B
-Message-Id: <20190828143946.GA21342@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=986 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908280154
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9b0e95d-f896-4947-ddcd-08d72bc5a9b6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 14:40:25.3928
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: paxkgAgF/TdQvDco2/uuuH66Km0esr3MC2D1DEP+cnOd7FeoGG30D6ipyiwCCcAe4NujhpWsU5QDviXZjvfESw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5246
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Aug 28, 2019 at 04:21:09PM +0200, Christoph Hellwig wrote:
+> Bo modular code uses these, which makes a lot of sense given the
+> wrappers around them are only called by core mm code.
 
-On Wed, Aug 28, 2019 at 10:12:52PM +0800, Guo Ren wrote:
-> Acked-by: Guo Ren <guoren@kernel.org>
+/Bo/No/
 
-Do you mind taking it via csky tree?
- 
-> On Wed, Aug 28, 2019 at 9:35 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> >
-> > The csky implementation of free_initrd_mem() is an open-coded version of
-> > free_reserved_area() without poisoning.
-> >
-> > Remove it and make csky use the generic version of free_initrd_mem().
-> >
-> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> > ---
-> >  arch/csky/mm/init.c | 16 ----------------
-> >  1 file changed, 16 deletions(-)
-> >
-> > diff --git a/arch/csky/mm/init.c b/arch/csky/mm/init.c
-> > index eb0dc9e..d4c2292 100644
-> > --- a/arch/csky/mm/init.c
-> > +++ b/arch/csky/mm/init.c
-> > @@ -60,22 +60,6 @@ void __init mem_init(void)
-> >         mem_init_print_info(NULL);
-> >  }
-> >
-> > -#ifdef CONFIG_BLK_DEV_INITRD
-> > -void free_initrd_mem(unsigned long start, unsigned long end)
-> > -{
-> > -       if (start < end)
-> > -               pr_info("Freeing initrd memory: %ldk freed\n",
-> > -                       (end - start) >> 10);
-> > -
-> > -       for (; start < end; start += PAGE_SIZE) {
-> > -               ClearPageReserved(virt_to_page(start));
-> > -               init_page_count(virt_to_page(start));
-> > -               free_page(start);
-> > -               totalram_pages_inc();
-> > -       }
-> > -}
-> > -#endif
-> > -
-> >  extern char __init_begin[], __init_end[];
-> >
-> >  void free_initmem(void)
-> > --
-> > 2.7.4
-> >
-> 
-> 
-> -- 
-> Best Regards
->  Guo Ren
-> 
-> ML: https://lore.kernel.org/linux-csky/
-> 
+> Also remove the recently added __mmu_notifier_invalidate_range_start_map
+> export for which the same applies.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>  mm/mmu_notifier.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>=20
+> diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+> index 690f1ea639d5..240f4e14d42e 100644
+> +++ b/mm/mmu_notifier.c
+> @@ -25,7 +25,6 @@ DEFINE_STATIC_SRCU(srcu);
+>  struct lockdep_map __mmu_notifier_invalidate_range_start_map =3D {
+>  	.name =3D "mmu_notifier_invalidate_range_start"
+>  };
+> -EXPORT_SYMBOL_GPL(__mmu_notifier_invalidate_range_start_map);
+>  #endif
 
--- 
-Sincerely yours,
-Mike.
+I inlined this hunk into Daniel's patch from yesterday
 
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+
+Applied to hmm.git..
+
+What about:
+
+EXPORT_SYMBOL_GPL(__mmu_notifier_invalidate_range);
+
+elixir suggest this is not called outside mm/ either?
+
+Jason
