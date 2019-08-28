@@ -2,138 +2,103 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9C6C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5594EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680DE22CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:50:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566989403;
-	bh=He3MdEl4k4wvBwy2BRtUix0E0BXxfd11sG2nGJHSlno=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Tn1RewTCOQDMDDSvSsrMInkgprZMr3RuvEabj8J8xOxclUCYzGrNWBb151vXmdq0T
-	 l26EtoP0je5i5iW5d01GqGTTcrgm3K9ZTIxqBPWZe92mF0JJisqIF/tttLvAROfPEq
-	 E2BT7M0pZAr3Byf5c+CHHcsaitW4SpEi7EOeR+50=
+	by mail.kernel.org (Postfix) with ESMTP id 2AD2D2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfH1KuC (ORCPT
+        id S1726444AbfH1Kuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:50:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55992 "EHLO mail.kernel.org"
+        Wed, 28 Aug 2019 06:50:46 -0400
+Received: from mga03.intel.com ([134.134.136.65]:54973 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfH1KuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:50:02 -0400
-Received: from linux-8ccs (ip5f5adbee.dynamic.kabel-deutschland.de [95.90.219.238])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AA242173E;
-        Wed, 28 Aug 2019 10:49:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566989401;
-        bh=He3MdEl4k4wvBwy2BRtUix0E0BXxfd11sG2nGJHSlno=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i40dmLIc4hNolwteO8/CrjM9Cpmu93uXZsAOD1MxRqDqkwMajOhi3Dh0Ac1J5QGbq
-         LszHHQ0TpbI6YImDsJdcJH+2MQ+nkwnpo8Rh7e8htHxd79vlrmg8Y4hcNYyhaKnSc2
-         TcnnzjJhpv8JAIXkqv1vRtuz4HQ/xogZe5mhW1hk=
-Date:   Wed, 28 Aug 2019 12:49:51 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Matthias Maennich <maennich@google.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        arnd@arndb.de, geert@linux-m68k.org, gregkh@linuxfoundation.org,
-        hpa@zytor.com, joel@joelfernandes.org,
-        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
-        maco@android.com, maco@google.com, michal.lkml@markovi.net,
-        mingo@redhat.com, oneukum@suse.com, pombredanne@nexb.com,
-        sam@ravnborg.org, sspatil@google.com, stern@rowland.harvard.edu,
-        tglx@linutronix.de, usb-storage@lists.one-eyed-alien.net,
-        x86@kernel.org, yamada.masahiro@socionext.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH v3 06/11] export: allow definition default namespaces in
- Makefiles or sources
-Message-ID: <20190828104951.GC25048@linux-8ccs>
-References: <20190813121733.52480-1-maennich@google.com>
- <20190821114955.12788-1-maennich@google.com>
- <20190821114955.12788-7-maennich@google.com>
+        id S1726315AbfH1Kuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 06:50:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 03:50:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
+   d="scan'208";a="181997044"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
+  by fmsmga007.fm.intel.com with ESMTP; 28 Aug 2019 03:50:43 -0700
+Subject: Re: [PATCH V6 4/5] mmc: sdhci: Export sdhci_abort_tuning function
+ symbol
+To:     Ben Chuang <benchuanggli@gmail.com>, ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        johnsonm@danlj.org, ben.chuang@genesyslogic.com.tw
+References: <20190827003322.2445-1-benchuanggli@gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <ecd70199-d3c9-b92d-493e-b49e23e6d91c@intel.com>
+Date:   Wed, 28 Aug 2019 13:49:18 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190821114955.12788-7-maennich@google.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190827003322.2445-1-benchuanggli@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Matthias Maennich [21/08/19 12:49 +0100]:
->To avoid excessive usage of EXPORT_SYMBOL_NS(sym, MY_NAMESPACE), where
->MY_NAMESPACE will always be the namespace we are exporting to, allow
->exporting all definitions of EXPORT_SYMBOL() and friends by defining
->DEFAULT_SYMBOL_NAMESPACE.
->
->For example, to export all symbols defined in usb-common into the
->namespace USB_COMMON, add a line like this to drivers/usb/common/Makefile:
->
->  ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=USB_COMMON
->
->That is equivalent to changing all EXPORT_SYMBOL(sym) definitions to
->EXPORT_SYMBOL_NS(sym, USB_COMMON). Subsequently all symbol namespaces
->functionality will apply.
->
->Another way of making use of this feature is to define the namespace
->within source or header files similar to how TRACE_SYSTEM defines are
->used:
->  #undef DEFAULT_SYMBOL_NAMESPACE
->  #define DEFAULT_SYMBOL_NAMESPACE USB_COMMON
->
->Please note that, as opposed to TRACE_SYSTEM, DEFAULT_SYMBOL_NAMESPACE
->has to be defined before including include/linux/export.h.
->
->If DEFAULT_SYMBOL_NAMESPACE is defined, a symbol can still be exported
->to another namespace by using EXPORT_SYMBOL_NS() and friends with
->explicitly specifying the namespace.
+On 27/08/19 3:33 AM, Ben Chuang wrote:
+> From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+> 
+> Export sdhci_abort_tuning() function symbols which are used by other SD Host
+> controller driver modules.
+> 
+> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+> Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
+> Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
 
-This changelog provides a good summary of how to use
-DEFAULT_SYMBOL_NAMESPACE, I wonder if we should explicitly document
-its proper usage somewhere? (along with EXPORT_SYMBOL_NS*)
-The EXPORT_SYMBOL API is briefly documented in
-Documentation/kernel-hacking/hacking.rst - it might be slightly dated,
-but perhaps it'd fit there best?
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
->Suggested-by: Arnd Bergmann <arnd@arndb.de>
->Reviewed-by: Martijn Coenen <maco@android.com>
->Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->Signed-off-by: Matthias Maennich <maennich@google.com>
->---
-> include/linux/export.h | 6 ++++++
-> 1 file changed, 6 insertions(+)
->
->diff --git a/include/linux/export.h b/include/linux/export.h
->index 8e12e05444d1..1fb243abdbc4 100644
->--- a/include/linux/export.h
->+++ b/include/linux/export.h
->@@ -166,6 +166,12 @@ struct kernel_symbol {
-> #define __EXPORT_SYMBOL ___EXPORT_SYMBOL
-> #endif
->
->+#ifdef DEFAULT_SYMBOL_NAMESPACE
->+#undef __EXPORT_SYMBOL
->+#define __EXPORT_SYMBOL(sym, sec)				\
->+	__EXPORT_SYMBOL_NS(sym, sec, DEFAULT_SYMBOL_NAMESPACE)
->+#endif
->+
-> #define EXPORT_SYMBOL(sym) __EXPORT_SYMBOL(sym, "")
-> #define EXPORT_SYMBOL_GPL(sym) __EXPORT_SYMBOL(sym, "_gpl")
-> #define EXPORT_SYMBOL_GPL_FUTURE(sym) __EXPORT_SYMBOL(sym, "_gpl_future")
->-- 
->2.23.0.rc1.153.gdeed80330f-goog
->
+> ---
+>  drivers/mmc/host/sdhci.c | 3 ++-
+>  drivers/mmc/host/sdhci.h | 1 +
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 9106ebc7a422..0f2f110534db 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -2328,7 +2328,7 @@ void sdhci_reset_tuning(struct sdhci_host *host)
+>  }
+>  EXPORT_SYMBOL_GPL(sdhci_reset_tuning);
+>  
+> -static void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
+> +void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
+>  {
+>  	sdhci_reset_tuning(host);
+>  
+> @@ -2339,6 +2339,7 @@ static void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
+>  
+>  	mmc_abort_tuning(host->mmc, opcode);
+>  }
+> +EXPORT_SYMBOL_GPL(sdhci_abort_tuning);
+>  
+>  /*
+>   * We use sdhci_send_tuning() because mmc_send_tuning() is not a good fit. SDHCI
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 72601a4d2e95..437bab3af195 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -797,5 +797,6 @@ void sdhci_start_tuning(struct sdhci_host *host);
+>  void sdhci_end_tuning(struct sdhci_host *host);
+>  void sdhci_reset_tuning(struct sdhci_host *host);
+>  void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
+> +void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode);
+>  
+>  #endif /* __SDHCI_HW_H */
+> 
+
