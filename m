@@ -2,387 +2,155 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B8AC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAED4C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F3F322CF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:37:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="kf2t8NX1"
+	by mail.kernel.org (Postfix) with ESMTP id A4F7E22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfH1QhM (ORCPT
+        id S1726719AbfH1Qhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:37:12 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:60968 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfH1QhL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:37:11 -0400
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x7SGamhu026496;
-        Thu, 29 Aug 2019 01:36:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x7SGamhu026496
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567010210;
-        bh=pzFnxHPByWE3p5MgyLZIinhZ1DpXXFl4e2A55YJh8R0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kf2t8NX17fIM4WLdsCznvCQKVHoax8oawuyhazOXKvxBX9Ku+VEIenw2i37Tp+Ffg
-         cKq0V1bRNxyK5gx7KJprGW18rWpR2mEwfUEY4G/nSTMn9MjtXyugYVwBem2sdBJa9M
-         a9YR7Z5o47AyyGC1IIR6W34lAXg4BvZIeonMkDPdC3N5d80fHVPhRlp2mNwiyYD7sv
-         hqlAVU16kXDIHIdG1XyhcdaIz+Soq0cDavGQ0QF7LZIeKzD+YiDY2I8sn9hkq/Co72
-         CLioEQk/HjBzroxxzzF7MeVp1MtUW467n68O6CESQ+USJEl+9wRkagWx7PgFm1Klev
-         nEQiew96kf0yg==
-X-Nifty-SrcIP: [209.85.217.53]
-Received: by mail-vs1-f53.google.com with SMTP id b187so383955vsc.9;
-        Wed, 28 Aug 2019 09:36:49 -0700 (PDT)
-X-Gm-Message-State: APjAAAXZvI0vawK7J1SSx178HLm+gIxI+ccmjm04aFftD+cYhwGUisri
-        T8MwIb2BV0HDUyYHhXt8xydEtM8BhxN9hk4c//U=
-X-Google-Smtp-Source: APXvYqzMmPYwM8DIHHUW6yOGBja2/aVO+uGvVU0EP7bREIinhmy/brVHqrnSJ0mtaKhqwD1tfdotXsyqq0cRHfw4qEw=
-X-Received: by 2002:a05:6102:20c3:: with SMTP id i3mr3019861vsr.155.1567010207932;
- Wed, 28 Aug 2019 09:36:47 -0700 (PDT)
+        Wed, 28 Aug 2019 12:37:38 -0400
+Received: from mga07.intel.com ([134.134.136.100]:12320 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726397AbfH1Qhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 12:37:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 09:37:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
+   d="scan'208";a="174970995"
+Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
+  by orsmga008.jf.intel.com with ESMTP; 28 Aug 2019 09:37:37 -0700
+To:     Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>
+Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        mingo@kernel.org, tglx@linutronix.de, pjt@google.com,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        subhra.mazumdar@oracle.com, fweisbec@gmail.com,
+        keescook@chromium.org, kerrnel@google.com,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <cover.1559129225.git.vpillai@digitalocean.com>
+ <20190827211417.snpwgnhsu5t6u52y@srcf.ucam.org>
+ <20190827215035.GH2332@hirez.programming.kicks-ass.net>
+ <20190828153033.GA15512@pauld.bos.csb>
+ <20190828160114.GE17205@worktop.programming.kicks-ass.net>
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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
+ l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <1a80f754-ff5b-353e-cc92-a5a4823976db@linux.intel.com>
+Date:   Wed, 28 Aug 2019 09:37:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190820170941.26193-1-yamada.masahiro@socionext.com> <20190820170941.26193-2-yamada.masahiro@socionext.com>
-In-Reply-To: <20190820170941.26193-2-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 29 Aug 2019 01:36:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT-ajH0qMseqJ3HqbBJWhBRbh8axW1bnjfZv+XSRY+1Ag@mail.gmail.com>
-Message-ID: <CAK7LNAT-ajH0qMseqJ3HqbBJWhBRbh8axW1bnjfZv+XSRY+1Ag@mail.gmail.com>
-Subject: Re: [PATCH 2/3] kbuild,arc: add CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
- for ARC
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Vineet Gupta <vgupta@synopsys.com>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190828160114.GE17205@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vineet,
+On 8/28/19 9:01 AM, Peter Zijlstra wrote:
+> On Wed, Aug 28, 2019 at 11:30:34AM -0400, Phil Auld wrote:
+>> On Tue, Aug 27, 2019 at 11:50:35PM +0200 Peter Zijlstra wrote:
+> 
+>> The current core scheduler implementation, I believe, still has (theoretical?) 
+>> holes involving interrupts, once/if those are closed it may be even less 
+>> attractive.
+> 
+> No; so MDS leaks anything the other sibling (currently) does, this makes
+> _any_ privilidge boundary a synchronization context.
+> 
+> Worse still, the exploit doesn't require a VM at all, any other task can
+> get to it.
+> 
+> That means you get to sync the siblings on lovely things like system
+> call entry and exit, along with VMM and anything else that one would
+> consider a privilidge boundary. Now, system calls are not rare, they
+> are really quite common in fact. Trying to sync up siblings at the rate
+> of system calls is utter madness.
+> 
+> So under MDS, SMT is completely hosed. If you use VMs exclusively, then
+> it _might_ work because a 'pure' host doesn't schedule that often
+> (maybe, same assumption as for L1TF).
+> 
+> Now, there have been proposals of moving the privilidge boundary further
+> into the kernel. Just like PTI exposes the entry stack and code to
+> Meltdown, the thinking is, lets expose more. By moving the priv boundary
+> the hope is that we can do lots of common system calls without having to
+> sync up -- lots of details are 'pending'.
+> 
 
-On Wed, Aug 21, 2019 at 2:10 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> arch/arc/Makefile overrides -O2 with -O3. This is the only user of
-> ARCH_CFLAGS. There is no user of ARCH_CPPFLAGS or ARCH_AFLAGS.
-> My plan is to remove ARCH_{CPP,A,C}FLAGS after refactoring the ARC
-> Makefile.
->
-> Currently, ARC has no way to enable -Wmaybe-uninitialized because both
-> -O3 and -Os disable it. Enabling it will be useful for compile-testing.
-> This commit allows allmodconfig (, which defaults to -O2) to enable it.
->
-> Add CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y to all the defconfig files
-> in arch/arc/configs/ in order to keep the current config settings.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+If are willing to consider the idea that we will sync with the sibling
+only if we touch potential user data, then a significant portion of
+syscalls may not need to sync.  Yeah, it still sucks because of the
+complexity added to audit all the places in kernel that may touch
+privileged data and require synchronization. 
 
-If it is OK to apply this to my kbuild tree,
-can I get your ACK?
+I did a prototype (without core sched), kernel build slow 2.5%.  
+So this use case still seem reasonable.
 
-If you see any problem, please let me know.
+A worst case scenario is concurrent SMT FIO write to encrypted file,
+which have a lot of synchronizations due to extended access to privilege
+data by crypto, we slow by 9%.
 
-Thanks.
+Tim
 
-
-
->
->  Makefile                                   | 10 ++++++----
->  arch/arc/Makefile                          |  8 --------
->  arch/arc/configs/axs101_defconfig          |  1 +
->  arch/arc/configs/axs103_defconfig          |  1 +
->  arch/arc/configs/axs103_smp_defconfig      |  1 +
->  arch/arc/configs/haps_hs_defconfig         |  1 +
->  arch/arc/configs/haps_hs_smp_defconfig     |  1 +
->  arch/arc/configs/hsdk_defconfig            |  1 +
->  arch/arc/configs/nps_defconfig             |  1 +
->  arch/arc/configs/nsim_700_defconfig        |  1 +
->  arch/arc/configs/nsim_hs_defconfig         |  1 +
->  arch/arc/configs/nsim_hs_smp_defconfig     |  1 +
->  arch/arc/configs/nsimosci_defconfig        |  1 +
->  arch/arc/configs/nsimosci_hs_defconfig     |  1 +
->  arch/arc/configs/nsimosci_hs_smp_defconfig |  1 +
->  arch/arc/configs/tb10x_defconfig           |  1 +
->  arch/arc/configs/vdk_hs38_defconfig        |  1 +
->  arch/arc/configs/vdk_hs38_smp_defconfig    |  1 +
->  init/Kconfig                               | 12 ++++++++++--
->  19 files changed, 32 insertions(+), 14 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index bc55f366677d..891e47da503f 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -716,10 +716,12 @@ KBUILD_CFLAGS     += $(call cc-disable-warning, format-truncation)
->  KBUILD_CFLAGS  += $(call cc-disable-warning, format-overflow)
->  KBUILD_CFLAGS  += $(call cc-disable-warning, address-of-packed-member)
->
-> -ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-> -KBUILD_CFLAGS  += -Os
-> -else
-> -KBUILD_CFLAGS   += -O2
-> +ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
-> +KBUILD_CFLAGS += -O2
-> +else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
-> +KBUILD_CFLAGS += -O3
-> +else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-> +KBUILD_CFLAGS += -Os
->  endif
->
->  ifdef CONFIG_CC_DISABLE_WARN_MAYBE_UNINITIALIZED
-> diff --git a/arch/arc/Makefile b/arch/arc/Makefile
-> index ee6d1184c2b1..f1c44cccf8d6 100644
-> --- a/arch/arc/Makefile
-> +++ b/arch/arc/Makefile
-> @@ -48,14 +48,6 @@ endif
->  cfi := $(call as-instr,.cfi_startproc\n.cfi_endproc,-DARC_DW2_UNWIND_AS_CFI)
->  cflags-$(CONFIG_ARC_DW2_UNWIND)                += -fasynchronous-unwind-tables $(cfi)
->
-> -ifndef CONFIG_CC_OPTIMIZE_FOR_SIZE
-> -# Generic build system uses -O2, we want -O3
-> -# Note: No need to add to cflags-y as that happens anyways
-> -#
-> -# Disable the false maybe-uninitialized warings gcc spits out at -O3
-> -ARCH_CFLAGS += -O3 $(call cc-disable-warning,maybe-uninitialized,)
-> -endif
-> -
->  # small data is default for elf32 tool-chain. If not usable, disable it
->  # This also allows repurposing GP as scratch reg to gcc reg allocator
->  disable_small_data := y
-> diff --git a/arch/arc/configs/axs101_defconfig b/arch/arc/configs/axs101_defconfig
-> index e31a8ebc3ecc..0016149f9583 100644
-> --- a/arch/arc/configs/axs101_defconfig
-> +++ b/arch/arc/configs/axs101_defconfig
-> @@ -9,6 +9,7 @@ CONFIG_NAMESPACES=y
->  # CONFIG_UTS_NS is not set
->  # CONFIG_PID_NS is not set
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_EMBEDDED=y
->  CONFIG_PERF_EVENTS=y
->  # CONFIG_VM_EVENT_COUNTERS is not set
-> diff --git a/arch/arc/configs/axs103_defconfig b/arch/arc/configs/axs103_defconfig
-> index e0e8567f0d75..5b031582a1cf 100644
-> --- a/arch/arc/configs/axs103_defconfig
-> +++ b/arch/arc/configs/axs103_defconfig
-> @@ -9,6 +9,7 @@ CONFIG_NAMESPACES=y
->  # CONFIG_UTS_NS is not set
->  # CONFIG_PID_NS is not set
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_EMBEDDED=y
->  CONFIG_PERF_EVENTS=y
->  # CONFIG_VM_EVENT_COUNTERS is not set
-> diff --git a/arch/arc/configs/axs103_smp_defconfig b/arch/arc/configs/axs103_smp_defconfig
-> index fcbc952bc75b..d4eec39e0112 100644
-> --- a/arch/arc/configs/axs103_smp_defconfig
-> +++ b/arch/arc/configs/axs103_smp_defconfig
-> @@ -9,6 +9,7 @@ CONFIG_NAMESPACES=y
->  # CONFIG_UTS_NS is not set
->  # CONFIG_PID_NS is not set
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_EMBEDDED=y
->  CONFIG_PERF_EVENTS=y
->  # CONFIG_VM_EVENT_COUNTERS is not set
-> diff --git a/arch/arc/configs/haps_hs_defconfig b/arch/arc/configs/haps_hs_defconfig
-> index 436f2135bdc1..47ff8a97e42d 100644
-> --- a/arch/arc/configs/haps_hs_defconfig
-> +++ b/arch/arc/configs/haps_hs_defconfig
-> @@ -10,6 +10,7 @@ CONFIG_NAMESPACES=y
->  # CONFIG_UTS_NS is not set
->  # CONFIG_PID_NS is not set
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_EXPERT=y
->  CONFIG_PERF_EVENTS=y
->  # CONFIG_COMPAT_BRK is not set
-> diff --git a/arch/arc/configs/haps_hs_smp_defconfig b/arch/arc/configs/haps_hs_smp_defconfig
-> index 33a787c375e2..9685fd5f57a4 100644
-> --- a/arch/arc/configs/haps_hs_smp_defconfig
-> +++ b/arch/arc/configs/haps_hs_smp_defconfig
-> @@ -10,6 +10,7 @@ CONFIG_NAMESPACES=y
->  # CONFIG_UTS_NS is not set
->  # CONFIG_PID_NS is not set
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_EMBEDDED=y
->  CONFIG_PERF_EVENTS=y
->  # CONFIG_VM_EVENT_COUNTERS is not set
-> diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
-> index 403125d9c9a3..9b9a74444ce2 100644
-> --- a/arch/arc/configs/hsdk_defconfig
-> +++ b/arch/arc/configs/hsdk_defconfig
-> @@ -9,6 +9,7 @@ CONFIG_NAMESPACES=y
->  # CONFIG_PID_NS is not set
->  CONFIG_BLK_DEV_INITRD=y
->  CONFIG_BLK_DEV_RAM=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_EMBEDDED=y
->  CONFIG_PERF_EVENTS=y
->  # CONFIG_VM_EVENT_COUNTERS is not set
-> diff --git a/arch/arc/configs/nps_defconfig b/arch/arc/configs/nps_defconfig
-> index f0a077c00efa..5978d4d7d5b0 100644
-> --- a/arch/arc/configs/nps_defconfig
-> +++ b/arch/arc/configs/nps_defconfig
-> @@ -6,6 +6,7 @@ CONFIG_HIGH_RES_TIMERS=y
->  CONFIG_IKCONFIG=y
->  CONFIG_IKCONFIG_PROC=y
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_SYSCTL_SYSCALL=y
->  # CONFIG_EPOLL is not set
->  # CONFIG_SIGNALFD is not set
-> diff --git a/arch/arc/configs/nsim_700_defconfig b/arch/arc/configs/nsim_700_defconfig
-> index de398c7b10b3..2b9b11474640 100644
-> --- a/arch/arc/configs/nsim_700_defconfig
-> +++ b/arch/arc/configs/nsim_700_defconfig
-> @@ -10,6 +10,7 @@ CONFIG_NAMESPACES=y
->  # CONFIG_UTS_NS is not set
->  # CONFIG_PID_NS is not set
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_KALLSYMS_ALL=y
->  CONFIG_EMBEDDED=y
->  CONFIG_PERF_EVENTS=y
-> diff --git a/arch/arc/configs/nsim_hs_defconfig b/arch/arc/configs/nsim_hs_defconfig
-> index 2dbd34a9ff07..bab3dd255841 100644
-> --- a/arch/arc/configs/nsim_hs_defconfig
-> +++ b/arch/arc/configs/nsim_hs_defconfig
-> @@ -10,6 +10,7 @@ CONFIG_NAMESPACES=y
->  # CONFIG_UTS_NS is not set
->  # CONFIG_PID_NS is not set
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_KALLSYMS_ALL=y
->  CONFIG_EMBEDDED=y
->  CONFIG_PERF_EVENTS=y
-> diff --git a/arch/arc/configs/nsim_hs_smp_defconfig b/arch/arc/configs/nsim_hs_smp_defconfig
-> index c7135f1e2583..90d2d50fb8dc 100644
-> --- a/arch/arc/configs/nsim_hs_smp_defconfig
-> +++ b/arch/arc/configs/nsim_hs_smp_defconfig
-> @@ -8,6 +8,7 @@ CONFIG_NAMESPACES=y
->  # CONFIG_UTS_NS is not set
->  # CONFIG_PID_NS is not set
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_KALLSYMS_ALL=y
->  CONFIG_EMBEDDED=y
->  CONFIG_PERF_EVENTS=y
-> diff --git a/arch/arc/configs/nsimosci_defconfig b/arch/arc/configs/nsimosci_defconfig
-> index 385a71d3c478..5dd470b6609e 100644
-> --- a/arch/arc/configs/nsimosci_defconfig
-> +++ b/arch/arc/configs/nsimosci_defconfig
-> @@ -10,6 +10,7 @@ CONFIG_NAMESPACES=y
->  # CONFIG_UTS_NS is not set
->  # CONFIG_PID_NS is not set
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_KALLSYMS_ALL=y
->  CONFIG_EMBEDDED=y
->  CONFIG_PERF_EVENTS=y
-> diff --git a/arch/arc/configs/nsimosci_hs_defconfig b/arch/arc/configs/nsimosci_hs_defconfig
-> index 248a2c3bdc12..3532e86f7bff 100644
-> --- a/arch/arc/configs/nsimosci_hs_defconfig
-> +++ b/arch/arc/configs/nsimosci_hs_defconfig
-> @@ -10,6 +10,7 @@ CONFIG_NAMESPACES=y
->  # CONFIG_UTS_NS is not set
->  # CONFIG_PID_NS is not set
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_KALLSYMS_ALL=y
->  CONFIG_EMBEDDED=y
->  CONFIG_PERF_EVENTS=y
-> diff --git a/arch/arc/configs/nsimosci_hs_smp_defconfig b/arch/arc/configs/nsimosci_hs_smp_defconfig
-> index 1a4bc7b660fb..d90448bee064 100644
-> --- a/arch/arc/configs/nsimosci_hs_smp_defconfig
-> +++ b/arch/arc/configs/nsimosci_hs_smp_defconfig
-> @@ -8,6 +8,7 @@ CONFIG_IKCONFIG_PROC=y
->  # CONFIG_UTS_NS is not set
->  # CONFIG_PID_NS is not set
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_PERF_EVENTS=y
->  # CONFIG_COMPAT_BRK is not set
->  CONFIG_KPROBES=y
-> diff --git a/arch/arc/configs/tb10x_defconfig b/arch/arc/configs/tb10x_defconfig
-> index dc739bd093e3..3a138f8c7299 100644
-> --- a/arch/arc/configs/tb10x_defconfig
-> +++ b/arch/arc/configs/tb10x_defconfig
-> @@ -14,6 +14,7 @@ CONFIG_INITRAMFS_SOURCE="../tb10x-rootfs.cpio"
->  CONFIG_INITRAMFS_ROOT_UID=2100
->  CONFIG_INITRAMFS_ROOT_GID=501
->  # CONFIG_RD_GZIP is not set
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_SYSCTL_SYSCALL=y
->  CONFIG_KALLSYMS_ALL=y
->  # CONFIG_AIO is not set
-> diff --git a/arch/arc/configs/vdk_hs38_defconfig b/arch/arc/configs/vdk_hs38_defconfig
-> index 0c3b21416819..d7c858df520c 100644
-> --- a/arch/arc/configs/vdk_hs38_defconfig
-> +++ b/arch/arc/configs/vdk_hs38_defconfig
-> @@ -4,6 +4,7 @@ CONFIG_HIGH_RES_TIMERS=y
->  CONFIG_IKCONFIG=y
->  CONFIG_IKCONFIG_PROC=y
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_EMBEDDED=y
->  CONFIG_PERF_EVENTS=y
->  # CONFIG_VM_EVENT_COUNTERS is not set
-> diff --git a/arch/arc/configs/vdk_hs38_smp_defconfig b/arch/arc/configs/vdk_hs38_smp_defconfig
-> index f9ad9d3ee702..015c1d43889e 100644
-> --- a/arch/arc/configs/vdk_hs38_smp_defconfig
-> +++ b/arch/arc/configs/vdk_hs38_smp_defconfig
-> @@ -4,6 +4,7 @@ CONFIG_HIGH_RES_TIMERS=y
->  CONFIG_IKCONFIG=y
->  CONFIG_IKCONFIG_PROC=y
->  CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3=y
->  CONFIG_EMBEDDED=y
->  CONFIG_PERF_EVENTS=y
->  # CONFIG_VM_EVENT_COUNTERS is not set
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 149efd82447f..92118505dd33 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -1209,14 +1209,22 @@ choice
->         default CC_OPTIMIZE_FOR_PERFORMANCE
->
->  config CC_OPTIMIZE_FOR_PERFORMANCE
-> -       bool "Optimize for performance"
-> +       bool "Optimize for performance (-O2)"
->         help
->           This is the default optimization level for the kernel, building
->           with the "-O2" compiler flag for best performance and most
->           helpful compile-time warnings.
->
-> +config CC_OPTIMIZE_FOR_PERFORMANCE_O3
-> +       bool "Optimize more for performance (-O3)"
-> +       depends on ARC
-> +       imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
-> +       help
-> +         Choosing this option will pass "-O3" to your compiler to optimize
-> +         the kernel yet more for performance.
-> +
->  config CC_OPTIMIZE_FOR_SIZE
-> -       bool "Optimize for size"
-> +       bool "Optimize for size (-Os)"
->         imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
->         help
->           Choosing this option will pass "-Os" to your compiler resulting
-> --
-> 2.17.1
->
-
-
--- 
-Best Regards
-Masahiro Yamada
