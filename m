@@ -2,160 +2,135 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC76C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B3CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E557208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3BD20828
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NVdwLJqM"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BUMTIuQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfH1K4f (ORCPT
+        id S1726534AbfH1K4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:56:35 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36902 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfH1K4e (ORCPT
+        Wed, 28 Aug 2019 06:56:41 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33799 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfH1K4k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:56:34 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z11so2023931wrt.4
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 03:56:32 -0700 (PDT)
+        Wed, 28 Aug 2019 06:56:40 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c7so2328438otp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 03:56:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Vx9t5xjLzwxSs68UQHUay9ecnGA4GXfJUCmBL33YCMk=;
-        b=NVdwLJqMFK27Egi+W5DT/3XO+B227WKx3M16ICzoXvtv3NVx+kYKIWtAq4ZidBcYR/
-         6IGwVIoAcsDgTwvd+pwztc4kqW7mf2sSDts/mC7aobOdzcsHuc/F1dpU/BpqoiE9ML/s
-         cDjmOLbsoCc6teLG/5wl/NGS2xAgrdjgeDYEI91IhxSHXf76R4GeGYbxSFH+75iaJUfe
-         wT8+75/RkSk5caZV3qv54/qXQy42Kzg3eZmIM2FCd4NoNwrSMF71P581+GSac3L9QeRC
-         S3Wx1vvGVwqa0gtVdM4obwVJsgIHz4ohf44ieueSHJ/wOuQxb45CsaAbBU1sGHgIo0nm
-         DTqQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9nBDIm2N1o53yUHNgHlni3PU6OkH5zkDsyDdUf/2oVk=;
+        b=BUMTIuQPT4mnrt196mfGejjgRmHSZoT05FuKeAxQp9JStqUFVI2cEDFgxC93bWptk0
+         mYMKz9bxEUKtrIbTgU1wlT3W5YGAOEnvVGHht9L/4jugtGrqk7yHpV8jFtxV+V90O+um
+         /H5YHEjPVI91os5xEofC/w51XzKgVSynB6t0WGQbyjwFqedBu1lnnQlw8HQiW4LaXWxi
+         NIpanUcOVC3DkhxmoTFRSasS4UR4482qgff6tXmEXUNTxQyI5p+Pimlr3yVg45yxjZIl
+         xPqZHIhF22HJXKOGJ44FdPfwF+j6y+nBXCtVJLfIj68NptVx2I0+zHOrHm4vqquq8Ktb
+         WIhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Vx9t5xjLzwxSs68UQHUay9ecnGA4GXfJUCmBL33YCMk=;
-        b=PiIWSE/DFcCHoUhbguRUeHikqY2s9vHGlte4wuNr3J++rtSfR3gv9lGygx1sMxh5Y/
-         yPOBRlvfjShCbOxcuda5Geya1RQTBov1cPvlexE9Dv2C2GUgq4Cf5S8hytoSQPR+3ymc
-         AlzrDxNNlkZ7gilx4mDa7TfaArj7OFGKgVLN15SQZ1jAQBsF66tQHGWyiPNnVvb3O8gR
-         rjeLlBKOdKDjdBe/ao+f3JSOg5s2I72ZVzjDmFasgN1KpzfL5Xk4JIttZOCzxG5h1NYw
-         sMOsGzMpUYeP3/eyvvuzPjoqV/2z89rbG7ey6CzM5xyRGKSiJiWktFSVPPG5Hm2DX8Wo
-         eukA==
-X-Gm-Message-State: APjAAAVGsAihp3re0bl0LkEjb1x4IHouu1wvNtJ9O+9iHPBNH/Fmt850
-        wBNwBY6CV9U6P9lTYC36Nl0Nkg==
-X-Google-Smtp-Source: APXvYqzmp0a1H7Elm+SaoHNY31yTb5NC/BkvI3kruZqJ9jlO42a8aciCDXtLmxYxYGNQyoKWXYPq/A==
-X-Received: by 2002:adf:ce81:: with SMTP id r1mr3959629wrn.114.1566989791786;
-        Wed, 28 Aug 2019 03:56:31 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id f6sm4573707wrh.30.2019.08.28.03.56.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 03:56:31 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 11:56:27 +0100
-From:   Matthias Maennich <maennich@google.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        arnd@arndb.de, geert@linux-m68k.org, gregkh@linuxfoundation.org,
-        hpa@zytor.com, joel@joelfernandes.org,
-        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
-        maco@android.com, maco@google.com, michal.lkml@markovi.net,
-        mingo@redhat.com, oneukum@suse.com, pombredanne@nexb.com,
-        sam@ravnborg.org, sspatil@google.com, stern@rowland.harvard.edu,
-        tglx@linutronix.de, usb-storage@lists.one-eyed-alien.net,
-        x86@kernel.org, yamada.masahiro@socionext.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH v3 06/11] export: allow definition default namespaces in
- Makefiles or sources
-Message-ID: <20190828105627.GA41539@google.com>
-References: <20190813121733.52480-1-maennich@google.com>
- <20190821114955.12788-1-maennich@google.com>
- <20190821114955.12788-7-maennich@google.com>
- <20190828104951.GC25048@linux-8ccs>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9nBDIm2N1o53yUHNgHlni3PU6OkH5zkDsyDdUf/2oVk=;
+        b=nHEZW47dmoDvibFmedSmXi86fSAZQwA2n9T220gu0bezh9vITOS7LPf2v9CFPX3yyz
+         zb+nLITHxZiO6gW5q7QYd44b9S7nNRC5eDAnXhJuvqIFlZti0T4PnJCKly5ub5S7DU9Z
+         L9ba/oa6HYY5aSeGATau0HYICutBUEzIwklyfpNGRG22OJZ4ciIfoRDtAK+yUP5J/VTl
+         BBdZ1KtnbQ5yUW0ximp3ApT9QK6OLn800M1eRapGxAY+58sN7m5daEJ+LIL6m7k4KM/2
+         9gdsvHrErha7B3FdB7Z2NlmSde4Dlg2BKjcIiQ5Sayp+UHhPL1l4unCGpbMfTvPqStcA
+         tVaA==
+X-Gm-Message-State: APjAAAV5i3NlaIhK26HNc/QOXsY0Q39CvxUP6q8CLwusLIwMiWRS6lKu
+        Qq27PhC49e83ypxA7sgLk5EJ3O3rSD1oeKVqZShQbQ==
+X-Google-Smtp-Source: APXvYqwbHxw64sX7kxlc9Y4MID92CqSaT+i8SQ6bQ48Si4zn2Rjk+DXtFquo2zpnX5NMjvYXztu9wY8XqKYajTOkN+M=
+X-Received: by 2002:a9d:6290:: with SMTP id x16mr2722950otk.292.1566989799465;
+ Wed, 28 Aug 2019 03:56:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190828104951.GC25048@linux-8ccs>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190827064629.90214-1-david@protonic.nl> <CAMpxmJV2XC+CK1SfJnH2YuaD2Gh=fiBQY+WPbjnqkvxGW6ZH_w@mail.gmail.com>
+In-Reply-To: <CAMpxmJV2XC+CK1SfJnH2YuaD2Gh=fiBQY+WPbjnqkvxGW6ZH_w@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 28 Aug 2019 12:56:28 +0200
+Message-ID: <CAMpxmJXQ=M9PeMFBf70aE5Jgg3c6P2=4QF5CxWpenh+2WXLhnA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: gpio-pca953x.c: Correct type of reg_direction
+To:     David Jander <david@protonic.nl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 12:49:51PM +0200, Jessica Yu wrote:
->+++ Matthias Maennich [21/08/19 12:49 +0100]:
->>To avoid excessive usage of EXPORT_SYMBOL_NS(sym, MY_NAMESPACE), where
->>MY_NAMESPACE will always be the namespace we are exporting to, allow
->>exporting all definitions of EXPORT_SYMBOL() and friends by defining
->>DEFAULT_SYMBOL_NAMESPACE.
->>
->>For example, to export all symbols defined in usb-common into the
->>namespace USB_COMMON, add a line like this to drivers/usb/common/Makefile:
->>
->> ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=USB_COMMON
->>
->>That is equivalent to changing all EXPORT_SYMBOL(sym) definitions to
->>EXPORT_SYMBOL_NS(sym, USB_COMMON). Subsequently all symbol namespaces
->>functionality will apply.
->>
->>Another way of making use of this feature is to define the namespace
->>within source or header files similar to how TRACE_SYSTEM defines are
->>used:
->> #undef DEFAULT_SYMBOL_NAMESPACE
->> #define DEFAULT_SYMBOL_NAMESPACE USB_COMMON
->>
->>Please note that, as opposed to TRACE_SYSTEM, DEFAULT_SYMBOL_NAMESPACE
->>has to be defined before including include/linux/export.h.
->>
->>If DEFAULT_SYMBOL_NAMESPACE is defined, a symbol can still be exported
->>to another namespace by using EXPORT_SYMBOL_NS() and friends with
->>explicitly specifying the namespace.
+=C5=9Br., 28 sie 2019 o 10:38 Bartosz Golaszewski
+<bgolaszewski@baylibre.com> napisa=C5=82(a):
 >
->This changelog provides a good summary of how to use
->DEFAULT_SYMBOL_NAMESPACE, I wonder if we should explicitly document
->its proper usage somewhere? (along with EXPORT_SYMBOL_NS*)
->The EXPORT_SYMBOL API is briefly documented in
->Documentation/kernel-hacking/hacking.rst - it might be slightly dated,
->but perhaps it'd fit there best?
+> wt., 27 sie 2019 o 08:46 David Jander <david@protonic.nl> napisa=C5=82(a)=
+:
+> >
+> > The type of reg_direction needs to match the type of the regmap, which =
+is
+> > u8.
+> >
+> > Signed-off-by: David Jander <david@protonic.nl>
+> > ---
+> >  drivers/gpio/gpio-pca953x.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> > index 378b206d2dc9..30072a570bc2 100644
+> > --- a/drivers/gpio/gpio-pca953x.c
+> > +++ b/drivers/gpio/gpio-pca953x.c
+> > @@ -604,7 +604,7 @@ static void pca953x_irq_bus_sync_unlock(struct irq_=
+data *d)
+> >         u8 new_irqs;
+> >         int level, i;
+> >         u8 invert_irq_mask[MAX_BANK];
+> > -       int reg_direction[MAX_BANK];
+> > +       u8 reg_direction[MAX_BANK];
+> >
+> >         regmap_bulk_read(chip->regmap, chip->regs->direction, reg_direc=
+tion,
+> >                          NBANK(chip));
+> > @@ -679,7 +679,7 @@ static bool pca953x_irq_pending(struct pca953x_chip=
+ *chip, u8 *pending)
+> >         bool pending_seen =3D false;
+> >         bool trigger_seen =3D false;
+> >         u8 trigger[MAX_BANK];
+> > -       int reg_direction[MAX_BANK];
+> > +       u8 reg_direction[MAX_BANK];
+> >         int ret, i;
+> >
+> >         if (chip->driver_data & PCA_PCAL) {
+> > @@ -768,7 +768,7 @@ static int pca953x_irq_setup(struct pca953x_chip *c=
+hip,
+> >  {
+> >         struct i2c_client *client =3D chip->client;
+> >         struct irq_chip *irq_chip =3D &chip->irq_chip;
+> > -       int reg_direction[MAX_BANK];
+> > +       u8 reg_direction[MAX_BANK];
+> >         int ret, i;
+> >
+> >         if (!client->irq)
+> > --
+> > 2.19.1
+> >
+>
+> Applied for v5.4.
 
-I will add documentation along with the commits. Not only for the
-macros, but in general to describe the feature.
+Actually the second patch depends on the first one, so moved it over to fix=
+es.
 
->>Suggested-by: Arnd Bergmann <arnd@arndb.de>
->>Reviewed-by: Martijn Coenen <maco@android.com>
->>Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>Signed-off-by: Matthias Maennich <maennich@google.com>
->>---
->>include/linux/export.h | 6 ++++++
->>1 file changed, 6 insertions(+)
->>
->>diff --git a/include/linux/export.h b/include/linux/export.h
->>index 8e12e05444d1..1fb243abdbc4 100644
->>--- a/include/linux/export.h
->>+++ b/include/linux/export.h
->>@@ -166,6 +166,12 @@ struct kernel_symbol {
->>#define __EXPORT_SYMBOL ___EXPORT_SYMBOL
->>#endif
->>
->>+#ifdef DEFAULT_SYMBOL_NAMESPACE
->>+#undef __EXPORT_SYMBOL
->>+#define __EXPORT_SYMBOL(sym, sec)				\
->>+	__EXPORT_SYMBOL_NS(sym, sec, DEFAULT_SYMBOL_NAMESPACE)
->>+#endif
->>+
->>#define EXPORT_SYMBOL(sym) __EXPORT_SYMBOL(sym, "")
->>#define EXPORT_SYMBOL_GPL(sym) __EXPORT_SYMBOL(sym, "_gpl")
->>#define EXPORT_SYMBOL_GPL_FUTURE(sym) __EXPORT_SYMBOL(sym, "_gpl_future")
->>-- 
->>2.23.0.rc1.153.gdeed80330f-goog
->>
+Bart
+
+>
+> Thanks!
+> Bart
