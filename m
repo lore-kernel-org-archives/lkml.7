@@ -2,124 +2,99 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABF1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBD7C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49AD22CF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4198D2189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:32:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDEmsUc7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbfH1KbR (ORCPT
+        id S1726906AbfH1KcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:31:17 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:48064 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfH1KbQ (ORCPT
+        Wed, 28 Aug 2019 06:32:05 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37266 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfH1KcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:31:16 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id BBF1F81097; Wed, 28 Aug 2019 12:31:00 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 12:31:13 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chen Yu <yu.c.chen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 4.19 72/98] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD
- family 15h/16h
-Message-ID: <20190828103113.GA14677@amd>
-References: <20190827072718.142728620@linuxfoundation.org>
- <20190827072722.020603090@linuxfoundation.org>
- <20190827113604.GB18218@amd>
- <alpine.DEB.2.21.1908271525480.1939@nanos.tec.linutronix.de>
+        Wed, 28 Aug 2019 06:32:05 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d16so2279259wme.2;
+        Wed, 28 Aug 2019 03:32:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:message-id:in-reply-to:references
+         :mime-version;
+        bh=O9bYm+nsJ9IvBpQO/QVMQi2zV67cEqyaEMQRFcxhnAU=;
+        b=KDEmsUc7HCO4dnB3WwF+eR0XWJULy/HSWbfq6Tzib2PecM+pX4J6XeWbdR6mjPog9b
+         Ivvpck44TaTTQ88e6kzk5BIzV3aGTcfV+jHkRIACnbsSGdhJJYpNE4fUoBV7JmTYJH/x
+         3PuFcT9XKiY2PT9bZWU9YXuLac7a6zw2ek+r21S0ag7wljteE2tfDlsrDhgBrCtjo/TF
+         qxtkftZKlHDSTtpSfO20GNCGMaIuNktI2tIE5uaDf0vnbWYedZKz+hptfGASywIY/2Xx
+         1SgwzHnJP6NG0CjrG88b8xJLV3Qm7RR2aJ8tzXybOVx2m1nfoJaCv9OelAixySM29TFg
+         8jFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
+         :references:mime-version;
+        bh=O9bYm+nsJ9IvBpQO/QVMQi2zV67cEqyaEMQRFcxhnAU=;
+        b=M0LEbs/4gMjjXK0/Zc5+R597cxzpQk3FyuvyoZPzchUs3vDPvmUZXowyl+bgPzRMpF
+         yZCDhrvap5hDoZ1JN4AJuiEqRrQ2ubP/BzawhccnCWPkSqkIva8xUjOAWISSW/oQe9lN
+         AAcxwYegsOo5/T6Zabhtu9CcYdl88IOM4iBUAsu0IsPoPbDm3bGxeWR0ajHxyCp2H0tR
+         Bbi4yBTrdWTN19cyA4JcVP9Ns/Nyr70nHtP88445UDees4A1g+O6Jv3QU2eL6yB5XDRs
+         GY1e+kW7Rh0e51FDzPrIRtRQ9JrZLIZfHg43VI71AP9O1vhNY5ZebCuv7FHshlOUevkN
+         LW2g==
+X-Gm-Message-State: APjAAAUTPQ2dYSXupWlMjGVv7Dah0dkPNWuaeqWmyG6Qh7QwTj7Aolcz
+        7SXIBY7/ftEpyURX/3PtKQM=
+X-Google-Smtp-Source: APXvYqyd0950RxmumVL/1HKXnIl5wEhYU7GYA8pBokTHKVTP81dK9Zni52g5XauBTsmBAWhtjDXIKw==
+X-Received: by 2002:a7b:c8c1:: with SMTP id f1mr3628820wml.87.1566988323034;
+        Wed, 28 Aug 2019 03:32:03 -0700 (PDT)
+Received: from [192.168.1.105] (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id g13sm2819125wrw.87.2019.08.28.03.32.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 03:32:02 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 12:32:00 +0200
+From:   Krzysztof Wilczynski <kswilczynski@gmail.com>
+Subject: Re: [PATCH] x86/PCI: Add missing SPDX license header.
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Krzysztof Wilczynski <kw@linux.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Daniel J Blueman <daniel@numascale.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <1566988320.26704.1@gmail.com>
+In-Reply-To: <20190827232457.GI9987@google.com>
+References: <20190819060624.17305-1-kw@linux.com>
+        <20190827232457.GI9987@google.com>
+X-Mailer: geary/3.32.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908271525480.1939@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Bjorn,
 
---ikeVEW9yuYc//A+q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for the feedback.
 
-On Tue 2019-08-27 15:30:30, Thomas Gleixner wrote:
-> On Tue, 27 Aug 2019, Pavel Machek wrote:
->=20
-> > On Tue 2019-08-27 09:50:51, Greg Kroah-Hartman wrote:
-> > > From: Tom Lendacky <thomas.lendacky@amd.com>
-> > >=20
-> > > commit c49a0a80137c7ca7d6ced4c812c9e07a949f6f24 upstream.
-> > >=20
-> > > There have been reports of RDRAND issues after resuming from suspend =
-on
-> > > some AMD family 15h and family 16h systems. This issue stems from a B=
-IOS
-> > > not performing the proper steps during resume to ensure RDRAND contin=
-ues
-> > > to function properly.
-> >=20
-> > Yes. And instead of reinitializing the RDRAND on resume, this patch
-> > breaks support even for people with properly functioning BIOSes...
->=20
-> There is no way to reinitialize RDRAND from the kernel otherwise we would
-> have exactly done that. If you know how to do that please tell.
+[...]
+>>  +// SPDX-License-Identifier: GPL-2.0
+>>   /*
+>>    * This file is subject to the terms and conditions of the GNU 
+>> General Public
+>>    * License.  See the file "COPYING" in the main directory of this 
+>> archive
+> 
+> You can remove this license text at the same time as in 8cfab3cf63cf
+> ("PCI: Add SPDX GPL-2.0 to replace GPL v2 boilerplate").
 
-Would they? AMD is not exactly doing good job with communication
-here. If BIOS can do it, kernel can do it, too... or do you have
-information saying otherwise?
+Will do. I am going to send an updated v2 that takes care about this.
 
-> Also disabling it for every BIOS is the only way which can be done because
-> there is no way to know whether the BIOS is fixed or not at cold boot
-> time. And it has to be known there because applications cache the
+Krzysztof
 
-I'm pretty sure DMI-based whitelist would help here. It should be
-reasonably to fill it with the common machines at least.
 
-Plus, where is the CVE, and does AMD do anything to make BIOS vendors
-fix them?
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---ikeVEW9yuYc//A+q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1mV/EACgkQMOfwapXb+vKEEACfa9KYDavWYmga5YIPImafscUZ
-6ToAoKvc4xitFnoM3ETkUUD2cV1in6+x
-=OTpt
------END PGP SIGNATURE-----
-
---ikeVEW9yuYc//A+q--
