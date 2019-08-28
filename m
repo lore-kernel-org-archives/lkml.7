@@ -4,36 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A43C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC347C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D272622CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDEF6233A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfH1O0i (ORCPT
+        id S1727433AbfH1O0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:26:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5234 "EHLO huawei.com"
+        Wed, 28 Aug 2019 10:26:37 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41772 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726691AbfH1OZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:25:40 -0400
+        id S1726397AbfH1OZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:25:43 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1825CCC0AA225B890167;
-        Wed, 28 Aug 2019 22:25:36 +0800 (CST)
+        by Forcepoint Email with ESMTP id 545FB1642EA358628807;
+        Wed, 28 Aug 2019 22:25:41 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 28 Aug 2019 22:25:30 +0800
+ 14.3.439.0; Wed, 28 Aug 2019 22:25:32 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 03/12] net: hns3: modify base parameter of kstrtouint in hclge_dbg_dump_tm_map
-Date:   Wed, 28 Aug 2019 22:23:07 +0800
-Message-ID: <1567002196-63242-4-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 11/12] net: hns3: check reset interrupt status when reset fails
+Date:   Wed, 28 Aug 2019 22:23:15 +0800
+Message-ID: <1567002196-63242-12-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
 References: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,48 +45,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch replaces kstrtouint()'s patameter base with 0 in the
-hclge_dbg_dump_tm_mac(), which makes it more flexible. Also
-uses a macro to replace string "dump tm map", since it has been
-used multiple times.
+Currently, the reset interrupt will be cleared firstly, so when
+reset fails, if interrupt status register has reset interrupt,
+it means there is a new coming reset.
 
+Fixes: 72e2fb07997c ("net: hns3: clear reset interrupt status in hclge_irq_handle()")
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Reviewed-by: Peng Li <lipeng321@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 +++----
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h | 1 +
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index 3b4cd23..0639250 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -564,7 +564,7 @@ static void hclge_dbg_dump_tm_map(struct hclge_dev *hdev,
- 	int pri_id, ret;
- 	u32 i;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 428f7c0..dc22b84 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -3536,11 +3536,10 @@ static bool hclge_reset_err_handle(struct hclge_dev *hdev)
+ 		dev_info(&hdev->pdev->dev, "Reset pending %lu\n",
+ 			 hdev->reset_pending);
+ 		return true;
+-	} else if ((hdev->reset_type != HNAE3_IMP_RESET) &&
+-		   (hclge_read_dev(&hdev->hw, HCLGE_GLOBAL_RESET_REG) &
+-		    BIT(HCLGE_IMP_RESET_BIT))) {
++	} else if (hclge_read_dev(&hdev->hw, HCLGE_MISC_VECTOR_INT_STS) &
++		   HCLGE_RESET_INT_M) {
+ 		dev_info(&hdev->pdev->dev,
+-			 "reset failed because IMP Reset is pending\n");
++			 "reset failed because new reset interrupt\n");
+ 		hclge_clear_reset_cause(hdev);
+ 		return false;
+ 	} else if (hdev->reset_fail_cnt < MAX_RESET_FAIL_CNT) {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index a3bc382..437a9ff 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -164,6 +164,7 @@ enum HLCGE_PORT_TYPE {
+ #define HCLGE_GLOBAL_RESET_BIT		0
+ #define HCLGE_CORE_RESET_BIT		1
+ #define HCLGE_IMP_RESET_BIT		2
++#define HCLGE_RESET_INT_M		GENMASK(2, 0)
+ #define HCLGE_FUN_RST_ING		0x20C00
+ #define HCLGE_FUN_RST_ING_B		0
  
--	ret = kstrtouint(&cmd_buf[12], 10, &queue_id);
-+	ret = kstrtouint(cmd_buf, 0, &queue_id);
- 	queue_id = (ret != 0) ? 0 : queue_id;
- 
- 	cmd = HCLGE_OPC_TM_NQ_TO_QS_LINK;
-@@ -1099,6 +1099,7 @@ static void hclge_dbg_dump_mac_tnl_status(struct hclge_dev *hdev)
- int hclge_dbg_run_cmd(struct hnae3_handle *handle, const char *cmd_buf)
- {
- #define DUMP_REG	"dump reg"
-+#define DUMP_TM_MAP	"dump tm map"
- 
- 	struct hclge_vport *vport = hclge_get_vport(handle);
- 	struct hclge_dev *hdev = vport->back;
-@@ -1107,8 +1108,8 @@ int hclge_dbg_run_cmd(struct hnae3_handle *handle, const char *cmd_buf)
- 		hclge_dbg_fd_tcam(hdev);
- 	} else if (strncmp(cmd_buf, "dump tc", 7) == 0) {
- 		hclge_dbg_dump_tc(hdev);
--	} else if (strncmp(cmd_buf, "dump tm map", 11) == 0) {
--		hclge_dbg_dump_tm_map(hdev, cmd_buf);
-+	} else if (strncmp(cmd_buf, DUMP_TM_MAP, strlen(DUMP_TM_MAP)) == 0) {
-+		hclge_dbg_dump_tm_map(hdev, &cmd_buf[sizeof(DUMP_TM_MAP)]);
- 	} else if (strncmp(cmd_buf, "dump tm", 7) == 0) {
- 		hclge_dbg_dump_tm(hdev);
- 	} else if (strncmp(cmd_buf, "dump qos pause cfg", 18) == 0) {
 -- 
 2.7.4
 
