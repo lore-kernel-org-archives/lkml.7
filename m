@@ -2,118 +2,119 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE8BC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 046B8C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E35A822DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:44:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FtdxS8G2"
+	by mail.kernel.org (Postfix) with ESMTP id D18882070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:46:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfH1Pom (ORCPT
+        id S1726603AbfH1Pqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:44:42 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40386 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfH1Pol (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:44:41 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w16so45082pfn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 08:44:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=Jx78g9+c3oSx9PoQ5GPvw3BbBJk++uJnwmqxETMCaDw=;
-        b=FtdxS8G25sXjQIfGPQnEVNL1c1QtBlRqPlrr5X2IDZ8KqOJJcBbakYqZ1/RknvIHvU
-         q68jrefN9dYhDpTsG/9+Na8XE7aPe12tA2vKuUGe7r9vWiyeoiPOvtZCjPOaL5MGRDVT
-         HMXKC2QMK2prUDpXktHsEuQKQGE+8tSCmtNL0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=Jx78g9+c3oSx9PoQ5GPvw3BbBJk++uJnwmqxETMCaDw=;
-        b=mxYiku0oGD5Mp1uc6DZc5/LkRp+pRgqmx6syVYMDCDp/G787YTCNnkc3unSxhROh2+
-         48HP5urnVTTX0BM9hFGeYpQuCqbRt7AbOsDth1Ff8Yrwyb4sxrFrfu1MqidGL/OB/BrJ
-         91RhezFLWAx/L1O1UucIutEchKb7lsMEjyHHA4ALwg9MbQbjwzAsuNCfsQS0OcUmVJf4
-         7ghbDDHx/4ybt23phAAlraUhTpsVaZisnLTnxuyNqwGq1mCzeYplJucyCnSO1SgFrR3z
-         02/KZ4EDy0hgKnH3h9WUwP8l9X8kj6b6Qek3emb1W3rljH/DaC9/vCaQ0eJrGQB7oezw
-         Scyw==
-X-Gm-Message-State: APjAAAUD2m5KLBfgbNez8MrvI00PFh6sGlb+6XHOsywSGDhLgaZVzGa8
-        yYPa0VdsIo8YA4AUWIyRnLrIXg==
-X-Google-Smtp-Source: APXvYqzY9v6YG3rvk6EhG6cDIUiFdX3gZS5f2YMEto/kGAYjz8HV33Zv3cGN5nMxnqyoka5FceyNNg==
-X-Received: by 2002:aa7:946d:: with SMTP id t13mr5579110pfq.121.1567007080982;
-        Wed, 28 Aug 2019 08:44:40 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id m145sm4747764pfd.68.2019.08.28.08.44.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 08:44:40 -0700 (PDT)
-Message-ID: <5d66a168.1c69fb81.570fd.ae07@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 28 Aug 2019 11:46:34 -0400
+Received: from mga06.intel.com ([134.134.136.31]:9910 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726428AbfH1Pqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 11:46:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 08:46:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
+   d="scan'208";a="171580261"
+Received: from unknown (HELO [10.7.201.140]) ([10.7.201.140])
+  by orsmga007.jf.intel.com with ESMTP; 28 Aug 2019 08:46:33 -0700
+Subject: Re: [patch 1/2] x86/mm/pti: Handle unaligned address gracefully in
+ pti_clone_pagetable()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Song Liu <songliubraving@fb.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>
+References: <20190828142445.454151604@linutronix.de>
+ <20190828143123.971884723@linutronix.de>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <55bb026c-5d54-6ebf-608f-3f376fbec4e5@intel.com>
+Date:   Wed, 28 Aug 2019 08:46:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAP245DVGY6+vue_REqy=Tbvka2fcBx6XhSBePW4L3=pNagX=Dw@mail.gmail.com>
-References: <cover.1566907161.git.amit.kucheria@linaro.org> <64a3d07ebe5c4cfb4643d91f5f6605e8a4ffa48b.1566907161.git.amit.kucheria@linaro.org> <5d65ccfd.1c69fb81.95798.20d8@mx.google.com> <CAP245DVGY6+vue_REqy=Tbvka2fcBx6XhSBePW4L3=pNagX=Dw@mail.gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Brian Masney <masneyb@onstation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v2 14/15] drivers: thermal: tsens: Create function to return sign-extended temperature
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 28 Aug 2019 08:44:39 -0700
+In-Reply-To: <20190828143123.971884723@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Amit Kucheria (2019-08-28 03:35:28)
-> (Resending, replied only to Stephen by mistake)
->=20
-> On Wed, Aug 28, 2019 at 6:08 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > Quoting Amit Kucheria (2019-08-27 05:14:10)
-> > > @@ -310,6 +328,10 @@ int __init init_common(struct tsens_priv *priv)
-> > > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 goto err_put_device;
-> > > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 }
-> > > =C2=A0 =C2=A0 =C2=A0 =C2=A0 }
-> > > +
-> > > + =C2=A0 =C2=A0 =C2=A0 /* Save away resolution of signed temperature =
-value for this IP */
-> > > + =C2=A0 =C2=A0 =C2=A0 priv->tempres =3D priv->fields[LAST_TEMP_0].ms=
-b - priv->fields
-> [LAST_TEMP_0].lsb;
-> > > +
-> >
-> > Why not just calculate this in the function that uses it? Is there a
-> > reason to stash it away in the struct?
->=20
-> To avoid recalculating in an often-called function. It doesn't change for=
- an IP
-> version.
->=20
-> We can't make it static either inside that function since the initializer=
- isn't
-> constant.
->=20
+On 8/28/19 7:24 AM, Thomas Gleixner wrote:
+> From: Song Liu <songliubraving@fb.com>
+> 
+> pti_clone_pmds() assumes that the supplied address is either:
+> 
+>  - properly PUD/PMD aligned
+> or
+>  - the address is actually mapped which means that independent
+>    of the mapping level (PUD/PMD/PTE) the next higher mapping
+>    exist.
+> 
+> If that's not the case the unaligned address can be incremented by PUD or
+> PMD size wrongly. All callers supply mapped and/or aligned addresses, but
+> for robustness sake, it's better to handle that case proper and to emit a
+> warning.
 
-This sounds like a super micro optimization. It's a couple derefs and a
-subtraction. If it isn't used anywhere else please just move it into the
-function where it's used.
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
 
+Song, did you ever root-cause the performance regression?  I thought
+there were still some mysteries there.
