@@ -2,120 +2,106 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7CCC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84681C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02CB22DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B73D22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:03:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="a/RfKNL4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfH1NCy (ORCPT
+        id S1726766AbfH1NC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:02:54 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39443 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbfH1NCy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:02:54 -0400
-Received: by mail-qt1-f195.google.com with SMTP id n7so12760qtb.6;
-        Wed, 28 Aug 2019 06:02:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IGBGJGSXKu1XI7QCTZRx+ka85VzBENyC+3JcanBjN3E=;
-        b=kels8ahvdbtG6I/zeXlp2TPncvBGw+0OZ6yveDN/QHjqt66v/KTiuxyDkNH4mLAeeh
-         f4ScJWKCH9HhgAeK5giljAYVR6RQMe+JteLC7CHuOyyO0+3mcHmpfvh7kf68Nz6RMsN5
-         YYSzrG3uDUhrmC6Rv1976zwvnIpAXCMsFxQ2YjMe12Za0vHYsB1V9nF18Cc0mH/euCZw
-         hnIuy3VF2KbylkfR7KiP9BKoQiLnnXIvKZhfzE62MzvoQX+7jyo8yRWg7fOkUFAjGTiH
-         A71nmS8U18m5SbtwUrJJIWSiQAIvWivEPQaKaYc5GdYU8WBReyZYNfWCJbgbI0raVmJy
-         pROw==
-X-Gm-Message-State: APjAAAU7irnUz74pNRden1djY0tbvT8j37oku3imyo9clV7f9A55d91X
-        LnNhvzU0aGkofzSGu8Pu4yA0KmYDpLHDdT5cV6M=
-X-Google-Smtp-Source: APXvYqwFs2+ff1HO4EmjqAOCzKXa7tMdrsXizeCnfMrVB5CqO4/vjsoIDKOUj+3CtQPhIKsdnKwWMimhgoCxxhSPV9c=
-X-Received: by 2002:ac8:239d:: with SMTP id q29mr4036253qtq.304.1566997372955;
- Wed, 28 Aug 2019 06:02:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190808212234.2213262-1-arnd@arndb.de> <20190808212234.2213262-15-arnd@arndb.de>
- <20190813103605.GL52127@atomide.com> <CAK8P3a0E+QUn9wcP5Obv-FitWyXCFwcp+oPConeO2p-NV1rqsw@mail.gmail.com>
- <20190813181158.GA26798@darkstar.musicnaut.iki.fi> <CAK8P3a0LjKrc+7c5Ht9OL7LfYyLnG9=y7u+w24ujA1xAid_yCQ@mail.gmail.com>
- <20190814074918.GA52127@atomide.com> <CAK8P3a3k_HOGqzMGjtc+7NSaK0Bsa_vxxRFLzY8aP6ev4wa9iA@mail.gmail.com>
- <20190816083403.GB1952@darkstar.musicnaut.iki.fi> <CAK8P3a3jqNxoihQ+UFvOZMg=AcF2yzHXs5ay6X1TZX8L3zQ3rg@mail.gmail.com>
- <20190827190453.GJ30291@darkstar.musicnaut.iki.fi>
-In-Reply-To: <20190827190453.GJ30291@darkstar.musicnaut.iki.fi>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 28 Aug 2019 15:02:36 +0200
-Message-ID: <CAK8P3a1PeBMRuweAmzrTQC85CmwdZPirG3HPg9aJ99p2U7zknQ@mail.gmail.com>
-Subject: Re: [PATCH 14/22] ARM: omap1: use pci_ioremap_io() for omap_cf
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Wed, 28 Aug 2019 09:02:59 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:48198 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726253AbfH1NC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:02:58 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 46JQq06pXgz86;
+        Wed, 28 Aug 2019 15:01:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1566997278; bh=uRuZuOqBLbzAnAvpCnYbVSyoMKxEZTSKinbvSRrThOk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a/RfKNL4MlNT+Kbj4nC71eLuYccZ4AB8NolM7w1vrgnZ6euiuqXjf13U1jRziElvk
+         ucg3Gg+i24xGI5+y1w5iJegO715BAu/bLNhxEYNUKzEy6OQXtqJW8PlZZLqWxHCTy4
+         8qf92eDmWNSZVcDwKReB5AdAirysbTx9mkKGrZ//GDRi2JU3P3EDBMYwdZ07NY2iAm
+         sVVtEL3HNSEPj102qGv/PBH+OnPi+Z2ZaumQOHIcsWDtMAYXYi0UtlKXLx/uy9mxnb
+         dS34IGGFYSRXIGcA+3LpGRzW4Vtz9OcFeuOjTe0qX65wYYLZUBDaRyaQvhUTOE2LC8
+         a+nZHriRfnmcA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.2 at mail
+Date:   Wed, 28 Aug 2019 15:02:52 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Rob Herring <robh@kernel.org>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Chas Williams <3chas3@gmail.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] dt-bindings: misc: atmel-ssc: LRCLK from TF/RF
+ pin option
+Message-ID: <20190828130252.GD20202@qmqm.qmqm.pl>
+References: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
+ <9b85d5a7c7e788e9ed87d020323ad9292e3aeab7.1566677788.git.mirq-linux@rere.qmqm.pl>
+ <20190827223716.GA31605@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190827223716.GA31605@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 9:05 PM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
-> On Tue, Aug 27, 2019 at 06:33:01PM +0200, Arnd Bergmann wrote:
-> > On Fri, Aug 16, 2019 at 10:34 AM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
-> > > However with earlyprintk it seems to hang as soon as kernel tries to print
-> > > something. So something goes wrong with early DEBUG_LL mapping code when
-> > > CONFIG_DEBUG_UART_VIRT=0xff000000 is used?
-> >
-> > I just redid the calculation and came out with the same address, so I
-> > don't think I put the wrong one there. The address also does not
-> > conflict with the PCI mapping, and the address is the same one that
-> > is installed later, so that should also be fine.
-> >
-> > Are you sure you used the correct address in the .config file? If you
-> > ran 'make oldconfig', the virtual address would not be changed here
-> > as I just modify the default for a fresh 'make omap1_defconfig'
-> > run or similar.
->
-> Yes... You should be able to try this out also in QEMU to see the hang:
+On Tue, Aug 27, 2019 at 05:37:16PM -0500, Rob Herring wrote:
+> On Sat, Aug 24, 2019 at 10:26:55PM +0200, Micha³ Miros³aw wrote:
+> > Add single-pin LRCLK source options for Atmel SSC module.
+> > 
+> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
+> > 
+> > ---
+> >   v2: split from implementation patch
+> > 
+> > ---
+> >  Documentation/devicetree/bindings/misc/atmel-ssc.txt | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/misc/atmel-ssc.txt b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+> > index f9fb412642fe..c98e96dbec3a 100644
+> > --- a/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+> > +++ b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+> > @@ -24,6 +24,11 @@ Optional properties:
+> >         this parameter to choose where the clock from.
+> >       - By default the clock is from TK pin, if the clock from RK pin, this
+> >         property is needed.
+> > +  - atmel,lrclk-from-tf-pin: bool property.
+> > +  - atmel,lrclk-from-rf-pin: bool property.
+> > +     - SSC in slave mode gets LRCLK from RF for receive and TF for transmit
+> > +       data direction. This property makes both use single TF (or RF) pin
+> > +       as LRCLK. At most one can be present.
+> 
+> A single property taking 1 of possible 2 values would prevent the error 
+> of more than 1 property present.
 
-Haven't tried yet, but I took a look at the dump:
+It still would need a validation check in the code, though: you
+could put wrong value then.  It seems more consistent with the
+existing parameters to have two bool properties.
 
-> $ qemu-system-arm -M sx1 -kernel sx1-zImage -nographic
->
-> [ Hangs silently, press Ctrl-a c to enter monitor. ]
->
-> QEMU 4.1.0 monitor - type 'help' for more information
-> (qemu) info registers
-> R00=c0379de1 R01=0000005b R02=00000000 R03=ff000000
-> R04=00000000 R05=00000031 R06=c038f119 R07=00000000
-> R08=00000000 R09=c038f50e R10=600001d3 R11=00000001
-> R12=00000010 R13=c0379de0 R14=c000e07c R15=c000dfcc
-> PSR=000001d3 ---- A svc32
-> FPSCR: 00000000
->
-> from System.map:
-> c000df7c T printascii
-> c000dfe0 T printch
-
-Ok, that is clearly the "busyloop" macro in
-arch/arm/include/debug/8250.S, checking if the data got sent.
-
-The 'r2' register contains zero, so UART_LSR_TEMT and
-UART_LSR_THRE are not set, but presumably the mapping
-was installed right since you did not get a page fault.
-
-I assume you checked that the uart output wasn't already broken
-by one of the earlier patches, right?
-
-Also, looking at arch/arm/mach-omap1/include/mach/uncompress.h
-it seems that SX1 normally uses UART3, not UART1.
-Is that different in qemu?
-
-        Arnd
+Best Regards,
+Micha³ Miros³aw
