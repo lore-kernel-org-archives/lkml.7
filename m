@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1A3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90F1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8832220828
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEE052173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfH1Rd3 (ORCPT
+        id S1726921AbfH1Rdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:33:29 -0400
+        Wed, 28 Aug 2019 13:33:33 -0400
 Received: from mga02.intel.com ([134.134.136.20]:19308 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbfH1Rd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:33:27 -0400
+        id S1726315AbfH1Rda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 13:33:30 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 10:33:26 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 10:33:29 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
-   d="scan'208";a="182093675"
+   d="scan'208";a="182093686"
 Received: from glass.png.intel.com ([172.30.181.95])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Aug 2019 10:33:24 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 28 Aug 2019 10:33:27 -0700
 From:   Ong Boon Leong <boon.leong.ong@intel.com>
 To:     davem@davemloft.net, linux@armlinux.org.uk,
         mcoquelin.stm32@gmail.com, joabreu@synopsys.com,
@@ -35,9 +35,9 @@ To:     davem@davemloft.net, linux@armlinux.org.uk,
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         peppe.cavallaro@st.comi, alexandre.torgue@st.com,
         weifeng.voon@intel.com
-Subject: [RFC net-next v1 1/5] net: phy: make mdiobus_create_device() function callable from Eth driver
-Date:   Thu, 29 Aug 2019 01:33:17 +0800
-Message-Id: <20190828173321.25334-2-boon.leong.ong@intel.com>
+Subject: [RFC net-next v1 2/5] net: phy: introduce mdiobus_get_mdio_device
+Date:   Thu, 29 Aug 2019 01:33:18 +0800
+Message-Id: <20190828173321.25334-3-boon.leong.ong@intel.com>
 X-Mailer: git-send-email 2.17.0
 In-Reply-To: <20190828173321.25334-1-boon.leong.ong@intel.com>
 References: <20190828173321.25334-1-boon.leong.ong@intel.com>
@@ -46,78 +46,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PHY converter and external PHY drivers depend on MDIO functions of Eth
-driver and such MDIO read/write completion may fire IRQ. The ISR for MDIO
-completion IRQ is done in the open() function of driver.
-
-For PHY converter mdio driver that registers ISR event that uses MDIO
-read/write function during its probe() function, the MDIO ISR should have
-been performed a head of time before mdio driver probe() is called. It is
-for reason as such, the mdio device creation and registration will need
-to be callable from Eth driver open() function.
-
-Why existing way to register mdio_device for PHY converter that is done
-via mdiobus_register_board_info() is not feasible is the mdio device
-creation and registration happens inside Eth driver probe() function,
-specifically in mdiobus_setup_mdiodevfrom_board_info() that is called
-by mdiobus_register().
-
-Therefore, to fulfill the need mentioned above, we make mdiobus_create_
-device() to be callable from Eth driver open().
+Add the function to get mdio_device based on the mdio addr.
 
 Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
 ---
- drivers/net/phy/mdio_bus.c | 5 +++--
- include/linux/phy.h        | 7 +++++++
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ drivers/net/phy/mdio_bus.c | 6 ++++++
+ include/linux/mdio.h       | 1 +
+ 2 files changed, 7 insertions(+)
 
 diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index bd04fe762056..06658d9197a1 100644
+index 06658d9197a1..96ef94f87ff1 100644
 --- a/drivers/net/phy/mdio_bus.c
 +++ b/drivers/net/phy/mdio_bus.c
-@@ -338,8 +338,8 @@ static inline void of_mdiobus_link_mdiodev(struct mii_bus *mdio,
-  *
-  * Returns 0 on success or < 0 on error.
-  */
--static int mdiobus_create_device(struct mii_bus *bus,
--				 struct mdio_board_info *bi)
-+int mdiobus_create_device(struct mii_bus *bus,
-+			  struct mdio_board_info *bi)
- {
- 	struct mdio_device *mdiodev;
- 	int ret = 0;
-@@ -359,6 +359,7 @@ static int mdiobus_create_device(struct mii_bus *bus,
- 
- 	return ret;
+@@ -130,6 +130,12 @@ struct phy_device *mdiobus_get_phy(struct mii_bus *bus, int addr)
  }
-+EXPORT_SYMBOL(mdiobus_create_device);
+ EXPORT_SYMBOL(mdiobus_get_phy);
+ 
++struct mdio_device *mdiobus_get_mdio_device(struct mii_bus *bus, int addr)
++{
++	return bus->mdio_map[addr];
++}
++EXPORT_SYMBOL(mdiobus_get_mdio_device);
++
+ bool mdiobus_is_registered_device(struct mii_bus *bus, int addr)
+ {
+ 	return bus->mdio_map[addr];
+diff --git a/include/linux/mdio.h b/include/linux/mdio.h
+index e8242ad88c81..e0ccd56a7ac0 100644
+--- a/include/linux/mdio.h
++++ b/include/linux/mdio.h
+@@ -315,6 +315,7 @@ int mdiobus_register_device(struct mdio_device *mdiodev);
+ int mdiobus_unregister_device(struct mdio_device *mdiodev);
+ bool mdiobus_is_registered_device(struct mii_bus *bus, int addr);
+ struct phy_device *mdiobus_get_phy(struct mii_bus *bus, int addr);
++struct mdio_device *mdiobus_get_mdio_device(struct mii_bus *bus, int addr);
  
  /**
-  * __mdiobus_register - bring up all the PHYs on a given bus and attach them to bus
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index d26779f1fb6b..4524db57fe0b 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -1249,12 +1249,19 @@ struct mdio_board_info {
- #if IS_ENABLED(CONFIG_MDIO_DEVICE)
- int mdiobus_register_board_info(const struct mdio_board_info *info,
- 				unsigned int n);
-+int mdiobus_create_device(struct mii_bus *bus, struct mdio_board_info *bi);
- #else
- static inline int mdiobus_register_board_info(const struct mdio_board_info *i,
- 					      unsigned int n)
- {
- 	return 0;
- }
-+
-+static inline int mdiobus_create_device(struct mii_bus *bus,
-+					struct mdio_board_info *bi)
-+{
-+	return 0;
-+}
- #endif
- 
- 
+  * mdio_module_driver() - Helper macro for registering mdio drivers
 -- 
 2.17.0
 
