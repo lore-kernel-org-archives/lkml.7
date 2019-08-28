@@ -2,41 +2,43 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E878AC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC7BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B978D205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2614522DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfH1WSG (ORCPT
+        id S1727195AbfH1WSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 18:18:06 -0400
+        Wed, 28 Aug 2019 18:18:14 -0400
 Received: from mga17.intel.com ([192.55.52.151]:11611 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726658AbfH1WSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 18:18:06 -0400
+        id S1727109AbfH1WSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 18:18:09 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 15:18:05 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 15:18:06 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="197662402"
+   d="scan'208";a="197662425"
 Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Aug 2019 15:18:05 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 28 Aug 2019 15:18:06 -0700
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, keith.busch@intel.com,
         sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v7 0/7] Fix PF/VF dependency issue
-Date:   Wed, 28 Aug 2019 15:14:00 -0700
-Message-Id: <cover.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v7 6/7] PCI/ATS: Disable PF/VF ATS service independently
+Date:   Wed, 28 Aug 2019 15:14:06 -0700
+Message-Id: <8163ab8fa66afd2cba514ae95d29ab12104781aa.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <cover.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,52 +48,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Current implementation of ATS, PASID, PRI does not handle VF dependencies
-correctly. Following patches addresses this issue.
+Currently all VF's needs to be disable their ATS service before
+disabling the ATS service in corresponding PF device. But this logic is
+incorrect and does not align with the spec. Also it might lead to
+some power and performance impact in the system. As per PCIe spec r4.0,
+sec 9.3.7.8, ATS Capabilities in VFs and their associated PFs may be
+enabled/disabled independently. So remove this dependency logic in
+enable/disable code.
 
-Changes since v6:
- * Removed locking interfaces used in v6.
- * Made necessary changes to PRI/PASID enable/disable calls to allow
-   register changes only for PF.
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Suggested-by: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ drivers/pci/ats.c   | 11 -----------
+ include/linux/pci.h |  1 -
+ 2 files changed, 12 deletions(-)
 
-Changes since v5:
- * Created new patches for PRI/PASID capability caching.
- * Removed individual locks (pri_lock, pasid_lock) and added common
-   resource lock to synchronize PRI/PASID updates between PF/VF.
- * Addressed comments from Bjorn Helgaas.
-
-Changes since v4:
- * Defined empty functions for pci_pri_init() and pci_pasid_init() for cases
-   where CONFIG_PCI_PRI and CONFIG_PCI_PASID are not enabled.
-
-Changes since v3:
- * Fixed critical path (lock context) in pci_restore_*_state functions.
-
-Changes since v2:
- * Added locking mechanism to synchronize accessing PF registers in VF.
- * Removed spec compliance checks in patches.
- * Addressed comments from Bjorn Helgaas.
-
-Changes since v1:
- * Added more details about the patches in commit log.
- * Removed bulk spec check patch.
- * Addressed comments from Bjorn Helgaas.
-
-Kuppuswamy Sathyanarayanan (7):
-  PCI/ATS: Fix pci_prg_resp_pasid_required() dependency issues
-  PCI/ATS: Cache PRI capability check result
-  PCI/ATS: Cache PASID capability check result
-  PCI/ATS: Add PRI support for PCIe VF devices
-  PCI/ATS: Add PASID support for PCIe VF devices
-  PCI/ATS: Disable PF/VF ATS service independently
-  PCI: Skip Enhanced Allocation (EA) initialization for VF device
-
- drivers/pci/ats.c       | 202 ++++++++++++++++++++++++++++------------
- drivers/pci/pci.c       |   7 ++
- include/linux/pci-ats.h |  12 ++-
- include/linux/pci.h     |   3 +-
- 4 files changed, 159 insertions(+), 65 deletions(-)
-
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index 893674520bbf..e7db42128176 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -108,8 +108,6 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
+ 		pdev = pci_physfn(dev);
+ 		if (pdev->ats_stu != ps)
+ 			return -EINVAL;
+-
+-		atomic_inc(&pdev->ats_ref_cnt);  /* count enabled VFs */
+ 	} else {
+ 		dev->ats_stu = ps;
+ 		ctrl |= PCI_ATS_CTRL_STU(dev->ats_stu - PCI_ATS_MIN_STU);
+@@ -127,20 +125,11 @@ EXPORT_SYMBOL_GPL(pci_enable_ats);
+  */
+ void pci_disable_ats(struct pci_dev *dev)
+ {
+-	struct pci_dev *pdev;
+ 	u16 ctrl;
+ 
+ 	if (WARN_ON(!dev->ats_enabled))
+ 		return;
+ 
+-	if (atomic_read(&dev->ats_ref_cnt))
+-		return;		/* VFs still enabled */
+-
+-	if (dev->is_virtfn) {
+-		pdev = pci_physfn(dev);
+-		atomic_dec(&pdev->ats_ref_cnt);
+-	}
+-
+ 	pci_read_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, &ctrl);
+ 	ctrl &= ~PCI_ATS_CTRL_ENABLE;
+ 	pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 782bca667010..2428414b2b9c 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -452,7 +452,6 @@ struct pci_dev {
+ 	};
+ 	u16		ats_cap;	/* ATS Capability offset */
+ 	u8		ats_stu;	/* ATS Smallest Translation Unit */
+-	atomic_t	ats_ref_cnt;	/* Number of VFs with ATS enabled */
+ #endif
+ #ifdef CONFIG_PCI_PRI
+ 	u16		pri_cap;	/* PRI Capability offset */
 -- 
 2.21.0
 
