@@ -2,101 +2,83 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A79C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F5AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C2B23404
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 838C7214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:13:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="CNdkjNPZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfH1TEr (ORCPT
+        id S1726663AbfH1TNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 15:04:47 -0400
-Received: from mga01.intel.com ([192.55.52.88]:21441 "EHLO mga01.intel.com"
+        Wed, 28 Aug 2019 15:13:42 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:50650 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbfH1TEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 15:04:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 12:04:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="171645852"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga007.jf.intel.com with ESMTP; 28 Aug 2019 12:04:46 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 0A3CD300FC7; Wed, 28 Aug 2019 12:04:46 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 12:04:45 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kan.liang@linux.intel.com, acme@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, jolsa@kernel.org,
-        eranian@google.com, alexander.shishkin@linux.intel.com
-Subject: Re: [RESEND PATCH V3 3/8] perf/x86/intel: Support hardware TopDown
- metrics
-Message-ID: <20190828190445.GQ5447@tassilo.jf.intel.com>
-References: <20190826144740.10163-1-kan.liang@linux.intel.com>
- <20190826144740.10163-4-kan.liang@linux.intel.com>
- <20190828150238.GC17205@worktop.programming.kicks-ass.net>
+        id S1726576AbfH1TNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 15:13:42 -0400
+Received: from zn.tnic (p200300EC2F0A5300A53AA9977BDEAF1A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5300:a53a:a997:7bde:af1a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 38C0A1EC0503;
+        Wed, 28 Aug 2019 21:13:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1567019617;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=EEJZJDQSuaHwZRcR7GT4CllUYlT+YVmw/EcCSIF/Nc0=;
+        b=CNdkjNPZTopEJ4kvqUGyaNVs1EhaS1E6SJmE1fzBvp42noz4A5/eKsi60o4ZaWHtQniAy3
+        V7nhGURuncWa0IHMTwd6ORgN+IDgpVUxWNteyX85OLbzklrJ5sWFJR3kuc88l/+WhSwBAg
+        +taOizm4N2NHjTpfzdW6snP5/8ho2UY=
+Date:   Wed, 28 Aug 2019 21:13:31 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+Cc:     Mihai Carabas <mihai.carabas@oracle.com>,
+        linux-kernel@vger.kernel.org, boris.ostrovsky@oracle.com,
+        konrad.wilk@oracle.com, patrick.colp@oracle.com,
+        kanth.ghatraju@oracle.com, Jon.Grimm@amd.com,
+        Thomas.Lendacky@amd.com
+Subject: Re: [PATCH 1/2] x86/microcode: Update late microcode in parallel
+Message-ID: <20190828191331.GN4920@zn.tnic>
+References: <1566506627-16536-1-git-send-email-mihai.carabas@oracle.com>
+ <1566506627-16536-2-git-send-email-mihai.carabas@oracle.com>
+ <20190824085156.GA16813@zn.tnic>
+ <20190824085300.GB16813@zn.tnic>
+ <20190826202339.GA49895@otc-nc-03>
+ <20190827122501.GD29752@zn.tnic>
+ <20190828005630.GB47494@otc-nc-03>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190828150238.GC17205@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190828005630.GB47494@otc-nc-03>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 05:02:38PM +0200, Peter Zijlstra wrote:
-> > 
-> > To avoid reading the METRICS register multiple times, the metrics and
-> > slots value can only be updated by the first slots/metrics event in a
-> > group. All active slots and metrics events will be updated one time.
+On Tue, Aug 27, 2019 at 05:56:30PM -0700, Raj, Ashok wrote:
+> > "Cloud customers have expressed discontent as services disappear for
+> > a prolonged time. The restriction is that only one core (or only one
+> > thread of a core in the case of an SMT system) goes through the update
+> > while other cores (or respectively, SMT threads) are quiesced."
 > 
-> Can't we require SLOTS to be the group leader for any Metric group?
+> the last line seems to imply that only one core can be updated at a time.
 
-Metrics are really useful to collect with any other sampling event
-to give you more context in the program behavior.
+Only one core *is* being updated at a time now, before the parallel
+loading patch. Look at the code. I'm talking about what the code does,
+not what the requirement is.
 
-> Is there ever a case where we want to add other events to a metric
-> group?
+Maybe it should not say "restriction" above but the sentence should
+start with: "Currently, only one core... "
 
-Yes. Any normal leader sampling case. You just collect metrics too.
+-- 
+Regards/Gruss,
+    Boris.
 
-> it also musn't be too cold. But that leaves it unspecified what exactly
-> is the right range.
-> 
-> IOW, you want a Goldilocks number of SLOTS.
-
-That's too strong. You probably don't want minutes, but seconds
-worth of measurement should be ok.
-
-> > NMI
-> > ======
-> > 
-> > The METRICS register may be overflow. The bit 48 of STATUS register
-> > will be set. If so, update all active slots and metrics events.
-> 
-> that happen? It would be useful to get that METRIC_OVF (can we please
-
-This happens when the internal counters that feed the metrics
-overflow.
-
-> If this is so; then we can use this to update/reset PERF_METRICS and
-> nothing else.
-
-It has to be handled in the PMI.
-
-> Then there is no mucking about with that odd counter/metrics msr pair
-> reset nonsense. Becuase that really stinks.
-
-You have to write them to reset the internal counters.
-
--Andi
-
+Good mailing practices for 400: avoid top-posting and trim the reply.
