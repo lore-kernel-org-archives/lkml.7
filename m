@@ -2,101 +2,108 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E6FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6461EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06ED22CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566999574;
-	bh=6293ZGylEn4OxyQXkqlfv9nHz0br1szMeuGh6Fg1x9Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gp4UDp5g7o3647+tyRu8qmQAtYre07ZEuN1qBDw0QYX2+l0038aXiw6uaQkTbbQLF
-	 01wBGWFb3EjeNTIJiHatFSaYUT33VY0nqIE4YXLj+rqiwXCrHtUIQdiegt2p/mSvMC
-	 RaZ4GCkzXz+8yGURjWcLPLrsWe5vbnVHDIz611Uk=
+	by mail.kernel.org (Postfix) with ESMTP id 30FFB20828
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:42:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="McnM47Sw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfH1Njd (ORCPT
+        id S1726465AbfH1NmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:39:33 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33374 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726863AbfH1Nja (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:39:30 -0400
-Received: by mail-lf1-f68.google.com with SMTP id g9so2233358lfb.0;
-        Wed, 28 Aug 2019 06:39:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XfvqJu9BApSnnB/3JXrqLAVXQ9aClPdswJgKx9f9+qc=;
-        b=doWxQoC+Ah3/3AH88K2YsY1NXHVx46jPwrn4eg0raNlXUqPUc+UYBUJqJYASMvWEGN
-         aE5KDjTU6QgQ5q+eRrn1iaT8u9J20tsoXwMf0SCKUfxiHok7tsUVUFX9vrPdSph3a/bP
-         f3gRjOcoCyWe2/BtyTddqFtkJIL/kk04vLOsDlYsRdLiBUgDOQ1weQjXuk9ZasPz5ONb
-         pkmD1IVN2s1EvJE7NyYrFxwxtko3hpWtJRAWG9Hl6N7OkAlJXFBzaDHd5mxlFqtadJyH
-         vQEDO8tjcECJXqG2/4WjNwV90c3mREhgJaspKDabZJdnaEUvRKAP80+NVzg1VrSAe9PC
-         qRsQ==
-X-Gm-Message-State: APjAAAWd/IJ8vjYx5Gkmi61bOXX+AUujiybzz2tBxyRxq8VKuRXx3I31
-        BnY6aCF5A5BTy513iYnx/fY=
-X-Google-Smtp-Source: APXvYqw86Voga75zop8qCSWYkYmKp6nuBxBwzyI1JZeW/NknsO6JDRlTk3L8uHcKZvkXk8vSSE5tkg==
-X-Received: by 2002:a05:6512:28d:: with SMTP id j13mr2675773lfp.12.1566999568728;
-        Wed, 28 Aug 2019 06:39:28 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id r20sm846817lfm.41.2019.08.28.06.39.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 06:39:27 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92)
-        (envelope-from <johan@kernel.org>)
-        id 1i2yAW-0007rt-9w; Wed, 28 Aug 2019 15:39:24 +0200
-Date:   Wed, 28 Aug 2019 15:39:24 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Matthew Michilot <matthew.michilot@gmail.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] USB: serial: ftdi_sio: add support for FT232H CBUS
- gpios
-Message-ID: <20190828133924.GG13017@localhost>
-References: <20190808222348.4428-1-matthew.michilot@gmail.com>
- <20190815174054.20240-1-matthew.michilot@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815174054.20240-1-matthew.michilot@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 28 Aug 2019 09:42:04 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:22938 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbfH1NmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:42:03 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46JRk12DWFz9txgl;
+        Wed, 28 Aug 2019 15:42:01 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=McnM47Sw; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id EbMeLWH2Bh5V; Wed, 28 Aug 2019 15:42:01 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46JRk10cSKz9txgf;
+        Wed, 28 Aug 2019 15:42:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566999721; bh=WlF/NSltuPx4PM3qTDCqQGZT8tc/4RbHenX+NeVwbvY=;
+        h=From:Subject:To:Cc:Date:From;
+        b=McnM47SwSpPMO6QuYvKKyyQZ648H4n+/LV51JTu8o3Xibt98fpDBFMT5U6czyfLJh
+         k6E89dZM4kQUGZKK6cfnEXvNHz8PP9ehnwwMAnbA1LFoHYp1fgP3O0k7SAdQ7ScGdD
+         x8vQDatxay1Us4HZnxp6IUnDo1ZQR+eNalwEyMcE=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 86B838B89B;
+        Wed, 28 Aug 2019 15:42:02 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id guMCPJ6UOkHP; Wed, 28 Aug 2019 15:42:02 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.105])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6AF798B885;
+        Wed, 28 Aug 2019 15:42:02 +0200 (CEST)
+Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 13C5B69728; Wed, 28 Aug 2019 13:42:01 +0000 (UTC)
+Message-Id: <ac19713826fa55e9e7bfe3100c5a7b1712ab9526.1566999711.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/reg: use ASM_FTR_IFSET() instead of opencoding fixup.
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Wed, 28 Aug 2019 13:42:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 05:40:54PM +0000, Matthew Michilot wrote:
-> Enable support for cbus gpios on FT232H. The cbus configuration is
-> stored in one word in the EEPROM at byte-offset 0x1a with the mux
+mftb() includes a feature fixup for CELL ppc.
 
-You forgot to fix the copy-paste error here; it should be "two words" as
-I mentioned before.
+Use ASM_FTR_IFSET() macro instead of opencoding the setup
+of the fixup sections.
 
-> config for ACBUS5, ACBUS6, ACBUS8 and ACBUS9 (only pins that can be
-> configured as I/O mode).
-> 
-> Tested using FT232H by configuring one ACBUS pin at a time.
-> 
-> Signed-off-by: Matthew Michilot <matthew.michilot@gmail.com>
-> Reviewed-by: Tim Harvey <tharvey@gateworks.com>
-> ---
-> V2:
-> - made hex notation all lowercase for consistency
-> - allocated 4 bytes instead of 2 bytes for buffer
-> - improved documentation on FT232H CBUS memory mapping
-> - fixed CBUS pins being incorrectly mapped to the wrong gpios
-> - sorted case labels alphabetically
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/include/asm/reg.h | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
 
-Now applied after amending the commit message.
+diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
+index 10caa145f98b..7acce24ace49 100644
+--- a/arch/powerpc/include/asm/reg.h
++++ b/arch/powerpc/include/asm/reg.h
+@@ -1378,19 +1378,9 @@ static inline void msr_check_and_clear(unsigned long bits)
+ #define mftb()		({unsigned long rval;				\
+ 			asm volatile(					\
+ 				"90:	mfspr %0, %2;\n"		\
+-				"97:	cmpwi %0,0;\n"			\
+-				"	beq- 90b;\n"			\
+-				"99:\n"					\
+-				".section __ftr_fixup,\"a\"\n"		\
+-				".align 3\n"				\
+-				"98:\n"					\
+-				"	.8byte %1\n"			\
+-				"	.8byte %1\n"			\
+-				"	.8byte 97b-98b\n"		\
+-				"	.8byte 99b-98b\n"		\
+-				"	.8byte 0\n"			\
+-				"	.8byte 0\n"			\
+-				".previous"				\
++				ASM_FTR_IFSET(				\
++					"97:	cmpwi %0,0;\n"		\
++					"	beq- 90b;\n", "", %1)	\
+ 			: "=r" (rval) \
+ 			: "i" (CPU_FTR_CELL_TB_BUG), "i" (SPRN_TBRL) : "cr0"); \
+ 			rval;})
+-- 
+2.13.3
 
-Thanks,
-Johan
