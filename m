@@ -2,130 +2,107 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B00C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F012C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC202173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:04:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SRcswj1N"
+	by mail.kernel.org (Postfix) with ESMTP id 690892173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:04:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfH1HEA (ORCPT
+        id S1726430AbfH1HEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 03:04:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39024 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfH1HD7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:03:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=b0lWlRYuwpcJp7FZARuB7iv+wNKnjSY45sYdI3qTaw0=; b=SRcswj1NZftwI/XnJvFP3pShU
-        znc/n+mtlRHu6TFjynsrTcX7AJbxhiAxqbwLDQuGtAPg3JfrBRRm0ct4NUb75sMosNwo6zzPno6++
-        UalJ7tB/CF1fibAZwF3XnkUahC3vLwVicDfZaOzdUfznqQYyj4cqeEELzUx5OBLE/UoBVq4xNa3fb
-        MAGABj29H9rsz6o5r+c35Ec806uTVIFEp3KPjzXh72MNxZwttb5puS+/o9mL5A6kR9sqWGaybBoG8
-        jFsHa7toIBBHEB+Y8OPHVqgL3GH3gy6DAyVnffryEZ3lpK0XGznfntg42Nb/sbcfkNgDjX3ozypqN
-        oKJ6ql6IQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2rz6-0000Q5-2E; Wed, 28 Aug 2019 07:03:12 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 95D553070F4;
-        Wed, 28 Aug 2019 09:02:34 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7D7E02018508C; Wed, 28 Aug 2019 09:03:08 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 09:03:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v8 11/27] x86/mm: Introduce _PAGE_DIRTY_SW
-Message-ID: <20190828070308.GJ2332@hirez.programming.kicks-ass.net>
-References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
- <20190813205225.12032-12-yu-cheng.yu@intel.com>
- <20190823140233.GC2332@hirez.programming.kicks-ass.net>
- <6c3dc33e16c8bbb6d45c0a6ec7c684de197fa065.camel@intel.com>
+        Wed, 28 Aug 2019 03:04:12 -0400
+Received: from nbd.name ([46.4.11.11]:42278 "EHLO nbd.name"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726169AbfH1HEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 03:04:11 -0400
+Received: from p5dcfb7c9.dip0.t-ipconnect.de ([93.207.183.201] helo=[192.168.45.104])
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <john@phrozen.org>)
+        id 1i2rzs-0004V3-3B; Wed, 28 Aug 2019 09:04:00 +0200
+Subject: Re: [PATCH 5/5] crypto: mediatek: fix incorrect crypto key setting
+To:     Vic Wu <vic.wu@mediatek.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Ryder Lee <ryder.lee@mediatek.com>, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-crypto@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190828063716.22689-1-vic.wu@mediatek.com>
+ <20190828063716.22689-5-vic.wu@mediatek.com>
+From:   John Crispin <john@phrozen.org>
+Message-ID: <f91ceaa6-edb3-1e70-1fdc-d0022fafd316@phrozen.org>
+Date:   Wed, 28 Aug 2019 09:03:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c3dc33e16c8bbb6d45c0a6ec7c684de197fa065.camel@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190828063716.22689-5-vic.wu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 03:37:12PM -0700, Yu-cheng Yu wrote:
-> On Fri, 2019-08-23 at 16:02 +0200, Peter Zijlstra wrote:
-> > On Tue, Aug 13, 2019 at 01:52:09PM -0700, Yu-cheng Yu wrote:
-> > 
-> > > +static inline pte_t pte_move_flags(pte_t pte, pteval_t from, pteval_t to)
-> > > +{
-> > > +	if (pte_flags(pte) & from)
-> > > +		pte = pte_set_flags(pte_clear_flags(pte, from), to);
-> > > +	return pte;
-> > > +}
-> > 
-> > Aside of the whole conditional thing (I agree it would be better to have
-> > this unconditionally); the function doesn't really do as advertised.
-> > 
-> > That is, if @from is clear, it doesn't endeavour to make sure @to is
-> > also clear.
-> > 
-> > Now it might be sufficient, but in that case it really needs a comment
-> > and or different name.
-> > 
-> > An implementation that actually moves the bit is something like:
-> > 
-> > 	pteval_t a,b;
-> > 
-> > 	a = native_pte_value(pte);
-> > 	b = (a >> from_bit) & 1;
-> > 	a &= ~((1ULL << from_bit) | (1ULL << to_bit));
-> > 	a |= b << to_bit;
-> > 	return make_native_pte(a);
-> 
-> There can be places calling pte_wrprotect() on a PTE that is already RO +
-> DIRTY_SW.  Then in pte_move_flags(pte, _PAGE_DIRTY_HW, _PAGE_DIRTY_SW) we do not
->  want to clear _PAGE_DIRTY_SW.  But, I will look into this and make it more
-> obvious.
 
-Well, then the name 'move' is just wrong, because that is not the
-semantics you're looking for.
+On 28/08/2019 08:37, Vic Wu wrote:
+> Record crypto key to context during setkey and set the key to
+> transform state buffer in encrypt/decrypt process.
+>
+> Signed-off-by: Vic Wu <vic.wu@mediatek.com>
 
-So the thing is; if you provide a generic function that 'munges' two
-bits, then it's name had better be accurate. But AFAICT you only ever
-used this for the DIRTY bits, so it might be better to have a function
-specifically for that and with a comment that spells out the exact
-semantics and reasons for them.
+Thanks for the fix !
+
+Tested-by: John Crispin <john@phrozen.og>
+
+> ---
+>   drivers/crypto/mediatek/mtk-aes.c | 11 ++++++-----
+>   1 file changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/crypto/mediatek/mtk-aes.c b/drivers/crypto/mediatek/mtk-aes.c
+> index 9eeb8b8d..05f21dc8 100644
+> --- a/drivers/crypto/mediatek/mtk-aes.c
+> +++ b/drivers/crypto/mediatek/mtk-aes.c
+> @@ -107,6 +107,7 @@ struct mtk_aes_reqctx {
+>   struct mtk_aes_base_ctx {
+>   	struct mtk_cryp *cryp;
+>   	u32 keylen;
+> +	__le32 key[12];
+>   	__le32 keymode;
+>   
+>   	mtk_aes_fn start;
+> @@ -541,6 +542,8 @@ static int mtk_aes_handle_queue(struct mtk_cryp *cryp, u8 id,
+>   		backlog->complete(backlog, -EINPROGRESS);
+>   
+>   	ctx = crypto_tfm_ctx(areq->tfm);
+> +	/* Write key into state buffer */
+> +	memcpy(ctx->info.state, ctx->key, sizeof(ctx->key));
+>   
+>   	aes->areq = areq;
+>   	aes->ctx = ctx;
+> @@ -660,7 +663,7 @@ static int mtk_aes_setkey(struct crypto_ablkcipher *tfm,
+>   	}
+>   
+>   	ctx->keylen = SIZE_IN_WORDS(keylen);
+> -	mtk_aes_write_state_le(ctx->info.state, (const u32 *)key, keylen);
+> +	mtk_aes_write_state_le(ctx->key, (const u32 *)key, keylen);
+>   
+>   	return 0;
+>   }
+> @@ -1093,10 +1096,8 @@ static int mtk_aes_gcm_setkey(struct crypto_aead *aead, const u8 *key,
+>   	if (err)
+>   		goto out;
+>   
+> -	/* Write key into state buffer */
+> -	mtk_aes_write_state_le(ctx->info.state, (const u32 *)key, keylen);
+> -	/* Write key(H) into state buffer */
+> -	mtk_aes_write_state_be(ctx->info.state + ctx->keylen, data->hash,
+> +	mtk_aes_write_state_le(ctx->key, (const u32 *)key, keylen);
+> +	mtk_aes_write_state_be(ctx->key + ctx->keylen, data->hash,
+>   			       AES_BLOCK_SIZE);
+>   out:
+>   	kzfree(data);
