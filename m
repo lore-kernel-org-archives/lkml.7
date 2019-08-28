@@ -2,121 +2,99 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 541B4C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4285CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31A9020828
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238D022CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfH1Nqz (ORCPT
+        id S1726880AbfH1Nq7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:46:55 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:47860 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726440AbfH1Nqy (ORCPT
+        Wed, 28 Aug 2019 09:46:59 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45724 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfH1Nq5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:46:54 -0400
-Received: from mr4.cc.vt.edu (mail.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x7SDkrh5030898
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 09:46:53 -0400
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x7SDkm8a014158
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 09:46:53 -0400
-Received: by mail-qk1-f197.google.com with SMTP id l14so2527586qke.16
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 06:46:53 -0700 (PDT)
+        Wed, 28 Aug 2019 09:46:57 -0400
+Received: by mail-ed1-f66.google.com with SMTP id x19so45308eda.12;
+        Wed, 28 Aug 2019 06:46:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=6dlfkMiIJoG2i19B9uaZmEjU8eFDQ1sIWjxdg+T91HE=;
-        b=Qz1bXNcNCskUAOUp9z1mm9J5CASnaybxWF2p9V1P96hD1q7zbnIBCcV4DLbZ3ZNQB1
-         ty2A7GHdDMjBLSzTzTmMNue73SbFZEi//8ue1dQMluqFAZ40aXBOXV/9xoSZSZw121wQ
-         1d7bVclwqWAdGJAzg3uSpT8Sd+YMndnwLpDtJUpfV61jV9pwzIl1YK55roRtwLwGyMgW
-         xQZ8K1ypr9IEPpaMz1IUygA5zHxXF0h3eSPgo+PElnfe6snNQX7xMncOpn0jau0O5Nwr
-         6CehbeHdL3pLD8uYGPQwr6HCya4dlHKgj3/eDz7iMwAAWkOAFVfoiFo/+UadL1pDj1Fb
-         1Vtg==
-X-Gm-Message-State: APjAAAUlFyttymkXnK/ks884JRJ+vViGawT31cjrEBUauPXQvuHZ466I
-        5RO0S9DxX55h1UzmR2SNRDn8mzmSArTmFUs8x7mZyn3bscny7ksl9xOdrYZ3L9PbQ7YqL0jHxwQ
-        L/HKGbQE3W94LlLkog6v2YhZtwMgVuGH3bx4=
-X-Received: by 2002:ac8:7543:: with SMTP id b3mr4241829qtr.13.1567000008084;
-        Wed, 28 Aug 2019 06:46:48 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxQaF6n9TNJ7UANQVE9yf8af37GlOyOcqa4tTFHjolQSwZt4CkCi4+VJt/bQM0T+/UKVBdLGA==
-X-Received: by 2002:ac8:7543:: with SMTP id b3mr4241800qtr.13.1567000007811;
-        Wed, 28 Aug 2019 06:46:47 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::359])
-        by smtp.gmail.com with ESMTPSA id g24sm1327307qtc.38.2019.08.28.06.46.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 06:46:46 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh@kernel.org, linux@armlinux.org.uk, frowand.list@gmail.com,
-        keescook@chromium.org, anton@enomsg.org, ccross@android.com,
-        tony.luck@intel.com, daniel.thompson@linaro.org,
-        linus.walleij@linaro.org, manivannan.sadhasivam@linaro.org,
-        linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de
-Subject: Re: [PATCHv5] drivers/amba: add reset control to amba bus probe
-In-Reply-To: <46bcf493-9dd6-bf5b-089a-be158739a13f@kernel.org>
-References: <20190826154252.22952-1-dinguyen@kernel.org> <30608.1566933924@turing-police>
- <46bcf493-9dd6-bf5b-089a-be158739a13f@kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1567000004_1612P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 28 Aug 2019 09:46:45 -0400
-Message-ID: <292438.1567000005@turing-police>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zyNoxyVItTkE7KkpzOzDQs+Ze+MdA8PTrGpUeQ6qzjg=;
+        b=a+LRiAunB7YSQbIrYOSvaFDmH2xgyHMf1bOdE3qB30z6nZA7gxcr9YLo4AnMyWcTbO
+         o1cemcVmAuoXO3kdxLQU74/fhbYAA5vB555JkMNBxtjpidDq6J9OkmZ6or5/thMFTVdH
+         7Bzon90JFiytHIBarS2xJO1MFdbjK53XnhVN5OuYr0gcog8yLsCa2lFvDWpbfVot9RPW
+         SGK/wrX+j2V3+f7X1Sder6MArpxDepF+Bb6GLqekuCgDedpjS+EAQEfrJLQEpMaGSfJw
+         uZMvpl+lSoE+SxNrnY24n8lDMiv+YccNThH72A6W+Tu5xNRgM6pH1K66RV0wlFb0o6sK
+         lF1A==
+X-Gm-Message-State: APjAAAW47dfYpp3Xzm6zMfrlLfTFbU4YquXKiK8cPcEDqO67Ufe+IYmf
+        1wVCuITit1s8SKs7mFImu2pZM/oOBU4=
+X-Google-Smtp-Source: APXvYqzGGR54H/3chozR6MXep8XidX9GVefLA56aH5jB+4Zx5Lu5GiU+AbMknH0QlsY7p5vBGLOvUg==
+X-Received: by 2002:aa7:dac9:: with SMTP id x9mr4110101eds.271.1567000014749;
+        Wed, 28 Aug 2019 06:46:54 -0700 (PDT)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
+        by smtp.gmail.com with ESMTPSA id h2sm473102edr.16.2019.08.28.06.46.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Aug 2019 06:46:54 -0700 (PDT)
+Received: by mail-wr1-f47.google.com with SMTP id u16so2617563wrr.0;
+        Wed, 28 Aug 2019 06:46:53 -0700 (PDT)
+X-Received: by 2002:a5d:568e:: with SMTP id f14mr4694015wrv.167.1567000013782;
+ Wed, 28 Aug 2019 06:46:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190825150558.15173-1-alejandro.gonzalez.correo@gmail.com>
+ <CACRpkdazfe3gJr6Q+X05GzxPuKtUg0M780SPA_oR5bd+-xBPvA@mail.gmail.com>
+ <CAGb2v67e8EiS-LUuhAyPc57nWd4iOBEWC_SZbH801Lzi4QWGyg@mail.gmail.com> <20190828134334.qzuwodoxmw7ov5yg@flea>
+In-Reply-To: <20190828134334.qzuwodoxmw7ov5yg@flea>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Wed, 28 Aug 2019 21:46:43 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67hS1a2iNJYgc97vwpg6hZwxjoxRhdMb5PjHmMrOC1jNA@mail.gmail.com>
+Message-ID: <CAGb2v67hS1a2iNJYgc97vwpg6hZwxjoxRhdMb5PjHmMrOC1jNA@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH] mmc: sunxi: fix unusuable eMMC on some
+ H6 boards by disabling DDR
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     =?UTF-8?Q?Alejandro_Gonz=C3=A1lez?= 
+        <alejandro.gonzalez.correo@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1567000004_1612P
-Content-Type: text/plain; charset=us-ascii
-
-On Wed, 28 Aug 2019 08:34:20 -0500, Dinh Nguyen said:
-
-> > Does this DTRT for both old and new U-Boots? My naive reading of
-> > this patch
+On Wed, Aug 28, 2019 at 9:43 PM Maxime Ripard <mripard@kernel.org> wrote:
 >
-> What is a DTRT?
-
-Do The Right Thing, sorry...
-
-> > says on an old U-Boot, we end up attempting to bring it out of
-> > reset even though they had already been brought out.
+> On Wed, Aug 28, 2019 at 09:29:32PM +0800, Chen-Yu Tsai wrote:
+> > On Wed, Aug 28, 2019 at 8:52 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > >
+> > > On Sun, Aug 25, 2019 at 5:06 PM Alejandro González
+> > > <alejandro.gonzalez.correo@gmail.com> wrote:
+> > >
+> > > > Jernej Skrabec compared the BSP driver with this
+> > > > driver, and found that the BSP driver configures pinctrl to operate at
+> > > > 1.8 V when entering DDR mode (although 3.3 V operation is supported), while
+> > > > the mainline kernel lacks any mechanism to switch voltages dynamically.
 > >
+> > AFAIK The Pine H64 does not have the ability to switch I/O voltages. It is
+> > fixed to either 1.8V (the default based on the schematics) or 3.3V.
 >
-> If the peripheral is already out of reset, de-asserting the reset has
-> no affect.
+> Should that be handled at the board level then maybe?
 
-OK, thanks.  There's been hardware where doing that sort of thing twice will
-confuse the device and cause issues.
+Yeah. You'd specify which one using vqmmc-supply in the mmc node and
+vcc-pc-supply
+in the pinctrl node.
 
---==_Exmh_1567000004_1612P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXWaFxAdmEQWDXROgAQJZPhAAopKhP6wn5B9evWUpllhb6CIajYqxhob3
-zLAF1vVdOpPXyTT3PaFMjwrqKiPt9QnMLHW5odZ5UswcH4dBRByhwb8Hr8a/Ibo9
-Nb6BdK1KuilWx3bCvw63nNH9aB+tPvcaOUtux73gD+HaPa/XCvzZvObCnFCXa4oa
-9gQJl8GG8pRLfH03QPSYGKAzyJ35qt2RBarVa0Z19NZPB5LDDePLKwxblatRFICW
-mhdH1t6uC7CuxMqfHKbG5MyhdmgmmOyHg16tHxZ85B8f0CoCFAHx9sNzvS3dmXZd
-bP2+r7cQ4kNkIWI/PNPzh+s8D9ZlWYdGn1p2VQU/4FKMh2d7IDS5MvLgA5rf0DiE
-bOPBbqzfZ/DsfyW96M9e4/53OYYK5gqC+ZaePJKY4BkAHLNtKewczCw6E+kck7OW
-4ya+eOEFQzl9wC5XNMrYkdV8DLhftU4qEzAHuNH2vHIK7BK+3ARGB4tSQyTMNi/x
-yOPY69cLv4llawfjD/y0PSqmvKN1MlIjmxeAD9kh6AoTUNNNRgj0F+T/Ma91uBeV
-50x+YgZZ104bD6d3s5U0kIgykQJARE0JivC9fkFuKZXE6vtIAssE3FFLw2NKncXw
-Sq+YA6DuuSvCdhAWEmYJpbpwREHEGAjLsN+JBxPhV7vbbGhVV1UuYXPDVfp18Moy
-fW9l0ZeoE+c=
-=tC0P
------END PGP SIGNATURE-----
-
---==_Exmh_1567000004_1612P--
+ChenYu
