@@ -6,132 +6,142 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B0DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B6EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D8E22CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77DE42173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfH1Rgh (ORCPT
+        id S1727111AbfH1Rgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:36:37 -0400
-Received: from mga04.intel.com ([192.55.52.120]:16474 "EHLO mga04.intel.com"
+        Wed, 28 Aug 2019 13:36:42 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:48316 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727055AbfH1Rgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:36:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 10:36:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
-   d="scan'208";a="188304621"
-Received: from kmsmsx157.gar.corp.intel.com ([172.21.138.134])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 Aug 2019 10:36:31 -0700
-Received: from pgsmsx103.gar.corp.intel.com ([169.254.2.25]) by
- kmsmsx157.gar.corp.intel.com ([169.254.5.162]) with mapi id 14.03.0439.000;
- Thu, 29 Aug 2019 01:36:30 +0800
-From:   "Voon, Weifeng" <weifeng.voon@intel.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
-        Andrew Lunn <andrew@lunn.ch>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "Heiner Kallweit" <hkallweit1@gmail.com>
-Subject: RE: [PATCH v1 net-next] net: phy: mdio_bus: make mdiobus_scan also
- cover PHY that only talks C45
-Thread-Topic: [PATCH v1 net-next] net: phy: mdio_bus: make mdiobus_scan also
- cover PHY that only talks C45
-Thread-Index: AQHVXDc1t4vgWavJu0GuD73CQMEeB6cNOWeAgAAHYgCAAdKi8P//jAIAgAGQK4CAABXrAIAAiMHA
-Date:   Wed, 28 Aug 2019 17:36:29 +0000
-Message-ID: <D6759987A7968C4889FDA6FA91D5CBC814759789@PGSMSX103.gar.corp.intel.com>
-References: <1566870769-9967-1-git-send-email-weifeng.voon@intel.com>
- <e9ece5ad-a669-6d6b-d050-c633cad15476@gmail.com>
- <20190826185418.GG2168@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC814758ED8@PGSMSX103.gar.corp.intel.com>
- <20190827154918.GO2168@lunn.ch>
- <AF233D1473C1364ABD51D28909A1B1B75C22CD3C@pgsmsx114.gar.corp.intel.com>
- <ef6aa10e-d3eb-e154-0168-d7f012858a2c@gmail.com>
-In-Reply-To: <ef6aa10e-d3eb-e154-0168-d7f012858a2c@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [172.30.20.205]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1727114AbfH1Rgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 13:36:36 -0400
+Received: from [104.132.1.107] (helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1i31s1-0000OU-Ls; Wed, 28 Aug 2019 19:36:33 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>
+Subject: Re: [PATCH v5 4/4] tpm: tpm_tis_spi: Support cr50 devices
+Date:   Wed, 28 Aug 2019 19:36:29 +0200
+Message-ID: <3003195.OAk3N042hN@phil>
+In-Reply-To: <20190828082150.42194-5-swboyd@chromium.org>
+References: <20190828082150.42194-1-swboyd@chromium.org> <20190828082150.42194-5-swboyd@chromium.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiA4LzI4LzE5IDg6NDEgQU0sIE9uZywgQm9vbiBMZW9uZyB3cm90ZToNCj4gPj4gT24gVHVl
-LCBBdWcgMjcsIDIwMTkgYXQgMDM6MjM6MzRQTSArMDAwMCwgVm9vbiwgV2VpZmVuZyB3cm90ZToN
-Cj4gPj4+Pj4+IE1ha2UgbWRpb2J1c19zY2FuKCkgdG8gdHJ5IGhhcmRlciB0byBsb29rIGZvciBh
-bnkgUEhZIHRoYXQgb25seQ0KPiA+Pj4+IHRhbGtzIEM0NS4NCj4gPj4+Pj4gSWYgeW91IGFyZSBu
-b3QgdXNpbmcgRGV2aWNlIFRyZWUgb3IgQUNQSSwgYW5kIHlvdSBhcmUgbGV0dGluZyB0aGUNCj4g
-Pj4+Pj4gTURJTyBidXMgYmUgc2Nhbm5lZCwgaXQgc291bmRzIGxpa2UgdGhlcmUgc2hvdWxkIGJl
-IGEgd2F5IGZvciB5b3UNCj4gPj4+Pj4gdG8gcHJvdmlkZSBhIGhpbnQgYXMgdG8gd2hpY2ggYWRk
-cmVzc2VzIHNob3VsZCBiZSBzY2FubmVkICh0aGF0J3MNCj4gPj4+Pj4gbWlpX2J1czo6cGh5X21h
-c2spIGFuZCBwb3NzaWJseSBlbmhhbmNlIHRoYXQgd2l0aCBhIG1hc2sgb2YNCj4gPj4+Pj4gcG9z
-c2libGUNCj4gPj4+Pj4gQzQ1IGRldmljZXM/DQo+ID4+Pj4NCj4gPj4+PiBZZXMsIGkgZG9uJ3Qg
-bGlrZSB0aGlzIHVuY29uZGl0aW9uYWwgYzQ1IHNjYW5uaW5nLiBBIGxvdCBvZiBNRElPDQo+ID4+
-Pj4gYnVzIGRyaXZlcnMgZG9uJ3QgbG9vayBmb3IgdGhlIE1JSV9BRERSX0M0NS4gVGhleSBhcmUg
-Z29pbmcgdG8gZG8gYQ0KPiA+Pj4+IEMyMiB0cmFuc2ZlciwgYW5kIG1heWJlIG5vdCBtYXNrIG91
-dCB0aGUgTUlJX0FERFJfQzQ1IGZyb20gcmVnLA0KPiA+Pj4+IGNhdXNpbmcgYW4gaW52YWxpZCBy
-ZWdpc3RlciB3cml0ZS4gQmFkIHRoaW5ncyBjYW4gdGhlbiBoYXBwZW4uDQo+ID4+Pj4NCj4gPj4+
-PiBXaXRoIERUIGFuZCBBQ1BJLCB3ZSBoYXZlIGFuIGV4cGxpY2l0IGluZGljYXRpb24gdGhhdCBD
-NDUgc2hvdWxkIGJlDQo+ID4+Pj4gdXNlZCwgc28gd2Uga25vdyBvbiB0aGlzIHBsYXRmb3JtIEM0
-NSBpcyBzYWZlIHRvIHVzZS4gV2UgbmVlZA0KPiA+Pj4+IHNvbWV0aGluZyBzaW1pbGFyIHdoZW4g
-bm90IHVzaW5nIERUIG9yIEFDUEkuDQo+ID4+Pj4NCj4gPj4+PiAJICBBbmRyZXcNCj4gPj4+DQo+
-ID4+PiBGbG9yaWFuIGFuZCBBbmRyZXcsDQo+ID4+PiBUaGUgbWRpbyBjMjIgaXMgdXNpbmcgdGhl
-IHN0YXJ0LW9mLWZyYW1lIFNUPTAxIHdoaWxlIG1kaW8gYzQ1IGlzDQo+ID4+PiB1c2luZyBTVD0w
-MCBhcyBpZGVudGlmaWVyLiBTbyBtZGlvIGMyMiBkZXZpY2Ugd2lsbCBub3QgcmVzcG9uc2UgdG8N
-Cj4gbWRpbyBjNDUgcHJvdG9jb2wuDQo+ID4+PiBBcyBpbiBJRUVFIDgwMi4xYWUtMjAwMiBBbm5l
-eCA0NUEuMyBtZW50aW9uIHRoYXQ6DQo+ID4+PiAiIEV2ZW4gdGhvdWdoIHRoZSBDbGF1c2UgNDUg
-TURJTyBmcmFtZXMgdXNpbmcgdGhlIFNUPTAwIGZyYW1lIGNvZGUNCj4gPj4+IHdpbGwgYWxzbyBi
-ZSBkcml2ZW4gb24gdG8gdGhlIENsYXVzZSAyMiBNSUkgTWFuYWdlbWVudCBpbnRlcmZhY2UsDQo+
-ID4+PiB0aGUgQ2xhdXNlIDIyIFBIWXMgd2lsbCBpZ25vcmUgdGhlIGZyYW1lcy4gIg0KPiA+Pj4N
-Cj4gPj4+IEhlbmNlLCBJIGFtIG5vdCBzZWVpbmcgYW55IGNvbmNlcm4gdGhhdCB0aGUgYzQ1IHNj
-YW5uaW5nIHdpbGwgbWVzcw0KPiA+Pj4gdXAgd2l0aA0KPiA+Pj4gYzIyIGRldmljZXMuDQo+ID4+
-DQo+ID4+IEhpIFZvb24NCj4gPj4NCj4gPj4gVGFrZSBmb3IgZXhhbXBsZSBtZGlvLWhpc2ktZmVt
-YWMuYw0KPiA+Pg0KPiA+PiBzdGF0aWMgaW50IGhpc2lfZmVtYWNfbWRpb19yZWFkKHN0cnVjdCBt
-aWlfYnVzICpidXMsIGludCBtaWlfaWQsIGludA0KPiA+PiByZWdudW0pIHsNCj4gPj4gICAgICAg
-IHN0cnVjdCBoaXNpX2ZlbWFjX21kaW9fZGF0YSAqZGF0YSA9IGJ1cy0+cHJpdjsNCj4gPj4gICAg
-ICAgIGludCByZXQ7DQo+ID4+DQo+ID4+ICAgICAgICByZXQgPSBoaXNpX2ZlbWFjX21kaW9fd2Fp
-dF9yZWFkeShkYXRhKTsNCj4gPj4gICAgICAgIGlmIChyZXQpDQo+ID4+ICAgICAgICAgICAgICAg
-IHJldHVybiByZXQ7DQo+ID4+DQo+ID4+ICAgICAgICB3cml0ZWwoKG1paV9pZCA8PCBCSVRfUEhZ
-X0FERFJfT0ZGU0VUKSB8IHJlZ251bSwNCj4gPj4gICAgICAgICAgICAgICBkYXRhLT5tZW1iYXNl
-ICsgTURJT19SV0NUUkwpOw0KPiA+Pg0KPiA+Pg0KPiA+PiBUaGVyZSBpcyBubyBjaGVjayBoZXJl
-IGZvciBNSUlfQUREUl9DNDUuIFNvIGl0IHdpbGwgcGVyZm9ybSBhIEMyMg0KPiA+PiB0cmFuc2Zl
-ci4gQW5kIHJlZ251bSB3aWxsIHN0aWxsIGhhdmUgTUlJX0FERFJfQzQ1IGluIGl0LCBzbyB0aGUN
-Cj4gPj4gd3JpdGVsKCkgaXMgZ29pbmcgdG8gc2V0IGJpdCAzMCwgc2luY2UgI2RlZmluZSBNSUlf
-QUREUl9DNDUgKDE8PDMwKS4NCj4gPj4gV2hhdCBoYXBwZW5zIG9uIHRoaXMgaGFyZHdhcmUgdW5k
-ZXIgdGhlc2UgY29uZGl0aW9ucz8NCj4gPj4NCj4gPj4gWW91IGNhbm5vdCB1bmNvbmRpdGlvbmFs
-bHkgYXNrIGFuIE1ESU8gZHJpdmVyIHRvIGRvIGEgQzQ1IHRyYW5zZmVyLg0KPiA+PiBTb21lIGRy
-aXZlcnMgYXJlIGdvaW5nIHRvIGRvIGJhZCB0aGluZ3MuDQo+ID4NCj4gPiBBbmRyZXcgJiBGbG9y
-aWFuLCB0aGFua3MgZm9yIHlvdXIgcmV2aWV3IG9uIHRoaXMgcGF0Y2ggYW5kIGluc2lnaHRzIG9u
-DQo+IGl0Lg0KPiA+IFdlIHdpbGwgbG9vayBpbnRvIHRoZSBpbXBsZW1lbnRhdGlvbiBhcyBzdWdn
-ZXN0ZWQgYXMgZm9sbG93Lg0KPiA+DQo+ID4gLSBmb3IgZWFjaCBiaXQgY2xlYXIgaW4gbWlpX2J1
-czo6cGh5X21hc2ssIHNjYW4gaXQgYXMgQzIyDQo+ID4gLSBmb3IgZWFjaCBiaXQgY2xlYXIgaW4g
-bWlpX2J1czo6cGh5X2M0NV9tYXNrLCBzY2FuIGl0IGFzIEM0NQ0KPiA+DQo+ID4gV2Ugd2lsbCB3
-b3JrIG9uIHRoaXMgYW5kIHJlc3VibWl0IHNvb25lc3QuDQo+IA0KPiBTb3VuZHMgZ29vZC4gSWYg
-eW91IGRvIG5vdCBuZWVkIHRvIHNjYW4gdGhlIE1ESU8gYnVzLCBhbm90aGVyIGFwcHJvYWNoDQo+
-IGlzIHRvIGNhbGwgZ2V0X3BoeV9kZXZpY2UoKSBieSBwYXNzaW5nIHRoZSBpc19jNDUgYm9vbGVh
-biB0byB0cnVlIGluDQo+IG9yZGVyIHRvIGNvbm5lY3QgZGlyZWN0bHkgdG8gYSBDNDUgZGV2aWNl
-IGZvciB3aGljaCB5b3UgYWxyZWFkeSBrbm93IHRoZQ0KPiBhZGRyZXNzLg0KPiANCj4gQXNzdW1p
-bmcgdGhpcyBpcyBkb25lIGZvciB0aGUgc3RtbWFjIFBDSSBjaGFuZ2VzIHRoYXQgeW91IGhhdmUg
-c3VibWl0dGVkLA0KPiBhbmQgdGhhdCB0aG9zZSBjYXJkcyBoYXZlIGEgZml4ZWQgc2V0IG9mIGFk
-ZHJlc3NlcyBmb3IgdGhlaXIgUEhZcywgbWF5YmUNCj4gc2Nhbm5pbmcgdGhlIGJ1cyBpcyBvdmVy
-a2lsbD8NCj4gLS0NCj4gRmxvcmlhbg0KDQpHb29kIHN1Z2dlc3Rpb24uIEFuZCB5ZXMsIHdlIGhh
-dmUgYSBmaXggcGh5IGFkZHJlc3MgdG9vLiBCdXQgdGhlIE1BQyBpcyBmcmVlIA0KdG8gcGFpciB3
-aXRoIGFueSBQSFkgd2hpY2ggbWlnaHQgc3VwcG9ydHMgb25seSBtZGlvIGMyMiBvciBvbmx5IG1k
-aW8gYzQ1LiANCldlIHdpbGwgY29uc2lkZXIgaXQgYW5kIHJlc3VibWl0IHNvb25lc3QuDQoNCg0K
-DQo=
+Am Mittwoch, 28. August 2019, 10:21:50 CEST schrieb Stephen Boyd:
+> Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
+> firmware. The firmware running on the currently supported H1 Secure
+> Microcontroller requires a special driver to handle its specifics:
+> 
+>  - need to ensure a certain delay between SPI transactions, or else
+>    the chip may miss some part of the next transaction
+>  - if there is no SPI activity for some time, it may go to sleep,
+>    and needs to be waken up before sending further commands
+>  - access to vendor-specific registers
+> 
+> Cr50 firmware has a requirement to wait for the TPM to wakeup before
+> sending commands over the SPI bus. Otherwise, the firmware could be in
+> deep sleep and not respond. The method to wait for the device to wakeup
+> is slightly different than the usual flow control mechanism described in
+> the TCG SPI spec. Add a completion to tpm_tis_spi_transfer() before we
+> start a SPI transfer so we can keep track of the last time the TPM
+> driver accessed the SPI bus to support the flow control mechanism.
+
+While the previous version did run just fine on my mainline gru-scarlet,
+this v5 very persistently runs into a panic on every boot:
+
+[    6.625500] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+[    6.632983] tpm_tis_spi spi1.0: Timeout waiting for TPM ready IRQ
+[    6.637415] Mem abort info:
+[    6.637417]   ESR = 0x96000004
+[    6.637419]   Exception class = DABT (current EL), IL = 32 bits
+[    6.637423]   SET = 0, FnV = 0
+[    6.644235] tpm_tis_spi spi1.0: TPM ready IRQ confirmed on attempt 1
+[    6.647350]   EA = 0, S1PTW = 0
+[    6.647352] Data abort info:
+[    6.647353]   ISV = 0, ISS = 0x00000004
+[    6.647354]   CM = 0, WnR = 0
+[    6.647357] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000eacc4000
+[    6.647361] [0000000000000000] pgd=0000000000000000
+[    6.694812] Internal error: Oops: 96000004 [#1] SMP
+[    6.700258] Modules linked in: tpm_tis_spi_mod(+) dw_mipi_dsi industrialio_triggered_buffer panfrost(+) drm_kms_helper videobuf2_memops kfifo_buf tpm_tis_core ov2685 ov5695 cros_ec_sensors_core videobuf2_v4l2 gpu_sched tpm videobuf2_common v4l2_common v4l2_fwnode crct10dif_ce drm videodev phy_rockchip_pcie phy_rockchip_dphy dw_wdt rng_core cros_ec_dev rockchip_thermal i2c_hid elants_i2c mc drm_panel_orientation_quirks pwm_bl ipv6
+[    6.742857] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc6-02924-gef15fcdb727f-dirty #1308
+[    6.752580] Hardware name: Google Scarlet (DT)
+[    6.757542] pstate: a0000085 (NzCv daIf -PAN -UAO)
+[    6.762901] pc : __wake_up_common+0x58/0x170
+[    6.767670] lr : __wake_up_locked+0x18/0x20
+[    6.772340] sp : ffff000010003d40
+[    6.776038] x29: ffff000010003d40 x28: 0000000000000060 
+[    6.781972] x27: 0000000000000000 x26: ffff000010e4fcef 
+[    6.787905] x25: 0000000000000001 x24: 0000000000000000 
+[    6.793838] x23: 0000000000000000 x22: 0000000000000000 
+[    6.799772] x21: 0000000000000003 x20: ffff8000f0431308 
+[    6.804944] dwmmc_rockchip fe320000.dwmmc: Unexpected data interrupt latency
+[    6.805707] x19: ffff8000f04312f8 x18: 0000000000000000 
+[    6.819504] x17: 0000000000000000 x16: 0000000000000000 
+[    6.825437] x15: 0000000000000000 x14: 0000000000000000 
+[    6.831370] x13: 0000000000000000 x12: ffff000010dc9688 
+[    6.837304] x11: 071c71c71c71c71c x10: 0000000000000040 
+[    6.843237] x9 : ffff000010de15d8 x8 : ffff000010de15d0 
+[    6.849171] x7 : ffffffffffffffe8 x6 : 0000000000000000 
+[    6.855104] x5 : 0000000000000000 x4 : 0000000000000000 
+[    6.856947] tpm_tis_spi spi1.0: SPI transfer timed out
+[    6.861037] x3 : 0000000000000000 x2 : 0000000000000001 
+[    6.861040] x1 : 0000000000000003 x0 : 0000000000000000 
+[    6.861045] Call trace:
+[    6.866794] spi_master spi1: failed to transfer one message from queue
+[    6.872724]  __wake_up_common+0x58/0x170
+[    6.872727]  __wake_up_locked+0x18/0x20
+[    6.872732]  complete+0x74/0xa8
+[    6.900836]  cr50_spi_irq_handler+0x18/0x28 [tpm_tis_spi_mod]
+[    6.907258]  __handle_irq_event_percpu+0x6c/0x170
+[    6.912512]  handle_irq_event_percpu+0x34/0x88
+[    6.917474]  handle_irq_event+0x40/0x98
+[    6.921756]  handle_edge_irq+0xcc/0x208
+[    6.926039]  generic_handle_irq+0x24/0x38
+[    6.930516]  rockchip_irq_demux+0x9c/0x1f0
+[    6.935091]  generic_handle_irq+0x24/0x38
+[    6.939567]  __handle_domain_irq+0x60/0xb8
+[    6.944140]  gic_handle_irq+0xa8/0x148
+[    6.948326]  el1_irq+0xb8/0x140
+[    6.951834]  cpuidle_enter_state+0x84/0x360
+[    6.956506]  cpuidle_enter+0x34/0x48
+[    6.960496]  call_cpuidle+0x1c/0x40
+[    6.964388]  do_idle+0x270/0x2a0
+[    6.967991]  cpu_startup_entry+0x20/0x28
+[    6.972371]  rest_init+0xb4/0xc0
+[    6.975976]  arch_call_rest_init+0xc/0x14
+[    6.980452]  start_kernel+0x444/0x470
+[    6.984543] Code: aa0503f8 f9002bfb aa0403f7 5280001b (f9400cf3) 
+[    6.991357] ---[ end trace 0371d5a99c07b7ba ]---
+[    6.996513] Kernel panic - not syncing: Fatal exception in interrupt
+[    7.003613] SMP: stopping secondary CPUs
+[    7.007994] Kernel Offset: disabled
+[    7.011887] CPU features: 0x0002,2100600c
+[    7.016362] Memory Limit: none
+[    7.019763] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+
+
+Heiko
+
+
