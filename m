@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE27C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D9AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2A62189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A67822CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566977511;
-	bh=gI7IiJMWIZ0sW5Bf+HUqzBJzo/jZVlH1IgAMeoQ077c=;
+	s=default; t=1566977515;
+	bh=EOT6dlfgG8sJ/kgDu9G2mMoZWSKY6XaaVpmPG+VpFCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lGixmE7wbTV+Nhd/p2yqm383qa6TKG6Jf2bOP3HCzk++xUPb26cb6p+KKhYve5sZa
-	 rxdA7X4+UhJTskIh3xnFrH2yTXqHvPqEXlS3Av0NgSddsxwBklgvE3amEiKfVVMI1P
-	 g3E35NWxrpBiYciwOolCjia6OIQ3NOnbkD/xilsY=
+	b=DyEhciUsqAjZYIUE64QWv4VUqO2s21YEbOZdUQqNH8ZSxu/pWqjX+QMTjIL4ni35Q
+	 /y88Sy9uQoqDVzIMEeYrN8+06U3u7mNXVrr31xLXnZz7ca1pVNJN2R3RNirPVdx5GZ
+	 09J1J6LK8YgQr/vFYZ5TxEIT7C4mwsIj6lgb3StY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfH1Hbu (ORCPT
+        id S1726563AbfH1Hby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 03:31:50 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36470 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfH1Hbt (ORCPT
+        Wed, 28 Aug 2019 03:31:54 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35628 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfH1Hbw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:31:49 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l21so975814pgm.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 00:31:49 -0700 (PDT)
+        Wed, 28 Aug 2019 03:31:52 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d85so1146280pfd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 00:31:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kGLm/3S6HbogwpS+pmEjYJKGtydqwdRO0UoTI8Vz4MU=;
-        b=PU1/H6oDzSqsIvUvfizbT85t4zs7+D5FHRps5ki//0CQ7XpO6N8nSL+T8dPeKUYzgC
-         xQTis/UEHfVqliecdQj0E95B+RaEH5cJ6lTSTuFfUH+CsSLVqjd6RptdLSU6WsUEGREy
-         V9qEJuXD24WOvwjMIJDaiN5h4+CXKh6QMz6fNXnUbz6iAb2k9KVYjRoyomlnmIxjpERm
-         QIjOOuRFTlvM0wIDSJ1ko3TZQNC+MX0scxE2xMKsNG/TCkijfkd3UsLm1QZwJ1z+W0bt
-         OrrfBUmXu/tV8hqy5U95wle5fhrjnidjxsyPzQZSvoyDqNitCLGR87JydwBQdujfxix9
-         O+JA==
+        bh=ozw3s4wDKjqsVdzZlYOC7Q8acgZg4p2t0Wv1nQeXlqo=;
+        b=YZiKmdnNvXPgj4mAd9oLrMdRZrBSDCATFkC7Tjc2eGqhJm6rrI5oMNVM/s9d5XXz0n
+         V5xd3V2KynE5iJDM24rv/mszhw3hJst2EylaQ1A7OdEKIvnz/G2eHBYDQ0RRIAuN8jE2
+         H63pe/KNBIa+RrX1V5cnkp+kmh+1Rcr2wJZPbP3Eqvf3MMqVQTe1qp08yPDSTG2DsPYG
+         7N0HqiR204bFT+ocFc09bH9YJSvPcGaVy0n9XRos5SDu1+grcWxoa30ZBiF/FEKVgobm
+         C3+WnsCLELOpVtZYZXihxLmooSXVPm4fLLoB9oUQ0W8XEO6+Z+HrGdDpex38MdvXN2A6
+         bgaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=kGLm/3S6HbogwpS+pmEjYJKGtydqwdRO0UoTI8Vz4MU=;
-        b=SOyg2tBfmm4L70iDgYilRBg/O725rEquJPvJPygaNUpjndKlst+USOnX4WOmfhYwp4
-         8Ar3OEC8pkMT5YJIsssZ8CIQ2GuefBLIzRSf/GH0yPkbBDZfbK18m0PT8PmjwJlEEbcg
-         XpAaWwX7dmizCjIgFBNHpkiXNgonqnvT9UwYdM0a5pax5t/bMrelwxmpdIJ3bE5xcgeq
-         uJZG72w0I29gRGjfDdMEniQRUVFL3x50lHnoSFFa3vrmlNxIj6vIk/qM15ZvxU54Sv5M
-         SBEJkGyEh5LF38SrerGFFTwtqwJo+b4trZJjasHr9fGGBi3cNSorrC1/qkkLJl3lNca3
-         p2xA==
-X-Gm-Message-State: APjAAAXnqz1giP64hD+Ws6EvJvDmL8nlXOW5QYxr56cIbmss+Bh72agJ
-        WejDdslRRyPqvi5xX9fAhxE=
-X-Google-Smtp-Source: APXvYqydwPdpHO3GMIDlt5RZ9tnke87YyS501asfalG6HoJW7NutTq81//VBIeGf02EoiXgDHJipkg==
-X-Received: by 2002:a62:2c93:: with SMTP id s141mr3094738pfs.114.1566977508654;
-        Wed, 28 Aug 2019 00:31:48 -0700 (PDT)
+        bh=ozw3s4wDKjqsVdzZlYOC7Q8acgZg4p2t0Wv1nQeXlqo=;
+        b=KEqFEAr8UwrCkDM1SwwTIoOSaLHkugrPm9ixCnEM1Ufvv9H1fqj9F5hUYLi0CppCVj
+         UTkcQs4GxUT/1fROuzvzkC+rF/smaoFfXF4H01oVj6FEW9X171CNg0VR6AtvUvrOtmnh
+         SdrHDVNUzMchEFGSAt/wWVanH0ZdnxhZiOjQo822x8R9p+TYl2T0S7gnDr+Bd+z7P6s4
+         ELXARgjFWfKRJr1L0ihQad+VkxaYu0Hj8N4PWY0XW7Z269D/EyTLPtFdPyguRmDbzJL5
+         x5YjL2ENG5s8RXGzS5KFuWss9pEVFOhCQRMkcyGLSHZDvCEQmIz8Twc2u8MYbNB307tz
+         N3Eg==
+X-Gm-Message-State: APjAAAW83KZiPn5jGYh/51b2mQpvQQWhH5mYRfVHejBGAxUd8cL2FvmP
+        ZLoZjjnNIVEq85DrF6YJn8E=
+X-Google-Smtp-Source: APXvYqyWM90JSIQXUSAPiWPqjWkVXFgKV0hPtIvBM7Zxq2b48bUpucgpTR+CN/HRUc1/maZc6pf2aw==
+X-Received: by 2002:a62:7790:: with SMTP id s138mr2909737pfc.243.1566977511814;
+        Wed, 28 Aug 2019 00:31:51 -0700 (PDT)
 Received: from gaurie.seo.corp.google.com ([2401:fa00:d:0:1034:ec6b:8056:9e93])
-        by smtp.gmail.com with ESMTPSA id v145sm1677054pfc.31.2019.08.28.00.31.45
+        by smtp.gmail.com with ESMTPSA id v145sm1677054pfc.31.2019.08.28.00.31.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 00:31:48 -0700 (PDT)
+        Wed, 28 Aug 2019 00:31:51 -0700 (PDT)
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
@@ -69,11 +69,10 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Stephane Eranian <eranian@google.com>,
         Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 1/9] perf/core: Add PERF_RECORD_CGROUP event
-Date:   Wed, 28 Aug 2019 16:31:22 +0900
-Message-Id: <20190828073130.83800-2-namhyung@kernel.org>
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: [PATCH 2/9] perf/core: Add PERF_SAMPLE_CGROUP feature
+Date:   Wed, 28 Aug 2019 16:31:23 +0900
+Message-Id: <20190828073130.83800-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 In-Reply-To: <20190828073130.83800-1-namhyung@kernel.org>
 References: <20190828073130.83800-1-namhyung@kernel.org>
@@ -84,217 +83,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To support cgroup tracking, add CGROUP event to save a link between
-cgroup path and inode number.  The attr.cgroup bit was also added to
-enable cgroup tracking from userspace.
-
-This event will be generated when a new cgroup becomes active.
-Userspace might need to synthesize those events for existing cgroups.
-
-As aux_output change is also going on, I just added the bit here as
-well to remove possible conflicts later.
+The PERF_SAMPLE_CGROUP bit is to save (perf_event) cgroup information
+in the sample.  It will add a 64-bit integer to identify current
+cgroup and it's the inode number in the cgroup file system.  Userspace
+should use this information with PERF_RECORD_CGROUP event to match
+which cgroup it belongs.
 
 Cc: Tejun Heo <tj@kernel.org>
 Cc: Li Zefan <lizefan@huawei.com>
 Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- include/uapi/linux/perf_event.h |  15 ++++-
- kernel/events/core.c            | 112 ++++++++++++++++++++++++++++++++
- 2 files changed, 126 insertions(+), 1 deletion(-)
+ include/linux/perf_event.h      |  1 +
+ include/uapi/linux/perf_event.h |  3 ++-
+ kernel/events/core.c            | 16 ++++++++++++++++
+ 3 files changed, 19 insertions(+), 1 deletion(-)
 
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index e8ad3c590a23..2b9661aa4240 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -958,6 +958,7 @@ struct perf_sample_data {
+ 	u64				stack_user_size;
+ 
+ 	u64				phys_addr;
++	u64				cgroup;
+ } ____cacheline_aligned;
+ 
+ /* default value for data source */
 diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index 7198ddd0c6b1..cb07c24b715f 100644
+index cb07c24b715f..91a552bf9611 100644
 --- a/include/uapi/linux/perf_event.h
 +++ b/include/uapi/linux/perf_event.h
-@@ -374,7 +374,9 @@ struct perf_event_attr {
- 				namespaces     :  1, /* include namespaces data */
- 				ksymbol        :  1, /* include ksymbol events */
- 				bpf_event      :  1, /* include bpf events */
--				__reserved_1   : 33;
-+				aux_output     :  1, /* generate AUX records instead of events */
-+				cgroup         :  1, /* include cgroup events */
-+				__reserved_1   : 31;
+@@ -141,8 +141,9 @@ enum perf_event_sample_format {
+ 	PERF_SAMPLE_TRANSACTION			= 1U << 17,
+ 	PERF_SAMPLE_REGS_INTR			= 1U << 18,
+ 	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
++	PERF_SAMPLE_CGROUP			= 1U << 20,
  
- 	union {
- 		__u32		wakeup_events;	  /* wakeup every n events */
-@@ -999,6 +1001,17 @@ enum perf_event_type {
- 	 */
- 	PERF_RECORD_BPF_EVENT			= 18,
+-	PERF_SAMPLE_MAX = 1U << 20,		/* non-ABI */
++	PERF_SAMPLE_MAX = 1U << 21,		/* non-ABI */
  
-+	/*
-+	 * struct {
-+	 *	struct perf_event_header	header;
-+	 *	u64				ino;
-+	 *	u64				path_len;
-+	 *	char				path[];
-+	 *	struct sample_id		sample_id;
-+	 * };
-+	 */
-+	PERF_RECORD_CGROUP			= 19,
-+
- 	PERF_RECORD_MAX,			/* non-ABI */
+ 	__PERF_SAMPLE_CALLCHAIN_EARLY		= 1ULL << 63, /* non-ABI; internal use */
  };
- 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 0463c1151bae..d898263db4fc 100644
+index d898263db4fc..04ae6a42a98b 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -386,6 +386,7 @@ static atomic_t nr_freq_events __read_mostly;
- static atomic_t nr_switch_events __read_mostly;
- static atomic_t nr_ksymbol_events __read_mostly;
- static atomic_t nr_bpf_events __read_mostly;
-+static atomic_t nr_cgroup_events __read_mostly;
+@@ -1754,6 +1754,9 @@ static void __perf_event_header_size(struct perf_event *event, u64 sample_type)
+ 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
+ 		size += sizeof(data->phys_addr);
  
- static LIST_HEAD(pmus);
- static DEFINE_MUTEX(pmus_lock);
-@@ -4314,6 +4315,8 @@ static void unaccount_event(struct perf_event *event)
- 		atomic_dec(&nr_comm_events);
- 	if (event->attr.namespaces)
- 		atomic_dec(&nr_namespaces_events);
-+	if (event->attr.cgroup)
-+		atomic_dec(&nr_cgroup_events);
- 	if (event->attr.task)
- 		atomic_dec(&nr_task_events);
- 	if (event->attr.freq)
-@@ -7217,6 +7220,106 @@ void perf_event_namespaces(struct task_struct *task)
- 			NULL);
++	if (sample_type & PERF_SAMPLE_CGROUP)
++		size += sizeof(data->cgroup);
++
+ 	event->header_size = size;
  }
  
-+/*
-+ * cgroup tracking
-+ */
-+#ifdef CONFIG_CGROUPS
+@@ -6388,6 +6391,19 @@ void perf_output_sample(struct perf_output_handle *handle,
+ 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
+ 		perf_output_put(handle, data->phys_addr);
+ 
++	if (sample_type & PERF_SAMPLE_CGROUP) {
++		u64 ino = 0;
 +
-+struct perf_cgroup_event {
-+	char				*path;
-+	struct {
-+		struct perf_event_header	header;
-+		u64				ino;
-+		u64				path_len;
-+		char				path[];
-+	} event_id;
-+};
++#ifdef CONFIG_CGROUP_PERF
++		struct cgroup *cgrp;
 +
-+static int perf_event_cgroup_match(struct perf_event *event)
-+{
-+	return event->attr.cgroup;
-+}
-+
-+static void perf_event_cgroup_output(struct perf_event *event, void *data)
-+{
-+	struct perf_cgroup_event *cgroup_event = data;
-+	struct perf_output_handle handle;
-+	struct perf_sample_data sample;
-+	u16 header_size = cgroup_event->event_id.header.size;
-+	int ret;
-+
-+	if (!perf_event_cgroup_match(event))
-+		return;
-+
-+	perf_event_header__init_id(&cgroup_event->event_id.header,
-+				   &sample, event);
-+	ret = perf_output_begin(&handle, event,
-+				cgroup_event->event_id.header.size);
-+	if (ret)
-+		goto out;
-+
-+	perf_output_put(&handle, cgroup_event->event_id);
-+	__output_copy(&handle, cgroup_event->path,
-+		      cgroup_event->event_id.path_len);
-+
-+	perf_event__output_id_sample(event, &handle, &sample);
-+
-+	perf_output_end(&handle);
-+out:
-+	cgroup_event->event_id.header.size = header_size;
-+}
-+
-+void perf_event_cgroup(struct cgroup *cgrp)
-+{
-+	struct perf_cgroup_event cgroup_event;
-+	char path_enomem[16] = "//enomem";
-+	char *pathname;
-+	size_t size;
-+
-+	if (!atomic_read(&nr_cgroup_events))
-+		return;
-+
-+	cgroup_event = (struct perf_cgroup_event){
-+		.event_id  = {
-+			.header = {
-+				.type = PERF_RECORD_CGROUP,
-+				.misc = 0,
-+				.size = sizeof(cgroup_event.event_id),
-+			},
-+			.ino = cgrp->kn->id.ino,
-+		},
-+	};
-+
-+	pathname = kmalloc(PATH_MAX, GFP_KERNEL);
-+	if (pathname == NULL) {
-+		cgroup_event.path = path_enomem;
-+	} else {
-+		/* just to be sure to have enough space for alignment */
-+		cgroup_path(cgrp, pathname, PATH_MAX - sizeof(u64));
-+		cgroup_event.path = pathname;
++		/* protected by RCU */
++		cgrp = task_css_check(current, perf_event_cgrp_id, 1)->cgroup;
++		ino = cgroup_ino(cgrp);
++#endif
++		perf_output_put(handle, ino);
 +	}
 +
-+	/*
-+	 * Since our buffer works in 8 byte units we need to align our string
-+	 * size to a multiple of 8. However, we must guarantee the tail end is
-+	 * zero'd out to avoid leaking random bits to userspace.
-+	 */
-+	size = strlen(cgroup_event.path) + 1;
-+	while (!IS_ALIGNED(size, sizeof(u64)))
-+		cgroup_event.path[size++] = '\0';
-+
-+	cgroup_event.event_id.header.size += size;
-+	cgroup_event.event_id.path_len = size;
-+
-+	perf_iterate_sb(perf_event_cgroup_output,
-+			&cgroup_event,
-+			NULL);
-+
-+	kfree(pathname);
-+}
-+
-+#endif
-+
- /*
-  * mmap tracking
-  */
-@@ -10232,6 +10335,8 @@ static void account_event(struct perf_event *event)
- 		atomic_inc(&nr_comm_events);
- 	if (event->attr.namespaces)
- 		atomic_inc(&nr_namespaces_events);
-+	if (event->attr.cgroup)
-+		atomic_inc(&nr_cgroup_events);
- 	if (event->attr.task)
- 		atomic_inc(&nr_task_events);
- 	if (event->attr.freq)
-@@ -12186,6 +12291,12 @@ static void perf_cgroup_css_free(struct cgroup_subsys_state *css)
- 	kfree(jc);
- }
+ 	if (!event->attr.watermark) {
+ 		int wakeup_events = event->attr.wakeup_events;
  
-+static int perf_cgroup_css_online(struct cgroup_subsys_state *css)
-+{
-+	perf_event_cgroup(css->cgroup);
-+	return 0;
-+}
-+
- static int __perf_cgroup_move(void *info)
- {
- 	struct task_struct *task = info;
-@@ -12207,6 +12318,7 @@ static void perf_cgroup_attach(struct cgroup_taskset *tset)
- struct cgroup_subsys perf_event_cgrp_subsys = {
- 	.css_alloc	= perf_cgroup_css_alloc,
- 	.css_free	= perf_cgroup_css_free,
-+	.css_online	= perf_cgroup_css_online,
- 	.attach		= perf_cgroup_attach,
- 	/*
- 	 * Implicitly enable on dfl hierarchy so that perf events can
 -- 
 2.23.0.187.g17f5b7556c-goog
 
