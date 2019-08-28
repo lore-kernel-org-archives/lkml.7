@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC75C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEA5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F76B217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B70B22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:18:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfH1KSu (ORCPT
+        id S1727555AbfH1KS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:18:50 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46371 "EHLO
+        Wed, 28 Aug 2019 06:18:58 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46359 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfH1KQZ (ORCPT
+        with ESMTP id S1726310AbfH1KQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 28 Aug 2019 06:16:25 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2v03-0000D9-1X; Wed, 28 Aug 2019 12:16:23 +0200
+        id 1i2v00-0000B9-O0; Wed, 28 Aug 2019 12:16:20 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B3EEF1C07D2;
-        Wed, 28 Aug 2019 12:16:22 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 10:16:22 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5F2EA1C0DE2;
+        Wed, 28 Aug 2019 12:16:20 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 10:16:20 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-cpu-timers: Use clock ID in posix_cpu_timer_set()
+Subject: [tip: timers/core] posix-cpu-timers: Provide quick sample function for itimer
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Frederic Weisbecker <frederic@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190821192920.050770464@linutronix.de>
-References: <20190821192920.050770464@linutronix.de>
+In-Reply-To: <20190821192919.599658199@linutronix.de>
+References: <20190821192919.599658199@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <156698738265.5711.7294224034567747192.tip-bot2@tip-bot2>
+Message-ID: <156698738032.5696.14317928842926407933.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,55 +57,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     c7a37c6f4c651a531101c5721814333bae2804ec
-Gitweb:        https://git.kernel.org/tip/c7a37c6f4c651a531101c5721814333bae2804ec
+Commit-ID:     19298fbf453c90a6cf72288155f80c6f55e9139d
+Gitweb:        https://git.kernel.org/tip/19298fbf453c90a6cf72288155f80c6f55e9139d
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 21 Aug 2019 21:08:56 +02:00
+AuthorDate:    Wed, 21 Aug 2019 21:08:51 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 28 Aug 2019 11:50:28 +02:00
+CommitterDate: Wed, 28 Aug 2019 11:50:26 +02:00
 
-posix-cpu-timers: Use clock ID in posix_cpu_timer_set()
+posix-cpu-timers: Provide quick sample function for itimer
 
-Extract the clock ID (PROF/VIRT/SCHED) from the clock selector and use it
-as argument to the sample functions. That allows to simplify them once all
-callers are fixed.
+get_itimer() needs a sample of the current thread group cputime. It invokes
+thread_group_cputimer() - which is a misnomer. That function also starts
+eventually the group cputime accouting which is bogus because the
+accounting is already active when a timer is armed.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lkml.kernel.org/r/20190821192920.050770464@linutronix.de
+Link: https://lkml.kernel.org/r/20190821192919.599658199@linutronix.de
 
 ---
- kernel/time/posix-cpu-timers.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ include/linux/sched/cputime.h  |  2 +-
+ kernel/time/posix-cpu-timers.c | 21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
+diff --git a/include/linux/sched/cputime.h b/include/linux/sched/cputime.h
+index 53f883f..6de7b38 100644
+--- a/include/linux/sched/cputime.h
++++ b/include/linux/sched/cputime.h
+@@ -62,7 +62,7 @@ extern void cputime_adjust(struct task_cputime *curr, struct prev_cputime *prev,
+  */
+ void thread_group_cputime(struct task_struct *tsk, struct task_cputime *times);
+ void thread_group_cputimer(struct task_struct *tsk, struct task_cputime *times);
+-
++void thread_group_sample_cputime(struct task_struct *tsk, struct task_cputime *times);
+ 
+ /*
+  * The following are functions that support scheduler-internal time accounting.
 diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index a9003b2..12561f8 100644
+index 4426a0f..c22b6b6 100644
 --- a/kernel/time/posix-cpu-timers.c
 +++ b/kernel/time/posix-cpu-timers.c
-@@ -556,10 +556,11 @@ static void cpu_timer_fire(struct k_itimer *timer)
- static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 			       struct itimerspec64 *new, struct itimerspec64 *old)
+@@ -232,6 +232,27 @@ static inline void sample_cputime_atomic(struct task_cputime *times,
+ 	times->sum_exec_runtime = atomic64_read(&atomic_times->sum_exec_runtime);
+ }
+ 
++/**
++ * thread_group_sample_cputime - Sample cputime for a given task
++ * @tsk:	Task for which cputime needs to be started
++ * @iimes:	Storage for time samples
++ *
++ * Called from sys_getitimer() to calculate the expiry time of an active
++ * timer. That means group cputime accounting is already active. Called
++ * with task sighand lock held.
++ *
++ * Updates @times with an uptodate sample of the thread group cputimes.
++ */
++void thread_group_sample_cputime(struct task_struct *tsk,
++				struct task_cputime *times)
++{
++	struct thread_group_cputimer *cputimer = &tsk->signal->cputimer;
++
++	WARN_ON_ONCE(!cputimer->running);
++
++	sample_cputime_atomic(times, &cputimer->cputime_atomic);
++}
++
+ void thread_group_cputimer(struct task_struct *tsk, struct task_cputime *times)
  {
--	unsigned long flags;
--	struct sighand_struct *sighand;
--	struct task_struct *p = timer->it.cpu.task;
-+	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
- 	u64 old_expires, new_expires, old_incr, val;
-+	struct task_struct *p = timer->it.cpu.task;
-+	struct sighand_struct *sighand;
-+	unsigned long flags;
- 	int ret;
- 
- 	if (WARN_ON_ONCE(!p))
-@@ -606,9 +607,9 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 	 * check if it's already passed.  In short, we need a sample.
- 	 */
- 	if (CPUCLOCK_PERTHREAD(timer->it_clock)) {
--		cpu_clock_sample(timer->it_clock, p, &val);
-+		cpu_clock_sample(clkid, p, &val);
- 	} else {
--		cpu_clock_sample_group(timer->it_clock, p, &val, true);
-+		cpu_clock_sample_group(clkid, p, &val, true);
- 	}
- 
- 	if (old) {
+ 	struct thread_group_cputimer *cputimer = &tsk->signal->cputimer;
