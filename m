@@ -2,113 +2,125 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00710C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A6AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6CFC206BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A715C2080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Prfgnz7b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAU7esjH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfH1SiF (ORCPT
+        id S1726820AbfH1Skd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:38:05 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40423 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbfH1SiF (ORCPT
+        Wed, 28 Aug 2019 14:40:33 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36725 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfH1Skd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:38:05 -0400
-Received: by mail-io1-f68.google.com with SMTP id t6so1563043ios.7
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 11:38:05 -0700 (PDT)
+        Wed, 28 Aug 2019 14:40:33 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p13so1141501wmh.1;
+        Wed, 28 Aug 2019 11:40:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WHcgLtBVTpOTGkvzzyFJrMalfpvT5RoFcnOBKCVmA5U=;
-        b=Prfgnz7bfxDp5kmjxjC/BLb48ridESw18bqWlWy5WpdGoMrDZkp/Ty3yA21Va0soPb
-         OgE8LcXLLqF/nBbyU/mNa9Aiqv3tcLDZblvAD0rYJ4H/oyzvRTnLRfk2BCMFR/Gs1GPl
-         gTGZ/V/78VeoGFu7mHjHQQ2E88PDCxxgrmERk=
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:message-id:in-reply-to:references
+         :mime-version;
+        bh=1ZQ5ojymViBrAruzvPsWbm4OehLwZlcgiZDLWBOPkfM=;
+        b=NAU7esjH2NV9GhK0Lz2BHZ+3nHLUsrrpH5KEinI+cgBB6OOMDv+05mIDKSszvqUnL9
+         VLyAkrMRInSdFJB6Xm3A6w1yl5FVtiswgPmYF6wIiyyigxfXAutOEd4m+4aC2w/hhAeK
+         9M8F0uvPPPZaN7rgrCqf5bjoVecefE5kUZQRtL4yXS8N2xh8OYfZvDsUQoGSlIL5c7+u
+         6NiE2eNs/qDsRCXUEy/ol0ucYicIu0c+Ng7j7/4c1WH8OtBQEgI38sv2AJ6iow7k8mU/
+         WBTit9nROwHCS6pN6Lfrf3f/qPf5n9pJ7onNZQ8FaDfJJr/XonrmcKtuOAi3b/QZrcM2
+         xevg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WHcgLtBVTpOTGkvzzyFJrMalfpvT5RoFcnOBKCVmA5U=;
-        b=gPall1vLpuIcuBYhbdEeokn8/R3nqB4B40gYY9ufjgDKrt/bMG5iCKXftAviFe+aBz
-         YGLg4lFfbJS/tOv0p9t2usPszKPo/XBp11C4p+YgV9bZbWQCep6T2JIBI27adUUwZSyM
-         +s8WsiO4ov3AEGy9bd4/wN0kQ8/L2mR1ulCob1oPbMQbnhq0wYpAIAfTN7eT2SKPMYRb
-         wGLOuNWAyRT/gOZydk4oKQqUPYF+NDl9AuNRv1PfpV6dqvHTiP6+3obn1XP/DE9qnSC7
-         Brvc4XARTmtHbfhfNeY/I3pah0Fuht6UStFZVwxU2baPRygQmybuX1JzjDOq+DC5o4H9
-         7eRQ==
-X-Gm-Message-State: APjAAAXBGqYsEqZ70EO1n2m6wuozQKlY/wut95gaO4foLiLxvaD+JX6C
-        JMrjFaJXtiHdGkjyXWHaWlzQeSCK/wLTjw==
-X-Google-Smtp-Source: APXvYqyTJ1bJXyGDWbBc6lK10AP1JqjnjpqqnNcWjg3el8gUSPgtA5J0MKM5o872ZZtIlfFPuskZ7Q==
-X-Received: by 2002:a6b:da1a:: with SMTP id x26mr5912882iob.285.1567017484708;
-        Wed, 28 Aug 2019 11:38:04 -0700 (PDT)
-Received: from localhost ([2620:15c:183:0:82e0:aef8:11bc:24c4])
-        by smtp.gmail.com with ESMTPSA id s4sm4599667iop.25.2019.08.28.11.38.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Aug 2019 11:38:04 -0700 (PDT)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     amd-gfx@lists.freedesktop.org
-Cc:     Raul E Rangel <rrangel@chromium.org>, Leo Li <sunpeng.li@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        hersen wu <hersenxs.wu@amd.com>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Nikola Cornij <nikola.cornij@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Charlene Liu <charlene.liu@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>, Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v2] drm/amd/display: fix struct init in update_bounding_box
-Date:   Wed, 28 Aug 2019 12:37:58 -0600
-Message-Id: <20190828183758.11553-1-rrangel@chromium.org>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
+         :references:mime-version;
+        bh=1ZQ5ojymViBrAruzvPsWbm4OehLwZlcgiZDLWBOPkfM=;
+        b=oxEBdhnpZFcCSLsQfamBuUfJ3RsLCLT+95hwGqJwzbYltMZkfyJFNPs7QVqs6jds10
+         m7pXLDEzLyC3Mv6vxFKbytkPMqEKA7dbxkZeedDq7+ppr5/ZuMOmyzRlugaJqhf0Ten/
+         mNGNLEU7ZP7+x/kbyc3qil4mM5XDuQ2+JrabSYGjtrAkXSic4xysOURb/d620FjCr63V
+         vHKc0xGZLgCydbRSuZgcybx7FEVilnYh9nQhMkHRwBCNU6PPxcXj4/Ctszhs6JZKA9T+
+         4SMyLRotGRRcqSUqwYuDoJH+JMUg3GsgF4l23qams1jBfpAA6lgoQ6QNMJP6+x2fldcT
+         Vqqg==
+X-Gm-Message-State: APjAAAUCD15ug2ShjTJLnWsGxKN1mH+90cZt45xEHRA2Adt8jjkuCTtT
+        x3i/xnvIWPG28BdoX+sNtzQ=
+X-Google-Smtp-Source: APXvYqyRk1lLXpkl6DdhmfkGq0J29LE5Po5p5CYSB5sL6KGREpE8nu8iCeVVG6wMhSo7ndyr6HkZHw==
+X-Received: by 2002:a05:600c:24cf:: with SMTP id 15mr6641221wmu.76.1567017630452;
+        Wed, 28 Aug 2019 11:40:30 -0700 (PDT)
+Received: from [192.168.1.105] (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id n8sm319052wma.7.2019.08.28.11.40.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 11:40:29 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 20:40:27 +0200
+From:   Krzysztof Wilczynski <kswilczynski@gmail.com>
+Subject: Re: [PATCH v2] x86/PCI: Add missing log facility and move to use pr_
+ macros in pcbios.c
+To:     Joe Perches <joe@perches.com>
+Cc:     Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <1567017627.3507.0@gmail.com>
+In-Reply-To: <a13a086c2dd6dd6259d28e5d1d360e2b4d04ca83.camel@perches.com>
+References: <20190825182557.23260-1-kw@linux.com>
+        <20190828175120.22164-1-kw@linux.com>
+        <a13a086c2dd6dd6259d28e5d1d360e2b4d04ca83.camel@perches.com>
+X-Mailer: geary/3.32.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dcn20_resource.c:2636:9: error: missing braces around initializer [-Werror=missing-braces]
-  struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {0};
-         ^
-Fixes: 7ed4e6352c16f ("drm/amd/display: Add DCN2 HW Sequencer and Resource")
+Hello Joe,
 
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
----
-So apparently `{}` is a gcc extension. The C standard requires at least
-one expression. So {{0}} is correct. I got a lint error about {{0}}
-needing a space, so i use `{ {0} }`.
+Thank you for feedback.
+[...]
+>>    Move to pr_debug() over using DBG() from 
+>> arch/x86/include/asm/pci_x86.h.
+> 
+> You might also consider the checkpatch output for this patch.
+> 
+> arch/x86/pci/pcbios.c:116: WARNING: line over 80 characters
+> arch/x86/pci/pcbios.c:116: WARNING: Prefer using '"%s...", __func__' 
+> to using 'bios32_service', this function's name, in a string
+> arch/x86/pci/pcbios.c:119: WARNING: Prefer using '"%s...", __func__' 
+> to using 'bios32_service', this function's name, in a string
+> arch/x86/pci/pcbios.c:391: WARNING: line over 80 characters
 
-Changes in v2:
-- Use { {0} } instead of {}
+Good point.
 
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The lines over 80 characters wide would be taken care of when
+moving to using the pr_ macros as the line length will now be
+shorter contrary to when the e.g., printk(KERNEL_INFO ...),
+etc., was used.
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-index b949e202d6cb..8e6433be2252 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-@@ -2633,7 +2633,7 @@ static void cap_soc_clocks(
- static void update_bounding_box(struct dc *dc, struct _vcs_dpi_soc_bounding_box_st *bb,
- 		struct pp_smu_nv_clock_table *max_clocks, unsigned int *uclk_states, unsigned int num_states)
- {
--	struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {0};
-+	struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = { {0} };
- 	int i;
- 	int num_calculated_states = 0;
- 	int min_dcfclk = 0;
--- 
-2.23.0.187.g17f5b7556c-goog
+The other warnings I am going to address in v3.  I was thinking
+of replacing the following:
+
+pr_warn("bios32_service(0x%lx): not present\n", service);
+
+With something that looks like this:
+
+pr_warn("BIOS32 Service(0x%lx): not present\n", service);
+
+Using "bios32_service" name directly or even moving to __func__
+feels a lot like an implementation detail is exposed to the
+end user.  I am not sure how useful that could be.  Also,
+we are already using log lines starting with "BIOS32", thus
+it seemed like following them would be the most sensible
+choice, especially to keep messages consistent.
+
+What do you think?
+
+Krzysztof
+
 
