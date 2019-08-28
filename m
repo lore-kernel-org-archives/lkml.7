@@ -2,204 +2,116 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF2CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 01:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6A1C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 01:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE8621883
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 01:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949C220856
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 01:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfH1Bxu (ORCPT
+        id S1726255AbfH1B7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 21:53:50 -0400
-Received: from mga11.intel.com ([192.55.52.93]:53122 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbfH1Bxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 21:53:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 18:53:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,439,1559545200"; 
-   d="scan'208";a="192436013"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 27 Aug 2019 18:53:47 -0700
-Received: from [10.226.39.5] (leichuan-mobl.gar.corp.intel.com [10.226.39.5])
-        by linux.intel.com (Postfix) with ESMTP id 18983580375;
-        Tue, 27 Aug 2019 18:53:44 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     eswara.kota@linux.intel.com, cheol.yong.kim@intel.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        p.zabel@pengutronix.de, qi-ming.wu@intel.com, robh@kernel.org,
-        Hauke Mehrtens <hauke@hauke-m.de>
-References: <90cc600d6f7ded68f5a618b626bd9cffa5edf5c3.1566531960.git.eswara.kota@linux.intel.com>
- <20190824211158.5900-1-martin.blumenstingl@googlemail.com>
- <3813e658-1600-d878-61a4-29b4fe51b281@linux.intel.com>
- <CAFBinCA_B9psNGBeDyhkewhoutNh6HsLUN+TRfO_8vuNqhis4Q@mail.gmail.com>
- <48b90943-e23d-a27a-c743-f321345c9151@linux.intel.com>
- <CAFBinCD1oKxYm8QD7XfZUWq_HC5A4GLMmLCnZrcRvpTxrKo30w@mail.gmail.com>
-From:   "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
-Message-ID: <19719490-178a-18fd-64f2-f77d955897f7@linux.intel.com>
-Date:   Wed, 28 Aug 2019 09:53:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Tue, 27 Aug 2019 21:59:48 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3978 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726127AbfH1B7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 21:59:48 -0400
+Received: from dggemi404-hub.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id C5486602C5D1A1E04F6C;
+        Wed, 28 Aug 2019 09:59:45 +0800 (CST)
+Received: from DGGEMI423-HUB.china.huawei.com (10.1.199.152) by
+ dggemi404-hub.china.huawei.com (10.3.17.142) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 28 Aug 2019 09:59:45 +0800
+Received: from DGGEMI524-MBX.china.huawei.com ([169.254.7.30]) by
+ dggemi423-hub.china.huawei.com ([10.1.199.152]) with mapi id 14.03.0439.000;
+ Wed, 28 Aug 2019 09:59:38 +0800
+From:   chengzhihao <chengzhihao1@huawei.com>
+To:     Richard Weinberger <richard.weinberger@gmail.com>
+CC:     Richard Weinberger <richard@nod.at>,
+        "zhangyi (F)" <yi.zhang@huawei.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggUkZDIHYyXSB1Ymk6IHViaV93bF9nZXRfcGViOiBJ?=
+ =?utf-8?B?bmNyZWFzZSB0aGUgbnVtYmVyIG9mIGF0dGVtcHRzIHdoaWxlIGdldHRpbmcg?=
+ =?utf-8?Q?PEB?=
+Thread-Topic: [PATCH RFC v2] ubi: ubi_wl_get_peb: Increase the number of
+ attempts while getting PEB
+Thread-Index: AQHVT2EsTJNmHoCNk0y5Wp2VB7/tCKb5GeuAgBbPnRA=
+Date:   Wed, 28 Aug 2019 01:59:37 +0000
+Message-ID: <0B80F9D4116B2F4484E7279D5A66984F7D875E@dggemi524-mbx.china.huawei.com>
+References: <1565431061-145460-1-git-send-email-chengzhihao1@huawei.com>
+ <CAFLxGvzOMfqJJ+ZKTUavxEx+0_OJO_VcrNu1nn2rrvcypAxAAA@mail.gmail.com>
+In-Reply-To: <CAFLxGvzOMfqJJ+ZKTUavxEx+0_OJO_VcrNu1nn2rrvcypAxAAA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.177.224.82]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCD1oKxYm8QD7XfZUWq_HC5A4GLMmLCnZrcRvpTxrKo30w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
-
-On 8/28/2019 5:15 AM, Martin Blumenstingl wrote:
-> Hi,
->
-> On Tue, Aug 27, 2019 at 4:23 AM Chuan Hua, Lei
-> <chuanhua.lei@linux.intel.com> wrote:
-> [...]
->>>> 1. reset-lantiq.c use index instead of register offset + bit position.
->>>> index reset is good for a small system (< 64). However, it will become very
->>>> difficult to use if you have  > 100 reset. So we use register offset +
->>>> bit position
->>> reset-lantiq uses bit bit positions for specifying the reset line.
->>> for example this is from OpenWrt's vr9.dtsi:
->>>     reset0: reset-controller@10 {
->>>       ...
->>>       reg = <0x10 4>, <0x14 4>;
->>>       #reset-cells = <2>;
->>>     };
->>>
->>>     gphy0: gphy@20 {
->>>       ...
->>>       resets = <&reset0 31 30>, <&reset1 7 7>;
->>>       reset-names = "gphy", "gphy2";
->>>     };
->>>
->>> in my own words this means:
->>> - all reset0 reset bits are at offset 0x10 (parent is RCU)
->>> - all reset0 status bits are at offset 0x14 (parent is RCU)
->>> - the first reset line uses reset bit 31 and status bit 30
->>> - the second reset line uses reset bit 7 and status bit 7
->>> - there can be multiple reset-controller instances, each taking the
->>> reset and status offsets (OpenWrt's vr9.dtsi specifies the second RCU
->>> reset controller "reset1" with reset offset 0x48 and status offset
->>> 0x24)
->> in reset-lantiq.c, we split each reset request /status pair into one
->> reset controller.
->>
->> Each reset controller handles up to 32 resets. It will create up to 9
->> even more
->> reset controllers in the new SoCs. In reality, there is only one RCU
->> controller for all
->> SoCs. These designs worked but did not follow what hardware implemented.
->>
->> After checking the existing code and referring to other implementation,
->> we decided to
->> use register offset + bit position method. It can support all SoCs with
->> this methods
->> without code change(device tree change only).
-> maybe I have a different interpretation of what "RCU" does.
-> let me explain it in my own words based on my knowledge about VRX200:
-> - in my own words it is a multi function device with the following
-> functionality:
-> - it contains two reset controllers (reset at 0x10, status 0x14 and
-> reset at 0x48, status at 0x24)
-> - it contains two USB2 PHYs (PHY registers at 0x18, ANA cfg at 0x38
-> and PHY registers at 0x34, ANA cfg at 0x3c)
-> - it contains the configuration for the two GPHY IP blocks (at 0x20 and 0x68)
-> - it contains endianness configuration registers (for PCI, PCIe, ...)
-> - it contains the watchdog boot status (whether the SoC was previously
-> reset by the WDT)
-> - maybe more, but I don't know anything else about it
-In fact, there is only one reset controller for all SoCs even it doesn't 
-prevent software from virtualizing multiple reset controllers. Reset 
-control does include some misc stuff which has been moved to chiptop in 
-new SoCs so that RCU has a clean job.
-> we tried our best to document this in
-> Documentation/devicetree/bindings/mips/lantiq/rcu.txt
->
-> I'm not sure about the details of the RCU on the LGM SoCs:
-> if it contains more than just reset controllers then please let Rob
-> Herring (dt-bindings maintainer) know about this.
-> we may only have one chance to do it right, if we start with a
-> "broken" binding then devices with incompatible bootloaders etc. may
-> have already shipped
-> (in general: that is why the devicetree maintainers want to have all
-> device properties documented in the binding, even if the driver does
-> not support all of them yet)
-
->
->>>> 2. reset-lantiq.c does not support device restart which is part of the
->>>> reset in
->>>> old lantiq SoC. It moved this part into arch/mips/lantiq directory.
->>> it was moved to the .dts instead of the arch code. again from
->>> OpenWrt's vr9.dtsi [0]:
->>>     reboot {
->>>       compatible = "syscon-reboot";
->>>       regmap = <&rcu0>;
->>>       offset = <0x10>;
->>>       mask = <0xe0000000>;
->>>     };
->>>
->>> this sets the reset0 reset bits 31, 30 and 29 at reboot
->> ok. but not sure why we need to reset bit 31 and 29. global softwre
->> reset is bit 30.
-> I don't know either. depending on what the LGM SoCs need you can
-> change the "mask" property to the value that fits that SoC best
->
-> [...]
-All SoCs have only one global software reset bit.
->>> - other reset lines only support reset pulses. the _reset function
->>> should be used in this case
->>> - the _reset function should only assert the reset line, then wait
->>> until the hardware automatically de-asserts it (without any further
->>> write)
->> Yes, this is called hardware reset. We can't control reset duration.
->>> is this the same for all, old and new SoCs?
->> New SoCs have removed support for hardware reset after software's feedback.
->>
->> Old SoCs such as VRX200/ARX300 has both software/hardware resets
-> nice, it's good to see teamwork between hardware and software teams!
->
-> [...]
->>>> 4. Code not optimized and intel internal review not assessed.
->>> insights from you (like the issue with the reset callback) are very
->>> valuable - this shows that we should focus on having one driver.
->>>
->>>> Based on the above findings, I would suggest reset-lantiq.c to move to
->>>> reset-intel-syscon.c
->>> my concern with having two separate drivers is that it will be hard to
->>> migrate from reset-lantiq to the "optimized" reset-intel-syscon
->>> driver.
->>> I don't have access to the datasheets for the any Lantiq/Intel SoC
->>> (VRX200 and even older).
->>> so debugging issues after switching from one driver to another is
->>> tedious because I cannot tell which part of the driver is causing a
->>> problem (it's either "all code from driver A" vs "all code from driver
->>> B", meaning it's hard to narrow it down).
->>> with separate commits/patches that are improving the reset-lantiq
->>> driver I can do git bisect to find the cause of a problem on the older
->>> SoCs (VRX200 for example)
->> Our internal version supports XRX350/XRX500/PRX300(MIPS based) and
->> latest Lighting Mountain(X86 based). Migration to reset-intel-syscon.c
->> should be straight forward.
-> what about the _reset callback on the XRX350/XRX500/PRX300 SoCs - do
-> they only use level resets (_assert and _deassert) or are some reset
-> lines using reset pulses (_reset)?
->
-> when we wanted to switch from reset-lantiq.c to reset-intel-syscon.c
-> we still had to add support for the _reset callback as this is missing
-> in reset-intel-syscon.c currently
-Yes. We have reset pulse(assert, then check the reset status).
->
->
-> Martin
+VGhpcyBwYXRjaCBtaXNzZWQgdGhlIGZpeGVzIHB1bGwgcmVxdWVzdCg1LjMtcmM2KSwgd2lsbCBp
+dCBiZSBpbiB2NS4zLXJjNz8NCg0KLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0K5Y+R5Lu25Lq6OiBS
+aWNoYXJkIFdlaW5iZXJnZXIgW21haWx0bzpyaWNoYXJkLndlaW5iZXJnZXJAZ21haWwuY29tXSAN
+CuWPkemAgeaXtumXtDogMjAxOeW5tDjmnIgxNOaXpSA1OjM4DQrmlLbku7bkuro6IGNoZW5nemhp
+aGFvIDxjaGVuZ3poaWhhbzFAaHVhd2VpLmNvbT4NCuaKhOmAgTogUmljaGFyZCBXZWluYmVyZ2Vy
+IDxyaWNoYXJkQG5vZC5hdD47IHpoYW5neWkgKEYpIDx5aS56aGFuZ0BodWF3ZWkuY29tPjsgbGlu
+dXgtbXRkQGxpc3RzLmluZnJhZGVhZC5vcmc7IExLTUwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc+DQrkuLvpopg6IFJlOiBbUEFUQ0ggUkZDIHYyXSB1Ymk6IHViaV93bF9nZXRfcGViOiBJ
+bmNyZWFzZSB0aGUgbnVtYmVyIG9mIGF0dGVtcHRzIHdoaWxlIGdldHRpbmcgUEVCDQoNCk9uIFNh
+dCwgQXVnIDEwLCAyMDE5IGF0IDExOjUxIEFNIFpoaWhhbyBDaGVuZyA8Y2hlbmd6aGloYW8xQGh1
+YXdlaS5jb20+IHdyb3RlOg0KPg0KPiBSdW5uaW5nIHN0cmVzcyB0ZXN0IGlvX3BhcmFsIChBIHBy
+ZXNzdXJlIHViaSB0ZXN0IGluIG10ZC11dGlscykgb24gYW4gDQo+IFVCSSBkZXZpY2Ugd2l0aCBm
+ZXdlciBQRUJzIChmYXN0bWFwIGVuYWJsZWQpIG1heSBjYXVzZSBFTk9TUEMgZXJyb3JzIA0KPiBh
+bmQgbWFrZSBVQkkgZGV2aWNlIHJlYWQtb25seSwgYnV0IHRoZXJlIGFyZSBzdGlsbCBmcmVlIFBF
+QnMgb24gdGhlIA0KPiBVQkkgZGV2aWNlLiBUaGlzIHByb2JsZW0gY2FuIGJlIGVhc2lseSByZXBy
+b2R1Y2VkIGJ5IHBlcmZvcm1pbmcgdGhlIA0KPiBmb2xsb3dpbmcgc3RlcHMgb24gYSAyLWNvcmUg
+bWFjaGluZToNCj4gICAkIG1vZHByb2JlIG5hbmRzaW0gZmlyc3RfaWRfYnl0ZT0weDIwIHNlY29u
+ZF9pZF9ieXRlPTB4MzMgcGFydHM9ODANCj4gICAkIG1vZHByb2JlIHViaSBtdGQ9IjAsMCIgZm1f
+YXV0b2NvbnZlcnQNCj4gICAkIC4vaW9fcGFyYWwgL2Rldi91YmkwDQo+DQo+IFdlIG1heSBzZWUg
+dGhlIGZvbGxvd2luZyB2ZXJib3NlOg0KPiAob3V0cHV0KQ0KPiAgIFtpb19wYXJhbF0gdXBkYXRl
+X3ZvbHVtZSgpOjEwODogZmFpbGVkIHRvIHdyaXRlIDM4MCBieXRlcyBhdCBvZmZzZXQNCj4gICA5
+NTkyMCBvZiB2b2x1bWUgMg0KPiAgIFtpb19wYXJhbF0gdXBkYXRlX3ZvbHVtZSgpOjEwOTogdXBk
+YXRlOiA5NzA4OCBieXRlcw0KPiAgIFtpb19wYXJhbF0gd3JpdGVfdGhyZWFkKCk6MjI3OiBmdW5j
+dGlvbiBwd3JpdGUoKSBmYWlsZWQgd2l0aCBlcnJvciAyOA0KPiAgIChObyBzcGFjZSBsZWZ0IG9u
+IGRldmljZSkNCj4gICBbaW9fcGFyYWxdIHdyaXRlX3RocmVhZCgpOjIyOTogY2Fubm90IHdyaXRl
+IDE1ODcyIGJ5dGVzIHRvIG9mZnMgMzE3NDQsDQo+ICAgd3JvdGUgLTENCj4gKGRtZXNnKQ0KPiAg
+IHViaTAgZXJyb3I6IHViaV93bF9nZXRfcGViIFt1YmldOiBVbmFibGUgdG8gZ2V0IGEgZnJlZSBQ
+RUIgZnJvbSB1c2VyIFdMDQo+ICAgcG9vbA0KPiAgIHViaTAgd2FybmluZzogdWJpX2ViYV93cml0
+ZV9sZWIgW3ViaV06IHN3aXRjaCB0byByZWFkLW9ubHkgbW9kZQ0KPiAgIENQVTogMCBQSUQ6IDIw
+MjcgQ29tbTogaW9fcGFyYWwgTm90IHRhaW50ZWQgNS4zLjAtcmMyLTAwMDAxLWc1OTg2Y2QwICM5
+DQo+ICAgdWJpMCB3YXJuaW5nOiB0cnlfd3JpdGVfdmlkX2FuZF9kYXRhIFt1YmldOiBmYWlsZWQg
+dG8gd3JpdGUgVklEIGhlYWRlcg0KPiAgIHRvIExFQiAyOjUsIFBFQiAxOA0KPiAgIEhhcmR3YXJl
+IG5hbWU6IFFFTVUgU3RhbmRhcmQgUEMgKGk0NDBGWCArIFBJSVgsIDE5OTYpLCBCSU9TIHJlbC0x
+LjEyLjANCj4gICAtMC1nYTY5OGM4OTk1Zi1wcmVidWlsdC5xZW11Lm9yZyAwNC8wMS8yMDE0DQo+
+ICAgQ2FsbCBUcmFjZToNCj4gICAgIGR1bXBfc3RhY2srMHg4NS8weGJhDQo+ICAgICB1YmlfZWJh
+X3dyaXRlX2xlYisweGExZS8weGE0MCBbdWJpXQ0KPiAgICAgdm9sX2NkZXZfd3JpdGUrMHgzMDcv
+MHg1MjAgW3ViaV0NCj4gICAgIHZmc193cml0ZSsweGZhLzB4MjgwDQo+ICAgICBrc3lzX3B3cml0
+ZTY0KzB4YzUvMHhlMA0KPiAgICAgX194NjRfc3lzX3B3cml0ZTY0KzB4MjIvMHgzMA0KPiAgICAg
+ZG9fc3lzY2FsbF82NCsweGJmLzB4NDQwDQo+DQo+IEluIGZ1bmN0aW9uIHViaV93bF9nZXRfcGVi
+LCB0aGUgb3BlcmF0aW9uIG9mIGZpbGxpbmcgdGhlIHBvb2wNCj4gKHViaV91cGRhdGVfZmFzdG1h
+cCkgd2l0aCBmcmVlIFBFQnMgYW5kIGZldGNoaW5nIGEgZnJlZSBQRUIgZnJvbSB0aGUgDQo+IHBv
+b2wgaXMgbm90IGF0b21pYy4gQWZ0ZXIgdGhyZWFkIEEgZmlsbGluZyB0aGUgcG9vbCB3aXRoIGZy
+ZWUgUEVCLCANCj4gZnJlZSBQRUIgbWF5IGJlIHRha2VuIGF3YXkgYnkgdGhyZWFkIEIuIFdoZW4g
+dGhyZWFkIEEgY2hlY2tzIHRoZSANCj4gZXhwcmVzc2lvbiBhZ2FpbiwgdGhlIGNvbmRpdGlvbiBp
+cyBzdGlsbCB1bnNhdGlzZmFjdG9yeS4gQXQgdGhpcyB0aW1lLCANCj4gdGhlcmUgbWF5IHN0aWxs
+IGJlIGZyZWUgUEVCcyBvbiBVQkkgdGhhdCBjYW4gYmUgZmlsbGVkIGludG8gdGhlIHBvb2wuDQo+
+DQo+IFRoaXMgcGF0Y2ggaW5jcmVhc2VzIHRoZSBudW1iZXIgb2YgYXR0ZW1wdHMgdG8gb2J0YWlu
+IFBFQi4gQW4gZXh0cmVtZSANCj4gY2FzZSAoTm8gZnJlZSBQRUJzIGxlZnQgYWZ0ZXIgY3JlYXRp
+bmcgdGVzdCB2b2x1bWVzKSBoYXMgYmVlbiB0ZXN0ZWQgDQo+IG9uIGRpZmZlcmVudCB0eXBlIG9m
+IG1hY2hpbmVzIGZvciAxMDAgdGltZXMuIFRoZSBiaWdnZXN0IG51bWJlciBvZiANCj4gYXR0ZW1w
+dHMgYXJlIHNob3duIGJlbG93Og0KPg0KPiAgICAgICAgICAgICAgeDg2XzY0ICAgICBhcm02NA0K
+PiAgIDItY29yZSAgICAgICAgNCAgICAgICAgIDQNCj4gICA0LWNvcmUgICAgICAgIDggICAgICAg
+ICA0DQo+ICAgOC1jb3JlICAgICAgICA0ICAgICAgICAgNA0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBa
+aGloYW8gQ2hlbmcgPGNoZW5nemhpaGFvMUBodWF3ZWkuY29tPg0KDQpUaGFua3MgZm9yIGFkZHJl
+c3NpbmcgdGhpcyENCkknbGwgdGFrZSB0aGlzIHZlcnNpb24uIDotKQ0KDQotLQ0KVGhhbmtzLA0K
+Ly9yaWNoYXJkDQo=
