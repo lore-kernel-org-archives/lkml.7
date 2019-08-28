@@ -2,154 +2,387 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9E7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B8DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02B72173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455492173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:21:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="UkCaK5W8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UL6qJbYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfH1QVC (ORCPT
+        id S1726583AbfH1QVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:21:02 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:46782 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfH1QVC (ORCPT
+        Wed, 28 Aug 2019 12:21:40 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45125 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfH1QVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:21:02 -0400
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x7SGKwWr032555;
-        Thu, 29 Aug 2019 01:20:58 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x7SGKwWr032555
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567009258;
-        bh=gLFsc4GoaKSP2blYoRMPLmZqDOXVyUGvyhVsoSy7tug=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UkCaK5W8/HC7ydYopRcA4en5nWKsFmKqbSKJp9oK21bX2H06tR9nl9dHrNfyObGvh
-         is4V+7oNJazKp1A6YNn+xiH8UxkoBKLuCUktUiLDOkdTdhW9Zebr630SBUJb9S98ky
-         RSCqGlhu8eaFkQQ16Gw9HpVYOIYc6ssDAsN81AVAymmeN0SLgKc+KupvmJ2iLKS2rv
-         YJMVJ3VSm7pT9S9shNhZUoILI0ydRy78d7idJOANrOWHVppD2c5dZK4eVFusmpFGwo
-         6mDJ3ad0qWFf1T09eYOveiXmW/G+Ac9EoysRn+iJYXNlKLHAEA64Tvkhkyw2KkPI7d
-         4L7DepLRaKhVg==
-X-Nifty-SrcIP: [209.85.222.50]
-Received: by mail-ua1-f50.google.com with SMTP id f9so175898uaj.4;
-        Wed, 28 Aug 2019 09:20:58 -0700 (PDT)
-X-Gm-Message-State: APjAAAWicYO1dAgErUkeAssot+HKphHGVExSuusKQDx+Ga/rMocrPPnx
-        RKN7hpLMzjBJaD6Z4YfLfuUag+wVBN7op3xSJRI=
-X-Google-Smtp-Source: APXvYqx0AiCoT1Nj6qNzrL4eY7yrUbBwb44z2Gqdj7kuBZooLZlGmtWqmGPjhiDk6h/Wjp4X3ddsAWdyEpa1sklEZD0=
-X-Received: by 2002:ab0:32d8:: with SMTP id f24mr2475802uao.121.1567009256901;
- Wed, 28 Aug 2019 09:20:56 -0700 (PDT)
+        Wed, 28 Aug 2019 12:21:40 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l1so67747lji.12
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 09:21:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+N7tBNex/H4hmDc+IQsOM6EnalTAb4uBLWHTxE0uTJU=;
+        b=UL6qJbYG59njWk9wpZmtaWCjDSowVukiRgqI6eZfRATDD6omgWXjcwfvURosQzytnk
+         qlSQrXORYPIMv9ewNsLmHFzXQo4E62XFQfSoowJFzTvkNGuMrCCp3Es+WvAC5C2ba/ep
+         V8AwiWqas92kDgDIrosuSlm+02stCGKalJ3X+vcGwhPMeB6dUtl8JNRFbcsESYWwaMMi
+         MynTF/NVGS+O6Qbb019LW85OMWKJCe17L3P9hIwjhbhVD23UZGvpIPm1FtjZ2dn5hizZ
+         IYCDO60OnZyMh0iVcLMWeBjjc00yVJiHEy0YZdIya4pE2aeNe2gXEDJceTbOV7HS236Y
+         mq/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+N7tBNex/H4hmDc+IQsOM6EnalTAb4uBLWHTxE0uTJU=;
+        b=eIYipx/loB5k40Z01Y471OM4LdhQ0NtII/a6x5nGRdlT/9PSQnxgZLR15kXit7Wbgc
+         XPz03UAOyMvx2NyhC39kJ9O55anoaUCRo8RcQ2YWY5VjRtIm/4bGhfI4V81ZOeP//dFg
+         2G2T9Nc/HLWMGR3M7lkVNSgLNfiRU3WkD7ixLfEOcgoR2+ap/pGFdmeHzusul++p/3mg
+         Ba4p/SnIfriB/UtUyen3szIBt+T97YautgR2hA45epw2D78D5qJ/Wos02nIJn9wzBAbM
+         2+5axkAWlDpTYzmGNr1MQolc/86YjOaXE43BalU1/c/VqPKUna89kfSPG8FBzlDkJrH7
+         MEAQ==
+X-Gm-Message-State: APjAAAVYOTYQbkZTuv83ou8ReISPtG0y9f1oNWvJU1kcYZD6+CMpKPW1
+        i1kRB/ilGSbhQAWSiuSXhLClYBfY/jh4yEpv6+Fbdw==
+X-Google-Smtp-Source: APXvYqweDQQOObJCIRc6tBRPRUSByNZcAYffFLSIL93snwSfMmOZsSNiXu0zd+i0q/aNLdhGoT3e4ZGUQeMgdzbIrBo=
+X-Received: by 2002:a2e:a313:: with SMTP id l19mr2579738lje.32.1567009296011;
+ Wed, 28 Aug 2019 09:21:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190815225844.145726-1-nhuck@google.com> <20190827004155.11366-1-natechancellor@gmail.com>
-In-Reply-To: <20190827004155.11366-1-natechancellor@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 29 Aug 2019 01:20:19 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATHj5KrnFa0fvHjuC-=5mV8VBT14vrpPMfuNKWw7wabag@mail.gmail.com>
-Message-ID: <CAK7LNATHj5KrnFa0fvHjuC-=5mV8VBT14vrpPMfuNKWw7wabag@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Do not enable -Wimplicit-fallthrough for clang
- for now
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Huckleberry <nhuck@google.com>,
-        Joe Perches <joe@perches.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
+References: <20190827204152.114609-1-hridya@google.com> <20190827204152.114609-5-hridya@google.com>
+ <20190828130759.4b4gtzf2jpi5c46y@wittgenstein>
+In-Reply-To: <20190828130759.4b4gtzf2jpi5c46y@wittgenstein>
+From:   Todd Kjos <tkjos@google.com>
+Date:   Wed, 28 Aug 2019 09:21:24 -0700
+Message-ID: <CAHRSSEw3Z6Wg1dsXmJei-o=FRj1U0Ys9_WHRbB4KTCCwjntjeQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] binder: Add binder_proc logging to binderfs
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Hridya Valsaraju <hridya@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 9:42 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
+On Wed, Aug 28, 2019 at 6:08 AM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
 >
-> This functionally reverts commit bfd77145f35c ("Makefile: Convert
-> -Wimplicit-fallthrough=3 to just -Wimplicit-fallthrough for clang").
+> On Tue, Aug 27, 2019 at 01:41:52PM -0700, Hridya Valsaraju wrote:
+> > Currently /sys/kernel/debug/binder/proc contains
+> > the debug data for every binder_proc instance.
+> > This patch makes this information also available
+> > in a binderfs instance mounted with a mount option
+> > "stats=global" in addition to debugfs. The patch does
+> > not affect the presence of the file in debugfs.
+> >
+> > If a binderfs instance is mounted at path /dev/binderfs,
+> > this file would be present at /dev/binderfs/binder_logs/proc.
+> > This change provides an alternate way to access this file when debugfs
+> > is not mounted.
+> >
+> > Signed-off-by: Hridya Valsaraju <hridya@google.com>
 >
-> clang enabled support for -Wimplicit-fallthrough in C in r369414 [1],
-> which causes a lot of warnings when building the kernel for two reasons:
+> I'm still wondering whether there's a nicer way to create those debuf
+> files per-process without doing it in binder_open() but it has worked
+> fine for a long time with debugfs.
 >
-> 1. Clang does not support the /* fall through */ comments. There seems
->    to be a general consensus in the LLVM community that this is not
->    something they want to support. Joe Perches wrote a script to convert
->    all of the comments to a "fallthrough" keyword that will be added to
->    compiler_attributes.h [2] [3], which catches the vast majority of the
->    comments. There doesn't appear to be any consensus in the kernel
->    community when to do this conversion.
+> Also, one minor question below. Otherwise
 >
-> 2. Clang and GCC disagree about falling through to final case statements
->    with no content or cases that simply break:
->
->    https://godbolt.org/z/c8csDu
->
->    This difference contributes at least 50 warnings in an allyesconfig
->    build for x86, not considering other architectures. This difference
->    will need to be discussed to see which compiler is right [4] [5].
->
-> [1]: https://github.com/llvm/llvm-project/commit/1e0affb6e564b7361b0aadb38805f26deff4ecfc
-> [2]: https://lore.kernel.org/lkml/61ddbb86d5e68a15e24ccb06d9b399bbf5ce2da7.camel@perches.com/
-> [3]: https://lore.kernel.org/lkml/1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com/
-> [4]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91432
-> [5]: https://github.com/ClangBuiltLinux/linux/issues/636
->
-> Given these two problems need discussion and coordination, do not enable
-> -Wimplicit-fallthrough with clang right now. Add a comment to explain
-> what is going on as well. This commit should be reverted once these two
-> issues are fully flushed out and resolved.
->
-> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
+> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-Applied to linux-kbuild. Thanks.
+Acked-by: Todd Kjos <tkjos@google.com>
 
-(If other clang folks give tags, I will add them later.)
-
-
-
->  Makefile | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
 >
-> diff --git a/Makefile b/Makefile
-> index f125625efd60..6007a56bdbee 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -751,6 +751,11 @@ else
->  # These warnings generated too much noise in a regular build.
->  # Use make W=1 to enable them (see scripts/Makefile.extrawarn)
->  KBUILD_CFLAGS += -Wno-unused-but-set-variable
-> +
-> +# Warn about unmarked fall-throughs in switch statement.
-> +# Disabled for clang while comment to attribute conversion happens and
-> +# https://github.com/ClangBuiltLinux/linux/issues/636 is discussed.
-> +KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
->  endif
+> > ---
+> >  drivers/android/binder.c          | 38 ++++++++++++++++++-
+> >  drivers/android/binder_internal.h | 46 ++++++++++++++++++++++
+> >  drivers/android/binderfs.c        | 63 ++++++++++++++-----------------
+> >  3 files changed, 111 insertions(+), 36 deletions(-)
+> >
+> > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> > index bed217310197..37189838f32a 100644
+> > --- a/drivers/android/binder.c
+> > +++ b/drivers/android/binder.c
+> > @@ -481,6 +481,7 @@ struct binder_priority {
+> >   * @inner_lock:           can nest under outer_lock and/or node lock
+> >   * @outer_lock:           no nesting under innor or node lock
+> >   *                        Lock order: 1) outer, 2) node, 3) inner
+> > + * @binderfs_entry:       process-specific binderfs log file
+> >   *
+> >   * Bookkeeping structure for binder processes
+> >   */
+> > @@ -510,6 +511,7 @@ struct binder_proc {
+> >       struct binder_context *context;
+> >       spinlock_t inner_lock;
+> >       spinlock_t outer_lock;
+> > +     struct dentry *binderfs_entry;
+> >  };
+> >
+> >  enum {
+> > @@ -5347,6 +5349,8 @@ static int binder_open(struct inode *nodp, struct file *filp)
+> >  {
+> >       struct binder_proc *proc;
+> >       struct binder_device *binder_dev;
+> > +     struct binderfs_info *info;
+> > +     struct dentry *binder_binderfs_dir_entry_proc = NULL;
+> >
+> >       binder_debug(BINDER_DEBUG_OPEN_CLOSE, "%s: %d:%d\n", __func__,
+> >                    current->group_leader->pid, current->pid);
+> > @@ -5368,11 +5372,14 @@ static int binder_open(struct inode *nodp, struct file *filp)
+> >       }
+> >
+> >       /* binderfs stashes devices in i_private */
+> > -     if (is_binderfs_device(nodp))
+> > +     if (is_binderfs_device(nodp)) {
+> >               binder_dev = nodp->i_private;
+> > -     else
+> > +             info = nodp->i_sb->s_fs_info;
+> > +             binder_binderfs_dir_entry_proc = info->proc_log_dir;
+> > +     } else {
+> >               binder_dev = container_of(filp->private_data,
+> >                                         struct binder_device, miscdev);
+> > +     }
+> >       proc->context = &binder_dev->context;
+> >       binder_alloc_init(&proc->alloc);
+> >
+> > @@ -5403,6 +5410,27 @@ static int binder_open(struct inode *nodp, struct file *filp)
+> >                       &proc_fops);
+> >       }
+> >
+> > +     if (binder_binderfs_dir_entry_proc) {
+> > +             char strbuf[11];
+> > +             struct dentry *binderfs_entry;
+> > +
+> > +             snprintf(strbuf, sizeof(strbuf), "%u", proc->pid);
+> > +             /*
+> > +              * Similar to debugfs, the process specific log file is shared
+> > +              * between contexts. If the file has already been created for a
+> > +              * process, the following binderfs_create_file() call will
+> > +              * fail if another context of the same process invoked
+> > +              * binder_open(). This is ok since same as debugfs,
+> > +              * the log file will contain information on all contexts of a
+> > +              * given PID.
+> > +              */
+> > +             binderfs_entry = binderfs_create_file(binder_binderfs_dir_entry_proc,
+> > +                     strbuf, &proc_fops, (void *)(unsigned long)proc->pid);
+> > +             if (!IS_ERR(binderfs_entry))
+> > +                     proc->binderfs_entry = binderfs_entry;
 >
->  KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
-> @@ -845,9 +850,6 @@ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
->  # warn about C99 declaration after statement
->  KBUILD_CFLAGS += -Wdeclaration-after-statement
+> You are sure that you don't want to fail the open, when the debug file
+> cannot be created in the binderfs instance? I'm not objecting at all, I
+> just want to make sure that this is the semantics you want because it
+> would be easy to differentiate between the non-fail-debugfs and the new
+> binderfs case.
+
+I don't think we should fail the open, but it would be nice to have
+some indication that it failed -- maybe a pr_warn() ?
 >
-> -# Warn about unmarked fall-throughs in switch statement.
-> -KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
-> -
->  # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
->  KBUILD_CFLAGS += -Wvla
+> > +
+> > +     }
+> > +
+> >       return 0;
+> >  }
+> >
+> > @@ -5442,6 +5470,12 @@ static int binder_release(struct inode *nodp, struct file *filp)
+> >       struct binder_proc *proc = filp->private_data;
+> >
+> >       debugfs_remove(proc->debugfs_entry);
+> > +
+> > +     if (proc->binderfs_entry) {
+> > +             binderfs_remove_file(proc->binderfs_entry);
+> > +             proc->binderfs_entry = NULL;
+> > +     }
+> > +
+> >       binder_defer_work(proc, BINDER_DEFERRED_RELEASE);
+> >
+> >       return 0;
+> > diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_internal.h
+> > index b9be42d9464c..bd47f7f72075 100644
+> > --- a/drivers/android/binder_internal.h
+> > +++ b/drivers/android/binder_internal.h
+> > @@ -35,17 +35,63 @@ struct binder_device {
+> >       struct inode *binderfs_inode;
+> >  };
+> >
+> > +/**
+> > + * binderfs_mount_opts - mount options for binderfs
+> > + * @max: maximum number of allocatable binderfs binder devices
+> > + * @stats_mode: enable binder stats in binderfs.
+> > + */
+> > +struct binderfs_mount_opts {
+> > +     int max;
+> > +     int stats_mode;
+> > +};
+> > +
+> > +/**
+> > + * binderfs_info - information about a binderfs mount
+> > + * @ipc_ns:         The ipc namespace the binderfs mount belongs to.
+> > + * @control_dentry: This records the dentry of this binderfs mount
+> > + *                  binder-control device.
+> > + * @root_uid:       uid that needs to be used when a new binder device is
+> > + *                  created.
+> > + * @root_gid:       gid that needs to be used when a new binder device is
+> > + *                  created.
+> > + * @mount_opts:     The mount options in use.
+> > + * @device_count:   The current number of allocated binder devices.
+> > + * @proc_log_dir:   Pointer to the directory dentry containing process-specific
+> > + *                  logs.
+> > + */
+> > +struct binderfs_info {
+> > +     struct ipc_namespace *ipc_ns;
+> > +     struct dentry *control_dentry;
+> > +     kuid_t root_uid;
+> > +     kgid_t root_gid;
+> > +     struct binderfs_mount_opts mount_opts;
+> > +     int device_count;
+> > +     struct dentry *proc_log_dir;
+> > +};
+> > +
+> >  extern const struct file_operations binder_fops;
+> >
+> >  extern char *binder_devices_param;
+> >
+> >  #ifdef CONFIG_ANDROID_BINDERFS
+> >  extern bool is_binderfs_device(const struct inode *inode);
+> > +extern struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
+> > +                                        const struct file_operations *fops,
+> > +                                        void *data);
+> > +extern void binderfs_remove_file(struct dentry *dentry);
+> >  #else
+> >  static inline bool is_binderfs_device(const struct inode *inode)
+> >  {
+> >       return false;
+> >  }
+> > +static inline struct dentry *binderfs_create_file(struct dentry *dir,
+> > +                                        const char *name,
+> > +                                        const struct file_operations *fops,
+> > +                                        void *data)
+> > +{
+> > +     return NULL;
+> > +}
+> > +static inline void binderfs_remove_file(struct dentry *dentry) {}
+> >  #endif
+> >
+> >  #ifdef CONFIG_ANDROID_BINDERFS
+> > diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+> > index dc25a7d759c9..c386a3738290 100644
+> > --- a/drivers/android/binderfs.c
+> > +++ b/drivers/android/binderfs.c
+> > @@ -48,16 +48,6 @@ static dev_t binderfs_dev;
+> >  static DEFINE_MUTEX(binderfs_minors_mutex);
+> >  static DEFINE_IDA(binderfs_minors);
+> >
+> > -/**
+> > - * binderfs_mount_opts - mount options for binderfs
+> > - * @max: maximum number of allocatable binderfs binder devices
+> > - * @stats_mode: enable binder stats in binderfs.
+> > - */
+> > -struct binderfs_mount_opts {
+> > -     int max;
+> > -     int stats_mode;
+> > -};
+> > -
+> >  enum {
+> >       Opt_max,
+> >       Opt_stats_mode,
+> > @@ -75,27 +65,6 @@ static const match_table_t tokens = {
+> >       { Opt_err, NULL     }
+> >  };
+> >
+> > -/**
+> > - * binderfs_info - information about a binderfs mount
+> > - * @ipc_ns:         The ipc namespace the binderfs mount belongs to.
+> > - * @control_dentry: This records the dentry of this binderfs mount
+> > - *                  binder-control device.
+> > - * @root_uid:       uid that needs to be used when a new binder device is
+> > - *                  created.
+> > - * @root_gid:       gid that needs to be used when a new binder device is
+> > - *                  created.
+> > - * @mount_opts:     The mount options in use.
+> > - * @device_count:   The current number of allocated binder devices.
+> > - */
+> > -struct binderfs_info {
+> > -     struct ipc_namespace *ipc_ns;
+> > -     struct dentry *control_dentry;
+> > -     kuid_t root_uid;
+> > -     kgid_t root_gid;
+> > -     struct binderfs_mount_opts mount_opts;
+> > -     int device_count;
+> > -};
+> > -
+> >  static inline struct binderfs_info *BINDERFS_I(const struct inode *inode)
+> >  {
+> >       return inode->i_sb->s_fs_info;
+> > @@ -535,7 +504,22 @@ static struct dentry *binderfs_create_dentry(struct dentry *dir,
+> >       return dentry;
+> >  }
+> >
+> > -static struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
+> > +void binderfs_remove_file(struct dentry *dentry)
+> > +{
+> > +     struct inode *dir;
+> > +
+> > +     dir = d_inode(dentry->d_parent);
+> > +     inode_lock(dir);
+> > +     if (simple_positive(dentry)) {
+> > +             dget(dentry);
+> > +             simple_unlink(dir, dentry);
+> > +             d_delete(dentry);
+> > +             dput(dentry);
+> > +     }
+> > +     inode_unlock(dir);
+> > +}
+> > +
+> > +struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
+> >                                   const struct file_operations *fops,
+> >                                   void *data)
+> >  {
+> > @@ -604,7 +588,8 @@ static struct dentry *binderfs_create_dir(struct dentry *parent,
+> >
+> >  static int init_binder_logs(struct super_block *sb)
+> >  {
+> > -     struct dentry *binder_logs_root_dir, *file_dentry;
+> > +     struct dentry *binder_logs_root_dir, *file_dentry, *proc_log_dir;
+> > +     struct binderfs_info *info;
+> >       int ret = 0;
+> >
+> >       binder_logs_root_dir = binderfs_create_dir(sb->s_root,
+> > @@ -648,8 +633,18 @@ static int init_binder_logs(struct super_block *sb)
+> >                                          "failed_transaction_log",
+> >                                          &binder_transaction_log_fops,
+> >                                          &binder_transaction_log_failed);
+> > -     if (IS_ERR(file_dentry))
+> > +     if (IS_ERR(file_dentry)) {
+> >               ret = PTR_ERR(file_dentry);
+> > +             goto out;
+> > +     }
+> > +
+> > +     proc_log_dir = binderfs_create_dir(binder_logs_root_dir, "proc");
+> > +     if (IS_ERR(proc_log_dir)) {
+> > +             ret = PTR_ERR(proc_log_dir);
+> > +             goto out;
+> > +     }
+> > +     info = sb->s_fs_info;
+> > +     info->proc_log_dir = proc_log_dir;
+> >
+> >  out:
+> >       return ret;
+> > --
+> > 2.23.0.187.g17f5b7556c-goog
+> >
 >
 > --
-> 2.23.0
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
 >
-
-
--- 
-Best Regards
-Masahiro Yamada
