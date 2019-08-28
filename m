@@ -7,41 +7,42 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D4BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480DCC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEEEF2341B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 293F0217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfH1KSi (ORCPT
+        id S1727116AbfH1KSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:18:38 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46383 "EHLO
+        Wed, 28 Aug 2019 06:18:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46367 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbfH1KQ2 (ORCPT
+        with ESMTP id S1726326AbfH1KQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:16:28 -0400
+        Wed, 28 Aug 2019 06:16:25 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2v05-0000El-LP; Wed, 28 Aug 2019 12:16:25 +0200
+        id 1i2v02-0000CI-43; Wed, 28 Aug 2019 12:16:22 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5170D1C07D2;
-        Wed, 28 Aug 2019 12:16:25 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 10:16:25 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BF1B31C07D2;
+        Wed, 28 Aug 2019 12:16:21 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 10:16:21 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-cpu-timers: Sample task times once in expiry check
+Subject: [tip: timers/core] posix-cpu-timers: Rename thread_group_cputimer()
+ and make it static
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Frederic Weisbecker <frederic@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190821192920.639878168@linutronix.de>
-References: <20190821192920.639878168@linutronix.de>
+In-Reply-To: <20190821192919.869350319@linutronix.de>
+References: <20190821192919.869350319@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <156698738522.5731.9692769171723341682.tip-bot2@tip-bot2>
+Message-ID: <156698738168.5705.3770894138948288106.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,53 +58,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     0476ff2c151ee35bda2f938e8828b6f6113ebf55
-Gitweb:        https://git.kernel.org/tip/0476ff2c151ee35bda2f938e8828b6f6113ebf55
+Commit-ID:     c506bef424ca282f2ad357e86fee940c69018974
+Gitweb:        https://git.kernel.org/tip/c506bef424ca282f2ad357e86fee940c69018974
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 21 Aug 2019 21:09:02 +02:00
+AuthorDate:    Wed, 21 Aug 2019 21:08:54 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 28 Aug 2019 11:50:32 +02:00
+CommitterDate: Wed, 28 Aug 2019 11:50:27 +02:00
 
-posix-cpu-timers: Sample task times once in expiry check
+posix-cpu-timers: Rename thread_group_cputimer() and make it static
 
-Sampling the task times twice does not make sense. Do it once.
+thread_group_cputimer() is a complete misnomer. The function does two things:
+
+ - For arming process wide timers it makes sure that the atomic time
+   storage is up to date. If no cpu timer is armed yet, then the atomic
+   time storage is not updated by the scheduler for performance reasons.
+
+   In that case a full summing up of all threads needs to be done and the
+   update needs to be enabled.
+
+- Samples the current time into the caller supplied storage.
+
+Rename it to thread_group_start_cputime(), make it static and fixup the
+callsite.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lkml.kernel.org/r/20190821192920.639878168@linutronix.de
+Link: https://lkml.kernel.org/r/20190821192919.869350319@linutronix.de
 
 ---
- kernel/time/posix-cpu-timers.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ include/linux/sched/cputime.h  |  1 -
+ kernel/time/posix-cpu-timers.c | 17 +++++++++++++++--
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
+diff --git a/include/linux/sched/cputime.h b/include/linux/sched/cputime.h
+index 6de7b38..2638fd0 100644
+--- a/include/linux/sched/cputime.h
++++ b/include/linux/sched/cputime.h
+@@ -61,7 +61,6 @@ extern void cputime_adjust(struct task_cputime *curr, struct prev_cputime *prev,
+  * Thread group CPU time accounting.
+  */
+ void thread_group_cputime(struct task_struct *tsk, struct task_cputime *times);
+-void thread_group_cputimer(struct task_struct *tsk, struct task_cputime *times);
+ void thread_group_sample_cputime(struct task_struct *tsk, struct task_cputime *times);
+ 
+ /*
 diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index a2007ce..98dab3e 100644
+index cb73678..def225a 100644
 --- a/kernel/time/posix-cpu-timers.c
 +++ b/kernel/time/posix-cpu-timers.c
-@@ -785,9 +785,9 @@ static inline void check_dl_overrun(struct task_struct *tsk)
- static void check_thread_timers(struct task_struct *tsk,
- 				struct list_head *firing)
+@@ -253,7 +253,20 @@ void thread_group_sample_cputime(struct task_struct *tsk,
+ 	sample_cputime_atomic(times, &cputimer->cputime_atomic);
+ }
+ 
+-void thread_group_cputimer(struct task_struct *tsk, struct task_cputime *times)
++/**
++ * thread_group_start_cputime - Start cputime and return a sample
++ * @tsk:	Task for which cputime needs to be started
++ * @iimes:	Storage for time samples
++ *
++ * The thread group cputime accouting is avoided when there are no posix
++ * CPU timers armed. Before starting a timer it's required to check whether
++ * the time accounting is active. If not, a full update of the atomic
++ * accounting store needs to be done and the accounting enabled.
++ *
++ * Updates @times with an uptodate sample of the thread group cputimes.
++ */
++static void
++thread_group_start_cputime(struct task_struct *tsk, struct task_cputime *times)
  {
--	struct list_head *timers = tsk->cpu_timers;
- 	struct task_cputime *tsk_expires = &tsk->cputime_expires;
--	u64 expires;
-+	struct list_head *timers = tsk->cpu_timers;
-+	u64 expires, stime, utime;
- 	unsigned long soft;
+ 	struct thread_group_cputimer *cputimer = &tsk->signal->cputimer;
+ 	struct task_cputime sum;
+@@ -536,7 +549,7 @@ static int cpu_timer_sample_group(const clockid_t which_clock,
+ {
+ 	struct task_cputime cputime;
  
- 	if (dl_task(tsk))
-@@ -800,10 +800,12 @@ static void check_thread_timers(struct task_struct *tsk,
- 	if (task_cputime_zero(&tsk->cputime_expires))
- 		return;
- 
--	expires = check_timers_list(timers, firing, prof_ticks(tsk));
-+	task_cputime(tsk, &utime, &stime);
-+
-+	expires = check_timers_list(timers, firing, utime + stime);
- 	tsk_expires->prof_exp = expires;
- 
--	expires = check_timers_list(++timers, firing, virt_ticks(tsk));
-+	expires = check_timers_list(++timers, firing, utime);
- 	tsk_expires->virt_exp = expires;
- 
- 	tsk_expires->sched_exp = check_timers_list(++timers, firing,
+-	thread_group_cputimer(p, &cputime);
++	thread_group_start_cputime(p, &cputime);
+ 	switch (CPUCLOCK_WHICH(which_clock)) {
+ 	default:
+ 		return -EINVAL;
