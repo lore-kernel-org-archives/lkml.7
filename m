@@ -2,103 +2,111 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5F2C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB61C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D3C523429
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:28:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="vmsSxbrA"
+	by mail.kernel.org (Postfix) with ESMTP id A7EB42342A
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfH1I24 (ORCPT
+        id S1726394AbfH1Ib5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:28:56 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:34870 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbfH1I2z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:28:55 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 62F74310;
-        Wed, 28 Aug 2019 10:28:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1566980933;
-        bh=yHqVMSWrsJvlNfBnMTE1NjxeNpyXRWkgKkXyuwYbZDU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vmsSxbrA2kZqrww2uiRS3uDRX/7GAnSU0FPjyQmdGsgW0H8Wv6oM+JS6YMXe9mBMG
-         Lp2TVbmaR343IJXXXDq6m6MwnqN0YNI7c9H1PvDT52FhYLEQakJxYj2Anti4pSMXYG
-         yQqtESmSKJVDQrFps1jkMaToiaIYNz8bdtUtHvMk=
-Date:   Wed, 28 Aug 2019 11:28:46 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 02/14] dt-bindings: display, renesas,du: Document cmms
- property
-Message-ID: <20190828082846.GA27842@pendragon.ideasonboard.com>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-3-jacopo+renesas@jmondi.org>
- <20190827202945.GA3488@bogus>
- <CAMuHMdUP1kZF4z=NkAb5LCV74dyCMw9pZACMYjOTFE=r2vvR3A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUP1kZF4z=NkAb5LCV74dyCMw9pZACMYjOTFE=r2vvR3A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 28 Aug 2019 04:31:57 -0400
+Received: from mga09.intel.com ([134.134.136.24]:32524 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726253AbfH1Ib5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:31:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 01:31:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
+   d="scan'208";a="210082537"
+Received: from deyangko-mobl.ccr.corp.intel.com ([10.249.168.35])
+  by fmsmga002.fm.intel.com with ESMTP; 28 Aug 2019 01:31:52 -0700
+Message-ID: <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
+Subject: Re: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Cc:     Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Wed, 28 Aug 2019 16:32:00 +0800
+In-Reply-To: <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <20190730022126.17883-1-Anson.Huang@nxp.com>
+         <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+         <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+         <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 09:32:23AM +0200, Geert Uytterhoeven wrote:
-> On Tue, Aug 27, 2019 at 10:29 PM Rob Herring <robh@kernel.org> wrote:
-> > On Sun, Aug 25, 2019 at 03:51:42PM +0200, Jacopo Mondi wrote:
-> > > Document the newly added 'cmms' property which accepts a list of phandle
-> > > and channel index pairs that point to the CMM units available for each
-> > > Display Unit output video channel.
-> > >
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
-> > > index c97dfacad281..c2265e2a1af2 100644
-> > > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
-> > > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-> > > @@ -45,6 +45,10 @@ Required Properties:
-> > >      instance that serves the DU channel, and the channel index identifies the
-> > >      LIF instance in that VSP.
-> > >
-> > > +  - cmms: A list of phandles to the CMM instances present in the SoC, one
-> > > +    for each available DU channel. The property shall not be specified for
-> > > +    SoCs that do not provide any CMM (such as V3M and V3H).
-> >
-> > renesas,cmms
+On Tue, 2019-08-27 at 12:41 +0000, Leonard Crestez wrote:
+> On 27.08.2019 04:51, Anson Huang wrote:
+> > > In an earlier series the CLK_IS_CRITICAL flags was removed from
+> > > the TMU
+> > > clock so if the thermal driver doesn't explicitly enable it the
+> > > system will hang
+> > > on probe. This is what happens in linux-next right now!
+> > 
+> > The thermal driver should be built with module, so default kernel
+> > should can boot
+> > up, do you modify the thermal driver as built-in?
+> > 
+> > > Unless this patches is merged soon we'll end up with a 5.4-rc1
+> > > that doesn't
+> > > boot on imx8mq. An easy fix would be to drop/revert commit
+> > > 951c1aef9691 ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+> > > IMX8MQ_CLK_TMU_ROOT") until the thermal patches are accepted.
+> > 
+> > If the thermal driver is built as module, I think no need to revert
+> > the commit, but
+> > if by default thermal driver is built-in or mod probed, then yes,
+> > it should NOT break
+> > kernel boot up.
 > 
-> So I guess we really wanted to have the prefix for the vsps property, too?
+> The qoriq_thermal driver is built as a module in defconfig and when 
+> modules are properly installed in rootfs they will be automatically
+> be 
+> probed on boot and cause a hang.
+> 
+> I usually run nfsroot with modules:
+> 
+>      make modules_install INSTALL_MOD_PATH=/srv/nfs/imx8-root
 
-Yes, we should have :-( My bad.
+so we need this patch shipped in the beginning of the merge window,
+right?
+if there is hard dependency between patches, it's better to send them
+in one series, and get shipped via either tree.
 
--- 
-Regards,
+BTW, who is maintaining qoriq driver from NXP? If Anson is maintaining
+and developing this driver, it's better to update this in the driver or
+the MAINTAINER file, I will take the driver specific patches as long as
+we have ACK/Reviewed-By from the driver maintainer.
 
-Laurent Pinchart
+thanks,
+rui
+
+> 
+> --
+> Regards,
+> Leonard
+
