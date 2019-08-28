@@ -2,275 +2,278 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C5BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471DBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCFA22CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041CE22CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:42:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kJN/7pmh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfH1VlA (ORCPT
+        id S1726960AbfH1VmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:41:00 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:46120 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726787AbfH1VlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:41:00 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1i35gX-0006pE-NZ; Wed, 28 Aug 2019 15:40:59 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1i35gW-0000wB-3e; Wed, 28 Aug 2019 15:40:56 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>
-Cc:     Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andrew Waterman <andrew@sifive.com>,
-        Olof Johansson <olof@lixom.net>,
-        Michael Clark <michaeljclark@mac.com>,
-        Rob Herring <robh@kernel.org>, Zong Li <zong@andestech.com>
-Date:   Wed, 28 Aug 2019 15:40:54 -0600
-Message-Id: <20190828214054.3562-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 28 Aug 2019 17:42:13 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55613 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbfH1VmN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 17:42:13 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f72so1541264wmf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 14:42:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9cUJTalk9UT065cy7J/NUfxyGrICB2f0wc49I6zU5Q4=;
+        b=kJN/7pmheA+InmF5KtWUWMzBtSOESyyTW+USV1YM83xekT1h153KEu9IbmmJMDE5ek
+         l6S5X2qixTwye9mi7j67MC9Wdzf+c66cmbG7iV2OGjhLAJZbeG624TAGyRgWtOySwV05
+         eRC+BnNgobC1I9P6ObA622jQrkGm8WuID8P9Yr1UggCuTAWplbw/7b40sDu4rqHHRSiI
+         VSDAwdaf6bYmoxMcKxbxxrxIL4c4i41Mp5aZk8BrgKbZ2EDeGLzHmjJ6WVf+zlVEACVL
+         vpEg6fDwPkDkBHoNvXHfXVdWEKr7vvMlvZM51hA7DOkv6bm1PnYgmLmSakPrZuViRvQ5
+         /HZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9cUJTalk9UT065cy7J/NUfxyGrICB2f0wc49I6zU5Q4=;
+        b=jDs62tW9ttfVTPX4p50vwCP4yc71u4s0YdKRQHwh/iMc5C7/XxKHSA0QytaUW7G+Tk
+         Rze87LwXTycmKXuexNdMUhzcrQPQKqmHrUusM8CaNIc2G37KgZ/0UpmocJnQLhj9HY54
+         XKbkroD1cXoLRzaeYVdQDUtm3SLh+DCcK/RMHBJ1nNMH3sgDOVTdmMCnXkzDqoKrTtK3
+         rgE5mPelivL4bq8TqJmpWXi3mC3DwEVGPieJdCpDqrzNjEyBzyxmb5EiUb10A1wJcwpj
+         88/oKaPx75vERH5MB+BbItypmIoyEQXk0Abnfb4PKYay4LOGzWS/6aZseHlge+EUHUtR
+         FJHw==
+X-Gm-Message-State: APjAAAV050LjkE9OBkKMJmTI1BhuIoco58GU/kfYMZlWrM7keE1eWxoP
+        7HcSjjNWNGLrH1qbremRJxFm9g==
+X-Google-Smtp-Source: APXvYqxKQxTbvoB4+l8ypE9/XNNnCohkPRwiPD2P5IbHpI3y4/6JjoMT+BmXEILa3fjrCMNPSPldwQ==
+X-Received: by 2002:a1c:6087:: with SMTP id u129mr7000155wmb.108.1567028528895;
+        Wed, 28 Aug 2019 14:42:08 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id d16sm262566wrv.55.2019.08.28.14.42.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 14:42:08 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 22:42:05 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Debian kernel maintainers <debian-kernel@lists.debian.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        Sandeep Patil <sspatil@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Alessio Balsini <balsini@google.com>,
+        Stephen Hines <srhines@google.com>,
+        Jessica Yu <jeyu@kernel.org>, Dodji Seketeli <dodji@redhat.com>
+Subject: Re: a bug in genksysms/CONFIG_MODVERSIONS w/ __attribute__((foo))?
+Message-ID: <20190828214205.GC30359@google.com>
+References: <CAKwvOdnJAApaUhTQs7w_VjSeYBQa0c-TNxRB4xPLi0Y0sOQMMQ@mail.gmail.com>
+ <CAKwvOdkbY_XatVfRbZQ88p=nnrahZbvdjJ0OkU9m73G89_LRzg@mail.gmail.com>
+ <1566899033.o5acyopsar.astroid@bobo.none>
+ <CAK7LNARHacanVT6XjRDkFJDETWX6qHfUJCFhskCVG6aDL-bt1g@mail.gmail.com>
+ <1566908344.dio7j9zb2h.astroid@bobo.none>
+ <daacccf8e36132b6a747fa4b42626a8812906eaa.camel@decadent.org.uk>
+ <1566955930.uir50f8wen.astroid@bobo.none>
+ <CAKwvOdmtT4in42Nwsm0ndqm8CB2jzaCKvtX+nmhdpA2dgMpBmw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, sbates@raithlin.com, hch@lst.de, rppt@linux.ibm.com, logang@deltatee.com, aou@eecs.berkeley.edu, palmer@sifive.com, greentime.hu@sifive.com, andrew@sifive.com, olof@lixom.net, michaeljclark@mac.com, robh@kernel.org, zong@andestech.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v6] RISC-V: Implement sparsemem
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdmtT4in42Nwsm0ndqm8CB2jzaCKvtX+nmhdpA2dgMpBmw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement sparsemem support for Risc-v which helps pave the
-way for memory hotplug and eventually P2P support.
+On Wed, Aug 28, 2019 at 10:17:27AM -0700, Nick Desaulniers wrote:
+>On Tue, Aug 27, 2019 at 7:26 PM Nicholas Piggin <npiggin@gmail.com> wrote:
+>>
+>> Ben Hutchings's on August 28, 2019 1:34 am:
+>> > On Tue, 2019-08-27 at 22:42 +1000, Nicholas Piggin wrote:
+>> >> Masahiro Yamada's on August 27, 2019 8:49 pm:
+>> >> > Hi.
+>> >> >
+>> >> > On Tue, Aug 27, 2019 at 6:59 PM Nicholas Piggin <npiggin@gmail.com> wrote:
+>> >> > > Nick Desaulniers's on August 27, 2019 8:57 am:
+>> >> > > > On Mon, Aug 26, 2019 at 2:22 PM Nick Desaulniers
+>> >> > > > <ndesaulniers@google.com> wrote:
+>> >> > > > > I'm looking into a linkage failure for one of our device kernels, and
+>> >> > > > > it seems that genksyms isn't producing a hash value correctly for
+>> >> > > > > aggregate definitions that contain __attribute__s like
+>> >> > > > > __attribute__((packed)).
+>> >> > > > >
+>> >> > > > > Example:
+>> >> > > > > $ echo 'struct foo { int bar; };' | ./scripts/genksyms/genksyms -d
+>> >> > > > > Defn for struct foo == <struct foo { int bar ; } >
+>> >> > > > > Hash table occupancy 1/4096 = 0.000244141
+>> >> > > > > $ echo 'struct __attribute__((packed)) foo { int bar; };' |
+>> >> > > > > ./scripts/genksyms/genksyms -d
+>> >> > > > > Hash table occupancy 0/4096 = 0
+>> >> > > > >
+>> >> > > > > I assume the __attribute__ part isn't being parsed correctly (looks
+>> >> > > > > like genksyms is a lex/yacc based C parser).
+>> >> > > > >
+>> >> > > > > The issue we have in our out of tree driver (*sadface*) is basically a
+>> >> > > > > EXPORT_SYMBOL'd function whose signature contains a packed struct.
+>> >> > > > >
+>> >> > > > > Theoretically, there should be nothing wrong with exporting a function
+>> >> > > > > that requires packed structs, and this is just a bug in the lex/yacc
+>> >> > > > > based parser, right?  I assume that not having CONFIG_MODVERSIONS
+>> >> > > > > coverage of packed structs in particular could lead to potentially
+>> >> > > > > not-fun bugs?  Or is using packed structs in exported function symbols
+>> >> > > > > with CONFIG_MODVERSIONS forbidden in some documentation somewhere I
+>> >> > > > > missed?
+>> >> > > >
+>> >> > > > Ah, looks like I'm late to the party:
+>> >> > > > https://lwn.net/Articles/707520/
+>> >> > >
+>> >> > > Yeah, would be nice to do something about this.
+>> >> >
+>> >> > modversions is ugly, so it would be great if we could dump it.
+>> >> >
+>> >> > > IIRC (without re-reading it all), in theory distros would be okay
+>> >> > > without modversions if they could just provide their own explicit
+>> >> > > versioning. They take care about ABIs, so they can version things
+>> >> > > carefully if they had to change.
+>> >
+>> > Debian doesn't currently have any other way of detecting ABI changes
+>> > (other than eyeballing diffs).
+>> >
+>> > I know there have been proposals of using libabigail for this instead,
+>> > but I'm not sure how far those progressed.
+>> >
+>> >> > We have not provided any alternative solution for this, haven't we?
+>> >> >
+>> >> > In your patch (https://lwn.net/Articles/707729/),
+>> >> > you proposed CONFIG_MODULE_ABI_EXPLICIT.
+>> >>
+>> >> Right, that was just my first proposal, but I am not confident that I
+>> >> understood everybody's requirements. I don't think the distro people
+>> >> had much time to to test things out.
+>> >>
+>> >> One possible shortcoming with that patch is no per-symbol version. The
+>> >> distro may break an ABI for a security fix, but they don't want to break
+>> >> all out of tree modules if it's an obscure ABI.
+>> >
+>> > Right, for example the KVM kABI is only meant for in-tree modules (like
+>> > kvm_intel) and in Debian we do not change the "ABI version" and require
+>> > rebuilding out-of-tree modules just because that ABI changes.
+>> > Currently we maintain explicit lists of exported symbols and exporting
+>> > modules for which we ignore ABI changes at build time.
+>> >
+>> >> The counter argument to
+>> >> that is they should just rename the symbol in their kernel for such
+>> >> cases, so I didn't implement it without somebody describing a good
+>> >> requirement.
+>> > [...]
+>> >
+>> > Sometimes it is just a single function that changes, but often a
+>> > structure change can affect large numbers of functions.  For example,
+>> > if KVM adds a member to an operations struct that can indirectly change
+>> > the ABI for most of its exported functions.  We wouldn't want to change
+>> > the ABI version but would still want to prevent loading mismatched kvm
+>> > and kvm_intel versions.  It would be a lot more work to change all of
+>> > the affected function names.
+>>
+>> You could change just a single symbol name though :)
+>>
+>> > An alternative to symbol version matching that I think would work for
+>> > us is: if a module's exports or imports match the "changes ignored"
+>> > list then the module can only be loaded on the exact version of the
+>> > kernel, otherwise it only needs to match the ABI version.  I think that
+>> > would avoid the need for carrying symbol versions, but we would still
+>> > need a build-time ABI check and a way of flagging which symbols need
+>> > the tighter version match.
+>>
+>> Just trying to think how best to express that.
+>>
+>> [ Aside, the whole symbol name resolution linking stuff does matching on
+>>   on any number of ~arbitrary strings that you can generate as you like,
+>>   and symbol tables are something that all existing tools and libs
+>>   understand.
+>>
+>>   So I strongly favour using that as the back end for our "version"
+>>   resolution system _if at all possible_ rather than adding these extra
+>>   bits of crud that really just do the same thing. At least for a first
+>>   pass, I don't want to over-engineer things.
+>>
+>>   Then it hopefully becomes a matter of adding some helper macros and
+>>   build facilities on top of that which can contain everyone's
+>>   requirements mostly within .config and perhaps a very small patch.
+>>   A bit more work with preprocessor macros etc is far preferable to
+>>   linking and loading "features" IMO]
+>>
+>> Back to your case, is it sufficient to have just an internal and an
+>> external module version where the kernel provides both and your in-tree
+>> modules match on the internal, others match on external?
+>>
+>> Thanks,
+>> Nick
+>>
+>
+>+ some Android folks who are looking into libabigail
+>
+>(root thread for context:
+>https://lore.kernel.org/lkml/CAKwvOdnJAApaUhTQs7w_VjSeYBQa0c-TNxRB4xPLi0Y0sOQMMQ@mail.gmail.com/)
+>
+>I'm only roughly aware of their issue/work, but hopefully they can
+>collaborate and add their insights to a list of requirements we could
+>collect, for any kind of replacement to CONFIG_MODVERSIONS/genksyms.
+>I'm not sure if they were planning on presenting this work at Linux
+>Plumber's Conference coming up or not, but I hope so.  Hopefully that
+>work will be a general solution for all kernel developers and distros,
+>not just Android.
 
-Introduce Kconfig options for virtual and physical address bits which
-are used to calculate the size of the vmemmap and set the
-MAX_PHYSMEM_BITS.
+Several people are currently working on improving libabigail's
+capabilities to deal with the kernel binaries. That ranges from fixes
+for newer kernel versions or fixes for binaries built with clang to
+performance improvements to better integrate the tool into build
+processes etc. There is still some work to do to be an actual
+replacement for what is used right now to detect ABI incompatibilities.
+But things look promising. The work that is done there is supposed to
+address general issues, not just Android. In particular, libabigail
+should be able to reliably keep track of the observable in-kernel ABI of
+the kernel binaries to detect potential incompatibilities with
+previously released kernel binaries. Please note, that this all happens
+after the build by inspecting binaries. As opposed to other solutions,
+in its current form, libabigail does not introduce any checks at
+runtime (i.e. module load time).
 
-The vmemmap is located directly before the VMALLOC region and sized
-such that we can allocate enough pages to populate all the virtual
-address space in the system (similar to the way it's done in arm64).
+There are discussions about this topic scheduled at Plumber's in the
+Distro MC and the Android MC.
 
-During initialization, call memblocks_present() and sparse_init(),
-and provide a stub for vmemmap_populate() (all of which is similar to
-arm64).
+Cheers,
+Matthias
 
-[greentime.hu@sifive.com:
-  fixed pfn_valid, FIXADDR_TOP and fixed a bug rebasing onto v5.3]
-Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Andrew Waterman <andrew@sifive.com>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Michael Clark <michaeljclark@mac.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Zong Li <zong@andestech.com>
----
- arch/riscv/Kconfig                 | 21 +++++++++++++++++++++
- arch/riscv/include/asm/fixmap.h    |  2 +-
- arch/riscv/include/asm/page.h      |  2 ++
- arch/riscv/include/asm/pgtable.h   | 21 +++++++++++++++++----
- arch/riscv/include/asm/sparsemem.h | 11 +++++++++++
- arch/riscv/mm/init.c               | 10 ++++++++++
- 6 files changed, 62 insertions(+), 5 deletions(-)
- create mode 100644 arch/riscv/include/asm/sparsemem.h
-
-Changes in v6:
- * Rebased onto v5.3-rc6 (no changes)
- * Fixed up commit message wording (per Mike's feedback)
- * Set SPARSEMEM_STATIC for 32BIT builds (per Mike)
-
-Changes in v5:
- * Rebased onto v5.3-rc5 (required moving the initialization to
-   after setup_vm_final() in paging_init())
- * Fixed FIXADDR_TOP value (per Greentime)
- * Use generic pfn_valid() function for sparsemem to fix a bug
-   with having holes in memory (also Greentime)
-
-Changes in v4:
- * Rebased onto v5.0-rc1
- * Changed the SECTION_SIZE_BITS to 27, per Nick Kossifidis
-
-Changes in v3 (only sent the common patches):
- * Rebased on v4.20-rc1
- * Minor fixups
- * Collected Ack from Will Deacon
-
-Changes in v2:
- * Rebase on v4.19-rc8
- * Move the STRUCT_PAGE_MAX_SHIFT define into a common header (near
-   the definition of struct page). As suggested by Christoph.
- * Clean up the unnecessary nid variable in the memblocks_present()
-   function, per Christoph.
- * Collected tags from Palmer and Catalin.
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 59a4727ecd6c..53b7556beb4a 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -54,6 +54,7 @@ config RISCV
- 	select EDAC_SUPPORT
- 	select ARCH_HAS_GIGANTIC_PAGE
- 	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
-+	select SPARSEMEM_STATIC if 32BIT
-
- config MMU
- 	def_bool y
-@@ -62,12 +63,32 @@ config ZONE_DMA32
- 	bool
- 	default y if 64BIT
-
-+config VA_BITS
-+	int
-+	default 32 if 32BIT
-+	default 39 if 64BIT
-+
-+config PA_BITS
-+	int
-+	default 34 if 32BIT
-+	default 56 if 64BIT
-+
- config PAGE_OFFSET
- 	hex
- 	default 0xC0000000 if 32BIT && MAXPHYSMEM_2GB
- 	default 0xffffffff80000000 if 64BIT && MAXPHYSMEM_2GB
- 	default 0xffffffe000000000 if 64BIT && MAXPHYSMEM_128GB
-
-+config ARCH_FLATMEM_ENABLE
-+	def_bool y
-+
-+config ARCH_SPARSEMEM_ENABLE
-+	def_bool y
-+	select SPARSEMEM_VMEMMAP_ENABLE
-+
-+config ARCH_SELECT_MEMORY_MODEL
-+	def_bool ARCH_SPARSEMEM_ENABLE
-+
- config ARCH_WANT_GENERAL_HUGETLB
- 	def_bool y
-
-diff --git a/arch/riscv/include/asm/fixmap.h b/arch/riscv/include/asm/fixmap.h
-index 9c66033c3a54..7b0259c044c9 100644
---- a/arch/riscv/include/asm/fixmap.h
-+++ b/arch/riscv/include/asm/fixmap.h
-@@ -31,7 +31,7 @@ enum fixed_addresses {
- };
-
- #define FIXADDR_SIZE		(__end_of_fixed_addresses * PAGE_SIZE)
--#define FIXADDR_TOP		(VMALLOC_START)
-+#define FIXADDR_TOP		(VMEMMAP_START)
- #define FIXADDR_START		(FIXADDR_TOP - FIXADDR_SIZE)
-
- #define FIXMAP_PAGE_IO		PAGE_KERNEL
-diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
-index 707e00a8430b..3db261c4810f 100644
---- a/arch/riscv/include/asm/page.h
-+++ b/arch/riscv/include/asm/page.h
-@@ -110,8 +110,10 @@ extern unsigned long min_low_pfn;
- #define page_to_bus(page)	(page_to_phys(page))
- #define phys_to_page(paddr)	(pfn_to_page(phys_to_pfn(paddr)))
-
-+#ifdef CONFIG_FLATMEM
- #define pfn_valid(pfn) \
- 	(((pfn) >= pfn_base) && (((pfn)-pfn_base) < max_mapnr))
-+#endif
-
- #define ARCH_PFN_OFFSET		(pfn_base)
-
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index a364aba23d55..dbc19e61ee66 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -83,6 +83,23 @@ extern pgd_t swapper_pg_dir[];
- #define __S110	PAGE_SHARED_EXEC
- #define __S111	PAGE_SHARED_EXEC
-
-+#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
-+#define VMALLOC_END      (PAGE_OFFSET - 1)
-+#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
-+
-+/*
-+ * Roughly size the vmemmap space to be large enough to fit enough
-+ * struct pages to map half the virtual address space. Then
-+ * position vmemmap directly below the VMALLOC region.
-+ */
-+#define VMEMMAP_SHIFT \
-+	(CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
-+#define VMEMMAP_SIZE	(1UL << VMEMMAP_SHIFT)
-+#define VMEMMAP_END	(VMALLOC_START - 1)
-+#define VMEMMAP_START	(VMALLOC_START - VMEMMAP_SIZE)
-+
-+#define vmemmap		((struct page *)VMEMMAP_START)
-+
- /*
-  * ZERO_PAGE is a global shared page that is always zero,
-  * used for zero-mapped memory areas, etc.
-@@ -416,10 +433,6 @@ static inline void pgtable_cache_init(void)
- 	/* No page table caches to initialize */
- }
-
--#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
--#define VMALLOC_END      (PAGE_OFFSET - 1)
--#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
--
- /*
-  * Task size is 0x4000000000 for RV64 or 0xb800000 for RV32.
-  * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
-diff --git a/arch/riscv/include/asm/sparsemem.h b/arch/riscv/include/asm/sparsemem.h
-new file mode 100644
-index 000000000000..b58ba2d9ed6e
---- /dev/null
-+++ b/arch/riscv/include/asm/sparsemem.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __ASM_SPARSEMEM_H
-+#define __ASM_SPARSEMEM_H
-+
-+#ifdef CONFIG_SPARSEMEM
-+#define MAX_PHYSMEM_BITS	CONFIG_PA_BITS
-+#define SECTION_SIZE_BITS	27
-+#endif /* CONFIG_SPARSEMEM */
-+
-+#endif /* __ASM_SPARSEMEM_H */
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 42bf939693d3..73f40c9d3dee 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -442,6 +442,16 @@ static void __init setup_vm_final(void)
- void __init paging_init(void)
- {
- 	setup_vm_final();
-+	memblocks_present();
-+	sparse_init();
- 	setup_zero_page();
- 	zone_sizes_init();
- }
-+
-+#ifdef CONFIG_SPARSEMEM
-+int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
-+			       struct vmem_altmap *altmap)
-+{
-+	return vmemmap_populate_basepages(start, end, node);
-+}
-+#endif
---
-2.20.1
+>This issue is now blocking my compiler upgrade, so I'm going to focus
+>on just fixing the yacc based parser to understand __attribute__'s on
+>struct/enum/union declarations.
+>
+>Speaking with Arnd about this issue, he came up with the test case:
+>$ echo 'struct __attribute__((packed)) foo { char bar; int baz; };' |
+>./scripts/genksyms/genksyms -d
+>Hash table occupancy 0/4096 = 0
+>$ echo 'struct __attribute__((packed)) foo { char bar; };' |
+>./scripts/genksyms/genksyms -d
+>Hash table occupancy 0/4096 = 0
+>
+>The implication being that because attributes don't parse correctly,
+>these symbols get a hash value of 0x00 in Module.symvers, meaning we
+>currently can't detect size changes of packed structs (or any other
+>attribute-qualified type) and happily proceed loading modules with
+>different ABIs than the kernel.
+>
+>I'll probably add some kind of script for unit tests for genksyms,
+>too.  Feels like overkill for something known to be broken where
+>active replacements are being discussed, but it's blocking my compiler
+>upgrade for our products, so I'm just going to fix it for now.
