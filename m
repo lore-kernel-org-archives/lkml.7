@@ -2,152 +2,167 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F692C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2B1C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E7F205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD7520856
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfH1JMD (ORCPT
+        id S1726513AbfH1JOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:12:03 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:25511 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726504AbfH1JMC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:12:02 -0400
-X-UUID: 53fc2922b1634b1492d6b88d40f85fa7-20190828
-X-UUID: 53fc2922b1634b1492d6b88d40f85fa7-20190828
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1113244299; Wed, 28 Aug 2019 17:11:58 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 28 Aug 2019 17:12:04 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 28 Aug 2019 17:12:04 +0800
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>
-CC:     James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
+        Wed, 28 Aug 2019 05:14:10 -0400
+Received: from mga14.intel.com ([192.55.52.115]:44648 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbfH1JOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 05:14:10 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 02:14:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
+   d="scan'208";a="381218667"
+Received: from deyangko-mobl.ccr.corp.intel.com ([10.249.168.35])
+  by fmsmga006.fm.intel.com with ESMTP; 28 Aug 2019 02:14:00 -0700
+Message-ID: <ff3fd0ab2ba659e98070760be8e7c0f223e921f9.camel@intel.com>
+Subject: Re: [PATCH V15 1/5] dt-bindings: fsl: scu: add thermal binding
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>,
-        Yong Wu <yong.wu@mediatek.com>
-Subject: [PATCH v7 02/13] dt-bindings: soc: Add MT8183 power dt-bindings
-Date:   Wed, 28 Aug 2019 17:11:35 +0800
-Message-ID: <1566983506-26598-3-git-send-email-weiyi.lu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1566983506-26598-1-git-send-email-weiyi.lu@mediatek.com>
-References: <1566983506-26598-1-git-send-email-weiyi.lu@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+Date:   Wed, 28 Aug 2019 17:14:09 +0800
+In-Reply-To: <DB3PR0402MB39162EB555CD7AE75D58C582F5C60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190618021820.14885-1-Anson.Huang@nxp.com>
+         <DB3PR0402MB39162C5B5AF828B127DD871EF5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+         <DB3PR0402MB39162EB555CD7AE75D58C582F5C60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add power dt-bindings of MT8183 and introduces "BASIC" and
-"SUBSYS" clock types in binding document.
-The "BASIC" type is compatible to the original power control with
-clock name [a-z]+[0-9]*, e.g. mm, vpu1.
-The "SUBSYS" type is used for bus protection control with clock
-name [a-z]+-[0-9]+, e.g. isp-0, cam-1.
+Hi, Anson,
 
-Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
----
- .../devicetree/bindings/soc/mediatek/scpsys.txt    | 14 ++++++++++++
- include/dt-bindings/power/mt8183-power.h           | 26 ++++++++++++++++++++++
- 2 files changed, 40 insertions(+)
- create mode 100644 include/dt-bindings/power/mt8183-power.h
+We're missing ACK from the maintainers for patch 4/5 and 5/5, if we
+want to shipped the patch via thermal tree.
 
-diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-index 876693a..00eab7e 100644
---- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-+++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-@@ -14,6 +14,7 @@ power/power_domain.txt. It provides the power domains defined in
- - include/dt-bindings/power/mt2701-power.h
- - include/dt-bindings/power/mt2712-power.h
- - include/dt-bindings/power/mt7622-power.h
-+- include/dt-bindings/power/mt8183-power.h
- 
- Required properties:
- - compatible: Should be one of:
-@@ -25,18 +26,31 @@ Required properties:
- 	- "mediatek,mt7623a-scpsys": For MT7623A SoC
- 	- "mediatek,mt7629-scpsys", "mediatek,mt7622-scpsys": For MT7629 SoC
- 	- "mediatek,mt8173-scpsys"
-+	- "mediatek,mt8183-scpsys"
- - #power-domain-cells: Must be 1
- - reg: Address range of the SCPSYS unit
- - infracfg: must contain a phandle to the infracfg controller
- - clock, clock-names: clocks according to the common clock binding.
-                       These are clocks which hardware needs to be
-                       enabled before enabling certain power domains.
-+                      The new clock type "BASIC" belongs to the type above.
-+                      As to the new clock type "SUBSYS" needs to be
-+                      enabled before releasing bus protection.
- 	Required clocks for MT2701 or MT7623: "mm", "mfg", "ethif"
- 	Required clocks for MT2712: "mm", "mfg", "venc", "jpgdec", "audio", "vdec"
- 	Required clocks for MT6797: "mm", "mfg", "vdec"
- 	Required clocks for MT7622 or MT7629: "hif_sel"
- 	Required clocks for MT7623A: "ethif"
- 	Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
-+	Required clocks for MT8183: BASIC: "audio", "mfg", "mm", "cam", "isp",
-+					   "vpu", "vpu1", "vpu2", "vpu3"
-+				    SUBSYS: "mm-0", "mm-1", "mm-2", "mm-3",
-+					    "mm-4", "mm-5", "mm-6", "mm-7",
-+					    "mm-8", "mm-9", "isp-0", "isp-1",
-+					    "cam-0", "cam-1", "cam-2", "cam-3",
-+					    "cam-4", "cam-5", "cam-6", "vpu-0",
-+					    "vpu-1", "vpu-2", "vpu-3", "vpu-4",
-+					    "vpu-5"
- 
- Optional properties:
- - vdec-supply: Power supply for the vdec power domain
-diff --git a/include/dt-bindings/power/mt8183-power.h b/include/dt-bindings/power/mt8183-power.h
-new file mode 100644
-index 0000000..5c0c8c7
---- /dev/null
-+++ b/include/dt-bindings/power/mt8183-power.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (c) 2018 MediaTek Inc.
-+ * Author: Weiyi Lu <weiyi.lu@mediatek.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_POWER_MT8183_POWER_H
-+#define _DT_BINDINGS_POWER_MT8183_POWER_H
-+
-+#define MT8183_POWER_DOMAIN_AUDIO	0
-+#define MT8183_POWER_DOMAIN_CONN	1
-+#define MT8183_POWER_DOMAIN_MFG_ASYNC	2
-+#define MT8183_POWER_DOMAIN_MFG		3
-+#define MT8183_POWER_DOMAIN_MFG_CORE0	4
-+#define MT8183_POWER_DOMAIN_MFG_CORE1	5
-+#define MT8183_POWER_DOMAIN_MFG_2D	6
-+#define MT8183_POWER_DOMAIN_DISP	7
-+#define MT8183_POWER_DOMAIN_CAM		8
-+#define MT8183_POWER_DOMAIN_ISP		9
-+#define MT8183_POWER_DOMAIN_VDEC	10
-+#define MT8183_POWER_DOMAIN_VENC	11
-+#define MT8183_POWER_DOMAIN_VPU_TOP	12
-+#define MT8183_POWER_DOMAIN_VPU_CORE0	13
-+#define MT8183_POWER_DOMAIN_VPU_CORE1	14
-+
-+#endif /* _DT_BINDINGS_POWER_MT8183_POWER_H */
--- 
-1.8.1.1.dirty
+For patch 2/5, as it introduces a new API for OF_THERMAL, I'd like to
+get Eduardo' feedback before taking them.
+
+thanks,
+rui
+
+On Wed, 2019-07-24 at 03:16 +0000, Anson Huang wrote:
+> Ping...
+> 
+> > Hi, Daniel/Rui/Eduardo
+> > 	Could you please take a look at this patch series?
+> > 
+> > Anson
+> > 
+> > > From: Anson Huang <Anson.Huang@nxp.com>
+> > > 
+> > > NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+> > > system
+> > > controller, the system controller is in charge of system power,
+> > > clock
+> > > and thermal sensors etc. management, Linux kernel has to
+> > > communicate
+> > > with system controller via MU (message unit) IPC to get
+> > > temperature
+> > > from thermal sensors, this patch adds binding doc for i.MX system
+> > > controller thermal driver.
+> > > 
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > > ---
+> > > No change.
+> > > ---
+> > >  .../devicetree/bindings/arm/freescale/fsl,scu.txt        | 16
+> > 
+> > ++++++++++++++++
+> > >  1 file changed, 16 insertions(+)
+> > > 
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > index a575e42..fc3844e 100644
+> > > --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > @@ -155,6 +155,17 @@ Required properties:
+> > >  Optional properties:
+> > >  - timeout-sec: contains the watchdog timeout in seconds.
+> > > 
+> > > +Thermal bindings based on SCU Message Protocol
+> > > +------------------------------------------------------------
+> > > +
+> > > +Required properties:
+> > > +- compatible:			Should be :
+> > > +				  "fsl,imx8qxp-sc-thermal"
+> > > +				followed by "fsl,imx-sc-thermal";
+> > > +
+> > > +- #thermal-sensor-cells:	See
+> > > Documentation/devicetree/bindings/thermal/thermal.txt
+> > > +				for a description.
+> > > +
+> > >  Example (imx8qxp):
+> > >  -------------
+> > >  aliases {
+> > > @@ -222,6 +233,11 @@ firmware {
+> > >  			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-
+> > > wdt";
+> > >  			timeout-sec = <60>;
+> > >  		};
+> > > +
+> > > +		tsens: thermal-sensor {
+> > > +			compatible = "fsl,imx8qxp-sc-thermal",
+> > > "fsl,imx-sc-
+> > > thermal";
+> > > +			#thermal-sensor-cells = <1>;
+> > > +		};
+> > >  	};
+> > >  };
+> > > 
+> > > --
+> > > 2.7.4
+> 
+> 
 
