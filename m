@@ -2,137 +2,99 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FCAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E58C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F49F20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1D520679
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfH1HmY (ORCPT
+        id S1726408AbfH1Ho2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 03:42:24 -0400
-Received: from shell.v3.sk ([90.176.6.54]:40444 "EHLO shell.v3.sk"
+        Wed, 28 Aug 2019 03:44:28 -0400
+Received: from mx7.zte.com.cn ([202.103.147.169]:39536 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726154AbfH1HmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:42:24 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id F2C06D831C;
-        Wed, 28 Aug 2019 09:42:20 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Kb_t2tL3vZHw; Wed, 28 Aug 2019 09:42:16 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 6FBECD8321;
-        Wed, 28 Aug 2019 09:42:15 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id yjTNDN1ha-T8; Wed, 28 Aug 2019 09:42:13 +0200 (CEST)
-Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id DBB28D831C;
-        Wed, 28 Aug 2019 09:42:12 +0200 (CEST)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [RESEND PATCH] ARM: multi_v7_defconfig: enable MMP2 platform
-Date:   Wed, 28 Aug 2019 09:42:04 +0200
-Message-Id: <20190828074204.287415-1-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.21.0
+        id S1726253AbfH1Ho2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 03:44:28 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id 244A6ABB5E9B5C8EB589;
+        Wed, 28 Aug 2019 15:44:26 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x7S7glHe066154;
+        Wed, 28 Aug 2019 15:42:47 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019082815430719-3232524 ;
+          Wed, 28 Aug 2019 15:43:07 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     akpm@linux-foundation.org
+Cc:     keescook@chromium.org, dan.j.williams@intel.com,
+        wang.yi59@zte.com.cn, cai@lca.pw, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, osalvador@suse.de, mhocko@suse.com,
+        rppt@linux.ibm.com, david@redhat.com,
+        richardw.yang@linux.intel.com, xue.zhihong@zte.com.cn,
+        up2wing@gmail.com, wang.liang82@zte.com.cn
+Subject: [PATCH] mm: fix -Wmissing-prototypes warnings
+Date:   Wed, 28 Aug 2019 15:42:41 +0800
+Message-Id: <1566978161-7293-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-08-28 15:43:07,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-08-28 15:42:49
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-MAIL: mse-fl2.zte.com.cn x7S7glHe066154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marvell MMP/PXA/MMP2 platforms seem to be excluded from the defconfig
-for no good reasons. Enable the DT-based boards and the modules for
-their peripherals.
+We get two warnings when build kernel W=1:
+mm/shuffle.c:36:12: warning: no previous prototype for ‘shuffle_show’
+[-Wmissing-prototypes]
+mm/sparse.c:220:6: warning: no previous prototype for
+‘subsection_mask_set’ [-Wmissing-prototypes]
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Make the function static to fix this.
+
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
 ---
- arch/arm/configs/multi_v7_defconfig | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ mm/shuffle.c | 2 +-
+ mm/sparse.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi=
-_v7_defconfig
-index 6a40bc2ef2718..091693797ce98 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -51,6 +51,8 @@ CONFIG_ARCH_MEDIATEK=3Dy
- CONFIG_ARCH_MESON=3Dy
- CONFIG_ARCH_MILBEAUT=3Dy
- CONFIG_ARCH_MILBEAUT_M10V=3Dy
-+CONFIG_ARCH_MMP=3Dy
-+CONFIG_MACH_MMP2_DT=3Dy
- CONFIG_ARCH_MVEBU=3Dy
- CONFIG_MACH_ARMADA_370=3Dy
- CONFIG_MACH_ARMADA_375=3Dy
-@@ -278,6 +280,7 @@ CONFIG_INPUT_EVDEV=3Dy
- CONFIG_KEYBOARD_QT1070=3Dm
- CONFIG_KEYBOARD_GPIO=3Dy
- CONFIG_KEYBOARD_TEGRA=3Dy
-+CONFIG_KEYBOARD_PXA27x=3Dm
- CONFIG_KEYBOARD_SAMSUNG=3Dm
- CONFIG_KEYBOARD_ST_KEYSCAN=3Dy
- CONFIG_KEYBOARD_SPEAR=3Dy
-@@ -312,6 +315,7 @@ CONFIG_SERIAL_8250_EM=3Dy
- CONFIG_SERIAL_8250_OMAP=3Dy
- CONFIG_SERIAL_8250_MT6577=3Dy
- CONFIG_SERIAL_8250_UNIPHIER=3Dy
-+CONFIG_SERIAL_8250_PXA=3Dm
- CONFIG_SERIAL_OF_PLATFORM=3Dy
- CONFIG_SERIAL_AMBA_PL011=3Dy
- CONFIG_SERIAL_AMBA_PL011_CONSOLE=3Dy
-@@ -590,6 +594,7 @@ CONFIG_VIDEO_V4L2_SUBDEV_API=3Dy
- CONFIG_MEDIA_USB_SUPPORT=3Dy
- CONFIG_USB_VIDEO_CLASS=3Dm
- CONFIG_V4L_PLATFORM_DRIVERS=3Dy
-+CONFIG_VIDEO_MMP_CAMERA=3Dm
- CONFIG_VIDEO_STM32_DCMI=3Dm
- CONFIG_VIDEO_SAMSUNG_EXYNOS4_IS=3Dm
- CONFIG_VIDEO_S5P_FIMC=3Dm
-@@ -684,6 +689,9 @@ CONFIG_SND_ATMEL_SOC_PDMIC=3Dm
- CONFIG_SND_ATMEL_SOC_I2S=3Dm
- CONFIG_SND_BCM2835_SOC_I2S=3Dm
- CONFIG_SND_SOC_FSL_SAI=3Dm
-+CONFIG_SND_MMP_SOC=3Dy
-+CONFIG_SND_PXA_SOC_SSP=3Dm
-+CONFIG_SND_PXA910_SOC=3Dm
- CONFIG_SND_SOC_ROCKCHIP=3Dm
- CONFIG_SND_SOC_ROCKCHIP_SPDIF=3Dm
- CONFIG_SND_SOC_ROCKCHIP_MAX98090=3Dm
-@@ -722,6 +730,7 @@ CONFIG_USB_EHCI_HCD=3Dy
- CONFIG_USB_EHCI_HCD_STI=3Dy
- CONFIG_USB_EHCI_TEGRA=3Dy
- CONFIG_USB_EHCI_EXYNOS=3Dy
-+CONFIG_USB_EHCI_MV=3Dm
- CONFIG_USB_OHCI_HCD=3Dy
- CONFIG_USB_OHCI_HCD_STI=3Dy
- CONFIG_USB_OHCI_EXYNOS=3Dm
-@@ -791,6 +800,7 @@ CONFIG_MMC_SDHCI_DOVE=3Dy
- CONFIG_MMC_SDHCI_TEGRA=3Dy
- CONFIG_MMC_SDHCI_S3C=3Dy
- CONFIG_MMC_SDHCI_PXAV3=3Dy
-+CONFIG_MMC_SDHCI_PXAV2=3Dm
- CONFIG_MMC_SDHCI_SPEAR=3Dy
- CONFIG_MMC_SDHCI_S3C_DMA=3Dy
- CONFIG_MMC_SDHCI_BCM_KONA=3Dy
-@@ -856,6 +866,7 @@ CONFIG_RTC_DRV_DA9063=3Dm
- CONFIG_RTC_DRV_EFI=3Dm
- CONFIG_RTC_DRV_DIGICOLOR=3Dm
- CONFIG_RTC_DRV_S3C=3Dm
-+CONFIG_RTC_DRV_SA1100=3Dm
- CONFIG_RTC_DRV_PL031=3Dy
- CONFIG_RTC_DRV_AT91RM9200=3Dm
- CONFIG_RTC_DRV_AT91SAM9=3Dm
---=20
-2.21.0
+diff --git a/mm/shuffle.c b/mm/shuffle.c
+index 3ce1248..b3fe97f 100644
+--- a/mm/shuffle.c
++++ b/mm/shuffle.c
+@@ -33,7 +33,7 @@ __meminit void page_alloc_shuffle(enum mm_shuffle_ctl ctl)
+ }
+ 
+ static bool shuffle_param;
+-extern int shuffle_show(char *buffer, const struct kernel_param *kp)
++static int shuffle_show(char *buffer, const struct kernel_param *kp)
+ {
+ 	return sprintf(buffer, "%c\n", test_bit(SHUFFLE_ENABLE, &shuffle_state)
+ 			? 'Y' : 'N');
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 72f010d..49006dd 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -217,7 +217,7 @@ static inline unsigned long first_present_section_nr(void)
+ 	return next_present_section_nr(-1);
+ }
+ 
+-void subsection_mask_set(unsigned long *map, unsigned long pfn,
++static void subsection_mask_set(unsigned long *map, unsigned long pfn,
+ 		unsigned long nr_pages)
+ {
+ 	int idx = subsection_map_index(pfn);
+-- 
+1.8.3.1
 
