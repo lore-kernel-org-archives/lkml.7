@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFCDC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E775EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B9B2339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B404D2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:56:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JzT8/LLb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ngR10Sh9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfH1W4W (ORCPT
+        id S1727447AbfH1W4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 18:56:22 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:41238 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbfH1W4T (ORCPT
+        Wed, 28 Aug 2019 18:56:25 -0400
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:57043 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727400AbfH1W4W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 18:56:19 -0400
-Received: by mail-pf1-f201.google.com with SMTP id 191so861795pfz.8
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 15:56:19 -0700 (PDT)
+        Wed, 28 Aug 2019 18:56:22 -0400
+Received: by mail-vk1-f202.google.com with SMTP id r17so490660vkd.23
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 15:56:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=b7ld9YNlx/ctaSkEdtcO3fpX7aUy1ofd0MxWpfkF/rA=;
-        b=JzT8/LLbQFND6yOdtjnjndUw5dZEXCmhAV49vnQicQImhLm9v6qzCBihCNlmrsXKTl
-         jKpxIU6rwju1F8GAvgLl1poxw1iypySHcqwITYHfFdUetBFnQRy2MYw8B4Fx8DZva/43
-         lI575oWycij5nbg78kD4esr4cV4ET13QvfrjpDIDnzzw+1tMt7relayQpEUDZSxiswjX
-         dJdU0sBvXksVr/8/4uioOoYAHsSOYQKNTnYrlSKsq5NIqH0bFJBkrBCK3sF/VWxnDDRb
-         pf05BA3w+S5mdkYjgJ7+v+z5ce9kp5i80DlZxB2Q3DhYgUwvhgc9vAZXNGlUFnsnHxWz
-         MOSQ==
+        bh=helgrIKKAulT+KsUi/GFOUXK8QZ6n67xZn+iPINxEBU=;
+        b=ngR10Sh95BLqDC0erJbnEzQJHXl2krXHymd0SWrk4V2luH2klpLvbRuYzeGiam/iN5
+         z0EJ3zNhjNEKGgSxY98naxS/lKhbqA8Khi+hXdS4lHEabYifPqn71kdC3D6+J+Viy622
+         B1bKIaAS+Wm+jJYCEftdGddEvh02BJaZGIPnlbZxEdwOjIT7Z8Y3LrnWtEZIIfMWvqIg
+         Tv8ZbtyzseFNYo6V2yJ24Xsw/U1hW/Vik42lHi4UgSDouIjgw1SAuSE932nJSVboAyGv
+         6eG5ZWCpWGTkC0fysrYSZUh7ju8fTtfkVA9R3tpGKeN8xNS93Gvr0vpFxbXEDHh/V8HN
+         7YXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=b7ld9YNlx/ctaSkEdtcO3fpX7aUy1ofd0MxWpfkF/rA=;
-        b=LKC2X0Ii+6or/U6sB1njrkOCCXIxtT9s26mWvlYUDVTQiIDWFtz9DYGd/JnLMzygIF
-         3HvVyK2aN+JZNLpsamjXONpQKmFWOxo6JGNp/UmU9nuCWbzarV0egZvkdjTeqHi7a1zi
-         S3mukk9cI0mZGS+ilYFcMZ0ud07M5avfPIos2WtIty9xqGlDbvkmagW6dReqOYIk5WBw
-         fij4yNUPNIl35FgxOVZxZAiugfMr5MMXvpYB9fPC1kss27uxeBvv+N3UYem8Hhpf0FYP
-         zojdn545Eq3IHEKKEQXw23no8bv/J6IXHRGTpnsDhQNua52WTW1feCFeIT47ArmNhfGK
-         lrCw==
-X-Gm-Message-State: APjAAAXmQODTaKBMee85H4tBv0jLQuMLLLCtgCxqBWt74pEJgM5GKn3/
-        bh0RzyAasHi8k7afDdfcGVkqlyMAJLLak5Rx6DY=
-X-Google-Smtp-Source: APXvYqx6pEqROs2HZkrQhulF4T9Tz/HeHr6yqL4s9fnbc6XdE+si85r0zcogoTYioslJn8BPV7HOIR5p5+RmsOjEOG8=
-X-Received: by 2002:a63:6686:: with SMTP id a128mr5422005pgc.361.1567032978096;
- Wed, 28 Aug 2019 15:56:18 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 15:55:29 -0700
+        bh=helgrIKKAulT+KsUi/GFOUXK8QZ6n67xZn+iPINxEBU=;
+        b=rkIu2cOcpKxQa7BWi0NnN6lsT+TV+ggv7o8oltVSUa0Wr3Q3qoi0k5e2kCu+DtOpzK
+         ItULWqKQsgyzmpQqkaI50Ud2t7ffBZvRZ/6UwWsLTvLCLxlf8pv0/nzilONrU7szvErJ
+         +84M98Cbje5AGo40+RuCOkacUW45lnu1prVBpyeJwbc72kgkpZldKAYWcDx0dhmKkJf/
+         1OlMwlJYaT5T80jrQhBVGp02SulscxZ/XJwMSMK0vyxWPybKB0HqxQyYCBaMTdlW7kzf
+         Ma7ftJI+P+D7pYPZohx2Xc5fFcsgYYW2mXBlsXDoL6A7qdD6T03sfNf15xd6a7spOdlL
+         Fa0w==
+X-Gm-Message-State: APjAAAWLRF26LmAqsnsTDzhDa1JrDf2dOXZBDn+kZvZWgGwL9Cj0g8HX
+        ChY2iG1ffF9KQTLHtkgGVoyYqcX4j6ic3UyY60o=
+X-Google-Smtp-Source: APXvYqzl1M4Se25zKlWClHi+L2FnI8y7Wb9f3voC7siSalrfpQtRC+U+CVSfMf2qbB7lDpz3+xqLQHs+RX1acA2Qda0=
+X-Received: by 2002:a1f:94e:: with SMTP id 75mr3672763vkj.8.1567032981180;
+ Wed, 28 Aug 2019 15:56:21 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 15:55:30 -0700
 In-Reply-To: <20190828225535.49592-1-ndesaulniers@google.com>
-Message-Id: <20190828225535.49592-9-ndesaulniers@google.com>
+Message-Id: <20190828225535.49592-10-ndesaulniers@google.com>
 Mime-Version: 1.0
 References: <20190828225535.49592-1-ndesaulniers@google.com>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v3 08/14] sparc: prefer __section from compiler_attributes.h
+Subject: [PATCH v3 09/14] powerpc: prefer __section and __printf from compiler_attributes.h
 From:   Nick Desaulniers <ndesaulniers@google.com>
 To:     miguel.ojeda.sandonis@gmail.com
 Cc:     sedat.dilek@gmail.com, will@kernel.org, jpoimboe@redhat.com,
@@ -90,34 +90,74 @@ See the discussions in:
 Link: https://bugs.llvm.org/show_bug.cgi?id=42950
 Link: https://marc.info/?l=linux-netdev&m=156412960619946&w=2
 Link: https://github.com/ClangBuiltLinux/linux/issues/619
-Acked-by: David S. Miller <davem@davemloft.net>
 Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
 Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- arch/sparc/include/asm/cache.h | 2 +-
- arch/sparc/kernel/btext.c      | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/boot/main.c         | 3 +--
+ arch/powerpc/boot/ps3.c          | 6 ++----
+ arch/powerpc/include/asm/cache.h | 2 +-
+ arch/powerpc/kernel/btext.c      | 2 +-
+ 4 files changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/arch/sparc/include/asm/cache.h b/arch/sparc/include/asm/cache.h
-index dcfd58118c11..9a9effdd01e2 100644
---- a/arch/sparc/include/asm/cache.h
-+++ b/arch/sparc/include/asm/cache.h
-@@ -21,6 +21,6 @@
+diff --git a/arch/powerpc/boot/main.c b/arch/powerpc/boot/main.c
+index 102cc546444d..3ccc84e06fc4 100644
+--- a/arch/powerpc/boot/main.c
++++ b/arch/powerpc/boot/main.c
+@@ -150,8 +150,7 @@ static struct addr_range prep_initrd(struct addr_range vmlinux, void *chosen,
+  * edit the command line passed to vmlinux (by setting /chosen/bootargs).
+  * The buffer is put in it's own section so that tools may locate it easier.
+  */
+-static char cmdline[BOOT_COMMAND_LINE_SIZE]
+-	__attribute__((__section__("__builtin_cmdline")));
++static char cmdline[BOOT_COMMAND_LINE_SIZE] __section(__builtin_cmdline);
  
- #define SMP_CACHE_BYTES (1 << SMP_CACHE_BYTES_SHIFT)
+ static void prep_cmdline(void *chosen)
+ {
+diff --git a/arch/powerpc/boot/ps3.c b/arch/powerpc/boot/ps3.c
+index c52552a681c5..70b2ed82d2de 100644
+--- a/arch/powerpc/boot/ps3.c
++++ b/arch/powerpc/boot/ps3.c
+@@ -24,8 +24,7 @@ extern int lv1_get_repository_node_value(u64 in_1, u64 in_2, u64 in_3,
+ #ifdef DEBUG
+ #define DBG(fmt...) printf(fmt)
+ #else
+-static inline int __attribute__ ((format (printf, 1, 2))) DBG(
+-	const char *fmt, ...) {return 0;}
++static inline int __printf(1, 2) DBG(const char *fmt, ...) { return 0; }
+ #endif
  
+ BSS_STACK(4096);
+@@ -35,8 +34,7 @@ BSS_STACK(4096);
+  * The buffer is put in it's own section so that tools may locate it easier.
+  */
+ 
+-static char cmdline[BOOT_COMMAND_LINE_SIZE]
+-	__attribute__((__section__("__builtin_cmdline")));
++static char cmdline[BOOT_COMMAND_LINE_SIZE] __section(__builtin_cmdline);
+ 
+ static void prep_cmdline(void *chosen)
+ {
+diff --git a/arch/powerpc/include/asm/cache.h b/arch/powerpc/include/asm/cache.h
+index 45e3137ccd71..9114495855eb 100644
+--- a/arch/powerpc/include/asm/cache.h
++++ b/arch/powerpc/include/asm/cache.h
+@@ -91,7 +91,7 @@ static inline u32 l1_cache_bytes(void)
+ 	isync
+ 
+ #else
 -#define __read_mostly __attribute__((__section__(".data..read_mostly")))
 +#define __read_mostly __section(.data..read_mostly)
  
- #endif /* !(_SPARC_CACHE_H) */
-diff --git a/arch/sparc/kernel/btext.c b/arch/sparc/kernel/btext.c
-index 5869773f3dc4..b2eff8f8f27b 100644
---- a/arch/sparc/kernel/btext.c
-+++ b/arch/sparc/kernel/btext.c
-@@ -24,7 +24,7 @@ static void draw_byte_32(unsigned char *bits, unsigned int *base, int rb);
- static void draw_byte_16(unsigned char *bits, unsigned int *base, int rb);
- static void draw_byte_8(unsigned char *bits, unsigned int *base, int rb);
+ #ifdef CONFIG_PPC_BOOK3S_32
+ extern long _get_L2CR(void);
+diff --git a/arch/powerpc/kernel/btext.c b/arch/powerpc/kernel/btext.c
+index 6dfceaa820e4..f57712a55815 100644
+--- a/arch/powerpc/kernel/btext.c
++++ b/arch/powerpc/kernel/btext.c
+@@ -26,7 +26,7 @@
+ static void scrollscreen(void);
+ #endif
  
 -#define __force_data __attribute__((__section__(".data")))
 +#define __force_data __section(.data)
