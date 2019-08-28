@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D7EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCF5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21FC7205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 307152064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbfH1MnZ (ORCPT
+        id S1726635AbfH1Mn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:43:25 -0400
-Received: from mga03.intel.com ([134.134.136.65]:63868 "EHLO mga03.intel.com"
+        Wed, 28 Aug 2019 08:43:28 -0400
+Received: from mga02.intel.com ([134.134.136.20]:58350 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726253AbfH1MnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:43:24 -0400
+        id S1726253AbfH1Mn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 08:43:27 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 05:43:23 -0700
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 05:43:27 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
-   d="scan'208";a="183118364"
+   d="scan'208";a="185611611"
 Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga003.jf.intel.com with ESMTP; 28 Aug 2019 05:43:21 -0700
+  by orsmga006.jf.intel.com with ESMTP; 28 Aug 2019 05:43:24 -0700
 From:   "Ramuthevar,Vadivel MuruganX" 
         <vadivel.muruganx.ramuthevar@linux.intel.com>
 To:     kishon@ti.com
@@ -36,9 +36,9 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
         peter.harliman.liem@intel.com,
         vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: [PATCH v2 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema for LGM SDXC PHY
-Date:   Wed, 28 Aug 2019 20:43:14 +0800
-Message-Id: <20190828124315.48448-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v2 2/2] phy: intel-lgm-sdxc: Add support for SDXC PHY
+Date:   Wed, 28 Aug 2019 20:43:15 +0800
+Message-Id: <20190828124315.48448-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 References: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
@@ -49,114 +49,188 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-Add a YAML schema to use the host controller driver with the
-SDXC PHY on Intel's Lightning Mountain SoC.
+Add support for SDXC PHY on Intel's Lightning Mountain SoC.
 
 Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 ---
- .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 52 ++++++++++++++++++++++
- .../devicetree/bindings/phy/intel,syscon.yaml      | 33 ++++++++++++++
- 2 files changed, 85 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/intel,syscon.yaml
+ drivers/phy/intel/Kconfig          |   6 ++
+ drivers/phy/intel/Makefile         |   1 +
+ drivers/phy/intel/phy-intel-sdxc.c | 144 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 151 insertions(+)
+ create mode 100644 drivers/phy/intel/phy-intel-sdxc.c
 
-diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
+index 4ea6a8897cd7..d6356c762a6b 100644
+--- a/drivers/phy/intel/Kconfig
++++ b/drivers/phy/intel/Kconfig
+@@ -7,3 +7,9 @@ config PHY_INTEL_EMMC
+ 	select GENERIC_PHY
+ 	help
+ 	  Enable this to support the Intel EMMC PHY
++
++config PHY_INTEL_SDXC
++       tristate "Intel SDXC PHY driver"
++       select GENERIC_PHY
++       help
++         Enable this to support the Intel SDXC PHY driver
+diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
+index 6b876a75599d..3c6e7523200c 100644
+--- a/drivers/phy/intel/Makefile
++++ b/drivers/phy/intel/Makefile
+@@ -1,2 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_PHY_INTEL_EMMC)            += phy-intel-emmc.o
++obj-$(CONFIG_PHY_INTEL_SDXC)            += phy-intel-sdxc.o
+diff --git a/drivers/phy/intel/phy-intel-sdxc.c b/drivers/phy/intel/phy-intel-sdxc.c
 new file mode 100644
-index 000000000000..99647207b414
+index 000000000000..7e13fd9ced5b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/phy/intel/phy-intel-sdxc.c
+@@ -0,0 +1,144 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Intel SDXC PHY driver
++ * Copyright (C) 2019 Intel, Corp.
++ */
 +
-+title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
++#include <linux/bits.h>
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
 +
-+maintainers:
-+  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
++/* SDXC PHY register definitions */
++#define SDXC_PHYCTRL_REG	0x88
++#define OTAPDLYENA_MASK		BIT(14)
++#define OTAPDLYSEL(x)		((x) << 10)
++#define OTAPDLYSEL_ALL		OTAPDLYSEL(GENMASK(3, 0))
 +
-+allOf:
-+  - $ref: "intel,syscon.yaml"
++struct intel_sdxc_phy {
++	struct regmap *syscfg;
++	struct clk *sdxcclk;
++};
 +
-+description: Binding for SDXC PHY
++static int intel_sdxc_phy_init(struct phy *phy)
++{
++	struct intel_sdxc_phy *priv = phy_get_drvdata(phy);
 +
-+properties:
-+  compatible:
-+    const: intel,lgm-sdxc-phy
++	/*
++	 * We purposely get the clock here and not in probe to avoid the
++	 * circular dependency problem.  We expect:
++	 * - PHY driver to probe
++	 * - SDHCI driver to start probe
++	 * - SDHCI driver to register it's clock
++	 * - SDHCI driver to get the PHY
++	 * - SDHCI driver to init the PHY
++	 *
++	 * The clock is optional, so upon any error just return it like
++	 * any other error to user.
++	 */
++	priv->sdxcclk = clk_get_optional(&phy->dev, "sdxcclk");
++	if (IS_ERR(priv->sdxcclk)) {
++		dev_err(&phy->dev, "Error getting sdxcclk\n");
++		return PTR_ERR(priv->sdxcclk);
++	}
 +
-+  intel,syscon:
-+    description: phandle to the sdxc through syscon
++	return 0;
++}
 +
-+  clocks:
-+    maxItems: 1
++static int intel_sdxc_phy_exit(struct phy *phy)
++{
++	struct intel_sdxc_phy *priv = phy_get_drvdata(phy);
 +
-+  clock-names:
-+    maxItems: 1
++	clk_put(priv->sdxcclk);
 +
-+  "#phy-cells":
-+    const: 0
++	return 0;
++}
 +
-+required:
-+  - "#phy-cells"
-+  - compatible
-+  - intel,syscon
-+  - clocks
-+  - clock-names
++static int intel_sdxc_phy_power_on(struct phy *phy)
++{
++	struct intel_sdxc_phy *priv = phy_get_drvdata(phy);
 +
-+additionalProperties: false
++	/* Output tap delay: disable */
++	regmap_update_bits(priv->syscfg, SDXC_PHYCTRL_REG, OTAPDLYENA_MASK, 0);
 +
-+examples:
-+  - |
-+    sdxc_phy: sdxc_phy {
-+        compatible = "intel,lgm-sdxc-phy";
-+        intel,syscon = <&sysconf>;
-+        clocks = <&sdxc>;
-+        clock-names = "sdxcclk";
-+        #phy-cells = <0>;
-+    };
++	/* Output tap delay */
++	regmap_update_bits(priv->syscfg, SDXC_PHYCTRL_REG, OTAPDLYSEL_ALL,
++			   OTAPDLYSEL_ALL);
 +
-+...
-diff --git a/Documentation/devicetree/bindings/phy/intel,syscon.yaml b/Documentation/devicetree/bindings/phy/intel,syscon.yaml
-new file mode 100644
-index 000000000000..d0b78805e49f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/intel,syscon.yaml
-@@ -0,0 +1,33 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/intel,syscon.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++	return 0;
++}
 +
-+title: Syscon for eMMC/SDXC PHY Device Tree Bindings
++static int intel_sdxc_phy_power_off(struct phy *phy)
++{
++	/* Do nothing */
++	return 0;
++}
 +
-+maintainers:
-+  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
++static const struct phy_ops ops = {
++	.init		= intel_sdxc_phy_init,
++	.exit		= intel_sdxc_phy_exit,
++	.power_on	= intel_sdxc_phy_power_on,
++	.power_off	= intel_sdxc_phy_power_off,
++	.owner		= THIS_MODULE,
++};
 +
-+properties:
-+  compatible:
-+    const: intel,syscon
++static int intel_sdxc_phy_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct intel_sdxc_phy *priv;
++	struct phy *generic_phy;
++	struct phy_provider *phy_provider;
 +
-+  reg:
-+    maxItems: 1
++	if (!dev->parent || !dev->parent->of_node)
++		return -ENODEV;
 +
-+  "#reset-cells":
-+   const: 1
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
 +
-+required:
-+  - compatible
-+  - reg
-+  - "#reset-cells"
++	/* Get SDXC phy (accessed via chiptop) regmap */
++	priv->syscfg = syscon_regmap_lookup_by_phandle(dev->of_node,
++						       "intel,syscon");
++	if (IS_ERR(priv->syscfg)) {
++		dev_err(dev, "No syscon phandle for chiptop\n");
++		return PTR_ERR(priv->syscfg);
++	}
 +
-+examples:
-+  - |
-+    sysconf: chiptop@e0020000 {
-+       compatible = "intel,syscon", "syscon";
-+       reg = <0xe0020000 0x100>;
-+       #reset-cells = <1>;
-+    };
++	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
++	if (IS_ERR(generic_phy)) {
++		dev_err(dev, "failed to create PHY\n");
++		return PTR_ERR(generic_phy);
++	}
++
++	phy_set_drvdata(generic_phy, priv);
++	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++
++	return PTR_ERR_OR_ZERO(phy_provider);
++}
++
++static const struct of_device_id intel_sdxc_phy_dt_ids[] = {
++	{ .compatible = "intel,lgm-sdxc-phy" },
++	{}
++};
++
++MODULE_DEVICE_TABLE(of, intel_sdxc_phy_dt_ids);
++
++static struct platform_driver intel_sdxc_driver = {
++	.probe		= intel_sdxc_phy_probe,
++	.driver		= {
++		.name	= "intel-sdxc-phy",
++		.of_match_table = intel_sdxc_phy_dt_ids,
++	},
++};
++
++module_platform_driver(intel_sdxc_driver);
++
++MODULE_AUTHOR("Peter Harliman Liem <peter.harliman.liem@intel.com>");
++MODULE_DESCRIPTION("Intel SDXC PHY driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.11.0
 
