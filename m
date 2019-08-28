@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB86C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67A3C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A747322DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C434C22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfH1Vyw (ORCPT
+        id S1727434AbfH1Vyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:54:52 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:46556 "EHLO ale.deltatee.com"
+        Wed, 28 Aug 2019 17:54:51 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:46442 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727314AbfH1Vyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:54:45 -0400
+        id S1727286AbfH1Vyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 17:54:43 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1i35to-00071m-Bo; Wed, 28 Aug 2019 15:54:44 -0600
+        id 1i35tj-00071k-NI; Wed, 28 Aug 2019 15:54:37 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1i35tj-0001DD-5C; Wed, 28 Aug 2019 15:54:35 -0600
+        id 1i35ti-0001D7-V0; Wed, 28 Aug 2019 15:54:34 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
@@ -37,8 +37,8 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 28 Aug 2019 15:54:27 -0600
-Message-Id: <20190828215429.4572-12-logang@deltatee.com>
+Date:   Wed, 28 Aug 2019 15:54:25 -0600
+Message-Id: <20190828215429.4572-10-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190828215429.4572-1-logang@deltatee.com>
 References: <20190828215429.4572-1-logang@deltatee.com>
@@ -47,7 +47,7 @@ Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v8 11/13] block: don't check blk_rq_is_passthrough() in blk_do_io_stat()
+Subject: [PATCH v8 09/13] nvmet-tcp: don't check data_len in nvmet_tcp_map_data()
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,50 +55,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of checking blk_rq_is_passthruough() for every call to
-blk_do_io_stat(), don't set RQF_IO_STAT for passthrough requests.
-This should be equivalent, and opens the possibility of passthrough
-requests specifically requesting statistics tracking.
+With passthru, the data_len is no longer guaranteed to be set
+for all requests. Therefore, we should not check for it to be
+non-zero. Instead check if the SGL length is zero and map
+when appropriate.
+
+None of the other transports check data_len which is verified
+in core code.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- block/blk-mq.c | 2 +-
- block/blk.h    | 5 ++---
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/nvme/target/tcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 0835f4d8d42e..8e38491dfbf8 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -318,7 +318,7 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- 	rq->cmd_flags = op;
- 	if (data->flags & BLK_MQ_REQ_PREEMPT)
- 		rq->rq_flags |= RQF_PREEMPT;
--	if (blk_queue_io_stat(data->q))
-+	if (blk_queue_io_stat(data->q) && !blk_rq_is_passthrough(rq))
- 		rq->rq_flags |= RQF_IO_STAT;
- 	INIT_LIST_HEAD(&rq->queuelist);
- 	INIT_HLIST_NODE(&rq->hash);
-diff --git a/block/blk.h b/block/blk.h
-index de6b2e146d6e..554efa769bfe 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -234,13 +234,12 @@ int blk_dev_init(void);
-  *
-  *	a) it's attached to a gendisk, and
-  *	b) the queue had IO stats enabled when this request was started, and
-- *	c) it's a file system request
-+ *	c) it's a file system request (RQF_IO_STAT will not be set otherwise)
-  */
- static inline bool blk_do_io_stat(struct request *rq)
- {
- 	return rq->rq_disk &&
--	       (rq->rq_flags & RQF_IO_STAT) &&
--		!blk_rq_is_passthrough(rq);
-+	       (rq->rq_flags & RQF_IO_STAT);
- }
+diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+index 69b83fa0c76c..db5bc5f444c4 100644
+--- a/drivers/nvme/target/tcp.c
++++ b/drivers/nvme/target/tcp.c
+@@ -320,7 +320,7 @@ static int nvmet_tcp_map_data(struct nvmet_tcp_cmd *cmd)
+ 	struct nvme_sgl_desc *sgl = &cmd->req.cmd->common.dptr.sgl;
+ 	u32 len = le32_to_cpu(sgl->length);
  
- static inline void req_set_nomerge(struct request_queue *q, struct request *req)
+-	if (!cmd->req.data_len)
++	if (!len)
+ 		return 0;
+ 
+ 	if (sgl->type == ((NVME_SGL_FMT_DATA_DESC << 4) |
 -- 
 2.20.1
 
