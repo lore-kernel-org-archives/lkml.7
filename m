@@ -2,82 +2,102 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F200AC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 733D2C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7645208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF11208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NokCpAH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfH1Qlu (ORCPT
+        id S1726693AbfH1Qn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:41:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:14625 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbfH1Qls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:41:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 09:41:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
-   d="scan'208";a="380462397"
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Aug 2019 09:41:47 -0700
-Received: from orsmsx116.amr.corp.intel.com (10.22.240.14) by
- ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 28 Aug 2019 09:41:46 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.119]) by
- ORSMSX116.amr.corp.intel.com ([169.254.7.63]) with mapi id 14.03.0439.000;
- Wed, 28 Aug 2019 09:41:46 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "hch@lst.de" <hch@lst.de>, "kbusch@kernel.org" <kbusch@kernel.org>
-CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/5] x86/pci: Add a to_pci_sysdata helper
-Thread-Topic: [PATCH 2/5] x86/pci: Add a to_pci_sysdata helper
-Thread-Index: AQHVXasMRGGSFfOeWEC6h3pcJWlJsKcROPeA
-Date:   Wed, 28 Aug 2019 16:41:45 +0000
-Message-ID: <809ad38b6aca8e828db7be6423cb03ac9208fb5a.camel@intel.com>
-References: <20190828141443.5253-1-hch@lst.de>
-         <20190828141443.5253-3-hch@lst.de>
-In-Reply-To: <20190828141443.5253-3-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.6.7]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F4FADED671890B4DA25C0EC95EBE283D@intel.com>
-Content-Transfer-Encoding: base64
+        Wed, 28 Aug 2019 12:43:26 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:33033 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbfH1QnZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 12:43:25 -0400
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x7SGhKvr028731;
+        Thu, 29 Aug 2019 01:43:21 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x7SGhKvr028731
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567010601;
+        bh=59gdCQYyt4WFTLa0VJOuXipx2hC/GGa/B8YFQvrXlsg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NokCpAH5Ok9a4O3hbnVRtBVYv3wP/ncXQ1qzW7RRji/4PgZvQneDkPhT3W/yJdfhG
+         9J0d3oCVQRbSRn/U1QuBd3sxpjzq1gYIoWg0/Zz9eRU7SzrrmKooDpZjBEf8cHr1+1
+         lc2jm3tC0iMdpQ0+VbrcFV0T3iDOXUCyLz9FPyB6DiJKVr7twYiOKw54mLVO91u0su
+         0MvfGmQ4WYkPLWXGPagsp5jP5Wp8/hAL87CeYn6cBkjAztfWjpGhbjcQJ9+QO4S3/3
+         e94yaJTPK3fvbBe7abGq3t9B8AQ0zfz7tyJ/6GcHbFU9v/yd/QcqNwDcso4OapqUNz
+         jEAngpbjATLFQ==
+X-Nifty-SrcIP: [209.85.222.45]
+Received: by mail-ua1-f45.google.com with SMTP id y19so178689ual.13;
+        Wed, 28 Aug 2019 09:43:21 -0700 (PDT)
+X-Gm-Message-State: APjAAAV92QNBB3xEjBgPnI7RXjSKLRZpV1l7F9uGtPateDlIe8bTWE74
+        eRFugVAjgmjJPvAPU8uxdplv378NoGMP6bQmjhE=
+X-Google-Smtp-Source: APXvYqy5/HkNib7+qeS5rprhDQhJDWpCinBaPEKLjgEqPH2eisrLA4CBCWrqk/cIGCMYGxo93El03la3zxyErwdyizs=
+X-Received: by 2002:ab0:442:: with SMTP id 60mr2209408uav.109.1567010599882;
+ Wed, 28 Aug 2019 09:43:19 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190821173321.15012-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190821173321.15012-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 29 Aug 2019 01:42:42 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS=2=D=aQDn_+iYTW6f86TnvHUL68SzCPkdqXxbNZWw-Q@mail.gmail.com>
+Message-ID: <CAK7LNAS=2=D=aQDn_+iYTW6f86TnvHUL68SzCPkdqXxbNZWw-Q@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: remove unneeded dependency for $(DOC_TARGETS)
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA4LTI4IGF0IDE2OjE0ICswMjAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
-ZToNCj4gVmFyaW91cyBoZWxwZXJzIG5lZWQgdGhlIHBjaV9zeXNkYXRhIGp1c3QgdG8gZGVyZWZl
-cmVuY2UgYSBzaW5nbGUgZmllbGQNCj4gaW4gaXQuICBBZGQgYSBsaXR0bGUgaGVscGVyIHRoYXQg
-cmV0dXJucyB0aGUgcHJvcGVybHkgdHlwZWQgc3lzZGF0YQ0KPiBwb2ludGVyIHRvIHJlcXVpcmUg
-YSBsaXR0bGUgbGVzcyBib2lsZXJwbGF0ZSBjb2RlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ2hy
-aXN0b3BoIEhlbGx3aWcgPGhjaEBsc3QuZGU+DQo+IC0tLQ0KPiAgYXJjaC94ODYvaW5jbHVkZS9h
-c20vcGNpLmggfCAyOCArKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hh
-bmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwgMTUgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0
-IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vcGNpLmggYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9wY2ku
-aA0KPiBpbmRleCA2ZmE4NDY5MjBmNWYuLjc1ZmUyODQ5MjI5MCAxMDA2NDQNCj4gLS0tIGEvYXJj
-aC94ODYvaW5jbHVkZS9hc20vcGNpLmgNCj4gKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vcGNp
-LmgNCj4gQEAgLTM1LDEyICszNSwxNSBAQCBleHRlcm4gaW50IG5vaW9hcGljcmVyb3V0ZTsNCj4g
-IA0KPiAgI2lmZGVmIENPTkZJR19QQ0kNCj4gIA0KPiArc3RhdGljIGlubGluZSBzdHJ1Y3QgcGNp
-X3N5c2RhdGEgKnRvX3BjaV9zeXNkYXRhKHN0cnVjdCBwY2lfYnVzICpidXMpDQpDYW4geW91IG1h
-a2UgdGhlIGFyZ3VtZW50IGNvbnN0IHRvIGF2b2lkIGFsbCB0aGUgd2FybmluZ3MgZnJvbSBjYWxs
-ZXJzDQpwYXNzaW5nIGNvbnN0IHN0cnVjdCBwY2lfYnVzDQoNCnNuaXANCg==
+On Thu, Aug 22, 2019 at 2:33 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Commit 415008af3219 ("docs-rst: convert lsm from DocBook to ReST")
+> stopped using if_changed_rule. No more users of if_changed* for the
+> doc targets. Hence, fixdep is unneeded. Remove the dependency on
+> scripts_basic.
+>
+> All the doc targets are phony. Depending on FORCE is odd.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+
+Applied to linux-kbuild.
+
+
+>  Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Makefile b/Makefile
+> index c0be1a4dbfdd..7e54a821b4b0 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1578,7 +1578,7 @@ $(help-board-dirs): help-%:
+>  DOC_TARGETS := xmldocs latexdocs pdfdocs htmldocs epubdocs cleandocs \
+>                linkcheckdocs dochelp refcheckdocs
+>  PHONY += $(DOC_TARGETS)
+> -$(DOC_TARGETS): scripts_basic FORCE
+> +$(DOC_TARGETS):
+>         $(Q)$(MAKE) $(build)=Documentation $@
+>
+>  # Misc
+> --
+> 2.17.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
