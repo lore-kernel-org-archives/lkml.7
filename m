@@ -2,198 +2,77 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724A7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEE6C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39AF122CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:37:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pVECr5uE"
+	by mail.kernel.org (Postfix) with ESMTP id D2A8520828
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:39:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567024756;
+	bh=OlEZBKXBrpxUG4SiWKZI6c38Hh86eJ1mRnJbnj4iUuI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LcffPxCVoe6kVLZbUNTSW3GDSF8HuLzgqtxlX1SVcw1uKO8FvioE9Dk1SHbJ9m/j+
+	 PgCeDJL0CqHLp7vhIdw5y6X9M5bv+TD49WviGYVUMGTR/k50BTxW3sOwDsgXV0Ny66
+	 xnZnaETdkOH7tOvO3tdFCgC+HlFJgxgFE7AqNU2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfH1Uhi (ORCPT
+        id S1726935AbfH1UjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 16:37:38 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43966 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfH1Uhi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 16:37:38 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y8so1091882wrn.10;
-        Wed, 28 Aug 2019 13:37:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=miPshPOcnrEwVpvxQoK3Ls37y5/pCPaMdY3vQpQnRPk=;
-        b=pVECr5uEbJzJZx8TrmQlLcIWPgLqayJDDotVSoF/PJWjF750XnV9qKxVSiOQQBcVUQ
-         TIvK0sjsvAxn3bsXcXikA6VAAaopwdIMVhSqfSXUAhX8HirmBRylAgRi6S0OmjIlNZGt
-         yLI4oV9YAS/cFofsoU2r6hvZNTZXTV3/VQGglLA1VnZ8COtH+5s22xTnTlpK/X1f1Qjs
-         fP8j33/6i9SwOFSBHDmKih2y4zRIpZagKowInP/EBRT/003CQNqhzoChDTummfoMQm6a
-         NC+YRgrT3579IFYLPW1h17gnjQA9AFBjvrSllaZIv7StH6qLxhU7w2VgLQPZdXw7ULab
-         BH2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=miPshPOcnrEwVpvxQoK3Ls37y5/pCPaMdY3vQpQnRPk=;
-        b=djtF/vvEZo9hsF4TvGZHAWuG14vjpbcsQU6nnRViWsFQy3PUoV3eebbSxsXrTeGhR5
-         tnt71bwEn+kf2jN6e+o9w/EM06uxH4VY7731vFKn58u6VVp1alvIwhLHFkwa7nPyv4iS
-         juI7npunucSQZ069zssf0uQDwHsU4+2eMcX3zotZgBi5nr3JMsRNEHPujJgOjM/59GYA
-         v8n4s6VWi6D5j/XSHHy84AmJQlTnFUQJOqlwzgjwxMvdDZJdA0qFkgrJ4DxwcYGQNueP
-         DReXY9u6XZUHX9Z/vKChVJL2GuH8IJeoOoLP7kXWZHan5+ZrumKn5xh6F4IEp45ANbJu
-         sPAA==
-X-Gm-Message-State: APjAAAV0yqyGytCruJgQtTiAcC2d5uKbPYvlgJ5WQeHQMvtivUUsoce6
-        sg9XaO+XpX+wjukKQ1ibBgZRqV0i
-X-Google-Smtp-Source: APXvYqysiWspI267imez/H1iQFU4xLC50QgrXaWgqSu08yzyzn06gYv39rESMMvD0DXx1Sp6XxU+gQ==
-X-Received: by 2002:adf:a2cd:: with SMTP id t13mr6535827wra.251.1567024655268;
-        Wed, 28 Aug 2019 13:37:35 -0700 (PDT)
-Received: from [192.168.1.19] (chg13.neoplus.adsl.tpnet.pl. [83.31.4.13])
-        by smtp.gmail.com with ESMTPSA id 24sm279546wmf.10.2019.08.28.13.37.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 13:37:34 -0700 (PDT)
-Subject: Re: [PATCH v3 1/5] leds: lm3532: Fix brightness control for i2c mode
-To:     Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>,
-        Tony Lindgren <tony@atomide.com>
-Cc:     sre@kernel.org, nekit1000@gmail.com, mpartap@gmx.net,
-        merlijn@wizzup.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190820195307.27590-1-dmurphy@ti.com>
- <20190826215822.GY52127@atomide.com> <20190826221413.GA19124@amd>
- <20190826224437.GZ52127@atomide.com> <20190827121818.GB19927@amd>
- <0eab6f72-ddb7-3da7-e90e-888374531f86@ti.com>
- <69925382-d8f4-4916-f121-0184a4219354@gmail.com>
- <84511f1e-5a04-5348-a2b4-1dc2b534a1cb@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4f2b2950-2756-67f9-3fde-09fa4b8439ee@gmail.com>
-Date:   Wed, 28 Aug 2019 22:37:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 16:39:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726583AbfH1UjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 16:39:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5091920828;
+        Wed, 28 Aug 2019 20:39:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567024754;
+        bh=OlEZBKXBrpxUG4SiWKZI6c38Hh86eJ1mRnJbnj4iUuI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Cj44yD/RmQMkgDoJ/jo1ZSEj6FfNJw5yYo0vu2z79KsdCwc751kC32msiiL5Diwgu
+         hRE0WS7EdOvQgH68uTSVn8Bd+r2bU/HtX98/RZ0v1nZEbYKJPwliCyX2f/cKKQMQxe
+         7HQhn8GZcOrIYdZ+aLDKvWOjp5FhfBlZPyD9LlDQ=
+Date:   Wed, 28 Aug 2019 22:39:12 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL drivers/misc] lkdtm updates for next
+Message-ID: <20190828203912.GA21068@kroah.com>
+References: <201908251522.DEAF618@keescook>
 MIME-Version: 1.0
-In-Reply-To: <84511f1e-5a04-5348-a2b4-1dc2b534a1cb@ti.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201908251522.DEAF618@keescook>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+On Sun, Aug 25, 2019 at 03:23:04PM -0700, Kees Cook wrote:
+> Hi Greg,
+> 
+> Please pull these LKDTM updates for next.
+> 
+> Thanks!
+> 
+> -Kees
+> 
+> The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
+> 
+>   Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/lkdtm-next
 
-On 8/28/19 5:28 PM, Dan Murphy wrote:
-> Jacek
-[...]
->>>>> Or i2c control is somehow broken and only als control now works?
->>> With only setting CONFIG_LEDS_LM3532=m to the next branch I get full
->>> brightness with 255.
->>>
->>> I also see half brightness at 128 with the ramp down working.
->>>
->>> I am not able to reproduce this issue on my device.
->>>
->>>> Well, max current led is obviously missing. Plus code does not check
->>>> the return from reading led-max-microamp.
->>> led-max-microamp is optional so there is no need to check the return.
->> It's also ugly to not check it when you have it assigned.
->> We'll soon receive complaints from static checkers about pointless
->> assignment.
->>
->> I'd distinguish between cases when parsing failed,
->> and when property has not been provided.
->>
->> if (fwnode_property_present(child, "led-max-microamp")) {
->>     if (fwnode_property_read_u32(child, "led-max-microamp",
->>                 &led->full_scale_current);
->>         dev_err(&priv->client->dev,
->>                           "Failed to parse led-max-microamp property\n")
-> 
-> I am OK with doing this but I think the else case logging is extra.
-> 
-> Again the property is optional and if the user decides not to populate
-> it then there should not
-> 
-> be a log of that it is missing.
+Pulled and pushed out, thanks.
 
-That's why I used lower log level (info). But it's up to you. I will
-not insist on keeping the logging for missing property case.
-
-> Dan
-> 
->> } else {
->>     dev_info(&priv->client->dev,
->>          led-max-microamp property is missing\n")
->> }
->>
->>> full_scale_current should be 0 if not populated and in the init only if
->>> this variable is set does
->>>
->>> the code program the register otherwise it is default of 20.2 mA.
-> 
-
--- 
-Best regards,
-Jacek Anaszewski
+greg k-h
