@@ -2,167 +2,172 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F55C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA32C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3D622CF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:45:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567003546;
-	bh=vneSpYWc4gWpu4W6gxC/dr26+W3sYZi98+pPPJepJB0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=O+cc63/6uncr77RgSJPusCVnI4w4u37OvhSPfnIxjUBxOrjb3XtubEvCfpShYnjRy
-	 mxbhe3MpmQ92NUYTiSYHBce2TX03DN4GlzwPM7GhVPOHrdLnU/jRxpwwwoacXpkTY8
-	 IRKIJsg1Tlc7eeOPOifqPsTzkEZzCxux00Y/eYUs=
+	by mail.kernel.org (Postfix) with ESMTP id 0DB8722CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:47:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfH1Opq (ORCPT
+        id S1726576AbfH1OrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:45:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45322 "EHLO mail.kernel.org"
+        Wed, 28 Aug 2019 10:47:03 -0400
+Received: from mga02.intel.com ([134.134.136.20]:4275 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726395AbfH1Opp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:45:45 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E85EF2077B;
-        Wed, 28 Aug 2019 14:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567003544;
-        bh=vneSpYWc4gWpu4W6gxC/dr26+W3sYZi98+pPPJepJB0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ucKcS+rJhzYEk6AK3752Inb4Zx4CTZgBJG43fvi3Wdb+3+BkPSB+RUS8Zmie1Jzlu
-         Hq9OuhmtffrrXHw2Ea3LeSm5kWb4cdvt3Ltm3G8h33of/sNQp19TtalYFb7isCAgwc
-         sb8Xm3J+E60E8aA8fzkjhV2WzEH80FJ6yeUVfd7M=
-Subject: Re: [PATCH] sefltest/ima: support appended signatures (modsig)
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
-Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Petr Vorel <pvorel@suse.cz>, Jessica Yu <jeyu@kernel.org>,
-        Dave Young <dyoung@redhat.com>,
-        linux-kselftest@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
-References: <1566995946-6582-1-git-send-email-zohar@linux.ibm.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <2f89d09f-1b69-3d77-6846-01bef7d20f39@kernel.org>
-Date:   Wed, 28 Aug 2019 08:45:29 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726326AbfH1OrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:47:03 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 07:47:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
+   d="scan'208";a="192613347"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 28 Aug 2019 07:47:00 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+        id 69717EC; Wed, 28 Aug 2019 17:46:59 +0300 (EEST)
+Date:   Wed, 28 Aug 2019 17:46:59 +0300
+From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Vlastimil Babka <vbabka@suse.cz>, hannes@cmpxchg.org,
+        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
+Message-ID: <20190828144658.ar4fajfuffn6k2ki@black.fi.intel.com>
+References: <20190827060139.GM7538@dhcp22.suse.cz>
+ <20190827110210.lpe36umisqvvesoa@box>
+ <aaaf9742-56f7-44b7-c3db-ad078b7b2220@suse.cz>
+ <20190827120923.GB7538@dhcp22.suse.cz>
+ <20190827121739.bzbxjloq7bhmroeq@box>
+ <20190827125911.boya23eowxhqmopa@box>
+ <d76ec546-7ae8-23a3-4631-5c531c1b1f40@linux.alibaba.com>
+ <20190828075708.GF7386@dhcp22.suse.cz>
+ <20190828140329.qpcrfzg2hmkccnoq@box>
+ <20190828141253.GM28313@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <1566995946-6582-1-git-send-email-zohar@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828141253.GM28313@dhcp22.suse.cz>
+User-Agent: NeoMutt/20170714-126-deb55f (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mimi,
-
-On 8/28/19 6:39 AM, Mimi Zohar wrote:
-> Detect and allow appended signatures.
+On Wed, Aug 28, 2019 at 02:12:53PM +0000, Michal Hocko wrote:
+> On Wed 28-08-19 17:03:29, Kirill A. Shutemov wrote:
+> > On Wed, Aug 28, 2019 at 09:57:08AM +0200, Michal Hocko wrote:
+> > > On Tue 27-08-19 10:06:20, Yang Shi wrote:
+> > > > 
+> > > > 
+> > > > On 8/27/19 5:59 AM, Kirill A. Shutemov wrote:
+> > > > > On Tue, Aug 27, 2019 at 03:17:39PM +0300, Kirill A. Shutemov wrote:
+> > > > > > On Tue, Aug 27, 2019 at 02:09:23PM +0200, Michal Hocko wrote:
+> > > > > > > On Tue 27-08-19 14:01:56, Vlastimil Babka wrote:
+> > > > > > > > On 8/27/19 1:02 PM, Kirill A. Shutemov wrote:
+> > > > > > > > > On Tue, Aug 27, 2019 at 08:01:39AM +0200, Michal Hocko wrote:
+> > > > > > > > > > On Mon 26-08-19 16:15:38, Kirill A. Shutemov wrote:
+> > > > > > > > > > > Unmapped completely pages will be freed with current code. Deferred split
+> > > > > > > > > > > only applies to partly mapped THPs: at least on 4k of the THP is still
+> > > > > > > > > > > mapped somewhere.
+> > > > > > > > > > Hmm, I am probably misreading the code but at least current Linus' tree
+> > > > > > > > > > reads page_remove_rmap -> [page_remove_anon_compound_rmap ->\ deferred_split_huge_page even
+> > > > > > > > > > for fully mapped THP.
+> > > > > > > > > Well, you read correctly, but it was not intended. I screwed it up at some
+> > > > > > > > > point.
+> > > > > > > > > 
+> > > > > > > > > See the patch below. It should make it work as intened.
+> > > > > > > > > 
+> > > > > > > > > It's not bug as such, but inefficientcy. We add page to the queue where
+> > > > > > > > > it's not needed.
+> > > > > > > > But that adding to queue doesn't affect whether the page will be freed
+> > > > > > > > immediately if there are no more partial mappings, right? I don't see
+> > > > > > > > deferred_split_huge_page() pinning the page.
+> > > > > > > > So your patch wouldn't make THPs freed immediately in cases where they
+> > > > > > > > haven't been freed before immediately, it just fixes a minor
+> > > > > > > > inefficiency with queue manipulation?
+> > > > > > > Ohh, right. I can see that in free_transhuge_page now. So fully mapped
+> > > > > > > THPs really do not matter and what I have considered an odd case is
+> > > > > > > really happening more often.
+> > > > > > > 
+> > > > > > > That being said this will not help at all for what Yang Shi is seeing
+> > > > > > > and we need a more proactive deferred splitting as I've mentioned
+> > > > > > > earlier.
+> > > > > > It was not intended to fix the issue. It's fix for current logic. I'm
+> > > > > > playing with the work approach now.
+> > > > > Below is what I've come up with. It appears to be functional.
+> > > > > 
+> > > > > Any comments?
+> > > > 
+> > > > Thanks, Kirill and Michal. Doing split more proactive is definitely a choice
+> > > > to eliminate huge accumulated deferred split THPs, I did think about this
+> > > > approach before I came up with memcg aware approach. But, I thought this
+> > > > approach has some problems:
+> > > > 
+> > > > First of all, we can't prove if this is a universal win for the most
+> > > > workloads or not. For some workloads (as I mentioned about our usecase), we
+> > > > do see a lot THPs accumulated for a while, but they are very short-lived for
+> > > > other workloads, i.e. kernel build.
+> > > > 
+> > > > Secondly, it may be not fair for some workloads which don't generate too
+> > > > many deferred split THPs or those THPs are short-lived. Actually, the cpu
+> > > > time is abused by the excessive deferred split THPs generators, isn't it?
+> > > 
+> > > Yes this is indeed true. Do we have any idea on how much time that
+> > > actually is?
+> > 
+> > For uncontented case, splitting 1G worth of pages (2MiB x 512) takes a bit
+> > more than 50 ms in my setup. But it's best-case scenario: pages not shared
+> > across multiple processes, no contention on ptl, page lock, etc.
 > 
+> Any idea about a bad case?
 
-Can you please add a couple of more sentences on the feature
-and what happens without it? I know this is a test for the
-feature, however, it will be useful for users and testers to
-know more about this test and the feature it is testing.
+Not really.
 
-Also, are there test skip conditions to be concerned about?
+How bad you want it to get? How many processes share the page? Access
+pattern? Locking situation?
 
-Is there a dependency on another tree or would like me to take
-this through kselftest tree?
+Worst case scenarion: no progress on splitting due to pins or locking
+conflicts (trylock failure).
 
-> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-> ---
->   .../selftests/kexec/test_kexec_file_load.sh        | 38 +++++++++++++++++++---
->   1 file changed, 34 insertions(+), 4 deletions(-)
+> > > > With memcg awareness, the deferred split THPs actually are isolated and
+> > > > capped by memcg. The long-lived deferred split THPs can't be accumulated too
+> > > > many due to the limit of memcg. And, cpu time spent in splitting them would
+> > > > just account to the memcgs who generate that many deferred split THPs, who
+> > > > generate them who pay for it. This sounds more fair and we could achieve
+> > > > much better isolation.
+> > > 
+> > > On the other hand, deferring the split and free up a non trivial amount
+> > > of memory is a problem I consider quite serious because it affects not
+> > > only the memcg workload which has to do the reclaim but also other
+> > > consumers of memory beucase large memory blocks could be used for higher
+> > > order allocations.
+> > 
+> > Maybe instead of drive the split from number of pages on queue we can take
+> > a hint from compaction that is struggles to get high order pages?
 > 
-> diff --git a/tools/testing/selftests/kexec/test_kexec_file_load.sh b/tools/testing/selftests/kexec/test_kexec_file_load.sh
-> index fa7c24e8eefb..2ff600388c30 100755
-> --- a/tools/testing/selftests/kexec/test_kexec_file_load.sh
-> +++ b/tools/testing/selftests/kexec/test_kexec_file_load.sh
-> @@ -37,11 +37,20 @@ is_ima_sig_required()
->   	# sequentially.  As a result, a policy rule may be defined, but
->   	# might not necessarily be used.  This test assumes if a policy
->   	# rule is specified, that is the intent.
-> +
-> +	# First check for appended signature (modsig), then xattr
->   	if [ $ima_read_policy -eq 1 ]; then
->   		check_ima_policy "appraise" "func=KEXEC_KERNEL_CHECK" \
-> -			"appraise_type=imasig"
-> +			"appraise_type=imasig|modsig"
->   		ret=$?
-> -		[ $ret -eq 1 ] && log_info "IMA signature required";
-> +		if [ $ret -eq 1 ]; then
-> +			log_info "IMA or appended(modsig) signature required"
-> +		else
-> +			check_ima_policy "appraise" "func=KEXEC_KERNEL_CHECK" \
-> +				"appraise_type=imasig"
-> +			ret=$?
-> +			[ $ret -eq 1 ] && log_info "IMA signature required";
-> +		fi
->   	fi
->   	return $ret
->   }
-> @@ -84,6 +93,22 @@ check_for_imasig()
->   	return $ret
->   }
->   
-> +# Return 1 for appended signature (modsig) found and 0 for not found.
-> +check_for_modsig()
-> +{
-> +	local module_sig_string="~Module signature appended~"
-> +	local sig="$(tail --bytes $((${#module_sig_string} + 1)) $KERNEL_IMAGE)"
-> +	local ret=0
-> +
-> +	if [ "$sig" == "$module_sig_string" ]; then
-> +		ret=1
-> +		log_info "kexec kernel image modsig signed"
-> +	else
-> +		log_info "kexec kernel image not modsig signed"
-> +	fi
-> +	return $ret
-> +}
-> +
->   kexec_file_load_test()
->   {
->   	local succeed_msg="kexec_file_load succeeded"
-> @@ -98,7 +123,8 @@ kexec_file_load_test()
->   		# In secureboot mode with an architecture  specific
->   		# policy, make sure either an IMA or PE signature exists.
->   		if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ] && \
-> -			[ $ima_signed -eq 0 ] && [ $pe_signed -eq 0 ]; then
-> +			[ $ima_signed -eq 0 ] && [ $pe_signed -eq 0 ] \
-> +			  && [ $ima_modsig -eq 0 ]; then
->   			log_fail "$succeed_msg (missing sig)"
->   		fi
->   
-> @@ -107,7 +133,8 @@ kexec_file_load_test()
->   			log_fail "$succeed_msg (missing PE sig)"
->   		fi
->   
-> -		if [ $ima_sig_required -eq 1 ] && [ $ima_signed -eq 0 ]; then
-> +		if [ $ima_sig_required -eq 1 ] && [ $ima_signed -eq 0 ] \
-> +		     && [ $ima_modsig -eq 0 ]; then
->   			log_fail "$succeed_msg (missing IMA sig)"
->   		fi
->   
-> @@ -204,5 +231,8 @@ pe_signed=$?
->   check_for_imasig
->   ima_signed=$?
->   
-> +check_for_modsig
-> +ima_modsig=$?
-> +
->   # Test loading the kernel image via kexec_file_load syscall
->   kexec_file_load_test
-> 
+> This is still unbounded in time.
 
-thanks,
--- Shuah
+I'm not sure we should focus on time.
+
+We need to make sure that we don't overal system health worse. Who cares
+if we have pages on deferred split list as long as we don't have other
+user for the memory?
+
+> > We can also try to use schedule_delayed_work() instead of plain
+> > schedule_work() to give short-lived page chance to get freed before
+> > splitting attempt.
+> 
+> No problem with that as long as this is well bound in time.
+> -- 
+> Michal Hocko
+> SUSE Labs
+
+-- 
+ Kirill A. Shutemov
