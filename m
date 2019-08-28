@@ -2,176 +2,159 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF33C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A788EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF1E2189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XgVEVqMV"
+	by mail.kernel.org (Postfix) with ESMTP id 830932189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfH1OTF (ORCPT
+        id S1727007AbfH1OTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 28 Aug 2019 10:19:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:60542 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726466AbfH1OTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 28 Aug 2019 10:19:05 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32927 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfH1OTF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:19:05 -0400
-Received: by mail-wr1-f67.google.com with SMTP id u16so19665wrr.0;
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FA5328;
+        Wed, 28 Aug 2019 07:19:05 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E185E3F246;
         Wed, 28 Aug 2019 07:19:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=Seb53bhrV9qLT1s/qYvDSSQVj25Xuijj2Bv+NVJgBcQ=;
-        b=XgVEVqMVsvRENk3CCBT1mQR1Ab+6FMr79DZ9YVtgGtYU1bOtezE4qtpsrhQvnbIx6M
-         EAaJnNI4xc2EyyG/cu/kk5ALWTiLCptpNiKzo0kSsonP62YYUeRamv2GUtCQ98dln+KV
-         E0aYIUKAHsQvPhGQvVohJSbp9GhD5QlM+tmhS/tsE4afMLhFYNA+4tWL32fMb/PUVfTv
-         P4GvqdOpXcYZ0dzWaTAusKUPLp5pAFomAvX3lvChMOC6RFZRz+/h0mYIVAlbIFgpj/+l
-         Awdy/eF3QXj9LcHpWtJqHg/p1885BDn8sz8QCjpbF30hJDJptdk6NY9b/vb5hNQdLvAy
-         D3XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=Seb53bhrV9qLT1s/qYvDSSQVj25Xuijj2Bv+NVJgBcQ=;
-        b=SpcryJ7FgmBpQmPW3UAymRN2/6DAz4yio699oqU1QMRHwccr2UAL30V/uROPUeJogP
-         E2a1R4oG5qY/LSXsMvJ0Pmm2WUW6iX4B3qtYh4t5nVyxpDjn7r5Jg0zwuq2QPOfzRSA2
-         IqoOZcOx3SiB8kilggCfiiCSbDL0DYnW94K9Q1j8506VI3isK9+MA+TWsNCoHCqiGv7V
-         ab6u+rze8mUi/4Uer+LRKzGResVxSCG0jcqozlw4iUnAzcojzr7wkzZYCSBtUV9zE7D9
-         hljicYB3h+GDZSUFkMiYg0+aFSJBa/1HTDL4uwFIp7sJY0s1j4uR0Mdq/iWVGKWf2zHm
-         Ie9g==
-X-Gm-Message-State: APjAAAWnZ/zCPiY+oKPEqtDaiAkDYyipBoh5A0qnidyY1cl8b0VqTFC1
-        07PVZ8E1oo9QAkx0Js6AvENgk28HibSMmkgM1fM=
-X-Google-Smtp-Source: APXvYqxeKif+VQwDRwK/EPQRG6U/V2qjCYPmjzlqT9bh1+ZpVCn8SHoVNLZpQocB1u/GulTYG+opibNwZwstIsxgBnc=
-X-Received: by 2002:a5d:69c8:: with SMTP id s8mr4682010wrw.353.1567001943244;
- Wed, 28 Aug 2019 07:19:03 -0700 (PDT)
+Subject: Re: [PATCH v2 4/8] sched/fair: rework load_balance
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>
+References: <1564670424-26023-1-git-send-email-vincent.guittot@linaro.org>
+ <1564670424-26023-5-git-send-email-vincent.guittot@linaro.org>
+ <74bb33d7-3ba4-aabe-c7a2-3865d5759281@arm.com>
+ <CAKfTPtA_=_ukj-8cQL4+5qU7bLHX5v4wuPODcGsX6a+o2HmBDQ@mail.gmail.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <a42542e5-8338-c00c-5d55-d30c0daf1701@arm.com>
+Date:   Wed, 28 Aug 2019 15:19:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190828055425.24765-1-yamada.masahiro@socionext.com> <CA+icZUWigJkh-VtJc4=xE06oMgE=ci2Mfdo2JaDv0fth8PKH+A@mail.gmail.com>
-In-Reply-To: <CA+icZUWigJkh-VtJc4=xE06oMgE=ci2Mfdo2JaDv0fth8PKH+A@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 28 Aug 2019 16:18:51 +0200
-Message-ID: <CA+icZUUhhOLfOgwoKP4nKOdPakNJF7XafJ09ERP6r7dOUduMsg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kbuild: refactor scripts/Makefile.extrawarn
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKfTPtA_=_ukj-8cQL4+5qU7bLHX5v4wuPODcGsX6a+o2HmBDQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 9:20 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Wed, Aug 28, 2019 at 7:55 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > Instead of the warning-[123] magic, let's accumulate compiler options
-> > to KBUILD_CFLAGS directly as the top Makefile does. I think this makes
-> > easier to understand what is going on in this file.
-> >
-> > This commit slightly changes the behavior, I think all of which are OK.
-> >
-> > [1] Currently, cc-option calls are needlessly evaluated. For example,
-> >       warning-3 += $(call cc-option, -Wpacked-bitfield-compat)
-> >     needs evaluating only when W=3, but it is actually evaluated for
-> >     W=1, W=2 as well. With this commit, only relevant cc-option calls
-> >     will be evaluated. This is a slight optimization.
-> >
-> > [2] Currently, unsupported level like W=4 is checked by:
-> >       $(error W=$(KBUILD_ENABLE_EXTRA_GCC_CHECKS) is unknown)
-> >     This will no longer be checked, but I do not think it is a big
-> >     deal.
-> >
->
-> Hi Masahiro Yamada,
->
-> thanks for your patch series.
->
-> If KBUILD_ENABLE_EXTRA_GCC_CHECKS does extra(-warning)-checks for GCC and Clang,
-> please rename the Kconfig into...
->
-> KBUILD_ENABLE_EXTRA_CC_CHECKS
->
-> ...or something similiar (and maybe with some notes in its Kconfig help-text?).
->
+On 26/08/2019 11:11, Vincent Guittot wrote:
+>>> +     case group_fully_busy:
+>>> +             /*
+>>> +              * Select the fully busy group with highest avg_load.
+>>> +              * In theory, there is no need to pull task from such
+>>> +              * kind of group because tasks have all compute
+>>> +              * capacity that they need but we can still improve the
+>>> +              * overall throughput by reducing contention when
+>>> +              * accessing shared HW resources.
+>>> +              * XXX for now avg_load is not computed and always 0 so
+>>> +              * we select the 1st one.
+>>> +              */
+>>
+>> What's wrong with unconditionally computing avg_load in update_sg_lb_stats()?
+> 
+> removing useless division which can be expensive
+> 
 
-I have tested both patches against recent kbuild-next and can boot on
-bare metal with clang.
+Seeing how much stuff we already do in just computing the stats, do we
+really save that much by doing this? I'd expect it to be negligible with
+modern architectures and all of the OoO/voodoo, but maybe I need a 
+refresher course.
 
-I have *not* passed any W= to my make, but I see that clang's W=1
-kbuild-cflags are active.
+>> We already unconditionally accumulate group_load anyway.
+> 
+> accumulation must be done while looping on the group whereas computing
+> avg_load can be done only when needed
+> 
+>>
+>> If it's to make way for patch 6/8 (using load instead of runnable load),
+>> then I think you are doing things in the wrong order. IMO in this patch we
+>> should unconditionally compute avg_load (using runnable load), and then
+>> you could tweak it up in a subsequent patch.
+> 
+> In fact, it's not link to patch 6/8.
+> It's only that I initially wanted to used load only when overloaded
+> but then I got this case and thought that comparing avg_load could be
+> interesting but without any proof that it's worth.
+> As mentioned in the comment, tasks in this group have enough capacity
+> and there is no need to move task in theory. This is there mainly to
+> trigger the discuss and keep in mind a possible area of improvement in
+> a next step.
+> I haven't run tests or done more study on this particular case to make
+> sure that there would be some benefit to compare avg_load.
+> 
+> So in the future, we might end up always computing avg_load and
+> comparing it for selecting busiest fully busy group
+> 
 
-[ scripts/Makefile.extrawarn ]
+Okay, that definitely wants testing then.
 
-ifeq ("$(origin W)", "command line")
-  export KBUILD_ENABLE_EXTRA_GCC_CHECKS := $(W)
-endif
+[...]
+>>> +     if (busiest->group_type == group_misfit_task) {
+>>> +             /* Set imbalance to allow misfit task to be balanced. */
+>>> +             env->balance_type = migrate_misfit;
+>>> +             env->imbalance = busiest->group_misfit_task_load;
+>>
+>> AFAICT we don't ever use this value, other than setting it to 0 in
+>> detach_tasks(), so what we actually set it to doesn't matter (as long as
+>> it's > 0).
+> 
+> not yet.
+> it's only in patch 8/8 that we check if the tasks fits the cpu's
+> capacity during the detach_tasks
+> 
 
-#
-# W=1 - warnings that may be relevant and does not occur too often
-#
-ifneq ($(findstring 1, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
-[ ... ]
-KBUILD_CPPFLAGS += -DKBUILD_EXTRA_WARN1
+But that doesn't use env->imbalance, right? With that v3 patch it's just
+the task util's, so AFAICT my comment still stands.
 
-else
+>>
+>> I'd re-suggest folding migrate_misfit into migrate_task, which is doable if
+>> we re-instore lb_env.src_grp_type (or rather, not delete it in this patch),
+>> though it makes some other places somewhat uglier. The good thing is that
+>> it actually does end up being implemented as a special kind of task
+>> migration, rather than being loosely related.
+> 
+> I prefer to keep it separate instead of adding a sub case in migrate_task
+> 
 
-# W=1 also stops suppressing some warnings
+My argument here is that ideally they shouldn't be separated, since the misfit
+migration is a subcase of task migration (or an extension of it - in any
+case, they're related). I haven't found a nicer way to express it though,
+and I agree that the special casing in detach_tasks()/fbq()/etc is meh.
 
-ifdef CONFIG_CC_IS_CLANG
-KBUILD_CFLAGS += -Wno-initializer-overrides
-KBUILD_CFLAGS += -Wno-format
-KBUILD_CFLAGS += -Wno-sign-compare
-KBUILD_CFLAGS += -Wno-format-zero-length
-endif # CONFIG_CC_IS_CLANG
-
-endif # KBUILD_ENABLE_EXTRA_GCC_CHECKS
-
-These clang KBUILD_CFLAGS are active independently of passing W=1.
-
-$ grep '\-Wno-initializer-overrides'
-build-log_5.3.0-rc6-2-amd64-cbl-asmgoto.txt | wc -l
-27195
-
-So the above comment is misleading?
-
-Is W=1 activated by default?
-
-Or do I miss something?
-
-[ Documentation/kbuild/kbuild.rst ]
-
-KBUILD_ENABLE_EXTRA_GCC_CHECKS
-------------------------------
-If enabled over the make command line with "W=1", it turns on additional
-gcc -W... options for more extensive build-time checking.
-
-What about?
-
-KBUILD_CC_EXTRA_CHECKS (or KBUILD_EXTRA_CC_CHECKS)
-------------------------------
-If enabled over the make command line with "W=...", it turns on additional
-compiler warning options like -Wmissing-declarations for more extensive
-build-time checking. For more details see <Documentation/kbuild/kbuild.rst>.
-
-W=1 - warnings that may be relevant and does not occur too often
-W=1 - also stops suppressing some warnings
-W=2 - warnings that occur quite often but may still be relevant
-W=3 - the more obscure warnings, can most likely be ignored
-
-- Sedat -
+[...]
+>>> @@ -8765,7 +8942,7 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+>>>       env.src_rq = busiest;
+>>>
+>>>       ld_moved = 0;
+>>> -     if (busiest->cfs.h_nr_running > 1) {
+>>> +     if (busiest->nr_running > 1) {
+>>
+>> Shouldn't that stay h_nr_running ? We can't do much if those aren't CFS
+>> tasks.
+> 
+> There is the case raised by srikar where we have for example 1 RT task
+> and 1 CFS task. cfs.h_nr_running==1 but we don't need active balance
+> because CFS is not the running task
+> 
+>>
+>>>               /*
+>>>                * Attempt to move tasks. If find_busiest_group has found
+>>>                * an imbalance but busiest->nr_running <= 1, the group is
+>>>
