@@ -2,107 +2,83 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517ECC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6830FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5EA20828
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48DB322CED
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfH1MJj (ORCPT
+        id S1726429AbfH1MN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:09:39 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:46996 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbfH1MJj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:09:39 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id EB15781E70; Wed, 28 Aug 2019 14:09:22 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 14:09:36 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Pavel Machek <pavel@denx.de>, Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chen Yu <yu.c.chen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 4.19 72/98] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD
- family 15h/16h
-Message-ID: <20190828120935.GD8052@amd>
-References: <20190827072718.142728620@linuxfoundation.org>
- <20190827072722.020603090@linuxfoundation.org>
- <20190827113604.GB18218@amd>
- <alpine.DEB.2.21.1908271525480.1939@nanos.tec.linutronix.de>
- <20190828103113.GA14677@amd>
- <alpine.DEB.2.21.1908281231480.1869@nanos.tec.linutronix.de>
- <20190828114947.GC8052@amd>
- <20190828120024.GF4920@zn.tnic>
+        Wed, 28 Aug 2019 08:13:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38366 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726378AbfH1MN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 08:13:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 155AAAC2C;
+        Wed, 28 Aug 2019 12:13:58 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org
+Cc:     Michal Suchanek <msuchanek@suse.de>, linux-kernel@vger.kernel.org,
+        oneukum@suse.com, acho@suse.com, tiwai@suse.com, jlee@suse.com
+Subject: [PATCH] Revert "Bluetooth: btusb: driver to enable the usb-wakeup feature"
+Date:   Wed, 28 Aug 2019 14:13:49 +0200
+Message-Id: <20190828121349.24966-1-msuchanek@suse.de>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Xm/fll+QQv+hsKip"
-Content-Disposition: inline
-In-Reply-To: <20190828120024.GF4920@zn.tnic>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This reverts commit a0085f2510e8976614ad8f766b209448b385492f.
 
---Xm/fll+QQv+hsKip
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+After this commit systems wake up at random, most commonly when
 
-On Wed 2019-08-28 14:00:24, Borislav Petkov wrote:
-> On Wed, Aug 28, 2019 at 01:49:47PM +0200, Pavel Machek wrote:
-> > AMD screwed this up,
->=20
-> Except that it wasn't AMD who screwed up but BIOS on *some* laptops.
+ - put to sleep while bluetooth audio stream is running
+ - connected bluetooth audio device is powered off while system is
+ asleep
 
-Yes, and now AMD has patch to break it on *all* machines.
+This is broken since the commit was merged up to 5.3-rc6.
 
-Hmm. "Get random data" instruction that fails to return random data,
-depending on BIOS... (and even indicates success, IIRC)... Sounds like
-CPU vendor screwup to me.
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+ drivers/bluetooth/btusb.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-And they can also fix it up. If re-initing random generator is
-impossible from kernel, surely CPU microcode can be either updated to
-do the init automatically, or at least allow kernel to do the init.
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 5cf0734eb31b..5c67d41ca254 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -1170,10 +1170,6 @@ static int btusb_open(struct hci_dev *hdev)
+ 	}
+ 
+ 	data->intf->needs_remote_wakeup = 1;
+-	/* device specific wakeup source enabled and required for USB
+-	 * remote wakeup while host is suspended
+-	 */
+-	device_wakeup_enable(&data->udev->dev);
+ 
+ 	if (test_and_set_bit(BTUSB_INTR_RUNNING, &data->flags))
+ 		goto done;
+@@ -1238,7 +1234,6 @@ static int btusb_close(struct hci_dev *hdev)
+ 		goto failed;
+ 
+ 	data->intf->needs_remote_wakeup = 0;
+-	device_wakeup_disable(&data->udev->dev);
+ 	usb_autopm_put_interface(data->intf);
+ 
+ failed:
+-- 
+2.22.0
 
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---Xm/fll+QQv+hsKip
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1mbv8ACgkQMOfwapXb+vKuGQCggrpXRxPboGyVt8+wPQDzbHsk
-Y5AAoJH+7uzv6qf18s+wwWNFoIo3pTOc
-=xR92
------END PGP SIGNATURE-----
-
---Xm/fll+QQv+hsKip--
