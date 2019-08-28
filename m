@@ -2,150 +2,116 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6BBC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BF5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC7320679
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5682C22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:45:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dXFZXrQn"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="PLFzOjVN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfH1HpX (ORCPT
+        id S1726465AbfH1Hp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 03:45:23 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:56950 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfH1HpX (ORCPT
+        Wed, 28 Aug 2019 03:45:29 -0400
+Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:39034 "EHLO
+        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfH1Hp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:45:23 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7S7iS8x119347;
-        Wed, 28 Aug 2019 02:44:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566978268;
-        bh=6awUWFtOdU1O63SCHM3c+fsnfHIDWdFPidD7RW4ydzA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dXFZXrQn0LpYrcwwqUWffJc2W1zM23THN6BmgVe/l05NZfQHM/LAEr5yRh6RwL0Sc
-         FvGCTpRXKPABXKQgbzDpBM/8W/GQrSvk/fI8CHLjV3OtwXxe5PqIqoJCDjo08+na3i
-         5WzRIxyRHfkSzbjjzMAdqMkbXywtkrlcQQnfbbi0=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7S7iSrs109129
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 28 Aug 2019 02:44:28 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 28
- Aug 2019 02:44:27 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 28 Aug 2019 02:44:28 -0500
-Received: from [172.24.145.97] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7S7iOF3048604;
-        Wed, 28 Aug 2019 02:44:25 -0500
-Subject: Re: [PATCH v2 0/5] ARM: make DaVinci part of the ARM v5 multiplatform
- build
-To:     Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>
-CC:     Kevin Hilman <khilman@kernel.org>,
-        David Lechner <david@lechnology.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-References: <20190725131257.6142-1-brgl@bgdev.pl>
- <CAK8P3a1FXyRRi5q48h-=egFjgoRJvy6_zuO9MQaAOMA-bsJKRA@mail.gmail.com>
- <CAMRc=Me_7aw_RvU_tZnVUgduN2wWYGqJ7hQirQ2RLzxGiPujvQ@mail.gmail.com>
- <CAMRc=MdCviMA4gakqFS3+F-nU2XkdmmZbCb-m1mBJdGRHufKGg@mail.gmail.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <27eb964a-bc6c-3a0d-c2c4-48e908465986@ti.com>
-Date:   Wed, 28 Aug 2019 13:14:23 +0530
+        Wed, 28 Aug 2019 03:45:29 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id ACF7F3F5B3;
+        Wed, 28 Aug 2019 09:45:21 +0200 (CEST)
+Authentication-Results: pio-pvt-msa3.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=PLFzOjVN;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id JQJY19CEXsGq; Wed, 28 Aug 2019 09:45:20 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id C1C7C3F56C;
+        Wed, 28 Aug 2019 09:45:19 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 78592360206;
+        Wed, 28 Aug 2019 09:45:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1566978319; bh=mBkh856ME9O8BAVpJGkK0OhFC4RbDPtnfBYkUhq0j1k=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PLFzOjVNUjnLtcpfuEsEUVU4TSRPOHj5Abbb1s/rqt5ayJdAApycaYedADfP0X5Xt
+         70WBkqPs8tQsuW6HV41iBLAV446afqQ558z3CBmJXPIxly/mF8KpWLaBXYvcp2WyiS
+         2YSypas5vCfUW+Zty1yhKvRZjydhErGlijA+yljQ=
+Subject: Re: [PATCH v2 1/4] x86/vmware: Update platform detection code for
+ VMCALL/VMMCALL hypercalls
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
+        linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        dri-devel@lists.freedekstop.org, Doug Covelli <dcovelli@vmware.com>
+References: <20190823081316.28478-1-thomas_os@shipmail.org>
+ <20190823081316.28478-2-thomas_os@shipmail.org>
+ <20190827125636.GE29752@zn.tnic>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <471e1f6b-56eb-281e-155d-3149f6915f81@shipmail.org>
+Date:   Wed, 28 Aug 2019 09:45:19 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAMRc=MdCviMA4gakqFS3+F-nU2XkdmmZbCb-m1mBJdGRHufKGg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190827125636.GE29752@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/08/19 1:03 PM, Bartosz Golaszewski wrote:
-> pon., 5 sie 2019 o 10:31 Bartosz Golaszewski <brgl@bgdev.pl> napisał(a):
->>
->> czw., 25 lip 2019 o 16:57 Arnd Bergmann <arnd@arndb.de> napisał(a):
->>>
->>> On Thu, Jul 25, 2019 at 3:13 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->>>>
->>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>>
->>>> This series makes DaVinci part of the multiplatform build for ARM v5.
->>>>
->>>> First three patches fix build errors spotted and fixed by Arnd with v1.
->>>>
->>>> The fourth patch adds necessary bits and pieces for davinci to support
->>>> multiplatform build and the last one actually adds all davinci boards
->>>> to multi_v5_defconfig.
->>>>
->>>> Tested on da850-lcdk with both multi_v5 as well as davinci_all defconfigs.
->>>>
->>>> v1 -> v2:
->>>> - added patches from Arnd that fix build errors spotted when building
->>>>   random configurations (much appreciated)
->>>> - rebased on top of v5.3-rc1
->>>
->>>> Arnd Bergmann (3):
->>>> staging: media/davinci_vpfe: fix pinmux setup compilation
->>>>  media: davinci-vpbe: remove obsolete includes
->>>>  davinci: fix sleep.S build error on ARMv4
->>>>
->>>> Bartosz Golaszewski (2):
->>>>  ARM: davinci: support multiplatform build for ARM v5
->>>>  ARM: multi_v5_defconfig: make DaVinci part of the ARM v5 multiplatform build
->>>
->>>
->>> Thanks a lot for reposting the series!
->>>
->>> I wonder how we shoud deal with the dependencies now that the two media
->>> patches got merged in the linux-media tree.
->>>
->>> It would be tempting to just merge the arch/arm/ changes, but that creates
->>> a bisection problem when the vpbe driver is enabled. I don't care
->>> about the staging driver really as that one is broken anyway, but including
->>> the "media: davinci-vpbe: remove obsolete includes" fix would be better
->>> here.
->>>
->>> Mauro, any idea for how to handle that? Should we apply an identical
->>> patch to the davinci tree, or maybe only have it the ARM tree and you
->>> drop it from your tree (I don't know if you have a rule against rebasing).
->>> Sorry for not coordinating with Bartosz before I sent the patch again
->>> earlier this week.
->>>
->>>
->>>       Arnd
->>
->> Hi Arnd,
->>
->> is there any action required from me for this series?
->>
->> Bart
-> 
-> Ping.
+On 8/27/19 2:56 PM, Borislav Petkov wrote:
+>
+> Also, you could restructure that function something like this to save yourself
+> an indentation level or two and make it more easily readable:
+>
+> static uint32_t __init vmware_platform(void)
+> {
+>          unsigned int hyper_vendor_id[3];
+>          unsigned int eax;
+>
+>          if (!boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+>                  if (dmi_available && dmi_name_in_serial("VMware") && __vmware_platform())
+>                          return 1;
 
-I dont think the multi-platform parts can be merged in v5.4 since we
-dont have DM365 converted successfully to use clocksource driver yet.
 
-But other parts of the series can be merged and hopefully we resolve
-that pending issue for v5.5
+Hmm, we're missing a return 0; here. The number of return points and the 
+moved up variable declarations worries me a little. I'll see if I can 
+clean this up a bit, but would prefer to make a follow-up patch in that 
+case.
 
-Thanks,
-Sekhar
+/Thomas
+
+
+>          }
+>
+>          cpuid(CPUID_VMWARE_INFO_LEAF, &eax, &hyper_vendor_id[0],
+>                &hyper_vendor_id[1], &hyper_vendor_id[2]);
+>
+>          if (!memcmp(hyper_vendor_id, "VMwareVMware", 12)) {
+>                  if (eax >= CPUID_VMWARE_FEATURES_LEAF)
+>                          vmware_hypercall_mode = vmware_select_hypercall();
+>
+>                  pr_info("hypercall mode: 0x%02x\n", (unsigned int) vmware_hypercall_mode);
+>
+>                  return CPUID_VMWARE_INFO_LEAF;
+>          }
+>          return 0;
+> }
+>
+
