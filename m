@@ -2,252 +2,201 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF21C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07819C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3E92189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54F42189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:01:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="mKAwPuxp";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="mKAwPuxp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W937E6M1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfH1PAp (ORCPT
+        id S1726663AbfH1PBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:00:45 -0400
-Received: from mail-eopbgr70077.outbound.protection.outlook.com ([40.107.7.77]:52896
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726394AbfH1PAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:00:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IM1IEgb87yGxGmqT6sYLlZkZjBxtjy4yeyRXYt4Mt6c=;
- b=mKAwPuxpEplh6RAsyV4bEypVyEna80EeP5JSvVU/ObBlZnvwzjF42fjur90piydRo4gARoGGEcj67AelqAs/X65CPCODYoilBD8/ZzFG+IPpdr/V+ry6oA0A5vGha2qqPBnKWXDRLgYP2wacylc1Kl9TAzimfBLzDWhZTUpARJY=
-Received: from AM6PR08CA0001.eurprd08.prod.outlook.com (2603:10a6:20b:b2::13)
- by DB6PR0802MB2599.eurprd08.prod.outlook.com (2603:10a6:4:a2::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2199.21; Wed, 28 Aug
- 2019 15:00:37 +0000
-Received: from DB5EUR03FT039.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e0a::206) by AM6PR08CA0001.outlook.office365.com
- (2603:10a6:20b:b2::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2199.14 via Frontend
- Transport; Wed, 28 Aug 2019 15:00:37 +0000
-Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=temperror action=none
- header.from=arm.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of arm.com: DNS Timeout)
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT039.mail.protection.outlook.com (10.152.21.120) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2220.16 via Frontend Transport; Wed, 28 Aug 2019 15:00:35 +0000
-Received: ("Tessian outbound aa6cb5c8f945:v27"); Wed, 28 Aug 2019 15:00:31 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: ce30f03f349cbbe7
-X-CR-MTA-TID: 64aa7808
-Received: from a64bf5be92b7.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.0.51])
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 738CCCAB-1CF4-4A87-99DC-284A7E01FF1D.1;
-        Wed, 28 Aug 2019 15:00:25 +0000
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01lp2051.outbound.protection.outlook.com [104.47.0.51])
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id a64bf5be92b7.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
-    Wed, 28 Aug 2019 15:00:25 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JcNszn9gwKjyOxLOweNcRL2gbDpbGq9LFYtQTqU4DgPiTyHf/BuLvDSO17NevpN1euXyizPpLdCeudKUApTTAiXrosU7LekhazP/F47ka99AXz6zX+eCbCA1+EaLsowNh1O81khXzOLJy5hNYIUszHHT1hl0rIV59yKph+jfscsfBK7jTWoZVMUWBZwT3xquX1cI2S9LMw3nDWCMpT+i9IM2ZFS890rgHx45QKwcERgCa48aMIly9Zy9BSxAMpjCWbI2G0CKY5UgPL2SxrbFcClXKiSba9XCbNqrGDWWqK6nNXq/Zs7PUInZGAHtnZVYxv/OXMaENO8tt+XoCRF5sg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IM1IEgb87yGxGmqT6sYLlZkZjBxtjy4yeyRXYt4Mt6c=;
- b=WvFXwapjgJ7wR9u13s5vjcu0k1dCDW11stl+BzwE7gQkSqKD6WhfKC34mdXQ0t2LrOYw8aU7l2NYse6Klbtl2Vi7L5WpddWPRrhXkuJvCezxe1YPx2yD6b2KaxeF2z6MQ1YLip06SHecNi6BI/rzDGTknoVB3RKkStBiX60vRUdgxRT1nw0yR9Elol76pAdDFhb9wLFE4xcVYLJR4CRog0893sWTL1bpmFQOLjRr36gwe1zJOTVq1aRd8XZv1K6CXQWNgOkOTrgJD/4bzbSEv2Np7cfGWoZpaaj7rliEl8bQD6lXE4atX1x/nKIaFzlGFfwpbCZ/J9mkQGhk564mGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IM1IEgb87yGxGmqT6sYLlZkZjBxtjy4yeyRXYt4Mt6c=;
- b=mKAwPuxpEplh6RAsyV4bEypVyEna80EeP5JSvVU/ObBlZnvwzjF42fjur90piydRo4gARoGGEcj67AelqAs/X65CPCODYoilBD8/ZzFG+IPpdr/V+ry6oA0A5vGha2qqPBnKWXDRLgYP2wacylc1Kl9TAzimfBLzDWhZTUpARJY=
-Received: from AM0PR08MB5345.eurprd08.prod.outlook.com (52.132.212.135) by
- AM0PR08MB3955.eurprd08.prod.outlook.com (20.178.119.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Wed, 28 Aug 2019 15:00:19 +0000
-Received: from AM0PR08MB5345.eurprd08.prod.outlook.com
- ([fe80::1de:178b:2ca:42e5]) by AM0PR08MB5345.eurprd08.prod.outlook.com
- ([fe80::1de:178b:2ca:42e5%2]) with mapi id 15.20.2199.021; Wed, 28 Aug 2019
- 15:00:19 +0000
-From:   Ayan Halder <Ayan.Halder@arm.com>
-To:     Ayan Halder <Ayan.Halder@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "malidp@foss.arm.com" <malidp@foss.arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     nd <nd@arm.com>, Ayan Halder <Ayan.Halder@arm.com>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>
-Subject: [PATCH v2] drm/komeda: Reordered the komeda's de-init functions
-Thread-Topic: [PATCH v2] drm/komeda: Reordered the komeda's de-init functions
-Thread-Index: AQHVXbFOPtkOyMBO7Em37TZu77ub2Q==
-Date:   Wed, 28 Aug 2019 15:00:19 +0000
-Message-ID: <20190828145945.15904-1-ayan.halder@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0133.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9f::25) To AM0PR08MB5345.eurprd08.prod.outlook.com
- (2603:10a6:208:17f::7)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Ayan.Halder@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.21.0
-x-originating-ip: [217.140.106.54]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-Correlation-Id: 7de397b7-f250-4d05-818b-08d72bc87b33
-X-MS-Office365-Filtering-HT: Tenant
-X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR08MB3955;
-X-MS-TrafficTypeDiagnostic: AM0PR08MB3955:|DB6PR0802MB2599:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR0802MB2599D85E09533CABA8ED27A0E4A30@DB6PR0802MB2599.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:78;OLM:78;
-x-forefront-prvs: 014304E855
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(366004)(136003)(396003)(189003)(199004)(66946007)(26005)(66556008)(102836004)(66476007)(64756008)(86362001)(52116002)(50226002)(99286004)(5660300002)(186003)(110136005)(1076003)(54906003)(6486002)(6436002)(316002)(3846002)(66446008)(2201001)(4326008)(478600001)(2906002)(476003)(66066001)(25786009)(2616005)(6506007)(5024004)(386003)(14454004)(486006)(6512007)(44832011)(71190400001)(6116002)(71200400001)(7736002)(81156014)(81166006)(8936002)(2501003)(36756003)(305945005)(256004)(14444005)(8676002)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB3955;H:AM0PR08MB5345.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info-Original: DtlUvpQ/raR5nEkk0UAaVab5doBrb3G4hTOB54l3wcN0R/kjgF7Z0vM4hOF187wWAqWWLmIaT+WoJymVWpdvHwqyTZE6EulnbKXjh4w4mM4qCDmOAbKERASJBLivhfLxlo+DglZkP4lY8TQiyQ8OgYKdzGa/5VaI4PmV5p9SbK277yCHk7DO2oTc++Lpzv7uvV7TApGtbYWxC1CTwxsVIxJ3x1/mBGTxBsGayFmJ9Xninl1e1PfgqpM1E+3LRtviayiuul48bfCounm7XGk2/rT/mk4CZuiNMIR+vW18gn87Q29rF8lAY0Cf4Tu71FCEIN0ZNKtDtiV4qvwo8rZUMSmAZh0xq8ZZgu4GMi6AXDszkWMxLCG4AXOhPKk46Q+w7KcHDjbBuIrkwgVdWuXCn3sv1rxlgkdQ7qFDdrb1gV4=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3955
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Ayan.Halder@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT039.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(346002)(396003)(2980300002)(199004)(189003)(356004)(8746002)(8936002)(50226002)(81156014)(81166006)(36756003)(14454004)(25786009)(6116002)(26826003)(14444005)(2201001)(26005)(86362001)(5024004)(7736002)(8676002)(305945005)(186003)(23756003)(99286004)(102836004)(478600001)(4326008)(6506007)(54906003)(386003)(110136005)(316002)(336012)(2501003)(50466002)(6512007)(63350400001)(486006)(126002)(476003)(2616005)(2906002)(76130400001)(47776003)(70586007)(6486002)(22756006)(1076003)(70206006)(3846002)(63370400001)(66066001)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0802MB2599;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 9461d39a-582f-4f1f-870b-08d72bc8715a
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(710020)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0802MB2599;
-NoDisclaimer: True
-X-Forefront-PRVS: 014304E855
-X-Microsoft-Antispam-Message-Info: GlohHSbiE5pAR/MTrnVnvTHnArTGDA+AXqeSh7TvYFgl/11T35WRVRiDc9+IcWkMCip9M6o3M1e7+KmBlpD9r1vz6nfepPRi9pmnQsgWr/ChaGWvifsHsjJov8THTqwoo6KD6RIxaoUU0ewG6Q7+dHrUqB4dT6ayckZ4Rponv686WwcY/5Rr8El5TMuKXB7c4/HiAyux+gFxxbnOmtsGSAFzbJEN22FPyDlDjxPJcgVc1V+2Bo6LYuVhCmq5XAQk45ZRbQAtP3XPRKEahX2yFcKnJnJoQfC0OaXGDRTv8HyHM+aa/icbFM2u9cfLjo/c1Y2dWqXcXmMLKuDlE49E65vvMK8OHSGZhrJyfLxKHuMnexkyqkGQvrF70z2TMX2YSUZJUJUJPbcd8eX6NsQcvq6dc4kvOMeNjj0gh6Tl7nQ=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2019 15:00:35.6100
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7de397b7-f250-4d05-818b-08d72bc87b33
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2599
+        Wed, 28 Aug 2019 11:01:17 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34427 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfH1PBR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 11:01:17 -0400
+Received: by mail-io1-f68.google.com with SMTP id s21so225724ioa.1;
+        Wed, 28 Aug 2019 08:01:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=I02anmGj4S9YRqFAlcHCi6doUcoEtL7IRdbmX6PMidk=;
+        b=W937E6M1/3aGD86pktze21hmWXVXnR5Q1jTQYOIHz1ME1/HCzrY4VoLPr5bXDtptJM
+         l0G6n8SS33Mt41/3NqSVimzOzaiY0ANI2qstCIZWvakBAlcoP8hjPT1DDEyGaiA2QagU
+         UzzcpZ5i3UKA8PAIn10G2nT0JEhoadrZCz2kGZ+uiAZygn3yuDmE1nOoX6E1VOethwtK
+         SmziPGXcE/lAKu8nANcYsI1cezKhsmDfl1nxPTtn0IUOkmZmNBvLj4iSxGmPY1HyDlWN
+         MllmQVzai4Fo2qjjLQx8duDt0QjTJ+6tUF8BPjUKEgRq4ypEJd+K+oF5ew4jsCp9kgvK
+         Xwiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=I02anmGj4S9YRqFAlcHCi6doUcoEtL7IRdbmX6PMidk=;
+        b=kiPULo+g9fxgSV0Px26qv/FSTjm5E1QVcaHplyE2nS3z9V/F8IiRHRXG5op1jUaR2J
+         BKLv//nifb05d/i5TFcptEN0SjL27eXP1Br5MJjkVeeVrnPAzCQ8rZBhBpL3EM4cuDCZ
+         auYAree8kRmqAIOcpVIo8Wofmhta7pqZ44C/ts/PbktSMpTu623z8TaJUJFa98yEqxNS
+         rKwOe02ftA0KncBaExpgNO08X1TiwbIXs3GyDYfyVvWrvt6rpJCyG6UxwDOipg5QCeuG
+         WJ4cL/Jvo8r5lu2QjMP63TasH0FueUfhOHaLN5fXxoNNe8ZMdd4HxFMH3UlPX1iuVtLe
+         D/VA==
+X-Gm-Message-State: APjAAAVoOGXo0KhsetWWb6LqYNTmQgevHpq/sL/c/CL7Q6nvdY8DJpaS
+        mJB0nHVbsgqoCOx6b4lvpNH0lAP1ksxLKQ==
+X-Google-Smtp-Source: APXvYqx5Aj1D6vL8dP3t9chNG93WuIFnEzdvfmVcbvK2YhKl8QfZue87AJSXNER131BK/7+PXrFCFQ==
+X-Received: by 2002:a5e:c101:: with SMTP id v1mr4819198iol.231.1567004475549;
+        Wed, 28 Aug 2019 08:01:15 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id i10sm2291519ioq.51.2019.08.28.08.01.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 08:01:14 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-omap@vger.kernel.org
+Cc:     pali.rohar@gmail.com, t-kristo@ti.com, aaro.koskinen@iki.fi,
+        adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Walmsley <paul@pwsan.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
+Date:   Wed, 28 Aug 2019 10:00:37 -0500
+Message-Id: <20190828150037.2640-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ayan Halder <Ayan.Halder@arm.com>
+The datasheet for the AM3517 shows the RNG is connected to L4.
+It shows the module address for the RNG is 0x480A0000, and it
+matches the omap2.dtsi description.  Since the driver can support
+omap2 and omap4, it seems reasonable to assume the omap3 would
+use the same core for the RNG.
 
-The de-init routine should be doing the following in order:-
-1. Unregister the drm device
-2. Shut down the crtcs - failing to do this might cause a connector leakage
-See the 'commit 109c4d18e574 ("drm/arm/malidp: Ensure that the crtcs are
-shutdown before removing any encoder/connector")'
-3. Disable the interrupts
-4. Unbind the components
-5. Free up DRM mode_config info
+This RFC, mimics much of the omap2 hwmods on the OMAP3. It
+also adds the necessary clock for driving the RNG.  Unfortunately,
+it appears non-functional.  If anyone has any suggestions on how
+to finish the hwmod (or port it to the newer l4 device tree
+format), feedback is requested.
 
-Changes from v1:-
-1. Re-ordered the header files inclusion
-2. Rebased on top of the latest drm-misc-fixes
+Currently the hwmods repond as follows:
 
-Signed-off-by: Ayan Kumar Halder <ayan.halder@arm.com>
-Reviewed-by: Mihail Atanassov <mihail.atanassov@arm.com>
----
- .../gpu/drm/arm/display/komeda/komeda_kms.c   | 23 ++++++++++++-------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+[    0.245697] omap_hwmod: rng: _wait_target_ready failed: -22
+[    0.245727] omap_hwmod: rng: cannot be enabled for reset (3)
+[    6.780792] omap_hwmod: rng: _wait_target_ready failed: -22
 
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/=
-drm/arm/display/komeda/komeda_kms.c
-index 1f0e3f4e8d74..69d9e26c60c8 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-@@ -14,8 +14,8 @@
- #include <drm/drm_gem_cma_helper.h>
- #include <drm/drm_gem_framebuffer_helper.h>
- #include <drm/drm_irq.h>
--#include <drm/drm_vblank.h>
- #include <drm/drm_probe_helper.h>
-+#include <drm/drm_vblank.h>
-=20
- #include "komeda_dev.h"
- #include "komeda_framebuffer.h"
-@@ -306,11 +306,11 @@ struct komeda_kms_dev *komeda_kms_attach(struct komed=
-a_dev *mdev)
- 			       komeda_kms_irq_handler, IRQF_SHARED,
- 			       drm->driver->name, drm);
- 	if (err)
--		goto cleanup_mode_config;
-+		goto free_component_binding;
-=20
- 	err =3D mdev->funcs->enable_irq(mdev);
- 	if (err)
--		goto cleanup_mode_config;
-+		goto free_component_binding;
-=20
- 	drm->irq_enabled =3D true;
-=20
-@@ -318,15 +318,21 @@ struct komeda_kms_dev *komeda_kms_attach(struct komed=
-a_dev *mdev)
-=20
- 	err =3D drm_dev_register(drm, 0);
- 	if (err)
--		goto cleanup_mode_config;
-+		goto free_interrupts;
-=20
- 	return kms;
-=20
--cleanup_mode_config:
-+free_interrupts:
- 	drm_kms_helper_poll_fini(drm);
- 	drm->irq_enabled =3D false;
-+	mdev->funcs->disable_irq(mdev);
-+free_component_binding:
-+	component_unbind_all(mdev->dev, drm);
-+cleanup_mode_config:
- 	drm_mode_config_cleanup(drm);
- 	komeda_kms_cleanup_private_objs(kms);
-+	drm->dev_private =3D NULL;
-+	drm_dev_put(drm);
- free_kms:
- 	kfree(kms);
- 	return ERR_PTR(err);
-@@ -337,13 +343,14 @@ void komeda_kms_detach(struct komeda_kms_dev *kms)
- 	struct drm_device *drm =3D &kms->base;
- 	struct komeda_dev *mdev =3D drm->dev_private;
-=20
--	drm->irq_enabled =3D false;
--	mdev->funcs->disable_irq(mdev);
- 	drm_dev_unregister(drm);
- 	drm_kms_helper_poll_fini(drm);
-+	drm_atomic_helper_shutdown(drm);
-+	drm->irq_enabled =3D false;
-+	mdev->funcs->disable_irq(mdev);
- 	component_unbind_all(mdev->dev, drm);
--	komeda_kms_cleanup_private_objs(kms);
- 	drm_mode_config_cleanup(drm);
-+	komeda_kms_cleanup_private_objs(kms);
- 	drm->dev_private =3D NULL;
- 	drm_dev_put(drm);
- }
---=20
-2.21.0
+Signed-off-by: Adam Ford <aford173@gmail.com>
+
+diff --git a/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi b/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi
+index 945537aee3ca..05891dff7fa1 100644
+--- a/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi
++++ b/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi
+@@ -189,7 +189,7 @@
+ 			 <&mcspi2_ick>, <&mcspi1_ick>, <&i2c3_ick>, <&i2c2_ick>,
+ 			 <&i2c1_ick>, <&uart2_ick>, <&uart1_ick>, <&gpt11_ick>,
+ 			 <&gpt10_ick>, <&mcbsp5_ick>, <&mcbsp1_ick>,
+-			 <&omapctrl_ick>, <&aes2_ick>, <&sha12_ick>,
++			 <&omapctrl_ick>, <&aes2_ick>, <&sha12_ick>, <&rng_ick>,
+ 			 <&ssi_ick>;
+ 	};
+ };
+diff --git a/arch/arm/mach-omap2/cm-regbits-34xx.h b/arch/arm/mach-omap2/cm-regbits-34xx.h
+index 037529a9e969..82330a66e35c 100644
+--- a/arch/arm/mach-omap2/cm-regbits-34xx.h
++++ b/arch/arm/mach-omap2/cm-regbits-34xx.h
+@@ -17,6 +17,7 @@
+ #define OMAP3430_CLKACTIVITY_IVA2_MASK			(1 << 0)
+ #define OMAP3430_CLKTRCTRL_MPU_MASK			(0x3 << 0)
+ #define OMAP3430_ST_AES2_SHIFT				28
++#define OMAP34XX_ST_RNG_SHIFT                           2
+ #define OMAP3430_ST_SHA12_SHIFT				27
+ #define AM35XX_ST_UART4_SHIFT				23
+ #define OMAP3430_ST_HDQ_SHIFT				22
+diff --git a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
+index f52438bdfc14..bae4487383b6 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
+@@ -1627,6 +1627,42 @@ static struct omap_hwmod omap3xxx_gpmc_hwmod = {
+ 	.flags		= HWMOD_NO_IDLEST | DEBUG_OMAP_GPMC_HWMOD_FLAGS,
+ };
+ 
++/* RNG */
++
++static struct omap_hwmod_class_sysconfig omap3_rng_sysc = {
++	.rev_offs	= 0x3c,
++	.sysc_offs	= 0x40,
++	.syss_offs	= 0x44,
++	.sysc_flags	= (SYSC_HAS_SOFTRESET | SYSC_HAS_AUTOIDLE |
++			   SYSS_HAS_RESET_STATUS),
++	.sysc_fields	= &omap_hwmod_sysc_type1,
++};
++
++static struct omap_hwmod_class omap3_rng_hwmod_class = {
++	.name		= "rng",
++	.sysc		= &omap3_rng_sysc,
++};
++
++struct omap_hwmod omap3xxx_rng_hwmod = {
++	.name		= "rng",
++	.main_clk	= "rng_ick",
++	.prcm		= {
++		.omap2 = {
++			.module_offs = CORE_MOD,
++			.idlest_reg_id = 4,
++			.idlest_idle_bit = OMAP34XX_ST_RNG_SHIFT,
++		},
++	},
++	/*
++	 * XXX The first read from the SYSSTATUS register of the RNG
++	 * after the SYSCONFIG SOFTRESET bit is set triggers an
++	 * imprecise external abort.  It's unclear why this happens.
++	 * Until this is analyzed, skip the IP block reset.
++	 */
++	.flags		= HWMOD_INIT_NO_RESET,
++	.class		= &omap3_rng_hwmod_class,
++};
++
+ /*
+  * interfaces
+  */
+@@ -2508,6 +2544,13 @@ static struct omap_hwmod omap3xxx_sham_hwmod = {
+ 	.class		= &omap3xxx_sham_class,
+ };
+ 
++/* l4_core -> rng */
++struct omap_hwmod_ocp_if omap3xxx_l4_core__rng = {
++	.master		= &omap3xxx_l4_core_hwmod,
++	.slave		= &omap3xxx_rng_hwmod,
++	.clk		= "rng_ick",
++	.user		= OCP_USER_MPU | OCP_USER_SDMA,
++};
+ 
+ static struct omap_hwmod_ocp_if omap3xxx_l4_core__sham = {
+ 	.master		= &omap3xxx_l4_core_hwmod,
+@@ -2769,6 +2812,7 @@ static struct omap_hwmod_ocp_if *omap36xx_hwmod_ocp_ifs[] __initdata = {
+ 	&omap3xxx_l4_core__mmu_isp,
+ 	&omap3xxx_l3_main__mmu_iva,
+ 	&omap3xxx_l4_core__ssi,
++	&omap3xxx_l4_core__rng,
+ 	NULL,
+ };
+ 
+@@ -2788,6 +2832,7 @@ static struct omap_hwmod_ocp_if *am35xx_hwmod_ocp_ifs[] __initdata = {
+ 	&am35xx_l4_core__mdio,
+ 	&am35xx_emac__l3,
+ 	&am35xx_l4_core__emac,
++	&omap3xxx_l4_core__rng,
+ 	NULL,
+ };
+ 
+-- 
+2.17.1
 
