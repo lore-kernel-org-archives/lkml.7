@@ -2,100 +2,121 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D649CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D698C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FEE122CF4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:47:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cx9/eKyZ"
+	by mail.kernel.org (Postfix) with ESMTP id 6920C22CF4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:49:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfH1Gry (ORCPT
+        id S1726444AbfH1Gtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 02:47:54 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40450 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbfH1Gry (ORCPT
+        Wed, 28 Aug 2019 02:49:40 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45740 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbfH1Gtj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 02:47:54 -0400
-Received: by mail-pl1-f193.google.com with SMTP id h3so753917pls.7;
-        Tue, 27 Aug 2019 23:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=bnr47kjwSYX7sFbyrZuRL9/chJw1MwjbhZytcoBlB5o=;
-        b=Cx9/eKyZMzzteG75d/97TvQdpvxY/AUlPeUQmItGvpwgkinp3omAK5ctohoduuAUgf
-         jXKKrh/NL2VTWn42aHIOX6MsZ8DNj048vQ+7qjLPrsx+kBlL4RNf6grEVohifDFAgIEb
-         H/upWcS4Rj6nVpuiPt1L4g3XYsusYygNas5of2T60fZbfdpKTKPmsDi0rVnBXggDpC4d
-         v5uMNv+AeoBc9jsq6RnC65wHU4ZUd5twIthsPjpbe7HLn+cyBi89+4aqgUeJaRJbGeKD
-         WpZ3s72o1ch9NrNYxIxj9qktepdSk49MRQnGGjXUb+ubbj36Db1a+q8Vmd2fXOyNo7P1
-         RdVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=bnr47kjwSYX7sFbyrZuRL9/chJw1MwjbhZytcoBlB5o=;
-        b=gEVpr2V70d+hnjHpDPma2o4MI8zcCJtj5q3ZW6RWS2CuIF4YEzhAr3k+NHiUjnVFg+
-         bO+n9tu82XJGgKQ8PqkAKrBQ2kQiOLxl92j9aZKfnvKzHCQGXtUwHWH4AOi5YNk2iKFP
-         TKv8VVzE9IMC9J07BXuMCslAcAbkAioT7P0KdS7HDV2QBU/r1PW+6QjjF/ewuOEvGYlF
-         LKexqDblfBv3tlGbi5bxGK79BoZcQ8Rg+Yac+BojkD7pyIRNz8pjwNhshVwgq+i8+fof
-         NhliIq3vA/czFQ8pI2vid6q1TiacqtwOgw9b6KI6trUQiZWxbQoK4UQDaK496zi8/z9Y
-         v57g==
-X-Gm-Message-State: APjAAAUrF6rnC6UcwUVFFrTfETVz9hDnvTxns6ulhuyO06UkN7d3KZzb
-        O/1q0qRZeC1xOAZl0bcHopA=
-X-Google-Smtp-Source: APXvYqwzylxpvp8rlW/hz8moz4sH8dXXtH+TZp8HF2VekHJ0Re5+eZzRrrarSINiZfPjbeimtCBYhg==
-X-Received: by 2002:a17:902:7085:: with SMTP id z5mr2814826plk.102.1566974873772;
-        Tue, 27 Aug 2019 23:47:53 -0700 (PDT)
-Received: from LGEARND20B15 ([27.122.242.75])
-        by smtp.gmail.com with ESMTPSA id 21sm1437347pfb.96.2019.08.27.23.47.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 23:47:53 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 15:47:49 +0900
-From:   Austin Kim <austindh.kim@gmail.com>
-To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        austindh.kim@gmail.com
-Subject: [PATCH] xfs: Use WARN_ON rather than BUG() for bailout
- mount-operation
-Message-ID: <20190828064749.GA165571@LGEARND20B15>
+        Wed, 28 Aug 2019 02:49:39 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i2rlY-0000qF-8A; Wed, 28 Aug 2019 08:49:12 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A04AB1C07D2;
+        Wed, 28 Aug 2019 08:49:11 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 06:49:11 -0000
+From:   "tip-bot2 for Cao Jin" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/cpufeature: Explain the macro duplication
+Cc:     Borislav Petkov <bp@alien8.de>, Cao Jin <caoj.fnst@cn.fujitsu.com>,
+        Borislav Petkov <bp@suse.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nadav Amit <namit@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86-ml" <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20190828061100.27032-1-caoj.fnst@cn.fujitsu.com>
+References: <20190828061100.27032-1-caoj.fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Message-ID: <156697495154.15133.9156303181767258276.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the CONFIG_BUG is enabled, BUG() is executed and then system is crashed.
-However, the bailout for mount is no longer proceeding.
+The following commit has been merged into the x86/cleanups branch of tip:
 
-For this reason, using WARN_ON rather than BUG() could prevent this situation.
+Commit-ID:     cbb1133b563a63901cf778220eb17e3ff1425aed
+Gitweb:        https://git.kernel.org/tip/cbb1133b563a63901cf778220eb17e3ff1425aed
+Author:        Cao Jin <caoj.fnst@cn.fujitsu.com>
+AuthorDate:    Wed, 28 Aug 2019 14:11:00 +08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 28 Aug 2019 08:38:39 +02:00
+
+x86/cpufeature: Explain the macro duplication
+
+Explain the intent behind the duplication of the
+
+  BUILD_BUG_ON_ZERO(NCAPINTS != n)
+
+check in *_MASK_CHECK and its immediate use in the *MASK_BIT_SET macros
+too.
+
+ [ bp: Massage. ]
+
+Suggested-by: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Cao Jin <caoj.fnst@cn.fujitsu.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nadav Amit <namit@vmware.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190828061100.27032-1-caoj.fnst@cn.fujitsu.com
 ---
- fs/xfs/xfs_mount.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/include/asm/cpufeature.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index 322da69..10fe000 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -213,8 +213,7 @@ xfs_initialize_perag(
- 			goto out_hash_destroy;
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index 58acda5..59bf91c 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -61,6 +61,13 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+ #define CHECK_BIT_IN_MASK_WORD(maskname, word, bit)	\
+ 	(((bit)>>5)==(word) && (1UL<<((bit)&31) & maskname##word ))
  
- 		spin_lock(&mp->m_perag_lock);
--		if (radix_tree_insert(&mp->m_perag_tree, index, pag)) {
--			BUG();
-+		if (WARN_ON(radix_tree_insert(&mp->m_perag_tree, index, pag))){
- 			spin_unlock(&mp->m_perag_lock);
- 			radix_tree_preload_end();
- 			error = -EEXIST;
--- 
-2.6.2
-
++/*
++ * {REQUIRED,DISABLED}_MASK_CHECK below may seem duplicated with the
++ * following BUILD_BUG_ON_ZERO() check but when NCAPINTS gets changed, all
++ * header macros which use NCAPINTS need to be changed. The duplicated macro
++ * use causes the compiler to issue errors for all headers so that all usage
++ * sites can be corrected.
++ */
+ #define REQUIRED_MASK_BIT_SET(feature_bit)		\
+ 	 ( CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  0, feature_bit) ||	\
+ 	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  1, feature_bit) ||	\
