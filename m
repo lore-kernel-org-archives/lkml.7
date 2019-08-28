@@ -2,95 +2,125 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178CDC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ACCC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD98217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E072B22CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567031183;
+	bh=nh/Cp1V3gNlbWJY+TFHAxN8PnPYse/LGeF2iYlhuYr0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x9lij5sZ45sfE0MGw8/TiYVi3D3yNEgyWyaxJiggcI4kVcUKd5+fTM93mp/z926Mp
+	 OwbURQevi7obC4fIkyjy6fvJnbHhE/wOXYFNelucC/REZM4B7YIUiiGtOZLy9tUU2M
+	 qLLfftb77qtKjQZuYhqP7lst5bnwdXErOFv2pSdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfH1WYc (ORCPT
+        id S1727024AbfH1W0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 18:24:32 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:58774 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726828AbfH1WYb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 18:24:31 -0400
-Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 0CD40361493;
-        Thu, 29 Aug 2019 08:24:24 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1i36MY-0004x3-2B; Thu, 29 Aug 2019 08:24:22 +1000
-Date:   Thu, 29 Aug 2019 08:24:22 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christopher Lameter <cl@linux.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
- kmalloc(power-of-two)
-Message-ID: <20190828222422.GL1119@dread.disaster.area>
-References: <20190826111627.7505-1-vbabka@suse.cz>
- <20190826111627.7505-3-vbabka@suse.cz>
- <0100016cd98bb2c1-a2af7539-706f-47ba-a68e-5f6a91f2f495-000000@email.amazonses.com>
- <20190828194607.GB6590@bombadil.infradead.org>
+        Wed, 28 Aug 2019 18:26:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726828AbfH1W0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 18:26:21 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6580A217F5;
+        Wed, 28 Aug 2019 22:26:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567031180;
+        bh=nh/Cp1V3gNlbWJY+TFHAxN8PnPYse/LGeF2iYlhuYr0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y19PaU3SJXWC5Jbbcdbffp+tIBXD/MaU3idWNPVC1i9/TYyH5mH3cGqpAhUPTgQB6
+         z/VKY/ron/skTmRO6tRYfYvUNLQMpKkEGmit8DxkT7py4vHms/0/79RjxNGBRJImT8
+         BHfPqMmItT6H6/p8Vo6LWWdZk6cj0ZJX9dzDxhBc=
+Date:   Wed, 28 Aug 2019 17:26:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof Wilczynski <kw@linux.com>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH] PCI: hv: Make functions only used locally static in
+ pci-hyperv.c
+Message-ID: <20190828222618.GE7013@google.com>
+References: <20190826154159.9005-1-kw@linux.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828194607.GB6590@bombadil.infradead.org>
+In-Reply-To: <20190826154159.9005-1-kw@linux.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=7-415B0cAAAA:8 a=wUb5uO5YJnghlZLzW24A:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 12:46:08PM -0700, Matthew Wilcox wrote:
-> On Wed, Aug 28, 2019 at 06:45:07PM +0000, Christopher Lameter wrote:
-> > I still think implicit exceptions to alignments are a bad idea. Those need
-> > to be explicity specified and that is possible using kmem_cache_create().
+Maybe just:
+
+  PCI: hv: Make functions static
+
+since we already know it's in pci-hyperv.c, and it's obvious that you
+can only do this for functions that are only used locally.
+
+On Mon, Aug 26, 2019 at 05:41:59PM +0200, Krzysztof Wilczynski wrote:
+> Functions hv_read_config_block(), hv_write_config_block()
+> and hv_register_block_invalidate() are not used anywhere
+> else and are local to drivers/pci/controller/pci-hyperv.c,
+> and do not need to be in global scope, so make these static.
 > 
-> I swear we covered this last time the topic came up, but XFS would need
-> to create special slab caches for each size between 512 and PAGE_SIZE.
-> Potentially larger, depending on whether the MM developers are willing to
-> guarantee that kmalloc(PAGE_SIZE * 2, GFP_KERNEL) will return a PAGE_SIZE
-> aligned block of memory indefinitely.
+> Resolve compiler warning that can be seen when building with
+> warnings enabled (W=1).
 
-Page size alignment of multi-page heap allocations is ncessary. The
-current behaviour w/ KASAN is to offset so a 8KB allocation spans 3
-pages and is not page aligned. That causes just as much in way
-of alignment problems as unaligned objects in multi-object-per-page
-slabs.
+Rewrap commit log to fill 75 columns.
 
-As I said in the lastest discussion of this problem on XFS (pmem
-devices w/ KASAN enabled), all we -need- is a GFP flag that tells the
-slab allocator to give us naturally aligned object or fail if it
-can't. I don't care how that gets implemented (e.g. another set of
-heap slabs like the -rcl slabs), I just don't want every high level
-subsystem that allocates heap memory for IO buffers to have to
-implement their own aligned slab caches.
+Does this fix all the similar warnings in drivers/pci/?  If there are
+more, maybe we could fix them all in a single patch or at least a
+single series?
 
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index f1f300218fab..c9642e429c2d 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -930,7 +930,7 @@ static void hv_pci_read_config_compl(void *context, struct pci_response *resp,
+>   *
+>   * Return: 0 on success, -errno on failure
+>   */
+> -int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+> +static int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+>  			 unsigned int block_id, unsigned int *bytes_returned)
+>  {
+>  	struct hv_pcibus_device *hbus =
+> @@ -1010,7 +1010,7 @@ static void hv_pci_write_config_compl(void *context, struct pci_response *resp,
+>   *
+>   * Return: 0 on success, -errno on failure
+>   */
+> -int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+> +static int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+>  			  unsigned int block_id)
+>  {
+>  	struct hv_pcibus_device *hbus =
+> @@ -1079,7 +1079,7 @@ int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+>   *
+>   * Return: 0 on success, -errno on failure
+>   */
+> -int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
+> +static int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
+>  				 void (*block_invalidate)(void *context,
+>  							  u64 block_mask))
+>  {
+> -- 
+> 2.22.1
+> 
