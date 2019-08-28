@@ -2,183 +2,143 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E79C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAED5C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 469EA208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B6C2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:53:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="CsSzg4pF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BA1KWLcF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfH1Sv7 (ORCPT
+        id S1726805AbfH1Sxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:51:59 -0400
-Received: from gateway30.websitewelcome.com ([192.185.193.11]:42398 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726400AbfH1Sv7 (ORCPT
+        Wed, 28 Aug 2019 14:53:52 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41957 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfH1Sxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:51:59 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 4E320D108
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 13:29:19 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 32h5iRkYhdnCe32h5ipXiE; Wed, 28 Aug 2019 13:29:19 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ewILt52ANbAo0/SJyy4fWKVEQWsG7Vl+LCU+2RXicqU=; b=CsSzg4pFPdVgp+yZgmkWLU+yLP
-        7Oel84hpT38RBNEyMamLet85i08wdlPJJ2MQVFrbhR4GdHBooX1at7o+D4Si0F0SAJixI70a7M1N+
-        eBDEPdwbCZe9EYoUhpwubfLEymSGmmlqYfO0ic50dyW4GMSL/1OO14R/2fU9fpD+O+jg5ydvTO5TS
-        ePIHPWynjVvm39jd44MfuyL5HGDdgAttNru2JUyRzK0U7c1HBd6V7MFqa3XX21ZRBZnfTdFiYa+EM
-        RSzZAYU5NOqptdCmd2biDzHmRHr/kjzZ24ULj0O0bmDpTs66MR3YfIhz5r2/Z0pShCztlBT5O0e9r
-        ANAFurPw==;
-Received: from [189.152.216.116] (port=47944 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1i32h4-003pFp-Ox; Wed, 28 Aug 2019 13:29:18 -0500
-Subject: Re: [PATCH] ima: use struct_size() in kzalloc()
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190529165343.GA2584@embeddedor>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <671185b9-5c91-5235-b5ea-96d3449bf716@embeddedor.com>
-Date:   Wed, 28 Aug 2019 13:29:16 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 14:53:52 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j16so838687wrr.8;
+        Wed, 28 Aug 2019 11:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dNeCU+ZF1utHP7CMktWuXnRZpMmmVHfRi6Kx10bzzBE=;
+        b=BA1KWLcFdAWrtBsaDuNr8g3j/SgOrTjFpsCuTY0hNWE9awNEoFniam51IU2VODgqUe
+         tWSuDD2MmJ6bGKNakIDXno5bS/OvPqmMHwa9fNrX1dfs9gE7XldIToxleEEzi/ehOzO0
+         MKCJAk19lRJbqJCa0+kg7t0a6maVuWyju3oiJA6+iDQmvwhgEJJZycLHj9ayfRmCQ3KC
+         neRbMBVmZagmm9I9yR/9bxQPZx2VJ2Uqvztc/ziKBS9h+fT4z/vSOu5QJUM2DVnqTr/Y
+         MhJj/HDKmHd/d9T+c/olDopKTALXtdiye+EwbIOXaPXRxT4MDLc6wsFk7ksDReqiG183
+         ebbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dNeCU+ZF1utHP7CMktWuXnRZpMmmVHfRi6Kx10bzzBE=;
+        b=rUra5E1d1houWussWPCClDgr8T7z4DORcin+XNTFO0/J2cKFxlyMNueAPKcxcsfX0v
+         o+iojMlH59k8w9WB2yqYKMFhcSZq/oPozw9PlveZiCkTXJ1vDTHFntNb21hwEmRlxjOh
+         8oAAwTazq5qHLHNhYOO0HXAThOYNkTn7gKwkxBk2jgJdEnv1bJQVpBD7NygslsPWTr8y
+         n4WCu7YSRXsEoUnC7p7Uidl+ALGls4UABF8AXNfxi8VXodu5qHRhyFLEpkTPXuyHUyTZ
+         v8scSjv+/2qeJLnLxwM/CarIORrlHXMTzLkh5E+6uNbCjGaUhpPteoxxvR0xoJzfhh6f
+         F9zA==
+X-Gm-Message-State: APjAAAVY6Y50uGElrh/hlhseVyy2+9gGLFw3OEJZ8VICqOUKjPtPraqp
+        QURkHlazwLEc22LCxfoCi+BgBQeObq6sAachaeo=
+X-Google-Smtp-Source: APXvYqweyMAnZ6yIhLJf6sFauZxV8VlmGh+lO4k0uF5jXv7BE29ZuBpN3aPxry2ik8FodDnqX68+X+75s0hzK6URnCM=
+X-Received: by 2002:adf:e286:: with SMTP id v6mr5946246wri.4.1567018429532;
+ Wed, 28 Aug 2019 11:53:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190529165343.GA2584@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.216.116
-X-Source-L: No
-X-Exim-ID: 1i32h4-003pFp-Ox
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [189.152.216.116]:47944
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 18
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190828034012.sBvm81sYK%akpm@linux-foundation.org> <3e4eba58-7d24-f811-baa1-b6e88334e5a2@infradead.org>
+In-Reply-To: <3e4eba58-7d24-f811-baa1-b6e88334e5a2@infradead.org>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 28 Aug 2019 14:53:37 -0400
+Message-ID: <CADnq5_PHNbSVUsM65sisfUwDxg_4-uEZWZMSQ=u78AWkaRdvtw@mail.gmail.com>
+Subject: Re: mmotm 2019-08-27-20-39 uploaded (gpu/drm/amd/display/)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mark Brown <broonie@kernel.org>, linux-fsdevel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.cz>, mm-commits@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Wed, Aug 28, 2019 at 2:51 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 8/27/19 8:40 PM, akpm@linux-foundation.org wrote:
+> > The mm-of-the-moment snapshot 2019-08-27-20-39 has been uploaded to
+> >
+> >    http://www.ozlabs.org/~akpm/mmotm/
+> >
+> > mmotm-readme.txt says
+> >
+> > README for mm-of-the-moment:
+> >
+> > http://www.ozlabs.org/~akpm/mmotm/
+> >
+> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > more than once a week.
+> >
+> > You will need quilt to apply these patches to the latest Linus release =
+(5.x
+> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated=
+ in
+> > http://ozlabs.org/~akpm/mmotm/series
+> >
+> > The file broken-out.tar.gz contains two datestamp files: .DATE and
+> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss=
+,
+> > followed by the base kernel version against which this patch series is =
+to
+> > be applied.
+> >
+> > This tree is partially included in linux-next.  To see which patches ar=
+e
+> > included in linux-next, consult the `series' file.  Only the patches
+> > within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included i=
+n
+> > linux-next.
+>
+> on i386:
+>
+> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_hwseq.c: In funct=
+ion =E2=80=98dcn20_hw_sequencer_construct=E2=80=99:
+> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_hwseq.c:2127:28: =
+error: =E2=80=98dcn20_dsc_pg_control=E2=80=99 undeclared (first use in this=
+ function); did you mean =E2=80=98dcn20_dpp_pg_control=E2=80=99?
+>   dc->hwss.dsc_pg_control =3D dcn20_dsc_pg_control;
+>                             ^~~~~~~~~~~~~~~~~~~~
+>                             dcn20_dpp_pg_control
+>
+>
+> Full randconfig file is attached.
 
-Friendly ping:
+Fixed here:
+https://cgit.freedesktop.org/~agd5f/linux/commit/?h=3Ddrm-next&id=3Dda26ded=
+3b2fff646d28559004195abe353bce49b
 
-Who can take this, please?
+Alex
 
-Thanks
---
-Gustavo
-
-On 5/29/19 11:53 AM, Gustavo A. R. Silva wrote:
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
-> 
-> struct foo {
->    int stuff;
->    struct boo entry[];
-> };
-> 
-> instance = kzalloc(sizeof(struct foo) + count * sizeof(struct boo), GFP_KERNEL);
-> 
-> Instead of leaving these open-coded and prone to type mistakes, we can
-> now use the new struct_size() helper:
-> 
-> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL);
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  security/integrity/ima/ima_template.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-> index b631b8bc7624..b945dff2ed14 100644
-> --- a/security/integrity/ima/ima_template.c
-> +++ b/security/integrity/ima/ima_template.c
-> @@ -281,9 +281,8 @@ static int ima_restore_template_data(struct ima_template_desc *template_desc,
->  	int ret = 0;
->  	int i;
->  
-> -	*entry = kzalloc(sizeof(**entry) +
-> -		    template_desc->num_fields * sizeof(struct ima_field_data),
-> -		    GFP_NOFS);
-> +	*entry = kzalloc(struct_size(*entry, template_data,
-> +				     template_desc->num_fields), GFP_NOFS);
->  	if (!*entry)
->  		return -ENOMEM;
->  
-> 
+>
+> --
+> ~Randy
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
