@@ -2,105 +2,183 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD302C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E79C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAB6D208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469EA208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:52:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="CsSzg4pF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfH1Svb (ORCPT
+        id S1726864AbfH1Sv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:51:31 -0400
-Received: from mga01.intel.com ([192.55.52.88]:20397 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbfH1Svb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:51:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 11:51:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="175014339"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga008.jf.intel.com with ESMTP; 28 Aug 2019 11:51:30 -0700
-Received: from fmsmsx157.amr.corp.intel.com (10.18.116.73) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 28 Aug 2019 11:51:30 -0700
-Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.127]) by
- FMSMSX157.amr.corp.intel.com ([169.254.14.57]) with mapi id 14.03.0439.000;
- Wed, 28 Aug 2019 11:51:29 -0700
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Subject: Re: [PATCH] libnvdimm, region: Use struct_size() in kzalloc()
-Thread-Topic: [PATCH] libnvdimm, region: Use struct_size() in kzalloc()
-Thread-Index: AQHVH9BpuhzKadnSBkOkhqdJ05WiaacR2OoA
-Date:   Wed, 28 Aug 2019 18:51:28 +0000
-Message-ID: <3e80b36c86942278ee66aebdd5ea2632f104083a.camel@intel.com>
-References: <20190610210613.GA21989@embeddedor>
-In-Reply-To: <20190610210613.GA21989@embeddedor>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-x-originating-ip: [10.232.112.185]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D1589446AC767F47B8FEFD059DCEA60D@intel.com>
-Content-Transfer-Encoding: base64
+        Wed, 28 Aug 2019 14:51:59 -0400
+Received: from gateway30.websitewelcome.com ([192.185.193.11]:42398 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726400AbfH1Sv7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 14:51:59 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 4E320D108
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 13:29:19 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 32h5iRkYhdnCe32h5ipXiE; Wed, 28 Aug 2019 13:29:19 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ewILt52ANbAo0/SJyy4fWKVEQWsG7Vl+LCU+2RXicqU=; b=CsSzg4pFPdVgp+yZgmkWLU+yLP
+        7Oel84hpT38RBNEyMamLet85i08wdlPJJ2MQVFrbhR4GdHBooX1at7o+D4Si0F0SAJixI70a7M1N+
+        eBDEPdwbCZe9EYoUhpwubfLEymSGmmlqYfO0ic50dyW4GMSL/1OO14R/2fU9fpD+O+jg5ydvTO5TS
+        ePIHPWynjVvm39jd44MfuyL5HGDdgAttNru2JUyRzK0U7c1HBd6V7MFqa3XX21ZRBZnfTdFiYa+EM
+        RSzZAYU5NOqptdCmd2biDzHmRHr/kjzZ24ULj0O0bmDpTs66MR3YfIhz5r2/Z0pShCztlBT5O0e9r
+        ANAFurPw==;
+Received: from [189.152.216.116] (port=47944 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i32h4-003pFp-Ox; Wed, 28 Aug 2019 13:29:18 -0500
+Subject: Re: [PATCH] ima: use struct_size() in kzalloc()
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190529165343.GA2584@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ mQINBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
+ 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
+ tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
+ DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
+ 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
+ YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
+ m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
+ NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
+ qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
+ LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABtCxHdXN0YXZvIEEu
+ IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPokCPQQTAQgAJwUCWywcDAIbIwUJ
+ CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
+ l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
+ obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
+ cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
+ ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
+ JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
+ JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
+ PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
+ R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
+ 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
+ e5YnLxF8ctRAp7K4yVlvA7kCDQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
+ H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
+ DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
+ 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
+ otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
+ l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
+ jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
+ zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
+ I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
+ ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
+ EQEAAYkCJQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
+ UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
+ XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
+ WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
+ imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
+ fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
+ 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
+ ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
+ YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
+ GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <671185b9-5c91-5235-b5ea-96d3449bf716@embeddedor.com>
+Date:   Wed, 28 Aug 2019 13:29:16 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190529165343.GA2584@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i32h4-003pFp-Ox
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [189.152.216.116]:47944
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 18
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA2LTEwIGF0IDE2OjA2IC0wNTAwLCBHdXN0YXZvIEEuIFIuIFNpbHZhIHdy
-b3RlOg0KPiBPbmUgb2YgdGhlIG1vcmUgY29tbW9uIGNhc2VzIG9mIGFsbG9jYXRpb24gc2l6ZSBj
-YWxjdWxhdGlvbnMgaXMNCj4gZmluZGluZw0KPiB0aGUgc2l6ZSBvZiBhIHN0cnVjdHVyZSB0aGF0
-IGhhcyBhIHplcm8tc2l6ZWQgYXJyYXkgYXQgdGhlIGVuZCwgYWxvbmcNCj4gd2l0aCBtZW1vcnkg
-Zm9yIHNvbWUgbnVtYmVyIG9mIGVsZW1lbnRzIGZvciB0aGF0IGFycmF5LiBGb3IgZXhhbXBsZToN
-Cj4gDQo+IHN0cnVjdCBuZF9yZWdpb24gew0KPiAJLi4uDQo+ICAgICAgICAgc3RydWN0IG5kX21h
-cHBpbmcgbWFwcGluZ1swXTsNCj4gfTsNCj4gDQo+IGluc3RhbmNlID0ga3phbGxvYyhzaXplb2Yo
-c3RydWN0IG5kX3JlZ2lvbikgKyBzaXplb2Yoc3RydWN0DQo+IG5kX21hcHBpbmcpICoNCj4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICBjb3VudCwgR0ZQX0tFUk5FTCk7DQo+IA0KPiBJbnN0ZWFk
-IG9mIGxlYXZpbmcgdGhlc2Ugb3Blbi1jb2RlZCBhbmQgcHJvbmUgdG8gdHlwZSBtaXN0YWtlcywg
-d2UgY2FuDQo+IG5vdyB1c2UgdGhlIG5ldyBzdHJ1Y3Rfc2l6ZSgpIGhlbHBlcjoNCj4gDQo+IGlu
-c3RhbmNlID0ga3phbGxvYyhzdHJ1Y3Rfc2l6ZShpbnN0YW5jZSwgbWFwcGluZywgY291bnQpLCBH
-RlBfS0VSTkVMKTsNCj4gDQo+IFRoaXMgY29kZSB3YXMgZGV0ZWN0ZWQgd2l0aCB0aGUgaGVscCBv
-ZiBDb2NjaW5lbGxlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogR3VzdGF2byBBLiBSLiBTaWx2YSA8
-Z3VzdGF2b0BlbWJlZGRlZG9yLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL252ZGltbS9yZWdpb25f
-ZGV2cy5jIHwgNyArKystLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCA0
-IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbnZkaW1tL3JlZ2lvbl9k
-ZXZzLmMNCj4gYi9kcml2ZXJzL252ZGltbS9yZWdpb25fZGV2cy5jDQo+IGluZGV4IGI0ZWY3ZDlm
-ZjIyZS4uODhiZWNjODdlMjM0IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL252ZGltbS9yZWdpb25f
-ZGV2cy5jDQo+ICsrKyBiL2RyaXZlcnMvbnZkaW1tL3JlZ2lvbl9kZXZzLmMNCj4gQEAgLTEwMjcs
-MTAgKzEwMjcsOSBAQCBzdGF0aWMgc3RydWN0IG5kX3JlZ2lvbg0KPiAqbmRfcmVnaW9uX2NyZWF0
-ZShzdHJ1Y3QgbnZkaW1tX2J1cyAqbnZkaW1tX2J1cywNCj4gIAkJfQ0KPiAgCQlyZWdpb25fYnVm
-ID0gbmRicjsNCj4gIAl9IGVsc2Ugew0KPiAtCQluZF9yZWdpb24gPSBremFsbG9jKHNpemVvZihz
-dHJ1Y3QgbmRfcmVnaW9uKQ0KPiAtCQkJCSsgc2l6ZW9mKHN0cnVjdCBuZF9tYXBwaW5nKQ0KPiAt
-CQkJCSogbmRyX2Rlc2MtPm51bV9tYXBwaW5ncywNCj4gLQkJCQlHRlBfS0VSTkVMKTsNCj4gKwkJ
-bmRfcmVnaW9uID0ga3phbGxvYyhzdHJ1Y3Rfc2l6ZShuZF9yZWdpb24sIG1hcHBpbmcsDQo+ICsJ
-CQkJCQluZHJfZGVzYy0+bnVtX21hcHBpbmdzKSwNCj4gKwkJCQkgICAgR0ZQX0tFUk5FTCk7DQo+
-ICAJCXJlZ2lvbl9idWYgPSBuZF9yZWdpb247DQo+ICAJfQ0KPiAgDQoNCkhpIEd1c3Rhdm8sDQoN
-ClRoZSBwYXRjaCBsb29rcyBnb29kIHRvIG1lLCBob3dldmVyIGl0IGxvb2tzIGxpa2UgaXQgbWln
-aHQndmUgbWlzc2VkDQpzb21lIGluc3RhbmNlcyB3aGVyZSB0aGlzIHJlcGxhY2VtZW50IGNhbiBi
-ZSBwZXJmb3JtZWQ/DQoNCk9uZSBpcyBqdXN0IGEgZmV3IGxpbmVzIGJlbG93IGZyb20gdGhlIGFi
-b3ZlLCBpbiB0aGUgJ2Vsc2UnIGJsb2NrWzFdLg0KQWRkaXRpb25hbGx5LCBtYXliZSB0aGUgQ29j
-Y2luZWxsZSBzY3JpcHQgY2FuIGJlIGF1Z21lbnRlZCB0byBjYXRjaA0KZGV2bV9remFsbG9jIGlu
-c3RhbmNlcyBhcyB3ZWxsIC0gdGhlcmUgaXMgb25lIG9mIHRob3NlIGluIHRoaXMgZmlsZVsyXS4N
-Cg0KVGhhbmtzLA0KCS1WaXNoYWwNCg0KWzFdOiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9z
-Y20vbGludXgva2VybmVsL2dpdC9udmRpbW0vbnZkaW1tLmdpdC90cmVlL2RyaXZlcnMvbnZkaW1t
-L3JlZ2lvbl9kZXZzLmMjbjEwMzANClsyXTogaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2Nt
-L2xpbnV4L2tlcm5lbC9naXQvbnZkaW1tL252ZGltbS5naXQvdHJlZS9kcml2ZXJzL252ZGltbS9y
-ZWdpb25fZGV2cy5jI245Ng0KDQoNCg0K
+Hi all,
+
+Friendly ping:
+
+Who can take this, please?
+
+Thanks
+--
+Gustavo
+
+On 5/29/19 11:53 AM, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
+> 
+> struct foo {
+>    int stuff;
+>    struct boo entry[];
+> };
+> 
+> instance = kzalloc(sizeof(struct foo) + count * sizeof(struct boo), GFP_KERNEL);
+> 
+> Instead of leaving these open-coded and prone to type mistakes, we can
+> now use the new struct_size() helper:
+> 
+> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL);
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  security/integrity/ima/ima_template.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
+> index b631b8bc7624..b945dff2ed14 100644
+> --- a/security/integrity/ima/ima_template.c
+> +++ b/security/integrity/ima/ima_template.c
+> @@ -281,9 +281,8 @@ static int ima_restore_template_data(struct ima_template_desc *template_desc,
+>  	int ret = 0;
+>  	int i;
+>  
+> -	*entry = kzalloc(sizeof(**entry) +
+> -		    template_desc->num_fields * sizeof(struct ima_field_data),
+> -		    GFP_NOFS);
+> +	*entry = kzalloc(struct_size(*entry, template_data,
+> +				     template_desc->num_fields), GFP_NOFS);
+>  	if (!*entry)
+>  		return -ENOMEM;
+>  
+> 
