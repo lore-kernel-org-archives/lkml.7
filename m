@@ -2,127 +2,140 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E620C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45A1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B072077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:37:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nml2rPgz"
+	by mail.kernel.org (Postfix) with ESMTP id 7968F2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567013931;
+	bh=RIt/H8XgVifTEhugC1lEufb4AZAcq59OXKgKcWpAXrM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WgpmL+dbaEokfGB/GzgbAVYB+5YN3X60cU/fRUjPdSqiMUr644vyAARjR6biYohfx
+	 fbKXTw+iTpL0hObj2Z09sSseB7dip85kp7pxJI/HHZq/zCw8jtgKi9cXw/ccj11cXt
+	 Guo5dCWQlI0Pv0Uq7L+5oTN2x8sjnN5NBrz+lQEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfH1Rg0 (ORCPT
+        id S1726777AbfH1Riu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:36:26 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38961 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbfH1RgX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:36:23 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y200so246802pfb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:36:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=EUMK8UKoJN8MBf0J3kYsSiXaGWd4l00MuXQSkXHjEkU=;
-        b=nml2rPgziIqKJ0ypA3HhZGv7pV0jpaWRM0sCJ9s6ye1Vt7mkf6Rl2xmGkJQg4ZnVF3
-         VhtIb7wJRRuVF8zrEpVU5NqQHImBtaOcva3nG2A6W77s4ijYRhKOQwwp4zqoxpw+Wcz2
-         C4mgd5vb4RlcMoNyuTQJNVLrpyoJm11W/LMtg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=EUMK8UKoJN8MBf0J3kYsSiXaGWd4l00MuXQSkXHjEkU=;
-        b=sB7eRTA0hn1R1BjM8tSHWLqt7w3WoLK/r0joHIWlcfM52d6Dt2stfU/lJwyaGguZx1
-         c5Ovz37gHptq7KXobNZ7W4plhgdW/sudSNa5+JOomOklfvNfvx/UxCU/iy4UsPReBbNo
-         TwdBnX7UAp/ZUQvjfykmLYasBv04vTCZiEwrGM9l1BAffKHGXNj/JwDK+Fw1eknwWqRX
-         1ZmvIu6RU0F3v1QoXwcSXGd1fvzxFNYWzASdb4wbG9+/FCdNIiAsAVKfAvgzkAzjWVsU
-         w2Vma4Pq/JGGXgMP2M5EtH4+7C0xk35vgdpV85T9OmG+0btMS/83Z2VvTg0TUjMgp2Ud
-         KeaQ==
-X-Gm-Message-State: APjAAAVJXvURJM8nlwL0aZqAWMN2HcSCK+UqNfW6v900U5NL7r2NzFUJ
-        0iIv3e700aOo1vQS+mXDtkI0MQ==
-X-Google-Smtp-Source: APXvYqzElEqg+zkKsqa/GUFMyi2GafNnjd+E8JvecYKCOt+Q9UFz6HH9rmld8KOXaKUdBxtTP1/AiQ==
-X-Received: by 2002:a17:90a:17c4:: with SMTP id q62mr5279289pja.135.1567013783037;
-        Wed, 28 Aug 2019 10:36:23 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j11sm3480331pfa.113.2019.08.28.10.36.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 10:36:20 -0700 (PDT)
-Date:   Sat, 24 Aug 2019 12:08:00 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        20190819234111.9019-8-keescook@chromium.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Feng Tang <feng.tang@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception
- handler
-Message-ID: <201908241206.D223659@keescook>
-References: <201908200943.601DD59DCE@keescook>
- <20190822155611.a1a6e26db99ba0876ba9c8bd@linux-foundation.org>
- <86003539-18ec-f2ff-a46f-764edb820dcd@c-s.fr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <86003539-18ec-f2ff-a46f-764edb820dcd@c-s.fr>
+        Wed, 28 Aug 2019 13:38:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726515AbfH1Rit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 13:38:49 -0400
+Received: from sstabellini-ThinkPad-T480s.xilinx.com (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69D4F2077B;
+        Wed, 28 Aug 2019 17:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567013928;
+        bh=RIt/H8XgVifTEhugC1lEufb4AZAcq59OXKgKcWpAXrM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mFFmsoI2WrO9CnnAGYaAzhzpXYFxVVg9B1B5BCL83R/9wuur9d4dRBFfL8iMMd4hi
+         W+BLxOuQOCNffysulPuuGslQVUWOHw/40PAdmxLOV9uTxovYH9PTbypJI5oSdu+TUL
+         pr+4j0JgPlICgAjAu0M7l4Q5vmQfBvVbBboU8gl0=
+From:   Stefano Stabellini <sstabellini@kernel.org>
+To:     will@kernel.org
+Cc:     robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        michal.simek@xilinx.com, sstabellini@kernel.org, git@xilinx.com,
+        linux-kernel@vger.kernel.org,
+        Stefano Stabellini <stefano.stabellini@xilinx.com>
+Subject: [PATCH] arm-smmu: check for generic bindings first
+Date:   Wed, 28 Aug 2019 10:38:37 -0700
+Message-Id: <20190828173837.29617-1-sstabellini@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 04:26:59PM +0200, Christophe Leroy wrote:
-> 
-> 
-> Le 23/08/2019 à 00:56, Andrew Morton a écrit :
-> > On Tue, 20 Aug 2019 09:47:55 -0700 Kees Cook <keescook@chromium.org> wrote:
-> > 
-> > > Reply-To: 20190819234111.9019-8-keescook@chromium.org
-> > 
-> > Really?
-> 
-> That seems correct, that's the "[PATCH 7/7] bug: Move WARN_ON() "cut here"
-> into exception handler" from the series at
-> https://lkml.org/lkml/2019/8/19/1155
-> 
-> 
-> > 
-> > > Subject: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception handler
-> > 
-> > It's strange to receive a standalone [7/7] patch.
-> 
-> Iaw the Reply_To, I understand it as an update of the 7th patch of the
-> series.
+From: Stefano Stabellini <stefano.stabellini@xilinx.com>
 
-Was trying to avoid the churn of resending the identical 1-6 patches
-(which are all just refactoring to make 7/7 not a mess).
+Today, the arm-smmu driver checks for mmu-masters on device tree, the
+legacy property, if it is absent it assumes that we are using the new
+bindings. If it is present it assumes that we are using the legacy
+bindings. All arm-smmus need to use the same bindings: legacy or new.
 
-I can resend the whole series, if that's preferred.
+There are two issues with this:
 
-> > > Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> > > Fixes: Fixes: 6b15f678fb7d ("include/asm-generic/bug.h: fix "cut here" for WARN_ON for __WARN_TAINT architectures")
-> > 
-> > I'm seeing double.
+- we are not actually checking for the new bindings explicitly
+It would be better to have an explicit check for the new bindings rather
+than assuming we must be using the new if the old are not there.
 
-Tracking down all these combinations has been tricky, which is why I did
-the patch 1-6 refactoring: it makes the call hierarchy much easier to
-examine (IMO).
+- old and new bindings cannot coexist
+It would be nice to be able to provide both old and new bindings so
+that software that hasn't been updated yet is still able to get IOMMU
+information from the legacy bindings while at the same time newer
+software can get the latest information via the new bindings. (Xen has
+not been updated to use the new binding yet for instance.) The current
+code breaks under these circumstances because if the old bindings are
+present, the new are not even checked.
 
--Kees
+This patch changes the scheme by checking for #iommu-cells, which is
+only present with the new bindings, before checking for mmu-masters.
+The new bindings are always favored when present. All SMMUs still need
+to use the same bindings: mix-and-matching new and old bindings between
+different SMMUs is not allowed.
 
+Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
+---
+
+Let me know if you'd like me to turn the two using_*_binding variables
+into a single one.
+
+Also, please note that this is not meant as an excuse not to get Xen
+updated to use the new binding.
+
+ drivers/iommu/arm-smmu.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 64977c131ee6..79b518ff215c 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -2118,7 +2118,7 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
+ {
+ 	const struct arm_smmu_match_data *data;
+ 	struct device *dev = &pdev->dev;
+-	bool legacy_binding;
++	bool legacy_binding, generic_binding;
+ 
+ 	if (of_property_read_u32(dev->of_node, "#global-interrupts",
+ 				 &smmu->num_global_irqs)) {
+@@ -2132,16 +2132,20 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
+ 
+ 	parse_driver_options(smmu);
+ 
+-	legacy_binding = of_find_property(dev->of_node, "mmu-masters", NULL);
+-	if (legacy_binding && !using_generic_binding) {
+-		if (!using_legacy_binding)
+-			pr_notice("deprecated \"mmu-masters\" DT property in use; DMA API support unavailable\n");
+-		using_legacy_binding = true;
+-	} else if (!legacy_binding && !using_legacy_binding) {
++	generic_binding = of_find_property(dev->of_node, "#iommu-cells", NULL);
++	if (generic_binding && !using_legacy_binding) {
+ 		using_generic_binding = true;
+ 	} else {
+-		dev_err(dev, "not probing due to mismatched DT properties\n");
+-		return -ENODEV;
++		legacy_binding = of_find_property(dev->of_node, "mmu-masters",
++						  NULL);
++		if (legacy_binding && !using_generic_binding) {
++			if (!using_legacy_binding)
++				pr_notice("deprecated \"mmu-masters\" DT property in use; DMA API support unavailable\n");
++			using_legacy_binding = true;
++		} else {
++			dev_err(dev, "not probing due to mismatched DT properties\n");
++			return -ENODEV;
++		}
+ 	}
+ 
+ 	if (of_dma_is_coherent(dev->of_node))
 -- 
-Kees Cook
+2.17.1
+
