@@ -2,76 +2,91 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AE4C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E609BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A75A20644
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA0920644
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DOSB80d1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E5GgF7uE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfH1Q3E (ORCPT
+        id S1726400AbfH1Qbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:29:04 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49412 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfH1Q3E (ORCPT
+        Wed, 28 Aug 2019 12:31:33 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35495 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbfH1Qbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:29:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=znSnT974Vl4Y8YOZ/9zd4iEg86qp19ImyyCFqmd1BbA=; b=DOSB80d13xppS27hBHrvl2LGe
-        VXKSlGeI0uYu7QVgeyr5PX8IaC2NTe40s1TTceDqN1HVNJTeEoMTyVhRQHTAqkvvxAcgW3DjUO0aK
-        1n6pm9QlBtX9AsCXmGF2JM/mSUCGRl09Az7xCAxD/pjQel/Xz1g00Pi2sec9vPurYBbB965WlYEDk
-        ytUP37p1XyezPqwXTOnBy/W3vJ5+4KjIRIoz70DMvMK/0gssE7HjXOZVs3poeaD91/xafISQlala2
-        KSzTixuF1/6vF/dPef4UDuUO+3SFNB5UUD9qvbkCxYCTmUzahopr3pBoojjoOD8YULatUEGRsg7/I
-        vYkookxeA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i30oc-00066Y-Pm; Wed, 28 Aug 2019 16:28:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1C41A300B83;
-        Wed, 28 Aug 2019 18:28:23 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 14FAE20C3AB21; Wed, 28 Aug 2019 18:28:57 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 18:28:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     kan.liang@linux.intel.com, acme@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, jolsa@kernel.org,
-        eranian@google.com, alexander.shishkin@linux.intel.com
-Subject: Re: [RESEND PATCH V3 3/8] perf/x86/intel: Support hardware TopDown
- metrics
-Message-ID: <20190828162857.GO2332@hirez.programming.kicks-ass.net>
-References: <20190826144740.10163-1-kan.liang@linux.intel.com>
- <20190826144740.10163-4-kan.liang@linux.intel.com>
- <20190828151921.GD17205@worktop.programming.kicks-ass.net>
- <20190828161754.GP5447@tassilo.jf.intel.com>
+        Wed, 28 Aug 2019 12:31:33 -0400
+Received: by mail-lj1-f193.google.com with SMTP id l14so169721lje.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 09:31:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NjXiz0jtJWGT4cEckFQPpVyw/lRnuMBErWmMi5AhrWA=;
+        b=E5GgF7uEiUS4O03g81yoi6j0NmHdf4h5a677oc0l/9oNnv0vPvwDHY9bBDT7sfZWMO
+         rtsogJ+CsbQsVUNcCCnRHsk9EWzhAL6ZAKvbAkIGd3LbnZ9GbTX5hpb5oa1NrfnQCDQD
+         85jxjR9VZDrJIS3b4zWx5d3/+VcTuqraAY6MfUm0HRhJ88NUTZw3xDXtM5agrv/wXgTK
+         4OEFhl9VwwKoRXdkm56/y0MiVOG/BysRAFp+oFrmld0FBfH7Wc6WzPLGLl/lz1dZz4pY
+         cQR2OdKQ1dpLW+E67rY2iNc+/jXps0kUscsilbRR/9V3g+yKEWUcVcl6Q4w3/v7MaUkX
+         iQqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NjXiz0jtJWGT4cEckFQPpVyw/lRnuMBErWmMi5AhrWA=;
+        b=sUOAC/JvjNv5YmwGWotUkvExmADcRFGfhoNAcPY9us6jnzDaWXYiKwqEXmireNDw8z
+         d5zLPnrIn6aFJA6ZA2RbQAQODLyUfpb6G0jxtr1bY2WNoTyhMwymvP6DLRvIVA3gUPG5
+         No0Pz8F9pIVCoPX2wrnYOP6obQ0AdXgfXmYDJhaBWPJxa5rL999Ilbwi4idLZAJLdPDq
+         HyAkvTaWGICSQX52+dcoM3PA06fvo3rVVB3hqAQ1qteP8QkjyTMifqMJLI5+clAQ4N+8
+         9oAg4ubvba367lHa8GZNGvc7G4ANPuk/uw3x4x1RE0UP7wdpdbI+CXpyRv0WZKDrvWtH
+         Bhgw==
+X-Gm-Message-State: APjAAAU2GY8gQXspJJa5Arc9ZlMwdpWkmsTc7sx/J5xffmP0w+lJSQ9K
+        QVYnD5f3eLTY/U7onMpkUtWcwxQ78YxtXoRuBG2m4w==
+X-Google-Smtp-Source: APXvYqxAHfxii1r8G4uA4TRksDr+gKgKoYBl4Hdl6wuwPpbFwpxiCpD0ZSA802wdhf0b6NWeu0VbqDNspGN9n84/Rjg=
+X-Received: by 2002:a2e:9f0f:: with SMTP id u15mr2559887ljk.54.1567009891738;
+ Wed, 28 Aug 2019 09:31:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828161754.GP5447@tassilo.jf.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190724082508.27617-1-brgl@bgdev.pl> <CAMRc=Mex_Ricd+C4F7nGLmpBggO-hWwJDB6duX8kFpPEeaTDjQ@mail.gmail.com>
+ <CAMRc=Mci4ncbDmns=0uL8hsAGz1Wvd5bgK4yxTF8QQQitXDv0g@mail.gmail.com>
+ <CAMRc=McUEgm6yH7enwHuHxVTL41dmb5KAY_pxTmSr3vctCs2xg@mail.gmail.com> <CAMuHMdV3obGtQ7qohNedQNgpvZvyL9xjH0HUiBKD6b8Ou5F+XA@mail.gmail.com>
+In-Reply-To: <CAMuHMdV3obGtQ7qohNedQNgpvZvyL9xjH0HUiBKD6b8Ou5F+XA@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 28 Aug 2019 18:31:19 +0200
+Message-ID: <CACRpkdbgZhgSvicq2XG0n2hiKA9K8VFmvCPn3W9oXgSLrZiw=w@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] backlight: gpio: simplify the driver
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 09:17:54AM -0700, Andi Kleen wrote:
-> > This really doesn't make sense to me; if you set FIXED_CTR3 := 0, you'll
-> > never trigger the overflow there; this then seems to suggest the actual
-> 
-> The 48bit counter might overflow in a few hours.
+On Wed, Aug 28, 2019 at 10:36 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
 
-Sure; the point is? Kan said it should not be too big; a full 48bit wrap
-around must be too big or nothing is.
+> CC the pour soul with the ecovec board.
+
+With great power comes great responsibility ;)
+
+Yours,
+Linus Walleij
