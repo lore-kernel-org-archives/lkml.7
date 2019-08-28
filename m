@@ -2,188 +2,106 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C1DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95837C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F35D233A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:32:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566977542;
-	bh=mpswMW0aglCPtQUR2ikfSkLwGAcU8bpRJl64Mrvh0jw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UCIj51puDcDm0G7XPkI/2ObYwqKNBltOfDbpumiOaTt2bqXPneiCZGYEVrZzpI+DU
-	 3uof+NDAo94LBnaW08x4kRnxGlYFnai26rD0+y7Izzs4k6crwHFJfsThBmhF1aYO1n
-	 5x6LjZNTyk2BPvlK3KUYVh7pS6oBUf4b6uwZ5fYs=
+	by mail.kernel.org (Postfix) with ESMTP id 760B7233A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:32:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfH1HcV (ORCPT
+        id S1726892AbfH1Hcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 03:32:21 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44170 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbfH1HcL (ORCPT
+        Wed, 28 Aug 2019 03:32:36 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34554 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbfH1Hcg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:32:11 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t14so803076plr.11
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 00:32:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=908RHXqoFIdDyUK9BmX+x3cPuKJ/6DHA6wfIqO4h7YA=;
-        b=LHp33Ib2+T38e0IXjQ/JWzQfzu4cT2ZtxVmnuwcL9q5tVuYzQWni9xdV5MqwM6dOf+
-         zMsG6qzfi7rQZ+6DMdcWUtjJFnp/CR9IVHDgoeA00k4jYpkSKeAtY3kX6H5Tuz7DEBXO
-         G9ks+0/sk9ZqzK7LDSdpVQ/Og+otkQ5lBFpr6N7v9mQAgu9sBFFhjsUKsFJf88uQOHXC
-         bDcPcEdDvdy+skzUkqs2uvcmOLRD/xuqsM/DN794ptjx/Bm5VtOx5drMMDgf7FSXSAe5
-         4ME88/X3gpKM2yOTvTOZzjKFIPlPy6WlyYK3V0iHlmCSffuBVlDTFjf5LKcOSgX3A9NN
-         UaMQ==
+        Wed, 28 Aug 2019 03:32:36 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c7so1842548otp.1;
+        Wed, 28 Aug 2019 00:32:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=908RHXqoFIdDyUK9BmX+x3cPuKJ/6DHA6wfIqO4h7YA=;
-        b=Q3TBBsDz6DO5VVURE0yJTt2+IK/XInS1mWVfeVRYr+E1JWj7n9LptX6RLxZLpgS93K
-         l0Zyaa76/z+V+DT85/ANHbFEkaO/eKYzMP9NyzAPAkRr+4gkvqu72/YvFJbqxS46i887
-         CpMGIPVplptxy3IDKCRx8xzj0x+iflBCvnbO9aIEGID1EnWGN7WYMFlBsNOFTCYDOqH3
-         PVVdF8HLtEOolDkBqXpXQfyEioFvA9/RwIfRftFL6NSPWYp9C1A1yj3DlsPgPdKzyjHc
-         BSyyZXPPXTQBxazx577Yv4WBaks2WFdty0IZKSO5zTZ5Aed+h7OApALDex1F5/dPbj9V
-         0giw==
-X-Gm-Message-State: APjAAAVRAksU0igHFaav8d6Zn1weZkG2ZnuFmV7L7UmB7gfcU0W2YayY
-        rWH/txJ7vK9I2jdVlsNVaGo=
-X-Google-Smtp-Source: APXvYqypPismMJSUbw7BXBcfjzFmXHqsBc0ww91dPuRmH1z+bOz9fjUlQN4OKJGhnV06etKV6JeEsw==
-X-Received: by 2002:a17:902:b406:: with SMTP id x6mr2837482plr.114.1566977530016;
-        Wed, 28 Aug 2019 00:32:10 -0700 (PDT)
-Received: from gaurie.seo.corp.google.com ([2401:fa00:d:0:1034:ec6b:8056:9e93])
-        by smtp.gmail.com with ESMTPSA id v145sm1677054pfc.31.2019.08.28.00.32.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 00:32:09 -0700 (PDT)
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: [PATCH 9/9] perf script: Add --show-cgroup-events option
-Date:   Wed, 28 Aug 2019 16:31:30 +0900
-Message-Id: <20190828073130.83800-10-namhyung@kernel.org>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-In-Reply-To: <20190828073130.83800-1-namhyung@kernel.org>
-References: <20190828073130.83800-1-namhyung@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QD99J6UIVZGmimTy0Hqij9Z3+TZVwBN/634gcbM0Yv4=;
+        b=tDQid61jgy0USX448UoUhool+fmWA2rlC+OBvIvYMUgwqscUcuzBCgZwBJIf+JLwo+
+         T8K2Wu/72AQ/7ZuDHHOQiiiBTw2poGVCf5MXNMoIZizGEq9u2oyOoxkc0eLu9yz0sIeR
+         FoyxgBuAGIJaDgQO/FiSb9PNsVDJFlx0jSZ0LVSth7Uph4gliyP0u61oL7CFn9LHzhn8
+         ad0G0aBKggbyB7/F2GUhOFvNKjuTGluWqeybHryaZxDCW96IomGXrs07hRl9xTSzSFMq
+         Otrkm96SuGhDELg3uTpAZZ187LNmUenIvXQ1D3K/efAt4V84x7kf3SkFGwhqOw/96cZ1
+         t73w==
+X-Gm-Message-State: APjAAAXhza930UKeP+mBlh8m/qcWb/9tHedApuyBHlLxd0R/EZNcek/G
+        DDfHdv5E2rtQs5/rCKRVZ2mF2uY6DJciYOObO+c=
+X-Google-Smtp-Source: APXvYqyjpqxjoBfQdEroCM3USq4z3WK8KF4ynWsTexmjyyVEiyc1iC6TSH5m59LwXn2dzLN+wuwlk6qaA8SwDNUYR5U=
+X-Received: by 2002:a9d:2cc:: with SMTP id 70mr2099177otl.145.1566977554932;
+ Wed, 28 Aug 2019 00:32:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-3-jacopo+renesas@jmondi.org> <20190827202945.GA3488@bogus>
+In-Reply-To: <20190827202945.GA3488@bogus>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 28 Aug 2019 09:32:23 +0200
+Message-ID: <CAMuHMdUP1kZF4z=NkAb5LCV74dyCMw9pZACMYjOTFE=r2vvR3A@mail.gmail.com>
+Subject: Re: [PATCH v3 02/14] dt-bindings: display, renesas,du: Document cmms property
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The --show-cgroup-events option is to print CGROUP events in the
-output like others.
+On Tue, Aug 27, 2019 at 10:29 PM Rob Herring <robh@kernel.org> wrote:
+> On Sun, Aug 25, 2019 at 03:51:42PM +0200, Jacopo Mondi wrote:
+> > Document the newly added 'cmms' property which accepts a list of phandle
+> > and channel index pairs that point to the CMM units available for each
+> > Display Unit output video channel.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > ---
+> >  Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > index c97dfacad281..c2265e2a1af2 100644
+> > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+> > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > @@ -45,6 +45,10 @@ Required Properties:
+> >      instance that serves the DU channel, and the channel index identifies the
+> >      LIF instance in that VSP.
+> >
+> > +  - cmms: A list of phandles to the CMM instances present in the SoC, one
+> > +    for each available DU channel. The property shall not be specified for
+> > +    SoCs that do not provide any CMM (such as V3M and V3H).
+>
+> renesas,cmms
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-script.txt |  3 ++
- tools/perf/builtin-script.c              | 41 ++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+So I guess we really wanted to have the prefix for the vsps property, too?
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 2599b057e47b..3dd297600427 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -319,6 +319,9 @@ OPTIONS
- --show-bpf-events
- 	Display bpf events i.e. events of type PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT.
- 
-+--show-cgroup-events
-+	Display cgroup events i.e. events of type PERF_RECORD_CGROUP.
-+
- --demangle::
- 	Demangle symbol names to human readable form. It's enabled by default,
- 	disable with --no-demangle.
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 51e7e6d0eee6..9017889084bd 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1629,6 +1629,7 @@ struct perf_script {
- 	bool			show_lost_events;
- 	bool			show_round_events;
- 	bool			show_bpf_events;
-+	bool			show_cgroup_events;
- 	bool			allocated;
- 	bool			per_event_dump;
- 	struct evswitch		evswitch;
-@@ -2146,6 +2147,41 @@ static int process_namespaces_event(struct perf_tool *tool,
- 	return ret;
- }
- 
-+static int process_cgroup_event(struct perf_tool *tool,
-+				union perf_event *event,
-+				struct perf_sample *sample,
-+				struct machine *machine)
-+{
-+	struct thread *thread;
-+	struct perf_script *script = container_of(tool, struct perf_script, tool);
-+	struct perf_session *session = script->session;
-+	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
-+	int ret = -1;
-+
-+	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
-+	if (thread == NULL) {
-+		pr_debug("problem processing CGROUP event, skipping it.\n");
-+		return -1;
-+	}
-+
-+	if (perf_event__process_cgroup(tool, event, sample, machine) < 0)
-+		goto out;
-+
-+	if (!evsel->core.attr.sample_id_all) {
-+		sample->cpu = 0;
-+		sample->time = 0;
-+	}
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_CGROUP, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
-+	ret = 0;
-+out:
-+	thread__put(thread);
-+	return ret;
-+}
-+
- static int process_fork_event(struct perf_tool *tool,
- 			      union perf_event *event,
- 			      struct perf_sample *sample,
-@@ -2485,6 +2521,8 @@ static int __cmd_script(struct perf_script *script)
- 		script->tool.context_switch = process_switch_event;
- 	if (script->show_namespace_events)
- 		script->tool.namespaces = process_namespaces_event;
-+	if (script->show_cgroup_events)
-+		script->tool.cgroup = process_cgroup_event;
- 	if (script->show_lost_events)
- 		script->tool.lost = process_lost_event;
- 	if (script->show_round_events) {
-@@ -3410,6 +3448,7 @@ int cmd_script(int argc, const char **argv)
- 			.mmap2		 = perf_event__process_mmap2,
- 			.comm		 = perf_event__process_comm,
- 			.namespaces	 = perf_event__process_namespaces,
-+			.cgroup		 = perf_event__process_cgroup,
- 			.exit		 = perf_event__process_exit,
- 			.fork		 = perf_event__process_fork,
- 			.attr		 = process_attr,
-@@ -3510,6 +3549,8 @@ int cmd_script(int argc, const char **argv)
- 		    "Show context switch events (if recorded)"),
- 	OPT_BOOLEAN('\0', "show-namespace-events", &script.show_namespace_events,
- 		    "Show namespace events (if recorded)"),
-+	OPT_BOOLEAN('\0', "show-cgroup-events", &script.show_cgroup_events,
-+		    "Show cgroup events (if recorded)"),
- 	OPT_BOOLEAN('\0', "show-lost-events", &script.show_lost_events,
- 		    "Show lost events (if recorded)"),
- 	OPT_BOOLEAN('\0', "show-round-events", &script.show_round_events,
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.23.0.187.g17f5b7556c-goog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
