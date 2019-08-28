@@ -2,127 +2,138 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91363C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5E8C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7119C233A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE7A233FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:58:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567000705;
+	bh=5b4yRDy98wf9sG9D6EK8j9pSXDtQGIZcUVdAUAENbLo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZfdwSUJ8dYA3qyHvppFb5dzjuz3vmUG+w49W8Y/niQcrXf4D970GdjeW/j/uYJlyC
+	 vsHErzI6O2uZ6L3U9YnlkwRaNuaG3RK/suJ0Xz8l1Ro67Z8mT/sOYrDmZwwwIlBQ8q
+	 lDCJjvX30sxOcTaxJSklRiKf20nNb0keU5CDIdRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfH1N6U (ORCPT
+        id S1727127AbfH1N6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:58:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37206 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726506AbfH1N6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:58:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7ED8EAC7D;
-        Wed, 28 Aug 2019 13:58:15 +0000 (UTC)
-Date:   Wed, 28 Aug 2019 15:58:22 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     lingyxu <lingyan.xu@nokia-sbell.com>
-Cc:     Krzysztof Adamski <krzysztof.adamski@nokia.com>,
-        WladislavWiebe <wladislav.wiebe@nokia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] i801_smbus: clear SMBALERT status bit and disable
- SMBALERT interrupt
-Message-ID: <20190828155822.7cb13a7b@endymion>
-In-Reply-To: <1565577634-18264-1-git-send-email-lingyan.xu@nokia-sbell.com>
-References: <1565577634-18264-1-git-send-email-lingyan.xu@nokia-sbell.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Wed, 28 Aug 2019 09:58:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59242 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727086AbfH1N6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:58:10 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E990CA53272;
+        Wed, 28 Aug 2019 13:58:09 +0000 (UTC)
+Received: from krava.brq.redhat.com (unknown [10.43.17.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 500961001B05;
+        Wed, 28 Aug 2019 13:58:08 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: [PATCH 23/23] libperf: Move 'enum perf_user_event_type' to perf/event.h
+Date:   Wed, 28 Aug 2019 15:57:17 +0200
+Message-Id: <20190828135717.7245-24-jolsa@kernel.org>
+In-Reply-To: <20190828135717.7245-1-jolsa@kernel.org>
+References: <20190828135717.7245-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 28 Aug 2019 13:58:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lingyan,
+So it's available for libperf's users.
 
-On Mon, 12 Aug 2019 10:40:34 +0800, lingyxu wrote:
-> From: Lingyan Xu <lingyan.xu@nokia-sbell.com>
-> 
-> In current i801 driver, SMBALERT interrupt is allowed
-> (Slave Command Register bit2 is 0).
-> But these is no handler for SMBALERT interrupt in i801_isr,
-> if there is SMBALERT interrupt asserted and deasserted,
-> i801 will have an irq flood for the related status bit is setted.
-> 
-> So SMBALERT interrupt handler is needed, and also, SMBALERT interrupt
-> will be generated from time to time if slave chip have some fault.
-> So disable SMBALERT interrupt is also needed.
-> 
-> About the solution,
-> please see http://www.farnell.com/datasheets/1581967.pdf
-> Page632 P640 for more.
-> 
-> Signed-off-by: Lingyan Xu <lingyan.xu@nokia-sbell.com>
-> ---
->  drivers/i2c/busses/i2c-i801.c |    7 ++++++-
->  1 files changed, 6 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-> index f295693..033bafe 100644
-> --- a/drivers/i2c/busses/i2c-i801.c
-> +++ b/drivers/i2c/busses/i2c-i801.c
-> @@ -661,9 +661,11 @@ static irqreturn_t i801_isr(int irq, void *dev_id)
->  	 * Clear irq sources and report transaction result.
->  	 * ->status must be cleared before the next transaction is started.
->  	 */
-> +
-> +	outb_p(status, SMBHSTSTS(priv));
-> +
->  	status &= SMBHSTSTS_INTR | STATUS_ERROR_FLAGS;
->  	if (status) {
-> -		outb_p(status, SMBHSTSTS(priv));
->  		priv->status = status;
->  		wake_up(&priv->waitq);
->  	}
+Link: http://lkml.kernel.org/n/tip-oci51ex7bb8gjuqzy9u1801z@git.kernel.org
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/lib/include/perf/event.h | 23 +++++++++++++++++++++++
+ tools/perf/util/event.h             | 23 -----------------------
+ 2 files changed, 23 insertions(+), 23 deletions(-)
 
-Looks scary. Writing the whole value of SMBHSTSTS back to itself
-without selecting which bits you write is dangerous. Specifically,
-writing back SMBHSTSTS_BYTE_DONE, SMBHSTSTS_INUSE_STS and
-SMBHSTSTS_HOST_BUSY could have unexpected consequences. I would feel
-much better if you would just explicitly add SMBHSTSTS_SMBALERT_STS to
-the list.
-
-> @@ -1810,6 +1812,9 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
->  	/* Default timeout in interrupt mode: 200 ms */
->  	priv->adapter.timeout = HZ / 5;
->  
-> +	/* Disable SMBALERT interrupt */
-> +	outb_p(inb_p(SMBSLVCMD(priv)) | BIT(2), SMBSLVCMD(priv));
-
-Please give SMBSLVCMD's BIT(2) a name and define it after
-SMBSLVCMD_HST_NTFY_INTREN.
-
-Also it is mandatory to restore the value of SMBSLVCMD before returning
-the control back to the BIOS. Currently this is only being done when
-the FEATURE_HOST_NOTIFY bit is set because that's the only case where
-we change the value of that register, but if we change it
-unconditionally then it must be saved and restored unconditionally too.
-
-> +
->  	if (dev->irq == IRQ_NOTCONNECTED)
->  		priv->features &= ~FEATURE_IRQ;
->  
-
-That being said, if you see this interrupt flood, it means that at
-least one device on your SMBus would benefit from SMBus Alert being
-supported. The infrastructure is already there as we added support in a
-few I2C bus drivers already. So maybe instead of silencing the
-interrupts, we could add proper SMBus Alert support to the i2c-i801
-driver?
-
-Did you figure out which device is raising the SMBus Alert and why?
-
+diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
+index 1655c744ec2b..18106899cb4e 100644
+--- a/tools/perf/lib/include/perf/event.h
++++ b/tools/perf/lib/include/perf/event.h
+@@ -323,6 +323,29 @@ struct perf_record_compressed {
+ 	char			 data[];
+ };
+ 
++enum perf_user_event_type { /* above any possible kernel type */
++	PERF_RECORD_USER_TYPE_START		= 64,
++	PERF_RECORD_HEADER_ATTR			= 64,
++	PERF_RECORD_HEADER_EVENT_TYPE		= 65, /* deprecated */
++	PERF_RECORD_HEADER_TRACING_DATA		= 66,
++	PERF_RECORD_HEADER_BUILD_ID		= 67,
++	PERF_RECORD_FINISHED_ROUND		= 68,
++	PERF_RECORD_ID_INDEX			= 69,
++	PERF_RECORD_AUXTRACE_INFO		= 70,
++	PERF_RECORD_AUXTRACE			= 71,
++	PERF_RECORD_AUXTRACE_ERROR		= 72,
++	PERF_RECORD_THREAD_MAP			= 73,
++	PERF_RECORD_CPU_MAP			= 74,
++	PERF_RECORD_STAT_CONFIG			= 75,
++	PERF_RECORD_STAT			= 76,
++	PERF_RECORD_STAT_ROUND			= 77,
++	PERF_RECORD_EVENT_UPDATE		= 78,
++	PERF_RECORD_TIME_CONV			= 79,
++	PERF_RECORD_HEADER_FEATURE		= 80,
++	PERF_RECORD_COMPRESSED			= 81,
++	PERF_RECORD_HEADER_MAX
++};
++
+ union perf_event {
+ 	struct perf_event_header		header;
+ 	struct perf_record_mmap			mmap;
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index a7341e14eb48..4c0c5232bd41 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -146,29 +146,6 @@ struct perf_sample {
+ 	 PERF_MEM_S(LOCK, NA) |\
+ 	 PERF_MEM_S(TLB, NA))
+ 
+-enum perf_user_event_type { /* above any possible kernel type */
+-	PERF_RECORD_USER_TYPE_START		= 64,
+-	PERF_RECORD_HEADER_ATTR			= 64,
+-	PERF_RECORD_HEADER_EVENT_TYPE		= 65, /* deprecated */
+-	PERF_RECORD_HEADER_TRACING_DATA		= 66,
+-	PERF_RECORD_HEADER_BUILD_ID		= 67,
+-	PERF_RECORD_FINISHED_ROUND		= 68,
+-	PERF_RECORD_ID_INDEX			= 69,
+-	PERF_RECORD_AUXTRACE_INFO		= 70,
+-	PERF_RECORD_AUXTRACE			= 71,
+-	PERF_RECORD_AUXTRACE_ERROR		= 72,
+-	PERF_RECORD_THREAD_MAP			= 73,
+-	PERF_RECORD_CPU_MAP			= 74,
+-	PERF_RECORD_STAT_CONFIG			= 75,
+-	PERF_RECORD_STAT			= 76,
+-	PERF_RECORD_STAT_ROUND			= 77,
+-	PERF_RECORD_EVENT_UPDATE		= 78,
+-	PERF_RECORD_TIME_CONV			= 79,
+-	PERF_RECORD_HEADER_FEATURE		= 80,
+-	PERF_RECORD_COMPRESSED			= 81,
+-	PERF_RECORD_HEADER_MAX
+-};
+-
+ enum auxtrace_error_type {
+ 	PERF_AUXTRACE_ERROR_ITRACE  = 1,
+ 	PERF_AUXTRACE_ERROR_MAX
 -- 
-Jean Delvare
-SUSE L3 Support
+2.21.0
+
