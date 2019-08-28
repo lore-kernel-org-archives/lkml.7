@@ -2,100 +2,126 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 696A8C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84BFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F1A2189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9AAB2189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:42:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LcF4Tuib"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uv8oEDT3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfH1Llq (ORCPT
+        id S1726515AbfH1Lmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 07:41:46 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:46880 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfH1Llq (ORCPT
+        Wed, 28 Aug 2019 07:42:46 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40753 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbfH1Lmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 07:41:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fSpXTrdVOEeAcGqJ/E8uEG2rEskhj76ysPzyL1f5x5k=; b=LcF4TuibbU0aSbD8g6vKz9skG
-        OLOHH+OFA2YKSygO7iRvI26fp0M+s/cd6B8IYLahcNo8OfleJbJpDQcavY/ES79CdnrGf2L5HiTOb
-        ewEWIpWdHTbQpof+VjB+tIRLJTK8ZiWmXQCb6e0id66925+4bxxy8FZXvritpCCoVwYb4t4NqYlh1
-        94XV4UHs+tbphyDypJ2J5qgQPCqnIaVQIlPl/FrCCQjGYh8kyulu/OLs8NIx3mVvr+u6Hh0tlQvML
-        l1g7YwEfqPQqkCQTu858ywvKyzauOjMUoDyfBbKUE5oVD/zpSRryzTMIBbCUQaiYEG6Rf/oc2+CkE
-        vfPoBGs9A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2wKW-0001k4-Mo; Wed, 28 Aug 2019 11:41:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 06086307594;
-        Wed, 28 Aug 2019 13:41:00 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BFF45201A38CA; Wed, 28 Aug 2019 13:41:34 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 13:41:34 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Liangyan <liangyan.peng@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Ben Segall <bsegall@google.com>, linux-kernel@vger.kernel.org,
-        shanpeic@linux.alibaba.com, xlpang@linux.alibaba.com
-Subject: Re: [PATCH v3] sched/fair: don't assign runtime for throttled cfs_rq
-Message-ID: <20190828114134.GH2369@hirez.programming.kicks-ass.net>
-References: <20190826121633.6538-1-liangyan.peng@linux.alibaba.com>
- <71df56cc-529b-aefb-2905-48e02de5cf86@arm.com>
+        Wed, 28 Aug 2019 07:42:45 -0400
+Received: by mail-ed1-f68.google.com with SMTP id h8so2642812edv.7;
+        Wed, 28 Aug 2019 04:42:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DHBfv5zjSEya+0Y/i6kKdeisc73VpG/vbKcbcAGWi3Q=;
+        b=Uv8oEDT3sDFgzoLnkO582psGXc3+5qq6bCYGdmUVGdSdIAUDsmmCrmbzOwwo0TxzRT
+         plcS5x5XUH0BT+dgcpj2kGi040BP2D3x1kgIzrBQwfvbOgm5vs9iLqNDztaPpEWXBkmr
+         SBbvFIz3p2m4UvFK4IsfVU4tIWiyHk+3SNDlwtjGUEfvNnlNlKDXQGAj4ZHFm8MeuxSi
+         6tIY+Gs6IqXzwIjG/3DhpxLmOR9Ptsa5O/FW6ObFGzXJwQwYGlQIaqjSWM6lp2+JLRgx
+         KNx63qglS1qpV/sybXXcqLwD8LZ+Ck+QNiR/i7g+adLMCj8dpsNmicKKedcF643WZt9A
+         L4wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DHBfv5zjSEya+0Y/i6kKdeisc73VpG/vbKcbcAGWi3Q=;
+        b=hgJ4zRqDhSrIrs085cWu5pJvBL8YSH8qGqqoT95f5LCaSxo1XGa6Hb5vj2YggsVaRb
+         QzoR8e4KxQ8USHuO54X4t98vOt0GpBksttfZX2dh3K6c/0QiwOpj5wXtsjT0ZBJbV5O3
+         ug8Kbdll28/smYGSWw9+7AXvWrnOyk+g/YHXWEY2CLDh1NfN6o1cWQPxAxz/19nfTcbo
+         xiGn69iGKOb6qG0QM92i8ho4HR+Qz6Ufie8+v2PMIauDlzfaFl4eod6lLQXzrtwqPePN
+         sm/9rklEPKNpj4Cx0i3ExpzPyg4f+h9W+W+H/kPYjWV+u++wDqPtqJExFlgeQMmTgXwz
+         QyQg==
+X-Gm-Message-State: APjAAAUhZgJRTLbiAeDRrCguDBBk7apmDVK6WsjlC1Ad45oMuBapSjLq
+        76zA7/e0jVPuC56qZGkroR2Vehlb8W9IQjJoyA8=
+X-Google-Smtp-Source: APXvYqwiuWc/qla2uovuk7m1aKx3c6zg1cpqDRe3loN0F+Yt/wGHuSFur575MSgIYElejaU8KfmFTnKDjHrpXipRlYc=
+X-Received: by 2002:a17:906:5e50:: with SMTP id b16mr2770107eju.254.1566992564016;
+ Wed, 28 Aug 2019 04:42:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <71df56cc-529b-aefb-2905-48e02de5cf86@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190723030206.2919-1-hslester96@gmail.com> <20190828032118.GA2966@b29397-desktop>
+In-Reply-To: <20190828032118.GA2966@b29397-desktop>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Wed, 28 Aug 2019 19:42:32 +0800
+Message-ID: <CANhBUQ0PEOoVoVscO66spy0Jv4jf5wwtGKRUwa4vd=7b70kBwA@mail.gmail.com>
+Subject: Re: [PATCH] usb: chipidea: msm: Use device-managed registration API
+To:     Peter Chen <peter.chen@nxp.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 11:16:52AM +0100, Valentin Schneider wrote:
-> On 26/08/2019 13:16, Liangyan wrote:
-> > do_sched_cfs_period_timer() will refill cfs_b runtime and call
-> > distribute_cfs_runtime to unthrottle cfs_rq, sometimes cfs_b->runtime
-> > will allocate all quota to one cfs_rq incorrectly, then other cfs_rqs
-> > attached to this cfs_b can't get runtime and will be throttled.
-> > 
-> > We find that one throttled cfs_rq has non-negative
-> > cfs_rq->runtime_remaining and cause an unexpetced cast from s64 to u64
-> > in snippet: distribute_cfs_runtime() {
-> > runtime = -cfs_rq->runtime_remaining + 1; }.
-> > The runtime here will change to a large number and consume all
-> > cfs_b->runtime in this cfs_b period.
-> > 
-> > According to Ben Segall, the throttled cfs_rq can have
-> > account_cfs_rq_runtime called on it because it is throttled before
-> > idle_balance, and the idle_balance calls update_rq_clock to add time
-> > that is accounted to the task.
-> > 
-> > This commit prevents cfs_rq to be assgined new runtime if it has been
-> > throttled until that distribute_cfs_runtime is called.
-> > 
-> > Signed-off-by: Liangyan <liangyan.peng@linux.alibaba.com>
-> > Reviewed-by: Ben Segall <bsegall@google.com>
-> > Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-> 
-> @Peter/Ingo, if we care about it I believe it can't hurt to strap
-> 
-> Cc: <stable@vger.kernel.org>
-> Fixes: d3d9dc330236 ("sched: Throttle entities exceeding their allowed bandwidth")
-> 
-> to the thing.
+On Wed, Aug 28, 2019 at 11:24 AM Peter Chen <peter.chen@nxp.com> wrote:
+>
+> On 19-07-23 11:02:07, Chuhong Yuan wrote:
+> > Use devm_reset_controller_register to get rid
+> > of manual unregistration.
+> >
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > ---
+> >  drivers/usb/chipidea/ci_hdrc_msm.c | 4 +---
+> >  1 file changed, 1 insertion(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/usb/chipidea/ci_hdrc_msm.c b/drivers/usb/chipidea/ci_hdrc_msm.c
+> > index bb4645a8ca46..067542e84aea 100644
+> > --- a/drivers/usb/chipidea/ci_hdrc_msm.c
+> > +++ b/drivers/usb/chipidea/ci_hdrc_msm.c
+> > @@ -216,7 +216,7 @@ static int ci_hdrc_msm_probe(struct platform_device *pdev)
+> >       ci->rcdev.ops = &ci_hdrc_msm_reset_ops;
+> >       ci->rcdev.of_node = pdev->dev.of_node;
+> >       ci->rcdev.nr_resets = 2;
+> > -     ret = reset_controller_register(&ci->rcdev);
+> > +     ret = devm_reset_controller_register(&pdev->dev, &ci->rcdev);
+> >       if (ret)
+> >               return ret;
+> >
+> > @@ -272,7 +272,6 @@ static int ci_hdrc_msm_probe(struct platform_device *pdev)
+> >  err_iface:
+> >       clk_disable_unprepare(ci->core_clk);
+> >  err_fs:
+> > -     reset_controller_unregister(&ci->rcdev);
+>
+> It is devm API, why the unregister needs to be called at
+> fail path?
+>
 
-OK, done.
+I am not very clear about your problem...
+After using devm_reset_controller_register(), I have removed
+reset_controller_unregister() calls
+in this patch.
+
+> Peter
+>
+> >       return ret;
+> >  }
+> >
+> > @@ -284,7 +283,6 @@ static int ci_hdrc_msm_remove(struct platform_device *pdev)
+> >       ci_hdrc_remove_device(ci->ci);
+> >       clk_disable_unprepare(ci->iface_clk);
+> >       clk_disable_unprepare(ci->core_clk);
+> > -     reset_controller_unregister(&ci->rcdev);
+> >
+> >       return 0;
+> >  }
+> > --
+> > 2.20.1
+> >
