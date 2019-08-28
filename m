@@ -2,163 +2,91 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655FBC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D18EDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD0122DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:36:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566995761;
-	bh=rRFgGrg7GpfBDd6hoKOgEyMd40JtYwwqS5pN+wGJELI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Sn2G8HVrAa2KojKyHQT61a3cfDhlTrAIj3PzlU3ZS8vRAbeSJEPrbPFBVOxmnwOr2
-	 eUZDSrLh1+auXnmiaMrMGbOFhxqbJYW4GvBhwRQI2YvG9NZWgy40hZ/cBxWC/a3IQ/
-	 71e2gUxsoGY5Hr8u8FgvSSo/uEiJJ0JmIyJxZatQ=
+	by mail.kernel.org (Postfix) with ESMTP id A989B22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:38:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ol+VAJf+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfH1MgA convert rfc822-to-8bit (ORCPT
+        id S1726549AbfH1MiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:36:00 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40235 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbfH1Mf7 (ORCPT
+        Wed, 28 Aug 2019 08:38:17 -0400
+Received: from mail-io1-f53.google.com ([209.85.166.53]:41043 "EHLO
+        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfH1MiQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:35:59 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c34so2565098otb.7;
-        Wed, 28 Aug 2019 05:35:58 -0700 (PDT)
+        Wed, 28 Aug 2019 08:38:16 -0400
+Received: by mail-io1-f53.google.com with SMTP id j5so5475678ioj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 05:38:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z9ub6dj8BakJd5JJrKLeLyNZnt+cLi7XQzPxfXn1B/Y=;
+        b=ol+VAJf+uEe+pW+OLeIh97TD4/T+F5ti0j1SOXt8p3g3+9AxRgrzHA2mKJ5vaZU8VN
+         Mtw2wgGYnnDXzVmxqToGtF2nfMvHrJsaRTKUm6NFeBvnBEL/AE1VgB2U4A+TnFgGlFJv
+         N3OutN+gjpK3Rrv6OQryvih8Y47Q1kTDwWl9GUwd8SvcwKziaGAnwe7nyHPNsvpwQUma
+         IX11hff05i2Q3HWy3nNHliuIoVJgJZC4rPy7abvo469srBQp9xh3rCEfMD2lAM1jknIq
+         8/zI0DqvJJeFJiUb98QaHvF8wwP/1clSTYqlKYm6UCHQpY3oSvVrXFAXBEEbPpXvHWuI
+         boiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8QDH9jpinSuXfS+ZOI90wcZgvUUIjZNcFdkdHit9RCY=;
-        b=MGVqp5aRVR8oKT+Yo25Ujqb64JrB5PcCJ7FnHBQajzIrdYNIIE8N4+dhxYUIiumsPl
-         pDVwBJmRnxfLO3X/1eQ6biwPeUjUN6DWITI+mGDc6Dsim4Xe+bcVzFgp4YcQxbEfQxiK
-         XJGuN0kGOU0RhElDBp1JeE/OB0OQIaxkYOhgAF6BSHlVKmq7j56lqMB+eBLALpSfyqoD
-         RYiYYKDWh3vz+fyu7xeBs1i3yArf+Mhy6hD2TkF0POG21Dk50C+I6YOvbWph0T/dX5B9
-         N8mMwRKge3mw6VQOwkYo7mDAUeR7jfqEcS0vnvMey9/5L98Y6OKxHtcJpll94pwCHM/L
-         xuyw==
-X-Gm-Message-State: APjAAAWRcnAAEAk+rzeWiqchhIMXM2r+C3BxM3kI+fg+wifucTbljMi3
-        zbw0bLsHAaTz8jcxoZtFBNzzN/FYyd7xRU7V4UbFYA==
-X-Google-Smtp-Source: APXvYqykwnj9n9QqtXyldmv4OqFTxHAgh7E3a+SF0O/1IY+hlXF/oXNDosKbW38kWtSu6Dhda2kbUI8M3d2WCe9UBOQ=
-X-Received: by 2002:a9d:12d1:: with SMTP id g75mr2946048otg.189.1566995758287;
- Wed, 28 Aug 2019 05:35:58 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=z9ub6dj8BakJd5JJrKLeLyNZnt+cLi7XQzPxfXn1B/Y=;
+        b=M5hy5AV+WLKIuE0zUsKubi15ZSOfUr6HnQ9jPitgSYLFS6jqKQC9WfjheclBy3T3x6
+         rpHwS+N+poMY4F3i/NjEw7/7sNTjz6zr+nW4/WxKMDRe+JYFRFvAjeIBPHVedtvcP7Lw
+         TAvgQyx9PShQv6DTUxS3N7GMXUH/qrqhn1gSrFy9gxR4fYto0JbJxv5MflHL9AAcVPQW
+         eEa0gXYze0tzZ8d1DJskoj4ajmKzjFq6/2/j65RzeN4LcI42+wfH4kLzTQ/prEh9uyb6
+         o0VcC9fR66OnWBS9RMCmRr30jA1LUMhknUqGc3Md/vegwGMy7+iuvJ3cqBkjcXqdIYbe
+         bYOQ==
+X-Gm-Message-State: APjAAAWIFFb7tvTzyma/sMzhaKlQT22yDU7Jvq6592cMnbVa/031PITR
+        WK94ev7iz9Tj8Ujm1hebYX7QDdaFh85q0sqMnCx4DA==
+X-Google-Smtp-Source: APXvYqxbmqQHdWluIFStqQGMBY9/BhbwVz+UeYCfBFj2T06LLlJsyfJiSeDsrC/N2EuGpd3vnE0wVob9VErTw280+4w=
+X-Received: by 2002:a02:3446:: with SMTP id z6mr4201108jaz.105.1566995894846;
+ Wed, 28 Aug 2019 05:38:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190826083112.8888-1-sakari.ailus@linux.intel.com>
- <20190826083112.8888-2-sakari.ailus@linux.intel.com> <20190826084343.GA1095@kroah.com>
- <20190826103200.GQ31967@paasikivi.fi.intel.com> <20190826133439.GA13275@kroah.com>
- <CAJZ5v0jmsPO5m2zBV3_j8LgqQ2Uj6euXUCJgT74L93hZP9nP_A@mail.gmail.com> <20190828095701.GC7657@paasikivi.fi.intel.com>
-In-Reply-To: <20190828095701.GC7657@paasikivi.fi.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 28 Aug 2019 14:35:46 +0200
-Message-ID: <CAJZ5v0gLPyJ7zDGTCLsv94fn4JJSmPEEpxwNJQyfU+RyveEspQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] ACPI: Enable driver and firmware hints to control
- power at probe time
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190814104520.6001-1-darekm@google.com> <CGME20190814104630epcas3p44755443f37e78b2613f7dda35d71bb71@epcas3p4.samsung.com>
+ <20190814104520.6001-10-darekm@google.com> <6bbfb6f8-15c2-9ad2-8857-898f4c6435a3@samsung.com>
+In-Reply-To: <6bbfb6f8-15c2-9ad2-8857-898f4c6435a3@samsung.com>
+From:   Dariusz Marcinkiewicz <darekm@google.com>
+Date:   Wed, 28 Aug 2019 14:38:02 +0200
+Message-ID: <CALFZZQHZrVSaKhTSH6suOc0epMQzcgxAHddoJGxvtdhSp1tW0Q@mail.gmail.com>
+Subject: Re: [PATCH v7 9/9] drm: exynos: exynos_hdmi: use cec_notifier_conn_(un)register
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 11:57 AM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> Hi Rafael,
->
-> On Wed, Aug 28, 2019 at 10:55:42AM +0200, Rafael J. Wysocki wrote:
-> > On Mon, Aug 26, 2019 at 3:34 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Mon, Aug 26, 2019 at 01:32:00PM +0300, Sakari Ailus wrote:
-> > > > Hi Greg,
-> > > >
-> > > > On Mon, Aug 26, 2019 at 10:43:43AM +0200, Greg Kroah-Hartman wrote:
-> > > >
-> > > > ...
-> > > >
-> > > > > > diff --git a/include/linux/device.h b/include/linux/device.h
-> > > > > > index 6717adee33f01..4bc0ea4a3201a 100644
-> > > > > > --- a/include/linux/device.h
-> > > > > > +++ b/include/linux/device.h
-> > > > > > @@ -248,6 +248,12 @@ enum probe_type {
-> > > > > >   * @owner:       The module owner.
-> > > > > >   * @mod_name:    Used for built-in modules.
-> > > > > >   * @suppress_bind_attrs: Disables bind/unbind via sysfs.
-> > > > > > + * @probe_low_power: The driver supports its probe function being called while
-> > > > > > + *                    the device is in a low power state, independently of the
-> > > > > > + *                    expected behaviour on combination of a given bus and
-> > > > > > + *                    firmware interface etc. The driver is responsible for
-> > > > > > + *                    powering the device on using runtime PM in such case.
-> > > > > > + *                    This configuration has no effect if CONFIG_PM is disabled.
-> > > > > >   * @probe_type:  Type of the probe (synchronous or asynchronous) to use.
-> > > > > >   * @of_match_table: The open firmware table.
-> > > > > >   * @acpi_match_table: The ACPI match table.
-> > > > > > @@ -285,6 +291,7 @@ struct device_driver {
-> > > > > >   const char              *mod_name;      /* used for built-in modules */
-> > > > > >
-> > > > > >   bool suppress_bind_attrs;       /* disables bind/unbind via sysfs */
-> > > > > > + bool probe_low_power;
-> > > > >
-> > > > > Ick, no, this should be a bus-specific thing to handle such messed up
-> > > > > hardware.  Why polute this in the driver core?
-> > > >
-> > > > The alternative could be to make it I²C specific indeed; the vast majority
-> > > > of camera sensors are I²C devices these days.
-> > >
-> > > Why is this even needed to be a bus/device attribute at all?  You are
-> > > checking the firmware property in the probe function, just do the logic
-> > > there as you are, what needs to be saved to the bus's logic?
-> >
-> > The situation today is that all devices are put into D0 by the ACPI
-> > layer before driver probing since drivers generally expect devices to
-> > be in D0 when their probe routines run.  If the driver is prepared to
-> > cope with devices in low-power states, though, powering them up before
-> > probing for a driver may not be necessary, but still the core (or
-> > generally the code invoking the driver probe) needs to know that the
-> > driver really is prepared for that.  Hence the driver flag AFAICS.
-> >
-> > Now, in theory there may be some platform requirements regarding the
-> > power states of devices during driver probe, although admittedly it is
-> > not entirely clear to me why that would be the case) and hence the
->
-> Please see the cover page of the set (also here):
->
-> <URL:https://lkml.org/lkml/2019/8/26/175>
->
-> > property.  I would think that if the driver could cope with devices in
-> > low-power states during probe, the platform wouldn't need to worry
-> > about that.
->
-> I understand this as driver deciding whether it'd power on the device
-> during probe.
->
-> That way there's no way to judge whether the device is accessible, and
-> probe would succeed without an error, which then manifests itself on the
-> first access of the device.
+Hi.
 
-OK, so the property really represents the platform preference in that
-respect and the presence of it by no means guarantees that there won't
-be any problems on the first device access.
-
-> Such as on the at24 EEPROM driver, the error
-> would take place on first read of the contents, not in probe.
+On Wed, Aug 28, 2019 at 10:39 AM Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
 >
-> Somebody might consider that as a driver bug.
+> nit: I think err_rpm_disable or err_pm_runtime_disable could be better
+>      label names.
+>
+Submitted v7.1 which replaces err_runtime_disable with err_rpm_disable.
 
-Well, I guess you can argue that the safer thing, which therefore
-should be the default, is to power up the device before probing and to
-check whether or not it is accessible at that time.  However, in some
-cases it may be desirable to avoid powering up the device at that
-point, whatever the reason, and the property provides a hint about
-that.
-
-Fair enough to me, but honestly I'm not sure about the example in the
-cover letter. :-)
+Thank you.
