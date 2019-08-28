@@ -2,127 +2,163 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E74C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2717FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 125D022CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:31:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J+0oZUK+"
+	by mail.kernel.org (Postfix) with ESMTP id 004C622CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbfH1WbS (ORCPT
+        id S1727002AbfH1Wbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 18:31:18 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39174 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbfH1WbR (ORCPT
+        Wed, 28 Aug 2019 18:31:53 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48645 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbfH1Wbw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 18:31:17 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y200so679557pfb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 15:31:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=p4kczEged4PJNYuJuOKUVrGMVyqBPXCMEIi25oSs9zE=;
-        b=J+0oZUK+9Yo1u47+ar5On6fbk1R7IVCW8Gt/TLA2mEIJUBhsB0B2kdGCuVcAn6NOUA
-         2ltzMJiUnbamaWDWxrssuzuAjajeytOxlIEF7/48sE64gpEQpItt7fZLUfHiNwImYzAf
-         Xg4CoYF8tDhYiLL6yV4loyFfs2v5ByVlNUC6M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=p4kczEged4PJNYuJuOKUVrGMVyqBPXCMEIi25oSs9zE=;
-        b=kAGZxrkm+1YkdTh5sSIGaYZsg99kvK8N06zU1v2oNJrbaUjFh8uM9al7CH5KtKzKg4
-         LuGM4mbVCET4zRNHotQyV6KBsBeeHn7IdN2jbS9f9L1m750LKgIwNXc7r5cCeDEU3OWU
-         133j6oZjET5MItuHni/hEMEea33bmE0MN8i5hK9MY+WAJyyWKY86RJQ2UYSAZRtC2DrS
-         RpH01D3t0s4rE+xiC8VkxhdTPyc3Gwk8eXTMOM1B970IbPeQzqSp2amLDpsqyhawLu9Q
-         6Oy+WeF45I+5KPeb1pT7iqJ6vmm85osImIkg4eOcgwazhYbamy6xK8u3GSPj5mgAzZ2S
-         CF0w==
-X-Gm-Message-State: APjAAAXAcFm45HrcqLSSZ4sabpYPFY9fVUDhWSF/JM16lBtgxOVGnCbc
-        lLOCZYVLsSszj4Gejq5+dJauv9MjxfOxjw==
-X-Google-Smtp-Source: APXvYqzUVNl95TJe5vg9vAyJ/wl9U3ASLCXCtEdozjIsaVJVnwYEPlFPokGNdsN/7UrrZeKEDbtZzw==
-X-Received: by 2002:a63:ec13:: with SMTP id j19mr5377502pgh.369.1567031476880;
-        Wed, 28 Aug 2019 15:31:16 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id c35sm191974pgl.72.2019.08.28.15.31.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 15:31:16 -0700 (PDT)
-Message-ID: <5d6700b4.1c69fb81.24793.0bff@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 28 Aug 2019 18:31:52 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i36TX-0005tv-Iv; Thu, 29 Aug 2019 00:31:36 +0200
+Date:   Thu, 29 Aug 2019 00:31:34 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Song Liu <songliubraving@fb.com>
+cc:     Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <jroedel@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH] x86/mm/cpa: Prevent large page split when ftrace flips RW
+ on kernel text
+In-Reply-To: <9B34E971-20ED-4A58-B086-AB94990B5A26@fb.com>
+Message-ID: <alpine.DEB.2.21.1908282355340.1938@nanos.tec.linutronix.de>
+References: <20190828142445.454151604@linutronix.de> <20190828143123.971884723@linutronix.de> <55bb026c-5d54-6ebf-608f-3f376fbec4e5@intel.com> <alpine.DEB.2.21.1908281750410.1938@nanos.tec.linutronix.de> <309E5006-E869-4761-ADE2-ADB7A1A63FF1@fb.com>
+ <alpine.DEB.2.21.1908282029550.1938@nanos.tec.linutronix.de> <9B34E971-20ED-4A58-B086-AB94990B5A26@fb.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190826164625.6744-1-jorge.ramirez-ortiz@linaro.org>
-References: <20190826164625.6744-1-jorge.ramirez-ortiz@linaro.org>
-Cc:     niklas.cassel@linaro.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mbox: qcom: add APCS child device for QCS404
-To:     agross@kernel.org, jassisinghbrar@gmail.com,
-        jorge.ramirez-ortiz@linaro.org
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 28 Aug 2019 15:31:15 -0700
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jorge Ramirez-Ortiz (2019-08-26 09:46:24)
-> There is clock controller functionality in the APCS hardware block of
-> qcs404 devices similar to msm8916.
->=20
-> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/mailbox/qcom-apcs-ipc-mailbox.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qc=
-om-apcs-ipc-mailbox.c
-> index 705e17a5479c..76e1ad433b3f 100644
-> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-> @@ -89,7 +89,11 @@ static int qcom_apcs_ipc_probe(struct platform_device =
-*pdev)
->                 return ret;
->         }
-> =20
-> -       if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global"))=
+ftrace does not use text_poke() for enabling trace functionality. It uses
+its own mechanism and flips the whole kernel text to RW and back to RO.
+
+The CPA rework removed a loop based check of 4k pages which tried to
+preserve a large page by checking each 4k page whether the change would
+actually cover all pages in the large page.
+
+This resulted in endless loops for nothing as in testing it turned out that
+it actually never preserved anything. Of course testing missed to include
+ftrace, which is the one and only case which benefitted from the 4k loop.
+
+As a consequence enabling function tracing or ftrace based kprobes results
+in a full 4k split of the kernel text, which affects iTLB performance.
+
+The kernel RO protection is the only valid case where this can actually
+preserve large pages.
+
+All other static protections (RO data, data NX, PCI, BIOS) are truly
+static.  So a conflict with those protections which results in a split
+should only ever happen when a change of memory next to a protected region
+is attempted. But these conflicts are rightfully splitting the large page
+to preserve the protected regions. In fact a change to the protected
+regions itself is a bug and is warned about.
+
+Add an exception for the static protection check for kernel text RO when
+the to be changed region spawns a full large page which allows to preserve
+the large mappings. This also prevents the syslog to be spammed about CPA
+violations when ftrace is used.
+
+The exception needs to be removed once ftrace switched over to text_poke()
+which avoids the whole issue.
+
+Fixes: 585948f4f695 ("x86/mm/cpa: Avoid the 4k pages check completely")
+Reported-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+---
+ arch/x86/mm/pageattr.c |   26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
+
+--- a/arch/x86/mm/pageattr.c
++++ b/arch/x86/mm/pageattr.c
+@@ -516,7 +516,7 @@ static inline void check_conflict(int wa
+  */
+ static inline pgprot_t static_protections(pgprot_t prot, unsigned long start,
+ 					  unsigned long pfn, unsigned long npg,
+-					  int warnlvl)
++					  unsigned long lpsize, int warnlvl)
  {
-> +       platform_set_drvdata(pdev, apcs);
-
-Why did this move? It's required in the child driver or something now?
-Is it a Fixes sort of change?
-
-> +
-> +       if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global") =
-||
-> +           of_device_is_compatible(np, "qcom,qcs404-apcs-apps-global")) {
-
-Maybe this should be a compatible list instead of two calls to
-of_device_is_compatible().
-
-> +
->                 apcs->clk =3D platform_device_register_data(&pdev->dev,
->                                                           "qcom-apcs-msm8=
-916-clk",
->                                                           -1, NULL, 0);
-> @@ -97,8 +101,6 @@ static int qcom_apcs_ipc_probe(struct platform_device =
-*pdev)
->                         dev_err(&pdev->dev, "failed to register APCS clk\=
-n");
->         }
-> =20
-> -       platform_set_drvdata(pdev, apcs);
-> -
->         return 0;
->  }
-> =20
+ 	pgprotval_t forbidden, res;
+ 	unsigned long end;
+@@ -535,9 +535,17 @@ static inline pgprot_t static_protection
+ 	check_conflict(warnlvl, prot, res, start, end, pfn, "Text NX");
+ 	forbidden = res;
+ 
+-	res = protect_kernel_text_ro(start, end);
+-	check_conflict(warnlvl, prot, res, start, end, pfn, "Text RO");
+-	forbidden |= res;
++	/*
++	 * Special case to preserve a large page. If the change spawns the
++	 * full large page mapping then there is no point to split it
++	 * up. Happens with ftrace and is going to be removed once ftrace
++	 * switched to text_poke().
++	 */
++	if (lpsize != (npg * PAGE_SIZE) || (start & (lpsize - 1))) {
++		res = protect_kernel_text_ro(start, end);
++		check_conflict(warnlvl, prot, res, start, end, pfn, "Text RO");
++		forbidden |= res;
++	}
+ 
+ 	/* Check the PFN directly */
+ 	res = protect_pci_bios(pfn, pfn + npg - 1);
+@@ -819,7 +827,7 @@ static int __should_split_large_page(pte
+ 	 * extra conditional required here.
+ 	 */
+ 	chk_prot = static_protections(old_prot, lpaddr, old_pfn, numpages,
+-				      CPA_CONFLICT);
++				      psize, CPA_CONFLICT);
+ 
+ 	if (WARN_ON_ONCE(pgprot_val(chk_prot) != pgprot_val(old_prot))) {
+ 		/*
+@@ -855,7 +863,7 @@ static int __should_split_large_page(pte
+ 	 * protection requirement in the large page.
+ 	 */
+ 	new_prot = static_protections(req_prot, lpaddr, old_pfn, numpages,
+-				      CPA_DETECT);
++				      psize, CPA_DETECT);
+ 
+ 	/*
+ 	 * If there is a conflict, split the large page.
+@@ -906,7 +914,8 @@ static void split_set_pte(struct cpa_dat
+ 	if (!cpa->force_static_prot)
+ 		goto set;
+ 
+-	prot = static_protections(ref_prot, address, pfn, npg, CPA_PROTECT);
++	/* Hand in lpsize = 0 to enforce the protection mechanism */
++	prot = static_protections(ref_prot, address, pfn, npg, 0, CPA_PROTECT);
+ 
+ 	if (pgprot_val(prot) == pgprot_val(ref_prot))
+ 		goto set;
+@@ -1503,7 +1512,8 @@ static int __change_page_attr(struct cpa
+ 		pgprot_val(new_prot) |= pgprot_val(cpa->mask_set);
+ 
+ 		cpa_inc_4k_install();
+-		new_prot = static_protections(new_prot, address, pfn, 1,
++		/* Hand in lpsize = 0 to enforce the protection mechanism */
++		new_prot = static_protections(new_prot, address, pfn, 1, 0,
+ 					      CPA_PROTECT);
+ 
+ 		new_prot = pgprot_clear_protnone_bits(new_prot);
