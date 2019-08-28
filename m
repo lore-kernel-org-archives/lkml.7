@@ -2,145 +2,84 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98538C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8437DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8792189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:33:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="EEMGEdKe"
+	by mail.kernel.org (Postfix) with ESMTP id 63B042189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:34:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfH1HdV (ORCPT
+        id S1726540AbfH1Hev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 03:33:21 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38994 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbfH1HdV (ORCPT
+        Wed, 28 Aug 2019 03:34:51 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:41803 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726341AbfH1Hev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:33:21 -0400
-Received: by mail-io1-f65.google.com with SMTP id l7so3975549ioj.6
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 00:33:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=B/tH3RdlaqfDevaRszeKuzoma9dqc91+yjGGb3NOxOw=;
-        b=EEMGEdKeWolNfI/KooBfRZc/Q+OmhNR1y2gBIBqBmjrn4rM9Hw/6LcXR/mLjl1iHJs
-         s80DsCvYOTbhDqAxUSB4W49DEn3MNVo4EfV3Czqdeni+peW7ElAIfU7Q/CcoqM+TtzuE
-         S7nqxdB74qcxFqm7XWNGSdt0ypJSogVkpoWxssjvJ5AbqqE5SmQ6Ejcl3D6+vUGaquLp
-         XrcxcyfiRAZrObjKdgHxBmgASOfwbkKtcz7FZuXknMLB/w3oRuN/3wgtEXLz15DVvS+c
-         U1xYdmO/m7i4yot972KQQpfS4Jx1JRxwed+y1B03CrDUdZi01EQ0mrQAxNf8x20YCjOo
-         GbxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=B/tH3RdlaqfDevaRszeKuzoma9dqc91+yjGGb3NOxOw=;
-        b=k//DGjcUsd4GMuVWdfd6FGkeLVGsLJ7+0dNb6Ij1/WOdcgZ9NXn1QwCQnaWP9tJxom
-         QYDWs9LOe/iGknoMTO05C4xRS6ZDs60HfX0LylGsIsbb7+pwy4kzcBWWgXsbvO+UyxqN
-         OzpRa36mq2CsegNmlfiV9YkBFBurT5NsM4Rm3K9YOQGuKBfyHHbDEmWAMSU7QdjxP2C4
-         16+4wmVoZ7ivQ5v1oxUpfMcG3iUCpMVeD67sC70MQrnP4s0eZ66Kn3sP9qBCjuW5pExI
-         OYz3+95rGGRI/Tln0p5GkfUGFMsuRvL51+a8ONWPpZYsZEF1vnQQuBh2R3z+9ZGlNWOc
-         LdWQ==
-X-Gm-Message-State: APjAAAVf6EIZs0WypCtj9g9tDsY8Hx96mwFpD0tZrBY+LSW5Q9/7uJOh
-        NCqUaOiObWRsnldqgBRr0WEARYAcFAmJug89RXbDug==
-X-Google-Smtp-Source: APXvYqwOjNI+i+/HB7m+y+971nBx96PG4X7ieZWlCQ3DG1WaX6qUh9J5Pye64Etxjg0B9PMLJFz9Jzg7RitiVF2UobE=
-X-Received: by 2002:a5d:9746:: with SMTP id c6mr913068ioo.235.1566977600395;
- Wed, 28 Aug 2019 00:33:20 -0700 (PDT)
+        Wed, 28 Aug 2019 03:34:51 -0400
+X-UUID: a9f024a4eade4060b192299bafd224ce-20190828
+X-UUID: a9f024a4eade4060b192299bafd224ce-20190828
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 720177889; Wed, 28 Aug 2019 15:34:38 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 28 Aug 2019 15:34:43 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 28 Aug 2019 15:34:42 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 2/7] dt-bindings: usb: mtk-xhci: support USB wakeup for MT8183
+Date:   Wed, 28 Aug 2019 15:34:26 +0800
+Message-ID: <1566977671-22191-3-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1566977671-22191-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1566977671-22191-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-References: <20190725131257.6142-1-brgl@bgdev.pl> <CAK8P3a1FXyRRi5q48h-=egFjgoRJvy6_zuO9MQaAOMA-bsJKRA@mail.gmail.com>
- <CAMRc=Me_7aw_RvU_tZnVUgduN2wWYGqJ7hQirQ2RLzxGiPujvQ@mail.gmail.com>
-In-Reply-To: <CAMRc=Me_7aw_RvU_tZnVUgduN2wWYGqJ7hQirQ2RLzxGiPujvQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 28 Aug 2019 09:33:09 +0200
-Message-ID: <CAMRc=MdCviMA4gakqFS3+F-nU2XkdmmZbCb-m1mBJdGRHufKGg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] ARM: make DaVinci part of the ARM v5 multiplatform build
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        David Lechner <david@lechnology.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 4439CDF3D4D595987813F254181810B9A41149B17B2F03E36F015F0A849F2EED2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 5 sie 2019 o 10:31 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(a=
-):
->
-> czw., 25 lip 2019 o 16:57 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a):
-> >
-> > On Thu, Jul 25, 2019 at 3:13 PM Bartosz Golaszewski <brgl@bgdev.pl> wro=
-te:
-> > >
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > This series makes DaVinci part of the multiplatform build for ARM v5.
-> > >
-> > > First three patches fix build errors spotted and fixed by Arnd with v=
-1.
-> > >
-> > > The fourth patch adds necessary bits and pieces for davinci to suppor=
-t
-> > > multiplatform build and the last one actually adds all davinci boards
-> > > to multi_v5_defconfig.
-> > >
-> > > Tested on da850-lcdk with both multi_v5 as well as davinci_all defcon=
-figs.
-> > >
-> > > v1 -> v2:
-> > > - added patches from Arnd that fix build errors spotted when building
-> > >   random configurations (much appreciated)
-> > > - rebased on top of v5.3-rc1
-> >
-> > > Arnd Bergmann (3):
-> > > staging: media/davinci_vpfe: fix pinmux setup compilation
-> > >  media: davinci-vpbe: remove obsolete includes
-> > >  davinci: fix sleep.S build error on ARMv4
-> > >
-> > > Bartosz Golaszewski (2):
-> > >  ARM: davinci: support multiplatform build for ARM v5
-> > >  ARM: multi_v5_defconfig: make DaVinci part of the ARM v5 multiplatfo=
-rm build
-> >
-> >
-> > Thanks a lot for reposting the series!
-> >
-> > I wonder how we shoud deal with the dependencies now that the two media
-> > patches got merged in the linux-media tree.
-> >
-> > It would be tempting to just merge the arch/arm/ changes, but that crea=
-tes
-> > a bisection problem when the vpbe driver is enabled. I don't care
-> > about the staging driver really as that one is broken anyway, but inclu=
-ding
-> > the "media: davinci-vpbe: remove obsolete includes" fix would be better
-> > here.
-> >
-> > Mauro, any idea for how to handle that? Should we apply an identical
-> > patch to the davinci tree, or maybe only have it the ARM tree and you
-> > drop it from your tree (I don't know if you have a rule against rebasin=
-g).
-> > Sorry for not coordinating with Bartosz before I sent the patch again
-> > earlier this week.
-> >
-> >
-> >       Arnd
->
-> Hi Arnd,
->
-> is there any action required from me for this series?
->
-> Bart
+Support USB wakeup by ip-sleep mode for MT8183
 
-Ping.
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+v2: no changes
+---
+ Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+index 266c2d917a28..9a0a9eb0456f 100644
+--- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+@@ -41,6 +41,7 @@ Optional properties:
+ 	"wakeup-source", and has two arguments:
+ 	- the first one : register base address of the glue layer in syscon;
+ 	- the second one : hardware version of the glue layer
++		- 0 : used by mt8183 etc
+ 		- 1 : used by mt8173 etc
+ 		- 2 : used by mt2712 etc
+  - mediatek,u3p-dis-msk : mask to disable u3ports, bit0 for u3port0,
+-- 
+2.23.0
+
