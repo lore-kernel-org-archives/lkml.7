@@ -2,96 +2,141 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC2CC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70349C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6600220644
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B38820644
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:47:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfH1RqK (ORCPT
+        id S1726864AbfH1Rra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:46:10 -0400
-Received: from fieldses.org ([173.255.197.46]:49346 "EHLO fieldses.org"
+        Wed, 28 Aug 2019 13:47:30 -0400
+Received: from mga12.intel.com ([192.55.52.136]:17717 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbfH1RqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:46:09 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 480341E3B; Wed, 28 Aug 2019 13:46:09 -0400 (EDT)
-Date:   Wed, 28 Aug 2019 13:46:09 -0400
-To:     Jason L Tibbitts III <tibbs@math.uh.edu>
-Cc:     linux-nfs@vger.kernel.org, km@cm4all.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: Regression in 5.1.20: Reading long directory fails
-Message-ID: <20190828174609.GB29148@fieldses.org>
-References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
- <ufapnkxkn0x.fsf@epithumia.math.uh.edu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ufapnkxkn0x.fsf@epithumia.math.uh.edu>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+        id S1726515AbfH1Rra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 13:47:30 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 10:47:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
+   d="scan'208";a="192675221"
+Received: from glass.png.intel.com ([172.30.181.95])
+  by orsmga002.jf.intel.com with ESMTP; 28 Aug 2019 10:47:25 -0700
+From:   Ong Boon Leong <boon.leong.ong@intel.com>
+To:     davem@davemloft.net, linux@armlinux.org.uk,
+        mcoquelin.stm32@gmail.com, joabreu@synopsys.com,
+        f.fainelli@gmail.com, andrew@lunn.ch
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        weifeng.voon@intel.com
+Subject: [RFC net-next v2 0/5] PHY converter driver for DW xPCS IP
+Date:   Thu, 29 Aug 2019 01:47:17 +0800
+Message-Id: <20190828174722.6726-1-boon.leong.ong@intel.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 02:39:26PM -0500, Jason L Tibbitts III wrote:
-> I now have another user reporting the same failure of readdir on a long
-> directory which showed up in 5.1.20 and was traced to
-> 3536b79ba75ba44b9ac1a9f1634f2e833bbb735c.  I'm not sure what to do to
-> get more traction besides reposting and adding some addresses to the CC
-> list.  If there is any information I can provide which might help to get
-> to the bottom of this, please let me know.
-> 
-> To recap:
-> 
-> 5.1.20 introduced a regression reading some large directories.  In this
-> case, the directory should have 7800 files or so in it:
-> 
-> [root@ld00 ~]# ls -l ~dblecher|wc -l
-> ls: reading directory '/home/dblecher': Input/output error
-> 1844
-> [root@ld00 ~]# cat /proc/version Linux version 5.1.20-300.fc30.x86_64 (mockbuild@bkernel04.phx2.fedoraproject.org) (gcc version 9.1.1 20190503 (Red Hat 9.1.1-1) (GCC)) #1 SMP Fri Jul 26 15:03:11 UTC 2019
-> 
-> (The server is a Centos 7 machine running kernel 3.10.0-957.12.2.el7.x86_64.)
-> 
-> Building a kernel which reverts commit 3536b79ba75ba44b9ac1a9f1634f2e833bbb735c:
->   Revert "NFS: readdirplus optimization by cache mechanism" (memleak)
+My apology for sending RFC v1 with incorrect email for
+peppe.cavallaro@st.com. Please use RFC v2 for discussion. Thanks.
 
-Looks like that's db531db951f950b8 upstream.  (Do you know if it's
-reproduceable upstream as well?)
 
-> fixes the issue, but of course that revert was fixing a real issue so
-> I'm not sure what to do.
-> 
-> I can trivially reproduce this by simply trying to list the problematic
-> directories but I'm not sure how to construct such a directory; simply
-> creating 10000 files doesn't cause the problem for me.
+Following review comment from Florian and discussion in below thread:-
 
-Maybe it depends on having names of the right length to place some bit
-of xdr on a boundary.  I wonder if it'd be possible to reproduce just by
-varying the name lengths randomly till you hit it.
+https://patchwork.ozlabs.org/patch/1109777/
 
-The fact that the problematic patch fixed a memory leak also makes me
-wonder if it might have gone to far and freed something out from under
-the readdir code.
+This RFC is to solicit feedback on the implementation of PHY converter
+driver for DW xPCS and some changes in the mdiobus API to prepare for
+mdio device registration during driver open() instead of probe() phase
+for non-DT platform. The implementation in this Phy Converter has DT
+registration for future expansion, however, it is not tested in our
+current platform.
 
-> I am willing to
-> test patches and can build my own kernels, and I'm happy to provide any
-> debugging information you might require.  Unfortunately I don't know
-> enough to dig in and figure out for myself what's going wrong.
-> 
-> I did file https://bugzilla.redhat.com/show_bug.cgi?id=1740954 just to
-> have this in a bug tracker somewhere.  I'm happy to file one somewhere
-> else if that would help.
+The 1st three patches involve changes in existing mdiobus API:-
+1) Make mdiobus_create_device() function callable from Ethernet driver
+2) Introduce new API mdiobus_get_mdio_device()
+3) Add private data for struct mdio_device so that DW xPCS specific
+   private data can be established between the pairing Ethernet
+   controller for non-DT way.
 
-No clever debugging ideas off the top of my head, I'm afraid.  I might
-start by patching the kernel or doing some tracing to figure out exactly
-where that EIO is being generated?
+The reason for changes for mdiobus_create_device() &
+mdiobus_get_mdio_device() is to allow Eth driver to be able to create
+mdio device for PHY converter driver when Ethernet driver open() is
+called. Existing way for registering mdio device for non-DT appraoch
+is through mdiobus_register_board_info() and the mdio device creation
+happens inside Ethernet probe() whereby IRQ is not setup. The mdio
+device registration happens in mdiobus_register() -->
+mdiobus_setup_mdiodevfrom_board_info(), and it becomes an issue for
+Phy Converter such as dwxpcs that requires IRQ setup before, i.e.
+inside Ethernet controller open().
 
---b.
+The 4th patch is for PHY Converter driver for DW xPCS.
+Large portion of main logics of this code has been reviewed in the
+past in above review thread and all review inputs have been factored.
+
+First, the loading of PHY converter driver is through ACPI Device ID.
+The current implementation also has logics for DT style, but since
+we don't have such platform, we the DT implementation as place-holder
+for anyone that needs in future. The DT implementation follows the
+design of drivers/net/phy/xilinx_gmii2rgmii.c closely.
+
+What is extra is setup for DW xPCS IRQ request. In current EHL & TGL
+implementation, the IRQ is routed from MAC controller. For non-DT way,
+the IRQ line is tied to Ethernet driver (PCI enum), and we need a
+way to pass IRQ info from Ethernet driver to PHY converter driver
+during the creation of mdio device. Therefore, this is the reason
+for the 1st 3 patches. All the ISR does is to kick the workqueue to
+process the IRQ as we cannot call mdio_read() and mdio_write() inside
+ISR.
+
+The 5th (last) patch shows how the associated PHY converter mdio device
+is setup in Ethernet controller open() function and removed during
+stop(). The implementation is done in stmmac pci driver.
+
+With this implementation, now, we have dwxpcs implemented as PHY driver
+and the hook from stmmac driver for non-DT style is done through
+platform-specific data related to EHL & TGL when SGMII interface is
+selected. The PHY converter driver will still be beneficial for other
+platform that would need it and may use DT to enable the PHY converter
+driver and mdio device through DT definition.
+
+Please kindly review this RFC and provide any feedback/concern that
+the community may have. Appreciate your time here.
+
+Thanks
+Boon Leong
+
+Ong Boon Leong (5):
+  net: phy: make mdiobus_create_device() function callable from Eth
+    driver
+  net: phy: introduce mdiobus_get_mdio_device
+  net: phy: add private data to mdio_device
+  net: phy: introducing support for DWC xPCS logics for EHL & TGL
+  net: stmmac: add dwxpcs boardinfo for mdio_device registration
+
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |   1 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h  |   2 +
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |  25 ++
+ .../net/ethernet/stmicro/stmmac/stmmac_pci.c  |  45 +-
+ drivers/net/phy/Kconfig                       |   9 +
+ drivers/net/phy/Makefile                      |   1 +
+ drivers/net/phy/dwxpcs.c                      | 417 ++++++++++++++++++
+ drivers/net/phy/mdio_bus.c                    |  11 +-
+ include/linux/dwxpcs.h                        |  16 +
+ include/linux/mdio.h                          |   3 +
+ include/linux/phy.h                           |   7 +
+ include/linux/stmmac.h                        |   3 +
+ 12 files changed, 537 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/net/phy/dwxpcs.c
+ create mode 100644 include/linux/dwxpcs.h
+
+-- 
+2.17.0
+
