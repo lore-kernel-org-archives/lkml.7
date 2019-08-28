@@ -2,175 +2,225 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E63C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 02:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 673C3C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 02:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C55320679
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 02:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DBD9214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 02:26:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="k98yVcHo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RyOw9ueU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfH1CVB (ORCPT
+        id S1726328AbfH1C0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 22:21:01 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:42617 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfH1CVA (ORCPT
+        Tue, 27 Aug 2019 22:26:31 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46355 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbfH1C0a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 22:21:00 -0400
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190828022057epoutp0223834cdc9b130a2da027f08518593641~_9MdYkhdo2281322813epoutp02v
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 02:20:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190828022057epoutp0223834cdc9b130a2da027f08518593641~_9MdYkhdo2281322813epoutp02v
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566958857;
-        bh=2Id8G/Xn6V06sAdZYXMptUi6MUxaX2z3h414AQSi5/I=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=k98yVcHoY5eRWy55whZ8rcavcrMGw1LpHMDptIqy9vdMw+WVazwzt15mo01XkRRd9
-         7l4/CVj1LA+KD2X9zJQ7pDyqu9or8QDc9Y8Ar0ut0xku1LRrop+z5Ki0aMLe43HoyD
-         3N5pbfTIZQ6BYehWU3Hx+E4IXA0zFrHfzsrXO79E=
-Received: from epsnrtp5.localdomain (unknown [182.195.42.166]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-        20190828022056epcas2p488315cc4e34969caaecc606d9bbd2c6e~_9Mc2Raic1168911689epcas2p4l;
-        Wed, 28 Aug 2019 02:20:56 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.40.181]) by
-        epsnrtp5.localdomain (Postfix) with ESMTP id 46J8c74t4rzMqYkf; Wed, 28 Aug
-        2019 02:20:55 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        36.C7.04156.705E56D5; Wed, 28 Aug 2019 11:20:55 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190828022055epcas2p25525077d0a5a3fa5a2027bac06a10bc1~_9MbUtf8v2048620486epcas2p2Q;
-        Wed, 28 Aug 2019 02:20:55 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190828022055epsmtrp247236feb1b81a6eaa608658d164e62a4~_9MbTgesT1110211102epsmtrp2U;
-        Wed, 28 Aug 2019 02:20:55 +0000 (GMT)
-X-AuditID: b6c32a45-ddfff7000000103c-c4-5d65e5073e36
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F0.33.03706.605E56D5; Wed, 28 Aug 2019 11:20:55 +0900 (KST)
-Received: from KORDO035251 (unknown [12.36.165.204]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20190828022054epsmtip1cb959d74740696d9b606a29b76e0110e~_9MbAmhuG2545625456epsmtip1A;
-        Wed, 28 Aug 2019 02:20:54 +0000 (GMT)
-From:   "boojin.kim" <boojin.kim@samsung.com>
-To:     "'Theodore Y. Ts'o'" <tytso@mit.edu>
-Cc:     "'Herbert Xu'" <herbert@gondor.apana.org.au>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        "'Eric Biggers'" <ebiggers@kernel.org>,
-        "'Theodore Y. Ts'o'" <tytso@mit.edu>,
-        "'Chao Yu'" <chao@kernel.org>,
-        "'Jaegeuk Kim'" <jaegeuk@kernel.org>,
-        "'Andreas Dilger'" <adilger.kernel@dilger.ca>,
-        "'Theodore Ts'o'" <tytso@mit.edu>, <dm-devel@redhat.com>,
-        "'Mike Snitzer'" <snitzer@redhat.com>,
-        "'Alasdair Kergon'" <agk@redhat.com>,
-        "'Jens Axboe'" <axboe@kernel.dk>,
-        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
-        "'Kukjin Kim'" <kgene@kernel.org>,
-        "'Jaehoon Chung'" <jh80.chung@samsung.com>,
-        "'Ulf Hansson'" <ulf.hansson@linaro.org>,
-        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fscrypt@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-samsung-soc@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-ext4@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-samsung-soc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 5/9] block: support diskcipher
-Date:   Wed, 28 Aug 2019 11:20:53 +0900
-Message-ID: <009301d55d47$38606400$a9212c00$@samsung.com>
+        Tue, 27 Aug 2019 22:26:30 -0400
+Received: by mail-pg1-f195.google.com with SMTP id m3so506338pgv.13
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 19:26:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=tmS2mj3RDHe/s39Essdscd5laSqvRE7R4IrNZ/gvifA=;
+        b=RyOw9ueUKkbk6TrWRbwEFwcNS4LFrn375b4GoVirycvZxUNH/vhGayI9fepPDdP7Kh
+         2fiiR6e1rv5ckSB8GNLLifUDyOFLHZejQ/TN5cB0MFA5YoD/G3io3ym79OTgjod2nSbE
+         x3tgzVpk81adzHhexE6oD2pWtbLjA0OkLt/8TmOiVKDgkAJ5xeeVv4MLL4+nh2vXpM0A
+         WH4qBRWYSLSLInvy0i+N68gTCLMKrQQy4xBcExIYB5DjzTsw9QtpcBO0/6HRYKSfIF3u
+         obP0ByZRjGK/VSGHMpqEzxwoAABKiASYOCy/jA2Nc20qWYwP+gJi8FruYrS44CdmeYfc
+         XObA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=tmS2mj3RDHe/s39Essdscd5laSqvRE7R4IrNZ/gvifA=;
+        b=T6a6SDFAzIihJhhqg//O77y5Ug3DD5pcOlPFkwEUyb+C1MWeos614sROaYiFn8YMxj
+         KfP0ilOZyoF/++VwBc5MjIX3W2QYDVmWcEMudt8btbxQQeYEsrKQkSC44up/nhPqFoWP
+         dljtgWeTwluSGmovlxO5qjaWSsXe0zRiWoEVAaETM4e5CLBSMi2s4nfvVWK9egJ12SQA
+         8X1Xrrzp0Nja3yKOU9pJjIWUd1q8Jk/m5fhcV0woc1aRyrK5g9Z92ObQBeGuq0YLEMIA
+         fUFpbaJHxPnYYDBlT/6ENqOkRkoVPrm/CM+r5ovLQD9Pz7yKXRCynvd8/YyUb6tgrY7s
+         Q2og==
+X-Gm-Message-State: APjAAAVxCRqCJDdTtAk7RrHGWL11yYaUB1xMysV3jBHOuQvWFxcZnBfy
+        ey7juSXNdvhswJE0qj/zRV4=
+X-Google-Smtp-Source: APXvYqw9m/QdgDZJzb9IfXd730676Sx51gpVpAmZEOp1AdttXC5PZBFTGnGpwy1p1d0d7uLqQEmGsw==
+X-Received: by 2002:aa7:9a81:: with SMTP id w1mr1997209pfi.24.1566959189859;
+        Tue, 27 Aug 2019 19:26:29 -0700 (PDT)
+Received: from localhost (14-202-91-55.tpgi.com.au. [14.202.91.55])
+        by smtp.gmail.com with ESMTPSA id r27sm609522pgn.25.2019.08.27.19.26.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 19:26:28 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 12:25:33 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: a bug in genksysms/CONFIG_MODVERSIONS w/ __attribute__((foo))?
+To:     Ben Hutchings <ben@decadent.org.uk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        =?iso-8859-1?q?Debian=0A?= kernel maintainers 
+        <debian-kernel@lists.debian.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>
+References: <CAKwvOdnJAApaUhTQs7w_VjSeYBQa0c-TNxRB4xPLi0Y0sOQMMQ@mail.gmail.com>
+        <CAKwvOdkbY_XatVfRbZQ88p=nnrahZbvdjJ0OkU9m73G89_LRzg@mail.gmail.com>
+        <1566899033.o5acyopsar.astroid@bobo.none>
+        <CAK7LNARHacanVT6XjRDkFJDETWX6qHfUJCFhskCVG6aDL-bt1g@mail.gmail.com>
+        <1566908344.dio7j9zb2h.astroid@bobo.none>
+        <daacccf8e36132b6a747fa4b42626a8812906eaa.camel@decadent.org.uk>
+In-Reply-To: <daacccf8e36132b6a747fa4b42626a8812906eaa.camel@decadent.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AdVdRkQ7u+BKrKHPSQuBNN28o4N3VA==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf0wbZRjOd3e9OybFs6vus6LrThYdE9arFj50qNG5XbL9gb+iMc56KZcW
-        7a/0WjbUbATXUhiRQXRuhbG5GeNgla3UjQzKXGGSOqBOZGEEt8QxDKBsApuBiNr2WOS/53m+
-        5/ne9/3efDSu+pzS0CV2t+iyC1aWXEGc7l6Xn0PdELfrWnqy0O05P4Faf/geRy2/1JLo4mf9
-        GGqM7yFQZLpBgYKdf+No72QmGmsN4Gh4wadAtdencBSPn6RQ6PplBYqMrEfXrs5j6GDTKIl+
-        OroFTTbdIVBnJEagwbONJOr5txagA/EuDPlO3QbIWzNPod7gG88/yIePX8H4PW07+NPfreUH
-        +z18qLmK5Ecvd5J825e7+Y4jsxhf0XcB5292DZH8J+FmwM+GHilKf8u60SIKxaJLK9pNjuIS
-        u7mQ3fqq8UWjIU/H5XAFKJ/V2gWbWMhu2laUs7nEmpid1ZYKVk9CKhIkid3w7EaXw+MWtRaH
-        5C5kRWex1clxzlxJsEkeuznX5LA9zel0ekPC+a7VUn/1EOWsTN/Zd7hWUQ4uplUDmobMUzBY
-        KVaDFbSKaQfw5/EmhUxmALw5vI+UyZ0E8VaAuwlveIusRwD8bfhPXCYTAJ7/ay4RT6NJZj1s
-        620GSaxmHodDi/Opa3HmHwqOzUSJ5MFKRg+91XuxJCaYtXCi6hKWrKBkCuCl/auTspK5D8YO
-        jqXsOLManvmjEU9iyGhhe/9UqiE1kwuPjr8iW9SwocqX6gcyixQcb/ATsn8T/NgbWcquhJO9
-        YUrGGjg7HSFlvBsOfXWMksM1APYt+JZMT8LAeGWqGM6sg61nN8gP8SjsGVlqLQP6uxcpWVZC
-        v08lB7PgoZlBTJY18FbNLlnmYThcD/aBNYFlMwaWzRhYNkzg/7JHANEMHhCdks0sSnont3zT
-        IZD6FNkvtYMDA9uigKEBm6703ytuVymEUqnMFgWQxlm18teshKQsFso+EF0Oo8tjFaUoMCQ2
-        UIdr7jc5El/M7jZyBn1enq7AgAx5esSuUrbdc+VtFWMW3OL7ougUXXdzGJ2mKQdm9e/PFMRj
-        773zBV9v6lKSE4+Fdg3MVVyYek5SKp6IvRms40syMn5sObHq/EM7TOdOZkd21tVrz2WWWSYa
-        Tk1jU4dBJy2xr58IfXvmNZtpf0UpZ87vuHGreyBmffiFeJeR+Kaj91prJhoJlleXfXpsob0n
-        mv91KTg++mHN1o/EzJdZQrIIXDbukoT/AJPWV5kqBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGIsWRmVeSWpSXmKPExsWy7bCSnC7709RYg94Ki69fOlgs1p86xmyx
-        +m4/m8XpqWeZLOacb2Gx2PtuNqvF2j1/mC26X8lYPFk/i9nixq82Vov+x6+ZLc6f38Busenx
-        NVaLvbe0Le7f+8lkMXPeHTaLS4vcLV7N+8ZisWfvSRaLy7vmsFkc+d/PaDHj/D4mi7aNXxkt
-        Wnt+slscXxvuIOmxZeVNJo+WzeUe2w6oelw+W+qxaVUnm8eda3vYPDYvqffYveAzk0fTmaPM
-        Hu/3XWXz6NuyitHj8ya5AJ4oLpuU1JzMstQifbsEroxJ9+ayF7TzVJyZ38/awHias4uRg0NC
-        wESidYt7FyMXh5DAbkaJkzPfsHYxcgLFpSS2tu9hhrCFJe63HAGLCwk8Z5T43FQAYrMJaEts
-        Pr6KEcQWEdCQuPr3J1gNs8A0DoldH8RBbGEBI4nWrm4mEJtFQFXiZedFJpC9vAKWEhenyYOE
-        eQUEgdY+YQEJMwvoSbRtZISYIi+x/e0cqAsUJHacfc0IUiICVLLoWRBEiYjE7M425gmMgrOQ
-        DJqFMGgWkkGzkHQsYGRZxSiZWlCcm55bbFhgmJdarlecmFtcmpeul5yfu4kRHPtamjsYLy+J
-        P8QowMGoxMPbwZ8aK8SaWFZcmXuIUYKDWUmE95EKUIg3JbGyKrUoP76oNCe1+BCjNAeLkjjv
-        07xjkUIC6YklqdmpqQWpRTBZJg5OqQbGCe6KPu0piqufKnP1tu34wfCOpXqGoZpO67oI2VcH
-        eqz4CosPzjLUeH51hWb/iW3c2p8WGrj7dMxw+SJmk/ti5rSjDMePZCbVPPVd3qPhWBbPHjtv
-        ZbFB6qVNv9OePpv046uo851LB0VeyiS+PenWVX+k+d80Jp7Pto/8NjFKWcr4L715Z/M0JZbi
-        jERDLeai4kQAn059LPkCAAA=
-X-CMS-MailID: 20190828022055epcas2p25525077d0a5a3fa5a2027bac06a10bc1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190828022055epcas2p25525077d0a5a3fa5a2027bac06a10bc1
-References: <CGME20190828022055epcas2p25525077d0a5a3fa5a2027bac06a10bc1@epcas2p2.samsung.com>
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1566955930.uir50f8wen.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 05:33:33PM +0900, boojin.kim wrote:
->
-> Hi Boojin,
->
-> I think the important thing to realize here is that there are a large
-> number of hardware devices for which the keyslot manager *is* needed.
-> And from the upstream kernel's perspective, supporting two different
-> schemes for supporting the inline encryption feature is more
-> complexity than just supporting one which is general enough to support
-> a wider variety of hardware devices.
->
-> If you want somethig which is only good for the hardware platform you
-> are charged to support, that's fine if it's only going to be in a
-> Samsung-specific kernel.  But if your goal is to get something that
-> works upstream, especially if it requires changes in core layers of
-> the kernel, it's important that it's general enough to support most,
-> if not all, if the hardware devices in the industry.
->
-> Regards,
+Ben Hutchings's on August 28, 2019 1:34 am:
+> On Tue, 2019-08-27 at 22:42 +1000, Nicholas Piggin wrote:
+>> Masahiro Yamada's on August 27, 2019 8:49 pm:
+>> > Hi.
+>> >=20
+>> > On Tue, Aug 27, 2019 at 6:59 PM Nicholas Piggin <npiggin@gmail.com> wr=
+ote:
+>> > > Nick Desaulniers's on August 27, 2019 8:57 am:
+>> > > > On Mon, Aug 26, 2019 at 2:22 PM Nick Desaulniers
+>> > > > <ndesaulniers@google.com> wrote:
+>> > > > > I'm looking into a linkage failure for one of our device kernels=
+, and
+>> > > > > it seems that genksyms isn't producing a hash value correctly fo=
+r
+>> > > > > aggregate definitions that contain __attribute__s like
+>> > > > > __attribute__((packed)).
+>> > > > >=20
+>> > > > > Example:
+>> > > > > $ echo 'struct foo { int bar; };' | ./scripts/genksyms/genksyms =
+-d
+>> > > > > Defn for struct foo =3D=3D <struct foo { int bar ; } >
+>> > > > > Hash table occupancy 1/4096 =3D 0.000244141
+>> > > > > $ echo 'struct __attribute__((packed)) foo { int bar; };' |
+>> > > > > ./scripts/genksyms/genksyms -d
+>> > > > > Hash table occupancy 0/4096 =3D 0
+>> > > > >=20
+>> > > > > I assume the __attribute__ part isn't being parsed correctly (lo=
+oks
+>> > > > > like genksyms is a lex/yacc based C parser).
+>> > > > >=20
+>> > > > > The issue we have in our out of tree driver (*sadface*) is basic=
+ally a
+>> > > > > EXPORT_SYMBOL'd function whose signature contains a packed struc=
+t.
+>> > > > >=20
+>> > > > > Theoretically, there should be nothing wrong with exporting a fu=
+nction
+>> > > > > that requires packed structs, and this is just a bug in the lex/=
+yacc
+>> > > > > based parser, right?  I assume that not having CONFIG_MODVERSION=
+S
+>> > > > > coverage of packed structs in particular could lead to potential=
+ly
+>> > > > > not-fun bugs?  Or is using packed structs in exported function s=
+ymbols
+>> > > > > with CONFIG_MODVERSIONS forbidden in some documentation somewher=
+e I
+>> > > > > missed?
+>> > > >=20
+>> > > > Ah, looks like I'm late to the party:
+>> > > > https://lwn.net/Articles/707520/
+>> > >=20
+>> > > Yeah, would be nice to do something about this.
+>> >=20
+>> > modversions is ugly, so it would be great if we could dump it.
+>> >=20
+>> > > IIRC (without re-reading it all), in theory distros would be okay
+>> > > without modversions if they could just provide their own explicit
+>> > > versioning. They take care about ABIs, so they can version things
+>> > > carefully if they had to change.
+>=20
+> Debian doesn't currently have any other way of detecting ABI changes
+> (other than eyeballing diffs).
+>=20
+> I know there have been proposals of using libabigail for this instead,
+> but I'm not sure how far those progressed.
+>=20
+>> > We have not provided any alternative solution for this, haven't we?
+>> >=20
+>> > In your patch (https://lwn.net/Articles/707729/),
+>> > you proposed CONFIG_MODULE_ABI_EXPLICIT.
+>>=20
+>> Right, that was just my first proposal, but I am not confident that I
+>> understood everybody's requirements. I don't think the distro people
+>> had much time to to test things out.
+>>=20
+>> One possible shortcoming with that patch is no per-symbol version. The=20
+>> distro may break an ABI for a security fix, but they don't want to break
+>> all out of tree modules if it's an obscure ABI.
+>=20
+> Right, for example the KVM kABI is only meant for in-tree modules (like
+> kvm_intel) and in Debian we do not change the "ABI version" and require
+> rebuilding out-of-tree modules just because that ABI changes.=20
+> Currently we maintain explicit lists of exported symbols and exporting
+> modules for which we ignore ABI changes at build time.
+>=20
+>> The counter argument to=20
+>> that is they should just rename the symbol in their kernel for such=20
+>> cases, so I didn't implement it without somebody describing a good
+>> requirement.
+> [...]
+>=20
+> Sometimes it is just a single function that changes, but often a
+> structure change can affect large numbers of functions.  For example,
+> if KVM adds a member to an operations struct that can indirectly change
+> the ABI for most of its exported functions.  We wouldn't want to change
+> the ABI version but would still want to prevent loading mismatched kvm
+> and kvm_intel versions.  It would be a lot more work to change all of
+> the affected function names.
 
-I understood your reply.
-But, Please consider the diskcipher isn't just for FMP. 
-The UFS in Samsung SoC also has UFS ICE. This UFS ICE can be registered 
-as an algorithm of diskcipher like FMP.
+You could change just a single symbol name though :)
 
-Following is my opinion to introduce diskcipher.
-I think the common feature of ICE like FMP and UFS ICE, 
-is 'exposing cipher text to storage".
-And, Crypto test is also important for ICE.  Diskcipher supports
-the common feature of ICE. 
-I think specific functions for each ICE such as the key control of UFS ICE
-and the writing crypto table of FMP can be processed at algorithm level.
+> An alternative to symbol version matching that I think would work for
+> us is: if a module's exports or imports match the "changes ignored"
+> list then the module can only be loaded on the exact version of the
+> kernel, otherwise it only needs to match the ABI version.  I think that
+> would avoid the need for carrying symbol versions, but we would still
+> need a build-time ABI check and a way of flagging which symbols need
+> the tighter version match.
 
-Thanks for your reply.
-Boojin Kim.
+Just trying to think how best to express that.
 
+[ Aside, the whole symbol name resolution linking stuff does matching on=20
+  on any number of ~arbitrary strings that you can generate as you like,=20
+  and symbol tables are something that all existing tools and libs=20
+  understand.
+
+  So I strongly favour using that as the back end for our "version"
+  resolution system _if at all possible_ rather than adding these extra
+  bits of crud that really just do the same thing. At least for a first
+  pass, I don't want to over-engineer things.
+
+  Then it hopefully becomes a matter of adding some helper macros and
+  build facilities on top of that which can contain everyone's
+  requirements mostly within .config and perhaps a very small patch.
+  A bit more work with preprocessor macros etc is far preferable to
+  linking and loading "features" IMO]
+
+Back to your case, is it sufficient to have just an internal and an
+external module version where the kernel provides both and your in-tree
+modules match on the internal, others match on external?
+
+Thanks,
+Nick
+
+=
