@@ -2,122 +2,173 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C992C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E89C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E537E23403
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C304923403
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:45:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fl2793y/"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="iu8FTBfX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfH1IoZ (ORCPT
+        id S1726446AbfH1IpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:44:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43914 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbfH1IoY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:44:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TbiAm34UHSQnJDbGh+tQRL2bzfQS9wG8Ak+/2D09nxw=; b=fl2793y/MBOXnRDDd+6MgQ4Cc
-        0W1gIATu84hfQ2hYcDQZ96n70fMihRgVM0yLjxbWwR1fNLiYroAeRoeQEgub2p6JgcPJ43FJHx12Q
-        NTn4K0SRSOdLNhdUzZfya2pfqGy2EAMnuW/JtLlaBIZqFntBFV2cU0A5FJ+gdYDmP4Pi4tiweXXHx
-        uebQSY2ndzt4azmZMuKvRAAYcC5at4ZqjaDavj1wD8UCk8k+kLJ+og/m433tIduNxhZLV+TRV1ae4
-        ekIzWcZKOjCqE96/+PnFJBVqK3im8cB6i3+H5FUuW1/1m+rgvPnewrhW2ki0OcGVFXsYw4adReDOB
-        gjrABJxxQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2tYx-0006QZ-V8; Wed, 28 Aug 2019 08:44:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 100113074C6;
-        Wed, 28 Aug 2019 10:43:43 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E387B20230B0C; Wed, 28 Aug 2019 10:44:16 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 10:44:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-Subject: Re: [RESEND PATCH V3 2/8] perf/x86/intel: Basic support for metrics
- counters
-Message-ID: <20190828084416.GC2369@hirez.programming.kicks-ass.net>
-References: <20190826144740.10163-1-kan.liang@linux.intel.com>
- <20190826144740.10163-3-kan.liang@linux.intel.com>
+        Wed, 28 Aug 2019 04:45:20 -0400
+Received: from mail-eopbgr1320122.outbound.protection.outlook.com ([40.107.132.122]:64096
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726232AbfH1IpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:45:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cTb6stk3X4DFfo9UJ7121oqn142FoaLUQKr+5HbglGzidLrH4kSC+9K7ertZXuGpCqwSjmpC7JH09Dk1YO1yB4Jf0quZmcgAdhnEr3x6xs0Gk6rLs/ccAGUOhJZdjfQJRe2MD2Zy03mNQ4izLzQcW0RMD0KjfQOuXCQs42HPMGqnB1pt7rXNwvXTEu7vLq5JBUn3usjx9XydR8sMQyGzEhqqgUwmrdfJHNN0uhAS1UZPqgBDg8zt0FtBPEQkcviGmRR37+5b5RHmlcU8L8dTHMF+9PuTh6GWjPlcZll2nuqxtYsTH7BnGSnfbvSVuvbTNQqOUvNAmxzqs1//1b1nJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0mpp4gY0hdl3enDz7UuGaAhzM9ufS5hhjJ0x9zT22R8=;
+ b=Qz3pqgIjzg32r8yH4W4t3bja332jfJ7eDI/d+BQGXTcBLa/D+z898Zrxvpq/+9LemE/Da/hMise+VFlPxGG5EtHoXdUxuij/rd/XnOmWEMV6gcBYUtWyyUM5RkafKG45aCZo031KZJnd4Pr76BReZ07mc14rcZteea+wwl9AEx2CCR8MGojfURQsBNHmAtq8Rrx98ZpSJBCYyuF2GfpgBAn54lwrXlXUBZCZ1iXFgRrBcRAeEM3FW100JIsU5HGXA1bsBnnsmGGMlbBlf7yFkaZ1vPl3UL9iRAA6PsITyGf3RPrRhB40P6K0WuxhvaZCpEEmamYOw5GtUByWhF4E3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0mpp4gY0hdl3enDz7UuGaAhzM9ufS5hhjJ0x9zT22R8=;
+ b=iu8FTBfXmnMgy8eoZ+/wiYhIFL+hrTcSqBitowRk+pq/D3GQxVPZhZ/tyHWGbmCTcfgKJRRBhudx0UJHdJHmmsFGN6PVVrTPJYeMkX2zP0mkJ7dLCOFr0ZFw9no4p9Yyfrl7iB9Pd1xYSibL+qEDk+mMTT/j9xLHEPOxM9nEWi4=
+Received: from KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM (52.132.240.17) by
+ KL1P15301MB0294.APCP153.PROD.OUTLOOK.COM (52.132.240.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.1; Wed, 28 Aug 2019 08:45:14 +0000
+Received: from KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM
+ ([fe80::c402:2ce2:cafa:8b1e]) by KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM
+ ([fe80::c402:2ce2:cafa:8b1e%9]) with mapi id 15.20.2241.000; Wed, 28 Aug 2019
+ 08:45:14 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>
+CC:     Iouri Tarassov <iourit@microsoft.com>
+Subject: RE: [PATCH v3] video: hyperv: hyperv_fb: Obtain screen resolution
+ from Hyper-V host
+Thread-Topic: [PATCH v3] video: hyperv: hyperv_fb: Obtain screen resolution
+ from Hyper-V host
+Thread-Index: AQHVXMfGJ3Qba7Bfm06iN/QPH/c1OqcPqo/wgACSKZA=
+Date:   Wed, 28 Aug 2019 08:45:13 +0000
+Message-ID: <KL1P15301MB026421E7481BBC5B28E3E468BBA30@KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM>
+References: <20190827110755.2707-1-weh@microsoft.com>
+ <DM5PR21MB013709ADC5CB4B48CE752048D7A00@DM5PR21MB0137.namprd21.prod.outlook.com>
+In-Reply-To: <DM5PR21MB013709ADC5CB4B48CE752048D7A00@DM5PR21MB0137.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-27T23:56:41.1284187Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=22d3c610-3ee8-44bd-b8c5-5b9a2554642b;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=weh@microsoft.com; 
+x-originating-ip: [167.220.255.109]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 68437d0d-9ae1-4a06-c492-08d72b940b82
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:KL1P15301MB0294;
+x-ms-traffictypediagnostic: KL1P15301MB0294:|KL1P15301MB0294:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <KL1P15301MB0294F66D3EF1D660E5DD9FB0BBA30@KL1P15301MB0294.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 014304E855
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(39860400002)(366004)(396003)(346002)(13464003)(199004)(189003)(54534003)(4326008)(6436002)(55016002)(33656002)(316002)(476003)(14454004)(486006)(22452003)(66946007)(5660300002)(25786009)(11346002)(446003)(3846002)(53936002)(107886003)(9686003)(6116002)(10290500003)(6246003)(2906002)(66446008)(64756008)(66556008)(66476007)(76116006)(76176011)(2201001)(186003)(102836004)(81156014)(71200400001)(71190400001)(6506007)(256004)(10090500001)(26005)(2501003)(478600001)(81166006)(8676002)(110136005)(52536014)(66066001)(8936002)(6636002)(86362001)(305945005)(1511001)(74316002)(7696005)(99286004)(229853002)(8990500004)(7736002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:KL1P15301MB0294;H:KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: hxahiCa7gvgFhdyN4nvl6A9E45qjUuoRHZabTDCTdIhE18d4qakWG7mu0cyhLK29O4bXJTIoHVEqcvsBYRehY8VWYLyqWzYr8QBMdhLBQdfWSFZ9siwsJ/odMu+vKLSfPPAlNZjtaEdhdzvvoWL2DLrLUYhMaqxgrQuNUOlwKUkGB2X37ybU5/zAQBDx6dJ/BpINZSCL7wg4Y1Vu4Gpy6dMRtwNwRt7e9USqlw4ZHoGhZZvHV5mL8P23T/wVIuo71utvsJwNveGn1oUNJNJsgWljj6Dews8pPU0cWfC4G+Bb2pnO8Z4sVt4u78EMuARWOpsO/l8ZQryY8rjLRpsTWCspwJ4h/MHmkDWsPHwypLCdLnTP6AIKzu+6DSz7HefAP6sjYbre7X/PecNzVzLaQugQ2DZ42o8o9NqTiHdXCBU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826144740.10163-3-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68437d0d-9ae1-4a06-c492-08d72b940b82
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 08:45:13.9800
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6YazZyzDnT19aTQFX0p+DswxF7CDKpVf1U/JjXQLDFcAPNPHmmsJ45yyCg1W0Lk5PF56hzQtIHtNwPutrzm5Dw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1P15301MB0294
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 07:47:34AM -0700, kan.liang@linux.intel.com wrote:
 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 1b2c37ed49db..f4d6335a18e2 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -2131,7 +2131,7 @@ static inline void intel_pmu_ack_status(u64 ack)
->  
->  static void intel_pmu_disable_fixed(struct hw_perf_event *hwc)
->  {
-> -	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
-> +	int idx = get_reg_idx(hwc->idx) - INTEL_PMC_IDX_FIXED;
->  	u64 ctrl_val, mask;
->  
->  	mask = 0xfULL << (idx * 4);
-> @@ -2150,6 +2150,7 @@ static void intel_pmu_disable_event(struct perf_event *event)
->  {
->  	struct hw_perf_event *hwc = &event->hw;
->  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +	int reg_idx = get_reg_idx(hwc->idx);
->  
->  	if (unlikely(hwc->idx == INTEL_PMC_IDX_FIXED_BTS)) {
->  		intel_pmu_disable_bts();
 
-It is unfortunate we need that in both cases; and note how the
-inconsitent naming.
+> -----Original Message-----
+> From: Michael Kelley <mikelley@microsoft.com>
+> >
+> > Beginning from Windows 10 RS5+, VM screen resolution is obtained from h=
+ost.
+> > The "video=3Dhyperv_fb" boot time option is not needed, but still can b=
+e
+> > used to overwrite what the host specifies. The VM resolution on the hos=
+t
+> > could be set by executing the powershell "set-vmvideo" command.
+> >
+> > v2:
+> > - Implemented fallback when version negotiation failed.
+> > - Defined full size for supported_resolution array.
+> >
+> > v3:
+> > - Corrected the synthvid major and minor version comparison problem.
+>=20
+> The changelog for v2 and v3 should actually go after the "---" below so
+> that the changelog does not end up as part of the commit message.  Take
+> a look at other postings to LKML for an example.
+>=20
+[Wei Hu]=20
+I saw people putting v2 and vN in commit message. The git log of this file =
+also=20
+contains similar lines like v2. But if you prefer I can move it after ---.=
+=20
 
-> @@ -2157,9 +2158,16 @@ static void intel_pmu_disable_event(struct perf_event *event)
->  		return;
->  	}
->  
-> -	cpuc->intel_ctrl_guest_mask &= ~(1ull << hwc->idx);
-> -	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->idx);
-> -	cpuc->intel_cp_status &= ~(1ull << hwc->idx);
-> +	/*
-> +	 * When any other topdown events are still enabled,
-> +	 * cancel the disabling.
-> +	 */
-> +	if (has_other_topdown_event(cpuc->active_mask, hwc->idx))
-> +		return;
 
-And this includes a 3rd instance of that check :/ Also, this really
-wants to be in disable_fixed.
+> >
+> > Signed-off-by: Iouri Tarassov <iourit@microsoft.com>
+> > Signed-off-by: Wei Hu <weh@microsoft.com>
+> > ---
+> >  drivers/video/fbdev/hyperv_fb.c | 159 +++++++++++++++++++++++++++++---
+> >  1 file changed, 147 insertions(+), 12 deletions(-)
+> >
+> >
+> > +/* Check if the ver1 version is equal or greater than ver2 */
+> > +static inline bool synthvid_ver_eg(u32 ver1, u32 ver2)
+>=20
+> I'm being picky here, but I would call this synthvid_ver_ge().   In my
+> experience "ge" is the shorthand for "greater than or equal", rather
+> than the "eg" you have used.
+>=20
+[Wei Hu]=20
+Okay.
 
-> +
-> +	cpuc->intel_ctrl_guest_mask &= ~(1ull << reg_idx);
-> +	cpuc->intel_ctrl_host_mask &= ~(1ull << reg_idx);
-> +	cpuc->intel_cp_status &= ~(1ull << reg_idx);
->  
->  	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL))
->  		intel_pmu_disable_fixed(hwc);
+Thanks,
+Wei
 
-Same for the enable thing.
 
-Let me clean up this mess for you.
+> Michael
+>=20
+
