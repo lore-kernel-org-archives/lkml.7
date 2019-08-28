@@ -2,167 +2,206 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE7EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E77C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B695820644
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6C6220644
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:51:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="bVyH6FKf";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="dloUOH+E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4fD/Nzk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfH1RvG (ORCPT
+        id S1726917AbfH1RvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:51:06 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:64386 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726541AbfH1RvG (ORCPT
+        Wed, 28 Aug 2019 13:51:25 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41827 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbfH1RvZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:51:06 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7SHnHZC023664;
-        Wed, 28 Aug 2019 10:49:37 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=CVW4QWPO9RPkeojdAb/58KzrB2b63BhgxGQJ+d0kI4g=;
- b=bVyH6FKfGwDXtsgpunAjkPb/mQssaKEd99jT7GQyedgvZ2NYWS4m87JK9cWIAsclxNbu
- 0Lj26b5mU/P91QeLHGh5sG1ykuhSYJv9umGdSU0C01Uyiy8pjtmFzMmJsHZlqcGB4wD/
- kzvEU+YaA6KFrCvKcLb4oAyk80nPUuu3Bno= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2unvfygntr-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 28 Aug 2019 10:49:36 -0700
-Received: from prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) by
- prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 28 Aug 2019 10:49:31 -0700
-Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
- prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 28 Aug 2019 10:49:30 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Wed, 28 Aug 2019 10:49:30 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oBjHxMNXHpOUDoX0Ic4nibjTKpFLdDCxtJzzoXD4s4CxleRk3ooV7Md79X8eSQ318EUaicML/KJ6s6zNaJJrMtYZHK0DtyC/OY0QsQfGzr1fKUw+FlIa3A1lnDGNCrg6sdzdlbRdp7BDjt4TW5Lrjmfacg06wRKxDsiL4CRYFFUlCd/NpMtxNEp08wmXCePX3xZSsuQqP8+TkQIrNA4UYiy9YhRYzw1Cp3WVg/vjMr8sKv1d/yPFFaViEmI27/AHmylZFvjSnrJD0Oj1M1Tp264DQZMCFx/NqjPffFtmvj8NbIDcTBCgAiVrYoz+D0Okck/cOG+fbgMDv3V1W5Q0KA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CVW4QWPO9RPkeojdAb/58KzrB2b63BhgxGQJ+d0kI4g=;
- b=hixCcak+o1u13f5F3PA3ZuHBk4chJ2HmP+VEmQ/EHhD8RONeM77SMnXbVO87ljYSuzhi6+mXjj7oW/cofbr5W8V6sMtAnMdUnGa9ymI1+RH88NTiFkaIut1W4wlOa4uOsSpePYBpUs21CNXaVnIbVkVVmUAuCRbA3wlkk3eWx1y9PT0Rid2sYRJyBaHAzwyUcxA/nwcDJdFLe1WUbSxrsHQEJ4MybkjXnC7pQYENDnRs1L4kfMlXpAWsKHmPjsAC4wYBt535g8p+GHEgHcZnOc85Qynp2LRudfewmmAk+KeStHgiLqXYDKGsoK2yvaGVsJGo4eFnXjzzk0xnlQwHMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CVW4QWPO9RPkeojdAb/58KzrB2b63BhgxGQJ+d0kI4g=;
- b=dloUOH+EleAbypL226NjUyoWNQ8UqwcBus2dMddYDGnFw76HplsMLRD0xPyYnqXZTe7jZruW66wpPr3NvNQfcIG/Cwg45WNAPS/sqOzBth0oH1N+IpP0009COBRtry8E/gA0oZi3ELcJC5J3jl8vhdjQw6Gy9/jRT/OVCpqPXA4=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1854.namprd15.prod.outlook.com (10.174.96.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.20; Wed, 28 Aug 2019 17:49:24 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::45ee:bc50:acfa:60a5]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::45ee:bc50:acfa:60a5%3]) with mapi id 15.20.2199.021; Wed, 28 Aug 2019
- 17:49:24 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [patch 2/2] x86/mm/pti: Do not invoke PTI functions when PTI is
- disabled
-Thread-Topic: [patch 2/2] x86/mm/pti: Do not invoke PTI functions when PTI is
- disabled
-Thread-Index: AQHVXa1fwgQObosxIkSWxQONTHvWuqcQ1n+A
-Date:   Wed, 28 Aug 2019 17:49:24 +0000
-Message-ID: <34AA7007-F41C-4EBB-8EF4-C9476078E03D@fb.com>
-References: <20190828142445.454151604@linutronix.de>
- <20190828143124.063353972@linutronix.de>
-In-Reply-To: <20190828143124.063353972@linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.11)
-x-originating-ip: [2620:10d:c090:180::cae3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3382f82d-3ab9-406f-bc63-08d72be01078
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1854;
-x-ms-traffictypediagnostic: MWHPR15MB1854:
-x-microsoft-antispam-prvs: <MWHPR15MB1854E9D5D5141F48023066D0B3A30@MWHPR15MB1854.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 014304E855
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(346002)(366004)(39860400002)(396003)(199004)(189003)(6512007)(11346002)(25786009)(7736002)(57306001)(102836004)(6436002)(305945005)(53936002)(4744005)(46003)(2906002)(5660300002)(8936002)(76116006)(8676002)(81156014)(81166006)(50226002)(478600001)(14454004)(66476007)(66556008)(64756008)(66446008)(66946007)(186003)(36756003)(6486002)(6116002)(33656002)(6246003)(6916009)(446003)(86362001)(316002)(2616005)(99286004)(4326008)(486006)(476003)(76176011)(71200400001)(54906003)(71190400001)(229853002)(256004)(6506007)(14444005)(53546011)(3714002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1854;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2UmSrjU1EfaNteMP7iZc/6BW1LipBmr397hqoPrugqjF/mDpFkDnQLGDJjlhUrFupAD0Gwxylsp8S1ZNXbYoFVyQej6jw6djLzDYlg4C4Tm/y4u6nmaJjvkDZ7rbOdqh5iGdNZ2CBfMFYhZzG/MvbQlyg/ob9N9OFRO5eb4sWAaNfggC4EdnjvPVjMwY0PQSl0zkfZ90ZJv7trd6vPNK7vTtjcyxdhFezx3T4exXUyKGQ+deRRf+BE7B387ttBttAXxe5VV06I8usAaEaOOkzvpCeHdqZicLoCyb7oTM5boB0jd3LvxTdEOvge6JUuv3i201GHiMr0UXC2KMoP+ZEGxXYA4/x64CpFb16AXzrSNcZhcFaOIX0SIm7BkGl65RX81zpDZ93MW7dE4dHeIGhoWD/7JXlCfwmGlpZ78iMIo=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <FCE9FC2B5240504FA28E34827C186403@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 28 Aug 2019 13:51:25 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j16so670070wrr.8;
+        Wed, 28 Aug 2019 10:51:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=S+L/L1oviegCq0SEoQs5dxf3RE/Q9qKwwJ9SUpVknSA=;
+        b=f4fD/NzkApqP6ivRI9YR83TuPET49XoCIQhc50e2vdDr1OJvTpDvOT44PALvTY7m5c
+         2mX5P6DhR35z4u0OpGpfzJ+Q0D2Sa+6hsfiM47YeWui2O3tLnqcqLxRcSafLqSO4Wy2L
+         1Xk+VU57K7VUj4SgIyT5bmwR6Zz3x4PfUO9P6BgmjPdthNpe4uM33tlALSUtt5aUxSe9
+         VUcENcVhtqLwJFWd5kL+nNnnaqkuacF7y48b2zIUitPC6ytfDhLeH58tGv7pZVNA6Qq7
+         i8vQnGNjQnxmMql+GQyeBtONBw/uNpcPFHq+t3fkRTlBLrTni/xX+MtLuJ0iNWKpdboJ
+         YYjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=S+L/L1oviegCq0SEoQs5dxf3RE/Q9qKwwJ9SUpVknSA=;
+        b=CsfQhPg8TNSXLRIIDbj5M/4RvklHvLqX/SSnxGmdIXUsotBjhs17Y1AnNG+43U4rK+
+         hNvoZbZG/j7fowKeCC58T4nk2KkrENKejZoX3PLi2+3C6GtKHoDMQ1jVsXa2Z2s8HEWy
+         8PpqASIUAhA7FKEKQbZCvislTcQvSBXppQmwJQoBZYy4OVIPh2qQLyDByQbLR37AxYPk
+         /V1nr39bgTFjWmIufdh+W3xTxi5usNSG8BpjDr616tkZigIY6vEM3ftLwrtJdDsJyghr
+         CjDPm18QcI9ijakgeBc8JIrzePg2wRV5rpYh/ZkpzTAnSOL3QfPXHiZStMGq5VSIf1gg
+         uj1Q==
+X-Gm-Message-State: APjAAAXoNNfp31jchnI5KsDF1NL8ORts/ghC8jaXr16ZoBsFQ6k1PzEl
+        6lMnVJaSQpIZGKHnKCRaJNg=
+X-Google-Smtp-Source: APXvYqw/SCzGBcopmvEQlDRIiVbzGRPhwwTlvsSne8NWA4bBf7lxZerjYU3UTwVx/hXdsSWUbkMxWQ==
+X-Received: by 2002:adf:fa0a:: with SMTP id m10mr5266855wrr.174.1567014682368;
+        Wed, 28 Aug 2019 10:51:22 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id i93sm5241437wri.57.2019.08.28.10.51.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 10:51:21 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] x86/PCI: Add missing log facility and move to use pr_ macros in pcbios.c
+Date:   Wed, 28 Aug 2019 19:51:20 +0200
+Message-Id: <20190828175120.22164-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20190825182557.23260-1-kw@linux.com>
+References: <20190825182557.23260-1-kw@linux.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3382f82d-3ab9-406f-bc63-08d72be01078
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 17:49:24.4101
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FqGmoFCVH/b7nzUdBd2IuhmAHKpGSLMZ4fY2f1a2SXm535Y4RbOWuVBJw0ld1g28UN/Zt9Niim9jyuxikbXJxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1854
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-08-28_08:2019-08-28,2019-08-28 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
- priorityscore=1501 mlxscore=0 mlxlogscore=827 clxscore=1015 malwarescore=0
- spamscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1908280174
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add missing log facility where two instances of printk() that did not
+use any (so it would be using MESSAGE_LOGLEVEL_DEFAULT set in Kconfig)
+to make all the warnings in the arch/x86/pci/pcbios.c to be printed
+consistently at the same log facility.  Also resolve the following
+checkpatch.pl script warning:
 
+WARNING: printk() should include KERN_<LEVEL> facility level
 
-> On Aug 28, 2019, at 7:24 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
->=20
-> When PTI is disabled at boot time either because the CPU is not affected =
-or
-> PTI has been disabled on the command line, the boot code still calls into
-> pti_finalize() which then unconditionally invokes:
->=20
->     pti_clone_entry_text()
->     pti_clone_kernel_text()
->=20
-> pti_clone_kernel_text() was called unconditionally before the 32bit suppo=
-rt
-> was added and 32bit added the call to pti_clone_entry_text().
->=20
-> The call has no side effects as cloning the page tables into the availabl=
-e
-> second one, which was allocated for PTI does not create damage. But it do=
-es
-> not make sense either and in case that this functionality would be extend=
-ed
-> later this might actually lead to hard to diagnose issue.
->=20
-> Neither function should be called when PTI is runtime disabled. Make the
-> invocation conditional.
->=20
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+While adding the missing log facility move over to using pr_ macros
+over using printk(KERN_<level> ...) and DBG().
 
-Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+Changes in v2:
+  Change wording and include checkpatch.pl script warning.
+  Leverage pr_fmt and remove "PCI: " prefix used throught.
+  Move to pr_debug() over using DBG() from arch/x86/include/asm/pci_x86.h.
+
+ arch/x86/pci/pcbios.c | 30 ++++++++++++++++--------------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
+
+diff --git a/arch/x86/pci/pcbios.c b/arch/x86/pci/pcbios.c
+index 9c97d814125e..ddcefb25c55e 100644
+--- a/arch/x86/pci/pcbios.c
++++ b/arch/x86/pci/pcbios.c
+@@ -3,6 +3,8 @@
+  * BIOS32 and PCI BIOS handling.
+  */
+ 
++#define pr_fmt(fmt) "PCI: " fmt
++
+ #include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
+@@ -47,7 +49,7 @@ static inline void set_bios_x(void)
+ 	pcibios_enabled = 1;
+ 	set_memory_x(PAGE_OFFSET + BIOS_BEGIN, (BIOS_END - BIOS_BEGIN) >> PAGE_SHIFT);
+ 	if (__supported_pte_mask & _PAGE_NX)
+-		printk(KERN_INFO "PCI: PCI BIOS area is rw and x. Use pci=nobios if you want it NX.\n");
++		pr_info("PCI BIOS area is rw and x. Use pci=nobios if you want it NX.\n");
+ }
+ 
+ /*
+@@ -111,10 +113,10 @@ static unsigned long __init bios32_service(unsigned long service)
+ 		case 0:
+ 			return address + entry;
+ 		case 0x80:	/* Not present */
+-			printk(KERN_WARNING "bios32_service(0x%lx): not present\n", service);
++			pr_warn("bios32_service(0x%lx): not present\n", service);
+ 			return 0;
+ 		default: /* Shouldn't happen */
+-			printk(KERN_WARNING "bios32_service(0x%lx): returned 0x%x -- BIOS bug!\n",
++			pr_warn("bios32_service(0x%lx): returned 0x%x -- BIOS bug!\n",
+ 				service, return_code);
+ 			return 0;
+ 	}
+@@ -160,14 +162,14 @@ static int __init check_pcibios(void)
+ 		minor_ver = ebx & 0xff;
+ 		if (pcibios_last_bus < 0)
+ 			pcibios_last_bus = ecx & 0xff;
+-		DBG("PCI: BIOS probe returned s=%02x hw=%02x ver=%02x.%02x l=%02x\n",
++		pr_debug("BIOS probe returned s=%02x hw=%02x ver=%02x.%02x l=%02x\n",
+ 			status, hw_mech, major_ver, minor_ver, pcibios_last_bus);
+ 		if (status || signature != PCI_SIGNATURE) {
+-			printk (KERN_ERR "PCI: BIOS BUG #%x[%08x] found\n",
++			pr_err("BIOS BUG #%x[%08x] found\n",
+ 				status, signature);
+ 			return 0;
+ 		}
+-		printk(KERN_INFO "PCI: PCI BIOS revision %x.%02x entry at 0x%lx, last bus=%d\n",
++		pr_info("PCI BIOS revision %x.%02x entry at 0x%lx, last bus=%d\n",
+ 			major_ver, minor_ver, pcibios_entry, pcibios_last_bus);
+ #ifdef CONFIG_PCI_DIRECT
+ 		if (!(hw_mech & PCIBIOS_HW_TYPE1))
+@@ -316,18 +318,18 @@ static const struct pci_raw_ops *__init pci_find_bios(void)
+ 		if (sum != 0)
+ 			continue;
+ 		if (check->fields.revision != 0) {
+-			printk("PCI: unsupported BIOS32 revision %d at 0x%p\n",
++			pr_warn("unsupported BIOS32 revision %d at 0x%p\n",
+ 				check->fields.revision, check);
+ 			continue;
+ 		}
+-		DBG("PCI: BIOS32 Service Directory structure at 0x%p\n", check);
++		pr_debug("BIOS32 Service Directory structure at 0x%p\n", check);
+ 		if (check->fields.entry >= 0x100000) {
+-			printk("PCI: BIOS32 entry (0x%p) in high memory, "
++			pr_warn("BIOS32 entry (0x%p) in high memory, "
+ 					"cannot use.\n", check);
+ 			return NULL;
+ 		} else {
+ 			unsigned long bios32_entry = check->fields.entry;
+-			DBG("PCI: BIOS32 Service Directory entry at 0x%lx\n",
++			pr_debug("BIOS32 Service Directory entry at 0x%lx\n",
+ 					bios32_entry);
+ 			bios32_indirect.address = bios32_entry + PAGE_OFFSET;
+ 			set_bios_x();
+@@ -366,7 +368,7 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
+ 	opt.size = PAGE_SIZE;
+ 	opt.segment = __KERNEL_DS;
+ 
+-	DBG("PCI: Fetching IRQ routing table... ");
++	pr_debug("Fetching IRQ routing table... ");
+ 	__asm__("push %%es\n\t"
+ 		"push %%ds\n\t"
+ 		"pop  %%es\n\t"
+@@ -384,9 +386,9 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
+ 		  "S" (&pci_indirect),
+ 		  "m" (opt)
+ 		: "memory");
+-	DBG("OK  ret=%d, size=%d, map=%x\n", ret, opt.size, map);
++	pr_debug("OK  ret=%d, size=%d, map=%x\n", ret, opt.size, map);
+ 	if (ret & 0xff00)
+-		printk(KERN_ERR "PCI: Error %02x when fetching IRQ routing table.\n", (ret >> 8) & 0xff);
++		pr_err("Error %02x when fetching IRQ routing table.\n", (ret >> 8) & 0xff);
+ 	else if (opt.size) {
+ 		rt = kmalloc(sizeof(struct irq_routing_table) + opt.size, GFP_KERNEL);
+ 		if (rt) {
+@@ -394,7 +396,7 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
+ 			rt->size = opt.size + sizeof(struct irq_routing_table);
+ 			rt->exclusive_irqs = map;
+ 			memcpy(rt->slots, (void *) page, opt.size);
+-			printk(KERN_INFO "PCI: Using BIOS Interrupt Routing Table\n");
++			pr_info("Using BIOS Interrupt Routing Table\n");
+ 		}
+ 	}
+ 	free_page(page);
+-- 
+2.22.1
 
