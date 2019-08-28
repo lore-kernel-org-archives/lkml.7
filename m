@@ -2,117 +2,141 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2BDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E39C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1C52064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61B82064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfH1Ojx (ORCPT
+        id S1726777AbfH1Oj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:39:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34520 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbfH1Ojx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:39:53 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 47863111A3D2;
-        Wed, 28 Aug 2019 14:39:52 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-8.gru2.redhat.com [10.97.112.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BB330601AC;
-        Wed, 28 Aug 2019 14:39:49 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id 039CE105139;
-        Wed, 28 Aug 2019 11:39:23 -0300 (BRT)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id x7SEdJ7Q013745;
-        Wed, 28 Aug 2019 11:39:19 -0300
-Date:   Wed, 28 Aug 2019 11:39:18 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Wanpeng Li <kernellwp@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when
- dedicated physical CPUs are available
-Message-ID: <20190828143916.GA13725@amt.cnet>
-References: <1564643196-7797-1-git-send-email-wanpengli@tencent.com>
- <7b1e3025-f513-7068-32ac-4830d67b65ac@intel.com>
- <c3fe182f-627f-88ad-cb4d-a4189202b438@redhat.com>
- <20190803202058.GA9316@amt.cnet>
- <CANRm+CwtHBOVWFcn+6Z3Ds7dEcNL2JP+b6hLRS=oeUW98A24MQ@mail.gmail.com>
- <20190826204045.GA24697@amt.cnet>
- <CANRm+Cx0+V67Ek7FhSs61ZqZL3MgV88Wdy17Q6UA369RH7=dgQ@mail.gmail.com>
- <CANRm+CxqYMzgvxYyhZLmEzYd6SLTyHdRzKVaSiHO-4SV+OwZUQ@mail.gmail.com>
- <CAJZ5v0iQc0-WzqeyAh-6m5O-BLraRMj+Z7sqvRgGwh2u2Hp7cg@mail.gmail.com>
+        Wed, 28 Aug 2019 10:39:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27834 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726315AbfH1Oj4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:39:56 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SEciaG122349
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:39:55 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2unuc00jhs-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:39:55 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 28 Aug 2019 15:39:53 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 28 Aug 2019 15:39:50 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7SEdRfs35062130
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 28 Aug 2019 14:39:27 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 13DE64C04A;
+        Wed, 28 Aug 2019 14:39:49 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B006A4C046;
+        Wed, 28 Aug 2019 14:39:48 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.86])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 28 Aug 2019 14:39:48 +0000 (GMT)
+Date:   Wed, 28 Aug 2019 17:39:47 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Guo Ren <guoren@kernel.org>
+Cc:     linux-csky@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] csky: use generic free_initrd_mem()
+References: <1566999319-8151-1-git-send-email-rppt@linux.ibm.com>
+ <CAJF2gTTF0W18kPzXP8hOA64FuOx=atxFnCk0syEhP7s7LOm0Kw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0iQc0-WzqeyAh-6m5O-BLraRMj+Z7sqvRgGwh2u2Hp7cg@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Wed, 28 Aug 2019 14:39:52 +0000 (UTC)
+In-Reply-To: <CAJF2gTTF0W18kPzXP8hOA64FuOx=atxFnCk0syEhP7s7LOm0Kw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19082814-0016-0000-0000-000002A3ED62
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082814-0017-0000-0000-000033043E8B
+Message-Id: <20190828143946.GA21342@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=986 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908280154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 10:45:44AM +0200, Rafael J. Wysocki wrote:
-> On Wed, Aug 28, 2019 at 10:34 AM Wanpeng Li <kernellwp@gmail.com> wrote:
-> >
-> > On Tue, 27 Aug 2019 at 08:43, Wanpeng Li <kernellwp@gmail.com> wrote:
-> > >
-> > > Cc Michael S. Tsirkin,
-> > > On Tue, 27 Aug 2019 at 04:42, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> > > >
-> > > > On Tue, Aug 13, 2019 at 08:55:29AM +0800, Wanpeng Li wrote:
-> > > > > On Sun, 4 Aug 2019 at 04:21, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> > > > > >
-> > > > > > On Thu, Aug 01, 2019 at 06:54:49PM +0200, Paolo Bonzini wrote:
-> > > > > > > On 01/08/19 18:51, Rafael J. Wysocki wrote:
-> > > > > > > > On 8/1/2019 9:06 AM, Wanpeng Li wrote:
-> > > > > > > >> From: Wanpeng Li <wanpengli@tencent.com>
-> > > > > > > >>
-> > > > > > > >> The downside of guest side polling is that polling is performed even
-> > > > > > > >> with other runnable tasks in the host. However, even if poll in kvm
-> > > > > > > >> can aware whether or not other runnable tasks in the same pCPU, it
-> > > > > > > >> can still incur extra overhead in over-subscribe scenario. Now we can
-> > > > > > > >> just enable guest polling when dedicated pCPUs are available.
-> > > > > > > >>
-> > > > > > > >> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > > > >> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > > > > > > >> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> > > > > > > >> Cc: Marcelo Tosatti <mtosatti@redhat.com>
-> > > > > > > >> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > > > > > > >
-> > > > > > > > Paolo, Marcelo, any comments?
-> > > > > > >
-> > > > > > > Yes, it's a good idea.
-> > > > > > >
-> > > > > > > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> >
-> > Hi Marcelo,
-> >
-> > If you don't have more concern, I guess Rafael can apply this patch
-> > now since the merge window is not too far.
-> 
-> I will likely queue it up later today and it will go to linux-next
-> early next week.
-> 
-> Thanks!
+Hi,
 
-NACK patch.
+On Wed, Aug 28, 2019 at 10:12:52PM +0800, Guo Ren wrote:
+> Acked-by: Guo Ren <guoren@kernel.org>
 
-Just don't load the haltpoll driver.
+Do you mind taking it via csky tree?
+ 
+> On Wed, Aug 28, 2019 at 9:35 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> >
+> > The csky implementation of free_initrd_mem() is an open-coded version of
+> > free_reserved_area() without poisoning.
+> >
+> > Remove it and make csky use the generic version of free_initrd_mem().
+> >
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > ---
+> >  arch/csky/mm/init.c | 16 ----------------
+> >  1 file changed, 16 deletions(-)
+> >
+> > diff --git a/arch/csky/mm/init.c b/arch/csky/mm/init.c
+> > index eb0dc9e..d4c2292 100644
+> > --- a/arch/csky/mm/init.c
+> > +++ b/arch/csky/mm/init.c
+> > @@ -60,22 +60,6 @@ void __init mem_init(void)
+> >         mem_init_print_info(NULL);
+> >  }
+> >
+> > -#ifdef CONFIG_BLK_DEV_INITRD
+> > -void free_initrd_mem(unsigned long start, unsigned long end)
+> > -{
+> > -       if (start < end)
+> > -               pr_info("Freeing initrd memory: %ldk freed\n",
+> > -                       (end - start) >> 10);
+> > -
+> > -       for (; start < end; start += PAGE_SIZE) {
+> > -               ClearPageReserved(virt_to_page(start));
+> > -               init_page_count(virt_to_page(start));
+> > -               free_page(start);
+> > -               totalram_pages_inc();
+> > -       }
+> > -}
+> > -#endif
+> > -
+> >  extern char __init_begin[], __init_end[];
+> >
+> >  void free_initmem(void)
+> > --
+> > 2.7.4
+> >
+> 
+> 
+> -- 
+> Best Regards
+>  Guo Ren
+> 
+> ML: https://lore.kernel.org/linux-csky/
+> 
+
+-- 
+Sincerely yours,
+Mike.
 
