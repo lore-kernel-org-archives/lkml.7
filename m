@@ -2,120 +2,160 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FED3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC76C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541B4208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E557208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:56:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="bK8fRPnW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NVdwLJqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbfH1Kyf (ORCPT
+        id S1726472AbfH1K4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:54:35 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:54855 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfH1Kyf (ORCPT
+        Wed, 28 Aug 2019 06:56:35 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36902 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfH1K4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:54:35 -0400
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x7SAsGhE023826;
-        Wed, 28 Aug 2019 19:54:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x7SAsGhE023826
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566989657;
-        bh=0aEfdaeY7mGkEAyGyJedaS36AmSkDHSHLjJWK6eJ8jU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bK8fRPnWch65cU6pgIoRy9PQBFZXFjZyaECj8O/kkx24MPqoedK98ZKATllbYFpCx
-         nEN73VKu9eY89bVTdzDU6v4j6xAD+ZPhYcHLtZI6J986KSm9T4v1ZXa30nNgd9iOa/
-         iVw5CoXOPXoV094mtj5rUSD9l+L2GUG738uJ6VpcqCkpDHUAcP3LkIVQIws/5MjHln
-         27ZJtFOqGh9EQlFwGFso/6v6/xwkQB1BIZU4X8d6Pn6jEASzJyVsxrQ2Y6pr9vLyvd
-         uLiEGSm67Nu/LHo2aqPZixxJR3pcME8nfDSwsPSDZMUPb5R6wnwVYSj8cjFpsa3ikc
-         GNot1GcyfydYA==
-X-Nifty-SrcIP: [209.85.217.52]
-Received: by mail-vs1-f52.google.com with SMTP id 62so1542350vsl.5;
-        Wed, 28 Aug 2019 03:54:17 -0700 (PDT)
-X-Gm-Message-State: APjAAAW/LPwpkfIYhZafs1steV7l8eGJz4VnFtLJuatM7SBP+1HcpcvA
-        5sFn7inf54Dgw8vg1BS4eNpY70BJ6SleeGMat+0=
-X-Google-Smtp-Source: APXvYqyTOMfJYEouCiB1bEN4976TgQu4HqralgHD2818HsBCGBXAYnYZsbiCyyA54/vVKIRU/ogvfy3faarlq+XW0VM=
-X-Received: by 2002:a67:8a83:: with SMTP id m125mr1914365vsd.181.1566989656023;
- Wed, 28 Aug 2019 03:54:16 -0700 (PDT)
+        Wed, 28 Aug 2019 06:56:34 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z11so2023931wrt.4
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 03:56:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Vx9t5xjLzwxSs68UQHUay9ecnGA4GXfJUCmBL33YCMk=;
+        b=NVdwLJqMFK27Egi+W5DT/3XO+B227WKx3M16ICzoXvtv3NVx+kYKIWtAq4ZidBcYR/
+         6IGwVIoAcsDgTwvd+pwztc4kqW7mf2sSDts/mC7aobOdzcsHuc/F1dpU/BpqoiE9ML/s
+         cDjmOLbsoCc6teLG/5wl/NGS2xAgrdjgeDYEI91IhxSHXf76R4GeGYbxSFH+75iaJUfe
+         wT8+75/RkSk5caZV3qv54/qXQy42Kzg3eZmIM2FCd4NoNwrSMF71P581+GSac3L9QeRC
+         S3Wx1vvGVwqa0gtVdM4obwVJsgIHz4ohf44ieueSHJ/wOuQxb45CsaAbBU1sGHgIo0nm
+         DTqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Vx9t5xjLzwxSs68UQHUay9ecnGA4GXfJUCmBL33YCMk=;
+        b=PiIWSE/DFcCHoUhbguRUeHikqY2s9vHGlte4wuNr3J++rtSfR3gv9lGygx1sMxh5Y/
+         yPOBRlvfjShCbOxcuda5Geya1RQTBov1cPvlexE9Dv2C2GUgq4Cf5S8hytoSQPR+3ymc
+         AlzrDxNNlkZ7gilx4mDa7TfaArj7OFGKgVLN15SQZ1jAQBsF66tQHGWyiPNnVvb3O8gR
+         rjeLlBKOdKDjdBe/ao+f3JSOg5s2I72ZVzjDmFasgN1KpzfL5Xk4JIttZOCzxG5h1NYw
+         sMOsGzMpUYeP3/eyvvuzPjoqV/2z89rbG7ey6CzM5xyRGKSiJiWktFSVPPG5Hm2DX8Wo
+         eukA==
+X-Gm-Message-State: APjAAAVGsAihp3re0bl0LkEjb1x4IHouu1wvNtJ9O+9iHPBNH/Fmt850
+        wBNwBY6CV9U6P9lTYC36Nl0Nkg==
+X-Google-Smtp-Source: APXvYqzmp0a1H7Elm+SaoHNY31yTb5NC/BkvI3kruZqJ9jlO42a8aciCDXtLmxYxYGNQyoKWXYPq/A==
+X-Received: by 2002:adf:ce81:: with SMTP id r1mr3959629wrn.114.1566989791786;
+        Wed, 28 Aug 2019 03:56:31 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id f6sm4573707wrh.30.2019.08.28.03.56.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 03:56:31 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 11:56:27 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        arnd@arndb.de, geert@linux-m68k.org, gregkh@linuxfoundation.org,
+        hpa@zytor.com, joel@joelfernandes.org,
+        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
+        maco@android.com, maco@google.com, michal.lkml@markovi.net,
+        mingo@redhat.com, oneukum@suse.com, pombredanne@nexb.com,
+        sam@ravnborg.org, sspatil@google.com, stern@rowland.harvard.edu,
+        tglx@linutronix.de, usb-storage@lists.one-eyed-alien.net,
+        x86@kernel.org, yamada.masahiro@socionext.com,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH v3 06/11] export: allow definition default namespaces in
+ Makefiles or sources
+Message-ID: <20190828105627.GA41539@google.com>
+References: <20190813121733.52480-1-maennich@google.com>
+ <20190821114955.12788-1-maennich@google.com>
+ <20190821114955.12788-7-maennich@google.com>
+ <20190828104951.GC25048@linux-8ccs>
 MIME-Version: 1.0
-References: <20190506223334.1834-1-nicoleotsuka@gmail.com> <20190506223334.1834-3-nicoleotsuka@gmail.com>
- <CAK7LNARacEorb38mVBw_V-Zvz-znWgBma1AP1-z_5B_xZU4ogg@mail.gmail.com>
- <CAK7LNAQfYBCoChMV=MOwcUyVoqRkrPWs7DaWdzDqjBe18gGiAQ@mail.gmail.com>
- <20190825011025.GA23410@lst.de> <CAK7LNAQb1ZHr=DiHLNeNRaQExMuXdDOV4sFghoGbco_Q=Qzb8g@mail.gmail.com>
- <20190826073320.GA11712@lst.de> <CAK7LNATYOLEboUTO4qPx2z7cqwDrHBO1HFHG8VzZEJ15STv+nw@mail.gmail.com>
- <20190827075021.GA953@lst.de> <CAK7LNAQZ+bueZZzSoMADmgLjWNvijHRV=wLQzN_kvLG3b5Uu+w@mail.gmail.com>
- <20190827115541.GB5921@lst.de>
-In-Reply-To: <20190827115541.GB5921@lst.de>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 28 Aug 2019 19:53:40 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ_nQcBt=xH1-h+=co85mTxFgbe+_46Gu4LaNsDSm+kYA@mail.gmail.com>
-Message-ID: <CAK7LNAQ_nQcBt=xH1-h+=co85mTxFgbe+_46Gu4LaNsDSm+kYA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dma-contiguous: Use fallback alloc_pages for
- single pages
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Nicolin Chen <nicoleotsuka@gmail.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>, vdumpa@nvidia.com,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thierry Reding <treding@nvidia.com>,
-        Kees Cook <keescook@chromium.org>, iamjoonsoo.kim@lge.com,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190828104951.GC25048@linux-8ccs>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
-
-On Tue, Aug 27, 2019 at 8:55 PM Christoph Hellwig <hch@lst.de> wrote:
+On Wed, Aug 28, 2019 at 12:49:51PM +0200, Jessica Yu wrote:
+>+++ Matthias Maennich [21/08/19 12:49 +0100]:
+>>To avoid excessive usage of EXPORT_SYMBOL_NS(sym, MY_NAMESPACE), where
+>>MY_NAMESPACE will always be the namespace we are exporting to, allow
+>>exporting all definitions of EXPORT_SYMBOL() and friends by defining
+>>DEFAULT_SYMBOL_NAMESPACE.
+>>
+>>For example, to export all symbols defined in usb-common into the
+>>namespace USB_COMMON, add a line like this to drivers/usb/common/Makefile:
+>>
+>> ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=USB_COMMON
+>>
+>>That is equivalent to changing all EXPORT_SYMBOL(sym) definitions to
+>>EXPORT_SYMBOL_NS(sym, USB_COMMON). Subsequently all symbol namespaces
+>>functionality will apply.
+>>
+>>Another way of making use of this feature is to define the namespace
+>>within source or header files similar to how TRACE_SYSTEM defines are
+>>used:
+>> #undef DEFAULT_SYMBOL_NAMESPACE
+>> #define DEFAULT_SYMBOL_NAMESPACE USB_COMMON
+>>
+>>Please note that, as opposed to TRACE_SYSTEM, DEFAULT_SYMBOL_NAMESPACE
+>>has to be defined before including include/linux/export.h.
+>>
+>>If DEFAULT_SYMBOL_NAMESPACE is defined, a symbol can still be exported
+>>to another namespace by using EXPORT_SYMBOL_NS() and friends with
+>>explicitly specifying the namespace.
 >
-> On Tue, Aug 27, 2019 at 06:03:14PM +0900, Masahiro Yamada wrote:
-> > Yes, this makes my driver working again
-> > when CONFIG_DMA_CMA=y.
-> >
-> >
-> > If I apply the following, my driver gets back working
-> > irrespective of CONFIG_DMA_CMA.
->
-> That sounds a lot like the device simply isn't 64-bit DMA capable, and
-> previously always got CMA allocations under the limit it actually
-> supported.  I suggest that you submit this quirk to the mmc maintainers.
+>This changelog provides a good summary of how to use
+>DEFAULT_SYMBOL_NAMESPACE, I wonder if we should explicitly document
+>its proper usage somewhere? (along with EXPORT_SYMBOL_NS*)
+>The EXPORT_SYMBOL API is briefly documented in
+>Documentation/kernel-hacking/hacking.rst - it might be slightly dated,
+>but perhaps it'd fit there best?
 
+I will add documentation along with the commits. Not only for the
+macros, but in general to describe the feature.
 
-I tested v5.2 and my MMC host controller works with
-dma_address that exceeds 32-bit physical address.
-
-So, I believe my MMC device is 64-bit DMA capable.
-
-I am still looking into the code
-to find out what was changed.
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+>>Suggested-by: Arnd Bergmann <arnd@arndb.de>
+>>Reviewed-by: Martijn Coenen <maco@android.com>
+>>Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>Signed-off-by: Matthias Maennich <maennich@google.com>
+>>---
+>>include/linux/export.h | 6 ++++++
+>>1 file changed, 6 insertions(+)
+>>
+>>diff --git a/include/linux/export.h b/include/linux/export.h
+>>index 8e12e05444d1..1fb243abdbc4 100644
+>>--- a/include/linux/export.h
+>>+++ b/include/linux/export.h
+>>@@ -166,6 +166,12 @@ struct kernel_symbol {
+>>#define __EXPORT_SYMBOL ___EXPORT_SYMBOL
+>>#endif
+>>
+>>+#ifdef DEFAULT_SYMBOL_NAMESPACE
+>>+#undef __EXPORT_SYMBOL
+>>+#define __EXPORT_SYMBOL(sym, sec)				\
+>>+	__EXPORT_SYMBOL_NS(sym, sec, DEFAULT_SYMBOL_NAMESPACE)
+>>+#endif
+>>+
+>>#define EXPORT_SYMBOL(sym) __EXPORT_SYMBOL(sym, "")
+>>#define EXPORT_SYMBOL_GPL(sym) __EXPORT_SYMBOL(sym, "_gpl")
+>>#define EXPORT_SYMBOL_GPL_FUTURE(sym) __EXPORT_SYMBOL(sym, "_gpl_future")
+>>-- 
+>>2.23.0.rc1.153.gdeed80330f-goog
+>>
