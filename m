@@ -2,170 +2,165 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A04CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73463C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE0D2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE9A2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:29:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXzNM0G+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfH1S3J (ORCPT
+        id S1726896AbfH1S3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:29:09 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:48698 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbfH1S3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:29:05 -0400
-Received: from [104.132.1.107] (helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1i32go-0000Zu-BI; Wed, 28 Aug 2019 20:29:02 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>
-Subject: Re: [PATCH v5 4/4] tpm: tpm_tis_spi: Support cr50 devices
-Date:   Wed, 28 Aug 2019 20:28:58 +0200
-Message-ID: <9117556.gNfTgloEly@phil>
-In-Reply-To: <5d66c2df.1c69fb81.b094.745d@mx.google.com>
-References: <20190828082150.42194-1-swboyd@chromium.org> <3003195.OAk3N042hN@phil> <5d66c2df.1c69fb81.b094.745d@mx.google.com>
+        Wed, 28 Aug 2019 14:29:12 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34028 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfH1S3H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 14:29:07 -0400
+Received: by mail-qt1-f196.google.com with SMTP id a13so695306qtj.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 11:29:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2qvNYEMMGJNTjB5I27Rkau20ZtcbZt6SrXihS7hG0ag=;
+        b=XXzNM0G+3jiKo+q+FIdNWm7fK6hAHTdJhMr7uoznQKh+QOmvDqvJPHfltNvE9fi8yd
+         5YBLA3eswrbvOlYR2BHqGtmHcHhO/ubROmpQXqJwo1ILZu5Y7ro7j5eVvLd9OYYmKDhF
+         xrLG2RNT+ob2ucxclPvxVtm3zNa2wlz2DdU3Z+BlxU3vynQ4zkrGfNeHGTdiLa/m9qGW
+         bR2U2InqgUSR6HMCeNUcFTzjKB8+J002nBQV0Lv8co3vo/MS4hTiEyE4aMNXJuXAJ1xh
+         vKqygbXMemBAN/isvCLvwF+ilXSoM6mMwJhZa9iPRoy+xEZB0pPIVazSSY+lbKGetspw
+         B1Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2qvNYEMMGJNTjB5I27Rkau20ZtcbZt6SrXihS7hG0ag=;
+        b=jr2wyHP8B9JqvR9WWgiyFBvQ0BbmcntERmrBOXryTU+rdoF98hCLrVHfRjUAkzdHJ/
+         YPBdxst2L7XB6xlQbl3vUiPD81p9BcqlZu/N6rQib4HtYs25ZK/Hm9gEl+yZ2jCbwCa3
+         xcXnAvkmu4gOtzBVQo6obINFXixJ/mZFKUQupiSaZyxSyj+QdYtRnH2h6yX3p6LFI08y
+         6ZjVqUUuRHIym928lBNPSkrDuwDoLCOeI/LsGzrTlynaOMcRo0iTBwv4Mf+fT9qP6XUm
+         e9PeOS+90oMgu6bISBC4swGY4PmY/nrKKiJN7lQY0mfe3isT/hROqrQxy4l/Z7I0SLYz
+         aXFw==
+X-Gm-Message-State: APjAAAUTZmyFn9BVO6ngeaGSCSiujXh3glh7TfgGfId+6KpK5xUQKkrC
+        6DkzLg+Gnfq9bBZSnGABEqc=
+X-Google-Smtp-Source: APXvYqx/ST+YeW431M3+ay9mgZNVS2xoNx6HMKmPcnXYBUF6XpjRAr00zE2/eBchtblEZlVWbVNEIg==
+X-Received: by 2002:ac8:41d7:: with SMTP id o23mr5952175qtm.268.1567016945538;
+        Wed, 28 Aug 2019 11:29:05 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.212.29])
+        by smtp.gmail.com with ESMTPSA id x15sm1513758qtp.66.2019.08.28.11.29.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 11:29:04 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 38B6A41146; Wed, 28 Aug 2019 15:29:01 -0300 (-03)
+Date:   Wed, 28 Aug 2019 15:29:01 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 00/23] libperf: Add rest of events to perf/event.h
+Message-ID: <20190828182901.GF26569@kernel.org>
+References: <20190828135717.7245-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828135717.7245-1-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 28. August 2019, 20:07:26 CEST schrieb Stephen Boyd:
-> Quoting Heiko Stuebner (2019-08-28 10:36:29)
-> > Am Mittwoch, 28. August 2019, 10:21:50 CEST schrieb Stephen Boyd:
-> > > Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
-> > > firmware. The firmware running on the currently supported H1 Secure
-> > > Microcontroller requires a special driver to handle its specifics:
-> > > 
-> > >  - need to ensure a certain delay between SPI transactions, or else
-> > >    the chip may miss some part of the next transaction
-> > >  - if there is no SPI activity for some time, it may go to sleep,
-> > >    and needs to be waken up before sending further commands
-> > >  - access to vendor-specific registers
-> > > 
-> > > Cr50 firmware has a requirement to wait for the TPM to wakeup before
-> > > sending commands over the SPI bus. Otherwise, the firmware could be in
-> > > deep sleep and not respond. The method to wait for the device to wakeup
-> > > is slightly different than the usual flow control mechanism described in
-> > > the TCG SPI spec. Add a completion to tpm_tis_spi_transfer() before we
-> > > start a SPI transfer so we can keep track of the last time the TPM
-> > > driver accessed the SPI bus to support the flow control mechanism.
-> > 
-> > While the previous version did run just fine on my mainline gru-scarlet,
-> > this v5 very persistently runs into a panic on every boot:
-> > 
-> > [    6.625500] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-> > [    6.632983] tpm_tis_spi spi1.0: Timeout waiting for TPM ready IRQ
-> > [    6.637415] Mem abort info:
-> > [    6.637417]   ESR = 0x96000004
-> > [    6.637419]   Exception class = DABT (current EL), IL = 32 bits
-> > [    6.637423]   SET = 0, FnV = 0
-> > [    6.644235] tpm_tis_spi spi1.0: TPM ready IRQ confirmed on attempt 1
-> > [    6.647350]   EA = 0, S1PTW = 0
-> > [    6.647352] Data abort info:
-> > [    6.647353]   ISV = 0, ISS = 0x00000004
-> > [    6.647354]   CM = 0, WnR = 0
-> > [    6.647357] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000eacc4000
-> > [    6.647361] [0000000000000000] pgd=0000000000000000
-> > [    6.694812] Internal error: Oops: 96000004 [#1] SMP
-> > [    6.700258] Modules linked in: tpm_tis_spi_mod(+) dw_mipi_dsi industrialio_triggered_buffer panfrost(+) drm_kms_helper videobuf2_memops kfifo_buf tpm_tis_core ov2685 ov5695 cros_ec_sensors_core videobuf2_v4l2 gpu_sched tpm videobuf2_common v4l2_common v4l2_fwnode crct10dif_ce drm videodev phy_rockchip_pcie phy_rockchip_dphy dw_wdt rng_core cros_ec_dev rockchip_thermal i2c_hid elants_i2c mc drm_panel_orientation_quirks pwm_bl ipv6
-> > [    6.742857] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc6-02924-gef15fcdb727f-dirty #1308
-> > [    6.752580] Hardware name: Google Scarlet (DT)
-> > [    6.757542] pstate: a0000085 (NzCv daIf -PAN -UAO)
-> > [    6.762901] pc : __wake_up_common+0x58/0x170
-> > [    6.767670] lr : __wake_up_locked+0x18/0x20
-> > [    6.772340] sp : ffff000010003d40
-> > [    6.776038] x29: ffff000010003d40 x28: 0000000000000060 
-> > [    6.781972] x27: 0000000000000000 x26: ffff000010e4fcef 
-> > [    6.787905] x25: 0000000000000001 x24: 0000000000000000 
-> > [    6.793838] x23: 0000000000000000 x22: 0000000000000000 
-> > [    6.799772] x21: 0000000000000003 x20: ffff8000f0431308 
-> > [    6.804944] dwmmc_rockchip fe320000.dwmmc: Unexpected data interrupt latency
-> > [    6.805707] x19: ffff8000f04312f8 x18: 0000000000000000 
-> > [    6.819504] x17: 0000000000000000 x16: 0000000000000000 
-> > [    6.825437] x15: 0000000000000000 x14: 0000000000000000 
-> > [    6.831370] x13: 0000000000000000 x12: ffff000010dc9688 
-> > [    6.837304] x11: 071c71c71c71c71c x10: 0000000000000040 
-> > [    6.843237] x9 : ffff000010de15d8 x8 : ffff000010de15d0 
-> > [    6.849171] x7 : ffffffffffffffe8 x6 : 0000000000000000 
-> > [    6.855104] x5 : 0000000000000000 x4 : 0000000000000000 
-> > [    6.856947] tpm_tis_spi spi1.0: SPI transfer timed out
-> > [    6.861037] x3 : 0000000000000000 x2 : 0000000000000001 
-> > [    6.861040] x1 : 0000000000000003 x0 : 0000000000000000 
-> > [    6.861045] Call trace:
-> > [    6.866794] spi_master spi1: failed to transfer one message from queue
-> > [    6.872724]  __wake_up_common+0x58/0x170
-> > [    6.872727]  __wake_up_locked+0x18/0x20
-> > [    6.872732]  complete+0x74/0xa8
-> > [    6.900836]  cr50_spi_irq_handler+0x18/0x28 [tpm_tis_spi_mod]
+Em Wed, Aug 28, 2019 at 03:56:54PM +0200, Jiri Olsa escreveu:
+> hi,
+> to export 'union perf_event' we need to export the rest of events.
+
+Thanks, applied to perf/core.
+
+- Arnaldo
+ 
+> It's also available in here:
+>   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+>   perf/fixes
 > 
-> Thanks! I forgot about pending interrupts and got a little overzealous
-> in consolidating that line of code. Can you try this patch?
+> thanks,
+> jirka
+> 
+> 
+> ---
+> Jiri Olsa (23):
+>       libperf: Add PERF_RECORD_HEADER_ATTR 'struct attr_event' to perf/event.h
+>       libperf: Add PERF_RECORD_CPU_MAP 'struct cpu_map_event' to perf/event.h
+>       libperf: Add PERF_RECORD_EVENT_UPDATE 'struct event_update_event' to perf/event.h
+>       libperf: Add PERF_RECORD_HEADER_EVENT_TYPE 'struct event_type_event' to perf/event.h
+>       libperf: Add PERF_RECORD_HEADER_TRACING_DATA 'struct tracing_data_event' to perf/event.h
+>       libperf: Add PERF_RECORD_HEADER_BUILD_ID 'struct build_id_event' to perf/event.h
+>       libperf: Add PERF_RECORD_ID_INDEX 'struct id_index_event' to perf/event.h
+>       libperf: Add PERF_RECORD_AUXTRACE_INFO 'struct auxtrace_info_event' to perf/event.h
+>       libperf: Add PERF_RECORD_AUXTRACE 'struct auxtrace_event' to perf/event.h
+>       libperf: Add PERF_RECORD_AUXTRACE_ERROR 'struct auxtrace_error_event' to perf/event.h
+>       libperf: Add PERF_RECORD_AUX 'struct aux_event' to perf/event.h
+>       libperf: Add PERF_RECORD_ITRACE_START 'struct itrace_start_event' to perf/event.h
+>       libperf: Add PERF_RECORD_SWITCH 'struct context_switch_event' to perf/event.h
+>       libperf: Add PERF_RECORD_THREAD_MAP 'struct thread_map_event' to perf/event.h
+>       libperf: Add PERF_RECORD_STAT_CONFIG 'struct stat_config_event' to perf/event.h
+>       libperf: Add PERF_RECORD_STAT 'struct stat_event' to perf/event.h
+>       libperf: Add PERF_RECORD_STAT_ROUND 'struct stat_round_event' to perf/event.h
+>       libperf: Add PERF_RECORD_TIME_CONV 'struct time_conv_event' to perf/event.h
+>       libperf: Add PERF_RECORD_HEADER_FEATURE 'struct feature_event' to perf/event.h
+>       libperf: Add PERF_RECORD_COMPRESSED 'struct compressed_event' to perf/event.h
+>       libperf: Add 'union perf_event' to perf/event.h
+>       libperf: Rename the PERF_RECORD_ structs to have a "perf" prefix
+>       libperf: Move 'enum perf_user_event_type' to perf/event.h
+> 
+>  tools/perf/arch/arm/util/cs-etm.c    |   4 +--
+>  tools/perf/arch/arm64/util/arm-spe.c |   2 +-
+>  tools/perf/arch/s390/util/auxtrace.c |   2 +-
+>  tools/perf/arch/x86/util/intel-bts.c |   2 +-
+>  tools/perf/arch/x86/util/intel-pt.c  |   4 +--
+>  tools/perf/arch/x86/util/tsc.c       |   2 +-
+>  tools/perf/builtin-record.c          |   4 +--
+>  tools/perf/builtin-report.c          |   2 +-
+>  tools/perf/builtin-script.c          |   2 +-
+>  tools/perf/builtin-stat.c            |   2 +-
+>  tools/perf/lib/include/perf/event.h  | 273 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  tools/perf/tests/cpumap.c            |  12 ++++----
+>  tools/perf/tests/event_update.c      |  16 +++++-----
+>  tools/perf/tests/stat.c              |   8 ++---
+>  tools/perf/tests/thread-map.c        |   2 +-
+>  tools/perf/util/arm-spe.c            |   6 ++--
+>  tools/perf/util/auxtrace.c           |  20 ++++++------
+>  tools/perf/util/auxtrace.h           |   8 ++---
+>  tools/perf/util/build-id.c           |   2 +-
+>  tools/perf/util/cpumap.c             |   6 ++--
+>  tools/perf/util/cpumap.h             |   4 +--
+>  tools/perf/util/cs-etm.c             |   2 +-
+>  tools/perf/util/event.c              |  38 +++++++++++------------
+>  tools/perf/util/event.h              | 278 +++--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+>  tools/perf/util/header.c             |  56 +++++++++++++++++-----------------
+>  tools/perf/util/intel-bts.c          |   6 ++--
+>  tools/perf/util/intel-pt.c           |  12 ++++----
+>  tools/perf/util/python.c             |   4 +--
+>  tools/perf/util/s390-cpumsf.c        |   4 +--
+>  tools/perf/util/session.c            |  28 ++++++++---------
+>  tools/perf/util/session.h            |   2 +-
+>  tools/perf/util/stat.c               |  12 ++++----
+>  tools/perf/util/thread_map.c         |   4 +--
+>  tools/perf/util/thread_map.h         |   4 +--
+>  34 files changed, 418 insertions(+), 415 deletions(-)
 
-With that change the tpm is happy again, probes and talks to me.
+-- 
 
-Heiko
-
-
-> ---8<-----
-> diff --git a/drivers/char/tpm/cr50_spi.c b/drivers/char/tpm/cr50_spi.c
-> index 535674f4b02a..24b1fb514161 100644
-> --- a/drivers/char/tpm/cr50_spi.c
-> +++ b/drivers/char/tpm/cr50_spi.c
-> @@ -259,12 +259,12 @@ int cr50_spi_probe(struct spi_device *spi)
->  	phy = &cr50_phy->spi_phy;
->  	phy->flow_control = cr50_spi_flow_control;
->  	phy->is_cr50 = true;
-> +	init_completion(&phy->ready);
->  
->  	cr50_phy->access_delay = CR50_NOIRQ_ACCESS_DELAY;
-> -
-> -	mutex_init(&cr50_phy->time_track_mutex);
->  	cr50_phy->wake_after = jiffies;
->  	cr50_phy->last_access = jiffies;
-> +	mutex_init(&cr50_phy->time_track_mutex);
->  
->  	if (spi->irq > 0) {
->  		ret = devm_request_irq(&spi->dev, spi->irq, cr50_spi_irq_handler,
-> diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
-> index fdac842a61ed..2f120ddce2d2 100644
-> --- a/drivers/char/tpm/tpm_tis_spi.c
-> +++ b/drivers/char/tpm/tpm_tis_spi.c
-> @@ -201,7 +201,6 @@ int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
->  	if (!phy->iobuf)
->  		return -ENOMEM;
->  
-> -	init_completion(&phy->ready);
->  	phy->spi_device = spi;
->  
->  	return tpm_tis_core_init(&spi->dev, &phy->priv, irq, phy_ops, NULL);
-> @@ -239,6 +238,7 @@ static int tpm_tis_spi_probe(struct spi_device *dev)
->  	else
->  		irq = -1;
->  
-> +	init_completion(&phy->ready);
->  	return tpm_tis_spi_init(dev, phy, irq, &tpm_spi_phy_ops);
->  }
->  
-
-
-
-
+- Arnaldo
