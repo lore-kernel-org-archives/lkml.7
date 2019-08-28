@@ -6,101 +6,107 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D66C41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5F7C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B462C2080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA75C214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:43:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbfH1SnP (ORCPT
+        id S1726952AbfH1SnT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:43:15 -0400
-Received: from smtprelay0031.hostedemail.com ([216.40.44.31]:42354 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726515AbfH1SnO (ORCPT
+        Wed, 28 Aug 2019 14:43:19 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52692 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbfH1SnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:43:14 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 128C5181D33FB;
-        Wed, 28 Aug 2019 18:43:13 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: turn77_73231392da913
-X-Filterd-Recvd-Size: 2909
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 28 Aug 2019 18:43:11 +0000 (UTC)
-Message-ID: <082d21ef9effc015de671ff51d689dab740cea16.camel@perches.com>
-Subject: Re: [PATCH v2] x86/PCI: Add missing log facility and move to use
- pr_ macros in pcbios.c
-From:   Joe Perches <joe@perches.com>
-To:     Krzysztof Wilczynski <kswilczynski@gmail.com>
-Cc:     Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 28 Aug 2019 11:43:09 -0700
-In-Reply-To: <1567017627.3507.0@gmail.com>
-References: <20190825182557.23260-1-kw@linux.com>
-         <20190828175120.22164-1-kw@linux.com>
-         <a13a086c2dd6dd6259d28e5d1d360e2b4d04ca83.camel@perches.com>
-         <1567017627.3507.0@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Wed, 28 Aug 2019 14:43:19 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <dan.streetman@canonical.com>)
+        id 1i32ub-0003Xm-DG
+        for linux-kernel@vger.kernel.org; Wed, 28 Aug 2019 18:43:17 +0000
+Received: by mail-io1-f70.google.com with SMTP id m7so765855ioc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 11:43:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xo4NJ4KDDgALFX7Tqoxor2uGZPbldp8kTAdetgMQVtA=;
+        b=ta+nzH/6TW8JU+2qcsyfzz0CMyPHEx3viZYSqceFApB1eHhFmQcMZeKSt+MCBmwal0
+         d+45PuNsJ619k9q0ew/dvL9Pb2lj19MOlfWmKFiBcNfQ2uDQiHDPngX/jga6j6nZo2y8
+         QKAj0gauWx7L5bDDuTYxQ2vJhwk1x4jdMwiI1G4shB//MsXkYKw/fLDSmhtTO/KA1kCN
+         6DoMJ89SAdYGR6LbpLMPbGrP5bFZLOIDQsadV5swm4RIp7K/UthewkR2XOWZcRJeFzbP
+         g7SHF1HuXCj5inxDdEZXKAUZAeOkbvjDyLGSAImly4oYR9YjXlaXvTbZsBBH3y+Pi72P
+         OLzg==
+X-Gm-Message-State: APjAAAV2Ho6usR2/2D4269tPy2BT5k015cGzY8TjtA70NeT/2jGDUhbB
+        /GbQcL2/JQiVCvElAvs9ad6MSHbeMhVGW7BmVzrU7JdJgS9rf7X7G4HPyaUL+3UkGAq17p1ZH6o
+        lzOzt3N8DwBj7GbadXNI2+baqpgj3EErgWUxe7231U5r07HH67T9O8MgWyQ==
+X-Received: by 2002:a5e:a80f:: with SMTP id c15mr2725648ioa.270.1567017796195;
+        Wed, 28 Aug 2019 11:43:16 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyMujKUJUD7JXYB1erKP8udJALPFmCxjApwznrkp0elZ7PfnmIZUeX3Sjz0w46mowoOarXhx9KFcf8h6NdqDac=
+X-Received: by 2002:a5e:a80f:: with SMTP id c15mr2725605ioa.270.1567017795889;
+ Wed, 28 Aug 2019 11:43:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <CAOZ2QJOZStRYa=5fyod_AEJcJQw90_yX40dPYY3Dhvfso1e=RA@mail.gmail.com>
+ <20190828175051.GK7482@intel.com> <20190828175913.GL7482@intel.com>
+In-Reply-To: <20190828175913.GL7482@intel.com>
+From:   Dan Streetman <dan.streetman@canonical.com>
+Date:   Wed, 28 Aug 2019 14:42:39 -0400
+Message-ID: <CAOZ2QJP-P1jfpNXL4nsRB802a+j-Hxc-suQa1e-=ypvto_MtXw@mail.gmail.com>
+Subject: Re: Follow up on hid2hci: Fix udev rules for linux-4.14+
+To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Brian Gix <brian.gix@intel.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Steve Brown <sbrown@ewol.com>
+Cc:     linux-bluetooth@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Kay Sievers <kay.sievers@vrfy.org>,
+        systemd-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-08-28 at 20:40 +0200, Krzysztof Wilczynski wrote:
-> Hello Joe,
-> 
-> Thank you for feedback.
-> [...]
-> > >    Move to pr_debug() over using DBG() from 
-> > > arch/x86/include/asm/pci_x86.h.
-> > 
-> > You might also consider the checkpatch output for this patch.
-> > 
-> > arch/x86/pci/pcbios.c:116: WARNING: line over 80 characters
-> > arch/x86/pci/pcbios.c:116: WARNING: Prefer using '"%s...", __func__' 
-> > to using 'bios32_service', this function's name, in a string
-> > arch/x86/pci/pcbios.c:119: WARNING: Prefer using '"%s...", __func__' 
-> > to using 'bios32_service', this function's name, in a string
-> > arch/x86/pci/pcbios.c:391: WARNING: line over 80 characters
-> 
-> Good point.
-> 
-> The lines over 80 characters wide would be taken care of when
-> moving to using the pr_ macros as the line length will now be
-> shorter contrary to when the e.g., printk(KERNEL_INFO ...),
-> etc., was used.
+On Wed, Aug 28, 2019 at 1:59 PM Ville Syrjälä
+<ville.syrjala@linux.intel.com> wrote:
+>
+> On Wed, Aug 28, 2019 at 08:50:51PM +0300, Ville Syrjälä wrote:
+> > On Wed, Aug 28, 2019 at 01:34:07PM -0400, Dan Streetman wrote:
+> > > It looks like this patch got lost at some point:
+> > > https://lore.kernel.org/patchwork/patch/902126/#1138115
+> > >
+> > > but it seems to still be a problem and I'd like to pull it into Ubuntu:
+> > > https://bugs.launchpad.net/ubuntu/+source/bluez/+bug/1759836
+> > >
+> > > Ville, did you ever follow up with a v2 for that patch and/or do you
+> > > know if it will be accepted soon?
+> >
+> > There's a more recent version of that somewhere on the mailing list.
+> > The problem is getting someone to actually apply it. Seems much harder
+> > than it should be...
+>
+> https://lore.kernel.org/patchwork/patch/1021109/
 
-Not really, those were the warnings checkpatch
-emits on your actual patch.
+I added to this reply a few of the most recent commit authors to the
+bluez tools/ subdir...can any of you review and/or apply Ville's
+patch?
 
-> The other warnings I am going to address in v3.  I was thinking
-> of replacing the following:
-> 
-> pr_warn("bios32_service(0x%lx): not present\n", service);
-> 
-> With something that looks like this:
-> 
-> pr_warn("BIOS32 Service(0x%lx): not present\n", service);
-> 
-> Using "bios32_service" name directly or even moving to __func__
-> feels a lot like an implementation detail is exposed to the
-> end user.  I am not sure how useful that could be.  Also,
-> we are already using log lines starting with "BIOS32", thus
-> it seemed like following them would be the most sensible
-> choice, especially to keep messages consistent.
-> 
-> What do you think?
+Marcel, you appear to have created the hid2hci.rules file back in
+2012, can you comment on the patch?
 
-Fine with me, your patch, your choices.
-
-
+>
+> >
+> > And IIRC I also posted a few other fixes for hid2hci tool which didn't
+> > get any response from the crowd.
+>
+> https://www.spinics.net/lists/linux-bluetooth/msg79803.html
+>
+> --
+> Ville Syrjälä
+> Intel
