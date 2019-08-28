@@ -2,103 +2,128 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DAAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0D1C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F03FA22CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:52:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j/ZkTZmH"
+	by mail.kernel.org (Postfix) with ESMTP id 9C4D822DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfH1Mwo (ORCPT
+        id S1726560AbfH1Mww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:52:44 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43302 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfH1Mwn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:52:43 -0400
-Received: by mail-lf1-f68.google.com with SMTP id q27so2054094lfo.10
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 05:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XVqiZEbVUqIzK5hY9HIE+w9Yw4YCnwVUWn8KQwWEJ/o=;
-        b=j/ZkTZmHKtb+C6yykay6Lk89TOZ2nUMHdfIDdtlO3/glkjnfikIYS28NL2SG8TTJgs
-         zaFgS4RwSSejdCGrhsS4ul+I8b6oSeCtpK4UBcERRoeQn1cs6AYlz+EbRcAN+fD38Vwi
-         uNGYpuHx5n5iVdfhs38LAFPqeS9CaugquJL9Up1fPrU1vDd5RVAH2Sz0oKDHDqMQ3UU4
-         r5KZS01C8wSJUawPbF/GeSys7s02FLBfU70H6f0Rz0LziJuBQNUyKBIppFqFqCPi4/XB
-         xv2nnTa6+37DxCcKyOOhHTeKyCepv77Atwv/mavdOHSUq9IIS6QjbQwDuqf5bIbFCIl6
-         is4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XVqiZEbVUqIzK5hY9HIE+w9Yw4YCnwVUWn8KQwWEJ/o=;
-        b=V1Pp2mupwTuKN1DGROW6sPC1aJLcccUX+F/CKtarQRBD2gNvK7wSmGvkLpjt2ZqbCj
-         mE5Kjp8jbW5caq1t/vJq05ZJSX3/vjsFUCGGo+F+6eYKK6fYC6a9fGawPG2LK8rEf638
-         ncODZ9HSfSgJX6EbKFow9gmjL/GRfCuRVLwQ7Aet4nR0L6+w8ANfT+57vizXFig4qiYZ
-         t5ZcDnyNC7+aCXAQmYyeO+bgxZ1HrniWsqcdPR9FM+c8rdUaUWOxPsbNyOcxY3IOYB8M
-         CZW7g6doXDjVQXFBn4djhHBXMyRESF2IFG6E7LAMmWaZTZ9rfZqXZx5aUF15PbKZtjO1
-         ia0w==
-X-Gm-Message-State: APjAAAWXeVDlG7LghtHSx06OTNRXDNg5qDM1183ydlPp7FomRh9AR5uX
-        /dQhrnUgBAK/cOtu4gkxcHaJ+Wl/TARI63oFLZUBmw==
-X-Google-Smtp-Source: APXvYqxhh7npR4DKD02urqAfnNma90KEuSilcS60X5kI+BR0cS5y3dkj2v9FsecupCFIorgjCH8a/URG0YasbPxugp4=
-X-Received: by 2002:ac2:5c11:: with SMTP id r17mr1699777lfp.61.1566996761734;
- Wed, 28 Aug 2019 05:52:41 -0700 (PDT)
+        Wed, 28 Aug 2019 08:52:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:15587 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726368AbfH1Mww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 08:52:52 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EA4F22D0FB7;
+        Wed, 28 Aug 2019 12:52:51 +0000 (UTC)
+Received: from bcodding.csb (ovpn-112-84.rdu2.redhat.com [10.10.112.84])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8AD2219D7A;
+        Wed, 28 Aug 2019 12:52:51 +0000 (UTC)
+Received: by bcodding.csb (Postfix, from userid 24008)
+        id 94486109C550; Wed, 28 Aug 2019 08:52:50 -0400 (EDT)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        rjw@rjwysocki.net, pavel@ucw.cz, len.brown@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: [PATCH] freezer,NFS: add an unsafe schedule_timeout_interruptable freezable helper for NFS
+Date:   Wed, 28 Aug 2019 08:52:50 -0400
+Message-Id: <9cf306ec17800f909f44a3889f52c6818b56bdbb.1566992889.git.bcodding@redhat.com>
 MIME-Version: 1.0
-References: <20190825150558.15173-1-alejandro.gonzalez.correo@gmail.com>
-In-Reply-To: <20190825150558.15173-1-alejandro.gonzalez.correo@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 28 Aug 2019 14:52:30 +0200
-Message-ID: <CACRpkdazfe3gJr6Q+X05GzxPuKtUg0M780SPA_oR5bd+-xBPvA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sunxi: fix unusuable eMMC on some H6 boards by
- disabling DDR
-To:     =?UTF-8?Q?Alejandro_Gonz=C3=A1lez?= 
-        <alejandro.gonzalez.correo@gmail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 28 Aug 2019 12:52:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 5:06 PM Alejandro Gonz=C3=A1lez
-<alejandro.gonzalez.correo@gmail.com> wrote:
+After commit 0688e64bc600 ("NFS: Allow signal interruption of NFS4ERR_DELAYed
+operations") my NFS client dumps lockdep warnings:
 
-> Jernej Skrabec compared the BSP driver with this
-> driver, and found that the BSP driver configures pinctrl to operate at
-> 1.8 V when entering DDR mode (although 3.3 V operation is supported), whi=
-le
-> the mainline kernel lacks any mechanism to switch voltages dynamically.
-(...)
-> the kernel lacks the required
-> dynamic pinctrl control for now
+	====================================
+	WARNING: dir_create.sh/1911 still has locks held!
+	5.3.0-rc6.47364e5cdc #1 Not tainted
+	------------------------------------
+	1 lock held by dir_create.sh/1911:
+	 #0: 000000005345f559 (sb_writers#21){.+.+}, at: mnt_want_write+0x20/0x50
 
-This is not a pin control thing, the I/O voltage level is usually
-controlled by a regulator called VCCQ, if the selection of the
-voltage rails is inside the pin control registers, see the solution
-in drivers/pinctrl/sh-pfc/pfc-sh73a0.c where we simply provide
-a regulator from inside the pinctrl driver to make things easy
-for the MMC core. Do this thing!
+	stack backtrace:
+	CPU: 1 PID: 1911 Comm: dir_create.sh Not tainted 5.3.0-rc6.47364e5cdc #1
+	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-2.fc27 04/01/2014
+	Call Trace:
+	 dump_stack+0x85/0xcb
+	 nfs4_handle_exception+0x1df/0x250 [nfsv4]
+	 nfs4_do_open+0x38b/0x850 [nfsv4]
+	 ? __filemap_fdatawrite_range+0xc1/0x100
+	 nfs4_atomic_open+0xe7/0x100 [nfsv4]
+	 nfs4_file_open+0x103/0x260 [nfsv4]
+	 ? nfs42_remap_file_range+0x220/0x220 [nfsv4]
+	 do_dentry_open+0x205/0x3c0
+	 path_openat+0x2ba/0xc80
+	 do_filp_open+0x9b/0x110
+	 ? kvm_sched_clock_read+0x14/0x30
+	 ? sched_clock+0x5/0x10
+	 ? sched_clock_cpu+0xc/0xc0
+	 ? _raw_spin_unlock+0x24/0x30
+	 ? do_sys_open+0x1bd/0x260
+	 do_sys_open+0x1bd/0x260
+	 do_syscall_64+0x75/0x320
+	 ? trace_hardirqs_off_thunk+0x1a/0x20
+	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
+	RIP: 0033:0x7fd49b2535ce
 
-If you don't have time to fix it up properly right now I would slap
-in a big FIXME in the code so people know this needs
-to be fixed properly.
+This patch follows prior art in commit 416ad3c9c006 ("freezer: add unsafe
+versions of freezable helpers for NFS") to skip lock dependency checks for
+NFS.
 
-Yours,
-Linus Walleij
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+---
+ fs/nfs/nfs4proc.c       |  2 +-
+ include/linux/freezer.h | 10 ++++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 1406858bae6c..b9c46373da25 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -415,7 +415,7 @@ static int nfs4_delay_interruptible(long *timeout)
+ {
+ 	might_sleep();
+ 
+-	freezable_schedule_timeout_interruptible(nfs4_update_delay(timeout));
++	freezable_schedule_timeout_interruptible_unsafe(nfs4_update_delay(timeout));
+ 	if (!signal_pending(current))
+ 		return 0;
+ 	return __fatal_signal_pending(current) ? -EINTR :-ERESTARTSYS;
+diff --git a/include/linux/freezer.h b/include/linux/freezer.h
+index 21f5aa0b217f..53e66eec837a 100644
+--- a/include/linux/freezer.h
++++ b/include/linux/freezer.h
+@@ -217,6 +217,16 @@ static inline long freezable_schedule_timeout_killable(long timeout)
+ 	return __retval;
+ }
+ 
++/* DO NOT ADD ANY NEW CALLERS OF THIS FUNCTION */
++static inline long freezable_schedule_timeout_interruptible_unsafe(long timeout)
++{
++	long __retval;
++	freezer_do_not_count();
++	__retval = schedule_timeout_interruptible(timeout);
++	freezer_count_unsafe();
++	return __retval;
++}
++
+ /* DO NOT ADD ANY NEW CALLERS OF THIS FUNCTION */
+ static inline long freezable_schedule_timeout_killable_unsafe(long timeout)
+ {
+-- 
+2.20.1
+
