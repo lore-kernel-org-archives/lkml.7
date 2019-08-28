@@ -3,82 +3,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6BFC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC21C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403FC2189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFD72189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:37:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfH1LhP (ORCPT
+        id S1726465AbfH1Lhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 07:37:15 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:37193 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbfH1LhP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 07:37:15 -0400
-Received: from [192.168.1.110] ([77.7.60.253]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N7yuz-1iFuZG3qoV-0150xU; Wed, 28 Aug 2019 13:37:06 +0200
-Subject: Re: [PATCH] platform: x86: pcengines-apuv2: detect apuv4 board
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-References: <1566294992-703-1-git-send-email-info@metux.net>
- <CAHp75VfFf7y5iLHSgS+mXa4cE78BC=maF6PWtwEGfgyi2pXKCg@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <8e9ee2a1-3731-9427-bd04-2d4327913aa3@metux.net>
-Date:   Wed, 28 Aug 2019 13:37:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 28 Aug 2019 07:37:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46418 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbfH1Lhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 07:37:47 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D55AE2A09B9;
+        Wed, 28 Aug 2019 11:37:46 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.63])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 447A75D712;
+        Wed, 28 Aug 2019 11:37:44 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed, 28 Aug 2019 13:37:46 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 13:37:43 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Dmitry Safonov <0x7f454c46@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Sebastian Mayr <me@sam.st>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Subject: Re: get_unmapped_area && in_ia32_syscall (Was: [PATCH] uprobes/x86:
+ fix detection of 32-bit user mode)
+Message-ID: <20190828113743.GA3721@redhat.com>
+References: <20190728152617.7308-1-me@sam.st>
+ <alpine.DEB.2.21.1908232343470.1939@nanos.tec.linutronix.de>
+ <20190827140055.GA6291@redhat.com>
+ <15c5d9f6-6429-4775-05af-8a956d44a9ef@gmail.com>
+ <459fdf33-1290-2651-6344-0ff9e466ddfc@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfFf7y5iLHSgS+mXa4cE78BC=maF6PWtwEGfgyi2pXKCg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:KLKDaCMaQBqKOY8KqvVqASnTA9aw0yZC1pGs+qu5ZVtHdNVb6/J
- etxkh3l4FqfAwn62U7llMjuh/X1v3tOH1DhVLPSXhDUW6aoFPA7sqnzSXUoZtUZBQKV65at
- pCaSOsO/qQ3Qw2isCKXvKOpfZ6hgyMSSRdEocisWECH/1A+6IFX7OIqV9jr9CChQeqbaaqS
- aZpbLzXzXgt1s8wiEolxA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SBNgbehj8sc=:/vbR3tYqUgif/8iocPuZPy
- gSHAD/tSZU7Zy+bod7rjnPWlpV9ksq4q3+4Rafw8pGt22bGOMVzrI/tlNaZze5m0z5hLfaLDW
- qdmyOUsIP6+FKaGlMavku3sldhJShMwGL0FcyvSygN967kAY8HBaB/a9NVIfBDJdMAG00W/3L
- iOPiwqUyMCyDYJrel1aQZltc9JhcLakzOmAgnH2nIp588pSJX2zpENn0YNdWdMt+hioS0p9Z5
- XT3j28jgNLc3/7uTXZpg/rIS995UBk2OoMqBqT4E/21MWKHqvcD9Jn/bwemmmAiN/0V62cgGb
- NZkoySzbapR0qk0kUhCiv35qNtJxGLuawqAe5IxBskDYr691+jLzTGh6UqoagvPPGNSCaeyP4
- /Pe6wiSx0XeM4cfF9QrgnET9FmE6jYHg3f3H7CZJkzAFBfaqibz4ISVig+S5zJ/aDm+e3NPUm
- Jzek3qNny9z5PSZJpXSiFsIUgpun7hqx/19cwkFEN69e0PCR7C9HTLWvCSIIAUmMu1fnofc3B
- KGHMO3M1GEJhmZkwncvMoxAcCgWywZaRUtEgGnfrTaKwwtPLbnjylqJGg+ru2CuVYgivWwVfN
- yoRI8Di8rdNsO5HV/nC376s1SRzCd6ehsPN/TXx/NL1N+x87m5BQXhB1qCchRzwyE/X8Tony6
- +ruvsQKvt21a8/8choLhPzC/l+eWc1NomDJA4XpkhKwcMr3i2Os7FxKf6w+zoM5eb+gaqGi7Q
- 4B6GIwgeHaCmgKPiQPq7AEyrfsqiCw3zLq5SQIhKb8froubyWDvRSIU0jiU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <459fdf33-1290-2651-6344-0ff9e466ddfc@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 28 Aug 2019 11:37:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.08.19 21:47, Andy Shevchenko wrote:
+On 08/28, Dmitry Safonov wrote:
+>
+> > On 8/27/19 3:00 PM, Oleg Nesterov wrote:
+> > [..]
+> >> But to remind, there is another problem with in_ia32_syscall() && uprobes.
+> >>
+> >> get_unmapped_area() paths use in_ia32_syscall() and this is wrong in case
+> >> when the caller is xol_add_vma(), in this case TS_COMPAT won't be set.>
+> >> Usually the addr = TASK_SIZE - PAGE_SIZE passed to get_unmapped_area() should
+> >> work, mm->get_unmapped_area() won't be even called. But if this addr is already
+> >> occupied get_area() can return addr > TASK_SIZE.
+> >
+> > Technically, it's not bigger than TASK_SIZE that's supplied
+> > get_unmapped_area() as an argument..
 
->> Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe
-> 
-> Wrong format.
-> 
-> W/o SoB tag I can't take it.
+Hmm. What do you mean?
 
-What's the correct format (what command shall I use to
-create it correctly ?)
+Just in case, TASK_SIZE checks TIF_ADDR32, not TS_COMPAT.
 
+> >>  	if (!area->vaddr) {
+> >> +		if(!is_64bit_mm(mm))
+> >> +			current_thread_info()->status |= TS_COMPAT;
+> >>  		/* Try to map as high as possible, this is only a hint. */
+> >>  		area->vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE,
+> >>  						PAGE_SIZE, 0, 0);
+> >> +		if(!is_64bit_mm(mm))
+> >> +			current_thread_info()->status &= ~TS_COMPAT;;
+> >>  		if (area->vaddr & ~PAGE_MASK) {
+> >>  			ret = area->vaddr;
+> >>  			goto fail;
+> >
+> > It could have been TASK_SIZE_OF(),
 
---mtx
+tsk is always current, why do we need TASK_SIZE_OF() ?
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> > I see that arch_uprobe_analyze_insn() uses is_64bit_mm() which
+> > is correct the majority of time, but not for processes those jump
+> > switching CS..
+
+Heh. it's actually even worse. Just suppose a 32-bit application simply
+mmaps a 64-bit executable which has a probe. But this is off-topic.
+
+> > Do I read the code properly and xol is always one page?
+
+Yes,
+
+> > Could that page be reserved on the top of mmap_base/mmap_compat_base at
+> > the binfmt loading time?
+
+How? I don't understand...
+
+> (I would need than to add .mremap() for
+> > restoring sake).
+
+for what? I don't think you can restore a probed process anyway... OK,
+right now this is off-topic too.
+
+Oleg.
+
