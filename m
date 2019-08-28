@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10159C3A5A1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF10C3A5A4
 	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E19A122CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2639E22CED
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:29:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfH1M3B (ORCPT
+        id S1726607AbfH1M3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:29:01 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:41915 "EHLO
+        Wed, 28 Aug 2019 08:29:03 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:63063 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726272AbfH1M26 (ORCPT
+        with ESMTP id S1726428AbfH1M3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:28:58 -0400
-X-UUID: 93e72ba8e64043d29648fbd35f590f64-20190828
-X-UUID: 93e72ba8e64043d29648fbd35f590f64-20190828
+        Wed, 28 Aug 2019 08:29:00 -0400
+X-UUID: 07e4afb7c74a4584920a1462ee7269f2-20190828
+X-UUID: 07e4afb7c74a4584920a1462ee7269f2-20190828
 Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
         (envelope-from <henryc.chen@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1283189724; Wed, 28 Aug 2019 20:28:53 +0800
+        with ESMTP id 844402232; Wed, 28 Aug 2019 20:28:53 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 28 Aug 2019 20:28:58 +0800
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 28 Aug 2019 20:28:59 +0800
 Received: from mtksdaap41.mediatek.inc (172.21.77.4) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 28 Aug 2019 20:28:58 +0800
+ Transport; Wed, 28 Aug 2019 20:28:59 +0800
 From:   Henry Chen <henryc.chen@mediatek.com>
 To:     Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -48,67 +48,52 @@ CC:     Nicolas Boichat <drinkcat@google.com>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Henry Chen <henryc.chen@mediatek.com>
-Subject: [PATCH V3 04/10] arm64: dts: mt8183: add performance state support of scpsys
-Date:   Wed, 28 Aug 2019 20:28:42 +0800
-Message-ID: <1566995328-15158-5-git-send-email-henryc.chen@mediatek.com>
+Subject: [PATCH V3 10/10] arm64: dts: mt8183: Add interconnect provider DT nodes
+Date:   Wed, 28 Aug 2019 20:28:48 +0800
+Message-ID: <1566995328-15158-11-git-send-email-henryc.chen@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
 References: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 10D13BFB56F081C114B106C0DBB1CD118FC6552153BCB6FE09CCA6277A5ACEB12000:8
+X-TM-SNTS-SMTP: 5A7D628ED1EE4F9C2C551AEC390E7608E055E3BDF0690A1F4EA55F66C15079B52000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for performance state of scpsys on mt8183 platform.
+Add DDR EMI provider dictating dram interconnect bus performance
+found on MT8183-based platforms
 
 Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 66aaa07..a58999f 100644
+index 7512f84..a3af77d 100644
 --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -10,6 +10,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
+@@ -11,6 +11,7 @@
  #include <dt-bindings/power/mt8183-power.h>
  #include "mt8183-pinfunc.h"
-+#include <dt-bindings/soc/mtk,dvfsrc.h>
+ #include <dt-bindings/soc/mtk,dvfsrc.h>
++#include <dt-bindings/interconnect/mtk,mt8183-emi.h>
  
  / {
  	compatible = "mediatek,mt8183";
-@@ -293,6 +294,26 @@
- 				      "vpu-3", "vpu-4", "vpu-5";
- 			infracfg = <&infracfg>;
- 			smi_comm = <&smi_common>;
-+			operating-points-v2 = <&dvfsrc_opp_table>;
-+			dvfsrc_opp_table: opp-table {
-+				compatible = "operating-points-v2-level";
-+
-+				dvfsrc_vol_min: opp1 {
-+					opp,level = <MT8183_DVFSRC_LEVEL_1>;
-+				};
-+
-+				dvfsrc_freq_medium: opp2 {
-+					opp,level = <MT8183_DVFSRC_LEVEL_2>;
-+				};
-+
-+				dvfsrc_freq_max: opp3 {
-+					opp,level = <MT8183_DVFSRC_LEVEL_3>;
-+				};
-+
-+				dvfsrc_vol_max: opp4 {
-+					opp,level = <MT8183_DVFSRC_LEVEL_4>;
-+				};
-+			};
- 		};
+@@ -148,6 +149,10 @@
+ 		reg = <0 0x10012000 0 0x1000>;
+ 		clocks = <&infracfg CLK_INFRA_DVFSRC>;
+ 		clock-names = "dvfsrc";
++		ddr_emi: interconnect {
++			compatible = "mediatek,mt8183-emi";
++			#interconnect-cells = <1>;
++		};
+ 	};
  
- 		apmixedsys: syscon@1000c000 {
+ 	timer {
 -- 
 1.9.1
 
