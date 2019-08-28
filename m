@@ -2,601 +2,93 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341C9C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE2DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB5B2339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802AD22CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:59:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JNcpr2jH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfH1M6n (ORCPT
+        id S1726592AbfH1M7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:58:43 -0400
-Received: from mga12.intel.com ([192.55.52.136]:55874 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfH1M6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:58:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 05:58:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
-   d="scan'208";a="174901717"
-Received: from deyangko-mobl.ccr.corp.intel.com ([10.249.168.35])
-  by orsmga008.jf.intel.com with ESMTP; 28 Aug 2019 05:58:37 -0700
-Message-ID: <ebfd68984103084d63cf01a80cfa9538a1a15baf.camel@intel.com>
-Subject: Re: [PATCH v7 4/4] thermal: cpu_cooling: Migrate to using the EM
- framework
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Quentin Perret <quentin.perret@arm.com>, edubezval@gmail.com,
-        javi.merino@kernel.org, viresh.kumar@linaro.org,
-        amit.kachhap@gmail.com, rjw@rjwysocki.net, catalin.marinas@arm.com,
-        will@kernel.org, daniel.lezcano@linaro.org
-Cc:     dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        mka@chromium.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Date:   Wed, 28 Aug 2019 20:58:47 +0800
-In-Reply-To: <20190812084235.21440-5-quentin.perret@arm.com>
-References: <20190812084235.21440-1-quentin.perret@arm.com>
-         <20190812084235.21440-5-quentin.perret@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 28 Aug 2019 08:59:09 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60082 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfH1M7J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 08:59:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=N2ennqGTOAx5tJixO7QU+ntzIMNHp1mbgiw7bGOtYCE=; b=JNcpr2jHgLPTN9VkbGRUvskXQ
+        VBONm52WJr3jKBYmqSH/JYBsap1kNc4dkkYA7dm0XFqTImTspHGzTHg6m/aPIR3qZXSCNb/EpPiDX
+        0JAiKyJE8Cqvbxc5OE30rJuYmWr9aMK5b52zduOb6iIFGMX0ZqSsCI97Qa6ToCW2x0IqC/Omwt8Gn
+        +Pr8pbnliiVGiW8FLD/liZW9UgLAXNwuP9ydvytaVFSCyMIw4ClIJ8ND5cfBmM28wS3HJXt8S4i8d
+        zTAYRbV+TOQ8pzKLv0dHY+UCdv4Wla/Di0H+7vhRWniMHHid4ZTcX0IFoqOqtkFycjzLl8/chw5be
+        4G+e1pzeg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i2xXU-0000b2-A5; Wed, 28 Aug 2019 12:59:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 367563074C6;
+        Wed, 28 Aug 2019 14:58:28 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2724720230B0D; Wed, 28 Aug 2019 14:59:02 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 14:59:02 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH -v2 0/5] Further sanitize INTEL_FAM6 naming
+Message-ID: <20190828125902.GP2386@hirez.programming.kicks-ass.net>
+References: <20190827194820.378516765@infradead.org>
+ <3908561D78D1C84285E8C5FCA982C28F7F43EC93@ORSMSX115.amr.corp.intel.com>
+ <20190827215135.GI2332@hirez.programming.kicks-ass.net>
+ <20190828093301.GE2369@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828093301.GE2369@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-12 at 09:42 +0100, Quentin Perret wrote:
-> The newly introduced Energy Model framework manages power cost tables
-> in
-> a generic way. Moreover, it supports several types of models since
-> the
-> tables can come from DT or firmware (through SCMI) for example. On
-> the
-> other hand, the cpu_cooling subsystem manages its own power cost
-> tables
-> using only DT data.
+On Wed, Aug 28, 2019 at 11:33:01AM +0200, Peter Zijlstra wrote:
+> On Tue, Aug 27, 2019 at 11:51:35PM +0200, Peter Zijlstra wrote:
+> > On Tue, Aug 27, 2019 at 08:44:23PM +0000, Luck, Tony wrote:
+> > > > I'm reposting because the version Ingo applied and partially fixed up still
+> > > > generates build bot failure.
+> > > 
+> > > Looks like this version gets them all. I built my standard config, allmodconfig and allyesconfig.
+> > > 
+> > > Reviewed-by: Tony Luck <tony.luck@intel.com>
+> > > 
+> > > What happens next? Will Ingo back out the previous set & his partial fixup and replace
+> > > with this series?  Or just slap one extra patch on top of what is already in tip?
+> > > 
+> > > First option changes a TIP branch
+> > 
+> > This is uncommon, but not unheard of. I'll talk to Ingo and Thomas
+> > tomorrow to see what would be the best way forward.
 > 
-> In order to avoid the duplication of data in the kernel, and in order
-> to
-> enable IPA with EMs coming from more than just DT, remove the private
-> tables from cpu_cooling.c and migrate it to using the centralized EM
-> framework. Doing so should have no visible functional impact for
-> existing users of IPA since:
-> 
->  - recent extenstions to the the PM_OPP infrastructure enable the
->    registration of EMs in PM_EM using the DT property used by IPA;
-> 
->  - the existing upstream cpufreq drivers marked with the
->    'CPUFREQ_IS_COOLING_DEV' flag all use the aforementioned PM_OPP
->    infrastructure, which means they all support PM_EM. The only two
->    exceptions are qoriq-cpufreq which doesn't in fact use an EM and
->    scmi-cpufreq which doesn't use DT for power costs.
-> 
-> For existing users of cpu_cooling, PM_EM tables will contain the
-> exact
-> same power values that IPA used to compute on its own until now. The
-> only new dependency for them is to compile in CONFIG_ENERGY_MODEL.
-> 
-> The case where the thermal subsystem is used without an Energy Model
-> (cpufreq_cooling_ops) is handled by looking directly at CPUFreq's
-> frequency table which is already a dependency for cpu_cooling.c
-> anyway.
-> Since the thermal framework expects the cooling states in a
-> particular
-> order, bail out whenever the CPUFreq table is unsorted, since that is
-> fairly uncommon in general, and there are currently no users of
-> cpu_cooling for this use-case.
-> 
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Signed-off-by: Quentin Perret <quentin.perret@arm.com>
+> OK, I talked to Thomas and we're going to force update that branch. I've
+> pushed it out to my queue.git thing and I'll push it to -tip later
+> (hoping the 0day gets a chance to have a go at it, but that thing's been
+> soooooo slow recently I'm loath to rely/wait on it).
 
-this patch has coding style problems, please check the checkpatch.pl
-output.
-total: 5 errors, 17 warnings, 413 lines checked
-
-thanks,
-rui
-> ---
->  drivers/thermal/Kconfig       |   1 +
->  drivers/thermal/cpu_cooling.c | 250 ++++++++++++------------------
-> ----
->  2 files changed, 91 insertions(+), 160 deletions(-)
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 9966364a6deb..340853a3ca48 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -144,6 +144,7 @@ config THERMAL_GOV_USER_SPACE
->  
->  config THERMAL_GOV_POWER_ALLOCATOR
->  	bool "Power allocator thermal governor"
-> +	depends on ENERGY_MODEL
->  	help
->  	  Enable this to manage platform thermals by dynamically
->  	  allocating and limiting power to devices.
-> diff --git a/drivers/thermal/cpu_cooling.c
-> b/drivers/thermal/cpu_cooling.c
-> index 498f59ab64b2..83486775e593 100644
-> --- a/drivers/thermal/cpu_cooling.c
-> +++ b/drivers/thermal/cpu_cooling.c
-> @@ -19,6 +19,7 @@
->  #include <linux/slab.h>
->  #include <linux/cpu.h>
->  #include <linux/cpu_cooling.h>
-> +#include <linux/energy_model.h>
->  
->  #include <trace/events/thermal.h>
->  
-> @@ -36,21 +37,6 @@
->   *	...
->   */
->  
-> -/**
-> - * struct freq_table - frequency table along with power entries
-> - * @frequency:	frequency in KHz
-> - * @power:	power in mW
-> - *
-> - * This structure is built when the cooling device registers and
-> helps
-> - * in translating frequency to power and vice versa.
-> - */
-> -struct freq_table {
-> -	u32 frequency;
-> -#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
-> -	u32 power;
-> -#endif
-> -};
-> -
->  /**
->   * struct time_in_idle - Idle time stats
->   * @time: previous reading of the absolute time that this cpu was
-> idle
-> @@ -72,7 +58,7 @@ struct time_in_idle {
->   *	frequency.
->   * @max_level: maximum cooling level. One less than total number of
-> valid
->   *	cpufreq frequencies.
-> - * @freq_table: Freq table in descending order of frequencies
-> + * @em: Reference on the Energy Model of the device
->   * @cdev: thermal_cooling_device pointer to keep track of the
->   *	registered cooling device.
->   * @policy: cpufreq policy.
-> @@ -88,7 +74,7 @@ struct cpufreq_cooling_device {
->  	unsigned int cpufreq_state;
->  	unsigned int clipped_freq;
->  	unsigned int max_level;
-> -	struct freq_table *freq_table;	/* In descending order */
-> +	struct em_perf_domain *em;
->  	struct cpufreq_policy *policy;
->  	struct list_head node;
->  	struct time_in_idle *idle_time;
-> @@ -162,114 +148,40 @@ static int cpufreq_thermal_notifier(struct
-> notifier_block *nb,
->  static unsigned long get_level(struct cpufreq_cooling_device
-> *cpufreq_cdev,
->  			       unsigned int freq)
->  {
-> -	struct freq_table *freq_table = cpufreq_cdev->freq_table;
-> -	unsigned long level;
-> +	int i;
->  
-> -	for (level = 1; level <= cpufreq_cdev->max_level; level++)
-> -		if (freq > freq_table[level].frequency)
-> +	for (i = cpufreq_cdev->max_level - 1; i >= 0; i--) {
-> +		if (freq > cpufreq_cdev->em->table[i].frequency)
->  			break;
-> -
-> -	return level - 1;
-> -}
-> -
-> -/**
-> - * update_freq_table() - Update the freq table with power numbers
-> - * @cpufreq_cdev:	the cpufreq cooling device in which to update
-> the table
-> - * @capacitance: dynamic power coefficient for these cpus
-> - *
-> - * Update the freq table with power numbers.  This table will be
-> used in
-> - * cpu_power_to_freq() and cpu_freq_to_power() to convert between
-> power and
-> - * frequency efficiently.  Power is stored in mW, frequency in
-> KHz.  The
-> - * resulting table is in descending order.
-> - *
-> - * Return: 0 on success, -EINVAL if there are no OPPs for any CPUs,
-> - * or -ENOMEM if we run out of memory.
-> - */
-> -static int update_freq_table(struct cpufreq_cooling_device
-> *cpufreq_cdev,
-> -			     u32 capacitance)
-> -{
-> -	struct freq_table *freq_table = cpufreq_cdev->freq_table;
-> -	struct dev_pm_opp *opp;
-> -	struct device *dev = NULL;
-> -	int num_opps = 0, cpu = cpufreq_cdev->policy->cpu, i;
-> -
-> -	dev = get_cpu_device(cpu);
-> -	if (unlikely(!dev)) {
-> -		pr_warn("No cpu device for cpu %d\n", cpu);
-> -		return -ENODEV;
-> -	}
-> -
-> -	num_opps = dev_pm_opp_get_opp_count(dev);
-> -	if (num_opps < 0)
-> -		return num_opps;
-> -
-> -	/*
-> -	 * The cpufreq table is also built from the OPP table and so
-> the count
-> -	 * should match.
-> -	 */
-> -	if (num_opps != cpufreq_cdev->max_level + 1) {
-> -		dev_warn(dev, "Number of OPPs not matching with
-> max_levels\n");
-> -		return -EINVAL;
-> -	}
-> -
-> -	for (i = 0; i <= cpufreq_cdev->max_level; i++) {
-> -		unsigned long freq = freq_table[i].frequency * 1000;
-> -		u32 freq_mhz = freq_table[i].frequency / 1000;
-> -		u64 power;
-> -		u32 voltage_mv;
-> -
-> -		/*
-> -		 * Find ceil frequency as 'freq' may be slightly lower
-> than OPP
-> -		 * freq due to truncation while converting to kHz.
-> -		 */
-> -		opp = dev_pm_opp_find_freq_ceil(dev, &freq);
-> -		if (IS_ERR(opp)) {
-> -			dev_err(dev, "failed to get opp for %lu
-> frequency\n",
-> -				freq);
-> -			return -EINVAL;
-> -		}
-> -
-> -		voltage_mv = dev_pm_opp_get_voltage(opp) / 1000;
-> -		dev_pm_opp_put(opp);
-> -
-> -		/*
-> -		 * Do the multiplication with MHz and millivolt so as
-> -		 * to not overflow.
-> -		 */
-> -		power = (u64)capacitance * freq_mhz * voltage_mv *
-> voltage_mv;
-> -		do_div(power, 1000000000);
-> -
-> -		/* power is stored in mW */
-> -		freq_table[i].power = power;
->  	}
->  
-> -	return 0;
-> +	return cpufreq_cdev->max_level - i - 1;
->  }
->  
->  static u32 cpu_freq_to_power(struct cpufreq_cooling_device
-> *cpufreq_cdev,
->  			     u32 freq)
->  {
->  	int i;
-> -	struct freq_table *freq_table = cpufreq_cdev->freq_table;
->  
-> -	for (i = 1; i <= cpufreq_cdev->max_level; i++)
-> -		if (freq > freq_table[i].frequency)
-> +	for (i = cpufreq_cdev->max_level - 1; i >= 0; i--) {
-> +		if (freq > cpufreq_cdev->em->table[i].frequency)
->  			break;
-> +	}
->  
-> -	return freq_table[i - 1].power;
-> +	return cpufreq_cdev->em->table[i + 1].power;
->  }
->  
->  static u32 cpu_power_to_freq(struct cpufreq_cooling_device
-> *cpufreq_cdev,
->  			     u32 power)
->  {
->  	int i;
-> -	struct freq_table *freq_table = cpufreq_cdev->freq_table;
->  
-> -	for (i = 1; i <= cpufreq_cdev->max_level; i++)
-> -		if (power > freq_table[i].power)
-> +	for (i = cpufreq_cdev->max_level - 1; i >= 0; i--) {
-> +		if (power > cpufreq_cdev->em->table[i].power)
->  			break;
-> +	}
->  
-> -	return freq_table[i - 1].frequency;
-> +	return cpufreq_cdev->em->table[i + 1].frequency;
->  }
->  
->  /**
-> @@ -410,7 +322,7 @@ static int cpufreq_state2power(struct
-> thermal_cooling_device *cdev,
->  			       struct thermal_zone_device *tz,
->  			       unsigned long state, u32 *power)
->  {
-> -	unsigned int freq, num_cpus;
-> +	unsigned int freq, num_cpus, idx;
->  	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
->  
->  	/* Request state should be less than max_level */
-> @@ -419,7 +331,8 @@ static int cpufreq_state2power(struct
-> thermal_cooling_device *cdev,
->  
->  	num_cpus = cpumask_weight(cpufreq_cdev->policy->cpus);
->  
-> -	freq = cpufreq_cdev->freq_table[state].frequency;
-> +	idx = cpufreq_cdev->max_level - state;
-> +	freq = cpufreq_cdev->em->table[idx].frequency;
->  	*power = cpu_freq_to_power(cpufreq_cdev, freq) * num_cpus;
->  
->  	return 0;
-> @@ -463,8 +376,60 @@ static int cpufreq_power2state(struct
-> thermal_cooling_device *cdev,
->  				      power);
->  	return 0;
->  }
-> +
-> +static inline bool em_is_sane(struct cpufreq_cooling_device
-> *cpufreq_cdev,
-> +			      struct em_perf_domain *em) {
-> +	struct cpufreq_policy *policy;
-> +	unsigned int nr_levels;
-> +
-> +	if (!em)
-> +		return false;
-> +
-> +	policy = cpufreq_cdev->policy;
-> +	if (!cpumask_equal(policy->related_cpus, to_cpumask(em->cpus))) 
-> {
-> +		pr_err("The span of pd %*pbl is misaligned with cpufreq
-> policy %*pbl\n",
-> +			cpumask_pr_args(to_cpumask(em->cpus)),
-> +			cpumask_pr_args(policy->related_cpus));
-> +		return false;
-> +	}
-> +
-> +	nr_levels = cpufreq_cdev->max_level + 1;
-> +	if (em->nr_cap_states != nr_levels) {
-> +		pr_err("The number of cap states in pd %*pbl (%u)
-> doesn't match the number of cooling levels (%u)\n",
-> +			cpumask_pr_args(to_cpumask(em->cpus)),
-> +			em->nr_cap_states, nr_levels);
-> +		return false;
-> +	}
-> +
-> +	return true;
-> +}
->  #endif /* CONFIG_THERMAL_GOV_POWER_ALLOCATOR */
->  
-> +static unsigned int get_state_freq(struct cpufreq_cooling_device
-> *cpufreq_cdev,
-> +                             unsigned long state)
-> +{
-> +       struct cpufreq_policy *policy;
-> +       unsigned long idx;
-> +
-> +#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
-> +       /* Use the Energy Model table if available */
-> +       if (cpufreq_cdev->em) {
-> +               idx = cpufreq_cdev->max_level - state;
-> +               return cpufreq_cdev->em->table[idx].frequency;
-> +       }
-> +#endif
-> +
-> +       /* Otherwise, fallback on the CPUFreq table */
-> +       policy = cpufreq_cdev->policy;
-> +       if (policy->freq_table_sorted ==
-> CPUFREQ_TABLE_SORTED_ASCENDING)
-> +               idx = cpufreq_cdev->max_level - state;
-> +       else
-> +               idx = state;
-> +
-> +       return policy->freq_table[idx].frequency;
-> +}
-> +
-> +
->  /* cpufreq cooling device callback functions are defined below */
->  
->  /**
-> @@ -530,7 +495,7 @@ static int cpufreq_set_cur_state(struct
-> thermal_cooling_device *cdev,
->  	if (cpufreq_cdev->cpufreq_state == state)
->  		return 0;
->  
-> -	clip_freq = cpufreq_cdev->freq_table[state].frequency;
-> +	clip_freq = get_state_freq(cpufreq_cdev, state);
->  	cpufreq_cdev->cpufreq_state = state;
->  	cpufreq_cdev->clipped_freq = clip_freq;
->  
-> @@ -552,26 +517,12 @@ static struct notifier_block
-> thermal_cpufreq_notifier_block = {
->  	.notifier_call = cpufreq_thermal_notifier,
->  };
->  
-> -static unsigned int find_next_max(struct cpufreq_frequency_table
-> *table,
-> -				  unsigned int prev_max)
-> -{
-> -	struct cpufreq_frequency_table *pos;
-> -	unsigned int max = 0;
-> -
-> -	cpufreq_for_each_valid_entry(pos, table) {
-> -		if (pos->frequency > max && pos->frequency < prev_max)
-> -			max = pos->frequency;
-> -	}
-> -
-> -	return max;
-> -}
-> -
->  /**
->   * __cpufreq_cooling_register - helper function to create cpufreq
-> cooling device
->   * @np: a valid struct device_node to the cooling device device tree
-> node
->   * @policy: cpufreq policy
->   * Normally this should be same as cpufreq policy->related_cpus.
-> - * @capacitance: dynamic power coefficient for these cpus
-> + * @em: Energy Model of the cpufreq policy
->   *
->   * This interface function registers the cpufreq cooling device with
-> the name
->   * "thermal-cpufreq-%x". This api can support multiple instances of
-> cpufreq
-> @@ -583,12 +534,13 @@ static unsigned int find_next_max(struct
-> cpufreq_frequency_table *table,
->   */
->  static struct thermal_cooling_device *
->  __cpufreq_cooling_register(struct device_node *np,
-> -			struct cpufreq_policy *policy, u32 capacitance)
-> +			struct cpufreq_policy *policy,
-> +			struct em_perf_domain *em)
->  {
->  	struct thermal_cooling_device *cdev;
->  	struct cpufreq_cooling_device *cpufreq_cdev;
->  	char dev_name[THERMAL_NAME_LENGTH];
-> -	unsigned int freq, i, num_cpus;
-> +	unsigned int i, num_cpus;
->  	int ret;
->  	struct thermal_cooling_device_ops *cooling_ops;
->  	bool first;
-> @@ -622,55 +574,38 @@ __cpufreq_cooling_register(struct device_node
-> *np,
->  	/* max_level is an index, not a counter */
->  	cpufreq_cdev->max_level = i - 1;
->  
-> -	cpufreq_cdev->freq_table = kmalloc_array(i,
-> -					sizeof(*cpufreq_cdev-
-> >freq_table),
-> -					GFP_KERNEL);
-> -	if (!cpufreq_cdev->freq_table) {
-> -		cdev = ERR_PTR(-ENOMEM);
-> -		goto free_idle_time;
-> -	}
-> -
->  	ret = ida_simple_get(&cpufreq_ida, 0, 0, GFP_KERNEL);
->  	if (ret < 0) {
->  		cdev = ERR_PTR(ret);
-> -		goto free_table;
-> +		goto free_idle_time;
->  	}
->  	cpufreq_cdev->id = ret;
->  
->  	snprintf(dev_name, sizeof(dev_name), "thermal-cpufreq-%d",
->  		 cpufreq_cdev->id);
->  
-> -	/* Fill freq-table in descending order of frequencies */
-> -	for (i = 0, freq = -1; i <= cpufreq_cdev->max_level; i++) {
-> -		freq = find_next_max(policy->freq_table, freq);
-> -		cpufreq_cdev->freq_table[i].frequency = freq;
-> -
-> -		/* Warn for duplicate entries */
-> -		if (!freq)
-> -			pr_warn("%s: table has duplicate entries\n",
-> __func__);
-> -		else
-> -			pr_debug("%s: freq:%u KHz\n", __func__, freq);
-> -	}
-> -
->  	cooling_ops = &cpufreq_cooling_ops;
->  #ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
-> -	if (capacitance) {
-> -		ret = update_freq_table(cpufreq_cdev, capacitance);
-> -		if (ret) {
-> -			cdev = ERR_PTR(ret);
-> -			goto remove_ida;
-> -		}
-> +	if (em_is_sane(cpufreq_cdev, em)) {
-> +		cpufreq_cdev->em = em;
->  		cooling_ops->get_requested_power =
-> cpufreq_get_requested_power;
->  		cooling_ops->state2power = cpufreq_state2power;
->  		cooling_ops->power2state = cpufreq_power2state;
-> -	}
-> +	} else
->  #endif
-> +	if (policy->freq_table_sorted == CPUFREQ_TABLE_UNSORTED) {
-> +		pr_err("%s: unsorted frequency tables are not
-> supported\n",
-> +				__func__);
-> +		cdev = ERR_PTR(-EINVAL);
-> +		goto remove_ida;
-> +	}
-> +
->  	cdev = thermal_of_cooling_device_register(np, dev_name,
-> cpufreq_cdev,
->  						  cooling_ops);
->  	if (IS_ERR(cdev))
->  		goto remove_ida;
->  
-> -	cpufreq_cdev->clipped_freq = cpufreq_cdev-
-> >freq_table[0].frequency;
-> +	cpufreq_cdev->clipped_freq = get_state_freq(cpufreq_cdev, 0);
->  
->  	mutex_lock(&cooling_list_lock);
->  	/* Register the notifier for first cpufreq cooling device */
-> @@ -686,8 +621,6 @@ __cpufreq_cooling_register(struct device_node
-> *np,
->  
->  remove_ida:
->  	ida_simple_remove(&cpufreq_ida, cpufreq_cdev->id);
-> -free_table:
-> -	kfree(cpufreq_cdev->freq_table);
->  free_idle_time:
->  	kfree(cpufreq_cdev->idle_time);
->  free_cdev:
-> @@ -709,7 +642,7 @@ __cpufreq_cooling_register(struct device_node
-> *np,
->  struct thermal_cooling_device *
->  cpufreq_cooling_register(struct cpufreq_policy *policy)
->  {
-> -	return __cpufreq_cooling_register(NULL, policy, 0);
-> +	return __cpufreq_cooling_register(NULL, policy, NULL);
->  }
->  EXPORT_SYMBOL_GPL(cpufreq_cooling_register);
->  
-> @@ -737,7 +670,6 @@ of_cpufreq_cooling_register(struct cpufreq_policy
-> *policy)
->  {
->  	struct device_node *np = of_get_cpu_node(policy->cpu, NULL);
->  	struct thermal_cooling_device *cdev = NULL;
-> -	u32 capacitance = 0;
->  
->  	if (!np) {
->  		pr_err("cpu_cooling: OF node not available for
-> cpu%d\n",
-> @@ -746,10 +678,9 @@ of_cpufreq_cooling_register(struct
-> cpufreq_policy *policy)
->  	}
->  
->  	if (of_find_property(np, "#cooling-cells", NULL)) {
-> -		of_property_read_u32(np, "dynamic-power-coefficient",
-> -				     &capacitance);
-> +		struct em_perf_domain *em = em_cpu_get(policy->cpu);
->  
-> -		cdev = __cpufreq_cooling_register(np, policy,
-> capacitance);
-> +		cdev = __cpufreq_cooling_register(np, policy, em);
->  		if (IS_ERR(cdev)) {
->  			pr_err("cpu_cooling: cpu%d failed to register
-> as cooling device: %ld\n",
->  			       policy->cpu, PTR_ERR(cdev));
-> @@ -791,7 +722,6 @@ void cpufreq_cooling_unregister(struct
-> thermal_cooling_device *cdev)
->  	thermal_cooling_device_unregister(cdev);
->  	ida_simple_remove(&cpufreq_ida, cpufreq_cdev->id);
->  	kfree(cpufreq_cdev->idle_time);
-> -	kfree(cpufreq_cdev->freq_table);
->  	kfree(cpufreq_cdev);
->  }
->  EXPORT_SYMBOL_GPL(cpufreq_cooling_unregister);
-
+Done now. tip/x86/cpu should have the shiny new patches in.
