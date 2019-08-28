@@ -2,113 +2,128 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCF4C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D67C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F973233FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566999819;
-	bh=PfdDBsRCBBChXNzCDotQ1Pc7yIyNBpQQ3ATlOtaDOC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IYS1/Po+VLuMhWUOMdsAfqSqWG441ZCBUBtR+eTjm65Ft+0bYNP/OEmlSijjH5iRK
-	 G/K6pSrevb9/ypWTwgnOBvYD//3tTOxblDlDiS9+t9dVH9T7xTreb9tlFIgO8/Sk+r
-	 HIuBPKP/EYriqyqKFocJOjI/gmFbQGD4IFENL8do=
+	by mail.kernel.org (Postfix) with ESMTP id 554F020828
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:43:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfH1Nni (ORCPT
+        id S1726775AbfH1Nn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:43:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726341AbfH1Nnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:43:37 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C5B022CF5;
-        Wed, 28 Aug 2019 13:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566999816;
-        bh=PfdDBsRCBBChXNzCDotQ1Pc7yIyNBpQQ3ATlOtaDOC0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vrdJ3HfPobb2OsDW8pbRC6kIQu+M8yr50ucNLFVYTeNTKvLnO6nyKvDDpbmHFOJae
-         BH6dkijIWCasP0rO2X7LUyBR1E1ZIsj6yaAd2rKfKTLspoDx1SyGcEY5p9+FHRy4q1
-         m8OXKEa1iDTbzsnltW5dZ5sSPKxK/nsX6gP28+Ik=
-Date:   Wed, 28 Aug 2019 15:43:34 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Alejandro =?utf-8?B?R29uesOhbGV6?= 
-        <alejandro.gonzalez.correo@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [linux-sunxi] Re: [PATCH] mmc: sunxi: fix unusuable eMMC on some
- H6 boards by disabling DDR
-Message-ID: <20190828134334.qzuwodoxmw7ov5yg@flea>
-References: <20190825150558.15173-1-alejandro.gonzalez.correo@gmail.com>
- <CACRpkdazfe3gJr6Q+X05GzxPuKtUg0M780SPA_oR5bd+-xBPvA@mail.gmail.com>
- <CAGb2v67e8EiS-LUuhAyPc57nWd4iOBEWC_SZbH801Lzi4QWGyg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="v6flhv747vrdixqb"
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67e8EiS-LUuhAyPc57nWd4iOBEWC_SZbH801Lzi4QWGyg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+        Wed, 28 Aug 2019 09:43:57 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15662 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726599AbfH1Nn4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:43:56 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SDe3cu131836
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 09:43:55 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2unr92e8f1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 09:43:53 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 28 Aug 2019 14:43:51 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 28 Aug 2019 14:43:46 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7SDhjxr37879864
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 28 Aug 2019 13:43:45 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D0A311C052;
+        Wed, 28 Aug 2019 13:43:45 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8A6C111C05C;
+        Wed, 28 Aug 2019 13:43:42 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.129.156])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 28 Aug 2019 13:43:42 +0000 (GMT)
+Subject: Re: [PATCH v12 00/11] Appended signatures support for IMA appraisal
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Jordan Hand <jorhand@linux.microsoft.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        linux-integrity@vger.kernel.org
+Cc:     linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
+Date:   Wed, 28 Aug 2019 09:43:41 -0400
+In-Reply-To: <9682b5d0-1634-2dd0-2cbb-eb1fa8ba7423@linux.microsoft.com>
+References: <20190628021934.4260-1-bauerman@linux.ibm.com>
+         <9682b5d0-1634-2dd0-2cbb-eb1fa8ba7423@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19082813-4275-0000-0000-0000035E558B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082813-4276-0000-0000-0000387089DF
+Message-Id: <1566999821.6115.14.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=895 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908280144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jordan,
 
---v6flhv747vrdixqb
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, 2019-08-26 at 15:46 -0700, Jordan Hand wrote:
+> On 6/27/19 7:19 PM, Thiago Jung Bauermann wrote:
+> > On the OpenPOWER platform, secure boot and trusted boot are being
+> > implemented using IMA for taking measurements and verifying signatures.
+> > Since the kernel image on Power servers is an ELF binary, kernels are
+> > signed using the scripts/sign-file tool and thus use the same signature
+> > format as signed kernel modules.
+> > 
+> > This patch series adds support in IMA for verifying those signatures.
+> > It adds flexibility to OpenPOWER secure boot, because it allows it to boot
+> > kernels with the signature appended to them as well as kernels where the
+> > signature is stored in the IMA extended attribute.
+> 
+> I know this is pretty late, but I just wanted to let you know that I
+> tested this patch set on x86_64 with QEMU.
+> 
+> That is, I enrolled a key to _ima keyring, signed my kernel and modules
+> with appended signatures (with scripts/sign-file), set the IMA policy to
+> appraise and measure my kernel and modules. Also tested kexec appraisal.
+> 
+> You can add my tested-by if you'd like.
 
-On Wed, Aug 28, 2019 at 09:29:32PM +0800, Chen-Yu Tsai wrote:
-> On Wed, Aug 28, 2019 at 8:52 PM Linus Walleij <linus.walleij@linaro.org> =
-wrote:
-> >
-> > On Sun, Aug 25, 2019 at 5:06 PM Alejandro Gonz=E1lez
-> > <alejandro.gonzalez.correo@gmail.com> wrote:
-> >
-> > > Jernej Skrabec compared the BSP driver with this
-> > > driver, and found that the BSP driver configures pinctrl to operate at
-> > > 1.8 V when entering DDR mode (although 3.3 V operation is supported),=
- while
-> > > the mainline kernel lacks any mechanism to switch voltages dynamicall=
-y.
->
-> AFAIK The Pine H64 does not have the ability to switch I/O voltages. It is
-> fixed to either 1.8V (the default based on the schematics) or 3.3V.
+I really appreciate your testing.  Based on the recent
+Documentation/maintainer/rebasing-and-merging.rst,  I'm trying not to
+rebase patches already staged in linux-next.  Patches are first being
+staged in the next-queued-testing branch.
 
-Should that be handled at the board level then maybe?
+FYI, I just posted a patch that adds IMA appended signature support to
+test_kexec_file_load.sh.
 
-Maxime
+thanks,
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Mimi
 
---v6flhv747vrdixqb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXWaFBgAKCRDj7w1vZxhR
-xUbcAQDTgCwVjSWuZKxoSkt/fp1VLfWi1UjCpSZ0cCr11a5BwAD8DLgodYfexZWL
-iW8NfsUfcOV7SktdFUgfMP1x74uruwE=
-=sxYW
------END PGP SIGNATURE-----
-
---v6flhv747vrdixqb--
