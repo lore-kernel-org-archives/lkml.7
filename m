@@ -2,382 +2,124 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16951C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABF1C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57B422CF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E49AD22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:31:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfH1Kaq (ORCPT
+        id S1726883AbfH1KbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:30:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39718 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726315AbfH1Kan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:30:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2B26FB07D;
-        Wed, 28 Aug 2019 10:30:41 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Michal Suchanek <msuchanek@suse.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Breno Leitao <leitao@debian.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Allison Randal <allison@lohutok.net>,
-        Michael Neuling <mikey@neuling.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
+        Wed, 28 Aug 2019 06:31:17 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:48064 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbfH1KbQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 06:31:16 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id BBF1F81097; Wed, 28 Aug 2019 12:31:00 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 12:31:13 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Pavel Machek <pavel@denx.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 2/4] powerpc: move common register copy functions from signal_32.c to signal.c
-Date:   Wed, 28 Aug 2019 12:30:27 +0200
-Message-Id: <82c373db60620978e0f128ca79dce8b2ff4b3de3.1566987936.git.msuchanek@suse.de>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1566987936.git.msuchanek@suse.de>
-References: <cover.1566987936.git.msuchanek@suse.de>
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chen Yu <yu.c.chen@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH 4.19 72/98] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD
+ family 15h/16h
+Message-ID: <20190828103113.GA14677@amd>
+References: <20190827072718.142728620@linuxfoundation.org>
+ <20190827072722.020603090@linuxfoundation.org>
+ <20190827113604.GB18218@amd>
+ <alpine.DEB.2.21.1908271525480.1939@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1908271525480.1939@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These functions are required for 64bit as well.
 
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
- arch/powerpc/kernel/signal.c    | 141 ++++++++++++++++++++++++++++++++
- arch/powerpc/kernel/signal_32.c | 140 -------------------------------
- 2 files changed, 141 insertions(+), 140 deletions(-)
+--ikeVEW9yuYc//A+q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
-index e6c30cee6abf..60436432399f 100644
---- a/arch/powerpc/kernel/signal.c
-+++ b/arch/powerpc/kernel/signal.c
-@@ -18,12 +18,153 @@
- #include <linux/syscalls.h>
- #include <asm/hw_breakpoint.h>
- #include <linux/uaccess.h>
-+#include <asm/switch_to.h>
- #include <asm/unistd.h>
- #include <asm/debug.h>
- #include <asm/tm.h>
- 
- #include "signal.h"
- 
-+#ifdef CONFIG_VSX
-+unsigned long copy_fpr_to_user(void __user *to,
-+			       struct task_struct *task)
-+{
-+	u64 buf[ELF_NFPREG];
-+	int i;
-+
-+	/* save FPR copy to local buffer then write to the thread_struct */
-+	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
-+		buf[i] = task->thread.TS_FPR(i);
-+	buf[i] = task->thread.fp_state.fpscr;
-+	return __copy_to_user(to, buf, ELF_NFPREG * sizeof(double));
-+}
-+
-+unsigned long copy_fpr_from_user(struct task_struct *task,
-+				 void __user *from)
-+{
-+	u64 buf[ELF_NFPREG];
-+	int i;
-+
-+	if (__copy_from_user(buf, from, ELF_NFPREG * sizeof(double)))
-+		return 1;
-+	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
-+		task->thread.TS_FPR(i) = buf[i];
-+	task->thread.fp_state.fpscr = buf[i];
-+
-+	return 0;
-+}
-+
-+unsigned long copy_vsx_to_user(void __user *to,
-+			       struct task_struct *task)
-+{
-+	u64 buf[ELF_NVSRHALFREG];
-+	int i;
-+
-+	/* save FPR copy to local buffer then write to the thread_struct */
-+	for (i = 0; i < ELF_NVSRHALFREG; i++)
-+		buf[i] = task->thread.fp_state.fpr[i][TS_VSRLOWOFFSET];
-+	return __copy_to_user(to, buf, ELF_NVSRHALFREG * sizeof(double));
-+}
-+
-+unsigned long copy_vsx_from_user(struct task_struct *task,
-+				 void __user *from)
-+{
-+	u64 buf[ELF_NVSRHALFREG];
-+	int i;
-+
-+	if (__copy_from_user(buf, from, ELF_NVSRHALFREG * sizeof(double)))
-+		return 1;
-+	for (i = 0; i < ELF_NVSRHALFREG ; i++)
-+		task->thread.fp_state.fpr[i][TS_VSRLOWOFFSET] = buf[i];
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
-+unsigned long copy_ckfpr_to_user(void __user *to,
-+				  struct task_struct *task)
-+{
-+	u64 buf[ELF_NFPREG];
-+	int i;
-+
-+	/* save FPR copy to local buffer then write to the thread_struct */
-+	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
-+		buf[i] = task->thread.TS_CKFPR(i);
-+	buf[i] = task->thread.ckfp_state.fpscr;
-+	return __copy_to_user(to, buf, ELF_NFPREG * sizeof(double));
-+}
-+
-+unsigned long copy_ckfpr_from_user(struct task_struct *task,
-+					  void __user *from)
-+{
-+	u64 buf[ELF_NFPREG];
-+	int i;
-+
-+	if (__copy_from_user(buf, from, ELF_NFPREG * sizeof(double)))
-+		return 1;
-+	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
-+		task->thread.TS_CKFPR(i) = buf[i];
-+	task->thread.ckfp_state.fpscr = buf[i];
-+
-+	return 0;
-+}
-+
-+unsigned long copy_ckvsx_to_user(void __user *to,
-+				  struct task_struct *task)
-+{
-+	u64 buf[ELF_NVSRHALFREG];
-+	int i;
-+
-+	/* save FPR copy to local buffer then write to the thread_struct */
-+	for (i = 0; i < ELF_NVSRHALFREG; i++)
-+		buf[i] = task->thread.ckfp_state.fpr[i][TS_VSRLOWOFFSET];
-+	return __copy_to_user(to, buf, ELF_NVSRHALFREG * sizeof(double));
-+}
-+
-+unsigned long copy_ckvsx_from_user(struct task_struct *task,
-+					  void __user *from)
-+{
-+	u64 buf[ELF_NVSRHALFREG];
-+	int i;
-+
-+	if (__copy_from_user(buf, from, ELF_NVSRHALFREG * sizeof(double)))
-+		return 1;
-+	for (i = 0; i < ELF_NVSRHALFREG ; i++)
-+		task->thread.ckfp_state.fpr[i][TS_VSRLOWOFFSET] = buf[i];
-+	return 0;
-+}
-+#endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
-+#else
-+inline unsigned long copy_fpr_to_user(void __user *to,
-+				      struct task_struct *task)
-+{
-+	return __copy_to_user(to, task->thread.fp_state.fpr,
-+			      ELF_NFPREG * sizeof(double));
-+}
-+
-+inline unsigned long copy_fpr_from_user(struct task_struct *task,
-+					void __user *from)
-+{
-+	return __copy_from_user(task->thread.fp_state.fpr, from,
-+			      ELF_NFPREG * sizeof(double));
-+}
-+
-+#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
-+inline unsigned long copy_ckfpr_to_user(void __user *to,
-+					 struct task_struct *task)
-+{
-+	return __copy_to_user(to, task->thread.ckfp_state.fpr,
-+			      ELF_NFPREG * sizeof(double));
-+}
-+
-+inline unsigned long copy_ckfpr_from_user(struct task_struct *task,
-+						 void __user *from)
-+{
-+	return __copy_from_user(task->thread.ckfp_state.fpr, from,
-+				ELF_NFPREG * sizeof(double));
-+}
-+#endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
-+#endif
-+
- /* Log an error when sending an unhandled signal to a process. Controlled
-  * through debug.exception-trace sysctl.
-  */
-diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
-index 98600b276f76..c93c937ea568 100644
---- a/arch/powerpc/kernel/signal_32.c
-+++ b/arch/powerpc/kernel/signal_32.c
-@@ -235,146 +235,6 @@ struct rt_sigframe {
- 	int			abigap[56];
- };
- 
--#ifdef CONFIG_VSX
--unsigned long copy_fpr_to_user(void __user *to,
--			       struct task_struct *task)
--{
--	u64 buf[ELF_NFPREG];
--	int i;
--
--	/* save FPR copy to local buffer then write to the thread_struct */
--	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
--		buf[i] = task->thread.TS_FPR(i);
--	buf[i] = task->thread.fp_state.fpscr;
--	return __copy_to_user(to, buf, ELF_NFPREG * sizeof(double));
--}
--
--unsigned long copy_fpr_from_user(struct task_struct *task,
--				 void __user *from)
--{
--	u64 buf[ELF_NFPREG];
--	int i;
--
--	if (__copy_from_user(buf, from, ELF_NFPREG * sizeof(double)))
--		return 1;
--	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
--		task->thread.TS_FPR(i) = buf[i];
--	task->thread.fp_state.fpscr = buf[i];
--
--	return 0;
--}
--
--unsigned long copy_vsx_to_user(void __user *to,
--			       struct task_struct *task)
--{
--	u64 buf[ELF_NVSRHALFREG];
--	int i;
--
--	/* save FPR copy to local buffer then write to the thread_struct */
--	for (i = 0; i < ELF_NVSRHALFREG; i++)
--		buf[i] = task->thread.fp_state.fpr[i][TS_VSRLOWOFFSET];
--	return __copy_to_user(to, buf, ELF_NVSRHALFREG * sizeof(double));
--}
--
--unsigned long copy_vsx_from_user(struct task_struct *task,
--				 void __user *from)
--{
--	u64 buf[ELF_NVSRHALFREG];
--	int i;
--
--	if (__copy_from_user(buf, from, ELF_NVSRHALFREG * sizeof(double)))
--		return 1;
--	for (i = 0; i < ELF_NVSRHALFREG ; i++)
--		task->thread.fp_state.fpr[i][TS_VSRLOWOFFSET] = buf[i];
--	return 0;
--}
--
--#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
--unsigned long copy_ckfpr_to_user(void __user *to,
--				  struct task_struct *task)
--{
--	u64 buf[ELF_NFPREG];
--	int i;
--
--	/* save FPR copy to local buffer then write to the thread_struct */
--	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
--		buf[i] = task->thread.TS_CKFPR(i);
--	buf[i] = task->thread.ckfp_state.fpscr;
--	return __copy_to_user(to, buf, ELF_NFPREG * sizeof(double));
--}
--
--unsigned long copy_ckfpr_from_user(struct task_struct *task,
--					  void __user *from)
--{
--	u64 buf[ELF_NFPREG];
--	int i;
--
--	if (__copy_from_user(buf, from, ELF_NFPREG * sizeof(double)))
--		return 1;
--	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
--		task->thread.TS_CKFPR(i) = buf[i];
--	task->thread.ckfp_state.fpscr = buf[i];
--
--	return 0;
--}
--
--unsigned long copy_ckvsx_to_user(void __user *to,
--				  struct task_struct *task)
--{
--	u64 buf[ELF_NVSRHALFREG];
--	int i;
--
--	/* save FPR copy to local buffer then write to the thread_struct */
--	for (i = 0; i < ELF_NVSRHALFREG; i++)
--		buf[i] = task->thread.ckfp_state.fpr[i][TS_VSRLOWOFFSET];
--	return __copy_to_user(to, buf, ELF_NVSRHALFREG * sizeof(double));
--}
--
--unsigned long copy_ckvsx_from_user(struct task_struct *task,
--					  void __user *from)
--{
--	u64 buf[ELF_NVSRHALFREG];
--	int i;
--
--	if (__copy_from_user(buf, from, ELF_NVSRHALFREG * sizeof(double)))
--		return 1;
--	for (i = 0; i < ELF_NVSRHALFREG ; i++)
--		task->thread.ckfp_state.fpr[i][TS_VSRLOWOFFSET] = buf[i];
--	return 0;
--}
--#endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
--#else
--inline unsigned long copy_fpr_to_user(void __user *to,
--				      struct task_struct *task)
--{
--	return __copy_to_user(to, task->thread.fp_state.fpr,
--			      ELF_NFPREG * sizeof(double));
--}
--
--inline unsigned long copy_fpr_from_user(struct task_struct *task,
--					void __user *from)
--{
--	return __copy_from_user(task->thread.fp_state.fpr, from,
--			      ELF_NFPREG * sizeof(double));
--}
--
--#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
--inline unsigned long copy_ckfpr_to_user(void __user *to,
--					 struct task_struct *task)
--{
--	return __copy_to_user(to, task->thread.ckfp_state.fpr,
--			      ELF_NFPREG * sizeof(double));
--}
--
--inline unsigned long copy_ckfpr_from_user(struct task_struct *task,
--						 void __user *from)
--{
--	return __copy_from_user(task->thread.ckfp_state.fpr, from,
--				ELF_NFPREG * sizeof(double));
--}
--#endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
--#endif
--
- /*
-  * Save the current user registers on the user stack.
-  * We only save the altivec/spe registers if the process has used
--- 
-2.22.0
+On Tue 2019-08-27 15:30:30, Thomas Gleixner wrote:
+> On Tue, 27 Aug 2019, Pavel Machek wrote:
+>=20
+> > On Tue 2019-08-27 09:50:51, Greg Kroah-Hartman wrote:
+> > > From: Tom Lendacky <thomas.lendacky@amd.com>
+> > >=20
+> > > commit c49a0a80137c7ca7d6ced4c812c9e07a949f6f24 upstream.
+> > >=20
+> > > There have been reports of RDRAND issues after resuming from suspend =
+on
+> > > some AMD family 15h and family 16h systems. This issue stems from a B=
+IOS
+> > > not performing the proper steps during resume to ensure RDRAND contin=
+ues
+> > > to function properly.
+> >=20
+> > Yes. And instead of reinitializing the RDRAND on resume, this patch
+> > breaks support even for people with properly functioning BIOSes...
+>=20
+> There is no way to reinitialize RDRAND from the kernel otherwise we would
+> have exactly done that. If you know how to do that please tell.
 
+Would they? AMD is not exactly doing good job with communication
+here. If BIOS can do it, kernel can do it, too... or do you have
+information saying otherwise?
+
+> Also disabling it for every BIOS is the only way which can be done because
+> there is no way to know whether the BIOS is fixed or not at cold boot
+> time. And it has to be known there because applications cache the
+
+I'm pretty sure DMI-based whitelist would help here. It should be
+reasonably to fill it with the common machines at least.
+
+Plus, where is the CVE, and does AMD do anything to make BIOS vendors
+fix them?
+
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--ikeVEW9yuYc//A+q
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1mV/EACgkQMOfwapXb+vKEEACfa9KYDavWYmga5YIPImafscUZ
+6ToAoKvc4xitFnoM3ETkUUD2cV1in6+x
+=OTpt
+-----END PGP SIGNATURE-----
+
+--ikeVEW9yuYc//A+q--
