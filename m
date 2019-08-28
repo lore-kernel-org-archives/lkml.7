@@ -2,51 +2,51 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A15CC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7597C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAA5233A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FCBF2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:15:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PySZeX7C"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tVTEMnR6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfH1OPG (ORCPT
+        id S1726974AbfH1OPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:15:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34178 "EHLO
+        Wed, 28 Aug 2019 10:15:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34106 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfH1OPF (ORCPT
+        with ESMTP id S1726603AbfH1OO4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:15:05 -0400
+        Wed, 28 Aug 2019 10:14:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=dcNoVkLcOFSpqEkta3afgycql03d8kNzZhx1x576b6A=; b=PySZeX7Cm0TijaFvshcMXuwXM4
-        uSy06EUr1VCggQ3gtbVTUi3M7BbJEuDt71eW09ylELoOXzKw/uA4ly37SFkn40z6oi7FzmOiDEfwZ
-        ZQQaXd0hkW4BbbKcxiqT1HS/u5XpTxHqNpWGMzQY/YCTszPFh1VIAFMw6azNmraoawT7lpbC1+ipj
-        KsS4DdpkfqHnoIXiWYIh2ZqaCMoSAzSTDynsTd+sh9Boax3avimOLzgOn/NA2UnOUANRIC2Natm0D
-        WdzkKfQ4kQxuHi8WyDB13hlgjNbXzYTPe8ZG+2VdINBrC5tLUtgwwfmZ0K0Rv1n2liLKBDP64Tcot
-        JfxdSzZQ==;
+        bh=UNjIsinlE8oqmYbJQIBJBGpyXDrDsScP7b7RPAv/kKo=; b=tVTEMnR6Tawd9xPItwcMznNdoQ
+        X1NerjCg6JvnvZf7533qsVt7aY1aTCGMgGKKghHrdNqssZoJxTVOL6jHKE1mcz8EKhMJykYxqYvSS
+        CDRc/f+tCAk8MLGnNsiJ/IBvados3y1TFHuKyyplAqexJWvvl5IaSAX5ht7R1Nlxx8oO49k9QLFiA
+        Ff0y8jD1a0zgugBp2GBZldMcmEOAWOllb+D7Uanl6KDNIiKvKZEgCXt9eTlgyXrRDoJxOmt39ZLfk
+        AU2hVLdlna1LnE73c9GncpIHICs4zPi35W7h5ySnphUhOlCJfrz48Qe2nVwXrYirRBkS3pwMacF33
+        uVsssEmw==;
 Received: from [2001:4bb8:180:3f4c:863:2ead:e9d4:da9f] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2yj1-0000WZ-88; Wed, 28 Aug 2019 14:15:03 +0000
+        id 1i2yis-0000Tf-Hu; Wed, 28 Aug 2019 14:14:55 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Keith Busch <kbusch@kernel.org>,
         "Derrick, Jonathan" <jonathan.derrick@intel.com>
 Cc:     x86@kernel.org, joro@8bytes.org, linux-pci@vger.kernel.org,
         bhelgaas@google.com, dwmw2@infradead.org,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] x86/pci: Remove X86_DEV_DMA_OPS
-Date:   Wed, 28 Aug 2019 16:14:43 +0200
-Message-Id: <20190828141443.5253-6-hch@lst.de>
+Subject: [PATCH 2/5] x86/pci: Add a to_pci_sysdata helper
+Date:   Wed, 28 Aug 2019 16:14:40 +0200
+Message-Id: <20190828141443.5253-3-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190828141443.5253-1-hch@lst.de>
 References: <20190828141443.5253-1-hch@lst.de>
@@ -58,106 +58,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are no users of X86_DEV_DMA_OPS left, so remove the code.
+Various helpers need the pci_sysdata just to dereference a single field
+in it.  Add a little helper that returns the properly typed sysdata
+pointer to require a little less boilerplate code.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/x86/Kconfig              |  3 ---
- arch/x86/include/asm/device.h | 10 ---------
- arch/x86/pci/common.c         | 38 -----------------------------------
- 3 files changed, 51 deletions(-)
+ arch/x86/include/asm/pci.h | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 222855cc0158..35597dae38b7 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2905,9 +2905,6 @@ config HAVE_ATOMIC_IOMAP
- 	def_bool y
- 	depends on X86_32
+diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
+index 6fa846920f5f..75fe28492290 100644
+--- a/arch/x86/include/asm/pci.h
++++ b/arch/x86/include/asm/pci.h
+@@ -35,12 +35,15 @@ extern int noioapicreroute;
  
--config X86_DEV_DMA_OPS
--	bool
--
- source "drivers/firmware/Kconfig"
+ #ifdef CONFIG_PCI
  
- source "arch/x86/kvm/Kconfig"
-diff --git a/arch/x86/include/asm/device.h b/arch/x86/include/asm/device.h
-index a8f6c809d9b1..3e6c75a6d070 100644
---- a/arch/x86/include/asm/device.h
-+++ b/arch/x86/include/asm/device.h
-@@ -11,16 +11,6 @@ struct dev_archdata {
- #endif
- };
- 
--#if defined(CONFIG_X86_DEV_DMA_OPS) && defined(CONFIG_PCI_DOMAINS)
--struct dma_domain {
--	struct list_head node;
--	const struct dma_map_ops *dma_ops;
--	int domain_nr;
--};
--void add_dma_domain(struct dma_domain *domain);
--void del_dma_domain(struct dma_domain *domain);
--#endif
--
- struct pdev_archdata {
- };
- 
-diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-index 9acab6ac28f5..d2ac803b6c00 100644
---- a/arch/x86/pci/common.c
-+++ b/arch/x86/pci/common.c
-@@ -625,43 +625,6 @@ unsigned int pcibios_assign_all_busses(void)
- 	return (pci_probe & PCI_ASSIGN_ALL_BUSSES) ? 1 : 0;
- }
- 
--#if defined(CONFIG_X86_DEV_DMA_OPS) && defined(CONFIG_PCI_DOMAINS)
--static LIST_HEAD(dma_domain_list);
--static DEFINE_SPINLOCK(dma_domain_list_lock);
--
--void add_dma_domain(struct dma_domain *domain)
--{
--	spin_lock(&dma_domain_list_lock);
--	list_add(&domain->node, &dma_domain_list);
--	spin_unlock(&dma_domain_list_lock);
--}
--EXPORT_SYMBOL_GPL(add_dma_domain);
--
--void del_dma_domain(struct dma_domain *domain)
--{
--	spin_lock(&dma_domain_list_lock);
--	list_del(&domain->node);
--	spin_unlock(&dma_domain_list_lock);
--}
--EXPORT_SYMBOL_GPL(del_dma_domain);
--
--static void set_dma_domain_ops(struct pci_dev *pdev)
--{
--	struct dma_domain *domain;
--
--	spin_lock(&dma_domain_list_lock);
--	list_for_each_entry(domain, &dma_domain_list, node) {
--		if (pci_domain_nr(pdev->bus) == domain->domain_nr) {
--			pdev->dev.dma_ops = domain->dma_ops;
--			break;
--		}
--	}
--	spin_unlock(&dma_domain_list_lock);
--}
--#else
--static void set_dma_domain_ops(struct pci_dev *pdev) {}
--#endif
--
- static void set_dev_domain_options(struct pci_dev *pdev)
++static inline struct pci_sysdata *to_pci_sysdata(struct pci_bus *bus)
++{
++	return bus->sysdata;
++}
++
+ #ifdef CONFIG_PCI_DOMAINS
+ static inline int pci_domain_nr(struct pci_bus *bus)
  {
- 	if (is_vmd(pdev->bus))
-@@ -697,7 +660,6 @@ int pcibios_add_device(struct pci_dev *dev)
- 		pa_data = data->next;
- 		memunmap(data);
- 	}
--	set_dma_domain_ops(dev);
- 	set_dev_domain_options(dev);
- 	return 0;
+-	struct pci_sysdata *sd = bus->sysdata;
+-
+-	return sd->domain;
++	return to_pci_sysdata(bus)->domain;
  }
+ 
+ static inline int pci_proc_domain(struct pci_bus *bus)
+@@ -52,23 +55,20 @@ static inline int pci_proc_domain(struct pci_bus *bus)
+ #ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
+ static inline void *_pci_root_bus_fwnode(struct pci_bus *bus)
+ {
+-	struct pci_sysdata *sd = bus->sysdata;
+-
+-	return sd->fwnode;
++	return to_pci_sysdata(bus)->fwnode;
+ }
+ 
+ #define pci_root_bus_fwnode	_pci_root_bus_fwnode
+ #endif
+ 
++#if IS_ENABLED(CONFIG_VMD)
+ static inline bool is_vmd(struct pci_bus *bus)
+ {
+-#if IS_ENABLED(CONFIG_VMD)
+-	struct pci_sysdata *sd = bus->sysdata;
+-
+-	return sd->vmd_domain;
++	return to_pci_sysdata(bus)->vmd_domain;
++}
+ #else
+-	return false;
+-#endif
++#define is_vmd(bus)		false
++#endif /* CONFIG_VMD */
+ }
+ 
+ /* Can be used to override the logic in pci_scan_bus for skipping
+@@ -128,9 +128,7 @@ void native_restore_msi_irqs(struct pci_dev *dev);
+ /* Returns the node based on pci bus */
+ static inline int __pcibus_to_node(const struct pci_bus *bus)
+ {
+-	const struct pci_sysdata *sd = bus->sysdata;
+-
+-	return sd->node;
++	return to_pci_sysdata(bus)->node;
+ }
+ 
+ static inline const struct cpumask *
 -- 
 2.20.1
 
