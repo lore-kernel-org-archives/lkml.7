@@ -2,110 +2,174 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28491C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4DEC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00AB1206BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:58:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IBueXC/o"
+	by mail.kernel.org (Postfix) with ESMTP id 38D12206BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfH1R6N (ORCPT
+        id S1726883AbfH1R6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:58:13 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40839 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfH1R6N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:58:13 -0400
-Received: by mail-oi1-f195.google.com with SMTP id h21so394513oie.7
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:58:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tK5THlH7NqfDItCUjzopiqfECSLNe3u1Nqtw0AYmMVQ=;
-        b=IBueXC/olKJzB5vkgN7R06mcGGzgzCsySyIoqFzMQQeswkJAHKqFm+qVQ5Q/mM2Viu
-         zMz1KIwbGEYS6VOP2ibBFyCNrAXohuSwim7uGYeBOM127IrM3XRf1yt9rJ+GHWQq+xby
-         Qc9uu+kA2eAXXs7BwohGVmINAWOvSq+nfdDJ7Y8/cZH7Zjv7WKps8+dAr7a87Jg8U7go
-         y6wsL5nd8ng2CHv6pSTiVZcRNiB8QywcWIY3rsDRn9ebc9S69ai7ItW57QzlHO290kDA
-         /eZVRciXkxX0EBDYL1nGG9xnDi802eQ8QjILYMSICbvd2i1N6UMg++8x6WAxh9mniN+W
-         DZgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tK5THlH7NqfDItCUjzopiqfECSLNe3u1Nqtw0AYmMVQ=;
-        b=NG9CieCkZED+x/Kuxq7qyexX272ZsLPM0itLkxzdevOd2pk3+8D/UTAROm1AkGJBGz
-         0WMGsCPvFGuuPA6YHH2870k7ZwgkVQCG2BZBR2clX6lnZGjQWBcQiARfTa5mb0q4ckXS
-         Y7NZ5Mzp4jO3Zv1vYjLQHJbli3uxEf2KLFWqrTmnAGJrPzIMDuoojnDVOtWAGHm3Yf29
-         gV8T23gEIAZL/aSQ4rbCjRcCej9JI+7pIlKwO9E2wR4OqNyyd329JqNBU/zcIy1aFPez
-         equDd4zcj/HdszfWt3twwU6kmHtyUCRCW7ojnOT0ZuW4nosXgvvHUhNwHdCKm45l4ddq
-         8X1g==
-X-Gm-Message-State: APjAAAUJ9DTh/ax/ArAgng8DZbVOiDwc368kLicKWvgeVZJR8/pQRCBY
-        +LQe6oocbzKyyr8uM2ar7aOarloQ4QkTbLAnCian6g==
-X-Google-Smtp-Source: APXvYqz0MlmHPcbvq/+RV6BUWyxran0z3juZutp6BvdDm8/FPvPCOgrtXXF42MKgXKq3VxKiHhatdFzdm45AKBpnZPA=
-X-Received: by 2002:a05:6808:b3a:: with SMTP id t26mr3719696oij.67.1567015091735;
- Wed, 28 Aug 2019 10:58:11 -0700 (PDT)
+        Wed, 28 Aug 2019 13:58:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36014 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726515AbfH1R6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 13:58:49 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 280B9107DD00;
+        Wed, 28 Aug 2019 17:58:49 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.158])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6668E5D9E2;
+        Wed, 28 Aug 2019 17:58:44 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id EB41B2206F5; Wed, 28 Aug 2019 13:58:43 -0400 (EDT)
+Date:   Wed, 28 Aug 2019 13:58:43 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     miklos@szeredi.hu, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org, dgilbert@redhat.com,
+        virtio-fs@redhat.com, stefanha@redhat.com,
+        linux-fsdevel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH 01/19] dax: remove block device dependencies
+Message-ID: <20190828175843.GB912@redhat.com>
+References: <20190821175720.25901-1-vgoyal@redhat.com>
+ <20190821175720.25901-2-vgoyal@redhat.com>
+ <20190826115152.GA21051@infradead.org>
+ <20190827163828.GA6859@redhat.com>
+ <20190828065809.GA27426@infradead.org>
 MIME-Version: 1.0
-References: <20190826233240.11524-1-almasrymina@google.com> <20190828112340.GB7466@dhcp22.suse.cz>
-In-Reply-To: <20190828112340.GB7466@dhcp22.suse.cz>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Wed, 28 Aug 2019 10:58:00 -0700
-Message-ID: <CAHS8izPPhPoqh-J9LJ40NJUCbgTFS60oZNuDSHmgtMQiYw72RA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] hugetlb_cgroup: Add hugetlb_cgroup reservation limits
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>, shuah <shuah@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org,
-        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
-        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828065809.GA27426@infradead.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Wed, 28 Aug 2019 17:58:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 4:23 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Mon 26-08-19 16:32:34, Mina Almasry wrote:
-> >  mm/hugetlb.c                                  | 493 ++++++++++++------
-> >  mm/hugetlb_cgroup.c                           | 187 +++++--
->
-> This is a lot of changes to an already subtle code which hugetlb
-> reservations undoubly are.
+On Tue, Aug 27, 2019 at 11:58:09PM -0700, Christoph Hellwig wrote:
+> On Tue, Aug 27, 2019 at 12:38:28PM -0400, Vivek Goyal wrote:
+> > > For bdev_dax_pgoff
+> > > I'd much rather have the partition offset if there is on in the daxdev
+> > > somehow so that we can get rid of the block device entirely.
+> > 
+> > IIUC, there is one block_device per partition while there is only one
+> > dax_device for the whole disk. So we can't directly move bdev logical
+> > offset into dax_device.
+> 
+> Well, then we need to find a way to get partitions for dax devices,
+> as we really should not expect a block device hiding behind a dax
+> dev.  That is just a weird legacy assumption - block device need to
+> layer on top of the dax device optionally.
+> 
+> > 
+> > We probably could put this in "iomap" and leave it to filesystems to
+> > report offset into dax_dev in iomap that way dax generic code does not
+> > have to deal with it. But that probably will be a bigger change.
+> 
+> And where would the file system get that information from?
 
-For what it's worth, I think this patch series is a net decrease in
-the complexity of the reservation code, especially the region_*
-functions, which is where a lot of the complexity lies. I removed the
-race between region_del and region_{add|chg}, refactored the main
-logic into smaller code, moved common code to helpers and deleted the
-duplicates, and finally added lots of comments to the hard to
-understand pieces. I hope that when folks review the changes they will
-see that! :)
+File system knows about block device, can it just call get_start_sect()
+while filling iomap->addr. And this means we don't have to have
+parition information in dax device. Will something like following work?
+(Just a proof of concept patch).
 
-> Moreover cgroupv1 is feature frozen and I am
-> not aware of any plans to port the controller to v2.
 
-Also for what it's worth, if porting the controller to v2 is a
-requisite to take this, I'm happy to do that. As far as I understand
-there is no reason hugetlb_cgroups shouldn't be in cgroups v2, and we
-see value in them.
+---
+ drivers/dax/super.c |   11 +++++++++++
+ fs/dax.c            |    6 +++---
+ fs/ext4/inode.c     |    6 +++++-
+ include/linux/dax.h |    1 +
+ 4 files changed, 20 insertions(+), 4 deletions(-)
 
-> That all doesn't
-> sound in favor of this change. Mike is the maintainer of the hugetlb
-> code so I will defer to him to make a decision but I wouldn't recommend
-> that.
-> --
-> Michal Hocko
-> SUSE Labs
+Index: rhvgoyal-linux/fs/ext4/inode.c
+===================================================================
+--- rhvgoyal-linux.orig/fs/ext4/inode.c	2019-08-28 13:51:16.051937204 -0400
++++ rhvgoyal-linux/fs/ext4/inode.c	2019-08-28 13:51:44.453937204 -0400
+@@ -3589,7 +3589,11 @@ retry:
+ 			WARN_ON_ONCE(1);
+ 			return -EIO;
+ 		}
+-		iomap->addr = (u64)map.m_pblk << blkbits;
++		if (IS_DAX(inode))
++			iomap->addr = ((u64)map.m_pblk << blkbits) +
++				      (get_start_sect(iomap->bdev) * 512);
++		else
++			iomap->addr = (u64)map.m_pblk << blkbits;
+ 	}
+ 
+ 	if (map.m_flags & EXT4_MAP_NEW)
+Index: rhvgoyal-linux/fs/dax.c
+===================================================================
+--- rhvgoyal-linux.orig/fs/dax.c	2019-08-28 13:51:16.051937204 -0400
++++ rhvgoyal-linux/fs/dax.c	2019-08-28 13:51:44.457937204 -0400
+@@ -688,7 +688,7 @@ static int copy_user_dax(struct block_de
+ 	long rc;
+ 	int id;
+ 
+-	rc = bdev_dax_pgoff(bdev, sector, size, &pgoff);
++	rc = dax_pgoff(sector, size, &pgoff);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -995,7 +995,7 @@ static int dax_iomap_pfn(struct iomap *i
+ 	int id, rc;
+ 	long length;
+ 
+-	rc = bdev_dax_pgoff(iomap->bdev, sector, size, &pgoff);
++	rc = dax_pgoff(sector, size, &pgoff);
+ 	if (rc)
+ 		return rc;
+ 	id = dax_read_lock();
+@@ -1137,7 +1137,7 @@ dax_iomap_actor(struct inode *inode, lof
+ 			break;
+ 		}
+ 
+-		ret = bdev_dax_pgoff(bdev, sector, size, &pgoff);
++		ret = dax_pgoff(sector, size, &pgoff);
+ 		if (ret)
+ 			break;
+ 
+Index: rhvgoyal-linux/drivers/dax/super.c
+===================================================================
+--- rhvgoyal-linux.orig/drivers/dax/super.c	2019-08-28 13:51:51.802937204 -0400
++++ rhvgoyal-linux/drivers/dax/super.c	2019-08-28 13:51:56.905937204 -0400
+@@ -43,6 +43,17 @@ EXPORT_SYMBOL_GPL(dax_read_unlock);
+ #ifdef CONFIG_BLOCK
+ #include <linux/blkdev.h>
+ 
++int dax_pgoff(sector_t sector, size_t size, pgoff_t *pgoff)
++{
++	phys_addr_t phys_off = sector * 512;
++
++	if (pgoff)
++		*pgoff = PHYS_PFN(phys_off);
++	if (phys_off % PAGE_SIZE || size % PAGE_SIZE)
++		return -EINVAL;
++	return 0;
++}
++
+ int bdev_dax_pgoff(struct block_device *bdev, sector_t sector, size_t size,
+ 		pgoff_t *pgoff)
+ {
+Index: rhvgoyal-linux/include/linux/dax.h
+===================================================================
+--- rhvgoyal-linux.orig/include/linux/dax.h	2019-08-28 13:51:51.802937204 -0400
++++ rhvgoyal-linux/include/linux/dax.h	2019-08-28 13:51:56.908937204 -0400
+@@ -111,6 +111,7 @@ static inline bool daxdev_mapping_suppor
+ 
+ struct writeback_control;
+ int bdev_dax_pgoff(struct block_device *, sector_t, size_t, pgoff_t *pgoff);
++int dax_pgoff(sector_t, size_t, pgoff_t *pgoff);
+ #if IS_ENABLED(CONFIG_FS_DAX)
+ bool __bdev_dax_supported(struct block_device *bdev, int blocksize);
+ static inline bool bdev_dax_supported(struct block_device *bdev, int blocksize)
