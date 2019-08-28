@@ -2,119 +2,270 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E34C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF213C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C1B2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E182077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:33:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="eMmYwxIX"
+	dkim=pass (2048-bit key) header.d=hev-cc.20150623.gappssmtp.com header.i=@hev-cc.20150623.gappssmtp.com header.b="BHcU93Ec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfH1Pbx (ORCPT
+        id S1726719AbfH1Pdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:31:53 -0400
-Received: from forward104p.mail.yandex.net ([77.88.28.107]:51019 "EHLO
-        forward104p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726429AbfH1Pbx (ORCPT
+        Wed, 28 Aug 2019 11:33:36 -0400
+Received: from mail-lf1-f51.google.com ([209.85.167.51]:42963 "EHLO
+        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbfH1Pdg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:31:53 -0400
-Received: from mxback7o.mail.yandex.net (mxback7o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::21])
-        by forward104p.mail.yandex.net (Yandex) with ESMTP id D013B4B0094F;
-        Wed, 28 Aug 2019 18:31:48 +0300 (MSK)
-Received: from smtp1j.mail.yandex.net (smtp1j.mail.yandex.net [2a02:6b8:0:801::ab])
-        by mxback7o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id ffjlMBsko1-VlremqIv;
-        Wed, 28 Aug 2019 18:31:48 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1567006308;
-        bh=7RA0sHF5D03f4tAZfj9rCdvuBWfcitbh3YPyvz8e+CI=;
-        h=In-Reply-To:Cc:To:Subject:From:Date:References:Message-ID;
-        b=eMmYwxIXwqY9HlvIBMIYRd49H7lhEAeOX2i3qqRcSXP5K2V0nBHs06yPe3mK8trzt
-         6/omZIndgJtP4AEB16Cim2Iz9aMzI9F9Y/xjR81E+DDJobtA7eFWJkDUYiNerlOfIp
-         uJQYGqzcDbpuCwZl+6eQRSqfPUcTOJ2vsI58TIkM=
-Authentication-Results: mxback7o.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id gq3U0rBuMO-VcbGsZJ1;
-        Wed, 28 Aug 2019 18:31:45 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH 04/13] irqchip: Add driver for Loongson-3 I/O interrupt
- controller
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-mips@vger.kernel.org, chenhc@lemote.com,
-        paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.co, devicetree@vger.kernel.org
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
- <20190827085302.5197-5-jiaxun.yang@flygoat.com>
- <e6a5862f-0f6c-cab0-9f4a-51b7889d38e7@kernel.org>
- <82c4b9ed-7270-74ce-6e10-165182e540dd@flygoat.com>
- <20190828075940.549e1983@why>
-Message-ID: <619b1d35-7bc2-999f-5a51-fb2efdc63f60@flygoat.com>
-Date:   Wed, 28 Aug 2019 23:31:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 11:33:36 -0400
+Received: by mail-lf1-f51.google.com with SMTP id u13so2527067lfm.9
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 08:33:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hev-cc.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fd+KTN0L+cF/fqV/5SbUQseAraIc6oxedxZ1b1p2O4A=;
+        b=BHcU93EcORnUyq8KZXVzcEQTJgm+tywX5ONdvRnEN86yU+yKHERKKK8b/88wmxMMiJ
+         4SBjXtGk9o1CRAVCNv0Tm4E6jB6Cz2tfieqeViqRxEQidQlaqIDPImOeLdqAFxCVkdyr
+         8ZAvprhbJrYArKirn3GakMwe6nGsb3HRTvyzQKknFYo1kHoutSWH4REsq+0sxdA66c90
+         6YUuqVbsXTl+V2SiiKA/drwrbyTtqLQsUYw4aVyWTd5dxYwj6E7WfPFILhANpBH8u1qs
+         ozF6cR0zfp4w20rKpzveNJ5sgTdDXSQ7SccWsQf71w1JSQ7e9XoV/Fvlfjlc+9NW/KZy
+         kf0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fd+KTN0L+cF/fqV/5SbUQseAraIc6oxedxZ1b1p2O4A=;
+        b=cxXI5oEszB6t2uKkN8IpVDjp7XcItZVOhgtTPW0J9Zz0ox+Mn4XACWoIiS+lhuFZqb
+         4DOtmZGvACBHlhDt+pLc2aDQVSenk4A1RAwgAPk0WDQdYN7Nph9iuN42ccE6t2/h0e5Y
+         6ZE/nB2awL/EOqKNLBIuwYzHPM+EAza3ovs7t1BkQUgMB+IcHgRctyZcbAjuc6PCPoWo
+         f5QDNP2QV/XXIClRGva+N63/p8Hw5JvtL00LFCDyrxSfkiZWVchnia1bLPcDsym2aOxO
+         PhaBqAxAbDHdZznaJb6FV3at741D7SUg1LP45mS4Lf8KtYrhgvx1XOYt7mtQqB+OiN+O
+         +N9w==
+X-Gm-Message-State: APjAAAUWSSVRzouhnyEt97oPNuSuuc58pOSmZMzM7iV8vBXMb1TTYSeU
+        nq0rzoaBvXARxT69TIaTLm4yPaYiJACSm/4lCU0b56MjQ7vXfQ==
+X-Google-Smtp-Source: APXvYqwJtR3sXBgBHjegpofPXjgg4bIwvBfh61XDj6K+96wGTa/hhMZhc2OJjv7L/IdBRg8zUTBfvwfiDVb0PJSUas0=
+X-Received: by 2002:ac2:43ad:: with SMTP id t13mr3230264lfl.66.1567006413387;
+ Wed, 28 Aug 2019 08:33:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190828075940.549e1983@why>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CAHirt9jesMHB_sXx7PyXTxrzLR=3xw9bHERueNMVkWOUkg6XXQ@mail.gmail.com>
+ <20190826062229.pjvumg4ag3qwhji6@whir>
+In-Reply-To: <20190826062229.pjvumg4ag3qwhji6@whir>
+From:   Heiher <r@hev.cc>
+Date:   Wed, 28 Aug 2019 23:33:21 +0800
+Message-ID: <CAHirt9jqJadEswetd06xdYQhc20vLr7QVz2zqORyoQUBBi3m-Q@mail.gmail.com>
+Subject: Re: Why the edge-triggered mode doesn't work for epoll file descriptor?
+To:     Eric Wong <e@80x24.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On 2019/8/28 下午2:59, Marc Zyngier wrote:
-> On Wed, 28 Aug 2019 08:27:05 +0800
-> Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+Thank you reply.
+
+On Mon, Aug 26, 2019 at 2:22 PM Eric Wong <e@80x24.org> wrote:
 >
->> On 2019/8/28 上午12:45, Marc Zyngier wrote:
->>> On 27/08/2019 09:52, Jiaxun Yang wrote:
->>>> +	chained_irq_enter(chip, desc);
->>>> +
->>>> +	pending = readl(priv->intc_base + LS3_REG_INTC_EN_STATUS) &
->>>> +		readl(priv->intc_base + LS3_REG_INTC_STATUS);
->>> Reading the enabled status from the HW on each interrupt? I'm sure
->>> that's pretty cheap...
->> Seems expensive but to deal with a buggy hardware... That's worthy.
-> How broken is it? You very much seem to rely on the HW being correct
-> here, since you trust it exclusively. I'd expect the enable mask to be
-> a SW construct if you didn't blindly trust it
-Hi Marc
-
-Thanks for your answering.
-
-The vendor code did this and said there is a HW issue. I just don't have 
-the guts to remove this check.
-Seems like sometimes masked interrupt may get ISR set wrongly.
-> And if this is truly the right way to do it, please document the
-> various problems with the controller so that we don't break it at a
-> later time.
-Thanks, will do.
+> Heiher <r@hev.cc> wrote:
+> > Hello,
+> >
+> > I've added a pipe file descriptor (fd1) to an epoll (fd3) with
+> > EPOLLOUT in edge-triggered mode, and then added the fd3 to another
+> > epoll (fd4) with EPOLLIN in edge-triggered too.
+> >
+> > Next, waiting for fd4 without timeout. When fd1 to be writable, i
+> > think epoll_wait(fd4, ...)  only return once, because all file
+> > descriptors are added in edge-triggered mode.
+> >
+> > But, the actual result is returns many and many times until do once
+> > eopll_wait(fd3, ...).
 >
-> Then how comes this comes from the irqchip's DT node? This should be
-> part of the endpoint's interrupt specifier.
-
-In theory it should be, However if we set different interrupt 
-lines/cores on that controller, interrupts may get lost. It means we can 
-only have single parent core/interrupt.
-
-So I'd prefer just set them uniformly by controller's dt-binding to 
-prevent confusing.
-
->> It's parent IRQ (mti,cpu-interrupt-controller) is a percpu IRQ.
-> But then why is that interrupt described using the "core" property? It
-> should be an interrupt specifier, just like any other interrupt.
-The same.
+> It looks like you can trigger a wakeup loop with printf writing
+> to the terminal (not a pipe), and that write to the terminal
+> triggering the EPOLLOUT wakeup over and over again.
 >
->> In design, it allows us to decide affinity at runtime but actually hardware is seriously broken.
-> I understand the HW is terrible. But the binding looks pretty bad too.
-> This needs fixing.
+> I don't know TTY stuff at all, but I assume it's intended
+> for terminals.
 >
-> 	M.
---
-Jiaxun Yang
+> You refer to "pipe file descriptor (fd1)", but I can't reproduce
+> the error when running your code piped to "tee" and using
+> strace to check epoll_wait returns.
+>
+> "strace ./foo | tee /dev/null" only shows one epoll_wait returning.
+>
+> >     e.events = EPOLLIN | EPOLLET;
+> >     e.data.u64 = 1;
+> >     if (epoll_ctl (efd[0], EPOLL_CTL_ADD, efd[1], &e) < 0)
+> >         return -3;
+> >
+> >     e.events = EPOLLOUT | EPOLLET;
+> >     e.data.u64 = 2;
+> >     if (epoll_ctl (efd[1], EPOLL_CTL_ADD, 1, &e) < 0)
+> >         return -4;
+>
+> Since epfd[1] is waiting for stdout...
+>
+> >     for (;;) {
+> >         struct epoll_event events[16];
+> >         int nfds;
+> >
+> >         nfds = epoll_wait (efd[0], events, 16, -1);
+> >         printf ("nfds: %d\n", nfds);
+>
+> Try outputting your message to stderr instead of stdout:
+>
+>         fprintf(stderr, "nfds: %d\n", nfds);
+>
+> And then run your program so stdout and stderr point to
+> different files:
+>
+>         ./foo | tee /dev/null
+>
+> (so stdout becomes a pipe, and stderr remains your terminal)
+
+OK, Let's use a set of test cases without external interference to
+indicate the problem.
+
+epoll1.c:
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/epoll.h>
+#include <sys/socket.h>
+
+int
+main (int argc, char *argv[])
+{
+    int sfd[2];
+    int efd[2];
+    struct epoll_event e;
+
+    if (socketpair (AF_UNIX, SOCK_STREAM, 0, sfd) < 0)
+        return -1;
+
+    efd[0] = epoll_create (1);
+    if (efd[0] < 0)
+        return -2;
+
+    efd[1] = epoll_create (1);
+    if (efd[1] < 0)
+        return -3;
+
+    e.events = EPOLLIN | EPOLLET;
+    e.data.u64 = 1;
+    if (epoll_ctl (efd[0], EPOLL_CTL_ADD, efd[1], &e) < 0)
+        return -3;
+
+    e.events = EPOLLIN;
+    e.data.u64 = 2;
+    if (epoll_ctl (efd[1], EPOLL_CTL_ADD, sfd[0], &e) < 0)
+        return -4;
+
+    /**
+     * Current structure:
+     *     efd[0]:
+     *     {
+     *         efd[1] (EPOLLIN | EPOLLET):
+     *         {
+     *             sfd[0] (EPOLLIN)
+     *         }
+     *     }
+     */
+
+    /* Make the sfd[0] is readable */
+    if (write (sfd[1], "a", 1) != 1)
+        return -5;
+
+    for (;;) {
+        struct epoll_event events[16];
+        int nfds;
+
+        /**
+         * IIRC, the epoll_wait(efd[0]) returns while efd[1] events
+changed only,
+         *
+         * so, the first call should be returned, because sfd[0] from
+not readable
+         * to readable.
+         *
+         * and then the calls should be blocked, because not any fd's event
+         * changed in efd[1] pool, and efd[1] is working in edge-triggerd mode,
+         * so, efd[1]'s event not changed.
+         */
+        nfds = epoll_wait (efd[0], events, 16, -1);
+        printf ("nfds: %d\n", nfds);
+    }
+
+    close (efd[1]);
+    close (efd[0]);
+    close (sfd[0]);
+    close (sfd[1]);
+
+    return 0;
+}
+
+epoll2.c:
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/epoll.h>
+#include <sys/socket.h>
+
+int
+main (int argc, char *argv[])
+{
+    int sfd[2];
+    int efd;
+    struct epoll_event e;
+
+    if (socketpair (AF_UNIX, SOCK_STREAM, 0, sfd) < 0)
+        return -1;
+
+    efd = epoll_create (1);
+    if (efd < 0)
+        return -2;
+
+    e.events = EPOLLIN | EPOLLET;
+    e.data.u64 = 1;
+    if (epoll_ctl (efd, EPOLL_CTL_ADD, sfd[0], &e) < 0)
+        return -3;
+
+    /**
+     * Current structure:
+     *     efd:
+     *     {
+     *         sfd[0] (EPOLLIN | EPOLLET)
+     *     }
+     */
+
+    /* Make the sfd[0] is readable */
+    if (write (sfd[1], "a", 1) != 1)
+        return -5;
+
+    for (;;) {
+        struct epoll_event events[16];
+        int nfds;
+
+        nfds = epoll_wait (efd, events, 16, -1);
+        printf ("nfds: %d\n", nfds);
+    }
+
+    close (efd);
+    close (sfd[0]);
+    close (sfd[1]);
+
+    return 0;
+}
+
+I don't know why the epoll1 prints many and many times, i think the
+epoll2 is correctly behavior.
+
+-- 
+Best regards!
+Hev
+https://hev.cc
