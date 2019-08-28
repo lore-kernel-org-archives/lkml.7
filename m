@@ -2,108 +2,113 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6461EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCF4C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30FFB20828
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:42:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="McnM47Sw"
+	by mail.kernel.org (Postfix) with ESMTP id 1F973233FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:43:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566999819;
+	bh=PfdDBsRCBBChXNzCDotQ1Pc7yIyNBpQQ3ATlOtaDOC0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IYS1/Po+VLuMhWUOMdsAfqSqWG441ZCBUBtR+eTjm65Ft+0bYNP/OEmlSijjH5iRK
+	 G/K6pSrevb9/ypWTwgnOBvYD//3tTOxblDlDiS9+t9dVH9T7xTreb9tlFIgO8/Sk+r
+	 HIuBPKP/EYriqyqKFocJOjI/gmFbQGD4IFENL8do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfH1NmE (ORCPT
+        id S1726560AbfH1Nni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:42:04 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:22938 "EHLO pegase1.c-s.fr"
+        Wed, 28 Aug 2019 09:43:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfH1NmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:42:03 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46JRk12DWFz9txgl;
-        Wed, 28 Aug 2019 15:42:01 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=McnM47Sw; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id EbMeLWH2Bh5V; Wed, 28 Aug 2019 15:42:01 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46JRk10cSKz9txgf;
-        Wed, 28 Aug 2019 15:42:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566999721; bh=WlF/NSltuPx4PM3qTDCqQGZT8tc/4RbHenX+NeVwbvY=;
-        h=From:Subject:To:Cc:Date:From;
-        b=McnM47SwSpPMO6QuYvKKyyQZ648H4n+/LV51JTu8o3Xibt98fpDBFMT5U6czyfLJh
-         k6E89dZM4kQUGZKK6cfnEXvNHz8PP9ehnwwMAnbA1LFoHYp1fgP3O0k7SAdQ7ScGdD
-         x8vQDatxay1Us4HZnxp6IUnDo1ZQR+eNalwEyMcE=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 86B838B89B;
-        Wed, 28 Aug 2019 15:42:02 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id guMCPJ6UOkHP; Wed, 28 Aug 2019 15:42:02 +0200 (CEST)
-Received: from pc16032vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.105])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6AF798B885;
-        Wed, 28 Aug 2019 15:42:02 +0200 (CEST)
-Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 13C5B69728; Wed, 28 Aug 2019 13:42:01 +0000 (UTC)
-Message-Id: <ac19713826fa55e9e7bfe3100c5a7b1712ab9526.1566999711.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/reg: use ASM_FTR_IFSET() instead of opencoding fixup.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 28 Aug 2019 13:42:01 +0000 (UTC)
+        id S1726341AbfH1Nnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:43:37 -0400
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C5B022CF5;
+        Wed, 28 Aug 2019 13:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566999816;
+        bh=PfdDBsRCBBChXNzCDotQ1Pc7yIyNBpQQ3ATlOtaDOC0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vrdJ3HfPobb2OsDW8pbRC6kIQu+M8yr50ucNLFVYTeNTKvLnO6nyKvDDpbmHFOJae
+         BH6dkijIWCasP0rO2X7LUyBR1E1ZIsj6yaAd2rKfKTLspoDx1SyGcEY5p9+FHRy4q1
+         m8OXKEa1iDTbzsnltW5dZ5sSPKxK/nsX6gP28+Ik=
+Date:   Wed, 28 Aug 2019 15:43:34 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Alejandro =?utf-8?B?R29uesOhbGV6?= 
+        <alejandro.gonzalez.correo@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [linux-sunxi] Re: [PATCH] mmc: sunxi: fix unusuable eMMC on some
+ H6 boards by disabling DDR
+Message-ID: <20190828134334.qzuwodoxmw7ov5yg@flea>
+References: <20190825150558.15173-1-alejandro.gonzalez.correo@gmail.com>
+ <CACRpkdazfe3gJr6Q+X05GzxPuKtUg0M780SPA_oR5bd+-xBPvA@mail.gmail.com>
+ <CAGb2v67e8EiS-LUuhAyPc57nWd4iOBEWC_SZbH801Lzi4QWGyg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="v6flhv747vrdixqb"
+Content-Disposition: inline
+In-Reply-To: <CAGb2v67e8EiS-LUuhAyPc57nWd4iOBEWC_SZbH801Lzi4QWGyg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mftb() includes a feature fixup for CELL ppc.
 
-Use ASM_FTR_IFSET() macro instead of opencoding the setup
-of the fixup sections.
+--v6flhv747vrdixqb
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/include/asm/reg.h | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+On Wed, Aug 28, 2019 at 09:29:32PM +0800, Chen-Yu Tsai wrote:
+> On Wed, Aug 28, 2019 at 8:52 PM Linus Walleij <linus.walleij@linaro.org> =
+wrote:
+> >
+> > On Sun, Aug 25, 2019 at 5:06 PM Alejandro Gonz=E1lez
+> > <alejandro.gonzalez.correo@gmail.com> wrote:
+> >
+> > > Jernej Skrabec compared the BSP driver with this
+> > > driver, and found that the BSP driver configures pinctrl to operate at
+> > > 1.8 V when entering DDR mode (although 3.3 V operation is supported),=
+ while
+> > > the mainline kernel lacks any mechanism to switch voltages dynamicall=
+y.
+>
+> AFAIK The Pine H64 does not have the ability to switch I/O voltages. It is
+> fixed to either 1.8V (the default based on the schematics) or 3.3V.
 
-diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
-index 10caa145f98b..7acce24ace49 100644
---- a/arch/powerpc/include/asm/reg.h
-+++ b/arch/powerpc/include/asm/reg.h
-@@ -1378,19 +1378,9 @@ static inline void msr_check_and_clear(unsigned long bits)
- #define mftb()		({unsigned long rval;				\
- 			asm volatile(					\
- 				"90:	mfspr %0, %2;\n"		\
--				"97:	cmpwi %0,0;\n"			\
--				"	beq- 90b;\n"			\
--				"99:\n"					\
--				".section __ftr_fixup,\"a\"\n"		\
--				".align 3\n"				\
--				"98:\n"					\
--				"	.8byte %1\n"			\
--				"	.8byte %1\n"			\
--				"	.8byte 97b-98b\n"		\
--				"	.8byte 99b-98b\n"		\
--				"	.8byte 0\n"			\
--				"	.8byte 0\n"			\
--				".previous"				\
-+				ASM_FTR_IFSET(				\
-+					"97:	cmpwi %0,0;\n"		\
-+					"	beq- 90b;\n", "", %1)	\
- 			: "=r" (rval) \
- 			: "i" (CPU_FTR_CELL_TB_BUG), "i" (SPRN_TBRL) : "cr0"); \
- 			rval;})
--- 
-2.13.3
+Should that be handled at the board level then maybe?
 
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--v6flhv747vrdixqb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXWaFBgAKCRDj7w1vZxhR
+xUbcAQDTgCwVjSWuZKxoSkt/fp1VLfWi1UjCpSZ0cCr11a5BwAD8DLgodYfexZWL
+iW8NfsUfcOV7SktdFUgfMP1x74uruwE=
+=sxYW
+-----END PGP SIGNATURE-----
+
+--v6flhv747vrdixqb--
