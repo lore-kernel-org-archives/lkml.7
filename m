@@ -2,128 +2,95 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D67C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68912C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 554F020828
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40415233A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfH1Nn5 (ORCPT
+        id S1726839AbfH1NoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:43:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15662 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726599AbfH1Nn4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:43:56 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SDe3cu131836
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 09:43:55 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2unr92e8f1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 09:43:53 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 28 Aug 2019 14:43:51 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 28 Aug 2019 14:43:46 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7SDhjxr37879864
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Aug 2019 13:43:45 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D0A311C052;
-        Wed, 28 Aug 2019 13:43:45 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8A6C111C05C;
-        Wed, 28 Aug 2019 13:43:42 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.129.156])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 28 Aug 2019 13:43:42 +0000 (GMT)
-Subject: Re: [PATCH v12 00/11] Appended signatures support for IMA appraisal
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Jordan Hand <jorhand@linux.microsoft.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
-Date:   Wed, 28 Aug 2019 09:43:41 -0400
-In-Reply-To: <9682b5d0-1634-2dd0-2cbb-eb1fa8ba7423@linux.microsoft.com>
-References: <20190628021934.4260-1-bauerman@linux.ibm.com>
-         <9682b5d0-1634-2dd0-2cbb-eb1fa8ba7423@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19082813-4275-0000-0000-0000035E558B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082813-4276-0000-0000-0000387089DF
-Message-Id: <1566999821.6115.14.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=895 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908280144
+        Wed, 28 Aug 2019 09:44:11 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42121 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726614AbfH1NoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:44:11 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46JRmQ3ct3z9sNm;
+        Wed, 28 Aug 2019 23:44:04 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] powerpc: Avoid clang warnings around setjmp and longjmp
+In-Reply-To: <20190812023214.107817-1-natechancellor@gmail.com>
+References: <20190812023214.107817-1-natechancellor@gmail.com>
+Date:   Wed, 28 Aug 2019 23:43:53 +1000
+Message-ID: <878srdv206.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jordan,
+Nathan Chancellor <natechancellor@gmail.com> writes:
 
-On Mon, 2019-08-26 at 15:46 -0700, Jordan Hand wrote:
-> On 6/27/19 7:19 PM, Thiago Jung Bauermann wrote:
-> > On the OpenPOWER platform, secure boot and trusted boot are being
-> > implemented using IMA for taking measurements and verifying signatures.
-> > Since the kernel image on Power servers is an ELF binary, kernels are
-> > signed using the scripts/sign-file tool and thus use the same signature
-> > format as signed kernel modules.
-> > 
-> > This patch series adds support in IMA for verifying those signatures.
-> > It adds flexibility to OpenPOWER secure boot, because it allows it to boot
-> > kernels with the signature appended to them as well as kernels where the
-> > signature is stored in the IMA extended attribute.
-> 
-> I know this is pretty late, but I just wanted to let you know that I
-> tested this patch set on x86_64 with QEMU.
-> 
-> That is, I enrolled a key to _ima keyring, signed my kernel and modules
-> with appended signatures (with scripts/sign-file), set the IMA policy to
-> appraise and measure my kernel and modules. Also tested kexec appraisal.
-> 
-> You can add my tested-by if you'd like.
+> Commit aea447141c7e ("powerpc: Disable -Wbuiltin-requires-header when
+> setjmp is used") disabled -Wbuiltin-requires-header because of a warning
+> about the setjmp and longjmp declarations.
+>
+> r367387 in clang added another diagnostic around this, complaining that
+> there is no jmp_buf declaration.
+>
+> In file included from ../arch/powerpc/xmon/xmon.c:47:
+> ../arch/powerpc/include/asm/setjmp.h:10:13: error: declaration of
+> built-in function 'setjmp' requires the declaration of the 'jmp_buf'
+> type, commonly provided in the header <setjmp.h>.
+> [-Werror,-Wincomplete-setjmp-declaration]
+> extern long setjmp(long *);
+>             ^
+> ../arch/powerpc/include/asm/setjmp.h:11:13: error: declaration of
+> built-in function 'longjmp' requires the declaration of the 'jmp_buf'
+> type, commonly provided in the header <setjmp.h>.
+> [-Werror,-Wincomplete-setjmp-declaration]
+> extern void longjmp(long *, long);
+>             ^
+> 2 errors generated.
+>
+> Take the same approach as the above commit by disabling the warning for
+> the same reason, we provide our own longjmp/setjmp function.
+>
+> Cc: stable@vger.kernel.org # 4.19+
+> Link: https://github.com/ClangBuiltLinux/linux/issues/625
+> Link: https://github.com/llvm/llvm-project/commit/3be25e79477db2d31ac46493d97eca8c20592b07
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>
+> It may be worth using -fno-builtin-setjmp and -fno-builtin-longjmp
+> instead as it makes it clear to clang that we are not using the builtin
+> longjmp and setjmp functions, which I think is why these warnings are
+> appearing (at least according to the commit that introduced this waring).
+>
+> Sample patch:
+> https://github.com/ClangBuiltLinux/linux/issues/625#issuecomment-519251372
 
-I really appreciate your testing.  Based on the recent
-Documentation/maintainer/rebasing-and-merging.rst,  I'm trying not to
-rebase patches already staged in linux-next.  Patches are first being
-staged in the next-queued-testing branch.
+Couldn't we just add those flags to CFLAGS for the whole kernel? Rather
+than making them per-file.
 
-FYI, I just posted a patch that adds IMA appended signature support to
-test_kexec_file_load.sh.
+I mean there's no kernel code that wants to use clang's builtin
+setjmp/longjmp implementation at all right?
 
-thanks,
-
-Mimi
-
+cheers
