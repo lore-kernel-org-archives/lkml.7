@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8CEC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9404C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5F3217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA96D217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727373AbfH1KRq (ORCPT
+        id S1727384AbfH1KRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:17:46 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46446 "EHLO
+        Wed, 28 Aug 2019 06:17:50 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46440 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbfH1KQj (ORCPT
+        with ESMTP id S1726839AbfH1KQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:16:39 -0400
+        Wed, 28 Aug 2019 06:16:38 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2v0G-0000LP-IJ; Wed, 28 Aug 2019 12:16:36 +0200
+        id 1i2v0F-0000HM-0D; Wed, 28 Aug 2019 12:16:35 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 99A2A1C0DE3;
-        Wed, 28 Aug 2019 12:16:32 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 10:16:32 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BCEA31C0DE2;
+        Wed, 28 Aug 2019 12:16:28 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 10:16:28 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-cpu-timers: Respect INFINITY for hard RTTIME limit
+Subject: [tip: timers/core] posix-cpu-timers: Simplify set_process_cpu_timer()
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Frederic Weisbecker <frederic@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190821192922.078293002@linutronix.de>
-References: <20190821192922.078293002@linutronix.de>
+In-Reply-To: <20190821192921.303316423@linutronix.de>
+References: <20190821192921.303316423@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <156698739240.5777.15500414280182979993.tip-bot2@tip-bot2>
+Message-ID: <156698738863.5753.1896232532462251513.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,45 +57,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     fe0517f893d36636de20d0a809fc0c788ca0cade
-Gitweb:        https://git.kernel.org/tip/fe0517f893d36636de20d0a809fc0c788ca0cade
+Commit-ID:     1b0dd96d0f07c482bf1d04987cc1b35e376a7518
+Gitweb:        https://git.kernel.org/tip/1b0dd96d0f07c482bf1d04987cc1b35e376a7518
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 21 Aug 2019 21:09:17 +02:00
+AuthorDate:    Wed, 21 Aug 2019 21:09:09 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 28 Aug 2019 11:50:39 +02:00
+CommitterDate: Wed, 28 Aug 2019 11:50:36 +02:00
 
-posix-cpu-timers: Respect INFINITY for hard RTTIME limit
+posix-cpu-timers: Simplify set_process_cpu_timer()
 
-The RTIME limit expiry code does not check the hard RTTIME limit for
-INFINITY, i.e. being disabled.  Add it.
-
-While this could be considered an ABI breakage if something would depend on
-this behaviour. Though it's highly unlikely to have an effect because
-RLIM_INFINITY is at minimum INT_MAX and the RTTIME limit is in seconds, so
-the timer would fire after ~68 years.
-
-Adding this obvious correct limit check also allows further consolidation
-of that code and is a prerequisite for cleaning up the 0 based checks and
-the rlimit setter code.
+The expiry cache can now be accessed as an array. Replace the per clock
+checks with a simple comparison of the clock indexed array member.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lkml.kernel.org/r/20190821192922.078293002@linutronix.de
+Link: https://lkml.kernel.org/r/20190821192921.303316423@linutronix.de
 
 ---
- kernel/time/posix-cpu-timers.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/time/posix-cpu-timers.c | 24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
 diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index e62139a..a738d76 100644
+index b132417..2c47ce6 100644
 --- a/kernel/time/posix-cpu-timers.c
 +++ b/kernel/time/posix-cpu-timers.c
-@@ -921,7 +921,7 @@ static void check_process_timers(struct task_struct *tsk,
- 		unsigned long hard = task_rlimit_max(tsk, RLIMIT_CPU);
- 		unsigned long psecs = div_u64(ptime, NSEC_PER_SEC);
+@@ -1174,15 +1174,15 @@ void run_posix_cpu_timers(void)
+  * Set one of the process-wide special case CPU timers or RLIMIT_CPU.
+  * The tsk->sighand->siglock must be held by the caller.
+  */
+-void set_process_cpu_timer(struct task_struct *tsk, unsigned int clock_idx,
++void set_process_cpu_timer(struct task_struct *tsk, unsigned int clkid,
+ 			   u64 *newval, u64 *oldval)
+ {
+-	u64 now;
++	u64 now, *expiry = tsk->signal->posix_cputimers.expiries + clkid;
  
--		if (psecs >= hard) {
-+		if (hard != RLIM_INFINITY && psecs >= hard) {
- 			/*
- 			 * At the hard limit, we just die.
- 			 * No need to calculate anything else now.
+-	if (WARN_ON_ONCE(clock_idx >= CPUCLOCK_SCHED))
++	if (WARN_ON_ONCE(clkid >= CPUCLOCK_SCHED))
+ 		return;
+ 
+-	now = cpu_clock_sample_group(clock_idx, tsk, true);
++	now = cpu_clock_sample_group(clkid, tsk, true);
+ 
+ 	if (oldval) {
+ 		/*
+@@ -1205,19 +1205,11 @@ void set_process_cpu_timer(struct task_struct *tsk, unsigned int clock_idx,
+ 	}
+ 
+ 	/*
+-	 * Update expiration cache if we are the earliest timer, or eventually
+-	 * RLIMIT_CPU limit is earlier than prof_exp cpu timer expire.
++	 * Update expiration cache if this is the earliest timer. CPUCLOCK_PROF
++	 * expiry cache is also used by RLIMIT_CPU!.
+ 	 */
+-	switch (clock_idx) {
+-	case CPUCLOCK_PROF:
+-		if (expires_gt(tsk->signal->posix_cputimers.cputime_expires.prof_exp, *newval))
+-			tsk->signal->posix_cputimers.cputime_expires.prof_exp = *newval;
+-		break;
+-	case CPUCLOCK_VIRT:
+-		if (expires_gt(tsk->signal->posix_cputimers.cputime_expires.virt_exp, *newval))
+-			tsk->signal->posix_cputimers.cputime_expires.virt_exp = *newval;
+-		break;
+-	}
++	if (expires_gt(*expiry, *newval))
++		*expiry = *newval;
+ 
+ 	tick_dep_set_signal(tsk->signal, TICK_DEP_BIT_POSIX_TIMER);
+ }
