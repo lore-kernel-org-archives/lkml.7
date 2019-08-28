@@ -2,125 +2,99 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED6AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CCFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4541208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C152173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:44:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWxS12FO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lF/ZY7bI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfH1Xlv (ORCPT
+        id S1727109AbfH1XoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 19:41:51 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33867 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfH1Xlu (ORCPT
+        Wed, 28 Aug 2019 19:44:25 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46598 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfH1XoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 19:41:50 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n9so556255pgc.1;
-        Wed, 28 Aug 2019 16:41:49 -0700 (PDT)
+        Wed, 28 Aug 2019 19:44:25 -0400
+Received: by mail-pg1-f196.google.com with SMTP id m3so524834pgv.13
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 16:44:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LEwbl1nqNHBHcJacD9dfeICHgcsBE/f/ceNiyU0uO2c=;
-        b=kWxS12FOGo7kRO8bUZisQdbdPaD7m90liBO1DJILGgor5och3M3Y8ixQUrLiOlvUAQ
-         KSCAKzPOIhK4qh4mkp723yecDQTzrNvHfSo5O2PLFMUzPr9tFIvttGdACmQk3GcLv9I5
-         cjYvi8Gr7ER3JMRMI2IeaYoSEzfDVilJaC9VvUum/aPr5t4C5xA5idz5lFsS5zANKFcg
-         337AY91x4TvIwnn1y9efIs3f4w9SNmURv9K2dvAIcHu0ypgbd+SQV2CIW7BfJIlZApXq
-         u8dQIG+K1EEA2/INmvvXiOQePA1oy0eoOgbrzRogC4V4vLfCANYJbRnPt4/hj/mnM9HJ
-         IDqA==
+         :content-disposition:in-reply-to;
+        bh=v+7Vi0K+7iSjD64GjXiDvUOi+ZQN8cBfyBO0kWUqTAo=;
+        b=lF/ZY7bIW43kPygO0eYojMdmyC7EdSWTlC9x4AJsKje+Nph5f5KWl56qJUptdakavf
+         3+VDYA9HoxjM2CxX7RveAOQ6cYpyLK7PcCGUnKa9xcsEa9/CsVN0BL9Hxe3VXpvggtia
+         fXrDMrD7JO7Zraw6pd2yZtpnDgWouvtCHOO9c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LEwbl1nqNHBHcJacD9dfeICHgcsBE/f/ceNiyU0uO2c=;
-        b=Dm6bK6YON5/uJ6yGcjawkadlawzzNOu4QZ/dxM4e/ZS6ZOM3weqTqSHAvvlNt+4cL7
-         bfMuHglY8fX44F7wMu5Uf+A2h+OmwcsvFW2+nAo0QTUypU2F05WBVXbfmfG12cdnTxLE
-         YxzDQVlpF3VYifP8YunGgnh/0FC5P4ztnlFbuVoVeoC8PBmvCF6NJhcEO/VLuKRH3jad
-         lW9WvNVzgtm1BzUDWfto0zH+/2zs7qlDbjLdIRqSGrZUaJcfUkoypEApUU3MDT7PmzEg
-         70pt2B7Lsp7vPBaA40BcYnebuANLTbT8ggelkPlPmEwP+BR2lzk7ji4HI2uDK82fopA3
-         MxXA==
-X-Gm-Message-State: APjAAAUYMvbDkleLX03ySndy5ert+il4kq9FkW6y9/LZBMEyqWPezMyX
-        nhDQRuq3AquMzIHDlmudKKjAzF9up37YUg==
-X-Google-Smtp-Source: APXvYqyltBUmIDPff9MzOKVsnLKdLLLDhQKStB24jbwVvtjezQpxtP9BLXnDENuon3HqazilZSGjqw==
-X-Received: by 2002:a17:90a:32a3:: with SMTP id l32mr7061863pjb.14.1567035708956;
-        Wed, 28 Aug 2019 16:41:48 -0700 (PDT)
-Received: from mail.google.com ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id g1sm270497pgg.27.2019.08.28.16.41.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 28 Aug 2019 16:41:48 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 23:41:34 +0000
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, Jessica Yu <jeyu@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        "John F . Reiser" <jreiser@BitWagon.com>,
-        Matt Helsley <mhelsley@vmware.com>
-Subject: Re: [PATCH 01/11] ftrace: move recordmcount tools to scripts/ftrace
-Message-ID: <20190828234133.quir3ptl4kidnxud@mail.google.com>
-References: <20190825132330.5015-1-changbin.du@gmail.com>
- <20190825132330.5015-2-changbin.du@gmail.com>
- <20190826184444.09334ae9@gandalf.local.home>
+         :mime-version:content-disposition:in-reply-to;
+        bh=v+7Vi0K+7iSjD64GjXiDvUOi+ZQN8cBfyBO0kWUqTAo=;
+        b=qqKcg3ylPbfiX+8SKXApHA0gGBiSjrWlrWvNSfsVuYNJfUFvVz/GDMJCWGOjsRs95Q
+         s7KDE8XfqJ9blqmayQ05xk4syzJMjhJENrqs3MDsxCDLzJCg8wWxvN6uXXz0SW7wA+GS
+         VWh3B0gCm+qnaJSdR9BO83fUs7sTuFBTNlxKdcpSa2R72s6cyt0Z/kk1Ya0PCd3ncOSj
+         eGDVvxIbbxDVMlkcdW+zzK/KxVxut7JsJXzbsE6UoI9HWaLaUWGk5aTgMnBXEBdFk+2H
+         2hdHgSY8LFxGhraqHVNN9H73OoT4NN32yU3JT4Cg2xK6Z5A1djnJMYI52r33/lSEaa1e
+         q1FA==
+X-Gm-Message-State: APjAAAVVp3NLpTxOC/ZecsECOEjuPJwBNiCCnv2HxTBACZls/MKaVFQm
+        /tikggZPwn3374r6/P6VFSqYdQ==
+X-Google-Smtp-Source: APXvYqxxx4925TvYESBbl7jTNbgz0DAnFrfbfZvXEyhrWpWa33PYoRop2V/NoIg6VNwG32B8ZouAmQ==
+X-Received: by 2002:a63:3dcd:: with SMTP id k196mr5739639pga.45.1567035864264;
+        Wed, 28 Aug 2019 16:44:24 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t4sm586675pfq.153.2019.08.28.16.44.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 16:44:23 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 16:44:21 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     David Abdurachmanov <david.abdurachmanov@gmail.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Vincent Chen <vincentc@andestech.com>,
+        Alan Kao <alankao@andestech.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, me@carlosedp.com
+Subject: Re: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
+Message-ID: <201908281643.1B89EB1E6@keescook>
+References: <20190822205533.4877-1-david.abdurachmanov@sifive.com>
+ <201908251451.73C6812E8@keescook>
+ <CAEn-LToB1atxDvehBanVaxg6sk8zDkMe_CbqeTVgKNzOvD9-Sw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190826184444.09334ae9@gandalf.local.home>
-User-Agent: NeoMutt/20180716-508-7c9a6d
+In-Reply-To: <CAEn-LToB1atxDvehBanVaxg6sk8zDkMe_CbqeTVgKNzOvD9-Sw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 06:44:44PM -0400, Steven Rostedt wrote:
-> On Sun, 25 Aug 2019 21:23:20 +0800
-> Changbin Du <changbin.du@gmail.com> wrote:
-> 
-> > Move ftrace tools to its own directory. We will add another tool later.
-> > 
-> > Cc: John F. Reiser <jreiser@BitWagon.com>
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > ---
-> >  scripts/.gitignore                   |  1 -
-> >  scripts/Makefile                     |  2 +-
-> >  scripts/Makefile.build               | 10 +++++-----
-> >  scripts/ftrace/.gitignore            |  4 ++++
-> >  scripts/ftrace/Makefile              |  4 ++++
-> >  scripts/{ => ftrace}/recordmcount.c  |  0
-> >  scripts/{ => ftrace}/recordmcount.h  |  0
-> >  scripts/{ => ftrace}/recordmcount.pl |  0
-> >  8 files changed, 14 insertions(+), 7 deletions(-)
-> >  create mode 100644 scripts/ftrace/.gitignore
-> >  create mode 100644 scripts/ftrace/Makefile
-> >  rename scripts/{ => ftrace}/recordmcount.c (100%)
-> >  rename scripts/{ => ftrace}/recordmcount.h (100%)
-> >  rename scripts/{ => ftrace}/recordmcount.pl (100%)
-> >  mode change 100755 => 100644
-> 
-> Note, we are in the process of merging recordmcount with objtool. It
-> would be better to continue from that work.
-> 
->  http://lkml.kernel.org/r/2767f55f4a5fbf30ba0635aed7a9c5ee92ac07dd.1563992889.git.mhelsley@vmware.com
-> 
-> -- Steve
-Thanks for reminding. Let me check if prototype tool can merge into
-objtool easily after above work.
+On Wed, Aug 28, 2019 at 02:37:34PM -0700, David Abdurachmanov wrote:
+>     --disk path=$PWD/disk \
+>     --boot kernel=$PWD/${FIRMWARE} \
+
+This is where I tripped over things. How do I specify the kernel to boot
+from OUTSIDE the disk image?
 
 -- 
-Cheers,
-Changbin Du
+Kees Cook
