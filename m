@@ -2,159 +2,104 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B70C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9674CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A83C2339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 673BB2080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:58:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hAWJjeHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfH1Gzk (ORCPT
+        id S1726410AbfH1G6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 02:55:40 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:2725 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726209AbfH1Gzk (ORCPT
+        Wed, 28 Aug 2019 02:58:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38904 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726209AbfH1G6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 02:55:40 -0400
-X-UUID: 2f7b9396eb764d099497d8d524d296ad-20190828
-X-UUID: 2f7b9396eb764d099497d8d524d296ad-20190828
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 118196236; Wed, 28 Aug 2019 14:55:34 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 28 Aug 2019 14:55:40 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 28 Aug 2019 14:55:40 +0800
-Message-ID: <1566975333.24969.2.camel@mtksdaap41>
-Subject: Re: [PATCH 2/2] clk: mediatek: add pericfg clocks for MT8183
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Ryder Lee" <ryder.lee@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "Erin Lo" <erin.lo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Wed, 28 Aug 2019 14:55:33 +0800
-In-Reply-To: <1566971755-21217-2-git-send-email-chunfeng.yun@mediatek.com>
-References: <1566971755-21217-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1566971755-21217-2-git-send-email-chunfeng.yun@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 28 Aug 2019 02:58:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gHAYFZOmvRYM0q5YzZ/Rq3ghbsnPUKY97o37njE3F0A=; b=hAWJjeHx+hNMC5YoNxadSMBM3
+        sdDqJJjTWleRyRhEJ7ePzLuc7msw6ISoYkvFXw80WuNWQXbJCeCYxKh223xdAAJWTqlcRja1Eumpg
+        JVwQxwDaSQh/o95aGDdFq1VXJauhtsNrV/atCrIpyq1pQkBhinB5oR2cX39Y+bBhRioWq3pStDmk7
+        RE1gB4b2FrlPJdCIWkB5+XiuQmTdQOrpHqNveR9/Gp+Pg8r5grdJpKAetwfYWyhpSr6C8uhP3t9kg
+        0nnkg/kNnDtLWsbLSCxKYiaHKJd2OQZaSKtPpZMCzcUnTYRgYKCF0U3E8gYsJMpXNNheXI+3lBUZ6
+        bdoRCMpKA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i2ruD-0007S7-4i; Wed, 28 Aug 2019 06:58:09 +0000
+Date:   Tue, 27 Aug 2019 23:58:09 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, miklos@szeredi.hu,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        dgilbert@redhat.com, virtio-fs@redhat.com, stefanha@redhat.com,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 01/19] dax: remove block device dependencies
+Message-ID: <20190828065809.GA27426@infradead.org>
+References: <20190821175720.25901-1-vgoyal@redhat.com>
+ <20190821175720.25901-2-vgoyal@redhat.com>
+ <20190826115152.GA21051@infradead.org>
+ <20190827163828.GA6859@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827163828.GA6859@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-08-28 at 13:55 +0800, Chunfeng Yun wrote:
-> Add pericfg clocks for MT8183, it's used when support USB
-> remote wakeup
+On Tue, Aug 27, 2019 at 12:38:28PM -0400, Vivek Goyal wrote:
+> > For bdev_dax_pgoff
+> > I'd much rather have the partition offset if there is on in the daxdev
+> > somehow so that we can get rid of the block device entirely.
 > 
-> Cc: Weiyi Lu <weiyi.lu@mediatek.com>
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
->  drivers/clk/mediatek/clk-mt8183.c      | 35 ++++++++++++++++++++++++++
->  include/dt-bindings/clock/mt8183-clk.h |  4 +++
->  2 files changed, 39 insertions(+)
+> IIUC, there is one block_device per partition while there is only one
+> dax_device for the whole disk. So we can't directly move bdev logical
+> offset into dax_device.
+
+Well, then we need to find a way to get partitions for dax devices,
+as we really should not expect a block device hiding behind a dax
+dev.  That is just a weird legacy assumption - block device need to
+layer on top of the dax device optionally.
+
 > 
-> diff --git a/drivers/clk/mediatek/clk-mt8183.c b/drivers/clk/mediatek/clk-mt8183.c
-> index 1aa5f4059251..b19221bad0c9 100644
-> --- a/drivers/clk/mediatek/clk-mt8183.c
-> +++ b/drivers/clk/mediatek/clk-mt8183.c
-> @@ -999,6 +999,25 @@ static const struct mtk_gate infra_clks[] = {
->  		"msdc50_0_sel", 24),
->  };
->  
-> +static const struct mtk_gate_regs peri_cg_regs = {
-> +	.set_ofs = 0x20c,
-> +	.clr_ofs = 0x20c,
-> +	.sta_ofs = 0x20c,
-> +};
-> +
-> +#define GATE_PERI(_id, _name, _parent, _shift) {	\
-> +	.id = _id,				\
-> +	.name = _name,				\
-> +	.parent_name = _parent,			\
-> +	.regs = &peri_cg_regs,			\
-> +	.shift = _shift,			\
-> +	.ops = &mtk_clk_gate_ops_no_setclr_inv,	\
-> +}
+> We probably could put this in "iomap" and leave it to filesystems to
+> report offset into dax_dev in iomap that way dax generic code does not
+> have to deal with it. But that probably will be a bigger change.
 
-Hi Chunfeng,
+And where would the file system get that information from?
 
-I suggest
+> commit 4b0228fa1d753f77fe0e6cf4c41398ec77dfbd2a
+> Author: Vishal Verma <vishal.l.verma@intel.com>
+> Date:   Thu Apr 21 15:13:46 2016 -0400
+> 
+>  dax: for truncate/hole-punch, do zeroing through the driver if possible
+> 
+> IIUC, they are doing it so that they can clear gendisk->badblocks list.
+> 
+> So even if there is pure dax way to do it, there will have to some
+> involvment of block layer to clear gendisk->badblocks list.
 
-#define GATE_PERI(_id, _name, _parent, _shift)		\
-	GATE_MTK(_id, _name, _parent, &peri_cg_regs, _shift,	\
-		&mtk_clk_gate_ops_no_setclr_inv)
+Once again we need to move that list to the dax device, as the
+assumption that there is a block device associated with the dax dev
+is flawed.
 
-> +
-> +static const struct mtk_gate peri_clks[] = {
-> +	GATE_PERI(CLK_PERI_AXI, "periaxi", "axi_sel", 31),
-> +};
-> +
->  static const struct mtk_gate_regs apmixed_cg_regs = {
->  	.set_ofs = 0x20,
->  	.clr_ofs = 0x20,
-> @@ -1194,6 +1213,19 @@ static int clk_mt8183_infra_probe(struct platform_device *pdev)
->  	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
->  }
->  
-> +static int clk_mt8183_peri_probe(struct platform_device *pdev)
-> +{
-> +	struct clk_onecell_data *clk_data;
-> +	struct device_node *node = pdev->dev.of_node;
-> +
-> +	clk_data = mtk_alloc_clk_data(CLK_PERI_NR_CLK);
-> +
-> +	mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks),
-> +			       clk_data);
-> +
-> +	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-> +}
-> +
->  static int clk_mt8183_mcu_probe(struct platform_device *pdev)
->  {
->  	struct clk_onecell_data *clk_data;
-> @@ -1223,6 +1255,9 @@ static const struct of_device_id of_match_clk_mt8183[] = {
->  	}, {
->  		.compatible = "mediatek,mt8183-infracfg",
->  		.data = clk_mt8183_infra_probe,
-> +	}, {
-> +		.compatible = "mediatek,mt8183-pericfg",
-> +		.data = clk_mt8183_peri_probe,
->  	}, {
->  		.compatible = "mediatek,mt8183-mcucfg",
->  		.data = clk_mt8183_mcu_probe,
-> diff --git a/include/dt-bindings/clock/mt8183-clk.h b/include/dt-bindings/clock/mt8183-clk.h
-> index 0046506eb24c..a7b470b0ec8a 100644
-> --- a/include/dt-bindings/clock/mt8183-clk.h
-> +++ b/include/dt-bindings/clock/mt8183-clk.h
-> @@ -284,6 +284,10 @@
->  #define CLK_INFRA_FBIST2FPC		100
->  #define CLK_INFRA_NR_CLK		101
->  
-> +/* PERICFG */
-> +#define CLK_PERI_AXI			0
-> +#define CLK_PERI_NR_CLK			1
-> +
->  /* MFGCFG */
->  #define CLK_MFG_BG3D			0
->  #define CLK_MFG_NR_CLK			1
+> I am not sure I fully understand your suggestion. But I am hoping its
+> not a must for these changes to make a progress. For now, I will drop
+> change to dax_range_is_aligned().
 
-
+Well, someone needs to clean this mess up, and as you have an actual
+real life example of a dax dev without the block device I think the
+burden naturally falls on you.
