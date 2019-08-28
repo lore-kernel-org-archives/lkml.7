@@ -2,135 +2,101 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B3CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA43C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C3BD20828
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:56:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BUMTIuQP"
+	by mail.kernel.org (Postfix) with ESMTP id BBFC720828
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:57:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfH1K4l (ORCPT
+        id S1726549AbfH1K5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:56:41 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33799 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfH1K4k (ORCPT
+        Wed, 28 Aug 2019 06:57:04 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:55316 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfH1K5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:56:40 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c7so2328438otp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 03:56:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9nBDIm2N1o53yUHNgHlni3PU6OkH5zkDsyDdUf/2oVk=;
-        b=BUMTIuQPT4mnrt196mfGejjgRmHSZoT05FuKeAxQp9JStqUFVI2cEDFgxC93bWptk0
-         mYMKz9bxEUKtrIbTgU1wlT3W5YGAOEnvVGHht9L/4jugtGrqk7yHpV8jFtxV+V90O+um
-         /H5YHEjPVI91os5xEofC/w51XzKgVSynB6t0WGQbyjwFqedBu1lnnQlw8HQiW4LaXWxi
-         NIpanUcOVC3DkhxmoTFRSasS4UR4482qgff6tXmEXUNTxQyI5p+Pimlr3yVg45yxjZIl
-         xPqZHIhF22HJXKOGJ44FdPfwF+j6y+nBXCtVJLfIj68NptVx2I0+zHOrHm4vqquq8Ktb
-         WIhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9nBDIm2N1o53yUHNgHlni3PU6OkH5zkDsyDdUf/2oVk=;
-        b=nHEZW47dmoDvibFmedSmXi86fSAZQwA2n9T220gu0bezh9vITOS7LPf2v9CFPX3yyz
-         zb+nLITHxZiO6gW5q7QYd44b9S7nNRC5eDAnXhJuvqIFlZti0T4PnJCKly5ub5S7DU9Z
-         L9ba/oa6HYY5aSeGATau0HYICutBUEzIwklyfpNGRG22OJZ4ciIfoRDtAK+yUP5J/VTl
-         BBdZ1KtnbQ5yUW0ximp3ApT9QK6OLn800M1eRapGxAY+58sN7m5daEJ+LIL6m7k4KM/2
-         9gdsvHrErha7B3FdB7Z2NlmSde4Dlg2BKjcIiQ5Sayp+UHhPL1l4unCGpbMfTvPqStcA
-         tVaA==
-X-Gm-Message-State: APjAAAV5i3NlaIhK26HNc/QOXsY0Q39CvxUP6q8CLwusLIwMiWRS6lKu
-        Qq27PhC49e83ypxA7sgLk5EJ3O3rSD1oeKVqZShQbQ==
-X-Google-Smtp-Source: APXvYqwbHxw64sX7kxlc9Y4MID92CqSaT+i8SQ6bQ48Si4zn2Rjk+DXtFquo2zpnX5NMjvYXztu9wY8XqKYajTOkN+M=
-X-Received: by 2002:a9d:6290:: with SMTP id x16mr2722950otk.292.1566989799465;
- Wed, 28 Aug 2019 03:56:39 -0700 (PDT)
+        Wed, 28 Aug 2019 06:57:04 -0400
+Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7SAv1Yi014970;
+        Wed, 28 Aug 2019 19:57:01 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp);
+ Wed, 28 Aug 2019 19:57:01 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7SAv12i014965
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Wed, 28 Aug 2019 19:57:01 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH 00/10] OOM Debug print selection and additional
+ information
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Edward Chron <echron@arista.com>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
+References: <20190826193638.6638-1-echron@arista.com>
+ <1566909632.5576.14.camel@lca.pw>
+ <CAM3twVQEMGWMQEC0dduri0JWt3gH6F2YsSqOmk55VQz+CZDVKg@mail.gmail.com>
+ <79FC3DA1-47F0-4FFC-A92B-9A7EBCE3F15F@lca.pw>
+ <CAM3twVSdxJaEpmWXu2m_F1MxFMB58C6=LWWCDYNn5yT3Ns+0sQ@mail.gmail.com>
+ <2A1D8FFC-9E9E-4D86-9A0E-28F8263CC508@lca.pw>
+ <CAM3twVR5TVuuZSLM2qRJYnkCEKVZmA3XDNREaB+wdKH2Ne9vVA@mail.gmail.com>
+ <20190828070845.GC7386@dhcp22.suse.cz>
+ <2e816b05-7b5b-4bc0-8d38-8415daea920d@i-love.sakura.ne.jp>
+ <20190828103211.GD28313@dhcp22.suse.cz>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <5db2d2bd-645b-8967-849a-0d1de5861742@i-love.sakura.ne.jp>
+Date:   Wed, 28 Aug 2019 19:56:58 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190827064629.90214-1-david@protonic.nl> <CAMpxmJV2XC+CK1SfJnH2YuaD2Gh=fiBQY+WPbjnqkvxGW6ZH_w@mail.gmail.com>
-In-Reply-To: <CAMpxmJV2XC+CK1SfJnH2YuaD2Gh=fiBQY+WPbjnqkvxGW6ZH_w@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 28 Aug 2019 12:56:28 +0200
-Message-ID: <CAMpxmJXQ=M9PeMFBf70aE5Jgg3c6P2=4QF5CxWpenh+2WXLhnA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: gpio-pca953x.c: Correct type of reg_direction
-To:     David Jander <david@protonic.nl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190828103211.GD28313@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 28 sie 2019 o 10:38 Bartosz Golaszewski
-<bgolaszewski@baylibre.com> napisa=C5=82(a):
->
-> wt., 27 sie 2019 o 08:46 David Jander <david@protonic.nl> napisa=C5=82(a)=
-:
-> >
-> > The type of reg_direction needs to match the type of the regmap, which =
-is
-> > u8.
-> >
-> > Signed-off-by: David Jander <david@protonic.nl>
-> > ---
-> >  drivers/gpio/gpio-pca953x.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> > index 378b206d2dc9..30072a570bc2 100644
-> > --- a/drivers/gpio/gpio-pca953x.c
-> > +++ b/drivers/gpio/gpio-pca953x.c
-> > @@ -604,7 +604,7 @@ static void pca953x_irq_bus_sync_unlock(struct irq_=
-data *d)
-> >         u8 new_irqs;
-> >         int level, i;
-> >         u8 invert_irq_mask[MAX_BANK];
-> > -       int reg_direction[MAX_BANK];
-> > +       u8 reg_direction[MAX_BANK];
-> >
-> >         regmap_bulk_read(chip->regmap, chip->regs->direction, reg_direc=
-tion,
-> >                          NBANK(chip));
-> > @@ -679,7 +679,7 @@ static bool pca953x_irq_pending(struct pca953x_chip=
- *chip, u8 *pending)
-> >         bool pending_seen =3D false;
-> >         bool trigger_seen =3D false;
-> >         u8 trigger[MAX_BANK];
-> > -       int reg_direction[MAX_BANK];
-> > +       u8 reg_direction[MAX_BANK];
-> >         int ret, i;
-> >
-> >         if (chip->driver_data & PCA_PCAL) {
-> > @@ -768,7 +768,7 @@ static int pca953x_irq_setup(struct pca953x_chip *c=
-hip,
-> >  {
-> >         struct i2c_client *client =3D chip->client;
-> >         struct irq_chip *irq_chip =3D &chip->irq_chip;
-> > -       int reg_direction[MAX_BANK];
-> > +       u8 reg_direction[MAX_BANK];
-> >         int ret, i;
-> >
-> >         if (!client->irq)
-> > --
-> > 2.19.1
-> >
->
-> Applied for v5.4.
+On 2019/08/28 19:32, Michal Hocko wrote:
+>> Speak of my cases, those who take care of their systems are not developers.
+>> And they afraid changing code that runs in kernel mode. They unlikely give
+>> permission to install SystemTap/eBPF scripts. As a result, in many cases,
+>> the root cause cannot be identified.
+> 
+> Which is something I would call a process problem more than a kernel
+> one. Really if you need to debug a problem you really have to trust
+> those who can debug that for you. We are not going to take tons of code
+> to the kernel just because somebody is afraid to run a diagnostic.
+> 
 
-Actually the second patch depends on the first one, so moved it over to fix=
-es.
+This is a problem of kernel development process.
 
-Bart
+>> Moreover, we are talking about OOM situations, where we can't expect userspace
+>> processes to work properly. We need to dump information we want, without
+>> counting on userspace processes, before sending SIGKILL.
+> 
+> Yes, this is an inherent assumption I was making and that means that
+> whatever dynamic hooks would have to be registered in advance.
+> 
 
->
-> Thanks!
-> Bart
+No. I'm saying that neither static hooks nor dynamic hooks can work as
+expected if they count on userspace processes. Registering in advance is
+irrelevant. Whether it can work without userspace processes is relevant.
+
+Also, out-of-tree codes tend to become defunctional. We are trying to debug
+problems caused by in-tree code. Breaking out-of-tree debugging code just
+because in-tree code developers don't want to pay the burden of maintaining
+code for debugging problems caused by in-tree code is a very bad idea.
+
