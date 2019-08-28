@@ -7,48 +7,44 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3C5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C507C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC9C9208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 028CA208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfH1ShT (ORCPT
+        id S1727161AbfH1Sh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:37:19 -0400
+        Wed, 28 Aug 2019 14:37:27 -0400
 Received: from relmlor2.renesas.com ([210.160.252.172]:43079 "EHLO
         relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727069AbfH1ShQ (ORCPT
+        by vger.kernel.org with ESMTP id S1727101AbfH1ShX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:37:16 -0400
+        Wed, 28 Aug 2019 14:37:23 -0400
 X-IronPort-AV: E=Sophos;i="5.64,442,1559487600"; 
-   d="scan'208";a="24947702"
+   d="scan'208";a="24947709"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 29 Aug 2019 03:37:13 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 29 Aug 2019 03:37:21 +0900
 Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 4895B4004953;
-        Thu, 29 Aug 2019 03:37:09 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 0CE244004953;
+        Thu, 29 Aug 2019 03:37:17 +0900 (JST)
 From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
 Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Simon Horman <horms@verge.net.au>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Chris Paterson <Chris.Paterson2@renesas.com>,
         Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
         Jacopo Mondi <jacopo+renesas@jmondi.org>, sam@ravnborg.org
-Subject: [PATCH v3 5/8] drm: bridge: thc63: Do not report input bus mode through bridge timings
-Date:   Wed, 28 Aug 2019 19:36:39 +0100
-Message-Id: <1567017402-5895-6-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v3 7/8] [HACK] arm64: dts: renesas: draak: Enable LVDS
+Date:   Wed, 28 Aug 2019 19:36:41 +0100
+Message-Id: <1567017402-5895-8-git-send-email-fabrizio.castro@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
@@ -57,85 +53,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No need to report the input bus mode through bridge timings
-anymore, that's now done through the DT, as specified by the
-dt-bindings.
+Enable and connect the second LVDS encoder to the second LVDS input of
+the THC63LVD1024 for dual-link LVDS operation. This requires changing
+the default settings of SW45 and SW47 to OFF and ON respectively.
+
+This patch is based on Laurent's dual-LVDS work:
+https://patchwork.kernel.org/patch/10965045/
 
 Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-
 ---
 v2->v3:
 * new patch
----
- drivers/gpu/drm/bridge/thc63lvd1024.c | 9 ++++-----
- include/drm/drm_bridge.h              | 8 --------
- 2 files changed, 4 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/thc63lvd1024.c b/drivers/gpu/drm/bridge/thc63lvd1024.c
-index 3d74129b..730f682 100644
---- a/drivers/gpu/drm/bridge/thc63lvd1024.c
-+++ b/drivers/gpu/drm/bridge/thc63lvd1024.c
-@@ -34,7 +34,7 @@ struct thc63_dev {
- 	struct drm_bridge bridge;
- 	struct drm_bridge *next;
+Geert,
+
+no need to review this patch unless they like the idea behind this
+series.
+
+Thanks,
+Fab
+
+---
+ arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+index b38f9d4..38b9c5a 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+@@ -87,11 +87,20 @@
  
--	struct drm_bridge_timings timings;
-+	bool dual_link;
+ 			port@0 {
+ 				reg = <0>;
+-				thc63lvd1024_in: endpoint {
++				dual-lvds-even-pixels;
++				thc63lvd1024_in0: endpoint {
+ 					remote-endpoint = <&lvds0_out>;
+ 				};
+ 			};
+ 
++			port@1 {
++				reg = <1>;
++				dual-lvds-odd-pixels;
++				thc63lvd1024_in1: endpoint {
++					remote-endpoint = <&lvds1_out>;
++				};
++			};
++
+ 			port@2 {
+ 				reg = <2>;
+ 				thc63lvd1024_out: endpoint {
+@@ -489,7 +498,7 @@
+ 	ports {
+ 		port@1 {
+ 			lvds0_out: endpoint {
+-				remote-endpoint = <&thc63lvd1024_in>;
++				remote-endpoint = <&thc63lvd1024_in0>;
+ 			};
+ 		};
+ 	};
+@@ -507,6 +516,14 @@
+ 		 <&x13_clk>,
+ 		 <&extal_clk>;
+ 	clock-names = "fck", "dclkin.0", "extal";
++
++	ports {
++		port@1 {
++			lvds1_out: endpoint {
++				remote-endpoint = <&thc63lvd1024_in1>;
++			};
++		};
++	};
  };
  
- static inline struct thc63_dev *to_thc63(struct drm_bridge *bridge)
-@@ -62,7 +62,7 @@ static enum drm_mode_status thc63_mode_valid(struct drm_bridge *bridge,
- 	 * isn't supported by the driver yet, simply derive the limits from the
- 	 * input mode.
- 	 */
--	if (thc63->timings.dual_link) {
-+	if (thc63->dual_link) {
- 		min_freq = 40000;
- 		max_freq = 150000;
- 	} else {
-@@ -157,13 +157,13 @@ static int thc63_parse_dt(struct thc63_dev *thc63)
- 
- 		if (remote) {
- 			if (of_device_is_available(remote))
--				thc63->timings.dual_link = true;
-+				thc63->dual_link = true;
- 			of_node_put(remote);
- 		}
- 	}
- 
- 	dev_dbg(thc63->dev, "operating in %s-link mode\n",
--		thc63->timings.dual_link ? "dual" : "single");
-+		thc63->dual_link ? "dual" : "single");
- 
- 	return 0;
- }
-@@ -221,7 +221,6 @@ static int thc63_probe(struct platform_device *pdev)
- 	thc63->bridge.driver_private = thc63;
- 	thc63->bridge.of_node = pdev->dev.of_node;
- 	thc63->bridge.funcs = &thc63_bridge_func;
--	thc63->bridge.timings = &thc63->timings;
- 
- 	drm_bridge_add(&thc63->bridge);
- 
-diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index 7616f65..3228018 100644
---- a/include/drm/drm_bridge.h
-+++ b/include/drm/drm_bridge.h
-@@ -362,14 +362,6 @@ struct drm_bridge_timings {
- 	 * input signal after the clock edge.
- 	 */
- 	u32 hold_time_ps;
--	/**
--	 * @dual_link:
--	 *
--	 * True if the bus operates in dual-link mode. The exact meaning is
--	 * dependent on the bus type. For LVDS buses, this indicates that even-
--	 * and odd-numbered pixels are received on separate links.
--	 */
--	bool dual_link;
- };
- 
- /**
+ &ohci0 {
 -- 
 2.7.4
 
