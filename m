@@ -2,128 +2,124 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46455C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4615DC41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D07023404
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:55:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="I7/yD7DH"
+	by mail.kernel.org (Postfix) with ESMTP id 1DF2623404
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:55:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566982555;
+	bh=vwCtkETiiyyM2/SVVkT/ic3p05enXK2LweQ2FcCvDhE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2cZ7vrcCqBrQii91YWZAbTYiOz1aFYAbUuaA0Eig60xUvAfmL4qdx6WC/nzq+QBCo
+	 icOZvgpaBxRUD1AJV3Yc1MOkB0GgpFkDTtxG1GiDgipb+whNkxqLuX8DaBHXgylDzm
+	 lU8jrpfz8UsHSjtI/ZnbuqzJ+NeN8GFFcxl2Twe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfH1Izc (ORCPT
+        id S1726894AbfH1Izy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:55:32 -0400
-Received: from ozlabs.org ([203.11.71.1]:37191 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726832AbfH1Iz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:55:28 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46JKMJ5Txkz9sNp;
-        Wed, 28 Aug 2019 18:55:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566982525;
-        bh=uHfZSqpM9d5GmZPwHwbJ/ALaDsqk/uyw9kZHkl+R9NE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=I7/yD7DH7aaydjm2wxLZr4OBwHvpk84eM0V2tmBzHdYVPOlqOrGmr3Q+jUAd4ZXPA
-         FE347BnBhMs4N5Nhf0ngbcP9ClAXbqLevO5Z00AQUDHipyUtkAJHGKDH9mnxn4ly4A
-         0Hoe4mowNqHA+XHsqW+9DZg660LpvFNpBMxWsOFKqhPNRxy1xgLar8ZRTq3bD9rVaC
-         EI3KcN9F13n6ZLK5PcKmkDJfHUep8Ac8eC8btSYJVXCaTSMqQ4jUoAZRohY/fRNzrB
-         YuU7aZ6FrJRpX1Aup0r7SJDw3RWPRzvyyqrIXIErez1MiXRAtBz9+V5N3kARzTnnw2
-         VhTPQfwaTLRwQ==
-Date:   Wed, 28 Aug 2019 18:55:16 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerd Hoffmann <kraxel@redhat.com>
-Subject: linux-next: build failure after merge of the drm-misc tree
-Message-ID: <20190828185516.22b03da8@canb.auug.org.au>
+        Wed, 28 Aug 2019 04:55:54 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44961 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfH1Izy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:55:54 -0400
+Received: by mail-ot1-f68.google.com with SMTP id w4so1980203ote.11;
+        Wed, 28 Aug 2019 01:55:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=mmNh7TCZzrfQu4dpCLq683e3Q8F8Ju4FY9urUanFkys=;
+        b=JKAnayug82FSVO/2f2cI4d6o8jdZAwjiFxRI94DFJGvB8Bl49Cb9suGHeX7RmCvZ03
+         mexaip8eu84t2NXVWXcTeSF3j6HQm61W88Ts024bH/ystN+6pFTcYa6VS26w9cCWZ+I/
+         XJcGo4eiq+svgpIbVxcqDklafjhaVSYvp5YxWKpt16QOu6L0+Q84AdvbTpi2nTbzph2b
+         Ei7zt/OV10ONgawrkHaHnSjjGeKEVJ6rBWwrKAtX3z0gm04k6e77Y+P9V6RLAPOb6zDD
+         JeRDnXEHHlR0pKLn8fGFQA6Xnt55pFf/8M1wF5jb6I/TuPoGx9QNrTgsdyAX2mjNmKLf
+         ZKqA==
+X-Gm-Message-State: APjAAAW/Sq5syWAPkjvV3+CNAInB4D+uFnOTiJHArX32EMkL4uFaM88V
+        Q6BEN+9nUrwu941t7b/kZW/HLxDoHID8SM4eiYw=
+X-Google-Smtp-Source: APXvYqzvCCzqmpJv/pCz10tOxmmDVAhwvGdkAVIKUcvjSYf1AHXomLL9szBu1nmbePqxuYZKK1+iLjJWbNyP+JvP+28=
+X-Received: by 2002:a9d:674c:: with SMTP id w12mr2208451otm.118.1566982553420;
+ Wed, 28 Aug 2019 01:55:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/vl+g_4dHxCiacR0wR8Sx6nD";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190826083112.8888-1-sakari.ailus@linux.intel.com>
+ <20190826083112.8888-2-sakari.ailus@linux.intel.com> <20190826084343.GA1095@kroah.com>
+ <20190826103200.GQ31967@paasikivi.fi.intel.com> <20190826133439.GA13275@kroah.com>
+In-Reply-To: <20190826133439.GA13275@kroah.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 28 Aug 2019 10:55:42 +0200
+Message-ID: <CAJZ5v0jmsPO5m2zBV3_j8LgqQ2Uj6euXUCJgT74L93hZP9nP_A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] ACPI: Enable driver and firmware hints to control
+ power at probe time
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/vl+g_4dHxCiacR0wR8Sx6nD
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Aug 26, 2019 at 3:34 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Aug 26, 2019 at 01:32:00PM +0300, Sakari Ailus wrote:
+> > Hi Greg,
+> >
+> > On Mon, Aug 26, 2019 at 10:43:43AM +0200, Greg Kroah-Hartman wrote:
+> >
+> > ...
+> >
+> > > > diff --git a/include/linux/device.h b/include/linux/device.h
+> > > > index 6717adee33f01..4bc0ea4a3201a 100644
+> > > > --- a/include/linux/device.h
+> > > > +++ b/include/linux/device.h
+> > > > @@ -248,6 +248,12 @@ enum probe_type {
+> > > >   * @owner:       The module owner.
+> > > >   * @mod_name:    Used for built-in modules.
+> > > >   * @suppress_bind_attrs: Disables bind/unbind via sysfs.
+> > > > + * @probe_low_power: The driver supports its probe function being called while
+> > > > + *                    the device is in a low power state, independently of the
+> > > > + *                    expected behaviour on combination of a given bus and
+> > > > + *                    firmware interface etc. The driver is responsible for
+> > > > + *                    powering the device on using runtime PM in such case.
+> > > > + *                    This configuration has no effect if CONFIG_PM is disabled.
+> > > >   * @probe_type:  Type of the probe (synchronous or asynchronous) to use.
+> > > >   * @of_match_table: The open firmware table.
+> > > >   * @acpi_match_table: The ACPI match table.
+> > > > @@ -285,6 +291,7 @@ struct device_driver {
+> > > >   const char              *mod_name;      /* used for built-in modules */
+> > > >
+> > > >   bool suppress_bind_attrs;       /* disables bind/unbind via sysfs */
+> > > > + bool probe_low_power;
+> > >
+> > > Ick, no, this should be a bus-specific thing to handle such messed up
+> > > hardware.  Why polute this in the driver core?
+> >
+> > The alternative could be to make it I²C specific indeed; the vast majority
+> > of camera sensors are I²C devices these days.
+>
+> Why is this even needed to be a bus/device attribute at all?  You are
+> checking the firmware property in the probe function, just do the logic
+> there as you are, what needs to be saved to the bus's logic?
 
-Hi all,
+The situation today is that all devices are put into D0 by the ACPI
+layer before driver probing since drivers generally expect devices to
+be in D0 when their probe routines run.  If the driver is prepared to
+cope with devices in low-power states, though, powering them up before
+probing for a driver may not be necessary, but still the core (or
+generally the code invoking the driver probe) needs to know that the
+driver really is prepared for that.  Hence the driver flag AFAICS.
 
-After merging the drm-misc tree, today's linux-next build (powerpc
-allyesconfig) failed like this:
-
-drivers/gpu/drm/virtio/virtgpu_object.c:31:67: error: expected ')' before '=
-int'
- module_param_named(virglhack, virtio_gpu_virglrenderer_workaround, int, 04=
-00);
-                                                                   ^~~~
-                                                                   )
-
-Caused by commit
-
-  3e93bc2a58aa ("drm/virtio: make resource id workaround runtime switchable=
-.")
-
-I applied the following fix patch:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 28 Aug 2019 18:37:40 +1000
-Subject: [PATCH] drm/virtio: module_param_named() requires linux/modulepara=
-m.h
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/gpu/drm/virtio/virtgpu_object.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virt=
-io/virtgpu_object.c
-index aab5534056ec..b5f8923ac674 100644
---- a/drivers/gpu/drm/virtio/virtgpu_object.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-@@ -23,6 +23,8 @@
-  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  */
-=20
-+#include <linux/moduleparam.h>
-+
- #include <drm/ttm/ttm_execbuf_util.h>
-=20
- #include "virtgpu_drv.h"
---=20
-2.20.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/vl+g_4dHxCiacR0wR8Sx6nD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1mQXQACgkQAVBC80lX
-0GwORQf6AlHwThxv6cZcRGeDgqyf3lCCR2mfKYONLAp2GmjLFjkS3TaAri5ltvPT
-97svBbPdH8yu86Kw8PowHBXS8BUV1CxmrgfSrmZHUjBerrTi+wlIduVFP7Q8tzry
-haUQ6gaVphSvChG0OCAB6TsJZlnmHtJy5VZSRH5mZ4Opsn0HYGaa0RcV5dWqQM1z
-cpOpsz7Hbyf1DQC4TQ6Y5+CLD1sj4MNe9gh8N4blAlN6Kv7HoLMEMSZCUPUxSlkV
-Z9bLuzSnHv+EB77v0H3UO9x3OOR7g1KYc6GmVJyOXk0QQC9o/yery3tYscE2lobC
-tF82e/0NcWBt1banOVbXJQCqWDFFjg==
-=/Jl+
------END PGP SIGNATURE-----
-
---Sig_/vl+g_4dHxCiacR0wR8Sx6nD--
+Now, in theory there may be some platform requirements regarding the
+power states of devices during driver probe, although admittedly it is
+not entirely clear to me why that would be the case) and hence the
+property.  I would think that if the driver could cope with devices in
+low-power states during probe, the platform wouldn't need to worry
+about that.
