@@ -2,131 +2,79 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA9CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F67AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8EF12189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F6CB22CED
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:50:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfH1Ltv (ORCPT
+        id S1726462AbfH1Luw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 07:49:51 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:40467 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfH1Ltu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 07:49:50 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id B97E581423; Wed, 28 Aug 2019 13:49:34 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 13:49:47 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chen Yu <yu.c.chen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 4.19 72/98] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD
- family 15h/16h
-Message-ID: <20190828114947.GC8052@amd>
-References: <20190827072718.142728620@linuxfoundation.org>
- <20190827072722.020603090@linuxfoundation.org>
- <20190827113604.GB18218@amd>
- <alpine.DEB.2.21.1908271525480.1939@nanos.tec.linutronix.de>
- <20190828103113.GA14677@amd>
- <alpine.DEB.2.21.1908281231480.1869@nanos.tec.linutronix.de>
+        Wed, 28 Aug 2019 07:50:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59984 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726253AbfH1Luv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 07:50:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6C28BAF77;
+        Wed, 28 Aug 2019 11:50:50 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 13:50:48 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        frowand.list@gmail.com, sergey.senozhatsky@gmail.com,
+        rostedt@goodmis.org, kunit-dev@googlegroups.com,
+        Randy Dunlap <rdunlap@infradead.org>, sboyd@kernel.org,
+        shuah@kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2] kunit: fix failure to build without printk
+Message-ID: <20190828115048.b4per6j3rw53oc5u@pathway.suse.cz>
+References: <20190828093143.163302-1-brendanhiggins@google.com>
+ <20190828094929.GA14038@jagdpanzerIV>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="YD3LsXFS42OYHhNZ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908281231480.1869@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190828094929.GA14038@jagdpanzerIV>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 2019-08-28 18:49:29, Sergey Senozhatsky wrote:
+> On (08/28/19 02:31), Brendan Higgins wrote:
+> [..]
+> > Previously KUnit assumed that printk would always be present, which is
+> > not a valid assumption to make. Fix that by removing call to
+> > vprintk_emit, and calling printk directly.
+> > 
+> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
+> > Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> 
+> [..]
+> 
+> > -static void kunit_vprintk(const struct kunit *test,
+> > -			  const char *level,
+> > -			  struct va_format *vaf)
+> > -{
+> > -	kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
+> > -}
+> 
+> This patch looks good to me. I like the removal of recursive
+> vsprintf() (%pV).
 
---YD3LsXFS42OYHhNZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Same here. And I am happy that we did not add more external
+vprintk_emit() callers. It would be great to rework dev_printk()
+as well.
 
-Hi!
-
-> > > There is no way to reinitialize RDRAND from the kernel otherwise we w=
-ould
-> > > have exactly done that. If you know how to do that please tell.
-> >=20
-> > Would they? AMD is not exactly doing good job with communication
->=20
-> Yes they would. Stop making up weird conspiracy theories.
-
-> > here. If BIOS can do it, kernel can do it, too...
->=20
-> May I recommend to read up on SMM and BIOS being able to lock down access
-> to certain facilities?
->=20
-> > or do you have information saying otherwise?
->=20
-> Yes. It was clearly stated by Tom that it can only be done in the
-> BIOS.
-
-Do you have a link for that? Because I don't think I seen that one.
-
-> > > Also disabling it for every BIOS is the only way which can be done be=
-cause
-> > > there is no way to know whether the BIOS is fixed or not at cold boot
-> > > time. And it has to be known there because applications cache the
-> >=20
-> > I'm pretty sure DMI-based whitelist would help here. It should be
-> > reasonably to fill it with the common machines at least.
->=20
-> Send patches to that effect.
-
-Why should it be my job? AMD screwed this up, they should fix it
-properly. And you should insist on proper fix.
-
-> > Plus, where is the CVE, and does AMD do anything to make BIOS vendors
-> > fix them?
->=20
-> May I redirect you to: https://www.amd.com/en/corporate/contact
-
-That will certainly make communication easier, right.
-
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---YD3LsXFS42OYHhNZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1malsACgkQMOfwapXb+vKGNQCfex+HxrNNM1zW06KK6370wJxS
-AHgAn3isBqW2j5ATWV822FJMAu++J1j4
-=41iR
------END PGP SIGNATURE-----
-
---YD3LsXFS42OYHhNZ--
+Best Regards,
+Petr
