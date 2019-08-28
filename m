@@ -2,347 +2,120 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3DFC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 598CBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E5B2339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3564A2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfH1H1S (ORCPT
+        id S1726399AbfH1HaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 03:27:18 -0400
-Received: from shell.v3.sk ([90.176.6.54]:40231 "EHLO shell.v3.sk"
+        Wed, 28 Aug 2019 03:30:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:12862 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726271AbfH1H1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:27:16 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id C9F39D8242;
-        Wed, 28 Aug 2019 09:27:14 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id eGp538FQdVBH; Wed, 28 Aug 2019 09:26:52 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 83B91D82FA;
-        Wed, 28 Aug 2019 09:26:44 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id zkLEle5Xiaa7; Wed, 28 Aug 2019 09:26:40 +0200 (CEST)
-Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 28950D82FE;
-        Wed, 28 Aug 2019 09:26:37 +0200 (CEST)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v3 6/6] ARM: dts: mmp2: add OLPC XO 1.75 machine
-Date:   Wed, 28 Aug 2019 09:26:29 +0200
-Message-Id: <20190828072629.285760-7-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190828072629.285760-1-lkundrak@v3.sk>
-References: <20190828072629.285760-1-lkundrak@v3.sk>
+        id S1726271AbfH1HaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 03:30:22 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 52BF1806D1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 07:30:22 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id u13so397189wmm.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 00:30:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=ueqkpbyP1ubtGaLxgAbGdw9aVC+mMhLE/TY03oCkmFY=;
+        b=L4y7K0vSJGT9heYrDvucNmUHjQCr7vODVmhLmxZlbEZd9TAXIdDMQqIbO4lKGSK8ih
+         n6XZlOv6mCfo35yhkjwk9UWhQ/odKxSHhFH+qNZFzVgAzXePAF8b6qk2k0Y+Y/lnnqS9
+         t8YCq5z1/rZAQhPkiTqa4lllxLDejJQ8Z6Ccph2lLHM5VuUmXG5ehdaibegILO9LDhMU
+         ZkUDprLB8YJ+RTqcE5N7UYpK0k7H8prksE++w/gh1dph8JgJokhKG318uL24U0QvqOZ+
+         cCSjU+c+G/0zTqwcDAKGQy/eAcUmLy3d6Ma5azLA2TyMr51e0gWjgibJQWUNQbVmbVDx
+         3Q8A==
+X-Gm-Message-State: APjAAAWkWBmp2B42mWUUgvD7zSEVWIi4ZXHY8VC85hOdGorNw9imkp5K
+        J6055Q28EkWoqR00iEWJxQbmp/WyRVTZLV0K90ltMBdx4jVrFqGZ8B/CiwHggA7iY793yrexcZG
+        g1FkP6vSYIh8heVTreZf4mM8v
+X-Received: by 2002:a1c:a383:: with SMTP id m125mr2993622wme.57.1566977420364;
+        Wed, 28 Aug 2019 00:30:20 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwq3WXDR8/8BaKVCYWFgg9755Ezm/7Lys3X0fvMndwJ41MWuRxZIS+ZlMXkDXS9hnPrnMvG+w==
+X-Received: by 2002:a1c:a383:: with SMTP id m125mr2993570wme.57.1566977419919;
+        Wed, 28 Aug 2019 00:30:19 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id z25sm1854857wml.5.2019.08.28.00.30.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 00:30:19 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Roman Kagan <rkagan@virtuozzo.com>
+Subject: Re: [PATCH 3/3] KVM: x86: announce KVM_CAP_HYPERV_ENLIGHTENED_VMCS support only when it is available
+In-Reply-To: <20190827195224.GI27459@linux.intel.com>
+References: <20190827160404.14098-1-vkuznets@redhat.com> <20190827160404.14098-4-vkuznets@redhat.com> <CALMp9eRyabQA8v5cJ1AwmtFdNFvWQz2jQ+iGTRQjow7r4FV3xA@mail.gmail.com> <20190827195224.GI27459@linux.intel.com>
+Date:   Wed, 28 Aug 2019 09:30:18 +0200
+Message-ID: <878srdlpbp.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a fairly complete description of an OLPC XO 1.75 laptop.
-What's missing for now is the GPU, LCD controller, DCON, the panel and
-audio.
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-The machine is booted with OpenFirmware and thus has a devicetree.
-However, older versions are unable to create a valid FDT and don't
-follow the Linux bindings. Having an device tree in the kernel tree
-makes it easier to use mainline kernels on such machines, test changes
-with CONFIG_ARM_APPENDED_DTB and give a good reference on what bindings
-are used on the machine without an access to one.
+> On Tue, Aug 27, 2019 at 09:54:39AM -0700, Jim Mattson wrote:
+>> On Tue, Aug 27, 2019 at 9:04 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>> >
+>> > It was discovered that after commit 65efa61dc0d5 ("selftests: kvm: provide
+>> > common function to enable eVMCS") hyperv_cpuid selftest is failing on AMD.
+>> > The reason is that the commit changed _vcpu_ioctl() to vcpu_ioctl() in the
+>> > test and this one can't fail.
+>> >
+>> > Instead of fixing the test is seems to make more sense to not announce
+>> > KVM_CAP_HYPERV_ENLIGHTENED_VMCS support if it is definitely missing
+>> > (on svm and in case kvm_intel.nested=0).
+>> >
+>> > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> > ---
+>> >  arch/x86/kvm/x86.c | 3 ++-
+>> >  1 file changed, 2 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>> > index d1cd0fcff9e7..ef2e8b138300 100644
+>> > --- a/arch/x86/kvm/x86.c
+>> > +++ b/arch/x86/kvm/x86.c
+>> > @@ -3106,7 +3106,6 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>> >         case KVM_CAP_HYPERV_EVENTFD:
+>> >         case KVM_CAP_HYPERV_TLBFLUSH:
+>> >         case KVM_CAP_HYPERV_SEND_IPI:
+>> > -       case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
+>> >         case KVM_CAP_HYPERV_CPUID:
+>> >         case KVM_CAP_PCI_SEGMENT:
+>> >         case KVM_CAP_DEBUGREGS:
+>> > @@ -3183,6 +3182,8 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>> >                 r = kvm_x86_ops->get_nested_state ?
+>> >                         kvm_x86_ops->get_nested_state(NULL, NULL, 0) : 0;
+>> >                 break;
+>> > +       case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
+>> > +               r = kvm_x86_ops->nested_enable_evmcs != NULL;
+>> 
+>> You should probably have an explicit break here, in case someone later
+>> adds another case below.
+>
+> Yep, this will trigger a warning on compilers with -Wimplicit-fallthrough.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Pavel Machek <pavel@ucw.cz>
+I always forget there's more than checkpatch.pl :-) Thanks you your
+reviews guys, I'm going to send v2 of this patchset without PATCH1 which
+was already queued by Radim.
 
----
-Changes since v1:
-- Added this patch
-
- arch/arm/boot/dts/Makefile              |   3 +-
- arch/arm/boot/dts/mmp2-olpc-xo-1-75.dts | 244 ++++++++++++++++++++++++
- 2 files changed, 246 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/mmp2-olpc-xo-1-75.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9159fa2cea90c..65213b5265187 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -336,7 +336,8 @@ dtb-$(CONFIG_MACH_MESON8) +=3D \
- dtb-$(CONFIG_ARCH_MMP) +=3D \
- 	pxa168-aspenite.dtb \
- 	pxa910-dkb.dtb \
--	mmp2-brownstone.dtb
-+	mmp2-brownstone.dtb \
-+	mmp2-olpc-xo-1-75.dtb
- dtb-$(CONFIG_ARCH_MPS2) +=3D \
- 	mps2-an385.dtb \
- 	mps2-an399.dtb
-diff --git a/arch/arm/boot/dts/mmp2-olpc-xo-1-75.dts b/arch/arm/boot/dts/=
-mmp2-olpc-xo-1-75.dts
-new file mode 100644
-index 0000000000000..6cfa0d4a18845
---- /dev/null
-+++ b/arch/arm/boot/dts/mmp2-olpc-xo-1-75.dts
-@@ -0,0 +1,244 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/*
-+ * OLPC XO 1.75 Laptop.
-+ *
-+ * Copyright (C) 2018,2019 Lubomir Rintel <lkundrak@v3.sk>
-+ */
-+
-+/dts-v1/;
-+#include "mmp2.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/linux-event-codes.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/ {
-+	model =3D "OLPC XO-1.75";
-+	compatible =3D "olpc,xo-1.75", "mrvl,mmp2";
-+
-+	chosen {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <1>;
-+		ranges;
-+
-+		framebuffer@1fc00000 {
-+			compatible =3D "simple-framebuffer";
-+			reg =3D <0x1fc00000 (1200 * 900 * 2)>;
-+			width =3D <1200>;
-+			height =3D <900>;
-+			stride =3D <(1200 * 2)>;
-+			format =3D "r5g6b5";
-+			clocks =3D <&soc_clocks MMP2_CLK_DISP0_LCDC>,
-+				 <&soc_clocks MMP2_CLK_DISP0>;
-+		};
-+	};
-+
-+	memory {
-+		linux,usable-memory =3D <0x0 0x1f800000>;
-+		available =3D <0xcf000 0x1ef31000 0x1000 0xbf000>;
-+		reg =3D <0x0 0x20000000>;
-+		device_type =3D "memory";
-+	};
-+
-+	gpio-keys {
-+		compatible =3D "gpio-keys";
-+
-+		lid {
-+			label =3D "Lid";
-+			gpios =3D <&gpio 129 GPIO_ACTIVE_LOW>;
-+			linux,input-type =3D <EV_SW>;
-+			linux,code =3D <SW_LID>;
-+			wakeup-source;
-+		};
-+
-+		tablet_mode {
-+			label =3D "E-Book Mode";
-+			gpios =3D <&gpio 128 GPIO_ACTIVE_LOW>;
-+			linux,input-type =3D <EV_SW>;
-+			linux,code =3D <SW_TABLET_MODE>;
-+			wakeup-source;
-+		};
-+
-+		microphone_insert {
-+			label =3D "Microphone Plug";
-+			gpios =3D <&gpio 96 GPIO_ACTIVE_HIGH>;
-+			linux,input-type =3D <EV_SW>;
-+			linux,code =3D <SW_MICROPHONE_INSERT>;
-+			debounce-interval =3D <100>;
-+			wakeup-source;
-+		};
-+
-+		headphone_insert {
-+			label =3D "Headphone Plug";
-+			gpios =3D <&gpio 97 GPIO_ACTIVE_HIGH>;
-+			linux,input-type =3D <EV_SW>;
-+			linux,code =3D <SW_HEADPHONE_INSERT>;
-+			debounce-interval =3D <100>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	camera_i2c {
-+		compatible =3D "i2c-gpio";
-+		gpios =3D <&gpio 109 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>,
-+			<&gpio 108 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+		i2c-gpio,timeout-ms =3D <1000>;
-+		status =3D "okay";
-+
-+		camera@21 {
-+			compatible =3D "ovti,ov7670";
-+			reg =3D <0x21>;
-+			reset-gpios =3D <&gpio 102 GPIO_ACTIVE_LOW>;
-+			powerdown-gpios =3D <&gpio 150 GPIO_ACTIVE_LOW>;
-+			clocks =3D <&camera0>;
-+			clock-names =3D "xclk";
-+
-+			port {
-+				ov7670_0: endpoint {
-+					hsync-active =3D <1>;
-+					vsync-active =3D <1>;
-+					remote-endpoint =3D <&camera0_0>;
-+				};
-+			};
-+		};
-+	};
-+
-+	battery {
-+		compatible =3D "olpc,xo1.5-battery", "olpc,xo1-battery";
-+	};
-+
-+	wlan_reg: fixedregulator0 {
-+		compatible =3D "regulator-fixed";
-+		regulator-name =3D "wlan";
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		gpio =3D <&gpio 34 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	wlan_pwrseq: pwrseq0 {
-+		compatible =3D "mmc-pwrseq-sd8787";
-+		powerdown-gpios =3D <&gpio 57 GPIO_ACTIVE_HIGH>;
-+		reset-gpios =3D <&gpio 58 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	soc {
-+		axi@d4200000 {
-+			ap-sp@d4290000 {
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+				compatible =3D "olpc,ap-sp";
-+				interrupts =3D <40>;
-+				reg =3D <0xd4290000 0x1000>;
-+				data-gpios =3D <&gpio 72 GPIO_ACTIVE_HIGH>;
-+				clk-gpios =3D <&gpio 71 GPIO_ACTIVE_HIGH>;
-+				status =3D "okay";
-+			};
-+		};
-+	};
-+};
-+
-+&uart3 {
-+	status =3D "okay";
-+};
-+
-+&uart4 {
-+	status =3D "okay";
-+};
-+
-+&rtc {
-+	status =3D "okay";
-+};
-+
-+&usb_phy0 {
-+	status =3D "okay";
-+};
-+
-+&usb_otg0 {
-+	status =3D "okay";
-+};
-+
-+&mmc1 {
-+	clock-frequency =3D <50000000>;
-+	no-1-8-v;
-+	mrvl,clk-delay-cycles =3D <31>;
-+	broken-cd;
-+	status =3D "okay";
-+};
-+
-+&mmc2 {
-+	clock-frequency =3D <50000000>;
-+	no-1-8-v;
-+	bus-width =3D <4>;
-+	non-removable;
-+	broken-cd;
-+	wakeup-source;
-+	keep-power-in-suspend;
-+	mmc-pwrseq =3D <&wlan_pwrseq>;
-+	vmmc-supply =3D <&wlan_reg>;
-+	status =3D "okay";
-+};
-+
-+&mmc3 {
-+	clock-frequency =3D <50000000>;
-+	no-1-8-v;
-+	bus-width =3D <8>;
-+	non-removable;
-+	broken-cd;
-+	mrvl,clk-delay-cycles =3D <31>;
-+	status =3D "okay";
-+};
-+
-+&twsi1 {
-+	status =3D "okay";
-+
-+	audio-codec@1a {
-+		compatible =3D "realtek,alc5631";
-+		reg =3D <0x1a>;
-+		status =3D "okay";
-+	};
-+};
-+
-+&twsi2 {
-+	status =3D "okay";
-+
-+	rtc@68 {
-+		compatible =3D "dallas,ds1338";
-+		reg =3D <0x68>;
-+		status =3D "okay";
-+	};
-+};
-+
-+&twsi6 {
-+	status =3D "okay";
-+
-+	accelerometer@1d {
-+		compatible =3D "st,lis331dlh", "st,lis3lv02d";
-+		reg =3D <0x1d>;
-+		status =3D "okay";
-+	};
-+};
-+
-+&ssp3 {
-+	#address-cells =3D <0>;
-+	spi-slave;
-+	status =3D "okay";
-+	ready-gpio =3D <&gpio 125 GPIO_ACTIVE_HIGH>;
-+
-+	slave {
-+		compatible =3D "olpc,xo1.75-ec";
-+		spi-cpha;
-+		cmd-gpio =3D <&gpio 155 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&camera0 {
-+	status =3D "okay";
-+
-+	port {
-+		camera0_0: endpoint {
-+			remote-endpoint =3D <&ov7670_0>;
-+		};
-+	};
-+};
---=20
-2.21.0
-
+-- 
+Vitaly
