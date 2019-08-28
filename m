@@ -2,200 +2,249 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506DDC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9773C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1998C22CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C5E822DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:17:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vnvh0Xj/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kx6LzpL4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfH1ROz (ORCPT
+        id S1726693AbfH1RRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:14:55 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40174 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfH1ROy (ORCPT
+        Wed, 28 Aug 2019 13:17:40 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34108 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfH1RRj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:14:54 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w16so206684pfn.7;
-        Wed, 28 Aug 2019 10:14:54 -0700 (PDT)
+        Wed, 28 Aug 2019 13:17:39 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n9so92591pgc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:17:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nmX1iH5t+qGsoVau1cVSSS+oy8ShDNckWp+WcaFenT0=;
-        b=Vnvh0Xj/ASJi51jsUph9xt++YDQHzJfdlYwWDRJO+zLKz2zIoxTHkyS2UQ57JpOrIV
-         6Zbc2fx1HXukVUIVcS6rzxem/CoWtDoNgj8TfywJYln5ht/lFPcgU/wQ0r8izDgVMHek
-         OCQmb6JvRkkOzq+kzaI1+E3u8nXHIiYkdWqgnocE8AncTaK6ATTZpaBb0oLSVjxqCPtc
-         RNnyK66NbV4/Zdo3hDx5CIcP0SkM8Zti5lb6Bgshoi2cuVYSLvno/FdC1+jELybgJP7N
-         c1BcbGIwNOYgty0YliB1dJYfb2cC43CUGwuLrzL+U5tYgrYEjdWZeqwyqD/kDoB/JOLq
-         uPzw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eaCLGK9FXrF5m526qncRT9MCFot6dMXXZVurplrH24k=;
+        b=Kx6LzpL4IVpTiL/ZUYhKdYOjHsHia7ypBR/g3SYArnZfCLpub/KjdVvucucMjRdQ/v
+         mF9FRIo1fYghuXp+7S3eRGP1DPggB1Gxv7ZdBkEzQot4rYuYQbSTzmSBt2lzISWEiwwk
+         9Vyi0dFYnaD4ozub6xKO7uR23Opqc/Bm0ZMugtYWpGtCvFU8O/WAGrGTaUGxBjP7gxAE
+         qV0ybQVJWUmCEOCDUq8Q2OJR1uaw1YswQ79daDiZFpM2kLMm2S2quEMi2bMe6BJWWBOJ
+         SgpOH5F13jsDPHUC7Jnm7S845UkX21L73Oe+YSdLpf6+mjQkpUWBLT44uc+FDEoTHBG7
+         0hqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=nmX1iH5t+qGsoVau1cVSSS+oy8ShDNckWp+WcaFenT0=;
-        b=AFAsHrFNLR3LuQR7EOBlMHOnqEwZJbn/0tFTNzkjp05bl4AGtBozaI1cFI4B6ttj/Y
-         FKdq6ECPkfPxSAg5YznNcT0uZlpKuYDBuVZar2WdhXb45vtCIKSJmQ0nSK+RoU7QrQ+x
-         QUOQPc3WhktMmNoIS1JGbvHAGDsFO0eZDyxG1AC15csdh++H8zQ58dVKb7K9RvArHd9d
-         KhDMd3xWIhxA/VmknAhSpnZa4O06huFEJo9x03zabMEOoRwY59IEYZPaYuCkU4AF8jD9
-         sOvEk60wQrscMMYc8Uw5lsEESFAi5gLzOLfs9OaOB82xI+q0Ih38q+e6SgiNRyGwCnnG
-         0ybA==
-X-Gm-Message-State: APjAAAWvFBPVYN3sYHbRVx5EPt5lgIdugzDZwNSCozoZErJ7vde15kY0
-        HIc2/Hh7JMIkioTx5Y75w7g=
-X-Google-Smtp-Source: APXvYqxY9SmeZYt0VS3ln3DwcM6OqEMQCVzdKMxwJOhUrn8iumNim1xjpg+hYQShXyUJp18QUomh1w==
-X-Received: by 2002:aa7:9a12:: with SMTP id w18mr6211496pfj.110.1567012493608;
-        Wed, 28 Aug 2019 10:14:53 -0700 (PDT)
-Received: from [10.67.49.31] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id l123sm7132314pfl.9.2019.08.28.10.14.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 10:14:52 -0700 (PDT)
-Subject: Re: [PATCH v1 net-next] net: stmmac: Add support for MDIO interrupts
-To:     "Voon, Weifeng" <weifeng.voon@intel.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>
-References: <1566870320-9825-1-git-send-email-weifeng.voon@intel.com>
- <20190826184719.GF2168@lunn.ch>
- <cac5aba0-b47b-00c6-f99b-64c6b385308a@gmail.com>
- <D6759987A7968C4889FDA6FA91D5CBC814759747@PGSMSX103.gar.corp.intel.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <a5ca1ddf-76ff-a9d9-681c-dea56a318e70@gmail.com>
-Date:   Wed, 28 Aug 2019 10:14:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eaCLGK9FXrF5m526qncRT9MCFot6dMXXZVurplrH24k=;
+        b=A9xqCr9pOLNV97M4Oo+b4E2VBK+LwCeDD40ZGlmbgj7w+gRsl3dpc2kZYAivWl+wKl
+         +XOmo4A//e4+QDDPSPxaA2z0x29OBpIfy9jhL0YPEZ28tK/+8orrCJg1vAoVuxtE/oT/
+         baX9UYVGMBHC5amqJRNInTEUUQKwuEQCDhYxk0R6PqYNr7hRBFtNJdD6huMc6+X1Sfw9
+         Qwvg24YozJ1l+5Vpl2+//AoniqkcgsR/aeFBx3krQB8bdO0eQ1tuVxHiglqDhlWse6os
+         efS6HqURImvaoCZpZ+BE1/14/W1bu6L+M7MOrxippT43JiVkdhq4qENi2PSDWHF3qQj/
+         SMrA==
+X-Gm-Message-State: APjAAAWpIUrNGTj1UAnsGedvAIfosUrDzobtZtHgzLXgRmeuj+SmtWGf
+        owlLenkwK+4p/EvPToxyopK6V0kt5MrY04Y7dEG2GA==
+X-Google-Smtp-Source: APXvYqzOCQA2L8HcjOVIU+33jdQ9kRwRU/UFKElwxa6zrxkl5FNQZQxulMaQmxU8C8nLn8HuhfWavuafN3zlnM2BrxU=
+X-Received: by 2002:a62:cec4:: with SMTP id y187mr5940897pfg.84.1567012658389;
+ Wed, 28 Aug 2019 10:17:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <D6759987A7968C4889FDA6FA91D5CBC814759747@PGSMSX103.gar.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CAKwvOdnJAApaUhTQs7w_VjSeYBQa0c-TNxRB4xPLi0Y0sOQMMQ@mail.gmail.com>
+ <CAKwvOdkbY_XatVfRbZQ88p=nnrahZbvdjJ0OkU9m73G89_LRzg@mail.gmail.com>
+ <1566899033.o5acyopsar.astroid@bobo.none> <CAK7LNARHacanVT6XjRDkFJDETWX6qHfUJCFhskCVG6aDL-bt1g@mail.gmail.com>
+ <1566908344.dio7j9zb2h.astroid@bobo.none> <daacccf8e36132b6a747fa4b42626a8812906eaa.camel@decadent.org.uk>
+ <1566955930.uir50f8wen.astroid@bobo.none>
+In-Reply-To: <1566955930.uir50f8wen.astroid@bobo.none>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 28 Aug 2019 10:17:27 -0700
+Message-ID: <CAKwvOdmtT4in42Nwsm0ndqm8CB2jzaCKvtX+nmhdpA2dgMpBmw@mail.gmail.com>
+Subject: Re: a bug in genksysms/CONFIG_MODVERSIONS w/ __attribute__((foo))?
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Ben Hutchings <ben@decadent.org.uk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Debian kernel maintainers <debian-kernel@lists.debian.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        Sandeep Patil <sspatil@google.com>,
+        =?UTF-8?Q?Matthias_M=C3=A4nnich?= <maennich@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Alessio Balsini <balsini@google.com>,
+        Stephen Hines <srhines@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/28/19 10:07 AM, Voon, Weifeng wrote:
->>>> DW EQoS v5.xx controllers added capability for interrupt generation
->>>> when MDIO interface is done (GMII Busy bit is cleared).
->>>> This patch adds support for this interrupt on supported HW to avoid
->>>> polling on GMII Busy bit.
->>>>
->>>> stmmac_mdio_read() & stmmac_mdio_write() will sleep until wake_up()
->>>> is called by the interrupt handler.
->>>
->>> Hi Voon
->>>
->>> I _think_ there are some order of operation issues here. The mdiobus
->>> is registered in the probe function. As soon as of_mdiobus_register()
->>> is called, the MDIO bus must work. At that point MDIO read/writes can
->>> start to happen.
->>>
->>> As far as i can see, the interrupt handler is only requested in
->>> stmmac_open(). So it seems like any MDIO operations after probe, but
->>> before open are going to fail?
->>
->> AFAIR, wait_event_timeout() will continue to busy loop and wait until
->> the timeout, but not return an error because the polled condition was
->> true, at least that is my recollection from having the same issue with
->> the bcmgenet driver before it was moved to connecting to the PHY in the
->> ndo_open() function.
->> --
->> Florian
-> 
-> Florian is right as the poll condition is still true after the timeout. 
-> Hence, any mdio operation after probe and before ndo_open will still work.
-> The only cons here is that attaching the PHY will takes a full length of 
-> timeout time for each mdio_read and mdio_write. 
-> So we should attach the phy only after the interrupt handler is requested?
+On Tue, Aug 27, 2019 at 7:26 PM Nicholas Piggin <npiggin@gmail.com> wrote:
+>
+> Ben Hutchings's on August 28, 2019 1:34 am:
+> > On Tue, 2019-08-27 at 22:42 +1000, Nicholas Piggin wrote:
+> >> Masahiro Yamada's on August 27, 2019 8:49 pm:
+> >> > Hi.
+> >> >
+> >> > On Tue, Aug 27, 2019 at 6:59 PM Nicholas Piggin <npiggin@gmail.com> wrote:
+> >> > > Nick Desaulniers's on August 27, 2019 8:57 am:
+> >> > > > On Mon, Aug 26, 2019 at 2:22 PM Nick Desaulniers
+> >> > > > <ndesaulniers@google.com> wrote:
+> >> > > > > I'm looking into a linkage failure for one of our device kernels, and
+> >> > > > > it seems that genksyms isn't producing a hash value correctly for
+> >> > > > > aggregate definitions that contain __attribute__s like
+> >> > > > > __attribute__((packed)).
+> >> > > > >
+> >> > > > > Example:
+> >> > > > > $ echo 'struct foo { int bar; };' | ./scripts/genksyms/genksyms -d
+> >> > > > > Defn for struct foo == <struct foo { int bar ; } >
+> >> > > > > Hash table occupancy 1/4096 = 0.000244141
+> >> > > > > $ echo 'struct __attribute__((packed)) foo { int bar; };' |
+> >> > > > > ./scripts/genksyms/genksyms -d
+> >> > > > > Hash table occupancy 0/4096 = 0
+> >> > > > >
+> >> > > > > I assume the __attribute__ part isn't being parsed correctly (looks
+> >> > > > > like genksyms is a lex/yacc based C parser).
+> >> > > > >
+> >> > > > > The issue we have in our out of tree driver (*sadface*) is basically a
+> >> > > > > EXPORT_SYMBOL'd function whose signature contains a packed struct.
+> >> > > > >
+> >> > > > > Theoretically, there should be nothing wrong with exporting a function
+> >> > > > > that requires packed structs, and this is just a bug in the lex/yacc
+> >> > > > > based parser, right?  I assume that not having CONFIG_MODVERSIONS
+> >> > > > > coverage of packed structs in particular could lead to potentially
+> >> > > > > not-fun bugs?  Or is using packed structs in exported function symbols
+> >> > > > > with CONFIG_MODVERSIONS forbidden in some documentation somewhere I
+> >> > > > > missed?
+> >> > > >
+> >> > > > Ah, looks like I'm late to the party:
+> >> > > > https://lwn.net/Articles/707520/
+> >> > >
+> >> > > Yeah, would be nice to do something about this.
+> >> >
+> >> > modversions is ugly, so it would be great if we could dump it.
+> >> >
+> >> > > IIRC (without re-reading it all), in theory distros would be okay
+> >> > > without modversions if they could just provide their own explicit
+> >> > > versioning. They take care about ABIs, so they can version things
+> >> > > carefully if they had to change.
+> >
+> > Debian doesn't currently have any other way of detecting ABI changes
+> > (other than eyeballing diffs).
+> >
+> > I know there have been proposals of using libabigail for this instead,
+> > but I'm not sure how far those progressed.
+> >
+> >> > We have not provided any alternative solution for this, haven't we?
+> >> >
+> >> > In your patch (https://lwn.net/Articles/707729/),
+> >> > you proposed CONFIG_MODULE_ABI_EXPLICIT.
+> >>
+> >> Right, that was just my first proposal, but I am not confident that I
+> >> understood everybody's requirements. I don't think the distro people
+> >> had much time to to test things out.
+> >>
+> >> One possible shortcoming with that patch is no per-symbol version. The
+> >> distro may break an ABI for a security fix, but they don't want to break
+> >> all out of tree modules if it's an obscure ABI.
+> >
+> > Right, for example the KVM kABI is only meant for in-tree modules (like
+> > kvm_intel) and in Debian we do not change the "ABI version" and require
+> > rebuilding out-of-tree modules just because that ABI changes.
+> > Currently we maintain explicit lists of exported symbols and exporting
+> > modules for which we ignore ABI changes at build time.
+> >
+> >> The counter argument to
+> >> that is they should just rename the symbol in their kernel for such
+> >> cases, so I didn't implement it without somebody describing a good
+> >> requirement.
+> > [...]
+> >
+> > Sometimes it is just a single function that changes, but often a
+> > structure change can affect large numbers of functions.  For example,
+> > if KVM adds a member to an operations struct that can indirectly change
+> > the ABI for most of its exported functions.  We wouldn't want to change
+> > the ABI version but would still want to prevent loading mismatched kvm
+> > and kvm_intel versions.  It would be a lot more work to change all of
+> > the affected function names.
+>
+> You could change just a single symbol name though :)
+>
+> > An alternative to symbol version matching that I think would work for
+> > us is: if a module's exports or imports match the "changes ignored"
+> > list then the module can only be loaded on the exact version of the
+> > kernel, otherwise it only needs to match the ABI version.  I think that
+> > would avoid the need for carrying symbol versions, but we would still
+> > need a build-time ABI check and a way of flagging which symbols need
+> > the tighter version match.
+>
+> Just trying to think how best to express that.
+>
+> [ Aside, the whole symbol name resolution linking stuff does matching on
+>   on any number of ~arbitrary strings that you can generate as you like,
+>   and symbol tables are something that all existing tools and libs
+>   understand.
+>
+>   So I strongly favour using that as the back end for our "version"
+>   resolution system _if at all possible_ rather than adding these extra
+>   bits of crud that really just do the same thing. At least for a first
+>   pass, I don't want to over-engineer things.
+>
+>   Then it hopefully becomes a matter of adding some helper macros and
+>   build facilities on top of that which can contain everyone's
+>   requirements mostly within .config and perhaps a very small patch.
+>   A bit more work with preprocessor macros etc is far preferable to
+>   linking and loading "features" IMO]
+>
+> Back to your case, is it sufficient to have just an internal and an
+> external module version where the kernel provides both and your in-tree
+> modules match on the internal, others match on external?
+>
+> Thanks,
+> Nick
+>
 
-From a power management/resource utilization perspective, it is better
-to initialize as close as possible from the time where you are actually
-going to use the hardware, therefore ndo_open().
++ some Android folks who are looking into libabigail
 
-This may not be convenient or possible given how widely use stmmac is,
-and I do not know if parts of the Ethernet MAC require the PHY to supply
-the clock, in which case, you may have some chicke and egg conditions if
-the design does not allow for MDIO to work independently from the data
-plane. Also, I would be worried about introducing bugs.
+(root thread for context:
+https://lore.kernel.org/lkml/CAKwvOdnJAApaUhTQs7w_VjSeYBQa0c-TNxRB4xPLi0Y0sOQMMQ@mail.gmail.com/)
 
-You could do a couple of things:
+I'm only roughly aware of their issue/work, but hopefully they can
+collaborate and add their insights to a list of requirements we could
+collect, for any kind of replacement to CONFIG_MODVERSIONS/genksyms.
+I'm not sure if they were planning on presenting this work at Linux
+Plumber's Conference coming up or not, but I hope so.  Hopefully that
+work will be a general solution for all kernel developers and distros,
+not just Android.
 
-- continue to probe the device with interrupts disabled and add a
-condition around the call to wait_event_timeout() to do a busy-loop
-without going to the maximum defined timeout, if the interrupt line is
-requested, use wait_event_timeout()
+This issue is now blocking my compiler upgrade, so I'm going to focus
+on just fixing the yacc based parser to understand __attribute__'s on
+struct/enum/union declarations.
 
-- request the interrupt during the probe function, but only
-unmask/enable the MDIO interrupts for the probe to succeed and leave the
-data path interrupts for a later enabling during ndo_open()
+Speaking with Arnd about this issue, he came up with the test case:
+$ echo 'struct __attribute__((packed)) foo { char bar; int baz; };' |
+./scripts/genksyms/genksyms -d
+Hash table occupancy 0/4096 = 0
+$ echo 'struct __attribute__((packed)) foo { char bar; };' |
+./scripts/genksyms/genksyms -d
+Hash table occupancy 0/4096 = 0
+
+The implication being that because attributes don't parse correctly,
+these symbols get a hash value of 0x00 in Module.symvers, meaning we
+currently can't detect size changes of packed structs (or any other
+attribute-qualified type) and happily proceed loading modules with
+different ABIs than the kernel.
+
+I'll probably add some kind of script for unit tests for genksyms,
+too.  Feels like overkill for something known to be broken where
+active replacements are being discussed, but it's blocking my compiler
+upgrade for our products, so I'm just going to fix it for now.
 -- 
-Florian
+Thanks,
+~Nick Desaulniers
