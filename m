@@ -2,416 +2,238 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DED3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 465E0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3FC2342A
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:32:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566981142;
-	bh=n/49yLp2ozK7cq5bb/89vOqq4mHVR3ewPza17MuWHQM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CU4NR/HDtFDeLiIbKZ4xrsUDaIHC3Fe1rthqLwjkuscTZ3uuM7yu6oTFSVfUHpN9x
-	 67N0e9/jy6edaM3GfbHW4Utx+O5VhqCYVXG/p5DvYk9j2JDsz1ZBeFbYG7+cSgD4mB
-	 YY6n2AWkmeLrbbmOszOFTVTFhlVuwVfUMIn48bfU=
+	by mail.kernel.org (Postfix) with ESMTP id 192CF2342A
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:32:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfH1IcV (ORCPT
+        id S1726472AbfH1Icx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:32:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47736 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfH1IcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:32:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 919B72342A;
-        Wed, 28 Aug 2019 08:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566981139;
-        bh=n/49yLp2ozK7cq5bb/89vOqq4mHVR3ewPza17MuWHQM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RfA1sAD+vZ+0Cx/L/c4jl0Wt/zx63Wam+XP8u+Y+VN8EFFwl7uNRaTiLcK3L49qJW
-         laS6cWjHK3p+2jul3HYcxgg+/DDjIF04uLEv5Ol69B1GKlFPjGsiihJjwTDD2n28E6
-         dZs/+ulE27exJmbZOlOkohOZsW8AHe83l/Z7gJjA=
-Date:   Wed, 28 Aug 2019 10:32:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Julius Werner <jwerner@chromium.org>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net
-Subject: Re: [PATCH] usb: storage: Add ums-cros-aoa driver
-Message-ID: <20190828083216.GB28851@kroah.com>
-References: <20190827231409.253037-1-jwerner@chromium.org>
+        Wed, 28 Aug 2019 04:32:53 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:21664 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726292AbfH1Icx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:32:53 -0400
+X-UUID: c0b76ca13e734927a29b3ac15c57aa67-20190828
+X-UUID: c0b76ca13e734927a29b3ac15c57aa67-20190828
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1611986398; Wed, 28 Aug 2019 16:32:49 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 28 Aug 2019 16:32:53 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 28 Aug 2019 16:32:53 +0800
+Message-ID: <1566981166.31833.21.camel@mtksdaap41>
+Subject: Re: [RESEND, PATCH v13 11/12] soc: mediatek: cmdq: add
+ cmdq_dev_get_client_reg function
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        "Sascha Hauer" <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Sascha Hauer" <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        YT Shen <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>
+Date:   Wed, 28 Aug 2019 16:32:46 +0800
+In-Reply-To: <f8945f1b-aaa7-4f4a-59e5-8e817aeb46ae@gmail.com>
+References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
+         <20190820084932.22282-12-bibby.hsieh@mediatek.com>
+         <ccd3782e-b1bb-7887-f4a5-d7774183c7b7@gmail.com>
+         <1566878368.29523.1.camel@mtksdaap41>
+         <f8945f1b-aaa7-4f4a-59e5-8e817aeb46ae@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827231409.253037-1-jwerner@chromium.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 3A49F78DCF6A33DAF3FCCD33C1485A7F22BDB34F6B84E8949B1A3282971FEA442000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 04:14:09PM -0700, Julius Werner wrote:
-> This patch adds a new "unusual" USB mass storage device driver. This
-> driver will be used for a virtual USB storage device presented by an
-> Android phone running the 'Chrome OS Recovery'* Android app. This app
-> uses the Android Open Accessory (AOA) API to talk directly to a USB host
-> attached to the phone.
+On Tue, 2019-08-27 at 12:13 +0200, Matthias Brugger wrote:
 > 
-> The AOA protocol requires the host to send a custom vendor command on
-> EP0 to "switch" the phone into "AOA mode" (making it drop off the bus
-> and reenumerate with different descriptors). The ums-cros-aoa driver is
-> just a small stub driver to send these vendor commands. It identifies
-> the device it should operate on by VID/PID passed in through a module
-> parameter (e.g. from the bootloader). After the phone is in AOA mode,
-> the normal USB mass storage stack will recognize it by its special
-> VID/PID like any other "unusual dev". An initializer function will
-> further double-check that the device is the device previously operated
-> on by ums-cros-aoa.
+> On 27/08/2019 05:59, Bibby Hsieh wrote:
+> > On Fri, 2019-08-23 at 16:21 +0200, Matthias Brugger wrote:
+> >>
+> >> On 20/08/2019 10:49, Bibby Hsieh wrote:
+> >>> GCE cannot know the register base address, this function
+> >>> can help cmdq client to get the cmdq_client_reg structure.
+> >>>
+> >>> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> >>> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> >>> ---
+> >>>  drivers/soc/mediatek/mtk-cmdq-helper.c | 29 ++++++++++++++++++++++++++
+> >>>  include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++
+> >>>  2 files changed, 50 insertions(+)
+> >>>
+> >>> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> >>> index c53f8476c68d..80f75a1075b4 100644
+> >>> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> >>> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> >>> @@ -27,6 +27,35 @@ struct cmdq_instruction {
+> >>>  	u8 op;
+> >>>  };
+> >>>  
+> >>> +int cmdq_dev_get_client_reg(struct device *dev,
+> >>> +			    struct cmdq_client_reg *client_reg, int idx)
+> >>> +{
+> >>
+> >> Can't we do/call this in cmdq_mbox_create parsing the number of gce-client-reg
+> >> properties we have and allocating these using a pointer to cmdq_client_reg in
+> >> cmdq_client?
+> >> We will have to free the pointer then in cmdq_mbox_destroy.
+> >>
+> >> Regards,
+> >> Matthias
+> > 
+> > I don't think we need to keep the cmdq_client_reg in cmdq_client
+> > structure.
+> > Because our client will have own data structure, they will copy the
+> > client_reg information into their own structure.
+> > 
+> > In the design now, we do not allocate the cmdq_client_reg, client pass
+> > the cmdq_client_reg pointer into this API.
+> > Client will destroy the pointer after they get the information they
+> > want.
+> > 
 > 
-> *NOTE: The Android app is still under development and will be released
-> at a later date. I'm submitting this patch now so that the driver name
-> and module parameters can be set in stone already, because I have to
-> bake them into bootloader code that is not field-updatable.
+> My point wasn't so much about the lifecycle of the object, but the fact that we
+> add another call, which can be already full-filled by a necessary previous call
+> to cmdq_mbox_create. So I would prefer to add the information gathering for
+> cmdq_client_reg in this call, and let it live there for the time cmdq_client
+> lives. In the end we are talking about 40 bits of memory.
 > 
-> Signed-off-by: Julius Werner <jwerner@chromium.org>
-> ---
->  drivers/usb/storage/Kconfig        |  12 +++
->  drivers/usb/storage/Makefile       |   2 +
->  drivers/usb/storage/cros-aoa.c     | 129 +++++++++++++++++++++++++++++
->  drivers/usb/storage/initializers.c |  34 ++++++++
->  drivers/usb/storage/initializers.h |   4 +
->  drivers/usb/storage/unusual_devs.h |  18 ++++
->  6 files changed, 199 insertions(+)
->  create mode 100644 drivers/usb/storage/cros-aoa.c
 
-Pure syntax issues noted below, nothing on the content, I'll wait until
-after my coffee for that...
+Thanks for the comments. :D
 
+Actually, I'm working for developing the chandes for MTK DRM apply cmdq
+interface.
+For MTK DRM, all the components included in MTK_CRTC use one mailbox
+channel. According to [1], we create mailbox channel by mmsys device
+node after get all the informations (include cmdq_client_reg) about
+every device node of display components respectively. Please refer to
+[2], [3] and [4], I'm going to upstream them recently.
+
+If create mailbox channel and get the cmdq_client_reg in the same device
+node, your suggestion is good for me.
+But from display and mdp's viewpoint now, I don't think it is convenient
+for them.
+
+So I still prefer separate this function out of cmdq_mbox_create.:D
+
+
+[1]
+https://elixir.bootlin.com/linux/latest/source/arch/arm64/boot/dts/mediatek/mt8173.dtsi#907
+[2] get cmdq_client_reg in mtk_ddp_comp_init()
+https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1746354/12/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c#431
+[3] create mailbox channel in mtk_drm_crtc_create()
+https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1746354/12/drivers/gpu/drm/mediatek/mtk_drm_crtc.c#814
+[4] After component_bind_all(), the mtk_drm_crtc_create will be called 
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/e15c2dc6ceb4810a2090cd11a512932095866559/drivers/gpu/drm/mediatek/mtk_drm_drv.c#452
+
+Thanks.
+Bibby
+
+> Regards,
+> Matthias
 > 
-> diff --git a/drivers/usb/storage/Kconfig b/drivers/usb/storage/Kconfig
-> index 59aad38b490a6..cc901ee2bb766 100644
-> --- a/drivers/usb/storage/Kconfig
-> +++ b/drivers/usb/storage/Kconfig
-> @@ -184,6 +184,18 @@ config USB_STORAGE_ENE_UB6250
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called ums-eneub6250.
->  
-> +config USB_STORAGE_CROS_AOA
-> +	tristate "Support for connecting to Chrome OS Recovery Android app"
-> +	default n
+> > Thanks for the comments so much.
+> > 
+> > Bibby
+> > 
+> >>
+> >>> +	struct of_phandle_args spec;
+> >>> +	int err;
+> >>> +
+> >>> +	if (!client_reg)
+> >>> +		return -ENOENT;
+> >>> +
+> >>> +	err = of_parse_phandle_with_fixed_args(dev->of_node,
+> >>> +					       "mediatek,gce-client-reg",
+> >>> +					       3, idx, &spec);
+> >>> +	if (err < 0) {
+> >>> +		dev_err(dev,
+> >>> +			"error %d can't parse gce-client-reg property (%d)",
+> >>> +			err, idx);
+> >>> +
+> >>> +		return err;
+> >>> +	}
+> >>> +
+> >>> +	client_reg->subsys = (u8)spec.args[0];
+> >>> +	client_reg->offset = (u16)spec.args[1];
+> >>> +	client_reg->size = (u16)spec.args[2];
+> >>> +	of_node_put(spec.np);
+> >>> +
+> >>> +	return 0;
+> >>> +}
+> >>> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
+> >>> +
+> >>>  static void cmdq_client_timeout(struct timer_list *t)
+> >>>  {
+> >>>  	struct cmdq_client *client = from_timer(client, t, timer);
+> >>> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> >>> index a345870a6d10..02ddd60b212f 100644
+> >>> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> >>> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> >>> @@ -15,6 +15,12 @@
+> >>>  
+> >>>  struct cmdq_pkt;
+> >>>  
+> >>> +struct cmdq_client_reg {
+> >>> +	u8 subsys;
+> >>> +	u16 offset;
+> >>> +	u16 size;
+> >>> +};
+> >>> +
+> >>>  struct cmdq_client {
+> >>>  	spinlock_t lock;
+> >>>  	u32 pkt_cnt;
+> >>> @@ -24,6 +30,21 @@ struct cmdq_client {
+> >>>  	u32 timeout_ms; /* in unit of microsecond */
+> >>>  };
+> >>>  
+> >>> +/**
+> >>> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
+> >>> + *			       node of CMDQ client
+> >>> + * @dev:	device of CMDQ mailbox client
+> >>> + * @client_reg: CMDQ client reg pointer
+> >>> + * @idx:	the index of desired reg
+> >>> + *
+> >>> + * Return: 0 for success; else the error code is returned
+> >>> + *
+> >>> + * Help CMDQ client parsing the cmdq client reg
+> >>> + * from the device node of CMDQ client.
+> >>> + */
+> >>> +int cmdq_dev_get_client_reg(struct device *dev,
+> >>> +			    struct cmdq_client_reg *client_reg, int idx);
+> >>> +
+> >>>  /**
+> >>>   * cmdq_mbox_create() - create CMDQ mailbox client and channel
+> >>>   * @dev:	device of CMDQ mailbox client
+> >>>
+> > 
+> > 
 
-"default n" is the default, no need to list it again.
-
-> +	depends on USB_STORAGE
-> +	help
-> +	  Say Y here if you want to connect an Android phone running the Chrome
-> +	  OS Recovery app to this device and mount the image served by that app
-> +	  as a virtual storage device. Unless you're building for Chrome OS, you
-> +	  probably want to say N.
-> +
-> +	  If this driver is compiled as a module, it will be named ums-cros-aoa.
-> +
->  endif # USB_STORAGE
->  
->  config USB_UAS
-> diff --git a/drivers/usb/storage/Makefile b/drivers/usb/storage/Makefile
-> index a67ddcbb4e249..f734741d4658b 100644
-> --- a/drivers/usb/storage/Makefile
-> +++ b/drivers/usb/storage/Makefile
-> @@ -17,6 +17,7 @@ usb-storage-y += usual-tables.o
->  usb-storage-$(CONFIG_USB_STORAGE_DEBUG) += debug.o
->  
->  obj-$(CONFIG_USB_STORAGE_ALAUDA)	+= ums-alauda.o
-> +obj-$(CONFIG_USB_STORAGE_CROS_AOA)	+= ums-cros-aoa.o
->  obj-$(CONFIG_USB_STORAGE_CYPRESS_ATACB) += ums-cypress.o
->  obj-$(CONFIG_USB_STORAGE_DATAFAB)	+= ums-datafab.o
->  obj-$(CONFIG_USB_STORAGE_ENE_UB6250)	+= ums-eneub6250.o
-> @@ -31,6 +32,7 @@ obj-$(CONFIG_USB_STORAGE_SDDR55)	+= ums-sddr55.o
->  obj-$(CONFIG_USB_STORAGE_USBAT)		+= ums-usbat.o
->  
->  ums-alauda-y		:= alauda.o
-> +ums-cros-aoa-y		:= cros-aoa.o
->  ums-cypress-y		:= cypress_atacb.o
->  ums-datafab-y		:= datafab.o
->  ums-eneub6250-y		:= ene_ub6250.o
-> diff --git a/drivers/usb/storage/cros-aoa.c b/drivers/usb/storage/cros-aoa.c
-> new file mode 100644
-> index 0000000000000..269e9193209d9
-> --- /dev/null
-> +++ b/drivers/usb/storage/cros-aoa.c
-> @@ -0,0 +1,129 @@
-> +// SPDX-License-Identifier: GPL-2 WITH Linux-syscall-note
-
-.c files do not have that license, sorry (I have had _LONG_ discussions
-with lawyers about that over the past few weeks...)
-
-It should just be GPL-2
-
-
-
-> +/*
-> + * Driver for Chrome OS Recovery via Android Open Accessory
-> + *
-> + * (c) 2019 Google LLC (Julius Werner <jwerner@chromium.org>)
-> + *
-> + * This driver connects to an Android device via the Android Open Accessory
-> + * protocol to use it as a USB storage back-end. It is used for system recovery
-> + * on Chrome OS. The descriptors sent are specific to the Chrome OS Recovery app
-> + * for Android. The driver is inert unless activated by boot firmware with an
-> + * explicit kernel command line parameter.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/printk.h>
-> +#include <linux/usb.h>
-> +
-> +#include "initializers.h"
-> +
-> +#define DRV_NAME "ums-cros-aoa"
-
-KBUILD_MODNAME?
-
-
-> +
-> +MODULE_DESCRIPTION("Driver for Chrome OS Recovery via Android Open Accessory");
-> +MODULE_AUTHOR("Julius Werner <jwerner@chromium.org>");
-> +MODULE_LICENSE("GPL");
-
-This usually goes at the end of the file, but ok...
-
-
-> +
-> +#define AOA_GET_PROTOCOL	51
-> +#define AOA_SET_STRING		52
-> +#define AOA_START		53
-> +
-> +#define AOA_STR_MANUFACTURER	0
-> +#define AOA_STR_MODEL		1
-> +#define AOA_STR_DESCRIPTION	2
-> +#define AOA_STR_VERSION		3
-> +#define AOA_STR_URI		4
-> +#define AOA_STR_SERIAL		5
-> +
-> +#define CROS_MANUF		"Google"
-> +#define CROS_MODEL		"Chrome OS Recovery"
-> +#define CROS_DESC		"Chrome OS device in Recovery Mode"
-> +#define CROS_VERSION		"1.0"
-> +#define CROS_URI		"https://google.com/chromeos/recovery_android"
-> +
-> +static char *bind;
-> +module_param(bind, charp, 0);
-
-No documentation for a module parameter?
-
-And what is this, the 1990's?  Please do not add these unless you have
-no other option as they only work on a driver-wide basis, not a
-per-device basis.
-
-> +
-> +static struct usb_device_id cros_aoa_ids[] = {
-> +	{ USB_DEVICE(0, 0) },	/* to be filled out by cros_aoa_init() */
-
-as-is, this driver is doing nothing, so it will never be auto-loaded :(
-
-Please provide the real ids here for your device to start with.  And if
-you insist on adding new ids from userspace, then use the functionality
-the driver core provides for you, do not invent a new one.
-
-> +	{ }
-> +};
-> +/* No MODULE_DEVICE_TABLE(). Autoloading doesn't make sense for this module. */
-
-I disagree, you need to bind to something...
-
-> +
-> +static int set_string(struct usb_device *udev, u16 type, const char *string)
-> +{
-> +	return usb_control_msg(udev, usb_sndctrlpipe(udev, 0), AOA_SET_STRING,
-> +			       USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
-> +			       0, type, (char *)string, strlen(string) + 1,
-> +			       USB_CTRL_SET_TIMEOUT);
-> +}
-> +
-> +static int cros_aoa_probe(struct usb_interface *intf,
-> +			  const struct usb_device_id *id)
-> +{
-> +	int rv;
-> +	u16 aoa_protocol;
-> +	struct usb_device *udev = interface_to_usbdev(intf);
-> +
-> +	rv = usb_control_msg(udev, usb_rcvctrlpipe(udev, 0), AOA_GET_PROTOCOL,
-> +			     USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
-> +			     0, 0, &aoa_protocol, sizeof(aoa_protocol),
-> +			     USB_CTRL_GET_TIMEOUT);
-> +	if (rv < 0 && rv != -EPROTO)
-> +		goto fail;
-> +	if (rv != sizeof(aoa_protocol) || aoa_protocol < 1) {
-> +		dev_err(&intf->dev, "bound device does not support AOA?\n");
-> +		rv = -ENODEV;
-> +		goto fail;
-> +	}
-> +
-> +	if ((rv = set_string(udev, AOA_STR_MANUFACTURER, CROS_MANUF)) < 0 ||
-> +	    (rv = set_string(udev, AOA_STR_MODEL, CROS_MODEL)) < 0 ||
-> +	    (rv = set_string(udev, AOA_STR_DESCRIPTION, CROS_DESC)) < 0 ||
-> +	    (rv = set_string(udev, AOA_STR_VERSION, CROS_VERSION)) < 0 ||
-> +	    (rv = set_string(udev, AOA_STR_URI, CROS_URI)) < 0)
-> +		goto fail;
-
-Ok, I was going to stop and not talk about content, but what?  You are
-sending urls to a device???
-
-> +
-> +	rv = usb_control_msg(udev, usb_sndctrlpipe(udev, 0), AOA_START,
-> +			     USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
-> +			     0, 0, NULL, 0, USB_CTRL_SET_TIMEOUT);
-> +
-> +	if (!rv) {
-> +		dev_info(&intf->dev, "switching to AOA mode\n");
-
-Do not be noisy for a normal functioning driver.
-
-> +		usb_stor_cros_aoa_bind_busnum = udev->bus->busnum;
-> +		usb_stor_cros_aoa_bind_route = udev->route;
-> +		return 0;
-> +	}
-> +
-> +fail:	dev_err(&intf->dev, "probe error %d\n", rv);
-> +	return rv;
-> +}
-> +
-> +static void cros_aoa_disconnect(struct usb_interface *intf)
-> +{
-> +	/* nothing to do -- we expect this to happen right after probe() */
-> +}
-> +
-> +static struct usb_driver cros_aoa_stub_driver = {
-> +	.name =		DRV_NAME,
-> +	.probe =	cros_aoa_probe,
-> +	.disconnect =	cros_aoa_disconnect,
-> +	.id_table =	cros_aoa_ids,
-> +};
-> +
-> +static int __init cros_aoa_init(void)
-> +{
-> +	if (!bind || sscanf(bind, "%hx:%hx", &cros_aoa_ids[0].idVendor,
-> +					     &cros_aoa_ids[0].idProduct) != 2)
-> +		return -ENODEV;
-> +	pr_info(DRV_NAME ": bound to USB device %4x:%4x\n",
-> +		cros_aoa_ids[0].idVendor, cros_aoa_ids[0].idProduct);
-> +	return usb_register(&cros_aoa_stub_driver);
-> +}
-> +
-> +static void __exit cros_aoa_exit(void)
-> +{
-> +	usb_deregister(&cros_aoa_stub_driver);
-> +}
-> +
-> +module_init(cros_aoa_init);
-> +module_exit(cros_aoa_exit);
-> diff --git a/drivers/usb/storage/initializers.c b/drivers/usb/storage/initializers.c
-> index f8f9ce8dc7102..3056db79cd1d9 100644
-> --- a/drivers/usb/storage/initializers.c
-> +++ b/drivers/usb/storage/initializers.c
-> @@ -92,3 +92,37 @@ int usb_stor_huawei_e220_init(struct us_data *us)
->  	usb_stor_dbg(us, "Huawei mode set result is %d\n", result);
->  	return 0;
->  }
-> +
-> +#if defined(CONFIG_USB_STORAGE_CROS_AOA) || \
-> +		defined(CONFIG_USB_STORAGE_CROS_AOA_MODULE)
-
-We have a macro to make that easier, please use it.
-
-> +/*
-> + * Our VID/PID match grabs any Android device that was switched into Android
-> + * Open Accessory mode. We only want to bind to the one that was switched by the
-> + * ums-cros-aoa driver. There's no 100% way to identify the same device again
-> + * (because it changes all descriptors), but checking that it is on the same bus
-> + * with the same topology route should be a pretty good heuristic.
-> + */
-> +int usb_stor_cros_aoa_bind_busnum = -1;
-> +EXPORT_SYMBOL(usb_stor_cros_aoa_bind_busnum);
-> +u32 usb_stor_cros_aoa_bind_route;
-> +EXPORT_SYMBOL(usb_stor_cros_aoa_bind_route);
-
-Ick.
-
-And _GPL at the very least...
-
-
-> +
-> +int usb_stor_cros_aoa_validate(struct us_data *us)
-> +{
-> +	if (us->pusb_dev->bus->busnum != usb_stor_cros_aoa_bind_busnum ||
-> +	    us->pusb_dev->route != usb_stor_cros_aoa_bind_route) {
-> +		dev_info(&us->pusb_intf->dev,
-> +			 "ums-cros-aoa ignoring unknown AOA device\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	/*
-> +	 * Only interface 0 connects to the AOA app. Android devices that have
-> +	 * ADB enabled also export an interface 1. We don't want it.
-> +	 */
-> +	if (us->pusb_intf->cur_altsetting->desc.bInterfaceNumber != 0)
-> +		return -ENODEV;
-> +
-> +	return 0;
-> +}
-> +#endif /* defined(CONFIG_USB_STORAGE_CROS_AOA) || ... */
-> diff --git a/drivers/usb/storage/initializers.h b/drivers/usb/storage/initializers.h
-> index 2dbf9c7d97492..35fe9ef3247d6 100644
-> --- a/drivers/usb/storage/initializers.h
-> +++ b/drivers/usb/storage/initializers.h
-> @@ -37,3 +37,7 @@ int usb_stor_ucr61s2b_init(struct us_data *us);
->  
->  /* This places the HUAWEI E220 devices in multi-port mode */
->  int usb_stor_huawei_e220_init(struct us_data *us);
-> +
-> +extern int usb_stor_cros_aoa_bind_busnum;
-> +extern u32 usb_stor_cros_aoa_bind_route;
-> +int usb_stor_cros_aoa_validate(struct us_data *us);
-> diff --git a/drivers/usb/storage/unusual_devs.h b/drivers/usb/storage/unusual_devs.h
-> index ea0d27a94afe0..45fe9bbc6da18 100644
-> --- a/drivers/usb/storage/unusual_devs.h
-> +++ b/drivers/usb/storage/unusual_devs.h
-> @@ -2259,6 +2259,24 @@ UNUSUAL_DEV( 0x1e74, 0x4621, 0x0000, 0x0000,
->  		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
->  		US_FL_BULK_IGNORE_TAG | US_FL_MAX_SECTORS_64 ),
->  
-> +/*
-> + * Using an Android phone as USB storage back-end for Chrome OS recovery. See
-> + * usb/storage/cros-aoa.c for details.
-> + */
-> +#if defined(CONFIG_USB_STORAGE_CROS_AOA) || \
-> +		defined(CONFIG_USB_STORAGE_CROS_AOA_MODULE)
-> +UNUSUAL_DEV(  0x18d1, 0x2d00, 0x0000, 0xffff,
-> +		"Google",
-> +		"Chrome OS Recovery via AOA",
-> +		USB_SC_SCSI, USB_PR_BULK, usb_stor_cros_aoa_validate,
-> +		US_FL_SINGLE_LUN | US_FL_CAPACITY_OK),
-> +UNUSUAL_DEV(  0x18d1, 0x2d01, 0x0000, 0xffff,
-> +		"Google",
-> +		"Chrome OS Recovery via AOA (with ADB)",
-> +		USB_SC_SCSI, USB_PR_BULK, usb_stor_cros_aoa_validate,
-> +		US_FL_SINGLE_LUN | US_FL_CAPACITY_OK),
-> +#endif /* defined(CONFIG_USB_STORAGE_CROS_AOA) || ... */
-
-Hey look, device ids!  Use them above please...
-
-I'm with Matt, this should be trivial to do in userspace, why is this
-needed in the kernel?  Did you try it in userspace already?  What does
-the code for that look like?
-
-thanks,
-
-greg k-h
