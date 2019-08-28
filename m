@@ -6,136 +6,87 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE414C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49349C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A96E62173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBCC217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfH1JXC (ORCPT
+        id S1726432AbfH1J1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:23:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:56132 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbfH1JXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:23:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC682337;
-        Wed, 28 Aug 2019 02:23:00 -0700 (PDT)
-Received: from [10.162.40.83] (p8cg001049571a15.blr.arm.com [10.162.40.83])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BCFF3F59C;
-        Wed, 28 Aug 2019 02:22:50 -0700 (PDT)
-Subject: Re: [RFC V2 0/1] mm/debug: Add tests for architecture exported page
- table helpers
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Wed, 28 Aug 2019 05:27:43 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46220 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfH1J1n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 05:27:43 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1i2uEt-0006qQ-MY; Wed, 28 Aug 2019 11:27:39 +0200
+Date:   Wed, 28 Aug 2019 11:27:39 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Scott Wood <swood@redhat.com>, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
         Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1565335998-22553-1-git-send-email-anshuman.khandual@arm.com>
- <20190809101632.GM5482@bombadil.infradead.org>
- <a5aab7ff-f7fd-9cc1-6e37-e4185eee65ac@arm.com>
- <20190809135202.GN5482@bombadil.infradead.org>
- <7a88f6bb-e8c7-3ac7-2f92-1de752a01f33@arm.com>
- <20190826131308.GA15933@bombadil.infradead.org>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <504f891e-7346-7328-74b0-7df3acc230e8@arm.com>
-Date:   Wed, 28 Aug 2019 14:52:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v2 2/3] sched: migrate_enable: Use sleeping_lock to
+ indicate involuntary sleep
+Message-ID: <20190828092739.46mrffvzjv6v3de5@linutronix.de>
+References: <20190821231906.4224-1-swood@redhat.com>
+ <20190821231906.4224-3-swood@redhat.com>
+ <20190823162024.47t7br6ecfclzgkw@linutronix.de>
+ <433936e4c720e6b81f9b297fefaa592fd8a961ad.camel@redhat.com>
+ <20190824031014.GB2731@google.com>
+ <20190826152523.dcjbsgyyir4zjdol@linutronix.de>
+ <20190826162945.GE28441@linux.ibm.com>
+ <20190827092333.jp3darw7teyyw67g@linutronix.de>
+ <20190827155306.GF26530@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190826131308.GA15933@bombadil.infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20190827155306.GF26530@linux.ibm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 08/26/2019 06:43 PM, Matthew Wilcox wrote:
-> On Mon, Aug 26, 2019 at 08:07:13AM +0530, Anshuman Khandual wrote:
->> On 08/09/2019 07:22 PM, Matthew Wilcox wrote:
->>> On Fri, Aug 09, 2019 at 04:05:07PM +0530, Anshuman Khandual wrote:
->>>> On 08/09/2019 03:46 PM, Matthew Wilcox wrote:
->>>>> On Fri, Aug 09, 2019 at 01:03:17PM +0530, Anshuman Khandual wrote:
->>>>>> Should alloc_gigantic_page() be made available as an interface for general
->>>>>> use in the kernel. The test module here uses very similar implementation from
->>>>>> HugeTLB to allocate a PUD aligned memory block. Similar for mm_alloc() which
->>>>>> needs to be exported through a header.
->>>>>
->>>>> Why are you allocating memory at all instead of just using some
->>>>> known-to-exist PFNs like I suggested?
->>>>
->>>> We needed PFN to be PUD aligned for pfn_pud() and PMD aligned for mk_pmd().
->>>> Now walking the kernel page table for a known symbol like kernel_init()
->>>
->>> I didn't say to walk the kernel page table.  I said to call virt_to_pfn()
->>> for a known symbol like kernel_init().
->>>
->>>> as you had suggested earlier we might encounter page table page entries at PMD
->>>> and PUD which might not be PMD or PUD aligned respectively. It seemed to me
->>>> that alignment requirement is applicable only for mk_pmd() and pfn_pud()
->>>> which create large mappings at those levels but that requirement does not
->>>> exist for page table pages pointing to next level. Is not that correct ? Or
->>>> I am missing something here ?
->>>
->>> Just clear the bottom bits off the PFN until you get a PMD or PUD aligned
->>> PFN.  It's really not hard.
->>
->> As Mark pointed out earlier that might end up being just a synthetic PFN
->> which might not even exist on a given system.
+On 2019-08-27 08:53:06 [-0700], Paul E. McKenney wrote:
+> > > On the other hand, within a PREEMPT=n kernel, the call to schedule()
+> > > would split even an rcu_read_lock() critical section.  Which is why I
+> > > asked earlier if sleeping_lock_inc() and sleeping_lock_dec() are no-ops
+> > > in !PREEMPT_RT_BASE kernels.  We would after all want the usual lockdep
+> > > complaints in that case.
+> > 
+> > sleeping_lock_inc() +dec() is only RT specific. It is part of RT's
+> > spin_lock() implementation and used by RCU (rcu_note_context_switch())
+> > to not complain if invoked within a critical section.
 > 
-> And why would that matter?
+> Then this is being called when we have something like this, correct?
 > 
+> 	DEFINE_SPINLOCK(mylock); // As opposed to DEFINE_RAW_SPINLOCK().
+> 
+> 	...
+> 
+> 	rcu_read_lock();
+> 	do_something();
+> 	spin_lock(&mylock); // Can block in -rt, thus needs sleeping_lock_inc()
+> 	...
+> 	rcu_read_unlock();
+> 
+> Without sleeping_lock_inc(), lockdep would complain about a voluntary
+> schedule within an RCU read-side critical section.  But in -rt, voluntary
+> schedules due to sleeping on a "spinlock" are OK.
+> 
+> Am I understanding this correctly?
 
-To start with the test uses struct page with mk_pte() and mk_pmd() while
-pfn gets used in pfn_pud() during pXX_basic_tests(). So we will not be able
-to derive a valid struct page from a synthetic pfn. Also if synthetic pfn is
-going to be used anyway then why derive it from a real kernel symbol like
-kernel_init(). Could not one be just made up with right alignment ?
+Everything perfect except that it is not lockdep complaining but the
+WARN_ON_ONCE() in rcu_note_context_switch().
 
-Currently the test allocates 'mm_struct' and other page table pages from real
-memory then why should it use synthetic pfn while creating actual page table
-entries ? Couple of benefits going with synthetic pfn will be..
+> 
+> 							Thanx, Paul
 
-- It simplifies the test a bit removing PUD_SIZE allocation helpers
-- It might enable the test to be run on systems without adequate memory
-
-In the current proposal the allocation happens during boot making it much more
-likely to succeed than not and when it fails, respective tests will be skipped.
-
-I am just wondering if being able to run complete set of tests on smaller
-systems with less memory weighs lot more in favor of going with synthetic
-pfn instead.
+Sebastian
