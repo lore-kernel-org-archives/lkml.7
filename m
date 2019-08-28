@@ -2,175 +2,86 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1BEC41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B901C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05F7D22CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:18:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="z3RuttDM"
+	by mail.kernel.org (Postfix) with ESMTP id 2957E2189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbfH1OSc (ORCPT
+        id S1726952AbfH1OSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:18:32 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37979 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfH1OSX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:18:23 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o184so236805wme.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 07:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=x8fPXZy6s7fSXGNVXDgDu4BkBSj5SqALzh4Ghh1aBOk=;
-        b=z3RuttDMt3zQy24jOPCzgIyuqq+QsAtA5zyPntuqSomsBiTTNZfb/86imnzx/8ah5e
-         zYGzol3Lm6Mu0ZMr8k5Zh/0r40bfepyK2b23EV+Hj5f68+y7ocpHxwNXK5qu+rrZG1xd
-         ttyT+uwd5HdpesNRcNxZ6+pQYPg6AwOP89g0gNxz4gX3BFBMVBNHFjRSBWCYRBpAw7Fb
-         3nt27CVcWzGJ7LK9uVZOv9hHv6GufTEc0r67+PF16zBpYl1QMwD7BZ9lOzPXVympnp4I
-         wxW4uobb0WlmK+ZcP0YrmFE4a9CcKqVaV/U0hja6BhmT08HvOMiLDaQGiWjmUTOMYhDk
-         03Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=x8fPXZy6s7fSXGNVXDgDu4BkBSj5SqALzh4Ghh1aBOk=;
-        b=L92SN1aSBB57/C+ggn893vP3+J0HaMPb9NndK+zF8dTemYvmXoNr/Y6hT2l+5Z+2lg
-         lCR+Dwm67g7vkZiw0uiPtRetVn8xVH+r3NZt9jsds3pNv5XkbPM/5PSQW6CadpzKpVPQ
-         YZZ/c/CQTzHL2OGzoFqPB+tkqDa3675qJEFmtsNCF1GHNo3fydIUvatNP5jGZL6tXvYb
-         nnyz1ctNpMQGlULRmHv9ZJje0aZJVgn5k6aDLX1MS72jZEtIgHUuLMQOBYe/omoNdNLB
-         4A5+2N9pTOySwpyFgy9Yl0kqOa+H4+6LvURNSxf5n/fhmLVDpL/xYBf3ZuDH2tSuB3He
-         X7Ow==
-X-Gm-Message-State: APjAAAWRAi8kaVri2yjVqX9SKHxNC9Q2bbRNAnKiAluIYUvaZsG9NUHN
-        7qnM9NWHnGrhuolejvSAtLiRh0LmQp9lTg==
-X-Google-Smtp-Source: APXvYqz//1qAjYnMY49bdNYUBOzbmJ/xbIX+Ea4PZTRK756pvLSdafxWSsysjqRMaSATj4WVGPBi3A==
-X-Received: by 2002:a1c:1b58:: with SMTP id b85mr3858293wmb.95.1567001901362;
-        Wed, 28 Aug 2019 07:18:21 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id u8sm3022354wmj.3.2019.08.28.07.18.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 07:18:20 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] arm64: dts: khadas-vim3: add support for the SM1 based VIM3L
-Date:   Wed, 28 Aug 2019 16:18:16 +0200
-Message-Id: <20190828141816.16328-4-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190828141816.16328-1-narmstrong@baylibre.com>
-References: <20190828141816.16328-1-narmstrong@baylibre.com>
+        Wed, 28 Aug 2019 10:18:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48864 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726466AbfH1OSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:18:46 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 15783308123B;
+        Wed, 28 Aug 2019 14:18:46 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7DC1335F2;
+        Wed, 28 Aug 2019 14:18:42 +0000 (UTC)
+Subject: Re: [PATCH v2] fs/proc/page: Skip uninitialized page when iterating
+ page structures
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Dan Williams <dan.j.williams@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+References: <20190826124336.8742-1-longman@redhat.com>
+ <20190827142238.GB10223@dhcp22.suse.cz>
+ <20190828080006.GG7386@dhcp22.suse.cz>
+ <8363a4ba-e26f-f88c-21fc-5dd1fe64f646@redhat.com>
+ <20190828140938.GL28313@dhcp22.suse.cz>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <4367f507-97ba-a74e-6bf5-811cdd6ecdf9@redhat.com>
+Date:   Wed, 28 Aug 2019 10:18:41 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190828140938.GL28313@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 28 Aug 2019 14:18:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the Amlogic SM1 based Khadas VIM3L, sharing all the same features
-as the G12B based VIM3, but:
-- a different DVFS support since only a single cluster is available
-- audio is still not available on SM1
+On 8/28/19 10:09 AM, Michal Hocko wrote:
+> On Wed 28-08-19 09:46:21, Waiman Long wrote:
+>> On 8/28/19 4:00 AM, Michal Hocko wrote:
+>>> On Tue 27-08-19 16:22:38, Michal Hocko wrote:
+>>>> Dan, isn't this something we have discussed recently?
+>>> This was http://lkml.kernel.org/r/20190725023100.31141-3-t-fukasawa@vx.jp.nec.com
+>>> and talked about /proc/kpageflags but this is essentially the same thing
+>>> AFAIU. I hope we get a consistent solution for both issues.
+>>>
+>> Yes, it is the same problem. The uninitialized page structure problem
+>> affects all the 3 /proc/kpage{cgroup,count,flags) files.
+>>
+>> Toshiki's patch seems to fix it just for /proc/kpageflags, though.
+> Yup. I was arguing that whacking a mole kinda fix is far from good. Dan
+> had some arguments on why initializing those struct pages is a problem.
+> The discussion had a half open end though. I hoped that Dan would try
+> out the initialization side but I migh have misunderstood.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/Makefile          |  1 +
- .../dts/amlogic/meson-sm1-khadas-vim3l.dts    | 70 +++++++++++++++++++
- 2 files changed, 71 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+If the page structures of the reserved PFNs are always initialized, that
+will fix the problem too. I am not familiar with the zone device code.
+So I didn't attempt to do that.
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index edbf128e7707..84afecba9ec0 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -35,3 +35,4 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-sm1-sei610.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-sm1-khadas-vim3l.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-new file mode 100644
-index 000000000000..5233bd7cacfb
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-@@ -0,0 +1,70 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-sm1.dtsi"
-+#include "meson-khadas-vim3.dtsi"
-+
-+/ {
-+	compatible = "khadas,vim3l", "amlogic,sm1";
-+	model = "Khadas VIM3L";
-+
-+	vddcpu: regulator-vddcpu {
-+		/*
-+		 * Silergy SY8030DEC Regulator.
-+		 */
-+		compatible = "pwm-regulator";
-+
-+		regulator-name = "VDDCPU";
-+		regulator-min-microvolt = <690000>;
-+		regulator-max-microvolt = <1050000>;
-+
-+		vin-supply = <&vsys_3v3>;
-+
-+		pwms = <&pwm_AO_cd 1 1250 0>;
-+		pwm-dutycycle-range = <100 0>;
-+
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU1_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU2_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU3_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&pwm_AO_cd {
-+	pinctrl-0 = <&pwm_ao_d_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&xtal>;
-+	clock-names = "clkin1";
-+	status = "okay";
-+};
--- 
-2.22.0
+Cheers,
+Longman
 
