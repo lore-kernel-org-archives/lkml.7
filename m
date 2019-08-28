@@ -7,115 +7,105 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC52C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBA0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E779208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7690F208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:59:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EPTJU0js"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eIprUPXR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfH1K7B (ORCPT
+        id S1726457AbfH1K7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:59:01 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46640 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbfH1K7B (ORCPT
+        Wed, 28 Aug 2019 06:59:50 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33624 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfH1K7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:59:01 -0400
-Received: by mail-pl1-f194.google.com with SMTP id o3so850881plb.13;
-        Wed, 28 Aug 2019 03:59:01 -0700 (PDT)
+        Wed, 28 Aug 2019 06:59:50 -0400
+Received: by mail-wr1-f67.google.com with SMTP id u16so2055498wrr.0;
+        Wed, 28 Aug 2019 03:59:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=3PfQgtmB/PeAwXzGWu3d6xyhKveRxe5sV2Su3HbU17A=;
-        b=EPTJU0js8l61hptAqP3s6hKS9aCaWQCN7ibiSNdE0YlenTrKIvMaJsnL00ZDyH/1Id
-         HVjpQ8BxRVeJoMR7sXd8i/JICRFB0D615CJqg0mmYhS5NFUbNLc6AOnYQZhHqvb5tsfX
-         GblMVaNIspx1j8Yr2R3D7tXDwmArQhhIJac7WuPlmLoPXveMQVakQQ1YCrui6Yj8B83O
-         02s7Cw7xXknEuKTxMY7nAKHpg56M2d55t1SnI14IxCd8UkjAYdcOpGUCwa53rTVmCgoC
-         tp6JYtulQCexCDDiG0UY0djuW7xN6WkBA2AmAZxVD1lo6KFWXbIe3CX16vId+io8PIfK
-         XKRA==
+        h=date:from:subject:to:cc:message-id:in-reply-to:references
+         :mime-version;
+        bh=4e6dKncyC8lppPWJvFlONYDFtBQAbbnYiHIeSIDNvNo=;
+        b=eIprUPXRpsLzuaXAUzKBaM7IpTdSw6XABL4VxaqqldXK/lX4ElDqlRvy1zblQtSrE1
+         ai2b2ubv4a6AgNuifyPIZtuM2YPhQAduEi1FiMhjRpppYbO+rw+Ky2Q6oimX1/L2NgPp
+         Gj6uUix49iHQadgJxep34frC++ySipugVJxSzH5h7iLEeexJBDkdBnlM80aMq/pyVI95
+         VRxQfDB9IL5lYN0uM/1o22RFh1d7fQQaEx2Ns8iQw0njAx8ltYQSmNl7sfInyuKpTMXL
+         xAagDk4XOc8n+oYjsSAe/8iLiJvCGO2b6uXeYTiayz20u+8Ru2tSF3n9kz1HQD5Gkkqo
+         BAAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=3PfQgtmB/PeAwXzGWu3d6xyhKveRxe5sV2Su3HbU17A=;
-        b=SAO+CMs2yQwiy282PxJGFqIrSi/44XRGgccAXENd/DnH7yf/agqZMBSJFxA3pMMAVu
-         2J1vf+aZwv+UhGUFAkIyPguQCXfKmG1V53NZ0mRzFKwJdLw80IyVz5+RfJGuQKFpvA5L
-         U/3tQxM8kTIdMyaGmy5XqeZpf9N1vpedJxu/D6Y3Nz2c582WsTbVZugU2liRh3pvN61W
-         8mDI/QtQdFnJte5bOhKRt7fImRaO3iZdh2qkyQ5tRYICPdyGZunmY0Mr3Otwd8Kwvc4w
-         Bjh4XN/5dCMoD4iaQ4bekzxPAOaXPAZ1v/Zr/Mr4jN6B4QIW3OyQpKKSCWyeA7oJB4Hv
-         qocA==
-X-Gm-Message-State: APjAAAUj+vamFhTPbDyDKPjDphr+JUfeZT6u/9viPP5m7lj8bQH3g+CX
-        4r3FsR1BM4+y2kzyHPJRWm4=
-X-Google-Smtp-Source: APXvYqwGf181xs50DmlZ+yXjcA3Ha+rq4NNQ+z03UQuBiE/tZSYbrDXwgyYFSdpeT6T3QIgucQmJpg==
-X-Received: by 2002:a17:902:7592:: with SMTP id j18mr3671462pll.186.1566989940790;
-        Wed, 28 Aug 2019 03:59:00 -0700 (PDT)
-Received: from localhost (14-202-91-55.tpgi.com.au. [14.202.91.55])
-        by smtp.gmail.com with ESMTPSA id g8sm1969083pgk.1.2019.08.28.03.58.59
+        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
+         :references:mime-version;
+        bh=4e6dKncyC8lppPWJvFlONYDFtBQAbbnYiHIeSIDNvNo=;
+        b=f7LMXP+n/OpLnx0nk6UUy4nC2BnJITDjDUh5Ox7iTJ3jXObc+LPuqpRgyNBwC94m7c
+         7ghZhoD+GSDInT2B341MyHI6NQ6PFo+xDVxTKYN8hKvwpSNonCOy0kKMnPgxCp6325Um
+         ROuHqWRA8UhktP6fP1VkYctYP3Oawjk7+0K82Qry8i0MsonNT5i93+oTNp9bK5FjKVrU
+         Guk30tNtJIn2dpcXRjLEZFHHUY7r9QarqZVkhR21FySj8rzH2pA9Ox3+d13n/zcNVQfl
+         i06maHgaWTspDj5fKM0B2jh6aMpk11eZiN3g4xZhq+M8UgNpJHXIXQkyysgiVtK0PFrc
+         An6A==
+X-Gm-Message-State: APjAAAUXthQNAQWLsZYTzD304p5av/uiXyasAGW+vFfKQ4HD+zraJ9XQ
+        xpUPXGg3+19dnQPiD4amcmAJhVqiWUFS0A==
+X-Google-Smtp-Source: APXvYqxQOaOKwoOUHo201U9bFqXrt+nZtY7OrdmazPpB6kx5obOFIFow50MilXv5wS+WAGrgz70f5Q==
+X-Received: by 2002:adf:bc84:: with SMTP id g4mr3884149wrh.135.1566989987792;
+        Wed, 28 Aug 2019 03:59:47 -0700 (PDT)
+Received: from [192.168.1.105] (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id b144sm4381228wmb.3.2019.08.28.03.59.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 03:59:00 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 20:57:48 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 0/4] Disable compat cruft on ppc64le v2
-To:     linuxppc-dev@lists.ozlabs.org, Michal Suchanek <msuchanek@suse.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        David Hildenbrand <david@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Breno Leitao <leitao@debian.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Neuling <mikey@neuling.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Wed, 28 Aug 2019 03:59:47 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 12:59:45 +0200
+From:   Krzysztof Wilczynski <kswilczynski@gmail.com>
+Subject: Re: [PATCH] x86/PCI: Add missing log facility and move to use pr_
+ macros in pcbios.c
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Krzysztof Wilczynski <kw@linux.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <cover.1566987936.git.msuchanek@suse.de>
-In-Reply-To: <cover.1566987936.git.msuchanek@suse.de>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <1566989985.26704.2@gmail.com>
+In-Reply-To: <20190827224725.GD9987@google.com>
+References: <20190825182557.23260-1-kw@linux.com>
+        <20190827224725.GD9987@google.com>
+X-Mailer: geary/3.32.0
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1566988993.aiyajovdx0.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Suchanek's on August 28, 2019 8:30 pm:
-> With endian switch disabled by default the ppc64le compat supports
-> ppc32le only which is something next to nobody has binaries for.
->=20
-> Less code means less bugs so drop the compat stuff.
+Hello Bjorn,
 
-Interesting patches, thanks for looking into it. I don't know much
-about compat and wrong endian userspaces. I think sys_switch_endian
-is enabled though, it's just a strange fast endian swap thing that
-has been disabled by default.
+Thank you for the feedback.
+[...]
+>>  Make the log facility used to print warnings to be KERN_WARNING
+>>  explicitly, rather than rely on the current (or default) value
+>>  of the MESSAGE_LOGLEVEL_DEFAULT set in Kconfig.  This will make
+>>  all the warnings in the arch/x86/pci/pcbios.c to be printed
+>>  consistently at the same log facility.
+> 
+> This is slightly confusing.  There are only two messages that didn't
+> supply a log level, so the avoidance of MESSAGE_LOGLEVEL_DEFAULT
+> applies to those.
 
-The first patches look pretty good. Maybe for the last one it could
-become a selectable option?
+Good point.  I will update both the wording and the explanation so that
+it would be more accurate and make a whole lot more sense.
+
+[...]
+> Might be worth doing this as well:
+> 
+>   #define pr_fmt(fmt) "PCI: " fmt
+> 
+> and removing the "PCI: " prefix from the messages.  This would change
+> the "bios32_service" output slightly, but I think the change would be
+> a good one.
+
+Will do. The v2 have all the improvements. Thank you!
+
+Krzysztof
 
 
-> I am not particularly sure about the best way to resolve the llseek
-> situation. I don't see anything in the syscal tables making it
-> 32bit-only so I suppose it should be available on 64bit as well.
-
-It's for 32-bit userspace only. Can we just get rid of it, or is
-there some old broken 64-bit BE userspace that tries to call it?
-
-Thanks,
-Nick
-
-=
