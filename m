@@ -2,92 +2,107 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BECC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656ACC41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B64A5214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D90521883
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:55:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="In1ofVVk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfH1Ixq (ORCPT
+        id S1726571AbfH1IzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:53:46 -0400
-Received: from mga12.intel.com ([192.55.52.136]:36181 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfH1Ixn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:53:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 01:53:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
-   d="scan'208";a="332095289"
-Received: from deyangko-mobl.ccr.corp.intel.com ([10.249.168.35])
-  by orsmga004.jf.intel.com with ESMTP; 28 Aug 2019 01:53:40 -0700
-Message-ID: <b94af6b2101f436c1bdeec744e164c78ee7c2682.camel@intel.com>
-Subject: Re: [PATCH] thermal: armada: Fix -Wshift-negative-value
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>, edubezval@gmail.com,
-        linux-pm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Huckleberry <nhuck@google.com>
-Date:   Wed, 28 Aug 2019 16:53:49 +0800
-In-Reply-To: <20190819102131.41da667b@xps13>
-References: <20190613184923.245935-1-nhuck@google.com>
-         <27428324-129e-ee37-304a-0da2ed3810a0@linaro.org>
-         <CAJkfWY4X-YwuansL1R5w0rQNmE_hVJZKrMBJmOLp9G2DJPkNow@mail.gmail.com>
-         <CAKwvOdkEp=q+2B_iqqyHJLwwUaFH2jnO+Ey8t-hn=x4shTbdoA@mail.gmail.com>
-         <c2b821f2-545a-9839-3de6-d68dfee5b5dc@linaro.org>
-         <20190819102131.41da667b@xps13>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 28 Aug 2019 04:55:03 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33848 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfH1IzD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:55:03 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n9so1109335pgc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 01:55:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZLhox3MGYU3vCPS8rU4RE1IvC0ssD0tDNzjTJYofQ/w=;
+        b=In1ofVVkExdB/56av3bUTO7avmdkFk/Pqr0JvQXtiAgUAfC2H8Rx0juj7UBNDrFfF7
+         mkpDwsuMPI+mgcWm4y66DB3z3GDqQXCk/goKJbknEzXrWSQnyL9lwR3wHQ79x7Q51a27
+         GXz2PmbWzsZvywqAGjIKFzooojw8P1cChYuMY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZLhox3MGYU3vCPS8rU4RE1IvC0ssD0tDNzjTJYofQ/w=;
+        b=hl4I6ZVQxp1+eQZOgXm6XSGSu2M5tBGgnHXH6BxPWcdbbMsE2QJ8zqH9uQ1UYzcfj+
+         D1A2V1s2L/4gQu4U2fz0Hy1ozsT+ugHeJHv/eEb8qXQf+9WfbbaswD/YfF+RKVptalAp
+         twk4CGib2RpqTnSlqAF16HLMDqEjDoLSbt33gEyQe6ncsE/bTbPaxha/r9FjTOaO42Xn
+         Ww3XSXFHzYXNxnWLOSJyRMIedIRBYksN4eLlS7flnJafHQs9MC7UX9zsxWV26v7zaPIb
+         zgZ6v5ZE+W0UjQTXfm8vlja9M1tFJBtL/VuiErWtBoui4WzlVQV4stxDJbs35UyuQ7H6
+         jwUQ==
+X-Gm-Message-State: APjAAAUJdmcwsgq0tmtH4kmfvp4B6olX+mvyMkyxa6LJxSk0LEXGinDW
+        04bHg/Z6UV7ZelvQ/hv0gjmK/Q==
+X-Google-Smtp-Source: APXvYqytDZtQ/1TFhyJ4wMqNxJBsNjny0aOoAimJi3RhZ1BROAWcLL8bfzDNHGtwKRyViN7YtxaPaw==
+X-Received: by 2002:a17:90a:fe0e:: with SMTP id ck14mr3113158pjb.78.1566982502193;
+        Wed, 28 Aug 2019 01:55:02 -0700 (PDT)
+Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id z189sm2431386pfb.137.2019.08.28.01.54.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 28 Aug 2019 01:55:01 -0700 (PDT)
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v2 0/6] PAXB INTx support with proper model
+Date:   Wed, 28 Aug 2019 14:24:42 +0530
+Message-Id: <1566982488-9673-1-git-send-email-srinath.mannam@broadcom.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-19 at 10:21 +0200, Miquel Raynal wrote:
-> Hello,
-> 
-> Daniel Lezcano <daniel.lezcano@linaro.org> wrote on Thu, 15 Aug 2019
-> 01:06:21 +0200:
-> 
-> > On 15/08/2019 00:12, Nick Desaulniers wrote:
-> > > On Tue, Aug 13, 2019 at 10:28 AM 'Nathan Huckleberry' via Clang
-> > > Built
-> > > Linux <clang-built-linux@googlegroups.com> wrote:  
-> > > > 
-> > > > Following up to see if this patch is going to be accepted.  
-> > > 
-> > > Miquel is listed as the maintainer of this file in MAINTAINERS.
-> > > Miquel, can you please pick this up?  Otherwise Zhang, Eduardo,
-> > > and
-> > > Daniel are listed as maintainers for drivers/thermal/.  
-> > 
-> > I'm listed as reviewer, it is up to Zhang or Eduardo to take the
-> > patches.
-> > 
-> > 
-> 
-> Sorry for the delay, I don't manage a tree for this driver, I'll let
-> Zhang or Eduardo take the patch with my
-> 
-> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> 
+This patch series adds PCIe legacy interrupt (INTx) support to the iProc
+PCIe driver by modeling it with its own IRQ domain. All 4 interrupts INTA,
+INTB, INTC, INTD share the same interrupt line connected to the GIC
+in the system. This is now modeled by using its own IRQ domain.
 
-Patch applied.
+Also update all relevant devicetree files to adapt to the new model.
 
-thanks,
-rui
-> 
-> Thanks,
-> Miquèl
+This patch set is based on Linux-5.2-rc4.
+
+Changes from v1:
+  - Addressed Rob, Lorenzo, Arnd's comments
+    - Used child node for interrupt controller.
+  - Addressed Andy Shevchenko's comments
+    - Replaced while loop with do-while.
+
+Ray Jui (6):
+  dt-bindings: pci: Update iProc PCI binding for INTx support
+  PCI: iproc: Add INTx support with better modeling
+  arm: dts: Change PCIe INTx mapping for Cygnus
+  arm: dts: Change PCIe INTx mapping for NSP
+  arm: dts: Change PCIe INTx mapping for HR2
+  arm64: dts: Change PCIe INTx mapping for NS2
+
+ .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |  48 ++++++++--
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |  30 ++++++-
+ arch/arm/boot/dts/bcm-hr2.dtsi                     |  30 ++++++-
+ arch/arm/boot/dts/bcm-nsp.dtsi                     |  45 ++++++++--
+ arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi   |  28 +++++-
+ drivers/pci/controller/pcie-iproc.c                | 100 ++++++++++++++++++++-
+ drivers/pci/controller/pcie-iproc.h                |   6 ++
+ 7 files changed, 260 insertions(+), 27 deletions(-)
+
+-- 
+2.7.4
 
