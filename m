@@ -2,119 +2,129 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DC8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC84C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7C9233FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:33:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLT+8WPP"
+	by mail.kernel.org (Postfix) with ESMTP id C4EBF233FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:37:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567035469;
+	bh=EhEjFW+KsaoKMHjqDkQxAsY+zVP9owpde5YL942AqFQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=N4FI9KlybkBbPb1H62qkzWOe+hRiQIArkNxTQpE54lDDXluqAsuT+PF32K7Rzn6is
+	 1FKOdQOm91BUEDMBtnHKSL8OFyKzv9evrEbNU7gwhEBCg7iT51i6sgzqV6gg5XQEC8
+	 8TkcXlI0L5kkTyL3+N0MiIUB71X9WrwbEDFcr3oU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfH1Xdy (ORCPT
+        id S1727086AbfH1Xht convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 19:33:54 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35589 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfH1Xdy (ORCPT
+        Wed, 28 Aug 2019 19:37:49 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42044 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726935AbfH1Xhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 19:33:54 -0400
-Received: by mail-ed1-f66.google.com with SMTP id t50so1911697edd.2;
-        Wed, 28 Aug 2019 16:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:message-id:in-reply-to:references
-         :mime-version;
-        bh=ccNqdtuiMvt6E8atu6PgUd6UzKjg1A78YsekiYEtSnk=;
-        b=bLT+8WPPJtUWMEXfvUFDV5YqjR2OK/pzHblHLsLXxScJ1vkjtxQdF13jyx9HdcmaqO
-         q/oJKLJeGS6ArWmchOkEdgtzJ2ibOlnrFq9LCCGisOem3SvmO74q3reNstk8xH8obWxp
-         hZMtUOpLpRjwIgzTb9yBonT54aWVqzlDW9AQR81afwqbjv8Xn0wIrDs5K3ZPr1lkcSIc
-         OVGYDxn8bCBL2koGv32UqQ08J0MS8Rg1d0v6rMQwwv1SR6+lVgfUgMAcgHGiLNl/ykhn
-         sEeGCXmbr0uj11j0XacJt6BJ0xnERq3dhf73ty3LRoOZv1jttJk3BXWCy0EvEQ54ktle
-         oCFQ==
+        Wed, 28 Aug 2019 19:37:48 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j7so1575123ota.9;
+        Wed, 28 Aug 2019 16:37:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
-         :references:mime-version;
-        bh=ccNqdtuiMvt6E8atu6PgUd6UzKjg1A78YsekiYEtSnk=;
-        b=nvhV8ZXz6CT1cEHm4oGEQ/tt/rpX/F/ccSw8b8H7fTPGEozb+zGqUGPAXBn6bNgHwl
-         D/lNMuRzOyc2PiRpTQH3fK3EQk+7ZFAJsY2uP/i49Uzb/aOHGu7N8ffTbsamK6N451tD
-         dhWCtsMPVXIZUktrSYkAV66sDJv1m2LhCjvFCk62CpOxWI5/ZmGH/ydPrrtC1tW4D9rY
-         +wwH9a0qASI1V6BltgF54peueq+5N/LMPSr95tut0j8WCPPSknA4SoISk4Q/UxX58Kyh
-         ApA/SoD7R9n8HcWXamem2TEUfkQ8YFqBjoNeHvQ4BBzv5AxRn603+yznGiMZeg/WNf1Q
-         y3iQ==
-X-Gm-Message-State: APjAAAVqz21hhwJMJ6ofjObM+A4xblqvYZxo8TxIsFewbdfTM59RC2Ja
-        e2GlyMAKSLe89/jX2Z/jVnw=
-X-Google-Smtp-Source: APXvYqzQtWmLg+Ff54zz0b3czHoIHOxt4Qvbah0rzrUfmbZTDmtksvM9wVOjqT28pgl4148pgVwMJQ==
-X-Received: by 2002:a17:906:8409:: with SMTP id n9mr5493528ejx.128.1567035232073;
-        Wed, 28 Aug 2019 16:33:52 -0700 (PDT)
-Received: from [192.168.1.105] (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id h13sm107252edw.78.2019.08.28.16.33.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 16:33:51 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 01:33:49 +0200
-From:   Krzysztof Wilczynski <kswilczynski@gmail.com>
-Subject: Re: [PATCH] PCI: hv: Make functions only used locally static in
- pci-hyperv.c
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Krzysztof Wilczynski <kw@linux.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Message-Id: <1567035229.11524.0@gmail.com>
-In-Reply-To: <20190828222618.GE7013@google.com>
-References: <20190826154159.9005-1-kw@linux.com>
-        <20190828222618.GE7013@google.com>
-X-Mailer: geary/3.32.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0WiNNlZ19WAx+O8CTTiGYwNeR0ZDw2Ysbv/e1WoYV9o=;
+        b=NzkWW2rEUGn2hm/+Q47nfXQgS+iditfvHFjoCGWPnNViisDyUh6UvUmPOb65gsI/lF
+         zuaC7Xxrb5ctQXyRUOOyy/h1IwuZvE+zN4e3+oNsKirgxmXjvDpQQXuozaSvDkdVg9Cp
+         yqPjw/dg3dbI5/Ygmw+SLiOVx47+r9hQ2+sKrFCE54kekC0uAUDSjJmNq6a5x6LsTtsu
+         t12qTTd4XdWTL3BcYPeHfY0uNf3s5O6GBh3ASBHgNsaucY/E2wgXzYBjfv4zt9AfAxZN
+         4SVn5aoXJzcyXIZnLGEEcgVqdSk4nwYWL5ekaqJR/FcezLmm0qPxIUvNLOvGGgnXydFk
+         38Lw==
+X-Gm-Message-State: APjAAAXVjpTOUYRSE1sEn6DzPM323ZmQx3fqTW7nN/MexHDcm2EkcxuP
+        D9oo/0mzQclC1WrxeqBTfNX2zuOryNHIvMGHkkM=
+X-Google-Smtp-Source: APXvYqxk5XxurJ7D0mvitMxzIf9FQRgo2vpruN5+wj43N/LYuGLxqqtW3SsJxC+VaDntTllf2UOHc/U87dV9dPOR7W8=
+X-Received: by 2002:a9d:12d1:: with SMTP id g75mr5311313otg.189.1567035467967;
+ Wed, 28 Aug 2019 16:37:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+References: <1564643196-7797-1-git-send-email-wanpengli@tencent.com>
+ <7b1e3025-f513-7068-32ac-4830d67b65ac@intel.com> <c3fe182f-627f-88ad-cb4d-a4189202b438@redhat.com>
+ <20190803202058.GA9316@amt.cnet> <CANRm+CwtHBOVWFcn+6Z3Ds7dEcNL2JP+b6hLRS=oeUW98A24MQ@mail.gmail.com>
+ <20190826204045.GA24697@amt.cnet> <CANRm+Cx0+V67Ek7FhSs61ZqZL3MgV88Wdy17Q6UA369RH7=dgQ@mail.gmail.com>
+ <CANRm+CxqYMzgvxYyhZLmEzYd6SLTyHdRzKVaSiHO-4SV+OwZUQ@mail.gmail.com>
+ <CAJZ5v0iQc0-WzqeyAh-6m5O-BLraRMj+Z7sqvRgGwh2u2Hp7cg@mail.gmail.com> <20190828143916.GA13725@amt.cnet>
+In-Reply-To: <20190828143916.GA13725@amt.cnet>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 29 Aug 2019 01:37:35 +0200
+Message-ID: <CAJZ5v0jiBprGrwLAhmLbZKpKUvmKwG9w4_R7+dQVqswptis5Qg@mail.gmail.com>
+Subject: Re: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when dedicated
+ physical CPUs are available
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Wanpeng Li <kernellwp@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Bjorn,
-Thank you for feedback.
+On Wed, Aug 28, 2019 at 4:39 PM Marcelo Tosatti <mtosatti@redhat.com> wrote:
+>
+> On Wed, Aug 28, 2019 at 10:45:44AM +0200, Rafael J. Wysocki wrote:
+> > On Wed, Aug 28, 2019 at 10:34 AM Wanpeng Li <kernellwp@gmail.com> wrote:
+> > >
+> > > On Tue, 27 Aug 2019 at 08:43, Wanpeng Li <kernellwp@gmail.com> wrote:
+> > > >
+> > > > Cc Michael S. Tsirkin,
+> > > > On Tue, 27 Aug 2019 at 04:42, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> > > > >
+> > > > > On Tue, Aug 13, 2019 at 08:55:29AM +0800, Wanpeng Li wrote:
+> > > > > > On Sun, 4 Aug 2019 at 04:21, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> > > > > > >
+> > > > > > > On Thu, Aug 01, 2019 at 06:54:49PM +0200, Paolo Bonzini wrote:
+> > > > > > > > On 01/08/19 18:51, Rafael J. Wysocki wrote:
+> > > > > > > > > On 8/1/2019 9:06 AM, Wanpeng Li wrote:
+> > > > > > > > >> From: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > > > >>
+> > > > > > > > >> The downside of guest side polling is that polling is performed even
+> > > > > > > > >> with other runnable tasks in the host. However, even if poll in kvm
+> > > > > > > > >> can aware whether or not other runnable tasks in the same pCPU, it
+> > > > > > > > >> can still incur extra overhead in over-subscribe scenario. Now we can
+> > > > > > > > >> just enable guest polling when dedicated pCPUs are available.
+> > > > > > > > >>
+> > > > > > > > >> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > > > > >> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > > > > > > > >> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> > > > > > > > >> Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> > > > > > > > >> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > > > >
+> > > > > > > > > Paolo, Marcelo, any comments?
+> > > > > > > >
+> > > > > > > > Yes, it's a good idea.
+> > > > > > > >
+> > > > > > > > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> > >
+> > > Hi Marcelo,
+> > >
+> > > If you don't have more concern, I guess Rafael can apply this patch
+> > > now since the merge window is not too far.
+> >
+> > I will likely queue it up later today and it will go to linux-next
+> > early next week.
+> >
+> > Thanks!
+>
+> NACK patch.
 
-[...]
-> Maybe just:
-> 
->   PCI: hv: Make functions static
-> 
-> since we already know it's in pci-hyperv.c, and it's obvious that you
-> can only do this for functions that are only used locally.
+I got an ACK from Paolo on it, though.  Convince Paolo to withdraw his
+ACK if you want it to not be applied.
 
-Makes sense.  I will update the subject line in v3.
+> Just don't load the haltpoll driver.
 
-[...]
-> Rewrap commit log to fill 75 columns.
-
-Sorry about this.  I wasn't sure if one also should wrap compiler and/or
-checkpatch.pl script warnings or errors.  I will fix this.
-
-> Does this fix all the similar warnings in drivers/pci/?  If there are
-> more, maybe we could fix them all in a single patch or at least a
-> single series?
-
-At the moment, while compiling the drivers/pci the compiler yields a 
-similar
-warning for the following files:
-
-arch/x86/pci/xen.c
-arch/x86/pci/numachip.c
-drivers/pci/controller/pci-hyperv.c
-drivers/pci/vc.c
-
-I will have a look at each closer.
-
-Krzysztof
-
-
+And why would that be better?
