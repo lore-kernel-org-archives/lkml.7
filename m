@@ -2,218 +2,134 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2A8C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9442EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 017E32173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E38208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:52:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9uRkJiA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfH1Kvv (ORCPT
+        id S1726429AbfH1Kw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:51:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44334 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725991AbfH1Kvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:51:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2B415AD82;
-        Wed, 28 Aug 2019 10:51:49 +0000 (UTC)
-Subject: Re: [LKP] [drm/mgag200] 90f479ae51: vm-scalability.median -18.8%
- regression
-To:     Rong Chen <rong.a.chen@intel.com>, Feng Tang <feng.tang@intel.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>, michel@daenzer.net,
-        lkp@01.org, linux-kernel@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>
-References: <14fdaaed-51c8-b270-b46b-cba7b5c4ba52@suse.de>
- <20190805070200.GA91650@shbuild999.sh.intel.com>
- <c0c3f387-dc93-3146-788c-23258b28a015@intel.com>
- <045a23ab-78f7-f363-4a2e-bf24a7a2f79e@suse.de>
- <37ae41e4-455d-c18d-5c93-7df854abfef9@intel.com>
- <370747ca-4dc9-917b-096c-891dcc2aedf0@suse.de>
- <c6e220fe-230c-265c-f2fc-b0948d1cb898@intel.com>
- <20190812072545.GA63191@shbuild999.sh.intel.com>
- <20190813093616.GA65475@shbuild999.sh.intel.com>
- <64d41701-55a4-e526-17ae-8936de4bc1ef@suse.de>
- <20190824051605.GA63850@shbuild999.sh.intel.com>
- <1b897bfe-fd40-3ae3-d867-424d1fc08c44@suse.de>
- <d114b0b6-6b64-406e-6c3f-a8b8d5502413@intel.com>
- <44029e80-ba00-8246-dec0-fda122d53f5e@suse.de>
- <90e78ce8-d46a-5154-c324-a05aa1743c98@intel.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
- IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
- AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
- 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
- hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
- YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
- 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
- tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
- R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
- E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
- kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
- 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
- 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
- A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
- NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
- VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
- iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
- VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
- iNx9uqqx
-Message-ID: <2e1b4d65-d477-f571-845d-fa0a670859af@suse.de>
-Date:   Wed, 28 Aug 2019 12:51:40 +0200
+        Wed, 28 Aug 2019 06:52:57 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51002 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfH1Kw5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 06:52:57 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v15so2285449wml.0;
+        Wed, 28 Aug 2019 03:52:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3bmOMK5FL6zFob4mCFt8AttEsF6S4HMbVALEegM1I+c=;
+        b=A9uRkJiAkBq18NwoLSOtlupjAW8mlK4uc/rtPAqgyQui+yv3DyUIIZ8JmZSJ280TLo
+         ZU9Muw7jMpo85ullp6/IwQcPsJ0QQZLlKhFsHJb8Po9a0cIKIrtkz8HOjnpW0ofnUQ+N
+         x/HRL/Ho/OONbsmetTHZ/9BgBDT8kWKrS1+Tn7iD6AHPmjPvrkZXuKjJW75y827eg6EA
+         GCfOSOeKYJ3l+WCmQpyHeG13iIWimS6/NeViIcpT/O5qJ2OOthpcye0F+j4g/125cmOG
+         JbniZIVXg9gJSVCN3A8Q4sYgDOf9K/fAqbstKmwsIPLIBbtZM9I/u/JI3TgpY2OSCZBn
+         EFtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3bmOMK5FL6zFob4mCFt8AttEsF6S4HMbVALEegM1I+c=;
+        b=Q2a63ciSns7ym08gkzorV5NtyluGbH23vKUZEwQFQfAcHSESjCfPOaeQ1E45WO3dow
+         13MR2+xXtL9F9raYGj7/fcVOZA5SQm2TQ1mt+4cLL07WaSMCZsNQ+rKVrF56edwKZxLO
+         fI+66Y2c/BfiP9oiqzWYLzTk049v7autsLH2tN7ljG+Dz3ye2icA2FE4BGG2CBf9OXYG
+         w1E7OInWYEW/WE+e2mI9lCSZJV7fNIOPinK1WYAK/UnflrJI6ESrU261h9tFePshPdnN
+         CrtHdcLdOATNHQ3aiLBGc3s4ZznQAHrmyn18eOfRr0/rOoOPS3Qicnguwt8A7pEhYZeV
+         xFnA==
+X-Gm-Message-State: APjAAAWjDcqOYIVcCvMBBh/zjTZQa3rYMPzryyRX10W5LB+Vf5Yoy5iq
+        7axHO6F13S7ACir6pIsGdDlQJ2LA+2NMcQ==
+X-Google-Smtp-Source: APXvYqyKxQtG6BjBhXJkeq2+oHYwaCMcBdW9tzCFT7rOhDmD4P3VOsBLn/ZkeCSzTep/JcLQfxqwCw==
+X-Received: by 2002:a1c:f016:: with SMTP id a22mr4146777wmb.170.1566989574337;
+        Wed, 28 Aug 2019 03:52:54 -0700 (PDT)
+Received: from [192.168.0.8] (57.166.117.91.dynamic.reverse-mundo-r.com. [91.117.166.57])
+        by smtp.gmail.com with ESMTPSA id g13sm2903957wrw.87.2019.08.28.03.52.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Aug 2019 03:52:53 -0700 (PDT)
+Subject: Re: [PATCH] mmc: sunxi: fix unusuable eMMC on some H6 boards by
+ disabling DDR
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+References: <20190825150558.15173-1-alejandro.gonzalez.correo@gmail.com>
+ <CAPDyKFr5opD2yBXmFRBY-9oA_3ShVv0GPFRO8Q_8TEiT+z2pQA@mail.gmail.com>
+From:   =?UTF-8?Q?Alejandro_Gonz=c3=a1lez?= 
+        <alejandro.gonzalez.correo@gmail.com>
+Message-ID: <f84d62b7-da00-f2bd-36e9-972435080bfe@gmail.com>
+Date:   Wed, 28 Aug 2019 12:52:49 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <90e78ce8-d46a-5154-c324-a05aa1743c98@intel.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="f7GTQRMh8Qu7OM6GRIAPC33sdxRH4uqP5"
+In-Reply-To: <CAPDyKFr5opD2yBXmFRBY-9oA_3ShVv0GPFRO8Q_8TEiT+z2pQA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: es-ES
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---f7GTQRMh8Qu7OM6GRIAPC33sdxRH4uqP5
-Content-Type: multipart/mixed; boundary="0zjm3brWZtDu1Tdf2bw7Kgs45JJ4SgylA";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Rong Chen <rong.a.chen@intel.com>, Feng Tang <feng.tang@intel.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, michel@daenzer.net, lkp@01.org,
- linux-kernel@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>
-Message-ID: <2e1b4d65-d477-f571-845d-fa0a670859af@suse.de>
-Subject: Re: [LKP] [drm/mgag200] 90f479ae51: vm-scalability.median -18.8%
- regression
-References: <14fdaaed-51c8-b270-b46b-cba7b5c4ba52@suse.de>
- <20190805070200.GA91650@shbuild999.sh.intel.com>
- <c0c3f387-dc93-3146-788c-23258b28a015@intel.com>
- <045a23ab-78f7-f363-4a2e-bf24a7a2f79e@suse.de>
- <37ae41e4-455d-c18d-5c93-7df854abfef9@intel.com>
- <370747ca-4dc9-917b-096c-891dcc2aedf0@suse.de>
- <c6e220fe-230c-265c-f2fc-b0948d1cb898@intel.com>
- <20190812072545.GA63191@shbuild999.sh.intel.com>
- <20190813093616.GA65475@shbuild999.sh.intel.com>
- <64d41701-55a4-e526-17ae-8936de4bc1ef@suse.de>
- <20190824051605.GA63850@shbuild999.sh.intel.com>
- <1b897bfe-fd40-3ae3-d867-424d1fc08c44@suse.de>
- <d114b0b6-6b64-406e-6c3f-a8b8d5502413@intel.com>
- <44029e80-ba00-8246-dec0-fda122d53f5e@suse.de>
- <90e78ce8-d46a-5154-c324-a05aa1743c98@intel.com>
-In-Reply-To: <90e78ce8-d46a-5154-c324-a05aa1743c98@intel.com>
+El 27/8/19 a las 15:24, Ulf Hansson escribió:> Assuming this should go stable as well? Perhaps you can find a
+> relevant commit that we can put as a fixes tag as well?
+> 
+> Kind regards
+> Uffe
 
---0zjm3brWZtDu1Tdf2bw7Kgs45JJ4SgylA
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+The most relevant commit I've found that is related to enabling DDR speeds
+on H6 boards is this one: https://github.com/torvalds/linux/commit/07bafc1e3536a4e3c422dbd13341688b54f159bb .
+But it doesn't address the H6 SoC specifically, so I doubted whether it would
+be appropiate to mark this patch as fixing it, and opted to not do it. I don't
+mind adding that tag if it's appropiate, though :-)
 
-Hi
+On the other hand, I'm not sure that I understood correctly what do you mean by
+this patch going stable, but I might say the changes themselves are stable and work.
+The only downside I can think of to them is that they are a kind of workaround that
+reduces performance on H6 boards and/or eMMC not affected by this problem (are there
+any?), unless device trees are changed.
 
-Am 28.08.19 um 11:37 schrieb Rong Chen:
-> Hi Thomas,
->=20
-> On 8/28/19 1:16 AM, Thomas Zimmermann wrote:
->> Hi
+El 27/8/19 a las 15:32, Maxime Ripard escribió:
+> On Sun, Aug 25, 2019 at 05:05:58PM +0200, Alejandro González wrote:
+>> Some Allwinner H6 boards have timing problems when dealing with
+>> DDR-capable eMMC cards. These boards include the Pine H64 and Tanix TX6.
 >>
->> Am 27.08.19 um 14:33 schrieb Chen, Rong A:
->>> Both patches have little impact on the performance from our side.
->> Thanks for testing. Too bad they doesn't solve the issue.
+>> These timing problems result in out of sync communication between the
+>> driver and the eMMC, which renders the memory unsuable for every
+>> operation but some basic commmands, like reading the status register.
 >>
->> There's another patch attached. Could you please tests this as well?
->> Thanks a lot!
->>
->> The patch comes from Daniel Vetter after discussing the problem on IRC=
-=2E
->> The idea of the patch is that the old mgag200 code might display much
->> less frames that the generic code, because mgag200 only prints from
->> non-atomic context. If we simulate this with the generic code, we shou=
-ld
->> see roughly the original performance.
->>
->>
->=20
-> It's cool, the patch "usecansleep.patch" can fix the issue.
+>> The cause of these timing problems is not yet well known, but they go
+>> away by disabling DDR mode operation in the driver. Like on some H5
+>> boards, it might be that the traces are not precise enough to support
+>> these speeds. However, Jernej Skrabec compared the BSP driver with this
+>> driver, and found that the BSP driver configures pinctrl to operate at
+>> 1.8 V when entering DDR mode (although 3.3 V operation is supported), while
+>> the mainline kernel lacks any mechanism to switch voltages dynamically.
+>> Finally, other possible cause might be some timing parameter that is
+>> different on the H6 with respect to other SoCs.
+> 
+> This should be a comment in the driver where this is disabled.
+> 
+> Maxime
 
-Thank you for testing. But don't get too excited, because the patch
-simulates a bug that was present in the original mgag200 code. A
-significant number of frames are simply skipped. That is apparently the
-reason why it's faster.
+Thank you for your review. I'll mention that briefly in a comment in the code for
+the next revision of this patch.
 
-Best regards
-Thomas
-
-> commit:
-> =C2=A0 f1f8555dfb9 drm/bochs: Use shadow buffer for bochs framebuffer c=
-onsole
-> =C2=A0 90f479ae51a drm/mgag200: Replace struct mga_fbdev with generic
-> framebuffer emulation
-> =C2=A0 b976b04c2bc only schedule worker from non-atomic context
->=20
-> f1f8555dfb9a70a2=C2=A0 90f479ae51afa45efab97afdde b976b04c2bcf33148d6c7=
-bc1a2=C2=A0
-> testcase/testparams/testbox
-> ----------------=C2=A0 -------------------------- ---------------------=
------=C2=A0
-> ---------------------------
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 %stddev=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 change=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 %s=
-tddev=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 change %stddev
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- \=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- \=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | \
-> =C2=A0=C2=A0=C2=A0=C2=A0 42912=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -15%=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 36517 4=
-4093
-> vm-scalability/performance-300s-8T-anon-cow-seq-hugetlb/lkp-knm01
-> =C2=A0=C2=A0=C2=A0=C2=A0 42912=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -15%=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 36517 4=
-4093=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 GEO-MEAN
-> vm-scalability.median
->=20
-> Best Regards,
-> Rong Chen
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
-GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG N=C3=BCrnberg)
-
-
---0zjm3brWZtDu1Tdf2bw7Kgs45JJ4SgylA--
-
---f7GTQRMh8Qu7OM6GRIAPC33sdxRH4uqP5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl1mXLwACgkQaA3BHVML
-eiPQyggAgwZ7VZ09sKEhZaJlvsbS+a/+CWNSTA9exigWKZCi6SNxCYvRDrkzEAFB
-HMUr9UbzfVog8nBg+Mgagv3En0m2t6GefyquCAbt01d6WcdZbsN6L9NTRKIFioOR
-QaY6ErcbDe5ftOQN+BNm/MmNLZSlDeK+UptPXwl9JmKu1SzZSY/XEQIzusl6iqVQ
-Pkle/nPTq3fcFA6RCx6E7zbmcA8vd7u1FdOAGNvflYMIA0D7U4kvt/ISP/1apvI8
-zrTcaYXzhZLuPL9r9DrUO/qI9sdZMVg7zvNV0dcD0hr8sKhQ84g32ZkjW1CxAMZd
-g/oxGIv/fZni63R3AXIEnYIXOUb/Nw==
-=Iprd
------END PGP SIGNATURE-----
-
---f7GTQRMh8Qu7OM6GRIAPC33sdxRH4uqP5--
+Regards.
