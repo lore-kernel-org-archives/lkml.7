@@ -2,238 +2,177 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB3CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB69C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EB3F22CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1808C2189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:35:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cp/+56qd"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="RiCGjpci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfH1Kch (ORCPT
+        id S1726457AbfH1KfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:32:37 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:42743 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfH1Kce (ORCPT
+        Wed, 28 Aug 2019 06:35:22 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:9268 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfH1KfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:32:34 -0400
-Received: by mail-ua1-f68.google.com with SMTP id n13so649040uap.9
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 03:32:33 -0700 (PDT)
+        Wed, 28 Aug 2019 06:35:21 -0400
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: bap3Z5+JViuosTgV+woFSqYaqXlR75JAZpx0xtJOzqEEuzFiu/gx7rz8i6JMxzl6skdIFMNLBd
+ 1YEj91QQxqeu8wffGLzm/U59uLzC0XtOxRc7nZtWGqO/17Btqa2MEOfWVyWekYk4FsmUC4S1ao
+ KMjkcH0LL2QeRjN6RzGG7dBmhE4O0urnvotOauAIjOHHsIGok/wlqMDIvt7LkzIYTP6goeyVj1
+ oLpl0zSCZEUM/dL43I7fhXnqXG/W/2d6U/qULzNt81TncZZNQrzyU6Tmh9OHCyg9spEsLx5H61
+ Jyg=
+X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
+   d="scan'208";a="43991246"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Aug 2019 03:35:20 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 28 Aug 2019 03:35:19 -0700
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Wed, 28 Aug 2019 03:35:19 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ILEFVrg4kWG3wQpUWvH4u05YMo1nkLSBkofZICruwk6XqzyO5I59SlWyRSoCm0Ng1xsJUOGTi0N38gMWmwWiTTvTbHTW4KQGMFnPmr6E/Jd99t4SfyoMIx6AQucp2MrzB5DNyx0N1oUMGhIt5OP7gxhpIQf9Qg7lfyikrqKe0o/Z51DdxvH5p5hiGpfKEtuO5RU2g/R2Z1I3B4kIk28C+IMR9HXjhrjkxzAcub02VvuaDQegM5erTIbJt62AbCt/wPm9ZGRnuRcbhfMnNYA73uMrWI4RX4w1oFj4U0cIQDd+dRDO/JJcMrClCPwr8/+txFjQlgHvXm3Nkhepkgw1jA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m/tITCLgdK+8h8PCbWdZ60tSC6ptOCE/uUr+uAHlP5M=;
+ b=leMw8eJQzBSiv88Ju82nvEhrP4LeUOyQVpI6fon+cBH3yfUeyXlxrWnuBrRrydCOkiF4sUGvLHM7dMbA3aJvNhHAAwd4PAbAxND54bwV5ctno2Yyo5+EJWwN4QFuoiGTL7Rz9QoDgqwC7qHD5aR5yc8u2+syYCE3Z8coMSQgcONxTMp2iLVncRKL3xZTrGjSY54WNc5ur0Dbm48aZkgyX6aaXTMZ38rBZZ521rPzriuUKS2FiZ0zkqGFy8wzQMOS2sDXC0UeCDeRFqCt1r9mAm09/v5y35ckNZozkSInUgNouAubHw4tFwwpr8OGR3xE3V/6v8jJIG+ZUv/WVwk05A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oF7a1jbNbbfi/DhdEHpIDQz29C1JdgCAJx5IOgrXi30=;
-        b=cp/+56qdxFuDpbtqG8L1bmfC561P9jMlzO5urm8esQqmM2W3gBfNZdp+scUb/KB4iB
-         qcXCcj0I8yeqS2BGaoF9CiIPWreZXVneX4W1Luzt07p5wChbYfShdsHS3Osr888EAF4O
-         RScUdSCEqK46D6wtZMBAHaY4yiVC8aYfB6mGWVtzG3imiZbLNGysfDNsRb7tFf/GBT6V
-         CwlWUrgju0whJHM+pQVqIXg8HYwHqJ6hv87myiJUck4Ad6jQ3fVS8ujj1t1NLvmLwkIt
-         KelRcR3YS364Ab3ZM6Cn/7sCdOvHfmtXLeXE5SuqM4gDlsWlwoySuoE7niD/nBoacqZp
-         nOcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oF7a1jbNbbfi/DhdEHpIDQz29C1JdgCAJx5IOgrXi30=;
-        b=i/TnwdrW1uu7tCkkW4oPPTjg6TTbxk28djmvZ1/Mn/f/bIzqUiaLrF0Ae8H9Ep2OfI
-         xYh3m2HWgLV3ra2QrEnYN9KE5xbljlHreUG4ycYjfpGxCdnq43x5ziwLuXLa287wkznh
-         2TUlZuOJBEx6o4yOUE++IpUPWCGvGC4lsGOdOI6MY/KgevnVIFw8jJyobbxgLmlXmRsf
-         qgN2wn1Ace1zbySwICe0qMIdW0a75ZzSj+eOR5wyH2YFGjPDNR/Kf2+1BQRGyxY/wb2e
-         NJLHIPcodif9YL4H8NFsNE3cgzgEC+5u5RkyNawG9txAoSg7EememRn4RfJpJKMeA4Ev
-         3uuw==
-X-Gm-Message-State: APjAAAWM6vIVOj9b3LlcJ3XVajP9zFmrH01HGIQMiByJx+Yl+qaERTBV
-        bjw3vJuLq9ghNlabhopaR/kqE06MqDwicSajhjhzzQ==
-X-Google-Smtp-Source: APXvYqxu8e7ouZlP59+4Xx/1uo07ZtNJgW3EppKd0LP9dwxPGjEFMRvCUHleqLWo7lXKmtIi0s8NylMLuJFV+YuvBNo=
-X-Received: by 2002:ab0:6883:: with SMTP id t3mr1585466uar.104.1566988353183;
- Wed, 28 Aug 2019 03:32:33 -0700 (PDT)
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m/tITCLgdK+8h8PCbWdZ60tSC6ptOCE/uUr+uAHlP5M=;
+ b=RiCGjpciRTEXgovCjQsFlOcEElLY6PV/d9FcFdVQlbJt7Tknyc4kI9O0PGSexJPSdnakYZjn+7KejgMfN8mVr3ogURpi+kNS+XkAqvZsxdW061ffvcQfH7OF7GP6t/wIB996r+ta+8kXj/4RvGB4txaNAbhUp9tfuSP/6yGcof8=
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
+ MN2PR11MB4333.namprd11.prod.outlook.com (10.255.90.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Wed, 28 Aug 2019 10:35:17 +0000
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::70c3:e929:4da2:60a5]) by MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::70c3:e929:4da2:60a5%7]) with mapi id 15.20.2199.021; Wed, 28 Aug 2019
+ 10:35:17 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <marek.vasut@gmail.com>, <vigneshr@ti.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC:     <Tudor.Ambarus@microchip.com>
+Subject: [PATCH] mtd: spi-nor: remove superfluous pass of
+ nor->info->sector_size
+Thread-Topic: [PATCH] mtd: spi-nor: remove superfluous pass of
+ nor->info->sector_size
+Thread-Index: AQHVXYxI0TEFgblBx06pcxDB5XcXng==
+Date:   Wed, 28 Aug 2019 10:35:17 +0000
+Message-ID: <20190828103423.8232-1-tudor.ambarus@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR0501CA0042.eurprd05.prod.outlook.com
+ (2603:10a6:800:60::28) To MN2PR11MB4448.namprd11.prod.outlook.com
+ (2603:10b6:208:193::29)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.9.5
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e3ebab99-e779-4b87-021f-08d72ba36ae6
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR11MB4333;
+x-ms-traffictypediagnostic: MN2PR11MB4333:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB43331FB7F0F7FF270C0C8327F0A30@MN2PR11MB4333.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1303;
+x-forefront-prvs: 014304E855
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(39860400002)(396003)(136003)(376002)(189003)(199004)(36756003)(2501003)(6116002)(3846002)(50226002)(66556008)(64756008)(102836004)(2906002)(8676002)(110136005)(107886003)(2201001)(81156014)(8936002)(7736002)(305945005)(14454004)(66066001)(478600001)(26005)(81166006)(6486002)(99286004)(486006)(6506007)(71190400001)(71200400001)(53936002)(256004)(52116002)(6512007)(86362001)(386003)(4326008)(25786009)(66946007)(1076003)(186003)(6436002)(5660300002)(476003)(316002)(2616005)(66476007)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4333;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: a6GbMM/HNko2jGMhVOT+K+gpC/tacQPik1apbRQZGv1z1Yi17K87Hx4RE9GgHsKOn/7aR1ziQQ8YHX9ipfHsv2KNeFYA3tbVeWLXjCKu+pjml4Q9/x7nhyyvJRFc5oyzOQnnLbMh2EXNRReqfDR3iIVl4IRfhSY7fzq8sdRec/1T3vx3DuXS+DhZVaVDMMyO7nFYXkgqIoAXNMLbsAX0uPqgzvJ9gd3g6QQUACziY+3XxrP+twnQG0i2aWP09FpHXu+/4cHL9I7atb9fJgaHugKXdg8I2/we3URvBRodxGe65rPOi6gDW2f2DgIucoFyan2bO/ljziAajstrFgKoZZQ63qx6bZzyrTTauCdqHXFvgsdUHFdr0M5TOcOr9k0/+i4mYu+B9/rfe1Fd9PpuqcfW7CNFHE8G3DQTuCEICY4=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190827134337.GK13294@shell.armlinux.org.uk> <CAPDyKFp7e2OD_idam3-2sEd0wJU5OcP=H04G1OvHmAUo2Y-bYw@mail.gmail.com>
- <20190827143634.GL13294@shell.armlinux.org.uk> <20190827145216.GM13294@shell.armlinux.org.uk>
- <20190827150614.GN13294@shell.armlinux.org.uk>
-In-Reply-To: <20190827150614.GN13294@shell.armlinux.org.uk>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 28 Aug 2019 12:31:56 +0200
-Message-ID: <CAPDyKFoJgT9kRnARcP+snZkqC7rrp3UCd=mA=n3GL_brr2SHBw@mail.gmail.com>
-Subject: Re: Continuous SD IO causes hung task messages
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3ebab99-e779-4b87-021f-08d72ba36ae6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 10:35:17.3554
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SXj/95nFWPHStNSw7ZVyc8KBaD+C/tfrSkNzpjhec/H4Tkb8ViGdjbA9252YsFTm+/0D6tIQBfns67Z/MWN+r1pTWI4iblUfL6gGCust++Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4333
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019 at 17:06, Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Tue, Aug 27, 2019 at 03:52:17PM +0100, Russell King - ARM Linux admin wrote:
-> > On Tue, Aug 27, 2019 at 03:36:34PM +0100, Russell King - ARM Linux admin wrote:
-> > > On Tue, Aug 27, 2019 at 03:55:23PM +0200, Ulf Hansson wrote:
-> > > > On Tue, 27 Aug 2019 at 15:43, Russell King - ARM Linux admin
-> > > > <linux@armlinux.org.uk> wrote:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > While dd'ing the contents of a SD card, I get hung task timeout
-> > > > > messages as per below.  However, the dd is making progress.  Any
-> > > > > ideas?
-> > > > >
-> > > > > Presumably, mmc_rescan doesn't get a look-in while IO is progressing
-> > > > > for the card?
-> > > >
-> > > > Is it a regression?
-> > > >
-> > > > There not much of recent mmc core and mmc block changes, that I can
-> > > > think of at this point.
-> > >
-> > > No idea - I just repaired the SD socket after the D2 line became
-> > > disconnected, and decided to run that command as a test.
-> > >
-> > > > > ARM64 host, Macchiatobin, uSD card.
-> > > >
-> > > > What mmc host driver is it? mmci?
-> > >
-> > > sdhci-xenon.
-> > >
-> > > I'm just trying with one CPU online, then I'll try with two.  My
-> > > suspicion is that there's a problem in the ARM64 arch code where
-> > > unlocking a mutex doesn't get noticed on other CPUs.
-> > >
-> > > Hmm, I thought I'd try bringing another CPU online, but it seems
-> > > like the ARM64 CPU hotplug code is broken:
-> > >
-> > > [ 3552.029689] CPU1: shutdown
-> > > [ 3552.031099] psci: CPU1 killed.
-> > > [ 3949.835212] CPU1: failed to come online
-> > > [ 3949.837753] CPU1: failed in unknown state : 0x0
-> > >
-> > > which means I can only take CPUs down, I can't bring them back
-> > > online without rebooting.
-> >
-> > Okay, running on a single CPU shows no problems.
-> >
-> > Running on four CPUs (as originally) shows that the kworker thread
-> > _never_ gets scheduled, so the warning is not false.
-> >
-> > With three CPUs, same problem.
-> >
-> > root@arm-d06300000000:~# ps aux | grep ' D '
-> > root        34  0.0  0.0      0     0 ?        D    15:38   0:00 [kworker/1:1+events_freezable]
-> > root@arm-d06300000000:~# cat /proc/34/sched
-> > kworker/1:1 (34, #threads: 1)
-> > -------------------------------------------------------------------
-> > se.exec_start                                :        318689.992440
-> > se.vruntime                                  :         37750.882357
-> > se.sum_exec_runtime                          :             9.421240
-> > se.nr_migrations                             :                    0
-> > nr_switches                                  :                 1174
-> > nr_voluntary_switches                        :                 1171
-> > nr_involuntary_switches                      :                    3
-> > se.load.weight                               :              1048576
-> > se.runnable_weight                           :              1048576
-> > se.avg.load_sum                              :                    6
-> > se.avg.runnable_load_sum                     :                    6
-> > se.avg.util_sum                              :                 5170
-> > se.avg.load_avg                              :                    0
-> > se.avg.runnable_load_avg                     :                    0
-> > se.avg.util_avg                              :                    0
-> > se.avg.last_update_time                      :         318689991680
-> > se.avg.util_est.ewma                         :                   10
-> > se.avg.util_est.enqueued                     :                    0
-> > policy                                       :                    0
-> > prio                                         :                  120
-> > clock-delta                                  :                    0
-> >
-> > The only thing that changes there is "clock-delta".  When I kill the
-> > dd, I get:
-> >
-> > root@arm-d06300000000:~# cat /proc/34/sched
-> > kworker/1:1 (34, #threads: 1)
-> > -------------------------------------------------------------------
-> > se.exec_start                                :        574025.791680
-> > se.vruntime                                  :         79996.657300
-> > se.sum_exec_runtime                          :            10.916400
-> > se.nr_migrations                             :                    0
-> > nr_switches                                  :                 1403
-> > nr_voluntary_switches                        :                 1400
-> > nr_involuntary_switches                      :                    3
-> > se.load.weight                               :              1048576
-> > se.runnable_weight                           :              1048576
-> > se.avg.load_sum                              :                   15
-> > se.avg.runnable_load_sum                     :                   15
-> > se.avg.util_sum                              :                15007
-> > se.avg.load_avg                              :                    0
-> > se.avg.runnable_load_avg                     :                    0
-> > se.avg.util_avg                              :                    0
-> > se.avg.last_update_time                      :         574025791488
-> > se.avg.util_est.ewma                         :                   10
-> > se.avg.util_est.enqueued                     :                    0
-> > policy                                       :                    0
-> > prio                                         :                  120
-> > clock-delta                                  :                   40
-> >
-> > so the thread makes forward progress.
-> >
-> > Down to two CPUs:
-> >
-> > root@arm-d06300000000:~# ps aux | grep ' D '
-> > root        34  0.0  0.0      0     0 ?        D    15:38   0:00 [kworker/1:1+events_freezable]
-> >
-> > Same symptoms.  dd and md5sum switch between CPU 0 and CPU1.
->
-> Hmm.
->
-> static blk_status_t mmc_mq_queue_rq(struct blk_mq_hw_ctx *hctx,
->                                     const struct blk_mq_queue_data *bd)
->
->         mq->in_flight[issue_type] += 1;
->         get_card = (mmc_tot_in_flight(mq) == 1);
->
->         if (get_card)
->                 mmc_get_card(card, &mq->ctx);
->
-> mmc_get_card() gets the host lock according to the card.
->
-> So, if we always have requests in flight (which is probably the case
-> here) we never drop the host lock, and mmc_rescan() never gets a look
-> in - hence blocking the kworker.
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-Ahh, you are right. However, this isn't a new problem I believe.
+We already pass a pointer to nor, we can obtain the sector_size
+by dereferencing it.
 
-Even if we did some re-work of the locking mechanism while converting
-to blk-mq, I still think the worker could starve the mmc_rescan work
-before.
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+---
+ drivers/mtd/spi-nor/spi-nor.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-In practice this shouldn't be a problem though, unless I am
-overlooking something. This is because it's not until there is an I/O
-error, that causes the block worker to release the host, to it makes
-sense to let mmc_rescan to claim the host to check for card removal.
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index 79c8f1dd8c6b..69532573dba9 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -4257,11 +4257,12 @@ spi_nor_select_uniform_erase(struct spi_nor_erase_m=
+ap *map,
+ 	return erase;
+ }
+=20
+-static int spi_nor_select_erase(struct spi_nor *nor, u32 wanted_size)
++static int spi_nor_select_erase(struct spi_nor *nor)
+ {
+ 	struct spi_nor_erase_map *map =3D &nor->params.erase_map;
+ 	const struct spi_nor_erase_type *erase =3D NULL;
+ 	struct mtd_info *mtd =3D &nor->mtd;
++	u32 wanted_size =3D nor->info->sector_size;
+ 	int i;
+=20
+ 	/*
+@@ -4355,7 +4356,7 @@ static int spi_nor_default_setup(struct spi_nor *nor,
+ 	}
+=20
+ 	/* Select the Sector Erase command. */
+-	err =3D spi_nor_select_erase(nor, nor->info->sector_size);
++	err =3D spi_nor_select_erase(nor);
+ 	if (err) {
+ 		dev_err(nor->dev,
+ 			"can't select erase settings supported by both the SPI controller and m=
+emory.\n");
+--=20
+2.9.5
 
->
-> So this is a real issue with MMC, and not down to something in the
-> arch.
-
-Yep, thanks for running the test and providing more details!
-
->
-> I suspect the reason that single-CPU doesn't show it is because it is
-> unable to keep multiple requests in flight.
-
-Yes, most likely.
-
-Now, how to solve this problem I need to think more about....
-
-FYI: The long term goal has been to try to remove the big fat host
-lock altogether and slowly we have moved more an more things to be
-executed as a part of the block worker, which is one of the needed
-steps. Like the mmc ioctls for example...
-
-Kind regards
-Uffe
