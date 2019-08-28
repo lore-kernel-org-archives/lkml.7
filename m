@@ -2,562 +2,153 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DD7C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9288C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E38820644
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9032B20644
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:48:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=labbott.name header.i=@labbott.name header.b="MU2Fx7Kh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfH1Rr7 (ORCPT
+        id S1727085AbfH1RsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:47:59 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20456 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726921AbfH1Rrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:47:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 10:47:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="192675399"
-Received: from glass.png.intel.com ([172.30.181.95])
-  by orsmga002.jf.intel.com with ESMTP; 28 Aug 2019 10:47:38 -0700
-From:   Ong Boon Leong <boon.leong.ong@intel.com>
-To:     davem@davemloft.net, linux@armlinux.org.uk,
-        mcoquelin.stm32@gmail.com, joabreu@synopsys.com,
-        f.fainelli@gmail.com, andrew@lunn.ch
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        weifeng.voon@intel.com
-Subject: [RFC net-next v2 4/5] net: phy: introducing support for DWC xPCS logics for EHL & TGL
-Date:   Thu, 29 Aug 2019 01:47:21 +0800
-Message-Id: <20190828174722.6726-5-boon.leong.ong@intel.com>
-X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20190828174722.6726-1-boon.leong.ong@intel.com>
-References: <20190828174722.6726-1-boon.leong.ong@intel.com>
+        Wed, 28 Aug 2019 13:48:07 -0400
+Received: from mail-qk1-f170.google.com ([209.85.222.170]:33900 "EHLO
+        mail-qk1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726921AbfH1RsG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 13:48:06 -0400
+Received: by mail-qk1-f170.google.com with SMTP id m10so546796qkk.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:48:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=labbott.name; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:date:references
+         :to:in-reply-to:message-id;
+        bh=D35SbGBlWhYpn/u3ldUwUJb3Qfls9S5/WWeqF78nIBA=;
+        b=MU2Fx7Kh07hEmhYLkOxosPfDPS27ERORbzqZ3eh5zCEc40yvbWT0Eb/zAZ7tOPVDF7
+         4wdqF9OfBG8XpmsWqEBtfdjO3gyN4vVk3DZuepW66EFBceqKQ0zPNR1kMoAX1fytqor3
+         UD3XMN7oWyzOzHa26Z8DADGpGQZf7V3ujGSi8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:date:references:to:in-reply-to:message-id;
+        bh=D35SbGBlWhYpn/u3ldUwUJb3Qfls9S5/WWeqF78nIBA=;
+        b=LOl9rJwJR/GsklNF+ch6g8AMkAsWDMpBd3O8CEeaXmenYa5wyrX05zQa7TMTkxe9tS
+         j5FZjOidvRZuNM683qi5KiK0iDmYUczZacGHs3BhnapWUGJmoWkhI7uGBmR8mJc2I0iu
+         k57Ez05tF45psW32mosKYE0s+qWAS0ZbIAR9/HYcUZD6O9Ktyv4H8OSdHPtZ90rGoEH9
+         YPk4Pfl+j5kq8nF48b3soi2nHKMYQ3nLCLZ0gKWDSJPdO0D46a1Yrb0FLcyFJGE0Qf+2
+         a3uesqplMxx1RHSQEofTr+5n3tEBkIqzLxHJ+nv5R3aXrCooio+KwPNqLU+PkAnUq+Av
+         0Z7A==
+X-Gm-Message-State: APjAAAWdxH0vDmoafbCRZYR5cX4sVyOY2MWWvw5i7PNHjsEhsBbAzBFJ
+        SrSh5aNfX4TiGlfavorTQQATe/VEUC1aeg==
+X-Google-Smtp-Source: APXvYqz9EtQEqzKRuk6DumXxdoKYmYWyg/8RdLUxpT4MSieRi5RPzW54mGUcYvGjuNmodytnXQtTbw==
+X-Received: by 2002:a05:620a:12af:: with SMTP id x15mr75546qki.131.1567014484373;
+        Wed, 28 Aug 2019 10:48:04 -0700 (PDT)
+Received: from lauras-mbp.fios-router.home (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
+        by smtp.gmail.com with ESMTPSA id m9sm1398646qtp.27.2019.08.28.10.48.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 28 Aug 2019 10:48:03 -0700 (PDT)
+From:   Laura Abbott <laura@labbott.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: Linux Foundation Technical Advisory Board Elections -- Call for
+ nominations
+Date:   Wed, 28 Aug 2019 13:48:03 -0400
+References: <DD187286-CEBE-44B3-A992-F84FC9C9CD26@labbott.name>
+To:     linux-kernel@vger.kernel.org
+In-Reply-To: <DD187286-CEBE-44B3-A992-F84FC9C9CD26@labbott.name>
+Message-Id: <EDD7B30A-8A0D-45BF-BBD5-4AEFA5625FA1@labbott.name>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-xPCS is DWC Ethernet Physical Coding Sublayer that can be integrated with
-Ethernet MAC controller and acts as converter between GMII and SGMII. An
-example is as shown below whereby DWC xPCS is integrated with DW EQoS MAC
-to form GbE Controller.
 
-  <-----------------GbE Controller---------->|<--External PHY chip-->
+> On Aug 9, 2019, at 2:26 AM, Laura Abbott <laura@labbott.name> wrote:
+>=20
+> Hello everyone,
+>=20
+> Friendly reminder that the TAB elections are coming soon:
+>=20
+> The Linux Foundation Technical Advisory Board (TAB) serves as the
+> interface between the kernel development community and the Linux
+> Foundation. The TAB advises the Foundation on kernel-related matters,
+> helps member companies learn to work with the community, and works to
+> resolve community-related problems before they get out of hand.  We
+> also support the Code of Conduct committee in their mission.
+>=20
+> The board has ten members, one of whom sits on the Linux Foundation
+> board of directors.
+>=20
+> The election to select five TAB members will be held at the 2019 =
+Kernel Summit
+> in Lisbon, Portugal September 9-11. As has been announced[2], we are =
+moving to
+> an electronic voting system this year. Further details about the exact =
+voting
+> procedures will be coming soon. Anyone is eligible to stand for =
+election,
+> simply send your nomination to:
+>=20
+> tech-board-discuss at lists.linux-foundation.org
+>=20
+> With your nomination, please include a short candidate statement. This =
+candidate
+> statement should focus on why you are running and what you hope to =
+accomplish
+> on the TAB. We will be collecting these statements and making them =
+publicly=20
+> available.
+>=20
+> The deadline for receiving nominations is 9am GMT+1 on September 9th =
+(the first
+> day of Kernel Summit). Due to the use of electronic voting, this will =
+be a hard
+> deadline!
+>=20
+> Current TAB members, and their election year:
+>=20
+> Jon Corbet		2017
+> Greg Kroah-Hartman	2017
+> Steven Rostedt		2017
+> Ted Tso			2017
+> Tim Bird		2017
+>=20
+> Chris Mason		2018
+> Laura Abbott		2018
+> Olof Johansson		2018
+> Kees Cook		2018
+> Dan Williams		2018
+>=20
+> The five slots from 2017 are all up for election.  As always, please
+> let us know if you have questions, and please do consider running.
+>=20
+> Thanks,
+> Laura
+>=20
+> [1] TAB members sit for a term of two years, and half of the board is
+> up for election every year. Five of the seats are up for election now.
+> The other five are halfway through their term and will be up for
+> election next year.
+>=20
+> [2] =
+https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2019-July/0065=
+82.html
 
-  +----------+         +----+    +---+               +--------------+
-  |   EQoS   | <-GMII->| DW |<-->|PHY| <-- SGMII --> | External GbE |
-  |   MAC    |         |xPCS|    |IF |               | PHY Chip     |
-  +----------+         +----+    +---+               +--------------+
-         ^               ^                                  ^
-         |               |                                  |
-         +---------------------MDIO-------------------------+
+Reminder to send in your candidate statements, the current ones are
+available at=20
 
-xPCS is a Clause-45 MDIO Manageable Device (MMD) and supports basic
-functionalities for initializing xPCS and configuring auto negotiation(AN),
-loopback, link status, AN advertisement and Link Partner ability are
-implemented. The implementation supports the C37 AN for 1000BASE-X and
-SGMII (MAC side SGMII only).
+=
+https://docs.google.com/document/d/1E3_W1c-xJMx9o2PCnKiGt3vqs-mPh77yNO4GSq=
+NipOQ
 
-Tested-by: Tan, Tee Min <tee.min.tan@intel.com>
-Reviewed-by: Voon Weifeng <weifeng.voon@intel.com>
-Reviewed-by: Kweh Hock Leong <hock.leong.kweh@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
----
- drivers/net/phy/Kconfig  |   9 +
- drivers/net/phy/Makefile |   1 +
- drivers/net/phy/dwxpcs.c | 417 +++++++++++++++++++++++++++++++++++++++
- include/linux/dwxpcs.h   |  16 ++
- 4 files changed, 443 insertions(+)
- create mode 100644 drivers/net/phy/dwxpcs.c
- create mode 100644 include/linux/dwxpcs.h
-
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 03be30cde552..fd037f5366d8 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -364,6 +364,15 @@ config DP83867_PHY
- 	---help---
- 	  Currently supports the DP83867 PHY.
- 
-+config DWXPCS
-+	tristate "Synopsys DesignWare PCS converter driver"
-+	help
-+	  This driver supports DW PCS IP that provides the Serial Gigabit
-+	  Media Independent Interface(SGMII) between Ethernet physical media
-+	  devices and the Gigabit Ethernet controller.
-+
-+	  Currently tested with stmmac.
-+
- config FIXED_PHY
- 	tristate "MDIO Bus/PHY emulation with fixed speed/link PHYs"
- 	depends on PHYLIB
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index a03437e091f3..5def985ae3ca 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -70,6 +70,7 @@ obj-$(CONFIG_DP83822_PHY)	+= dp83822.o
- obj-$(CONFIG_DP83TC811_PHY)	+= dp83tc811.o
- obj-$(CONFIG_DP83848_PHY)	+= dp83848.o
- obj-$(CONFIG_DP83867_PHY)	+= dp83867.o
-+obj-$(CONFIG_DWXPCS)		+= dwxpcs.o
- obj-$(CONFIG_FIXED_PHY)		+= fixed_phy.o
- obj-$(CONFIG_ICPLUS_PHY)	+= icplus.o
- obj-$(CONFIG_INTEL_XWAY_PHY)	+= intel-xway.o
-diff --git a/drivers/net/phy/dwxpcs.c b/drivers/net/phy/dwxpcs.c
-new file mode 100644
-index 000000000000..f0003cec6871
---- /dev/null
-+++ b/drivers/net/phy/dwxpcs.c
-@@ -0,0 +1,417 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2019, Intel Corporation.
-+ * DWC Ethernet Physical Coding Sublayer for GMII2SGMII Converter
-+ */
-+#include <linux/acpi.h>
-+#include <linux/bitops.h>
-+#include <linux/dwxpcs.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/mdio.h>
-+#include <linux/module.h>
-+#include <linux/of_mdio.h>
-+#include <linux/phy.h>
-+
-+/* XPCS MII MMD Device Addresses */
-+#define XPCS_MDIO_MII_MMD	MDIO_MMD_VEND2
-+
-+/* MII MMD registers offsets */
-+#define MDIO_MII_MMD_DIGITAL_CTRL_1	0x8000	/* Digital Control 1 */
-+#define MDIO_MII_MMD_AN_CTRL		0x8001	/* AN Control */
-+#define MDIO_MII_MMD_AN_STAT		0x8002	/* AN Status */
-+
-+/* MII MMD SR AN Advertisement & Link Partner Ability are slightly
-+ * different from MII_ADVERTISEMENT & MII_LPA in below fields:
-+ */
-+#define MDIO_MII_MMD_HD			BIT(6)	/* Half duplex */
-+#define MDIO_MII_MMD_FD			BIT(5)	/* Full duplex */
-+#define MDIO_MII_MMD_PSE_SHIFT		7	/* Pause Ability shift */
-+#define MDIO_MII_MMD_PSE		GENMASK(8, 7)	/* Pause Ability */
-+#define MDIO_MII_MMD_PSE_NO		0x0
-+#define MDIO_MII_MMD_PSE_ASYM		0x1
-+#define MDIO_MII_MMD_PSE_SYM		0x2
-+#define MDIO_MII_MMD_PSE_BOTH		0x3
-+
-+/* Automatic Speed Mode Change for MAC side SGMII AN */
-+#define MDIO_MII_MMD_DIGI_CTRL_1_MAC_AUTO_SW	BIT(9)
-+
-+/* MII MMD AN Control defines */
-+#define MDIO_MII_MMD_AN_CTRL_TX_CONFIG_SHIFT	3 /* TX Config shift */
-+#define AN_CTRL_TX_CONF_PHY_SIDE_SGMII		0x1 /* PHY side SGMII mode */
-+#define AN_CTRL_TX_CONF_MAC_SIDE_SGMII		0x0 /* MAC side SGMII mode */
-+#define MDIO_MII_MMD_AN_CTRL_PCS_MD_SHIFT	1  /* PCS Mode shift */
-+#define MDIO_MII_MMD_AN_CTRL_PCS_MD	GENMASK(2, 1) /* PCS Mode */
-+#define AN_CTRL_PCS_MD_C37_1000BASEX	0x0	/* C37 AN for 1000BASE-X */
-+#define AN_CTRL_PCS_MD_C37_SGMII	0x2	/* C37 AN for SGMII */
-+#define MDIO_MII_MMD_AN_CTRL_AN_INTR_EN	BIT(0)	/* AN Complete Intr Enable */
-+
-+/* MII MMD AN Status defines for SGMII AN Status */
-+#define AN_STAT_C37_AN_CMPLT		BIT(0)	/* AN Complete Intr */
-+#define AN_STAT_SGMII_AN_FD		BIT(1)	/* Full Duplex */
-+#define AN_STAT_SGMII_AN_SPEED_SHIFT	2	/* AN Speed shift */
-+#define AN_STAT_SGMII_AN_SPEED		GENMASK(3, 2)	/* AN Speed */
-+#define AN_STAT_SGMII_AN_10MBPS		0x0	/* 10 Mbps */
-+#define AN_STAT_SGMII_AN_100MBPS	0x1	/* 100 Mbps */
-+#define AN_STAT_SGMII_AN_1000MBPS	0x2	/* 1000 Mbps */
-+#define AN_STAT_SGMII_AN_LNKSTS		BIT(4)	/* Link Status */
-+
-+enum dwxpcs_state_t {
-+	__DWXPCS_REMOVING,
-+	__DWXPCS_TASK_SCHED,
-+};
-+
-+struct pcs_stats {
-+	int link;
-+	int speed;
-+	int duplex;
-+};
-+
-+struct dwxpcs_priv {
-+	struct phy_device *phy_dev;
-+	struct phy_driver *phy_drv;
-+	struct phy_device cached_phy_dev;
-+	struct phy_driver conv_phy_drv;
-+	struct mdio_device *mdiodev;
-+	struct pcs_stats stats;
-+	struct dwxpcs_platform_data *pdata;
-+	char int_name[IFNAMSIZ];
-+	unsigned long state;
-+	struct workqueue_struct *int_wq;
-+	struct work_struct an_task;
-+};
-+
-+/* DW xPCS mdiobus_read and mdiobus_write helper functions */
-+#define xpcs_read(dev, reg) \
-+	mdiobus_read(bus, xpcs_addr, \
-+		     MII_ADDR_C45 | (reg) | \
-+		     ((dev) << MII_DEVADDR_C45_SHIFT))
-+#define xpcs_write(dev, reg, val) \
-+	mdiobus_write(bus, xpcs_addr, \
-+		      MII_ADDR_C45 | (reg) | \
-+		      ((dev) << MII_DEVADDR_C45_SHIFT), val)
-+
-+static void dwxpcs_init(struct dwxpcs_priv *priv)
-+{
-+	struct mii_bus *bus = priv->mdiodev->bus;
-+	int xpcs_addr = priv->mdiodev->addr;
-+	int pcs_mode = priv->pdata->mode;
-+	int phydata;
-+
-+	if (pcs_mode == DWXPCS_MODE_SGMII_AN) {
-+		/* For AN for SGMII mode, the settings are :-
-+		 * 1) VR_MII_AN_CTRL Bit(2:1)[PCS_MODE] = 10b (SGMII AN)
-+		 * 2) VR_MII_AN_CTRL Bit(3) [TX_CONFIG] = 0b (MAC side SGMII)
-+		 *    DW xPCS used with DW EQoS MAC is always MAC
-+		 *    side SGMII.
-+		 * 3) VR_MII_AN_CTRL Bit(0) [AN_INTR_EN] = 1b (AN Interrupt
-+		 *    enabled)
-+		 * 4) VR_MII_DIG_CTRL1 Bit(9) [MAC_AUTO_SW] = 1b (Automatic
-+		 *    speed/duplex mode change by HW after SGMII AN complete)
-+		 * Note: Since it is MAC side SGMII, there is no need to set
-+		 *	 SR_MII_AN_ADV. MAC side SGMII receives AN Tx Config
-+		 *	 from PHY about the link state change after C28 AN
-+		 *	 is completed between PHY and Link Partner.
-+		 */
-+		phydata = xpcs_read(XPCS_MDIO_MII_MMD, MDIO_MII_MMD_AN_CTRL);
-+		phydata &= ~MDIO_MII_MMD_AN_CTRL_PCS_MD;
-+
-+		phydata |= MDIO_MII_MMD_AN_CTRL_AN_INTR_EN |
-+			   (AN_CTRL_PCS_MD_C37_SGMII <<
-+			    MDIO_MII_MMD_AN_CTRL_PCS_MD_SHIFT &
-+			    MDIO_MII_MMD_AN_CTRL_PCS_MD) |
-+			   (AN_CTRL_TX_CONF_MAC_SIDE_SGMII <<
-+			    MDIO_MII_MMD_AN_CTRL_TX_CONFIG_SHIFT);
-+		xpcs_write(XPCS_MDIO_MII_MMD, MDIO_MII_MMD_AN_CTRL, phydata);
-+
-+		phydata = xpcs_read(XPCS_MDIO_MII_MMD,
-+				    MDIO_MII_MMD_DIGITAL_CTRL_1);
-+		phydata |= MDIO_MII_MMD_DIGI_CTRL_1_MAC_AUTO_SW;
-+		xpcs_write(XPCS_MDIO_MII_MMD, MDIO_MII_MMD_DIGITAL_CTRL_1,
-+			   phydata);
-+	} else {
-+		/* For AN for 1000BASE-X mode, the settings are :-
-+		 * 1) VR_MII_AN_CTRL Bit(2:1)[PCS_MODE] = 00b (1000BASE-X C37)
-+		 * 2) VR_MII_AN_CTRL Bit(0) [AN_INTR_EN] = 1b (AN Interrupt
-+		 *    enabled)
-+		 * 3) SR_MII_AN_ADV Bit(6)[FD] = 1b (Full Duplex)
-+		 *    Note: Half Duplex is rarely used, so don't advertise.
-+		 * 4) SR_MII_AN_ADV Bit(8:7)[PSE] = 11b (Sym & Asym Pause)
-+		 */
-+		phydata = xpcs_read(XPCS_MDIO_MII_MMD, MDIO_MII_MMD_AN_CTRL);
-+		phydata &= ~MDIO_MII_MMD_AN_CTRL_PCS_MD;
-+		phydata |= MDIO_MII_MMD_AN_CTRL_AN_INTR_EN |
-+			   (AN_CTRL_PCS_MD_C37_1000BASEX <<
-+			    MDIO_MII_MMD_AN_CTRL_PCS_MD_SHIFT &
-+			    MDIO_MII_MMD_AN_CTRL_PCS_MD);
-+		xpcs_write(XPCS_MDIO_MII_MMD, MDIO_MII_MMD_AN_CTRL, phydata);
-+
-+		phydata = xpcs_read(XPCS_MDIO_MII_MMD, MII_ADVERTISE);
-+		phydata |= MDIO_MII_MMD_FD |
-+			   (MDIO_MII_MMD_PSE_BOTH << MDIO_MII_MMD_PSE_SHIFT);
-+		xpcs_write(XPCS_MDIO_MII_MMD, MII_ADVERTISE, phydata);
-+	}
-+}
-+
-+static int dwxpcs_read_status(struct phy_device *phydev)
-+{
-+	struct dwxpcs_priv *priv = (struct dwxpcs_priv *)phydev->priv;
-+	struct mii_bus *bus = priv->mdiodev->bus;
-+	int xpcs_addr = priv->mdiodev->addr;
-+	int pcs_mode = priv->pdata->mode;
-+	int phydata;
-+	int err;
-+
-+	if (priv->phy_drv->read_status)
-+		err = priv->phy_drv->read_status(phydev);
-+	else
-+		err = genphy_read_status(phydev);
-+
-+	if (err < 0)
-+		return err;
-+
-+	/* For SGMII AN, we are done as the speed/duplex are automatically
-+	 * set because we have initialized 'MAC_AUTO_SW' for MAC side SGMII.
-+	 */
-+	if (pcs_mode == DWXPCS_MODE_1000BASEX_AN) {
-+		/* For 1000BASE-X AN, we need to adjust duplex mode according
-+		 * to link partner. No need to update speed as it is always
-+		 * 1000Mbps.
-+		 */
-+		phydata = xpcs_read(XPCS_MDIO_MII_MMD, MII_BMCR);
-+		phydata &= ~BMCR_FULLDPLX;
-+		phydata |= phydev->duplex ? BMCR_FULLDPLX : 0;
-+		xpcs_write(XPCS_MDIO_MII_MMD, MII_BMCR, phydata);
-+	}
-+
-+	return 0;
-+}
-+
-+static void dwxpcs_get_linkstatus(struct dwxpcs_priv *priv, int an_stat)
-+{
-+	struct mii_bus *bus = priv->mdiodev->bus;
-+	struct pcs_stats *stats = &priv->stats;
-+	int xpcs_addr = priv->mdiodev->addr;
-+	int pcs_mode = priv->pdata->mode;
-+
-+	if (pcs_mode == DWXPCS_MODE_SGMII_AN) {
-+		/* Check the SGMII AN link status */
-+		if (an_stat & AN_STAT_SGMII_AN_LNKSTS) {
-+			int speed_value;
-+
-+			stats->link = 1;
-+
-+			speed_value = ((an_stat & AN_STAT_SGMII_AN_SPEED) >>
-+					AN_STAT_SGMII_AN_SPEED_SHIFT);
-+			if (speed_value == AN_STAT_SGMII_AN_1000MBPS)
-+				stats->speed = SPEED_1000;
-+			else if (speed_value == AN_STAT_SGMII_AN_100MBPS)
-+				stats->speed = SPEED_100;
-+			else
-+				stats->speed = SPEED_10;
-+
-+			if (an_stat & AN_STAT_SGMII_AN_FD)
-+				stats->duplex = 1;
-+			else
-+				stats->duplex = 0;
-+		} else {
-+			stats->link = 0;
-+		}
-+	} else if (pcs_mode == DWXPCS_MODE_1000BASEX_AN) {
-+		/* For 1000BASE-X AN, 1000BASE-X is always 1000Mbps.
-+		 * For duplex mode, we read from BMCR_FULLDPLX which is
-+		 * only valid if BMCR_ANENABLE is not enabeld.
-+		 */
-+		int phydata = xpcs_read(XPCS_MDIO_MII_MMD, MII_BMCR);
-+
-+		stats->link = 1;
-+		stats->speed = SPEED_1000;
-+		if (!(phydata & BMCR_ANENABLE))
-+			stats->duplex = phydata & BMCR_FULLDPLX ? 1 : 0;
-+	}
-+}
-+
-+static void dwxpcs_irq_handle(struct dwxpcs_priv *priv)
-+{
-+	struct mii_bus *bus = priv->mdiodev->bus;
-+	struct device *dev = &priv->mdiodev->dev;
-+	int xpcs_addr = priv->mdiodev->addr;
-+	int an_stat;
-+
-+	/* AN status */
-+	an_stat = xpcs_read(XPCS_MDIO_MII_MMD, MDIO_MII_MMD_AN_STAT);
-+
-+	if (an_stat & AN_STAT_C37_AN_CMPLT) {
-+		struct pcs_stats *stats = &priv->stats;
-+
-+		dwxpcs_get_linkstatus(priv, an_stat);
-+
-+		/* Clear C37 AN complete status by writing zero */
-+		xpcs_write(XPCS_MDIO_MII_MMD, MDIO_MII_MMD_AN_STAT, 0);
-+
-+		dev_info(dev, "%s: Link = %d - %d/%s\n",
-+			 __func__,
-+			 stats->link,
-+			 stats->speed,
-+			 stats->duplex ? "Full" : "Half");
-+	}
-+}
-+
-+static void dwxpcs_an_task(struct work_struct *work)
-+{
-+	struct dwxpcs_priv *priv = container_of(work,
-+						struct dwxpcs_priv,
-+						an_task);
-+	dwxpcs_irq_handle(priv);
-+
-+	clear_bit(__DWXPCS_TASK_SCHED, &priv->state);
-+}
-+
-+static irqreturn_t dwxpcs_interrupt(int irq, void *dev_id)
-+{
-+	struct dwxpcs_priv *priv = (struct dwxpcs_priv *)dev_id;
-+
-+	/* Handle the clearing of AN status outside of interrupt context
-+	 * as it involves mdiobus_read() & mdiobus_write().
-+	 */
-+	if (!test_bit(__DWXPCS_REMOVING, &priv->state) &&
-+	    !test_and_set_bit(__DWXPCS_TASK_SCHED, &priv->state)) {
-+		queue_work(priv->int_wq, &priv->an_task);
-+
-+		return IRQ_HANDLED;
-+	}
-+
-+	return IRQ_NONE;
-+}
-+
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id dwxpcs_acpi_match[] = {
-+	{ "INTC1033" }, /* EHL Ethernet PCS */
-+	{ "INTC1034" }, /* TGL Ethernet PCS */
-+	{ },
-+};
-+
-+MODULE_DEVICE_TABLE(acpi, dwxpcs_acpi_match);
-+#endif // CONFIG_ACPI
-+
-+static int dwxpcs_probe(struct mdio_device *mdiodev)
-+{
-+	struct device_node *phy_node;
-+	struct dwxpcs_priv *priv;
-+	struct device_node *np;
-+	struct device *dev;
-+	int ret;
-+
-+	dev = &mdiodev->dev;
-+	np = dev->of_node;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	if (np) {
-+		/* Handle mdio_device registered through devicetree */
-+		phy_node = of_parse_phandle(np, "phy-handle", 0);
-+		if (!phy_node) {
-+			dev_err(dev, "Couldn't parse phy-handle\n");
-+			return -ENODEV;
-+		}
-+
-+		priv->phy_dev = of_phy_find_device(phy_node);
-+		of_node_put(phy_node);
-+		if (!priv->phy_dev) {
-+			dev_info(dev, "Couldn't find phydev\n");
-+			return -EPROBE_DEFER;
-+		}
-+	} else {
-+		/* Handle mdio_device registered through mdio_board_info */
-+		priv->pdata = (struct dwxpcs_platform_data *)dev->platform_data;
-+
-+		priv->phy_dev = mdiobus_get_phy(mdiodev->bus,
-+						priv->pdata->ext_phy_addr);
-+	}
-+
-+	if (!priv->phy_dev) {
-+		dev_info(dev, "Couldn't find phydev\n");
-+		return -EPROBE_DEFER;
-+	}
-+
-+	if (!priv->phy_dev->drv) {
-+		dev_info(dev, "Attached phy not ready\n");
-+		return -EPROBE_DEFER;
-+	}
-+
-+	priv->mdiodev = mdiodev;
-+
-+	/* Initialize DW XPCS */
-+	dwxpcs_init(priv);
-+
-+	priv->phy_drv = priv->phy_dev->drv;
-+	memcpy(&priv->conv_phy_drv, priv->phy_dev->drv,
-+	       sizeof(struct phy_driver));
-+	priv->conv_phy_drv.read_status = dwxpcs_read_status;
-+	/* Store a copy of phy_dev info for remove() later */
-+	priv->cached_phy_dev.priv = priv->phy_dev->priv;
-+	priv->cached_phy_dev.drv = priv->phy_dev->drv;
-+	priv->phy_dev->priv = priv;
-+	priv->phy_dev->drv = &priv->conv_phy_drv;
-+
-+	if (priv->pdata->irq > 0) {
-+		char *int_name;
-+
-+		INIT_WORK(&priv->an_task, dwxpcs_an_task);
-+		clear_bit(__DWXPCS_TASK_SCHED, &priv->state);
-+
-+		int_name = priv->int_name;
-+		sprintf(int_name, "%s-%d", "dwxpcs", priv->mdiodev->dev.id);
-+		priv->int_wq = create_singlethread_workqueue(int_name);
-+		if (!priv->int_wq) {
-+			dev_err(dev, "%s: Failed to create workqueue\n",
-+				int_name);
-+			return -ENOMEM;
-+		}
-+
-+		ret = request_irq(priv->pdata->irq, dwxpcs_interrupt,
-+				  IRQF_SHARED, int_name, priv);
-+		if (unlikely(ret < 0)) {
-+			destroy_workqueue(priv->int_wq);
-+			dev_err(dev, "%s: Allocating DW XPCS IRQ %d (%d)\n",
-+				__func__, priv->pdata->irq, ret);
-+			return ret;
-+		}
-+	}
-+	dev_info(dev, "%s: DW XPCS mdio device (IRQ: %d) probed successful\n",
-+		 __func__, priv->pdata->irq);
-+
-+	mdiodev->priv = priv;
-+
-+	return 0;
-+}
-+
-+static void dwxpcs_remove(struct mdio_device *mdiodev)
-+{
-+	struct dwxpcs_priv *priv = (struct dwxpcs_priv *)mdiodev->priv;
-+
-+	set_bit(__DWXPCS_REMOVING, &priv->state);
-+
-+	/* Restore the original phy_device info */
-+	priv->phy_dev->priv = priv->cached_phy_dev.priv;
-+	priv->phy_dev->drv = priv->cached_phy_dev.drv;
-+
-+	free_irq(priv->pdata->irq, priv);
-+	if (priv->int_wq)
-+		destroy_workqueue(priv->int_wq);
-+}
-+
-+static struct mdio_driver dwxpcs_driver = {
-+	.probe = dwxpcs_probe,
-+	.remove = dwxpcs_remove,
-+	.mdiodrv.driver = {
-+		.name = "dwxpcs",
-+		.acpi_match_table = ACPI_PTR(dwxpcs_acpi_match),
-+	},
-+};
-+
-+mdio_module_driver(dwxpcs_driver);
-+
-+MODULE_DESCRIPTION("DW xPCS converter driver");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/dwxpcs.h b/include/linux/dwxpcs.h
-new file mode 100644
-index 000000000000..2082e800ee04
---- /dev/null
-+++ b/include/linux/dwxpcs.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_DWXPCS_H
-+#define __LINUX_DWXPCS_H
-+
-+enum dwxpcs_pcs_mode {
-+	DWXPCS_MODE_SGMII_AN,
-+	DWXPCS_MODE_1000BASEX_AN,
-+};
-+
-+struct dwxpcs_platform_data {
-+	int irq;
-+	enum dwxpcs_pcs_mode mode;
-+	int ext_phy_addr;
-+};
-+
-+#endif
--- 
-2.17.0
+Thanks,
+Laura
 
