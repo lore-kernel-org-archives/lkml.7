@@ -2,83 +2,85 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1918EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4231C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF2912189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:37:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="VCY2K4Rr"
+	by mail.kernel.org (Postfix) with ESMTP id C2E232064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfH1Thb (ORCPT
+        id S1726924AbfH1Tii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 15:37:31 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:63712 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbfH1Thb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 15:37:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1567021050; x=1598557050;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:mime-version:content-transfer-encoding;
-  bh=0/zETLT6OxlsuzV2h4cI2jALLd91yg4iSxzLtVcgnvs=;
-  b=VCY2K4RrpK6UMEW21DASV1UktYIj5ssljwK8Itd6VWYX+5QoOnKDt8xp
-   3WRMAgRzNO5EKVVNV/YGaFdUIX43dAZrWgqUFHEWyPeWw36ucIS2o+xvX
-   guVuIWp+iFLvjIy9xRgJhwxCGvj3I+UwHf2KcSa9LZihelPwjpgpWEctC
-   s=;
-X-IronPort-AV: E=Sophos;i="5.64,442,1559520000"; 
-   d="scan'208";a="824873404"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 28 Aug 2019 19:37:28 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id 33854A269C;
-        Wed, 28 Aug 2019 19:37:28 +0000 (UTC)
-Received: from EX13D01EUA002.ant.amazon.com (10.43.165.199) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 28 Aug 2019 19:37:27 +0000
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13D01EUA002.ant.amazon.com (10.43.165.199) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 28 Aug 2019 19:37:26 +0000
-Received: from EX13D20UWC001.ant.amazon.com ([10.43.162.244]) by
- EX13D20UWC001.ant.amazon.com ([10.43.162.244]) with mapi id 15.00.1367.000;
- Wed, 28 Aug 2019 19:37:25 +0000
-From:   "Graf (AWS), Alexander" <graf@amazon.de>
-To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Schoenherr, Jan H." <jschoenh@amazon.de>,
-        "Raslan, KarimAllah" <karahmed@amazon.de>,
-        "Lukaszewicz, Rimas" <rimasluk@amazon.com>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>
-Subject: Re: [PATCH v2 11/15] svm: Temporary deactivate AVIC during ExtINT
- handling
-Thread-Topic: [PATCH v2 11/15] svm: Temporary deactivate AVIC during ExtINT
- handling
-Thread-Index: AQHVU4YZx2GIhsHgJkOSwpBQnjkrXqcCTLuAgA5zxoCAAEh7gA==
-Date:   Wed, 28 Aug 2019 19:37:24 +0000
-Message-ID: <82C8A08D-6CB3-4268-BF79-802E1015E365@amazon.de>
-References: <1565886293-115836-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1565886293-115836-12-git-send-email-suravee.suthikulpanit@amd.com>
- <1ed5bf9c-177e-b41c-b5ac-4c76155ead2a@amazon.com>,<5aaef6f4-4bee-4cc4-8eb0-d9b4c412988b@amd.com>
-In-Reply-To: <5aaef6f4-4bee-4cc4-8eb0-d9b4c412988b@amd.com>
-Accept-Language: en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-Content-Type: text/plain; charset="us-ascii"
+        Wed, 28 Aug 2019 15:38:38 -0400
+Received: from mga06.intel.com ([134.134.136.31]:28642 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726614AbfH1Tih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 15:38:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 12:38:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
+   d="scan'208";a="381391122"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga006.fm.intel.com with ESMTP; 28 Aug 2019 12:38:35 -0700
+Subject: Re: [PATCH] ioat/dca: Use struct_size() helper
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190828184015.GA4273@embeddedor>
+From:   Dave Jiang <dave.jiang@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.jiang@intel.com; prefer-encrypt=mutual; keydata=
+ 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
+ o6nmKbYpUAltQObU2w==
+Message-ID: <78eb4e9a-ec3d-f61e-1c7e-5f26a5608e9b@intel.com>
+Date:   Wed, 28 Aug 2019 12:38:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190828184015.GA4273@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -86,134 +88,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> Am 28.08.2019 um 17:19 schrieb Suthikulpanit, Suravee <Suravee.Suthikulpa=
-nit@amd.com>:
-> =
+On 8/28/19 11:40 AM, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
+> 
+> struct ioat_dca_priv {
+> 	...
+>         struct ioat_dca_slot     req_slots[0];
+> };
+> 
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+> 
+> So, replace the following form:
+> 
+> sizeof(*ioatdca) + (sizeof(struct ioat_dca_slot) * slots)
+> 
+> with:
+> 
+> struct_size(ioatdca, req_slots, slots)
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-> Alex,
-> =
+Acked-by: Dave Jiang <dave.jiang@intel.com>
 
->> On 8/19/19 5:35 AM, Alexander Graf wrote:
->> =
-
->> =
-
->>> On 15.08.19 18:25, Suthikulpanit, Suravee wrote:
->>> AMD AVIC does not support ExtINT. Therefore, AVIC must be temporary
->>> deactivated and fall back to using legacy interrupt injection via vINTR
->>> and interrupt window.
->>> =
-
->>> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
->>> ---
->>>   arch/x86/kvm/svm.c | 49 =
-
->>> +++++++++++++++++++++++++++++++++++++++++++++----
->>>   1 file changed, 45 insertions(+), 4 deletions(-)
->>> =
-
->>> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
->>> index cfa4b13..4690351 100644
->>> --- a/arch/x86/kvm/svm.c
->>> +++ b/arch/x86/kvm/svm.c
->>> @@ -384,6 +384,7 @@ struct amd_svm_iommu_ir {
->>>   static void svm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0);
->>>   static void svm_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa);
->>>   static void svm_complete_interrupts(struct vcpu_svm *svm);
->>> +static void svm_request_activate_avic(struct kvm_vcpu *vcpu);
->>>   static bool svm_get_enable_apicv(struct kvm *kvm);
->>>   static inline void avic_post_state_restore(struct kvm_vcpu *vcpu);
->>> @@ -4494,6 +4495,15 @@ static int interrupt_window_interception(struct =
-
->>> vcpu_svm *svm)
->>>   {
->>>       kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
->>>       svm_clear_vintr(svm);
->>> +
->>> +    /*
->>> +     * For AVIC, the only reason to end up here is ExtINTs.
->>> +     * In this case AVIC was temporarily disabled for
->>> +     * requesting the IRQ window and we have to re-enable it.
->>> +     */
->>> +    if (svm_get_enable_apicv(svm->vcpu.kvm))
->>> +        svm_request_activate_avic(&svm->vcpu);
->> =
-
->> Would it make sense to add a trace point here and to the other call =
-
->> sites, so that it becomes obvious in a trace when and why exactly avic =
-
->> was active/inactive?
->> =
-
->> The trace point could add additional information on the why.
-> =
-
-> Sure, sounds good.
-> =
-
->>> ....
->>> @@ -5522,9 +5558,6 @@ static void enable_irq_window(struct kvm_vcpu =
-
->>> *vcpu)
->>>   {
->>>       struct vcpu_svm *svm =3D to_svm(vcpu);
->>> -    if (kvm_vcpu_apicv_active(vcpu))
->>> -        return;
->>> -
->>>       /*
->>>        * In case GIF=3D0 we can't rely on the CPU to tell us when GIF =
-
->>> becomes
->>>        * 1, because that's a separate STGI/VMRUN intercept.  The next =
-
->>> time we
->>> @@ -5534,6 +5567,14 @@ static void enable_irq_window(struct kvm_vcpu =
-
->>> *vcpu)
->>>        * window under the assumption that the hardware will set the GIF.
->>>        */
->>>       if ((vgif_enabled(svm) || gif_set(svm)) && nested_svm_intr(svm)) {
->>> +        /*
->>> +         * IRQ window is not needed when AVIC is enabled,
->>> +         * unless we have pending ExtINT since it cannot be injected
->>> +         * via AVIC. In such case, we need to temporarily disable AVIC,
->>> +         * and fallback to injecting IRQ via V_IRQ.
->>> +         */
->>> +        if (kvm_vcpu_apicv_active(vcpu))
->>> +            svm_request_deactivate_avic(&svm->vcpu);
->> =
-
->> Did you test AVIC with nesting? Did you actually run across this issue =
-
->> there?
-> =
-
-> Currently, we have not claimed that AVIC is supported w/ nested VM. =
-
-> That's why we have not enabled AVIC by default yet. We will be looking =
-
-> more into that next.
-
-If it's not supported, please suspend it when we enter a nested guest then?=
- In that case, the above change is also unnecessary, as it only affects nes=
-ted guests, no?
-
-Alex
-
-> =
-
-> Suravee
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+> ---
+>  drivers/dma/ioat/dca.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/ioat/dca.c b/drivers/dma/ioat/dca.c
+> index 70fd8454d002..be61c32a876f 100644
+> --- a/drivers/dma/ioat/dca.c
+> +++ b/drivers/dma/ioat/dca.c
+> @@ -286,8 +286,7 @@ struct dca_provider *ioat_dca_init(struct pci_dev *pdev, void __iomem *iobase)
+>  		return NULL;
+>  
+>  	dca = alloc_dca_provider(&ioat_dca_ops,
+> -				 sizeof(*ioatdca)
+> -				      + (sizeof(struct ioat_dca_slot) * slots));
+> +				 struct_size(ioatdca, req_slots, slots));
+>  	if (!dca)
+>  		return NULL;
+>  
+> 
