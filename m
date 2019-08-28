@@ -2,167 +2,81 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1EDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516E6C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597132189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A1521883
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:52:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xZw6Yyz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfH1IwQ (ORCPT
+        id S1726548AbfH1Iwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:52:16 -0400
-Received: from mga11.intel.com ([192.55.52.93]:20965 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbfH1IwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:52:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 01:52:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
-   d="scan'208";a="183060632"
-Received: from deyangko-mobl.ccr.corp.intel.com ([10.249.168.35])
-  by orsmga003.jf.intel.com with ESMTP; 28 Aug 2019 01:52:12 -0700
-Message-ID: <82458318837ed1154a183be0b96337fc7809c645.camel@intel.com>
-Subject: Re: [PATCH] thermal: rcar_gen3_thermal: Fix Wshift-negative-value
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Nathan Huckleberry <nhuck@google.com>, edubezval@gmail.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Yoshihiro Kaneko <ykaneko0929@gmail.com>,
-        wsa+renesas@sang-engineering.com
-Date:   Wed, 28 Aug 2019 16:52:20 +0800
-In-Reply-To: <fd8b8a48-dfb7-1478-2d8d-0953acee39d3@linaro.org>
-References: <20190613211228.34092-1-nhuck@google.com>
-         <fd8b8a48-dfb7-1478-2d8d-0953acee39d3@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 28 Aug 2019 04:52:31 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:45662 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfH1Iwb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:52:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5Q83mTglAkKXyC+Y0UqudjISX6lQKt8C4Ce1Rh9Mo7Y=; b=xZw6Yyz+SBp/TTHSm2OAqYA1N
+        iQIpVvzMm3GLqfBQMI+e+QRKsJ9+sFcvFokXh2vhghnvO71dljYSIjUorFy2rtDMSKAcMy+nYuJms
+        A/7B6g1SZO674ckCBmRMLf4m/P6lc3h6qAhqKOe/QQ6AR9sJ6tD8+49NiHaqT+1QecMLAqEQqFsR3
+        khp4yzyF0yT5gLbEirr9zZPqOgpwtoBJmOp+dHrbWXkSGrSVPSLgBDVzaVMWmryd0I51K0HEXreC/
+        zTPiA2cNwWpbY/4oq3dF1hcYVuEAy/qorvxlIHWCNhdUvNevkzzh8De6w53TxSdavTETtL93Cxa42
+        1AGITfjBQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i2tgi-0007oh-9Q; Wed, 28 Aug 2019 08:52:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 577DC3074C6;
+        Wed, 28 Aug 2019 10:51:43 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3C9F820230B0B; Wed, 28 Aug 2019 10:52:17 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 10:52:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [RESEND PATCH V3 2/8] perf/x86/intel: Basic support for metrics
+ counters
+Message-ID: <20190828085217.GD2369@hirez.programming.kicks-ass.net>
+References: <20190826144740.10163-1-kan.liang@linux.intel.com>
+ <20190826144740.10163-3-kan.liang@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826144740.10163-3-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-14 at 12:52 +0200, Daniel Lezcano wrote:
-> Hi Nathan,
-> 
-> On 13/06/2019 23:12, Nathan Huckleberry wrote:
-> > Clang produces the following warning
-> > 
-> > vers/thermal/rcar_gen3_thermal.c:147:33: warning: shifting a
-> > negative
-> > signed value is undefined [-Wshift-negative-value] / (ptat[0] -
-> > ptat[2])) +
-> > FIXPT_INT(TJ_3); ^~~~~~~~~~~~~~~
-> > drivers/thermal/rcar_gen3_thermal.c:126:29
-> > note: expanded from macro 'FIXPT_INT' #define FIXPT_INT(_x) ((_x)
-> > <<
-> > FIXPT_SHIFT) ~~~~ ^ drivers/thermal/rcar_gen3_thermal.c:150:18:
-> > warning:
-> > shifting a negative signed value is undefined [-Wshift-negative-
-> > value]
-> > tsc->tj_t - FIXPT_INT(TJ_3)); ~~~~~~~~~~~~^~~~~~~~~~~~~~~~
-> > 
-> > Upon further investigating it looks like there is no real reason
-> > for
-> > TJ_3 to be -41. Usages subtract -41, code would be cleaner to just
-> > add.
-> 
-> All the code seems broken regarding the negative value shifting as
-> the
-> macros pass an integer:
-> 
-> eg.
->         tsc->coef.a2 = FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]),
->                                  tsc->tj_t - FIXPT_INT(ths_tj_1));
-> 
-> thcode[1] is always < than thcode[0],
-> 
-> thcode[1] - thcode[0] < 0
-> 
-> FIXPT_INT(thcode[1] - thcode[0]) is undefined
-> 
-> 
-> Is it done on purpose FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]) ?
-> 
-> Try developing the macro with the coef.a2 computation ...
-> 
-> The code quality of this driver could be better, it deserves a rework
-> IMHO ...
-> 
-> I suggest to revert:
-> 
-> 4eb39f79ef443fa566d36bd43f1f578d5c140305
-> bdc4480a669d476814061b4da6bb006f7048c8e5
-> 6a310f8f97bb8bc2e2bb9db6f49a1b8678c8d144
-> 
-> Rework the coefficient computation and re-introduce what was reverted
-> in
-> a nicer way.
+On Mon, Aug 26, 2019 at 07:47:34AM -0700, kan.liang@linux.intel.com wrote:
+> +#define INTEL_PMC_IDX_FIXED_METRIC_BASE		(INTEL_PMC_IDX_FIXED + 16)
+> +#define INTEL_PMC_IDX_TD_RETIRING		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 0)
+> +#define INTEL_PMC_IDX_TD_BAD_SPEC		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 1)
+> +#define INTEL_PMC_IDX_TD_FE_BOUND		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 2)
+> +#define INTEL_PMC_IDX_TD_BE_BOUND		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 3)
+> +#define INTEL_PMC_MSK_TOPDOWN			((0xfull << INTEL_PMC_IDX_FIXED_METRIC_BASE) | \
+> +						 INTEL_PMC_MSK_FIXED_SLOTS)
 
-Sounds reasonable to me.
+> +
+> +#define INTEL_PMC_CLEAR_TOPDOWN_BIT(bit)	(~(0x1ull << bit) & INTEL_PMC_MSK_TOPDOWN)
 
-Yoshihiro,
-can you please clarify on this? Or else I will revert the above commits
-first?
-
-Also CC Wolfram Sang, the driver author.
-
-thanks,
-rui
-> 
-> 
-> > Fixes: 4eb39f79ef44 ("thermal: rcar_gen3_thermal: Update value of
-> > Tj_1")
-> > Cc: clang-built-linux@googlegroups.com
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/531
-> > Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-> > ---
-> >  drivers/thermal/rcar_gen3_thermal.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/thermal/rcar_gen3_thermal.c
-> > b/drivers/thermal/rcar_gen3_thermal.c
-> > index a56463308694..f4b4558c08e9 100644
-> > --- a/drivers/thermal/rcar_gen3_thermal.c
-> > +++ b/drivers/thermal/rcar_gen3_thermal.c
-> > @@ -131,7 +131,7 @@ static inline void
-> > rcar_gen3_thermal_write(struct rcar_gen3_thermal_tsc *tsc,
-> >  #define RCAR3_THERMAL_GRAN 500 /* mili Celsius */
-> >  
-> >  /* no idea where these constants come from */
-> > -#define TJ_3 -41
-> > +#define TJ_3 41
-> >  
-> >  static void rcar_gen3_thermal_calc_coefs(struct
-> > rcar_gen3_thermal_tsc *tsc,
-> >  					 int *ptat, const int *thcode,
-> > @@ -144,11 +144,11 @@ static void
-> > rcar_gen3_thermal_calc_coefs(struct rcar_gen3_thermal_tsc *tsc,
-> >  	 * the dividend (4095 * 4095 << 14 > INT_MAX) so keep it
-> > unscaled
-> >  	 */
-> >  	tsc->tj_t = (FIXPT_INT((ptat[1] - ptat[2]) * 157)
-> > -		     / (ptat[0] - ptat[2])) + FIXPT_INT(TJ_3);
-> > +		     / (ptat[0] - ptat[2])) - FIXPT_INT(TJ_3);
-> >  
-> >  	tsc->coef.a1 = FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[2]),
-> > -				 tsc->tj_t - FIXPT_INT(TJ_3));
-> > -	tsc->coef.b1 = FIXPT_INT(thcode[2]) - tsc->coef.a1 * TJ_3;
-> > +				 tsc->tj_t + FIXPT_INT(TJ_3));
-> > +	tsc->coef.b1 = FIXPT_INT(thcode[2]) + tsc->coef.a1 * TJ_3;
-> >  
-> >  	tsc->coef.a2 = FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]),
-> >  				 tsc->tj_t - FIXPT_INT(ths_tj_1));
-> > 
-> 
-> 
-
+That thing is a clear misnomer; it is OTHER_TOPDOWN_BITS(). Fixed that
+too.
