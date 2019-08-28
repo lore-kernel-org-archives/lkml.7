@@ -2,87 +2,98 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FBEC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8876FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8D4A23406
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7C42070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:02:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Jd6T353A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y3BEohni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfH1MAe (ORCPT
+        id S1726437AbfH1MCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:00:34 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:39738 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725991AbfH1MAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:00:34 -0400
-Received: from zn.tnic (p200300EC2F0A5300B1A6357224C8EB83.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5300:b1a6:3572:24c8:eb83])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1E35E1EC06E5;
-        Wed, 28 Aug 2019 14:00:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566993632;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=8xpwVf+VIsLRQ2aLupeFHolCJXDPzjt+Wi6mPweoFlg=;
-        b=Jd6T353AKbGfPOz7tG4uD23DNCJsXidU8hWdEU9EXJGXYGFVH9vRF5WV9oRvRaZFd9m8eW
-        5gshBwZD3lTmzW92WtE9tivbdyynKQd0GkwTtGgJREm0IGUEYFhq9uQ1vc46DSG8UjyTZ2
-        QCb/wSOq3lva6H2aai39nrB21g45mHw=
-Date:   Wed, 28 Aug 2019 14:00:24 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Wed, 28 Aug 2019 08:02:51 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44340 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfH1MCv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 08:02:51 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i18so1341391pgl.11;
+        Wed, 28 Aug 2019 05:02:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7x9QbvCyV5/uMb/ZbOZTelfBuJtIOSZaHEFOwZS1U/k=;
+        b=Y3BEohniDvROSCc8HVpk5lxDFNRFq3WG0SOtiNwmkHU5GinDquwPZBDb4aU0eLfbuM
+         aK678pnnDLR81ayJ3iuVvCL98TcTcxKDmGj74hdliwh0PJipIhsXmFvVzig2T3dJTShN
+         2qaHRsfYmbf3x/O+aJNIDVUaqAHMp0nj7TF0GLPrgNEfRwJ5NEijtiVgOZCuQnU2FgJ7
+         YD8nvS3s2Zx6Y7ipsyIXufshNneXGNzEIGPqdZPHKvMvXEPlLTUq9qY+t6wTB0je+zEy
+         EHHtNQ3wFVZBr7wSwmd22ANQpmnURLZDPGe0mwEirZLNFUsT78P+xvvqJy0+I4JTabzn
+         NlIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7x9QbvCyV5/uMb/ZbOZTelfBuJtIOSZaHEFOwZS1U/k=;
+        b=OivtLQ8TZnU16dnYYzpixrHUvbkz3MIm2+XoYmYRHobG5JFWIiNpnlYvkI2P9JmnpV
+         QjS+a/eaa6Ro4e3W4mS914LmECH1OBYnSDuyuiWV77CSTxl4oXeSU84imlHSXpaXLqdb
+         gxSNKtGgia+zMES9gYRuUq/AdzhxipzpIq4SH+XEpVSWdJNBudx5VjUPQG6OQcIIDtPA
+         /gsYKTAWJFNhhvaSQea8SaA0w3BRYqB4S3UQL5kjk8TPojwgoVgxU2NX0gZOHq6Ma28B
+         T/HYhWjwO9HsX/zW/GI0i9+ABwmfccRLe27R0qlHC3EoQ74ec/rR5W1WHv4+HWLMLWKx
+         Zdvw==
+X-Gm-Message-State: APjAAAXc9LR8q0Rp6AYOvUdGUJvSykppsYanrSkAHmdo+gDedQfgXZ98
+        LBAKTwQ+5mzfScKjaC2Gzhp8I6J1
+X-Google-Smtp-Source: APXvYqxqn73YmKtwiQE/Z78oW/kPclfZYPbgL6GOeW6wDfM8YR3mgFQYHFlhxHMRR6wnLD94mNR0Rg==
+X-Received: by 2002:a62:1715:: with SMTP id 21mr4286575pfx.134.1566993770513;
+        Wed, 28 Aug 2019 05:02:50 -0700 (PDT)
+Received: from localhost ([39.7.47.251])
+        by smtp.gmail.com with ESMTPSA id y23sm5509638pfr.86.2019.08.28.05.02.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 05:02:49 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 21:02:46 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, Enrico@kleine-koenig.org,
+        Weigelt@kleine-koenig.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Chen Yu <yu.c.chen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 4.19 72/98] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD
- family 15h/16h
-Message-ID: <20190828120024.GF4920@zn.tnic>
-References: <20190827072718.142728620@linuxfoundation.org>
- <20190827072722.020603090@linuxfoundation.org>
- <20190827113604.GB18218@amd>
- <alpine.DEB.2.21.1908271525480.1939@nanos.tec.linutronix.de>
- <20190828103113.GA14677@amd>
- <alpine.DEB.2.21.1908281231480.1869@nanos.tec.linutronix.de>
- <20190828114947.GC8052@amd>
+        metux IT consult <lkml@metux.net>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] vsprintf: introduce %dE for error constants
+Message-ID: <20190828120246.GA31416@jagdpanzerIV>
+References: <20190827211244.7210-1-uwe@kleine-koenig.org>
+ <20190828113216.p2yiha4xyupkbcbs@pathway.suse.cz>
+ <87o9097bff.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828114947.GC8052@amd>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87o9097bff.fsf@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 01:49:47PM +0200, Pavel Machek wrote:
-> AMD screwed this up,
+On (08/28/19 14:54), Jani Nikula wrote:
+[..]
+> > I personally think that this feature is not worth the code, data,
+> > and bikeshedding.
+> 
+> The obvious alternative, I think already mentioned, is to just add
+> strerror() or similar as a function. I doubt there'd be much opposition
+> to that. Folks could use %s and strerr(ret). And a follow-up could add
+> the special format specifier if needed.
 
-Except that it wasn't AMD who screwed up but BIOS on *some* laptops.
+Yeah, I'd say that strerror() would be a better alternative
+to vsprintf() specifier. (if we decide to add such functionality).
 
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+	-ss
