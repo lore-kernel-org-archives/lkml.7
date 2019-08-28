@@ -2,104 +2,95 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA90CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846EEC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A7920828
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55429217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfH1HLX (ORCPT
+        id S1726328AbfH1HNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 03:11:23 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54935 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbfH1HLX (ORCPT
+        Wed, 28 Aug 2019 03:13:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45818 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726154AbfH1HNr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:11:23 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id E66BF81849; Wed, 28 Aug 2019 09:11:06 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 09:11:19 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Steve Dickson <steved@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 35/98] NFS: Fix regression whereby fscache errors
- are appearing on nofsc mounts
-Message-ID: <20190828071119.GA10462@amd>
-References: <20190827072718.142728620@linuxfoundation.org>
- <20190827072720.043818271@linuxfoundation.org>
+        Wed, 28 Aug 2019 03:13:47 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1i2s9G-0001nS-3j; Wed, 28 Aug 2019 09:13:42 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Andrea Parri <parri.andrea@gmail.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: numlist API Re: [RFC PATCH v4 1/9] printk-rb: add a new printk ringbuffer implementation
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+        <20190807222634.1723-2-john.ogness@linutronix.de>
+        <20190823171802.eo2chwyktibeub7a@pathway.suse.cz>
+        <20190823171802.eo2chwyktibeub7a@pathway.suse.cz>
+        <87sgpnmqdo.fsf@linutronix.de>
+        <20190827130349.6mrnhdlqyqokgsfk@pathway.suse.cz>
+Date:   Wed, 28 Aug 2019 09:13:39 +0200
+In-Reply-To: <20190827130349.6mrnhdlqyqokgsfk@pathway.suse.cz> (Petr Mladek's
+        message of "Tue, 27 Aug 2019 15:03:49 +0200")
+Message-ID: <87o909lq3g.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="/9DWx/yDrRhgMJTb"
-Content-Disposition: inline
-In-Reply-To: <20190827072720.043818271@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-08-27, Petr Mladek <pmladek@suse.com> wrote:
+> The API is complicated because of the callbacks. It depends on a logic
+> that is implemented externally. It makes it abstract to some extent.
+>
+> My view is that the API would be much cleaner and easier to review
+> when the ID handling is "hardcoded" (helper functions). It could be
+> made abstract anytime later when there is another user.
+>
+> There should always be a reason why to make a code more complicated
+> than necessary. It seems that the only reason is some theoretical
+> future user and its theoretical requirements.
 
---/9DWx/yDrRhgMJTb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+FWIW, I did _not_ create the numlist and dataring structures in order to
+support some theoretical future user. PeterZ helped[0] me realize that
+RFCv2 was actually using multiple internal data structures. Each of
+these internal data structures has their own set of memory barriers and
+semantics. By explicitly refactoring them behind strong APIs, the memory
+barriers could be clearly visible and the semantics clearly defined.
 
-On Tue 2019-08-27 09:50:14, Greg Kroah-Hartman wrote:
-> [ Upstream commit dea1bb35c5f35e0577cfc61f79261d80b8715221 ]
->=20
-> People are reporing seeing fscache errors being reported concerning
-> duplicate cookies even in cases where they are not setting up fscache
-> at all. The rule needs to be that if fscache is not enabled, then it
-> should have no side effects at all.
->=20
-> To ensure this is the case, we disable fscache completely on all superblo=
-cks
-> for which the 'fsc' mount option was not set. In order to avoid issues
-> with '-oremount', we also disable the ability to turn fscache on via
-> remount.
+For me this was a great help in _simplifying_ the design. For me it also
+greatly simplified debugging, testing, and verifying because I could
+write tests for numlist and datalist that explicitly targeted those data
+structures. Once I believed they were bullet-proof, I could move on to
+higher-level tests of the printk_ringbuffer. And once I believed the
+printk_ringbuffer was bullet-proof, I could move on to the higher-level
+printk tests. When a problem was found, I could effectively isolate
+which component failed their job.
 
-Actually, the code seems to suggest that you disable the ability to
-turn fscache _off_ via remount, too.
+I understand that we disagree about the abstractions being a
+simplification. And I'm not sure how to proceed in this regard. (Maybe
+once we get everything bullet-proof, we can put everything back together
+into a monolith like RFCv2.) Either way, please understand that the
+abstractions were done for the benefit of printk_ringbuffer, not for any
+theoretical future user.
 
-Is that intentional?
+John Ogness
 
-Best regards,
-								Pavel
-
-> @@ -2239,6 +2239,7 @@ nfs_compare_remount_data(struct nfs_server *nfss,
->  	    data->acdirmin !=3D nfss->acdirmin / HZ ||
->  	    data->acdirmax !=3D nfss->acdirmax / HZ ||
->  	    data->timeo !=3D (10U * nfss->client->cl_timeout->to_initval / HZ) =
-||
-> +	    (data->options & NFS_OPTION_FSCACHE) !=3D (nfss->options & NFS_OPTI=
-ON_FSCACHE) ||
->  	    data->nfs_server.port !=3D nfss->port ||
->  	    data->nfs_server.addrlen !=3D nfss->nfs_client->cl_addrlen ||
->  	    !rpc_cmp_addr((struct sockaddr *)&data->nfs_server.address,
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---/9DWx/yDrRhgMJTb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1mKRcACgkQMOfwapXb+vIEvACfVpzLbeyLcBleN3N5tPiXdRHY
-yqsAoKVSoLdRl2MIVRw24zZV2bl8V+9T
-=hqyc
------END PGP SIGNATURE-----
-
---/9DWx/yDrRhgMJTb--
+[0] https://lkml.kernel.org/r/20190628154435.GZ7905@worktop.programming.kicks-ass.net
