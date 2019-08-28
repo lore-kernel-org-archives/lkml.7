@@ -2,203 +2,115 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623FFC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F28C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E3E22CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:00:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ehoWpItY"
+	by mail.kernel.org (Postfix) with ESMTP id EA2F72339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567022491;
+	bh=MD4qcU/RNuQWBhQQ01cICuFkYluzMOqVUuTE6FPZ0IM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bJ3FfX6Vb1Qvc/e4BIjdgudgYE00TBHdBzU/S/+Hq4SKLW6QAhL2kQxtg2OA7Nkcd
+	 Hkpy1HMefk7GywvCZ0Y9TTnpeU7DqZaZYo/joeMUMG4Ci91QjR41Kni/G9NIbEAtOM
+	 eCFOZEiY72Se/ppIDmYdsIXWlLlhjbWEpJuJbU5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfH1UAz (ORCPT
+        id S1726943AbfH1UBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 16:00:55 -0400
-Received: from gateway34.websitewelcome.com ([192.185.147.201]:37490 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726315AbfH1UAy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 16:00:54 -0400
-X-Greylist: delayed 1429 seconds by postgrey-1.27 at vger.kernel.org; Wed, 28 Aug 2019 16:00:53 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id B063175B82A6
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 14:37:04 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 33keiSrKMdnCe33keiqdwh; Wed, 28 Aug 2019 14:37:04 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=y9Y4u6PMnvkO2bkJKn2LaoZEbskbiHYMmROX18FXaTw=; b=ehoWpItYDnc3uoSl6iu/G0BFQC
-        uXZcvP3s38BAFM3XVbkqo3HOZGDiES0BuVBPfOBFGRpT9o3teLyYyi0pCeiiWoNcmudaJjoCeaeRe
-        4EePmCF7R0u+Tt4czVTmL/phMR/DTxOqeT5wPoZtIyX6knQAmJmeXmY64Lgu37GN3mwxzdUsOi3gB
-        /WXxO5B5LAPA40d/qgMeZ6CRpT2BvQU52HAmK3/a7MkFd2R2jWGgw2o4DjyDkkqj1LS7Aacc1SEPu
-        dQ8A1QDjePsD7/qBY54L3wYcHICo0cEeRfeWhaCcwCENqv4I+lUl11KSjBcbiSJ7nqiuWPRSkTugz
-        I7wSGyPA==;
-Received: from [189.152.216.116] (port=52198 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1i33kc-001KPW-3i; Wed, 28 Aug 2019 14:37:02 -0500
-To:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-References: <20190610210613.GA21989@embeddedor>
- <3e80b36c86942278ee66aebdd5ea2632f104083a.camel@intel.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH] libnvdimm, region: Use struct_size() in kzalloc()
-Message-ID: <d940183a-c00d-3a96-37bb-9553583f160a@embeddedor.com>
-Date:   Wed, 28 Aug 2019 14:36:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 16:01:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbfH1UB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 16:01:29 -0400
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5613E22CF8;
+        Wed, 28 Aug 2019 20:01:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567022488;
+        bh=MD4qcU/RNuQWBhQQ01cICuFkYluzMOqVUuTE6FPZ0IM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iFfeQDhnrzVMUj4H9FCZIGJEVCdmUoJdFOJqH0nNIMzHq+sMuN7d0E/8e4AMSnVtC
+         7MVGmzqlFmzUS63rAQNUJjQdW0qwa87B1DdQhq1z0vsDdXRF4aSG1YgvLlybgwRoQb
+         8M19RIEIXpDElPoZ3O4OZ4pJwThIcMXQWQDipfuo=
+Received: by mail-qt1-f177.google.com with SMTP id g4so980662qtq.7;
+        Wed, 28 Aug 2019 13:01:28 -0700 (PDT)
+X-Gm-Message-State: APjAAAUp9VezRVwUfVlbLWU2fWju0bUz/wwgtg+3u4Fa489Jpdf4Lz/5
+        UBukcuG9fU7gdhlwQ3Gsf151owJyzj+NxHzN6A==
+X-Google-Smtp-Source: APXvYqzh6lclUqux/vGx4y8IrMqxuIi7axYVYygQGUBgHesfvCn92IkyHi3rsied4shlJPCDpAw75irc/7RIpvqF21A=
+X-Received: by 2002:ad4:4301:: with SMTP id c1mr4283774qvs.138.1567022487474;
+ Wed, 28 Aug 2019 13:01:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <3e80b36c86942278ee66aebdd5ea2632f104083a.camel@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.216.116
-X-Source-L: No
-X-Exim-ID: 1i33kc-001KPW-3i
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [189.152.216.116]:52198
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <1565691791-26167-1-git-send-email-Ashish.Kumar@nxp.com>
+ <20190821110640.GC5128@sirena.co.uk> <VI1PR04MB401528B4F92DAD98385EF53395AA0@VI1PR04MB4015.eurprd04.prod.outlook.com>
+ <VI1PR04MB4015474B3086AE99354FE65395A50@VI1PR04MB4015.eurprd04.prod.outlook.com>
+ <20190822184927.GH23391@sirena.co.uk> <20190827155005.GA18581@bogus> <20190827195606.GA28879@sirena.org.uk>
+In-Reply-To: <20190827195606.GA28879@sirena.org.uk>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 28 Aug 2019 15:01:15 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKnY1ucejpaSUYu_dGZ=uHMybsW4ryJAtEgimUXB+ozbg@mail.gmail.com>
+Message-ID: <CAL_JsqKnY1ucejpaSUYu_dGZ=uHMybsW4ryJAtEgimUXB+ozbg@mail.gmail.com>
+Subject: Re: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add
+ ls2080a compatibility string to bindings
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Ashish Kumar <ashish.kumar@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        Kuldeep Singh <kuldeep.singh@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vishal,
+On Tue, Aug 27, 2019 at 2:56 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Aug 27, 2019 at 10:50:05AM -0500, Rob Herring wrote:
+> > On Thu, Aug 22, 2019 at 07:49:27PM +0100, Mark Brown wrote:
+>
+> > > Drop the dt-bindings:.
+>
+> > If you do 'git log --oneline Documentation/devicetree/bindings/' you'll
+> > notice that SPI and ASoC are the oddballs now. I don't really care
+> > except it does add to tribal knowledge needed regarding maintainers'
+> > requirements.
+>
+> Well, you have been pushing people to change over to using
+> dt-bindings: so I guess you do care :(
 
-On 8/28/19 1:51 PM, Verma, Vishal L wrote:
+Well, yes. In the absence of any sort of pattern, I have pushed for
+some consistency. And to get rid of subjects like this:
 
-[..]
+Documentation/devicetree/bindings: Add the DT binding documentation for foo-bar
 
-> 
-> Hi Gustavo,
-> 
-> The patch looks good to me, however it looks like it might've missed
-> some instances where this replacement can be performed?
-> 
+If subsystems are consistent with their own standard as you are, then
+as a maintainer I don't really care. My point was in regard to what
+submitters need to know and follow.
 
-struct_size() does not apply to those scenarios. See below...
+> It really does cause me
+> to miss stuff, especially where people don't even include the
+> subsystem name in the header.  I get quite a lot of CCs for
+> things where I once reviewed a patch for a subsystem that made
+> use of some subsystem I do maintain or where one patch in a
+> series (perhaps even an already applied one) was relevant at some
+> point so I'm doing quite a bit of triage that's purely based on
+> the subject lines.
 
-> 
-> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git/tree/drivers/nvdimm/region_devs.c#n1030
+I can't imagine filtering on subjects will ever be that reliable
+unless we add subject prefixes to MAINTAINERS and have checkpatch
+check commits against those. Filtering on the diffstat is the only
+thing that's kept things to a sane list for me (MAINTAINERS for DT
+used to tag of_* functions which just meant getting copied on *every*
+driver). This is done on the patchwork server side for me, but I
+imagine one could do it on the client side too.
 
-struct_size() only applies to structures of the following kind:
-
-struct foo {
-   int stuff;
-   struct boo entry[];
-};
-
-and this scenario includes two different structures:
-
-struct nd_region {
-
-	...
-
-        struct nd_mapping mapping[0];
-};
-
-struct nd_blk_region {
-
-	...
-
-        struct nd_region nd_region;
-};
-
-> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git/tree/drivers/nvdimm/region_devs.c#n96
-> 
-
-In this scenario struct_size() does not apply directly because of the following
-logic before the call to devm_kzalloc():
-
- 	size_t flush_data_size = sizeof(void *);
-	
-	[..]
-
-        for (i = 0; i < nd_region->ndr_mappings; i++) {
-
-		[..]
-
-                /* at least one null hint slot per-dimm for the "no-hint" case */
-                flush_data_size += sizeof(void *);
-		
-		[..]
-
-                flush_data_size += nvdimm->num_flush * sizeof(void *);
-        }
-
-Thanks
---
-Gustavo
-
-
+Rob
