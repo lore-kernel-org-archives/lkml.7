@@ -2,132 +2,96 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34604C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83795C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069F72189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:03:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567004638;
-	bh=UdcxP8PvW8h4h3ltsMgYpEi3ypmTFhsT6eT1HrV6HXM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ONcVWdbj4auDLhsaayQEMJRgLlivZ2ZcHuXSQMpo/0GpggkAccYoa4XGHGpeHfJWk
-	 4cw9oquVk9PiAeWSIbXm+exxqNFPwo/g8t24e4COdrPUATrncHvuyDez/3NNKw9t7P
-	 iiSCRFOCi3tF65KzfOY+3qwrJxPacfDWb+7zFFmw=
+	by mail.kernel.org (Postfix) with ESMTP id 4B4C72189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:05:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="XTMO2HGg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfH1PD5 (ORCPT
+        id S1726702AbfH1PFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:03:57 -0400
-Received: from mail-wm1-f42.google.com ([209.85.128.42]:35855 "EHLO
-        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfH1PD4 (ORCPT
+        Wed, 28 Aug 2019 11:05:10 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44445 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbfH1PFK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:03:56 -0400
-Received: by mail-wm1-f42.google.com with SMTP id p13so423755wmh.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 08:03:55 -0700 (PDT)
+        Wed, 28 Aug 2019 11:05:10 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c81so1892515pfc.11
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 08:05:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ev+eyec33mKCmlxne5PpZs8ItbnOEVrmXSsAxEwGuYk=;
-        b=bPg83++Fji41iN7cKuEycpbpRKjFtc0Z7u/+iLVCFSA4JPpulgWXQwNFe1Et2g0t6d
-         duQwf9o8hPaLKm7pAv0ITd0OAiYzOXBHU5P6t5ysU+4b9140Tg3ObV9PVFYYKvZPPexB
-         Zf7TTjoMm3Xpsc+CYXwZVtWQ4qUJ7+skM72kUyAgyJ1hc/oSh6q6QJCDwe+G4BHKoGau
-         IcaKJXhU1DmgKXwJMxPsQZUCd06lQi9GrHobmWzSLPxt1gZtFqPz2ougvgMJZcMtc/Yh
-         kmNh73j913rPrOWnQXf1Tw4hOfm6Q5Ig93+MySZIMgjIuijgX+W8MO6t5GdmTg09eApq
-         fyCw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=bT8YwM8lVQY3Bq3jN8kP+13N5ePTqKFep5cdRAHRBlc=;
+        b=XTMO2HGgu5TOWpIq2y/FGjSLIfekGl3M7vrFDWmmXrc3l7yTlbf9kzmw+6UgrRxdYf
+         EUbuRzFeta2W/L+B3PZpY2qEZ/y7tzJ2F9OBVzaEfG4xsqk7cFhMoHP6Gqtqhoxfu0Qy
+         gYPyPibTk1uvvsWLxnTDR1dWnS3h8m7lFWrTbJ45gr/cTJs2QW8ToY49DvtGetqBEYyv
+         oyRJy0DZaBt5PB7jWV5PBWBzEGr01umcF/KgPXrcn29lDdPIOqrqGKLcrdvzpZjJ/6Nn
+         mM9gdu1u/oEj8ogKNPKG2C1347dDMjGgsOFsW+F9OG5wvKz9ixqPyBLNi0DCc87HstDR
+         Ep1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ev+eyec33mKCmlxne5PpZs8ItbnOEVrmXSsAxEwGuYk=;
-        b=Chj1gvKgMQMyUaoDcAijF9RjapoObj7aIiAp2BjCUJy8T5Pu5MyQrvvWTn4iF05C1W
-         5CNDzRN0LK/5evWtv5t3ul6tFce+DBiKP3HnCXR89KouigO41TZVsln5D5atIe0c93ii
-         FiChMREv0Mu6JMJbpkmsKgflXLnA5RNN2pQFhlEOa1LE0G6bxMecl+6njZTl8yxUUwM0
-         GiZPEstztljummF8U0SYvDvmXAFWfQRqfHXQZfv/i/gU+WINkTof1h/dTwox0rWfkTxH
-         ArDaohQN0uk4VU50phPIAGXtAmmbnokVG/RzquhrB0RfqYVNr2mIc6MmZJt8xN623JQu
-         wCdQ==
-X-Gm-Message-State: APjAAAWEWhfx6GkNEGy2mscf4iAqlBUGHU1awIIGm82QZKi944XPQ7Rd
-        9Qfz9XhX1qJF2pRvxO+2APbICTyv
-X-Google-Smtp-Source: APXvYqxZtunqdyf/S38Gt3Uc2V14Czl2S4pOvLDuxLxuW0Y2j6Jd+0zMp/FvL4Lbh803TjMwVTa3SA==
-X-Received: by 2002:a7b:cf2d:: with SMTP id m13mr5467420wmg.120.1567004634967;
-        Wed, 28 Aug 2019 08:03:54 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id s19sm4665558wrb.94.2019.08.28.08.03.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 08:03:54 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 17:03:52 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH -v2 0/5] Further sanitize INTEL_FAM6 naming
-Message-ID: <20190828150352.GA14545@gmail.com>
-References: <20190827194820.378516765@infradead.org>
- <3908561D78D1C84285E8C5FCA982C28F7F43EC93@ORSMSX115.amr.corp.intel.com>
- <20190827215135.GI2332@hirez.programming.kicks-ass.net>
- <20190828093301.GE2369@hirez.programming.kicks-ass.net>
- <20190828125902.GP2386@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=bT8YwM8lVQY3Bq3jN8kP+13N5ePTqKFep5cdRAHRBlc=;
+        b=R7mBnjUJ/Eh8ssGHq3CH8dDsi80EKiKLsOak/ztGDFplnTnaoQzoAMwqA9S3DsRcpM
+         510+qVGo31J4I2qal2We2mJyF4vs9A2hpXu5+IiSWrzf0NbkztH3a7xndqmKX+0lvmyO
+         8cBc/XUXZ289xv01TbYKv3RA+b9MtTBLJxmlVKMXLjphIqjRpWk3g6UgigS1Kazzluz+
+         p+KTKoifHOQKvv7DkmQbrGmT76E96igDHGuYXb+2iBD1y5JnN0kv4nfocrN0hNJPkVoR
+         h6CvFN2JoXLnbfuh8On9gMNMxWmTBSK87Zx1VmtUxFdo4uQL6hRazhF/3vrEjArWwsBS
+         roEA==
+X-Gm-Message-State: APjAAAUUhxlIcbH5okJW3+u6X/dVBWd1leTaKQ3iKpiivY27XGLN8Y4S
+        34RdAW1Zpz6qZ9dn8BxOORlQdMc/LcE=
+X-Google-Smtp-Source: APXvYqzkvG1I1NPAFfC7H9Dk+LVN7x+xUAvV2mJTqg57N1F2qNKzHUY0aH5d1aHxD8OQH2RdhhU8aQ==
+X-Received: by 2002:aa7:8705:: with SMTP id b5mr5275834pfo.205.1567004709374;
+        Wed, 28 Aug 2019 08:05:09 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:cc35:e750:308e:47f])
+        by smtp.gmail.com with ESMTPSA id b126sm6598437pfa.177.2019.08.28.08.05.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 28 Aug 2019 08:05:08 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] arm64: dts: meson: g12a: add tdm resets
+In-Reply-To: <1j4l217m4h.fsf@starbuckisacylon.baylibre.com>
+References: <20190820121551.18398-1-jbrunet@baylibre.com> <7hh862tbt2.fsf@baylibre.com> <1j4l217m4h.fsf@starbuckisacylon.baylibre.com>
+Date:   Wed, 28 Aug 2019 08:05:07 -0700
+Message-ID: <7h36hltjoc.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828125902.GP2386@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-* Peter Zijlstra <peterz@infradead.org> wrote:
+> On Tue 27 Aug 2019 at 16:42, Kevin Hilman <khilman@baylibre.com> wrote:
+>
+>> Jerome Brunet <jbrunet@baylibre.com> writes:
+>>
+>>> This patchset adds the dedicated reset of the tdm formatters which
+>>> have been added on the g12a SoC family. Using these help with the channel
+>>> mapping when the formatter uses more than 1 i2s lane.
+>>
+>> Because I forgot^W waited on this, we did the meson-g12a-common split,
+>> so this no longer applies cleanly.  Could you rebase this on current v5.4/dt64
+>> and I'll queue it for v5.4/dt64.
+>
+> Acutally it was already not applying when I sent this v1 ...
+> .. which is why I sent a v2 [0] ;)
+>
+> [0]: https://lkml.kernel.org/r/20190823154432.16268-1-jbrunet@baylibre.com
 
-> On Wed, Aug 28, 2019 at 11:33:01AM +0200, Peter Zijlstra wrote:
-> > On Tue, Aug 27, 2019 at 11:51:35PM +0200, Peter Zijlstra wrote:
-> > > On Tue, Aug 27, 2019 at 08:44:23PM +0000, Luck, Tony wrote:
-> > > > > I'm reposting because the version Ingo applied and partially fixed up still
-> > > > > generates build bot failure.
-> > > > 
-> > > > Looks like this version gets them all. I built my standard config, allmodconfig and allyesconfig.
-> > > > 
-> > > > Reviewed-by: Tony Luck <tony.luck@intel.com>
-> > > > 
-> > > > What happens next? Will Ingo back out the previous set & his partial fixup and replace
-> > > > with this series?  Or just slap one extra patch on top of what is already in tip?
+Oops, I saw there was a v2, but I missed that in my `git pw` because v2
+of the series had an "ASoC:" prefix in the cover letter, not an "arm64:
+dts" one, so I skimmed past it.
 
-There was no extra patch needed:
-
-> > > > First option changes a TIP branch
-> > > 
-> > > This is uncommon, but not unheard of. I'll talk to Ingo and Thomas
-> > > tomorrow to see what would be the best way forward.
-> > 
-> > OK, I talked to Thomas and we're going to force update that branch. I've
-> > pushed it out to my queue.git thing and I'll push it to -tip later
-> > (hoping the 0day gets a chance to have a go at it, but that thing's been
-> > soooooo slow recently I'm loath to rely/wait on it).
-> 
-> Done now. tip/x86/cpu should have the shiny new patches in.
-
-Note that it's the exact same patches:
-
-  old:  tip/x86/cpu 26ee9ccc117b: x86/cpu/intel: Fix rename fallout
-  new:  tip/x86/cpu a3d8c0d13bde: x86/intel: Add common OPTDIFFs
-
-  dagon:~/tip> git diff 26ee9ccc117b..a3d8c0d13bde
-  dagon:~/tip> 
-
-What you did was to backmerge my fix, but haven't changed anything else, 
-right?
-
-Thanks,
-
-	Ingo
+Kevin
