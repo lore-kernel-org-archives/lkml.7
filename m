@@ -2,116 +2,96 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB15C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527A5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67352173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26BA12173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:39:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="MA7imn2n"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IGR9CiXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbfH1Rj0 (ORCPT
+        id S1726944AbfH1Rjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:39:26 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:42975 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfH1Rj0 (ORCPT
+        Wed, 28 Aug 2019 13:39:32 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39979 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfH1Rjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:39:26 -0400
-Received: by mail-yw1-f68.google.com with SMTP id i207so173012ywc.9
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:39:25 -0700 (PDT)
+        Wed, 28 Aug 2019 13:39:31 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w10so103977pgj.7
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:39:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qFpGxWkuqJvzGEyaIhW5jLfEJosqdgJDRUmrRBBeYNs=;
-        b=MA7imn2ncsnCHudQTmqQ5VNmGP5xmFYdXGG3IQLhQSRJBwKfS7igz5Tj3J25Zl9xza
-         KU3CGRXXNayp++1iMedSJO1s4CBH6XYix460Ds56VGq3d0ZwGI9EzPhh9sUG6keZGuLx
-         rm+4kkgsTNggulY9ExRns+6vzU/YZE/bfWtXM6GUBPHYmbbMbHwEcNlCVNhMrxXGQyek
-         jeNBueGjMnKw9Pri3cmDJAiLZPSVg6XfDKQuq7UGs46jHubFTsyYZVGC1d4LYX0ubV0C
-         Nf0nom5s1riI86vEeEhTPzf3lNPNtewKpqTGthpXeceEptS+Pv92dEukR9Va11d7uU/V
-         irIg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GuCbGVwHRmEGqfMBjZZ+2u4NovL8Rt/IpkZfKDrFBI8=;
+        b=IGR9CiXHZQSh/xjQMoY6pRAdfAFxdTZNImDxml/hjjOXvJ+gRYKyeoRx8mYWbRhZvz
+         GrByy0qWFHCi/YCnq0nk0i2F0Uyh3zew2GKE8iw1N3pmmuOwEaPeSFiy1MRX8CzcMuRZ
+         mkQ13VgaMibRHsM8YDcSX84q45vyxMq3XHi0YOSc/Vn9seZ/HrhxmFEBsJMH50ohZon3
+         3GRUl2ipzTQISk5T0eHK9Exwck0dA+Y54K8x2HMFLy+sXXha95k9CGPrjVar0ijiCvgl
+         0MxX1s9Z/4QIb0NNa+jEur5DCeeV9hDAw3GHwjG97CDGBh3JGZBHUx3Qf5sn1ZCR17+h
+         +pvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qFpGxWkuqJvzGEyaIhW5jLfEJosqdgJDRUmrRBBeYNs=;
-        b=IQcxqeNOt5+aPRNtWH/n1jVs6CfALcLXHoKv5Y+ZONJAfyIFkNQeq/92KLzzaLsXsN
-         VN3kg3hydmqRqXTG+RKOw4kRKkL/qvB7WS7g3P2uLVC3Y7hEApFwChPppVo/tNaZzFam
-         0p2a7evCatZaMXmd4fNa/ccrrUz7nnRl9xysF02oXWkCTs8CdXi55kZOCGp+HgQnUpyA
-         ifLhM14SkT8cNXP+lOFQ4NFQKO447U6Q/Mx4H+slOYlA53dhQisUnm4OPlm/BRaH4J21
-         kxyk/IYgKxoRKRIQGtS3DGV5D91Nl3orRgidyNLrR7tPaqpv4/4ZvfkVSTxUFOmJV0Q2
-         6oug==
-X-Gm-Message-State: APjAAAWXkDoKcOHrZFv/ToKFVj+1+WOl0HdhAXkxURJqLXy4N7Lt6PPy
-        135PLjLYgcK7MJbXylJk0U+EPw==
-X-Google-Smtp-Source: APXvYqyrVae82GONg6G6xNXh2GuQpBKNgcXrFoQjXLJtaTK9ENwDFPeV9rgnIhlfcztUqTBdkROW9Q==
-X-Received: by 2002:a81:2e0b:: with SMTP id u11mr3819761ywu.219.1567013965380;
-        Wed, 28 Aug 2019 10:39:25 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id d186sm614964ywf.28.2019.08.28.10.39.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 10:39:24 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 13:39:24 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bruce Wang <bzwang@chromium.org>,
-        Jayant Shekhar <jshekhar@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm/dpu: remove stray "\n"
-Message-ID: <20190828173924.GD218215@art_vandelay>
-References: <20190827211016.18070-1-robdclark@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GuCbGVwHRmEGqfMBjZZ+2u4NovL8Rt/IpkZfKDrFBI8=;
+        b=XT+1f5lsT/0fWXjvsbPDdoNb0zkQ0mQrRnvZYq955QEiawTfjIcAZGHH0sm1Vzy9pI
+         122T/C+yP1jtIOFLZU4fFnrgJOeTS78G8VCqx3SJxQF0vCqQHwGa9MKSGXtWtgl1OPN9
+         q2Z5LwsLR6dW7NClga8M9/LHgBlKFObDlVgXYrOIzy69ap2K+VIUVJHMP4H1D7obl2Lf
+         dzrsvrKXhGuJqFGrsZawUzwm24XBA4FtAQidRkcsJZX3zyQy02tNZkXWDXnSl4PsoycP
+         SgFbVt2IRGkN+9+c54GwCR25s06RVFkjQanhtw00zPoapveURmgWVh8mfGDlwMowxESK
+         PalA==
+X-Gm-Message-State: APjAAAVQIfdfSJhMb/9NdoDFeLFlLspUJepgk91nIE49RGWmd3/LBK6B
+        TIRVk3KcCC9TeFBrVO/rd40f7w1PrSDjxLg1rWZxJw==
+X-Google-Smtp-Source: APXvYqzdtkFSXhZjMKVoVzXBpdLNDINY5K3kMdUxm75M/4l37E4Q0dysGQ/lGI2Jnh2fcoAoGM+YptMYIOb8HnteoXE=
+X-Received: by 2002:a17:90a:c20f:: with SMTP id e15mr5304440pjt.123.1567013970427;
+ Wed, 28 Aug 2019 10:39:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827211016.18070-1-robdclark@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190815225844.145726-1-nhuck@google.com> <20190827004155.11366-1-natechancellor@gmail.com>
+ <CAK7LNATHj5KrnFa0fvHjuC-=5mV8VBT14vrpPMfuNKWw7wabag@mail.gmail.com> <CANiq72ndWZWD-KBT1s-mUxQNa1jaD7oDaCB2+NPiT1chf14Z_g@mail.gmail.com>
+In-Reply-To: <CANiq72ndWZWD-KBT1s-mUxQNa1jaD7oDaCB2+NPiT1chf14Z_g@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 28 Aug 2019 10:39:19 -0700
+Message-ID: <CAKwvOdkuDPfOusJRneeTzg7tZ4VKxaRCNg2SgmjVas58cDwe8w@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Do not enable -Wimplicit-fallthrough for clang
+ for now
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Huckleberry <nhuck@google.com>,
+        Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 02:10:09PM -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> The extra line-break in traces was annoying me.
-> 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+On Wed, Aug 28, 2019 at 9:45 AM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Wed, Aug 28, 2019 at 6:21 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > Applied to linux-kbuild. Thanks.
+> >
+> > (If other clang folks give tags, I will add them later.)
+>
+> Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
-Reviewed-by: Sean Paul <sean@poorly.run>
-
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h
-> index 765484437d11..eecfe9b3199e 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h
-> @@ -392,7 +392,7 @@ TRACE_EVENT(dpu_enc_rc,
->  		__entry->rc_state = rc_state;
->  		__assign_str(stage_str, stage);
->  	),
-> -	TP_printk("%s: id:%u, sw_event:%d, idle_pc_supported:%s, rc_state:%d\n",
-> +	TP_printk("%s: id:%u, sw_event:%d, idle_pc_supported:%s, rc_state:%d",
->  		  __get_str(stage_str), __entry->drm_id, __entry->sw_event,
->  		  __entry->idle_pc_supported ? "true" : "false",
->  		  __entry->rc_state)
-> -- 
-> 2.21.0
-> 
-
+I verified that GCC didn't get support for -Wimplicit-fallthrough
+until GCC ~7.1 release, so the cc-option guard is still required.
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+Thanks for the patch Nathan.
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
+Thanks,
+~Nick Desaulniers
