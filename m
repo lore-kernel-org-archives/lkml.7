@@ -2,308 +2,101 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10140C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79111C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD57217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 231C222CED
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:27:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fnarfbargle.com header.i=@fnarfbargle.com header.b="kB3cMATD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfH1Q1h (ORCPT
+        id S1726917AbfH1Q1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:27:37 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:42163 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726407AbfH1Q1f (ORCPT
+        Wed, 28 Aug 2019 12:27:40 -0400
+Received: from ns3.fnarfbargle.com ([103.4.19.87]:42556 "EHLO
+        ns3.fnarfbargle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbfH1Q1h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:27:35 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id x7SGQJeN004240;
-        Wed, 28 Aug 2019 19:26:19 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-        id AB1A462CAA; Wed, 28 Aug 2019 19:26:19 +0300 (IDT)
-From:   Tomer Maimon <tmaimon77@gmail.com>
-To:     mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, avifishman70@gmail.com,
-        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
-        benjaminfair@google.com, sumit.garg@linaro.org,
-        jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de,
-        joel@jms.id.au
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, openbmc@lists.ozlabs.org,
-        Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 2/2] hwrng: npcm: add NPCM RNG driver
-Date:   Wed, 28 Aug 2019 19:26:17 +0300
-Message-Id: <20190828162617.237398-3-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190828162617.237398-1-tmaimon77@gmail.com>
-References: <20190828162617.237398-1-tmaimon77@gmail.com>
+        Wed, 28 Aug 2019 12:27:37 -0400
+Received: from [10.8.0.1] (helo=srv.home ident=heh12100)
+        by ns3.fnarfbargle.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <lists2009@fnarfbargle.com>)
+        id 1i30mc-000414-Eo; Thu, 29 Aug 2019 00:26:54 +0800
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fnarfbargle.com; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=Q6pQA2hBI5LX+VRBBaU8DvqsCNBqlofTcGdZN0ScIEs=;
+        b=kB3cMATDwH03UOlLtYDNWrVGmDabraS9P1sO7EIjlbdPIxkfOR4Lgsn2/GBI/z80XNLjM+xwiZNIxz6S+9zd8bxQ4cp7goYvOMjZHPrQ411tcJYn6pG770qyAuyhVHdAgpw8kHjk6MF73UOhFTU9cpFdbNZ9+I4CT76ItngB7sg=;
+Subject: Re: Thunderbolt DP oddity on v5.2.9 on iMac 12,2
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, michael.jamet@intel.com,
+        YehezkelShB@gmail.com
+References: <472bee84-d62b-bfcb-eb83-db881165756b@fnarfbargle.com>
+ <20190828073302.GO3177@lahna.fi.intel.com>
+ <7c9474d2-d948-4d1d-6f7b-94335b8b1f15@fnarfbargle.com>
+ <20190828102342.GT3177@lahna.fi.intel.com>
+ <e3a8fa91-2cfd-76a4-641c-610c32122833@fnarfbargle.com>
+ <20190828131943.GZ3177@lahna.fi.intel.com>
+From:   Brad Campbell <lists2009@fnarfbargle.com>
+Message-ID: <be32b369-b013-cca8-5475-9b56acaa3e18@fnarfbargle.com>
+Date:   Thu, 29 Aug 2019 00:27:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190828131943.GZ3177@lahna.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Nuvoton NPCM BMC Random Number Generator(RNG) driver.
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- drivers/char/hw_random/Kconfig    |  13 ++
- drivers/char/hw_random/Makefile   |   1 +
- drivers/char/hw_random/npcm-rng.c | 207 ++++++++++++++++++++++++++++++
- 3 files changed, 221 insertions(+)
- create mode 100644 drivers/char/hw_random/npcm-rng.c
+On 28/8/19 21:19, Mika Westerberg wrote:
+> On Wed, Aug 28, 2019 at 06:43:35PM +0800, Brad Campbell wrote:
+>> On 28/8/19 6:23 pm, Mika Westerberg wrote:
+>>
+>>> On Wed, Aug 28, 2019 at 05:12:00PM +0800, Brad Campbell wrote:
+>>>
+>>> Apart from the warning in the log (which is not fatal, I'll look into
+>>> it) to me the second path setup looks fine.
+>>>
+>>> Can you do one more experiment? Boot the system up without anything
+>>> connected and then plug both monitors. Does it work?
+>>>
+>> Aside from head ordering issues in X it works just fine.
+>> I've attached the dmesg. Boot with nothing plugged in, then plug in 0-1 and
+>> 0-3 in that order.
+> OK, thanks for checking. So when Linux is in complete control both DP
+> tunnels get created properly. I suspect there is something different
+> what the firmware does compared to other Macs I've been using and that
+> causes the driver to fail to discover all the paths. I will take a look
+> at this but I'm away tomorrow and friday so it goes to next week.
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 59f25286befe..87a1c30e7958 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -440,6 +440,19 @@ config HW_RANDOM_OPTEE
- 
- 	  If unsure, say Y.
- 
-+config HW_RANDOM_NPCM
-+	tristate "NPCM Random Number Generator support"
-+	depends on ARCH_NPCM || COMPILE_TEST
-+	default HW_RANDOM
-+	help
-+ 	  This driver provides support for the Random Number
-+	  Generator hardware available in Nuvoton NPCM SoCs.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called npcm-rng.
-+
-+ 	  If unsure, say Y.
-+
- endif # HW_RANDOM
- 
- config UML_RANDOM
-diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-index 7c9ef4a7667f..17b6d4e6d591 100644
---- a/drivers/char/hw_random/Makefile
-+++ b/drivers/char/hw_random/Makefile
-@@ -39,3 +39,4 @@ obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
- obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
- obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
- obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
-+obj-$(CONFIG_HW_RANDOM_NPCM) += npcm-rng.o
-diff --git a/drivers/char/hw_random/npcm-rng.c b/drivers/char/hw_random/npcm-rng.c
-new file mode 100644
-index 000000000000..5b4b1b6cb362
---- /dev/null
-+++ b/drivers/char/hw_random/npcm-rng.c
-@@ -0,0 +1,207 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2019 Nuvoton Technology corporation.
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/init.h>
-+#include <linux/random.h>
-+#include <linux/err.h>
-+#include <linux/platform_device.h>
-+#include <linux/hw_random.h>
-+#include <linux/delay.h>
-+#include <linux/of_irq.h>
-+#include <linux/pm_runtime.h>
-+
-+#define NPCM_RNGCS_REG		0x00	/* Control and status register */
-+#define NPCM_RNGD_REG		0x04	/* Data register */
-+#define NPCM_RNGMODE_REG	0x08	/* Mode register */
-+
-+#define NPCM_RNG_CLK_SET_25MHZ	GENMASK(4, 3) /* 20-25 MHz */
-+#define NPCM_RNG_DATA_VALID	BIT(1)
-+#define NPCM_RNG_ENABLE		BIT(0)
-+#define NPCM_RNG_M1ROSEL	BIT(1)
-+
-+#define NPCM_RNG_TIMEOUT_POLL	20
-+
-+#define to_npcm_rng(p)	container_of(p, struct npcm_rng, rng)
-+
-+struct npcm_rng {
-+	void __iomem *base;
-+	struct hwrng rng;
-+};
-+
-+static int npcm_rng_init(struct hwrng *rng)
-+{
-+	struct npcm_rng *priv = to_npcm_rng(rng);
-+	u32 val;
-+
-+	val = readl(priv->base + NPCM_RNGCS_REG);
-+	val |= NPCM_RNG_ENABLE;
-+	writel(val, priv->base + NPCM_RNGCS_REG);
-+
-+	return 0;
-+}
-+
-+static void npcm_rng_cleanup(struct hwrng *rng)
-+{
-+	struct npcm_rng *priv = to_npcm_rng(rng);
-+	u32 val;
-+
-+	val = readl(priv->base + NPCM_RNGCS_REG);
-+	val &= ~NPCM_RNG_ENABLE;
-+	writel(val, priv->base + NPCM_RNGCS_REG);
-+}
-+
-+static bool npcm_rng_wait_ready(struct hwrng *rng, bool wait)
-+{
-+	struct npcm_rng *priv = to_npcm_rng(rng);
-+	int timeout_cnt = 0;
-+	int ready;
-+
-+	ready = readl(priv->base + NPCM_RNGCS_REG) & NPCM_RNG_DATA_VALID;
-+	while ((ready == 0) && (timeout_cnt < NPCM_RNG_TIMEOUT_POLL)) {
-+		usleep_range(500, 1000);
-+		ready = readl(priv->base + NPCM_RNGCS_REG) &
-+			NPCM_RNG_DATA_VALID;
-+		timeout_cnt++;
-+	}
-+
-+	return !!ready;
-+}
-+
-+static int npcm_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-+{
-+	struct npcm_rng *priv = to_npcm_rng(rng);
-+	int retval = 0;
-+
-+	pm_runtime_get_sync((struct device *)priv->rng.priv);
-+
-+	while (max >= sizeof(u32)) {
-+		if (!npcm_rng_wait_ready(rng, wait))
-+			break;
-+
-+		*(u32 *)buf = readl(priv->base + NPCM_RNGD_REG);
-+		retval += sizeof(u32);
-+		buf += sizeof(u32);
-+		max -= sizeof(u32);
-+	}
-+
-+	pm_runtime_mark_last_busy((struct device *)priv->rng.priv);
-+	pm_runtime_put_sync_autosuspend((struct device *)priv->rng.priv);
-+
-+	return retval || !wait ? retval : -EIO;
-+}
-+
-+static int npcm_rng_probe(struct platform_device *pdev)
-+{
-+	struct npcm_rng *priv;
-+	struct resource *res;
-+	u32 quality;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	priv->rng.name = pdev->name;
-+#ifndef CONFIG_PM
-+	priv->rng.init = npcm_rng_init;
-+	priv->rng.cleanup = npcm_rng_cleanup;
-+#endif
-+	priv->rng.read = npcm_rng_read;
-+	priv->rng.priv = (unsigned long)&pdev->dev;
-+	if (of_property_read_u32(pdev->dev.of_node, "quality", &quality))
-+		priv->rng.quality = 1000;
-+	else
-+		priv->rng.quality = quality;
-+
-+	writel(NPCM_RNG_M1ROSEL, priv->base + NPCM_RNGMODE_REG);
-+#ifndef CONFIG_PM
-+	writel(NPCM_RNG_CLK_SET_25MHZ, priv->base + NPCM_RNGCS_REG);
-+#else
-+	writel(NPCM_RNG_CLK_SET_25MHZ | NPCM_RNG_ENABLE,
-+	       priv->base + NPCM_RNGCS_REG);
-+#endif
-+
-+	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register rng device: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	dev_set_drvdata(&pdev->dev, priv);
-+	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
-+	pm_runtime_use_autosuspend(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
-+	dev_info(&pdev->dev, "Random Number Generator Probed\n");
-+
-+	return 0;
-+}
-+
-+static int npcm_rng_remove(struct platform_device *pdev)
-+{
-+	struct npcm_rng *priv = platform_get_drvdata(pdev);
-+
-+	hwrng_unregister(&priv->rng);
-+	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_set_suspended(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM
-+static int npcm_rng_runtime_suspend(struct device *dev)
-+{
-+	struct npcm_rng *priv = dev_get_drvdata(dev);
-+
-+	npcm_rng_cleanup(&priv->rng);
-+
-+	return 0;
-+}
-+
-+static int npcm_rng_runtime_resume(struct device *dev)
-+{
-+	struct npcm_rng *priv = dev_get_drvdata(dev);
-+
-+	return npcm_rng_init(&priv->rng);
-+}
-+#endif
-+
-+static const struct dev_pm_ops npcm_rng_pm_ops = {
-+	SET_RUNTIME_PM_OPS(npcm_rng_runtime_suspend,
-+			   npcm_rng_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
-+};
-+
-+static const struct of_device_id rng_dt_id[] = {
-+	{ .compatible = "nuvoton,npcm750-rng",  },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rng_dt_id);
-+
-+static struct platform_driver npcm_rng_driver = {
-+	.driver = {
-+		.name		= "npcm-rng",
-+		.pm		= &npcm_rng_pm_ops,
-+		.owner		= THIS_MODULE,
-+		.of_match_table = of_match_ptr(rng_dt_id),
-+	},
-+	.probe		= npcm_rng_probe,
-+	.remove		= npcm_rng_remove,
-+};
-+
-+module_platform_driver(npcm_rng_driver);
-+
-+MODULE_DESCRIPTION("Nuvoton NPCM Random Number Generator Driver");
-+MODULE_AUTHOR("Tomer Maimon <tomer.maimon@nuvoton.com>");
-+MODULE_LICENSE("GPL v2");
+It wouldn't surprise me if the firmware was doing something funky. It 
+was one of the first Thunderbolt equipped models and the support docs 
+explicitly say only one Thunderbolt display in Windows and two in later 
+versions of OSX. It almost needs a quirk to say "firmware does something 
+we don't like, reset the controller and re-discover from scratch".
+
+Anyway, I'm not in any hurry. It doesn't get rebooted often and it's not 
+in any way preventing me using the machine. In fact, upgrading the third 
+head from an old 24" 1920x1200 to the second Thunderbolt display has 
+been invaluable.
+
+> BTW, have you tried to chain the two monitors?
+
+Not yet, but it was something I've been considering. I'll give it a go 
+tomorrow. Due to cable length vs display dimensions it'll require me 
+cleaning my desk, and that takes some forward planning.
+
 -- 
-2.18.0
+
+An expert is a person who has found out by his own painful
+experience all the mistakes that one can make in a very
+narrow field. - Niels Bohr
 
