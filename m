@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C8CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5F0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CE32189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 818012189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfH1KRG (ORCPT
+        id S1726992AbfH1KQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:17:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46488 "EHLO
+        Wed, 28 Aug 2019 06:16:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46460 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbfH1KQr (ORCPT
+        with ESMTP id S1726906AbfH1KQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:16:47 -0400
+        Wed, 28 Aug 2019 06:16:43 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2v0O-0000O2-Cy; Wed, 28 Aug 2019 12:16:44 +0200
+        id 1i2v0I-0000Md-3H; Wed, 28 Aug 2019 12:16:38 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5AB511C07D2;
-        Wed, 28 Aug 2019 12:16:35 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 10:16:35 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 11DEA1C0DE7;
+        Wed, 28 Aug 2019 12:16:34 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 10:16:33 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-cpu-timers: Deduplicate rlimit handling
+Subject: [tip: timers/core] posix-cpu-timers: Consolidate timer expiry further
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Frederic Weisbecker <frederic@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190821192922.653276779@linutronix.de>
-References: <20190821192922.653276779@linutronix.de>
+In-Reply-To: <20190821192922.365469982@linutronix.de>
+References: <20190821192922.365469982@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <156698739526.5795.11005886170189232333.tip-bot2@tip-bot2>
+Message-ID: <156698739395.5786.693651296957117258.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,126 +57,152 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     8991afe2640d05a805eba01277856e8549cdc838
-Gitweb:        https://git.kernel.org/tip/8991afe2640d05a805eba01277856e8549cdc838
+Commit-ID:     1cd07c0b94f2c320270d76edb7dd49bceb09c1df
+Gitweb:        https://git.kernel.org/tip/1cd07c0b94f2c320270d76edb7dd49bceb09c1df
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 21 Aug 2019 21:09:23 +02:00
+AuthorDate:    Wed, 21 Aug 2019 21:09:20 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 28 Aug 2019 11:50:42 +02:00
+CommitterDate: Wed, 28 Aug 2019 11:50:41 +02:00
 
-posix-cpu-timers: Deduplicate rlimit handling
+posix-cpu-timers: Consolidate timer expiry further
 
-Both thread and process expiry functions have the same functionality for
-sending signals for soft and hard RLIMITs duplicated in 4 different
-ways.
-
-Split it out into a common function and cleanup the callsites.
+With the array based samples and expiry cache, the expiry function can use
+a loop to collect timers from the clock specific lists.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lkml.kernel.org/r/20190821192922.653276779@linutronix.de
+Link: https://lkml.kernel.org/r/20190821192922.365469982@linutronix.de
 
 ---
- kernel/time/posix-cpu-timers.c | 67 ++++++++++++---------------------
- 1 file changed, 25 insertions(+), 42 deletions(-)
+ kernel/time/posix-cpu-timers.c | 63 +++++++++++++++------------------
+ 1 file changed, 30 insertions(+), 33 deletions(-)
 
 diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index 115c8df..ef39a7a 100644
+index cf85292..caafdfd 100644
 --- a/kernel/time/posix-cpu-timers.c
 +++ b/kernel/time/posix-cpu-timers.c
-@@ -772,6 +772,20 @@ static inline void check_dl_overrun(struct task_struct *tsk)
- 	}
+@@ -752,6 +752,18 @@ check_timers_list(struct list_head *timers,
+ 	return U64_MAX;
  }
  
-+static bool check_rlimit(u64 time, u64 limit, int signo, bool rt, bool hard)
++static void collect_posix_cputimers(struct posix_cputimers *pct,
++				    u64 *samples, struct list_head *firing)
 +{
-+	if (time < limit)
-+		return false;
++	struct posix_cputimer_base *base = pct->bases;
++	int i;
 +
-+	if (print_fatal_signals) {
-+		pr_info("%s Watchdog Timeout (%s): %s[%d]\n",
-+			rt ? "RT" : "CPU", hard ? "hard" : "soft",
-+			current->comm, task_pid_nr(current));
++	for (i = 0; i < CPUCLOCK_MAX; i++, base++) {
++		base->nextevt = check_timers_list(&base->cpu_timers, firing,
++						   samples[i]);
 +	}
-+	__group_send_sig_info(signo, SEND_SIG_PRIV, current);
-+	return true;
 +}
 +
- /*
-  * Check for any per-thread CPU timers that have fired and move them off
-  * the tsk->cpu_timers[N] list onto the firing list.  Here we update the
-@@ -799,34 +813,18 @@ static void check_thread_timers(struct task_struct *tsk,
- 	soft = task_rlimit(tsk, RLIMIT_RTTIME);
- 	if (soft != RLIM_INFINITY) {
- 		/* Task RT timeout is accounted in jiffies. RTTIME is usec */
--		unsigned long rtim = tsk->rt.timeout * (USEC_PER_SEC / HZ);
-+		unsigned long rttime = tsk->rt.timeout * (USEC_PER_SEC / HZ);
- 		unsigned long hard = task_rlimit_max(tsk, RLIMIT_RTTIME);
+ static inline void check_dl_overrun(struct task_struct *tsk)
+ {
+ 	if (tsk->dl.dl_overrun) {
+@@ -768,25 +780,18 @@ static inline void check_dl_overrun(struct task_struct *tsk)
+ static void check_thread_timers(struct task_struct *tsk,
+ 				struct list_head *firing)
+ {
+-	struct posix_cputimer_base *base = tsk->posix_cputimers.bases;
++	struct posix_cputimers *pct = &tsk->posix_cputimers;
++	u64 samples[CPUCLOCK_MAX];
+ 	unsigned long soft;
+-	u64 stime, utime;
  
--		if (hard != RLIM_INFINITY && rtim >= hard) {
--			/*
--			 * At the hard limit, we just die.
--			 * No need to calculate anything else now.
--			 */
--			if (print_fatal_signals) {
--				pr_info("CPU Watchdog Timeout (hard): %s[%d]\n",
--					tsk->comm, task_pid_nr(tsk));
--			}
--			__group_send_sig_info(SIGKILL, SEND_SIG_PRIV, tsk);
-+		/* At the hard limit, send SIGKILL. No further action. */
-+		if (hard != RLIM_INFINITY &&
-+		    check_rlimit(rttime, hard, SIGKILL, true, true))
- 			return;
--		}
+ 	if (dl_task(tsk))
+ 		check_dl_overrun(tsk);
  
--		if (rtim >= soft) {
--			/*
--			 * At the soft limit, send a SIGXCPU every second.
--			 */
-+		/* At the soft limit, send a SIGXCPU every second */
-+		if (check_rlimit(rttime, soft, SIGXCPU, true, false)) {
- 			soft += USEC_PER_SEC;
- 			tsk->signal->rlim[RLIMIT_RTTIME].rlim_cur = soft;
+-	if (expiry_cache_is_inactive(&tsk->posix_cputimers))
++	if (expiry_cache_is_inactive(pct))
+ 		return;
+ 
+-	task_cputime(tsk, &utime, &stime);
 -
--			if (print_fatal_signals) {
--				pr_info("RT Watchdog Timeout (soft): %s[%d]\n",
--					tsk->comm, task_pid_nr(tsk));
--			}
--			__group_send_sig_info(SIGXCPU, SEND_SIG_PRIV, tsk);
+-	base->nextevt = check_timers_list(&base->cpu_timers, firing,
+-					  utime + stime);
+-	base++;
+-	base->nextevt = check_timers_list(&base->cpu_timers, firing, utime);
+-	base++;
+-	base->nextevt = check_timers_list(&base->cpu_timers, firing,
+-					  tsk->se.sum_exec_runtime);
++	task_sample_cputime(tsk, samples);
++	collect_posix_cputimers(pct, samples, firing);
+ 
+ 	/*
+ 	 * Check for the special case thread timers.
+@@ -825,7 +830,7 @@ static void check_thread_timers(struct task_struct *tsk,
  		}
  	}
  
-@@ -916,28 +914,13 @@ static void check_process_timers(struct task_struct *tsk,
- 		u64 softns = (u64)soft * NSEC_PER_SEC;
- 		u64 hardns = (u64)hard * NSEC_PER_SEC;
+-	if (expiry_cache_is_inactive(&tsk->posix_cputimers))
++	if (expiry_cache_is_inactive(pct))
+ 		tick_dep_clear_task(tsk, TICK_DEP_BIT_POSIX_TIMER);
+ }
  
--		if (hard != RLIM_INFINITY && ptime >= hardns) {
--			/*
--			 * At the hard limit, we just die.
--			 * No need to calculate anything else now.
--			 */
--			if (print_fatal_signals) {
--				pr_info("RT Watchdog Timeout (hard): %s[%d]\n",
--					tsk->comm, task_pid_nr(tsk));
--			}
--			__group_send_sig_info(SIGKILL, SEND_SIG_PRIV, tsk);
-+		/* At the hard limit, send SIGKILL. No further action. */
-+		if (hard != RLIM_INFINITY &&
-+		    check_rlimit(ptime, hardns, SIGKILL, false, true))
- 			return;
--		}
--		if (ptime >= softns) {
--			/*
--			 * At the soft limit, send a SIGXCPU every second.
--			 */
--			if (print_fatal_signals) {
--				pr_info("CPU Watchdog Timeout (soft): %s[%d]\n",
--					tsk->comm, task_pid_nr(tsk));
--			}
--			__group_send_sig_info(SIGXCPU, SEND_SIG_PRIV, tsk);
+@@ -869,15 +874,15 @@ static void check_process_timers(struct task_struct *tsk,
+ 				 struct list_head *firing)
+ {
+ 	struct signal_struct *const sig = tsk->signal;
+-	struct posix_cputimer_base *base = sig->posix_cputimers.bases;
+-	u64 virt_exp, prof_exp, sched_exp, samples[CPUCLOCK_MAX];
++	struct posix_cputimers *pct = &sig->posix_cputimers;
++	u64 samples[CPUCLOCK_MAX];
+ 	unsigned long soft;
  
-+		/* At the soft limit, send a SIGXCPU every second */
-+		if (check_rlimit(ptime, softns, SIGXCPU, false, false)) {
- 			sig->rlim[RLIMIT_CPU].rlim_cur = soft + 1;
- 			softns += NSEC_PER_SEC;
+ 	/*
+ 	 * If cputimer is not running, then there are no active
+ 	 * process wide timers (POSIX 1.b, itimers, RLIMIT_CPU).
+ 	 */
+-	if (!READ_ONCE(tsk->signal->cputimer.running))
++	if (!READ_ONCE(sig->cputimer.running))
+ 		return;
+ 
+        /*
+@@ -891,21 +896,17 @@ static void check_process_timers(struct task_struct *tsk,
+ 	 * so the sample can be taken directly.
+ 	 */
+ 	proc_sample_cputime_atomic(&sig->cputimer.cputime_atomic, samples);
+-
+-	prof_exp = check_timers_list(&base[CPUCLOCK_PROF].cpu_timers,
+-				     firing, samples[CPUCLOCK_PROF]);
+-	virt_exp = check_timers_list(&base[CPUCLOCK_VIRT].cpu_timers,
+-				     firing, samples[CPUCLOCK_VIRT]);
+-	sched_exp = check_timers_list(&base[CPUCLOCK_SCHED].cpu_timers,
+-				      firing, samples[CPUCLOCK_SCHED]);
++	collect_posix_cputimers(pct, samples, firing);
+ 
+ 	/*
+ 	 * Check for the special case process timers.
+ 	 */
+-	check_cpu_itimer(tsk, &sig->it[CPUCLOCK_PROF], &prof_exp,
++	check_cpu_itimer(tsk, &sig->it[CPUCLOCK_PROF],
++			 &pct->bases[CPUCLOCK_PROF].nextevt,
+ 			 samples[CPUCLOCK_PROF], SIGPROF);
+-	check_cpu_itimer(tsk, &sig->it[CPUCLOCK_VIRT], &virt_exp,
+-			 samples[CPUCLOCK_PROF], SIGVTALRM);
++	check_cpu_itimer(tsk, &sig->it[CPUCLOCK_VIRT],
++			 &pct->bases[CPUCLOCK_VIRT].nextevt,
++			 samples[CPUCLOCK_VIRT], SIGVTALRM);
+ 
+ 	soft = task_rlimit(tsk, RLIMIT_CPU);
+ 	if (soft != RLIM_INFINITY) {
+@@ -940,15 +941,11 @@ static void check_process_timers(struct task_struct *tsk,
+ 			}
  		}
+ 		softns = soft * NSEC_PER_SEC;
+-		if (softns < prof_exp)
+-			prof_exp = softns;
++		if (softns < pct->bases[CPUCLOCK_PROF].nextevt)
++			pct->bases[CPUCLOCK_PROF].nextevt = softns;
+ 	}
+ 
+-	base[CPUCLOCK_PROF].nextevt = prof_exp;
+-	base[CPUCLOCK_VIRT].nextevt = virt_exp;
+-	base[CPUCLOCK_SCHED].nextevt = sched_exp;
+-
+-	if (expiry_cache_is_inactive(&sig->posix_cputimers))
++	if (expiry_cache_is_inactive(pct))
+ 		stop_process_timers(sig);
+ 
+ 	sig->cputimer.checking_timer = false;
