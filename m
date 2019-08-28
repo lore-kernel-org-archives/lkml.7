@@ -2,99 +2,138 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D90C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B70C8C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90CA322CF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566980304;
-	bh=+pPMLUCSSxO28zMU47W0EaRFagvxicZdMQed3gzfifw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S9fMO9cbHg76XklSfQ8aRFSEdsynMo5FBl4GQQtvqfe/pO+R3f5UUgZuVQsKFqLRC
-	 HFnN/VkCL+T2mib/N62MmWWtRQ4HQMVLl9gTMLcEykN77YAY3r0VUe9jKIC8b8idoX
-	 epHv/eu7ryxH4XEIg/rcBd/DG6nqA3OsWLlBuYMk=
+	by mail.kernel.org (Postfix) with ESMTP id 8AA8D2189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:19:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pWudp200"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfH1ISX (ORCPT
+        id S1726444AbfH1ITI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:18:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbfH1ISX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:18:23 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 310E82189D;
-        Wed, 28 Aug 2019 08:18:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566980302;
-        bh=+pPMLUCSSxO28zMU47W0EaRFagvxicZdMQed3gzfifw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=09CmK50HCvij31BRxh1M3vSf9K8uw68/0d/d5eMMsCOfA6A9Pbp7INvd1tMHJg7nu
-         pvbxHaI4GFBWa/xBBLz7LAsxuA+8PaEk8PSl0DRtAAVMoJ6YdYrBxVU+RvOOUMMhOS
-         vt8f/iHOhmY5YghwX2M2lOmhLJkRIKLPNgFxtkk0=
-Date:   Wed, 28 Aug 2019 10:18:19 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     linux@roeck-us.net, wim@linux-watchdog.org
-Cc:     linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH RESEND v2 1/6] dt-bindings: watchdog: Add YAML schemas
- for the generic watchdog bindings
-Message-ID: <20190828081819.qqztieg7cgdvpkxv@flea>
-References: <20190821143835.7294-1-mripard@kernel.org>
+        Wed, 28 Aug 2019 04:19:08 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35107 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbfH1ITI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:19:08 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d85so1228853pfd.2;
+        Wed, 28 Aug 2019 01:19:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W7GKLPAGmCBm9bFk16i6qv/H1D4Ue6Mzr647i7CBlq8=;
+        b=pWudp200xJPqLG8gbdZmOS6rC3AjwavyXDrm65Uh0QOIEuGy8SI1wF1eEfhT+GssFA
+         nRJVI5i83WwNJ4r56NkhqF/Ieny0DrariGtiaT+yYu2zm5Q7zl6PShX4L0mzHpkIM9XT
+         fQokuycnWDeZRJTLORLRPCPp/Ln/71vBoraawn3RVZfbZP+mUp3VIU9QYBL3MQVlBmSY
+         mdAlt64YdiycL8cJYGsmzF7S3K662B9wgJrf/m8+xaMgNcPnT4y2I10XksQ6o+CyVBcq
+         GwZBeZFZ2zm7+jraFi5t4XXTyrhgSB+iAMu9b4b0pO214BzYh1h0z9zrQEbM29h6GHwT
+         qDeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W7GKLPAGmCBm9bFk16i6qv/H1D4Ue6Mzr647i7CBlq8=;
+        b=PM0cGRcON27/5MK7z+iMxN6b8V1VMi+L/tfmi68OmgkDS0YYs3n7+kj7/gOwJayNoh
+         oAZagQU4LKSBvQSsfNZH2catZ/rEvicmSVvjFbL1xKLaEhoNkTOzqxNKgIiUtKeME4UF
+         qjNYmKffcn8cyrkfbkSFCArEPg8FXJ5bsJoudBuWet1UbIV/NNuedojGIKpXlqAqJNJD
+         MHmTDL+yw3rdQ6bCAfuJQpvw4T4kdJPFo3cUuI30skIx2S84J5dnuchSyC33wabbOuLX
+         MtmtpIfCgzssYkYvUUWaxYlvAU8xVj2N1M0ctLcUqSzC0oHyfNmhR/YEr/Drhq9WvTrI
+         yd8g==
+X-Gm-Message-State: APjAAAUKxIxjJpNesuj+W5ybm3z7ajkOYNZl/rVUppGrX980kWStIHGV
+        9wP7K79WyVrfaIQORSw+hRSbhmSI
+X-Google-Smtp-Source: APXvYqxHwaHzAOj0x1bmSnv3GB4eFOeCcWwCxN0e7YwF2BcgKx54IpxvhYZ9fB+7k8TSxktmU2sy8g==
+X-Received: by 2002:a63:3148:: with SMTP id x69mr2244026pgx.300.1566980347471;
+        Wed, 28 Aug 2019 01:19:07 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id g1sm1787263pgg.27.2019.08.28.01.19.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 28 Aug 2019 01:19:07 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH v3 1/2] KVM: LAPIC: Tune lapic_timer_advance_ns smoothly
+Date:   Wed, 28 Aug 2019 16:19:01 +0800
+Message-Id: <1566980342-22045-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="i6iaeebbwmfsnvrm"
-Content-Disposition: inline
-In-Reply-To: <20190821143835.7294-1-mripard@kernel.org>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Wanpeng Li <wanpengli@tencent.com>
 
---i6iaeebbwmfsnvrm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Using a moving average based on per-vCPU lapic_timer_advance_ns to tune 
+smoothly, filter out drastic fluctuation which prevents this before, 
+let's assume it is 10000 cycles.
 
-On Wed, Aug 21, 2019 at 04:38:30PM +0200, Maxime Ripard wrote:
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> The watchdogs have a bunch of generic properties that are needed in a
-> device tree. Add a YAML schemas for those.
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/lapic.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-Ping?
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index e904ff0..181537a 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -69,6 +69,7 @@
+ #define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
+ /* step-by-step approximation to mitigate fluctuation */
+ #define LAPIC_TIMER_ADVANCE_ADJUST_STEP 8
++#define LAPIC_TIMER_ADVANCE_FILTER 10000
+ 
+ static inline int apic_test_vector(int vec, void *bitmap)
+ {
+@@ -1484,23 +1485,28 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+ 					      s64 advance_expire_delta)
+ {
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
+-	u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
+-	u64 ns;
++	u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns, ns;
++
++	if (abs(advance_expire_delta) > LAPIC_TIMER_ADVANCE_FILTER)
++		/* filter out drastic fluctuations */
++		return;
+ 
+ 	/* too early */
+ 	if (advance_expire_delta < 0) {
+ 		ns = -advance_expire_delta * 1000000ULL;
+ 		do_div(ns, vcpu->arch.virtual_tsc_khz);
+-		timer_advance_ns -= min((u32)ns,
+-			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
++		timer_advance_ns -= ns;
+ 	} else {
+ 	/* too late */
+ 		ns = advance_expire_delta * 1000000ULL;
+ 		do_div(ns, vcpu->arch.virtual_tsc_khz);
+-		timer_advance_ns += min((u32)ns,
+-			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
++		timer_advance_ns += ns;
+ 	}
+ 
++	timer_advance_ns = (apic->lapic_timer.timer_advance_ns *
++		(LAPIC_TIMER_ADVANCE_ADJUST_STEP - 1) + advance_expire_delta) /
++		LAPIC_TIMER_ADVANCE_ADJUST_STEP;
++
+ 	if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+ 		apic->lapic_timer.timer_advance_adjust_done = true;
+ 	if (unlikely(timer_advance_ns > 5000)) {
+-- 
+2.7.4
 
-Maxime
-
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---i6iaeebbwmfsnvrm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXWY4ywAKCRDj7w1vZxhR
-xSrsAP9Wm4uqadS7xrVp8WfRQCHb46bRTlF+qGXNnJAoK7xrlwEAnhNhZ4zOZeDd
-sjEXxaKnIq1SiINnOpEsBy21a+L8eAY=
-=fuF4
------END PGP SIGNATURE-----
-
---i6iaeebbwmfsnvrm--
