@@ -2,135 +2,83 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605A0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB11C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 408EC20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF4B20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:19:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="WzCFTqXf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfH1XTL (ORCPT
+        id S1727106AbfH1XT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 19:19:11 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:35482 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726943AbfH1XTK (ORCPT
+        Wed, 28 Aug 2019 19:19:57 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46382 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfH1XTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 19:19:10 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1i37DP-0003vX-60; Wed, 28 Aug 2019 19:18:59 -0400
-Message-ID: <d703071084dadb477b8248b041d0d1aa730d65cd.camel@surriel.com>
-Subject: Re: [PATCH 08/15] sched,fair: simplify timeslice length code
-From:   Rik van Riel <riel@surriel.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>, Paul Turner <pjt@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mel Gorman <mgorman@techsingularity.net>
-Date:   Wed, 28 Aug 2019 19:18:58 -0400
-In-Reply-To: <CAKfTPtDxHijR3PCOFfxA-r02rf2hVP4LpB=y-9emHS7znTPxTA@mail.gmail.com>
-References: <20190822021740.15554-1-riel@surriel.com>
-         <20190822021740.15554-9-riel@surriel.com>
-         <CAKfTPtDxHijR3PCOFfxA-r02rf2hVP4LpB=y-9emHS7znTPxTA@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-5Tr4lXHpCftQWl9CGQiq"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 28 Aug 2019 19:19:55 -0400
+Received: by mail-ed1-f65.google.com with SMTP id z51so1796745edz.13
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 16:19:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=M+altPdUhJXeOTwHA/oSnIsndgm2Hmqt8quJCF+sxbc=;
+        b=WzCFTqXfFkywaGuT8K4gAg5rA3m05yrJhWcL3uNHs7TQEHC64XLGOH3p0KU9yPvVMq
+         kTpzlVn9Vs13K6FdRPi4V0bUOiMxvklXizkiAPwJZv+Wn/Zbcaq3oonB5XtdMeacvw8Y
+         xEOkSJkBrtqXU3v+wdu5IGZJJe+6uOPxj7cv+pgZICiZQTud2rhyo8EUe6f+OctuWSjs
+         zDWZJH4YImndwQUNzX3HD70AqZRR4x7twtRqwue/5+0wO6z8mTieCark4wFzI6je+67+
+         f4hDKZzOwmTZPBlfFfBb9q5igpart7Yx9Asjucgx3SmDMpjcUwNYW74AVS3AgfngiNzF
+         U50g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=M+altPdUhJXeOTwHA/oSnIsndgm2Hmqt8quJCF+sxbc=;
+        b=YXSN1IT55oT/oo24E6SuZXawvSARfUE8dE4AWIfzU5J9kc7puSx6ku1wTTHWByxDbc
+         4FO1fn+zNr20BxEZV14EKi0Ej95Akidn/o6VeHhzEnk2MGU9XgOOLUSf8PxgXR2/iKh0
+         q6urv2F2CdHkfegfCbBiK9EgNIqxbxdg0nB0OPasRZP6cGYwrATimJURldG8aU+Fe55a
+         ek3irDLS2K9BuEy8zpZj0JkNceXB/XUGBhLPNlrchau3wup5+LBBjGmhiTWfzfWbRdVU
+         MVVYOwREGwj5oiuS5xijIgQbfJmi9lVVJBCj59vFFvg8ZSiI2tAWEb7H5egAMwQeFgcz
+         P4FQ==
+X-Gm-Message-State: APjAAAVtQerDD+I2c8vT2i69DX1y5XIw3PJ7u7ZlxynGFwC5OtmCVjYK
+        Nk63dJL1II408IrJThVKRAh04w==
+X-Google-Smtp-Source: APXvYqxCHpyV+rsCxYbI2mAgGsXNwr5OfEHodnscKaidhDW/FKVB9MkvcPQOD611LZru5nvF1mWwZg==
+X-Received: by 2002:a17:906:f742:: with SMTP id jp2mr5333218ejb.87.1567034393780;
+        Wed, 28 Aug 2019 16:19:53 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id d20sm107011ejb.75.2019.08.28.16.19.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 16:19:53 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 16:19:31 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Huazhong Tan <tanhuazhong@huawei.com>
+Cc:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 00/12] net: hns3: add some cleanups and
+ optimizations
+Message-ID: <20190828161931.1789697d@cakuba.netronome.com>
+In-Reply-To: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
+References: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 28 Aug 2019 22:23:04 +0800, Huazhong Tan wrote:
+> This patch-set includes cleanups, optimizations and bugfix for
+> the HNS3 ethernet controller driver.
 
---=-5Tr4lXHpCftQWl9CGQiq
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 2019-08-28 at 19:32 +0200, Vincent Guittot wrote:
-> On Thu, 22 Aug 2019 at 04:18, Rik van Riel <riel@surriel.com> wrote:
-> > The idea behind __sched_period makes sense, but the results do not
-> > always.
-> >=20
-> > When a CPU has one high priority task and a large number of low
-> > priority
-> > tasks, __sched_period will return a value larger than
-> > sysctl_sched_latency,
-> > and the one high priority task may end up getting a timeslice all
-> > for itself
-> > that is also much larger than sysctl_sched_latency.
->=20
-> note that unless you enable sched_feat(HRTICK), the sched_slice is
-> mainly used to decide how fast we preempt running task at tick but a
-> newly wake up task can preempt it before
->=20
-> > The low priority tasks will have their time slices rounded up to
-> > sysctl_sched_min_granularity, resulting in an even larger
-> > scheduling
-> > latency than targeted by __sched_period.
->=20
-> Will this not break the fairness between a always running task and a
-> short sleeping one with this changes ?
-
-In what way?
-
-The vruntime for the always running task will continue
-to advance the same way it always has.
-
-> > Simplify the code by simply ripping out __sched_period and always
-> > taking
-> > fractions of sysctl_sched_latency.
-> >=20
-> > If a high priority task ends up getting a "too small" time slice
-> > compared
-> > to low priority tasks, the vruntime scaling ensures that it will
-> > simply
-> > get scheduled more frequently than low priority tasks.
->=20
-> Will you not increase the number of context switch ?
-
-It should actually decrease the number of context
-switches. If a nice +19 task gets a longer time slice
-than it would today, its vruntime will be advanced by
-more than sysctl_sched_latency, and it will not get
-to run again until another task has caught up with its
-vruntime.
-
-That means the regular (or high) priority task that
-shares the CPU with that nice +19 task might get
-several time slices in a row until the nice +19 task
-gets to run again.
-
-What am I overlooking?
-
---=20
-All Rights Reversed.
-
---=-5Tr4lXHpCftQWl9CGQiq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl1nC+IACgkQznnekoTE
-3oNotgf7BbuP7sQ1i2xJTmmF2o9Eae9tykrnkx/UfL5eRz17UNkNkYl8/AmCy4Th
-8IesFu4GwztOVCC4rm90Ftm4G0DOK6Su7Xr7OR7jzwnTSvIOi6/MkAafMAZFXgBF
-F1whsJjjQJlK4lI3XzAlggEvRIacOQ3nfQP7kAAl5gGHKbuhW1IPX3NNJPklzxS2
-8n/6c6LFjoa3o84YGSs9bbAiqFfuxrqdJEusj+hHD/SP9YesLvOgP/Fc3dKsI72Y
-V/9uEIPzBxja35cQmS790hee6X5INvaF87l8vSTLZ40E1caJnp9IeclaLpeC5mih
-sRvH8n3dUbCpSTN/oLVA2JpKyE5R0g==
-=4eRB
------END PGP SIGNATURE-----
-
---=-5Tr4lXHpCftQWl9CGQiq--
-
+The phy loopback (patch 10) could probably benefit from an expert look
+but in general LGTM.
