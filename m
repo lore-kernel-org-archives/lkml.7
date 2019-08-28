@@ -2,167 +2,171 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066F5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F97C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89CC22DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1174822CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfH1Mj1 (ORCPT
+        id S1726550AbfH1Mj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:39:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4666 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726300AbfH1Mj1 (ORCPT
+        Wed, 28 Aug 2019 08:39:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41588 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbfH1Mj7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:39:27 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SCZkuG063679
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 08:39:25 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2unr2640jt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 08:39:25 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 28 Aug 2019 13:39:23 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 28 Aug 2019 13:39:19 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7SCdHOH55574588
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Aug 2019 12:39:17 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5E37EA4064;
-        Wed, 28 Aug 2019 12:39:17 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1646CA4060;
-        Wed, 28 Aug 2019 12:39:16 +0000 (GMT)
-Received: from localhost.ibm.com (unknown [9.85.129.156])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 28 Aug 2019 12:39:15 +0000 (GMT)
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Petr Vorel <pvorel@suse.cz>, Jessica Yu <jeyu@kernel.org>,
-        Dave Young <dyoung@redhat.com>, shuah <shuah@kernel.org>,
-        linux-kselftest@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] sefltest/ima: support appended signatures (modsig)
-Date:   Wed, 28 Aug 2019 08:39:06 -0400
-X-Mailer: git-send-email 2.7.5
-X-TM-AS-GCONF: 00
-x-cbid: 19082812-0012-0000-0000-00000343E072
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082812-0013-0000-0000-0000217E1D40
-Message-Id: <1566995946-6582-1-git-send-email-zohar@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=752 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908280134
+        Wed, 28 Aug 2019 08:39:59 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1i2xEv-0002EI-OW; Wed, 28 Aug 2019 12:39:53 +0000
+Date:   Wed, 28 Aug 2019 14:39:53 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Hridya Valsaraju <hridya@google.com>,
+        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH 1/4] binder: add a mount option to show global stats
+Message-ID: <20190828123952.zzffvezeq4hykxej@wittgenstein>
+References: <20190827204152.114609-1-hridya@google.com>
+ <20190827204152.114609-2-hridya@google.com>
+ <20190828092237.GA23192@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190828092237.GA23192@kroah.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Detect and allow appended signatures.
+On Wed, Aug 28, 2019 at 11:22:37AM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Aug 27, 2019 at 01:41:49PM -0700, Hridya Valsaraju wrote:
+> > Currently, all binder state and statistics live in debugfs.
+> > We need this information even when debugfs is not mounted.
+> > This patch adds the mount option 'stats' to enable a binderfs
+> > instance to have binder debug information present in the same.
+> > 'stats=global' will enable the global binder statistics. In
+> > the future, 'stats=local' will enable binder statistics local
+> > to the binderfs instance. The two modes 'global' and 'local'
+> > will be mutually exclusive. 'stats=global' option is only available
+> > for a binderfs instance mounted in the initial user namespace.
+> > An attempt to use the option to mount a binderfs instance in
+> > another user namespace will return an EPERM error.
+> > 
+> > Signed-off-by: Hridya Valsaraju <hridya@google.com>
+> > ---
+> >  drivers/android/binderfs.c | 47 ++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 45 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+> > index cc2e71576396..d95d179aec58 100644
+> > --- a/drivers/android/binderfs.c
+> > +++ b/drivers/android/binderfs.c
+> > @@ -51,18 +51,27 @@ static DEFINE_IDA(binderfs_minors);
+> >  /**
+> >   * binderfs_mount_opts - mount options for binderfs
+> >   * @max: maximum number of allocatable binderfs binder devices
+> > + * @stats_mode: enable binder stats in binderfs.
+> >   */
+> >  struct binderfs_mount_opts {
+> >  	int max;
+> > +	int stats_mode;
+> >  };
+> >  
+> >  enum {
+> >  	Opt_max,
+> > +	Opt_stats_mode,
+> >  	Opt_err
+> >  };
+> >  
+> > +enum binderfs_stats_mode {
+> > +	STATS_NONE,
+> > +	STATS_GLOBAL,
+> > +};
+> > +
+> >  static const match_table_t tokens = {
+> >  	{ Opt_max, "max=%d" },
+> > +	{ Opt_stats_mode, "stats=%s" },
+> >  	{ Opt_err, NULL     }
+> >  };
+> >  
+> > @@ -290,8 +299,9 @@ static void binderfs_evict_inode(struct inode *inode)
+> >  static int binderfs_parse_mount_opts(char *data,
+> >  				     struct binderfs_mount_opts *opts)
+> >  {
+> > -	char *p;
+> > +	char *p, *stats;
+> >  	opts->max = BINDERFS_MAX_MINOR;
+> > +	opts->stats_mode = STATS_NONE;
+> >  
+> >  	while ((p = strsep(&data, ",")) != NULL) {
+> >  		substring_t args[MAX_OPT_ARGS];
+> > @@ -311,6 +321,24 @@ static int binderfs_parse_mount_opts(char *data,
+> >  
+> >  			opts->max = max_devices;
+> >  			break;
+> > +		case Opt_stats_mode:
+> > +			stats = match_strdup(&args[0]);
+> > +			if (!stats)
+> > +				return -ENOMEM;
+> > +
+> > +			if (strcmp(stats, "global") != 0) {
+> > +				kfree(stats);
+> > +				return -EINVAL;
+> > +			}
+> > +
+> > +			if (!capable(CAP_SYS_ADMIN)) {
+> > +				kfree(stats);
+> > +				return -EINVAL;
+> 
+> Can a non-CAP_SYS_ADMIN task even call this function?  Anyway, if it
 
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
----
- .../selftests/kexec/test_kexec_file_load.sh        | 38 +++++++++++++++++++---
- 1 file changed, 34 insertions(+), 4 deletions(-)
+It can. A task that has CAP_SYS_ADMIN in the userns the corresponding
+binderfs mount has been created in can change the max=<nr> mount option.
+Only stats=global currently requires capable(CAP_SYS_ADMIN) aka
+CAP_SYS_ADMIN in the initial userns to prevent non-initial userns from
+snooping at global statistics.
 
-diff --git a/tools/testing/selftests/kexec/test_kexec_file_load.sh b/tools/testing/selftests/kexec/test_kexec_file_load.sh
-index fa7c24e8eefb..2ff600388c30 100755
---- a/tools/testing/selftests/kexec/test_kexec_file_load.sh
-+++ b/tools/testing/selftests/kexec/test_kexec_file_load.sh
-@@ -37,11 +37,20 @@ is_ima_sig_required()
- 	# sequentially.  As a result, a policy rule may be defined, but
- 	# might not necessarily be used.  This test assumes if a policy
- 	# rule is specified, that is the intent.
-+
-+	# First check for appended signature (modsig), then xattr
- 	if [ $ima_read_policy -eq 1 ]; then
- 		check_ima_policy "appraise" "func=KEXEC_KERNEL_CHECK" \
--			"appraise_type=imasig"
-+			"appraise_type=imasig|modsig"
- 		ret=$?
--		[ $ret -eq 1 ] && log_info "IMA signature required";
-+		if [ $ret -eq 1 ]; then
-+			log_info "IMA or appended(modsig) signature required"
-+		else
-+			check_ima_policy "appraise" "func=KEXEC_KERNEL_CHECK" \
-+				"appraise_type=imasig"
-+			ret=$?
-+			[ $ret -eq 1 ] && log_info "IMA signature required";
-+		fi
- 	fi
- 	return $ret
- }
-@@ -84,6 +93,22 @@ check_for_imasig()
- 	return $ret
- }
- 
-+# Return 1 for appended signature (modsig) found and 0 for not found.
-+check_for_modsig()
-+{
-+	local module_sig_string="~Module signature appended~"
-+	local sig="$(tail --bytes $((${#module_sig_string} + 1)) $KERNEL_IMAGE)"
-+	local ret=0
-+
-+	if [ "$sig" == "$module_sig_string" ]; then
-+		ret=1
-+		log_info "kexec kernel image modsig signed"
-+	else
-+		log_info "kexec kernel image not modsig signed"
-+	fi
-+	return $ret
-+}
-+
- kexec_file_load_test()
- {
- 	local succeed_msg="kexec_file_load succeeded"
-@@ -98,7 +123,8 @@ kexec_file_load_test()
- 		# In secureboot mode with an architecture  specific
- 		# policy, make sure either an IMA or PE signature exists.
- 		if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ] && \
--			[ $ima_signed -eq 0 ] && [ $pe_signed -eq 0 ]; then
-+			[ $ima_signed -eq 0 ] && [ $pe_signed -eq 0 ] \
-+			  && [ $ima_modsig -eq 0 ]; then
- 			log_fail "$succeed_msg (missing sig)"
- 		fi
- 
-@@ -107,7 +133,8 @@ kexec_file_load_test()
- 			log_fail "$succeed_msg (missing PE sig)"
- 		fi
- 
--		if [ $ima_sig_required -eq 1 ] && [ $ima_signed -eq 0 ]; then
-+		if [ $ima_sig_required -eq 1 ] && [ $ima_signed -eq 0 ] \
-+		     && [ $ima_modsig -eq 0 ]; then
- 			log_fail "$succeed_msg (missing IMA sig)"
- 		fi
- 
-@@ -204,5 +231,8 @@ pe_signed=$?
- check_for_imasig
- ima_signed=$?
- 
-+check_for_modsig
-+ima_modsig=$?
-+
- # Test loading the kernel image via kexec_file_load syscall
- kexec_file_load_test
--- 
-2.7.5
-
+> can, put the check at the top of the case, and just return early before
+> doing any extra work like checking values or allocating memory.
+> 
+> > +			}
+> > +
+> > +			opts->stats_mode = STATS_GLOBAL;
+> > +			kfree(stats);
+> > +			break;
+> >  		default:
+> >  			pr_err("Invalid mount options\n");
+> >  			return -EINVAL;
+> > @@ -322,8 +350,21 @@ static int binderfs_parse_mount_opts(char *data,
+> >  
+> >  static int binderfs_remount(struct super_block *sb, int *flags, char *data)
+> >  {
+> > +	int prev_stats_mode, ret;
+> >  	struct binderfs_info *info = sb->s_fs_info;
+> > -	return binderfs_parse_mount_opts(data, &info->mount_opts);
+> > +
+> > +	prev_stats_mode = info->mount_opts.stats_mode;
+> > +	ret = binderfs_parse_mount_opts(data, &info->mount_opts);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (prev_stats_mode != info->mount_opts.stats_mode) {
+> > +		pr_info("Binderfs stats mode cannot be changed during a remount\n");
+> 
+> pr_err()?
+> 
+> thanks,
+> 
+> greg k-h
