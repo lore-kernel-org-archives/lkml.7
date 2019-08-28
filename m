@@ -2,234 +2,166 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B52C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9296C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4B8217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB13221883
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:32:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="HpYnOvau";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DWggFqvh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TpkXszfq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfH1JaI (ORCPT
+        id S1726444AbfH1JcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:30:08 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:36321 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726340AbfH1JaI (ORCPT
+        Wed, 28 Aug 2019 05:32:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43081 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfH1JcN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:30:08 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 760E65A6;
-        Wed, 28 Aug 2019 05:30:06 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Wed, 28 Aug 2019 05:30:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=P8J9s2s8eH7Ar5wyBE89/+UKWMN
-        ppv9j293pWFZo1Yg=; b=HpYnOvau8zH3WqEcR/mx7lCU2Id+FHhUM084nNAPzee
-        XakZbK7BRuxW4w+rwluC5mi0LWlr34FaGlkEzAI3Zw6yxM131YJYP8pmB8yWONuV
-        oVdPVg3YLUlwMByM/rZPLsNf5acgjctfsa+qRYgaJMhbukWFaQwAkny+tjyIXr3R
-        0eWn6/85MzSEUhDvr2eljBHNQSKyl47jL0x/5kWW2A51XPD7j2hLCXtc5VEqycpi
-        R7fFFP17XpUvLyrMmJUQqD/Wre9DH73fm0XcVMnf8DtzkImtUaNK4RWRrPdio//l
-        lB2XVz24W56jpUmbRtvwXZGf0DRbrCrES2f4Sk8J99Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=P8J9s2
-        s8eH7Ar5wyBE89/+UKWMNppv9j293pWFZo1Yg=; b=DWggFqvhmPOa2rzdhiAREY
-        i5BOfDGYG70ClWrNzP1xpr38UChGoqCqz5/aefbYgQVGSvxOXaLUiumS3Fbf07K3
-        buifKTlirlWK8tBYLUdMQOJhrusxWsfGDJiReZEk1t3D8kRKjYi0lrgkm73c5EMF
-        YJ9X8L957ZyzzJ0WQugNHfydF7sZOT69c1+BPC5RLNNQ9pGhuZNc7ORkvbMCvuEb
-        3Nrl+8nTtVrrpL8lFHJqkLSFr8bz4h7Dt2zVxnPwIKiNEyaLW0xb2vV0KdK0UWop
-        OTbd4gjBVzaEMLx9zjXeMdoQ9ueFgNSeWMNfrALEeOxsaG8ozGKVL8Nh+++5pIrw
-        ==
-X-ME-Sender: <xms:nUlmXX-lZUmG2di96mKAMnSXwtpyi1p3Rbz-9imqfJrhKFhyUVSSug>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeitddgudeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuffhomhgrihhnpehlkhhmlhdroh
-    hrghenucfkphepkeefrdekiedrkeelrddutdejnecurfgrrhgrmhepmhgrihhlfhhrohhm
-    pehgrhgvgheskhhrohgrhhdrtghomhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:nUlmXYxfDTMg8P0aGyJKcgsBWVXWB_PNLz5YjEXOmlkT_2q61uNIbQ>
-    <xmx:nUlmXSC8vygScdf3ZeQzc-z3lIhIYgl6-Vig8b7fF0Xtfmwc_vuWwA>
-    <xmx:nUlmXRJ7Vj-VTAQ4hsRBNkb46UxZjtTXP5R378zrwajcfSNM7Stggw>
-    <xmx:nklmXUd6Y1kv2dgVhrJ_Ym7WVg4XpfaUMzjAEUvYKQ3-zPBXxNTJwA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8F038D6005E;
-        Wed, 28 Aug 2019 05:30:05 -0400 (EDT)
-Date:   Wed, 28 Aug 2019 11:30:04 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     gregkh@linuxfoundation.com, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rajatxjain@gmail.com
-Subject: Re: [PATCH v3 2/2] PCI/AER: Split the AER stats into multiple sysfs
- attributes
-Message-ID: <20190828093004.GC23192@kroah.com>
-References: <20190827062309.GA30987@kroah.com>
- <20190827222145.32642-1-rajatja@google.com>
- <20190827222145.32642-2-rajatja@google.com>
+        Wed, 28 Aug 2019 05:32:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y8so1736932wrn.10;
+        Wed, 28 Aug 2019 02:32:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8YZMPrk4taIfd9lhqFUp5xwJn0FNidcXhT7fTedt7cc=;
+        b=TpkXszfqgchu4JhwM4l26r9kQzmiJ25FKVEV4NRDkanYqou5TF2iXz2qfMLdVgKxc8
+         kFUoM5rwlaLnSYpfJgYhffezbf53NAluAXWDX4pZxlGeQQCMnGgQMCbyDDVy+u49+GNi
+         6A6pGixrU89g/irZKbir08mxb86Znnu0Nn3RDFHSUyKlLfdhFKYR/kalfdNWelkgmuEX
+         5CdmNWfJH2GjPZvW0FOaJPoL+UZqHKLu9+dzCXGbcM5BEbU8D7PJQW+IrmNNe9nosojO
+         ECD/zG+ulrxNYTEgNIAhdsAtyq6NykWgKpJfD/oRIaRbgytEOwwl8rkmpwFxDLgfxReE
+         rG2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8YZMPrk4taIfd9lhqFUp5xwJn0FNidcXhT7fTedt7cc=;
+        b=FtHkCVE0wLha+fQh3z2K/HDFyempnIQfSYwbHcuriLYQjmY0E4AwfjymkHUZifpJYD
+         Dpvy82xe83WYLGQRXokYt0w/9D3diY+Zg4cFWAfBP3Lj8ZE/xFmh+kcASfy4AL/Xldv5
+         /FOhSR8OySTCAwEwT6GQWC9fneMQw1JZG2gNkTyD1RuY2sYw9TL2H3V0AHESaAPSTkd4
+         c63WmYh7KYo2HsGrsACUB13GIEYkUBaxMnZD8HHSDKJK1C4rDYHTRafZYewrZGqtpK/T
+         k0q7mhDqTLpYW966mJawgwZPZFkMPEG0xVHqoebWJ5zVWG/mhxtEEWE85PXcf2oAJarh
+         EtPA==
+X-Gm-Message-State: APjAAAUh66BkdBrX/6KCuqVGAWGfX7z4g2mOP0EOo9BY/9oBvyyKsaBF
+        Et8zvuqqZLBvf2U1W6GKo371IfHc
+X-Google-Smtp-Source: APXvYqzBKn5uq8Z/LSmYy1vCSMHdQAKtE9a0raqpTeuGSXHKKnSz0po7mYOh1BmKRa3SxJCjrM6vWA==
+X-Received: by 2002:a5d:4250:: with SMTP id s16mr3400811wrr.318.1566984730627;
+        Wed, 28 Aug 2019 02:32:10 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id f10sm1988058wrs.22.2019.08.28.02.32.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 02:32:09 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 11:32:08 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] driver core: platform: Introduce
+ platform_get_irq_optional()
+Message-ID: <20190828093208.GC2917@ulmo>
+References: <20190828083411.2496-1-thierry.reding@gmail.com>
+ <20190828085724.GA31055@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jousvV0MzM2p6OtC"
 Content-Disposition: inline
-In-Reply-To: <20190827222145.32642-2-rajatja@google.com>
+In-Reply-To: <20190828085724.GA31055@kroah.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 03:21:45PM -0700, Rajat Jain wrote:
-> Split the AER stats into multiple sysfs atributes. Note that
-> this changes the ABI of the AER stats, but hopefully, there
-> aren't active users that need to change. This is how the AERs
-> are being exposed now:
-> 
-> localhost /sys/devices/pci0000:00/0000:00:1c.0/aer_stats # ls -l
-> total 0
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit0_RxErr
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit12_Timeout
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit13_NonFatalErr
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit14_CorrIntErr
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit15_HeaderOF
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit6_BadTLP
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit7_BadDLLP
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit8_Rollover
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit0_Undefined
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit12_TLP
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit13_FCP
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit14_CmpltTO
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit15_CmpltAbrt
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit16_UnxCmplt
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit17_RxOF
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit18_MalfTLP
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit19_ECRC
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit20_UnsupReq
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit21_ACSViol
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit22_UncorrIntErr
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit23_BlockedTLP
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit24_AtomicOpBlocked
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit25_TLPBlockedErr
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit26_PoisonTLPBlocked
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit4_DLP
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit5_SDES
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit0_Undefined
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit12_TLP
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit13_FCP
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit14_CmpltTO
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit15_CmpltAbrt
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit16_UnxCmplt
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit17_RxOF
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit18_MalfTLP
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit19_ECRC
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit20_UnsupReq
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit21_ACSViol
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit22_UncorrIntErr
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit23_BlockedTLP
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit24_AtomicOpBlocked
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit25_TLPBlockedErr
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit26_PoisonTLPBlocked
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit4_DLP
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit5_SDES
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_device_err_cor
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_device_err_fatal
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_device_err_nonfatal
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_rootport_err_cor
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_rootport_err_fatal
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_rootport_err_nonfatal
-> localhost /sys/devices/pci0000:00/0000:00:1c.0/aer_stats #
-> 
-> Each file is has a single counter value. Single file containing all
-> stats was frowned upon and discussed here:
-> https://lkml.org/lkml/2019/6/28/220
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
-> v3: indent the sysfs attribute names in documentation.
-> v2: Also change the Documentation
-> 
->  .../testing/sysfs-bus-pci-devices-aer_stats   | 160 ++++++++---------
->  drivers/pci/pcie/aer.c                        | 166 +++++++++++++-----
->  2 files changed, 191 insertions(+), 135 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> index 3c9a8c4a25eb..8cd93acddf76 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> @@ -9,89 +9,72 @@ errors may be "seen" / reported by the link partner and not the
->  problematic endpoint itself (which may report all counters as 0 as it never
->  saw any problems).
->  
-> -What:		/sys/bus/pci/devices/<dev>/aer_dev_correctable
-> -Date:		July 2018
-> -KernelVersion: 4.19.0
-> +What: Following files in /sys/bus/pci/devices/<dev>/aer_stats/
-> +	correctable_bit0_RxErr
-> +	correctable_bit12_Timeout
-> +	correctable_bit13_NonFatalErr
-> +	correctable_bit14_CorrIntErr
-> +	correctable_bit15_HeaderOF
-> +	correctable_bit6_BadTLP
-> +	correctable_bit7_BadDLLP
-> +	correctable_bit8_Rollover
-> +	fatal_bit0_Undefined
-> +	fatal_bit12_TLP
-> +	fatal_bit13_FCP
-> +	fatal_bit14_CmpltTO
-> +	fatal_bit15_CmpltAbrt
-> +	fatal_bit16_UnxCmplt
-> +	fatal_bit17_RxOF
-> +	fatal_bit18_MalfTLP
-> +	fatal_bit19_ECRC
-> +	fatal_bit20_UnsupReq
-> +	fatal_bit21_ACSViol
-> +	fatal_bit22_UncorrIntErr
-> +	fatal_bit23_BlockedTLP
-> +	fatal_bit24_AtomicOpBlocked
-> +	fatal_bit25_TLPBlockedErr
-> +	fatal_bit26_PoisonTLPBlocked
-> +	fatal_bit4_DLP
-> +	fatal_bit5_SDES
-> +	nonfatal_bit0_Undefined
-> +	nonfatal_bit12_TLP
-> +	nonfatal_bit13_FCP
-> +	nonfatal_bit14_CmpltTO
-> +	nonfatal_bit15_CmpltAbrt
-> +	nonfatal_bit16_UnxCmplt
-> +	nonfatal_bit17_RxOF
-> +	nonfatal_bit18_MalfTLP
-> +	nonfatal_bit19_ECRC
-> +	nonfatal_bit20_UnsupReq
-> +	nonfatal_bit21_ACSViol
-> +	nonfatal_bit22_UncorrIntErr
-> +	nonfatal_bit23_BlockedTLP
-> +	nonfatal_bit24_AtomicOpBlocked
-> +	nonfatal_bit25_TLPBlockedErr
-> +	nonfatal_bit26_PoisonTLPBlocked
-> +	nonfatal_bit4_DLP
-> +	nonfatal_bit5_SDES
 
-{sigh}
+--jousvV0MzM2p6OtC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Does this look good to you?  There's a whole lot of alignment in the
-original tags here, and you are not doing that here at all.
+On Wed, Aug 28, 2019 at 10:57:24AM +0200, Greg Kroah-Hartman wrote:
+> On Wed, Aug 28, 2019 at 10:34:10AM +0200, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
+> >=20
+> > In some cases the interrupt line of a device is optional. Introduce a
+> > new platform_get_irq_optional() that works much like platform_get_irq()
+> > but does not output an error on failure to find the interrupt.
+> >=20
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> >  drivers/base/platform.c         | 22 ++++++++++++++++++++++
+> >  include/linux/platform_device.h |  1 +
+> >  2 files changed, 23 insertions(+)
+> >=20
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index 8ad701068c11..0dda6ade50fd 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -192,6 +192,28 @@ int platform_get_irq(struct platform_device *dev, =
+unsigned int num)
+> >  }
+> >  EXPORT_SYMBOL_GPL(platform_get_irq);
+> > =20
+> > +/**
+> > + * platform_get_irq_optional - get an optional IRQ for a device
+> > + * @dev: platform device
+> > + * @num: IRQ number index
+> > + *
+> > + * Gets an IRQ for a platform device. Device drivers should check the =
+return
+> > + * value for errors so as to not pass a negative integer value to the
+> > + * request_irq() APIs. This is the same as platform_get_irq(), except =
+that it
+> > + * does not print an error message if an IRQ can not be obtained.
+>=20
+> Kind of funny that the work people did to put error messages in a
+> central place needs to be worked around at times :)
 
-Yes, this is a trivial complaint, but please, these should be easy to
-read and understand, and you aren't makeing it that here...
+Indeed. I think it does make sense in this case to have the error
+message in a central place, because it really does seem like the vast
+majority of users really do want that IRQ. Having the _optional variant
+makes it really explicit in the cases where it's fine to continue
+without the IRQ.
 
+> Anyway, I have no objection to this, but it looks like it has to go in
+> through my tree.  I can take the hwmon patch as well through my tree if
+> the hwmon maintainer(s) say it is ok to do so.
 
-> +Date:		Aug 2019
-> +KernelVersion:  5.3.0
+I suppose we could technically make this go through the driver core and
+hwmon trees separately with a bit of timing, but the hwmon patch is so
+trivial that it would indeed be simplest to take it through the driver
+core tree as well.
 
-I do not think this will hit 5.3, right?
+Thierry
 
-thanks,
+--jousvV0MzM2p6OtC
+Content-Type: application/pgp-signature; name="signature.asc"
 
-greg k-h
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1mShUACgkQ3SOs138+
+s6FNhhAAwVNhp6Fie+ky5QepEPYXddUP7qI5ou4FIufzN/u8+VgqfHNaNuli1BT5
+uJgWDNTwyOYVmPCC29QZ+bQpDEauGkkg5bXKaewkp1omnir84EsWRSZfNrR8m24C
+T6W4DuGrqNWhvrFeqyZjzqVmcgksUAZ2Uqiy4c8qtSAMGZwRkZxzMwpDnWyLFShB
+40OpgxqWCx/GqjJnCwBwlNNI9JqPhblu09znMo9oHXoELubago8/L0R7vfSWmMqN
+KBSZ+Qak0vnRWrbVZpKDQTyHgiiNpRQ7M/pmblktEWgwwAH1OJLR9buWwPkePoOE
+dJldWRKmbORp7hGkHQSQ8UkdTLfOkEr70WcH73BChPWTIdvPOJ2zkhDFehVoFLkU
+SkoNwma5NSvIb4r5xvnVfRWYbKEas1ijO6LeVzMBBsEYoEsXBL04OF7w4waEH+R9
+7yBBasVSqdTmDdZXpP69f9kwjS/giwNX29/hq+6FPQNbrWjv7pumKaWQp3FB9K9U
+eS4ceCw32/XUyyor2gTSonZg11jHAzTc/GhvS0r6Z+RwJL3Ih90OCfLjYXe8/s+0
+ydGtUJSFQv+HX0ZUNWZo5u2il6POcxQuToEQFBw5uxSFysIlK0YcdTlxHqf2aswG
+mYuvMvLq7+R5yRm9nHxKZWQQhteQX6mBSIHjLBv3/FQO/NvPUo4=
+=u2KZ
+-----END PGP SIGNATURE-----
+
+--jousvV0MzM2p6OtC--
