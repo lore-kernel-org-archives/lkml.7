@@ -2,200 +2,140 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5064BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CFFC41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 221C1217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:15:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="haoiuUv6"
+	by mail.kernel.org (Postfix) with ESMTP id CF1EA22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566976724;
+	bh=Nscg4TVE3c6k/w4PdTL0hyIxaESz7KLEGJ5JbGWgamY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WHaEYR3V3V8iOqBNAHOjv02+yzYJUH7jnRv1J+JptBSLTV669BVZ/Er68W7PUQzi+
+	 otHwDIYZ7ACtOUOkEaGra1x1E7Sa4wKYonLqM4G5d8Z1uHnJl03UYsdy2FtYRUTR/H
+	 T0+UdqSQ3RzDORJBRMyzW4s+nQutDwY7aj8ISye4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfH1HPp (ORCPT
+        id S1726378AbfH1HSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 03:15:45 -0400
-Received: from mail-yw1-f74.google.com ([209.85.161.74]:45934 "EHLO
-        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfH1HPp (ORCPT
+        Wed, 28 Aug 2019 03:18:44 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38969 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfH1HSn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:15:45 -0400
-Received: by mail-yw1-f74.google.com with SMTP id c129so1249168ywf.12
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 00:15:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=pO6G2tJIWIc79GlfXyD7tYRlgpCJ3Wp5sfmQpLmODHQ=;
-        b=haoiuUv6FwAVdeyp7BVc3pDAqvPC/ds02yPDw/Lpq4KFYSLid/2T8oP3DA7sI/XnNp
-         bjngcL7mnMQro96+ZwOb1Gt25bxq37G4z/Ow3o6U0dzdJZjKslbNsk+zC9g7Qce0tV0u
-         BzgU5+IQ3ZGQGPfxagkcalDyaPCw7MxZ8hC62nXstPdNeOEigWogCgbHn1F5PP0d8gi+
-         b+oWiiRZHQW/ZFtAcJrlup+jI6vXsdVAs6VYfOH/lNmSeWyt3ukutR8MA5ibwX/IlN4L
-         9woWplT7Z01+fxXDw2GJRh4M3TQcaFmmsCLk5z9SrkRBcCglOyOyo78zPoRN6fq5d04T
-         Aaxg==
+        Wed, 28 Aug 2019 03:18:43 -0400
+Received: by mail-ed1-f68.google.com with SMTP id g8so1812473edm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 00:18:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=pO6G2tJIWIc79GlfXyD7tYRlgpCJ3Wp5sfmQpLmODHQ=;
-        b=CzHo25kjtMNlfLyN8sZfs/DkXCy1ZsXGN1TGPpYOClsAdEibezWRXieu9O2uj+FAgg
-         POkIiKbRngfWXw6FztKwgjKLdjc6VrYOpW5SGEqt2mj4KNjUi/VIR/eqCqHqgRPS0YJI
-         Z+0YP6HpUjbdCoGbdeUaptbXfthzDWnMnvoOyjbhJQyUELcUZwXVQ/MCYHqhjeXcTxvo
-         Gi2worBLPAHjApU7r+BC+E+e7o/wkYp6duh2RcgulbWNgVzQSgGefNDJqv8WpFwn440M
-         3euVQ07G3Iutylqj1rRGmIFBhZDWNn1ArrT8JKSGPjgE/QLVDZR3fUiKylwNe1mQk1c+
-         MpDg==
-X-Gm-Message-State: APjAAAWHWo2iLZKFZvAbqGetrGHMDQa9rEs8WfbWWtNRc8rM14iJwqnj
-        xh9KMYkDfkoFUxeLuFWMROcEcemVOTE=
-X-Google-Smtp-Source: APXvYqzctMiFQlYF+UvzuyviUGwwek3BnAXSR8uVLG9IR+PqW/ao+bgQWKhtNMFcd7Hc/sZBH20B8YFhEug=
-X-Received: by 2002:a81:a68d:: with SMTP id d135mr2009010ywh.38.1566976544368;
- Wed, 28 Aug 2019 00:15:44 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 09:15:36 +0200
-In-Reply-To: <20190819112207.57166-1-darekm@google.com>
-Message-Id: <20190828071536.56533-1-darekm@google.com>
-Mime-Version: 1.0
-References: <20190819112207.57166-1-darekm@google.com>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v7.2 5/9] drm: tda998x: use cec_notifier_conn_(un)register
-From:   Dariusz Marcinkiewicz <darekm@google.com>
-To:     dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-        hverkuil-cisco@xs4all.nl
-Cc:     Dariusz Marcinkiewicz <darekm@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w4tygEA7hdMTAmlKH0W1U33PjlTpQI6lJR6+C+DfktA=;
+        b=NPP15WugbrbQXPEDmaZwn4X/yzFmF9FPlFpBNpqUy6g0lTD0fI1ulsRmIC/U00xjq6
+         W+O6BU+u2ugWUn3Q1/XxWKcVuHKZYot6PjBlmVgrXmTOHb6e9yDczMIcRzA+eDuD2lkz
+         V+GOzbWTrRXY3b1dEyX7dIhWckjcqfZS52KNNZkN7SD8tWgKGVluUdd1GP6oujNFAHfZ
+         Q20gQknIEUzEnswemjqb+UOBKuGzvYOSH/Xf6qAVaTA8Znlm1cIwDy3kLTcR6IdbQttQ
+         IEVX407vJa3WvJdQJAo0ldDZROdyeu6iKHiLrenXUGU5ZwhykHEanzQCnz7J5c/XETw7
+         eO0g==
+X-Gm-Message-State: APjAAAWsGQffgvabnGLgsEw9AKN6p6Kki3faw11fQh7aYkHM2uKEicbJ
+        AU/tGDj+aqEg77Fyln1gjF4=
+X-Google-Smtp-Source: APXvYqx8RZh3jXZjSGE4MwlVL2inkV97jj78gIfYfWZpFlCJSBjw/ehfjxk7ZWkKSVITMEKA1h8pEA==
+X-Received: by 2002:a50:c90d:: with SMTP id o13mr2607574edh.148.1566976721988;
+        Wed, 28 Aug 2019 00:18:41 -0700 (PDT)
+Received: from tiehlicka.microfocus.com (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id y19sm278969edu.90.2019.08.28.00.18.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 00:18:39 -0700 (PDT)
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Hillf Danton <hdanton@sina.com>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Adric Blake <promarbler14@gmail.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+Subject: [PATCH] mm, memcg: do not set reclaim_state on soft limit reclaim
+Date:   Wed, 28 Aug 2019 09:18:08 +0200
+Message-Id: <20190828071808.20410-1-mhocko@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new cec_notifier_conn_(un)register() functions to
-(un)register the notifier for the HDMI connector, and fill
-in the cec_connector_info.
+From: Michal Hocko <mhocko@suse.com>
 
-Changes since v7.1:
-	- re-added if (!notifier)..
-Changes since v7:
-	- typo fix
-Changes since v6:
-        - move cec_notifier_conn_unregister to tda998x_bridge_detach,
-	- add a mutex protecting accesses to a CEC notifier.
-Changes since v2:
-	- cec_notifier_phys_addr_invalidate where appropriate,
-	- don't check for NULL notifier before calling
-	cec_notifier_conn_unregister.
-Changes since v1:
-	Add memory barrier to make sure that the notifier
-	becomes visible to the irq thread once it is
-	fully constructed.
+Adric Blake has noticed[1] the following warning:
+[38491.963105] WARNING: CPU: 7 PID: 175 at mm/vmscan.c:245 set_task_reclaim_state+0x1e/0x40
+[...]
+[38491.963239] Call Trace:
+[38491.963246]  mem_cgroup_shrink_node+0x9b/0x1d0
+[38491.963250]  mem_cgroup_soft_limit_reclaim+0x10c/0x3a0
+[38491.963254]  balance_pgdat+0x276/0x540
+[38491.963258]  kswapd+0x200/0x3f0
+[38491.963261]  ? wait_woken+0x80/0x80
+[38491.963265]  kthread+0xfd/0x130
+[38491.963267]  ? balance_pgdat+0x540/0x540
+[38491.963269]  ? kthread_park+0x80/0x80
+[38491.963273]  ret_from_fork+0x35/0x40
+[38491.963276] ---[ end trace 727343df67b2398a ]---
 
-Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
-Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+which tells us that soft limit reclaim is about to overwrite the
+reclaim_state configured up in the call chain (kswapd in this case but
+the direct reclaim is equally possible). This means that reclaim stats
+would get misleading once the soft reclaim returns and another reclaim
+is done.
+
+Fix the warning by dropping set_task_reclaim_state from the soft reclaim
+which is always called with reclaim_state set up.
+
+Reported-by: Adric Blake <promarbler14@gmail.com>
+Acked-by: Yafang Shao <laoar.shao@gmail.com>
+Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+
+[1] http://lkml.kernel.org/r/CAE1jjeePxYPvw1mw2B3v803xHVR_BNnz0hQUY_JDMN8ny29M6w@mail.gmail.com
 ---
- drivers/gpu/drm/i2c/tda998x_drv.c | 37 ++++++++++++++++++++++---------
- 1 file changed, 26 insertions(+), 11 deletions(-)
+ mm/vmscan.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-index 61e042918a7fc..2bc4f50458137 100644
---- a/drivers/gpu/drm/i2c/tda998x_drv.c
-+++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-@@ -82,6 +82,8 @@ struct tda998x_priv {
- 	u8 audio_port_enable[AUDIO_ROUTE_NUM];
- 	struct tda9950_glue cec_glue;
- 	struct gpio_desc *calib;
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index c77d1e3761a7..a6c5d0b28321 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -3220,6 +3220,7 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
+ 
+ #ifdef CONFIG_MEMCG
+ 
++/* Only used by soft limit reclaim. Do not reuse for anything else. */
+ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
+ 						gfp_t gfp_mask, bool noswap,
+ 						pg_data_t *pgdat,
+@@ -3235,7 +3236,8 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
+ 	};
+ 	unsigned long lru_pages;
+ 
+-	set_task_reclaim_state(current, &sc.reclaim_state);
++	WARN_ON_ONCE(!current->reclaim_state);
 +
-+	struct mutex cec_notify_mutex;
- 	struct cec_notifier *cec_notify;
- };
+ 	sc.gfp_mask = (gfp_mask & GFP_RECLAIM_MASK) |
+ 			(GFP_HIGHUSER_MOVABLE & ~GFP_RECLAIM_MASK);
  
-@@ -805,8 +807,11 @@ static irqreturn_t tda998x_irq_thread(int irq, void *data)
- 				tda998x_edid_delay_start(priv);
- 			} else {
- 				schedule_work(&priv->detect_work);
--				cec_notifier_set_phys_addr(priv->cec_notify,
--						   CEC_PHYS_ADDR_INVALID);
-+
-+				mutex_lock(&priv->cec_notify_mutex);
-+				cec_notifier_phys_addr_invalidate(
-+						priv->cec_notify);
-+				mutex_unlock(&priv->cec_notify_mutex);
- 			}
+@@ -3253,7 +3255,6 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
  
- 			handled = true;
-@@ -1331,6 +1336,8 @@ static int tda998x_connector_init(struct tda998x_priv *priv,
- 				  struct drm_device *drm)
- {
- 	struct drm_connector *connector = &priv->connector;
-+	struct cec_connector_info conn_info;
-+	struct cec_notifier *notifier;
- 	int ret;
+ 	trace_mm_vmscan_memcg_softlimit_reclaim_end(sc.nr_reclaimed);
  
- 	connector->interlace_allowed = 1;
-@@ -1347,6 +1354,17 @@ static int tda998x_connector_init(struct tda998x_priv *priv,
- 	if (ret)
- 		return ret;
+-	set_task_reclaim_state(current, NULL);
+ 	*nr_scanned = sc.nr_scanned;
  
-+	cec_fill_conn_info_from_drm(&conn_info, connector);
-+
-+	notifier = cec_notifier_conn_register(priv->cec_glue.parent,
-+					      NULL, &conn_info);
-+	if (!notifier)
-+		return -ENOMEM;
-+
-+	mutex_lock(&priv->cec_notify_mutex);
-+	priv->cec_notify = notifier;
-+	mutex_unlock(&priv->cec_notify_mutex);
-+
- 	drm_connector_attach_encoder(&priv->connector,
- 				     priv->bridge.encoder);
- 
-@@ -1366,6 +1384,11 @@ static void tda998x_bridge_detach(struct drm_bridge *bridge)
- {
- 	struct tda998x_priv *priv = bridge_to_tda998x_priv(bridge);
- 
-+	mutex_lock(&priv->cec_notify_mutex);
-+	cec_notifier_conn_unregister(priv->cec_notify);
-+	priv->cec_notify = NULL;
-+	mutex_unlock(&priv->cec_notify_mutex);
-+
- 	drm_connector_cleanup(&priv->connector);
- }
- 
-@@ -1789,9 +1812,6 @@ static void tda998x_destroy(struct device *dev)
- 	cancel_work_sync(&priv->detect_work);
- 
- 	i2c_unregister_device(priv->cec);
--
--	if (priv->cec_notify)
--		cec_notifier_put(priv->cec_notify);
- }
- 
- static int tda998x_create(struct device *dev)
-@@ -1812,6 +1832,7 @@ static int tda998x_create(struct device *dev)
- 	mutex_init(&priv->mutex);	/* protect the page access */
- 	mutex_init(&priv->audio_mutex); /* protect access from audio thread */
- 	mutex_init(&priv->edid_mutex);
-+	mutex_init(&priv->cec_notify_mutex);
- 	INIT_LIST_HEAD(&priv->bridge.list);
- 	init_waitqueue_head(&priv->edid_delay_waitq);
- 	timer_setup(&priv->edid_delay_timer, tda998x_edid_delay_done, 0);
-@@ -1916,12 +1937,6 @@ static int tda998x_create(struct device *dev)
- 		cec_write(priv, REG_CEC_RXSHPDINTENA, CEC_RXSHPDLEV_HPD);
- 	}
- 
--	priv->cec_notify = cec_notifier_get(dev);
--	if (!priv->cec_notify) {
--		ret = -ENOMEM;
--		goto fail;
--	}
--
- 	priv->cec_glue.parent = dev;
- 	priv->cec_glue.data = priv;
- 	priv->cec_glue.init = tda998x_cec_hook_init;
+ 	return sc.nr_reclaimed;
 -- 
-2.23.0.187.g17f5b7556c-goog
+2.20.1
 
