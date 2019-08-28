@@ -2,176 +2,140 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A08C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE414C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A30F0214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566984162;
-	bh=HryJYf5g08YQjfvT68Ede1Nd4RLNa68zczGsa66UktA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BHK1/JCyJ4M0sNhuojhYRgHWCcxUja+gW3Dt6ReTqtFoanYO/+VVnnbnc6tO4VeIw
-	 QS3TbfveFXOApyOxUQ0OQ9fNhXgwWV6S99vy3ezrjJ9WH1C/3oIzGSaWHXZt+GxyyG
-	 OrN/aLhLSBIVOw6xkH1P4NOeIbMQD1ZbLP37ZaBs=
+	by mail.kernel.org (Postfix) with ESMTP id A96E62173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfH1JWl (ORCPT
+        id S1726743AbfH1JXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:22:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48448 "EHLO mail.kernel.org"
+        Wed, 28 Aug 2019 05:23:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:56132 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbfH1JWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:22:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 377B02173E;
-        Wed, 28 Aug 2019 09:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566984159;
-        bh=HryJYf5g08YQjfvT68Ede1Nd4RLNa68zczGsa66UktA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OSYHZeREby00ePW9bDdBeQYwY+gDqs9Oz9kmWf8N8yaOhHQgAI/rdKXmGDWkHBU+G
-         cWIYFHTKVNXD9yY/Awne0jwAO3vRaXnTd1FLmRryisDCYtNQOwl8E/hAq0O5eZ1xOc
-         Ne8rxhaEuFQBbvDuE2TF/opB8l+ndhWG5/eIRmic=
-Date:   Wed, 28 Aug 2019 11:22:37 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hridya Valsaraju <hridya@google.com>
-Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH 1/4] binder: add a mount option to show global stats
-Message-ID: <20190828092237.GA23192@kroah.com>
-References: <20190827204152.114609-1-hridya@google.com>
- <20190827204152.114609-2-hridya@google.com>
+        id S1726310AbfH1JXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 05:23:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC682337;
+        Wed, 28 Aug 2019 02:23:00 -0700 (PDT)
+Received: from [10.162.40.83] (p8cg001049571a15.blr.arm.com [10.162.40.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BCFF3F59C;
+        Wed, 28 Aug 2019 02:22:50 -0700 (PDT)
+Subject: Re: [RFC V2 0/1] mm/debug: Add tests for architecture exported page
+ table helpers
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1565335998-22553-1-git-send-email-anshuman.khandual@arm.com>
+ <20190809101632.GM5482@bombadil.infradead.org>
+ <a5aab7ff-f7fd-9cc1-6e37-e4185eee65ac@arm.com>
+ <20190809135202.GN5482@bombadil.infradead.org>
+ <7a88f6bb-e8c7-3ac7-2f92-1de752a01f33@arm.com>
+ <20190826131308.GA15933@bombadil.infradead.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <504f891e-7346-7328-74b0-7df3acc230e8@arm.com>
+Date:   Wed, 28 Aug 2019 14:52:54 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827204152.114609-2-hridya@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190826131308.GA15933@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 01:41:49PM -0700, Hridya Valsaraju wrote:
-> Currently, all binder state and statistics live in debugfs.
-> We need this information even when debugfs is not mounted.
-> This patch adds the mount option 'stats' to enable a binderfs
-> instance to have binder debug information present in the same.
-> 'stats=global' will enable the global binder statistics. In
-> the future, 'stats=local' will enable binder statistics local
-> to the binderfs instance. The two modes 'global' and 'local'
-> will be mutually exclusive. 'stats=global' option is only available
-> for a binderfs instance mounted in the initial user namespace.
-> An attempt to use the option to mount a binderfs instance in
-> another user namespace will return an EPERM error.
+
+
+On 08/26/2019 06:43 PM, Matthew Wilcox wrote:
+> On Mon, Aug 26, 2019 at 08:07:13AM +0530, Anshuman Khandual wrote:
+>> On 08/09/2019 07:22 PM, Matthew Wilcox wrote:
+>>> On Fri, Aug 09, 2019 at 04:05:07PM +0530, Anshuman Khandual wrote:
+>>>> On 08/09/2019 03:46 PM, Matthew Wilcox wrote:
+>>>>> On Fri, Aug 09, 2019 at 01:03:17PM +0530, Anshuman Khandual wrote:
+>>>>>> Should alloc_gigantic_page() be made available as an interface for general
+>>>>>> use in the kernel. The test module here uses very similar implementation from
+>>>>>> HugeTLB to allocate a PUD aligned memory block. Similar for mm_alloc() which
+>>>>>> needs to be exported through a header.
+>>>>>
+>>>>> Why are you allocating memory at all instead of just using some
+>>>>> known-to-exist PFNs like I suggested?
+>>>>
+>>>> We needed PFN to be PUD aligned for pfn_pud() and PMD aligned for mk_pmd().
+>>>> Now walking the kernel page table for a known symbol like kernel_init()
+>>>
+>>> I didn't say to walk the kernel page table.  I said to call virt_to_pfn()
+>>> for a known symbol like kernel_init().
+>>>
+>>>> as you had suggested earlier we might encounter page table page entries at PMD
+>>>> and PUD which might not be PMD or PUD aligned respectively. It seemed to me
+>>>> that alignment requirement is applicable only for mk_pmd() and pfn_pud()
+>>>> which create large mappings at those levels but that requirement does not
+>>>> exist for page table pages pointing to next level. Is not that correct ? Or
+>>>> I am missing something here ?
+>>>
+>>> Just clear the bottom bits off the PFN until you get a PMD or PUD aligned
+>>> PFN.  It's really not hard.
+>>
+>> As Mark pointed out earlier that might end up being just a synthetic PFN
+>> which might not even exist on a given system.
 > 
-> Signed-off-by: Hridya Valsaraju <hridya@google.com>
-> ---
->  drivers/android/binderfs.c | 47 ++++++++++++++++++++++++++++++++++++--
->  1 file changed, 45 insertions(+), 2 deletions(-)
+> And why would that matter?
 > 
-> diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-> index cc2e71576396..d95d179aec58 100644
-> --- a/drivers/android/binderfs.c
-> +++ b/drivers/android/binderfs.c
-> @@ -51,18 +51,27 @@ static DEFINE_IDA(binderfs_minors);
->  /**
->   * binderfs_mount_opts - mount options for binderfs
->   * @max: maximum number of allocatable binderfs binder devices
-> + * @stats_mode: enable binder stats in binderfs.
->   */
->  struct binderfs_mount_opts {
->  	int max;
-> +	int stats_mode;
->  };
->  
->  enum {
->  	Opt_max,
-> +	Opt_stats_mode,
->  	Opt_err
->  };
->  
-> +enum binderfs_stats_mode {
-> +	STATS_NONE,
-> +	STATS_GLOBAL,
-> +};
-> +
->  static const match_table_t tokens = {
->  	{ Opt_max, "max=%d" },
-> +	{ Opt_stats_mode, "stats=%s" },
->  	{ Opt_err, NULL     }
->  };
->  
-> @@ -290,8 +299,9 @@ static void binderfs_evict_inode(struct inode *inode)
->  static int binderfs_parse_mount_opts(char *data,
->  				     struct binderfs_mount_opts *opts)
->  {
-> -	char *p;
-> +	char *p, *stats;
->  	opts->max = BINDERFS_MAX_MINOR;
-> +	opts->stats_mode = STATS_NONE;
->  
->  	while ((p = strsep(&data, ",")) != NULL) {
->  		substring_t args[MAX_OPT_ARGS];
-> @@ -311,6 +321,24 @@ static int binderfs_parse_mount_opts(char *data,
->  
->  			opts->max = max_devices;
->  			break;
-> +		case Opt_stats_mode:
-> +			stats = match_strdup(&args[0]);
-> +			if (!stats)
-> +				return -ENOMEM;
-> +
-> +			if (strcmp(stats, "global") != 0) {
-> +				kfree(stats);
-> +				return -EINVAL;
-> +			}
-> +
-> +			if (!capable(CAP_SYS_ADMIN)) {
-> +				kfree(stats);
-> +				return -EINVAL;
 
-Can a non-CAP_SYS_ADMIN task even call this function?  Anyway, if it
-can, put the check at the top of the case, and just return early before
-doing any extra work like checking values or allocating memory.
+To start with the test uses struct page with mk_pte() and mk_pmd() while
+pfn gets used in pfn_pud() during pXX_basic_tests(). So we will not be able
+to derive a valid struct page from a synthetic pfn. Also if synthetic pfn is
+going to be used anyway then why derive it from a real kernel symbol like
+kernel_init(). Could not one be just made up with right alignment ?
 
-> +			}
-> +
-> +			opts->stats_mode = STATS_GLOBAL;
-> +			kfree(stats);
-> +			break;
->  		default:
->  			pr_err("Invalid mount options\n");
->  			return -EINVAL;
-> @@ -322,8 +350,21 @@ static int binderfs_parse_mount_opts(char *data,
->  
->  static int binderfs_remount(struct super_block *sb, int *flags, char *data)
->  {
-> +	int prev_stats_mode, ret;
->  	struct binderfs_info *info = sb->s_fs_info;
-> -	return binderfs_parse_mount_opts(data, &info->mount_opts);
-> +
-> +	prev_stats_mode = info->mount_opts.stats_mode;
-> +	ret = binderfs_parse_mount_opts(data, &info->mount_opts);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (prev_stats_mode != info->mount_opts.stats_mode) {
-> +		pr_info("Binderfs stats mode cannot be changed during a remount\n");
+Currently the test allocates 'mm_struct' and other page table pages from real
+memory then why should it use synthetic pfn while creating actual page table
+entries ? Couple of benefits going with synthetic pfn will be..
 
-pr_err()?
+- It simplifies the test a bit removing PUD_SIZE allocation helpers
+- It might enable the test to be run on systems without adequate memory
 
-thanks,
+In the current proposal the allocation happens during boot making it much more
+likely to succeed than not and when it fails, respective tests will be skipped.
 
-greg k-h
+I am just wondering if being able to run complete set of tests on smaller
+systems with less memory weighs lot more in favor of going with synthetic
+pfn instead.
