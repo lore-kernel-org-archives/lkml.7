@@ -2,161 +2,140 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B957DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA25C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7933A233FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8010B22CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="WdNDNj/G"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5vZiC16"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfH1WcP (ORCPT
+        id S1727123AbfH1Wcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 18:32:15 -0400
-Received: from mail-eopbgr730091.outbound.protection.outlook.com ([40.107.73.91]:61944
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726658AbfH1WcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 18:32:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IkFuEtcdt3v2R1PZIDUxY5yc/C7Zw2zcuE6b2Mc+jUUdWQhgEMXTqQjxMRqJCRuhIHyXOggIlNt7Syx4ZNIPiaYOTuAWX58lfmLSPQ0EhD0/Sr1B+mYGxkiy6zXetRkz3JONl8j8A3YBAtd10P+cC5svCe90HeuourCh98KPOYbihVmafK80IA0A3sNmg2KiMpnjCZljL3LHzVsQ/pVtDKTfrFqeGF9rI6QCFe9oCQkt90kdu328ozhGsmESAwHhumfnJ1/6/2KXKUmuUHd+t64w9Iya8eZxWk4P0af2qq/n2dQ8O6uQUu0V4ZXrFaRyMu7wn5g068SpblyDJt3+NQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qFSkZM6cEP8XoenE1QzpfJQ3LUVaHA8UJozByd475eU=;
- b=iIPXgF4M3htkwlSgYqnICmnzhyum9sn7GRx5liyDqVVotDSLyi0kORaN6uma40U3iGvx/K5u8AF9GwEZW/ytD3nrdqGb9oTXbF6lkeJ73ZE6rFekXuoocBEM+//SYcFZzcD1f0026rEwc9UbuafA0WSO5q41J/uCmn/pgXnPjyUw9etHTSsy7uG5LZF96LmND+vhSAm5oC/HuRAX0QrTYElRjkaOjEXvLyu+B+oPGcRBuwIiH27ZZPcQnHEwlZi1i3q6SH1HG/HLa5JHO6qUt4uiJHP9laemb5JELEO+AzIHMJ5UU1Mhy7cFVlz9LZUy3aP/z64aJpBlu+CKU25fZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qFSkZM6cEP8XoenE1QzpfJQ3LUVaHA8UJozByd475eU=;
- b=WdNDNj/Ge5f2SUz6wkzEHpCDIsAd42T6Yzhz87A3bc6+nkwDWAulO4c7Lmuvyc9hKXFeTDHwxs50dRi8YXsLOfbGM309IgmPYnaY4sp//QE/VioUnP6s1O0Rv09JDX0NLqkvTcyHquhpezlgwvh9IYls//OEenB9XEruXQW+eqU=
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
- DM6PR21MB1273.namprd21.prod.outlook.com (20.179.51.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.5; Wed, 28 Aug 2019 22:32:12 +0000
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::28a1:fa7:2ff:108b]) by DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::28a1:fa7:2ff:108b%5]) with mapi id 15.20.2220.000; Wed, 28 Aug 2019
- 22:32:11 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH v2] PCI: hv: Make functions only used locally static in
- pci-hyperv.c
-Thread-Topic: [PATCH v2] PCI: hv: Make functions only used locally static in
- pci-hyperv.c
-Thread-Index: AQHVXe6TS8LsYHPB50mHaE/2a8/d+qcRJEug
-Date:   Wed, 28 Aug 2019 22:32:11 +0000
-Message-ID: <DM6PR21MB133796BB3D4A41278C513332CAA30@DM6PR21MB1337.namprd21.prod.outlook.com>
-References: <20190826154159.9005-1-kw@linux.com>
- <20190828221846.6672-1-kw@linux.com>
-In-Reply-To: <20190828221846.6672-1-kw@linux.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-28T22:32:10.6393175Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c93428da-745d-45eb-822e-1faebec1ec71;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:3:3261:3ef3:246a:9ec3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 42b0fd7f-5a76-4c8f-3b61-08d72c0791e0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1273;
-x-ms-traffictypediagnostic: DM6PR21MB1273:|DM6PR21MB1273:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR21MB1273B9D7CF3527E1D88E7663CAA30@DM6PR21MB1273.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:63;
-x-forefront-prvs: 014304E855
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(39860400002)(396003)(376002)(346002)(13464003)(199004)(189003)(6436002)(22452003)(10090500001)(66946007)(52536014)(64756008)(46003)(7736002)(486006)(25786009)(2906002)(229853002)(33656002)(54906003)(110136005)(4326008)(186003)(6116002)(66556008)(71200400001)(316002)(5660300002)(66476007)(8676002)(81166006)(66446008)(71190400001)(81156014)(76116006)(102836004)(8990500004)(478600001)(7696005)(10290500003)(86362001)(6246003)(9686003)(53546011)(6506007)(8936002)(55016002)(53936002)(14454004)(74316002)(305945005)(446003)(11346002)(476003)(76176011)(14444005)(256004)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1273;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: C4WPBxiyN4OEjnR2yJQJzXsszTi8eQrsH1bwkgnqRRMpPT69DaH2QK6FNXzziinuMFqEnX8MM+Lv1u+1JCuraF1IpW/KgrYP6C0ugNivEwuEYpUQZZFCdgnGd0RXh2uKfi7O1NY1eKGfo9n84kwsA1aRHUjRngAd+sDSZMDnOuSyga3blz2MmrucgeovnChkd8Hp8Bv+cH1mIyBCg4KeyP/I051y3xU4AFIFhEx6T1dbFNsfb0rgp2gIGSn3JeXo9cWEXJAUOU7+g5szrqvWAsUiH5C3JgTUCJTB5A7jw6qDb3dvXCipv4ouYTiv6dFm/Erp276tHzRIJDNcPf+EXVxizWxNlfL1n/iQVevjtJ2runQIuwkKB9h0XJQVgc3tbDiNV7R+d3JW072nYjyqWhWAqvo46yQFTVm6YP2rJ5s=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 28 Aug 2019 18:32:47 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35546 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbfH1Wcr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 18:32:47 -0400
+Received: by mail-oi1-f193.google.com with SMTP id a127so1040243oii.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 15:32:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0HaheuQHQRT9LEcUZx3XnMQChJG5XRPyuRaS389XelY=;
+        b=V5vZiC16J5Bo/EFt40iuUWwnm4/xViVSyGBhX75zFVM/0kdyuv4XCBtyAd9+y0EBjk
+         d5wLd/zPiUSIRR4KUVHRY2vJMnraOR+JkElYh03WeZhN2wtSyAAi7hO66MrzSCteG/1t
+         oRqrQX9yAYfoUsCVBPa4jjk3F5LPzqib+FED2i8aDpUO2j5P4jQ8if+CV+dinRsrqK08
+         YxxqiDBbjCsNsevgElegWEiAPAW5v69Gb4mOX1O8TdQPRHWUpfyCcUx5fdUquy1/+vXW
+         GJuC3+wdydLKcUIhdLsSdxR5brS47cl73bDpTsh7TE5xBs52AdWWr+0fB9EYWGzuvFta
+         Fb7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=0HaheuQHQRT9LEcUZx3XnMQChJG5XRPyuRaS389XelY=;
+        b=KJzPIChT+msXsf6s0FKuhHh73z+DM/VJ+H9H6duuHpyj9l0IC3NDIaEzzy7OBqP5wE
+         G8UcWKw0hExfok2urEph0Ps1r5UQ5E756h7eZsp1tcEKplyhd0WiltwZltuG3BSJ5tDt
+         xZGRI00xz5UkT0db2dqJvN14MiEnWN9fqvgMWO8ytrjlxSr8lJjbjzcdZrH4ScqoAzKS
+         gTieqr5O26YCHijsEuTHGqNiAYLJnCY3mpyX1JEjWXjK5gws+QGYUipNVH6jOEcSLf9m
+         O2liwkEm6PNbkckeZ+1IsJSbA5bpFgOXx9txqiBEoj7wszcH5HKVYlKWH43oiQsAM8wN
+         6G2A==
+X-Gm-Message-State: APjAAAVhG6mcbGjteRqmGazJsEtaoQxVEm/OuiQaSSEOpmMy+2DVYv9A
+        qUP4d4N+aH0dDcw+m01Geg==
+X-Google-Smtp-Source: APXvYqzteF9SCvtsRjWtIzJJEXjRttCnhDRsKCkjbJtd/gHZP3r2rNLG0DB1SCpG3D8s7IpUS6nzKQ==
+X-Received: by 2002:aca:5ad4:: with SMTP id o203mr2830633oib.136.1567031566036;
+        Wed, 28 Aug 2019 15:32:46 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.136.59])
+        by smtp.gmail.com with ESMTPSA id i17sm135007oik.32.2019.08.28.15.32.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 15:32:45 -0700 (PDT)
+Received: from t560 (unknown [45.19.219.178])
+        by serve.minyard.net (Postfix) with ESMTPSA id A5C7E180039;
+        Wed, 28 Aug 2019 22:32:43 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 17:32:38 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Jes Sorensen <jes.sorensen@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net, kernel-team@fb.com
+Subject: Re: [PATCH 0/1] Fix race in ipmi timer cleanup
+Message-ID: <20190828223238.GB3294@t560>
+Reply-To: minyard@acm.org
+References: <20190828203625.32093-1-Jes.Sorensen@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 42b0fd7f-5a76-4c8f-3b61-08d72c0791e0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 22:32:11.8983
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0jEq9CqjfIz2apBfq49ezzy+M5KoYDyJTwGG8Oj37kzGHuoXW/W3PwuVVStH0kuhx5joI73TE+EZOn49Pg94Sg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1273
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828203625.32093-1-Jes.Sorensen@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3J6eXN6dG9mIFdpbGN6
-eW5za2kgPGtzd2lsY3p5bnNraUBnbWFpbC5jb20+IE9uIEJlaGFsZiBPZiBLcnp5c3p0b2YNCj4g
-V2lsY3p5bnNraQ0KPiBTZW50OiBXZWRuZXNkYXksIEF1Z3VzdCAyOCwgMjAxOSAzOjE5IFBNDQo+
-IFRvOiBCam9ybiBIZWxnYWFzIDxoZWxnYWFzQGtlcm5lbC5vcmc+DQo+IENjOiBLWSBTcmluaXZh
-c2FuIDxreXNAbWljcm9zb2Z0LmNvbT47IEhhaXlhbmcgWmhhbmcNCj4gPGhhaXlhbmd6QG1pY3Jv
-c29mdC5jb20+OyBTdGVwaGVuIEhlbW1pbmdlcg0KPiA8c3RoZW1taW5AbWljcm9zb2Z0LmNvbT47
-IFNhc2hhIExldmluIDxzYXNoYWxAa2VybmVsLm9yZz47IExvcmVuem8NCj4gUGllcmFsaXNpIDxs
-b3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tPjsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGlu
-dXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWh5cGVydkB2Z2VyLmtlcm5lbC5v
-cmcNCj4gU3ViamVjdDogW1BBVENIIHYyXSBQQ0k6IGh2OiBNYWtlIGZ1bmN0aW9ucyBvbmx5IHVz
-ZWQgbG9jYWxseSBzdGF0aWMgaW4gcGNpLQ0KPiBoeXBlcnYuYw0KPiANCj4gRnVuY3Rpb25zIGh2
-X3JlYWRfY29uZmlnX2Jsb2NrKCksIGh2X3dyaXRlX2NvbmZpZ19ibG9jaygpDQo+IGFuZCBodl9y
-ZWdpc3Rlcl9ibG9ja19pbnZhbGlkYXRlKCkgYXJlIG5vdCB1c2VkIGFueXdoZXJlDQo+IGVsc2Ug
-YW5kIGFyZSBsb2NhbCB0byBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaS1oeXBlcnYuYywNCj4g
-YW5kIGRvIG5vdCBuZWVkIHRvIGJlIGluIGdsb2JhbCBzY29wZSwgc28gbWFrZSB0aGVzZSBzdGF0
-aWMuDQo+IA0KPiBSZXNvbHZlIGZvbGxvd2luZyBjb21waWxlciB3YXJuaW5nIHRoYXQgY2FuIGJl
-IHNlZW4gd2hlbg0KPiBidWlsZGluZyB3aXRoIHdhcm5pbmdzIGVuYWJsZWQgKFc9MSk6DQo+IA0K
-PiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaS1oeXBlcnYuYzo5MzM6NTogd2FybmluZzogbm8g
-cHJldmlvdXMgcHJvdG90eXBlIGZvcg0KPiDigJhodl9yZWFkX2NvbmZpZ19ibG9ja+KAmSBbLVdt
-aXNzaW5nLXByb3RvdHlwZXNdDQo+ICBpbnQgaHZfcmVhZF9jb25maWdfYmxvY2soc3RydWN0IHBj
-aV9kZXYgKnBkZXYsIHZvaWQgKmJ1ZiwgdW5zaWduZWQgaW50IGxlbiwNCj4gICAgICBeDQo+IGRy
-aXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpLWh5cGVydi5jOjEwMTM6NTogd2FybmluZzogbm8gcHJl
-dmlvdXMgcHJvdG90eXBlDQo+IGZvciDigJhodl93cml0ZV9jb25maWdfYmxvY2vigJkgWy1XbWlz
-c2luZy1wcm90b3R5cGVzXQ0KPiAgaW50IGh2X3dyaXRlX2NvbmZpZ19ibG9jayhzdHJ1Y3QgcGNp
-X2RldiAqcGRldiwgdm9pZCAqYnVmLCB1bnNpZ25lZCBpbnQgbGVuLA0KPiAgICAgIF4NCj4gZHJp
-dmVycy9wY2kvY29udHJvbGxlci9wY2ktaHlwZXJ2LmM6MTA4Mjo1OiB3YXJuaW5nOiBubyBwcmV2
-aW91cyBwcm90b3R5cGUNCj4gZm9yIOKAmGh2X3JlZ2lzdGVyX2Jsb2NrX2ludmFsaWRhdGXigJkg
-Wy1XbWlzc2luZy1wcm90b3R5cGVzXQ0KPiAgaW50IGh2X3JlZ2lzdGVyX2Jsb2NrX2ludmFsaWRh
-dGUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIHZvaWQgKmNvbnRleHQsDQo+ICAgICAgXg0KPiBTaWdu
-ZWQtb2ZmLWJ5OiBLcnp5c3p0b2YgV2lsY3p5bnNraSA8a3dAbGludXguY29tPg0KPiAtLS0NCj4g
-Q2hhbmdlcyBpbiB2MjoNCj4gICBVcGRhdGUgY29tbWl0IG1lc3NhZ2UgdG8gaW5jbHVkZSBjb21w
-aWxlciB3YXJuaW5nLg0KPiANCj4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpLWh5cGVydi5j
-IHwgNiArKystLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRp
-b25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ktaHlw
-ZXJ2LmMgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaS0NCj4gaHlwZXJ2LmMNCj4gaW5kZXgg
-ZjFmMzAwMjE4ZmFiLi5jOTY0MmU0MjljMmQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGNpL2Nv
-bnRyb2xsZXIvcGNpLWh5cGVydi5jDQo+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNp
-LWh5cGVydi5jDQo+IEBAIC05MzAsNyArOTMwLDcgQEAgc3RhdGljIHZvaWQgaHZfcGNpX3JlYWRf
-Y29uZmlnX2NvbXBsKHZvaWQgKmNvbnRleHQsDQo+IHN0cnVjdCBwY2lfcmVzcG9uc2UgKnJlc3As
-DQo+ICAgKg0KPiAgICogUmV0dXJuOiAwIG9uIHN1Y2Nlc3MsIC1lcnJubyBvbiBmYWlsdXJlDQo+
-ICAgKi8NCj4gLWludCBodl9yZWFkX2NvbmZpZ19ibG9jayhzdHJ1Y3QgcGNpX2RldiAqcGRldiwg
-dm9pZCAqYnVmLCB1bnNpZ25lZCBpbnQgbGVuLA0KPiArc3RhdGljIGludCBodl9yZWFkX2NvbmZp
-Z19ibG9jayhzdHJ1Y3QgcGNpX2RldiAqcGRldiwgdm9pZCAqYnVmLCB1bnNpZ25lZCBpbnQgbGVu
-LA0KPiAgCQkJIHVuc2lnbmVkIGludCBibG9ja19pZCwgdW5zaWduZWQgaW50ICpieXRlc19yZXR1
-cm5lZCkNCg0KVGhlIHNlY29uZCBsaW5lIHNob3VsZCBiZSBhbGlnbmVkIG5leHQgdG8gdGhlICIo
-IiBvbiB0aGUgZmlyc3QgbGluZS4NCkFsc28gdGhlIGZpcnN0IGxpbmUgaXMgbm93IG92ZXIgODAg
-Y2hhcnMuDQoNClRoYW5rcywNCi0gSGFpeWFuZw0KDQo=
+On Wed, Aug 28, 2019 at 04:36:24PM -0400, Jes Sorensen wrote:
+> From: Jes Sorensen <jsorensen@fb.com>
+> 
+> I came across this in 4.16, but I believe the bug is still present
+> in current 5.x, even if it is less likely to trigger.
+> 
+> Basially stop_timer_and_thread() only calls del_timer_sync() if
+> timer_running == true. However smi_mod_timer enables the timer before
+> setting timer_running = true.
+
+All the modifications/checks for timer_running should be done under
+the si_lock.  It looks like a lock is missing in shutdown_smi(),
+probably starting before setting interrupt_disabled to true and
+after stop_timer_and_thread.  I think that is the right fix for
+this problem.
+
+-corey
+
+> 
+> I was able to reproduce this in 4.16 running the following on a host
+> 
+>    while :; do rmmod ipmi_si ; modprobe ipmi_si; done
+> 
+> while rebooting the BMC on it in parallel.
+> 
+> 5.2 moves the error handling around and does it more centralized, but
+> relying on timer_running still seems dubious to me.
+> 
+> static void smi_mod_timer(struct smi_info *smi_info, unsigned long new_val)
+> {
+>         if (!smi_info->timer_can_start)
+>                 return;
+>         smi_info->last_timeout_jiffies = jiffies;
+>         mod_timer(&smi_info->si_timer, new_val);
+>         smi_info->timer_running = true;
+> }
+> 
+> static inline void stop_timer_and_thread(struct smi_info *smi_info)
+> {
+>         if (smi_info->thread != NULL) {
+>                 kthread_stop(smi_info->thread);
+>                 smi_info->thread = NULL;
+>         }
+> 
+>         smi_info->timer_can_start = false;
+>         if (smi_info->timer_running)
+>                 del_timer_sync(&smi_info->si_timer);
+> }
+> 
+> Cheers,
+> Jes
+> 
+> Jes Sorensen (1):
+>   ipmi_si_intf: Fix race in timer shutdown handling
+> 
+>  drivers/char/ipmi/ipmi_si_intf.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> -- 
+> 2.21.0
+> 
