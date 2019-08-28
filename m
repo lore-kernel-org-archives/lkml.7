@@ -2,157 +2,107 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C020C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D24ECC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33FCB2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:28:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="URl23LOl"
+	by mail.kernel.org (Postfix) with ESMTP id AD77E22CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:29:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfH1P2M (ORCPT
+        id S1726830AbfH1P3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:28:12 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53750 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfH1P2L (ORCPT
+        Wed, 28 Aug 2019 11:29:08 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43730 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfH1P3I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:28:11 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7SFS1He009861;
-        Wed, 28 Aug 2019 10:28:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1567006082;
-        bh=uWf4xw0Csl6sothe8w8KpW37on/sM8Kd9UswtPm39m4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=URl23LOlJSBkM/t3SANIA3dY32oM8gKAjVl9tgbPhafuNed40j8WA5mmJZ2FiHlQl
-         p5P5Yv2xl45uy/qdyVQFf9z6xkCGLue4nrjMwwHjuMsDuent1kBJlAo1hzMHJwZORJ
-         xFLDncrSLxzMOTUIoBlA+o+AChlTx2+6949CqUOA=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7SFS1Ow042133
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 28 Aug 2019 10:28:01 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 28
- Aug 2019 10:28:01 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 28 Aug 2019 10:28:01 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7SFS1aB107270;
-        Wed, 28 Aug 2019 10:28:01 -0500
-Subject: Re: [PATCH v3 1/5] leds: lm3532: Fix brightness control for i2c mode
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>
-CC:     <sre@kernel.org>, <nekit1000@gmail.com>, <mpartap@gmx.net>,
-        <merlijn@wizzup.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190820195307.27590-1-dmurphy@ti.com>
- <20190826215822.GY52127@atomide.com> <20190826221413.GA19124@amd>
- <20190826224437.GZ52127@atomide.com> <20190827121818.GB19927@amd>
- <0eab6f72-ddb7-3da7-e90e-888374531f86@ti.com>
- <69925382-d8f4-4916-f121-0184a4219354@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <84511f1e-5a04-5348-a2b4-1dc2b534a1cb@ti.com>
-Date:   Wed, 28 Aug 2019 10:28:01 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 11:29:08 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m2so75534qkd.10
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 08:29:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aAe1wjp9JN1ttLqqfLIB3tUk3jgO2VwykepSQ75JmU4=;
+        b=LKnsPJSaTlG4mZKZYKw5NaEql/fynIUSfIvqm7to6OjPXfDZpLJEiUE8Aiook8ryFf
+         ziGNiaq3pqodL2Xm5Z+L6aVUMCR6G5D6SYgFeajUXp5tTwFJELgmxTLIPi+gBnMSlfla
+         rEWk6+GJDDSMwnYiCOVJ/cnRZCwU1Yyg10WX7WK3rknEpE38b8WsBBq+fed55AFNotQu
+         kkvOlX1Vs3MelfyHUqXPMscXtaaTRabmvoRw1hFQtprSW4UfkdJGJqYRYR4mUsakUay7
+         O8pNyzTrLrXYz3ZVfHcTHUa7oRtfw9b601UVr/1WGNH/vNo8jKVHb4jdZbN4iAcYSuPa
+         9SeA==
+X-Gm-Message-State: APjAAAVQaWuNsUkJ1FYq7C9UGXkJa8K21lqNuMRTy9i7mNoKo7IuIItA
+        wAQqS6h5ZzRqRxaGnZA/B390ZEJKmEp9a1ItEy0=
+X-Google-Smtp-Source: APXvYqyBc7cLJzmMCd2Y39mzszTMAggeXra6JZI2DfOgfk96SVOch19MaiL98x8Ri9d7VL39d4izHLYG1D5eaQ6EYAs=
+X-Received: by 2002:a37:bd44:: with SMTP id n65mr4552576qkf.286.1567006147108;
+ Wed, 28 Aug 2019 08:29:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <69925382-d8f4-4916-f121-0184a4219354@gmail.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CAK8P3a3G=GCpLtNztuoLR4BuugAB=zpa_Jrz5BSft6Yj-nok1g@mail.gmail.com>
+ <20190827145102.p7lmkpytf3mngxbj@treble> <CAHFW8PRsmmCR6TWoXpQ9gyTA7azX9YOerPErCMggcQX-=fAqng@mail.gmail.com>
+ <CAK8P3a2TeaMc_tWzzjuqO-eQjZwJdpbR1yH8yzSQbbVKdWCwSg@mail.gmail.com>
+ <20190827192255.wbyn732llzckmqmq@treble> <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
+ <CAKwvOdnD1mEd-G9sWBtnzfe9oGTeZYws6zNJA7opS69DN08jPg@mail.gmail.com>
+ <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
+ <CAK8P3a0bY9QfamCveE3P4H+Nrs1e6CTqWVgiY+MCd9hJmgMQZg@mail.gmail.com> <20190828152226.r6pl64ij5kol6d4p@treble>
+In-Reply-To: <20190828152226.r6pl64ij5kol6d4p@treble>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 28 Aug 2019 17:28:50 +0200
+Message-ID: <CAK8P3a2ATzqRSqVeeKNswLU74+bjvwK_GmG0=jbMymVaSp2ysw@mail.gmail.com>
+Subject: Re: objtool warning "uses BP as a scratch register" with clang-9
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
-
-On 8/27/19 4:14 PM, Jacek Anaszewski wrote:
-> Dan,
+On Wed, Aug 28, 2019 at 5:22 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> On Wed, Aug 28, 2019 at 05:13:59PM +0200, Arnd Bergmann wrote:
+> > On Wed, Aug 28, 2019 at 11:00 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Tue, Aug 27, 2019 at 11:22 PM 'Nick Desaulniers' via Clang Built Linux <clang-built-linux@googlegroups.com> wrote:
+> > I figured this one out as well:
+> >
+> > > http://paste.ubuntu.com/p/XjdDsypRxX/
+> > > 0x5BA1B7A1:arch/x86/ia32/ia32_signal.o: warning: objtool:
+> > > ia32_setup_rt_frame()+0x238: call to memset() with UACCESS enabled
+> > > 0x5BA1B7A1:arch/x86/kernel/signal.o: warning: objtool:
+> > > __setup_rt_frame()+0x5b8: call to memset() with UACCESS enabled
+> >
+> > When CONFIG_KASAN is set, clang decides to use memset() to set
+> > the first two struct members in this function:
+> >
+> >  static inline void sas_ss_reset(struct task_struct *p)
+> >  {
+> >         p->sas_ss_sp = 0;
+> >         p->sas_ss_size = 0;
+> >         p->sas_ss_flags = SS_DISABLE;
+> >  }
+> >
+> > and that is called from save_altstack_ex(). Adding a barrier() after
+> > the sas_ss_sp() works around the issue, but is certainly not the
+> > best solution. Any other ideas?
 >
-> On 8/27/19 2:44 PM, Dan Murphy wrote:
->> Tony
->>
->> On 8/27/19 7:18 AM, Pavel Machek wrote:
->>> On Mon 2019-08-26 15:44:37, Tony Lindgren wrote:
->>>> * Pavel Machek <pavel@ucw.cz> [190826 22:14]:
->>>>> On Mon 2019-08-26 14:58:22, Tony Lindgren wrote:
->>>>>> Hi,
->>>>>>
->>>>>> * Dan Murphy <dmurphy@ti.com> [190820 19:53]:
->>>>>>> Fix the brightness control for I2C mode.  Instead of
->>>>>>> changing the full scale current register update the ALS target
->>>>>>> register for the appropriate banks.
->>>>>>>
->>>>>>> In addition clean up some code errors and random misspellings found
->>>>>>> during coding.
->>>>>>>
->>>>>>> Tested on Droid4 as well as LM3532 EVM connected to a BeagleBoneBlack
->>>>>>>
->>>>>>> Fixes: e37a7f8d77e1 ("leds: lm3532: Introduce the lm3532 LED driver")
->>>>>>> Reported-by: Pavel Machek <pavel@ucw.cz>
->>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>>>>> ---
->>>>>>>
->>>>>>> v3 - Removed register define updates -
->>>>>>> https://lore.kernel.org/patchwork/patch/1114542/
->>>>>> Looks like starting with this patch in Linux next the LCD on droid4
->>>>>> is so dim it's unreadable even with brightness set to 255. Setting
->>>>>> brightness to 0 does blank it completely though.
->>>>>>
->>>>>> Did something maybe break with the various patch revisions or are
->>>>>> we now missing some dts patch?
->>>>> Maybe missing dts patch. We should provide maximum current the LED can
->>>>> handle...
->>>> Or i2c control is somehow broken and only als control now works?
->> With only setting CONFIG_LEDS_LM3532=m to the next branch I get full
->> brightness with 255.
->>
->> I also see half brightness at 128 with the ramp down working.
->>
->> I am not able to reproduce this issue on my device.
->>
->>> Well, max current led is obviously missing. Plus code does not check
->>> the return from reading led-max-microamp.
->> led-max-microamp is optional so there is no need to check the return.
-> It's also ugly to not check it when you have it assigned.
-> We'll soon receive complaints from static checkers about pointless
-> assignment.
->
-> I'd distinguish between cases when parsing failed,
-> and when property has not been provided.
->
-> if (fwnode_property_present(child, "led-max-microamp")) {
-> 	if (fwnode_property_read_u32(child, "led-max-microamp",
-> 				&led->full_scale_current);
-> 		dev_err(&priv->client->dev,
->                           "Failed to parse led-max-microamp property\n")
+> Wow, is the compiler allowed to insert memset calls like that?  Seems a
+> bit overbearing, at least in a kernel context.  I don't recall GCC ever
+> doing it.
 
-I am OK with doing this but I think the else case logging is extra.
+Yes, it's free to assume that any standard library function behaves
+as defined, so it can and will turn struct assignments into memcpy
+or back, or replace string operations with others depending on what
+seems better for optimization.
 
-Again the property is optional and if the user decides not to populate 
-it then there should not
+clang is more aggressive than gcc here, and this has caused some
+other problems in the past, but it's usually harmless.
 
-be a log of that it is missing.
+In theory, we could pass -ffreestanding to tell the compiler
+not to make assumptions about standard library function behavior,
+but that turns off all kinds of useful optimizations. The problem
+is really that the kernel is neither exactly hosted nor freestanding.
 
-Dan
-
-> } else {
-> 	dev_info(&priv->client->dev,
-> 		 led-max-microamp property is missing\n")
-> }
->
->> full_scale_current should be 0 if not populated and in the init only if
->> this variable is set does
->>
->> the code program the register otherwise it is default of 20.2 mA.
+       Arnd
