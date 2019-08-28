@@ -2,107 +2,127 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31843C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91363C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091F8233A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:58:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZMiIyKOR"
+	by mail.kernel.org (Postfix) with ESMTP id 7119C233A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfH1N6K (ORCPT
+        id S1726713AbfH1N6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:58:10 -0400
-Received: from mail-pf1-f175.google.com ([209.85.210.175]:40448 "EHLO
-        mail-pf1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbfH1N6G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:58:06 -0400
-Received: by mail-pf1-f175.google.com with SMTP id w16so1788689pfn.7;
-        Wed, 28 Aug 2019 06:58:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=l000k2htpnRvRkCB+Wmu6cmx2Z5HU+VewOeFpWYlWGA=;
-        b=ZMiIyKORcwyRCkC5rskiys0McHKqTG6xXs5uYLEbUDcCyb5Bz7U4KKNUwAL6GOweM9
-         eSHEYDEhv7pZfxXSjdxLsL36zJOPM2AymiXilqkIsWBkcbw1du5j/rhKFGyWQkJhYU3i
-         EiTW2/ja8zlr6D8LZVY0Brai/UhjujxLHv1g1FntCzVK74bjMztly9eoj1le96LE+vzx
-         sra6Mv/HPiMD+0c9i/2NoTl4kQCF0Hd2NPuy5X4J+YYwz5IO44ExdIxUUjITRCNYzmOz
-         41jGQmRaaRHyZt+Q8W8fSHqY1UEDY9Ddu7nHxwrn/23q1fvj+mKOJ5eQI6hSx19gZ735
-         En5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=l000k2htpnRvRkCB+Wmu6cmx2Z5HU+VewOeFpWYlWGA=;
-        b=hSjcGEPJeIhrbBgwBBNDklmZ9ysiFjleCSXJ1T7ZJYYQYe34yhKXagnauKLGVbMpgM
-         G3xk4NlzwjTwSOCaOXUUmGlSzCLpLTHe4+BI+A5NksXQF+eGxsrwtqlZ8ExuIqEqOtTN
-         S3EBlm3VE2NwplNgkHsqbNlvZ/VHuprmWaIJ+miSThfp5dF7uI/Gq0mV0A315YhuGi3o
-         qvtxv6Xoo1NnOgtFagndcLP65pcuHHsBox9pBa0R5dNXLlpHz4XDKz5ckC7Rp69MgR4V
-         mrqbrzG9NVhu7JZIVmsfN4fHSZcKWkwYLdpa16Ij7yFxr4pMRH3tsIGMU1pf0i7dmorO
-         No5Q==
-X-Gm-Message-State: APjAAAVvX96hvEPGOcUJ1av4Qsd5BT9cZqyf6DjUvj2YTR6LnY+71kG5
-        FRlwdu4VqABT/iPCwbcbkNWgynw/
-X-Google-Smtp-Source: APXvYqxS9p+J/DoFSHmH4vAstAnmsgeKT+r0UC+FdPrYN4o/q8gCAcnIKyY4jboh3PuRvFPYSyiGyg==
-X-Received: by 2002:a17:90a:a46:: with SMTP id o64mr4389679pjo.90.1567000685593;
-        Wed, 28 Aug 2019 06:58:05 -0700 (PDT)
-Received: from Gentoo ([103.231.91.67])
-        by smtp.gmail.com with ESMTPSA id e19sm2943723pfh.114.2019.08.28.06.58.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 06:58:04 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 19:27:53 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     StableKernel <stable@vger.kernel.org>
-Cc:     LinuxKernel <linux-kernel@vger.kernel.org>
-Subject: Latest kernel version no NOT reflecting on kernel.org
-Message-ID: <20190828135750.GA5841@Gentoo>
+        Wed, 28 Aug 2019 09:58:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37206 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726506AbfH1N6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:58:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7ED8EAC7D;
+        Wed, 28 Aug 2019 13:58:15 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 15:58:22 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     lingyxu <lingyan.xu@nokia-sbell.com>
+Cc:     Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+        WladislavWiebe <wladislav.wiebe@nokia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] i801_smbus: clear SMBALERT status bit and disable
+ SMBALERT interrupt
+Message-ID: <20190828155822.7cb13a7b@endymion>
+In-Reply-To: <1565577634-18264-1-git-send-email-lingyan.xu@nokia-sbell.com>
+References: <1565577634-18264-1-git-send-email-lingyan.xu@nokia-sbell.com>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Lingyan,
 
---PEIAKu/WMn1b1Hv9
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, 12 Aug 2019 10:40:34 +0800, lingyxu wrote:
+> From: Lingyan Xu <lingyan.xu@nokia-sbell.com>
+> 
+> In current i801 driver, SMBALERT interrupt is allowed
+> (Slave Command Register bit2 is 0).
+> But these is no handler for SMBALERT interrupt in i801_isr,
+> if there is SMBALERT interrupt asserted and deasserted,
+> i801 will have an irq flood for the related status bit is setted.
+> 
+> So SMBALERT interrupt handler is needed, and also, SMBALERT interrupt
+> will be generated from time to time if slave chip have some fault.
+> So disable SMBALERT interrupt is also needed.
+> 
+> About the solution,
+> please see http://www.farnell.com/datasheets/1581967.pdf
+> Page632 P640 for more.
+> 
+> Signed-off-by: Lingyan Xu <lingyan.xu@nokia-sbell.com>
+> ---
+>  drivers/i2c/busses/i2c-i801.c |    7 ++++++-
+>  1 files changed, 6 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+> index f295693..033bafe 100644
+> --- a/drivers/i2c/busses/i2c-i801.c
+> +++ b/drivers/i2c/busses/i2c-i801.c
+> @@ -661,9 +661,11 @@ static irqreturn_t i801_isr(int irq, void *dev_id)
+>  	 * Clear irq sources and report transaction result.
+>  	 * ->status must be cleared before the next transaction is started.
+>  	 */
+> +
+> +	outb_p(status, SMBHSTSTS(priv));
+> +
+>  	status &= SMBHSTSTS_INTR | STATUS_ERROR_FLAGS;
+>  	if (status) {
+> -		outb_p(status, SMBHSTSTS(priv));
+>  		priv->status = status;
+>  		wake_up(&priv->waitq);
+>  	}
 
-Am I the only one, who is not seeing it getting reflected on
-kernel.org???
+Looks scary. Writing the whole value of SMBHSTSTS back to itself
+without selecting which bits you write is dangerous. Specifically,
+writing back SMBHSTSTS_BYTE_DONE, SMBHSTSTS_INUSE_STS and
+SMBHSTSTS_HOST_BUSY could have unexpected consequences. I would feel
+much better if you would just explicitly add SMBHSTSTS_SMBALERT_STS to
+the list.
 
-Well, I have tried it 2 different browsers.....cleared caches several
-times(heck) .....3 different devices .....and importantly 3 different
-networks.
+> @@ -1810,6 +1812,9 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  	/* Default timeout in interrupt mode: 200 ms */
+>  	priv->adapter.timeout = HZ / 5;
+>  
+> +	/* Disable SMBALERT interrupt */
+> +	outb_p(inb_p(SMBSLVCMD(priv)) | BIT(2), SMBSLVCMD(priv));
 
-Wondering!=20
+Please give SMBSLVCMD's BIT(2) a name and define it after
+SMBSLVCMD_HST_NTFY_INTREN.
 
-Thanks,
-Bhaskar
+Also it is mandatory to restore the value of SMBSLVCMD before returning
+the control back to the BIOS. Currently this is only being done when
+the FEATURE_HOST_NOTIFY bit is set because that's the only case where
+we change the value of that register, but if we change it
+unconditionally then it must be saved and restored unconditionally too.
 
---PEIAKu/WMn1b1Hv9
-Content-Type: application/pgp-signature; name="signature.asc"
+> +
+>  	if (dev->irq == IRQ_NOTCONNECTED)
+>  		priv->features &= ~FEATURE_IRQ;
+>  
 
------BEGIN PGP SIGNATURE-----
+That being said, if you see this interrupt flood, it means that at
+least one device on your SMBus would benefit from SMBus Alert being
+supported. The infrastructure is already there as we added support in a
+few I2C bus drivers already. So maybe instead of silencing the
+interrupts, we could add proper SMBus Alert support to the i2c-i801
+driver?
 
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl1miEMACgkQsjqdtxFL
-KRWu0ggArttx+uKUPpICaT94nUAUQAgW1BZ8wFRqJWZTXg+108YXj+fbxEsw935h
-CvFe3T75EMTeLEOoH1G0LbLZcUsIybWrBKM9Cd65KjDs0OPdkdlDHjcmQMRR1fAF
-dETtrs0jm3iJvFFGJjef+cC//gvk/x8GmbTV+JiMQga1ei6s0Q9UOKeVjXLxY6Qw
-tDL9lBcu8YeWkQeiyq60AOh7tX5wPJoTROwsi9rpReZSQVtxiK+nmJX5Pa/dotng
-0rdAs7cKL2T2whzUBw68/y1dkIRwLSZV9lhkYe9YYb+aESC/KDUVW9eeYP+5/klK
-A24CoquvyZAVS91PkYQNYpwBY7GhqA==
-=BzVG
------END PGP SIGNATURE-----
+Did you figure out which device is raising the SMBus Alert and why?
 
---PEIAKu/WMn1b1Hv9--
+-- 
+Jean Delvare
+SUSE L3 Support
