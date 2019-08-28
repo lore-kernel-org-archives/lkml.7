@@ -2,107 +2,105 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B48C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B220C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386D02070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B86222CED
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:15:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bNPPEbcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfH1NPI (ORCPT
+        id S1726857AbfH1NPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:15:08 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:60812 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfH1NPH (ORCPT
+        Wed, 28 Aug 2019 09:15:16 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:16239 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfH1NPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:15:07 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1i2xmp-0008Gg-ES; Wed, 28 Aug 2019 09:14:55 -0400
-Message-ID: <a35dd83b9ecadf4e136b588d7696a23e36ff2e9a.camel@surriel.com>
-Subject: Re: [PATCH 13/15] sched,fair: propagate sum_exec_runtime up the
- hierarchy
-From:   Rik van Riel <riel@surriel.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     kernel-team@fb.com, pjt@google.com, peterz@infradead.org,
-        mingo@redhat.com, morten.rasmussen@arm.com, tglx@linutronix.de,
-        mgorman@techsingularity.net, vincent.guittot@linaro.org
-Date:   Wed, 28 Aug 2019 09:14:54 -0400
-In-Reply-To: <f940abf6-3020-014c-74d7-d9be334e201c@arm.com>
-References: <20190822021740.15554-1-riel@surriel.com>
-         <20190822021740.15554-14-riel@surriel.com>
-         <f940abf6-3020-014c-74d7-d9be334e201c@arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-YVLA9/K5jNpds7mVVwG8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 28 Aug 2019 09:15:15 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d667e650000>; Wed, 28 Aug 2019 06:15:17 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 28 Aug 2019 06:15:15 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 28 Aug 2019 06:15:15 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 28 Aug
+ 2019 13:15:14 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 28 Aug 2019 13:15:14 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d667e5e0000>; Wed, 28 Aug 2019 06:15:14 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
+CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
+        <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V2 0/6] PCI: tegra: Enable PCIe C5 controller of Tegra194 in p2972-0000 platform
+Date:   Wed, 28 Aug 2019 18:44:59 +0530
+Message-ID: <20190828131505.28475-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566998117; bh=6gE8JO5jHpwhTw643om2gL+eYxt+1gqjrcc+vk+Bz10=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=bNPPEbcr+r+cMKTDSkKzK3gEmx4poL2ucpuWpuvcSkyCpliAvdeHrpF7CZCU93/Gk
+         uNNAyIh++t4R+FhG6gtUGfEdQebatulERdWJgs/gXLzVas5YZ+WKyPB7ic0qalJf0r
+         Ajk1uHov8kWYYmTZTXO1eKBtuXqRu7bGT6GxLF6v4125OboMyt8wbRCsaF8MhDdN8A
+         yYEABiCfN+R7vPXJCJ4tHtKDo/sxtfeXyMR5xuutDSM7cnd5ber/qpl0OermQfS14V
+         JA7wX9USzmLh2pcWZZC3zTLHPjd6rx4SF3kLV0Vd1LSWJzLHwRDCBjhvaTte6km5V7
+         gbe/mLMYwCnLw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch series enables Tegra194's C5 controller which owns x16 slot in
+p2972-0000 platform. C5 controller's PERST# and CLKREQ# are not configured as
+output and bi-directional signals by default and hence they need to be
+configured explicitly. Also, x16 slot's 3.3V and 12V supplies are controlled
+through GPIOs and hence they need to be enabled through regulator framework.
+This patch series adds required infrastructural support to address both the
+aforementioned requirements.
+Testing done on p2972-0000 platform
+- Able to enumerate devices connected to x16 slot (owned by C5 controller)
+- Enumerated device's functionality verified
+- Suspend-Resume sequence is verified with device connected to x16 slot
 
---=-YVLA9/K5jNpds7mVVwG8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+V2:
+* Changed the order of patches in the series for easy merging
+* Addressed review comments from Thierry Reding and Andrew Murray
 
-On Wed, 2019-08-28 at 09:51 +0200, Dietmar Eggemann wrote:
-> On 22/08/2019 04:17, Rik van Riel wrote:
-> > Now that enqueue_task_fair and dequeue_task_fair no longer iterate
-> > up
-> > the hierarchy all the time, a method to lazily propagate
-> > sum_exec_runtime
-> > up the hierarchy is necessary.
-> >=20
-> > Once a tick, propagate the newly accumulated exec_runtime up the
-> > hierarchy,
-> > and feed it into CFS bandwidth control.
-> >=20
-> > Remove the pointless call to account_cfs_rq_runtime from
-> > update_curr,
-> > which is always called with a root cfs_rq.
->=20
-> But what about the call to account_cfs_rq_runtime() in
-> set_curr_task_fair()? Here you always call it with the root cfs_rq.
-> Shouldn't this be called also in a loop over all se's until !se-
-> >parent
-> (like in propagate_exec_runtime() further below).
+Vidya Sagar (6):
+  dt-bindings: PCI: tegra: Add sideband pins configuration entries
+  dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
+  PCI: tegra: Add support to configure sideband pins
+  PCI: tegra: Add support to enable slot regulators
+  arm64: tegra: Add configuration for PCIe C5 sideband signals
+  arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
 
-I believe that call should be only on the cgroup
-cfs_rq, with account_cfs_rq_runtime figuring out
-whether more runtime needs to be obtained from
-further up in the hierarchy.
+ .../bindings/pci/nvidia,tegra194-pcie.txt     | 16 ++++
+ .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 24 +++++
+ .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  4 +-
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      | 38 +++++++-
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 91 ++++++++++++++++++-
+ 5 files changed, 169 insertions(+), 4 deletions(-)
 
-By default we should probably work under the assumption
-that account_cfs_rq_runtime() will succeed at the current
-level, and no gymnastics are required to obtain CPU time.
-
---=20
-All Rights Reversed.
-
---=-YVLA9/K5jNpds7mVVwG8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl1mfk8ACgkQznnekoTE
-3oMqrQf6A9CIcHBD91ysYlu6dqDA472OlW0Ml7c5n9B2nC6WM/+J7740PEMEZ2xv
-qnISoltSnfLcveWrykUn7UBsn4QZX+sCLDA4TSK/gkOsmhdyEvW7cleM4muKE5Ff
-t+6zoTRTs2KoLPtoMUi3q4Ew0I2521pwZ0HfUoFDEm5b1fE/LHil7oiOZGv5UVV+
-37b+SPUs4kZ1lbm9p28LQDd56Dck/TgFo3OlZA5O4IWP32U1MMl+qMls3YQSNbKk
-n1jgT7F8ftWjyEZhU4dH919suovk7qWUXB15Jdg/wFR/gUG+jbXqwmluIpF+/Zzq
-Wwtr2rWLnZHnbMQJVZIA/+9zq5g8Bg==
-=yfel
------END PGP SIGNATURE-----
-
---=-YVLA9/K5jNpds7mVVwG8--
+-- 
+2.17.1
 
