@@ -2,147 +2,146 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E00C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC41C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03FD92189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7101922DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:52:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gE6YlKq+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfH1Iua (ORCPT
+        id S1726463AbfH1IwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:50:30 -0400
-Received: from mga11.intel.com ([192.55.52.93]:20784 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfH1Iu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:50:29 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 01:50:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
-   d="scan'208";a="171472029"
-Received: from chenyu-office.sh.intel.com ([10.239.158.163])
-  by orsmga007.jf.intel.com with ESMTP; 28 Aug 2019 01:50:27 -0700
-Date:   Wed, 28 Aug 2019 17:00:44 +0800
-From:   Yu Chen <yu.c.chen@intel.com>
-To:     Greg KH <greg@kroah.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable-commits@vger.kernel.org
-Subject: Re: Patch "x86/pm: Introduce quirk framework to save/restore extra
- MSR registers around suspend/resume" has been added to the 4.4-stable tree
-Message-ID: <20190828090043.GA7589@chenyu-office.sh.intel.com>
-References: <20190828041240.12F5221883@mail.kernel.org>
- <20190828084351.GC29927@kroah.com>
+        Wed, 28 Aug 2019 04:52:07 -0400
+Received: from mail-eopbgr150078.outbound.protection.outlook.com ([40.107.15.78]:37609
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726292AbfH1IwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:52:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OB0GCeD1Uvzhg/3tN9DSMVfYqFWqi1H/+cptXpTN4f4+rKenBg9TW+zbxs5NB+LL+5RlQjMINlKUZkrrnMvecf2YtjIV/gNonOavbHTDb5DHmimcTeDrWTFyq62dzQ70LZOslrGSbGXebc/e8r9WYB4D0yjvdweA2xknamPaM9aLo6lKtyZc7/DHQOK+sObXH6Tm/CNY8/jEG3Q7g8zqv1ZPDB9fyw0CBQ+lnvDIv9Q4LV5/H/TS53+/l/bge/5B6mONq9sq4SX9un6ziw1L6VWkD/rWssP9WLL9Mr4tjOnBJtOtegYyS2W1OqwTdyFYVVqD8qNRaKHHHZS2hSaxLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qB9oOmXUgWMAC3dNFwGEjZ+tjSkufJSAOXLzyrJhSEk=;
+ b=fen03mkx3LW1rnWw2+V1DrxqY3/efg3uEBzYeQSdnrUhrTdJjofTxuA75BMBnhAjAsvdsgZ6DKZFpcyDKTCGxxR36tfs95KDR2YBhNwoRfEp2RAHmfZbiU2fl1z8xnIVJopHV87ZfIVrZlwPk2ROpJb9AeOMC/E+XF3ymQdbn+/mhcs1kYFTfsemes/mcMHVVdfb+lRIfOwuVqgB4lvNWJEnz2aGdb1SvVYmg2nuuBIwKdPrJVuioVAi4kx+qj/s23sc1xoAXrB2grpv8OE7NMjFy6YEyy0eG5ZBnxS2M/HS8eqTNcnUEttrA7gRC2/zMfV94n+mTP/ziux4qmbvvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qB9oOmXUgWMAC3dNFwGEjZ+tjSkufJSAOXLzyrJhSEk=;
+ b=gE6YlKq+9qZlROZS54o06lSIWnG2Z+7H4N7Y/5km6Qf4NhGUEqv01mJFOxhnzuSIh/0byZ3zVq/m1PO6r9Hj48WGOMsKqgecwADMorvCqXvAxsONHPJ674rLNfRmKfc53NoKSyoIdnG8s0TyF4R11zhzOKPJX0yy6q+A6GJQ1z0=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3914.eurprd04.prod.outlook.com (52.134.71.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Wed, 28 Aug 2019 08:51:51 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8958:299c:bc54:2a38]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8958:299c:bc54:2a38%7]) with mapi id 15.20.2199.021; Wed, 28 Aug 2019
+ 08:51:51 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+CC:     Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: RE: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Thread-Topic: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Thread-Index: AQHVRn7U0xGc5nAWcEuPNmwDSS0IiacQaSEAgAAE+eA=
+Date:   Wed, 28 Aug 2019 08:51:51 +0000
+Message-ID: <DB3PR0402MB3916D1492F43D77E3679E3B1F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190730022126.17883-1-Anson.Huang@nxp.com>
+         <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+         <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+         <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
+In-Reply-To: <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 52b736b2-607a-4513-814e-08d72b94f80e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3914;
+x-ms-traffictypediagnostic: DB3PR0402MB3914:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3914FF15CD3C27248E4F50C2F5A30@DB3PR0402MB3914.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 014304E855
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(376002)(346002)(39860400002)(366004)(189003)(199004)(4326008)(6246003)(25786009)(6436002)(7416002)(66446008)(66476007)(9686003)(66066001)(305945005)(52536014)(76116006)(229853002)(64756008)(66556008)(66946007)(256004)(3846002)(102836004)(44832011)(186003)(55016002)(14444005)(76176011)(6506007)(446003)(74316002)(53546011)(5660300002)(99286004)(26005)(486006)(476003)(7736002)(7696005)(11346002)(8936002)(33656002)(2906002)(71190400001)(71200400001)(8676002)(110136005)(6116002)(478600001)(81166006)(81156014)(14454004)(316002)(54906003)(53936002)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3914;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8fg2acVHbPbGShVV2DNvXfNTDfVYE3744yhJff7BkMBYYNfZIhueZy6V5ku3h3CC7JbeAaBZGdkS8zuA3fRqzo7NcjqbojNLa8F/lTDJpIHn7zmntj2bJq7+2g/EdMBdDLDJAPHVShuT5buw97mFsTF0lycBF+sTi7WuIBcnw8AcGVmpiECahuQIjQ7Ad233+304WqCmj3UT+hpoKkJZMNxxrQnY25MZSdqIUO99QniEE++i/Dwxx723yHUqOaS/AXnE1CKUMEnp7XUTB6ll8zkBVX7o6w+OrDX6zRbI63IFBJRV4xE9eqkEp0/ehg/akCbOx7v54yuUeSTUbOTYiTYEs4FWjnddY0whaZIJeu/3nd8fWQ5uJrJIsqYX0+UfZd9EX57V2VdvwGV/bKbSI9Aq9VPhQbP3kRU5DHpf5Qc=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828084351.GC29927@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52b736b2-607a-4513-814e-08d72b94f80e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 08:51:51.2009
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 52RJ32Ubl57HbL9AXApju/sfO6APxcDwv/HhPmzhiUmA++olFYK9nvhz1xT1gxFsNEObXIYqhgFz00Y3myO8PQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3914
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 10:43:51AM +0200, Greg KH wrote:
-> On Wed, Aug 28, 2019 at 12:12:39AM -0400, Sasha Levin wrote:
-> > This is a note to let you know that I've just added the patch titled
-> > 
-> >     x86/pm: Introduce quirk framework to save/restore extra MSR registers around suspend/resume
-> > 
-> > to the 4.4-stable tree which can be found at:
-> >     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-> > 
-> > The filename of the patch is:
-> >      x86-pm-introduce-quirk-framework-to-save-restore-ext.patch
-> > and it can be found in the queue-4.4 subdirectory.
-> > 
-> > If you, or anyone else, feels it should not be added to the stable tree,
-> > please let <stable@vger.kernel.org> know about it.
-> > 
-> > 
-> > 
-> > commit d63273440aa0fdebc30d0c931f15f79beb213134
-> > Author: Chen Yu <yu.c.chen@intel.com>
-> > Date:   Wed Nov 25 01:03:41 2015 +0800
-> > 
-> >     x86/pm: Introduce quirk framework to save/restore extra MSR registers around suspend/resume
-> >     
-> >     A bug was reported that on certain Broadwell platforms, after
-> >     resuming from S3, the CPU is running at an anomalously low
-> >     speed.
-> >     
-> >     It turns out that the BIOS has modified the value of the
-> >     THERM_CONTROL register during S3, and changed it from 0 to 0x10,
-> >     thus enabled clock modulation(bit4), but with undefined CPU Duty
-> >     Cycle(bit1:3) - which causes the problem.
-> >     
-> >     Here is a simple scenario to reproduce the issue:
-> >     
-> >      1. Boot up the system
-> >      2. Get MSR 0x19a, it should be 0
-> >      3. Put the system into sleep, then wake it up
-> >      4. Get MSR 0x19a, it shows 0x10, while it should be 0
-> >     
-> >     Although some BIOSen want to change the CPU Duty Cycle during
-> >     S3, in our case we don't want the BIOS to do any modification.
-> >     
-> >     Fix this issue by introducing a more generic x86 framework to
-> >     save/restore specified MSR registers(THERM_CONTROL in this case)
-> >     for suspend/resume. This allows us to fix similar bugs in a much
-> >     simpler way in the future.
-> >     
-> >     When the kernel wants to protect certain MSRs during suspending,
-> >     we simply add a quirk entry in msr_save_dmi_table, and customize
-> >     the MSR registers inside the quirk callback, for example:
-> >     
-> >       u32 msr_id_need_to_save[] = {MSR_ID0, MSR_ID1, MSR_ID2...};
-> >     
-> >     and the quirk mechanism ensures that, once resumed from suspend,
-> >     the MSRs indicated by these IDs will be restored to their
-> >     original, pre-suspend values.
-> >     
-> >     Since both 64-bit and 32-bit kernels are affected, this patch
-> >     covers the common 64/32-bit suspend/resume code path. And
-> >     because the MSRs specified by the user might not be available or
-> >     readable in any situation, we use rdmsrl_safe() to safely save
-> >     these MSRs.
-> >     
-> >     Reported-and-tested-by: Marcin Kaszewski <marcin.kaszewski@intel.com>
-> >     Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> >     Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >     Acked-by: Pavel Machek <pavel@ucw.cz>
-> >     Cc: Andy Lutomirski <luto@amacapital.net>
-> >     Cc: Borislav Petkov <bp@alien8.de>
-> >     Cc: Brian Gerst <brgerst@gmail.com>
-> >     Cc: Denys Vlasenko <dvlasenk@redhat.com>
-> >     Cc: H. Peter Anvin <hpa@zytor.com>
-> >     Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> >     Cc: Peter Zijlstra <peterz@infradead.org>
-> >     Cc: Thomas Gleixner <tglx@linutronix.de>
-> >     Cc: bp@suse.de
-> >     Cc: len.brown@intel.com
-> >     Cc: linux@horizon.com
-> >     Cc: luto@kernel.org
-> >     Cc: rjw@rjwysocki.net
-> >     Link: http://lkml.kernel.org/r/c9abdcbc173dd2f57e8990e304376f19287e92ba.1448382971.git.yu.c.chen@intel.com
-> >     [ More edits to the naming of data structures. ]
-> >     Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> 
-> No git id of the patch in Linus's tree, or your signed-off-by?
->
-I think the commit id in Linus'tree should be 7a9c2dd08eadd5c6943115dbbec040c38d2e0822
-
-Thanks,
-Chenyu
-
-> Sasha, did your scripts trigger this unintentionally somehow?
-> 
-> thanks,
-> 
-> greg k-h
+SGksIFJ1aQ0KDQo+IE9uIFR1ZSwgMjAxOS0wOC0yNyBhdCAxMjo0MSArMDAwMCwgTGVvbmFyZCBD
+cmVzdGV6IHdyb3RlOg0KPiA+IE9uIDI3LjA4LjIwMTkgMDQ6NTEsIEFuc29uIEh1YW5nIHdyb3Rl
+Og0KPiA+ID4gPiBJbiBhbiBlYXJsaWVyIHNlcmllcyB0aGUgQ0xLX0lTX0NSSVRJQ0FMIGZsYWdz
+IHdhcyByZW1vdmVkIGZyb20NCj4gPiA+ID4gdGhlIFRNVSBjbG9jayBzbyBpZiB0aGUgdGhlcm1h
+bCBkcml2ZXIgZG9lc24ndCBleHBsaWNpdGx5IGVuYWJsZQ0KPiA+ID4gPiBpdCB0aGUgc3lzdGVt
+IHdpbGwgaGFuZyBvbiBwcm9iZS4gVGhpcyBpcyB3aGF0IGhhcHBlbnMgaW4NCj4gPiA+ID4gbGlu
+dXgtbmV4dCByaWdodCBub3chDQo+ID4gPg0KPiA+ID4gVGhlIHRoZXJtYWwgZHJpdmVyIHNob3Vs
+ZCBiZSBidWlsdCB3aXRoIG1vZHVsZSwgc28gZGVmYXVsdCBrZXJuZWwNCj4gPiA+IHNob3VsZCBj
+YW4gYm9vdCB1cCwgZG8geW91IG1vZGlmeSB0aGUgdGhlcm1hbCBkcml2ZXIgYXMgYnVpbHQtaW4/
+DQo+ID4gPg0KPiA+ID4gPiBVbmxlc3MgdGhpcyBwYXRjaGVzIGlzIG1lcmdlZCBzb29uIHdlJ2xs
+IGVuZCB1cCB3aXRoIGEgNS40LXJjMQ0KPiA+ID4gPiB0aGF0IGRvZXNuJ3QgYm9vdCBvbiBpbXg4
+bXEuIEFuIGVhc3kgZml4IHdvdWxkIGJlIHRvIGRyb3AvcmV2ZXJ0DQo+ID4gPiA+IGNvbW1pdA0K
+PiA+ID4gPiA5NTFjMWFlZjk2OTEgKCJjbGs6IGlteDhtcTogUmVtb3ZlIENMS19JU19DUklUSUNB
+TCBmbGFnIGZvcg0KPiA+ID4gPiBJTVg4TVFfQ0xLX1RNVV9ST09UIikgdW50aWwgdGhlIHRoZXJt
+YWwgcGF0Y2hlcyBhcmUgYWNjZXB0ZWQuDQo+ID4gPg0KPiA+ID4gSWYgdGhlIHRoZXJtYWwgZHJp
+dmVyIGlzIGJ1aWx0IGFzIG1vZHVsZSwgSSB0aGluayBubyBuZWVkIHRvIHJldmVydA0KPiA+ID4g
+dGhlIGNvbW1pdCwgYnV0IGlmIGJ5IGRlZmF1bHQgdGhlcm1hbCBkcml2ZXIgaXMgYnVpbHQtaW4g
+b3IgbW9kDQo+ID4gPiBwcm9iZWQsIHRoZW4geWVzLCBpdCBzaG91bGQgTk9UIGJyZWFrIGtlcm5l
+bCBib290IHVwLg0KPiA+DQo+ID4gVGhlIHFvcmlxX3RoZXJtYWwgZHJpdmVyIGlzIGJ1aWx0IGFz
+IGEgbW9kdWxlIGluIGRlZmNvbmZpZyBhbmQgd2hlbg0KPiA+IG1vZHVsZXMgYXJlIHByb3Blcmx5
+IGluc3RhbGxlZCBpbiByb290ZnMgdGhleSB3aWxsIGJlIGF1dG9tYXRpY2FsbHkgYmUNCj4gPiBw
+cm9iZWQgb24gYm9vdCBhbmQgY2F1c2UgYSBoYW5nLg0KPiA+DQo+ID4gSSB1c3VhbGx5IHJ1biBu
+ZnNyb290IHdpdGggbW9kdWxlczoNCj4gPg0KPiA+ICAgICAgbWFrZSBtb2R1bGVzX2luc3RhbGwg
+SU5TVEFMTF9NT0RfUEFUSD0vc3J2L25mcy9pbXg4LXJvb3QNCj4gDQo+IHNvIHdlIG5lZWQgdGhp
+cyBwYXRjaCBzaGlwcGVkIGluIHRoZSBiZWdpbm5pbmcgb2YgdGhlIG1lcmdlIHdpbmRvdywgcmln
+aHQ/DQo+IGlmIHRoZXJlIGlzIGhhcmQgZGVwZW5kZW5jeSBiZXR3ZWVuIHBhdGNoZXMsIGl0J3Mg
+YmV0dGVyIHRvIHNlbmQgdGhlbSBpbiBvbmUNCj4gc2VyaWVzLCBhbmQgZ2V0IHNoaXBwZWQgdmlh
+IGVpdGhlciB0cmVlLg0KDQpUaGVyZSBpcyBubyBoYXJkIGRlcGVuZGVuY3kgaW4gdGhpcyBwYXRj
+aCBzZXJpZXMuIFByZXZpb3VzIGZvciB0aGUgVE1VIGNsb2NrIGRpc2FibGVkDQpwYXRjaCwgc2lu
+Y2UgdGhlcm1hbCBkcml2ZXIgaXMgYnVpbHQgYXMgbW9kdWxlIHNvIEkgZGlkIE5PVCBmb3VuZCB0
+aGUgaXNzdWUuIFRoZSBwYXRjaA0Kc2VyaWVzIGlzIHRoZSBjb3JyZWN0IGZpeC4NCg0KVGhhbmtz
+LA0KQW5zb24gDQoNCj4gDQo+IEJUVywgd2hvIGlzIG1haW50YWluaW5nIHFvcmlxIGRyaXZlciBm
+cm9tIE5YUD8gSWYgQW5zb24gaXMgbWFpbnRhaW5pbmcgYW5kDQo+IGRldmVsb3BpbmcgdGhpcyBk
+cml2ZXIsIGl0J3MgYmV0dGVyIHRvIHVwZGF0ZSB0aGlzIGluIHRoZSBkcml2ZXIgb3IgdGhlDQo+
+IE1BSU5UQUlORVIgZmlsZSwgSSB3aWxsIHRha2UgdGhlIGRyaXZlciBzcGVjaWZpYyBwYXRjaGVz
+IGFzIGxvbmcgYXMgd2UgaGF2ZQ0KPiBBQ0svUmV2aWV3ZWQtQnkgZnJvbSB0aGUgZHJpdmVyIG1h
+aW50YWluZXIuDQo+IA0KPiB0aGFua3MsDQo+IHJ1aQ0KPiANCj4gPg0KPiA+IC0tDQo+ID4gUmVn
+YXJkcywNCj4gPiBMZW9uYXJkDQoNCg==
