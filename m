@@ -2,97 +2,94 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A236EC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E667DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782E62077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:19:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B+w/8WIE"
+	by mail.kernel.org (Postfix) with ESMTP id C4A2920679
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbfH1RTE (ORCPT
+        id S1726725AbfH1RT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:19:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49198 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbfH1RTE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:19:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AlcDejLqus5Zm1OgF/D2SbvMaWMC14kOcgweWFWp9ZA=; b=B+w/8WIEq/ywgCOsUw4odPUMy
-        ps2chauyCPQzUBgmya2bROQT1+PiK1XymDN795xLmreUBGPot/+UQngUl/CXdKe04MK8IU4eNsZfd
-        C9toGqTeTN4sJKkcSTczneF6hKKDF/4OzCBCje/XHIaUmeWs20OrRZZU1GGkcjXrVJpWh4Vph8RpC
-        O4cM7B2gVc9xjD7paUtk1/jKtaDQnUb8KyG1VJ8f/TS1KNSTHp2rS5dV5XEhf4bGWBNiJr2yztAuU
-        fEqZRam7ypGa+8+X+FRpUqB0z8IJknqg8RwVZnn0dOB9zpiu8V2CYbCMIyc+K5k/R5Z3YdrROSOPm
-        2WSeqJmuw==;
-Received: from [2601:1c0:6200:6e8::4f71]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i31b0-0001fj-4R; Wed, 28 Aug 2019 17:18:58 +0000
-Subject: Re: [PATCH -next] rtc: pcf2127: Fix build error without
- CONFIG_WATCHDOG_CORE
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Cc:     a.zummo@towertech.it, bruno.thomsen@gmail.com, linux@roeck-us.net,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190823124553.19364-1-yuehaibing@huawei.com>
- <20190823140513.GB9844@piout.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <36720fae-ef20-61d4-1d9d-421e7199a0eb@infradead.org>
-Date:   Wed, 28 Aug 2019 10:18:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 13:19:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:25004 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726400AbfH1RT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 13:19:29 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BB35A807064;
+        Wed, 28 Aug 2019 17:19:28 +0000 (UTC)
+Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5FB1360BEC;
+        Wed, 28 Aug 2019 17:19:26 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 12:19:23 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: mmotm 2019-08-27-20-39 uploaded (objtool: xen)
+Message-ID: <20190828171923.4sir3sxwsnc2pvjy@treble>
+References: <20190828034012.sBvm81sYK%akpm@linux-foundation.org>
+ <8b09d93a-bc42-bd8e-29ee-cd37765f4899@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190823140513.GB9844@piout.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <8b09d93a-bc42-bd8e-29ee-cd37765f4899@infradead.org>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Wed, 28 Aug 2019 17:19:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/23/19 7:05 AM, Alexandre Belloni wrote:
-> On 23/08/2019 20:45:53+0800, YueHaibing wrote:
->> If WATCHDOG_CORE is not set, build fails:
->>
->> drivers/rtc/rtc-pcf2127.o: In function `pcf2127_probe.isra.6':
->> drivers/rtc/rtc-pcf2127.c:478: undefined reference to `devm_watchdog_register_device'
->>
->> Add WATCHDOG_CORE Kconfig dependency to fix this.
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Fixes: bbc597561ce1 ("rtc: pcf2127: add watchdog feature support")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->>  drivers/rtc/Kconfig | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
->> index 25af63d..9dce7dc 100644
->> --- a/drivers/rtc/Kconfig
->> +++ b/drivers/rtc/Kconfig
->> @@ -886,6 +886,8 @@ config RTC_DRV_DS3232_HWMON
->>  config RTC_DRV_PCF2127
->>  	tristate "NXP PCF2127"
->>  	depends on RTC_I2C_AND_SPI
->> +	depends on WATCHDOG
-> 
-> Definitively not, I fixed it that way:
-> +       select WATCHDOG_CORE if WATCHDOG
+On Wed, Aug 28, 2019 at 09:58:37AM -0700, Randy Dunlap wrote:
+> On 8/27/19 8:40 PM, akpm@linux-foundation.org wrote:
+> > The mm-of-the-moment snapshot 2019-08-27-20-39 has been uploaded to
+> > 
+> >    http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > mmotm-readme.txt says
+> > 
+> > README for mm-of-the-moment:
+> > 
+> > http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > more than once a week.
+> > 
+> > You will need quilt to apply these patches to the latest Linus release (5.x
+> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> > http://ozlabs.org/~akpm/mmotm/series
+> > 
+> > The file broken-out.tar.gz contains two datestamp files: .DATE and
+> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> > followed by the base kernel version against which this patch series is to
+> > be applied.
 > 
 > 
+> 
+> drivers/xen/gntdev.o: warning: objtool: gntdev_copy()+0x229: call to __ubsan_handle_out_of_bounds() with UACCESS enabled
 
-No, that's not a fix.  The build error still happens with that patch applied.
+Easy one :-)
 
--- 
-~Randy
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 0c8e17f946cd..6a935ab93149 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -483,6 +483,7 @@ static const char *uaccess_safe_builtin[] = {
+ 	"ubsan_type_mismatch_common",
+ 	"__ubsan_handle_type_mismatch",
+ 	"__ubsan_handle_type_mismatch_v1",
++	"__ubsan_handle_out_of_bounds",
+ 	/* misc */
+ 	"csum_partial_copy_generic",
+ 	"__memcpy_mcsafe",
