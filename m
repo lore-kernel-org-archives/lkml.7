@@ -2,64 +2,53 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8E7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 04:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA7EC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 04:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AEB32080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 04:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40872080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 04:24:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbfH1EYu (ORCPT
+        id S1726201AbfH1EYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 00:24:50 -0400
-Received: from ozlabs.org ([203.11.71.1]:53079 "EHLO ozlabs.org"
+        Wed, 28 Aug 2019 00:24:51 -0400
+Received: from ozlabs.org ([203.11.71.1]:52809 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbfH1EYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 00:24:50 -0400
+        id S1725827AbfH1EYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 00:24:51 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 46JCM34MCJz9sNF; Wed, 28 Aug 2019 14:24:47 +1000 (AEST)
+        id 46JCM551djz9sNp; Wed, 28 Aug 2019 14:24:49 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 56347074c5307d7bca5db38eb2c764c64ae57514
-In-Reply-To: <20190713032106.8509-1-yamada.masahiro@socionext.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linuxppc-dev@lists.ozlabs.org
+X-powerpc-patch-commit: f0f8d7ae3924ed93453e30123e4aaf6f888ca555
+In-Reply-To: <7b1668941ad1041d08b19167030868de5840b153.1566309262.git.christophe.leroy@c-s.fr>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
+        hch@lst.de
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul Mackerras <paulus@samba.org>
-Subject: Re: [PATCH] powerpc: remove meaningless KBUILD_ARFLAGS addition
-Message-Id: <46JCM34MCJz9sNF@ozlabs.org>
-Date:   Wed, 28 Aug 2019 14:24:47 +1000 (AEST)
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/12] powerpc: remove the ppc44x ocm.c file
+Message-Id: <46JCM551djz9sNp@ozlabs.org>
+Date:   Wed, 28 Aug 2019 14:24:49 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-07-13 at 03:21:06 UTC, Masahiro Yamada wrote:
-> The KBUILD_ARFLAGS addition in arch/powerpc/Makefile has never worked
-> in a useful way because it is always overridden by the following code
-> in the top Makefile:
+On Tue, 2019-08-20 at 14:07:09 UTC, Christophe Leroy wrote:
+> From: Christoph Hellwig <hch@lst.de>
 > 
->   # use the deterministic mode of AR if available
->   KBUILD_ARFLAGS := $(call ar-option,D)
+> The on chip memory allocator is entirely unused in the kernel tree.
 > 
-> The code in the top Makefile was added in 2011, by commit 40df759e2b9e
-> ("kbuild: Fix build with binutils <= 2.19").
-> 
-> The KBUILD_ARFLAGS addition for ppc has always been dead code from the
-> beginning.
-> 
-> Nobody has reported a problem since 43c9127d94d6 ("powerpc: Add option
-> to use thin archives"), so this code was unneeded.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Applied to powerpc next, thanks.
+Series applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/56347074c5307d7bca5db38eb2c764c64ae57514
+https://git.kernel.org/powerpc/c/f0f8d7ae3924ed93453e30123e4aaf6f888ca555
 
 cheers
