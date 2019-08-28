@@ -2,147 +2,151 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B47C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF58CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 423D5233A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA43214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:32:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Zxu+zqpo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YpmxYUVQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfH1R3h (ORCPT
+        id S1726583AbfH1RcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:29:37 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:7444 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfH1R3g (ORCPT
+        Wed, 28 Aug 2019 13:32:19 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39495 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfH1RcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:29:36 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d66ba010001>; Wed, 28 Aug 2019 10:29:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 28 Aug 2019 10:29:35 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 28 Aug 2019 10:29:35 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 28 Aug
- 2019 17:29:35 +0000
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 28 Aug
- 2019 17:29:35 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 28 Aug 2019 17:29:34 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d66b9fa0000>; Wed, 28 Aug 2019 10:29:34 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
-CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
-        <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V3 6/6] arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
-Date:   Wed, 28 Aug 2019 22:58:50 +0530
-Message-ID: <20190828172850.19871-7-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190828172850.19871-1-vidyas@nvidia.com>
-References: <20190828172850.19871-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 28 Aug 2019 13:32:19 -0400
+Received: by mail-lj1-f193.google.com with SMTP id x4so325741ljj.6
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:32:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8qd9uDtDKAYrGf5FVzWTysgwl4bOPCeZQ18mj4Gsi3k=;
+        b=YpmxYUVQN4Bc3N0gHlrPqxI/acBLSzcAUD5kCstyYybhjimnPZjcT4bxa6oXHpaowL
+         3wEQqGbTomQydS0dxVAUQm90+u881tmpxMOpdXCouusYEi1fln0XtVtiqSnMq0f6/Ooq
+         6mrGOXKOIqAudzqxItKkvb9FVIQjC5X+NFiIwtw+vilykvfw+nZTVx/3CENytKepIsd4
+         KN0thSj9D0S61f9J76MdK3u60PYRqeVJHTozaE7n5Glh2QYZwhBwwB2KuuYw0q13zm4+
+         /ZORwWQIygDPaH0hfPP/nEARvrPhzRhzByfp9HLsBw0mK4HtbxFBAcqmY2VrbLhTwN94
+         m0yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8qd9uDtDKAYrGf5FVzWTysgwl4bOPCeZQ18mj4Gsi3k=;
+        b=F3MYnCjfFUOGJUCO828XJKKAhaPtOumame26CDSHnhCKzRbXCSFQA0QJmTlxPCDttL
+         dZg+EQYS5h1+1b1iKGkeKDc7qvv1Jfgv828zbB3PRbgk8FgjcQIxDVsN5lV5Nq+EV2Fe
+         lOcNlbA4CaCYV+YrbO3yeU+hZD2GHw67FAGHQlpQgteCUJc4/AWqeN0inNM6WcTC5XnU
+         DiFBU40tdI3qDNZGqCBVqfMDvdNNbMHQOsMKUwPmbcNF6yItpiRSvqiag2+kVFfKx6WG
+         eP4TDe5L/Qjs7QnzeZTGHPZs5UOJY0Aishcw6vILVsFCDXQLRF3098MWQu2pALXRzy2k
+         6pRQ==
+X-Gm-Message-State: APjAAAV1a8yyzj/m9FB2+uPOjYP6aoBtRQ8hbJ/8wfeC23Oay4XVxTHp
+        OSc0QbZL8rSZGzX0iH7n0UdLOW6rp/DdY03Gib/W6g==
+X-Google-Smtp-Source: APXvYqxxGgDzLtIMSUYhug4BtQvbD5qbWAUyw3a7t0FA09sestyJmYS8nHkDT3G6XruToS8W8hAnweD4TmSajD4ba7g=
+X-Received: by 2002:a05:651c:1b8:: with SMTP id c24mr2730534ljn.2.1567013536968;
+ Wed, 28 Aug 2019 10:32:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567013377; bh=pqenOE/Va6ZccwLf8/ZCtakjRCrDvI5bZnar6GjXaYE=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=Zxu+zqpoWxxbZwxEbY6fRhF1p0oN39Mz8qXzcjZkrUsb3xAlI46nkOIVN36SRn4mS
-         JAyBR922LYR0RNBasYMcItyRlKGZOnhY2P0JAgxu/j8ec8A3EeXGtKWlVNyOfQA4vX
-         Whb82J/tEtD/8cYe6YBAmK3ijeCEEEyWeM0cOBplFjF+BykjINIOnbC01nnbSwaZQ4
-         3eo1evbA3bAO3o9WMqka7257ml61Nr29dgRoOC/yq48OtphbmDemnLxFN4KBxEJxS2
-         5JnEfDhygAmB/j3ip/PNEyPourAeOiz4lVQRTLJr6GDhR7wGgPa93m90SRf3j4UR9/
-         h4GeNzZXX+rSg==
+References: <20190822021740.15554-1-riel@surriel.com> <20190822021740.15554-9-riel@surriel.com>
+In-Reply-To: <20190822021740.15554-9-riel@surriel.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 28 Aug 2019 19:32:05 +0200
+Message-ID: <CAKfTPtDxHijR3PCOFfxA-r02rf2hVP4LpB=y-9emHS7znTPxTA@mail.gmail.com>
+Subject: Re: [PATCH 08/15] sched,fair: simplify timeslice length code
+To:     Rik van Riel <riel@surriel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>, Paul Turner <pjt@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mel Gorman <mgorman@techsingularity.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add 3.3V and 12V supplies regulators information of x16 PCIe slot in
-p2972-0000 platform which is owned by C5 controller and also enable C5
-controller.
+On Thu, 22 Aug 2019 at 04:18, Rik van Riel <riel@surriel.com> wrote:
+>
+> The idea behind __sched_period makes sense, but the results do not always.
+>
+> When a CPU has one high priority task and a large number of low priority
+> tasks, __sched_period will return a value larger than sysctl_sched_latency,
+> and the one high priority task may end up getting a timeslice all for itself
+> that is also much larger than sysctl_sched_latency.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
-V3:
-* None
+note that unless you enable sched_feat(HRTICK), the sched_slice is
+mainly used to decide how fast we preempt running task at tick but a
+newly wake up task can preempt it before
 
-V2:
-* None
+>
+> The low priority tasks will have their time slices rounded up to
+> sysctl_sched_min_granularity, resulting in an even larger scheduling
+> latency than targeted by __sched_period.
 
- .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 24 +++++++++++++++++++
- .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  4 +++-
- 2 files changed, 27 insertions(+), 1 deletion(-)
+Will this not break the fairness between a always running task and a
+short sleeping one with this changes ?
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-index 62e07e1197cc..4c38426a6969 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-@@ -289,5 +289,29 @@
- 			gpio = <&gpio TEGRA194_MAIN_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
- 		};
-+
-+		vdd_3v3_pcie: regulator@2 {
-+			compatible = "regulator-fixed";
-+			reg = <2>;
-+
-+			regulator-name = "PEX_3V3";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			gpio = <&gpio TEGRA194_MAIN_GPIO(Z, 2) GPIO_ACTIVE_HIGH>;
-+			regulator-boot-on;
-+			enable-active-high;
-+		};
-+
-+		vdd_12v_pcie: regulator@3 {
-+			compatible = "regulator-fixed";
-+			reg = <3>;
-+
-+			regulator-name = "VDD_12V";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			gpio = <&gpio TEGRA194_MAIN_GPIO(A, 1) GPIO_ACTIVE_LOW>;
-+			regulator-boot-on;
-+			enable-active-low;
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-index 23597d53c9c9..d47cd8c4dd24 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-@@ -93,9 +93,11 @@
- 	};
- 
- 	pcie@141a0000 {
--		status = "disabled";
-+		status = "okay";
- 
- 		vddio-pex-ctl-supply = <&vdd_1v8ao>;
-+		vpcie3v3-supply = <&vdd_3v3_pcie>;
-+		vpcie12v-supply = <&vdd_12v_pcie>;
- 
- 		phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
- 		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
--- 
-2.17.1
+>
+> Simplify the code by simply ripping out __sched_period and always taking
+> fractions of sysctl_sched_latency.
+>
+> If a high priority task ends up getting a "too small" time slice compared
+> to low priority tasks, the vruntime scaling ensures that it will simply
+> get scheduled more frequently than low priority tasks.
 
+Will you not increase the number of context switch ?
+
+>
+> Signed-off-by: Rik van Riel <riel@surriel.com>
+> ---
+>  kernel/sched/fair.c | 18 +-----------------
+>  1 file changed, 1 insertion(+), 17 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 8f8c85c6da9b..74ee22c59d13 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -691,22 +691,6 @@ static inline u64 calc_delta_fair(u64 delta, struct sched_entity *se)
+>         return delta;
+>  }
+>
+> -/*
+> - * The idea is to set a period in which each task runs once.
+> - *
+> - * When there are too many tasks (sched_nr_latency) we have to stretch
+> - * this period because otherwise the slices get too small.
+> - *
+> - * p = (nr <= nl) ? l : l*nr/nl
+> - */
+> -static u64 __sched_period(unsigned long nr_running)
+> -{
+> -       if (unlikely(nr_running > sched_nr_latency))
+> -               return nr_running * sysctl_sched_min_granularity;
+> -       else
+> -               return sysctl_sched_latency;
+> -}
+> -
+>  /*
+>   * We calculate the wall-time slice from the period by taking a part
+>   * proportional to the weight.
+> @@ -715,7 +699,7 @@ static u64 __sched_period(unsigned long nr_running)
+>   */
+>  static u64 sched_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>  {
+> -       u64 slice = __sched_period(cfs_rq->nr_running + !se->on_rq);
+> +       u64 slice = sysctl_sched_latency;
+>
+>         for_each_sched_entity(se) {
+>                 struct load_weight *load;
+> --
+> 2.20.1
+>
