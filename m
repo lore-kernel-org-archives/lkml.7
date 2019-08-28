@@ -2,139 +2,159 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51733C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22103C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2622A22CF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E343922CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:56:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="MTI+Kanp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfH1S4T (ORCPT
+        id S1726991AbfH1S4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:56:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48150 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfH1S4T (ORCPT
+        Wed, 28 Aug 2019 14:56:52 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43334 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfH1S4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:56:19 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i3377-0002d0-Od; Wed, 28 Aug 2019 20:56:13 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5A4621C0DE2;
-        Wed, 28 Aug 2019 20:56:13 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 18:56:13 -0000
-From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] MAINTAINERS: Update from paulmck@linux.ibm.com to
- paulmck@kernel.org
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
+        Wed, 28 Aug 2019 14:56:52 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e12so848941otp.10
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 11:56:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nS9sghIUIPx7g755mVLBuxz1Z71NtFQBCRRvUjCx70o=;
+        b=MTI+KanpTuhTrzzLxlbtZ1+swgBPtUkHfSSiiksg4bSXV8X0K5yvq031Ly+YoDSY5V
+         ZymtBakgNC8hjLexb5QVq0atw4I+AobGrh1I4snAozgBTC+pTzLQaFbJPhDtNNw9RE4u
+         2mRKcWVUunztUfQpODM6eEjC8xJ49wiw3XGFA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nS9sghIUIPx7g755mVLBuxz1Z71NtFQBCRRvUjCx70o=;
+        b=EVv09dFAPP2ZHRmazqcZaO/qrZe/6d4eKhrBeYMP7DC9vQ90CQIyiJa1zoV4HKYUnp
+         4XyFK6JNTUIpdo6h6/Gi9PRI/BdysKKDYRb3hIRTFIqr4A+Zsv33udaFNEzwg5xnVPcA
+         1TI6Xj4+bbJhLGnlPfbo5BfQ4Lb/ywMKIV2GCaRvCcYwjwSlAL96YdhjFsXbTXDlDTgF
+         VRg8s1GEokOQ9fSCYYVRkaeARB+wc9/OR/Xvg35FUSdJCE97N0MKMiASL/r/5jOB66Lc
+         y145theWCZ9IRVVZoR9KfXngHrYMx00vRaZBIsOBQIzV7DoNr/6wr8MIJ3MFhj587y+b
+         uZAQ==
+X-Gm-Message-State: APjAAAUGfP9oT6CcXG3CEy1IvS9XiQ9Jx5TJ9dw9J/LlvO+YWgYyGNWK
+        U8szx6tGn4qvbqKSsiZYaJqz4ag+z3/G89K2kf1tGw==
+X-Google-Smtp-Source: APXvYqyggOyk01nC8FZIwN+CbjL/bjhI1aZtVdsQYi3h4hYy3se1Usiy90hGVxmIIjB8FzpqdJKGP5apV2lekxdVIBg=
+X-Received: by 2002:a9d:6955:: with SMTP id p21mr283847oto.204.1567018610863;
+ Wed, 28 Aug 2019 11:56:50 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <156701857329.18445.9457677423596381777.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190826201425.17547-1-daniel.vetter@ffwll.ch>
+ <20190826201425.17547-4-daniel.vetter@ffwll.ch> <20190827225002.GB30700@ziepe.ca>
+ <CAKMK7uHKiLwXLHd1xThZVM1dH-oKrtpDZ=FxLBBwtY7XmJKgtA@mail.gmail.com> <20190828184330.GD933@ziepe.ca>
+In-Reply-To: <20190828184330.GD933@ziepe.ca>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Wed, 28 Aug 2019 20:56:39 +0200
+Message-ID: <CAKMK7uFJESH1XHTCqYoDb4iMfThxnib3Uz=RUcd7h=SS-TJWbg@mail.gmail.com>
+Subject: Re: [PATCH 3/5] kernel.h: Add non_block_start/end()
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/rcu branch of tip:
+On Wed, Aug 28, 2019 at 8:43 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> On Wed, Aug 28, 2019 at 08:33:13PM +0200, Daniel Vetter wrote:
+> > On Wed, Aug 28, 2019 at 12:50 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > >
+> > > > diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> > > > index 4fa360a13c1e..82f84cfe372f 100644
+> > > > +++ b/include/linux/kernel.h
+> > > > @@ -217,7 +217,9 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
+> > > >   * might_sleep - annotation for functions that can sleep
+> > > >   *
+> > > >   * this macro will print a stack trace if it is executed in an atomic
+> > > > - * context (spinlock, irq-handler, ...).
+> > > > + * context (spinlock, irq-handler, ...). Additional sections where blocking is
+> > > > + * not allowed can be annotated with non_block_start() and non_block_end()
+> > > > + * pairs.
+> > > >   *
+> > > >   * This is a useful debugging help to be able to catch problems early and not
+> > > >   * be bitten later when the calling function happens to sleep when it is not
+> > > > @@ -233,6 +235,25 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
+> > > >  # define cant_sleep() \
+> > > >       do { __cant_sleep(__FILE__, __LINE__, 0); } while (0)
+> > > >  # define sched_annotate_sleep()      (current->task_state_change = 0)
+> > > > +/**
+> > > > + * non_block_start - annotate the start of section where sleeping is prohibited
+> > > > + *
+> > > > + * This is on behalf of the oom reaper, specifically when it is calling the mmu
+> > > > + * notifiers. The problem is that if the notifier were to block on, for example,
+> > > > + * mutex_lock() and if the process which holds that mutex were to perform a
+> > > > + * sleeping memory allocation, the oom reaper is now blocked on completion of
+> > > > + * that memory allocation. Other blocking calls like wait_event() pose similar
+> > > > + * issues.
+> > > > + */
+> > > > +# define non_block_start() \
+> > > > +     do { current->non_block_count++; } while (0)
+> > > > +/**
+> > > > + * non_block_end - annotate the end of section where sleeping is prohibited
+> > > > + *
+> > > > + * Closes a section opened by non_block_start().
+> > > > + */
+> > > > +# define non_block_end() \
+> > > > +     do { WARN_ON(current->non_block_count-- == 0); } while (0)
+> > >
+> > > check-patch does not like these, and I agree
+> > >
+> > > #101: FILE: include/linux/kernel.h:248:
+> > > +# define non_block_start() \
+> > > +       do { current->non_block_count++; } while (0)
+> > >
+> > > /tmp/tmp1spfxufy/0006-kernel-h-Add-non_block_start-end-.patch:108: WARNING: Single statement macros should not use a do {} while (0) loop
+> > > #108: FILE: include/linux/kernel.h:255:
+> > > +# define non_block_end() \
+> > > +       do { WARN_ON(current->non_block_count-- == 0); } while (0)
+> > >
+> > > Please use a static inline?
+> >
+> > We need get_current() plus the task_struct, so this gets real messy
+> > real fast. Not even sure which header this would fit in, or whether
+> > I'd need to create a new one. You're insisting on this or respinning
+> > with the do { } while (0) dropped ok.
+>
+> My prefernce is always a static inline, but if the headers are so
+> twisty we need to use #define to solve a missing include, then I
+> wouldn't insist on it.
 
-Commit-ID:     049b405029c00f3fd9e4ffa269bdd29b429c4672
-Gitweb:        https://git.kernel.org/tip/049b405029c00f3fd9e4ffa269bdd29b429c4672
-Author:        Paul E. McKenney <paulmck@linux.ibm.com>
-AuthorDate:    Mon, 26 Aug 2019 16:02:56 -07:00
-Committer:     Paul E. McKenney <paulmck@linux.ibm.com>
-CommitterDate: Mon, 26 Aug 2019 16:27:08 -07:00
+Cleanest would be a new header I guess, together with might_sleep().
+But moving that is a bit much I think, there's almost 500 callers of
+that one from a quick git grep
 
-MAINTAINERS: Update from paulmck@linux.ibm.com to paulmck@kernel.org
+> If dropping do while is the only change then I can edit it in..
+> I think we have the acks now
 
-Note that the paulmck@linux.ibm.com still works most of the time.
-
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
----
- MAINTAINERS | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5273170..e200eb5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9334,7 +9334,7 @@ M:	Nicholas Piggin <npiggin@gmail.com>
- M:	David Howells <dhowells@redhat.com>
- M:	Jade Alglave <j.alglave@ucl.ac.uk>
- M:	Luc Maranget <luc.maranget@inria.fr>
--M:	"Paul E. McKenney" <paulmck@linux.ibm.com>
-+M:	"Paul E. McKenney" <paulmck@kernel.org>
- R:	Akira Yokosawa <akiyks@gmail.com>
- R:	Daniel Lustig <dlustig@nvidia.com>
- L:	linux-kernel@vger.kernel.org
-@@ -10363,7 +10363,7 @@ F:	drivers/platform/x86/mlx-platform.c
- 
- MEMBARRIER SUPPORT
- M:	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
--M:	"Paul E. McKenney" <paulmck@linux.ibm.com>
-+M:	"Paul E. McKenney" <paulmck@kernel.org>
- L:	linux-kernel@vger.kernel.org
- S:	Supported
- F:	kernel/sched/membarrier.c
-@@ -13476,7 +13476,7 @@ S:	Orphan
- F:	drivers/net/wireless/ray*
- 
- RCUTORTURE TEST FRAMEWORK
--M:	"Paul E. McKenney" <paulmck@linux.ibm.com>
-+M:	"Paul E. McKenney" <paulmck@kernel.org>
- M:	Josh Triplett <josh@joshtriplett.org>
- R:	Steven Rostedt <rostedt@goodmis.org>
- R:	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-@@ -13523,7 +13523,7 @@ F:	arch/x86/include/asm/resctrl_sched.h
- F:	Documentation/x86/resctrl*
- 
- READ-COPY UPDATE (RCU)
--M:	"Paul E. McKenney" <paulmck@linux.ibm.com>
-+M:	"Paul E. McKenney" <paulmck@kernel.org>
- M:	Josh Triplett <josh@joshtriplett.org>
- R:	Steven Rostedt <rostedt@goodmis.org>
- R:	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-@@ -13681,7 +13681,7 @@ F:	include/linux/reset-controller.h
- RESTARTABLE SEQUENCES SUPPORT
- M:	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
- M:	Peter Zijlstra <peterz@infradead.org>
--M:	"Paul E. McKenney" <paulmck@linux.ibm.com>
-+M:	"Paul E. McKenney" <paulmck@kernel.org>
- M:	Boqun Feng <boqun.feng@gmail.com>
- L:	linux-kernel@vger.kernel.org
- S:	Supported
-@@ -14710,7 +14710,7 @@ F:	mm/sl?b*
- 
- SLEEPABLE READ-COPY UPDATE (SRCU)
- M:	Lai Jiangshan <jiangshanlai@gmail.com>
--M:	"Paul E. McKenney" <paulmck@linux.ibm.com>
-+M:	"Paul E. McKenney" <paulmck@kernel.org>
- M:	Josh Triplett <josh@joshtriplett.org>
- R:	Steven Rostedt <rostedt@goodmis.org>
- R:	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-@@ -16207,7 +16207,7 @@ F:	drivers/platform/x86/topstar-laptop.c
- 
- TORTURE-TEST MODULES
- M:	Davidlohr Bueso <dave@stgolabs.net>
--M:	"Paul E. McKenney" <paulmck@linux.ibm.com>
-+M:	"Paul E. McKenney" <paulmck@kernel.org>
- M:	Josh Triplett <josh@joshtriplett.org>
- L:	linux-kernel@vger.kernel.org
- S:	Supported
+Yeah sounds simplest, thanks.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
