@@ -2,123 +2,120 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD4FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7CCC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2B822CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E02CB22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfH1NCo (ORCPT
+        id S1726711AbfH1NCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:02:44 -0400
-Received: from mga06.intel.com ([134.134.136.31]:60481 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726253AbfH1NCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:02:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 06:02:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
-   d="scan'208";a="182022481"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Aug 2019 06:02:41 -0700
-Subject: Re: [PATCH] mmc: sdhci: use lower/upper_32_bits() macros for DMA
- addresses
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20190828111453.4023-1-yamada.masahiro@socionext.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <0d5da294-61f8-4b9f-1a6e-7212da40f572@intel.com>
-Date:   Wed, 28 Aug 2019 16:01:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 09:02:54 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39443 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbfH1NCy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:02:54 -0400
+Received: by mail-qt1-f195.google.com with SMTP id n7so12760qtb.6;
+        Wed, 28 Aug 2019 06:02:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IGBGJGSXKu1XI7QCTZRx+ka85VzBENyC+3JcanBjN3E=;
+        b=kels8ahvdbtG6I/zeXlp2TPncvBGw+0OZ6yveDN/QHjqt66v/KTiuxyDkNH4mLAeeh
+         f4ScJWKCH9HhgAeK5giljAYVR6RQMe+JteLC7CHuOyyO0+3mcHmpfvh7kf68Nz6RMsN5
+         YYSzrG3uDUhrmC6Rv1976zwvnIpAXCMsFxQ2YjMe12Za0vHYsB1V9nF18Cc0mH/euCZw
+         hnIuy3VF2KbylkfR7KiP9BKoQiLnnXIvKZhfzE62MzvoQX+7jyo8yRWg7fOkUFAjGTiH
+         A71nmS8U18m5SbtwUrJJIWSiQAIvWivEPQaKaYc5GdYU8WBReyZYNfWCJbgbI0raVmJy
+         pROw==
+X-Gm-Message-State: APjAAAU7irnUz74pNRden1djY0tbvT8j37oku3imyo9clV7f9A55d91X
+        LnNhvzU0aGkofzSGu8Pu4yA0KmYDpLHDdT5cV6M=
+X-Google-Smtp-Source: APXvYqwFs2+ff1HO4EmjqAOCzKXa7tMdrsXizeCnfMrVB5CqO4/vjsoIDKOUj+3CtQPhIKsdnKwWMimhgoCxxhSPV9c=
+X-Received: by 2002:ac8:239d:: with SMTP id q29mr4036253qtq.304.1566997372955;
+ Wed, 28 Aug 2019 06:02:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190828111453.4023-1-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190808212234.2213262-1-arnd@arndb.de> <20190808212234.2213262-15-arnd@arndb.de>
+ <20190813103605.GL52127@atomide.com> <CAK8P3a0E+QUn9wcP5Obv-FitWyXCFwcp+oPConeO2p-NV1rqsw@mail.gmail.com>
+ <20190813181158.GA26798@darkstar.musicnaut.iki.fi> <CAK8P3a0LjKrc+7c5Ht9OL7LfYyLnG9=y7u+w24ujA1xAid_yCQ@mail.gmail.com>
+ <20190814074918.GA52127@atomide.com> <CAK8P3a3k_HOGqzMGjtc+7NSaK0Bsa_vxxRFLzY8aP6ev4wa9iA@mail.gmail.com>
+ <20190816083403.GB1952@darkstar.musicnaut.iki.fi> <CAK8P3a3jqNxoihQ+UFvOZMg=AcF2yzHXs5ay6X1TZX8L3zQ3rg@mail.gmail.com>
+ <20190827190453.GJ30291@darkstar.musicnaut.iki.fi>
+In-Reply-To: <20190827190453.GJ30291@darkstar.musicnaut.iki.fi>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 28 Aug 2019 15:02:36 +0200
+Message-ID: <CAK8P3a1PeBMRuweAmzrTQC85CmwdZPirG3HPg9aJ99p2U7zknQ@mail.gmail.com>
+Subject: Re: [PATCH 14/22] ARM: omap1: use pci_ioremap_io() for omap_cf
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/08/19 2:14 PM, Masahiro Yamada wrote:
-> Currently, the DMA addresses are casted to (u64) for the upper 32bits
-> to avoid "right shift count >= width of type" warning.
-> 
-> <linux/kernel.h> provides macros to address this, and the macro names
-> are self-documenting.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  drivers/mmc/host/sdhci.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index a5dc5aae973e..07144a195a9f 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -668,10 +668,10 @@ void sdhci_adma_write_desc(struct sdhci_host *host, void **desc,
->  	/* 32-bit and 64-bit descriptors have these members in same position */
->  	dma_desc->cmd = cpu_to_le16(cmd);
->  	dma_desc->len = cpu_to_le16(len);
-> -	dma_desc->addr_lo = cpu_to_le32((u32)addr);
-> +	dma_desc->addr_lo = cpu_to_le32(lower_32_bits(addr));
->  
->  	if (host->flags & SDHCI_USE_64_BIT_DMA)
-> -		dma_desc->addr_hi = cpu_to_le32((u64)addr >> 32);
-> +		dma_desc->addr_hi = cpu_to_le32(upper_32_bits(addr));
->  
->  	*desc += host->desc_sz;
->  }
-> @@ -827,9 +827,10 @@ static dma_addr_t sdhci_sdma_address(struct sdhci_host *host)
->  static void sdhci_set_sdma_addr(struct sdhci_host *host, dma_addr_t addr)
->  {
->  	if (host->v4_mode) {
+On Tue, Aug 27, 2019 at 9:05 PM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
+> On Tue, Aug 27, 2019 at 06:33:01PM +0200, Arnd Bergmann wrote:
+> > On Fri, Aug 16, 2019 at 10:34 AM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
+> > > However with earlyprintk it seems to hang as soon as kernel tries to print
+> > > something. So something goes wrong with early DEBUG_LL mapping code when
+> > > CONFIG_DEBUG_UART_VIRT=0xff000000 is used?
+> >
+> > I just redid the calculation and came out with the same address, so I
+> > don't think I put the wrong one there. The address also does not
+> > conflict with the PCI mapping, and the address is the same one that
+> > is installed later, so that should also be fine.
+> >
+> > Are you sure you used the correct address in the .config file? If you
+> > ran 'make oldconfig', the virtual address would not be changed here
+> > as I just modify the default for a fresh 'make omap1_defconfig'
+> > run or similar.
+>
+> Yes... You should be able to try this out also in QEMU to see the hang:
 
-To reduce line wrapping, how about using:
+Haven't tried yet, but I took a look at the dump:
 
-		u32 lo = lower_32_bits(addr);
-		u32 hi = upper_32_bits(addr);
+> $ qemu-system-arm -M sx1 -kernel sx1-zImage -nographic
+>
+> [ Hangs silently, press Ctrl-a c to enter monitor. ]
+>
+> QEMU 4.1.0 monitor - type 'help' for more information
+> (qemu) info registers
+> R00=c0379de1 R01=0000005b R02=00000000 R03=ff000000
+> R04=00000000 R05=00000031 R06=c038f119 R07=00000000
+> R08=00000000 R09=c038f50e R10=600001d3 R11=00000001
+> R12=00000010 R13=c0379de0 R14=c000e07c R15=c000dfcc
+> PSR=000001d3 ---- A svc32
+> FPSCR: 00000000
+>
+> from System.map:
+> c000df7c T printascii
+> c000dfe0 T printch
 
-> -		sdhci_writel(host, addr, SDHCI_ADMA_ADDRESS);
-> +		sdhci_writel(host, lower_32_bits(addr), SDHCI_ADMA_ADDRESS);
->  		if (host->flags & SDHCI_USE_64_BIT_DMA)
-> -			sdhci_writel(host, (u64)addr >> 32, SDHCI_ADMA_ADDRESS_HI);
-> +			sdhci_writel(host, upper_32_bits(addr),
-> +				     SDHCI_ADMA_ADDRESS_HI);
->  	} else {
->  		sdhci_writel(host, addr, SDHCI_DMA_ADDRESS);
->  	}
-> @@ -1096,10 +1097,11 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
->  		} else if (host->flags & SDHCI_USE_ADMA) {
+Ok, that is clearly the "busyloop" macro in
+arch/arm/include/debug/8250.S, checking if the data got sent.
 
-To reduce line wrapping, how about using:
+The 'r2' register contains zero, so UART_LSR_TEMT and
+UART_LSR_THRE are not set, but presumably the mapping
+was installed right since you did not get a page fault.
 
-			u32 lo = lower_32_bits(host->adma_addr);
-			u32 hi = upper_32_bits(host->adma_addr);
+I assume you checked that the uart output wasn't already broken
+by one of the earlier patches, right?
 
->  			sdhci_adma_table_pre(host, data, sg_cnt);
->  
-> -			sdhci_writel(host, host->adma_addr, SDHCI_ADMA_ADDRESS);
-> +			sdhci_writel(host, lower_32_bits(host->adma_addr),
-> +				     SDHCI_ADMA_ADDRESS);
->  			if (host->flags & SDHCI_USE_64_BIT_DMA)
->  				sdhci_writel(host,
-> -					     (u64)host->adma_addr >> 32,
-> +					     upper_32_bits(host->adma_addr),
->  					     SDHCI_ADMA_ADDRESS_HI);
->  		} else {
->  			WARN_ON(sg_cnt != 1);
-> 
+Also, looking at arch/arm/mach-omap1/include/mach/uncompress.h
+it seems that SX1 normally uses UART3, not UART1.
+Is that different in qemu?
 
+        Arnd
