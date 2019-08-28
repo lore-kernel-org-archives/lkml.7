@@ -2,107 +2,142 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24869C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EC9C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03BEF2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9C12173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:16:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ddOdhhcY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfH1QPt (ORCPT
+        id S1726833AbfH1QQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:15:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54658 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726395AbfH1QPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:15:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4DA50B04F;
-        Wed, 28 Aug 2019 16:15:48 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 8CD26DA809; Wed, 28 Aug 2019 18:16:10 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 18:16:09 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Jan Kara <jack@suse.cz>
-Cc:     SunKe <sunke32@huawei.com>, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/sync.c: Fix UBSAN Undefined behaviour in
- sync_file_range
-Message-ID: <20190828161609.GE2752@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Jan Kara <jack@suse.cz>,
-        SunKe <sunke32@huawei.com>, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1562898517-143943-1-git-send-email-sunke32@huawei.com>
- <20190827152237.GC10306@quack2.suse.cz>
+        Wed, 28 Aug 2019 12:16:35 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:7261 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbfH1QQf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 12:16:35 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d66a8e40000>; Wed, 28 Aug 2019 09:16:36 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 28 Aug 2019 09:16:34 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 28 Aug 2019 09:16:34 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 28 Aug
+ 2019 16:16:33 +0000
+Received: from [10.25.74.161] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 28 Aug
+ 2019 16:16:28 +0000
+Subject: Re: [PATCH V2 3/6] PCI: tegra: Add support to configure sideband pins
+To:     Andrew Murray <andrew.murray@arm.com>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>,
+        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
+        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190828131505.28475-1-vidyas@nvidia.com>
+ <20190828131505.28475-4-vidyas@nvidia.com>
+ <20190828150739.GX14582@e119886-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <015280f6-cf13-9a36-6ae7-77476d089af4@nvidia.com>
+Date:   Wed, 28 Aug 2019 21:46:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827152237.GC10306@quack2.suse.cz>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20190828150739.GX14582@e119886-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1567008996; bh=vkYR9GMGra4mXvzpjpzlucRSvf0JCKSyhfkQefgDo5g=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ddOdhhcYgMCMUdb0NaOCMhghD3DAvywx7L0BfIq4QMvoctZLVx6TYtgcTOWclJqd1
+         Kk5QMQWGX+FdIkHUG+yE+dFVqPPL2JPHnamym5DTHQJ5RrGsjvtzPckOR4ct3icH3n
+         kCVV6C3TQnc35zWT2euvmQP/mBZ52L7x1JhVWJAgvn05Mi5U8tbzCM6htKUHVtGfl6
+         xYhsu/1q0UBrr458CbH/lzSxu99dJmrc1xEPJJ3IMYPLXhWR0TKHihzHQNrpli90zw
+         FtrGsKFehb71WlKSxCLC9ZxPCmQYeXv7qntl9qOoeOh8VaCFgBbrNAorTAI4jyOjwX
+         df6qf8GLoa4GA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 05:22:37PM +0200, Jan Kara wrote:
-> On Fri 12-07-19 10:28:37, SunKe wrote:
-> > There is a UBSAN report:
-> > UBSAN: Undefined behaviour in ../fs/sync.c:298:10
-> > signed integer overflow:
-> > -8 + -9223372036854775807 cannot be represented in type 'long long int'
-> > CPU: 0 PID: 15876 Comm: syz-executor.3 Not tainted
-> > Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-> > Call trace:
-> > [<ffffff90080ac450>] dump_backtrace+0x0/0x698 arch/arm64/kernel/traps.c:96
-> > [<ffffff90080acb20>] show_stack+0x38/0x60 arch/arm64/kernel/traps.c:234
-> > [<ffffff9008ca4500>] __dump_stack lib/dump_stack.c:15 [inline]
-> > [<ffffff9008ca4500>] dump_stack+0x1a8/0x230 lib/dump_stack.c:51
-> > [<ffffff9008d7e078>] ubsan_epilogue+0x34/0x9c lib/ubsan.c:164
-> > [<ffffff9008d7ebb4>] handle_overflow+0x228/0x280 lib/ubsan.c:195
-> > [<ffffff9008d7ed28>] __ubsan_handle_add_overflow+0x4c/0x68 lib/ubsan.c:203
-> > [<ffffff900874c2b8>] SYSC_sync_file_range fs/sync.c:298 [inline]
-> > [<ffffff900874c2b8>] SyS_sync_file_range+0x350/0x3e8 fs/sync.c:285
-> > [<ffffff9008094480>] el0_svc_naked+0x30/0x34
-> > 
-> > When calculate the endbyte, there maybe an overflow, even if no effect
-> > the kernel, but I also want to avoid overflowing and avoid UBSAN reporting.
-> > The original compare is to ensure the offset >= 0 && nbytes >= 0 && no
-> > overflow happened.
-> > 
-> > I do the calculate after compare. ensure the offset >= 0 && nbytes >= 0 &&
-> > no overflow may happen first.
-> > 
-> > Signed-off-by: SunKe <sunke32@huawei.com>
+On 8/28/2019 8:37 PM, Andrew Murray wrote:
+> On Wed, Aug 28, 2019 at 06:45:02PM +0530, Vidya Sagar wrote:
+>> Add support to configure sideband signal pins when information is present
+>> in respective controller's device-tree node.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>> V2:
+>> * Addressed review comment from Andrew Murray
+>> * Handled failure case of pinctrl_pm_select_default_state() cleanly
+>>
+>>   drivers/pci/controller/dwc/pcie-tegra194.c | 11 +++++++++--
+>>   1 file changed, 9 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+>> index fc0dbeb31d78..057ba4f9fbcd 100644
+>> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+>> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+>> @@ -1304,8 +1304,13 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
+>>   	if (ret < 0) {
+>>   		dev_err(dev, "Failed to get runtime sync for PCIe dev: %d\n",
+>>   			ret);
+>> -		pm_runtime_disable(dev);
+>> -		return ret;
+>> +		goto fail_pm_get_sync;
+>> +	}
+>> +
+>> +	ret = pinctrl_pm_select_default_state(pcie->dev);
+> 
+> This patch looks OK, though you're still using pcie->dev here instead of dev.
+I'll take care of this.
+Thanks for the thorough review.
 
-I don't have the original mail in my mailbox to reply, let me qote the
-code here again:
+- Vidya Sagar
 
-@@ -246,15 +246,15 @@ int sync_file_range(struct file *file, loff_t offset, loff_t nbytes,
- 	if (flags & ~VALID_FLAGS)
- 		goto out;
- 
--	endbyte = offset + nbytes;
--
- 	if ((s64)offset < 0)
- 		goto out;
--	if ((s64)endbyte < 0)
-+	if ((s64)nbytes < 0)
- 		goto out;
--	if (endbyte < offset)
-+	if (S64_MAX - offset < nbytes)
- 		goto out;
- 
-+	endbyte = offset + nbytes;
+> 
+> Thanks,
+> 
+> Andrew Murray
+> 
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "Failed to configure sideband pins: %d\n", ret);
+>> +		goto fail_pinctrl;
+>>   	}
+>>   
+>>   	tegra_pcie_init_controller(pcie);
+>> @@ -1332,7 +1337,9 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
+>>   
+>>   fail_host_init:
+>>   	tegra_pcie_deinit_controller(pcie);
+>> +fail_pinctrl:
+>>   	pm_runtime_put_sync(dev);
+>> +fail_pm_get_sync:
+>>   	pm_runtime_disable(dev);
+>>   	return ret;
+>>   }
+>> -- 
+>> 2.17.1
+>>
 
-Can this be replaced by check_add_overflow? This can handle
-signed/unsigned types while the opencoding obscures the meaning.
-
-And a shameless plug, I sent a fix for another UB report, in remap_verify_area
-https://lore.kernel.org/lkml/20190808123942.19592-1-dsterba@suse.com/
-
-that I'd like to get merged.
