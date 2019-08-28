@@ -2,220 +2,155 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD74C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E235EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD36C20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE71420856
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:09:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfH1MJT (ORCPT
+        id S1726474AbfH1MJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:09:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:58034 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726259AbfH1MJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:09:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CA1D344;
-        Wed, 28 Aug 2019 05:09:18 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE7EA3F246;
-        Wed, 28 Aug 2019 05:09:16 -0700 (PDT)
-Subject: Re: [PATCH v3 01/10] KVM: arm64: Document PV-time interface
-To:     Christoffer Dall <christoffer.dall@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20190821153656.33429-1-steven.price@arm.com>
- <20190821153656.33429-2-steven.price@arm.com>
- <20190827085706.GB6541@e113682-lin.lund.arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <37eaf54b-8a22-8483-a372-419bfa1475f1@arm.com>
-Date:   Wed, 28 Aug 2019 13:09:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 08:09:28 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41368 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfH1MJ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 08:09:27 -0400
+Received: by mail-qt1-f196.google.com with SMTP id i4so2662881qtj.8;
+        Wed, 28 Aug 2019 05:09:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uY/0QthbDm0KRk0gieS7xBLQazGhEOHEGV7wuOo/gng=;
+        b=BGYAmdWj4B0XNk0rvMFA8tozmwzlR/M2xf3gkPNBZ4Q75U4KsbWj7RWdimXtUWgmaF
+         2AwdsadbK+097tHgmE8MeraL+TJquf7NML3n6UnH6caAWoMhXoWiQ7X8QCqOWOxmY+km
+         Ks8aHnGFPHX8hYOHJx/jL7wykxOrVaksZ5minRY1ssfEqfduZd5F2AgrutHiSytCg9Jz
+         XuujESQpo1AovCoC1gz9ZTswRCpm+f+FHkZ3tlnNgwlXdakP7TRvPR/xIaUViQKJ3Oq7
+         v1VoXrxUGM4jHtuQ1x4Fx7R3QWUUk9OwW4HSz5STfHavQRcLkLBfPLJPkYG0nx+YGQu0
+         W2jg==
+X-Gm-Message-State: APjAAAXFfGVzyYZeZLZ8inEwAeyrhU8MsJtchiL1dbBtcevg7RiADsA4
+        8i1NWcyG7LBgCu7EmnpV7hOh+mndbdyB84HZENg=
+X-Google-Smtp-Source: APXvYqxPjCZy8Yr70wpAUsKG4hqpSsecPtkX5jagW7DEkIoSG6k0GIS1TjLQmGSzQOE2w0NAJB8sdbquABde5znr26Y=
+X-Received: by 2002:ad4:45c7:: with SMTP id v7mr2362538qvt.63.1566994166270;
+ Wed, 28 Aug 2019 05:09:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190827085706.GB6541@e113682-lin.lund.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190827154851.10486-1-enric.balletbo@collabora.com>
+ <20190827161045.GC26807@tuxbook-pro> <CAK8P3a2h2gUhxcVgD5JhR1Uo4qUSuG5yp4RCrAxevNmyD4ZRTA@mail.gmail.com>
+ <2db6cde1-9e7f-8b1c-f2e4-80bdd2478d28@collabora.com>
+In-Reply-To: <2db6cde1-9e7f-8b1c-f2e4-80bdd2478d28@collabora.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 28 Aug 2019 14:09:10 +0200
+Message-ID: <CAK8P3a3zYpgouGAibyMjDykZmy+ABnx6AD2cYpHnXq9Zsw2V=w@mail.gmail.com>
+Subject: Re: [PATCH] arm/arm64: defconfig: Update configs to use the new
+ CROS_EC options
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        SoC Team <soc@kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Collabora kernel ML <kernel@collabora.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Yannick Fertr?" <yannick.fertre@st.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/08/2019 09:57, Christoffer Dall wrote:
-> On Wed, Aug 21, 2019 at 04:36:47PM +0100, Steven Price wrote:
->> Introduce a paravirtualization interface for KVM/arm64 based on the
->> "Arm Paravirtualized Time for Arm-Base Systems" specification DEN 0057A.
->>
->> This only adds the details about "Stolen Time" as the details of "Live
->> Physical Time" have not been fully agreed.
->>
->> User space can specify a reserved area of memory for the guest and
->> inform KVM to populate the memory with information on time that the host
->> kernel has stolen from the guest.
->>
->> A hypercall interface is provided for the guest to interrogate the
->> hypervisor's support for this interface and the location of the shared
->> memory structures.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>  Documentation/virt/kvm/arm/pvtime.txt | 100 ++++++++++++++++++++++++++
->>  1 file changed, 100 insertions(+)
->>  create mode 100644 Documentation/virt/kvm/arm/pvtime.txt
->>
->> diff --git a/Documentation/virt/kvm/arm/pvtime.txt b/Documentation/virt/kvm/arm/pvtime.txt
->> new file mode 100644
->> index 000000000000..1ceb118694e7
->> --- /dev/null
->> +++ b/Documentation/virt/kvm/arm/pvtime.txt
->> @@ -0,0 +1,100 @@
->> +Paravirtualized time support for arm64
->> +======================================
->> +
->> +Arm specification DEN0057/A defined a standard for paravirtualised time
->> +support for AArch64 guests:
->> +
->> +https://developer.arm.com/docs/den0057/a
->> +
->> +KVM/arm64 implements the stolen time part of this specification by providing
->> +some hypervisor service calls to support a paravirtualized guest obtaining a
->> +view of the amount of time stolen from its execution.
->> +
->> +Two new SMCCC compatible hypercalls are defined:
->> +
->> +PV_FEATURES 0xC5000020
->> +PV_TIME_ST  0xC5000022
->> +
->> +These are only available in the SMC64/HVC64 calling convention as
->> +paravirtualized time is not available to 32 bit Arm guests. The existence of
->> +the PV_FEATURES hypercall should be probed using the SMCCC 1.1 ARCH_FEATURES
->> +mechanism before calling it.
->> +
->> +PV_FEATURES
->> +    Function ID:  (uint32)  : 0xC5000020
->> +    PV_func_id:   (uint32)  : Either PV_TIME_LPT or PV_TIME_ST
->> +    Return value: (int32)   : NOT_SUPPORTED (-1) or SUCCESS (0) if the relevant
->> +                              PV-time feature is supported by the hypervisor.
->> +
->> +PV_TIME_ST
->> +    Function ID:  (uint32)  : 0xC5000022
->> +    Return value: (int64)   : IPA of the stolen time data structure for this
->> +                              (V)CPU. On failure:
->> +                              NOT_SUPPORTED (-1)
->> +
->> +The IPA returned by PV_TIME_ST should be mapped by the guest as normal memory
->> +with inner and outer write back caching attributes, in the inner shareable
->> +domain. A total of 16 bytes from the IPA returned are guaranteed to be
->> +meaningfully filled by the hypervisor (see structure below).
->> +
->> +PV_TIME_ST returns the structure for the calling VCPU.
->> +
->> +Stolen Time
->> +-----------
->> +
->> +The structure pointed to by the PV_TIME_ST hypercall is as follows:
->> +
->> +  Field       | Byte Length | Byte Offset | Description
->> +  ----------- | ----------- | ----------- | --------------------------
->> +  Revision    |      4      |      0      | Must be 0 for version 0.1
->> +  Attributes  |      4      |      4      | Must be 0
->> +  Stolen time |      8      |      8      | Stolen time in unsigned
->> +              |             |             | nanoseconds indicating how
->> +              |             |             | much time this VCPU thread
->> +              |             |             | was involuntarily not
->> +              |             |             | running on a physical CPU.
->> +
->> +The structure will be updated by the hypervisor prior to scheduling a VCPU. It
->> +will be present within a reserved region of the normal memory given to the
->> +guest. The guest should not attempt to write into this memory. There is a
->> +structure per VCPU of the guest.
->> +
->> +User space interface
->> +====================
->> +
->> +User space can request that KVM provide the paravirtualized time interface to
->> +a guest by creating a KVM_DEV_TYPE_ARM_PV_TIME device, for example:
->> +
->> +    struct kvm_create_device pvtime_device = {
->> +            .type = KVM_DEV_TYPE_ARM_PV_TIME,
->> +            .attr = 0,
->> +            .flags = 0,
->> +    };
->> +
->> +    pvtime_fd = ioctl(vm_fd, KVM_CREATE_DEVICE, &pvtime_device);
->> +
->> +Creation of the device should be done after creating the vCPUs of the virtual
->> +machine.
->> +
->> +The IPA of the structures must be given to KVM. This is the base address
->> +of an array of stolen time structures (one for each VCPU). The base address
->> +must be page aligned. The size must be at least 64 * number of VCPUs and be a
->> +multiple of PAGE_SIZE.
->> +
->> +The memory for these structures should be added to the guest in the usual
->> +manner (e.g. using KVM_SET_USER_MEMORY_REGION).
->> +
->> +For example:
->> +
->> +    struct kvm_dev_arm_st_region region = {
->> +            .gpa = <IPA of guest base address>,
->> +            .size = <size in bytes>
->> +    };
-> 
-> This feel fragile; how are you handling userspace creating VCPUs after
-> setting this up,
+On Wed, Aug 28, 2019 at 12:10 PM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+> On 27/8/19 18:12, Arnd Bergmann wrote:
+> > On Tue, Aug 27, 2019 at 6:08 PM Bjorn Andersson
+> > <bjorn.andersson@linaro.org> wrote:
+> >>
+> >> On Tue 27 Aug 08:48 PDT 2019, Enric Balletbo i Serra wrote:
+> >>
+> >>> Recently we refactored the CrOS EC drivers moving part of the code from
+> >>> the MFD subsystem to the platform chrome subsystem. During this change
+> >>> we needed to rename some config options, so, update the defconfigs
+> >>> accordingly.
+> >>>
+> >>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> >>> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >>> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+> >>> Tested-by: Gwendal Grignou <gwendal@chromium.org>
+> >>
+> >> Can we make the entries in the generic arm64 defconfig modules?
+> >
+> > Good idea.
+> >
+> > Actually I would prefer to have all of them as modules for consistency,
+> > if at all possible.
+> >
+>
+> It is very common boot Chromebooks from an USB device, the EC needs to be
+> built-in in order to boot from these devices, otherwise you should use an
+> initramfs. I'd like to avoid forcing people to build an initramfs just to boot
+> from these devices if possible, in fact, my usual workflow is without initramfs,
+> and knowing that with the default defconfig just should boot helps a lot sometimes.
+>
+> Note that, it's not the case for EC subdevices, these are already build as modules.
 
-In this case as long as the structures all fit within the region created
-VCPUs can be created/destroyed at will. If the VCPU index is too high
-then the kernel will bail out in kvm_update_stolen_time() so the
-structure will not be written. I consider this case as user space
-messing up, so beyond protecting the host from the mess, user space gets
-to keep the pieces.
+Ok, fair enough, let's leave it built-in then.
 
-> the GPA overlapping guest memory, etc.
+> BTW, Lee asked if this patch should be squashed with the patches that really
+> renames the config options to help bisect ability, I don't have a hard opinion
+> as I don't usually run the config option between bisection steps, so please let
+> me know what do you prefer and I'll respin the patches ASAP if that's the case.
 
-Again, the (host) kernel is protected against this, but clearly this
-will end badly for the guest.
+I'm not usually worried about bisection in defconfig changes, since like you
+say most commonly one would not run 'make defconfig' betweens the
+bisection steps.
 
-> Is the
-> philosophy here that the VMM can mess up the VM if it wants, but that
-> this should never lead attacks on the host (we better hope not) and so
-> we don't care?
+If we really care about it, we could keep a symbol like this
+in drivers/platform/chrome/Kconfig for one release:
 
-Yes. For things like GPA overlapping guest memory it's not really the
-host's position to work out what is "guest memory". It's quite possible
-that user space could decide to place the stolen time structures right
-in the middle of guest memory - it's just up to user space to inform the
-guest what memory is usable. Obviously the expectation is that the
-shared structures would be positioned "out of the way" in GPA space in
-any normal arrangement.
+config CONFIG_MFD_CROS_EC
+        tristate "Enable ChromeOS Embedded Controller"
+        select CROS_EC
+        select CHROME_PLATFORMS
+        select CONFIG_MFD_CROS_EC_DEV
+        help
+           This is a transitional Kconfig option and will be removed
+           after everyone enables the parts individually.
 
-> It seems to me setting the IPA per vcpu throught the VCPU device would
-> avoid a lot of these issues.  See
-> Documentation/virt/kvm/devices/vcpu.txt.
-
-That is certainly a possibility, I'm not really sure what the benefit is
-though? It would still lead to corner cases:
-
- * What if only some VCPUs had stolen time setup on them?
- * What if multiple VCPUs pointed to the same location?
- * The structures can still overlap with guest memory
-
-It's also more work to setup in user space with the only "benefit" being
-that user space could choose to organise the structures however it sees
-fit (e.g. no need for them to be contiguous in memory). But I'm not sure
-I see a use case for that flexibility.
-
-Perhaps there's some benefit I'm not seeing?
-
-Steve
+      Arnd
