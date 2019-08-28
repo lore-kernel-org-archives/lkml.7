@@ -2,99 +2,135 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38805C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B382DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069012064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:46:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ANJ2J/8Q"
+	by mail.kernel.org (Postfix) with ESMTP id 8F3932064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfH1Mq2 (ORCPT
+        id S1726536AbfH1Mqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:46:28 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:47058 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbfH1Mq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:46:28 -0400
-Received: from zn.tnic (p200300EC2F0A5300B1A6357224C8EB83.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5300:b1a6:3572:24c8:eb83])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 596B01EC09E2;
-        Wed, 28 Aug 2019 14:46:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566996386;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=YotASNKG5TQSIo5/90ZJMMOo66u6rq+Oxb5MG7ExeFI=;
-        b=ANJ2J/8Qgwxx2nKsfT3swocAsnLzRZS10vUSsL9UD+cLKvyOm49ULSHJl4vQTFa2Vwnp60
-        2tNRkKLRq05O9sokFKiG5dlleG3PLvhXaK++tvwHsGx84jexrhunszr8RoDIXSeJpWCoP5
-        kit090PCjxJItAS0rgxU07S8c5EvYRs=
-Date:   Wed, 28 Aug 2019 14:46:21 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chen Yu <yu.c.chen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 4.19 72/98] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD
- family 15h/16h
-Message-ID: <20190828124621.GI4920@zn.tnic>
-References: <20190827072722.020603090@linuxfoundation.org>
- <20190827113604.GB18218@amd>
- <alpine.DEB.2.21.1908271525480.1939@nanos.tec.linutronix.de>
- <20190828103113.GA14677@amd>
- <alpine.DEB.2.21.1908281231480.1869@nanos.tec.linutronix.de>
- <20190828114947.GC8052@amd>
- <20190828120024.GF4920@zn.tnic>
- <20190828120935.GD8052@amd>
- <20190828121628.GG4920@zn.tnic>
- <20190828122913.GE8052@amd>
+        Wed, 28 Aug 2019 08:46:55 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47009 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfH1Mqz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 08:46:55 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i2xLe-0003Fv-Fd; Wed, 28 Aug 2019 14:46:50 +0200
+Date:   Wed, 28 Aug 2019 14:46:50 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Neil Horman <nhorman@tuxdriver.com>
+cc:     linux-kernel@vger.kernel.org, x86@kernel.org, djuran@redhat.com,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH V2] x86: Add irq spillover warning
+In-Reply-To: <20190822143421.9535-1-nhorman@tuxdriver.com>
+Message-ID: <alpine.DEB.2.21.1908281337280.1869@nanos.tec.linutronix.de>
+References: <20190822143421.9535-1-nhorman@tuxdriver.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190828122913.GE8052@amd>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 02:29:13PM +0200, Pavel Machek wrote:
-> This is not a way to have an inteligent conversation.
+Neil,
 
-No, this *is* the way to keep the conversation sane, without veering
-off into some absurd claims.
+On Thu, 22 Aug 2019, Neil Horman wrote:
 
-So, to cut to the chase: you can simply add "rdrand=force" to your
-cmdline parameters and get back to using RDRAND.
+Just a few nits.
 
-And yet if you still feel this fix does not meet your expectations,
-you were told already to either produce patches or who to contact. I'm
-afraid complaining on this thread won't get you anywhere but that's your
-call.
+> On Intel hardware, cpus are limited in the number of irqs they can
+> have affined to them (currently 240), based on section 10.5.2 of:
+> https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf
+>
 
--- 
-Regards/Gruss,
-    Boris.
+Please do not add links to URLs which are not reliable and sections which
+have a different number in the next version of the document. Just cite the
+3 relevant lines or transcribe them.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Aside of that the above is not really accurate:
+
+1) This is not restricted to Intel. All x86 CPUs of all vendors behave
+   that way.
+
+2) CPUs have a vector space of 256. CPUs reserve 32 vectors (0..31). That
+   leaves 224. The kernel reserves another 22 vectors for various purposes.
+
+   That leaves 202 vectors for assignment to devices and that's what this
+   is about.
+
+> assign_irq_vector_any_locked() will attempt to honor the affining
+> request, but if the 240 vector limitation documented above is crossed, a
+
+that means the vector space is exhausted.
+
+> new mask will be selected that is potentially outside the requested cpu
+
+It's not potentially outside. The point is that the requested affinity mask
+has no vectors left, so it falls back to a wider cpumask and is guaranteed
+to select a CPU which is not in the requested affinity mask.
+
+> set silently.  This can lead to unexpected behavior for administrators.
+> 
+> Mitigate this problem by checking the affinity mask after its been
+> assigned in activate_reserved so that adminstrators get a logged warning
+> about the change.
+
+Please do not describe implementation details which can be seen from the
+patch itself.
+ 
+> Tested successfully by the reporter
+
+We have a 'Tested-by:' tag for this
+ 
+> Change Notes:
+> V1->V2)
+> 	* Moved the check for this condition to activate_reserved from
+> do_IRQ, taking it out of the hot path (request by tglx@lintronix.de)
+
+Please put change notes (and thanks for providing them) below the '---'
+discard line. They are not part of the final changelog in git. They are
+informative for the reviewers, but if in the changelog it's manual work to
+remove them while the discard section goes away automatically.
+
+> +
+> +	/*
+> +	 * Check to ensure that the effective affinity mask is a subset
+> +	 * the user supplied affinity mask, and warn the user if it is not
+> +	 */
+> +	if (!cpumask_subset(irq_data_get_effective_affinity_mask(irqd),
+> +	     irq_data_get_affinity_mask(irqd)))
+> +		pr_warn("irq %d has been assigned to a cpu outside of its user affinity mask\n",
+
+s/%d/%u/  irqd->irq is unsigned int.
+
+So you tell what, but no hint about the why. That should be:
+
+   "irq %u: Affinity broken due to vector space exhaustion.\n"
+
+That actually tells that it happened and gives the administrator
+information why. So he knows that he tried to assign too many interrupts to
+a set of CPUs.
+
+> +			irqd->irq);
+
+This is a multiline statement and wants brackets around it.
+
+> +
+>  	return ret;
+
+I fixed that all up while applying, so no need to resend.
+
+Thanks,
+
+	tglx
