@@ -2,95 +2,124 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846EEC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E29BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55429217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9E8217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:14:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfH1HNs (ORCPT
+        id S1726396AbfH1HOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 03:13:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45818 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbfH1HNr (ORCPT
+        Wed, 28 Aug 2019 03:14:23 -0400
+Received: from bastet.se.axis.com ([195.60.68.11]:35414 "EHLO
+        bastet.se.axis.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbfH1HOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:13:47 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1i2s9G-0001nS-3j; Wed, 28 Aug 2019 09:13:42 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andrea Parri <parri.andrea@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: numlist API Re: [RFC PATCH v4 1/9] printk-rb: add a new printk ringbuffer implementation
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
-        <20190807222634.1723-2-john.ogness@linutronix.de>
-        <20190823171802.eo2chwyktibeub7a@pathway.suse.cz>
-        <20190823171802.eo2chwyktibeub7a@pathway.suse.cz>
-        <87sgpnmqdo.fsf@linutronix.de>
-        <20190827130349.6mrnhdlqyqokgsfk@pathway.suse.cz>
-Date:   Wed, 28 Aug 2019 09:13:39 +0200
-In-Reply-To: <20190827130349.6mrnhdlqyqokgsfk@pathway.suse.cz> (Petr Mladek's
-        message of "Tue, 27 Aug 2019 15:03:49 +0200")
-Message-ID: <87o909lq3g.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Wed, 28 Aug 2019 03:14:22 -0400
+X-Greylist: delayed 416 seconds by postgrey-1.27 at vger.kernel.org; Wed, 28 Aug 2019 03:14:21 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by bastet.se.axis.com (Postfix) with ESMTP id 94C4918489;
+        Wed, 28 Aug 2019 09:07:24 +0200 (CEST)
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+        by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id hq3WF_UGHAyI; Wed, 28 Aug 2019 09:07:23 +0200 (CEST)
+Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
+        by bastet.se.axis.com (Postfix) with ESMTPS id 7D936182F4;
+        Wed, 28 Aug 2019 09:07:23 +0200 (CEST)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 68FDD1E06E;
+        Wed, 28 Aug 2019 09:07:23 +0200 (CEST)
+Received: from boulder03.se.axis.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5BDB11E064;
+        Wed, 28 Aug 2019 09:07:23 +0200 (CEST)
+Received: from seth.se.axis.com (unknown [10.0.2.172])
+        by boulder03.se.axis.com (Postfix) with ESMTP;
+        Wed, 28 Aug 2019 09:07:23 +0200 (CEST)
+Received: from XBOX03.axis.com (xbox03.axis.com [10.0.5.17])
+        by seth.se.axis.com (Postfix) with ESMTP id 4F111229A;
+        Wed, 28 Aug 2019 09:07:23 +0200 (CEST)
+Received: from lnxricardw1.se.axis.com (10.0.5.60) by XBOX03.axis.com
+ (10.0.5.17) with Microsoft SMTP Server (TLS) id 15.0.1365.1; Wed, 28 Aug 2019
+ 09:07:23 +0200
+Date:   Wed, 28 Aug 2019 09:07:17 +0200
+From:   Ricard Wanderlof <ricard.wanderlof@axis.com>
+X-X-Sender: ricardw@lnxricardw1.se.axis.com
+To:     Sasha Levin <sashal@kernel.org>
+CC:     Mark Brown <broonie@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 5.2 040/123] ASoC: Fail card instantiation if
+ DAI format setup fails
+In-Reply-To: <20190828021311.GV5281@sasha-vm>
+Message-ID: <alpine.DEB.2.20.1908280859060.5799@lnxricardw1.se.axis.com>
+References: <20190814021047.14828-1-sashal@kernel.org> <20190814021047.14828-40-sashal@kernel.org> <20190814092213.GC4640@sirena.co.uk> <20190826013515.GG5281@sasha-vm> <20190827110014.GD23391@sirena.co.uk> <20190828021311.GV5281@sasha-vm>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="US-ASCII"
+X-Originating-IP: [10.0.5.60]
+X-ClientProxiedBy: XBOX04.axis.com (10.0.5.18) To XBOX03.axis.com (10.0.5.17)
+X-TM-AS-GCONF: 00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-27, Petr Mladek <pmladek@suse.com> wrote:
-> The API is complicated because of the callbacks. It depends on a logic
-> that is implemented externally. It makes it abstract to some extent.
->
-> My view is that the API would be much cleaner and easier to review
-> when the ID handling is "hardcoded" (helper functions). It could be
-> made abstract anytime later when there is another user.
->
-> There should always be a reason why to make a code more complicated
-> than necessary. It seems that the only reason is some theoretical
-> future user and its theoretical requirements.
 
-FWIW, I did _not_ create the numlist and dataring structures in order to
-support some theoretical future user. PeterZ helped[0] me realize that
-RFCv2 was actually using multiple internal data structures. Each of
-these internal data structures has their own set of memory barriers and
-semantics. By explicitly refactoring them behind strong APIs, the memory
-barriers could be clearly visible and the semantics clearly defined.
+On Wed, 28 Aug 2019, Sasha Levin wrote:
 
-For me this was a great help in _simplifying_ the design. For me it also
-greatly simplified debugging, testing, and verifying because I could
-write tests for numlist and datalist that explicitly targeted those data
-structures. Once I believed they were bullet-proof, I could move on to
-higher-level tests of the printk_ringbuffer. And once I believed the
-printk_ringbuffer was bullet-proof, I could move on to the higher-level
-printk tests. When a problem was found, I could effectively isolate
-which component failed their job.
+> On Tue, Aug 27, 2019 at 12:00:14PM +0100, Mark Brown wrote:
+> > On Sun, Aug 25, 2019 at 09:35:15PM -0400, Sasha Levin wrote:
+> > > On Wed, Aug 14, 2019 at 10:22:13AM +0100, Mark Brown wrote:
+> > 
+> > > > > If the DAI format setup fails, there is no valid communication format
+> > > > > between CPU and CODEC, so fail card instantiation, rather than
+> > > continue
+> > > > > with a card that will most likely not function properly.
+> > 
+> > > > This is another one where if nobody noticed a problem already and things
+> > > > just happened to be working this might break things, it's vanishingly
+> > > > unlikely to fix anything that was broken.
+> > 
+> > > Same as the other patch: this patch suggests it fixes a real bug, and if
+> > > this patch is broken let's fix it.
+> > 
+> > If anyone ran into this on the older kernel and fixed or worked
+> > around it locally there's a reasonable chance this will then
+> > break what they're doing.  The patch itself is perfectly fine but
+> 
+> But there's not much we can do here. We can't hold off on fixing
+> breakage such as this because existing users have workarounds for this.
+> Are we breaking kernel ABI with this patch then?
+> 
+> And what about new users? We'll let them get hit by the issue and
+> develop their own workarounds?
 
-I understand that we disagree about the abstractions being a
-simplification. And I'm not sure how to proceed in this regard. (Maybe
-once we get everything bullet-proof, we can put everything back together
-into a monolith like RFCv2.) Either way, please understand that the
-abstractions were done for the benefit of printk_ringbuffer, not for any
-theoretical future user.
+My $0.02 here: In my specific case, we noticed the problem because there 
+was an unexpected left shift in the captured audio data, since the codec 
+and CPU DAIs were using different formats when the DAI format was not 
+explicitly set. The fix for that was to add
 
-John Ogness
+simple-audio-card,format= "i2s";
 
-[0] https://lkml.kernel.org/r/20190628154435.GZ7905@worktop.programming.kicks-ass.net
+to the devicetree audio card section which of course should have been 
+there all the time. The fact that the kernel failed halt the 
+initialization of the audio card lengthened the debug time, but did not 
+provoke me to attempt a workaround, since the information (the error 
+printout from the ALSA framework when an invalid daifmt setting was made) 
+was actually right there in the kernel log.
+
+Possibly there might be other usecases, but in our case, if the kernel had 
+stopped the audio initialization it would then have been more obvious 
+where to start looking.
+
+/Ricard
+-- 
+Ricard Wolf Wanderlof                           ricardw(at)axis.com
+Axis Communications AB, Lund, Sweden            www.axis.com
+Phone +46 46 272 2016                           Fax +46 46 13 61 30
