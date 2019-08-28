@@ -2,147 +2,194 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E9BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC6EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6B4217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E00217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:54:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FZMeB9HY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SyySb40L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfH1HwU (ORCPT
+        id S1726450AbfH1HyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 03:52:20 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:45176 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfH1HwU (ORCPT
+        Wed, 28 Aug 2019 03:54:04 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36114 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbfH1HyD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:52:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8PXB9ABTilydihE3Gb8q5wBSvHgzk09E4AOCFNyrau0=; b=FZMeB9HYg0EdOqIfg+1qQDPLZ
-        afrYplqiqSjtey2IRkZVwoXK97TMHQqxayKBYPdFutEKZiNZDCHlouRFK8mlKMKgUJB1Ev2oQFLeZ
-        9uJ2Ls2j5K3CSiV9+3ucaI5Ul8KrClL5oAka19IoJffJ2HhA/NKKHTOt7tXbMX/8Or3VvE5kAANaH
-        5Hh4svanf148HExDc3v0UyZM44UWOHTkFxVC50Vvzo46nkLvgDXu60pqTwbU8feumpEw5VMVxQUh4
-        DTXa38yP/3v0IyDuAeI+h6GaNKMLdXbjMWULduwHrtXvikShD0Javi0NkjGZq+UHFrqfRzVB+Mbp0
-        1VddxzBZA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2skZ-0007FC-Hd; Wed, 28 Aug 2019 07:52:15 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D381A3070F4;
-        Wed, 28 Aug 2019 09:51:39 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B7AC020230B05; Wed, 28 Aug 2019 09:52:13 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 09:52:13 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-Subject: Re: [RESEND PATCH V3 2/8] perf/x86/intel: Basic support for metrics
- counters
-Message-ID: <20190828075213.GB2369@hirez.programming.kicks-ass.net>
-References: <20190826144740.10163-1-kan.liang@linux.intel.com>
- <20190826144740.10163-3-kan.liang@linux.intel.com>
+        Wed, 28 Aug 2019 03:54:03 -0400
+Received: by mail-lj1-f193.google.com with SMTP id u15so1694062ljl.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 00:54:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2FWSvDl8u8A9TagHUKslPXq5SjeFzZUA7+MhZLlUGBI=;
+        b=SyySb40LApNqB6t9DZDy3xCJSzfkq9oiIyjKd66nYOBRQMBmp9SXVdseZyAUZNsyUr
+         fM0HzG9XntwS1PBm215QTakWStTL/kE+BU5xZ8Twbx9PX9d4DvRVAVqR1p8PUJf7RbUZ
+         sm0A6lKe3ISKB7iiMLcyHKxdOekG8sLYczB6S52aT4UpmSPSwqhkYThMmJC7l6Ux9H8K
+         J1Ky+YnxHE5jyC4kGEaT/SjlLeE3Kzu08uPgtXN76NlB90W39WfrNCwftApX0ib5QoOW
+         dhQnn+z7E12KuyGnoeOgxuvRno5NMnoUWoXBCarkNQzUkIBlrc77sY3hJjQCQdFG5jQe
+         znlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2FWSvDl8u8A9TagHUKslPXq5SjeFzZUA7+MhZLlUGBI=;
+        b=hYahE1zYbXqIrBSjNEngFzsjUObYBvHMXHRAXiRvADz0CWdeUS6tqZnW3lQE/Kjkpl
+         VCfYrObmOElp8ELGo3kV13tW8bTpYbNYtztuT5yUPmkRzVt0R75slk+KV7Goge7uNsGH
+         mMUr3VMc9Rwwu2+bW4lU3o45mc5kRoThI5Eci24V5aFk2kFqe0dQEW4JNapcA/G0p/nF
+         EAtugFOv1slmEnrdACBNin/OuPWbHi739hwDEoudFU0qT9SzrRag4WtWXPGFWhNV27Kd
+         MaSNggTFdsCOiwPpn7rdPeRZ8ImRTueMiwWYoVAeYlRoJuRCMmEJT3e1lZ1YCObYbboR
+         ht4g==
+X-Gm-Message-State: APjAAAX4N+kIFMPZx2gfRk7tltzI/6KDVvnHbwCvcpPCHJJUR/anDI4u
+        2YW4ZrLhxA/wytdY6R0borAHifjp3N/s4eFp/4TU7w==
+X-Google-Smtp-Source: APXvYqxeb+AdkH9DgGEC/VNyhBRf9kBywzLuKN64qaPgSoo4WRvRKBmmqcBMLfUTf8k99zNgM8UjuDhaD5zGQKxwhBI=
+X-Received: by 2002:a2e:a0d1:: with SMTP id f17mr1266354ljm.106.1566978840468;
+ Wed, 28 Aug 2019 00:54:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826144740.10163-3-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190827161408.20082-1-ttayar@habana.ai>
+In-Reply-To: <20190827161408.20082-1-ttayar@habana.ai>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Wed, 28 Aug 2019 10:53:34 +0300
+Message-ID: <CAFCwf13Z7W+VLiRWcFT5aVf62N1VeL4P+kbFUM-To3ZafC+RWQ@mail.gmail.com>
+Subject: Re: [PATCH] habanalabs: Make the Coresight timestamp perpetual
+To:     Tomer Tayar <ttayar@habana.ai>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 07:47:34AM -0700, kan.liang@linux.intel.com wrote:
-
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 81b005e4c7d9..54534ff00940 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -1033,18 +1033,30 @@ static inline void x86_assign_hw_event(struct perf_event *event,
->  				struct cpu_hw_events *cpuc, int i)
->  {
->  	struct hw_perf_event *hwc = &event->hw;
-> +	int reg_idx;
->  
->  	hwc->idx = cpuc->assign[i];
->  	hwc->last_cpu = smp_processor_id();
->  	hwc->last_tag = ++cpuc->tags[i];
->  
-> +	/*
-> +	 * Metrics counters use different indexes in the scheduler
-> +	 * versus the hardware.
-> +	 *
-> +	 * Map metrics to fixed counter 3 (which is the base count),
-> +	 * but the update event callback reads the extra metric register
-> +	 * and converts to the right metric.
-> +	 */
-> +	reg_idx = get_reg_idx(hwc->idx);
+On Tue, Aug 27, 2019 at 7:14 PM Tomer Tayar <ttayar@habana.ai> wrote:
+>
+> The Coresight timestamp is enabled for a specific debug session using
+> the HL_DEBUG_OP_TIMESTAMP opcode of the debug IOCTL.
+> In order to have a perpetual timestamp that would be comparable between
+> various debug sessions, this patch moves the timestamp enablement to be
+> part of the HW initialization.
+> The HL_DEBUG_OP_TIMESTAMP opcode turns to be deprecated and shouldn't be
+> used.
+>
+> Signed-off-by: Tomer Tayar <ttayar@habana.ai>
+> ---
+>  drivers/misc/habanalabs/goya/goya.c           | 23 +++++++++++++++++++
+>  drivers/misc/habanalabs/goya/goya_coresight.c | 17 ++------------
+>  include/uapi/misc/habanalabs.h                |  2 +-
+>  3 files changed, 26 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+> index de275cb3bb98..0dd0b4429fee 100644
+> --- a/drivers/misc/habanalabs/goya/goya.c
+> +++ b/drivers/misc/habanalabs/goya/goya.c
+> @@ -2062,6 +2062,25 @@ static void goya_disable_msix(struct hl_device *hdev)
+>         goya->hw_cap_initialized &= ~HW_CAP_MSIX;
+>  }
+>
+> +static void goya_enable_timestamp(struct hl_device *hdev)
+> +{
+> +       /* Disable the timestamp counter */
+> +       WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE, 0);
 > +
->  	if (hwc->idx == INTEL_PMC_IDX_FIXED_BTS) {
->  		hwc->config_base = 0;
->  		hwc->event_base	= 0;
->  	} else if (hwc->idx >= INTEL_PMC_IDX_FIXED) {
->  		hwc->config_base = MSR_ARCH_PERFMON_FIXED_CTR_CTRL;
-> -		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 + (hwc->idx - INTEL_PMC_IDX_FIXED);
-> -		hwc->event_base_rdpmc = (hwc->idx - INTEL_PMC_IDX_FIXED) | 1<<30;
-> +		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 +
-> +				  (reg_idx - INTEL_PMC_IDX_FIXED);
-> +		hwc->event_base_rdpmc = (reg_idx - INTEL_PMC_IDX_FIXED) | 1<<30;
->  	} else {
->  		hwc->config_base = x86_pmu_config_addr(hwc->idx);
->  		hwc->event_base  = x86_pmu_event_addr(hwc->idx);
+> +       /* Zero the lower/upper parts of the 64-bit counter */
+> +       WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE + 0xC, 0);
+> +       WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE + 0x8, 0);
+> +
+> +       /* Enable the counter */
+> +       WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE, 1);
+> +}
+> +
+> +static void goya_disable_timestamp(struct hl_device *hdev)
+> +{
+> +       /* Disable the timestamp counter */
+> +       WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE, 0);
+> +}
+> +
+>  static void goya_halt_engines(struct hl_device *hdev, bool hard_reset)
+>  {
+>         u32 wait_timeout_ms, cpu_timeout_ms;
+> @@ -2102,6 +2121,8 @@ static void goya_halt_engines(struct hl_device *hdev, bool hard_reset)
+>         goya_disable_external_queues(hdev);
+>         goya_disable_internal_queues(hdev);
+>
+> +       goya_disable_timestamp(hdev);
+> +
+>         if (hard_reset) {
+>                 goya_disable_msix(hdev);
+>                 goya_mmu_remove_device_cpu_mappings(hdev);
+> @@ -2504,6 +2525,8 @@ static int goya_hw_init(struct hl_device *hdev)
+>
+>         goya_init_tpc_qmans(hdev);
+>
+> +       goya_enable_timestamp(hdev);
+> +
+>         /* MSI-X must be enabled before CPU queues are initialized */
+>         rc = goya_enable_msix(hdev);
+>         if (rc)
+> diff --git a/drivers/misc/habanalabs/goya/goya_coresight.c b/drivers/misc/habanalabs/goya/goya_coresight.c
+> index 3d77b1c20336..b4d406af1bed 100644
+> --- a/drivers/misc/habanalabs/goya/goya_coresight.c
+> +++ b/drivers/misc/habanalabs/goya/goya_coresight.c
+> @@ -636,24 +636,11 @@ static int goya_config_spmu(struct hl_device *hdev,
+>         return 0;
+>  }
+>
+> -static int goya_config_timestamp(struct hl_device *hdev,
+> -               struct hl_debug_params *params)
+> -{
+> -       WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE, 0);
+> -       if (params->enable) {
+> -               WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE + 0xC, 0);
+> -               WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE + 0x8, 0);
+> -               WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE, 1);
+> -       }
+> -
+> -       return 0;
+> -}
+> -
+>  int goya_debug_coresight(struct hl_device *hdev, void *data)
+>  {
+>         struct hl_debug_params *params = data;
+>         u32 val;
+> -       int rc;
+> +       int rc = 0;
+>
+>         switch (params->op) {
+>         case HL_DEBUG_OP_STM:
+> @@ -675,7 +662,7 @@ int goya_debug_coresight(struct hl_device *hdev, void *data)
+>                 rc = goya_config_spmu(hdev, params);
+>                 break;
+>         case HL_DEBUG_OP_TIMESTAMP:
+> -               rc = goya_config_timestamp(hdev, params);
+> +               /* Do nothing as this opcode is deprecated */
+>                 break;
+>
+>         default:
+> diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
+> index 6cf50177cd21..266bf85056d4 100644
+> --- a/include/uapi/misc/habanalabs.h
+> +++ b/include/uapi/misc/habanalabs.h
+> @@ -451,7 +451,7 @@ struct hl_debug_params_spmu {
+>  #define HL_DEBUG_OP_BMON       4
+>  /* Opcode for SPMU component */
+>  #define HL_DEBUG_OP_SPMU       5
+> -/* Opcode for timestamp */
+> +/* Opcode for timestamp (deprecated) */
+>  #define HL_DEBUG_OP_TIMESTAMP  6
+>  /* Opcode for setting the device into or out of debug mode. The enable
+>   * variable should be 1 for enabling debug mode and 0 for disabling it
+> --
+> 2.17.1
+>
 
-That reg_idx is a pointless unconditional branch; better to write it
-like:
-
-static inline void x86_assign_hw_event(struct perf_event *event,
-				struct cpu_hw_events *cpuc, int i)
-{
-	struct hw_perf_event *hwc = &event->hw;
-	int idx;
-
-	idx = hwc->idx = cpuc->assign[i];
-	hwc->last_cpu = smp_processor_id();
-	hwc->last_tag = ++cpuc->tags[i];
-
-	switch (hwc->idx) {
-	case INTEL_PMC_IDX_FIXED_BTS:
-		hwc->config_base = 0;
-		hwc->event_base	= 0;
-		break;
-
-	case INTEL_PMC_IDX_FIXED_METRIC_BASE ... INTEL_PMC_IDX_FIXED_METRIC_BASE+3:
-		/* All METRIC events are mapped onto the fixed SLOTS counter */
-		idx = INTEL_PMC_IDX_FIXED_SLOTS;
-
-	case INTEL_PMC_IDX_FIXED ... INTEL_PMC_IDX_FIXED_METRIC_BASE-1:
-		hwc->config_base = MSR_ARCH_PERFMON_FIXED_CTR_CTRL;
-		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 +
-				  (idx - INTEL_PMC_IDX_FIXED);
-		hwc->event_base_rdpmc = (idx - INTEL_PMC_IDX_FIXED) | 1<<30;
-		break;
-
-	default:
-		hwc->config_base = x86_pmu_config_addr(hwc->idx);
-		hwc->event_base = x86_pmu_event_addr(hwc->idx);
-		hwc->event_base_rdpmc = x86_pmu_rdpmc_index(hwc->idx);
-		break;
-	}
-}
-
-On that; wth does this to the RDPMC userspace support!? Does that even
-work with these counters?
+This patch is:
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Applied to -next
+Oded
