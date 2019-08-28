@@ -2,155 +2,184 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5C7C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC492C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6805E2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C4B20828
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:28:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="tFZUT4Sa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AeLh70p2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbfH1NZg (ORCPT
+        id S1726536AbfH1N2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:25:36 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:5682 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726440AbfH1NZg (ORCPT
+        Wed, 28 Aug 2019 09:28:14 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42243 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfH1N2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:25:36 -0400
-Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7SDK58e016915;
-        Wed, 28 Aug 2019 09:25:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=M4H2MeVozN6OSEVuKFagj5g9cUAem7017Zcwzvn7ORM=;
- b=tFZUT4SapLiU1PIflnKZ6scK0F+WxVCtjWfILgXIfKyKXC5qFzAlreVQAJg1F20pby7l
- MaF1LKeSdCWbD8YQzc85sMu5tk8OYP9t2Bg3ezIqmFhegwVs8XEPXcZkd5HHDPbnPuPt
- fKdqBPNo8F2pwjzJzrDM/T9HX6A62H90OvVEBXEA79cmDYYG4EVzIVFvms3l9nphNJNd
- ewjdcbXsep6uPg30JvmJb5l4cFG/d38zPI+yAeUwkW0llgL9D1osA/3KZLHYoVtEw1xc
- CMP1nmKughK6Dk+mvel9EWAA7D7UYW0i95C4AaZ6vYdnrdREY1QipgF/QftKI0ZwKe8V NA== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0a-00154904.pphosted.com with ESMTP id 2uk2rb12fh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Aug 2019 09:25:34 -0400
-Received: from pps.filterd (m0144104.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7SDIbKM189580;
-        Wed, 28 Aug 2019 09:25:33 -0400
-Received: from ausxippc110.us.dell.com (AUSXIPPC110.us.dell.com [143.166.85.200])
-        by mx0b-00154901.pphosted.com with ESMTP id 2un5xnhuc3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Aug 2019 09:25:33 -0400
-X-LoopCount0: from 10.166.132.130
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="849141483"
-From:   <Mario.Limonciello@dell.com>
-To:     <kai.heng.feng@canonical.com>, <xiaojian.cao@cn.alps.com>
-CC:     <masaki.ota@alpsalpine.com>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <naoki.saito@alpsalpine.com>
-Subject: RE: Alps touchpad generates IRQ storm after S3
-Thread-Topic: Alps touchpad generates IRQ storm after S3
-Thread-Index: AQHVXWj6J4YtFH+tbUKrj18edFzHtKcQboCAgAAEigCAAAHfAIAAFVNg
-Date:   Wed, 28 Aug 2019 13:25:31 +0000
-Message-ID: <39b2e63e339447e8b09b2601abf3d1ba@AUSX13MPC101.AMER.DELL.COM>
-References: <44F93018-5F13-4932-A5AC-9D288CDF68DD@canonical.com>
- <TYAPR01MB30223CB8A576C7809F6382C1ECA30@TYAPR01MB3022.jpnprd01.prod.outlook.com>
- <TYXPR01MB1470902D804A47EE72013006C8A30@TYXPR01MB1470.jpnprd01.prod.outlook.com>
- <A118551C-A0D9-485F-91F7-44A5BE228B99@canonical.com>
-In-Reply-To: <A118551C-A0D9-485F-91F7-44A5BE228B99@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-08-28T13:25:30.8198278Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
- aiplabel=External Public
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.242.75]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-08-28_06:2019-08-28,2019-08-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- malwarescore=0 clxscore=1011 lowpriorityscore=0 adultscore=0
- mlxlogscore=868 bulkscore=0 impostorscore=0 priorityscore=1501 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1908280143
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
- spamscore=0 mlxscore=0 phishscore=0 clxscore=1011 malwarescore=0
- adultscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
- definitions=main-1908280143
+        Wed, 28 Aug 2019 09:28:14 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i30so1730550pfk.9
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 06:28:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=HLjilt3rg+lyPd3792HT3u5sFVLvu7ZHcOUuot5vMxU=;
+        b=AeLh70p2oFQ6VbhYkCFUDStORNri4RTp7C/JORMqO1c+g6fqqzmNpWUKhUwNDF+31K
+         YZeKKzGMM2WPATadOlwZxxCDmQDu0b+zSidhq/Xmc1GNbpbbq8KcWtGeRoOACFLyNIVR
+         LdpuIv20+9GLIsiaZAADHgFQlun1o2KJHLaM5fxFUE8XC+JTienfq2f6BgqU9xtt7C6k
+         hgkHx1gXMKBakw3tp9CADgfdwufArZLvP5U4zIel+xP4FgMzYM/NyM3nYS+ofo60O/VI
+         97j1CX/xKmsoX2IL/JZW1t0yhhqtv+XJmvJ7uU7jgBFlzOK+fJCVzOhg/H/nUQG/mFgb
+         xO8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HLjilt3rg+lyPd3792HT3u5sFVLvu7ZHcOUuot5vMxU=;
+        b=AS1VvCyeY2tKhjIBGqU/wEROuPC8oYfPilkiGbMBaXaaxmcCMCzmjXgfRiZLAlF5qY
+         XXneHvzDq+lF39/4tIN8W1NAhrZ8vTtvRl3qSt2KG75b1e6/N2Nl92ga6q94rx75926b
+         T/xeLzZ4xmNcaltayBV5ltCTYpDxpiMXzXaoXrglEIdm+i283Jp0s4zsLMWJaiGo/cFx
+         bMLhBC4wjnq7w3PZOCd5jE9/9Stb6xNciZ9/8hM3PwtKZ90Z+hQ0VrliAy0b4bPsBTFX
+         3FHu2emLThAi24paHVyewG0+Lw+4onCoedNoJK2lISBypkAQY1yXEF6fz7kviBE9wEpg
+         4w9Q==
+X-Gm-Message-State: APjAAAUq3b7lrGvjQJJZ45zlYDHY7VdBF6bXTndAaLwmakPZChvDTza9
+        auURNiCCY1PObJ5GJpqlh5xUTQ==
+X-Google-Smtp-Source: APXvYqzDwjhZ+nQXlc2KZFLLmCfQJ6Gx0V/PWp3sT/2sifJljHcHLJ/vJQ6zz2LkVS8WjxiyFEA0Ng==
+X-Received: by 2002:a17:90a:148:: with SMTP id z8mr4250825pje.96.1566998893349;
+        Wed, 28 Aug 2019 06:28:13 -0700 (PDT)
+Received: from localhost.localdomain (li1566-229.members.linode.com. [139.162.86.229])
+        by smtp.gmail.com with ESMTPSA id h11sm2473034pgv.5.2019.08.28.06.28.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 28 Aug 2019 06:28:12 -0700 (PDT)
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, jonathan.cameron@huawei.com,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>
+Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v2 0/2] Add uacce module for Accelerator
+Date:   Wed, 28 Aug 2019 21:27:54 +0800
+Message-Id: <1566998876-31770-1-git-send-email-zhangfei.gao@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-S0gsDQoNCkp1c3QgbWFrZSBzdXJlIEkgdW5kZXJzdGFuZCBkZXRhaWxzLg0KDQo+IENvbW1pdCAi
-SElEOiBpMmMtaGlkOiBEb24ndCByZXNldCBkZXZpY2UgdXBvbiBzeXN0ZW0gcmVzdW1lDQoNCklm
-IHlvdSByZXZlcnQgdGhpcyBpdCdzIGZpeGVkIG9uIHRoaXMgc3lzdGVtPw0KDQpJbiB0aGF0IGNv
-bW1pdCB5b3UgaGFkIG1lbnRpb25lZCBpZiB0aGlzIGNhdXNlcyBwcm9ibGVtcyBpdCBtaWdodCBi
-ZSB3b3J0aA0KcXVpcmtpbmcganVzdCBSYXlkaXVtIGJ1dCBjb21taXQgYWZiYjExNjllZDViNThj
-ZmNhMDE3ZTM2OGI1M2UwMTljZjI4NTg1Mw0KY29uZmlybWVkIHRoYXQgaXQgaGVscGVkIHNldmVy
-YWwgb3RoZXIgc3lzdGVtcyB0b28uDQoNCklmIHRoZSBjb25jbHVzaW9uIGZyb20gdGhpcyBpbnZl
-c3RpZ2F0aW9uIHRoaXMgaXMgb25seSBmaXhhYmxlIHZpYSB0b3VjaHBhZCBGVyB1cGRhdGUNCml0
-IG1pZ2h0IGJlIHdvcnRoIHF1aXJraW5nIHRoaXMgdG91Y2hwYWQvdG91Y2hwYWQgRlcvc3lzdGVt
-IGNvbWJpbmF0aW9uLg0KDQo+IEFsc28gQ2MgTWFyaW8gYmVjYXVzZSB0aGlzIGNvdWxkIHJlbGF0
-ZSB0byBCSU9TLg0KDQpBbHNvIEkgYXNzdW1lIHRoaXMgaXMgb24gY3VycmVudCBzdGFibGUgQklP
-Uy9FQyByZWxlYXNlLCByaWdodD8NCg0KVGhhbmtzLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
-ZS0tLS0tDQo+IEZyb206IEthaS1IZW5nIEZlbmcgPGthaS5oZW5nLmZlbmdAY2Fub25pY2FsLmNv
-bT4NCj4gU2VudDogV2VkbmVzZGF5LCBBdWd1c3QgMjgsIDIwMTkgMTo1OCBBTQ0KPiBUbzogWGlh
-b2ppYW4gQ2FvDQo+IENjOiBNYXNha2kgT3RhOyBMaW1vbmNpZWxsbywgTWFyaW87IG9wZW4gbGlz
-dDpISUQgQ09SRSBMQVlFUjsgTGludXggS2VybmVsDQo+IE1haWxpbmcgTGlzdDsgTmFva2kgU2Fp
-dG8NCj4gU3ViamVjdDogUmU6IEFscHMgdG91Y2hwYWQgZ2VuZXJhdGVzIElSUSBzdG9ybSBhZnRl
-ciBTMw0KPiANCj4gDQo+IFtFWFRFUk5BTCBFTUFJTF0NCj4gDQo+IEhpIFhpYW9qaWFuLA0KPiAN
-Cj4gYXQgMTQ6NTEsIFhpYW9qaWFuIENhbyA8eGlhb2ppYW4uY2FvQGNuLmFscHMuY29tPiB3cm90
-ZToNCj4gDQo+ID4gSGkgT3RhLXNhbiwNCj4gPg0KPiA+IE9LLCB3ZSB3aWxsIGxvb2sgaW50byBp
-dC4NCj4gPg0KPiA+DQo+ID4gSGkgS2FpLUhlbmcsDQo+ID4NCj4gPiBXZSB3aWxsIHRyeSB0byBy
-ZXByb2R1Y2UgdGhpcyBpc3N1ZSBmaXJzdCwgY291bGQgeW91IHBsZWFzZSB0ZWxsIG1lIHRoZQ0K
-PiA+IHRhcmdldCBVYnVudHUgdmVyc2lvbj8NCj4gDQo+IEl04oCZcyBkaXN0cm8tYWdub3N0aWMs
-IGFueSBkaXN0cm8gd2l0aCBtYWlubGluZSBMaW51eCBjYW4gcmVwcm9kdWNlIHRoZSBpc3N1ZS4N
-Cj4gDQo+IEthaS1IZW5nDQo+IA0KPiA+DQo+ID4gQmVzdCByZWdhcmRzLA0KPiA+IEphc29uDQo+
-ID4NCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206IOWkqueUsCDnnJ/l
-lpwgTWFzYWtpIE90YSA8bWFzYWtpLm90YUBhbHBzYWxwaW5lLmNvbT4NCj4gPiBTZW50OiBXZWRu
-ZXNkYXksIEF1Z3VzdCAyOCwgMjAxOSAyOjM1IFBNDQo+ID4gVG86IOabuSDmm4nlu7ogWGlhb2pp
-YW4gQ2FvIDx4aWFvamlhbi5jYW9AY24uYWxwcy5jb20+OyBLYWktSGVuZyBGZW5nDQo+ID4gPGth
-aS5oZW5nLmZlbmdAY2Fub25pY2FsLmNvbT4NCj4gPiBDYzogTWFyaW8gTGltb25jaWVsbG8gPG1h
-cmlvLmxpbW9uY2llbGxvQGRlbGwuY29tPjsgb3BlbiBsaXN0OkhJRCBDT1JFDQo+ID4gTEFZRVIg
-PGxpbnV4LWlucHV0QHZnZXIua2VybmVsLm9yZz47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QN
-Cj4gPiA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IOaWieiXpCDnm7TmqLkgTmFva2kg
-U2FpdG8NCj4gPiA8bmFva2kuc2FpdG9AYWxwc2FscGluZS5jb20+DQo+ID4gU3ViamVjdDogUkU6
-IEFscHMgdG91Y2hwYWQgZ2VuZXJhdGVzIElSUSBzdG9ybSBhZnRlciBTMw0KPiA+DQo+ID4gSGks
-IEthaS1IZW5nLA0KPiA+DQo+ID4gU29ycnksIEknbSBub3QgaW4gY2hhcmdlIG9mIExpbnV4IHRh
-c2sgbm93Lg0KPiA+DQo+ID4gSGksIFhpYW9KaWFuLA0KPiA+DQo+ID4gUGxlYXNlIGNoZWNrIHRo
-ZSBmb2xsb3dpbmcgbWFpbC4NCj4gPiBJZiB5b3UgaGF2ZSBhbnkgcXVlc3Rpb24sIHBsZWFzZSBh
-c2sgS2FpLUhlbmcuDQo+ID4NCj4gPiBCZXN0IFJlZ2FyZHMsDQo+ID4gTWFzYWtpIE90YQ0KPiA+
-IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogS2FpLUhlbmcgRmVuZyA8a2Fp
-LmhlbmcuZmVuZ0BjYW5vbmljYWwuY29tPg0KPiA+IFNlbnQ6IFdlZG5lc2RheSwgQXVndXN0IDI4
-LCAyMDE5IDM6MjIgUE0NCj4gPiBUbzog5aSq55SwIOecn+WWnCBNYXNha2kgT3RhIDxtYXNha2ku
-b3RhQGFscHNhbHBpbmUuY29tPg0KPiA+IENjOiBNYXJpbyBMaW1vbmNpZWxsbyA8bWFyaW8ubGlt
-b25jaWVsbG9AZGVsbC5jb20+OyBvcGVuIGxpc3Q6SElEIENPUkUNCj4gPiBMQVlFUiA8bGludXgt
-aW5wdXRAdmdlci5rZXJuZWwub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdA0KPiA+IDxs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPg0KPiA+IFN1YmplY3Q6IEFscHMgdG91Y2hwYWQg
-Z2VuZXJhdGVzIElSUSBzdG9ybSBhZnRlciBTMw0KPiA+DQo+ID4gSGkgTWFzYWtpLA0KPiA+DQo+
-ID4gVGhlIEFscHMgdG91Y2hwYWQgKDA0NEU6MTIyMCkgb24gRGVsbCBQcmVjaXNpb24gNzUzMCBj
-YXVzZXMgSVJRIHN0b3JtDQo+ID4gYWZ0ZXIgc3lzdGVtIHN1c3BlbmQgKFMzKS4NCj4gPiBDb21t
-aXQgIkhJRDogaTJjLWhpZDogRG9uJ3QgcmVzZXQgZGV2aWNlIHVwb24gc3lzdGVtIHJlc3VtZeKA
-nSB3aGljaCBzb2x2ZXMNCj4gPiB0aGUgc2FtZSBpc3N1ZSBmb3Igb3RoZXIgdmVuZG9ycywgY2F1
-c2UgdGhlIGlzc3VlIG9uIEFscHMgdG91Y2hwYWQuDQo+ID4gU28gSeKAmWQgbGlrZSB0byBrbm93
-IHRoZSBjb3JyZWN0IGNvbW1hbmQgQWxwcyB0b3VjaHBhZCBleHBlY3RzIGFmdGVyDQo+ID4gc3lz
-dGVtIHJlc3VtZS4NCj4gPg0KPiA+IEFsc28gQ2MgTWFyaW8gYmVjYXVzZSB0aGlzIGNvdWxkIHJl
-bGF0ZSB0byBCSU9TLg0KPiA+DQo+ID4gS2FpLUhlbmcNCj4gDQoNCg==
+Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
+provide Shared Virtual Addressing (SVA) between accelerators and processes.
+So accelerator can access any data structure of the main cpu.
+This differs from the data sharing between cpu and io device, which share
+data content rather than address.
+Since unified address, hardware and user space of process can share the
+same virtual address in the communication.
+
+Uacce is intended to be used with Jean Philippe Brucker's SVA
+patchset[1], which enables IO side page fault and PASID support. 
+We have keep verifying with Jean's sva/current [2]
+We also keep verifying with Eric's SMMUv3 Nested Stage patch [3]
+
+This series and related zip & qm driver
+https://github.com/Linaro/linux-kernel-warpdrive/tree/5.3-rc1-warpdrive-v2
+
+The library and user application:
+https://github.com/Linaro/warpdrive/tree/5.3-rc1-v2
+
+References:
+[1] http://jpbrucker.net/sva/
+[2] http://www.linux-arm.org/git?p=linux-jpb.git;a=shortlog;h=refs/heads/sva/current
+[3] https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9
+
+Change History:
+v2:
+Address comments from Greg and Jonathan
+Modify interface uacce_register
+Drop noiommu mode first
+
+v1:
+1. Rebase to 5.3-rc1
+2. Build on iommu interface
+3. Verifying with Jean's sva and Eric's nested mode iommu.
+4. User library has developed a lot: support zlib, openssl etc.
+5. Move to misc first
+
+RFC3:
+https://lkml.org/lkml/2018/11/12/1951
+
+RFC2:
+https://lwn.net/Articles/763990/
+
+
+Background of why Uacce:
+Von Neumann processor is not good at general data manipulation.
+It is designed for control-bound rather than data-bound application.
+The latter need less control path facility and more/specific ALUs.
+So there are more and more heterogeneous processors, such as
+encryption/decryption accelerators, TPUs, or
+EDGE (Explicated Data Graph Execution) processors, introduced to gain
+better performance or power efficiency for particular applications
+these days.
+
+There are generally two ways to make use of these heterogeneous processors:
+
+The first is to make them co-processors, just like FPU.
+This is good for some application but it has its own cons:
+It changes the ISA set permanently.
+You must save all state elements when the process is switched out.
+But most data-bound processors have a huge set of state elements.
+It makes the kernel scheduler more complex.
+
+The second is Accelerator.
+It is taken as a IO device from the CPU's point of view
+(but it need not to be physically). The process, running on CPU,
+hold a context of the accelerator and send instructions to it as if
+it calls a function or thread running with FPU.
+The context is bound with the processor itself.
+So the state elements remain in the hardware context until
+the context is released.
+
+We believe this is the core feature of an "Accelerator" vs. Co-processor
+or other heterogeneous processors.
+
+The intention of Uacce is to provide the basic facility to backup
+this scenario. Its first step is to make sure the accelerator and process
+can share the same address space. So the accelerator ISA can directly
+address any data structure of the main CPU.
+This differs from the data sharing between CPU and IO device,
+which share data content rather than address.
+So it is different comparing to the other DMA libraries.
+
+In the future, we may add more facility to support linking accelerator
+library to the main application, or managing the accelerator context as
+special thread.
+But no matter how, this can be a solid start point for new processor
+to be used as an "accelerator" as this is the essential requirement.
+
+Kenneth Lee (2):
+  uacce: Add documents for uacce
+  uacce: add uacce driver
+
+ Documentation/ABI/testing/sysfs-driver-uacce |   47 ++
+ Documentation/misc-devices/uacce.rst         |  335 ++++++++
+ drivers/misc/Kconfig                         |    1 +
+ drivers/misc/Makefile                        |    1 +
+ drivers/misc/uacce/Kconfig                   |   13 +
+ drivers/misc/uacce/Makefile                  |    2 +
+ drivers/misc/uacce/uacce.c                   | 1086 ++++++++++++++++++++++++++
+ include/linux/uacce.h                        |  172 ++++
+ include/uapi/misc/uacce.h                    |   39 +
+ 9 files changed, 1696 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-uacce
+ create mode 100644 Documentation/misc-devices/uacce.rst
+ create mode 100644 drivers/misc/uacce/Kconfig
+ create mode 100644 drivers/misc/uacce/Makefile
+ create mode 100644 drivers/misc/uacce/uacce.c
+ create mode 100644 include/linux/uacce.h
+ create mode 100644 include/uapi/misc/uacce.h
+
+-- 
+2.7.4
+
