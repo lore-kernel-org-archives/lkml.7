@@ -2,94 +2,158 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4286C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1E3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD173217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0DDC22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:36:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="KvpOLeo1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfH1TfF (ORCPT
+        id S1726839AbfH1Tgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 15:35:05 -0400
-Received: from mga11.intel.com ([192.55.52.93]:11689 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbfH1TfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 15:35:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 12:35:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="175025884"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 28 Aug 2019 12:35:04 -0700
-Received: from [10.254.95.196] (kliang2-mobl.ccr.corp.intel.com [10.254.95.196])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id CA4BB580107;
-        Wed, 28 Aug 2019 12:35:03 -0700 (PDT)
-Subject: Re: [RESEND PATCH V3 3/8] perf/x86/intel: Support hardware TopDown
- metrics
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-References: <20190826144740.10163-1-kan.liang@linux.intel.com>
- <20190826144740.10163-4-kan.liang@linux.intel.com>
- <20190828150238.GC17205@worktop.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <9e5f9292-9767-d17a-2223-37dff9e759c7@linux.intel.com>
-Date:   Wed, 28 Aug 2019 15:35:02 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 15:36:52 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44044 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbfH1Tgw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 15:36:52 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k22so618316oiw.11;
+        Wed, 28 Aug 2019 12:36:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fMw4NAQR15jFRGg47hS9E1G9rDiMkZE/YWhS4jiC9BQ=;
+        b=KvpOLeo1KYyOkdOLdBNEM0yoTpH55Mkwam/x4ZcbDAsaNGyH7XvW3vpbOlRIBWK66L
+         SZP3Q15wmCUoUEqeOnXACRIocFIl3n+IQCtaOcCs2vBCy5xRPWoedHQkJzooTsggHhRz
+         1wQZYJHX+hlJSRCEqvw4yryxOCvljeEMYwGKL594eGxjovL4Qd8bDPTc+6pyRQk+m30g
+         d0bWdKCSpHu3L6SbpH5PrTmWcivnlARLOBxZIhhJbnBuIBSZSCXFSSDu61dfTsb4YCKp
+         YPIsiRGnf7XSHN9sRS5SdDoCj0OErQevSrYhbcZXU6qgBJceLokgm0VqyiikcI7Fu4E/
+         sW8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fMw4NAQR15jFRGg47hS9E1G9rDiMkZE/YWhS4jiC9BQ=;
+        b=BhRKkH5gVNDI/bPEwOyDVyctijuxUHqwORx82fYQ8PEcuqxN8VcgVXgGvSUQntLH6T
+         gYCFmp08MOkONi8OgUx6NrzVXeUuCUF1MrqTUHuf4uDU1XB3Uk7cUGHY1NSbjbPDVL7l
+         u++huAwa9Yk9vuTuVeHErziyxvg4WjVCRI5MqWuQswcZdnS/1v5wlj2rg1QbwDRTjhr7
+         6vn32sumBdmLL1a6EAfWJ/34xdw4u9Ns/kD7YMMwhiV4dpra4Dp33XF0a+KVD6CSTYTA
+         0ZnBRWvuypoZsRZO7/S6g1xj4a+SdB8YjiZ913C/vHXmSYYxTtj3cmwDZLOqHvLM/enZ
+         UEvg==
+X-Gm-Message-State: APjAAAWHnJogYwA6wag6FhtpbV0vCroYtsUNrQDjFyfHMttY4sfTg+30
+        6Y08JihkHrSQt8BJ+9mKmaZTyxa0GvSHxpewhhE=
+X-Google-Smtp-Source: APXvYqypkhHf1Qy3Lvx+8RZhtTrlK4uvkEnQVGQapo4EO4+SCydqNK3tQhPyJqT2P8ykOhp3rn1gkAMAuaWSnKfEZnU=
+X-Received: by 2002:aca:d650:: with SMTP id n77mr4083095oig.129.1567021010776;
+ Wed, 28 Aug 2019 12:36:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190828150238.GC17205@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com> <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
+ <9ba19f08-e25a-4d15-8854-8dc4f9b6faca@linux.intel.com> <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
+ <7c0fd56f-ecc5-40c2-c435-3805ca1f97c7@linux.intel.com>
+In-Reply-To: <7c0fd56f-ecc5-40c2-c435-3805ca1f97c7@linux.intel.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 28 Aug 2019 21:36:38 +0200
+Message-ID: <CAFBinCBa9G+E+vjmQCGBx=zRG80ad1am_1TrNbAMvqKCQU38gw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+To:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
+Cc:     eswara.kota@linux.intel.com, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
+        gustavo.pimentel@synopsys.com, hch@infradead.org,
+        jingoohan1@gmail.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, qi-ming.wu@intel.com, kishon@ti.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 28, 2019 at 5:35 AM Chuan Hua, Lei
+<chuanhua.lei@linux.intel.com> wrote:
+[...]
+> >>>>>> +static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
+> >>>>>> +{
+> >>>>>> +    struct device *dev = lpp->pci->dev;
+> >>>>>> +    int ret = 0;
+> >>>>>> +
+> >>>>>> +    lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> >>>>>> +    if (IS_ERR(lpp->reset_gpio)) {
+> >>>>>> +            ret = PTR_ERR(lpp->reset_gpio);
+> >>>>>> +            if (ret != -EPROBE_DEFER)
+> >>>>>> +                    dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
+> >>>>>> +            return ret;
+> >>>>>> +    }
+> >>>>>> +    /* Make initial reset last for 100ms */
+> >>>>>> +    msleep(100);
+> >>>>> why is there lpp->rst_interval when you hardcode 100ms here?
+> >>>> There are different purpose. rst_interval is purely for asserted reset
+> >>>> pulse.
+> >>>>
+> >>>> Here 100ms is to make sure the initial state keeps at least 100ms, then we
+> >>>> can reset.
+> >>> my interpretation is that it totally depends on the board design or
+> >>> the bootloader setup.
+> >> Partially, you are right. However, we should not add some dependency
+> >> here from
+> >> bootloader and board. rst_interval is just to make sure the pulse (low
+> >> active or high active)
+> >> lasts the specified the time.
+> > +Cc Kishon
+> >
+> > he recently added support for a GPIO reset line to the
+> > pcie-cadence-host.c [0] and I believe he's also maintaining
+> > pci-keystone.c which are both using a 100uS delay (instead of 100ms).
+> > I don't know the PCIe spec so maybe Kishon can comment on the values
+> > that should be used according to the spec.
+> > if there's then a reason why values other than the ones from the spec
+> > are needed then there should be a comment explaining why different
+> > values are needed (what problem does it solve).
+>
+> spec doesn't guide this part. It is a board or SoC specific setting.
+> 100us also should work. spec only requirs reset duration should last
+> 100ms. The idea is that before reset assert and deassert, make sure the
+> default deassert status keeps some time. We take this value from
+> hardware suggestion long time back. We can reduce this value to 100us,
+> but we need to test on the board.
+OK. I don't know how other PCI controller drivers manage this. if the
+PCI maintainers are happy with this then I am as well
+maybe it's worth changing the comment to indicate that this delay was
+suggested by the hardware team (so it's clear that this is not coming
+from the PCI spec)
+
+[...]
+> >>>>>> +static void __intel_pcie_remove(struct intel_pcie_port *lpp)
+> >>>>>> +{
+> >>>>>> +    pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER,
+> >>>>>> +                        0, PCI_COMMAND);
+> >>>>> I expect logic like this to be part of the PCI subsystem in Linux.
+> >>>>> why is this needed?
+> >>>>>
+> >>>>> [...]
+> >>>> bind/unbind case we use this. For extreme cases, we use unbind and bind
+> >>>> to reset
+> >>>> PCI instead of rebooting.
+> >>> OK, but this does not seem Intel/Lantiq specific at all
+> >>> why isn't this managed by either pcie-designware-host.c or the generic
+> >>> PCI/PCIe subsystem in Linux?
+> >> I doubt if other RC driver will support bind/unbind. We do have this
+> >> requirement due to power management from WiFi devices.
+> > pcie-designware-host.c will gain .remove() support in Linux 5.4
+> > I don't understand how .remove() and then .probe() again is different
+> > from .unbind() followed by a .bind()
+> Good. If this is the case, bind/unbind eventually goes to probe/remove,
+> so we can remove this.
+OK. as far as I understand you need to call dw_pcie_host_deinit from
+the .remove() callback (which is missing in this version)
+(I'm using drivers/pci/controller/dwc/pcie-tegra194.c as an example,
+this driver is in linux-next and thus will appear in Linux 5.4)
 
 
-On 8/28/2019 11:02 AM, Peter Zijlstra wrote:
->> Reset
->> ======
->>
->> The PERF_METRICS and Fixed counter 3 have to be reset for each read,
->> because:
->> - The 8bit metrics ratio values lose precision when the measurement
->>    period gets longer.
-> So it musn't be too hot,
-> 
->> - The PERF_METRICS may report wrong value if its delta was less than
->>    1/255 of SLOTS (Fixed counter 3).
-
-The "delta" is actually for the internal counters. Sorry for the
-confusion.
-
-> it also musn't be too cold. But that leaves it unspecified what exactly
-> is the right range.
-> 
-> IOW, you want a Goldilocks number of SLOTS.
-> 
->> Also, for counting, the -max_period is the initial value of the SLOTS.
->> The huge initial value will definitely trigger the issue mentioned
->> above. Force initial value as 0 for topdown and slots event counting.
-> But you just told us that 0 is wrong too (too cold).
-
-We set -max_period (0x8000 0000 0001) as initial value of FIXCTR3 for 
-counting. But the internal counters probably starts counting from 0.
-PERF_METRICS is fraction of internal counters / FIXCTR3.
-So PERF_METRICS will never works.
-We have to make FIXCTR3 count from 0 as well.
-
-Thanks,
-Kan
+Martin
