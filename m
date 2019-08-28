@@ -2,96 +2,203 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2056DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB666C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F229F22CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995CE22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfH1PTw convert rfc822-to-8bit (ORCPT
+        id S1726861AbfH1PUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:19:52 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:55500 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726415AbfH1PTw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:19:52 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 18292894-1500050 
-        for multiple; Wed, 28 Aug 2019 16:19:35 +0100
-Content-Type: text/plain; charset="utf-8"
+        Wed, 28 Aug 2019 11:20:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:33142 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbfH1PUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 11:20:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C77F28;
+        Wed, 28 Aug 2019 08:20:08 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B19D3F59C;
+        Wed, 28 Aug 2019 08:20:07 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 16:20:05 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V2 4/6] PCI: tegra: Add support to enable slot regulators
+Message-ID: <20190828152005.GY14582@e119886-lin.cambridge.arm.com>
+References: <20190828131505.28475-1-vidyas@nvidia.com>
+ <20190828131505.28475-5-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Chris Clayton <chris2553@googlemail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <c2706468-6f88-7276-b791-e9573394aa18@gmail.com>
-Cc:     tj@kernel.org, intel-gfx@lists.freedesktop.org
-References: <c2706468-6f88-7276-b791-e9573394aa18@gmail.com>
-Message-ID: <156700557283.15406.5823286371997423740@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [Intel-gfx] Workqueue - warning splat
-Date:   Wed, 28 Aug 2019 16:19:32 +0100
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828131505.28475-5-vidyas@nvidia.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Chris Clayton (2019-08-28 16:14:20)
-> Hi,
+On Wed, Aug 28, 2019 at 06:45:03PM +0530, Vidya Sagar wrote:
+> Add support to get regulator information of 3.3V and 12V supplies of a PCIe
+> slot from the respective controller's device-tree node and enable those
+> supplies. This is required in platforms like p2972-0000 where the supplies
+> to x16 slot owned by C5 controller need to be enabled before attempting to
+> enumerate the devices.
 > 
-> I've just copying 319G of data from a partition on one USB-attached (/dev/sdb3) to a partition on another USB-attached
-> drive (/dev/sdc1). It's not quite finished but as it's progressed, I have been reading email and browsing web sites, so
-> switching between windows from time to time.
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V2:
+> * Addressed review comments from Thierry Reding and Andrew Murray
+> * Handled failure case of devm_regulator_get_optional() for -ENODEV cleanly
 > 
-> I found the splat below at the end the output from dmesg:
-
-> [ 6048.070148] workqueue: PF_MEMALLOC task 148(kswapd0) is flushing !WQ_MEM_RECLAIM events:gen6_pm_rps_work [i915]
-> [ 6048.070152] WARNING: CPU: 6 PID: 148 at kernel/workqueue.c:2598 check_flush_dependency+0x105/0x120
-> [ 6048.070152] Modules linked in: uas rfcomm bnep iptable_filter xt_conntrack iptable_nat xt_MASQUERADE nf_nat
-> nf_conntrack nf_defrag_ipv4 coretemp hwmon snd_hda_codec_hdmi snd_hda_codec_generic iwlmvm mac80211 uvcvideo
-> videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videobuf2_common snd_hda_intel iwlwifi usbhid snd_hda_codec btusb
-> btintel snd_hwdep x86_pkg_temp_thermal snd_hda_core cfg80211 i915
-> [ 6048.070162] CPU: 6 PID: 148 Comm: kswapd0 Tainted: G     U            5.3.0-rc6+ #40
-> [ 6048.070163] Hardware name: PC Specialist LTD N8xxEZ                         /N8xxEZ                         , BIOS
-> 1.07.08 10/04/2018
-> [ 6048.070165] RIP: 0010:check_flush_dependency+0x105/0x120
-> [ 6048.070166] Code: 8d 8a c0 05 00 00 49 89 e8 48 c7 c7 90 61 b5 b0 48 8d 8b b0 00 00 00 4c 89 ca 48 89 04 24 c6 05 02
-> 8f 00 01 01 e8 b2 97 fe ff <0f> 0b 48 8b 04 24 e9 63 ff ff ff 80 3d eb 8e 00 01 00 0f 85 56 ff
-> [ 6048.070167] RSP: 0018:ffffa6e4003679a0 EFLAGS: 00010086
-> [ 6048.070167] RAX: 0000000000000000 RBX: ffff8a188d414000 RCX: 0000000000000000
-> [ 6048.070168] RDX: 0000000000000063 RSI: ffffffffb125f723 RDI: ffffffffb125d28c
-> [ 6048.070169] RBP: ffffffffc0466390 R08: 000005802d12a057 R09: 0000000000000063
-> [ 6048.070169] R10: ffffffffb125faa0 R11: 00000000b125f70b R12: ffff8a188c809a80
-> [ 6048.070170] R13: ffff8a1890a23e00 R14: 0000000000000001 R15: 0000000000000000
-> [ 6048.070170] FS:  0000000000000000(0000) GS:ffff8a1890b80000(0000) knlGS:0000000000000000
-> [ 6048.070171] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 6048.070172] CR2: 00000000025d1fa0 CR3: 00000004d700a004 CR4: 00000000003606e0
-> [ 6048.070172] Call Trace:
-> [ 6048.070175]  __flush_work+0x8d/0x1d0
-> [ 6048.070176]  ? try_to_wake_up+0x1b9/0x3b0
-> [ 6048.070177]  __cancel_work_timer+0xfb/0x180
-> [ 6048.070179]  ? synchronize_irq+0x30/0xa0
-> [ 6048.070204]  ? fwtable_write32+0xf1/0x180 [i915]
-> [ 6048.070212]  gen6_disable_rps_interrupts+0x79/0xa0 [i915]
-> [ 6048.070220]  gen6_rps_idle+0xe/0xd0 [i915]
-> [ 6048.070230]  intel_gt_park+0x4f/0x60 [i915]
-> [ 6048.070239]  __intel_wakeref_put_last+0x12/0x40 [i915]
-> [ 6048.070248]  __engine_park+0xb7/0xc0 [i915]
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 80 ++++++++++++++++++++++
+>  1 file changed, 80 insertions(+)
 > 
-> It might be difficult to create it again, but I guess a heads up might be useful.
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 057ba4f9fbcd..6a66101ec83d 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -278,6 +278,8 @@ struct tegra_pcie_dw {
+>  	u32 aspm_l0s_enter_lat;
+>  
+>  	struct regulator *pex_ctl_supply;
+> +	struct regulator *slot_ctl_3v3;
+> +	struct regulator *slot_ctl_12v;
+>  
+>  	unsigned int phy_count;
+>  	struct phy **phys;
+> @@ -1047,6 +1049,72 @@ static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
+>  	}
+>  }
+>  
+> +static int tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
+> +{
+> +	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
+> +	if (IS_ERR(pcie->slot_ctl_3v3)) {
+> +		if (PTR_ERR(pcie->slot_ctl_3v3) != -ENODEV)
+> +			return PTR_ERR(pcie->slot_ctl_3v3);
+> +
+> +		pcie->slot_ctl_3v3 = NULL;
+> +	}
+> +
+> +	pcie->slot_ctl_12v = devm_regulator_get_optional(pcie->dev, "vpcie12v");
+> +	if (IS_ERR(pcie->slot_ctl_12v)) {
+> +		if (PTR_ERR(pcie->slot_ctl_12v) != -ENODEV)
+> +			return PTR_ERR(pcie->slot_ctl_12v);
+> +
+> +		pcie->slot_ctl_12v = NULL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
+> +{
+> +	int ret;
+> +
+> +	if (pcie->slot_ctl_3v3) {
+> +		ret = regulator_enable(pcie->slot_ctl_3v3);
+> +		if (ret < 0) {
+> +			dev_err(pcie->dev,
+> +				"Failed to enable 3V3 slot supply: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	if (pcie->slot_ctl_12v) {
+> +		ret = regulator_enable(pcie->slot_ctl_12v);
+> +		if (ret < 0) {
+> +			dev_err(pcie->dev,
+> +				"Failed to enable 12V slot supply: %d\n", ret);
+> +			goto fail_12v_enable;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * According to PCI Express Card Electromechanical Specification
+> +	 * Revision 1.1, Table-2.4, T_PVPERL (Power stable to PERST# inactive)
+> +	 * should be a minimum of 100ms.
+> +	 */
+> +	msleep(100);
+> +
+> +	return 0;
+> +
+> +fail_12v_enable:
+> +	if (pcie->slot_ctl_3v3)
+> +		regulator_disable(pcie->slot_ctl_3v3);
+> +	return ret;
+> +}
+> +
+> +static void tegra_pcie_disable_slot_regulators(struct tegra_pcie_dw *pcie)
+> +{
+> +	if (pcie->slot_ctl_12v)
+> +		regulator_disable(pcie->slot_ctl_12v);
+> +	if (pcie->slot_ctl_3v3)
+> +		regulator_disable(pcie->slot_ctl_3v3);
+> +}
+> +
+>  static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>  					bool en_hw_hot_rst)
+>  {
+> @@ -1060,6 +1128,10 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>  		return ret;
+>  	}
+>  
+> +	ret = tegra_pcie_enable_slot_regulators(pcie);
+> +	if (ret < 0)
+> +		goto fail_slot_reg_en;
+> +
+>  	ret = regulator_enable(pcie->pex_ctl_supply);
+>  	if (ret < 0) {
+>  		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
+> @@ -1142,6 +1214,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>  fail_core_clk:
+>  	regulator_disable(pcie->pex_ctl_supply);
+>  fail_reg_en:
+> +	tegra_pcie_disable_slot_regulators(pcie);
+> +fail_slot_reg_en:
+>  	tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+>  
+>  	return ret;
+> @@ -1174,6 +1248,8 @@ static int __deinit_controller(struct tegra_pcie_dw *pcie)
+>  		return ret;
+>  	}
+>  
+> +	tegra_pcie_disable_slot_regulators(pcie);
+> +
+>  	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+>  	if (ret) {
+>  		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
+> @@ -1373,6 +1449,10 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	ret = tegra_pcie_get_slot_regulators(pcie);
+> +	if (ret < 0)
+> +		return ret;
 
-Should be fixed by 
+All of the functions called from tegra_pcie_dw_probe appear to dev_err if
+something goes wrong, is there any reason why you haven't done that here?
 
-commit c7302f204490f3eb4ef839bec228315bcd3ba43f
-Author: Chris Wilson <chris@chris-wilson.co.uk>
-Date:   Thu Aug 8 21:27:58 2019 +0100
+Thanks,
 
-    drm/i915: Defer final intel_wakeref_put to process context
+Andrew Murray
 
--Chris
+> +
+>  	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
+>  	if (IS_ERR(pcie->pex_ctl_supply)) {
+>  		dev_err(dev, "Failed to get regulator: %ld\n",
+> -- 
+> 2.17.1
+> 
