@@ -7,62 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96A7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE36C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBAB722DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFCFA233A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:38:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="DQgpMf8a"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="MgNQWIW5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfH1Tip (ORCPT
+        id S1726990AbfH1Tit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 15:38:45 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39809 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726614AbfH1Tip (ORCPT
+        Wed, 28 Aug 2019 15:38:49 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33838 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbfH1Tiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 15:38:45 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g8so1292202edm.6
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 12:38:44 -0700 (PDT)
+        Wed, 28 Aug 2019 15:38:46 -0400
+Received: by mail-ed1-f65.google.com with SMTP id s49so1328721edb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 12:38:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v6I0NxJQJkD1JgL9Whr1E8kXbKnnwerSju7V9v+AMdA=;
-        b=DQgpMf8ao0gcsEtBQ7MRr/p3CHj1R5lHbOEo69FnLPGYitpp4vCxTy9KpNSIGqPaHS
-         FukOT0+NWkJm2PbBnj1hhcvBTdsWnKOnM6V+aF1EQ/b267OOWqzKVlprsDDJEEMg19e+
-         9VMRsZyhg5YF1lEupwdc0HAhuXSCI+n7hxm3E=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mGPxPtRA1D+C9Lx3ecKYNHdNJ8rQlVmAMJe2O6XMN1o=;
+        b=MgNQWIW5jaNIZ+v28n88Cf6T294svtLxJZdXwXVamUX/+sr9l91TkrXK+FgKlMwbry
+         EPaEnzysbWIwA9j35sHyxxlGI2AlqJcLv0DksYPfmu7kxL5kj7JFqM770Ja98lKj9cBN
+         KHajg8E52NCpTHC1oRWQ+WJyyNZAroXzHXP8M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v6I0NxJQJkD1JgL9Whr1E8kXbKnnwerSju7V9v+AMdA=;
-        b=SyLXsxZDWfyg+eWNs0d9ALfwSDWKpt0C7z4wPgpqnV6h9dkFnOPgtkYQAvNNRfHp+e
-         a9GLKmcJYNdrizpoJGNjJSm4ndgl9RurcN3WfOf0BxaN63lDHsxRgPSxSitQwkBIzyzJ
-         WHP3Mzrs12lyQ3QdyAbARQgG3n996yEFZDEzO/THAenO/saNpdyLbJzjc9klH8lZILPP
-         DieZ5htDF3QDSn7DUYfqWtYEkQLUdKNizHYC8cPTNHU6Ed93vtbYRx0PElwQq2r0ow7o
-         l6YH25Jv7pqrfJGJ2Da2DGbhOfGk7O5RFEX4kOcrXbaj9AGPkLQb2kgium89OSdHFLwr
-         s/KA==
-X-Gm-Message-State: APjAAAVvDPVk6lUvMtpr6FrB/47NKBcaQI4An9cSgSeqPd2ykE+hKsJK
-        4hwsFH92eDdhdfHSizY4W796Xw==
-X-Google-Smtp-Source: APXvYqwBlQWZhg2J452zDKYW5Hy49ik9wm4fiM1ibr/NRl10YSHYjbPZQkOkBKGwDg9H98uus9/xsQ==
-X-Received: by 2002:a50:b825:: with SMTP id j34mr6104619ede.58.1567021123668;
-        Wed, 28 Aug 2019 12:38:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mGPxPtRA1D+C9Lx3ecKYNHdNJ8rQlVmAMJe2O6XMN1o=;
+        b=GMpmi9bnk9iRKeGlIMLSfYSBX3XEaYNo87AEhKsoz+ilozdGuUwA08towg798cYUPz
+         jUrLKfiS3Xma8DczNlbhX4HuCBKDqoa9/WK/g4bkcaB8kdQGOetSPMEgGnoME7iw2DcS
+         bmPthni35Iy/hDgvQG0lIEUznvvIlPOWtG+DZVZMbD/w5oVuMH8eVGlalZoCTmcTqGJJ
+         4jqZ8G5rafpEM1tF2AuVu+f3I2xpAglvr3dk9rXio6m7SM7s/FNzJbL/6tU3xV8V+Wv1
+         n/yc1v6Xlne9tH8cp3EfudOpcQIuflSoeVDi8RekgmdUK3O3FYU4+LVIPRRUBhea5AxM
+         X8UA==
+X-Gm-Message-State: APjAAAXAfsvLULnSKG5xYDZY5Rek7oOFqkHxe993I1h7dJfDUVypttHz
+        dAitxFasA+i8WetOvHsE0yktQgQRdOSi4lb8
+X-Google-Smtp-Source: APXvYqwZUHjFu8iHpa+MkvhDT19gzuQxbNAf7mpdYtbc6V4wQUM1HtedjY+kAqqFhFCfI0Jctp83Cw==
+X-Received: by 2002:a50:fc12:: with SMTP id i18mr6036132edr.23.1567021124863;
+        Wed, 28 Aug 2019 12:38:44 -0700 (PDT)
 Received: from prevas-ravi.prevas.se (ip-5-186-115-35.cgn.fibianet.dk. [5.186.115.35])
-        by smtp.gmail.com with ESMTPSA id ni7sm38990ejb.57.2019.08.28.12.38.42
+        by smtp.gmail.com with ESMTPSA id ni7sm38990ejb.57.2019.08.28.12.38.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 12:38:43 -0700 (PDT)
+        Wed, 28 Aug 2019 12:38:44 -0700 (PDT)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] x86: mmu.h: move mm_context_t::lock member inside CONFIG_MODIFY_LDT_SYSCALL
-Date:   Wed, 28 Aug 2019 21:38:35 +0200
-Message-Id: <20190828193836.16791-1-linux@rasmusvillemoes.dk>
+Subject: [PATCH 2/2] x86: mmu.h: move mm_context_t::ia32_compat member a bit down
+Date:   Wed, 28 Aug 2019 21:38:36 +0200
+Message-Id: <20190828193836.16791-2-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190828193836.16791-1-linux@rasmusvillemoes.dk>
+References: <20190828193836.16791-1-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,77 +72,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The placement of the lock member in mm_context_t suggests that it is
-used to protect the vdso* members, but AFAICT, it is only ever used
-under #ifdef CONFIG_MODIFY_LDT_SYSCALL. So guarding the member by the
-same config option is a cheap way to reduce sizeof(mm_struct) by 32
-bytes (only for !CONFIG_MODIFY_LDT_SYSCALL kernels, of course).
+For CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS=n, there's both a
+6-byte hole after ia32_compat as well as a 4-byte hole after
+perf_rdpmc_allowed. So rearranging things a bit we cut 8 bytes of
+sizeof(struct mm_struct).
+
+For a CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS=y kernel, this patch
+just moves the 6-byte hole to another place in mm_context_t.
+
+Putting the ia32_compat member after the pkey members is deliberate to
+keep the latter two (when present) in the same 4-byte unit.
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- arch/x86/include/asm/mmu.h         | 11 ++++++++---
- arch/x86/include/asm/mmu_context.h |  3 +--
- 2 files changed, 9 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/mmu.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
-index e78c7db87801..b1bb47a3577b 100644
+index b1bb47a3577b..ba3d22fcd507 100644
 --- a/arch/x86/include/asm/mmu.h
 +++ b/arch/x86/include/asm/mmu.h
-@@ -30,14 +30,13 @@ typedef struct {
- #ifdef CONFIG_MODIFY_LDT_SYSCALL
- 	struct rw_semaphore	ldt_usr_sem;
+@@ -32,10 +32,6 @@ typedef struct {
  	struct ldt_struct	*ldt;
-+	struct mutex		lock;
+ 	struct mutex		lock;
  #endif
--
- #ifdef CONFIG_X86_64
- 	/* True if mm supports a task running in 32 bit compatibility mode. */
- 	unsigned short ia32_compat;
- #endif
+-#ifdef CONFIG_X86_64
+-	/* True if mm supports a task running in 32 bit compatibility mode. */
+-	unsigned short ia32_compat;
+-#endif
  
--	struct mutex lock;
  	void __user *vdso;			/* vdso base address */
  	const struct vdso_image *vdso_image;	/* vdso image in use */
- 
-@@ -56,10 +55,16 @@ typedef struct {
+@@ -49,6 +45,10 @@ typedef struct {
+ 	u16 pkey_allocation_map;
+ 	s16 execute_only_pkey;
  #endif
- } mm_context_t;
- 
-+#ifdef CONFIG_MODIFY_LDT_SYSCALL
-+#define INIT_MM_CONTEXT_LOCK(mm) .lock = __MUTEX_INITIALIZER(mm.context.lock),
-+#else
-+#define INIT_MM_CONTEXT_LOCK(mm)
++#ifdef CONFIG_X86_64
++	/* True if mm supports a task running in 32 bit compatibility mode. */
++	unsigned short ia32_compat;
 +#endif
-+
- #define INIT_MM_CONTEXT(mm)						\
- 	.context = {							\
- 		.ctx_id = 1,						\
--		.lock = __MUTEX_INITIALIZER(mm.context.lock),		\
-+		INIT_MM_CONTEXT_LOCK(mm)				\
- 	}
- 
- void leave_mm(int cpu);
-diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
-index 9024236693d2..ac8e3ef8a774 100644
---- a/arch/x86/include/asm/mmu_context.h
-+++ b/arch/x86/include/asm/mmu_context.h
-@@ -82,6 +82,7 @@ static inline void init_new_context_ldt(struct mm_struct *mm)
- {
- 	mm->context.ldt = NULL;
- 	init_rwsem(&mm->context.ldt_usr_sem);
-+	mutex_init(&mm->context.lock);
- }
- int ldt_dup_context(struct mm_struct *oldmm, struct mm_struct *mm);
- void destroy_context_ldt(struct mm_struct *mm);
-@@ -186,8 +187,6 @@ void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk);
- static inline int init_new_context(struct task_struct *tsk,
- 				   struct mm_struct *mm)
- {
--	mutex_init(&mm->context.lock);
--
- 	mm->context.ctx_id = atomic64_inc_return(&last_mm_ctx_id);
- 	atomic64_set(&mm->context.tlb_gen, 0);
- 
+ #ifdef CONFIG_X86_INTEL_MPX
+ 	/* address of the bounds directory */
+ 	void __user *bd_addr;
 -- 
 2.20.1
 
