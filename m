@@ -2,88 +2,87 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCDCC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 04:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AFBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 04:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 620EA217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 04:06:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=euphon.net header.i=fam@euphon.net header.b="gKntHUbp"
+	by mail.kernel.org (Postfix) with ESMTP id 8B5CB20830
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 04:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725927AbfH1EGo (ORCPT
+        id S1726146AbfH1EMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 00:06:44 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17868 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725497AbfH1EGo (ORCPT
+        Wed, 28 Aug 2019 00:12:23 -0400
+Received: from baldur.buserror.net ([165.227.176.147]:49074 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfH1EMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 00:06:44 -0400
-X-Greylist: delayed 916 seconds by postgrey-1.27 at vger.kernel.org; Wed, 28 Aug 2019 00:06:38 EDT
-ARC-Seal: i=1; a=rsa-sha256; t=1566964261; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=nC0x4IFtr5oUkqo7CJopOuSOhRR5Uj5vv7ozu9uG51mRfJHG04y/d8q19F3JJjvyFIue4GIq6lCYQdVAC4rQDOUAOs8nhMo2nupo3oq/oSKfPKH0TE3Q9cmmU6JOBsaNWtmXKDRBvOWpssbX8X8LyzrYX+IDRTO3ZLCPFLGx92k=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1566964261; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To:ARC-Authentication-Results; 
-        bh=kZZ0SaUSYboCypvlsV1KXUwzNEviRw5SwLxgGnE8zzY=; 
-        b=RZWvI+EBuMXc7SdAQBjrfAPV51T1la8dCfa1BgIvCmhQBFM8sIesVFfnVa7Ay/lPCraO//X5XhYfZ/MCYGyYWwRg1bNYk9OyEg1p6JVbuBrl3YopBQLnNSys54inM3FcV/GwWY4abp/58f+eYSlW+RgdThRFIu95xftdh7wunuM=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=euphon.net;
-        spf=pass  smtp.mailfrom=fam@euphon.net;
-        dmarc=pass header.from=<fam@euphon.net> header.from=<fam@euphon.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1566964261;
-        s=zoho; d=euphon.net; i=fam@euphon.net;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        l=522; bh=kZZ0SaUSYboCypvlsV1KXUwzNEviRw5SwLxgGnE8zzY=;
-        b=gKntHUbpwtEPWYsG8RAFSvgvTifHJiZkg0vZjQvPumRN9CB0yaXDLVlxxcTjfXxU
-        ZsYBpyud35mPITI8gubkdPsc6N8m82VpRlujPxbqsV6jFCGarVssE8zSEnomCZmJ2gE
-        M0vRNjeXrf8TtvD1IZdzdga5MoM4tn2JwiI/IadU=
-Received: from localhost (120.52.147.46 [120.52.147.46]) by mx.zoho.com.cn
-        with SMTPS id 1566964259915588.9970437337977; Wed, 28 Aug 2019 11:50:59 +0800 (CST)
-Date:   Wed, 28 Aug 2019 11:50:55 +0800
-From:   Fam Zheng <fam@euphon.net>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Tejun Heo <tj@kernel.org>,
-        Fam Zheng <zhengfeiran@bytedance.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        duanxiongchun@bytedance.com, linux-block@vger.kernel.org,
-        cgroups@vger.kernel.org, zhangjiachen.jc@bytedance.com
-Subject: Re: [PATCH v2 3/3] bfq: Add per-device weight
-Message-ID: <20190828035055.GA16893@magic>
-References: <20190805063807.9494-1-zhengfeiran@bytedance.com>
- <20190805063807.9494-4-zhengfeiran@bytedance.com>
- <20190821154402.GI2263813@devbig004.ftw2.facebook.com>
- <C2F0BE1E-9CAA-4FBD-80D8-C18ECCE3FD4B@linaro.org>
- <fff76a58-65e7-7060-0329-aef15c422639@kernel.dk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fff76a58-65e7-7060-0329-aef15c422639@kernel.dk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-ZohoCNMailClient: External
+        Wed, 28 Aug 2019 00:12:23 -0400
+Received: from [2601:449:8400:7293:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1i2pDA-0007By-1u; Tue, 27 Aug 2019 23:05:32 -0500
+Message-ID: <a39b81562bcdeda7ffe0c2c29a60ff08c77047a6.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
+        christophe.leroy@c-s.fr, benh@kernel.crashing.org,
+        paulus@samba.org, npiggin@gmail.com, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com
+Cc:     wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org,
+        jingxiangfeng@huawei.com, zhaohongjiang@huawei.com,
+        thunder.leizhen@huawei.com, fanchengyang@huawei.com,
+        yebin10@huawei.com
+Date:   Tue, 27 Aug 2019 23:05:30 -0500
+In-Reply-To: <20190809100800.5426-1-yanaijie@huawei.com>
+References: <20190809100800.5426-1-yanaijie@huawei.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2601:449:8400:7293:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: yanaijie@huawei.com, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com, christophe.leroy@c-s.fr, benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com, keescook@chromium.org, kernel-hardening@lists.openwall.com, wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org, jingxiangfeng@huawei.com, zhaohongjiang@huawei.com, thunder.leizhen@huawei.com, fanchengyang@huawei.com, yebin10@huawei.com
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v6 00/12] implement KASLR for powerpc/fsl_booke/32
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 08/26 07:59, Jens Axboe wrote:
-> On 8/26/19 12:36 AM, Paolo Valente wrote:
-> > Hi Jens,
-> > do you think this series could now be queued for 5.4?
+On Fri, 2019-08-09 at 18:07 +0800, Jason Yan wrote:
+> This series implements KASLR for powerpc/fsl_booke/32, as a security
+> feature that deters exploit attempts relying on knowledge of the location
+> of kernel internals.
 > 
-> The most glaring oversight in this series, is that the meat of it,
-> patch #3, doesn't even have a commit message. The cover letter
-> essentially looks like it should have been the commit message for
-> that patch.
+> Since CONFIG_RELOCATABLE has already supported, what we need to do is
+> map or copy kernel to a proper place and relocate.
+
+Have you tested this with a kernel that was loaded at a non-zero address?  I
+tried loading a kernel at 0x04000000 (by changing the address in the uImage,
+and setting bootm_low to 04000000 in U-Boot), and it works without
+CONFIG_RANDOMIZE and fails with.
+
+>  Freescale Book-E
+> parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
+> entries are not suitable to map the kernel directly in a randomized
+> region, so we chose to copy the kernel to a proper place and restart to
+> relocate.
 > 
-> Please resend with acks/reviews collected, and ensure that all
-> patches have a reasonable commit message.
+> Entropy is derived from the banner and timer base, which will change every
+> build and boot. This not so much safe so additionally the bootloader may
+> pass entropy via the /chosen/kaslr-seed node in device tree.
 
-Will do. Thanks!
+How complicated would it be to directly access the HW RNG (if present) that
+early in the boot?  It'd be nice if a U-Boot update weren't required (and
+particularly concerning that KASLR would appear to work without a U-Boot
+update, but without decent entropy).
 
-Fam
+-Scott
+
 
