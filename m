@@ -2,312 +2,178 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86318C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0676C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54E6423403
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8753023406
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:39:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GyUvhO6H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfH1IjA (ORCPT
+        id S1726521AbfH1Ij5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:39:00 -0400
-Received: from mga11.intel.com ([192.55.52.93]:19667 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbfH1Ii7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:38:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 01:38:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
-   d="scan'208";a="181964199"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Aug 2019 01:38:56 -0700
-Subject: Re: [PATCH V8 3/3] mmc: sdhci-pci-o2micro: Fix O2 Host data
- read/write DLL Lock phase shift issue
-To:     "Shirley Her (SC)" <shirley.her@bayhubtech.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
-        "Shaper Liu (WH)" <shaper.liu@bayhubtech.com>,
-        "Louis Lu (TP)" <louis.lu@bayhubtech.com>,
-        "Max Huang (SC)" <max.huang@bayhubtech.com>
-References: <1566412784-6224-1-git-send-email-shirley.her@bayhubtech.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <4d926e9c-cb98-6587-f38d-426dd04d84de@intel.com>
-Date:   Wed, 28 Aug 2019 11:37:52 +0300
+        Wed, 28 Aug 2019 04:39:57 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:44492 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbfH1Ij5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:39:57 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190828083955euoutp028ef90bcf053553a8e644f39ef3335abb~-CXWO6L5M0690406904euoutp02h
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 08:39:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190828083955euoutp028ef90bcf053553a8e644f39ef3335abb~-CXWO6L5M0690406904euoutp02h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566981595;
+        bh=nCO1CGbNKa5rvO48tD1eLJmbBQi/YQi3un/pIVM1ksQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=GyUvhO6HUlrozwZ+TG0uHeVIsHhZiuw7lkq26iTfRYh/mXQq/HVm2f0FZ4Q2Brefi
+         /go/dCadcvFZSwQaJ4kn/7fqD7oQyo9qjS24MxWdthRrAkgHTAx+NJqdHM7UHBHp5L
+         S0CF7Js9555sE7kx4Y1RZlliA8d1Tv4DUheaz7QA=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190828083955eucas1p2c5ef161d4b0934ff1def119ebe330278~-CXVc2gpu2348323483eucas1p2z;
+        Wed, 28 Aug 2019 08:39:55 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 0A.DD.04374.ADD366D5; Wed, 28
+        Aug 2019 09:39:54 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190828083954eucas1p2b8dc8e6d795b984ec607a7e49911ff2b~-CXUm5jQe2349023490eucas1p2h;
+        Wed, 28 Aug 2019 08:39:54 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190828083953eusmtrp1093ab1005f1cbb6474ace28275f78049~-CXUYPHem2582525825eusmtrp1x;
+        Wed, 28 Aug 2019 08:39:53 +0000 (GMT)
+X-AuditID: cbfec7f5-4ddff70000001116-b1-5d663dda61d3
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id D7.07.04117.9DD366D5; Wed, 28
+        Aug 2019 09:39:53 +0100 (BST)
+Received: from [106.120.51.75] (unknown [106.120.51.75]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190828083953eusmtip198a24422c79bd0cf39db371dda376fb4~-CXTs6pHN0415604156eusmtip1z;
+        Wed, 28 Aug 2019 08:39:53 +0000 (GMT)
+Subject: Re: [PATCH v7 9/9] drm: exynos: exynos_hdmi: use
+ cec_notifier_conn_(un)register
+To:     Dariusz Marcinkiewicz <darekm@google.com>,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        hverkuil-cisco@xs4all.nl
+Cc:     Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <6bbfb6f8-15c2-9ad2-8857-898f4c6435a3@samsung.com>
+Date:   Wed, 28 Aug 2019 10:39:51 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1566412784-6224-1-git-send-email-shirley.her@bayhubtech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190814104520.6001-10-darekm@google.com>
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+3bO2Y7D6WkavqybDfujIs2MOmVZQcSBIIIoYyW27KTSZrbT
+        uhJ5AfGy6XJRuVatErR102XzVkZqDZMaUoQpa5JCqUnknGBeltuZ5H+/532f93veFz4Sk/4g
+        ZGRm1hlWk6VUyYVi3P5u4uPanm0nUtZ1F8fS+o8dAtpnv4rRlY6HiP7s/S2kuypcOF3uNuD0
+        z29dOF3WP4zRTmeNiP6Q90tE2/q/EPSnJrOQ1tW8IOibzhYBfdM4KNwRzrwat+CMxaZlbNYi
+        IVM/3kcw7hKHgHleeYUprbMixmNbxrz3ekT7QhTircdZVeZZVhOXdFScca15lMhuCz1vnviJ
+        5aAqcTEKIYHaAK6rPYJiJCalVDUCS25xUIwheGvXI154EPwqdKK5EXf+oIhvVCG4Wz8UFCMI
+        XDN/cL8rglLAtOuR0N+IpIoQPNCPBwRGVWCQ224Q+F1CKh70b0sD70qoJDB+MBN+xqmVMGOb
+        CNQXUYdgtK+N4D0LoaNiIJAQQm0Coy434MGoKMgbe0jwvBzqR8yYPwyoIhKG/74KLr4L7M52
+        Ic8RMOSoE/G8BDqNOpwfyEega+4V8cKAwO2wBKcToc3RNRtBzkasgmdNcX4Eaif0vVDxGAbd
+        Iwv5HcKg3H4D48sSKCyQ8m/EwKT1hoBnGZQM+HADkpvmXWaad41p3jWm/7EWhFtRFKvl1Oks
+        l5DFnovllGpOm5Uem3ZKbUOz369zxuFtQC1Tx1oRRSJ5qKQwnE2REsqz3AV1KwISk0dKvsfM
+        liTHlRcusppTqRqtiuVa0WISl0dJLi3oOyyl0pVn2JMsm81q5roCMkSWg0JtUUeTahWjntKc
+        38k1BUmENe70Cvflgarke3dueauv9ywzNEq96w5M/tn7MmUqc+nmg7UmRVnbYEWe6xz96MmT
+        L0OpTRunDkfXDdsOJnZz62WNr/fcr6a2xzyd7k+IeOxTR2fcbX1sUPs+NfjSCm/3Kr6uMTX9
+        OJJt3r3/zZb+khw5zmUo41djGk75D83/noN6AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJIsWRmVeSWpSXmKPExsVy+t/xu7o3bdNiDV7M0bPoPXeSyeL/tonM
+        FkuOr2S0uPL1PZvFxZl3WSwm3Z/AYvHi3kUWi/7Hr5ktzp/fwG5xtukNu8Wmx9dYLS7vmsNm
+        0bNhK6vFjPP7mCxmTH7J5sDvsffbAhaPBZtKPTat6mTz2P7tAavH/e7jTB6bl9R79G1Zxejx
+        eZOcx6mvn9kDOKP0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLL
+        Uov07RL0Mqbs/sRacJinYs7PF8wNjMu5uhg5OSQETCTuN79k72Lk4hASWMoo8fHhHcYuRg6g
+        hJTE/BYliBphiT/Xutggal4zSnzfso8RJCEsECXx9+5qsISIQCejxK47t1lAHGaBmcwSu1b0
+        QI3dxijxZ8kWVpAWNgFDid6jfWDtvAJ2EpPPzgGLswioSvzb9BMsLioQIXF4xyyoGkGJkzOf
+        sIDYnALmEpN7GsHizALqEn/mXWKGsMUlmr6sZIWw5SW2v53DPIFRaBaS9llIWmYhaZmFpGUB
+        I8sqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwGjfduznlh2MXe+CDzEKcDAq8fB28KfGCrEm
+        lhVX5h5ilOBgVhLhfaQCFOJNSaysSi3Kjy8qzUktPsRoCvTcRGYp0eR8YCLKK4k3NDU0t7A0
+        NDc2NzazUBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAWHk/8qHuefNNd5nnltxWXRTqWXXl
+        y2nn3wfm7brHqOHCeant5InlAk7si0tEVi09KF/4ZqOfC+P5kBei//tM4j9HL0+68izsilSt
+        /jzR4IYXEoeWcXqFRU75ylH0TVdjzkZ1ZptntxK0jj3dbphVotGx/j27adNijwOdrae2mmVq
+        Cx+LmLwnQYmlOCPRUIu5qDgRAAkeheoMAwAA
+X-CMS-MailID: 20190828083954eucas1p2b8dc8e6d795b984ec607a7e49911ff2b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190814104630epcas3p44755443f37e78b2613f7dda35d71bb71
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190814104630epcas3p44755443f37e78b2613f7dda35d71bb71
+References: <20190814104520.6001-1-darekm@google.com>
+        <CGME20190814104630epcas3p44755443f37e78b2613f7dda35d71bb71@epcas3p4.samsung.com>
+        <20190814104520.6001-10-darekm@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/08/19 9:39 PM, Shirley Her (SC) wrote:
-> Fix data read/write error in HS200 mode due to chip DLL lock phase shift
+On 8/14/19 12:45, Dariusz Marcinkiewicz wrote:
+> Use the new cec_notifier_conn_(un)register() functions to
+> (un)register the notifier for the HDMI connector, and fill in
+> the cec_connector_info.
 > 
-> Signed-off-by: Shirley Her <shirley.her@bayhubtech.com>
+> Changes since v2:
+> 	- removed unnecessary call to invalidate phys address before
+> 	deregistering the notifier,
+> 	- use cec_notifier_phys_addr_invalidate instead of setting
+> 	invalid address on a notifier.
+> 
+> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+> Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-2 comments below:
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-> ---
-> change in V8:
->  1. fix patch format error
-> 
-> change in V7:
->  1. change subject
->  2. change the sdhci_o2_wait_dll_detect_lock_function
->  3. add suitable usleep_range() to detect dll lock status
-> 
-> change in V6:
->  1. define constant by using array size
->  2. add more explanation for the code
->  3. fix loop forever code error
-> 
-> change in V5:
->  1. split 2 patches into 3 patches
->  2. make dll_adjust_count start from 0
->  3. fix ret overwritten issue
->  4. use break instead of goto
-> 
-> change in V4:
->  1. add a bug fix for V3
-> 
-> change in V3:
->  1. add more explanation in dll_recovery and execute_tuning function
->  2. move dll_adjust_count to O2_host struct
->  3. fix some coding style error
->  4. renaming O2_PLL_WDT_CONTROL1 TO O2_PLL_DLL_WDT_CONTROL1
-> 
-> change in V2:
->  1. use usleep_range instead of udelay
->  2. move dll_adjust_count to sdhci-pci-o2micro.c
-> 
-> chagne in V1:
->  1. add error recovery function to relock DLL with correct phase
->  2. retuning HS200 after DLL locked
-> ---
->  drivers/mmc/host/sdhci-pci-o2micro.c | 124 ++++++++++++++++++++++++++++++++++-
->  1 file changed, 122 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-> index 57c8b83..d879d91 100644
-> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
-> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-> @@ -11,6 +11,7 @@
->  #include <linux/mmc/host.h>
->  #include <linux/mmc/mmc.h>
->  #include <linux/delay.h>
-> +#include <linux/iopoll.h>
->  
->  #include "sdhci.h"
->  #include "sdhci-pci.h"
-> @@ -55,9 +56,18 @@
->  #define  O2_PLL_FORCE_ACTIVE	BIT(18)
->  #define  O2_PLL_LOCK_STATUS	BIT(14)
->  #define  O2_PLL_SOFT_RESET	BIT(12)
-> +#define  O2_DLL_LOCK_STATUS	BIT(11)
->  
->  #define O2_SD_DETECT_SETTING 0x324
->  
-> +static const u32 dmdn_table[] = {0x2B1C0000,
-> +	0x2C1A0000, 0x371B0000, 0x35100000};
-> +#define DMDN_SZ ARRAY_SIZE(dmdn_table)
-> +
-> +struct o2_host {
-> +	u8 dll_adjust_count;
-> +};
-> +
->  static void sdhci_o2_wait_card_detect_stable(struct sdhci_host *host)
->  {
->  	ktime_t timeout;
-> @@ -133,7 +143,8 @@ static int sdhci_o2_get_cd(struct mmc_host *mmc)
->  {
->  	struct sdhci_host *host = mmc_priv(mmc);
->  
-> -	sdhci_o2_enable_internal_clock(host);
-> +	if (!(sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1) & O2_PLL_LOCK_STATUS))
-> +		sdhci_o2_enable_internal_clock(host);
->  
->  	return !!(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT);
->  }
-> @@ -152,6 +163,25 @@ static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
->  			       O2_SD_PLL_SETTING, scratch_32);
->  }
->  
-> +static u32 sdhci_o2_pll_dll_wdt_control(struct sdhci_host *host)
-> +{
-> +	return sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> +}
-> +
-> +/*
-> + * This function is used to detect dll lock status.
-> + * Since the dll lock status bit will toggle randomly
-> + * with very short interval which needs to be polled
-> + * as fast as possible. Set sleep_us as 1 microsecond.
-> + */
-> +static int sdhci_o2_wait_dll_detect_lock(struct sdhci_host *host)
-> +{
-> +	u32	scratch32 = 0;
-> +
-> +	return readx_poll_timeout(sdhci_o2_pll_dll_wdt_control, host,
-> +		scratch32, !(scratch32 & O2_DLL_LOCK_STATUS), 1, 1000000);
-> +}
-> +
->  static void sdhci_o2_set_tuning_mode(struct sdhci_host *host)
->  {
->  	u16 reg;
-> @@ -189,6 +219,83 @@ static void __sdhci_o2_execute_tuning(struct sdhci_host *host, u32 opcode)
->  	sdhci_reset_tuning(host);
->  }
->  
-> +/*
-> + * This function is used to fix o2 dll shift issue.
-> + * It isn't necessary to detect card present before recovery.
-> + * Firstly, it is used by bht emmc card, which is embedded.
-> + * Second, before call recovery card present will be detected
-> + * outside of the execute tuning function.
-> + */
-> +static int sdhci_o2_dll_recovery(struct sdhci_host *host)
-> +{
-> +	int ret = 0;
-> +	u8 scratch_8 = 0;
-> +	u32 scratch_32 = 0;
-> +	struct sdhci_pci_slot *slot = sdhci_priv(host);
-> +	struct sdhci_pci_chip *chip = slot->chip;
-> +	struct o2_host *o2_host = sdhci_pci_priv(slot);
-> +
-> +	/* UnLock WP */
-> +	pci_read_config_byte(chip->pdev,
-> +			O2_SD_LOCK_WP, &scratch_8);
-> +	scratch_8 &= 0x7f;
-> +	pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch_8);
-> +	while (o2_host->dll_adjust_count < DMDN_SZ && !ret) {
-> +		/* Disable clock */
-> +		sdhci_writeb(host, 0, SDHCI_CLOCK_CONTROL);
-> +
-> +		/* PLL software reset */
-> +		scratch_32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> +		scratch_32 |= O2_PLL_SOFT_RESET;
-> +		sdhci_writel(host, scratch_32, O2_PLL_DLL_WDT_CONTROL1);
-> +
-> +		pci_read_config_dword(chip->pdev,
-> +					    O2_SD_FUNC_REG4,
-> +					    &scratch_32);
-> +		/* Enable Base Clk setting change */
-> +		scratch_32 |= O2_SD_FREG4_ENABLE_CLK_SET;
-> +		pci_write_config_dword(chip->pdev, O2_SD_FUNC_REG4, scratch_32);
-> +		o2_pci_set_baseclk(chip, dmdn_table[o2_host->dll_adjust_count]);
-> +
-> +		/* Enable internal clock */
-> +		scratch_8 = SDHCI_CLOCK_INT_EN;
-> +		sdhci_writeb(host, scratch_8, SDHCI_CLOCK_CONTROL);
-> +
-> +		if (sdhci_o2_get_cd(host->mmc)) {
-> +			/*
-> +			 * need wait at least 5ms for dll status stable,
-> +			 * after enable internal clock
-> +			 */
-> +			usleep_range(5000, 6000);
-> +			if (sdhci_o2_wait_dll_detect_lock(host)) {
-> +				scratch_8 |= SDHCI_CLOCK_CARD_EN;
-> +				sdhci_writeb(host, scratch_8,
-> +					SDHCI_CLOCK_CONTROL);
-> +				ret = 1;
-> +			} else {
-> +				pr_warn("%s: DLL unlocked when dll_adjust_count is %d.\n",
-> +					mmc_hostname(host->mmc),
-> +					o2_host->dll_adjust_count);
-> +			}
-> +		} else {
-> +			pr_err("%s: card present detect failed.\n",
-> +				mmc_hostname(host->mmc));
-> +			break;
-> +		}
-> +
-> +		o2_host->dll_adjust_count++;
-> +	}
-> +	if (!ret && o2_host->dll_adjust_count == DMDN_SZ)
+> diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
+> index bc1565f1822ab..d532b468d9af5 100644
+> --- a/drivers/gpu/drm/exynos/exynos_hdmi.c
+> +++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
 
-As I wrote in reply to V7, isn't this off by 1? i.e. should be
-o2_host->dll_adjust_count > DMDN_SZ
-
-> +		pr_err("%s: DLL adjust over max times\n",
-> +		mmc_hostname(host->mmc));
-> +	/* Lock WP */
-> +	pci_read_config_byte(chip->pdev,
-> +				   O2_SD_LOCK_WP, &scratch_8);
-> +	scratch_8 |= 0x80;
-> +	pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch_8);
-> +	return ret;
-> +}
-> +
->  static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  {
->  	struct sdhci_host *host = mmc_priv(mmc);
-> @@ -203,7 +310,16 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+> @@ -2006,12 +2020,6 @@ static int hdmi_probe(struct platform_device *pdev)
+>  		}
+>  	}
 >  
->  	if (WARN_ON(opcode != MMC_SEND_TUNING_BLOCK_HS200))
->  		return -EINVAL;
+> -	hdata->notifier = cec_notifier_get(&pdev->dev);
+> -	if (hdata->notifier == NULL) {
+> -		ret = -ENOMEM;
+> -		goto err_hdmiphy;
+> -	}
 > -
-> +	/*
-> +	 * Judge the tuning reason, whether caused by dll shift
-> +	 * If cause by dll shift, should call sdhci_o2_dll_recovery
-> +	 */
-> +	if (!sdhci_o2_wait_dll_detect_lock(host))
-> +		if (!sdhci_o2_dll_recovery(host)) {
-> +			pr_err("%s: o2 dll recovery failed\n",
-> +				mmc_hostname(host->mmc));
-> +			return -EINVAL;
-> +		}
->  	/*
->  	 * o2 sdhci host didn't support 8bit emmc tuning
->  	 */
-> @@ -371,6 +487,7 @@ static void sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
->  	clk |= SDHCI_CLOCK_INT_EN;
->  	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+>  	pm_runtime_enable(dev);
 >  
-> +	sdhci_o2_enable_internal_clock(host);
->  	if (sdhci_o2_get_cd(host->mmc)) {
->  		clk |= SDHCI_CLOCK_CARD_EN;
->  		sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
-> @@ -396,12 +513,14 @@ int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
->  {
->  	struct sdhci_pci_chip *chip;
->  	struct sdhci_host *host;
-> +	struct o2_host *o2_host = sdhci_pci_priv(slot);
->  	u32 reg, caps;
->  	int ret;
+>  	audio_infoframe = &hdata->audio.infoframe;
+> @@ -2023,7 +2031,7 @@ static int hdmi_probe(struct platform_device *pdev)
 >  
->  	chip = slot->chip;
->  	host = slot->host;
->  
-> +	o2_host->dll_adjust_count = 0;
+>  	ret = hdmi_register_audio_device(hdata);
+>  	if (ret)
+> -		goto err_notifier_put;
+> +		goto err_runtime_disable;
 
-As I wrote in reply to V7, please remove trailing white space after
-"o2_host->dll_adjust_count = 0;"
 
->  	caps = sdhci_readl(host, SDHCI_CAPABILITIES);
->  
->  	/*
-> @@ -688,4 +807,5 @@ const struct sdhci_pci_fixes sdhci_o2 = {
->  	.resume = sdhci_pci_o2_resume,
->  #endif
->  	.ops = &sdhci_pci_o2_ops,
-> +	.priv_size = sizeof(struct o2_host),
->  };
-> 
+> -err_notifier_put:
+> -	cec_notifier_put(hdata->notifier);
+> +err_runtime_disable:
+>  	pm_runtime_disable(dev);
 
+nit: I think err_rpm_disable or err_pm_runtime_disable could be better 
+     label names.
+
+-- 
+Thanks,
+Sylwester
