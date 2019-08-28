@@ -2,124 +2,375 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDF3C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9800EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5AD21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5942521726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:51:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXqjVb4y"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="o4ujO8Ub";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BejK36lM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbfH2Ruo (ORCPT
+        id S1728042AbfH2RvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:50:44 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38492 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfH2Ruo (ORCPT
+        Thu, 29 Aug 2019 13:51:07 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:45918 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727495AbfH2RvG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:50:44 -0400
-Received: by mail-pf1-f195.google.com with SMTP id o70so2569047pfg.5;
-        Thu, 29 Aug 2019 10:50:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=C0c3Z1paEgDZynzXFK49rQPn2NcgrpyMRJRXJjSfdS0=;
-        b=EXqjVb4y/WwUgZeTgYtqQrj2s+pCQQ3Wd5fATC2hSxen/zrMsXPZ/8WjzNYuJYUotp
-         DxUq01LQs7mDdr3uRa7nxQ88FJYxvayxO+Op3t91FrFw47BggasnQWWmVP1WjZ36UPUB
-         gWcP84+R19b0xsQIaMhbY329hqAhc2rVpmEGFd8LXH9S9f/8S3KqrXJF7k2Ahsi6OO/Z
-         D31LZX7+vskardnB0PUtFvCPxfCt+RLH3uzDMFEmJceVCT4AAlbdWajSKHuVUTvnOLcu
-         dmPMH+H/HY4KpmRJKQSL5vqMpTlc8F4ac04iH3mW5oOkoHEQixwJOtei+ipQjOXJC3l9
-         toog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=C0c3Z1paEgDZynzXFK49rQPn2NcgrpyMRJRXJjSfdS0=;
-        b=ZvrZIao3UBlFgPt0+V+lwGxzp4wC9Xll24D5pESGC7VWij7LYi6tOQUSqQCPN/bC82
-         5+vd/2rm5tp3UxbFToOvETOlUEzWm5lwg9MrcXYk+YuEK0p3BP1esL5zGLs/kTPPmpf0
-         /hfwFIGRdk8zvqUSqSlLWkhAvWx+DVinG1GeiTY1l2E9Uq8Jg9+wyX8GCwu3hWyIdVAI
-         fFl0UjZ4EreCn3n8uv4TZOhdJiZLVP7yaLLuBWI7niuzRR1uUrXAJ2nEoPgJFJ22xFrh
-         9HkZSKHOuCfh4HUB1ah1f0YWGcVI0Sugo0FyrRwbroOeuvi8LySCjX6uboVoeMEe02bh
-         CbYA==
-X-Gm-Message-State: APjAAAWf0DCQ47ZeHGXVW1/62EyOtB+tNsV1VwqaT+8hC6aCm15g8Q4m
-        1fZy7LNEiLzx32Hl3mrZVsI=
-X-Google-Smtp-Source: APXvYqzz6aYtL303net0Q2XoobY3+IfZ+KjkTCCRv9mGfinoCAHvvn/eFJl3hSKth/9/3+Rithx5Ng==
-X-Received: by 2002:aa7:9112:: with SMTP id 18mr13054322pfh.127.1567101043175;
-        Thu, 29 Aug 2019 10:50:43 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id p10sm3618213pff.132.2019.08.29.10.50.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 10:50:42 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 10:50:39 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v3 09/11] Input: alps - remove unlikely() from IS_ERR*()
- condition
-Message-ID: <20190829175039.GA187474@dtor-ws>
-References: <20190829165025.15750-1-efremov@linux.com>
- <20190829165025.15750-9-efremov@linux.com>
+        Thu, 29 Aug 2019 13:51:06 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 87A6587624; Thu, 29 Aug 2019 11:52:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567079572;
+        bh=OHKwkI/sdEgnVyxudiOOLrgRs7l5wbuwZtUz5z/MjT8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o4ujO8Ub3h8UdIQvNPiLWE3/P8r3RTWDGP6Yeyn10Ffps7PWD2t5h6r/kc9OMqF0T
+         WIhEPJmeGlBaRcVfgWNOf+vmTwCTL7yxJ4Z5KvDiQtlj9mTDAUmjEsm2bX5L/wVhQr
+         FQWLIj0QheBTkSk45w/yqDuSbKF9TcylkGYqu3OY=
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F306B717A6;
+        Wed, 28 Aug 2019 15:12:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567005151;
+        bh=OHKwkI/sdEgnVyxudiOOLrgRs7l5wbuwZtUz5z/MjT8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BejK36lMPzA13/cjZqPZoXa/eOjWiZbRxpyj7LZqyNJ6uVpcw4nMtPXmez6+1A2zu
+         tXq6LWd37yuIusL0LAVwc8AX1andY2qEfQLqXqeLOp7xjReKQG/hz+nIGBXZ5z6fn/
+         fCmR+Jl0udrxKJqq7Jny0yCGZAbKS1/BDJDWE2J8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F306B717A6
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Wed, 28 Aug 2019 09:12:28 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     agross@kernel.org, robdclark@gmail.com, sean@poorly.run,
+        robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        jonathan@marek.ca, airlied@linux.ie, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        daniel@ffwll.ch, freedreno@lists.freedesktop.org
+Subject: Re: [Freedreno] [PATCH v7 6/7] drm/msm/gpu: add ocmem init/cleanup
+ functions
+Message-ID: <20190828151227.GA32634@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Brian Masney <masneyb@onstation.org>, agross@kernel.org,
+        robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org,
+        bjorn.andersson@linaro.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, jonathan@marek.ca, airlied@linux.ie,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, daniel@ffwll.ch,
+        freedreno@lists.freedesktop.org
+References: <20190823121637.5861-1-masneyb@onstation.org>
+ <20190823121637.5861-7-masneyb@onstation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190829165025.15750-9-efremov@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190823121637.5861-7-masneyb@onstation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 07:50:23PM +0300, Denis Efremov wrote:
-> "unlikely(IS_ERR_OR_NULL(x))" is excessive. IS_ERR_OR_NULL() already uses
-> unlikely() internally.
+On Fri, Aug 23, 2019 at 05:16:36AM -0700, Brian Masney wrote:
+> The files a3xx_gpu.c and a4xx_gpu.c have ifdefs for the OCMEM support
+> that was missing upstream. Add two new functions (adreno_gpu_ocmem_init
+> and adreno_gpu_ocmem_cleanup) that removes some duplicated code.
 
-The keyword here is _internally_.
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 
-https://lore.kernel.org/lkml/20190821174857.GD76194@dtor-ws/
-
-So please no.
-
-> 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> Cc: "Pali Rohár" <pali.rohar@gmail.com>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Joe Perches <joe@perches.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-input@vger.kernel.org
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 > ---
->  drivers/input/mouse/alps.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Changes since v6:
+> - None
 > 
-> diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
-> index 34700eda0429..ed1661434899 100644
-> --- a/drivers/input/mouse/alps.c
-> +++ b/drivers/input/mouse/alps.c
-> @@ -1476,7 +1476,7 @@ static void alps_report_bare_ps2_packet(struct psmouse *psmouse,
->  		/* On V2 devices the DualPoint Stick reports bare packets */
->  		dev = priv->dev2;
->  		dev2 = psmouse->dev;
-> -	} else if (unlikely(IS_ERR_OR_NULL(priv->dev3))) {
-> +	} else if (IS_ERR_OR_NULL(priv->dev3)) {
->  		/* Register dev3 mouse if we received PS/2 packet first time */
->  		if (!IS_ERR(priv->dev3))
->  			psmouse_queue_work(psmouse, &priv->dev3_register_work,
+> Changes since v5:
+> - None
+> 
+> Changes since v4:
+> - None
+> 
+> Changes since v3:
+> - None
+> 
+> Changes since v2:
+> - Check for -ENODEV error of_get_ocmem()
+> - remove fail_cleanup_ocmem label in a[34]xx_gpu_init
+> 
+> Changes since v1:
+> - remove CONFIG_QCOM_OCMEM #ifdefs
+> - use unsigned long for memory addresses instead of uint32_t
+> - add 'depends on QCOM_OCMEM || QCOM_OCMEM=n' to Kconfig
+> 
+>  drivers/gpu/drm/msm/Kconfig             |  1 +
+>  drivers/gpu/drm/msm/adreno/a3xx_gpu.c   | 28 +++++------------
+>  drivers/gpu/drm/msm/adreno/a3xx_gpu.h   |  3 +-
+>  drivers/gpu/drm/msm/adreno/a4xx_gpu.c   | 25 ++++------------
+>  drivers/gpu/drm/msm/adreno/a4xx_gpu.h   |  3 +-
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 40 +++++++++++++++++++++++++
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.h | 10 +++++++
+>  7 files changed, 66 insertions(+), 44 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
+> index 9c37e4de5896..b3d3b2172659 100644
+> --- a/drivers/gpu/drm/msm/Kconfig
+> +++ b/drivers/gpu/drm/msm/Kconfig
+> @@ -7,6 +7,7 @@ config DRM_MSM
+>  	depends on OF && COMMON_CLK
+>  	depends on MMU
+>  	depends on INTERCONNECT || !INTERCONNECT
+> +	depends on QCOM_OCMEM || QCOM_OCMEM=n
+>  	select QCOM_MDT_LOADER if ARCH_QCOM
+>  	select REGULATOR
+>  	select DRM_KMS_HELPER
+> diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+> index 5f7e98028eaf..7ad14937fcdf 100644
+> --- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+> @@ -6,10 +6,6 @@
+>   * Copyright (c) 2014 The Linux Foundation. All rights reserved.
+>   */
+>  
+> -#ifdef CONFIG_MSM_OCMEM
+> -#  include <mach/ocmem.h>
+> -#endif
+> -
+>  #include "a3xx_gpu.h"
+>  
+>  #define A3XX_INT0_MASK \
+> @@ -195,9 +191,9 @@ static int a3xx_hw_init(struct msm_gpu *gpu)
+>  		gpu_write(gpu, REG_A3XX_RBBM_GPR0_CTL, 0x00000000);
+>  
+>  	/* Set the OCMEM base address for A330, etc */
+> -	if (a3xx_gpu->ocmem_hdl) {
+> +	if (a3xx_gpu->ocmem.hdl) {
+>  		gpu_write(gpu, REG_A3XX_RB_GMEM_BASE_ADDR,
+> -			(unsigned int)(a3xx_gpu->ocmem_base >> 14));
+> +			(unsigned int)(a3xx_gpu->ocmem.base >> 14));
+>  	}
+>  
+>  	/* Turn on performance counters: */
+> @@ -318,10 +314,7 @@ static void a3xx_destroy(struct msm_gpu *gpu)
+>  
+>  	adreno_gpu_cleanup(adreno_gpu);
+>  
+> -#ifdef CONFIG_MSM_OCMEM
+> -	if (a3xx_gpu->ocmem_base)
+> -		ocmem_free(OCMEM_GRAPHICS, a3xx_gpu->ocmem_hdl);
+> -#endif
+> +	adreno_gpu_ocmem_cleanup(&a3xx_gpu->ocmem);
+>  
+>  	kfree(a3xx_gpu);
+>  }
+> @@ -494,17 +487,10 @@ struct msm_gpu *a3xx_gpu_init(struct drm_device *dev)
+>  
+>  	/* if needed, allocate gmem: */
+>  	if (adreno_is_a330(adreno_gpu)) {
+> -#ifdef CONFIG_MSM_OCMEM
+> -		/* TODO this is different/missing upstream: */
+> -		struct ocmem_buf *ocmem_hdl =
+> -				ocmem_allocate(OCMEM_GRAPHICS, adreno_gpu->gmem);
+> -
+> -		a3xx_gpu->ocmem_hdl = ocmem_hdl;
+> -		a3xx_gpu->ocmem_base = ocmem_hdl->addr;
+> -		adreno_gpu->gmem = ocmem_hdl->len;
+> -		DBG("using %dK of OCMEM at 0x%08x", adreno_gpu->gmem / 1024,
+> -				a3xx_gpu->ocmem_base);
+> -#endif
+> +		ret = adreno_gpu_ocmem_init(&adreno_gpu->base.pdev->dev,
+> +					    adreno_gpu, &a3xx_gpu->ocmem);
+> +		if (ret)
+> +			goto fail;
+>  	}
+>  
+>  	if (!gpu->aspace) {
+> diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.h b/drivers/gpu/drm/msm/adreno/a3xx_gpu.h
+> index 5dc33e5ea53b..c555fb13e0d7 100644
+> --- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.h
+> +++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.h
+> @@ -19,8 +19,7 @@ struct a3xx_gpu {
+>  	struct adreno_gpu base;
+>  
+>  	/* if OCMEM is used for GMEM: */
+> -	uint32_t ocmem_base;
+> -	void *ocmem_hdl;
+> +	struct adreno_ocmem ocmem;
+>  };
+>  #define to_a3xx_gpu(x) container_of(x, struct a3xx_gpu, base)
+>  
+> diff --git a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
+> index ab2b752566d8..b01388a9e89e 100644
+> --- a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
+> @@ -2,9 +2,6 @@
+>  /* Copyright (c) 2014 The Linux Foundation. All rights reserved.
+>   */
+>  #include "a4xx_gpu.h"
+> -#ifdef CONFIG_MSM_OCMEM
+> -#  include <soc/qcom/ocmem.h>
+> -#endif
+>  
+>  #define A4XX_INT0_MASK \
+>  	(A4XX_INT0_RBBM_AHB_ERROR |        \
+> @@ -188,7 +185,7 @@ static int a4xx_hw_init(struct msm_gpu *gpu)
+>  			(1 << 30) | 0xFFFF);
+>  
+>  	gpu_write(gpu, REG_A4XX_RB_GMEM_BASE_ADDR,
+> -			(unsigned int)(a4xx_gpu->ocmem_base >> 14));
+> +			(unsigned int)(a4xx_gpu->ocmem.base >> 14));
+>  
+>  	/* Turn on performance counters: */
+>  	gpu_write(gpu, REG_A4XX_RBBM_PERFCTR_CTL, 0x01);
+> @@ -318,10 +315,7 @@ static void a4xx_destroy(struct msm_gpu *gpu)
+>  
+>  	adreno_gpu_cleanup(adreno_gpu);
+>  
+> -#ifdef CONFIG_MSM_OCMEM
+> -	if (a4xx_gpu->ocmem_base)
+> -		ocmem_free(OCMEM_GRAPHICS, a4xx_gpu->ocmem_hdl);
+> -#endif
+> +	adreno_gpu_ocmem_cleanup(&a4xx_gpu->ocmem);
+>  
+>  	kfree(a4xx_gpu);
+>  }
+> @@ -578,17 +572,10 @@ struct msm_gpu *a4xx_gpu_init(struct drm_device *dev)
+>  
+>  	/* if needed, allocate gmem: */
+>  	if (adreno_is_a4xx(adreno_gpu)) {
+> -#ifdef CONFIG_MSM_OCMEM
+> -		/* TODO this is different/missing upstream: */
+> -		struct ocmem_buf *ocmem_hdl =
+> -				ocmem_allocate(OCMEM_GRAPHICS, adreno_gpu->gmem);
+> -
+> -		a4xx_gpu->ocmem_hdl = ocmem_hdl;
+> -		a4xx_gpu->ocmem_base = ocmem_hdl->addr;
+> -		adreno_gpu->gmem = ocmem_hdl->len;
+> -		DBG("using %dK of OCMEM at 0x%08x", adreno_gpu->gmem / 1024,
+> -				a4xx_gpu->ocmem_base);
+> -#endif
+> +		ret = adreno_gpu_ocmem_init(dev->dev, adreno_gpu,
+> +					    &a4xx_gpu->ocmem);
+> +		if (ret)
+> +			goto fail;
+>  	}
+>  
+>  	if (!gpu->aspace) {
+> diff --git a/drivers/gpu/drm/msm/adreno/a4xx_gpu.h b/drivers/gpu/drm/msm/adreno/a4xx_gpu.h
+> index d506311ee240..a01448cba2ea 100644
+> --- a/drivers/gpu/drm/msm/adreno/a4xx_gpu.h
+> +++ b/drivers/gpu/drm/msm/adreno/a4xx_gpu.h
+> @@ -16,8 +16,7 @@ struct a4xx_gpu {
+>  	struct adreno_gpu base;
+>  
+>  	/* if OCMEM is used for GMEM: */
+> -	uint32_t ocmem_base;
+> -	void *ocmem_hdl;
+> +	struct adreno_ocmem ocmem;
+>  };
+>  #define to_a4xx_gpu(x) container_of(x, struct a4xx_gpu, base)
+>  
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> index 048c8be426f3..0783e4b5486a 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/pm_opp.h>
+>  #include <linux/slab.h>
+>  #include <linux/soc/qcom/mdt_loader.h>
+> +#include <soc/qcom/ocmem.h>
+>  #include "adreno_gpu.h"
+>  #include "msm_gem.h"
+>  #include "msm_mmu.h"
+> @@ -893,6 +894,45 @@ static int adreno_get_pwrlevels(struct device *dev,
+>  	return 0;
+>  }
+>  
+> +int adreno_gpu_ocmem_init(struct device *dev, struct adreno_gpu *adreno_gpu,
+> +			  struct adreno_ocmem *adreno_ocmem)
+> +{
+> +	struct ocmem_buf *ocmem_hdl;
+> +	struct ocmem *ocmem;
+> +
+> +	ocmem = of_get_ocmem(dev);
+> +	if (IS_ERR(ocmem)) {
+> +		if (PTR_ERR(ocmem) == -ENODEV) {
+> +			/*
+> +			 * Return success since either the ocmem property was
+> +			 * not specified in device tree, or ocmem support is
+> +			 * not compiled into the kernel.
+> +			 */
+> +			return 0;
+> +		}
+> +
+> +		return PTR_ERR(ocmem);
+> +	}
+> +
+> +	ocmem_hdl = ocmem_allocate(ocmem, OCMEM_GRAPHICS, adreno_gpu->gmem);
+> +	if (IS_ERR(ocmem_hdl))
+> +		return PTR_ERR(ocmem_hdl);
+> +
+> +	adreno_ocmem->ocmem = ocmem;
+> +	adreno_ocmem->base = ocmem_hdl->addr;
+> +	adreno_ocmem->hdl = ocmem_hdl;
+> +	adreno_gpu->gmem = ocmem_hdl->len;
+> +
+> +	return 0;
+> +}
+> +
+> +void adreno_gpu_ocmem_cleanup(struct adreno_ocmem *adreno_ocmem)
+> +{
+> +	if (adreno_ocmem && adreno_ocmem->base)
+> +		ocmem_free(adreno_ocmem->ocmem, OCMEM_GRAPHICS,
+> +			   adreno_ocmem->hdl);
+> +}
+> +
+>  int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+>  		struct adreno_gpu *adreno_gpu,
+>  		const struct adreno_gpu_funcs *funcs, int nr_rings)
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> index c7441fb8313e..d225a8a92e58 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> @@ -126,6 +126,12 @@ struct adreno_gpu {
+>  };
+>  #define to_adreno_gpu(x) container_of(x, struct adreno_gpu, base)
+>  
+> +struct adreno_ocmem {
+> +	struct ocmem *ocmem;
+> +	unsigned long base;
+> +	void *hdl;
+> +};
+> +
+>  /* platform config data (ie. from DT, or pdata) */
+>  struct adreno_platform_config {
+>  	struct adreno_rev rev;
+> @@ -236,6 +242,10 @@ void adreno_dump(struct msm_gpu *gpu);
+>  void adreno_wait_ring(struct msm_ringbuffer *ring, uint32_t ndwords);
+>  struct msm_ringbuffer *adreno_active_ring(struct msm_gpu *gpu);
+>  
+> +int adreno_gpu_ocmem_init(struct device *dev, struct adreno_gpu *adreno_gpu,
+> +			  struct adreno_ocmem *ocmem);
+> +void adreno_gpu_ocmem_cleanup(struct adreno_ocmem *ocmem);
+> +
+>  int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+>  		struct adreno_gpu *gpu, const struct adreno_gpu_funcs *funcs,
+>  		int nr_rings);
 > -- 
 > 2.21.0
 > 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
 
 -- 
-Dmitry
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
