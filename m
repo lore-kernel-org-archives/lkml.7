@@ -2,112 +2,99 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D56C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A4FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2549120679
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF76020679
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfH1R5R (ORCPT
+        id S1727003AbfH1R5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:57:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57378 "EHLO mx1.redhat.com"
+        Wed, 28 Aug 2019 13:57:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43638 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726657AbfH1R5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:57:17 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        id S1726515AbfH1R5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 13:57:44 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2C667308219F;
-        Wed, 28 Aug 2019 17:57:17 +0000 (UTC)
-Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E42E45D70D;
-        Wed, 28 Aug 2019 17:57:15 +0000 (UTC)
-Date:   Wed, 28 Aug 2019 12:57:13 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: objtool warning "uses BP as a scratch register" with clang-9
-Message-ID: <20190828175713.s7jub3sf6l7vyfoj@treble>
-References: <CAK8P3a3G=GCpLtNztuoLR4BuugAB=zpa_Jrz5BSft6Yj-nok1g@mail.gmail.com>
- <20190827145102.p7lmkpytf3mngxbj@treble>
- <CAHFW8PRsmmCR6TWoXpQ9gyTA7azX9YOerPErCMggcQX-=fAqng@mail.gmail.com>
- <CAK8P3a2TeaMc_tWzzjuqO-eQjZwJdpbR1yH8yzSQbbVKdWCwSg@mail.gmail.com>
- <20190827192255.wbyn732llzckmqmq@treble>
- <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
- <CAKwvOdnD1mEd-G9sWBtnzfe9oGTeZYws6zNJA7opS69DN08jPg@mail.gmail.com>
- <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
- <20190828145102.o7h3la3ofb2b4aie@treble>
- <CAK8P3a1gkA4cqbKbLLCAukiX-0tA9fV_FTG6PLTfv+DSHp44GQ@mail.gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 580EE3082E24;
+        Wed, 28 Aug 2019 17:57:44 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CED2E5D9E2;
+        Wed, 28 Aug 2019 17:57:43 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm@lists.01.org, Dave Jiang <dave.jiang@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] libnvdimm/security: Enumerate the frozen state and other cleanups
+References: <156686728950.184120.5188743631586996901.stgit@dwillia2-desk3.amr.corp.intel.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Wed, 28 Aug 2019 13:57:43 -0400
+In-Reply-To: <156686728950.184120.5188743631586996901.stgit@dwillia2-desk3.amr.corp.intel.com>
+        (Dan Williams's message of "Mon, 26 Aug 2019 17:54:49 -0700")
+Message-ID: <x4936hl8960.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1gkA4cqbKbLLCAukiX-0tA9fV_FTG6PLTfv+DSHp44GQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 28 Aug 2019 17:57:17 +0000 (UTC)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 28 Aug 2019 17:57:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 05:29:39PM +0200, Arnd Bergmann wrote:
-> On Wed, Aug 28, 2019 at 4:51 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > On Wed, Aug 28, 2019 at 11:00:04AM +0200, Arnd Bergmann wrote:
-> > > On Tue, Aug 27, 2019 at 11:22 PM 'Nick Desaulniers' via Clang Built
-> > > Linux <clang-built-linux@googlegroups.com> wrote:
-> > > > On Tue, Aug 27, 2019 at 12:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > >
-> > > Only a few unique objtool warnings remain now, here are the ones I
-> > > currently see,
-> > > along with .config files. Let me know which ones I should investigate further,
-> > > I assume a lot of these are known issues:
-> >
-> > None of those look necessarily familiar.  What are the remaining "known"
-> > clang issues which were found by objtool?
-> 
-> Maybe Nick can identify some.
-> 
-> > If you share .o files I can look at them.
-> 
-> Attaching the ones I could easily recreate here.
+Dan Williams <dan.j.williams@intel.com> writes:
 
-adm1275.o: warning: objtool: adm1275_probe()+0x756: unreachable instruction
-- known issue: clang switch table has invalid entries
-- also an objtool bug: need to report it as "falls through to next function"
+> Changes since v1 [1]:
+> - Cleanup patch1, simplify flags return in the overwrite case and
+>   consolidate frozen-state cases (Jeff)
+> - Clarify the motivation for patch2 (Jeff)
+> - Collect Dave's Reviewed-by
 
-atom.o: warning: objtool: atom_op_move() falls through to next function atom_op_and()
-evergreen_cs.o: warning: objtool: evergreen_cs_parse() falls through to next function evergreen_dma_cs_parse()
-- known issue: clang switch table has invalid entries
+The series tests out fine for me.
 
-common.o: warning: objtool: kasan_report()+0x52: call to __stack_chk_fail() with UACCESS enabled
-trace_branch.o: warning: objtool: ftrace_likely_update()+0x6c: call to __stack_chk_fail() with UACCESS enabled
-- objtool bug: need to add __stack_chk_fail to uaccess whitelist
+Thanks, Dan!
 
-cxd2880_tnrdmd_dvbt2.o: warning: objtool: x_tune_dvbt2_demod_setting()+0x7f6: can't find switch jump table
-- objtool bug: tricky switch table issue
+-Jeff
 
-exit.o: warning: objtool: abort()+0x3: unreachable instruction
-hugetlb.o: warning: objtool: hugetlb_vm_op_fault()+0x3: unreachable instruction
-idle.o: warning: objtool: switched_to_idle()+0x3: unreachable instruction
-madvise.o: warning: objtool: hugepage_madvise()+0x3: unreachable instruction
-privcmd.o: warning: objtool: privcmd_ioctl_mmap_batch()+0x5dd: unreachable instruction
-process.o: warning: objtool: play_dead()+0x3: unreachable instruction
-rmap.o: warning: objtool: anon_vma_clone()+0x1c2: unreachable instruction
-s5c73m3-core.o: warning: objtool: s5c73m3_probe()+0x262: unreachable instruction
-videobuf2-core.o: warning: objtool: vb2_core_dqbuf()+0xae6: unreachable instruction
-xfrm_output.o: warning: objtool: xfrm_outer_mode_output()+0x109: unreachable instruction
-- clang issue: trying to finish frame pointer setup after BUG() in unreachable code path
 
-pinctrl-ingenic.o: warning: objtool: ingenic_pinconf_set()+0x10d: sibling call from callable instruction with modified stack frame
-- bad clang bug: sibling call without first popping registers
-
--- 
-Josh
+>
+> [1]: https://lists.01.org/pipermail/linux-nvdimm/2019-August/023133.html
+>
+> ---
+>
+> Jeff reported a scenario where ndctl was failing to unlock DIMMs [2].
+> Through the course of debug it was discovered that the security
+> interface on the DIMMs was in the 'frozen' state disallowing unlock, or
+> any security operation.  Unfortunately the kernel only showed that the
+> DIMMs were 'locked', not 'locked' and 'frozen'.
+>
+> Introduce a new sysfs 'frozen' attribute so that ndctl can reflect the
+> "security-operations-allowed" state independently of the lock status.
+> Then, followup with cleanups related to replacing a security-state-enum
+> with a set of flags.
+>  
+> [2]: https://lists.01.org/pipermail/linux-nvdimm/2019-August/022856.html
+>
+> ---
+>
+> Dan Williams (3):
+>       libnvdimm/security: Introduce a 'frozen' attribute
+>       libnvdimm/security: Tighten scope of nvdimm->busy vs security operations
+>       libnvdimm/security: Consolidate 'security' operations
+>
+>
+>  drivers/acpi/nfit/intel.c        |   59 ++++++-----
+>  drivers/nvdimm/bus.c             |    2 
+>  drivers/nvdimm/dimm_devs.c       |  134 ++++++--------------------
+>  drivers/nvdimm/nd-core.h         |   51 ++++------
+>  drivers/nvdimm/security.c        |  199 +++++++++++++++++++++++++-------------
+>  include/linux/libnvdimm.h        |    9 +-
+>  tools/testing/nvdimm/dimm_devs.c |   19 +---
+>  7 files changed, 226 insertions(+), 247 deletions(-)
