@@ -2,100 +2,97 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B517C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 03:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DDAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 03:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA55217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 03:02:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566961340;
-	bh=RDSQqkdwT/l2dfY6CLVb889H2LImUnadgP6hEdEu8kE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VmtSBIkXaYIOzrqbYxlz5mrma5A2OKEHqGrl0nnFY45wCJnUCTIift/0MIpZ9p0B/
-	 SjEvnPO0Z8AqNqxRXYaFZDuQORe16nsOrdzHPAfzftZQbozPmWtsJI7CpQI+IVWbvs
-	 jGalGHJ9/XO8cpnWaWxDInGc8IO98PDYTx0AWAnw=
+	by mail.kernel.org (Postfix) with ESMTP id 9D62620674
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 03:02:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TOcYBSfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbfH1DCT (ORCPT
+        id S1726462AbfH1DCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 23:02:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbfH1DCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 23:02:19 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDCF220674;
-        Wed, 28 Aug 2019 03:02:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566961338;
-        bh=RDSQqkdwT/l2dfY6CLVb889H2LImUnadgP6hEdEu8kE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g0zYB32t/lQXi6CregD22CqJ/Mb+M1oS/T+M8msGz/4x41i8VV3mskjZ7877x91d5
-         x6rDmB4P2ZmUT3WmVp2Fb2wK8g1pjTEFGzdNkKsOT6S+1HBgV8cgN8UehVOovSJReJ
-         ugd1EEp8nuqJ2z0eADAglzMhQiR65Musmn89nOOw=
-Date:   Tue, 27 Aug 2019 23:02:16 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 4.9 033/223] perf test 6: Fix missing kvm module load for
- s390
-Message-ID: <20190828030216.GX5281@sasha-vm>
-References: <20190802092238.692035242@linuxfoundation.org>
- <20190802092241.125480296@linuxfoundation.org>
- <3c6356b7406c0a49b8262b9b4b7326afd367a3f5.camel@decadent.org.uk>
+        Tue, 27 Aug 2019 23:02:37 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39287 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbfH1DCh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 23:02:37 -0400
+Received: by mail-pl1-f193.google.com with SMTP id z3so504091pln.6;
+        Tue, 27 Aug 2019 20:02:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EVdeCyf+Dre527jjy+znlXDOFiaoUxVGSV52G0y0lqE=;
+        b=TOcYBSfe9DBMW5GPB5A9ilKGvlI2vJSk+dor2a0ec0k7vZpCHBfpGohC2g1/vw37LN
+         MQS1syL9hKOoK7iKdXZmowPyvCYLdRe0fZ1l3rVymZVcC6Alm36iB0buT9u/ppiVfrSB
+         hVLS3RSNPH0e78n+1QgBNBIqYmFonHNjRQe/wJAZMUig9GKyeS2230BiJuvVAByWuwlU
+         y2uBVbKC0syPvgSjoaObDzS8ZYilqc3eKZkFt9U38ex5skAX03snPcdcWKFXTpyBDjNY
+         PpwFYmvQFJCGAuEB3Mfa94oB5eqm9MeVdj+pwRQnn3icrz7y0/RDCT6PhQMSsVJbpdVv
+         uAlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EVdeCyf+Dre527jjy+znlXDOFiaoUxVGSV52G0y0lqE=;
+        b=BgAG5a/zirVktr09ojEOQT94vTfQHdMsDJR9nO7chprpKt65KYl1xwjyd6HA4zuED/
+         9tVEyL9misU4aL1Nf34lrn3AJf0zJEKckqNveW2qAcU+iusRCSGenHVQHWSqpwbx8ZNe
+         V+9t22btp03dh3hxArXDl3UW1MK0kTT1skwOEGGI3NObUQTWeXjxECRuIiegbTRXyoPK
+         z2QYuyH2ZgZNjC7hGWk/zk0ViDQeqbRFsC55m16e/rRLjCa6wzWkJwytY4DUB1KAgTAk
+         whAjXS/Clqnrrd7EEQVLhwYu++Rn78Zhwcu5Zg7vJuLBRsZcmEuJ+CqA6ox29fSaIPhz
+         quyQ==
+X-Gm-Message-State: APjAAAU83/KcmG0wX4gWT+aLVlkHXCEwpelRsKLeSEa9BVVXGFhoVwje
+        q0pGlx3UbMivl14r4MNTUWg=
+X-Google-Smtp-Source: APXvYqy1wfsldbfqxCgWrZeeaMWDOEH5Htif11waPnaXWPN2MnBS8r/n23K0stabgpOhS6P5U2lw4w==
+X-Received: by 2002:a17:902:3265:: with SMTP id y92mr734078plb.343.1566961355738;
+        Tue, 27 Aug 2019 20:02:35 -0700 (PDT)
+Received: from localhost ([39.7.47.251])
+        by smtp.gmail.com with ESMTPSA id y14sm659858pge.7.2019.08.27.20.02.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 20:02:34 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 12:02:31 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     shuah@kernel.org, pmladek@suse.com, sergey.senozhatsky@gmail.com,
+        rostedt@goodmis.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        frowand.list@gmail.com, sboyd@kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v1] printk: add dummy vprintk_emit for when
+ CONFIG_PRINTK=n
+Message-ID: <20190828030231.GA24069@jagdpanzerIV>
+References: <20190827234835.234473-1-brendanhiggins@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3c6356b7406c0a49b8262b9b4b7326afd367a3f5.camel@decadent.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190827234835.234473-1-brendanhiggins@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 01:12:44AM +0100, Ben Hutchings wrote:
->On Fri, 2019-08-02 at 11:34 +0200, Greg Kroah-Hartman wrote:
->> [ Upstream commit 53fe307dfd309e425b171f6272d64296a54f4dff ]
->
->This results in numerous compiler errors:
->
->tests/parse-events.c: In function 'kvm_s390_create_vm_valid':
->tests/parse-events.c:25:14: error: implicit declaration of function 'get_events_file' [-Werror=implicit-function-declaration]
->  eventfile = get_events_file("kvm-s390");
->              ^~~~~~~~~~~~~~~
->tests/parse-events.c:25:12: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
->  eventfile = get_events_file("kvm-s390");
->            ^
->tests/parse-events.c:34:3: error: implicit declaration of function 'put_events_file' [-Werror=implicit-function-declaration]
->   put_events_file(eventfile);
->   ^~~~~~~~~~~~~~~
->tests/parse-events.c: At top level:
->tests/parse-events.c:1622:3: error: unknown field 'valid' specified in initializer
->   .valid = kvm_s390_create_vm_valid,
->   ^
->tests/parse-events.c:1622:12: error: excess elements in struct initializer [-Werror]
->   .valid = kvm_s390_create_vm_valid,
->            ^~~~~~~~~~~~~~~~~~~~~~~~
->tests/parse-events.c:1622:12: note: (near initialization for 'test__events[45]')
->
->It is using functions that were only added in Linux 4.18 so I think it
->should be reverted from the 4.4, 4.9, and 4.14 stable branches.
+On (08/27/19 16:48), Brendan Higgins wrote:
+> Previously vprintk_emit was only defined when CONFIG_PRINTK=y, this
+> caused a build failure in kunit/test.c when CONFIG_PRINTK was not set.
+> Add a no-op dummy so that callers don't have to ifdef around this.
+> 
+> Note: It has been suggested that this go in through the kselftest tree
+> along with the KUnit patches, because KUnit depends on this. See the
+> second link for the discussion on this.
 
-Sigh... I didn't think of adding cross compilation to the tools dir...
+Is there any reason for kunit to use vprintk_emit()? Can you switch
+to pr_err()/pr_info()/pr_foo()?
 
-Thanks for this, now reverted for those branches.
+vprintk_emit() function is pretty internal. It's not static because
+drivers/base/core.c wants to add some extra payload to printk()
+messages (extended headers, etc).
 
---
-Thanks,
-Sasha
+	-ss
