@@ -2,94 +2,131 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D27C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F22C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 671002189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:41:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567024911;
-	bh=79HWdPBNBYF5I/cWJfXDP0h0nsh+4uutZ+ovvson+AY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tCmSLRbzKbDc0RiZTyUEvupnQYOFK3ITqKJEM9oaQEjEijOe17jgRdETseXNe2miI
-	 dr2y0/DrXsSYUFnpg815u+FOTqd3vkl1y1Nd/vCcTI99zjsbx3XEkjRW9aYWum7Ue7
-	 4Sw8VEFCEhrQouuXc1YS1g1tQRSQJuuGDcfLqk4c=
+	by mail.kernel.org (Postfix) with ESMTP id 66E3022DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfH1Ulu (ORCPT
+        id S1727014AbfH1UmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 16:41:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53686 "EHLO mail.kernel.org"
+        Wed, 28 Aug 2019 16:42:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:36228 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726583AbfH1Ulu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 16:41:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C040020828;
-        Wed, 28 Aug 2019 20:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567024909;
-        bh=79HWdPBNBYF5I/cWJfXDP0h0nsh+4uutZ+ovvson+AY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OuSQNE5RfzUZo75l7c9bzZCZZmskGhv/Pr9mf/twYV6+m8jmnVeCJIA2sJ5ObHPpv
-         tUIkJEBjmgJWy1ttOVGKFm2O63hnDE8bP67mtP9fXcCRroPumTfZ4B3tlL3sL3HMuh
-         Sug+LhRHKjbnlk5csHapLzDv0fs9Z/V/9ADta3Uc=
-Date:   Wed, 28 Aug 2019 22:41:46 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jochen Sprickerhof <jochen@sprickerhof.de>,
-        Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH v2 1/2 RESEND] usb: core: phy: add support for PHY
- calibration
-Message-ID: <20190828204146.GA21235@kroah.com>
-References: <20190808094128.27213-1-m.szyprowski@samsung.com>
- <CGME20190808094146eucas1p2a5a88ce5e7a87d47c4bcececab4df9a5@eucas1p2.samsung.com>
- <20190808094128.27213-2-m.szyprowski@samsung.com>
- <a380a635-e036-1a18-bc0f-947931f8735c@samsung.com>
+        id S1726583AbfH1UmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 16:42:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AF63337;
+        Wed, 28 Aug 2019 13:42:12 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF79F3F718;
+        Wed, 28 Aug 2019 13:42:10 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 21:42:08 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Fawad Lateef <fawadlateef@gmail.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Andy Gross <agross@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: *_pcie_establish_link() usage
+Message-ID: <20190828204208.GB7329@e121166-lin.cambridge.arm.com>
+References: <20190801212529.GE151852@google.com>
+ <20190828130056.GA4550@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a380a635-e036-1a18-bc0f-947931f8735c@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190828130056.GA4550@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 10:55:33AM +0200, Marek Szyprowski wrote:
-> Hi Greg
+On Wed, Aug 28, 2019 at 08:00:56AM -0500, Bjorn Helgaas wrote:
+> On Thu, Aug 01, 2019 at 04:25:29PM -0500, Bjorn Helgaas wrote:
+> > Hi,
+> > 
+> > I got the following dmesg log from Fawad [1]:
+> > 
+> >   imx6q-pcie 1ffc000.pcie: host bridge /soc/pcie@1ffc000 ranges:
+> >   imx6q-pcie 1ffc000.pcie:    IO 0x01f80000..0x01f8ffff -> 0x00000000
+> >   imx6q-pcie 1ffc000.pcie:   MEM 0x01000000..0x01efffff -> 0x01000000
+> >   imx6q-pcie 1ffc000.pcie: Link up
+> >   imx6q-pcie 1ffc000.pcie: Link: Gen2 disabled
+> >   imx6q-pcie 1ffc000.pcie: Link up, Gen1
+> >   imx6q-pcie 1ffc000.pcie: PCI host bridge to bus 0000:00
+> >   pci 0000:00:00.0: [16c3:abcd] type 01 class 0x060400
+> >   pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+> > 
+> > This is unrelated to the problem Fawad is working on, but the above
+> > looks wrong to me because it associates the "Link up" and link speed
+> > info with the host bridge (imx6q-pcie 1ffc000.pcie), not the Root Port
+> > (pci 0000:00:00.0).
+> > 
+> > I see that *_pcie_establish_link() is generally called from
+> > *_pcie_host_init(), typically via the struct
+> > dw_pcie_host_ops.host_init pointer, e.g.,
+> > 
+> >   dra7xx_pcie_probe
+> >     dra7xx_add_pcie_port(dra7xx)
+> >       struct dw_pcie *pci = dra7xx->pci
+> >       struct pcie_port *pp = &pci->pp
+> >       dw_pcie_host_init(struct pcie_port *pp)
+> > 	bridge = devm_pci_alloc_host_bridge
+> > 	devm_of_pci_get_host_bridge_resources
+> > 	pp->ops->host_init(pp)
+> > 	  dra7xx_pcie_host_init               # .host_init
+> > 	    dra7xx_pcie_establish_link        # <--- bring up link
+> > 	    dw_pcie_wait_for_link
+> > 	pci_scan_root_bus_bridge(bridge)      # <--- enumerate
+> > 	pp->root_bus = bridge->bus
+> > 	pci_bus_add_devices(pp->root_bus)
+> > 
+> > AFAICT, the *_pcie_establish_link() functions all operate on a single
+> > PCIe link, i.e., they are bringing up the link going downstream from a
+> > single Root Port.
+> > 
+> > It looks like this only allows a single Root Port per struct dw_pcie
+> > device.  Is that true?  *Should* that be true?
+> > 
+> > It looks like we bring up the link before enumerating.  In some cases,
+> > (meson_pcie_host_init(), qcom_pcie_host_init(),
+> > uniphier_pcie_host_init()) if the link doesn't come up, we return
+> > failure, which means dw_pcie_host_init() will not enumerate devices at
+> > all.
+> > 
+> > That seems wrong -- can't we have Root Complex Integrated Endpoints
+> > and even other Root Ports on that root bus?  Those should be
+> > accessible and possibly useful even if we can't bring up a link on
+> > *one* Root Port.
+> > 
+> > I would *expect* that we would enumerate all the devices on the root
+> > bus.  Then if we find one or more Root Ports, we might try to bring up
+> > the link for each one, and if successful, enumerate the downstream
+> > devices.
+> > 
+> > I'm confused.  Is there some restriction that means there can only be
+> > a single Root Port in this design, and no RCiEPs?  Even if there is,
+> > can we change the code so it enumerates the root bus first and brings
+> > up links as necessary so it matches the generic PCIe topology better?
 > 
-> On 2019-08-08 11:41, Marek Szyprowski wrote:
-> > Some PHYs (for example Exynos5 USB3.0 DRD PHY) require calibration to be
-> > done after every USB HCD reset. Generic PHY framework has been already
-> > extended with phy_calibrate() function in commit 36914111e682 ("drivers:
-> > phy: add calibrate method"). This patch adds support for it to generic
-> > PHY handling code in USB HCD core.
-> >
-> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Tested-by: Anand Moon <linux.amoon@gmail.com>
-> > Tested-by: Jochen Sprickerhof <jochen@sprickerhof.de>
-> 
-> Greg: any chance to give it this a try in -next? If not, maybe You can 
-> point someone whose review will help?
+> Anyone?  I'll add this to a list of projects for interested people to
+> work on unless somebody objects.
 
-Ah crap, this is me, not the PHY maintainer :(
+I think we should broach this topic at LPC in Lisbon, I expect some
+of the dwc (and other host controllers) maintainers to be there.
 
-Can you resend this and I will be glad to review it.  But it would also
-be good to get Felipe's review as well.
+Thanks for bringing this up.
 
-thanks,
+Lorenzo
 
-greg k-h
+> > [1] https://lore.kernel.org/linux-pci/CAGgoGu7rot61LSgu2syOMq9Onx26_u3PEtS7pf_QNQRxOaifhg@mail.gmail.com/
