@@ -2,124 +2,124 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71293C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8084AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDE422CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508CD22CED
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="j0BmqqfF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtqnzLil"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbfH1UfB (ORCPT
+        id S1726925AbfH1Ugc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 16:35:01 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37075 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfH1UfA (ORCPT
+        Wed, 28 Aug 2019 16:36:32 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41336 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbfH1Ugc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 16:35:00 -0400
-Received: by mail-pl1-f196.google.com with SMTP id bj8so498430plb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 13:35:00 -0700 (PDT)
+        Wed, 28 Aug 2019 16:36:32 -0400
+Received: by mail-qt1-f196.google.com with SMTP id i4so1105710qtj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 13:36:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=upwaiJ61BH1IpIswTLq+2j1brd6YlJwq3xhLh2FJl/Q=;
-        b=j0BmqqfF2dUwzXmcTIDGocquJMKbOF2wEU+8SAdj+xEVuSMZZt2jvoMBCH9qUDV+W4
-         uhp73qjEXaaGHfOJZyoJqtVlxC+xLcYkpu4P4xSXiVYog59x/FImui1wixg9OrquFFcn
-         gpjMbjgO+WQ7poBwG4DFhCjIajmLZEDP1B0ec=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=azRAxHr0avIn2Bp0eJAD08hfKMaVL22jDWUPUYBHm4c=;
+        b=jtqnzLil+XA7yTM3OdWgXVyNBavMUt5JAVUsgumaEP99csE94Haz1GwdZ7D5FHLeQ1
+         W/TyJwZSzOAGiLwwZ505ytOCNFEqMu8n43sS52YeDrGxJhTUDH6KD3Ugx7gl3sK2QQWT
+         kiOfLynt48kYhEChLre+4SNZA7AdaFkQEyvyITludBaSkM4bDyTMqbeBUb3//krnnXqh
+         zuOiMZGjmb3bSEp8T9aW3PF6vPg8ZGkZ6+0PhlAAmB0vgAjhZnvcoa5xJOS37HJE0gQG
+         ON80nJniur0DL+6O+fneIuz5W0L4UxOXA90L34eVs7tkcsh2eiwQuF013q+qZgOAx5kY
+         ljJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=upwaiJ61BH1IpIswTLq+2j1brd6YlJwq3xhLh2FJl/Q=;
-        b=PWzj3VUaQ9vmvgzMUMX8PDjryL9G7RGn9OXDLg2HD4L2eW9IeY8i8Qf+uZm/1EMvoG
-         suLG6QRZHsT/aZcqlck+zJdIHy94F9WUL8vjartOfpvYst35WgNGoy9GdzciC3JIEXXi
-         ya6BU3SR9FV9XmunOby70N7IgUEX/o3Ev2IKRkUWhZV61P7sN2KGDt96j24XVthxr9lm
-         fWraZ/moORiTSM/0VQ+3JQDb5HU9cxMmBLV/DIUrvIpoZwoiCZJnqXcONE7LM/YsJ6FL
-         4gGP1UboJklSUVSgpvrwbsOzbMY3UmG/q7bTnC43AHF9SOxpGjHHUX4kPfYUJGKUJJXa
-         hRiQ==
-X-Gm-Message-State: APjAAAW8oemorIgBvA7IUV1m8rg4ZTysdkMMdmizk87aAhqMmIT/fQHP
-        rZomnIRhicBHS01AbsqfAiVIZg==
-X-Google-Smtp-Source: APXvYqwnZzm4cK0z1wLUekxhHBcwsIiezmmxCb7nn4XUc+uSnyrmAgKCD6uVOWydivR5Imi9QmdyUw==
-X-Received: by 2002:a17:902:a410:: with SMTP id p16mr6220611plq.150.1567024500119;
-        Wed, 28 Aug 2019 13:35:00 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id y14sm62881pge.7.2019.08.28.13.34.58
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=azRAxHr0avIn2Bp0eJAD08hfKMaVL22jDWUPUYBHm4c=;
+        b=AfiipGZFM/3D5BotpMDV+dOfo2dfcgVwU6wB7EM3HyV05wSMQVnaHaWqdDR5CO9a0N
+         Kg7/umvU1PV/Llq5ceYzig28J3MdQttbO9EMJgT0qf77u4DqZNa3G/svvpzU6xyaHE7+
+         Ht+GDkuwjOAtOBfKmDBAcvoMBJeSuKqWwsZt0689xyzOZqu7c1nC6rIsgQTJbKOPLO1G
+         HCBxk5Au4SEdDNrl0UZ+/JcQx1rPeq3Y9JyYSp3c+j9B0kLiPgOtfRmxUqRPVjdNeOJ3
+         zrrCBvR6Vj01p9ncvb7/JSdGbFjDrbDvuG7OBrVlnQp5PWddgqyCwu5lod2DDOsnIsj1
+         teQA==
+X-Gm-Message-State: APjAAAWOEIeAaPwxX452BFr3yixQ2iHmjawgbsiLuJK2tqFf+7gHmZjp
+        jErGVtjNUsErcVYZFxp/8es=
+X-Google-Smtp-Source: APXvYqy6ZCNV6NVK5L14HO6HhqHQboRWbgBDDDbwB2gYO31bokexCtg+/WdPXMLE1wOY2xq4apS9bQ==
+X-Received: by 2002:ac8:364a:: with SMTP id n10mr6632742qtb.148.1567024590924;
+        Wed, 28 Aug 2019 13:36:30 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::b715])
+        by smtp.gmail.com with ESMTPSA id h9sm126548qto.97.2019.08.28.13.36.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 13:34:59 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 16:34:58 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, byungchul.park@lge.com,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        kernel-team@android.com
-Subject: Re: [PATCH 0/5] kfree_rcu() additions for -rcu
-Message-ID: <20190828203458.GA75931@google.com>
-References: <5d657e30.1c69fb81.54250.01dc@mx.google.com>
- <20190828202808.GT26530@linux.ibm.com>
+        Wed, 28 Aug 2019 13:36:30 -0700 (PDT)
+From:   Jes Sorensen <jes.sorensen@gmail.com>
+X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
+To:     minyard@acm.org
+Cc:     linux-kernel@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net, kernel-team@fb.com
+Subject: [PATCH 0/1] Fix race in ipmi timer cleanup
+Date:   Wed, 28 Aug 2019 16:36:24 -0400
+Message-Id: <20190828203625.32093-1-Jes.Sorensen@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828202808.GT26530@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 01:28:08PM -0700, Paul E. McKenney wrote:
-> On Tue, Aug 27, 2019 at 03:01:54PM -0400, Joel Fernandes (Google) wrote:
-> > Hi,
-> > 
-> > This is a series on top of the patch "rcu/tree: Add basic support for kfree_rcu() batching".
-> > 
-> > Link: http://lore.kernel.org/r/20190814160411.58591-1-joel@joelfernandes.org
-> > 
-> > It adds performance tests, some clean ups and removal of "lazy" RCU callbacks.
-> > 
-> > Now that kfree_rcu() is handled separately from call_rcu(), we also get rid of
-> > kfree "lazy" handling from tree RCU as suggested by Paul which will be unused.
-> > This also results in a nice negative delta as well.
-> > 
-> > Joel Fernandes (Google) (5):
-> > rcu/rcuperf: Add kfree_rcu() performance Tests
-> > rcu/tree: Add multiple in-flight batches of kfree_rcu work
-> > rcu/tree: Add support for debug_objects debugging for kfree_rcu()
-> > rcu: Remove kfree_rcu() special casing and lazy handling
-> > rcu: Remove kfree_call_rcu_nobatch()
-> > 
-> > Documentation/RCU/stallwarn.txt               |  13 +-
-> > .../admin-guide/kernel-parameters.txt         |  13 ++
-> > include/linux/rcu_segcblist.h                 |   2 -
-> > include/linux/rcutiny.h                       |   5 -
-> > include/linux/rcutree.h                       |   1 -
-> > include/trace/events/rcu.h                    |  32 ++--
-> > kernel/rcu/rcu.h                              |  27 ---
-> > kernel/rcu/rcu_segcblist.c                    |  25 +--
-> > kernel/rcu/rcu_segcblist.h                    |  25 +--
-> > kernel/rcu/rcuperf.c                          | 173 +++++++++++++++++-
-> > kernel/rcu/srcutree.c                         |   4 +-
-> > kernel/rcu/tiny.c                             |  29 ++-
-> > kernel/rcu/tree.c                             | 145 ++++++++++-----
-> > kernel/rcu/tree.h                             |   1 -
-> > kernel/rcu/tree_plugin.h                      |  42 +----
-> > kernel/rcu/tree_stall.h                       |   6 +-
-> > 16 files changed, 337 insertions(+), 206 deletions(-)
-> 
-> Looks like a 131-line positive delta to me.  ;-)
+From: Jes Sorensen <jsorensen@fb.com>
 
-Not if you overlook the rcuperf changes which is just test code. :-D ;-)
+I came across this in 4.16, but I believe the bug is still present
+in current 5.x, even if it is less likely to trigger.
 
-thanks,
+Basially stop_timer_and_thread() only calls del_timer_sync() if
+timer_running == true. However smi_mod_timer enables the timer before
+setting timer_running = true.
 
- - Joel
+I was able to reproduce this in 4.16 running the following on a host
+
+   while :; do rmmod ipmi_si ; modprobe ipmi_si; done
+
+while rebooting the BMC on it in parallel.
+
+5.2 moves the error handling around and does it more centralized, but
+relying on timer_running still seems dubious to me.
+
+static void smi_mod_timer(struct smi_info *smi_info, unsigned long new_val)
+{
+        if (!smi_info->timer_can_start)
+                return;
+        smi_info->last_timeout_jiffies = jiffies;
+        mod_timer(&smi_info->si_timer, new_val);
+        smi_info->timer_running = true;
+}
+
+static inline void stop_timer_and_thread(struct smi_info *smi_info)
+{
+        if (smi_info->thread != NULL) {
+                kthread_stop(smi_info->thread);
+                smi_info->thread = NULL;
+        }
+
+        smi_info->timer_can_start = false;
+        if (smi_info->timer_running)
+                del_timer_sync(&smi_info->si_timer);
+}
+
+Cheers,
+Jes
+
+Jes Sorensen (1):
+  ipmi_si_intf: Fix race in timer shutdown handling
+
+ drivers/char/ipmi/ipmi_si_intf.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+-- 
+2.21.0
 
