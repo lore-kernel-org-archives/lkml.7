@@ -2,317 +2,140 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 278DAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB450C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED23214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9870F214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfH1Ifv (ORCPT
+        id S1726422AbfH1IhA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:35:51 -0400
-Received: from mga11.intel.com ([192.55.52.93]:19343 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726259AbfH1Ifu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:35:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 01:35:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
-   d="scan'208";a="181963392"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Aug 2019 01:35:47 -0700
-Subject: Re: [PATCH V8 2/3] mmc: sdhci-pci-o2micro: Modify get CD status
- function
-To:     "Shirley Her (SC)" <shirley.her@bayhubtech.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
-        "Shaper Liu (WH)" <shaper.liu@bayhubtech.com>,
-        "Louis Lu (TP)" <louis.lu@bayhubtech.com>,
-        "Max Huang (SC)" <max.huang@bayhubtech.com>
-References: <1566412771-6178-1-git-send-email-shirley.her@bayhubtech.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <67a764af-22bd-f9aa-c915-8c29468b8060@intel.com>
-Date:   Wed, 28 Aug 2019 11:34:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 04:37:00 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34014 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbfH1Ig7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:36:59 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c7so1992378otp.1;
+        Wed, 28 Aug 2019 01:36:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2Erove1KI2K6GKd3UFaZlGI+A1u6CspqOGbjftwYs2o=;
+        b=RsOVHUV2rRGqeecVWFLG9J8HlcIjMgja8ncvY9XZYMOmqj2KbuMsTXW6ref0ZZpP8y
+         O2sS5+di2RzdaHXQYtEIPQb5ok7KmnTxE3WKc4YceBZgbDRxCwsqoq0gCMFk2+jnnuzf
+         l1HryWSif65yXT4d8xZATRsz/zGG6fWJOtq2S+VUBcWK8qh9ev9g/5dBjeChYh7nWdAx
+         xFWy3iKBPVB2c73orPP7ivNKWHm4Ts4fH4rZY8D1D5vcT/uJbFuGmAisv3rbUaUmtWUR
+         9d+C2SVBB6T3NfoMRVg4YmMWEx3YAsmlz3VNuX/ishcTDSlSWXSRGyu9lYshArLxZVa8
+         g01Q==
+X-Gm-Message-State: APjAAAVE0IS7InGjjN4TWjbhmOlxt6SEVZurGt01g+nMsCroWmPz4IbA
+        1dj4tqQ5L0OwnGwsQLqPLQCAmPTAcBrYmb/QZig=
+X-Google-Smtp-Source: APXvYqwTqVVwndN/cmFOt6L70c8aRtBjQJbRXGGSl1zhN+C4xJfXzPvGeTsPdgjseoyM2bIW2gDueQGp86hfFZCk314=
+X-Received: by 2002:a9d:2cc:: with SMTP id 70mr2261989otl.145.1566981418736;
+ Wed, 28 Aug 2019 01:36:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1566412771-6178-1-git-send-email-shirley.her@bayhubtech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190724082508.27617-1-brgl@bgdev.pl> <CAMRc=Mex_Ricd+C4F7nGLmpBggO-hWwJDB6duX8kFpPEeaTDjQ@mail.gmail.com>
+ <CAMRc=Mci4ncbDmns=0uL8hsAGz1Wvd5bgK4yxTF8QQQitXDv0g@mail.gmail.com> <CAMRc=McUEgm6yH7enwHuHxVTL41dmb5KAY_pxTmSr3vctCs2xg@mail.gmail.com>
+In-Reply-To: <CAMRc=McUEgm6yH7enwHuHxVTL41dmb5KAY_pxTmSr3vctCs2xg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 28 Aug 2019 10:36:47 +0200
+Message-ID: <CAMuHMdV3obGtQ7qohNedQNgpvZvyL9xjH0HUiBKD6b8Ou5F+XA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] backlight: gpio: simplify the driver
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/08/19 9:39 PM, Shirley Her (SC) wrote:
-> Modify get CD status function
+CC the pour soul with the ecovec board.
 
-You have lost the V7 changes to the subject and commit message.
+On Wed, Aug 28, 2019 at 9:33 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> pt., 16 sie 2019 o 17:48 Bartosz Golaszewski <brgl@bgdev.pl> napisał(a):
+> > czw., 8 sie 2019 o 10:17 Bartosz Golaszewski <brgl@bgdev.pl> napisał(a):
+> > > śr., 24 lip 2019 o 10:25 Bartosz Golaszewski <brgl@bgdev.pl> napisał(a):
+> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > >
+> > > > While working on my other series related to gpio-backlight[1] I noticed
+> > > > that we could simplify the driver if we made the only user of platform
+> > > > data use GPIO lookups and device properties. This series tries to do
+> > > > that.
+> > > >
+> > > > The first patch adds all necessary data structures to ecovec24. Patch
+> > > > 2/7 unifies much of the code for both pdata and non-pdata cases. Patches
+> > > > 3-4/7 remove unused platform data fields. Last three patches contain
+> > > > additional improvements for the GPIO backlight driver while we're already
+> > > > modifying it.
+> > > >
+> > > > I don't have access to this HW but hopefully this works. Only compile
+> > > > tested.
+> > > >
+> > > > [1] https://lkml.org/lkml/2019/6/25/900
+> > > >
+> > > > v1 -> v2:
+> > > > - rebased on top of v5.3-rc1 and adjusted to the recent changes from Andy
+> > > > - added additional two patches with minor improvements
+> > > >
+> > > > v2 -> v3:
+> > > > - in patch 7/7: used initializers to set values for pdata and dev local vars
+> > > >
+> > > > Bartosz Golaszewski (7):
+> > > >   sh: ecovec24: add additional properties to the backlight device
+> > > >   backlight: gpio: simplify the platform data handling
+> > > >   sh: ecovec24: don't set unused fields in platform data
+> > > >   backlight: gpio: remove unused fields from platform data
+> > > >   backlight: gpio: remove dev from struct gpio_backlight
+> > > >   backlight: gpio: remove def_value from struct gpio_backlight
+> > > >   backlight: gpio: use a helper variable for &pdev->dev
+> > > >
+> > > >  arch/sh/boards/mach-ecovec24/setup.c         | 33 ++++++--
+> > > >  drivers/video/backlight/gpio_backlight.c     | 82 +++++---------------
+> > > >  include/linux/platform_data/gpio_backlight.h |  3 -
+> > > >  3 files changed, 44 insertions(+), 74 deletions(-)
+> > > >
+> > > > --
+> > > > 2.21.0
+> > > >
+> > >
+> > > Hi Rich, Yoshinori,
+> > >
+> > > can you ack the sh patches in this series?
+> > >
+> > > Bart
+> >
+> > Ping.
+>
+> Hi,
+>
+> any chance of getting this reviewed for sh?
 
-> 
-> Signed-off-by: Shirley Her <shirley.her@bayhubtech.com>
-> ---
-> change in V8:
->  1. fix patch format error
-> 
-> change in V7:
->  1. change subject to match the patch
->  2. move functions in preparation to fix DLL lock phase shift issue
-> 
-> change in V6:
->  1. change subjec and commit message to match the patch
->  2. modify the get CD status function
->  3. re-arrange the order of some functions
-> 
-> change in V5:
->  1. split 2 patches into 3 patches
->  2. make dll_adjust_count start from 0
->  3. fix ret overwritten issue
->  4. use break instead of goto
-> 
-> change in V4:
->  1. add a bug fix for V3
-> 
-> change in V3:
->  1. add more explanation in dll_recovery and execute_tuning function
->  2. move dll_adjust_count to O2_host struct
->  3. fix some coding style error
->  4. renaming O2_PLL_WDT_CONTROL1 TO O2_PLL_DLL_WDT_CONTROL1
-> 
-> change in V2:
->  1. use usleep_range instead of udelay
->  2. move dll_adjust_count to sdhci-pci-o2micro.c
-> 
-> chagne in V1:
->  1. add error recovery function to relock DLL with correct phase
->  2. retuning HS200 after DLL locked
-> ---
->  drivers/mmc/host/sdhci-pci-o2micro.c | 187 ++++++++++++++++++-----------------
->  1 file changed, 94 insertions(+), 93 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-> index b3a33d9..57c8b83 100644
-> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
-> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-> @@ -58,6 +58,100 @@
->  
->  #define O2_SD_DETECT_SETTING 0x324
->  
-> +static void sdhci_o2_wait_card_detect_stable(struct sdhci_host *host)
-> +{
-> +	ktime_t timeout;
-> +	u32 scratch32;
-> +
-> +	/* Wait max 50 ms */
-> +	timeout = ktime_add_ms(ktime_get(), 50);
-> +	while (1) {
-> +		bool timedout = ktime_after(ktime_get(), timeout);
-> +
-> +		scratch32 = sdhci_readl(host, SDHCI_PRESENT_STATE);
-> +		if ((scratch32 & SDHCI_CARD_PRESENT) >> SDHCI_CARD_PRES_SHIFT
-> +		    == (scratch32 & SDHCI_CD_LVL) >> SDHCI_CD_LVL_SHIFT)
-> +			break;
-> +
-> +		if (timedout) {
-> +			pr_err("%s: Card Detect debounce never finished.\n",
-> +			       mmc_hostname(host->mmc));
-> +			sdhci_dumpregs(host);
-> +			return;
-> +		}
-> +		udelay(10);
-> +	}
-> +}
-> +
-> +static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
-> +{
-> +	ktime_t timeout;
-> +	u16 scratch;
-> +	u32 scratch32;
-> +
-> +	/* PLL software reset */
-> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> +	scratch32 |= O2_PLL_SOFT_RESET;
-> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> +	udelay(1);
-> +	scratch32 &= ~(O2_PLL_SOFT_RESET);
-> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> +
-> +	/* PLL force active */
-> +	scratch32 |= O2_PLL_FORCE_ACTIVE;
-> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> +
-> +	/* Wait max 20 ms */
-> +	timeout = ktime_add_ms(ktime_get(), 20);
-> +	while (1) {
-> +		bool timedout = ktime_after(ktime_get(), timeout);
-> +
-> +		scratch = sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
-> +		if (scratch & O2_PLL_LOCK_STATUS)
-> +			break;
-> +		if (timedout) {
-> +			pr_err("%s: Internal clock never stabilised.\n",
-> +			       mmc_hostname(host->mmc));
-> +			sdhci_dumpregs(host);
-> +			goto out;
-> +		}
-> +		udelay(10);
-> +	}
-> +
-> +	/* Wait for card detect finish */
-> +	udelay(1);
-> +	sdhci_o2_wait_card_detect_stable(host);
-> +
-> +out:
-> +	/* Cancel PLL force active */
-> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> +	scratch32 &= ~O2_PLL_FORCE_ACTIVE;
-> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> +}
-> +
-> +static int sdhci_o2_get_cd(struct mmc_host *mmc)
-> +{
-> +	struct sdhci_host *host = mmc_priv(mmc);
-> +
-> +	sdhci_o2_enable_internal_clock(host);
-> +
-> +	return !!(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT);
-> +}
-> +
-> +static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
-> +{
-> +	u32 scratch_32;
-> +
-> +	pci_read_config_dword(chip->pdev,
-> +			      O2_SD_PLL_SETTING, &scratch_32);
-> +
-> +	scratch_32 &= 0x0000FFFF;
-> +	scratch_32 |= value;
-> +
-> +	pci_write_config_dword(chip->pdev,
-> +			       O2_SD_PLL_SETTING, scratch_32);
-> +}
-> +
->  static void sdhci_o2_set_tuning_mode(struct sdhci_host *host)
->  {
->  	u16 reg;
-> @@ -136,19 +230,6 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  	return 0;
->  }
->  
-> -static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
-> -{
-> -	u32 scratch_32;
-> -	pci_read_config_dword(chip->pdev,
-> -			      O2_SD_PLL_SETTING, &scratch_32);
-> -
-> -	scratch_32 &= 0x0000FFFF;
-> -	scratch_32 |= value;
-> -
-> -	pci_write_config_dword(chip->pdev,
-> -			       O2_SD_PLL_SETTING, scratch_32);
-> -}
-> -
->  static void o2_pci_led_enable(struct sdhci_pci_chip *chip)
->  {
->  	int ret;
-> @@ -284,86 +365,6 @@ static void sdhci_pci_o2_enable_msi(struct sdhci_pci_chip *chip,
->  	host->irq = pci_irq_vector(chip->pdev, 0);
->  }
->  
-> -static void sdhci_o2_wait_card_detect_stable(struct sdhci_host *host)
-> -{
-> -	ktime_t timeout;
-> -	u32 scratch32;
-> -
-> -	/* Wait max 50 ms */
-> -	timeout = ktime_add_ms(ktime_get(), 50);
-> -	while (1) {
-> -		bool timedout = ktime_after(ktime_get(), timeout);
-> -
-> -		scratch32 = sdhci_readl(host, SDHCI_PRESENT_STATE);
-> -		if ((scratch32 & SDHCI_CARD_PRESENT) >> SDHCI_CARD_PRES_SHIFT
-> -		    == (scratch32 & SDHCI_CD_LVL) >> SDHCI_CD_LVL_SHIFT)
-> -			break;
-> -
-> -		if (timedout) {
-> -			pr_err("%s: Card Detect debounce never finished.\n",
-> -			       mmc_hostname(host->mmc));
-> -			sdhci_dumpregs(host);
-> -			return;
-> -		}
-> -		udelay(10);
-> -	}
-> -}
-> -
-> -static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
-> -{
-> -	ktime_t timeout;
-> -	u16 scratch;
-> -	u32 scratch32;
-> -
-> -	/* PLL software reset */
-> -	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> -	scratch32 |= O2_PLL_SOFT_RESET;
-> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> -	udelay(1);
-> -	scratch32 &= ~(O2_PLL_SOFT_RESET);
-> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> -
-> -	/* PLL force active */
-> -	scratch32 |= O2_PLL_FORCE_ACTIVE;
-> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> -
-> -	/* Wait max 20 ms */
-> -	timeout = ktime_add_ms(ktime_get(), 20);
-> -	while (1) {
-> -		bool timedout = ktime_after(ktime_get(), timeout);
-> -
-> -		scratch = sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
-> -		if (scratch & O2_PLL_LOCK_STATUS)
-> -			break;
-> -		if (timedout) {
-> -			pr_err("%s: Internal clock never stabilised.\n",
-> -			       mmc_hostname(host->mmc));
-> -			sdhci_dumpregs(host);
-> -			goto out;
-> -		}
-> -		udelay(10);
-> -	}
-> -
-> -	/* Wait for card detect finish */
-> -	udelay(1);
-> -	sdhci_o2_wait_card_detect_stable(host);
-> -
-> -out:
-> -	/* Cancel PLL force active */
-> -	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> -	scratch32 &= ~O2_PLL_FORCE_ACTIVE;
-> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> -}
-> -
-> -static int sdhci_o2_get_cd(struct mmc_host *mmc)
-> -{
-> -	struct sdhci_host *host = mmc_priv(mmc);
-> -
-> -	sdhci_o2_enable_internal_clock(host);
-> -
-> -	return !!(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT);
-> -}
-> -
->  static void sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
->  {
->  	/* Enable internal clock */
-> 
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
