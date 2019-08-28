@@ -2,85 +2,143 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75A5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448C6C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3D962189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 147BC20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:25:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bx1zz6Bg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfH1UYh (ORCPT
+        id S1726921AbfH1UZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 16:24:37 -0400
-Received: from mga01.intel.com ([192.55.52.88]:28046 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbfH1UYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 16:24:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 13:24:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="171666831"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga007.jf.intel.com with ESMTP; 28 Aug 2019 13:24:36 -0700
-Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.127]) by
- FMSMSX103.amr.corp.intel.com ([169.254.2.141]) with mapi id 14.03.0439.000;
- Wed, 28 Aug 2019 13:24:36 -0700
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+        Wed, 28 Aug 2019 16:25:34 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34166 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbfH1UZd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 16:25:33 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n9so330001pgc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 13:25:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=m9K6geHQslN19tGBbmOQDx2FY+2m9BB3O5M0ryJqK9c=;
+        b=bx1zz6Bghmx2cAm/3B3M1XQ5TzD9T6Shao6YQ/kAskDAzddvVphm3y/VszXyU8cVxt
+         GmrZL8kV6W5wHbTkcTKkqgx5rPnKlOZTZtpFqe0b87i6tjcwzIPvhnmQatdzfwt755AQ
+         /TbGEuYOWia2rpi1xfmsUoZAgfgNRQN8izYhI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=m9K6geHQslN19tGBbmOQDx2FY+2m9BB3O5M0ryJqK9c=;
+        b=j1R85rJVVwDFgjrFCiMLtwXm9yFXCBx8CTiZIkjZbA6eBPKHxAramuUtmw3vhTl8Vs
+         WX687iS9SDLudPgWXWK7qj0P/qRQaiTc1NelO0eTa/3tWNvNt4Kq39eyZmI/bi/Vpuxi
+         TCx4rOm1NieBEFp706oc1xbR7bun4St78QpW/D1oQ9SnA4JyuRBpPe13wgnzPgZZ5pio
+         3fWwaeAv0FseLE5DohFgwo/957piJGFm29nXSqUnQVul9cvNcvVQtssGYFHa4meE/U3c
+         p9VOT2Op9DgRAbT2WKcHyz6BuGaHCa/gUGlisRCPlfgBcZNPzhbxcjB/YMc/TrR1H7+I
+         UVMw==
+X-Gm-Message-State: APjAAAXUrblIBDQKPR3rHe5hJm1zO8dPrWBnjC2+b4suiEch7OJmcJr2
+        1O5LtSNAMrfZbd9Eff4GLevDOg==
+X-Google-Smtp-Source: APXvYqxQAENVpZgVbOZciL3QGjuq0yBD38cfywqNfv+zc8DilopsyfnAC3fYr1sECkiUbk2gzmgRoA==
+X-Received: by 2002:a63:5a0a:: with SMTP id o10mr5112466pgb.282.1567023932990;
+        Wed, 28 Aug 2019 13:25:32 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h17sm232891pfo.24.2019.08.28.13.25.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 13:25:32 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 13:25:31 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] libnvdimm, region: Use struct_size() in kzalloc()
-Thread-Topic: [PATCH] libnvdimm, region: Use struct_size() in kzalloc()
-Thread-Index: AQHVH9BpuhzKadnSBkOkhqdJ05WiaacR2OoAgAAMuICAAA1MgA==
-Date:   Wed, 28 Aug 2019 20:24:35 +0000
-Message-ID: <7980d0c0b43bc6f377e0daad4a066f7ab37c2258.camel@intel.com>
+Message-ID: <201908281325.1E7C2A9@keescook>
 References: <20190610210613.GA21989@embeddedor>
-         <3e80b36c86942278ee66aebdd5ea2632f104083a.camel@intel.com>
-         <d940183a-c00d-3a96-37bb-9553583f160a@embeddedor.com>
-In-Reply-To: <d940183a-c00d-3a96-37bb-9553583f160a@embeddedor.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-x-originating-ip: [10.232.112.185]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3847512B969EEA4C94940FD1F358BBD7@intel.com>
-Content-Transfer-Encoding: base64
+ <3abfb317-76cc-f9a0-243f-9b493a524a98@embeddedor.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3abfb317-76cc-f9a0-243f-9b493a524a98@embeddedor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA4LTI4IGF0IDE0OjM2IC0wNTAwLCBHdXN0YXZvIEEuIFIuIFNpbHZhIHdy
-b3RlOg0KDQo+IHN0cnVjdF9zaXplKCkgZG9lcyBub3QgYXBwbHkgdG8gdGhvc2Ugc2NlbmFyaW9z
-LiBTZWUgYmVsb3cuLi4NCj4gDQo+ID4gWzFdOiANCj4gPiBodHRwczovL2dpdC5rZXJuZWwub3Jn
-L3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9udmRpbW0vbnZkaW1tLmdpdC90cmVlL2RyaXZlcnMv
-bnZkaW1tL3JlZ2lvbl9kZXZzLmMjbjEwMzANCj4gDQo+IHN0cnVjdF9zaXplKCkgb25seSBhcHBs
-aWVzIHRvIHN0cnVjdHVyZXMgb2YgdGhlIGZvbGxvd2luZyBraW5kOg0KPiANCj4gc3RydWN0IGZv
-byB7DQo+ICAgIGludCBzdHVmZjsNCj4gICAgc3RydWN0IGJvbyBlbnRyeVtdOw0KPiB9Ow0KPiAN
-Cj4gYW5kIHRoaXMgc2NlbmFyaW8gaW5jbHVkZXMgdHdvIGRpZmZlcmVudCBzdHJ1Y3R1cmVzOg0K
-PiANCj4gc3RydWN0IG5kX3JlZ2lvbiB7DQo+IAkuLi4NCj4gICAgICAgICBzdHJ1Y3QgbmRfbWFw
-cGluZyBtYXBwaW5nWzBdOw0KPiB9Ow0KPiANCj4gc3RydWN0IG5kX2Jsa19yZWdpb24gew0KPiAJ
-Li4uDQo+ICAgICAgICAgc3RydWN0IG5kX3JlZ2lvbiBuZF9yZWdpb247DQo+IH07DQoNClllcCAt
-IEkgbmVnbGVjdGVkIHRvIGFjdHVhbGx5IGxvb2sgYXQgdGhlIHN0cnVjdHVyZXMgaW52b2x2ZWQg
-LSB5b3UncmUNCnJpZ2h0LCBpdCBkb2Vzbid0IGFwcGx5IGhlcmUuDQoNCj4gDQo+ID4gWzJdOiAN
-Cj4gPiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9udmRp
-bW0vbnZkaW1tLmdpdC90cmVlL2RyaXZlcnMvbnZkaW1tL3JlZ2lvbl9kZXZzLmMjbjk2DQo+ID4g
-DQo+IA0KPiBJbiB0aGlzIHNjZW5hcmlvIHN0cnVjdF9zaXplKCkgZG9lcyBub3QgYXBwbHkgZGly
-ZWN0bHkgYmVjYXVzZSBvZiB0aGUNCj4gZm9sbG93aW5nDQo+IGxvZ2ljIGJlZm9yZSB0aGUgY2Fs
-bCB0byBkZXZtX2t6YWxsb2MoKToNCg0KQWdyZWVkLCBJIG1pc3NlZCB0aGF0IHRoZSBjYWxjdWxh
-dGlvbiB3YXMgbW9yZSBpbnZvbHZlZCBoZXJlLg0KDQpUaGFua3MgZm9yIHRoZSBjbGFyaWZpY2F0
-aW9ucywgeW91IGNhbiBhZGQ6DQpSZXZpZXdlZC1ieTogVmlzaGFsIFZlcm1hIDx2aXNoYWwubC52
-ZXJtYUBpbnRlbC5jb20+DQoNCg==
+On Wed, Aug 28, 2019 at 01:30:24PM -0500, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> Friendly ping:
+> 
+> Who can take this, please?
+> 
+> Thanks
+> --
+> Gustavo
+> 
+> On 6/10/19 4:06 PM, Gustavo A. R. Silva wrote:
+> > One of the more common cases of allocation size calculations is finding
+> > the size of a structure that has a zero-sized array at the end, along
+> > with memory for some number of elements for that array. For example:
+> > 
+> > struct nd_region {
+> > 	...
+> >         struct nd_mapping mapping[0];
+> > };
+> > 
+> > instance = kzalloc(sizeof(struct nd_region) + sizeof(struct nd_mapping) *
+> >                           count, GFP_KERNEL);
+> > 
+> > Instead of leaving these open-coded and prone to type mistakes, we can
+> > now use the new struct_size() helper:
+> > 
+> > instance = kzalloc(struct_size(instance, mapping, count), GFP_KERNEL);
+> > 
+> > This code was detected with the help of Coccinelle.
+> > 
+> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+FWIW,
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> > ---
+> >  drivers/nvdimm/region_devs.c | 7 +++----
+> >  1 file changed, 3 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+> > index b4ef7d9ff22e..88becc87e234 100644
+> > --- a/drivers/nvdimm/region_devs.c
+> > +++ b/drivers/nvdimm/region_devs.c
+> > @@ -1027,10 +1027,9 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
+> >  		}
+> >  		region_buf = ndbr;
+> >  	} else {
+> > -		nd_region = kzalloc(sizeof(struct nd_region)
+> > -				+ sizeof(struct nd_mapping)
+> > -				* ndr_desc->num_mappings,
+> > -				GFP_KERNEL);
+> > +		nd_region = kzalloc(struct_size(nd_region, mapping,
+> > +						ndr_desc->num_mappings),
+> > +				    GFP_KERNEL);
+> >  		region_buf = nd_region;
+> >  	}
+> >  
+> > 
+
+-- 
+Kees Cook
+
+
