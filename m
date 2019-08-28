@@ -2,159 +2,269 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22103C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDD9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E343922CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="MTI+Kanp"
+	by mail.kernel.org (Postfix) with ESMTP id 22EEE2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567018635;
+	bh=YWRPIo5lY+npq8po6q8Hxw9uV+CVU6RPeUclOwdOxGQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yg9yBOq/zSDG/qH9SJIjc95KY28RLuBHlFVI1XkJOBZOsxOZxiOjILz10Weojkypu
+	 K6jPcZMQX2yzWiyzmCRQYypxDCric5thEBG6ZbbtalHdVFcB6eWsQ4/34FUfx3x3M9
+	 oNcN055fOjmC8b0ygwznanyz9r9sFY8G2OOLG+uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfH1S4w (ORCPT
+        id S1726997AbfH1S5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:56:52 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43334 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfH1S4w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:56:52 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e12so848941otp.10
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 11:56:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nS9sghIUIPx7g755mVLBuxz1Z71NtFQBCRRvUjCx70o=;
-        b=MTI+KanpTuhTrzzLxlbtZ1+swgBPtUkHfSSiiksg4bSXV8X0K5yvq031Ly+YoDSY5V
-         ZymtBakgNC8hjLexb5QVq0atw4I+AobGrh1I4snAozgBTC+pTzLQaFbJPhDtNNw9RE4u
-         2mRKcWVUunztUfQpODM6eEjC8xJ49wiw3XGFA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nS9sghIUIPx7g755mVLBuxz1Z71NtFQBCRRvUjCx70o=;
-        b=EVv09dFAPP2ZHRmazqcZaO/qrZe/6d4eKhrBeYMP7DC9vQ90CQIyiJa1zoV4HKYUnp
-         4XyFK6JNTUIpdo6h6/Gi9PRI/BdysKKDYRb3hIRTFIqr4A+Zsv33udaFNEzwg5xnVPcA
-         1TI6Xj4+bbJhLGnlPfbo5BfQ4Lb/ywMKIV2GCaRvCcYwjwSlAL96YdhjFsXbTXDlDTgF
-         VRg8s1GEokOQ9fSCYYVRkaeARB+wc9/OR/Xvg35FUSdJCE97N0MKMiASL/r/5jOB66Lc
-         y145theWCZ9IRVVZoR9KfXngHrYMx00vRaZBIsOBQIzV7DoNr/6wr8MIJ3MFhj587y+b
-         uZAQ==
-X-Gm-Message-State: APjAAAUGfP9oT6CcXG3CEy1IvS9XiQ9Jx5TJ9dw9J/LlvO+YWgYyGNWK
-        U8szx6tGn4qvbqKSsiZYaJqz4ag+z3/G89K2kf1tGw==
-X-Google-Smtp-Source: APXvYqyggOyk01nC8FZIwN+CbjL/bjhI1aZtVdsQYi3h4hYy3se1Usiy90hGVxmIIjB8FzpqdJKGP5apV2lekxdVIBg=
-X-Received: by 2002:a9d:6955:: with SMTP id p21mr283847oto.204.1567018610863;
- Wed, 28 Aug 2019 11:56:50 -0700 (PDT)
+        Wed, 28 Aug 2019 14:57:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbfH1S5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 14:57:13 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA58122CF5;
+        Wed, 28 Aug 2019 18:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567018632;
+        bh=YWRPIo5lY+npq8po6q8Hxw9uV+CVU6RPeUclOwdOxGQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QLKAwqiTPxwGgomTw1T2reBYMxE7Qpb8aaskA1lf/DvrIxznvfA40Vu2kmRI7kuIs
+         JvipCril8TxoMfqswwzTF1GWO3QE1cZFqFfvz8JF20a8d6Wwu7iFMt2X9knUNCLtNv
+         NCFm8KbORoWgOr7GVaRWUP09VxHmTfQK3HOVdSI4=
+Date:   Wed, 28 Aug 2019 13:57:10 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v5 4/7] PCI/ATS: Add PRI support for PCIe VF devices
+Message-ID: <20190828185710.GB7013@google.com>
+References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <827d051ef8c8bbfa815908ce927e607870780cb6.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190815222049.GL253360@google.com>
+ <f05eb779-9f78-f20f-7626-16b8bd28af40@linux.intel.com>
+ <20190819141500.GQ253360@google.com>
+ <20190819225331.GB28404@skuppusw-desk.amr.corp.intel.com>
+ <20190819231925.GW253360@google.com>
+ <20190828182153.GH28404@skuppusw-desk.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <20190826201425.17547-1-daniel.vetter@ffwll.ch>
- <20190826201425.17547-4-daniel.vetter@ffwll.ch> <20190827225002.GB30700@ziepe.ca>
- <CAKMK7uHKiLwXLHd1xThZVM1dH-oKrtpDZ=FxLBBwtY7XmJKgtA@mail.gmail.com> <20190828184330.GD933@ziepe.ca>
-In-Reply-To: <20190828184330.GD933@ziepe.ca>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Wed, 28 Aug 2019 20:56:39 +0200
-Message-ID: <CAKMK7uFJESH1XHTCqYoDb4iMfThxnib3Uz=RUcd7h=SS-TJWbg@mail.gmail.com>
-Subject: Re: [PATCH 3/5] kernel.h: Add non_block_start/end()
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828182153.GH28404@skuppusw-desk.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 8:43 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> On Wed, Aug 28, 2019 at 08:33:13PM +0200, Daniel Vetter wrote:
-> > On Wed, Aug 28, 2019 at 12:50 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > >
-> > > > diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> > > > index 4fa360a13c1e..82f84cfe372f 100644
-> > > > +++ b/include/linux/kernel.h
-> > > > @@ -217,7 +217,9 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
-> > > >   * might_sleep - annotation for functions that can sleep
-> > > >   *
-> > > >   * this macro will print a stack trace if it is executed in an atomic
-> > > > - * context (spinlock, irq-handler, ...).
-> > > > + * context (spinlock, irq-handler, ...). Additional sections where blocking is
-> > > > + * not allowed can be annotated with non_block_start() and non_block_end()
-> > > > + * pairs.
-> > > >   *
-> > > >   * This is a useful debugging help to be able to catch problems early and not
-> > > >   * be bitten later when the calling function happens to sleep when it is not
-> > > > @@ -233,6 +235,25 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
-> > > >  # define cant_sleep() \
-> > > >       do { __cant_sleep(__FILE__, __LINE__, 0); } while (0)
-> > > >  # define sched_annotate_sleep()      (current->task_state_change = 0)
-> > > > +/**
-> > > > + * non_block_start - annotate the start of section where sleeping is prohibited
-> > > > + *
-> > > > + * This is on behalf of the oom reaper, specifically when it is calling the mmu
-> > > > + * notifiers. The problem is that if the notifier were to block on, for example,
-> > > > + * mutex_lock() and if the process which holds that mutex were to perform a
-> > > > + * sleeping memory allocation, the oom reaper is now blocked on completion of
-> > > > + * that memory allocation. Other blocking calls like wait_event() pose similar
-> > > > + * issues.
-> > > > + */
-> > > > +# define non_block_start() \
-> > > > +     do { current->non_block_count++; } while (0)
-> > > > +/**
-> > > > + * non_block_end - annotate the end of section where sleeping is prohibited
-> > > > + *
-> > > > + * Closes a section opened by non_block_start().
-> > > > + */
-> > > > +# define non_block_end() \
-> > > > +     do { WARN_ON(current->non_block_count-- == 0); } while (0)
-> > >
-> > > check-patch does not like these, and I agree
-> > >
-> > > #101: FILE: include/linux/kernel.h:248:
-> > > +# define non_block_start() \
-> > > +       do { current->non_block_count++; } while (0)
-> > >
-> > > /tmp/tmp1spfxufy/0006-kernel-h-Add-non_block_start-end-.patch:108: WARNING: Single statement macros should not use a do {} while (0) loop
-> > > #108: FILE: include/linux/kernel.h:255:
-> > > +# define non_block_end() \
-> > > +       do { WARN_ON(current->non_block_count-- == 0); } while (0)
-> > >
-> > > Please use a static inline?
-> >
-> > We need get_current() plus the task_struct, so this gets real messy
-> > real fast. Not even sure which header this would fit in, or whether
-> > I'd need to create a new one. You're insisting on this or respinning
-> > with the do { } while (0) dropped ok.
->
-> My prefernce is always a static inline, but if the headers are so
-> twisty we need to use #define to solve a missing include, then I
-> wouldn't insist on it.
+On Wed, Aug 28, 2019 at 11:21:53AM -0700, Kuppuswamy Sathyanarayanan wrote:
+> On Mon, Aug 19, 2019 at 06:19:25PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Aug 19, 2019 at 03:53:31PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > > On Mon, Aug 19, 2019 at 09:15:00AM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, Aug 15, 2019 at 03:39:03PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > > > > On 8/15/19 3:20 PM, Bjorn Helgaas wrote:
+> > > > > > [+cc Joerg, David, iommu list: because IOMMU drivers are the only
+> > > > > > callers of pci_enable_pri() and pci_enable_pasid()]
+> > > > > > 
+> > > > > > On Thu, Aug 01, 2019 at 05:06:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > > > > 
+> > > > > > > When IOMMU tries to enable Page Request Interface (PRI) for VF device
+> > > > > > > in iommu_enable_dev_iotlb(), it always fails because PRI support for
+> > > > > > > PCIe VF device is currently broken. Current implementation expects
+> > > > > > > the given PCIe device (PF & VF) to implement PRI capability before
+> > > > > > > enabling the PRI support. But this assumption is incorrect. As per PCIe
+> > > > > > > spec r4.0, sec 9.3.7.11, all VFs associated with PF can only use the
+> > > > > > > PRI of the PF and not implement it. Hence we need to create exception
+> > > > > > > for handling the PRI support for PCIe VF device.
+> > > > > > > 
+> > > > > > > Also, since PRI is a shared resource between PF/VF, following rules
+> > > > > > > should apply.
+> > > > > > > 
+> > > > > > > 1. Use proper locking before accessing/modifying PF resources in VF
+> > > > > > >     PRI enable/disable call.
+> > > > > > > 2. Use reference count logic to track the usage of PRI resource.
+> > > > > > > 3. Disable PRI only if the PRI reference count (pri_ref_cnt) is zero.
+> > > > 
+> > > > > > Wait, why do we need this at all?  I agree the spec says VFs may not
+> > > > > > implement PRI or PASID capabilities and that VFs use the PRI and
+> > > > > > PASID of the PF.
+> > > > > > 
+> > > > > > But why do we need to support pci_enable_pri() and pci_enable_pasid()
+> > > > > > for VFs?  There's nothing interesting we can *do* in the VF, and
+> > > > > > passing it off to the PF adds all this locking mess.  For VFs, can we
+> > > > > > just make them do nothing or return -EINVAL?  What functionality would
+> > > > > > we be missing if we did that?
+> > > > > 
+> > > > > Currently PRI/PASID capabilities are not enabled by default. IOMMU can
+> > > > > enable PRI/PASID for VF first (and not enable it for PF). In this case,
+> > > > > doing nothing for VF device will break the functionality.
+> > > > 
+> > > > What is the path where we can enable PRI/PASID for VF but not for the
+> > > > PF?  The call chains leading to pci_enable_pri() go through the
+> > > > iommu_ops.add_device interface, which makes me think this is part of
+> > > > the device enumeration done by the PCI core, and in that case I would
+> > > > think this it should be done for the PF before VFs.  But maybe this
+> > > > path isn't exercised until a driver does a DMA map or something
+> > > > similar?
+> > 
+> > > AFAIK, this path will only get exercised when the device does DMA and
+> > > hence there is no specific order in which PRI/PASID is enabled in PF/VF.
+> > > In fact, my v2 version of this patch set had a check to ensure PF
+> > > PRI/PASID enable is happened before VF attempts PRI/PASID
+> > > enable/disable. But I had to remove it in later version of this series
+> > > due to failure case reported by one the tester of this code. 
+> > 
+> > What's the path?  And does that path make sense?
+> > 
+> > I got this far before giving up:
+> > 
+> >     iommu_go_to_state                           # AMD
+> >       state_next
+> >         amd_iommu_init_pci
+> >           amd_iommu_init_api
+> >             bus_set_iommu
+> >               iommu_bus_init
+> >                 bus_for_each_dev(..., add_iommu_group)
+> >                   add_iommu_group
+> >                     iommu_probe_device
+> >                       amd_iommu_add_device                      # amd_iommu_ops.add_device
+> >                         init_iommu_group
+> >                           iommu_group_get_for_dev
+> >                             iommu_group_add_device
+> >                               __iommu_attach_device
+> >                                 amd_iommu_attach_device         # amd_iommu_ops.attach_dev
+> >                                   attach_device                 # amd_iommu
+> >                                     pdev_iommuv2_enable
+> >                                       pci_enable_pri
+> > 
+> > 
+> >     iommu_probe_device
+> >       intel_iommu_add_device                    # intel_iommu_ops.add_device
+> >         domain_add_dev_info
+> >           dmar_insert_one_dev_info
+> >             domain_context_mapping
+> >               domain_context_mapping_one
+> >                 iommu_enable_dev_iotlb
+> >                   pci_enable_pri
+> > 
+> > 
+> > These *look* like enumeration paths, not DMA setup paths.  But I could
+> > be wrong, since I gave up before getting to the source.
+> > 
+> > I don't want to add all this complexity because we *think* we need it.
+> > I want to think about whether it makes *sense*.  Maybe it's sensible
+> > for the PF enumeration or a PF driver to enable the hardware it owns.
+> > 
+> > If we leave it to the VFs, then we have issues with coordinating
+> > between VFs that want different settings, etc.
+> > 
+> > If we understand the whole picture and it needs to be in the VFs,
+> > that's fine.  But I don't think we understand the whole picture yet.
+> 
+> After re-analyzing the code paths, I also could not find the use case
+> where PF/VF PRI/PASID is enabled in out of order(VF first and then PF).
+> Also, I had no luck in finding that old bug report email which triggered
+> me to come up with this complicated fix. As per my current analysis, as
+> you have mentioned, PF/VF PRI/PASID enable seems to happen only during
+> device creation time.
+> 
+> Following are some of the possible code paths:
+> 
+> VF PRI/PASID enable path is,
+> 
+> [ 8367.161880]  iommu_enable_dev_iotlb+0x83/0x180
+> [ 8367.168061]  domain_context_mapping_one+0x44f/0x500
+> [ 8367.174264]  ? domain_context_mapping_one+0x500/0x500
+> [ 8367.180429]  pci_for_each_dma_alias+0x30/0x170
+> [ 8367.186368]  dmar_insert_one_dev_info+0x43f/0x4d0
+> [ 8367.192288]  domain_add_dev_info+0x50/0x90
+> [ 8367.197973]  intel_iommu_attach_device+0x9c/0x130
+> [ 8367.203726]  __iommu_attach_device+0x47/0xb0
+> [ 8367.209292]  ? _cond_resched+0x15/0x40
+> [ 8367.214643]  iommu_group_add_device+0x13a/0x2c0
+> [ 8367.220102]  iommu_group_get_for_dev+0xa8/0x220
+> [ 8367.225460]  intel_iommu_add_device+0x61/0x590
+> [ 8367.230708]  iommu_bus_notifier+0xb1/0xe0
+> [ 8367.235768]  notifier_call_chain+0x47/0x70
+> [ 8367.240757]  blocking_notifier_call_chain+0x3e/0x60
+> [ 8367.245854]  device_add+0x3ec/0x690
+> [ 8367.250533]  pci_device_add+0x26b/0x660
+> [ 8367.255207]  pci_iov_add_virtfn+0x1ce/0x3b0
+> [ 8367.259873]  sriov_enable+0x254/0x410
+> [ 8367.264323]  dev_fops_ioctl+0x1378/0x1520 [sad8]
+> [ 8367.322115]  init_fops_ioctl+0x12c/0x150 [sad8]
+> [ 8367.324921]  do_vfs_ioctl+0xa4/0x630
+> [ 8367.327415]  ksys_ioctl+0x70/0x80
+> [ 8367.329822]  __x64_sys_ioctl+0x16/0x20
+> [ 8367.332310]  do_syscall_64+0x5b/0x1a0
+> [ 8367.334771]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> PF PRI/PASID enable path is,
+> 
+> [   11.084005] Call Trace:
+> [   11.084005]  dump_stack+0x5c/0x7b
+> [   11.084005]  iommu_enable_dev_iotlb+0x83/0x180
+> [   11.084005]  domain_context_mapping_one+0x44f/0x500
+> [   11.084005]  ? domain_context_mapping_one+0x500/0x500
+> [   11.084005]  pci_for_each_dma_alias+0x30/0x170
+> [   11.084005]  dmar_insert_one_dev_info+0x43f/0x4d0
+> [   11.084005]  domain_add_dev_info+0x50/0x90
+> [   11.084005]  intel_iommu_attach_device+0x9c/0x130
+> [   11.084005]  __iommu_attach_device+0x47/0xb0
+> [   11.084005]  ? _cond_resched+0x15/0x40
+> [   11.084005]  iommu_group_add_device+0x13a/0x2c0
+> [   11.084005]  iommu_group_get_for_dev+0xa8/0x220
+> [   11.084005]  intel_iommu_add_device+0x61/0x590
+> [   11.084005]  ? iommu_probe_device+0x40/0x40
+> [   11.084005]  add_iommu_group+0xa/0x20
+> [   11.084005]  bus_for_each_dev+0x76/0xc0
+> [   11.084005]  bus_set_iommu+0x85/0xc0
+> [   11.084005]  intel_iommu_init+0xfe5/0x11c1
+> [   11.084005]  ? __fput+0x134/0x220
+> [   11.084005]  ? set_debug_rodata+0x11/0x11
+> [   11.084005]  ? e820__memblock_setup+0x60/0x60
+> [   11.084005]  ? pci_iommu_init+0x16/0x3f
+> [   11.084005]  pci_iommu_init+0x16/0x3f
+> [   11.084005]  do_one_initcall+0x46/0x1f4
+> [   11.084005]  kernel_init_freeable+0x1ba/0x283
+> [   11.084005]  ? rest_init+0xb0/0xb0
+> [   11.084005]  kernel_init+0xa/0x120
+> [   11.084005]  ret_from_fork+0x1f/0x40
+> 
+> Similarly PF/VF PRI/PASID possible disable paths are,
+> 
+> iommu_hotplug_path->disable_dmar_iommu->__dmar_remove_one_dev_info->iommu_disable_dev_iotlb
+> 
+> domain_exit()->domain_remove_dev_info->iommu_disable_dev_iotlb
+> 
+> vfio_iommu_type1_detach_group()->iommu_detach_group()->intel_iommu_detach_device->dmar_remove_one_dev_info
+> 
+> But even in all of these paths, PF/VF PRI/PASID disable have to happen
+> in order (VF first and then PF).
+> 
+> So we can implement the logic of not doing anything for VF when its
+> related PRI/PASID calls. But my questions is, is it safe to go with
+> these assumptions? Since all these dependencies we have found are not
+> explicitly defined, if some one breaks it will also affect PRI/PASID
+> logic. Let me know your comments.
 
-Cleanest would be a new header I guess, together with might_sleep().
-But moving that is a bit much I think, there's almost 500 callers of
-that one from a quick git grep
+I think we should assume PRI/PASID will be controlled via the PF.
+That's true today because we initialize them via the IOMMU binding
+path.  If the IOMMU path changes so that's no longer feasible, we
+could probably do the initialization in the PCI core.  These features
+are implemented in the PF, so I think the code will be simpler if it
+mirrors that instead of trying to provide the illusion that they're in
+the VF.
 
-> If dropping do while is the only change then I can edit it in..
-> I think we have the acks now
-
-Yeah sounds simplest, thanks.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Bjorn
