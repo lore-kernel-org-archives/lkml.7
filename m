@@ -2,411 +2,290 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20348C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA0DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB4E922CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED562070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfH1O04 (ORCPT
+        id S1726571AbfH1O3z convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:26:56 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5235 "EHLO huawei.com"
+        Wed, 28 Aug 2019 10:29:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49752 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726415AbfH1OZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:25:39 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 24CB7192A15C549F711C;
-        Wed, 28 Aug 2019 22:25:36 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 28 Aug 2019 22:25:29 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Zhongzhu Liu <liuzhongzhu@huawei.com>,
-        Guangbin Huang <huangguangbin2@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 01/12] net: hns3: code optimization for debugfs related to "dump reg"
-Date:   Wed, 28 Aug 2019 22:23:05 +0800
-Message-ID: <1567002196-63242-2-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
-References: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
+        id S1726428AbfH1O3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:29:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4D8E1B620;
+        Wed, 28 Aug 2019 14:29:51 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 16:29:45 +0200
+From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Breno Leitao <leitao@debian.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Allison Randal <allison@lohutok.net>,
+        Michael Neuling <mikey@neuling.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] powerpc/64: make buildable without CONFIG_COMPAT
+Message-ID: <20190828162945.50b86232@naga>
+In-Reply-To: <fb471a46-5598-1c5c-911f-499b1aad259c@c-s.fr>
+References: <cover.1566987936.git.msuchanek@suse.de>
+        <fbf3f09d2f01e53aceea448ac42578251f424829.1566987936.git.msuchanek@suse.de>
+        <fb471a46-5598-1c5c-911f-499b1aad259c@c-s.fr>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhongzhu Liu <liuzhongzhu@huawei.com>
+On Wed, 28 Aug 2019 14:49:16 +0200
+Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 
-For making the code more readable, this patch uses a array to
-keep the information about the dumping register, and then uses
-it to parse the parameter cmd_buf which passing into
-hclge_dbg_dump_reg_cmd().
+> Le 28/08/2019 à 12:30, Michal Suchanek a écrit :
+> > There are numerous references to 32bit functions in generic and 64bit
+> > code so ifdef them out.  
+> 
+> As far as possible, avoid opting things out with ifdefs. Ref 
+> https://www.kernel.org/doc/html/latest/process/coding-style.html#conditional-compilation
+> 
+> See comment below.
+> 
+> > 
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > ---
+> > v2:
+> > - fix 32bit ifdef condition in signal.c
+> > - simplify the compat ifdef condition in vdso.c - 64bit is redundant
+> > - simplify the compat ifdef condition in callchain.c - 64bit is redundant
+> > ---
+> >   arch/powerpc/include/asm/syscall.h |  2 ++
+> >   arch/powerpc/kernel/Makefile       | 15 ++++++++++++---
+> >   arch/powerpc/kernel/entry_64.S     |  2 ++
+> >   arch/powerpc/kernel/signal.c       |  5 +++--
+> >   arch/powerpc/kernel/syscall_64.c   |  5 +++--
+> >   arch/powerpc/kernel/vdso.c         |  4 +++-
+> >   arch/powerpc/perf/callchain.c      | 14 ++++++++++----
+> >   7 files changed, 35 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/include/asm/syscall.h b/arch/powerpc/include/asm/syscall.h
+> > index 38d62acfdce7..3ed3b75541a1 100644
+> > --- a/arch/powerpc/include/asm/syscall.h
+> > +++ b/arch/powerpc/include/asm/syscall.h
+> > @@ -16,7 +16,9 @@
+> >   
+> >   /* ftrace syscalls requires exporting the sys_call_table */
+> >   extern const unsigned long sys_call_table[];
+> > +#ifdef CONFIG_COMPAT
+> >   extern const unsigned long compat_sys_call_table[];
+> > +#endif  
+> 
+> Leaving the declaration should be harmless.
 
-Also replaces parameter "base" of kstrtouint with 0 in the
-hclge_dbg_dump_reg_common(), which makes it more flexible.
+Yes, it only allows earlier check that the type is not used.
 
-Signed-off-by: Zhongzhu Liu <liuzhongzhu@huawei.com>
-Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 226 +++++++++++----------
- .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h |  16 ++
- 2 files changed, 132 insertions(+), 110 deletions(-)
+> 
+> >   
+> >   static inline int syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
+> >   {
+> > diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> > index 1d646a94d96c..b0db365b83d8 100644
+> > --- a/arch/powerpc/kernel/Makefile
+> > +++ b/arch/powerpc/kernel/Makefile
+> > @@ -44,16 +44,25 @@ CFLAGS_btext.o += -DDISABLE_BRANCH_PROFILING
+> >   endif
+> >   
+> >   obj-y				:= cputable.o ptrace.o syscalls.o \
+> > -				   irq.o align.o signal_32.o pmc.o vdso.o \
+> > +				   irq.o align.o pmc.o vdso.o \
+> >   				   process.o systbl.o idle.o \
+> >   				   signal.o sysfs.o cacheinfo.o time.o \
+> >   				   prom.o traps.o setup-common.o \
+> >   				   udbg.o misc.o io.o misc_$(BITS).o \
+> >   				   of_platform.o prom_parse.o
+> > -obj-$(CONFIG_PPC64)		+= setup_64.o sys_ppc32.o \
+> > -				   signal_64.o ptrace32.o \
+> > +ifndef CONFIG_PPC64
+> > +obj-y				+= signal_32.o
+> > +else
+> > +ifdef CONFIG_COMPAT
+> > +obj-y				+= signal_32.o
+> > +endif
+> > +endif
+> > +obj-$(CONFIG_PPC64)		+= setup_64.o signal_64.o \
+> >   				   paca.o nvram_64.o firmware.o \
+> >   				   syscall_64.o  
+> 
+> That's still a bit messy. You could have:
+> 
+> obj-y = +=signal_$(BITS).o
+> obj-$(CONFIG_COMPAT) += signal_32.o
+> 
+> > +ifdef CONFIG_COMPAT
+> > +obj-$(CONFIG_PPC64)		+= sys_ppc32.o ptrace32.o
+> > +endif  
+> 
+> AFAIK, CONFIG_COMPAT is only defined when CONFIG_PP64 is defined, so 
+> could be:
+> 
+> obj-$(CONFIG_COMPAT)		+= sys_ppc32.o ptrace32.o
+> 
+> And could be grouped with the above signal_32.o
+> 
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index 025184a..a56f388 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -4,14 +4,80 @@
- #include <linux/device.h>
- 
- #include "hclge_debugfs.h"
--#include "hclge_cmd.h"
- #include "hclge_main.h"
- #include "hclge_tm.h"
- #include "hnae3.h"
- 
-+static struct hclge_dbg_reg_type_info hclge_dbg_reg_info[] = {
-+	{ .reg_type = "bios common",
-+	  .dfx_msg = &hclge_dbg_bios_common_reg[0],
-+	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_bios_common_reg),
-+		       .offset = HCLGE_DBG_DFX_BIOS_OFFSET,
-+		       .cmd = HCLGE_OPC_DFX_BIOS_COMMON_REG } },
-+	{ .reg_type = "ssu",
-+	  .dfx_msg = &hclge_dbg_ssu_reg_0[0],
-+	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_ssu_reg_0),
-+		       .offset = HCLGE_DBG_DFX_SSU_0_OFFSET,
-+		       .cmd = HCLGE_OPC_DFX_SSU_REG_0 } },
-+	{ .reg_type = "ssu",
-+	  .dfx_msg = &hclge_dbg_ssu_reg_1[0],
-+	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_ssu_reg_1),
-+		       .offset = HCLGE_DBG_DFX_SSU_1_OFFSET,
-+		       .cmd = HCLGE_OPC_DFX_SSU_REG_1 } },
-+	{ .reg_type = "ssu",
-+	  .dfx_msg = &hclge_dbg_ssu_reg_2[0],
-+	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_ssu_reg_2),
-+		       .offset = HCLGE_DBG_DFX_SSU_2_OFFSET,
-+		       .cmd = HCLGE_OPC_DFX_SSU_REG_2 } },
-+	{ .reg_type = "igu egu",
-+	  .dfx_msg = &hclge_dbg_igu_egu_reg[0],
-+	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_igu_egu_reg),
-+		       .offset = HCLGE_DBG_DFX_IGU_OFFSET,
-+		       .cmd = HCLGE_OPC_DFX_IGU_EGU_REG } },
-+	{ .reg_type = "rpu",
-+	  .dfx_msg = &hclge_dbg_rpu_reg_0[0],
-+	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_rpu_reg_0),
-+		       .offset = HCLGE_DBG_DFX_RPU_0_OFFSET,
-+		       .cmd = HCLGE_OPC_DFX_RPU_REG_0 } },
-+	{ .reg_type = "rpu",
-+	  .dfx_msg = &hclge_dbg_rpu_reg_1[0],
-+	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_rpu_reg_1),
-+		       .offset = HCLGE_DBG_DFX_RPU_1_OFFSET,
-+		       .cmd = HCLGE_OPC_DFX_RPU_REG_1 } },
-+	{ .reg_type = "ncsi",
-+	  .dfx_msg = &hclge_dbg_ncsi_reg[0],
-+	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_ncsi_reg),
-+		       .offset = HCLGE_DBG_DFX_NCSI_OFFSET,
-+		       .cmd = HCLGE_OPC_DFX_NCSI_REG } },
-+	{ .reg_type = "rtc",
-+	  .dfx_msg = &hclge_dbg_rtc_reg[0],
-+	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_rtc_reg),
-+		       .offset = HCLGE_DBG_DFX_RTC_OFFSET,
-+		       .cmd = HCLGE_OPC_DFX_RTC_REG } },
-+	{ .reg_type = "ppp",
-+	  .dfx_msg = &hclge_dbg_ppp_reg[0],
-+	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_ppp_reg),
-+		       .offset = HCLGE_DBG_DFX_PPP_OFFSET,
-+		       .cmd = HCLGE_OPC_DFX_PPP_REG } },
-+	{ .reg_type = "rcb",
-+	  .dfx_msg = &hclge_dbg_rcb_reg[0],
-+	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_rcb_reg),
-+		       .offset = HCLGE_DBG_DFX_RCB_OFFSET,
-+		       .cmd = HCLGE_OPC_DFX_RCB_REG } },
-+	{ .reg_type = "tqp",
-+	  .dfx_msg = &hclge_dbg_tqp_reg[0],
-+	  .reg_msg = { .msg_num = ARRAY_SIZE(hclge_dbg_tqp_reg),
-+		       .offset = HCLGE_DBG_DFX_TQP_OFFSET,
-+		       .cmd = HCLGE_OPC_DFX_TQP_REG } },
-+};
-+
- static int hclge_dbg_get_dfx_bd_num(struct hclge_dev *hdev, int offset)
- {
--	struct hclge_desc desc[4];
-+#define HCLGE_GET_DFX_REG_TYPE_CNT	4
-+
-+	struct hclge_desc desc[HCLGE_GET_DFX_REG_TYPE_CNT];
-+	int entries_per_desc;
-+	int index;
- 	int ret;
- 
- 	ret = hclge_query_bd_num_cmd_send(hdev, desc);
-@@ -21,7 +87,9 @@ static int hclge_dbg_get_dfx_bd_num(struct hclge_dev *hdev, int offset)
- 		return ret;
- 	}
- 
--	return (int)desc[offset / 6].data[offset % 6];
-+	entries_per_desc = ARRAY_SIZE(desc[0].data);
-+	index = offset % entries_per_desc;
-+	return (int)desc[offset / entries_per_desc].data[index];
- }
- 
- static int hclge_dbg_cmd_send(struct hclge_dev *hdev,
-@@ -52,23 +120,28 @@ static int hclge_dbg_cmd_send(struct hclge_dev *hdev,
- }
- 
- static void hclge_dbg_dump_reg_common(struct hclge_dev *hdev,
--				      struct hclge_dbg_dfx_message *dfx_message,
--				      const char *cmd_buf, int msg_num,
--				      int offset, enum hclge_opcode_type cmd)
-+				      struct hclge_dbg_reg_type_info *reg_info,
-+				      const char *cmd_buf)
- {
--#define BD_DATA_NUM       6
-+#define IDX_OFFSET	1
- 
-+	const char *s = &cmd_buf[strlen(reg_info->reg_type) + IDX_OFFSET];
-+	struct hclge_dbg_dfx_message *dfx_message = reg_info->dfx_msg;
-+	struct hclge_dbg_reg_common_msg *reg_msg = &reg_info->reg_msg;
- 	struct hclge_desc *desc_src;
- 	struct hclge_desc *desc;
-+	int entries_per_desc;
- 	int bd_num, buf_len;
-+	int index = 0;
-+	int min_num;
- 	int ret, i;
--	int index;
--	int max;
- 
--	ret = kstrtouint(cmd_buf, 10, &index);
--	index = (ret != 0) ? 0 : index;
-+	if (*s) {
-+		ret = kstrtouint(s, 0, &index);
-+		index = (ret != 0) ? 0 : index;
-+	}
- 
--	bd_num = hclge_dbg_get_dfx_bd_num(hdev, offset);
-+	bd_num = hclge_dbg_get_dfx_bd_num(hdev, reg_msg->offset);
- 	if (bd_num <= 0)
- 		return;
- 
-@@ -80,22 +153,23 @@ static void hclge_dbg_dump_reg_common(struct hclge_dev *hdev,
- 	}
- 
- 	desc = desc_src;
--	ret  = hclge_dbg_cmd_send(hdev, desc, index, bd_num, cmd);
--	if (ret != HCLGE_CMD_EXEC_SUCCESS) {
-+	ret  = hclge_dbg_cmd_send(hdev, desc, index, bd_num, reg_msg->cmd);
-+	if (ret) {
- 		kfree(desc_src);
- 		return;
- 	}
- 
--	max = (bd_num * BD_DATA_NUM) <= msg_num ?
--		(bd_num * BD_DATA_NUM) : msg_num;
-+	entries_per_desc = ARRAY_SIZE(desc->data);
-+	min_num = min_t(int, bd_num * entries_per_desc, reg_msg->msg_num);
- 
- 	desc = desc_src;
--	for (i = 0; i < max; i++) {
--		((i > 0) && ((i % BD_DATA_NUM) == 0)) ? desc++ : desc;
-+	for (i = 0; i < min_num; i++) {
-+		if (i > 0 && (i % entries_per_desc) == 0)
-+			desc++;
- 		if (dfx_message->flag)
- 			dev_info(&hdev->pdev->dev, "%s: 0x%x\n",
- 				 dfx_message->message,
--				 desc->data[i % BD_DATA_NUM]);
-+				 desc->data[i % entries_per_desc]);
- 
- 		dfx_message++;
- 	}
-@@ -205,95 +279,25 @@ static void hclge_dbg_dump_dcb(struct hclge_dev *hdev, const char *cmd_buf)
- 
- static void hclge_dbg_dump_reg_cmd(struct hclge_dev *hdev, const char *cmd_buf)
- {
--	int msg_num;
--
--	if (strncmp(&cmd_buf[9], "bios common", 11) == 0) {
--		msg_num = sizeof(hclge_dbg_bios_common_reg) /
--			  sizeof(struct hclge_dbg_dfx_message);
--		hclge_dbg_dump_reg_common(hdev, hclge_dbg_bios_common_reg,
--					  &cmd_buf[21], msg_num,
--					  HCLGE_DBG_DFX_BIOS_OFFSET,
--					  HCLGE_OPC_DFX_BIOS_COMMON_REG);
--	} else if (strncmp(&cmd_buf[9], "ssu", 3) == 0) {
--		msg_num = sizeof(hclge_dbg_ssu_reg_0) /
--			  sizeof(struct hclge_dbg_dfx_message);
--		hclge_dbg_dump_reg_common(hdev, hclge_dbg_ssu_reg_0,
--					  &cmd_buf[13], msg_num,
--					  HCLGE_DBG_DFX_SSU_0_OFFSET,
--					  HCLGE_OPC_DFX_SSU_REG_0);
--
--		msg_num = sizeof(hclge_dbg_ssu_reg_1) /
--			  sizeof(struct hclge_dbg_dfx_message);
--		hclge_dbg_dump_reg_common(hdev, hclge_dbg_ssu_reg_1,
--					  &cmd_buf[13], msg_num,
--					  HCLGE_DBG_DFX_SSU_1_OFFSET,
--					  HCLGE_OPC_DFX_SSU_REG_1);
--
--		msg_num = sizeof(hclge_dbg_ssu_reg_2) /
--			  sizeof(struct hclge_dbg_dfx_message);
--		hclge_dbg_dump_reg_common(hdev, hclge_dbg_ssu_reg_2,
--					  &cmd_buf[13], msg_num,
--					  HCLGE_DBG_DFX_SSU_2_OFFSET,
--					  HCLGE_OPC_DFX_SSU_REG_2);
--	} else if (strncmp(&cmd_buf[9], "igu egu", 7) == 0) {
--		msg_num = sizeof(hclge_dbg_igu_egu_reg) /
--			  sizeof(struct hclge_dbg_dfx_message);
--		hclge_dbg_dump_reg_common(hdev, hclge_dbg_igu_egu_reg,
--					  &cmd_buf[17], msg_num,
--					  HCLGE_DBG_DFX_IGU_OFFSET,
--					  HCLGE_OPC_DFX_IGU_EGU_REG);
--	} else if (strncmp(&cmd_buf[9], "rpu", 3) == 0) {
--		msg_num = sizeof(hclge_dbg_rpu_reg_0) /
--			  sizeof(struct hclge_dbg_dfx_message);
--		hclge_dbg_dump_reg_common(hdev, hclge_dbg_rpu_reg_0,
--					  &cmd_buf[13], msg_num,
--					  HCLGE_DBG_DFX_RPU_0_OFFSET,
--					  HCLGE_OPC_DFX_RPU_REG_0);
--
--		msg_num = sizeof(hclge_dbg_rpu_reg_1) /
--			  sizeof(struct hclge_dbg_dfx_message);
--		hclge_dbg_dump_reg_common(hdev, hclge_dbg_rpu_reg_1,
--					  &cmd_buf[13], msg_num,
--					  HCLGE_DBG_DFX_RPU_1_OFFSET,
--					  HCLGE_OPC_DFX_RPU_REG_1);
--	} else if (strncmp(&cmd_buf[9], "ncsi", 4) == 0) {
--		msg_num = sizeof(hclge_dbg_ncsi_reg) /
--			  sizeof(struct hclge_dbg_dfx_message);
--		hclge_dbg_dump_reg_common(hdev, hclge_dbg_ncsi_reg,
--					  &cmd_buf[14], msg_num,
--					  HCLGE_DBG_DFX_NCSI_OFFSET,
--					  HCLGE_OPC_DFX_NCSI_REG);
--	} else if (strncmp(&cmd_buf[9], "rtc", 3) == 0) {
--		msg_num = sizeof(hclge_dbg_rtc_reg) /
--			  sizeof(struct hclge_dbg_dfx_message);
--		hclge_dbg_dump_reg_common(hdev, hclge_dbg_rtc_reg,
--					  &cmd_buf[13], msg_num,
--					  HCLGE_DBG_DFX_RTC_OFFSET,
--					  HCLGE_OPC_DFX_RTC_REG);
--	} else if (strncmp(&cmd_buf[9], "ppp", 3) == 0) {
--		msg_num = sizeof(hclge_dbg_ppp_reg) /
--			  sizeof(struct hclge_dbg_dfx_message);
--		hclge_dbg_dump_reg_common(hdev, hclge_dbg_ppp_reg,
--					  &cmd_buf[13], msg_num,
--					  HCLGE_DBG_DFX_PPP_OFFSET,
--					  HCLGE_OPC_DFX_PPP_REG);
--	} else if (strncmp(&cmd_buf[9], "rcb", 3) == 0) {
--		msg_num = sizeof(hclge_dbg_rcb_reg) /
--			  sizeof(struct hclge_dbg_dfx_message);
--		hclge_dbg_dump_reg_common(hdev, hclge_dbg_rcb_reg,
--					  &cmd_buf[13], msg_num,
--					  HCLGE_DBG_DFX_RCB_OFFSET,
--					  HCLGE_OPC_DFX_RCB_REG);
--	} else if (strncmp(&cmd_buf[9], "tqp", 3) == 0) {
--		msg_num = sizeof(hclge_dbg_tqp_reg) /
--			  sizeof(struct hclge_dbg_dfx_message);
--		hclge_dbg_dump_reg_common(hdev, hclge_dbg_tqp_reg,
--					  &cmd_buf[13], msg_num,
--					  HCLGE_DBG_DFX_TQP_OFFSET,
--					  HCLGE_OPC_DFX_TQP_REG);
--	} else if (strncmp(&cmd_buf[9], "dcb", 3) == 0) {
--		hclge_dbg_dump_dcb(hdev, &cmd_buf[13]);
--	} else {
-+	struct hclge_dbg_reg_type_info *reg_info = &hclge_dbg_reg_info[0];
-+	bool has_dump = false;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(hclge_dbg_reg_info); i++) {
-+		reg_info = &hclge_dbg_reg_info[i];
-+		if (!strncmp(cmd_buf, reg_info->reg_type,
-+			     strlen(reg_info->reg_type))) {
-+			hclge_dbg_dump_reg_common(hdev, reg_info, cmd_buf);
-+			has_dump = true;
-+		}
-+	}
-+
-+	if (strncmp(cmd_buf, "dcb", 3) == 0) {
-+		hclge_dbg_dump_dcb(hdev, &cmd_buf[sizeof("dcb")]);
-+		has_dump = true;
-+	}
-+
-+	if (!has_dump) {
- 		dev_info(&hdev->pdev->dev, "unknown command\n");
- 		return;
- 	}
-@@ -1092,6 +1096,8 @@ static void hclge_dbg_dump_mac_tnl_status(struct hclge_dev *hdev)
- 
- int hclge_dbg_run_cmd(struct hnae3_handle *handle, const char *cmd_buf)
- {
-+#define DUMP_REG	"dump reg"
-+
- 	struct hclge_vport *vport = hclge_get_vport(handle);
- 	struct hclge_dev *hdev = vport->back;
- 
-@@ -1111,8 +1117,8 @@ int hclge_dbg_run_cmd(struct hnae3_handle *handle, const char *cmd_buf)
- 		hclge_dbg_dump_qos_buf_cfg(hdev);
- 	} else if (strncmp(cmd_buf, "dump mng tbl", 12) == 0) {
- 		hclge_dbg_dump_mng_table(hdev);
--	} else if (strncmp(cmd_buf, "dump reg", 8) == 0) {
--		hclge_dbg_dump_reg_cmd(hdev, cmd_buf);
-+	} else if (strncmp(cmd_buf, DUMP_REG, strlen(DUMP_REG)) == 0) {
-+		hclge_dbg_dump_reg_cmd(hdev, &cmd_buf[sizeof(DUMP_REG)]);
- 	} else if (strncmp(cmd_buf, "dump reset info", 15) == 0) {
- 		hclge_dbg_dump_rst_info(hdev);
- 	} else if (strncmp(cmd_buf, "dump m7 info", 12) == 0) {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-index d055fda..80e5cc2 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-@@ -4,6 +4,9 @@
- #ifndef __HCLGE_DEBUGFS_H
- #define __HCLGE_DEBUGFS_H
- 
-+#include <linux/etherdevice.h>
-+#include "hclge_cmd.h"
-+
- #define HCLGE_DBG_BUF_LEN	   256
- #define HCLGE_DBG_MNG_TBL_MAX	   64
- 
-@@ -63,11 +66,24 @@ struct hclge_dbg_bitmap_cmd {
- 	};
- };
- 
-+struct hclge_dbg_reg_common_msg {
-+	int msg_num;
-+	int offset;
-+	enum hclge_opcode_type cmd;
-+};
-+
- struct hclge_dbg_dfx_message {
- 	int flag;
- 	char message[60];
- };
- 
-+#define HCLGE_DBG_MAC_REG_TYPE_LEN	32
-+struct hclge_dbg_reg_type_info {
-+	const char *reg_type;
-+	struct hclge_dbg_dfx_message *dfx_msg;
-+	struct hclge_dbg_reg_common_msg reg_msg;
-+};
-+
- #pragma pack()
- 
- static struct hclge_dbg_dfx_message hclge_dbg_bios_common_reg[] = {
--- 
-2.7.4
+Looks better.
 
+> 
+> >   obj-$(CONFIG_VDSO32)		+= vdso32/
+> >   obj-$(CONFIG_PPC_WATCHDOG)	+= watchdog.o
+> >   obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
+> > diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+> > index 2ec825a85f5b..a2dbf216f607 100644
+> > --- a/arch/powerpc/kernel/entry_64.S
+> > +++ b/arch/powerpc/kernel/entry_64.S
+> > @@ -51,8 +51,10 @@
+> >   SYS_CALL_TABLE:
+> >   	.tc sys_call_table[TC],sys_call_table
+> >   
+> > +#ifdef CONFIG_COMPAT
+> >   COMPAT_SYS_CALL_TABLE:
+> >   	.tc compat_sys_call_table[TC],compat_sys_call_table
+> > +#endif  
+> 
+> Can we avoid this ifdef ?
+
+AFAICT it creates reference to non-existent table otherwise.
+
+> 
+> >   
+> >   /* This value is used to mark exception frames on the stack. */
+> >   exception_marker:
+> > diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
+> > index 60436432399f..ffd045e9fb57 100644
+> > --- a/arch/powerpc/kernel/signal.c
+> > +++ b/arch/powerpc/kernel/signal.c
+> > @@ -277,14 +277,15 @@ static void do_signal(struct task_struct *tsk)
+> >   
+> >   	rseq_signal_deliver(&ksig, tsk->thread.regs);
+> >   
+> > +#if !defined(CONFIG_PPC64) || defined(CONFIG_COMPAT)
+> >   	if (is32) {
+> >           	if (ksig.ka.sa.sa_flags & SA_SIGINFO)
+> >   			ret = handle_rt_signal32(&ksig, oldset, tsk);
+> >   		else
+> >   			ret = handle_signal32(&ksig, oldset, tsk);
+> > -	} else {
+> > +	} else  
+> 
+> " if only one branch of a conditional statement is a single statement 
+> [...] use braces in both branches"
+> 
+> Ref 
+> https://www.kernel.org/doc/html/latest/process/coding-style.html#placing-braces-and-spaces
+> 
+> > +#endif /* 32bit */  
+> 
+> Having an #ifdef in a middle of a if/else is gross.
+> 
+> Check what are the possible values for is32. It will be always true 
+> which CONFIG_PPC32.
+> If you can make sure it is always false without CONFIG_COMPAT, you are 
+> done. If not, then combine the if(is32) with something involving 
+> IS_ENABLED(CONFIG_COMPAT).
+
+The value of is32 is not a problem. References to non-existent
+functions could be.
+
+...
+
+> > diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+> > index c84bbd4298a0..b3dacc8bc98d 100644
+> > --- a/arch/powerpc/perf/callchain.c
+> > +++ b/arch/powerpc/perf/callchain.c
+> > @@ -15,7 +15,7 @@
+> >   #include <asm/sigcontext.h>
+> >   #include <asm/ucontext.h>
+> >   #include <asm/vdso.h>
+> > -#ifdef CONFIG_PPC64
+> > +#ifdef CONFIG_COMPAT
+> >   #include "../kernel/ppc32.h"
+
+/srv/kernel/arch/powerpc/perf/../kernel/ppc32.h:50:2: error: unknown type name ‘compat_stack_t’
+
+When required declarations are ifdefed in compat.h
+
+> >   
+> >   static inline int valid_user_sp(unsigned long sp, int is_64)
+> >   {
+> > @@ -341,6 +343,7 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
+> >   
+> >   #endif /* CONFIG_PPC64 */
+> >   
+> > +#if !defined(CONFIG_PPC64) || defined(CONFIG_COMPAT)  
+> 
+> You don't need to opt that out.
+
+You need to opt out here:
+
+/srv/kernel/arch/powerpc/perf/callchain.c:349:22: error: field ‘sctx’ has incomplete type
+  struct sigcontext32 sctx;
+/srv/kernel/arch/powerpc/perf/callchain.c:359:2: error: unknown type name ‘compat_siginfo_t’
+  compat_siginfo_t info;
+...
+> 
+> >   /*
+> >    * Layout for non-RT signal frames
+> >    */
+> > @@ -482,12 +485,15 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+> >   		sp = next_sp;
+> >   	}
+> >   }
+> > +#endif /* 32bit */
+> >   
+> >   void
+> >   perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
+> >   {
+> > -	if (current_is_64bit())
+> > -		perf_callchain_user_64(entry, regs);
+> > -	else
+> > +#if !defined(CONFIG_PPC64) || defined(CONFIG_COMPAT)
+> > +	if (!current_is_64bit())
+> >   		perf_callchain_user_32(entry, regs);
+> > +	else
+> > +#endif
+> > +		perf_callchain_user_64(entry, regs);  
+> 
+> Please rewrite using  IS_ENABLED() instead of #ifdefs.
+
+And ifdef here.
+
+The ifdefs could be potentially reduced in some places, though.
+
+Thanks
+
+Michal
