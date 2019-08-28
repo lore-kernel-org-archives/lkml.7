@@ -2,339 +2,204 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA9BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A33C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 433A92173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937652173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566975598;
-	bh=NGL07/RlsYm6oKuw1LKBdLs+szOmJeDdjvssJT1+Fjg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=F86uPXFGGAPP5shHm6zx4hJu6Bne01MvfulpD7YOEqVb4BZVxgUW3953/CsKcDU7K
-	 O/Fn4xfomiXwG4Z8scRMEJOtwCe8UM1db0kzqoG/Nr/zKaJxESFYfqt6s8yM9mJn62
-	 wc8bcJSDowHRbZa2gMt9ADXKKkWoYIcw1zDJhCbQ=
+	s=default; t=1566975601;
+	bh=Ty++oYHUuN433N4oLuW9RPNzOY4pBDYjTBWFWRi/gqI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YnaDmHi/8c8h/LqncQ520rG4nojMgcuN4uUogBh/TwvqRVFqH8qbQbbkO4OY9/OtR
+	 dW3W6IwkxpJStZ6NROpZbOLKlFx5HI7ypLKE00E3Tauzt1mv4FGEYkMh8Tla7g8WZc
+	 HgIXpK3DsQY20/4ma+6qwvB2ITw8Nvqc3cLlYJag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfH1G75 convert rfc822-to-8bit (ORCPT
+        id S1726691AbfH1HAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 02:59:57 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:53406 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726209AbfH1G74 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 02:59:56 -0400
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1i2rvi-0002v3-Uy; Wed, 28 Aug 2019 08:59:43 +0200
-Date:   Wed, 28 Aug 2019 07:59:40 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, chenhc@lemote.com,
-        paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.co, devicetree@vger.kernel.org
-Subject: Re: [PATCH 04/13] irqchip: Add driver for Loongson-3 I/O interrupt
- controller
-Message-ID: <20190828075940.549e1983@why>
-In-Reply-To: <82c4b9ed-7270-74ce-6e10-165182e540dd@flygoat.com>
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
-        <20190827085302.5197-5-jiaxun.yang@flygoat.com>
-        <e6a5862f-0f6c-cab0-9f4a-51b7889d38e7@kernel.org>
-        <82c4b9ed-7270-74ce-6e10-165182e540dd@flygoat.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 28 Aug 2019 03:00:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55792 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726209AbfH1G76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 02:59:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ECFBCAD3B;
+        Wed, 28 Aug 2019 06:59:56 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 08:59:55 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Edward Chron <echron@arista.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
+Subject: Re: [PATCH 00/10] OOM Debug print selection and additional
+ information
+Message-ID: <20190828065955.GB7386@dhcp22.suse.cz>
+References: <20190826193638.6638-1-echron@arista.com>
+ <20190827071523.GR7538@dhcp22.suse.cz>
+ <CAM3twVRZfarAP6k=LLWH0jEJXu8C8WZKgMXCFKBZdRsTVVFrUQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org, chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM3twVRZfarAP6k=LLWH0jEJXu8C8WZKgMXCFKBZdRsTVVFrUQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 28 Aug 2019 08:27:05 +0800
-Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
-
-> On 2019/8/28 上午12:45, Marc Zyngier wrote:
-> > On 27/08/2019 09:52, Jiaxun Yang wrote:  
-> >> This controller appeared on Loongson-3 family of chips as the primary
-> >> package interrupt source.
-> >>
-> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> >> ---
-> >>   drivers/irqchip/Kconfig          |   9 ++
-> >>   drivers/irqchip/Makefile         |   1 +
-> >>   drivers/irqchip/irq-ls3-iointc.c | 216 +++++++++++++++++++++++++++++++
-> >>   3 files changed, 226 insertions(+)
-> >>   create mode 100644 drivers/irqchip/irq-ls3-iointc.c
-> >>
-> >> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> >> index 80e10f4e213a..8d9eac5fd4a7 100644
-> >> --- a/drivers/irqchip/Kconfig
-> >> +++ b/drivers/irqchip/Kconfig
-> >> @@ -471,6 +471,15 @@ config TI_SCI_INTA_IRQCHIP
-> >>   	  If you wish to use interrupt aggregator irq resources managed by the
-> >>   	  TI System Controller, say Y here. Otherwise, say N.  
-> >>   >> +config LS3_IOINTC  
-> >> +	bool "Loongson3 I/O Interrupt Controller"
-> >> +	depends on MACH_LOONGSON64
-> >> +	default y
-> >> +	select IRQ_DOMAIN
-> >> +	select GENERIC_IRQ_CHIP
-> >> +	help
-> >> +	  Support for the Loongson-3 I/O Interrupt Controller.
-> >> +
-> >>   endmenu  
-> >>   >>   config SIFIVE_PLIC  
-> >> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> >> index 8d0fcec6ab23..49ecb8d38138 100644
-> >> --- a/drivers/irqchip/Makefile
-> >> +++ b/drivers/irqchip/Makefile
-> >> @@ -102,3 +102,4 @@ obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
-> >>   obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
-> >>   obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
-> >>   obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
-> >> +obj-$(CONFIG_LS3_IOINTC)			+= irq-ls3-iointc.o
-> >> diff --git a/drivers/irqchip/irq-ls3-iointc.c b/drivers/irqchip/irq-ls3-iointc.c
-> >> new file mode 100644
-> >> index 000000000000..1fc3c41c57d9
-> >> --- /dev/null
-> >> +++ b/drivers/irqchip/irq-ls3-iointc.c
-> >> @@ -0,0 +1,216 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + *  Copyright (C) 2019, Jiaxun Yang <jiaxun.yang@flygoat.com>
-> >> + *  Loongson-3 IOINTC IRQ support
-> >> + */
-> >> +
-> >> +#include <linux/errno.h>
-> >> +#include <linux/init.h>
-> >> +#include <linux/types.h>
-> >> +#include <linux/interrupt.h>
-> >> +#include <linux/ioport.h>
-> >> +#include <linux/irqchip.h>
-> >> +#include <linux/of_address.h>
-> >> +#include <linux/of_irq.h>
-> >> +#include <linux/io.h>
-> >> +#include <linux/smp.h>
-> >> +#include <linux/irqchip/chained_irq.h>
-> >> +
-> >> +
-> >> +#define LS3_CHIP_IRQ	32
-> >> +
-> >> +#define LS3_INTC_CHIP_START	0x20
-> >> +
-> >> +#define LS3_REG_INTC_STATUS	0x00
-> >> +#define LS3_REG_INTC_EN_STATUS	0x04
-> >> +#define LS3_REG_INTC_ENABLE	0x08
-> >> +#define LS3_REG_INTC_DISABLE	0x0c
-> >> +#define LS3_REG_INTC_POL	0x10
-> >> +#define LS3_REG_INTC_EDGE	0x18
-> >> +
-> >> +#define LS3_MAP_CORE_INT(x, y)	(u8)(BIT(x) | (BIT(y) << 4))
-> >> +
-> >> +
-> >> +struct ls3_iointc_priv {
-> >> +	struct irq_domain	*domain;
-> >> +	void __iomem		*intc_base;
-> >> +};
-> >> +
-> >> +
-> >> +static void ls3_io_chained_handle_irq(struct irq_desc *desc)
-> >> +{
-> >> +	struct ls3_iointc_priv *priv = irq_desc_get_handler_data(desc);
-> >> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> >> +	u32 pending;
-> >> +
-> >> +	chained_irq_enter(chip, desc);
-> >> +
-> >> +	pending = readl(priv->intc_base + LS3_REG_INTC_EN_STATUS) &
-> >> +		readl(priv->intc_base + LS3_REG_INTC_STATUS);  
-> > Reading the enabled status from the HW on each interrupt? I'm sure
-> > that's pretty cheap...  
-> Seems expensive but to deal with a buggy hardware... That's worthy.
-
-How broken is it? You very much seem to rely on the HW being correct
-here, since you trust it exclusively. I'd expect the enable mask to be
-a SW construct if you didn't blindly trust it.
-
-And if this is truly the right way to do it, please document the
-various problems with the controller so that we don't break it at a
-later time.
-
-> >  
-> >> +
-> >> +	if (!pending)
-> >> +		spurious_interrupt();
-> >> +
-> >> +	while (pending) {
-> >> +		int bit = __ffs(pending);
-> >> +
-> >> +		generic_handle_irq(irq_find_mapping(priv->domain, bit));
-> >> +		pending &= ~BIT(bit);
-> >> +	}
-> >> +
-> >> +	chained_irq_exit(chip, desc);
-> >> +}
-> >> +
-> >> +
-> >> +static void ls_intc_set_bit(struct irq_chip_generic *gc,
-> >> +							unsigned int offset,
-> >> +							u32 mask, bool set)
-> >> +{
-> >> +	if (set)
-> >> +		writel(readl(gc->reg_base + offset) | mask,
-> >> +		gc->reg_base + offset);  
-> > Please correctly align the second line.
-> >  
-> >> +	else
-> >> +		writel(readl(gc->reg_base + offset) & ~mask,
-> >> +		gc->reg_base + offset);
-> >> +}  
-> > Have you tried this on a SMP system? A RMW without locking is unlikely
-> > to go down very well.
-> >  
-> >> +
-> >> +static int ls_intc_set_type(struct irq_data *data, unsigned int type)
-> >> +{
-> >> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
-> >> +	u32 mask = data->mask;
-> >> +
-> >> +	switch (type) {
-> >> +	case IRQ_TYPE_LEVEL_HIGH:
-> >> +		ls_intc_set_bit(gc, LS3_REG_INTC_EDGE, mask, false);
-> >> +		ls_intc_set_bit(gc, LS3_REG_INTC_POL, mask, true);
-> >> +		break;
-> >> +	case IRQ_TYPE_LEVEL_LOW:
-> >> +		ls_intc_set_bit(gc, LS3_REG_INTC_EDGE, mask, false);
-> >> +		ls_intc_set_bit(gc, LS3_REG_INTC_POL, mask, false);
-> >> +		break;
-> >> +	case IRQ_TYPE_EDGE_RISING:
-> >> +		ls_intc_set_bit(gc, LS3_REG_INTC_EDGE, mask, true);
-> >> +		ls_intc_set_bit(gc, LS3_REG_INTC_POL, mask, true);
-> >> +		break;
-> >> +	case IRQ_TYPE_EDGE_FALLING:
-> >> +		ls_intc_set_bit(gc, LS3_REG_INTC_EDGE, mask, true);
-> >> +		ls_intc_set_bit(gc, LS3_REG_INTC_POL, mask, false);
-> >> +		break;
-> >> +	default:
-> >> +		return -EINVAL;
-> >> +	}
-> >> +
-> >> +	irqd_set_trigger_type(data, type);
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +int __init ls3_iointc_of_init(struct device_node *node,
-> >> +				       struct device_node *parent)
-> >> +{
-> >> +	struct irq_chip_generic *gc;
-> >> +	struct irq_chip_type *ct;
-> >> +	struct ls3_iointc_priv *priv;
-> >> +	int parent_irq, err = 0;
-> >> +	int core = cpu_logical_map(smp_processor_id());  
-> > Are you guaranteed to be in a non-preemptible section here?  
-> Yes, as irqchip will be initialized even earlier than clockevent. There must be non-preemptible.
-> >  
-> >> +	int ip = 0;
-> >> +	int i;
-> >> +	const u32 *map_ip, *map_core;
-> >> +
-> >> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> >> +	if (!priv)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	priv->intc_base = of_iomap(node, 0);
-> >> +	if (!priv->intc_base) {
-> >> +		err = -ENODEV;
-> >> +		goto out_free_priv;
-> >> +	}
-> >> +
-> >> +	map_ip = of_get_property(node, "loongson,map-ip", NULL);
-> >> +	if (!map_ip)
-> >> +		goto no_ip;
-> >> +	else if ((*map_ip) > 5)
-> >> +		pr_err("* %pOF loongson,map-ip is invalid\n", node);
-> >> +	else
-> >> +		ip = (*map_ip);  
-> > What is this "ip"?  
-> The interrupt line number of CPU (parent intc). As MIPS called CPU interrupt registers "CAUSE_IP".
-
-Then how comes this comes from the irqchip's DT node? This should be
-part of the endpoint's interrupt specifier.
-
-> >> +no_ip:
-> >> +
-> >> +	/* If this property does not exist or invalid,
-> >> +	 * we map all IRQs to bootcore.
-> >> +	 */  
-> > Comment format.
-> >  
-> >> +	map_core = of_get_property(node, "loongson,map-core", NULL);
-> >> +	if (!map_core)
-> >> +		goto no_core;
-> >> +	else if ((*map_core) > 3)
-> >> +		pr_err("* %pOF loongson,map-core is invalid\n", node);
-> >> +	else
-> >> +		core = (*map_core);
-> >> +no_core:
-> >> +
-> >> +	parent_irq = irq_of_parse_and_map(node, 0);
-> >> +	if (!parent_irq) {
-> >> +		pr_err("ls3-iointc: unable to get parent irq\n");
-> >> +		err =  -ENODEV;
-> >> +		goto out_iounmap;
-> >> +	}
-> >> +	/* Set up an IRQ domain */
-> >> +	priv->domain = irq_domain_add_linear(node, 32, &irq_generic_chip_ops,
-> >> +					     NULL);
-> >> +	if (!priv->domain) {
-> >> +		pr_err("ls3-iointc: cannot add IRQ domain\n");
-> >> +		err = -ENOMEM;
-> >> +		goto out_iounmap;
-> >> +	}
-> >> +
-> >> +	err = irq_alloc_domain_generic_chips(priv->domain, 32, 1,
-> >> +		node->full_name, handle_level_irq,
-> >> +		IRQ_NOPROBE, 0, 0);
-> >> +	if (err) {
-> >> +		pr_err("ls3-iointc: unable to register IRQ domain\n");
-> >> +		err = -ENOMEM;
-> >> +		goto out_free_domain;
-> >> +	}
-> >> +
-> >> +	/*
-> >> +	 * Q: Why don't we set IRQ affinity by these registers?
-> >> +	 * A: Hardware IRQ delivery is seriously broken,
-> >> +	 *    so we map all IRQs to a fixed core.
-> >> +	 */
-> >> +	pr_info("ls3-iointc: Mapping All ls3-iointc IRQ to core %d, IP %d\n", core, ip);
-> >> +	for (i = 0; i < LS3_CHIP_IRQ; i++)
-> >> +		writeb(LS3_MAP_CORE_INT(core, ip), priv->intc_base + 0x1 * i);  
-> > This doesn't make much sense. If this is a chained irqchip, all
-> > interrupts end-up on a single CPU (the one that handle the parent IRQ).
-> > So how comes there is even a choice of picking a target CPU?  
+On Tue 27-08-19 18:07:54, Edward Chron wrote:
+> On Tue, Aug 27, 2019 at 12:15 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Mon 26-08-19 12:36:28, Edward Chron wrote:
+> > [...]
+> > > Extensibility using OOM debug options
+> > > -------------------------------------
+> > > What is needed is an extensible system to optionally configure
+> > > debug options as needed and to then dynamically enable and disable
+> > > them. Also for options that produce multiple lines of entry based
+> > > output, to configure which entries to print based on how much
+> > > memory they use (or optionally all the entries).
+> >
+> > With a patch this large and adding a lot of new stuff we need a more
+> > detailed usecases described I believe.
 > 
-> It's parent IRQ (mti,cpu-interrupt-controller) is a percpu IRQ.
+> I guess it would make sense to explain motivation for each OOM Debug
+> option I've sent separately.
+> I see there comments on the patches I will try and add more information there.
+> 
+> An overview would be that we've been collecting information on OOM's
+> over the last 12 years or so.
+> These are from switches, other embedded devices, servers both large and small.
+> We ask for feedback on what information was helpful or could be helpful.
+> We try and add it to make root causing issues easier.
+> 
+> These OOM debug options are some of the options we've created.
+> I didn't port all of them to 5.3 but these are representative.
+> Our latest is kernel is a bit behind 5.3.
+> 
+> >
+> >
+> > [...]
+> >
+> > > Use of debugfs to allow dynamic controls
+> > > ----------------------------------------
+> > > By providing a debugfs interface that allows options to be configured,
+> > > enabled and where appropriate to set a minimum size for selecting
+> > > entries to print, the output produced when an OOM event occurs can be
+> > > dynamically adjusted to produce as little or as much detail as needed
+> > > for a given system.
+> >
+> > Who is going to consume this information and why would that consumer be
+> > unreasonable to demand further maintenance of that information in future
+> > releases? In other words debugfs is not considered a stableAPI which is
+> > OK here but the side effect of any change to these files results in user
+> > visible behavior and we consider that more or less a stable as long as
+> > there are consumers.
+> >
+> > > OOM debug options can be added to the base code as needed.
+> > >
+> > > Currently we have the following OOM debug options defined:
+> > >
+> > > * System State Summary
+> > >   --------------------
+> > >   One line of output that includes:
+> > >   - Uptime (days, hour, minutes, seconds)
+> >
+> > We do have timestamps in the log so why is this needed?
+> 
+> 
+> Here is how an OOM report looks when we get it to look at:
+> 
+> Aug 26 09:06:34 coronado kernel: oomprocs invoked oom-killer:
+> gfp_mask=0x100dca(GFP_HIGHUSER_MOVABLE|__GFP_ZERO), order=0,
+> oom_score_adj=1000
+> Aug 26 09:06:34 coronado kernel: CPU: 1 PID: 2795 Comm: oomprocs Not
+> tainted 5.3.0-rc6+ #33
+> Aug 26 09:06:34 coronado kernel: Hardware name: Compulab Ltd.
+> IPC3/IPC3, BIOS 5.12_IPC3K.PRD.0.25.7 08/09/2018
+> 
+> This shows the date and time, not time of the last boot. The
+> /var/log/messages output is what we often have to look at not raw
+> dmesgs.
 
-But then why is that interrupt described using the "core" property? It
-should be an interrupt specifier, just like any other interrupt.
+This looks more like a configuration of the logging than a kernel
+problem. Kernel does provide timestamps for logs. E.g.
+$ tail -n1 /var/log/kern.log
+Aug 28 08:27:46 tiehlicka kernel: <1054>[336340.954345] systemd-udevd[7971]: link_config: autonegotiation is unset or enabled, the speed and duplex are not writable.
 
-> In design, it allows us to decide affinity at runtime but actually hardware is seriously broken.
+[...]
+> > >   Example output when configured and enabled:
+> > >
+> > > Jul 22 15:20:57 yoursystem kernel: Threads:530 Processes:279 forks_since_boot:2786 procs_runable:2 procs_iowait:0
+> > >
+> > > * ARP Table and/or Neighbour Discovery Table Summary
+> > >   --------------------------------------------------
+> > >   One line of output each for ARP and ND that includes:
+> > >   - Table name
+> > >   - Table size (max # entries)
+> > >   - Key Length
+> > >   - Entry Size
+> > >   - Number of Entries
+> > >   - Last Flush (in seconds)
+> > >   - hash grows
+> > >   - entry allocations
+> > >   - entry destroys
+> > >   - Number lookups
+> > >   - Number of lookup hits
+> > >   - Resolution failures
+> > >   - Garbage Collection Forced Runs
+> > >   - Table Full
+> > >   - Proxy Queue Length
+> > >
+> > >   Example output when configured and enabled (for both):
+> > >
+> > > ... kernel: neighbour: Table: arp_tbl size:   256 keyLen:  4 entrySize: 360 entries:     9 lastFlush:  1721s hGrows:     1 allocs:     9 destroys:     0 lookups:   204 hits:   199 resFailed:    38 gcRuns/Forced: 111 /  0 tblFull:  0 proxyQlen:  0
+> > >
+> > > ... kernel: neighbour: Table:  nd_tbl size:   128 keyLen: 16 entrySize: 368 entries:     6 lastFlush:  1720s hGrows:     0 allocs:     7 destroys:     1 lookups:     0 hits:     0 resFailed:     0 gcRuns/Forced: 110 /  0 tblFull:  0 proxyQlen:  0
+> >
+> > Again, why is this needed particularly for the OOM event? I do
+> > understand this might be useful system health diagnostic information but
+> > how does this contribute to the OOM?
+> >
+> 
+> It is example of some system table information we print.
+> Other adjustable table information may be useful as well.
+> These table sizes are often adjustable and collecting stats on usage
+> helps determine if settings are appropriate.
+> The value during OOM events is very useful as usage varies.
+> We also collect the same stats like this from user code periodically
+> and can compare these.
 
-I understand the HW is terrible. But the binding looks pretty bad too.
-This needs fixing.
+I suspect that this is a very narrow usecase and there are more like
+that and I can imagine somebody with a different workload could come up
+with yet another set of useful information to print. The more I think of these
+additional modules the more I am convinced that this "plugin" architecture
+is a wrong approach. Why? Mostly because all the code maintenance burden
+is likely to be not worth all the niche usecase. This all has to be more
+dynamic and ideally scriptable so that the code in the kernel just
+provides the basic information and everybody can just hook in there and
+dump whatever additional information is needed. Sounds like something
+that eBPF could fit in, no? Have you considered that?
 
-	M.
+[...]
+
+Skipping over many useful stuff. I can reassure you that my experience
+with OOM debugging has been a real pain at times (e.g. when there is
+simply no way to find out who has eaten all the memory because it is not
+accounted anywhere) as well and I completely understand where you are
+coming from. There is definitely a room for improvements we just have to
+find a way how to get there.
+
+Thanks!
 -- 
-Without deviation from the norm, progress is not possible.
+Michal Hocko
+SUSE Labs
