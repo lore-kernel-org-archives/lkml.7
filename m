@@ -2,74 +2,56 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E945C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B31C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B81220679
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A629D22CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 23:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfH1XOy (ORCPT
+        id S1727073AbfH1XRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 19:14:54 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57671 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfH1XOy (ORCPT
+        Wed, 28 Aug 2019 19:17:40 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:38656 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbfH1XRk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 19:14:54 -0400
-Received: from cpc129250-craw9-2-0-cust139.know.cable.virginm.net ([82.43.126.140] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i379O-0000SZ-K7; Wed, 28 Aug 2019 23:14:50 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][V2] arcnet: capmode: remove redundant assignment to pointer pkt
-Date:   Thu, 29 Aug 2019 00:14:50 +0100
-Message-Id: <20190828231450.22424-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Wed, 28 Aug 2019 19:17:40 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5FE10153B3159;
+        Wed, 28 Aug 2019 16:17:38 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 16:17:35 -0700 (PDT)
+Message-Id: <20190828.161735.1528060932193718727.davem@davemloft.net>
+To:     hayeswang@realtek.com
+Cc:     netdev@vger.kernel.org, nic_swsd@realtek.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v4 0/2] r8152: fix side effect
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1394712342-15778-323-Taiwan-albertk@realtek.com>
+References: <1394712342-15778-314-Taiwan-albertk@realtek.com>
+        <1394712342-15778-323-Taiwan-albertk@realtek.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 28 Aug 2019 16:17:39 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Hayes Wang <hayeswang@realtek.com>
+Date: Wed, 28 Aug 2019 20:56:11 +0800
 
-Pointer pkt is being initialized with a value that is never read
-and pkt is being re-assigned a little later on. The assignment is
-redundant and hence can be removed.
+> v4:
+> Add Fixes tag for both patch #1 and #2.
 
-Addresses-Coverity: ("Ununsed value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
+I applied v3, sorry.
 
-V2: fix typo in patch description, pkg -> pkt
-
----
- drivers/net/arcnet/capmode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/arcnet/capmode.c b/drivers/net/arcnet/capmode.c
-index b780be6f41ff..c09b567845e1 100644
---- a/drivers/net/arcnet/capmode.c
-+++ b/drivers/net/arcnet/capmode.c
-@@ -44,7 +44,7 @@ static void rx(struct net_device *dev, int bufnum,
- {
- 	struct arcnet_local *lp = netdev_priv(dev);
- 	struct sk_buff *skb;
--	struct archdr *pkt = pkthdr;
-+	struct archdr *pkt;
- 	char *pktbuf, *pkthdrbuf;
- 	int ofs;
- 
--- 
-2.20.1
-
+I think it is OK as I will backport things to v5.2 -stable anyways.
