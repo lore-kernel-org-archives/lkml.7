@@ -2,151 +2,107 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF58CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A62C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA43214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:32:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YpmxYUVQ"
+	by mail.kernel.org (Postfix) with ESMTP id CD7E92339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:32:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567013560;
+	bh=g4OCrTwVa9bGHj9tnxdp3jF6CcqJ8f1XiF9bSopoU3g=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=cL6NdGHv8yZnI/8mzM4fohverEbZfjZbkqmtTKsh1OVtqR6O7fLr4ifw8Xfug0QGh
+	 zAauujBSi4jGHcmGn0HTVO2eib9Ird5ZdEMJTqqKFcDxHTD6mP2s/RWeZ6aQGZ5hUG
+	 i8vcYY0cWP8Z6IAIVDH3vlIa1J1FZ+gaYZat9oIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfH1RcT (ORCPT
+        id S1726735AbfH1Rcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:32:19 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39495 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfH1RcT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:32:19 -0400
-Received: by mail-lj1-f193.google.com with SMTP id x4so325741ljj.6
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:32:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8qd9uDtDKAYrGf5FVzWTysgwl4bOPCeZQ18mj4Gsi3k=;
-        b=YpmxYUVQN4Bc3N0gHlrPqxI/acBLSzcAUD5kCstyYybhjimnPZjcT4bxa6oXHpaowL
-         3wEQqGbTomQydS0dxVAUQm90+u881tmpxMOpdXCouusYEi1fln0XtVtiqSnMq0f6/Ooq
-         6mrGOXKOIqAudzqxItKkvb9FVIQjC5X+NFiIwtw+vilykvfw+nZTVx/3CENytKepIsd4
-         KN0thSj9D0S61f9J76MdK3u60PYRqeVJHTozaE7n5Glh2QYZwhBwwB2KuuYw0q13zm4+
-         /ZORwWQIygDPaH0hfPP/nEARvrPhzRhzByfp9HLsBw0mK4HtbxFBAcqmY2VrbLhTwN94
-         m0yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8qd9uDtDKAYrGf5FVzWTysgwl4bOPCeZQ18mj4Gsi3k=;
-        b=F3MYnCjfFUOGJUCO828XJKKAhaPtOumame26CDSHnhCKzRbXCSFQA0QJmTlxPCDttL
-         dZg+EQYS5h1+1b1iKGkeKDc7qvv1Jfgv828zbB3PRbgk8FgjcQIxDVsN5lV5Nq+EV2Fe
-         lOcNlbA4CaCYV+YrbO3yeU+hZD2GHw67FAGHQlpQgteCUJc4/AWqeN0inNM6WcTC5XnU
-         DiFBU40tdI3qDNZGqCBVqfMDvdNNbMHQOsMKUwPmbcNF6yItpiRSvqiag2+kVFfKx6WG
-         eP4TDe5L/Qjs7QnzeZTGHPZs5UOJY0Aishcw6vILVsFCDXQLRF3098MWQu2pALXRzy2k
-         6pRQ==
-X-Gm-Message-State: APjAAAV1a8yyzj/m9FB2+uPOjYP6aoBtRQ8hbJ/8wfeC23Oay4XVxTHp
-        OSc0QbZL8rSZGzX0iH7n0UdLOW6rp/DdY03Gib/W6g==
-X-Google-Smtp-Source: APXvYqxxGgDzLtIMSUYhug4BtQvbD5qbWAUyw3a7t0FA09sestyJmYS8nHkDT3G6XruToS8W8hAnweD4TmSajD4ba7g=
-X-Received: by 2002:a05:651c:1b8:: with SMTP id c24mr2730534ljn.2.1567013536968;
- Wed, 28 Aug 2019 10:32:16 -0700 (PDT)
+        Wed, 28 Aug 2019 13:32:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbfH1Rcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 13:32:39 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5F3222CF8;
+        Wed, 28 Aug 2019 17:32:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567013558;
+        bh=g4OCrTwVa9bGHj9tnxdp3jF6CcqJ8f1XiF9bSopoU3g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=a3rf4aOlbouRot3H7YWNOPjdMdjcSi4kuaOwn9XEDNdNwloLChRW0NRPbuHXR9PXS
+         C6MgP0i2QWJTMl2Pk08Rc1N/ScAAM4oPGmcweVwXtZ/63yqisTC31BDdQGAwJFmL4V
+         GPPOqjrUiOAnRHK07SzjdAwi+63PljkdrwKkNN/A=
+Date:   Wed, 28 Aug 2019 18:32:33 +0100
+From:   Will Deacon <will@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     catalin.marinas@arm.com, marc.zyngier@arm.com, pbonzini@redhat.com,
+        rkrcmar@redhat.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu
+Subject: [GIT PULL] arm64: Fixes for -rc7
+Message-ID: <20190828173233.zqwm5nd4p5xa4jxi@willie-the-truck>
 MIME-Version: 1.0
-References: <20190822021740.15554-1-riel@surriel.com> <20190822021740.15554-9-riel@surriel.com>
-In-Reply-To: <20190822021740.15554-9-riel@surriel.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 28 Aug 2019 19:32:05 +0200
-Message-ID: <CAKfTPtDxHijR3PCOFfxA-r02rf2hVP4LpB=y-9emHS7znTPxTA@mail.gmail.com>
-Subject: Re: [PATCH 08/15] sched,fair: simplify timeslice length code
-To:     Rik van Riel <riel@surriel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>, Paul Turner <pjt@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mel Gorman <mgorman@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 22 Aug 2019 at 04:18, Rik van Riel <riel@surriel.com> wrote:
->
-> The idea behind __sched_period makes sense, but the results do not always.
->
-> When a CPU has one high priority task and a large number of low priority
-> tasks, __sched_period will return a value larger than sysctl_sched_latency,
-> and the one high priority task may end up getting a timeslice all for itself
-> that is also much larger than sysctl_sched_latency.
+Hi Linus,
 
-note that unless you enable sched_feat(HRTICK), the sched_slice is
-mainly used to decide how fast we preempt running task at tick but a
-newly wake up task can preempt it before
+Hot on the heels of our last set of fixes are a few more for -rc7. Two
+of them are fixing issues with our virtual interrupt controller
+implementation in KVM/arm, while the other is a longstanding but
+straightforward kallsyms fix which was been acked by Masami and resolves
+an initialisation failure in kprobes observed on arm64.
 
->
-> The low priority tasks will have their time slices rounded up to
-> sysctl_sched_min_granularity, resulting in an even larger scheduling
-> latency than targeted by __sched_period.
+Please pull, thanks.
 
-Will this not break the fairness between a always running task and a
-short sleeping one with this changes ?
+Will
 
->
-> Simplify the code by simply ripping out __sched_period and always taking
-> fractions of sysctl_sched_latency.
->
-> If a high priority task ends up getting a "too small" time slice compared
-> to low priority tasks, the vruntime scaling ensures that it will simply
-> get scheduled more frequently than low priority tasks.
+--->8
 
-Will you not increase the number of context switch ?
+The following changes since commit b6143d10d23ebb4a77af311e8b8b7f019d0163e6:
 
->
-> Signed-off-by: Rik van Riel <riel@surriel.com>
-> ---
->  kernel/sched/fair.c | 18 +-----------------
->  1 file changed, 1 insertion(+), 17 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 8f8c85c6da9b..74ee22c59d13 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -691,22 +691,6 @@ static inline u64 calc_delta_fair(u64 delta, struct sched_entity *se)
->         return delta;
->  }
->
-> -/*
-> - * The idea is to set a period in which each task runs once.
-> - *
-> - * When there are too many tasks (sched_nr_latency) we have to stretch
-> - * this period because otherwise the slices get too small.
-> - *
-> - * p = (nr <= nl) ? l : l*nr/nl
-> - */
-> -static u64 __sched_period(unsigned long nr_running)
-> -{
-> -       if (unlikely(nr_running > sched_nr_latency))
-> -               return nr_running * sysctl_sched_min_granularity;
-> -       else
-> -               return sysctl_sched_latency;
-> -}
-> -
->  /*
->   * We calculate the wall-time slice from the period by taking a part
->   * proportional to the weight.
-> @@ -715,7 +699,7 @@ static u64 __sched_period(unsigned long nr_running)
->   */
->  static u64 sched_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
->  {
-> -       u64 slice = __sched_period(cfs_rq->nr_running + !se->on_rq);
-> +       u64 slice = sysctl_sched_latency;
->
->         for_each_sched_entity(se) {
->                 struct load_weight *load;
-> --
-> 2.20.1
->
+  arm64: ftrace: Ensure module ftrace trampoline is coherent with I-side (2019-08-16 17:40:03 +0100)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+
+for you to fetch changes up to 82e40f558de566fdee214bec68096bbd5e64a6a4:
+
+  KVM: arm/arm64: vgic-v2: Handle SGI bits in GICD_I{S,C}PENDR0 as WI (2019-08-28 11:21:42 +0100)
+
+----------------------------------------------------------------
+arm64 fixes for -rc7
+
+- Fix GICv2 emulation bug (KVM)
+
+- Fix deadlock in virtual GIC interrupt injection code (KVM)
+
+- Fix kprobes blacklist init failure due to broken kallsyms lookup
+
+----------------------------------------------------------------
+Heyi Guo (1):
+      KVM: arm/arm64: vgic: Fix potential deadlock when ap_list is long
+
+Marc Zyngier (2):
+      kallsyms: Don't let kallsyms_lookup_size_offset() fail on retrieving the first symbol
+      KVM: arm/arm64: vgic-v2: Handle SGI bits in GICD_I{S,C}PENDR0 as WI
+
+ kernel/kallsyms.c             |  6 ++++--
+ virt/kvm/arm/vgic/vgic-mmio.c | 18 ++++++++++++++++++
+ virt/kvm/arm/vgic/vgic-v2.c   |  5 ++++-
+ virt/kvm/arm/vgic/vgic-v3.c   |  5 ++++-
+ virt/kvm/arm/vgic/vgic.c      |  7 +++++++
+ 5 files changed, 37 insertions(+), 4 deletions(-)
