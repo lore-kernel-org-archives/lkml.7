@@ -2,40 +2,38 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DB8C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC01C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9AB22080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4772080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:25:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfH1OZj (ORCPT
+        id S1726820AbfH1OZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:25:39 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5232 "EHLO huawei.com"
+        Wed, 28 Aug 2019 10:25:40 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5233 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726341AbfH1OZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726397AbfH1OZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 28 Aug 2019 10:25:39 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 20AAF72F76A31012F689;
+        by Forcepoint Email with ESMTP id 1C7947BC4F351F1B1D10;
         Wed, 28 Aug 2019 22:25:36 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 28 Aug 2019 22:25:30 +0800
+ 14.3.439.0; Wed, 28 Aug 2019 22:25:29 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 02/12] net: hns3: use macro instead of magic number
-Date:   Wed, 28 Aug 2019 22:23:06 +0800
-Message-ID: <1567002196-63242-3-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 00/12] net: hns3: add some cleanups and optimizations
+Date:   Wed, 28 Aug 2019 22:23:04 +0800
+Message-ID: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
-References: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.212.132]
@@ -45,54 +43,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch uses macro to replace some magic number.
+This patch-set includes cleanups, optimizations and bugfix for
+the HNS3 ethernet controller driver.
 
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 6 ++++--
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h | 3 ++-
- 2 files changed, 6 insertions(+), 3 deletions(-)
+[patch 01/12] adds code optimization for debugfs command "dump reg".
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index a56f388..3b4cd23 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -774,7 +774,8 @@ static void hclge_dbg_dump_qos_buf_cfg(struct hclge_dev *hdev)
- 	rx_priv_wl = (struct hclge_rx_priv_wl_buf *)desc[1].data;
- 	for (i = 0; i < HCLGE_TC_NUM_ONE_DESC; i++)
- 		dev_info(&hdev->pdev->dev,
--			 "rx_priv_wl_tc_%d: high: 0x%x, low: 0x%x\n", i + 4,
-+			 "rx_priv_wl_tc_%d: high: 0x%x, low: 0x%x\n",
-+			 i + HCLGE_TC_NUM_ONE_DESC,
- 			 rx_priv_wl->tc_wl[i].high, rx_priv_wl->tc_wl[i].low);
- 
- 	cmd = HCLGE_OPC_RX_COM_THRD_ALLOC;
-@@ -796,7 +797,8 @@ static void hclge_dbg_dump_qos_buf_cfg(struct hclge_dev *hdev)
- 	rx_com_thrd = (struct hclge_rx_com_thrd *)desc[1].data;
- 	for (i = 0; i < HCLGE_TC_NUM_ONE_DESC; i++)
- 		dev_info(&hdev->pdev->dev,
--			 "rx_com_thrd_tc_%d: high: 0x%x, low: 0x%x\n", i + 4,
-+			 "rx_com_thrd_tc_%d: high: 0x%x, low: 0x%x\n",
-+			 i + HCLGE_TC_NUM_ONE_DESC,
- 			 rx_com_thrd->com_thrd[i].high,
- 			 rx_com_thrd->com_thrd[i].low);
- 	return;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-index 80e5cc2..38b7932 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-@@ -72,9 +72,10 @@ struct hclge_dbg_reg_common_msg {
- 	enum hclge_opcode_type cmd;
- };
- 
-+#define	HCLGE_DBG_MAX_DFX_MSG_LEN	60
- struct hclge_dbg_dfx_message {
- 	int flag;
--	char message[60];
-+	char message[HCLGE_DBG_MAX_DFX_MSG_LEN];
- };
- 
- #define HCLGE_DBG_MAC_REG_TYPE_LEN	32
+[patch 02/12] fixes magic number issues.
+
+[patch 03/12] modifies some parameters about hclge_dbg_dump_tm_map().
+
+[patch 04/12] removes some unused parameters.
+
+[patch 05/12] refactors some logs to make them more readable.
+
+[patch 06/12] makes some resusable codes into functions.
+
+[patch 07/12] fixes some type errors.
+
+[patch 08/12] reduces the waiting time for per TQP reset.
+
+[patch 09/12] implements .process_hw_error for hns3 client.
+
+[patch 10/12] adds phy selftest for HNS3 driver.
+
+[patch 11/12] adds checking for reset interrupt status when reset fails.
+
+[patch 12/12] prevents SSU loopback when running ethtool -t.
+
+Guojia Liao (2):
+  net: hns3: reduce the parameters of some functions
+  net: hns3: fix incorrect type in assignment.
+
+Huazhong Tan (3):
+  net: hns3: use macro instead of magic number
+  net: hns3: modify base parameter of kstrtouint in
+    hclge_dbg_dump_tm_map
+  net: hns3: check reset interrupt status when reset fails
+
+Weihang Li (1):
+  net: hns3: implement .process_hw_error for hns3 client
+
+Yonglong Liu (1):
+  net: hns3: make some reusable codes into a function
+
+Yufeng Mo (3):
+  net: hns3: optimize some log printings
+  net: hns3: add phy selftest function
+  net: hns3: not allow SSU loopback while execute ethtool -t dev
+
+Zhongzhu Liu (2):
+  net: hns3: code optimization for debugfs related to "dump reg"
+  net: hns3: optimize waiting time for TQP reset
+
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   9 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c |  25 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |  24 ++
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |   5 +
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  16 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  28 +++
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c |  54 ++--
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 271 +++++++++++----------
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h |  19 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c |  42 ++--
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |   1 +
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 268 ++++++++++++++++----
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   9 +-
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c   |  10 +-
+ 14 files changed, 546 insertions(+), 235 deletions(-)
+
 -- 
 2.7.4
 
