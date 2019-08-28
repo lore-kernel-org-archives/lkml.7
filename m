@@ -2,112 +2,98 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81431C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7AFC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51AE422CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:11:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1p8mfq1h"
+	by mail.kernel.org (Postfix) with ESMTP id AF4442173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:13:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfH1QLb (ORCPT
+        id S1726569AbfH1QNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:11:31 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49258 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfH1QLa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:11:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jiaOVki4EodwE0pYAnmxrX9Htp9sDWrdGfGGhC7eBQw=; b=1p8mfq1heH7aRTZG74Nc5HL2d
-        fMsHfpOqwz9b5/qasGWHkaD3BbtTroe83h+nKjZ6LMOwkil6b4dZ+t242vxJ3RZlaol1WuAe38MJe
-        +WjUjT5qKa8nw4qvGty8MNmpyEbixidllMivvTePfoV8QhxIl0CBf1J7+wxhLYbKvYnYF/NRUaK5H
-        SvF4O2/po0SQjUVqCKxEhi0Xy/9YOe0RCERHvQAPork+fS9XNwwYfI9rDfTQDRDlDLDptIpLECM9w
-        cIUsUL6TEGoZKiNwNSmC5DFdNwhJIUNT7WOqdSdkGABZox6XA0dATArsuy16FLcma9NUTAvMT7oK4
-        1QIiKHk4Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i30Xd-0005iz-2x; Wed, 28 Aug 2019 16:11:25 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 483CB3074C6;
-        Wed, 28 Aug 2019 18:10:49 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3F6BD20230B2E; Wed, 28 Aug 2019 18:11:23 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 18:11:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-        x86@kernel.org
-Subject: [PATCH] x86/math64: Provide a sane mul_u64_u32_div() implementation
- for x86_64
-Message-ID: <20190828161123.GQ2386@hirez.programming.kicks-ass.net>
-References: <20190826144740.10163-1-kan.liang@linux.intel.com>
- <20190826144740.10163-4-kan.liang@linux.intel.com>
- <20190828151921.GD17205@worktop.programming.kicks-ass.net>
+        Wed, 28 Aug 2019 12:13:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55768 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726450AbfH1QNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 12:13:35 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 458FA8AC6F9;
+        Wed, 28 Aug 2019 16:13:35 +0000 (UTC)
+Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1E2055D6B0;
+        Wed, 28 Aug 2019 16:13:33 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 11:13:31 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Aug 27 (objtool)
+Message-ID: <20190828161331.kvikro257blxtzu5@treble>
+References: <20190827190526.6f27e763@canb.auug.org.au>
+ <6c42e32f-901d-be78-e69b-cb9ff8703932@infradead.org>
+ <20190827155911.ct2zzo2zhcrauf3z@treble>
+ <2e8b18a0-a09c-b67e-c99f-45066ab9d511@infradead.org>
+ <20190828155147.v6eowc7rr7upr7dr@treble>
+ <f354f4be-99c7-346f-c7c5-ac5ce8a72a16@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190828151921.GD17205@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f354f4be-99c7-346f-c7c5-ac5ce8a72a16@infradead.org>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Wed, 28 Aug 2019 16:13:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 05:19:21PM +0200, Peter Zijlstra wrote:
-> On Mon, Aug 26, 2019 at 07:47:35AM -0700, kan.liang@linux.intel.com wrote:
-
-> > +	return  mul_u64_u32_div(slots, val, 0xff);
+On Wed, Aug 28, 2019 at 09:05:18AM -0700, Randy Dunlap wrote:
+> On 8/28/19 8:51 AM, Josh Poimboeuf wrote:
+> > On Tue, Aug 27, 2019 at 12:05:42PM -0700, Randy Dunlap wrote:
+> >> On 8/27/19 8:59 AM, Josh Poimboeuf wrote:
+> >>> On Tue, Aug 27, 2019 at 08:40:07AM -0700, Randy Dunlap wrote:
+> >>>> On 8/27/19 2:05 AM, Stephen Rothwell wrote:
+> >>>>> Hi all,
+> >>>>>
+> >>>>> Changes since 20190826:
+> >>>>>
+> >>>>
+> >>>> on x86_64:
+> >>>>
+> >>>> arch/x86/kvm/vmx/vmx.o: warning: objtool: vmx_handle_exit_irqoff()+0x33: unreachable instruction
+> >>>>
+> >>>>> gcc --version
+> >>>> gcc (SUSE Linux) 7.4.0
+> >>>>
+> >>>>
+> >>>> want more info?
+> >>>
+> >>> Yes, can you provide the .o and the .config?
+> >>>
+> >>
+> >> Sure.  The .o was 508KB, so I compressed it.
+> > 
+> > Thanks Randy.  Here's a tentative fix.  I need to make sure it doesn't
+> > break anything else.
 > 
-> But also; x86_64 seems to lack a sane implementation of that function,
-> and it currently compiles into utter crap (it can be 2 instructions).
+> Works for me on the reported failure.  Thanks.
+> 
+> Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
----
-Subject: x86/math64: Provide a sane mul_u64_u32_div() implementation for x86_64
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Wed Aug 28 17:39:46 CEST 2019
+Turns out this patch does break something:
 
-On x86_64 we can do a u64 * u64 -> u128 widening multiply followed by
-a u128 / u64 -> u64 division to implement a sane version of
-mul_u64_u32_div().
+  arch/x86/xen/enlighten_pv.o: warning: objtool: xen_cpuid()+0x25: can't find jump dest instruction at .text+0x9c
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/include/asm/div64.h |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+I'll need to figure out a better way to whitelist that
+XEN_EMULATE_PREFIX fake instruction thing.  I'll probably just teach
+the objtool decoder about it.
 
---- a/arch/x86/include/asm/div64.h
-+++ b/arch/x86/include/asm/div64.h
-@@ -73,6 +73,19 @@ static inline u64 mul_u32_u32(u32 a, u32
- 
- #else
- # include <asm-generic/div64.h>
-+
-+static inline u64 mul_u64_u32_div(u64 a, u32 mul, u32 div)
-+{
-+	u64 q;
-+
-+	asm ("mulq %2; divq %3" : "=a" (q)
-+				: "a" (a), "rm" (mul), "rm" (div)
-+				: "rdx");
-+
-+	return q;
-+}
-+#define mul_u64_u32_div	mul_u64_u32_div
-+
- #endif /* CONFIG_X86_32 */
- 
- #endif /* _ASM_X86_DIV64_H */
+-- 
+Josh
