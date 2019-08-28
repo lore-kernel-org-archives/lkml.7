@@ -2,131 +2,399 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F22C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BFAC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E3022DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF492189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:42:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a9LWQsxV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfH1UmN (ORCPT
+        id S1727045AbfH1Umz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 16:42:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:36228 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726583AbfH1UmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 16:42:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AF63337;
-        Wed, 28 Aug 2019 13:42:12 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF79F3F718;
-        Wed, 28 Aug 2019 13:42:10 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 21:42:08 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Fawad Lateef <fawadlateef@gmail.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Andy Gross <agross@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: *_pcie_establish_link() usage
-Message-ID: <20190828204208.GB7329@e121166-lin.cambridge.arm.com>
-References: <20190801212529.GE151852@google.com>
- <20190828130056.GA4550@google.com>
+        Wed, 28 Aug 2019 16:42:55 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37267 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbfH1Umz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 16:42:55 -0400
+Received: by mail-ot1-f68.google.com with SMTP id f17so1203607otq.4
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 13:42:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gyXGeGM3qNFrB5NaUrrtvt6KfxMRkmPmPa7zh7Lf/Ws=;
+        b=a9LWQsxVfm6q156CbfV6/AA8rNqpUHcDWtN7LJ05uIdu6lelSnWM/l5JALpLmF6SKj
+         bGz8NqfVAHgIhYlIUFMImNUhFxzHE5TfQ7//B/9iq2tEBDlJAblaAq1G4cW9bqTvHryo
+         7cukJbsO3AhEt2Lt3zmPAyxc7EBMlxjgFBy1ItRx/ipdrnC6dPnOLpy2PgkhF8ExUjyU
+         LP0HACfxuBtreGtMkdTCWfAZyVOb5iT49oq583JsDyXuxY/HuQWsoogGK4qoUmbEZ1TL
+         H9nfiepJfXRZfSRns7XTV4GC+dnaM98FoQ7qBhSEPxfFNT4fOqmTYfVZzulK2gkGY/Nd
+         xuUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gyXGeGM3qNFrB5NaUrrtvt6KfxMRkmPmPa7zh7Lf/Ws=;
+        b=kLmTGNYjR6xZmJJ6uCzpgM9VLOUJUZdRLqShw3j3Va9itl5QtA1sbb61UnSAs1L39Q
+         lXDc89befljvpG7kOofWCoNrm8QQIXcI8ONUtVhkNk43l5LR/Xw98ccnA9SsGxxiBKqw
+         QB/78ELTq9NKGxCUIIbCF/nL+TR6otm0ZOyTogQcy7sukuc8kB9HQD7YqAfYwi6CpuMn
+         A649smebw/oEmcWw3lv0TnUFP1BOzJXPKmHvivbm+sKyOdzXMWLGWNlfBUfKc8bRbJt9
+         uxW5UwNQ4sBoO1YUynv3HKEUsEN+ENgsIpZVuydia4LyHpGm7XiqO2hJX9y7srYx7bGd
+         Wa3g==
+X-Gm-Message-State: APjAAAV8kqmxqVdZU3a82Ch7lMMxBxwqWMrEO9LBb8HXnN1wT0hxhIgf
+        NUpSFYEV8iAxFEin6SqZzraM6UpSIP7SFmZ+c/GN3g==
+X-Google-Smtp-Source: APXvYqwZYnf+72BEPbxaq/j3biRONIoTPQdoZMBdfJ8oeckRqbO07vVfI+WCzSYnYEbDCEPZNAwBVtZyZLWQjvysFII=
+X-Received: by 2002:a9d:3b3:: with SMTP id f48mr5004135otf.35.1567024973722;
+ Wed, 28 Aug 2019 13:42:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828130056.GA4550@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190827204152.114609-1-hridya@google.com> <20190827204152.114609-5-hridya@google.com>
+ <20190828130759.4b4gtzf2jpi5c46y@wittgenstein> <CAHRSSEw3Z6Wg1dsXmJei-o=FRj1U0Ys9_WHRbB4KTCCwjntjeQ@mail.gmail.com>
+In-Reply-To: <CAHRSSEw3Z6Wg1dsXmJei-o=FRj1U0Ys9_WHRbB4KTCCwjntjeQ@mail.gmail.com>
+From:   Hridya Valsaraju <hridya@google.com>
+Date:   Wed, 28 Aug 2019 13:42:17 -0700
+Message-ID: <CA+wgaPOSkzkQyYwgXMwZxwNadqNR7z3wibABG=6wRtQ4spbeWA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] binder: Add binder_proc logging to binderfs
+To:     Todd Kjos <tkjos@google.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 08:00:56AM -0500, Bjorn Helgaas wrote:
-> On Thu, Aug 01, 2019 at 04:25:29PM -0500, Bjorn Helgaas wrote:
-> > Hi,
-> > 
-> > I got the following dmesg log from Fawad [1]:
-> > 
-> >   imx6q-pcie 1ffc000.pcie: host bridge /soc/pcie@1ffc000 ranges:
-> >   imx6q-pcie 1ffc000.pcie:    IO 0x01f80000..0x01f8ffff -> 0x00000000
-> >   imx6q-pcie 1ffc000.pcie:   MEM 0x01000000..0x01efffff -> 0x01000000
-> >   imx6q-pcie 1ffc000.pcie: Link up
-> >   imx6q-pcie 1ffc000.pcie: Link: Gen2 disabled
-> >   imx6q-pcie 1ffc000.pcie: Link up, Gen1
-> >   imx6q-pcie 1ffc000.pcie: PCI host bridge to bus 0000:00
-> >   pci 0000:00:00.0: [16c3:abcd] type 01 class 0x060400
-> >   pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> > 
-> > This is unrelated to the problem Fawad is working on, but the above
-> > looks wrong to me because it associates the "Link up" and link speed
-> > info with the host bridge (imx6q-pcie 1ffc000.pcie), not the Root Port
-> > (pci 0000:00:00.0).
-> > 
-> > I see that *_pcie_establish_link() is generally called from
-> > *_pcie_host_init(), typically via the struct
-> > dw_pcie_host_ops.host_init pointer, e.g.,
-> > 
-> >   dra7xx_pcie_probe
-> >     dra7xx_add_pcie_port(dra7xx)
-> >       struct dw_pcie *pci = dra7xx->pci
-> >       struct pcie_port *pp = &pci->pp
-> >       dw_pcie_host_init(struct pcie_port *pp)
-> > 	bridge = devm_pci_alloc_host_bridge
-> > 	devm_of_pci_get_host_bridge_resources
-> > 	pp->ops->host_init(pp)
-> > 	  dra7xx_pcie_host_init               # .host_init
-> > 	    dra7xx_pcie_establish_link        # <--- bring up link
-> > 	    dw_pcie_wait_for_link
-> > 	pci_scan_root_bus_bridge(bridge)      # <--- enumerate
-> > 	pp->root_bus = bridge->bus
-> > 	pci_bus_add_devices(pp->root_bus)
-> > 
-> > AFAICT, the *_pcie_establish_link() functions all operate on a single
-> > PCIe link, i.e., they are bringing up the link going downstream from a
-> > single Root Port.
-> > 
-> > It looks like this only allows a single Root Port per struct dw_pcie
-> > device.  Is that true?  *Should* that be true?
-> > 
-> > It looks like we bring up the link before enumerating.  In some cases,
-> > (meson_pcie_host_init(), qcom_pcie_host_init(),
-> > uniphier_pcie_host_init()) if the link doesn't come up, we return
-> > failure, which means dw_pcie_host_init() will not enumerate devices at
-> > all.
-> > 
-> > That seems wrong -- can't we have Root Complex Integrated Endpoints
-> > and even other Root Ports on that root bus?  Those should be
-> > accessible and possibly useful even if we can't bring up a link on
-> > *one* Root Port.
-> > 
-> > I would *expect* that we would enumerate all the devices on the root
-> > bus.  Then if we find one or more Root Ports, we might try to bring up
-> > the link for each one, and if successful, enumerate the downstream
-> > devices.
-> > 
-> > I'm confused.  Is there some restriction that means there can only be
-> > a single Root Port in this design, and no RCiEPs?  Even if there is,
-> > can we change the code so it enumerates the root bus first and brings
-> > up links as necessary so it matches the generic PCIe topology better?
-> 
-> Anyone?  I'll add this to a list of projects for interested people to
-> work on unless somebody objects.
+On Wed, Aug 28, 2019 at 9:21 AM Todd Kjos <tkjos@google.com> wrote:
+>
+> On Wed, Aug 28, 2019 at 6:08 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > On Tue, Aug 27, 2019 at 01:41:52PM -0700, Hridya Valsaraju wrote:
+> > > Currently /sys/kernel/debug/binder/proc contains
+> > > the debug data for every binder_proc instance.
+> > > This patch makes this information also available
+> > > in a binderfs instance mounted with a mount option
+> > > "stats=global" in addition to debugfs. The patch does
+> > > not affect the presence of the file in debugfs.
+> > >
+> > > If a binderfs instance is mounted at path /dev/binderfs,
+> > > this file would be present at /dev/binderfs/binder_logs/proc.
+> > > This change provides an alternate way to access this file when debugfs
+> > > is not mounted.
+> > >
+> > > Signed-off-by: Hridya Valsaraju <hridya@google.com>
+> >
+> > I'm still wondering whether there's a nicer way to create those debuf
+> > files per-process without doing it in binder_open() but it has worked
+> > fine for a long time with debugfs.
+> >
+> > Also, one minor question below. Otherwise
+> >
+> > Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+>
+> Acked-by: Todd Kjos <tkjos@google.com>
+>
+> >
+> > > ---
+> > >  drivers/android/binder.c          | 38 ++++++++++++++++++-
+> > >  drivers/android/binder_internal.h | 46 ++++++++++++++++++++++
+> > >  drivers/android/binderfs.c        | 63 ++++++++++++++-----------------
+> > >  3 files changed, 111 insertions(+), 36 deletions(-)
+> > >
+> > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> > > index bed217310197..37189838f32a 100644
+> > > --- a/drivers/android/binder.c
+> > > +++ b/drivers/android/binder.c
+> > > @@ -481,6 +481,7 @@ struct binder_priority {
+> > >   * @inner_lock:           can nest under outer_lock and/or node lock
+> > >   * @outer_lock:           no nesting under innor or node lock
+> > >   *                        Lock order: 1) outer, 2) node, 3) inner
+> > > + * @binderfs_entry:       process-specific binderfs log file
+> > >   *
+> > >   * Bookkeeping structure for binder processes
+> > >   */
+> > > @@ -510,6 +511,7 @@ struct binder_proc {
+> > >       struct binder_context *context;
+> > >       spinlock_t inner_lock;
+> > >       spinlock_t outer_lock;
+> > > +     struct dentry *binderfs_entry;
+> > >  };
+> > >
+> > >  enum {
+> > > @@ -5347,6 +5349,8 @@ static int binder_open(struct inode *nodp, struct file *filp)
+> > >  {
+> > >       struct binder_proc *proc;
+> > >       struct binder_device *binder_dev;
+> > > +     struct binderfs_info *info;
+> > > +     struct dentry *binder_binderfs_dir_entry_proc = NULL;
+> > >
+> > >       binder_debug(BINDER_DEBUG_OPEN_CLOSE, "%s: %d:%d\n", __func__,
+> > >                    current->group_leader->pid, current->pid);
+> > > @@ -5368,11 +5372,14 @@ static int binder_open(struct inode *nodp, struct file *filp)
+> > >       }
+> > >
+> > >       /* binderfs stashes devices in i_private */
+> > > -     if (is_binderfs_device(nodp))
+> > > +     if (is_binderfs_device(nodp)) {
+> > >               binder_dev = nodp->i_private;
+> > > -     else
+> > > +             info = nodp->i_sb->s_fs_info;
+> > > +             binder_binderfs_dir_entry_proc = info->proc_log_dir;
+> > > +     } else {
+> > >               binder_dev = container_of(filp->private_data,
+> > >                                         struct binder_device, miscdev);
+> > > +     }
+> > >       proc->context = &binder_dev->context;
+> > >       binder_alloc_init(&proc->alloc);
+> > >
+> > > @@ -5403,6 +5410,27 @@ static int binder_open(struct inode *nodp, struct file *filp)
+> > >                       &proc_fops);
+> > >       }
+> > >
+> > > +     if (binder_binderfs_dir_entry_proc) {
+> > > +             char strbuf[11];
+> > > +             struct dentry *binderfs_entry;
+> > > +
+> > > +             snprintf(strbuf, sizeof(strbuf), "%u", proc->pid);
+> > > +             /*
+> > > +              * Similar to debugfs, the process specific log file is shared
+> > > +              * between contexts. If the file has already been created for a
+> > > +              * process, the following binderfs_create_file() call will
+> > > +              * fail if another context of the same process invoked
+> > > +              * binder_open(). This is ok since same as debugfs,
+> > > +              * the log file will contain information on all contexts of a
+> > > +              * given PID.
+> > > +              */
+> > > +             binderfs_entry = binderfs_create_file(binder_binderfs_dir_entry_proc,
+> > > +                     strbuf, &proc_fops, (void *)(unsigned long)proc->pid);
+> > > +             if (!IS_ERR(binderfs_entry))
+> > > +                     proc->binderfs_entry = binderfs_entry;
+> >
+> > You are sure that you don't want to fail the open, when the debug file
+> > cannot be created in the binderfs instance? I'm not objecting at all, I
+> > just want to make sure that this is the semantics you want because it
+> > would be easy to differentiate between the non-fail-debugfs and the new
+> > binderfs case.
+>
+> I don't think we should fail the open, but it would be nice to have
+> some indication that it failed -- maybe a pr_warn() ?
 
-I think we should broach this topic at LPC in Lisbon, I expect some
-of the dwc (and other host controllers) maintainers to be there.
+Thanks for taking a look Christian and Todd! The reason I do not fail
+binder_open() on an error here is because once the file has been
+created for a process, if the same process invokes binder_open() again
+from a different context, the binderfs_create_file() call would fail
+with the EEXIST error code. This is expected behaviour since the log
+file is shared between all contexts of a process(same as the behaviour
+of the file in debugfs today). I can add a pr_warn() statement in v2
+as Todd suggested so that the failure would be logged.
 
-Thanks for bringing this up.
-
-Lorenzo
-
-> > [1] https://lore.kernel.org/linux-pci/CAGgoGu7rot61LSgu2syOMq9Onx26_u3PEtS7pf_QNQRxOaifhg@mail.gmail.com/
+> >
+> > > +
+> > > +     }
+> > > +
+> > >       return 0;
+> > >  }
+> > >
+> > > @@ -5442,6 +5470,12 @@ static int binder_release(struct inode *nodp, struct file *filp)
+> > >       struct binder_proc *proc = filp->private_data;
+> > >
+> > >       debugfs_remove(proc->debugfs_entry);
+> > > +
+> > > +     if (proc->binderfs_entry) {
+> > > +             binderfs_remove_file(proc->binderfs_entry);
+> > > +             proc->binderfs_entry = NULL;
+> > > +     }
+> > > +
+> > >       binder_defer_work(proc, BINDER_DEFERRED_RELEASE);
+> > >
+> > >       return 0;
+> > > diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_internal.h
+> > > index b9be42d9464c..bd47f7f72075 100644
+> > > --- a/drivers/android/binder_internal.h
+> > > +++ b/drivers/android/binder_internal.h
+> > > @@ -35,17 +35,63 @@ struct binder_device {
+> > >       struct inode *binderfs_inode;
+> > >  };
+> > >
+> > > +/**
+> > > + * binderfs_mount_opts - mount options for binderfs
+> > > + * @max: maximum number of allocatable binderfs binder devices
+> > > + * @stats_mode: enable binder stats in binderfs.
+> > > + */
+> > > +struct binderfs_mount_opts {
+> > > +     int max;
+> > > +     int stats_mode;
+> > > +};
+> > > +
+> > > +/**
+> > > + * binderfs_info - information about a binderfs mount
+> > > + * @ipc_ns:         The ipc namespace the binderfs mount belongs to.
+> > > + * @control_dentry: This records the dentry of this binderfs mount
+> > > + *                  binder-control device.
+> > > + * @root_uid:       uid that needs to be used when a new binder device is
+> > > + *                  created.
+> > > + * @root_gid:       gid that needs to be used when a new binder device is
+> > > + *                  created.
+> > > + * @mount_opts:     The mount options in use.
+> > > + * @device_count:   The current number of allocated binder devices.
+> > > + * @proc_log_dir:   Pointer to the directory dentry containing process-specific
+> > > + *                  logs.
+> > > + */
+> > > +struct binderfs_info {
+> > > +     struct ipc_namespace *ipc_ns;
+> > > +     struct dentry *control_dentry;
+> > > +     kuid_t root_uid;
+> > > +     kgid_t root_gid;
+> > > +     struct binderfs_mount_opts mount_opts;
+> > > +     int device_count;
+> > > +     struct dentry *proc_log_dir;
+> > > +};
+> > > +
+> > >  extern const struct file_operations binder_fops;
+> > >
+> > >  extern char *binder_devices_param;
+> > >
+> > >  #ifdef CONFIG_ANDROID_BINDERFS
+> > >  extern bool is_binderfs_device(const struct inode *inode);
+> > > +extern struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
+> > > +                                        const struct file_operations *fops,
+> > > +                                        void *data);
+> > > +extern void binderfs_remove_file(struct dentry *dentry);
+> > >  #else
+> > >  static inline bool is_binderfs_device(const struct inode *inode)
+> > >  {
+> > >       return false;
+> > >  }
+> > > +static inline struct dentry *binderfs_create_file(struct dentry *dir,
+> > > +                                        const char *name,
+> > > +                                        const struct file_operations *fops,
+> > > +                                        void *data)
+> > > +{
+> > > +     return NULL;
+> > > +}
+> > > +static inline void binderfs_remove_file(struct dentry *dentry) {}
+> > >  #endif
+> > >
+> > >  #ifdef CONFIG_ANDROID_BINDERFS
+> > > diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+> > > index dc25a7d759c9..c386a3738290 100644
+> > > --- a/drivers/android/binderfs.c
+> > > +++ b/drivers/android/binderfs.c
+> > > @@ -48,16 +48,6 @@ static dev_t binderfs_dev;
+> > >  static DEFINE_MUTEX(binderfs_minors_mutex);
+> > >  static DEFINE_IDA(binderfs_minors);
+> > >
+> > > -/**
+> > > - * binderfs_mount_opts - mount options for binderfs
+> > > - * @max: maximum number of allocatable binderfs binder devices
+> > > - * @stats_mode: enable binder stats in binderfs.
+> > > - */
+> > > -struct binderfs_mount_opts {
+> > > -     int max;
+> > > -     int stats_mode;
+> > > -};
+> > > -
+> > >  enum {
+> > >       Opt_max,
+> > >       Opt_stats_mode,
+> > > @@ -75,27 +65,6 @@ static const match_table_t tokens = {
+> > >       { Opt_err, NULL     }
+> > >  };
+> > >
+> > > -/**
+> > > - * binderfs_info - information about a binderfs mount
+> > > - * @ipc_ns:         The ipc namespace the binderfs mount belongs to.
+> > > - * @control_dentry: This records the dentry of this binderfs mount
+> > > - *                  binder-control device.
+> > > - * @root_uid:       uid that needs to be used when a new binder device is
+> > > - *                  created.
+> > > - * @root_gid:       gid that needs to be used when a new binder device is
+> > > - *                  created.
+> > > - * @mount_opts:     The mount options in use.
+> > > - * @device_count:   The current number of allocated binder devices.
+> > > - */
+> > > -struct binderfs_info {
+> > > -     struct ipc_namespace *ipc_ns;
+> > > -     struct dentry *control_dentry;
+> > > -     kuid_t root_uid;
+> > > -     kgid_t root_gid;
+> > > -     struct binderfs_mount_opts mount_opts;
+> > > -     int device_count;
+> > > -};
+> > > -
+> > >  static inline struct binderfs_info *BINDERFS_I(const struct inode *inode)
+> > >  {
+> > >       return inode->i_sb->s_fs_info;
+> > > @@ -535,7 +504,22 @@ static struct dentry *binderfs_create_dentry(struct dentry *dir,
+> > >       return dentry;
+> > >  }
+> > >
+> > > -static struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
+> > > +void binderfs_remove_file(struct dentry *dentry)
+> > > +{
+> > > +     struct inode *dir;
+> > > +
+> > > +     dir = d_inode(dentry->d_parent);
+> > > +     inode_lock(dir);
+> > > +     if (simple_positive(dentry)) {
+> > > +             dget(dentry);
+> > > +             simple_unlink(dir, dentry);
+> > > +             d_delete(dentry);
+> > > +             dput(dentry);
+> > > +     }
+> > > +     inode_unlock(dir);
+> > > +}
+> > > +
+> > > +struct dentry *binderfs_create_file(struct dentry *dir, const char *name,
+> > >                                   const struct file_operations *fops,
+> > >                                   void *data)
+> > >  {
+> > > @@ -604,7 +588,8 @@ static struct dentry *binderfs_create_dir(struct dentry *parent,
+> > >
+> > >  static int init_binder_logs(struct super_block *sb)
+> > >  {
+> > > -     struct dentry *binder_logs_root_dir, *file_dentry;
+> > > +     struct dentry *binder_logs_root_dir, *file_dentry, *proc_log_dir;
+> > > +     struct binderfs_info *info;
+> > >       int ret = 0;
+> > >
+> > >       binder_logs_root_dir = binderfs_create_dir(sb->s_root,
+> > > @@ -648,8 +633,18 @@ static int init_binder_logs(struct super_block *sb)
+> > >                                          "failed_transaction_log",
+> > >                                          &binder_transaction_log_fops,
+> > >                                          &binder_transaction_log_failed);
+> > > -     if (IS_ERR(file_dentry))
+> > > +     if (IS_ERR(file_dentry)) {
+> > >               ret = PTR_ERR(file_dentry);
+> > > +             goto out;
+> > > +     }
+> > > +
+> > > +     proc_log_dir = binderfs_create_dir(binder_logs_root_dir, "proc");
+> > > +     if (IS_ERR(proc_log_dir)) {
+> > > +             ret = PTR_ERR(proc_log_dir);
+> > > +             goto out;
+> > > +     }
+> > > +     info = sb->s_fs_info;
+> > > +     info->proc_log_dir = proc_log_dir;
+> > >
+> > >  out:
+> > >       return ret;
+> > > --
+> > > 2.23.0.187.g17f5b7556c-goog
+> > >
+> >
+> > --
+> > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+> >
