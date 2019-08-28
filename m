@@ -2,138 +2,84 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355B4C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 02:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E34C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 02:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108F820679
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 02:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE69A20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 02:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfH1Cj1 (ORCPT
+        id S1726272AbfH1Cns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 22:39:27 -0400
-Received: from out1.zte.com.cn ([202.103.147.172]:42878 "EHLO mxct.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbfH1Cj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 22:39:27 -0400
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id 2AF0C45E1332F6B18411;
-        Wed, 28 Aug 2019 10:39:25 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x7S2JCiK083635;
-        Wed, 28 Aug 2019 10:19:12 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019082810193054-3226640 ;
-          Wed, 28 Aug 2019 10:19:30 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     davem@davemloft.net
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        wang.liang82@zte.com.cn, Cheng Lin <cheng.lin130@zte.com.cn>
-Subject: [PATCH v2] ipv6: Not to probe neighbourless routes
-Date:   Wed, 28 Aug 2019 10:19:25 +0800
-Message-Id: <1566958765-1686-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-08-28 10:19:30,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-08-28 10:19:14,
-        Serialize complete at 2019-08-28 10:19:14
-X-MAIL: mse-fl2.zte.com.cn x7S2JCiK083635
+        Tue, 27 Aug 2019 22:43:48 -0400
+Received: from emcscan.emc.com.tw ([192.72.220.5]:55788 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfH1Cns (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 22:43:48 -0400
+X-Greylist: delayed 595 seconds by postgrey-1.27 at vger.kernel.org; Tue, 27 Aug 2019 22:43:48 EDT
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="31937800"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with SMTP; 28 Aug 2019 10:33:50 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(128607:0:AUTH_RELAY)
+        (envelope-from <johnny.chuang@emc.com.tw>); Wed, 28 Aug 2019 10:33:49 +0800 (CST)
+Received: from 192.168.55.71
+        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(122352:0:AUTH_LOGIN)
+        (envelope-from <johnny.chuang@emc.com.tw>); Wed, 28 Aug 2019 10:33:48 +0800 (CST)
+From:   "Johnny.Chuang" <johnny.chuang@emc.com.tw>
+To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        =?big5?B?U1RSRDItsviozsBN?= <johnny.chuang@emc.com.tw>,
+        =?big5?B?U1RSRDItvbK0Zrxg?= <jennifer.tsai@emc.com.tw>
+Cc:     =?big5?B?U1RSRDIts6+xUqn6uGeyeg==?= <james.chen@emc.com.tw>,
+        =?big5?B?J7Hns9W1vic=?= <paul.liang@emc.com.tw>,
+        "'jeff'" <jeff.chuang@emc.com.tw>
+References: <1566958886-25756-1-git-send-email-johnny.chuang@emc.com.tw>
+In-Reply-To: <1566958886-25756-1-git-send-email-johnny.chuang@emc.com.tw>
+Subject: [PATCH] Input: elants_i2c - return real value of elants_i2c_initialize()
+Date:   Wed, 28 Aug 2019 10:33:46 +0800
+Message-ID: <000601d55d49$05878160$10968420$@emc.com.tw>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="big5"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AQFmeLP5IfQOHpOgOs9iM2bs2d5OHaftn74w
+Content-Language: zh-tw
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDUwMTBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy00MWI0NWQwMC1jOTNjLTExZTktODgyNC03YzVjZjg3NDk0NzhcYW1lLXRlc3RcNDFiNDVkMDItYzkzYy0xMWU5LTg4MjQtN2M1Y2Y4NzQ5NDc4Ym9keS50eHQiIHN6PSI3ODIiIHQ9IjEzMjExNDMzMjI2MjQ0MTE4NSIgaD0iVWdENXQwZFMyRnZIOWlVa3hDcWJ2YlIzOTRFPSIgaWQ9IiIgYmw9IjAiIGJvPSIxIi8+PC9tZXRhPg==
+x-dg-rorf: true
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cheng Lin <cheng.lin130@zte.com.cn>
+The return value of elants_i2c_initialize() was always 0.
+It maybe register input device when initialize fail.
 
-Originally, Router Reachability Probing require a neighbour entry
-existed. Commit 2152caea7196 ("ipv6: Do not depend on rt->n in
-rt6_probe().") removed the requirement for a neighbour entry. And
-commit f547fac624be ("ipv6: rate-limit probes for neighbourless
-routes") adds rate-limiting for neighbourless routes.
-
-And, the Neighbor Discovery for IP version 6 (IPv6)(rfc4861) says,
-"
-7.2.5.  Receipt of Neighbor Advertisements
-
-When a valid Neighbor Advertisement is received (either solicited or
-unsolicited), the Neighbor Cache is searched for the target's entry.
-If no entry exists, the advertisement SHOULD be silently discarded.
-There is no need to create an entry if none exists, since the
-recipient has apparently not initiated any communication with the
-target.
-".
-
-In rt6_probe(), just a Neighbor Solicitation message are transmited.
-When receiving a Neighbor Advertisement, the node does nothing in a
-Neighborless condition.
-
-Not sure it's needed to create a neighbor entry in Router
-Reachability Probing. And the Original way may be the right way.
-
-This patch recover the requirement for a neighbour entry.
-
-Signed-off-by: Cheng Lin <cheng.lin130@zte.com.cn>
+Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
 ---
- include/net/ip6_fib.h | 5 -----
- net/ipv6/route.c      | 6 +-----
- 2 files changed, 1 insertion(+), 10 deletions(-)
+ drivers/input/touchscreen/elants_i2c.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/ip6_fib.h b/include/net/ip6_fib.h
-index 4b5656c..8c2e022 100644
---- a/include/net/ip6_fib.h
-+++ b/include/net/ip6_fib.h
-@@ -124,11 +124,6 @@ struct rt6_exception {
+diff --git a/drivers/input/touchscreen/elants_i2c.c
+b/drivers/input/touchscreen/elants_i2c.c
+index d4ad24e..9c9816f 100644
+--- a/drivers/input/touchscreen/elants_i2c.c
++++ b/drivers/input/touchscreen/elants_i2c.c
+@@ -571,7 +571,7 @@ static int elants_i2c_initialize(struct elants_data *ts)
+ 	if (error)
+ 		ts->iap_mode = ELAN_IAP_RECOVERY;
  
- struct fib6_nh {
- 	struct fib_nh_common	nh_common;
--
--#ifdef CONFIG_IPV6_ROUTER_PREF
--	unsigned long		last_probe;
--#endif
--
- 	struct rt6_info * __percpu *rt6i_pcpu;
- 	struct rt6_exception_bucket __rcu *rt6i_exception_bucket;
- };
-diff --git a/net/ipv6/route.c b/net/ipv6/route.c
-index fd059e0..1839dd7 100644
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -639,12 +639,12 @@ static void rt6_probe(struct fib6_nh *fib6_nh)
- 	nh_gw = &fib6_nh->fib_nh_gw6;
- 	dev = fib6_nh->fib_nh_dev;
- 	rcu_read_lock_bh();
--	idev = __in6_dev_get(dev);
- 	neigh = __ipv6_neigh_lookup_noref(dev, nh_gw);
- 	if (neigh) {
- 		if (neigh->nud_state & NUD_VALID)
- 			goto out;
+-	return 0;
++	return error;
+ }
  
-+		idev = __in6_dev_get(dev);
- 		write_lock(&neigh->lock);
- 		if (!(neigh->nud_state & NUD_VALID) &&
- 		    time_after(jiffies,
-@@ -654,13 +654,9 @@ static void rt6_probe(struct fib6_nh *fib6_nh)
- 				__neigh_set_probe_once(neigh);
- 		}
- 		write_unlock(&neigh->lock);
--	} else if (time_after(jiffies, fib6_nh->last_probe +
--				       idev->cnf.rtr_probe_interval)) {
--		work = kmalloc(sizeof(*work), GFP_ATOMIC);
- 	}
- 
- 	if (work) {
--		fib6_nh->last_probe = jiffies;
- 		INIT_WORK(&work->work, rt6_probe_deferred);
- 		work->target = *nh_gw;
- 		dev_hold(dev);
+ /*
 -- 
-1.8.3.1
+2.7.4
 
