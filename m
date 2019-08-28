@@ -2,108 +2,117 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CCDC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91607C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A83202077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:48:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567003719;
-	bh=DrggFc35vDJ5BKYSOvDqyafOdM1VWe8R/POFM1RO03k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=veJP+pCM0G+pnT7kkpVt6aKsmfuLvt/4C+dhZkzJVyjYkIr223rTfwlVJrbEp/ypL
-	 5mLV4spHVa+BrC/nViHyCW0be/vDe7llfGJa58CEAXh7qYHvVXd2dT9NF649qlTxhG
-	 0c2sK9XvTiw7urWbN/rqtAnjXL3wLyUS3uYnYmOw=
+	by mail.kernel.org (Postfix) with ESMTP id 6A5682077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:49:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="KcX0hs9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfH1Osi (ORCPT
+        id S1726840AbfH1OtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:48:38 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39300 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfH1Osi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:48:38 -0400
-Received: by mail-qk1-f196.google.com with SMTP id 4so2611675qki.6
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 07:48:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=p11EOwu/uVWWwafbZoZanI/o5iGdReqlGXH8aeEIwZs=;
-        b=qRCmLgBMPolI5D1ew8nG90rOtC7mFtSfXX2Jrds5xSvZmTrMg/CHVyjmHKQwjOQ1Yl
-         IFz51blzXZUBrSOQX5/zWXzKDY4iihZvRE0aVY71k8y66pk3jz9EHnjaHjF2DOUAE2b/
-         m1tXhsQbenmBNS4WG/OtjRkbC15NJF/rPh5TC4Dgm+7ghafp+i8NJVZ/MtSQk7RHptg3
-         u/uNWe2nSOVte8P2CiC8je410mnaUQzTd3mlgGES1SdkfRO+g5QLpqGXeTcD/kv02glK
-         uhMzGCpNDwIS07fcqh79UmUAjOdk9RosI22JvLaCt6VZsiXr1boDM2s3R2qnbYE1PXYa
-         Ra3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p11EOwu/uVWWwafbZoZanI/o5iGdReqlGXH8aeEIwZs=;
-        b=CH801lXULXnoR5PzdLay4B8Gdc8cvJV/0m1YIjSlRh+RetWObpPIBjh4yMwCRTj02d
-         Z3AcuD3QV2kJE/H9gbY/N/9HLWOM9vQaD0GY1o3UGkTvHIOYzJPkFjMwE8EMJqA9myrn
-         ZC1ILdkyYtppbP39sRSiIZh0EsAEpfXg7m8+JpzSlCRmZ2dY88EYfKcsjjLpWIeH+HX2
-         SMderAu0ydErXMducjodNcDCWVS8Ya9ZcWv8SzH5pjCCeByNmVP7i1aWgNHkA162sT1N
-         SA8g+Jo8ulsexw5VqLevm59bgi+jqQ2OySZ5+vstTh7xbIGLvSaMqo0oCR2x05ARwQ7m
-         W9eQ==
-X-Gm-Message-State: APjAAAW6zztZXGJbEgczgRrmK+fdSmiVEl5ANJdV/8zOito1sTgYJGXX
-        9GImKUM59080p/h9Rfi91T8=
-X-Google-Smtp-Source: APXvYqyI/lM8w93rKPohI6SnUh1EbEp6HqeyFc9b6D2tyMIFivGgf81C5M52iseVgilUGgu7Q6ZOuQ==
-X-Received: by 2002:a37:813:: with SMTP id 19mr3865720qki.427.1567003713733;
-        Wed, 28 Aug 2019 07:48:33 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:c231])
-        by smtp.gmail.com with ESMTPSA id h1sm1588941qtc.92.2019.08.28.07.48.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 07:48:33 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 07:48:30 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 1/9] perf/core: Add PERF_RECORD_CGROUP event
-Message-ID: <20190828144830.GQ2263813@devbig004.ftw2.facebook.com>
-References: <20190828073130.83800-1-namhyung@kernel.org>
- <20190828073130.83800-2-namhyung@kernel.org>
+        Wed, 28 Aug 2019 10:49:13 -0400
+Received: from mail-eopbgr20062.outbound.protection.outlook.com ([40.107.2.62]:25664
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726506AbfH1OtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:49:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y3X7pVzUuno2nheJXPlytsbh8ZRVKbd6c7WPCrbns32weFi0UGwr0K4hL+3NXSxZf61jKNPVS++1QCLDZRr3yYaiiJHsL4VFk3RkNwUmtudW7jme4Xfw2Xyy5L3Pp5sRHTVSCNTvYMwmMo9yGeQExps8kB+dO9a1LrpWvnVMtKXCoHehLVsm68dsA8qjGO4QGQbUe+u0ffZK6aqxu73KRe8Tf0VeeVALatnMFeWteTc2oEDP2CZVgvzvAh5HRlqbcSzqvgl7j1RHkuzFJtoVcKRzeQILQPH1+0HnPNi0A54PeXYGlYV8bNPmWw5afNzLVq3trnNUKoY3PPb+IAkcow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qwx5txf2qT3QAH9pb6v1FpDIJuiD60SHzoN9kDRBcJE=;
+ b=SdIDdJnutc0oS1KWjqI0DadYc/ig3gkBG+cjrdjt4Ns2e5jeoudFbMsa6Edn6+XPfi08RgvsfthQkfvdhlWpIxwIqkHBUO5zmkn9YcezGaQTt9V+aWLwGpHwce33v1eEmjzaUqL5ODtVqvcCfw9zn2FXJ7YH5BTE5PpkQiR0FEtd/KLnPh54nHNLvoDs0F/B1JmgXcn3SLALqIEcjTjvGbEvSXE6hUrUbWsafy2Ochru7YFDdBDd+5Yl0mgKnMh8VuTvcpiyuXKet9tgjMSKeft11b7GMVVLVuufu5jlgYjpWQMyzo2wyFfXVs5wbOBQ3N/UeEBpJKM/ZsGISCjHJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qwx5txf2qT3QAH9pb6v1FpDIJuiD60SHzoN9kDRBcJE=;
+ b=KcX0hs9akdBxl3JQOWIqXI8HKvoWdwLRLy+ElFv4TxSyBEu/Bk/0m8VR2Y676LgNoAJAipjjxsK7gNlu12qXCtq4K5MVRXOAydENNBTG4jkF41+ATRUr9xRz/6Rekm/NHJuziRi3ZLDrigxggcHwFXAISFCjI7ypI63XVez1/FU=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4624.eurprd05.prod.outlook.com (20.176.3.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Wed, 28 Aug 2019 14:49:08 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2199.021; Wed, 28 Aug 2019
+ 14:49:08 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>
+Subject: Re: [PATCH] mm: remove the __mmu_notifier_invalidate_range_start/end
+ exports
+Thread-Topic: [PATCH] mm: remove the __mmu_notifier_invalidate_range_start/end
+ exports
+Thread-Index: AQHVXavZqxXcfLyzmkeft6WFMi/zb6cQobAAgAAB/gCAAABwAA==
+Date:   Wed, 28 Aug 2019 14:49:08 +0000
+Message-ID: <20190828144902.GK914@mellanox.com>
+References: <20190828142109.29012-1-hch@lst.de>
+ <20190828144020.GI914@mellanox.com> <20190828144728.GA30428@lst.de>
+In-Reply-To: <20190828144728.GA30428@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQXPR0101CA0071.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:14::48) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.167.216.168]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b66c8561-4ee3-416c-44ff-08d72bc6e196
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4624;
+x-ms-traffictypediagnostic: VI1PR05MB4624:
+x-microsoft-antispam-prvs: <VI1PR05MB462415A263D3A5B4A2ECB52BCFA30@VI1PR05MB4624.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 014304E855
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(366004)(376002)(396003)(199004)(189003)(4326008)(33656002)(7736002)(229853002)(8676002)(66446008)(64756008)(66556008)(66946007)(66476007)(6436002)(86362001)(8936002)(6486002)(256004)(2906002)(81166006)(81156014)(14454004)(6246003)(316002)(6916009)(5660300002)(99286004)(53936002)(1076003)(71190400001)(6116002)(3846002)(4744005)(71200400001)(25786009)(66066001)(36756003)(476003)(2616005)(486006)(11346002)(446003)(6506007)(386003)(478600001)(52116002)(76176011)(54906003)(6512007)(102836004)(305945005)(26005)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4624;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 73QEiwxg4M6S/1eEStQgnnhaQfhmWJsshWOcaUtWQ3C1IusLTH2vKXqW1CY62YpOUl6XLYx1GOrmWxQiucF0JPNa4PO1b9YRDJ0N/giI8uHBbr5lwlOcJkmW/OV0hM3+1PftGmLV1ok+23777XSHBFjvYxUGNEDPQsOfqVTeWoW8oRrZH0vvNv0KKQwmQJz224fXnh6u3pXDHIqdP1mfQBYsNDsqheRH6P5RP1rZibklRPcuTzQifJNBhGxx9BiB8WWhkdy1HkSXXpjxioZJIh0NtOukRAnsaq4t6VlXt9XwcrHfrZ8PDKPLH8v8DlxUpamFrRmTSnlFknNZxklMpPIQwIkVuRsI6h/nxeb7sWBJBqvizlp7dAPX9xkg6F0AtqVg/LSoMph6RrMn6mcRyGgHQYz2/s/0vt/MEjLjC3E=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <BF50AE540214C24AA437B0DBD60624D1@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828073130.83800-2-namhyung@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b66c8561-4ee3-416c-44ff-08d72bc6e196
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 14:49:08.6134
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DwFL8wFntFo9y5eJAPxL0jYxkCzagyBC/BPw8J5jwq/j+JiBm8lDCu829F3lRuHVo02SPO70EX2qmYO9FkRXpA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4624
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Namhyung.
+On Wed, Aug 28, 2019 at 04:47:28PM +0200, Christoph Hellwig wrote:
+> On Wed, Aug 28, 2019 at 02:40:25PM +0000, Jason Gunthorpe wrote:
+> > EXPORT_SYMBOL_GPL(__mmu_notifier_invalidate_range);
+> >=20
+> > elixir suggest this is not called outside mm/ either?
+>=20
+> Yes, it seems like that one should go away as well.
 
-On Wed, Aug 28, 2019 at 04:31:22PM +0900, Namhyung Kim wrote:
-> +	 * struct {
-> +	 *	struct perf_event_header	header;
-> +	 *	u64				ino;
-> +	 *	u64				path_len;
-> +	 *	char				path[];
+I will amend this patch to drop it too and send it through 0-day
 
-ino and path aren't great identifers for cgroups because both can get
-recycled pretty quickly.  Can you please take a look at
-KERNFS_ROOT_SUPPORT_EXPORTOP?  That's the fhandle that cgroup uses,
-currently the standard ino+gen which isn't ideal but good enough.
-Another benefit is that the path can also be resolved efficiently from
-userspace given the handle.
-
-Thanks.
-
--- 
-tejun
+Thanks,
+Jason
