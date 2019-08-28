@@ -2,157 +2,143 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16190C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20816C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF91D2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7DB12077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ur+Y+HO3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfH1Paj (ORCPT
+        id S1726820AbfH1Pbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:30:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:7204 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726429AbfH1Pai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:30:38 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D6AAE308A9E0;
-        Wed, 28 Aug 2019 15:30:37 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C2565100197A;
-        Wed, 28 Aug 2019 15:30:35 +0000 (UTC)
-Date:   Wed, 28 Aug 2019 11:30:34 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <20190828153033.GA15512@pauld.bos.csb>
-References: <cover.1559129225.git.vpillai@digitalocean.com>
- <20190827211417.snpwgnhsu5t6u52y@srcf.ucam.org>
- <20190827215035.GH2332@hirez.programming.kicks-ass.net>
+        Wed, 28 Aug 2019 11:31:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49196 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726429AbfH1Pbi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 11:31:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+4RbtbadPeHDqkWHNeTqtGn6hIPGJnVJdxnnaB9xmZY=; b=Ur+Y+HO3NeJVf0WUmN6alVkTx
+        awzvqkfhHx5NAj5o8PhCN5egCiVC8tGf1oKNzZllH2zKiEblJfdcLnzIb8Gq1vp3W7YwhHXCLdoS7
+        t9Bi0ixv2Wt7HqOHvsyth5hW4a5caGSJEMu7PZu2uz+yW2NzHJKutwUYlBw645CYxKOLlLMmgz9tx
+        cO90OCokv2HuW8FkcbyWcD9tukBL4IoFwCwXzdJje1hePXpM2iTpos2Jv52GuvBus7A1HCGb2IaUp
+        48Ib0wN32leS3ObbNfrAg+l8FfaYttqVwHFDbgIJEe/W9dIB3XSgwNVypUCFo41JMzxxQJJBDqhvy
+        XvuOsPMxg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i2zv2-0007RL-HW; Wed, 28 Aug 2019 15:31:32 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9BA7C98040A; Wed, 28 Aug 2019 17:02:38 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 17:02:38 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [RESEND PATCH V3 3/8] perf/x86/intel: Support hardware TopDown
+ metrics
+Message-ID: <20190828150238.GC17205@worktop.programming.kicks-ass.net>
+References: <20190826144740.10163-1-kan.liang@linux.intel.com>
+ <20190826144740.10163-4-kan.liang@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190827215035.GH2332@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 28 Aug 2019 15:30:38 +0000 (UTC)
+In-Reply-To: <20190826144740.10163-4-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 11:50:35PM +0200 Peter Zijlstra wrote:
-> On Tue, Aug 27, 2019 at 10:14:17PM +0100, Matthew Garrett wrote:
-> > Apple have provided a sysctl that allows applications to indicate that 
-> > specific threads should make use of core isolation while allowing 
-> > the rest of the system to make use of SMT, and browsers (Safari, Firefox 
-> > and Chrome, at least) are now making use of this. Trying to do something 
-> > similar using cgroups seems a bit awkward. Would something like this be 
-> > reasonable? 
+On Mon, Aug 26, 2019 at 07:47:35AM -0700, kan.liang@linux.intel.com wrote:
+
+> Groups
+> ======
 > 
-> Sure; like I wrote earlier; I only did the cgroup thing because I was
-> lazy and it was the easiest interface to hack on in a hurry.
+> To avoid reading the METRICS register multiple times, the metrics and
+> slots value can only be updated by the first slots/metrics event in a
+> group. All active slots and metrics events will be updated one time.
+
+Can't we require SLOTS to be the group leader for any Metric group?
+
+Is there ever a case where we want to add other events to a metric
+group?
+
+> Reset
+> ======
 > 
-> The rest of the ABI nonsense can 'trivially' be done later; if when we
-> decide to actually do this.
+> The PERF_METRICS and Fixed counter 3 have to be reset for each read,
+> because:
+> - The 8bit metrics ratio values lose precision when the measurement
+>   period gets longer.
 
-I think something that allows the tag to be set may be needed. One of 
-the use cases for this is virtualization stacks, where you really want
-to be able to keep the higher CPU count and to set up the isolation 
-from management processes on the host. 
+So it musn't be too hot,
 
-The current cgroup interface doesn't work for that because it doesn't 
-apply the tag to children. We've been unable to fully test it in a virt
-setup because our VMs are made of a child cgroup per vcpu. 
+> - The PERF_METRICS may report wrong value if its delta was less than
+>   1/255 of SLOTS (Fixed counter 3).
 
+it also musn't be too cold. But that leaves it unspecified what exactly
+is the right range.
+
+IOW, you want a Goldilocks number of SLOTS.
+
+> Also, for counting, the -max_period is the initial value of the SLOTS.
+> The huge initial value will definitely trigger the issue mentioned
+> above. Force initial value as 0 for topdown and slots event counting.
+
+But you just told us that 0 is wrong too (too cold).
+
+I'm still confused by all this; when exactly does:
+
+> NMI
+> ======
 > 
-> And given MDS, I'm still not entirely convinced it all makes sense. If
-> it were just L1TF, then yes, but now...
+> The METRICS register may be overflow. The bit 48 of STATUS register
+> will be set. If so, update all active slots and metrics events.
 
-I was thinking MDS is really the reason for this. L1TF has mitigations but
-the only current mitigation for MDS for smt is ... nosmt. 
+that happen? It would be useful to get that METRIC_OVF (can we please
+start naming them; 62,55,48 is past silly) at the exact point
+where PERF_METRICS is saturated.
 
-The current core scheduler implementation, I believe, still has (theoretical?) 
-holes involving interrupts, once/if those are closed it may be even less 
-attractive.
+If this is so; then we can use this to update/reset PERF_METRICS and
+nothing else.
 
-> 
-> > Having spoken to the Chrome team, I believe that the 
-> > semantics we want are:
-> > 
-> > 1) A thread to be able to indicate that it should not run on the same 
-> > core as anything not in posession of the same cookie
-> > 2) Descendents of that thread to (by default) have the same cookie
-> > 3) No other thread be able to obtain the same cookie
-> > 4) Threads not be able to rejoin the global group (ie, threads can 
-> > segregate themselves from their parent and peers, but can never rejoin 
-> > that group once segregated)
-> > 
-> > but don't know if that's what everyone else would want.
-> > 
-> > diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-> > index 094bb03b9cc2..5d411246d4d5 100644
-> > --- a/include/uapi/linux/prctl.h
-> > +++ b/include/uapi/linux/prctl.h
-> > @@ -229,4 +229,5 @@ struct prctl_mm_map {
-> >  # define PR_PAC_APDBKEY			(1UL << 3)
-> >  # define PR_PAC_APGAKEY			(1UL << 4)
-> >  
-> > +#define PR_CORE_ISOLATE			55
-> >  #endif /* _LINUX_PRCTL_H */
-> > diff --git a/kernel/sys.c b/kernel/sys.c
-> > index 12df0e5434b8..a054cfcca511 100644
-> > --- a/kernel/sys.c
-> > +++ b/kernel/sys.c
-> > @@ -2486,6 +2486,13 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
-> >  			return -EINVAL;
-> >  		error = PAC_RESET_KEYS(me, arg2);
-> >  		break;
-> > +	case PR_CORE_ISOLATE:
-> > +#ifdef CONFIG_SCHED_CORE
-> > +		current->core_cookie = (unsigned long)current;
-> 
-> This needs to then also force a reschedule of current. And there's the
-> little issue of what happens if 'current' dies while its children live
-> on, and current gets re-used for a new process and does this again.
+That is; leave the SLOTS programming alone; use -max_period as usual.
 
-sched_core_get() too?
+Then on METRIC_OVF, read PERF_METRICS and clear it, and update all the
+metric events by adding slots_delta * frac / 256 -- where slots_delta is
+the SLOTS count since the last METRIC_OVF.
 
+On read; read PERF_METRICS -- BUT DO NOT RESET -- and compute an
+intermediate delta and add that to whatever stable count we had.
 
-Cheers,
-Phil
+Maybe something like:
 
-> 
-> > +#else
-> > +		result = -EINVAL;
-> > +#endif
-> > +		break;
-> >  	default:
-> >  		error = -EINVAL;
-> >  		break;
-> > 
-> > 
-> > -- 
-> > Matthew Garrett | mjg59@srcf.ucam.org
+	do {
+		count1 = local64_read(&event->count);
+		barrier();
+		metrics = read_perf_metrics();
+		barrier();
+		count2 = local64_read(event->count);
+	} while (count1 != count2);
 
--- 
+	/* no METRIC_OVF happened and {count,metrics} is consistent */
+
+	return count1 + (slots_delta * frac / 256);
+
+> The update_topdown_event() has to read two registers separately. The
+> values may be modify by a NMI. PMU has to be disabled before calling the
+> function.
+
+Then there is no mucking about with that odd counter/metrics msr pair
+reset nonsense. Becuase that really stinks.
