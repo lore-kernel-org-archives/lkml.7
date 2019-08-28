@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E95C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5643DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA6C2080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D822080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:04:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfH1OEf (ORCPT
+        id S1727478AbfH1OEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:04:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39688 "EHLO mx1.suse.de"
+        Wed, 28 Aug 2019 10:04:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39660 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726738AbfH1ODc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726657AbfH1ODc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 28 Aug 2019 10:03:32 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4B755B64D;
-        Wed, 28 Aug 2019 14:03:31 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 8B02DB649;
+        Wed, 28 Aug 2019 14:03:30 +0000 (UTC)
 From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
 To:     Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paul.burton@mips.com>,
@@ -31,9 +31,9 @@ To:     Ralf Baechle <ralf@linux-mips.org>,
         "David S. Miller" <davem@davemloft.net>,
         linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH net-next 07/15] net: sgi: ioc3-eth: separate tx and rx ring handling
-Date:   Wed, 28 Aug 2019 16:03:06 +0200
-Message-Id: <20190828140315.17048-8-tbogendoerfer@suse.de>
+Subject: [PATCH net-next 04/15] net: sgi: ioc3-eth: use defines for constants dealing with desc rings
+Date:   Wed, 28 Aug 2019 16:03:03 +0200
+Message-Id: <20190828140315.17048-5-tbogendoerfer@suse.de>
 X-Mailer: git-send-email 2.13.7
 In-Reply-To: <20190828140315.17048-1-tbogendoerfer@suse.de>
 References: <20190828140315.17048-1-tbogendoerfer@suse.de>
@@ -42,86 +42,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After allocation of descriptor memory is now done once in probe
-handling of tx ring is completely done by ioc3_clean_tx_ring. So
-we remove the remaining tx ring actions out of ioc3_alloc_rings
-and ioc3_free_rings and rename it to ioc3_[alloc|free]_rx_bufs
-to better describe what they are doing.
+Descriptor ring sizes of the IOC3 are more or less fixed size. To
+make clearer where there is a relation to ring sizes use defines.
 
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 ---
- drivers/net/ethernet/sgi/ioc3-eth.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/sgi/ioc3-eth.c | 42 +++++++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
-index 39631e067b71..6c79be3098c3 100644
+index e81e5bb37ac6..c875640926d6 100644
 --- a/drivers/net/ethernet/sgi/ioc3-eth.c
 +++ b/drivers/net/ethernet/sgi/ioc3-eth.c
-@@ -778,13 +778,11 @@ static inline void ioc3_clean_tx_ring(struct ioc3_private *ip)
- 	ip->tx_ci = 0;
- }
+@@ -61,10 +61,16 @@
+ #include <asm/sn/ioc3.h>
+ #include <asm/pci/bridge.h>
  
--static void ioc3_free_rings(struct ioc3_private *ip)
-+static void ioc3_free_rx_bufs(struct ioc3_private *ip)
- {
- 	struct sk_buff *skb;
- 	int rx_entry, n_entry;
- 
--	ioc3_clean_tx_ring(ip);
--
- 	n_entry = ip->rx_ci;
- 	rx_entry = ip->rx_pi;
- 
-@@ -797,7 +795,7 @@ static void ioc3_free_rings(struct ioc3_private *ip)
- 	}
- }
- 
--static void ioc3_alloc_rings(struct net_device *dev)
-+static void ioc3_alloc_rx_bufs(struct net_device *dev)
- {
- 	struct ioc3_private *ip = netdev_priv(dev);
- 	struct ioc3_erxbuf *rxb;
-@@ -826,9 +824,6 @@ static void ioc3_alloc_rings(struct net_device *dev)
- 	}
- 	ip->rx_ci = 0;
- 	ip->rx_pi = RX_BUFFS;
--
--	ip->tx_pi = 0;
--	ip->tx_ci = 0;
- }
- 
- static void ioc3_init_rings(struct net_device *dev)
-@@ -837,8 +832,8 @@ static void ioc3_init_rings(struct net_device *dev)
- 	struct ioc3_ethregs *regs = ip->regs;
- 	unsigned long ring;
- 
--	ioc3_free_rings(ip);
--	ioc3_alloc_rings(dev);
-+	ioc3_free_rx_bufs(ip);
-+	ioc3_alloc_rx_bufs(dev);
- 
- 	ioc3_clean_tx_ring(ip);
- 
-@@ -964,7 +959,9 @@ static int ioc3_close(struct net_device *dev)
- 	ioc3_stop(ip);
- 	free_irq(dev->irq, dev);
- 
--	ioc3_free_rings(ip);
-+	ioc3_free_rx_bufs(ip);
-+	ioc3_clean_tx_ring(ip);
+-/* 64 RX buffers.  This is tunable in the range of 16 <= x < 512.  The
+- * value must be a power of two.
++/* Number of RX buffers.  This is tunable in the range of 16 <= x < 512.
++ * The value must be a power of two.
+  */
+-#define RX_BUFFS 64
++#define RX_BUFFS		64
++#define RX_RING_ENTRIES		512		/* fixed in hardware */
++#define RX_RING_MASK		(RX_RING_ENTRIES - 1)
 +
- 	return 0;
- }
++/* 128 TX buffers (not tunable) */
++#define TX_RING_ENTRIES		128
++#define TX_RING_MASK		(TX_RING_ENTRIES - 1)
  
-@@ -1265,7 +1262,7 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- out_stop:
- 	ioc3_stop(ip);
- 	del_timer_sync(&ip->ioc3_timer);
--	ioc3_free_rings(ip);
-+	ioc3_free_rx_bufs(ip);
- 	kfree(ip->rxr);
- 	kfree(ip->txr);
- out_res:
+ #define ETCSR_FD   ((17 << ETCSR_IPGR2_SHIFT) | (11 << ETCSR_IPGR1_SHIFT) | 21)
+ #define ETCSR_HD   ((21 << ETCSR_IPGR2_SHIFT) | (21 << ETCSR_IPGR1_SHIFT) | 21)
+@@ -76,8 +82,8 @@ struct ioc3_private {
+ 	u32 *ssram;
+ 	unsigned long *rxr;		/* pointer to receiver ring */
+ 	struct ioc3_etxd *txr;
+-	struct sk_buff *rx_skbs[512];
+-	struct sk_buff *tx_skbs[128];
++	struct sk_buff *rx_skbs[RX_RING_ENTRIES];
++	struct sk_buff *tx_skbs[TX_RING_ENTRIES];
+ 	int rx_ci;			/* RX consumer index */
+ 	int rx_pi;			/* RX producer index */
+ 	int tx_ci;			/* TX consumer index */
+@@ -573,10 +579,10 @@ static inline void ioc3_rx(struct net_device *dev)
+ 		ip->rx_skbs[n_entry] = new_skb;
+ 		rxr[n_entry] = cpu_to_be64(ioc3_map(rxb, 1));
+ 		rxb->w0 = 0;				/* Clear valid flag */
+-		n_entry = (n_entry + 1) & 511;		/* Update erpir */
++		n_entry = (n_entry + 1) & RX_RING_MASK;	/* Update erpir */
+ 
+ 		/* Now go on to the next ring entry.  */
+-		rx_entry = (rx_entry + 1) & 511;
++		rx_entry = (rx_entry + 1) & RX_RING_MASK;
+ 		skb = ip->rx_skbs[rx_entry];
+ 		rxb = (struct ioc3_erxbuf *)(skb->data - RX_OFFSET);
+ 		w0 = be32_to_cpu(rxb->w0);
+@@ -598,7 +604,7 @@ static inline void ioc3_tx(struct net_device *dev)
+ 	spin_lock(&ip->ioc3_lock);
+ 	etcir = readl(&regs->etcir);
+ 
+-	tx_entry = (etcir >> 7) & 127;
++	tx_entry = (etcir >> 7) & TX_RING_MASK;
+ 	o_entry = ip->tx_ci;
+ 	packets = 0;
+ 	bytes = 0;
+@@ -610,17 +616,17 @@ static inline void ioc3_tx(struct net_device *dev)
+ 		dev_consume_skb_irq(skb);
+ 		ip->tx_skbs[o_entry] = NULL;
+ 
+-		o_entry = (o_entry + 1) & 127;		/* Next */
++		o_entry = (o_entry + 1) & TX_RING_MASK;	/* Next */
+ 
+ 		etcir = readl(&regs->etcir);		/* More pkts sent?  */
+-		tx_entry = (etcir >> 7) & 127;
++		tx_entry = (etcir >> 7) & TX_RING_MASK;
+ 	}
+ 
+ 	dev->stats.tx_packets += packets;
+ 	dev->stats.tx_bytes += bytes;
+ 	ip->txqlen -= packets;
+ 
+-	if (ip->txqlen < 128)
++	if (netif_queue_stopped(dev) && ip->txqlen < TX_RING_ENTRIES)
+ 		netif_wake_queue(dev);
+ 
+ 	ip->tx_ci = o_entry;
+@@ -765,10 +771,10 @@ static inline void ioc3_clean_rx_ring(struct ioc3_private *ip)
+ 		ip->rx_skbs[ip->rx_pi] = ip->rx_skbs[ip->rx_ci];
+ 		ip->rxr[ip->rx_pi++] = ip->rxr[ip->rx_ci++];
+ 	}
+-	ip->rx_pi &= 511;
+-	ip->rx_ci &= 511;
++	ip->rx_pi &= RX_RING_MASK;
++	ip->rx_ci &= RX_RING_MASK;
+ 
+-	for (i = ip->rx_ci; i != ip->rx_pi; i = (i + 1) & 511) {
++	for (i = ip->rx_ci; i != ip->rx_pi; i = (i + 1) & RX_RING_MASK) {
+ 		skb = ip->rx_skbs[i];
+ 		rxb = (struct ioc3_erxbuf *)(skb->data - RX_OFFSET);
+ 		rxb->w0 = 0;
+@@ -780,7 +786,7 @@ static inline void ioc3_clean_tx_ring(struct ioc3_private *ip)
+ 	struct sk_buff *skb;
+ 	int i;
+ 
+-	for (i = 0; i < 128; i++) {
++	for (i = 0; i < TX_RING_ENTRIES; i++) {
+ 		skb = ip->tx_skbs[i];
+ 		if (skb) {
+ 			ip->tx_skbs[i] = NULL;
+@@ -812,7 +818,7 @@ static void ioc3_free_rings(struct ioc3_private *ip)
+ 			if (skb)
+ 				dev_kfree_skb_any(skb);
+ 
+-			n_entry = (n_entry + 1) & 511;
++			n_entry = (n_entry + 1) & RX_RING_MASK;
+ 		}
+ 		free_page((unsigned long)ip->rxr);
+ 		ip->rxr = NULL;
+@@ -1425,13 +1431,13 @@ static netdev_tx_t ioc3_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	mb(); /* make sure all descriptor changes are visible */
+ 
+ 	ip->tx_skbs[produce] = skb;			/* Remember skb */
+-	produce = (produce + 1) & 127;
++	produce = (produce + 1) & TX_RING_MASK;
+ 	ip->tx_pi = produce;
+ 	writel(produce << 7, &ip->regs->etpir);		/* Fire ... */
+ 
+ 	ip->txqlen++;
+ 
+-	if (ip->txqlen >= 127)
++	if (ip->txqlen >= (TX_RING_ENTRIES - 1))
+ 		netif_stop_queue(dev);
+ 
+ 	spin_unlock_irq(&ip->ioc3_lock);
 -- 
 2.13.7
 
