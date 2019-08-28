@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F5EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE79C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D6F2339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7F6C233FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:56:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DhOt2NbA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tYltaOcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfH1W4P (ORCPT
+        id S1727014AbfH1W4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 18:56:15 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:43209 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727230AbfH1W4L (ORCPT
+        Wed, 28 Aug 2019 18:56:18 -0400
+Received: from mail-yw1-f74.google.com ([209.85.161.74]:57091 "EHLO
+        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727281AbfH1W4O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 18:56:11 -0400
-Received: by mail-pf1-f202.google.com with SMTP id q67so857760pfc.10
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 15:56:11 -0700 (PDT)
+        Wed, 28 Aug 2019 18:56:14 -0400
+Received: by mail-yw1-f74.google.com with SMTP id x20so1044420ywg.23
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 15:56:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=2yoc1GXfYVLtZMNWi7ZECLQeadNDjorQFIKFDUAGhfE=;
-        b=DhOt2NbA0WCkAxiij5rqLx8+s6ImkZreZtvO53khZX4r8LiDrRXEaxcSqPrm+6A/wV
-         RbvCPnS9TMGV9TgeEy/fod0EMRNImTnm+Z8InKr4nZuY9320QraIDLwfG4UeBPkoJrt6
-         0pFqqxLJ+UKjz/GwCbVbYgV0/aCJLnIOxL26dxi/tGPsNPutnUfdcF5dSm88dTInhfJI
-         WMb1aaZKtKc48GMwRkbk1+xryLFSJ+NDPSaoJ4mUag2RWBqLeeO7m3FK/Vf8NYOSFvmB
-         ozSXrEfdmPCTCafdWg3hEIT3lZosf2QMhxMfyopav00wNN/1TDGLXV7Q5wdCGgLZC4Cc
-         NNOw==
+        bh=9sn2Js9Jk/bJ5Zg7h20L566WLWmk48WwAynvNmd3FH0=;
+        b=tYltaOcXAE1Pk0+XWSPCxkgkn4DA8pkE8EZAGttEN1oDBLIzf0BNTyu+945ulEISPq
+         rBAq8NTnpvqGlOZ/BEdwqoxU/Vkvr4MxH0mbzwbtCXbr90JtfwCO5LZe0+i7fq5KeZ4c
+         gzXGaQBqsehZ/wx0X7zTnPe9JczuFwG4sx8nZkGMbKkOKh3Dw0voX02SmgMMmfvi3HEO
+         3IbHAWJa/7sewAZmKYL78GA0dBir4bO6etEVF1VvnF3mgIDfZKOakkWXcOLs0ydxdvFi
+         ChH2MNi9fQzHNDuUSpJf7P/+nYtv7jJy6fLKFYewdkcBAYn9AT51ylcMFlj+pldnfa0c
+         Fl7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=2yoc1GXfYVLtZMNWi7ZECLQeadNDjorQFIKFDUAGhfE=;
-        b=lzBlateSzIETjAMrGH1NIrGMvMhZDlnUItHb6NQLfwyHqO9vEYE7Q6isSI++x4A0A+
-         F6soiXaTSJLKPwCt8zPjzQQ8ojyQt3jqDcP/2WZVQ8WrB3k2QHezHPEuRX1lLdghgDfO
-         DD7ebbDYkWEdDqag9pOmvLCH+8YQlNo5YdEvsF0//Ip9Uk+bm/z3Owo9Hl84ZIi3UfOQ
-         wvo3Y+GrFecOr611WJnQQbwuF/DGdd5932nPINQi2ciV1/T4FIlMaQTyDMhkXoeYD1yE
-         2oYiWGvg8HPDBGL+1TiJ5ZNfDcpVCxZT/BH1j/LX5G3dyjU/8hQ6TczBlt0KjaNaM0RY
-         +5LQ==
-X-Gm-Message-State: APjAAAWlwZaRtELOuONtLvHRkhqJcQ+zqp3llIsTFcQd9fTXpZmdDtMt
-        nHBiIrRd2dKjSSHt2UPLUr7XlCr9J2txWNMHpOw=
-X-Google-Smtp-Source: APXvYqw0QkSd6wT7yOaU7zoS4nMfF/M9loxATVkkpNqvjLCaIJHHVOTdFNdIWNbOPJzKWJ9EOoB8v4zL2PEJy/qRoq8=
-X-Received: by 2002:a65:56c1:: with SMTP id w1mr5392712pgs.395.1567032970530;
- Wed, 28 Aug 2019 15:56:10 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 15:55:26 -0700
+        bh=9sn2Js9Jk/bJ5Zg7h20L566WLWmk48WwAynvNmd3FH0=;
+        b=jOPo5f8RiseWcBMMxAbGH8yuHB3sKd1D2wvW5zu9FDx6v/q0/t3XGG+6i8u+BPf9M3
+         BYOM4SjWGq8ID34mXU7bNSLFL+U0aLvB7SZPxee2iMNm3eyMQ/1c8cdxElN/XijSDCHG
+         FiLYMbZLoGMIF+39gQUYiUWLsXqYV9X8Se4fNqfr9E6GIvJQAE+mURyWwzWodIsNCwXS
+         y8E++mDTMUxrFWYPvRmdydF9m0ArT7m6liQ5QSkatHcc3VXY+nCF20DejiG7ELN5MwbR
+         3BqKzc06jCVi9nIZQ5+4RVsnQZBN2HS7R5G+147S+Bimqw9Aj2nQmxjyZFuqHojI9KAq
+         5BgQ==
+X-Gm-Message-State: APjAAAUEhUQpplYtnSe5xogvKGrd+YGXuf+/dGQNrfvbO/XL/F1M1/Ve
+        EIEEe+wsajyo+zOX0X0coZcZyrOyOB/PSk1BjVE=
+X-Google-Smtp-Source: APXvYqyct/Nm+WyQyU3D6RHUexlV8O9rrKlkogR7y5MmqVECwCUKxqY+Dq/ozDF+TpLUU3J7i4g/uYt/m6vktMB2IJQ=
+X-Received: by 2002:a81:2d46:: with SMTP id t67mr4917695ywt.512.1567032973325;
+ Wed, 28 Aug 2019 15:56:13 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 15:55:27 -0700
 In-Reply-To: <20190828225535.49592-1-ndesaulniers@google.com>
-Message-Id: <20190828225535.49592-6-ndesaulniers@google.com>
+Message-Id: <20190828225535.49592-7-ndesaulniers@google.com>
 Mime-Version: 1.0
 References: <20190828225535.49592-1-ndesaulniers@google.com>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v3 05/14] ia64: prefer __section from compiler_attributes.h
+Subject: [PATCH v3 06/14] arm: prefer __section from compiler_attributes.h
 From:   Nick Desaulniers <ndesaulniers@google.com>
 To:     miguel.ojeda.sandonis@gmail.com
 Cc:     sedat.dilek@gmail.com, will@kernel.org, jpoimboe@redhat.com,
@@ -94,21 +94,58 @@ Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
 Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- arch/ia64/include/asm/cache.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/include/asm/cache.h     | 2 +-
+ arch/arm/include/asm/mach/arch.h | 4 ++--
+ arch/arm/include/asm/setup.h     | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/ia64/include/asm/cache.h b/arch/ia64/include/asm/cache.h
-index 4eb6f742d14f..7decf91ca11a 100644
---- a/arch/ia64/include/asm/cache.h
-+++ b/arch/ia64/include/asm/cache.h
-@@ -25,6 +25,6 @@
- # define SMP_CACHE_BYTES	(1 << 3)
+diff --git a/arch/arm/include/asm/cache.h b/arch/arm/include/asm/cache.h
+index 1d65ed3a2755..cc06079600e0 100644
+--- a/arch/arm/include/asm/cache.h
++++ b/arch/arm/include/asm/cache.h
+@@ -24,6 +24,6 @@
+ #define ARCH_SLAB_MINALIGN 8
  #endif
  
 -#define __read_mostly __attribute__((__section__(".data..read_mostly")))
 +#define __read_mostly __section(.data..read_mostly)
  
- #endif /* _ASM_IA64_CACHE_H */
+ #endif
+diff --git a/arch/arm/include/asm/mach/arch.h b/arch/arm/include/asm/mach/arch.h
+index e7df5a822cab..2986f6b4862d 100644
+--- a/arch/arm/include/asm/mach/arch.h
++++ b/arch/arm/include/asm/mach/arch.h
+@@ -81,7 +81,7 @@ extern const struct machine_desc __arch_info_begin[], __arch_info_end[];
+ #define MACHINE_START(_type,_name)			\
+ static const struct machine_desc __mach_desc_##_type	\
+  __used							\
+- __attribute__((__section__(".arch.info.init"))) = {	\
++ __section(.arch.info.init) = {	\
+ 	.nr		= MACH_TYPE_##_type,		\
+ 	.name		= _name,
+ 
+@@ -91,7 +91,7 @@ static const struct machine_desc __mach_desc_##_type	\
+ #define DT_MACHINE_START(_name, _namestr)		\
+ static const struct machine_desc __mach_desc_##_name	\
+  __used							\
+- __attribute__((__section__(".arch.info.init"))) = {	\
++ __section(.arch.info.init) = {	\
+ 	.nr		= ~0,				\
+ 	.name		= _namestr,
+ 
+diff --git a/arch/arm/include/asm/setup.h b/arch/arm/include/asm/setup.h
+index 67d20712cb48..00190f1f0574 100644
+--- a/arch/arm/include/asm/setup.h
++++ b/arch/arm/include/asm/setup.h
+@@ -14,7 +14,7 @@
+ #include <uapi/asm/setup.h>
+ 
+ 
+-#define __tag __used __attribute__((__section__(".taglist.init")))
++#define __tag __used __section(.taglist.init)
+ #define __tagtable(tag, fn) \
+ static const struct tagtable __tagtable_##fn __tag = { tag, fn }
+ 
 -- 
 2.23.0.187.g17f5b7556c-goog
 
