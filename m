@@ -2,149 +2,101 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626E6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEB3C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3981922CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:08:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Y5B6obTo"
+	by mail.kernel.org (Postfix) with ESMTP id 2EE142077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:09:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566997758;
+	bh=U3FZYhMcq/k1KSsuXFiZMT2uabIYtqGZpMhTCs/Urek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L0E9512zmW7s4QV8xehUpncLIxQu9ABS7pjuCcfc45u3CQ9ZtX5ulrDbjfTZiZlzH
+	 qP8W7zXYuDuJ+xU2jOSstMo8LEfp2JzLZ7B2cpCKlYSGL/8uluG8OZOWv3oD8FGJfs
+	 Xmj4YeypwzcBtt2VBWLihmQlvrs9bmtMhGyg/Tbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfH1NIv (ORCPT
+        id S1726566AbfH1NJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:08:51 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:11462 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbfH1NIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:08:51 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46JQzg3kGdz9txhj;
-        Wed, 28 Aug 2019 15:08:47 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Y5B6obTo; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id r64Uwv1Lynu4; Wed, 28 Aug 2019 15:08:47 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46JQzg2ZmBz9txgj;
-        Wed, 28 Aug 2019 15:08:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566997727; bh=+Ru/YcnPxN7Wge10zCE6AYHla18pP5X9f7nBPFpgkac=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Y5B6obToOkjP4Ff8if0UsMGPSgW6lRVj2736s0QlPDJjUckmNBtKUkIgZmSvatPsf
-         aoDQdtUuVkVJG2eHXxen8MfR7pCBI9lp7oZu2we1qegqNLnervO1Mhyx7wIC5Gngxa
-         +EiYZAfDaYDJx0IMzSlW5C003iNTDs411BdWYf88=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C02748B895;
-        Wed, 28 Aug 2019 15:08:48 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id nx4I442IqYD8; Wed, 28 Aug 2019 15:08:48 +0200 (CEST)
-Received: from pc16032vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.105])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5FFB28B885;
-        Wed, 28 Aug 2019 15:08:48 +0200 (CEST)
-Subject: Re: [PATCH v2 0/4] Disable compat cruft on ppc64le v2
-To:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Breno Leitao <leitao@debian.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Allison Randal <allison@lohutok.net>,
-        Michael Neuling <mikey@neuling.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <cover.1566987936.git.msuchanek@suse.de>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <dbc5abde-ea15-be43-1fdb-d16052c19e03@c-s.fr>
-Date:   Wed, 28 Aug 2019 13:08:48 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Wed, 28 Aug 2019 09:09:17 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58548 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfH1NJQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:09:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WSWbS6ihzqaiPHwyoaBqyBgPm/auLcr1DVrpKWTKdbU=; b=IXEh7FFZEguEpku6GjnPND5zw
+        Fkkgg/y7e7HuxV8YO5ZsB9ZIlDwjxiMNUHJs6lA6ZEQL69p0qHmOWx4guWLQCa/3XAspchiUDQmYy
+        SW9YUnm1Y0gwkPz/OtRL22amt+MHddAsr5fX/W5/IIQ9BKWzaymxgjeS6TAaxzSqxSJpg=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i2xhJ-0004FK-Q9; Wed, 28 Aug 2019 13:09:13 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 3438D2742B61; Wed, 28 Aug 2019 14:09:13 +0100 (BST)
+Date:   Wed, 28 Aug 2019 14:09:13 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/1] spi: bcm-qspi: Make BSPI default mode
+Message-ID: <20190828130913.GI4298@sirena.co.uk>
+References: <1565086474-4461-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+ <20190806121612.GB4527@sirena.org.uk>
+ <CAC=U0a2VsdrjypcLQCJTROmbF9ojuJ2rA4Og7XXeR48LAjrArA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <cover.1566987936.git.msuchanek@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="/GPgYEyhnw15BExa"
+Content-Disposition: inline
+In-Reply-To: <CAC=U0a2VsdrjypcLQCJTROmbF9ojuJ2rA4Og7XXeR48LAjrArA@mail.gmail.com>
+X-Cookie: Oatmeal raisin.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--/GPgYEyhnw15BExa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 08/28/2019 10:30 AM, Michal Suchanek wrote:
-> With endian switch disabled by default the ppc64le compat supports
-> ppc32le only which is something next to nobody has binaries for.
-> 
-> Less code means less bugs so drop the compat stuff.
-> 
-> I am not particularly sure about the best way to resolve the llseek
-> situation. I don't see anything in the syscal tables making it
-> 32bit-only so I suppose it should be available on 64bit as well.
-> 
-> This is tested on ppc64le top of
+On Tue, Aug 27, 2019 at 09:01:42AM -0400, Kamal Dasu wrote:
 
-Really ?
+Please don't top post, reply in line with needed context.  This allows
+readers to readily follow the flow of conversation and understand what
+you are talking about and also helps ensure that everything in the
+discussion is being addressed.
 
-I get a build failure with ppc64_defconfig + LITTLE_ENDIAN :
+> The spi-nor controller defaults to BSPI mode. So its being put to its
+> default mode.
 
-   CC      arch/powerpc/kernel/signal.o
-arch/powerpc/kernel/signal.c: In function 'do_signal':
-arch/powerpc/kernel/signal.c:250:6: error: unused variable 'is32' 
-[-Werror=unused-variable]
-   int is32 = is_32bit_task();
-       ^~~~
-cc1: all warnings being treated as errors
-make[3]: *** [arch/powerpc/kernel/signal.o] Error 1
+The changelog should explain this.
 
-Christophe
+--/GPgYEyhnw15BExa
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> https://patchwork.ozlabs.org/cover/1153556/
-> 
-> Changes in v2: saner CONFIG_COMPAT ifdefs
-> 
-> Thanks
-> 
-> Michal
-> 
-> Michal Suchanek (4):
->    fs: always build llseek.
->    powerpc: move common register copy functions from signal_32.c to
->      signal.c
->    powerpc/64: make buildable without CONFIG_COMPAT
->    powerpc/64: Disable COMPAT if littleendian.
-> 
->   arch/powerpc/Kconfig               |   2 +-
->   arch/powerpc/include/asm/syscall.h |   2 +
->   arch/powerpc/kernel/Makefile       |  15 ++-
->   arch/powerpc/kernel/entry_64.S     |   2 +
->   arch/powerpc/kernel/signal.c       | 146 ++++++++++++++++++++++++++++-
->   arch/powerpc/kernel/signal_32.c    | 140 ---------------------------
->   arch/powerpc/kernel/syscall_64.c   |   5 +-
->   arch/powerpc/kernel/vdso.c         |   4 +-
->   arch/powerpc/perf/callchain.c      |  14 ++-
->   fs/read_write.c                    |   2 -
->   10 files changed, 177 insertions(+), 155 deletions(-)
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1mfPgACgkQJNaLcl1U
+h9DT8Af/W9xLRIZrZOMJ7/axJAM6NO/K2kioTvE+M5sZVU6WqHQf8PxU2bIEMUk4
+Thq6SBNkopZrxLYPuEVvztrBImWJhpvG7cxd5xb6+3XWDxU+gfRNGdBoOn1J+k7u
+cCs1Fl8eCkUWcu09MPuQ/iL7kbZcXxOdyvN3xP4T+q4TpLudWae7dTOUc7CxltqL
+dNWj8/UEAjr/Qa7uyzYZ+zUe6rjamJ0NafvgFzOdlbQjB+rWzmvXVE4JjeLoj/yT
+X1ApML5M/o0Ii2LHvsTVFWQiW0bXhwjQhrV+yZu7afFBlocXHSqacP+txTrWhRBX
+wPMTLMcjgcFYeyZGIg5NxZWZ+D0xkg==
+=l/ec
+-----END PGP SIGNATURE-----
+
+--/GPgYEyhnw15BExa--
