@@ -2,278 +2,556 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471DBC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB551C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 041CE22CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8972C22CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:42:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kJN/7pmh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="la7r9TLX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfH1VmN (ORCPT
+        id S1727007AbfH1Vmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:42:13 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55613 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbfH1VmN (ORCPT
+        Wed, 28 Aug 2019 17:42:31 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33039 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbfH1Vmb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:42:13 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f72so1541264wmf.5
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 14:42:10 -0700 (PDT)
+        Wed, 28 Aug 2019 17:42:31 -0400
+Received: by mail-pl1-f194.google.com with SMTP id go14so576372plb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 14:42:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9cUJTalk9UT065cy7J/NUfxyGrICB2f0wc49I6zU5Q4=;
-        b=kJN/7pmheA+InmF5KtWUWMzBtSOESyyTW+USV1YM83xekT1h153KEu9IbmmJMDE5ek
-         l6S5X2qixTwye9mi7j67MC9Wdzf+c66cmbG7iV2OGjhLAJZbeG624TAGyRgWtOySwV05
-         eRC+BnNgobC1I9P6ObA622jQrkGm8WuID8P9Yr1UggCuTAWplbw/7b40sDu4rqHHRSiI
-         VSDAwdaf6bYmoxMcKxbxxrxIL4c4i41Mp5aZk8BrgKbZ2EDeGLzHmjJ6WVf+zlVEACVL
-         vpEg6fDwPkDkBHoNvXHfXVdWEKr7vvMlvZM51hA7DOkv6bm1PnYgmLmSakPrZuViRvQ5
-         /HZw==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:subject:to:from:user-agent:date;
+        bh=LDrJN78swrMMxTHINo5awtlZAwquYmUFK4yMD7VkcMU=;
+        b=la7r9TLXU+NDtIhY6O2OLWmlqu7Ah++Y6piSXx6+5+y7QwV+VBB7SEbswo04eZOKkY
+         wQcxcJPYaQTA989uD0BEaak/osFdHOvZVWOCBYmRgAYeghsrk/5i046m3KTDsHGhhP3T
+         ZUrRfJPb2z4d8YWLscAlaafnVLRvldlH+/OZI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9cUJTalk9UT065cy7J/NUfxyGrICB2f0wc49I6zU5Q4=;
-        b=jDs62tW9ttfVTPX4p50vwCP4yc71u4s0YdKRQHwh/iMc5C7/XxKHSA0QytaUW7G+Tk
-         Rze87LwXTycmKXuexNdMUhzcrQPQKqmHrUusM8CaNIc2G37KgZ/0UpmocJnQLhj9HY54
-         XKbkroD1cXoLRzaeYVdQDUtm3SLh+DCcK/RMHBJ1nNMH3sgDOVTdmMCnXkzDqoKrTtK3
-         rgE5mPelivL4bq8TqJmpWXi3mC3DwEVGPieJdCpDqrzNjEyBzyxmb5EiUb10A1wJcwpj
-         88/oKaPx75vERH5MB+BbItypmIoyEQXk0Abnfb4PKYay4LOGzWS/6aZseHlge+EUHUtR
-         FJHw==
-X-Gm-Message-State: APjAAAV050LjkE9OBkKMJmTI1BhuIoco58GU/kfYMZlWrM7keE1eWxoP
-        7HcSjjNWNGLrH1qbremRJxFm9g==
-X-Google-Smtp-Source: APXvYqxKQxTbvoB4+l8ypE9/XNNnCohkPRwiPD2P5IbHpI3y4/6JjoMT+BmXEILa3fjrCMNPSPldwQ==
-X-Received: by 2002:a1c:6087:: with SMTP id u129mr7000155wmb.108.1567028528895;
-        Wed, 28 Aug 2019 14:42:08 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id d16sm262566wrv.55.2019.08.28.14.42.08
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
+         :user-agent:date;
+        bh=LDrJN78swrMMxTHINo5awtlZAwquYmUFK4yMD7VkcMU=;
+        b=qKmop1nipv46M/20/syStEYsDYg3aTEqwUyNJH6dF6ifohu75Qkv4v3PZstnhLMsLK
+         pVlXBbsSItzF85fjErvUkQ6c0hALFwQbHdL4Hdicu/bAybfkzn5Ua/O0ZFRgYPp6M/Vr
+         OW3/na22HMSnoQiAdsKd4P1P8l1vn4jN311sWuZrCaB9LZgxKfMR1450fq3X4FZAjDdM
+         N/qY+rfHrgC/KH30zl7hi0+UnkQ8BEctpx5YJbdpj2/vCHAXWPr3kqq8xMqjB6AQvRqf
+         K2Hur0G9ZrW8jFw9QHKC5mYUfI+VExcsiSrvCeZtng2Z0xh0enDMnRYdUIXc2a8wfQlH
+         BGtA==
+X-Gm-Message-State: APjAAAVFfBDNcRGvdt/ZzTnbhUqkxedJrnTsPKZCcs0/ds7sq0wVhENl
+        o0HfmCeWolxJKQaRsjOmosF97Q==
+X-Google-Smtp-Source: APXvYqwYTeDAowzlzAkDxZz7oOto4rbnQgH/GzVolQqHURmi9UIsX3deKmGnPugpIKq7tg206io/5Q==
+X-Received: by 2002:a17:902:fe0f:: with SMTP id g15mr6146828plj.2.1567028550008;
+        Wed, 28 Aug 2019 14:42:30 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id j187sm313829pfg.178.2019.08.28.14.42.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 14:42:08 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 22:42:05 +0100
-From:   Matthias Maennich <maennich@google.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Debian kernel maintainers <debian-kernel@lists.debian.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        Sandeep Patil <sspatil@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Stephen Hines <srhines@google.com>,
-        Jessica Yu <jeyu@kernel.org>, Dodji Seketeli <dodji@redhat.com>
-Subject: Re: a bug in genksysms/CONFIG_MODVERSIONS w/ __attribute__((foo))?
-Message-ID: <20190828214205.GC30359@google.com>
-References: <CAKwvOdnJAApaUhTQs7w_VjSeYBQa0c-TNxRB4xPLi0Y0sOQMMQ@mail.gmail.com>
- <CAKwvOdkbY_XatVfRbZQ88p=nnrahZbvdjJ0OkU9m73G89_LRzg@mail.gmail.com>
- <1566899033.o5acyopsar.astroid@bobo.none>
- <CAK7LNARHacanVT6XjRDkFJDETWX6qHfUJCFhskCVG6aDL-bt1g@mail.gmail.com>
- <1566908344.dio7j9zb2h.astroid@bobo.none>
- <daacccf8e36132b6a747fa4b42626a8812906eaa.camel@decadent.org.uk>
- <1566955930.uir50f8wen.astroid@bobo.none>
- <CAKwvOdmtT4in42Nwsm0ndqm8CB2jzaCKvtX+nmhdpA2dgMpBmw@mail.gmail.com>
+        Wed, 28 Aug 2019 14:42:29 -0700 (PDT)
+Message-ID: <5d66f545.1c69fb81.3663f.129d@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdmtT4in42Nwsm0ndqm8CB2jzaCKvtX+nmhdpA2dgMpBmw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <a4666f8afa39471658602e06758b04a991f80828.1566907161.git.amit.kucheria@linaro.org>
+References: <cover.1566907161.git.amit.kucheria@linaro.org> <a4666f8afa39471658602e06758b04a991f80828.1566907161.git.amit.kucheria@linaro.org>
+Cc:     linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 15/15] drivers: thermal: tsens: Add interrupt support
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, agross@kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marc.w.gonzalez@free.fr, masneyb@onstation.org
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 28 Aug 2019 14:42:28 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 10:17:27AM -0700, Nick Desaulniers wrote:
->On Tue, Aug 27, 2019 at 7:26 PM Nicholas Piggin <npiggin@gmail.com> wrote:
->>
->> Ben Hutchings's on August 28, 2019 1:34 am:
->> > On Tue, 2019-08-27 at 22:42 +1000, Nicholas Piggin wrote:
->> >> Masahiro Yamada's on August 27, 2019 8:49 pm:
->> >> > Hi.
->> >> >
->> >> > On Tue, Aug 27, 2019 at 6:59 PM Nicholas Piggin <npiggin@gmail.com> wrote:
->> >> > > Nick Desaulniers's on August 27, 2019 8:57 am:
->> >> > > > On Mon, Aug 26, 2019 at 2:22 PM Nick Desaulniers
->> >> > > > <ndesaulniers@google.com> wrote:
->> >> > > > > I'm looking into a linkage failure for one of our device kernels, and
->> >> > > > > it seems that genksyms isn't producing a hash value correctly for
->> >> > > > > aggregate definitions that contain __attribute__s like
->> >> > > > > __attribute__((packed)).
->> >> > > > >
->> >> > > > > Example:
->> >> > > > > $ echo 'struct foo { int bar; };' | ./scripts/genksyms/genksyms -d
->> >> > > > > Defn for struct foo == <struct foo { int bar ; } >
->> >> > > > > Hash table occupancy 1/4096 = 0.000244141
->> >> > > > > $ echo 'struct __attribute__((packed)) foo { int bar; };' |
->> >> > > > > ./scripts/genksyms/genksyms -d
->> >> > > > > Hash table occupancy 0/4096 = 0
->> >> > > > >
->> >> > > > > I assume the __attribute__ part isn't being parsed correctly (looks
->> >> > > > > like genksyms is a lex/yacc based C parser).
->> >> > > > >
->> >> > > > > The issue we have in our out of tree driver (*sadface*) is basically a
->> >> > > > > EXPORT_SYMBOL'd function whose signature contains a packed struct.
->> >> > > > >
->> >> > > > > Theoretically, there should be nothing wrong with exporting a function
->> >> > > > > that requires packed structs, and this is just a bug in the lex/yacc
->> >> > > > > based parser, right?  I assume that not having CONFIG_MODVERSIONS
->> >> > > > > coverage of packed structs in particular could lead to potentially
->> >> > > > > not-fun bugs?  Or is using packed structs in exported function symbols
->> >> > > > > with CONFIG_MODVERSIONS forbidden in some documentation somewhere I
->> >> > > > > missed?
->> >> > > >
->> >> > > > Ah, looks like I'm late to the party:
->> >> > > > https://lwn.net/Articles/707520/
->> >> > >
->> >> > > Yeah, would be nice to do something about this.
->> >> >
->> >> > modversions is ugly, so it would be great if we could dump it.
->> >> >
->> >> > > IIRC (without re-reading it all), in theory distros would be okay
->> >> > > without modversions if they could just provide their own explicit
->> >> > > versioning. They take care about ABIs, so they can version things
->> >> > > carefully if they had to change.
->> >
->> > Debian doesn't currently have any other way of detecting ABI changes
->> > (other than eyeballing diffs).
->> >
->> > I know there have been proposals of using libabigail for this instead,
->> > but I'm not sure how far those progressed.
->> >
->> >> > We have not provided any alternative solution for this, haven't we?
->> >> >
->> >> > In your patch (https://lwn.net/Articles/707729/),
->> >> > you proposed CONFIG_MODULE_ABI_EXPLICIT.
->> >>
->> >> Right, that was just my first proposal, but I am not confident that I
->> >> understood everybody's requirements. I don't think the distro people
->> >> had much time to to test things out.
->> >>
->> >> One possible shortcoming with that patch is no per-symbol version. The
->> >> distro may break an ABI for a security fix, but they don't want to break
->> >> all out of tree modules if it's an obscure ABI.
->> >
->> > Right, for example the KVM kABI is only meant for in-tree modules (like
->> > kvm_intel) and in Debian we do not change the "ABI version" and require
->> > rebuilding out-of-tree modules just because that ABI changes.
->> > Currently we maintain explicit lists of exported symbols and exporting
->> > modules for which we ignore ABI changes at build time.
->> >
->> >> The counter argument to
->> >> that is they should just rename the symbol in their kernel for such
->> >> cases, so I didn't implement it without somebody describing a good
->> >> requirement.
->> > [...]
->> >
->> > Sometimes it is just a single function that changes, but often a
->> > structure change can affect large numbers of functions.  For example,
->> > if KVM adds a member to an operations struct that can indirectly change
->> > the ABI for most of its exported functions.  We wouldn't want to change
->> > the ABI version but would still want to prevent loading mismatched kvm
->> > and kvm_intel versions.  It would be a lot more work to change all of
->> > the affected function names.
->>
->> You could change just a single symbol name though :)
->>
->> > An alternative to symbol version matching that I think would work for
->> > us is: if a module's exports or imports match the "changes ignored"
->> > list then the module can only be loaded on the exact version of the
->> > kernel, otherwise it only needs to match the ABI version.  I think that
->> > would avoid the need for carrying symbol versions, but we would still
->> > need a build-time ABI check and a way of flagging which symbols need
->> > the tighter version match.
->>
->> Just trying to think how best to express that.
->>
->> [ Aside, the whole symbol name resolution linking stuff does matching on
->>   on any number of ~arbitrary strings that you can generate as you like,
->>   and symbol tables are something that all existing tools and libs
->>   understand.
->>
->>   So I strongly favour using that as the back end for our "version"
->>   resolution system _if at all possible_ rather than adding these extra
->>   bits of crud that really just do the same thing. At least for a first
->>   pass, I don't want to over-engineer things.
->>
->>   Then it hopefully becomes a matter of adding some helper macros and
->>   build facilities on top of that which can contain everyone's
->>   requirements mostly within .config and perhaps a very small patch.
->>   A bit more work with preprocessor macros etc is far preferable to
->>   linking and loading "features" IMO]
->>
->> Back to your case, is it sufficient to have just an internal and an
->> external module version where the kernel provides both and your in-tree
->> modules match on the internal, others match on external?
->>
->> Thanks,
->> Nick
->>
->
->+ some Android folks who are looking into libabigail
->
->(root thread for context:
->https://lore.kernel.org/lkml/CAKwvOdnJAApaUhTQs7w_VjSeYBQa0c-TNxRB4xPLi0Y0sOQMMQ@mail.gmail.com/)
->
->I'm only roughly aware of their issue/work, but hopefully they can
->collaborate and add their insights to a list of requirements we could
->collect, for any kind of replacement to CONFIG_MODVERSIONS/genksyms.
->I'm not sure if they were planning on presenting this work at Linux
->Plumber's Conference coming up or not, but I hope so.  Hopefully that
->work will be a general solution for all kernel developers and distros,
->not just Android.
+Quoting Amit Kucheria (2019-08-27 05:14:11)
+> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/t=
+sens-common.c
+> index 06b44cfd5eab9..c549f8e1488ba 100644
+> --- a/drivers/thermal/qcom/tsens-common.c
+> +++ b/drivers/thermal/qcom/tsens-common.c
+> @@ -114,6 +146,314 @@ static int tsens_hw_to_mC(struct tsens_sensor *s, i=
+nt field)
+>         return sign_extend32(temp, priv->tempres) * 100;
+>  }
+> =20
+> +/**
+> + * tsens_mC_to_hw - Return correct value to be written to threshold
+> + * registers, whether in ADC code or deciCelsius depending on IP version
 
-Several people are currently working on improving libabigail's
-capabilities to deal with the kernel binaries. That ranges from fixes
-for newer kernel versions or fixes for binaries built with clang to
-performance improvements to better integrate the tool into build
-processes etc. There is still some work to do to be an actual
-replacement for what is used right now to detect ABI incompatibilities.
-But things look promising. The work that is done there is supposed to
-address general issues, not just Android. In particular, libabigail
-should be able to reliably keep track of the observable in-kernel ABI of
-the kernel binaries to detect potential incompatibilities with
-previously released kernel binaries. Please note, that this all happens
-after the build by inspecting binaries. As opposed to other solutions,
-in its current form, libabigail does not introduce any checks at
-runtime (i.e. module load time).
+Document arguments and return value? Maybe summary can be 'convert
+tsens temperature to hardware register value'?
 
-There are discussions about this topic scheduled at Plumber's in the
-Distro MC and the Android MC.
+> + */
+> +static int tsens_mC_to_hw(struct tsens_sensor *s, int temp)
+> +{
+> +       struct tsens_priv *priv =3D s->priv;
+> +
+> +       if (priv->feat->adc) {
+> +               /* milliC to C to adc code */
+> +               return degc_to_code(temp / 1000, s);
+> +       }
+> +
+> +       /* milliC to deciC */
+> +       return temp / 100;
+> +}
+> +
+> +static inline unsigned int tsens_ver(struct tsens_priv *priv)
 
-Cheers,
-Matthias
+Can this return the enum instead of unsigned int?
 
->This issue is now blocking my compiler upgrade, so I'm going to focus
->on just fixing the yacc based parser to understand __attribute__'s on
->struct/enum/union declarations.
->
->Speaking with Arnd about this issue, he came up with the test case:
->$ echo 'struct __attribute__((packed)) foo { char bar; int baz; };' |
->./scripts/genksyms/genksyms -d
->Hash table occupancy 0/4096 = 0
->$ echo 'struct __attribute__((packed)) foo { char bar; };' |
->./scripts/genksyms/genksyms -d
->Hash table occupancy 0/4096 = 0
->
->The implication being that because attributes don't parse correctly,
->these symbols get a hash value of 0x00 in Module.symvers, meaning we
->currently can't detect size changes of packed structs (or any other
->attribute-qualified type) and happily proceed loading modules with
->different ABIs than the kernel.
->
->I'll probably add some kind of script for unit tests for genksyms,
->too.  Feels like overkill for something known to be broken where
->active replacements are being discussed, but it's blocking my compiler
->upgrade for our products, so I'm just going to fix it for now.
+> +{
+> +       return priv->feat->ver_major;
+> +}
+> +
+> +/**
+> + * tsens_set_interrupt_v1 - Disable an interrupt (enable =3D false)
+> + *                          Re-enable an interrupt (enable =3D true)
+> + */
+> +static void tsens_set_interrupt_v1(struct tsens_priv *priv, u32 hw_id,
+> +                                  enum tsens_irq_type irq_type, bool ena=
+ble)
+> +{
+> +       u32 index;
+> +
+> +       if (enable) {
+> +               switch (irq_type) {
+> +               case UPPER:
+> +                       index =3D UP_INT_CLEAR_0 + hw_id;
+> +                       break;
+> +               case LOWER:
+> +                       index =3D LOW_INT_CLEAR_0 + hw_id;
+> +                       break;
+> +               }
+> +               regmap_field_write(priv->rf[index], 0);
+> +       } else {
+> +               switch (irq_type) {
+> +               case UPPER:
+> +                       index =3D UP_INT_CLEAR_0 + hw_id;
+> +                       break;
+> +               case LOWER:
+> +                       index =3D LOW_INT_CLEAR_0 + hw_id;
+> +                       break;
+> +               }
+> +               regmap_field_write(priv->rf[index], 1);
+> +       }
+
+De-dup the switch statement and have
+
+	regmap_field_write(priv->rf[index], enable ? 1 : 0);
+
+> +}
+> +
+> +/**
+> + * tsens_set_interrupt_v2 - Disable an interrupt (enable =3D false)
+> + *                          Re-enable an interrupt (enable =3D true)
+> + */
+> +static void tsens_set_interrupt_v2(struct tsens_priv *priv, u32 hw_id,
+> +                                  enum tsens_irq_type irq_type, bool ena=
+ble)
+> +{
+> +       u32 index_mask, index_clear;
+> +
+> +       if (enable) {
+> +               switch (irq_type) {
+> +               case UPPER:
+> +                       index_mask =3D UP_INT_MASK_0 + hw_id;
+> +                       break;
+> +               case LOWER:
+> +                       index_mask =3D LOW_INT_MASK_0 + hw_id;
+> +                       break;
+> +               }
+> +               regmap_field_write(priv->rf[index_mask], 0);
+> +       } else {
+> +               /* To disable the interrupt flag for a sensor:
+
+Nitpick: Wrong comment style.
+
+> +                *  1. Mask further interrupts for this sensor
+> +                *  2. Write 1 followed by 0 to clear the interrupt
+> +                */
+> +               switch (irq_type) {
+> +               case UPPER:
+> +                       index_mask  =3D UP_INT_MASK_0 + hw_id;
+> +                       index_clear =3D UP_INT_CLEAR_0 + hw_id;
+> +                       break;
+> +               case LOWER:
+> +                       index_mask  =3D LOW_INT_MASK_0 + hw_id;
+> +                       index_clear =3D LOW_INT_CLEAR_0 + hw_id;
+> +                       break;
+> +               }
+
+Please extract index_mask and index_clear assignments to one switch
+statement and then change the sequence to an if/else
+
+	if (enable) {
+               regmap_field_write(priv->rf[index_mask], 1);
+               regmap_field_write(priv->rf[index_clear], 1);
+               regmap_field_write(priv->rf[index_clear], 0);
+       } else {
+               regmap_field_write(priv->rf[index_mask], 0);
+       }
+
+> +}
+> +
+> +/**
+> + * tsens_set_interrupt - Disable an interrupt (enable =3D false)
+> + *                       Re-enable an interrupt (enable =3D true)
+> + */
+> +static void tsens_set_interrupt(struct tsens_priv *priv, u32 hw_id,
+> +                               enum tsens_irq_type irq_type, bool enable)
+> +{
+> +       dev_dbg(priv->dev, "[%u] %s: %s -> %s\n", hw_id, __func__,
+> +               irq_type ? ((irq_type =3D=3D 1) ? "UP" : "CRITICAL") : "L=
+OW",
+> +               enable ? "en" : "dis");
+> +       if (tsens_ver(priv) > VER_1_X)
+> +               tsens_set_interrupt_v2(priv, hw_id, irq_type, enable);
+> +       else
+> +               tsens_set_interrupt_v1(priv, hw_id, irq_type, enable);
+> +}
+> +
+> +/**
+> + * tsens_threshold_violated - Check if a sensor temperature violated a p=
+reset threshold
+> + *
+
+Document arguments?
+
+> + * Return: 0 if threshold was not violated, 1 if it was violated and neg=
+ative
+> + * errno in case of errors
+> + */
+> +static int tsens_threshold_violated(struct tsens_priv *priv, u32 hw_id,
+> +                                   struct tsens_irq_data *d)
+> +{
+> +       int ret;
+> +
+> +       ret =3D regmap_field_read(priv->rf[UPPER_STATUS_0 + hw_id], &d->u=
+p_viol);
+> +       if (ret)
+> +               return ret;
+> +       ret =3D regmap_field_read(priv->rf[LOWER_STATUS_0 + hw_id], &d->l=
+ow_viol);
+> +       if (ret)
+> +               return ret;
+> +       if (d->up_viol || d->low_viol)
+> +               return 1;
+> +
+> +       return 0;
+> +}
+> +
+> +static int tsens_read_irq_state(struct tsens_priv *priv, u32 hw_id,
+> +                               struct tsens_sensor *s, struct tsens_irq_=
+data *d)
+> +{
+> +       int ret;
+> +
+> +       ret =3D regmap_field_read(priv->rf[UP_INT_CLEAR_0 + hw_id], &d->u=
+p_irq_clear);
+> +       if (ret)
+> +               return ret;
+> +       ret =3D regmap_field_read(priv->rf[LOW_INT_CLEAR_0 + hw_id], &d->=
+low_irq_clear);
+> +       if (ret)
+> +               return ret;
+> +       if (tsens_ver(priv) > VER_1_X) {
+> +               ret =3D regmap_field_read(priv->rf[UP_INT_MASK_0 + hw_id]=
+, &d->up_irq_mask);
+> +               if (ret)
+> +                       return ret;
+> +               ret =3D regmap_field_read(priv->rf[LOW_INT_MASK_0 + hw_id=
+], &d->low_irq_mask);
+> +               if (ret)
+> +                       return ret;
+> +       } else {
+> +               /* No mask register on older TSENS */
+> +               d->up_irq_mask =3D 0;
+> +               d->low_irq_mask =3D 0;
+> +       }
+> +
+> +       d->up_thresh =3D tsens_hw_to_mC(s, UP_THRESH_0 + hw_id);
+> +       d->low_thresh =3D tsens_hw_to_mC(s, LOW_THRESH_0 + hw_id);
+> +
+> +       dev_dbg(priv->dev, "[%u] %s%s: status(%u|%u) | clr(%u|%u) | mask(=
+%u|%u)\n",
+> +               hw_id, __func__, (d->up_viol || d->low_viol) ? "(V)" : "",
+> +               d->low_viol, d->up_viol, d->low_irq_clear, d->up_irq_clea=
+r,
+> +               d->low_irq_mask, d->up_irq_mask);
+> +       dev_dbg(priv->dev, "[%u] %s%s: thresh: (%d:%d)\n", hw_id, __func_=
+_,
+> +               (d->up_viol || d->low_viol) ? "(violation)" : "",
+> +               d->low_thresh, d->up_thresh);
+> +
+> +       return 0;
+> +}
+> +
+> +static inline u32 masked_irq(u32 hw_id, u32 mask, enum tsens_ver ver)
+> +{
+> +       if (ver > VER_1_X)
+> +               return mask & (1 << hw_id);
+> +
+> +       /* v1, v0.1 don't have a irq mask register */
+> +       return 0;
+> +}
+> +
+> +irqreturn_t tsens_irq_thread(int irq, void *data)
+> +{
+> +       struct tsens_priv *priv =3D data;
+> +       struct tsens_irq_data d;
+> +       bool enable =3D true, disable =3D false;
+> +       unsigned long flags;
+> +       int temp, ret, i;
+> +
+> +       /*
+> +        * Check if any sensor raised an IRQ - for each sensor connected =
+to the
+> +        * TSENS block if it set the threshold violation bit.
+> +        */
+> +       for (i =3D 0; i < priv->num_sensors; i++) {
+> +               bool trigger =3D 0;
+
+How about trigger =3D false? It's a bool.
+
+> +               struct tsens_sensor *s =3D &priv->sensor[i];
+> +               u32 hw_id =3D s->hw_id;
+> +
+> +               if (IS_ERR(priv->sensor[i].tzd))
+> +                       continue;
+> +               if (!tsens_threshold_violated(priv, hw_id, &d))
+> +                       continue;
+> +               ret =3D get_temp_tsens_valid(s, &temp);
+> +               if (ret) {
+> +                       dev_err(priv->dev, "[%u] %s: error reading sensor=
+\n", hw_id, __func__);
+
+I hope there isn't an interrupt storm where we're trying to print out
+messages from the irq handler.
+
+> +                       continue;
+> +               }
+> +
+> +               spin_lock_irqsave(&priv->ul_lock, flags);
+> +
+> +               tsens_read_irq_state(priv, hw_id, s, &d);
+> +
+> +               if (d.up_viol &&
+> +                   !masked_irq(hw_id, d.up_irq_mask, tsens_ver(priv))) {
+> +                       tsens_set_interrupt(priv, hw_id, UPPER, disable);
+> +                       if (d.up_thresh > temp) {
+> +                               dev_dbg(priv->dev, "[%u] %s: re-arm upper=
+\n",
+> +                                       priv->sensor[i].hw_id, __func__);
+> +                               /* unmask the interrupt for this sensor */
+> +                               tsens_set_interrupt(priv, hw_id, UPPER, e=
+nable);
+> +                       } else {
+> +                               trigger =3D 1;
+> +                               /* Keep irq masked */
+> +                       }
+> +               } else if (d.low_viol &&
+> +                          !masked_irq(hw_id, d.low_irq_mask, tsens_ver(p=
+riv))) {
+> +                       tsens_set_interrupt(priv, hw_id, LOWER, disable);
+> +                       if (d.low_thresh < temp) {
+> +                               dev_dbg(priv->dev, "[%u] %s: re-arm low\n=
+",
+> +                                       priv->sensor[i].hw_id, __func__);
+> +                               /* unmask the interrupt for this sensor */
+> +                               tsens_set_interrupt(priv, hw_id, LOWER, e=
+nable);
+> +                       } else {
+> +                               trigger =3D 1;
+> +                               /* Keep irq masked */
+> +                       }
+> +               }
+> +
+> +               spin_unlock_irqrestore(&priv->ul_lock, flags);
+> +
+> +               if (trigger) {
+> +                       dev_dbg(priv->dev, "[%u] %s: TZ update trigger (%=
+d mC)\n",
+> +                               hw_id, __func__, temp);
+> +                       thermal_zone_device_update(priv->sensor[i].tzd,
+> +                                                  THERMAL_EVENT_UNSPECIF=
+IED);
+> +               } else {
+> +                       dev_dbg(priv->dev, "[%u] %s: no violation:  %d\n",
+> +                               hw_id, __func__, temp);
+> +               }
+> +       }
+> +
+> +       return IRQ_HANDLED;
+
+Should we return IRQ_NONE in the case that the above for loop didn't
+find anything in those if/else-ifs?
+
+> +}
+> +
+> +int tsens_set_trips(void *_sensor, int low, int high)
+> +{
+> +       struct tsens_sensor *s =3D _sensor;
+> +       struct tsens_priv *priv =3D s->priv;
+> +       struct device *dev =3D priv->dev;
+> +       struct tsens_irq_data d;
+> +       unsigned long flags;
+> +       int high_val, low_val, cl_high, cl_low;
+> +       bool enable =3D true;
+> +       u32 hw_id =3D s->hw_id;
+> +
+> +       dev_dbg(dev, "[%u] %s: proposed thresholds: (%d:%d)\n",
+> +               hw_id, __func__, low, high);
+> +
+> +       cl_high =3D clamp_val(high, -40000, 120000);
+> +       cl_low  =3D clamp_val(low, -40000, 120000);
+> +
+> +       high_val =3D tsens_mC_to_hw(s, cl_high);
+> +       low_val  =3D tsens_mC_to_hw(s, cl_low);
+> +
+> +       spin_lock_irqsave(&priv->ul_lock, flags);
+> +
+> +       tsens_read_irq_state(priv, hw_id, s, &d);
+> +
+> +       /* Write the new thresholds and clear the status */
+> +       regmap_field_write(priv->rf[LOW_THRESH_0 + hw_id], low_val);
+> +       regmap_field_write(priv->rf[UP_THRESH_0 + hw_id], high_val);
+> +       tsens_set_interrupt(priv, hw_id, LOWER, enable);
+> +       tsens_set_interrupt(priv, hw_id, UPPER, enable);
+
+Just pass true? Why is there an enable local variable?
+
+> +
+> +       spin_unlock_irqrestore(&priv->ul_lock, flags);
+> +
+> +       dev_dbg(dev, "[%u] %s: (%d:%d)->(%d:%d)\n",
+> +               s->hw_id, __func__, d.low_thresh, d.up_thresh, cl_low, cl=
+_high);
+> +
+> +       return 0;
+> +}
+> +
+[...]
+> @@ -319,28 +659,31 @@ int __init init_common(struct tsens_priv *priv)
+>                 ret =3D PTR_ERR(priv->rf[SENSOR_EN]);
+>                 goto err_put_device;
+>         }
+> -       /* now alloc regmap_fields in tm_map */
+> -       for (i =3D 0, j =3D LAST_TEMP_0; i < priv->feat->max_sensors; i++=
+, j++) {
+> -               priv->rf[j] =3D devm_regmap_field_alloc(dev, priv->tm_map,
+> -                                                     priv->fields[j]);
+> -               if (IS_ERR(priv->rf[j])) {
+> -                       ret =3D PTR_ERR(priv->rf[j]);
+> -                       goto err_put_device;
+> -               }
+> +       priv->rf[INT_EN] =3D devm_regmap_field_alloc(dev, priv->tm_map,
+> +                                                  priv->fields[INT_EN]);
+> +       if (IS_ERR(priv->rf[INT_EN])) {
+> +               ret =3D PTR_ERR(priv->rf[INT_EN]);
+> +               goto err_put_device;
+>         }
+> =20
+> -       /* Save away resolution of signed temperature value for this IP */
+> -       priv->tempres =3D priv->fields[LAST_TEMP_0].msb - priv->fields[LA=
+ST_TEMP_0].lsb;
+> -
+> -       for (i =3D 0, j =3D VALID_0; i < priv->feat->max_sensors; i++, j+=
++) {
+> -               priv->rf[j] =3D devm_regmap_field_alloc(dev, priv->tm_map,
+> -                                                     priv->fields[j]);
+> -               if (IS_ERR(priv->rf[j])) {
+> -                       ret =3D PTR_ERR(priv->rf[j]);
+> -                       goto err_put_device;
+> +       /* This loop might need changes if enum regfield_ids is reordered=
+ */
+> +       for (j =3D LAST_TEMP_0; j <=3D UP_THRESH_15; j +=3D 16) {
+> +               for (i =3D 0; i < priv->feat->max_sensors; i++) {
+> +                       int idx =3D j + i;
+> +
+> +                       priv->rf[idx] =3D devm_regmap_field_alloc(dev, pr=
+iv->tm_map,
+> +                                                               priv->fie=
+lds[idx]);
+> +                       if (IS_ERR(priv->rf[idx])) {
+> +                               ret =3D PTR_ERR(priv->rf[idx]);
+> +                               goto err_put_device;
+> +                       }
+>                 }
+>         }
+> +       /* Save away resolution of signed temperature value for this IP */
+> +       priv->tempres =3D priv->fields[LAST_TEMP_0].msb - priv->fields[LA=
+ST_TEMP_0].lsb;
+
+Leave this where it was, i.e. before the for loop? Or is that a bug and
+it doesn't actually work unless it's after the for loop? In which case,
+this should go to the previous patch.
+
+> =20
+> +       spin_lock_init(&priv->ul_lock);
+> +       tsens_enable_irq(priv);
+>         tsens_debug_init(op);
+> =20
+>         return 0;
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 772aa76b50e12..a4335717aeede 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -96,7 +99,33 @@ static int tsens_register(struct tsens_priv *priv)
+>                 if (priv->ops->enable)
+>                         priv->ops->enable(priv, i);
+>         }
+> +
+> +       pdev =3D of_find_device_by_node(priv->dev->of_node);
+> +       if (!pdev) {
+> +               dev_err(&pdev->dev, "%s: device node not found in DT\n", =
+__func__);
+
+Do we really need this? Maybe just bail out in silence because this
+should never happen?
+
+> +               return -ENODEV;
+> +       }
+> +
+> +       irq =3D platform_get_irq_byname(pdev, "uplow");
+> +       if (irq < 0) {
+> +               dev_err(&pdev->dev, "%s: missing irq in dt: uplow\n", __f=
+unc__);
+
+You can drop the error print. I upstreamed a change to print the error
+generically in the core.
+
+> +               return irq;
+
+Did we need to put_device() here?
+
+> +       }
+> +
+> +       ret =3D devm_request_threaded_irq(&pdev->dev, irq,
+> +                                       NULL, tsens_irq_thread,
+> +                                       IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+> +                                       dev_name(&pdev->dev), priv);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "%s: failed to get irq\n", __func__);
+> +               goto err_put_device;
+> +       }
+> +       enable_irq_wake(irq);
+>         return 0;
+> +
+> +err_put_device:
+> +       put_device(&pdev->dev);
+> +       return ret;
