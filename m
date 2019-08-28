@@ -2,124 +2,312 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BBFC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86318C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48B423404
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:38:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hfSMAmRp"
+	by mail.kernel.org (Postfix) with ESMTP id 54E6423403
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfH1Iis (ORCPT
+        id S1726444AbfH1IjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:38:48 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38731 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbfH1Iis (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:38:48 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r20so1971932ota.5
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 01:38:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LA42bpg7TE1ErDc8e8NGiPSnjc3LkGHxDTQOiKqpb4U=;
-        b=hfSMAmRpOdASqMo7kGDzwsaq1ugAqj8azpYiMW18Q4rIOyrsHZHB8eUQZRZWS6talu
-         aq8wdMiWdJYogvypSrLVo8nEOyX7ETgHotBuqD2xXAnkpsCEQmqAtVnK76LnFuTHD0cD
-         FS2jQLmBQtBHhcUeLjxcFGH23vM2ugltBi0mZl3AKifLrE4Dcfu82NYWTwduo8N9nF0o
-         POzqNyeGFRSXYaDTcJlIMhmKWlHMqhp7vxvqHNr1pZebgghxEoaQWhymlcp/WAey8P85
-         RlNvGjLrgQ2Vd4em5KUYRyhWldG9dH2oMv2LKV/t9kYF6I1+uP2ZwjPygwg7mHCxEuUe
-         vTBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LA42bpg7TE1ErDc8e8NGiPSnjc3LkGHxDTQOiKqpb4U=;
-        b=XOrG2faJNLR67WxPVWAm4UNhXB3nBVSfwJc1faaQQjh7jZr/kd+NG58cUrHr5oMYDP
-         YIVfPGGCuqJ6peODo+gEmxZ0ampsCDL7c8pg3a6MXfZluW1BvCq5byOTiq2FAHwrpJsV
-         E+Di0zO593LeDDObvpQ12V+P81VONZkLpXquSC19qX9Z46jpOGv4L/Ljqu+NsigegjWi
-         9KF53Ag9p9mQMXL9zpQAXslN4nWaQvqvBuHyaoSZr6nO1FXdzfIUIfbkwSlGrIBN/SPr
-         JQvb23P3fV02fnfYeJBSJEaX4f8HcJs6DJ+sUCo7rqP1npnFZOAhYpqRXYW30MUN6VBH
-         /1LA==
-X-Gm-Message-State: APjAAAXidArwCiUA16CZAPU89sf72CxYysFsU1Y5BHg/3ZF1Ix6aG4HC
-        4eXjado66b02YUXG4T5YBNlKZnp6eyT6ZjHAPViTbiM4
-X-Google-Smtp-Source: APXvYqzr+/pBY3bba/FTj2fIGzqgeyy/JZsqIzuMeHwfBrHmod6PlFGij5uDPP1r6ct0mKAIXOz2O0gG2DETVBBY5pM=
-X-Received: by 2002:a9d:5551:: with SMTP id h17mr2372248oti.194.1566981527387;
- Wed, 28 Aug 2019 01:38:47 -0700 (PDT)
+        Wed, 28 Aug 2019 04:39:00 -0400
+Received: from mga11.intel.com ([192.55.52.93]:19667 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbfH1Ii7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:38:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 01:38:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
+   d="scan'208";a="181964199"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
+  by fmsmga007.fm.intel.com with ESMTP; 28 Aug 2019 01:38:56 -0700
+Subject: Re: [PATCH V8 3/3] mmc: sdhci-pci-o2micro: Fix O2 Host data
+ read/write DLL Lock phase shift issue
+To:     "Shirley Her (SC)" <shirley.her@bayhubtech.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
+        "Shaper Liu (WH)" <shaper.liu@bayhubtech.com>,
+        "Louis Lu (TP)" <louis.lu@bayhubtech.com>,
+        "Max Huang (SC)" <max.huang@bayhubtech.com>
+References: <1566412784-6224-1-git-send-email-shirley.her@bayhubtech.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <4d926e9c-cb98-6587-f38d-426dd04d84de@intel.com>
+Date:   Wed, 28 Aug 2019 11:37:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190827064629.90214-1-david@protonic.nl>
-In-Reply-To: <20190827064629.90214-1-david@protonic.nl>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 28 Aug 2019 10:38:36 +0200
-Message-ID: <CAMpxmJV2XC+CK1SfJnH2YuaD2Gh=fiBQY+WPbjnqkvxGW6ZH_w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: gpio-pca953x.c: Correct type of reg_direction
-To:     David Jander <david@protonic.nl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1566412784-6224-1-git-send-email-shirley.her@bayhubtech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 27 sie 2019 o 08:46 David Jander <david@protonic.nl> napisa=C5=82(a):
->
-> The type of reg_direction needs to match the type of the regmap, which is
-> u8.
->
-> Signed-off-by: David Jander <david@protonic.nl>
+On 21/08/19 9:39 PM, Shirley Her (SC) wrote:
+> Fix data read/write error in HS200 mode due to chip DLL lock phase shift
+> 
+> Signed-off-by: Shirley Her <shirley.her@bayhubtech.com>
+
+2 comments below:
+
 > ---
->  drivers/gpio/gpio-pca953x.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index 378b206d2dc9..30072a570bc2 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -604,7 +604,7 @@ static void pca953x_irq_bus_sync_unlock(struct irq_da=
-ta *d)
->         u8 new_irqs;
->         int level, i;
->         u8 invert_irq_mask[MAX_BANK];
-> -       int reg_direction[MAX_BANK];
-> +       u8 reg_direction[MAX_BANK];
->
->         regmap_bulk_read(chip->regmap, chip->regs->direction, reg_directi=
-on,
->                          NBANK(chip));
-> @@ -679,7 +679,7 @@ static bool pca953x_irq_pending(struct pca953x_chip *=
-chip, u8 *pending)
->         bool pending_seen =3D false;
->         bool trigger_seen =3D false;
->         u8 trigger[MAX_BANK];
-> -       int reg_direction[MAX_BANK];
-> +       u8 reg_direction[MAX_BANK];
->         int ret, i;
->
->         if (chip->driver_data & PCA_PCAL) {
-> @@ -768,7 +768,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chi=
-p,
+> change in V8:
+>  1. fix patch format error
+> 
+> change in V7:
+>  1. change subject
+>  2. change the sdhci_o2_wait_dll_detect_lock_function
+>  3. add suitable usleep_range() to detect dll lock status
+> 
+> change in V6:
+>  1. define constant by using array size
+>  2. add more explanation for the code
+>  3. fix loop forever code error
+> 
+> change in V5:
+>  1. split 2 patches into 3 patches
+>  2. make dll_adjust_count start from 0
+>  3. fix ret overwritten issue
+>  4. use break instead of goto
+> 
+> change in V4:
+>  1. add a bug fix for V3
+> 
+> change in V3:
+>  1. add more explanation in dll_recovery and execute_tuning function
+>  2. move dll_adjust_count to O2_host struct
+>  3. fix some coding style error
+>  4. renaming O2_PLL_WDT_CONTROL1 TO O2_PLL_DLL_WDT_CONTROL1
+> 
+> change in V2:
+>  1. use usleep_range instead of udelay
+>  2. move dll_adjust_count to sdhci-pci-o2micro.c
+> 
+> chagne in V1:
+>  1. add error recovery function to relock DLL with correct phase
+>  2. retuning HS200 after DLL locked
+> ---
+>  drivers/mmc/host/sdhci-pci-o2micro.c | 124 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 122 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+> index 57c8b83..d879d91 100644
+> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
+> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/mmc/host.h>
+>  #include <linux/mmc/mmc.h>
+>  #include <linux/delay.h>
+> +#include <linux/iopoll.h>
+>  
+>  #include "sdhci.h"
+>  #include "sdhci-pci.h"
+> @@ -55,9 +56,18 @@
+>  #define  O2_PLL_FORCE_ACTIVE	BIT(18)
+>  #define  O2_PLL_LOCK_STATUS	BIT(14)
+>  #define  O2_PLL_SOFT_RESET	BIT(12)
+> +#define  O2_DLL_LOCK_STATUS	BIT(11)
+>  
+>  #define O2_SD_DETECT_SETTING 0x324
+>  
+> +static const u32 dmdn_table[] = {0x2B1C0000,
+> +	0x2C1A0000, 0x371B0000, 0x35100000};
+> +#define DMDN_SZ ARRAY_SIZE(dmdn_table)
+> +
+> +struct o2_host {
+> +	u8 dll_adjust_count;
+> +};
+> +
+>  static void sdhci_o2_wait_card_detect_stable(struct sdhci_host *host)
 >  {
->         struct i2c_client *client =3D chip->client;
->         struct irq_chip *irq_chip =3D &chip->irq_chip;
-> -       int reg_direction[MAX_BANK];
-> +       u8 reg_direction[MAX_BANK];
->         int ret, i;
->
->         if (!client->irq)
-> --
-> 2.19.1
->
+>  	ktime_t timeout;
+> @@ -133,7 +143,8 @@ static int sdhci_o2_get_cd(struct mmc_host *mmc)
+>  {
+>  	struct sdhci_host *host = mmc_priv(mmc);
+>  
+> -	sdhci_o2_enable_internal_clock(host);
+> +	if (!(sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1) & O2_PLL_LOCK_STATUS))
+> +		sdhci_o2_enable_internal_clock(host);
+>  
+>  	return !!(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT);
+>  }
+> @@ -152,6 +163,25 @@ static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
+>  			       O2_SD_PLL_SETTING, scratch_32);
+>  }
+>  
+> +static u32 sdhci_o2_pll_dll_wdt_control(struct sdhci_host *host)
+> +{
+> +	return sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+> +}
+> +
+> +/*
+> + * This function is used to detect dll lock status.
+> + * Since the dll lock status bit will toggle randomly
+> + * with very short interval which needs to be polled
+> + * as fast as possible. Set sleep_us as 1 microsecond.
+> + */
+> +static int sdhci_o2_wait_dll_detect_lock(struct sdhci_host *host)
+> +{
+> +	u32	scratch32 = 0;
+> +
+> +	return readx_poll_timeout(sdhci_o2_pll_dll_wdt_control, host,
+> +		scratch32, !(scratch32 & O2_DLL_LOCK_STATUS), 1, 1000000);
+> +}
+> +
+>  static void sdhci_o2_set_tuning_mode(struct sdhci_host *host)
+>  {
+>  	u16 reg;
+> @@ -189,6 +219,83 @@ static void __sdhci_o2_execute_tuning(struct sdhci_host *host, u32 opcode)
+>  	sdhci_reset_tuning(host);
+>  }
+>  
+> +/*
+> + * This function is used to fix o2 dll shift issue.
+> + * It isn't necessary to detect card present before recovery.
+> + * Firstly, it is used by bht emmc card, which is embedded.
+> + * Second, before call recovery card present will be detected
+> + * outside of the execute tuning function.
+> + */
+> +static int sdhci_o2_dll_recovery(struct sdhci_host *host)
+> +{
+> +	int ret = 0;
+> +	u8 scratch_8 = 0;
+> +	u32 scratch_32 = 0;
+> +	struct sdhci_pci_slot *slot = sdhci_priv(host);
+> +	struct sdhci_pci_chip *chip = slot->chip;
+> +	struct o2_host *o2_host = sdhci_pci_priv(slot);
+> +
+> +	/* UnLock WP */
+> +	pci_read_config_byte(chip->pdev,
+> +			O2_SD_LOCK_WP, &scratch_8);
+> +	scratch_8 &= 0x7f;
+> +	pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch_8);
+> +	while (o2_host->dll_adjust_count < DMDN_SZ && !ret) {
+> +		/* Disable clock */
+> +		sdhci_writeb(host, 0, SDHCI_CLOCK_CONTROL);
+> +
+> +		/* PLL software reset */
+> +		scratch_32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+> +		scratch_32 |= O2_PLL_SOFT_RESET;
+> +		sdhci_writel(host, scratch_32, O2_PLL_DLL_WDT_CONTROL1);
+> +
+> +		pci_read_config_dword(chip->pdev,
+> +					    O2_SD_FUNC_REG4,
+> +					    &scratch_32);
+> +		/* Enable Base Clk setting change */
+> +		scratch_32 |= O2_SD_FREG4_ENABLE_CLK_SET;
+> +		pci_write_config_dword(chip->pdev, O2_SD_FUNC_REG4, scratch_32);
+> +		o2_pci_set_baseclk(chip, dmdn_table[o2_host->dll_adjust_count]);
+> +
+> +		/* Enable internal clock */
+> +		scratch_8 = SDHCI_CLOCK_INT_EN;
+> +		sdhci_writeb(host, scratch_8, SDHCI_CLOCK_CONTROL);
+> +
+> +		if (sdhci_o2_get_cd(host->mmc)) {
+> +			/*
+> +			 * need wait at least 5ms for dll status stable,
+> +			 * after enable internal clock
+> +			 */
+> +			usleep_range(5000, 6000);
+> +			if (sdhci_o2_wait_dll_detect_lock(host)) {
+> +				scratch_8 |= SDHCI_CLOCK_CARD_EN;
+> +				sdhci_writeb(host, scratch_8,
+> +					SDHCI_CLOCK_CONTROL);
+> +				ret = 1;
+> +			} else {
+> +				pr_warn("%s: DLL unlocked when dll_adjust_count is %d.\n",
+> +					mmc_hostname(host->mmc),
+> +					o2_host->dll_adjust_count);
+> +			}
+> +		} else {
+> +			pr_err("%s: card present detect failed.\n",
+> +				mmc_hostname(host->mmc));
+> +			break;
+> +		}
+> +
+> +		o2_host->dll_adjust_count++;
+> +	}
+> +	if (!ret && o2_host->dll_adjust_count == DMDN_SZ)
 
-Applied for v5.4.
+As I wrote in reply to V7, isn't this off by 1? i.e. should be
+o2_host->dll_adjust_count > DMDN_SZ
 
-Thanks!
-Bart
+> +		pr_err("%s: DLL adjust over max times\n",
+> +		mmc_hostname(host->mmc));
+> +	/* Lock WP */
+> +	pci_read_config_byte(chip->pdev,
+> +				   O2_SD_LOCK_WP, &scratch_8);
+> +	scratch_8 |= 0x80;
+> +	pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch_8);
+> +	return ret;
+> +}
+> +
+>  static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>  {
+>  	struct sdhci_host *host = mmc_priv(mmc);
+> @@ -203,7 +310,16 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>  
+>  	if (WARN_ON(opcode != MMC_SEND_TUNING_BLOCK_HS200))
+>  		return -EINVAL;
+> -
+> +	/*
+> +	 * Judge the tuning reason, whether caused by dll shift
+> +	 * If cause by dll shift, should call sdhci_o2_dll_recovery
+> +	 */
+> +	if (!sdhci_o2_wait_dll_detect_lock(host))
+> +		if (!sdhci_o2_dll_recovery(host)) {
+> +			pr_err("%s: o2 dll recovery failed\n",
+> +				mmc_hostname(host->mmc));
+> +			return -EINVAL;
+> +		}
+>  	/*
+>  	 * o2 sdhci host didn't support 8bit emmc tuning
+>  	 */
+> @@ -371,6 +487,7 @@ static void sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
+>  	clk |= SDHCI_CLOCK_INT_EN;
+>  	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+>  
+> +	sdhci_o2_enable_internal_clock(host);
+>  	if (sdhci_o2_get_cd(host->mmc)) {
+>  		clk |= SDHCI_CLOCK_CARD_EN;
+>  		sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> @@ -396,12 +513,14 @@ int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
+>  {
+>  	struct sdhci_pci_chip *chip;
+>  	struct sdhci_host *host;
+> +	struct o2_host *o2_host = sdhci_pci_priv(slot);
+>  	u32 reg, caps;
+>  	int ret;
+>  
+>  	chip = slot->chip;
+>  	host = slot->host;
+>  
+> +	o2_host->dll_adjust_count = 0;
+
+As I wrote in reply to V7, please remove trailing white space after
+"o2_host->dll_adjust_count = 0;"
+
+>  	caps = sdhci_readl(host, SDHCI_CAPABILITIES);
+>  
+>  	/*
+> @@ -688,4 +807,5 @@ const struct sdhci_pci_fixes sdhci_o2 = {
+>  	.resume = sdhci_pci_o2_resume,
+>  #endif
+>  	.ops = &sdhci_pci_o2_ops,
+> +	.priv_size = sizeof(struct o2_host),
+>  };
+> 
+
