@@ -2,158 +2,193 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PLING_QUERY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4D7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F1AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7312422DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:05:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WSsKwCPe"
+	by mail.kernel.org (Postfix) with ESMTP id 2DEAB22CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:05:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfH1NFM (ORCPT
+        id S1726635AbfH1NFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:05:12 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40167 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfH1NFL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:05:11 -0400
-Received: by mail-lj1-f193.google.com with SMTP id e27so2479367ljb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 06:05:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aBa6809B/gHmmp4EpJcSDmUhGHIHI4rcokmH6bw1gyQ=;
-        b=WSsKwCPevwM8s1mITSowZLAEJU5REzl86rGVN24r6SjtlDX0IQWaB8QQ9VXCwOn8Zp
-         K/PmXTjuOr3CcPL0LngY392mz4Rd21YRpIMz/a8ENgEDXRn1XoVnWHghXUKcY5mfmpvu
-         3g9v8QhtedgvwVoVeXfzZKPJbXj8f48RM4Qgk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aBa6809B/gHmmp4EpJcSDmUhGHIHI4rcokmH6bw1gyQ=;
-        b=jtURRpUwvrg8uW1EaQt4dYHYlu6RaGBQEISRdKYoLDjvjeXFubzRXsKIu6/J5Jx9ZM
-         d448A3aPbwQ/cr+EJkPo61+PwK8aB4PWEDbJQB4byFEL7nBCncOCynJgfVcVY7xjGl/+
-         VfmU2zx/aKgk2zTgCOFHWR2hdl679nDTpQ1ZRm4oRfVuFrbv5KjdW2G5iQRLqAWVY3uG
-         Dpooo+jBBEQpQPTSxO2V+rCiYnupdfakxf5r6h+Toy7TtFk3uuLqiXMNINPZK0d8xQb0
-         qmeAkzYw/g1yhjuUd+ggGfbhQYmeepd6TMtPh6iz0T7BhEMAPn7RWG19Yst+/9JdxnGk
-         QrLg==
-X-Gm-Message-State: APjAAAUySVYB8/uxBXHFsQy6swdvcbde5GLR+GIWJFyLjJ9v07zUKBbt
-        TscWhwuQnEGOAGUVeoIADFVh6FVIrziGdrpi
-X-Google-Smtp-Source: APXvYqz4yGLr4MGxBo5VJWyaqo6TFhaeYqH/ywXBE+2q3Vp56Fd9pHlJnOjWCrtiu1mWL7N9i1fAXQ==
-X-Received: by 2002:a2e:2a05:: with SMTP id q5mr1876171ljq.132.1566997509964;
-        Wed, 28 Aug 2019 06:05:09 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id o5sm851790lfn.42.2019.08.28.06.05.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 06:05:09 -0700 (PDT)
-Subject: Re: [PATCH] scripts: coccinelle: check for !(un)?likely usage
-To:     efremov@linux.com, Julia Lawall <julia.lawall@lip6.fr>
-Cc:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>
-References: <20190825130536.14683-1-efremov@linux.com>
- <b5bae2981e27d133b61d99b08ee60244bf7aabe3.camel@perches.com>
- <88f6e48e-1230-9488-a973-397f4e6dfbb5@linux.com>
- <4E9DDF9E-C883-44F0-A3F4-CD49284DB60D@lip6.fr>
- <95c32d19-eb4d-a214-6332-038610ec3dbd@rasmusvillemoes.dk>
- <16053035-655a-7d53-29d1-ea914e3a21dd@linux.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <75f5210f-43a3-ab0d-912a-6dff6163fd9a@rasmusvillemoes.dk>
-Date:   Wed, 28 Aug 2019 15:05:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <16053035-655a-7d53-29d1-ea914e3a21dd@linux.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+        Wed, 28 Aug 2019 09:05:45 -0400
+Received: from mga02.intel.com ([134.134.136.20]:60001 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfH1NFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:05:44 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 06:05:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
+   d="scan'208";a="197552902"
+Received: from deyangko-mobl.ccr.corp.intel.com ([10.249.168.35])
+  by fmsmga001.fm.intel.com with ESMTP; 28 Aug 2019 06:05:41 -0700
+Message-ID: <961b814b345ee765408b85861ec3c37d01857c0a.camel@intel.com>
+Subject: Re: [PATCH] drivers: thermal: qcom: tsens: Fix memory leak from
+ qfprom read
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Linux PM list <linux-pm@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 28 Aug 2019 21:05:51 +0800
+In-Reply-To: <CAP245DVf9fZNVEaYS39_NZ133LbwuZ77i=2fHUs-u_r-5EK-3Q@mail.gmail.com>
+References: <20190823093835.32655-1-srinivas.kandagatla@linaro.org>
+         <CAP245DVf9fZNVEaYS39_NZ133LbwuZ77i=2fHUs-u_r-5EK-3Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/08/2019 14.33, Denis Efremov wrote:
-> On 8/28/19 2:33 PM, Rasmus Villemoes wrote:
->> On 25/08/2019 21.19, Julia Lawall wrote:
->>>
->>>
->>>> On 26 Aug 2019, at 02:59, Denis Efremov <efremov@linux.com> wrote:
->>>>
->>>>
->>>>
->>>>> On 25.08.2019 19:37, Joe Perches wrote:
->>>>>> On Sun, 2019-08-25 at 16:05 +0300, Denis Efremov wrote:
->>>>>> This patch adds coccinelle script for detecting !likely and !unlikely
->>>>>> usage. It's better to use unlikely instead of !likely and vice versa.
->>>>>
->>>>> Please explain _why_ is it better in the changelog.
->>>>>
->>>>
->>>> In my naive understanding the negation (!) before the likely/unlikely
->>>> could confuse the compiler
->>>
->>> As a human I am confused. Is !likely(x) equivalent to x or !x?
->>
->> #undef likely
->> #undef unlikely
->> #define likely(x) (x)
->> #define unlikely(x) (x)
->>
->> should be a semantic no-op. So changing !likely(x) to unlikely(x) is
->> completely wrong. If anything, !likely(x) can be transformed to
->> unlikely(!x).
+On Fri, 2019-08-23 at 17:29 +0530, Amit Kucheria wrote:
+> On Fri, Aug 23, 2019 at 3:08 PM Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
+> > 
+> > memory returned as part of nvmem_read via qfprom_read should be
+> > freed by the consumer once done.
+> > Existing code is not doing it so fix it.
+> > 
+> > Below memory leak detected by kmemleak
+> >    [<ffffff80088b7658>] kmemleak_alloc+0x50/0x84
+> >     [<ffffff80081df120>] __kmalloc+0xe8/0x168
+> >     [<ffffff80086db350>] nvmem_cell_read+0x30/0x80
+> >     [<ffffff8008632790>] qfprom_read+0x4c/0x7c
+> >     [<ffffff80086335a4>] calibrate_v1+0x34/0x204
+> >     [<ffffff8008632518>] tsens_probe+0x164/0x258
+> >     [<ffffff80084e0a1c>] platform_drv_probe+0x80/0xa0
+> >     [<ffffff80084de4f4>] really_probe+0x208/0x248
+> >     [<ffffff80084de2c4>] driver_probe_device+0x98/0xc0
+> >     [<ffffff80084dec54>] __device_attach_driver+0x9c/0xac
+> >     [<ffffff80084dca74>] bus_for_each_drv+0x60/0x8c
+> >     [<ffffff80084de634>] __device_attach+0x8c/0x100
+> >     [<ffffff80084de6c8>] device_initial_probe+0x20/0x28
+> >     [<ffffff80084dcbb8>] bus_probe_device+0x34/0x7c
+> >     [<ffffff80084deb08>] deferred_probe_work_func+0x6c/0x98
+> >     [<ffffff80080c3da8>] process_one_work+0x160/0x2f8
+> > 
+> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > 
-> As far as I could understand it:
+> Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
+
+patch applied.
+
+thanks,
+rui
 > 
-> # define likely(x)	__builtin_expect(!!(x), 1)
-> # define unlikely(x)	__builtin_expect(!!(x), 0)
-> 
-> From GCC doc:
-> __builtin_expect compares the values. The semantics of the built-in are that it is expected that exp == c.
+> > ---
+> >  drivers/thermal/qcom/tsens-8960.c |  2 ++
+> >  drivers/thermal/qcom/tsens-v0_1.c | 12 ++++++++++--
+> >  drivers/thermal/qcom/tsens-v1.c   |  1 +
+> >  drivers/thermal/qcom/tsens.h      |  1 +
+> >  4 files changed, 14 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/thermal/qcom/tsens-8960.c
+> > b/drivers/thermal/qcom/tsens-8960.c
+> > index 8d9b721dadb6..e46a4e3f25c4 100644
+> > --- a/drivers/thermal/qcom/tsens-8960.c
+> > +++ b/drivers/thermal/qcom/tsens-8960.c
+> > @@ -229,6 +229,8 @@ static int calibrate_8960(struct tsens_priv
+> > *priv)
+> >         for (i = 0; i < num_read; i++, s++)
+> >                 s->offset = data[i];
+> > 
+> > +       kfree(data);
+> > +
+> >         return 0;
+> >  }
+> > 
+> > diff --git a/drivers/thermal/qcom/tsens-v0_1.c
+> > b/drivers/thermal/qcom/tsens-v0_1.c
+> > index 6f26fadf4c27..055647bcee67 100644
+> > --- a/drivers/thermal/qcom/tsens-v0_1.c
+> > +++ b/drivers/thermal/qcom/tsens-v0_1.c
+> > @@ -145,8 +145,10 @@ static int calibrate_8916(struct tsens_priv
+> > *priv)
+> >                 return PTR_ERR(qfprom_cdata);
+> > 
+> >         qfprom_csel = (u32 *)qfprom_read(priv->dev, "calib_sel");
+> > -       if (IS_ERR(qfprom_csel))
+> > +       if (IS_ERR(qfprom_csel)) {
+> > +               kfree(qfprom_cdata);
+> >                 return PTR_ERR(qfprom_csel);
+> > +       }
+> > 
+> >         mode = (qfprom_csel[0] & MSM8916_CAL_SEL_MASK) >>
+> > MSM8916_CAL_SEL_SHIFT;
+> >         dev_dbg(priv->dev, "calibration mode is %d\n", mode);
+> > @@ -181,6 +183,8 @@ static int calibrate_8916(struct tsens_priv
+> > *priv)
+> >         }
+> > 
+> >         compute_intercept_slope(priv, p1, p2, mode);
+> > +       kfree(qfprom_cdata);
+> > +       kfree(qfprom_csel);
+> > 
+> >         return 0;
+> >  }
+> > @@ -198,8 +202,10 @@ static int calibrate_8974(struct tsens_priv
+> > *priv)
+> >                 return PTR_ERR(calib);
+> > 
+> >         bkp = (u32 *)qfprom_read(priv->dev, "calib_backup");
+> > -       if (IS_ERR(bkp))
+> > +       if (IS_ERR(bkp)) {
+> > +               kfree(calib);
+> >                 return PTR_ERR(bkp);
+> > +       }
+> > 
+> >         calib_redun_sel =  bkp[1] & BKP_REDUN_SEL;
+> >         calib_redun_sel >>= BKP_REDUN_SHIFT;
+> > @@ -313,6 +319,8 @@ static int calibrate_8974(struct tsens_priv
+> > *priv)
+> >         }
+> > 
+> >         compute_intercept_slope(priv, p1, p2, mode);
+> > +       kfree(calib);
+> > +       kfree(bkp);
+> > 
+> >         return 0;
+> >  }
+> > diff --git a/drivers/thermal/qcom/tsens-v1.c
+> > b/drivers/thermal/qcom/tsens-v1.c
+> > index 10b595d4f619..870f502f2cb6 100644
+> > --- a/drivers/thermal/qcom/tsens-v1.c
+> > +++ b/drivers/thermal/qcom/tsens-v1.c
+> > @@ -138,6 +138,7 @@ static int calibrate_v1(struct tsens_priv
+> > *priv)
+> >         }
+> > 
+> >         compute_intercept_slope(priv, p1, p2, mode);
+> > +       kfree(qfprom_cdata);
+> > 
+> >         return 0;
+> >  }
+> > diff --git a/drivers/thermal/qcom/tsens.h
+> > b/drivers/thermal/qcom/tsens.h
+> > index 2fd94997245b..b89083b61c38 100644
+> > --- a/drivers/thermal/qcom/tsens.h
+> > +++ b/drivers/thermal/qcom/tsens.h
+> > @@ -17,6 +17,7 @@
+> > 
+> >  #include <linux/thermal.h>
+> >  #include <linux/regmap.h>
+> > +#include <linux/slab.h>
+> > 
+> >  struct tsens_priv;
+> > 
+> > --
+> > 2.21.0
+> > 
 
-When I said "semantic" I meant from the C language point of view. Yes,
-of course, the whole reason for having these is that we can give hints
-to gcc as to which branch is more likely. Replace the dummy defines by
-#define likely(x) (!!(x)) if you like - it amounts to the same thing
-when it's only ever used in a boolean context.
-
-> if (!likely(cond))
-> if (!__builtin_expect(!!(cond), 1))
-> if (!((!!(cond)) == 1))
-
-You're inventing this comparison to 1. It should be "if (!(!!(cond)))",
-but it ends up being equivalent in C.
-
-> if ((!!(cond)) != 1) and since !! could result in 0 or 1
-> if ((!!(cond)) == 0)
-
-which in turn is equivalent to !(cond).
-
-> 
-> if (unlikely(cond))
-> if (__builtin_expect(!!(cond), 0))
-> if ((!!(cond)) == 0))
-
-No, that last transformation is wrong. Yes, the _expectation_ is that
-!!(cond) has the value 0, but that does not mean that the whole
-condition turns into "does !!(cond) compare equal to 0?" - we _expect_
-that it does, meaning that we expect not to enter the if block. Read the
-docs, the value of __builtin_expect(whatever, foobar) is whatever, so a
-correct third line above would be
-
-  "if (!!(cond))"
-
-which is of course not at all the same as
-
-  "if (!!(cond) == 0)" aka "if (!(cond))"
-
-Rasmus
