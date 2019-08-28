@@ -2,195 +2,167 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C959C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F55C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0958122CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3D622CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:45:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567003546;
+	bh=vneSpYWc4gWpu4W6gxC/dr26+W3sYZi98+pPPJepJB0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=O+cc63/6uncr77RgSJPusCVnI4w4u37OvhSPfnIxjUBxOrjb3XtubEvCfpShYnjRy
+	 mxbhe3MpmQ92NUYTiSYHBce2TX03DN4GlzwPM7GhVPOHrdLnU/jRxpwwwoacXpkTY8
+	 IRKIJsg1Tlc7eeOPOifqPsTzkEZzCxux00Y/eYUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbfH1Onl (ORCPT
+        id S1726571AbfH1Opq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:43:41 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44837 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfH1Onl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 10:43:41 -0400
-Received: from mail-pl1-f199.google.com ([209.85.214.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1i2zAh-0007sZ-7i
-        for linux-kernel@vger.kernel.org; Wed, 28 Aug 2019 14:43:39 +0000
-Received: by mail-pl1-f199.google.com with SMTP id g18so73889plj.19
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 07:43:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=72loJw2E4prnYu2bHnqkOxrbxvpeYzeWqqougV4V12o=;
-        b=BSifnAEGlKnnVaK2/Pcx+rdyTvfCoX0OCW3uoxdb0WxHF8b3NfORgDfuaYLyeJMWpe
-         fM5dt/NCOrnb/AocC75W/X47V9LTDCrakOwDeVRoUDfZwMuMTD9upkjoDnyIbfbHSggr
-         DmG3hIfgd+GVIxpdHwhyn0lD2yfsgvOIDi90H6ngJfkzgknAD2GLxSj5fvt5jBcAcG88
-         uqPR7QlbJogEy+H5/4mrFTR5oFMQ8xHoNcN2cYQm/PNkGECh9yT/ZgvwB/WyLIC0l+O4
-         5n4SWRo4Dro0WzSSmt2NByw38hFAhs+zMKtwh/Z7FsmFI0HVC/LpAkCbIeawGfdrJnG2
-         Y3TQ==
-X-Gm-Message-State: APjAAAWQnZMx4pwY9mc+bvGNpkhggCu7DcljMg/j7CPqdapq0N+JrTaV
-        xA2fDP4o8ivwkbWd2TgZOfPBDU2kriY/NU+Xluw3sTlEs7EiM2+bTEZkLsJn1uAnhEntoX8cIwz
-        bN687eTKld/PvRjRt2jBZHEXLk62zhXtDzafn+JsK/w==
-X-Received: by 2002:a17:90a:5d0d:: with SMTP id s13mr4582559pji.133.1567003417013;
-        Wed, 28 Aug 2019 07:43:37 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxL3rfIbXwPyv0+NNICU20lJfi4k7SBT61KY+ctfFExjZnGrr1gvd06tr2Bm/DtSiHV9tmc/w==
-X-Received: by 2002:a17:90a:5d0d:: with SMTP id s13mr4582519pji.133.1567003416579;
-        Wed, 28 Aug 2019 07:43:36 -0700 (PDT)
-Received: from 2001-b011-380f-3c42-f8f8-a260-49a8-d1ed.dynamic-ip6.hinet.net (2001-b011-380f-3c42-f8f8-a260-49a8-d1ed.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:f8f8:a260:49a8:d1ed])
-        by smtp.gmail.com with ESMTPSA id y194sm3121815pfg.116.2019.08.28.07.43.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 07:43:36 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: Alps touchpad generates IRQ storm after S3
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <39b2e63e339447e8b09b2601abf3d1ba@AUSX13MPC101.AMER.DELL.COM>
-Date:   Wed, 28 Aug 2019 22:43:33 +0800
-Cc:     xiaojian.cao@cn.alps.com, masaki.ota@alpsalpine.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        naoki.saito@alpsalpine.com
-Content-Transfer-Encoding: 8bit
-Message-Id: <BFBB1DB9-00B6-497E-80D1-5168CF16B889@canonical.com>
-References: <44F93018-5F13-4932-A5AC-9D288CDF68DD@canonical.com>
- <TYAPR01MB30223CB8A576C7809F6382C1ECA30@TYAPR01MB3022.jpnprd01.prod.outlook.com>
- <TYXPR01MB1470902D804A47EE72013006C8A30@TYXPR01MB1470.jpnprd01.prod.outlook.com>
- <A118551C-A0D9-485F-91F7-44A5BE228B99@canonical.com>
- <39b2e63e339447e8b09b2601abf3d1ba@AUSX13MPC101.AMER.DELL.COM>
-To:     Mario.Limonciello@dell.com
-X-Mailer: Apple Mail (2.3445.104.11)
+        Wed, 28 Aug 2019 10:45:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726395AbfH1Opp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:45:45 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E85EF2077B;
+        Wed, 28 Aug 2019 14:45:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567003544;
+        bh=vneSpYWc4gWpu4W6gxC/dr26+W3sYZi98+pPPJepJB0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ucKcS+rJhzYEk6AK3752Inb4Zx4CTZgBJG43fvi3Wdb+3+BkPSB+RUS8Zmie1Jzlu
+         Hq9OuhmtffrrXHw2Ea3LeSm5kWb4cdvt3Ltm3G8h33of/sNQp19TtalYFb7isCAgwc
+         sb8Xm3J+E60E8aA8fzkjhV2WzEH80FJ6yeUVfd7M=
+Subject: Re: [PATCH] sefltest/ima: support appended signatures (modsig)
+To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
+Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Petr Vorel <pvorel@suse.cz>, Jessica Yu <jeyu@kernel.org>,
+        Dave Young <dyoung@redhat.com>,
+        linux-kselftest@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
+References: <1566995946-6582-1-git-send-email-zohar@linux.ibm.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <2f89d09f-1b69-3d77-6846-01bef7d20f39@kernel.org>
+Date:   Wed, 28 Aug 2019 08:45:29 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1566995946-6582-1-git-send-email-zohar@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mario,
+Hi Mimi,
 
-at 21:25, <Mario.Limonciello@dell.com> <Mario.Limonciello@dell.com> wrote:
+On 8/28/19 6:39 AM, Mimi Zohar wrote:
+> Detect and allow appended signatures.
+> 
 
-> KH,
->
-> Just make sure I understand details.
->
->> Commit "HID: i2c-hid: Don't reset device upon system resume
->
-> If you revert this it's fixed on this system?
+Can you please add a couple of more sentences on the feature
+and what happens without it? I know this is a test for the
+feature, however, it will be useful for users and testers to
+know more about this test and the feature it is testing.
 
-Yes. Once reset is used instead of  the issue is gone.
+Also, are there test skip conditions to be concerned about?
 
->
-> In that commit you had mentioned if this causes problems it might be worth
-> quirking just Raydium but commit afbb1169ed5b58cfca017e368b53e019cf285853
-> confirmed that it helped several other systems too.
->
-> If the conclusion from this investigation this is only fixable via  
-> touchpad FW update
-> it might be worth quirking this touchpad/touchpad FW/system combination.
+Is there a dependency on another tree or would like me to take
+this through kselftest tree?
 
-Hopefully there’s a better solution from ALPS :)
+> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> ---
+>   .../selftests/kexec/test_kexec_file_load.sh        | 38 +++++++++++++++++++---
+>   1 file changed, 34 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kexec/test_kexec_file_load.sh b/tools/testing/selftests/kexec/test_kexec_file_load.sh
+> index fa7c24e8eefb..2ff600388c30 100755
+> --- a/tools/testing/selftests/kexec/test_kexec_file_load.sh
+> +++ b/tools/testing/selftests/kexec/test_kexec_file_load.sh
+> @@ -37,11 +37,20 @@ is_ima_sig_required()
+>   	# sequentially.  As a result, a policy rule may be defined, but
+>   	# might not necessarily be used.  This test assumes if a policy
+>   	# rule is specified, that is the intent.
+> +
+> +	# First check for appended signature (modsig), then xattr
+>   	if [ $ima_read_policy -eq 1 ]; then
+>   		check_ima_policy "appraise" "func=KEXEC_KERNEL_CHECK" \
+> -			"appraise_type=imasig"
+> +			"appraise_type=imasig|modsig"
+>   		ret=$?
+> -		[ $ret -eq 1 ] && log_info "IMA signature required";
+> +		if [ $ret -eq 1 ]; then
+> +			log_info "IMA or appended(modsig) signature required"
+> +		else
+> +			check_ima_policy "appraise" "func=KEXEC_KERNEL_CHECK" \
+> +				"appraise_type=imasig"
+> +			ret=$?
+> +			[ $ret -eq 1 ] && log_info "IMA signature required";
+> +		fi
+>   	fi
+>   	return $ret
+>   }
+> @@ -84,6 +93,22 @@ check_for_imasig()
+>   	return $ret
+>   }
+>   
+> +# Return 1 for appended signature (modsig) found and 0 for not found.
+> +check_for_modsig()
+> +{
+> +	local module_sig_string="~Module signature appended~"
+> +	local sig="$(tail --bytes $((${#module_sig_string} + 1)) $KERNEL_IMAGE)"
+> +	local ret=0
+> +
+> +	if [ "$sig" == "$module_sig_string" ]; then
+> +		ret=1
+> +		log_info "kexec kernel image modsig signed"
+> +	else
+> +		log_info "kexec kernel image not modsig signed"
+> +	fi
+> +	return $ret
+> +}
+> +
+>   kexec_file_load_test()
+>   {
+>   	local succeed_msg="kexec_file_load succeeded"
+> @@ -98,7 +123,8 @@ kexec_file_load_test()
+>   		# In secureboot mode with an architecture  specific
+>   		# policy, make sure either an IMA or PE signature exists.
+>   		if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ] && \
+> -			[ $ima_signed -eq 0 ] && [ $pe_signed -eq 0 ]; then
+> +			[ $ima_signed -eq 0 ] && [ $pe_signed -eq 0 ] \
+> +			  && [ $ima_modsig -eq 0 ]; then
+>   			log_fail "$succeed_msg (missing sig)"
+>   		fi
+>   
+> @@ -107,7 +133,8 @@ kexec_file_load_test()
+>   			log_fail "$succeed_msg (missing PE sig)"
+>   		fi
+>   
+> -		if [ $ima_sig_required -eq 1 ] && [ $ima_signed -eq 0 ]; then
+> +		if [ $ima_sig_required -eq 1 ] && [ $ima_signed -eq 0 ] \
+> +		     && [ $ima_modsig -eq 0 ]; then
+>   			log_fail "$succeed_msg (missing IMA sig)"
+>   		fi
+>   
+> @@ -204,5 +231,8 @@ pe_signed=$?
+>   check_for_imasig
+>   ima_signed=$?
+>   
+> +check_for_modsig
+> +ima_modsig=$?
+> +
+>   # Test loading the kernel image via kexec_file_load syscall
+>   kexec_file_load_test
+> 
 
->
->> Also Cc Mario because this could relate to BIOS.
->
-> Also I assume this is on current stable BIOS/EC release, right?
-
-Yes. The BIOS version is 1.10.1.
-
-The IRQ storm stops as soon as the touchpad gets touched.
-
-Kai-Heng
-
->
-> Thanks,
->
->> -----Original Message-----
->> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> Sent: Wednesday, August 28, 2019 1:58 AM
->> To: Xiaojian Cao
->> Cc: Masaki Ota; Limonciello, Mario; open list:HID CORE LAYER; Linux Kernel
->> Mailing List; Naoki Saito
->> Subject: Re: Alps touchpad generates IRQ storm after S3
->>
->>
->> [EXTERNAL EMAIL]
->>
->> Hi Xiaojian,
->>
->> at 14:51, Xiaojian Cao <xiaojian.cao@cn.alps.com> wrote:
->>
->>> Hi Ota-san,
->>>
->>> OK, we will look into it.
->>>
->>>
->>> Hi Kai-Heng,
->>>
->>> We will try to reproduce this issue first, could you please tell me the
->>> target Ubuntu version?
->>
->> It’s distro-agnostic, any distro with mainline Linux can reproduce the  
->> issue.
->>
->> Kai-Heng
->>
->>> Best regards,
->>> Jason
->>>
->>> -----Original Message-----
->>> From: 太田 真喜 Masaki Ota <masaki.ota@alpsalpine.com>
->>> Sent: Wednesday, August 28, 2019 2:35 PM
->>> To: 曹 曉建 Xiaojian Cao <xiaojian.cao@cn.alps.com>; Kai-Heng Feng
->>> <kai.heng.feng@canonical.com>
->>> Cc: Mario Limonciello <mario.limonciello@dell.com>; open list:HID CORE
->>> LAYER <linux-input@vger.kernel.org>; Linux Kernel Mailing List
->>> <linux-kernel@vger.kernel.org>; 斉藤 直樹 Naoki Saito
->>> <naoki.saito@alpsalpine.com>
->>> Subject: RE: Alps touchpad generates IRQ storm after S3
->>>
->>> Hi, Kai-Heng,
->>>
->>> Sorry, I'm not in charge of Linux task now.
->>>
->>> Hi, XiaoJian,
->>>
->>> Please check the following mail.
->>> If you have any question, please ask Kai-Heng.
->>>
->>> Best Regards,
->>> Masaki Ota
->>> -----Original Message-----
->>> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>> Sent: Wednesday, August 28, 2019 3:22 PM
->>> To: 太田 真喜 Masaki Ota <masaki.ota@alpsalpine.com>
->>> Cc: Mario Limonciello <mario.limonciello@dell.com>; open list:HID CORE
->>> LAYER <linux-input@vger.kernel.org>; Linux Kernel Mailing List
->>> <linux-kernel@vger.kernel.org>
->>> Subject: Alps touchpad generates IRQ storm after S3
->>>
->>> Hi Masaki,
->>>
->>> The Alps touchpad (044E:1220) on Dell Precision 7530 causes IRQ storm
->>> after system suspend (S3).
->>> Commit "HID: i2c-hid: Don't reset device upon system resume” which solves
->>> the same issue for other vendors, cause the issue on Alps touchpad.
->>> So I’d like to know the correct command Alps touchpad expects after
->>> system resume.
->>>
->>> Also Cc Mario because this could relate to BIOS.
->>>
->>> Kai-Heng
-
-
+thanks,
+-- Shuah
