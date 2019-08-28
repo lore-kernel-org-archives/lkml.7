@@ -2,120 +2,153 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC21C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB5AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFD72189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05395217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:39:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566992387;
+	bh=zFX6K+sbahwAVHjk1v7Y0ynjPUeiaUDUZEEnuIPaDo8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zBtP9q1M7nZ4nMWsWpm3wpqthWWWE3Rc1D8bdORXKTk3tzSAVDfY0d3wQF3L2U9Tx
+	 APk9rMQ4D8PU+fyE28Diw2u60UX1IEW/9UVhuSPIjLm2CINeIhxoIFy5TRgYaBs1T2
+	 VqvrWE10FwwPNxHPsC8LeabJ5Yc5+DoGyd0szj6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfH1Lhr (ORCPT
+        id S1726466AbfH1Ljq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 07:37:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46418 "EHLO mx1.redhat.com"
+        Wed, 28 Aug 2019 07:39:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbfH1Lhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 07:37:47 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726326AbfH1Ljp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 07:39:45 -0400
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D55AE2A09B9;
-        Wed, 28 Aug 2019 11:37:46 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.63])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 447A75D712;
-        Wed, 28 Aug 2019 11:37:44 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 28 Aug 2019 13:37:46 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 13:37:43 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Dmitry Safonov <0x7f454c46@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Sebastian Mayr <me@sam.st>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Subject: Re: get_unmapped_area && in_ia32_syscall (Was: [PATCH] uprobes/x86:
- fix detection of 32-bit user mode)
-Message-ID: <20190828113743.GA3721@redhat.com>
-References: <20190728152617.7308-1-me@sam.st>
- <alpine.DEB.2.21.1908232343470.1939@nanos.tec.linutronix.de>
- <20190827140055.GA6291@redhat.com>
- <15c5d9f6-6429-4775-05af-8a956d44a9ef@gmail.com>
- <459fdf33-1290-2651-6344-0ff9e466ddfc@gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 77A5522CF8;
+        Wed, 28 Aug 2019 11:39:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566992384;
+        bh=zFX6K+sbahwAVHjk1v7Y0ynjPUeiaUDUZEEnuIPaDo8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Z3/ECLQSL7wh6MTn4A6x8vrX9g0jEHKxPtPHd5PCTw3kwe/Fp9kW1Ac3KXrvyj9dd
+         Tx3djCmBNmPpfRxvVo3+UzcdKLw85GTS1mFE41y7DB6G0mcvo/QGr0BBkl+ixXzzr5
+         EnGmjCSAGTArW7nvFbEafw1P4Lu+wdh8o4SvAJzQ=
+Received: by mail-qk1-f175.google.com with SMTP id w18so2093902qki.0;
+        Wed, 28 Aug 2019 04:39:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAUozvkvtKAUd+Elz/fHMVMBdztl3NPW3YADG1QQcRb2Gdbei1f9
+        NchL/PSxc/aA2xrWYaga6bNFB2Rk0bHv4xTzcQ==
+X-Google-Smtp-Source: APXvYqydDnMJj3jUU3Wub3MN0mjmXdZW8HBVHZ2a6QgyavC3ZjOUxXUkCbX8LKAVCJZc9hkLGTCYIXvcb0nDHtiTO90=
+X-Received: by 2002:a37:d8f:: with SMTP id 137mr3443285qkn.254.1566992383614;
+ Wed, 28 Aug 2019 04:39:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <459fdf33-1290-2651-6344-0ff9e466ddfc@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 28 Aug 2019 11:37:47 +0000 (UTC)
+References: <20190827082652.43840-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190827082652.43840-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAL_JsqJsTDNR7FsdFouLetzhsRhmr3fVT_xzzhKbR7KuTwepuQ@mail.gmail.com> <2a915595-be5f-83f4-34e8-34d667875cc2@linux.intel.com>
+In-Reply-To: <2a915595-be5f-83f4-34e8-34d667875cc2@linux.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 28 Aug 2019 06:39:32 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLSXCK9u0fC99mv=7Lwmiqg2Qtu7Kf_xFG0WHE3v3wE6w@mail.gmail.com>
+Message-ID: <CAL_JsqLSXCK9u0fC99mv=7Lwmiqg2Qtu7Kf_xFG0WHE3v3wE6w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
+ for LGM SDXC PHY
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        peter.harliman.liem@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/28, Dmitry Safonov wrote:
+On Tue, Aug 27, 2019 at 10:47 PM Ramuthevar, Vadivel MuruganX
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 >
-> > On 8/27/19 3:00 PM, Oleg Nesterov wrote:
-> > [..]
-> >> But to remind, there is another problem with in_ia32_syscall() && uprobes.
+> Hi Rob,
+>
+> On 27/8/2019 8:39 PM, Rob Herring wrote:
+> > On Tue, Aug 27, 2019 at 3:27 AM Ramuthevar,Vadivel MuruganX
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> >> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > >>
-> >> get_unmapped_area() paths use in_ia32_syscall() and this is wrong in case
-> >> when the caller is xol_add_vma(), in this case TS_COMPAT won't be set.>
-> >> Usually the addr = TASK_SIZE - PAGE_SIZE passed to get_unmapped_area() should
-> >> work, mm->get_unmapped_area() won't be even called. But if this addr is already
-> >> occupied get_area() can return addr > TASK_SIZE.
-> >
-> > Technically, it's not bigger than TASK_SIZE that's supplied
-> > get_unmapped_area() as an argument..
+> >> Add a YAML schema to use the host controller driver with the
+> >> SDXC PHY on Intel's Lightning Mountain SoC.
+> >>
+> >> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >> ---
+> >>   .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 50 ++++++++++++++++++++++
+> >>   1 file changed, 50 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >> new file mode 100644
+> >> index 000000000000..be05020880bf
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >> @@ -0,0 +1,50 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
+> >> +
+> >> +maintainers:
+> >> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >> +
+> >> +description: Binding for SDXC PHY
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: intel,lgm-sdxc-phy
+> >> +
+> >> +  intel,syscon:
+> >> +    description: phandle to the sdxc through syscon
+> >> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> >> +
+> >> +  clocks:
+> >> +    maxItems: 1
+> >> +
+> >> +  clock-names:
+> >> +    maxItems: 1
+> >> +
+> >> +  "#phy-cells":
+> >> +    const: 0
+> >> +
+> >> +required:
+> >> +  - "#phy-cells"
+> >> +  - compatible
+> >> +  - intel,syscon
+> >> +  - clocks
+> >> +  - clock-names
+> >> +
+> >> +additionalProperties: false
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    sdxc_phy: sdxc_phy {
+> >> +        compatible = "intel,lgm-sdxc-phy";
+> >> +        intel,syscon = <&sysconf>;
+> > Rather than a phandle, can this be a child node of sysconf? You need a
+> > binding for sysconf first anyways.
+> intel,syscon is phandle, emmc_phy is not child node of sysconf, access
+> emmc_phy
+> register over sysconf so made as reference here.
 
-Hmm. What do you mean?
+How do you access the emmc_phy registers? They are part of the sysconf
+address space or the sysconf provides some sort of indirect register
+access? In case of the former, then emmc_phy should be a child node.
+That's actually fairly common.
 
-Just in case, TASK_SIZE checks TIF_ADDR32, not TS_COMPAT.
-
-> >>  	if (!area->vaddr) {
-> >> +		if(!is_64bit_mm(mm))
-> >> +			current_thread_info()->status |= TS_COMPAT;
-> >>  		/* Try to map as high as possible, this is only a hint. */
-> >>  		area->vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE,
-> >>  						PAGE_SIZE, 0, 0);
-> >> +		if(!is_64bit_mm(mm))
-> >> +			current_thread_info()->status &= ~TS_COMPAT;;
-> >>  		if (area->vaddr & ~PAGE_MASK) {
-> >>  			ret = area->vaddr;
-> >>  			goto fail;
-> >
-> > It could have been TASK_SIZE_OF(),
-
-tsk is always current, why do we need TASK_SIZE_OF() ?
-
-> > I see that arch_uprobe_analyze_insn() uses is_64bit_mm() which
-> > is correct the majority of time, but not for processes those jump
-> > switching CS..
-
-Heh. it's actually even worse. Just suppose a 32-bit application simply
-mmaps a 64-bit executable which has a probe. But this is off-topic.
-
-> > Do I read the code properly and xol is always one page?
-
-Yes,
-
-> > Could that page be reserved on the top of mmap_base/mmap_compat_base at
-> > the binfmt loading time?
-
-How? I don't understand...
-
-> (I would need than to add .mremap() for
-> > restoring sake).
-
-for what? I don't think you can restore a probed process anyway... OK,
-right now this is off-topic too.
-
-Oleg.
-
+Rob
