@@ -2,75 +2,154 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18362C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53ACC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1354217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5CD23407
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:51:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567007509;
+	bh=G0VsCP8dbOtgyqj9srK7YmA1XEAwzErVOoPM9ccmKLY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=yXP+9AVpvVZJkV/4t0Y/loQydGqjq/xiZxWMNFIQS6tLpRIVRrxq8FdxSAKI909L5
+	 XgWy9wXoQ+uAkErID9UswEM5C79nJsudG1H7Jt5ePXYcbU7OH/n9ewnl8keX/YmrKU
+	 e+Kt3MmOhzv98Yx1041Khm02KxQVo0q8/1ItB0Qw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfH1PvQ (ORCPT
+        id S1726832AbfH1Pvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:51:16 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47730 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbfH1PvP (ORCPT
+        Wed, 28 Aug 2019 11:51:48 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9112 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726368AbfH1Pvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:51:15 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i30E2-0007Du-Oh; Wed, 28 Aug 2019 17:51:10 +0200
-Date:   Wed, 28 Aug 2019 17:51:10 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dave Hansen <dave.hansen@intel.com>
-cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
+        Wed, 28 Aug 2019 11:51:48 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SFmU3G159123;
+        Wed, 28 Aug 2019 11:51:41 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2umnmw55vf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 11:51:41 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7SFmWc9159537;
+        Wed, 28 Aug 2019 11:51:31 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2umnmw55ns-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 11:51:30 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7SFolWA014163;
+        Wed, 28 Aug 2019 15:51:19 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma02wdc.us.ibm.com with ESMTP id 2ujvv6pr56-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 15:51:19 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7SFpJ5t52298036
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 28 Aug 2019 15:51:19 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0EC2FB2064;
+        Wed, 28 Aug 2019 15:51:19 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E55D5B205F;
+        Wed, 28 Aug 2019 15:51:18 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 28 Aug 2019 15:51:18 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 6281216C1700; Wed, 28 Aug 2019 08:51:20 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 08:51:20 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Scott Wood <swood@redhat.com>, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
         Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [patch 1/2] x86/mm/pti: Handle unaligned address gracefully in
- pti_clone_pagetable()
-In-Reply-To: <55bb026c-5d54-6ebf-608f-3f376fbec4e5@intel.com>
-Message-ID: <alpine.DEB.2.21.1908281750410.1938@nanos.tec.linutronix.de>
-References: <20190828142445.454151604@linutronix.de> <20190828143123.971884723@linutronix.de> <55bb026c-5d54-6ebf-608f-3f376fbec4e5@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v2 2/3] sched: migrate_enable: Use sleeping_lock to
+ indicate involuntary sleep
+Message-ID: <20190828155120.GQ26530@linux.ibm.com>
+Reply-To: paulmck@kernel.org
+References: <433936e4c720e6b81f9b297fefaa592fd8a961ad.camel@redhat.com>
+ <20190824031014.GB2731@google.com>
+ <20190826152523.dcjbsgyyir4zjdol@linutronix.de>
+ <20190826162945.GE28441@linux.ibm.com>
+ <20190827092333.jp3darw7teyyw67g@linutronix.de>
+ <20190827155306.GF26530@linux.ibm.com>
+ <20190828092739.46mrffvzjv6v3de5@linutronix.de>
+ <20190828125426.GO26530@linux.ibm.com>
+ <20190828131433.3gi4debho5zc7hgc@linutronix.de>
+ <20190828135938.GA230957@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828135938.GA230957@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908280160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 28 Aug 2019, Dave Hansen wrote:
-> On 8/28/19 7:24 AM, Thomas Gleixner wrote:
-> > From: Song Liu <songliubraving@fb.com>
+On Wed, Aug 28, 2019 at 09:59:38AM -0400, Joel Fernandes wrote:
+> On Wed, Aug 28, 2019 at 03:14:33PM +0200, Sebastian Andrzej Siewior wrote:
+> > On 2019-08-28 05:54:26 [-0700], Paul E. McKenney wrote:
+> > > On Wed, Aug 28, 2019 at 11:27:39AM +0200, Sebastian Andrzej Siewior wrote:
+> > > > On 2019-08-27 08:53:06 [-0700], Paul E. McKenney wrote:
+> > > > > Am I understanding this correctly?
+> > > > 
+> > > > Everything perfect except that it is not lockdep complaining but the
+> > > > WARN_ON_ONCE() in rcu_note_context_switch().
+> > > 
+> > > This one, right?
+> > > 
+> > > 	WARN_ON_ONCE(!preempt && t->rcu_read_lock_nesting > 0);
+> > > 
+> > > Another approach would be to change that WARN_ON_ONCE().  This fix might
+> > > be too extreme, as it would suppress other issues:
+> > > 
+> > > 	WARN_ON_ONCE(IS_ENABLED(CONFIG_PREEMPT_RT_BASE) && !preempt && t->rcu_read_lock_nesting > 0);
+> > > 
+> > > But maybe what is happening under the covers is that preempt is being
+> > > set when sleeping on a spinlock.  Is that the case?
 > > 
-> > pti_clone_pmds() assumes that the supplied address is either:
+> > I would like to keep that check and that is why we have:
 > > 
-> >  - properly PUD/PMD aligned
-> > or
-> >  - the address is actually mapped which means that independent
-> >    of the mapping level (PUD/PMD/PTE) the next higher mapping
-> >    exist.
+> > |   #if defined(CONFIG_PREEMPT_RT_FULL)
+> > |         sleeping_l = t->sleeping_lock;
+> > |   #endif
+> > |         WARN_ON_ONCE(!preempt && t->rcu_read_lock_nesting > 0 && !sleeping_l);
 > > 
-> > If that's not the case the unaligned address can be incremented by PUD or
-> > PMD size wrongly. All callers supply mapped and/or aligned addresses, but
-> > for robustness sake, it's better to handle that case proper and to emit a
-> > warning.
+> > in -RT and ->sleeping_lock is that counter that is incremented in
+> > spin_lock(). And the only reason why sleeping_lock_inc() was used in the
+> > patch was to disable _this_ warning.
 > 
-> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Makes sense, Sebastian.
 > 
-> Song, did you ever root-cause the performance regression?  I thought
-> there were still some mysteries there.
+> Paul, you meant "!" in front of the IS_ENABLED right in your code snippet right?
+> 
+> The other issue with:
+> WARN_ON_ONCE(!IS_ENABLED(CONFIG_PREEMPT_RT_BASE) && !preempt && t->rcu_read_lock_nesting > 0);
+> 
+> .. could be that, the warning will be disabled for -rt entirely, not just for
+> sleeping locks. And we probably do want to keep this warning for the cases in
+> -rt where we are blocking but it is not a sleeping lock. Right?
 
-See Peter's series to rework the ftrace code patching ...
+Yes, my code was missing a "!", but I prefer Sebastian's and Scott's
+approach to mine anyway.  ;-)
 
+							Thanx, Paul
