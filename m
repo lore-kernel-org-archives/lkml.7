@@ -2,114 +2,113 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C386C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7A1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1AE2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:23:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Uqh5RTPx"
+	by mail.kernel.org (Postfix) with ESMTP id 77ECC2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:24:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfH1NXU (ORCPT
+        id S1726571AbfH1NYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:23:20 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38258 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfH1NXR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:23:17 -0400
-Received: by mail-wr1-f67.google.com with SMTP id e16so2503192wro.5
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 06:23:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SMEwDnA8PK409z+Aw0DoKAxN3PbjiYfTei3jRL70xXE=;
-        b=Uqh5RTPxsxlgO6fW+/GUp4PHz90/PXrd2mH3+ERhbCtOXr5thlsbr2p/LwY2qGqpwp
-         VuHQen7EZmGCxAiXC1cfifEbYOaAC+p3+x/DJIs3P+8EgDXQ89qvHHqwqrG8nhBdxW+c
-         tJwQqCHExOTpgBG9ImlyJxpAel/U4SnSMOwbYsPe88WLxu7Pmq5UYVC9duZEaD1GaLZo
-         81vaNBLxSAlavlQjnWQ2ndvY1rZyH4+flemGFSIF98DM/qchwIzCXEG3n9t79jy2Y7TM
-         jXnrU60lr0P44mWM3EoDT07kZ+I4m5LUEMwJfftMdDRo8EuKrXUMraB10G9aCyud/5+t
-         tuPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SMEwDnA8PK409z+Aw0DoKAxN3PbjiYfTei3jRL70xXE=;
-        b=sbqq0Fj9j+UUg9l0Jhs97BgypeVTfY84dFq7xQScBptCvIOYauE3oyZm6xVE+A7hjE
-         szbcocjSSgj1acUhgB8GvoWRG5qapcGCAeOqFUGV+B9EqsgcJAJ+x39wClfb5+yRNR9P
-         ZhG43kNN3cPDs5zAyZWEPOrnvHvHRq5jjz5jLGQaSLK+U9XhUb/17y67WPbFd9JDAzyn
-         get6xE32t03cBI7oaUAFFWlJIC1Thd/6PWMnEKNhpLPzBW8LmYY3X7PlTo5uIdQjL2Kn
-         krtiyjrmdTtouGcpshEkQRWbA8dmV2udmZLWEsBDhSSR2rEThY9rYcY6mgORJdkkMZej
-         tmyw==
-X-Gm-Message-State: APjAAAWv8ErvB9K1MJCsB9PtNEyO3Iy7IZMFbKZmWu5c/Ir8k08f47ne
-        IBHDfv4/zzIxMm2yMBhVhhUyog==
-X-Google-Smtp-Source: APXvYqwSRs75Y6JmL0J+jZ9ePz6PFEOEGjCGu9Py7xJQeuRqpBpdE3NXmyi2gk1js3KzTuh8qnnuxw==
-X-Received: by 2002:adf:ba4a:: with SMTP id t10mr4522910wrg.325.1566998595621;
-        Wed, 28 Aug 2019 06:23:15 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id z7sm2785505wrh.67.2019.08.28.06.23.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 06:23:15 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] drm/meson: vclk: use the correct G12A frac max value
-Date:   Wed, 28 Aug 2019 15:23:11 +0200
-Message-Id: <20190828132311.23881-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 28 Aug 2019 09:24:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:59282 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbfH1NYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 09:24:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DBF928;
+        Wed, 28 Aug 2019 06:23:59 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61DF03F246;
+        Wed, 28 Aug 2019 06:23:58 -0700 (PDT)
+Subject: Re: cleanup the walk_page_range interface
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?Q?Thomas_Hellstr=c3=b6m?= <thomas@shipmail.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+References: <20190808154240.9384-1-hch@lst.de>
+ <CAHk-=wh3jZnD3zaYJpW276WL=N0Vgo4KGW8M2pcFymHthwf0Vg@mail.gmail.com>
+ <20190816062751.GA16169@infradead.org> <20190823134308.GH12847@mellanox.com>
+ <20190824222654.GA28766@infradead.org> <20190827013408.GC31766@mellanox.com>
+ <20190827163431.65a284b295004d1ed258fbd5@linux-foundation.org>
+ <20190827233619.GB28814@mellanox.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <1a0e8f03-d1c6-9325-1db3-2c3e2fd0f7d5@arm.com>
+Date:   Wed, 28 Aug 2019 14:23:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190827233619.GB28814@mellanox.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calculating the HDMI PLL settings for a DMT mode PHY frequency,
-use the correct max fractional PLL value for G12A VPU.
+On 28/08/2019 00:36, Jason Gunthorpe wrote:
+> On Tue, Aug 27, 2019 at 04:34:31PM -0700, Andrew Morton wrote:
+>> On Tue, 27 Aug 2019 01:34:13 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
+>>
+>>> On Sat, Aug 24, 2019 at 03:26:55PM -0700, Christoph Hellwig wrote:
+>>>> On Fri, Aug 23, 2019 at 01:43:12PM +0000, Jason Gunthorpe wrote:
+>>>>>> So what is the plan forward?  Probably a little late for 5.3,
+>>>>>> so queue it up in -mm for 5.4 and deal with the conflicts in at least
+>>>>>> hmm?  Queue it up in the hmm tree even if it doesn't 100% fit?
+>>>>>
+>>>>> Did we make a decision on this? Due to travel & LPC I'd like to
+>>>>> finalize the hmm tree next week.
+>>>>
+>>>> I don't think we've made any decision.  I'd still love to see this
+>>>> in hmm.git.  It has a minor conflict, but I can resend a rebased
+>>>> version.
+>>>
+>>> I'm looking at this.. The hmm conflict is easy enough to fix.
+>>>
+>>> But the compile conflict with these two patches in -mm requires some
+>>> action from Andrew:
+>>>
+>>> commit 027b9b8fd9ee3be6b7440462102ec03a2d593213
+>>> Author: Minchan Kim <minchan@kernel.org>
+>>> Date:   Sun Aug 25 11:49:27 2019 +1000
+>>>
+>>>     mm: introduce MADV_PAGEOUT
+>>>
+>>> commit f227453a14cadd4727dd159782531d617f257001
+>>> Author: Minchan Kim <minchan@kernel.org>
+>>> Date:   Sun Aug 25 11:49:27 2019 +1000
+>>>
+>>>     mm: introduce MADV_COLD
+>>>     
+>>>     Patch series "Introduce MADV_COLD and MADV_PAGEOUT", v7.
+>>>
+>>> I'm inclined to suggest you send this series in the 2nd half of the
+>>> merge window after this MADV stuff lands for least disruption? 
+>>
+>> Just merge it, I'll figure it out.  Probably by staging Minchan's
+>> patches after linux-next.
+> 
+> Okay, I'll get it on a branch and merge it toward hmm.git tomorrow
+> 
+> Steven, do you need the branch as well for your patch series? Let me know
 
-With this fix, we can finally setup the 1024x768-60 mode.
+Since my series is (mostly) just refactoring I'm planning on rebasing it
+after -rc1 and aim for v5.4 - I don't really have the time just now to
+do that.
 
-Fixes: 202b9808f8ed ("drm/meson: Add G12A Video Clock setup")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
-Fixed typo in commit log, 1024x76 => 1024x768
+But please keep me in the loop because it'll reduce the surprises when I
+do do the rebase.
 
- drivers/gpu/drm/meson/meson_vclk.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Thanks,
 
-diff --git a/drivers/gpu/drm/meson/meson_vclk.c b/drivers/gpu/drm/meson/meson_vclk.c
-index ac491a781952..f690793ae2d5 100644
---- a/drivers/gpu/drm/meson/meson_vclk.c
-+++ b/drivers/gpu/drm/meson/meson_vclk.c
-@@ -638,13 +638,18 @@ static bool meson_hdmi_pll_validate_params(struct meson_drm *priv,
- 		if (frac >= HDMI_FRAC_MAX_GXBB)
- 			return false;
- 	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXM) ||
--		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL) ||
--		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
-+		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL)) {
- 		/* Empiric supported min/max dividers */
- 		if (m < 106 || m > 247)
- 			return false;
- 		if (frac >= HDMI_FRAC_MAX_GXL)
- 			return false;
-+	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
-+		/* Empiric supported min/max dividers */
-+		if (m < 106 || m > 247)
-+			return false;
-+		if (frac >= HDMI_FRAC_MAX_G12A)
-+			return false;
- 	}
- 
- 	return true;
--- 
-2.22.0
-
+Steve
