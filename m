@@ -2,103 +2,89 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7728C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F89DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C457C2339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E0B2339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:39:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VrjuRwfm";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aeeVAq6Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfH2MhW (ORCPT
+        id S1727387AbfH2MjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 08:37:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39552 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727014AbfH2MhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 08:37:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EE906AC67;
-        Thu, 29 Aug 2019 12:37:20 +0000 (UTC)
-Date:   Thu, 29 Aug 2019 14:37:16 +0200
-From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Breno Leitao <leitao@debian.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Allison Randal <allison@lohutok.net>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Nicolai Stange <nstange@suse.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christian Brauner <christian@brauner.io>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v4 1/4] powerpc: make llseek 32bit-only.
-Message-ID: <20190829143716.6e41b10e@naga>
-In-Reply-To: <CAK8P3a1wR-jzFSzdPqgfCG4vyAi_xBPVGhc6Nn4KaXpk3cUiJw@mail.gmail.com>
-References: <cover.1567072270.git.msuchanek@suse.de>
-        <061a0de2042156669303f95526ec13476bf490c7.1567072270.git.msuchanek@suse.de>
-        <CAK8P3a1wR-jzFSzdPqgfCG4vyAi_xBPVGhc6Nn4KaXpk3cUiJw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Thu, 29 Aug 2019 08:39:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:45580 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfH2MjY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 08:39:24 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 77FB48A1A6; Wed, 28 Aug 2019 15:16:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567005368;
+        bh=+EwOCSrATTfaecERMGr7s8wbx3PWkrc30gIRhDZCi1A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VrjuRwfm8DZtQigZQgTgHkacGaLb3S1IyYgj8Deg5Oy3mitdGf4UFK2t7XyRuTIqD
+         h4KWBeC1ksA7iJ6dcJsuLFOqa8wytoZh1aY8Wkkf20mBg6rS+epDCenYX27jaqep8s
+         9VamivGkRTlawfhG3bCPC4JREr4/mTrEsfB/AOsM=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 82BCB782A7;
+        Wed, 28 Aug 2019 07:44:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566978287;
+        bh=+EwOCSrATTfaecERMGr7s8wbx3PWkrc30gIRhDZCi1A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aeeVAq6YhSYhMWz5IV7u9cU/D4kOmDQxphEmV2RiAkhT1SkP42Py3FRu9qpZkEGNG
+         RghbuZp6w/Row9bs6u7Hyyhn6yI4zf7ZGSoNTjQxL5kc8maOZhqdV7rU4MelYQ2Jy+
+         UqWQva2uAXCEWYF+vfLcIxVcjRGLUR2anHdGlsC0=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 28 Aug 2019 10:44:46 +0300
+From:   merez@codeaurora.org
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        wil6210@qti.qualcomm.com, "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        linux-wireless-owner@vger.kernel.org
+Subject: Re: [PATCH] wil6210: Delete an unnecessary kfree() call in
+ wil_tid_ampdu_rx_alloc()
+In-Reply-To: <b9620e49-618d-b392-6456-17de5807df75@web.de>
+References: <b9620e49-618d-b392-6456-17de5807df75@web.de>
+Message-ID: <6eea96653c83cffe648465bc8b953913@codeaurora.org>
+X-Sender: merez@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 14:19:46 +0200
-Arnd Bergmann <arnd@arndb.de> wrote:
-
-> On Thu, Aug 29, 2019 at 12:23 PM Michal Suchanek <msuchanek@suse.de> wrote:
-> >
-> > Fixes: aff850393200 ("powerpc: add system call table generation support")  
+On 2019-08-27 17:44, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Tue, 27 Aug 2019 16:39:02 +0200
 > 
-> This patch needs a proper explanation. The Fixes tag doesn't seem right
-> here, since ppc64 has had llseek since the start in 2002 commit 3939e37587e7
-> ("Add ppc64 support. This includes both pSeries (RS/6000) and iSeries
-> (AS/400).").
+> A null pointer would be passed to a call of the function “kfree”
+> directly after a call of the function “kcalloc” failed at one place.
+> Remove this superfluous function call.
 > 
-> > diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-> > index 010b9f445586..53e427606f6c 100644
-> > --- a/arch/powerpc/kernel/syscalls/syscall.tbl
-> > +++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-> > @@ -188,7 +188,7 @@
-> >  137    common  afs_syscall                     sys_ni_syscall
-> >  138    common  setfsuid                        sys_setfsuid
-> >  139    common  setfsgid                        sys_setfsgid
-> > -140    common  _llseek                         sys_llseek
-> > +140    32      _llseek                         sys_llseek
-> >  141    common  getdents                        sys_getdents                    compat_sys_getdents
-> >  142    common  _newselect                      sys_select                      compat_sys_select
-> >  143    common  flock                           sys_flock  
+> This issue was detected by using the Coccinelle software.
 > 
-> In particular, I don't see why you single out llseek here, but leave other
-> syscalls that are not needed on 64-bit machines such as pread64().
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
 
-Because llseek is not built in fs/ when building 64bit only causing a
-link error. 
+Reviewed-by: Maya Erez <merez@codeaurora.org>
 
-I initially posted patch to build it always but it was pointed out it
-is not needed, and  the interface does not make sense on 64bit, and
-that platforms that don't have it on 64bit now don't want that useless
-code.
-
-Thanks
-
-Michal
+-- 
+Maya Erez
+Qualcomm Israel, Inc. on behalf of Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
+Linux Foundation Collaborative Project
