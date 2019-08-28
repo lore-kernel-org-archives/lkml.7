@@ -2,113 +2,224 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69796C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD83EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B89B22CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:59:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5ibXSmp"
+	by mail.kernel.org (Postfix) with ESMTP id 9893922CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:00:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfH1M75 (ORCPT
+        id S1726506AbfH1NAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:59:57 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38421 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfH1M74 (ORCPT
+        Wed, 28 Aug 2019 09:00:02 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42037 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726554AbfH1NAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:59:56 -0400
-Received: by mail-pf1-f193.google.com with SMTP id o70so1693596pfg.5;
-        Wed, 28 Aug 2019 05:59:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yQYjQEKx+pk9xunTic066tAg2N98pbyunLxiZPwNrWc=;
-        b=D5ibXSmprjmd0nrYB034o67G7p4IAvRsMo16+h1yTJErfwE8lXN1xBcCf6Z00lKynp
-         uLPpAc0QS39qXchQtkZS/naaItb8OgG8K4iUz6wYSuPuTDtgh5DX8DAXYUmzSADhXeBe
-         eUvMn0SLn6aRwByHr0BRj7aGUsDg/no3qDrJirtf5x4fMWfQQP6sSXQDufsBOdA97/OZ
-         enmzP/js+LX8yRqZWfV0Jc7SJw0vFMHlANay1aBoJnrJs5R623aq33W3GxTEg1g59/93
-         ocaVdxxUQIyuCrhSjzqZNJDt/lzD2FM3XEJdXXF+pW/liJup1DFZTUL/NAbJkbQPoSyt
-         cm7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yQYjQEKx+pk9xunTic066tAg2N98pbyunLxiZPwNrWc=;
-        b=PxAr4Tzr2BYPZGdfikSrsUhoJB3+DED5YKZC1xevHr/va9gojhCQgzi2OKAyfRTbQW
-         zQ+4R1tPGFascnbp9EOLwnYrZGjM33AC5RfbGhm8EzqfOfBizp+Tk936lbMxXdnGUixp
-         /6Nm6la5KAPxTJRj4ePInnDIvFSdCuio5UGrNXJWuMYgxbJle/XGeePHnKKaopa/P6Mc
-         KC2CmD+MvlsjpF+4deaT+E+4UH4E/X+4SsWqAZ63Ntqa7/H47WAH/R/Ihp3oPVwr0Q9y
-         71Ww0/+nl7hncEn3YjTDS/rlFebQpP2b5p08r8flaVUeysV0UVV8XG/9iD+3dBo8CGSW
-         s4KA==
-X-Gm-Message-State: APjAAAUxaagLNOcbYlm772jF74mG+l2/vaCRaF+bI7j9tqYPRAPVMT/w
-        vBQT5KBvGBM/jJxH5vUxEXQ=
-X-Google-Smtp-Source: APXvYqzrPpOWTJJWhnUbKPR+vEQmsu9fCVoHA4kj6YedxO5kRFtjRob/4TjTFO9aYUYIZEWIeZ7OTg==
-X-Received: by 2002:aa7:8d42:: with SMTP id s2mr4520451pfe.185.1566997196023;
-        Wed, 28 Aug 2019 05:59:56 -0700 (PDT)
-Received: from localhost ([39.7.47.251])
-        by smtp.gmail.com with ESMTPSA id w2sm2258227pgc.32.2019.08.28.05.59.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 05:59:55 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 21:59:51 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Enrico@kleine-koenig.org,
-        Weigelt@kleine-koenig.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        metux IT consult <lkml@metux.net>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] vsprintf: introduce %dE for error constants
-Message-ID: <20190828125951.GA12653@jagdpanzerIV>
-References: <20190827211244.7210-1-uwe@kleine-koenig.org>
- <20190828113216.p2yiha4xyupkbcbs@pathway.suse.cz>
- <87o9097bff.fsf@intel.com>
- <20190828120246.GA31416@jagdpanzerIV>
- <087e8e18-8044-27ef-b0bd-8a1093f53b32@rasmusvillemoes.dk>
+        Wed, 28 Aug 2019 09:00:00 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1i2xYI-0003uK-85; Wed, 28 Aug 2019 12:59:54 +0000
+Date:   Wed, 28 Aug 2019 14:59:53 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Hridya Valsaraju <hridya@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH 3/4] binder: Make transaction_log available in binderfs
+Message-ID: <20190828125952.ivvlxybw35kj67rj@wittgenstein>
+References: <20190827204152.114609-1-hridya@google.com>
+ <20190827204152.114609-4-hridya@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <087e8e18-8044-27ef-b0bd-8a1093f53b32@rasmusvillemoes.dk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190827204152.114609-4-hridya@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (08/28/19 14:49), Rasmus Villemoes wrote:
-> On 28/08/2019 14.02, Sergey Senozhatsky wrote:
-> > On (08/28/19 14:54), Jani Nikula wrote:
-> > [..]
-> >>> I personally think that this feature is not worth the code, data,
-> >>> and bikeshedding.
-> >>
-> >> The obvious alternative, I think already mentioned, is to just add
-> >> strerror() or similar as a function. I doubt there'd be much opposition
-> >> to that. Folks could use %s and strerr(ret). And a follow-up could add
-> >> the special format specifier if needed.
-> > 
-> > Yeah, I'd say that strerror() would be a better alternative
-> > to vsprintf() specifier. (if we decide to add such functionality).
+On Tue, Aug 27, 2019 at 01:41:51PM -0700, Hridya Valsaraju wrote:
+> Currently, the binder transaction log files 'transaction_log'
+> and 'failed_transaction_log' live in debugfs at the following locations:
 > 
-> Please no. The .text footprint of the changes at the call sites to do
-> pr_err("...%s...", errcode(err)) instead of the current
-> pr_err("...%d...", err) would very soon dwarf whatever is necessary to
-> implement %pE or %dE.
+> /sys/kernel/debug/binder/failed_transaction_log
+> /sys/kernel/debug/binder/transaction_log
+> 
+> This patch makes these files also available in a binderfs instance
+> mounted with the mount option "stats=global".
+> It does not affect the presence of these files in debugfs.
+> If a binderfs instance is mounted at path /dev/binderfs, the location of
+> these files will be as follows:
+> 
+> /dev/binderfs/binder_logs/failed_transaction_log
+> /dev/binderfs/binder_logs/transaction_log
+> 
+> This change provides an alternate option to access these files when
+> debugfs is not mounted.
+> 
+> Signed-off-by: Hridya Valsaraju <hridya@google.com>
 
-New vsprintf() specifiers have some downsides as well. Should %dE
-accidentally (via backport) make it to the -stable kernel, which
-does not support %dE, and we are going to lose the actual error
-code value as well.
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-	-ss
+> ---
+>  drivers/android/binder.c          | 34 +++++--------------------------
+>  drivers/android/binder_internal.h | 30 +++++++++++++++++++++++++++
+>  drivers/android/binderfs.c        | 19 +++++++++++++++++
+>  3 files changed, 54 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> index de795bd229c4..bed217310197 100644
+> --- a/drivers/android/binder.c
+> +++ b/drivers/android/binder.c
+> @@ -197,30 +197,8 @@ static inline void binder_stats_created(enum binder_stat_types type)
+>  	atomic_inc(&binder_stats.obj_created[type]);
+>  }
+>  
+> -struct binder_transaction_log_entry {
+> -	int debug_id;
+> -	int debug_id_done;
+> -	int call_type;
+> -	int from_proc;
+> -	int from_thread;
+> -	int target_handle;
+> -	int to_proc;
+> -	int to_thread;
+> -	int to_node;
+> -	int data_size;
+> -	int offsets_size;
+> -	int return_error_line;
+> -	uint32_t return_error;
+> -	uint32_t return_error_param;
+> -	const char *context_name;
+> -};
+> -struct binder_transaction_log {
+> -	atomic_t cur;
+> -	bool full;
+> -	struct binder_transaction_log_entry entry[32];
+> -};
+> -static struct binder_transaction_log binder_transaction_log;
+> -static struct binder_transaction_log binder_transaction_log_failed;
+> +struct binder_transaction_log binder_transaction_log;
+> +struct binder_transaction_log binder_transaction_log_failed;
+>  
+>  static struct binder_transaction_log_entry *binder_transaction_log_add(
+>  	struct binder_transaction_log *log)
+> @@ -6166,7 +6144,7 @@ static void print_binder_transaction_log_entry(struct seq_file *m,
+>  			"\n" : " (incomplete)\n");
+>  }
+>  
+> -static int transaction_log_show(struct seq_file *m, void *unused)
+> +int binder_transaction_log_show(struct seq_file *m, void *unused)
+>  {
+>  	struct binder_transaction_log *log = m->private;
+>  	unsigned int log_cur = atomic_read(&log->cur);
+> @@ -6198,8 +6176,6 @@ const struct file_operations binder_fops = {
+>  	.release = binder_release,
+>  };
+>  
+> -DEFINE_SHOW_ATTRIBUTE(transaction_log);
+> -
+>  static int __init init_binder_device(const char *name)
+>  {
+>  	int ret;
+> @@ -6268,12 +6244,12 @@ static int __init binder_init(void)
+>  				    0444,
+>  				    binder_debugfs_dir_entry_root,
+>  				    &binder_transaction_log,
+> -				    &transaction_log_fops);
+> +				    &binder_transaction_log_fops);
+>  		debugfs_create_file("failed_transaction_log",
+>  				    0444,
+>  				    binder_debugfs_dir_entry_root,
+>  				    &binder_transaction_log_failed,
+> -				    &transaction_log_fops);
+> +				    &binder_transaction_log_fops);
+>  	}
+>  
+>  	if (!IS_ENABLED(CONFIG_ANDROID_BINDERFS) &&
+> diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_internal.h
+> index 12ef96f256c6..b9be42d9464c 100644
+> --- a/drivers/android/binder_internal.h
+> +++ b/drivers/android/binder_internal.h
+> @@ -65,4 +65,34 @@ DEFINE_SHOW_ATTRIBUTE(binder_state);
+>  
+>  int binder_transactions_show(struct seq_file *m, void *unused);
+>  DEFINE_SHOW_ATTRIBUTE(binder_transactions);
+> +
+> +int binder_transaction_log_show(struct seq_file *m, void *unused);
+> +DEFINE_SHOW_ATTRIBUTE(binder_transaction_log);
+> +
+> +struct binder_transaction_log_entry {
+> +	int debug_id;
+> +	int debug_id_done;
+> +	int call_type;
+> +	int from_proc;
+> +	int from_thread;
+> +	int target_handle;
+> +	int to_proc;
+> +	int to_thread;
+> +	int to_node;
+> +	int data_size;
+> +	int offsets_size;
+> +	int return_error_line;
+> +	uint32_t return_error;
+> +	uint32_t return_error_param;
+> +	const char *context_name;
+> +};
+> +
+> +struct binder_transaction_log {
+> +	atomic_t cur;
+> +	bool full;
+> +	struct binder_transaction_log_entry entry[32];
+> +};
+> +
+> +extern struct binder_transaction_log binder_transaction_log;
+> +extern struct binder_transaction_log binder_transaction_log_failed;
+>  #endif /* _LINUX_BINDER_INTERNAL_H */
+> diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+> index d542f9b8d8ab..dc25a7d759c9 100644
+> --- a/drivers/android/binderfs.c
+> +++ b/drivers/android/binderfs.c
+> @@ -630,8 +630,27 @@ static int init_binder_logs(struct super_block *sb)
+>  
+>  	file_dentry = binderfs_create_file(binder_logs_root_dir, "transactions",
+>  					   &binder_transactions_fops, NULL);
+> +	if (IS_ERR(file_dentry)) {
+> +		ret = PTR_ERR(file_dentry);
+> +		goto out;
+> +	}
+> +
+> +	file_dentry = binderfs_create_file(binder_logs_root_dir,
+> +					   "transaction_log",
+> +					   &binder_transaction_log_fops,
+> +					   &binder_transaction_log);
+> +	if (IS_ERR(file_dentry)) {
+> +		ret = PTR_ERR(file_dentry);
+> +		goto out;
+> +	}
+> +
+> +	file_dentry = binderfs_create_file(binder_logs_root_dir,
+> +					   "failed_transaction_log",
+> +					   &binder_transaction_log_fops,
+> +					   &binder_transaction_log_failed);
+>  	if (IS_ERR(file_dentry))
+>  		ret = PTR_ERR(file_dentry);
+> +
+>  out:
+>  	return ret;
+>  }
+> -- 
+> 2.23.0.187.g17f5b7556c-goog
+> 
