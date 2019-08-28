@@ -2,145 +2,95 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FFCC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 00:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2F8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 00:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F7E217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 00:16:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="i1u2s7xo"
+	by mail.kernel.org (Postfix) with ESMTP id 735952173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 00:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbfH1AQH (ORCPT
+        id S1726234AbfH1AV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 20:16:07 -0400
-Received: from forward101p.mail.yandex.net ([77.88.28.101]:44793 "EHLO
-        forward101p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725992AbfH1AQH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 20:16:07 -0400
-Received: from mxback25j.mail.yandex.net (mxback25j.mail.yandex.net [IPv6:2a02:6b8:0:1619::225])
-        by forward101p.mail.yandex.net (Yandex) with ESMTP id 71FC532815FB;
-        Wed, 28 Aug 2019 03:16:03 +0300 (MSK)
-Received: from smtp3o.mail.yandex.net (smtp3o.mail.yandex.net [2a02:6b8:0:1a2d::27])
-        by mxback25j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id pf3PWAbr7i-G220X1LN;
-        Wed, 28 Aug 2019 03:16:03 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1566951363;
-        bh=JPqk88nk2DvsQEaTqhodzeqJOHeYNWtRgMzrH+66FJg=;
-        h=In-Reply-To:From:To:Subject:Cc:Date:References:Message-ID;
-        b=i1u2s7xowOB75lenpI0lHDZ/U0kTl3tkfQdfi4l2fJFr0wkn3zjc7wumd3RtszugH
-         8+o7pPqvhqfsjdvg1mT2yqxVDBOT7DjATMrcV+jqkMFl7AQx/Py+yLo59v9+nbSZs0
-         I3BnLUdPvCa5cAIRkcXIWR/Dkumw96H3Ys4k9J84=
-Authentication-Results: mxback25j.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp3o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id ZovwiHQNO6-FsmGkx2E;
-        Wed, 28 Aug 2019 03:16:01 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH 11/13] dt-bindings: mips: Add loongson cpus & boards
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.co>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
- <20190827085302.5197-12-jiaxun.yang@flygoat.com>
- <CAL_JsqL6htVye-LSBWw1WwRy9xH=zwuH6gurscwoCWj9Te_hAg@mail.gmail.com>
- <d94eff2b-76ec-5cd2-512d-5ee0406a1bb9@flygoat.com>
- <20190827204105.7nyt4pi7lvxse5ij@pburton-laptop>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <63304ddd-eb24-31a4-d905-ce8e37ec5cb9@flygoat.com>
-Date:   Wed, 28 Aug 2019 08:15:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 20:21:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55142 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbfH1AV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 20:21:29 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A269A307BCC7;
+        Wed, 28 Aug 2019 00:21:28 +0000 (UTC)
+Received: from masetto.com (ovpn-116-56.phx2.redhat.com [10.3.116.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C3C7119D7A;
+        Wed, 28 Aug 2019 00:21:25 +0000 (UTC)
+From:   Al Stone <ahs3@redhat.com>
+To:     linux-acpi@vger.kernel.org
+Cc:     Al Stone <ahs3@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] ACPI / CPPC: do not require the _PSD method when using CPPC
+Date:   Tue, 27 Aug 2019 18:21:20 -0600
+Message-Id: <20190828002120.13669-1-ahs3@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190827204105.7nyt4pi7lvxse5ij@pburton-laptop>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 28 Aug 2019 00:21:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+According to the ACPI 6.3 specification, the _PSD method is optional
+when using CPPC.  The underlying assumption is that each CPU can change
+frequency independently from all other CPUs; _PSD is provided to tell
+the OS that some processors can NOT do that.
 
-On 2019/8/28 上午4:41, Paul Burton wrote:
-> Hi guys,
->
-> On Tue, Aug 27, 2019 at 10:18:46PM +0800, Jiaxun Yang wrote:
->> On 2019/8/27 下午8:45, Rob Herring wrote:
->>> On Tue, Aug 27, 2019 at 3:55 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->>>> diff --git a/Documentation/devicetree/bindings/mips/loongson/cpus.yaml b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
->>>> new file mode 100644
->>>> index 000000000000..410d896a0078
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
->>>> @@ -0,0 +1,38 @@
->>>> +# SPDX-License-Identifier: GPL-2.0
->>> Dual license for new bindings please:
->>>
->>> (GPL-2.0-only OR BSD-2-Clause)
->>>
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/mips/loongson/cpus.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Loongson CPUs bindings
->>>> +
->>>> +maintainers:
->>>> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
->>>> +
->>>> +description: |+
->>>> +  The device tree allows to describe the layout of CPUs in a system through
->>>> +  the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
->>>> +  defining properties for every cpu.
->>>> +
->>>> +  Bindings for CPU nodes follow the Devicetree Specification, available from:
->>>> +
->>>> +  https://www.devicetree.org/specifications/
->>>> +
->>>> +properties:
->>>> +  reg:
->>>> +    maxItems: 1
->>>> +    description: |
->>>> +      Physical ID of a CPU, Can be read from CP0 EBase.CPUNum.
->>> Is this definition specific to Loongson CPUs or all MIPS?
->> Currently it's specific to Loongson CPU only, as other processors may using
->> different method to express CPU map.
->>
->> Different from Arm, MIPS family of processors seems less uniform and have
->> their own designs.
->>
->> For this point, we'd better ask Paul's opinion.
-> In general on MIPS we detect CPU properties at runtime from coprocessor
-> 0 registers & similar sources of information, so there's not really a
-> need to specify anything about the CPU in devicetree. For example here
-> you say yourself that the value for this property can be read from
-> EBase.CPUNum - so why specify it in DT?
-Hi Paul,
+However, the acpi_get_psd() function returns ENODEV if there is no _PSD
+method present, or an ACPI error status if an error occurs when evaluating
+_PSD, if present.  This makes _PSD mandatory when using CPPC, in violation
+of the specification, and only on Linux.
 
-CPU itself doesn't have to expressed by DT, but other nodes (like NUMA) 
-will use CPU Node to determine the physical core.
+This has forced some firmware writers to provide a dummy _PSD, even though
+it is irrelevant, but only because Linux requires it; other OSPMs follow
+the spec.  We really do not want to have OS specific ACPI tables, though.
 
-Also CPU Node can be used to express the total number of CPUs. We need 
-this property to bind a CPU Node to a fixed core.
+So, correct acpi_get_psd() so that it does not return an error if there
+is no _PSD method present, but does return a failure when the method can
+not be executed properly.  This allows _PSD to be optional as it should
+be.
 
-Or we'd better describe "reg" as "Physical Core ID" rather than specify 
-"EBase.CPUNum"?
+v3:
+   -- bodged the simplification in v2; simplified it properly this time
+   -- verified all error statuses are handled
 
---
+v2:
+   -- verified simple check for AE_NOT_FOUND was sufficient
+   -- simplified return status check per Rafael's suggestion
 
-Jiaxun Yang
+Signed-off-by: Al Stone <ahs3@redhat.com>
+---
+ drivers/acpi/cppc_acpi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
->
-> Thanks,
->      Paul
+diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+index 15f103d7532b..3b2525908dd8 100644
+--- a/drivers/acpi/cppc_acpi.c
++++ b/drivers/acpi/cppc_acpi.c
+@@ -365,8 +365,10 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
+ 	union acpi_object  *psd = NULL;
+ 	struct acpi_psd_package *pdomain;
+ 
+-	status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
+-			ACPI_TYPE_PACKAGE);
++	status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
++					    &buffer, ACPI_TYPE_PACKAGE);
++	if (status == AE_NOT_FOUND)	/* _PSD is optional */
++		return 0;
+ 	if (ACPI_FAILURE(status))
+ 		return -ENODEV;
+ 
+-- 
+2.21.0
+
