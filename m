@@ -2,150 +2,102 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A4DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DC5C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2199522CF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:58:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567018718;
-	bh=CBKtnFW9ZlO6IHgvOEUpDHqoVFzVyfWY/nzaZe5pyGU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s6xKRmRNjQSK4NC2UcYOvXEtHqf4d+RmHzPH3gAOHnN+/E3NGsWds6xc0zNiVAdLy
-	 0JJJHVS9w7K0bDk7zLXcXEgZHbfu3fDBpJ5wah2gKVVv+OABtCWQgswCiAOw7ldyzk
-	 AWEd7LOo6FtYAcHwP/hOwyClKaUgJSC9mTRRt1wA=
+	by mail.kernel.org (Postfix) with ESMTP id C62B722CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:58:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="foJF6t8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfH1S6h (ORCPT
+        id S1727102AbfH1S6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:58:37 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35137 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfH1S6g (ORCPT
+        Wed, 28 Aug 2019 14:58:49 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39619 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726935AbfH1S6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:58:36 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g7so896957wrx.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 11:58:35 -0700 (PDT)
+        Wed, 28 Aug 2019 14:58:49 -0400
+Received: by mail-wm1-f67.google.com with SMTP id i63so1170230wmg.4;
+        Wed, 28 Aug 2019 11:58:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Rg266ysErRfz6Q6O8ZllDkT8j1Yu9RGIuCA6YHrmQ3E=;
-        b=MUFabnk2H7YdNK5dqt8E6WFFJM/SNvgpRDY0fhZ7ln9Owbgr6VYnG30ClwbkprR8Ui
-         wKeABdrdLQ21ZhDOX9wAW+uiNRqS/tiw4FPmeJ7DpIHl4bYKXvmuRyJhMn/3Nhug5Urd
-         uDyDofZgEJEGvVexPuFc/c1Cnl669csAMi/k9OyhPzjG8cupcQ85nKx2Evxa1yigM8fU
-         fF8WxyOGaO+zBYmLdGG+IZyu8qRLHcSqs4Yeu4/zS5eyzEiUJ3mD3rVs4W+s0lW/Jnz/
-         Dip87USG4/VB9tzICrUsCbSJRSco9+UV0p/dg0e3EXT6flb/W91heLtI0oD7qiyyxRdN
-         My7w==
+        h=date:from:subject:to:cc:message-id:in-reply-to:references
+         :mime-version;
+        bh=h3hPr3aReWTRAXA22oX/cJbYrvqfiIXXgWPGxnjPUAY=;
+        b=foJF6t8MzSyo7DTOjtVGVEZBUa3vP5j//fN2OglIXG/+wHl9CdiG6O6F9wvvRri2sF
+         DC4viGsEfwI1FFf0nI0IK4NTnmLztHfaKN1+trvpm3Xe6VVHSd5HLHTBXqQ+YmJv0MaM
+         l7uqqBtgUgM6a9CS8b0V4I9EXZTdwDKXbdh4DFWXA7hmlazvS2W1okEiOBw5k15lbh5i
+         vMvPRkYykWrBh9e5NcCVL0o+dxqpAkcKwEa4sf04BDntWfqJ0MoNuUa8xFuq06LlhGtr
+         rRfNY5wTZRq4H1/3LLEqY0p5wxIpjOM2+SkewsbgUmG9EyHA63hQSQISjWWkwjxP6c3J
+         pmAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Rg266ysErRfz6Q6O8ZllDkT8j1Yu9RGIuCA6YHrmQ3E=;
-        b=MHawzNkbPZz4HlOdgkq2jWguBKei+AlyuN8E4T+qCxYZqXJus7GkR3105GyuWwlxZ1
-         C26if+8kfj+ACwxuMjGJQe5P+cNZzZE7bRTJo6lCaelo6FH1LehImXZkRlOTnepzVIyy
-         jods1wwu5AUkweop2GNWyzoTRewri9ADGjoD5Whi6yh5kYy7lTsbaGux5Ij5VxvT5agh
-         lCH23dgae1tl8Wk6a/vrkptCqR/fXArcxiYMqzSTNqJ+yDbrq3ywqJA7FgDYSVbWUIUc
-         1KwMDBH2AbdcfaNvduCL5l69lfyvDTDIdG0qqdnBIyA8SMF6Zr2OzOskToHM30Qx5IYi
-         aeLg==
-X-Gm-Message-State: APjAAAWKFOEOpx/mXfsyPTGDEPVe3CD4TOd9WQ9MHZHJ8Sr8N59e30t5
-        26ARQ0XblGb+dSSDRspLla4=
-X-Google-Smtp-Source: APXvYqxd2oSRFERYqJrydmXOODNBPiWPvPWQ3BDeSyRdvtZQWbvckCCBAYbd/zBjdSVehTRzuQhdNQ==
-X-Received: by 2002:adf:ab18:: with SMTP id q24mr6027144wrc.354.1567018714860;
-        Wed, 28 Aug 2019 11:58:34 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id h125sm147104wmf.31.2019.08.28.11.58.33
+        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
+         :references:mime-version;
+        bh=h3hPr3aReWTRAXA22oX/cJbYrvqfiIXXgWPGxnjPUAY=;
+        b=KfEH2SQc03mHt2elMf0bfAZW1zlrvRLdmi/fAHOtFxj8CLGUFmUzoqhf47xaqUqjy0
+         E7aIfMd1WAaCebtqopDbrBqAxNLkuyiyimOVJzsnx5KyXcyci+RghTt6YvPa668kZR3s
+         BNWobdEHC+nRmyRyhucudtcDySId/xllJWCC4pQ+UnpiRVEZ/gohqAho/IwilBlcW8oZ
+         faizEVj4r6vEBS/kuYMXJKXTap/Ebouu0D25nw+UQzS2xWCpCoIk1ZtFWdcaAoXLlBRK
+         3aJMUq+TJ9j3nFmEIhtQp7MpWxA2c/OZtkcvR9mpuhyeZakqcX3HnAN0tEurWUTU9CyV
+         l5Tw==
+X-Gm-Message-State: APjAAAXqh563Ga20NSohK2sBlVVEohMae8ivSRUOnCAB8z2U5GUYStvX
+        h4L+WrPJhZdYq0LcfsvyynQ=
+X-Google-Smtp-Source: APXvYqyaFkLmHyhLTNCdux2+SjW3uOkMO7x5pN0naN68rph9wTC0NZQxCQtvczSTpP2qeYJZcHWGPg==
+X-Received: by 2002:a1c:9d15:: with SMTP id g21mr6929443wme.96.1567018727062;
+        Wed, 28 Aug 2019 11:58:47 -0700 (PDT)
+Received: from [192.168.1.105] (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id q24sm7884609wmc.3.2019.08.28.11.58.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 11:58:34 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 20:58:32 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [patch 1/2] x86/mm/pti: Handle unaligned address gracefully in
- pti_clone_pagetable()
-Message-ID: <20190828185832.GA77809@gmail.com>
-References: <20190828142445.454151604@linutronix.de>
- <20190828143123.971884723@linutronix.de>
+        Wed, 28 Aug 2019 11:58:46 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 20:58:44 +0200
+From:   Krzysztof Wilczynski <kswilczynski@gmail.com>
+Subject: Re: [PATCH v2] x86/PCI: Add missing log facility and move to use pr_
+ macros in pcbios.c
+To:     Joe Perches <joe@perches.com>
+Cc:     Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <1567018724.3507.1@gmail.com>
+In-Reply-To: <082d21ef9effc015de671ff51d689dab740cea16.camel@perches.com>
+References: <20190825182557.23260-1-kw@linux.com>
+        <20190828175120.22164-1-kw@linux.com>
+        <a13a086c2dd6dd6259d28e5d1d360e2b4d04ca83.camel@perches.com>
+        <1567017627.3507.0@gmail.com>
+        <082d21ef9effc015de671ff51d689dab740cea16.camel@perches.com>
+X-Mailer: geary/3.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828143123.971884723@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Thomas Gleixner <tglx@linutronix.de> wrote:
-
-> From: Song Liu <songliubraving@fb.com>
+Hello Joe,
+[...]
+>>  The lines over 80 characters wide would be taken care of when
+>>  moving to using the pr_ macros as the line length will now be
+>>  shorter contrary to when the e.g., printk(KERNEL_INFO ...),
+>>  etc., was used.
 > 
-> pti_clone_pmds() assumes that the supplied address is either:
-> 
->  - properly PUD/PMD aligned
-> or
->  - the address is actually mapped which means that independent
->    of the mapping level (PUD/PMD/PTE) the next higher mapping
->    exist.
+> Not really, those were the warnings checkpatch
+> emits on your actual patch.
 
-s/independent
- /independently
+Ah! Yes, very true.  Sorry about that.  I will address these in v3,
+of course.
 
-s/exist
- /exists
+Thank you for correcting me!
 
-> If that's not the case the unaligned address can be incremented by PUD or
-> PMD size wrongly. All callers supply mapped and/or aligned addresses, but
-> for robustness sake, it's better to handle that case proper and to emit a
-> warning.
+Krzysztof
 
-s/wrongly
- /incorrectly
 
-s/robustness sake
- /robustness's sake
 
-s/proper
- /properly
-
-With that:
-
->  		pud = pud_offset(p4d, addr);
->  		if (pud_none(*pud)) {
-> -			addr += PUD_SIZE;
-> +			WARN_ON_ONCE(addr & PUD_MASK);
-> +			addr = round_up(addr + 1, PUD_SIZE);
->  			continue;
->  		}
->  
->  		pmd = pmd_offset(pud, addr);
->  		if (pmd_none(*pmd)) {
-> -			addr += PMD_SIZE;
-> +			WARN_ON_ONCE(addr & PMD_MASK);
-> +			addr = round_up(addr + 1, PMD_SIZE);
-
-So given that PUD_MASK and PMD_MASK are masking out the *offset*:
-
- arch/x86/include/asm/pgtable_64_types.h:#define PMD_MASK	(~(PMD_SIZE - 1))
-
-Didn't we want something like:
-
-			WARN_ON_ONCE(addr & ~PUD_MASK);
-
-			WARN_ON_ONCE(addr & ~PMD_MASK);
-
-to warn about an unaligned 'addr', or am I misreading the intent here?
-
-Thanks,
-
-	Ingo
