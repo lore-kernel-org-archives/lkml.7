@@ -2,52 +2,74 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E04C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 03:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FB8C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 03:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26CA1205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 03:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7DE120856
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 03:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbfH1DNK (ORCPT
+        id S1726415AbfH1DUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 23:13:10 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:54112 "EHLO
+        Tue, 27 Aug 2019 23:20:45 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:54220 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbfH1DNJ (ORCPT
+        with ESMTP id S1726206AbfH1DUo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 23:13:09 -0400
+        Tue, 27 Aug 2019 23:20:44 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2C704153B621D;
-        Tue, 27 Aug 2019 20:13:08 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 20:13:05 -0700 (PDT)
-Message-Id: <20190827.201305.1460354856100541470.davem@davemloft.net>
-To:     wang.yi59@zte.com.cn
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 02D60153B917B;
+        Tue, 27 Aug 2019 20:20:43 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 20:20:43 -0700 (PDT)
+Message-Id: <20190827.202043.766506227116086877.davem@davemloft.net>
+To:     marco.hartmann@nxp.com
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.liang82@zte.com.cn,
-        cheng.lin130@zte.com.cn
-Subject: Re: [PATCH v2] ipv6: Not to probe neighbourless routes
+        christian.herber@nxp.com
+Subject: Re: [PATCH v2 net] Add genphy_c45_config_aneg() function to
+ phy-c45.c
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1566958765-1686-1-git-send-email-wang.yi59@zte.com.cn>
-References: <1566958765-1686-1-git-send-email-wang.yi59@zte.com.cn>
+In-Reply-To: <1566385208-23523-1-git-send-email-marco.hartmann@nxp.com>
+References: <1566385208-23523-1-git-send-email-marco.hartmann@nxp.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 27 Aug 2019 20:13:08 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 27 Aug 2019 20:20:44 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Marco Hartmann <marco.hartmann@nxp.com>
+Date: Wed, 21 Aug 2019 11:00:46 +0000
 
-Because you didn't even compile test the previous patch, I want to
-know how you did functional testing on this version on current kernel
-versions?
+> Commit 34786005eca3 ("net: phy: prevent PHYs w/o Clause 22 regs from calling
+> genphy_config_aneg") introduced a check that aborts phy_config_aneg()
+> if the phy is a C45 phy.
+> This causes phy_state_machine() to call phy_error() so that the phy
+> ends up in PHY_HALTED state.
+> 
+> Instead of returning -EOPNOTSUPP, call genphy_c45_config_aneg()
+> (analogous to the C22 case) so that the state machine can run
+> correctly.
+> 
+> genphy_c45_config_aneg() closely resembles mv3310_config_aneg()
+> in drivers/net/phy/marvell10g.c, excluding vendor specific
+> configurations for 1000BaseT.
+> 
+> Fixes: 22b56e827093 ("net: phy: replace genphy_10g_driver with genphy_c45_driver")
+> 
+> Signed-off-by: Marco Hartmann <marco.hartmann@nxp.com>
+> ---
+> Changes in v2:
+> - corrected commit message
+> - reordered variables
+
+Applied to net-next.
