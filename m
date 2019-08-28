@@ -2,103 +2,125 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F5CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291C1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930CC208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0CA1208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:01:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t82bo+7n"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JS/uUe1j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfH1QBd (ORCPT
+        id S1726853AbfH1QBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:01:33 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42172 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfH1QBd (ORCPT
+        Wed, 28 Aug 2019 12:01:48 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49170 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbfH1QBs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:01:33 -0400
-Received: by mail-lj1-f195.google.com with SMTP id l14so22166ljj.9
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 09:01:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yR3tqYiTxpppS/HN0rTYfpt0BO2DjSod+qzn1YFlyUY=;
-        b=t82bo+7nReRN8qUwONp3FOyUNOQe+SJmGjj43nMjkurkeSF72Pd1VV3hRf1OgE66RR
-         KDWoG2kZQnBVJzkM8KDZCFy7mqz9bcKdJSmmEx2dYdkoTRZLvN6pnCl8E0pBhjwKdkJ4
-         sf49qG2yOviuQ4Fu1Tm1UKeNFc43o8A1iRxF9LdpIDyvUrr/EXGEZPFdILgnN8BLCa2n
-         KW3jLLC38MeV3yMp6xS8/rl6fTmU4XS6EpBjg41uqXmYE0AhDM2igs87zJIiHIANDVPC
-         XsI6R22UTUjfppFtkbsj92qJogfUbp92F2UjpP47UJCKAq9rZ+NXm3mNfnDYXCPxjkdA
-         RFnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yR3tqYiTxpppS/HN0rTYfpt0BO2DjSod+qzn1YFlyUY=;
-        b=WEo/8rEeQuhKTpBnvZe+9SVACV/uRId6GkItilRfJbI/fX8Ka3adtcF/McwlCOPhuG
-         VODWQIcwOp2uzruR+u4XWfXEYBtevkBIob3CpGiTzhgHn2yfmsjZ4qW80aYdKWsJ0/vb
-         8SpEkYsiSBpnkX/9FYyUb5xrUtuPJFolp27SCvpHk1XQfFeVBpBAEIophDw9+jZuydW8
-         BWBoNq/3SDAQntG630VzBxJeRL4xh+kzXsCN4ROTgBpWZWEYz7SdM11r90i80hdA6IAm
-         1XATxC6RugQw6htP4tR5/sacpX2Sj9vjDTPOQZ1d2wC8gZMW+EgGpKfy8bqiojx8ZJSz
-         R+RA==
-X-Gm-Message-State: APjAAAV7ny4WCP5Fn/p9/eUuRZ1x1LzEXJY6IrtHgjuALnwRAc71vx0U
-        iqSjMnocOYrVvkOhByi5P/VLi02Yu4yYyW4B1j4=
-X-Google-Smtp-Source: APXvYqyOP2EB8a83ZtqOJPUj3xY7/goLSp49RDBCXTtxODlPCxl+xIBbp0pHHEXIFG32IeOGVr0WeRsO6J9J5w8UT1g=
-X-Received: by 2002:a2e:978e:: with SMTP id y14mr2524405lji.10.1567008091865;
- Wed, 28 Aug 2019 09:01:31 -0700 (PDT)
+        Wed, 28 Aug 2019 12:01:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=T2C3qa57ei+z6I+sxwzCsEwSVzg2AfcS5B55dEodyQo=; b=JS/uUe1j1IMBl6pGYGQbHu1C8
+        uM4r8T3B31GnORseMzzh3aF0NMw4Ht/1Ra1X8+q731fIz4ZHK2jVTiYAkpajojw0QMupeI5lNxGsm
+        QavgstrX8J6evWaU3g0J0OTpjvT5WTEhrahoRi3V3mHfPWmp4oGJiVABQleURz/BAMJEugZUk/N+C
+        54J/dp4N28g0n0Tfeo0m/BXIrDSi65Qs3O4BoSMn9+jy8frRsfjmmEHfNQh6cv/qpZt1MxYbCoqMc
+        FLswq1I7Cmye3Ws/3K8OfsKAEXp1remcNwNehHZRiBgGVTaPvVjvSl6E7VhaGSHlCR/v74YcYwiS8
+        HdCg6Vf+g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i30No-0005YE-GB; Wed, 28 Aug 2019 16:01:16 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9BECB98040A; Wed, 28 Aug 2019 18:01:14 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 18:01:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Phil Auld <pauld@redhat.com>
+Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190828160114.GE17205@worktop.programming.kicks-ass.net>
+References: <cover.1559129225.git.vpillai@digitalocean.com>
+ <20190827211417.snpwgnhsu5t6u52y@srcf.ucam.org>
+ <20190827215035.GH2332@hirez.programming.kicks-ass.net>
+ <20190828153033.GA15512@pauld.bos.csb>
 MIME-Version: 1.0
-References: <1567012817-12625-1-git-send-email-shengjiu.wang@nxp.com>
-In-Reply-To: <1567012817-12625-1-git-send-email-shengjiu.wang@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 28 Aug 2019 13:02:32 -0300
-Message-ID: <CAOMZO5BF6M4McwGTuNU8jM41+N3jeaJp+U2ST5JY7e+yv8GO_A@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: fsl_ssi: Fix clock control issue in master mode
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828153033.GA15512@pauld.bos.csb>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shengjiu,
+On Wed, Aug 28, 2019 at 11:30:34AM -0400, Phil Auld wrote:
+> On Tue, Aug 27, 2019 at 11:50:35PM +0200 Peter Zijlstra wrote:
 
-On Wed, Aug 28, 2019 at 2:21 AM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
->
-> The test case is
-> arecord -Dhw:0 -d 10 -f S16_LE -r 48000 -c 2 temp.wav &
-> aplay -Dhw:0 -d 30 -f S16_LE -r 48000 -c 2 test.wav
->
-> There will be error after end of arecord:
-> aplay: pcm_write:2051: write error: Input/output error
->
-> Capture and Playback work in parallel in master mode, one
-> substream stops, the other substream is impacted, the
-> reason is that clock is disabled wrongly.
->
-> The clock's reference count is not increased when second
-> substream starts, the hw_param() function returns in the
-> beginning because first substream is enabled, then in end
-> of first substream, the hw_free() disables the clock.
->
-> This patch is to move the clock enablement to the place
-> before checking of the device enablement in hw_param().
->
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > And given MDS, I'm still not entirely convinced it all makes sense. If
+> > it were just L1TF, then yes, but now...
+> 
+> I was thinking MDS is really the reason for this. L1TF has mitigations but
+> the only current mitigation for MDS for smt is ... nosmt. 
 
-It would be nice if you could add a Fixes tag as well.
+L1TF has no known mitigation that is SMT safe. The moment you have
+something in your L1, the other sibling can read it using L1TF.
+
+The nice thing about L1TF is that only (malicious) guests can exploit
+it, and therefore the synchronizatin context is VMM. And it so happens
+that VMEXITs are 'rare' (and already expensive and thus lots of effort
+has already gone into avoiding them).
+
+If you don't use VMs, you're good and SMT is not a problem.
+
+If you do use VMs (and do/can not trust them), _then_ you need
+core-scheduling; and in that case, the implementation under discussion
+misses things like synchronization on VMEXITs due to interrupts and
+things like that.
+
+But under the assumption that VMs don't generate high scheduling rates,
+it can work.
+
+> The current core scheduler implementation, I believe, still has (theoretical?) 
+> holes involving interrupts, once/if those are closed it may be even less 
+> attractive.
+
+No; so MDS leaks anything the other sibling (currently) does, this makes
+_any_ privilidge boundary a synchronization context.
+
+Worse still, the exploit doesn't require a VM at all, any other task can
+get to it.
+
+That means you get to sync the siblings on lovely things like system
+call entry and exit, along with VMM and anything else that one would
+consider a privilidge boundary. Now, system calls are not rare, they
+are really quite common in fact. Trying to sync up siblings at the rate
+of system calls is utter madness.
+
+So under MDS, SMT is completely hosed. If you use VMs exclusively, then
+it _might_ work because a 'pure' host doesn't schedule that often
+(maybe, same assumption as for L1TF).
+
+Now, there have been proposals of moving the privilidge boundary further
+into the kernel. Just like PTI exposes the entry stack and code to
+Meltdown, the thinking is, lets expose more. By moving the priv boundary
+the hope is that we can do lots of common system calls without having to
+sync up -- lots of details are 'pending'.
