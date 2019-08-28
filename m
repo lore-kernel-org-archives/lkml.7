@@ -2,81 +2,82 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CD5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56053C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93FAA23403
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27DB2217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 20:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567025576;
-	bh=MxTUwvguZO0iDTfR/W0BUhqZMLEuD0P6DX4yPt254ss=;
+	s=default; t=1567025626;
+	bh=L658Uoi5wgh1LJ4svG0zhq44VhHlSp/4XyccC4WYsYw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jL995uR/5SJbbTE/9ojUrfiRiqCQCHfDMYs6VeX04mdqwmOaA7MPrrt9WHVhP/RSS
-	 MJFFqJ8qy3YRkXu6Bl0ngy5ohxLsxAF9ZZ7Rxt9hhNOzeCSQdDs8yXugK4xLwyTh+w
-	 TuLvvj8NzO/UTLjCLoRZ2IgJrpglGqYXo/7PSCc8=
+	b=svcO6JdyNQFgOcpjA0P4lLdeZh/4NREEDMPhZX38WPTU/6Zyhdn+/pupSsrPl6AOB
+	 rYRo+0jqaBYg88LgEu3eijUq4txdmedUGiBUBj9XEV2wpH6hFqz1lLMdSmgVC3Oqld
+	 LOy10uLTJc0M1kXD9J9phDmH/8iiA0skjvEZILns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfH1Uwz (ORCPT
+        id S1726991AbfH1Uxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 16:52:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57942 "EHLO mail.kernel.org"
+        Wed, 28 Aug 2019 16:53:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbfH1Uwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 16:52:55 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S1726618AbfH1Uxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 16:53:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1914F217F5;
-        Wed, 28 Aug 2019 20:52:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDBD62070B;
+        Wed, 28 Aug 2019 20:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567025574;
-        bh=MxTUwvguZO0iDTfR/W0BUhqZMLEuD0P6DX4yPt254ss=;
+        s=default; t=1567025624;
+        bh=L658Uoi5wgh1LJ4svG0zhq44VhHlSp/4XyccC4WYsYw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2owBKQd5EHl+vrpuDZl7Puk+Tsy+UUt72HaLYwdKYqk77pXKIwBikn+hizWKD9NGw
-         mj0h5qgs2oVfaDVovVOLOrNX6dHgnITZ2QtaHO9vzxVMkTgq3+5k0fi+HMeg66jRzX
-         y8vHGjBmjPkG2CDRdjVLGvaFvml1FdyYj7gS7iZ4=
-Date:   Wed, 28 Aug 2019 15:52:27 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] Cleanup resource_alignment parameter
-Message-ID: <20190828205227.GD7013@google.com>
-References: <20190822161013.5481-1-logang@deltatee.com>
+        b=pXJTObT0GlU3fnn9CrEggvS9W+JfyefwiglkaD8sMY+w5maq2PPbTDdJqguMbjJzX
+         0K5K9854MN8vMr3z07rThNpEc9GsUJFipR7JyqpSpW4Xo/Ng6ZNpkFTEQJ90Y6eFYg
+         HkVrsXked6N2YBJKUrXqElk+iJdMynkTVDhKx4xs=
+Date:   Wed, 28 Aug 2019 22:53:41 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     arnd@arndb.de, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mayank Chopra <mak.chopra@codeaurora.org>,
+        Abhinav Asati <asatiabhi@codeaurora.org>,
+        Vamsi Singamsetty <vamssi@codeaurora.org>
+Subject: Re: [PATCH 1/5] misc: fastrpc: Reference count channel context
+Message-ID: <20190828205341.GA13049@kroah.com>
+References: <20190823100622.3892-1-srinivas.kandagatla@linaro.org>
+ <20190823100622.3892-2-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190822161013.5481-1-logang@deltatee.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190823100622.3892-2-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 10:10:10AM -0600, Logan Gunthorpe wrote:
-> As requested, this is a refresh of this series. I rebased it on v5.3-rc5
-> without any other changes.
+On Fri, Aug 23, 2019 at 11:06:18AM +0100, Srinivas Kandagatla wrote:
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
 > 
-> This is a cleanup of the resource_alignment parameter after finding
-> an improved way to handle the static buffer for the disable_acs_redir
-> parameter. So this patchset allows us to drop a significant chunk
-> of static data.
+> The channel context is referenced from the fastrpc user and might as
+> user space holds the file descriptor open outlive the fastrpc device,
+> which is removed when the remote processor is shutting down.
 > 
-> Thanks,
+> Reference count the channel context in order to retain this object until
+> all references has been relinquished.
 > 
-> Logan
-> 
-> --
-> 
-> Logan Gunthorpe (3):
->   PCI: Clean up resource_alignment parameter to not require static
->     buffer
->   PCI: Move pci_[get|set]_resource_alignment_param() into their callers
->   PCI: Force trailing new line to resource_alignment_param in sysfs
-> 
->  drivers/pci/pci.c | 65 +++++++++++++++++++++++++----------------------
->  1 file changed, 35 insertions(+), 30 deletions(-)
+> TEST=stop and start remote proc1 using sysfs
 
-Applied to pci/misc for v5.4, thanks!
+What is this for?
+
+Please fix up the series and resend so that I do not have to hand-edit
+the changelog text.
+
+thanks,
+
+greg k-h
