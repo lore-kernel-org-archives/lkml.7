@@ -2,109 +2,96 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 207E1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C46C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBDE8214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:05:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="QKS3F1l4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VOdXUCyU"
+	by mail.kernel.org (Postfix) with ESMTP id 80DC420679
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:07:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfH1RFv (ORCPT
+        id S1726702AbfH1RHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:05:51 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:56049 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726395AbfH1RFu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:05:50 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 682455DD;
-        Wed, 28 Aug 2019 13:05:49 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Wed, 28 Aug 2019 13:05:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=St94MHN5UV1RXYwkQ8jFmrNTF9L
-        FaXFtqhsHG7B3yIk=; b=QKS3F1l4/yfRlYJu7cJda2XaOFJ0Ru7f8T0ZtS7nPGK
-        E3Fqymi/m6R8NxGtRmkt1bAqnt4YzgjPgJqrjW/hO9i7KPdsp8syAT01t3uMwqL2
-        2OfpS+jhyTw5BcW783bZx6eVn7lvUJcn/q4o2eEcbQrpo7BfHHeSDLwsMpcf9c0P
-        J8GRoPV7Znoj6F/YfsrpLYfY+f20Wyihp56yfJqJaWtUVAR5bSGVms4mdxDOUvA3
-        AEJbqQQi6ta6ZGm+nHKFLipHd62Dr1SrNTRWf3LDziQ0xjGzygEX4tL0y5WdRezr
-        LlljtGW0KQF1Jy9EXkXDv6Cx/ci6FrAwWXoz9EM/oOA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=St94MH
-        N5UV1RXYwkQ8jFmrNTF9LFaXFtqhsHG7B3yIk=; b=VOdXUCyUTDVeEUqpNC9CWA
-        3saR+N6pNvM/sm27TGpq3oTIVOGYK0VULnLKII7m/xGx0pSoyyEYAVo+H5d7OTNB
-        rb3jZDhS1rYjQfMU+oPlQipzOYLtMn/HDTXB6Get5y5nMEI8AX6eVkr+EBnB0rB8
-        CX/Rcwts8TPVnXag/mUAJ9J+I7edOJMU+L5GsiKw9SJB8sKT1co3xKG2QywDzyOi
-        dWEx/G4TB+9VRMc2ABJgVUFHqdwwEafQSumV3G+kJlZ2EcCOQewvPhexXn90GKSP
-        hsU9Ctn7w/vfsqMIT86UEcXPDWuxc3cbXU8D2JdUHaERvhvPpmjEUfSHeeYz1RbA
-        ==
-X-ME-Sender: <xms:bLRmXQDu8hPepStpYa_6EmT5zjQm9chhz0uBhfLYC4XPDpzZjnMdbQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeitddguddtkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjfgesth
-    dtredttdervdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtgho
-    mheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrd
-    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
-    ucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:bLRmXemq8QkzM7TamVi1vd3XCpXNck_mVBmIkziU57bU95-o7V7Dyw>
-    <xmx:bLRmXQRqfyunFfgIZMoKIOfzbQcJRTnotElBz0TBTPzrB-6l4DO9AA>
-    <xmx:bLRmXdHpWFNjWabQkyr_Tn0VpEJuWdCD-pUPesgvXNSd_ytLhHyb0Q>
-    <xmx:bbRmXZ9ZxoHqI4c-7odHqZWiVDAP-2H1HoS9t7QPtIQXFFBEAlXk6g>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 77A10D6005F;
-        Wed, 28 Aug 2019 13:05:48 -0400 (EDT)
-Date:   Wed, 28 Aug 2019 19:05:47 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Konstantin Ryabitsev <mricon@kernel.org>
-Cc:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        StableKernel <stable@vger.kernel.org>,
-        LinuxKernel <linux-kernel@vger.kernel.org>
-Subject: Re: Latest kernel version no NOT reflecting on kernel.org
-Message-ID: <20190828170547.GA11688@kroah.com>
-References: <20190828135750.GA5841@Gentoo>
- <20190828151353.GA9673@kroah.com>
- <20190828160156.GB26001@chatter.i7.local>
+        Wed, 28 Aug 2019 13:07:21 -0400
+Received: from mga14.intel.com ([192.55.52.115]:20811 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbfH1RHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 13:07:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 10:07:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
+   d="scan'208";a="210237523"
+Received: from kmsmsx153.gar.corp.intel.com ([172.21.73.88])
+  by fmsmga002.fm.intel.com with ESMTP; 28 Aug 2019 10:07:18 -0700
+Received: from pgsmsx103.gar.corp.intel.com ([169.254.2.25]) by
+ KMSMSX153.gar.corp.intel.com ([169.254.5.69]) with mapi id 14.03.0439.000;
+ Thu, 29 Aug 2019 01:07:17 +0800
+From:   "Voon, Weifeng" <weifeng.voon@intel.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>
+Subject: RE: [PATCH v1 net-next] net: stmmac: Add support for MDIO interrupts
+Thread-Topic: [PATCH v1 net-next] net: stmmac: Add support for MDIO
+ interrupts
+Thread-Index: AQHVXDYvbcbFOv5jhkKTA358ZQr6KKcNPteAgAA+tgCAA0MwoA==
+Date:   Wed, 28 Aug 2019 17:07:16 +0000
+Message-ID: <D6759987A7968C4889FDA6FA91D5CBC814759747@PGSMSX103.gar.corp.intel.com>
+References: <1566870320-9825-1-git-send-email-weifeng.voon@intel.com>
+ <20190826184719.GF2168@lunn.ch>
+ <cac5aba0-b47b-00c6-f99b-64c6b385308a@gmail.com>
+In-Reply-To: <cac5aba0-b47b-00c6-f99b-64c6b385308a@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [172.30.20.205]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828160156.GB26001@chatter.i7.local>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 12:01:56PM -0400, Konstantin Ryabitsev wrote:
-> On Wed, Aug 28, 2019 at 05:13:53PM +0200, Greg KH wrote:
-> > On Wed, Aug 28, 2019 at 07:27:53PM +0530, Bhaskar Chowdhury wrote:
-> > > Am I the only one, who is not seeing it getting reflected on
-> > > kernel.org???
-> > > 
-> > > Well, I have tried it 2 different browsers.....cleared caches several
-> > > times(heck) .....3 different devices .....and importantly 3 different
-> > > networks.
-> > > 
-> > > Wondering!
-> > 
-> > Adding Konstantin.
-> > 
-> > I think there's a way to see which cdn mirror you are hitting when you
-> > ask for "www.kernel.org".  Konstantin, any hints as to see if maybe one
-> > of the mirrors is out of sync?
-> 
-> Looks like the Singapore mirror was feeling out-of-sorts. It'll start
-> feeling better shortly.
-
-Great, thanks for looking into this!
-
-greg k-h
+PiA+PiBEVyBFUW9TIHY1Lnh4IGNvbnRyb2xsZXJzIGFkZGVkIGNhcGFiaWxpdHkgZm9yIGludGVy
+cnVwdCBnZW5lcmF0aW9uDQo+ID4+IHdoZW4gTURJTyBpbnRlcmZhY2UgaXMgZG9uZSAoR01JSSBC
+dXN5IGJpdCBpcyBjbGVhcmVkKS4NCj4gPj4gVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRo
+aXMgaW50ZXJydXB0IG9uIHN1cHBvcnRlZCBIVyB0byBhdm9pZA0KPiA+PiBwb2xsaW5nIG9uIEdN
+SUkgQnVzeSBiaXQuDQo+ID4+DQo+ID4+IHN0bW1hY19tZGlvX3JlYWQoKSAmIHN0bW1hY19tZGlv
+X3dyaXRlKCkgd2lsbCBzbGVlcCB1bnRpbCB3YWtlX3VwKCkNCj4gPj4gaXMgY2FsbGVkIGJ5IHRo
+ZSBpbnRlcnJ1cHQgaGFuZGxlci4NCj4gPg0KPiA+IEhpIFZvb24NCj4gPg0KPiA+IEkgX3RoaW5r
+XyB0aGVyZSBhcmUgc29tZSBvcmRlciBvZiBvcGVyYXRpb24gaXNzdWVzIGhlcmUuIFRoZSBtZGlv
+YnVzDQo+ID4gaXMgcmVnaXN0ZXJlZCBpbiB0aGUgcHJvYmUgZnVuY3Rpb24uIEFzIHNvb24gYXMg
+b2ZfbWRpb2J1c19yZWdpc3RlcigpDQo+ID4gaXMgY2FsbGVkLCB0aGUgTURJTyBidXMgbXVzdCB3
+b3JrLiBBdCB0aGF0IHBvaW50IE1ESU8gcmVhZC93cml0ZXMgY2FuDQo+ID4gc3RhcnQgdG8gaGFw
+cGVuLg0KPiA+DQo+ID4gQXMgZmFyIGFzIGkgY2FuIHNlZSwgdGhlIGludGVycnVwdCBoYW5kbGVy
+IGlzIG9ubHkgcmVxdWVzdGVkIGluDQo+ID4gc3RtbWFjX29wZW4oKS4gU28gaXQgc2VlbXMgbGlr
+ZSBhbnkgTURJTyBvcGVyYXRpb25zIGFmdGVyIHByb2JlLCBidXQNCj4gPiBiZWZvcmUgb3BlbiBh
+cmUgZ29pbmcgdG8gZmFpbD8NCj4gDQo+IEFGQUlSLCB3YWl0X2V2ZW50X3RpbWVvdXQoKSB3aWxs
+IGNvbnRpbnVlIHRvIGJ1c3kgbG9vcCBhbmQgd2FpdCB1bnRpbA0KPiB0aGUgdGltZW91dCwgYnV0
+IG5vdCByZXR1cm4gYW4gZXJyb3IgYmVjYXVzZSB0aGUgcG9sbGVkIGNvbmRpdGlvbiB3YXMNCj4g
+dHJ1ZSwgYXQgbGVhc3QgdGhhdCBpcyBteSByZWNvbGxlY3Rpb24gZnJvbSBoYXZpbmcgdGhlIHNh
+bWUgaXNzdWUgd2l0aA0KPiB0aGUgYmNtZ2VuZXQgZHJpdmVyIGJlZm9yZSBpdCB3YXMgbW92ZWQg
+dG8gY29ubmVjdGluZyB0byB0aGUgUEhZIGluIHRoZQ0KPiBuZG9fb3BlbigpIGZ1bmN0aW9uLg0K
+PiAtLQ0KPiBGbG9yaWFuDQoNCkZsb3JpYW4gaXMgcmlnaHQgYXMgdGhlIHBvbGwgY29uZGl0aW9u
+IGlzIHN0aWxsIHRydWUgYWZ0ZXIgdGhlIHRpbWVvdXQuIA0KSGVuY2UsIGFueSBtZGlvIG9wZXJh
+dGlvbiBhZnRlciBwcm9iZSBhbmQgYmVmb3JlIG5kb19vcGVuIHdpbGwgc3RpbGwgd29yay4NClRo
+ZSBvbmx5IGNvbnMgaGVyZSBpcyB0aGF0IGF0dGFjaGluZyB0aGUgUEhZIHdpbGwgdGFrZXMgYSBm
+dWxsIGxlbmd0aCBvZiANCnRpbWVvdXQgdGltZSBmb3IgZWFjaCBtZGlvX3JlYWQgYW5kIG1kaW9f
+d3JpdGUuIA0KU28gd2Ugc2hvdWxkIGF0dGFjaCB0aGUgcGh5IG9ubHkgYWZ0ZXIgdGhlIGludGVy
+cnVwdCBoYW5kbGVyIGlzIHJlcXVlc3RlZD8NCiANCg==
