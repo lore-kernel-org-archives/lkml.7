@@ -2,127 +2,99 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D01C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D90C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A5A6208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90CA322CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:18:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566980304;
+	bh=+pPMLUCSSxO28zMU47W0EaRFagvxicZdMQed3gzfifw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S9fMO9cbHg76XklSfQ8aRFSEdsynMo5FBl4GQQtvqfe/pO+R3f5UUgZuVQsKFqLRC
+	 HFnN/VkCL+T2mib/N62MmWWtRQ4HQMVLl9gTMLcEykN77YAY3r0VUe9jKIC8b8idoX
+	 epHv/eu7ryxH4XEIg/rcBd/DG6nqA3OsWLlBuYMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfH1IRM (ORCPT
+        id S1726463AbfH1ISX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:17:12 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44245 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbfH1IRL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:17:11 -0400
-Received: by mail-wr1-f67.google.com with SMTP id j11so690459wrp.11;
-        Wed, 28 Aug 2019 01:17:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=elcDxralvab5BCLPwy6aNqNRddh9yUrA4hJ16xi48PI=;
-        b=KsERq02pyOdSj8DPaDZ0SanJNIq3WnXBJWhH4yeuGICKoNdcG/9JkmJnkyKaf1Bs5E
-         wySG6bGoQYTgWbP1BBBPPmK3AKu5ZToZxtlj7LomlVhH+QBpvbXmcflr7LwXDdObalFd
-         hSmRWdwk1tYK+9e6k+wmNKw8P1diniRId/9fYsbaongF4Icrao+lOa4pR5iNMV+FOwpF
-         y8WVPgwaYs9swp9fsTSOlYtsQ3x2DH6w52xLLsUIa68bBQF0bQZ9lFTaB4gQaRAlOTcZ
-         bt7stDAHzHBNx4o7yDZTvAUOBi51FLw1hnC/SQmGIh4o+1QWQr9PMIJ6EmJzWX5c/fZL
-         i1Pw==
-X-Gm-Message-State: APjAAAW+awAfq6FaYJpF9ifkLDUanahXWBdAMWQLz/BYvXvU5GUH0ppN
-        l1W7RG5o7oa1xsl7OGIiyuc=
-X-Google-Smtp-Source: APXvYqwmhv7I8k483ahGnEjGNmo4amPeyJahnDXrjCmOd75ub2Hi+25Drc0PFsP+jngUCzaAGvF4IQ==
-X-Received: by 2002:adf:efd2:: with SMTP id i18mr2910751wrp.145.1566980229213;
-        Wed, 28 Aug 2019 01:17:09 -0700 (PDT)
-Received: from 1aq-andre ([77.107.218.170])
-        by smtp.gmail.com with ESMTPSA id p19sm1406467wmg.31.2019.08.28.01.17.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 01:17:08 -0700 (PDT)
-Message-ID: <bc6247cdd51d7a7b28c52a186d4975ecbeaa602d.camel@andred.net>
-Subject: Re: [PATCH 2/2] dt-bindings: imx6q-pcie: add
- "fsl,pcie-phy-refclk-internal" for i.MX7D
-From:   =?ISO-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        Wed, 28 Aug 2019 04:18:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbfH1ISX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:18:23 -0400
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 310E82189D;
+        Wed, 28 Aug 2019 08:18:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566980302;
+        bh=+pPMLUCSSxO28zMU47W0EaRFagvxicZdMQed3gzfifw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=09CmK50HCvij31BRxh1M3vSf9K8uw68/0d/d5eMMsCOfA6A9Pbp7INvd1tMHJg7nu
+         pvbxHaI4GFBWa/xBBLz7LAsxuA+8PaEk8PSl0DRtAAVMoJ6YdYrBxVU+RvOOUMMhOS
+         vt8f/iHOhmY5YghwX2M2lOmhLJkRIKLPNgFxtkk0=
+Date:   Wed, 28 Aug 2019 10:18:19 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     linux@roeck-us.net, wim@linux-watchdog.org
+Cc:     linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Date:   Wed, 28 Aug 2019 09:17:07 +0100
-In-Reply-To: <20190827155626.GA29948@bogus>
-References: <20190813103759.38358-1-git@andred.net>
-         <20190813103759.38358-2-git@andred.net> <20190827155626.GA29948@bogus>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH RESEND v2 1/6] dt-bindings: watchdog: Add YAML schemas
+ for the generic watchdog bindings
+Message-ID: <20190828081819.qqztieg7cgdvpkxv@flea>
+References: <20190821143835.7294-1-mripard@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i6iaeebbwmfsnvrm"
+Content-Disposition: inline
+In-Reply-To: <20190821143835.7294-1-mripard@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
 
-On Tue, 2019-08-27 at 10:56 -0500, Rob Herring wrote:
-> On Tue, Aug 13, 2019 at 11:37:59AM +0100, André Draszik wrote:
-> > The i.MX7D variant of the IP can use either an external
-> > crystal oscillator input or an internal clock input as
-> > a reference clock input for the PCIe PHY.
-> > 
-> > Document the optional property 'fsl,pcie-phy-refclk-internal'
-> > 
-> > Signed-off-by: André Draszik <git@andred.net>
-> > Cc: Richard Zhu <hongxing.zhu@nxp.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> > Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> > Cc: Fabio Estevam <festevam@gmail.com>
-> > Cc: NXP Linux Team <linux-imx@nxp.com>
-> > Cc: linux-pci@vger.kernel.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > index a7f5f5afa0e6..985d7083df9f 100644
-> > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > @@ -56,6 +56,11 @@ Additional required properties for imx7d-pcie and imx8mq-pcie:
-> >  	       - "turnoff"
-> >  - fsl,imx7d-pcie-phy: A phandle to an fsl,imx7d-pcie-phy node.
-> 
-> Not sure how this got in, but why is the phy binding not used here?
-> 
-> >  
-> > +Additional optional properties for imx7d-pcie:
-> > +- fsl,pcie-phy-refclk-internal: If present then an internal PLL input is used
-> > +  as PCIe PHY reference clock source. By default an external ocsillator input
-> > +  is used.
-> 
-> Can't the clock binding and maybe 'assigned-clocks' be used here? 
-> 
-> Also, this is a property of the PHY, so it belongs in the PHY's node.
+--i6iaeebbwmfsnvrm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks for pointing this out. I'll have a look.
+On Wed, Aug 21, 2019 at 04:38:30PM +0200, Maxime Ripard wrote:
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> The watchdogs have a bunch of generic properties that are needed in a
+> device tree. Add a YAML schemas for those.
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Andre'
+Ping?
+
+Maxime
 
 
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--i6iaeebbwmfsnvrm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXWY4ywAKCRDj7w1vZxhR
+xSrsAP9Wm4uqadS7xrVp8WfRQCHb46bRTlF+qGXNnJAoK7xrlwEAnhNhZ4zOZeDd
+sjEXxaKnIq1SiINnOpEsBy21a+L8eAY=
+=fuF4
+-----END PGP SIGNATURE-----
+
+--i6iaeebbwmfsnvrm--
