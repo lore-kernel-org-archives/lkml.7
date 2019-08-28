@@ -2,286 +2,88 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB23C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 03:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCDCC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 04:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BEA821883
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 03:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 620EA217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 04:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="K2eGYL4I"
+	dkim=pass (1024-bit key) header.d=euphon.net header.i=fam@euphon.net header.b="gKntHUbp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfH1DzO (ORCPT
+        id S1725927AbfH1EGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 23:55:14 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39241 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfH1DzL (ORCPT
+        Wed, 28 Aug 2019 00:06:44 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17868 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725497AbfH1EGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 23:55:11 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y200so768560pfb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 20:55:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bIgxA3Dicc5Em+9jvdlEZK29bkfLLIMFrYtwXp+us5U=;
-        b=K2eGYL4IXh4PqkH4VQU9aqqpK9Ede0d7UemLz9b+BP0cRFvInRySZyzPCWi0kADk5R
-         bEqWj/ITKXnZk0s3uvaRI4Rh1lddoKo+KijHfgB7uebG3LI3IAZ9iV77sMTiD8WkA5oV
-         VP3KXf8BlOiIyabJqciJtI3kebyh1cs+b67Jg4MIzWRUw+GJTaA4Nxd2pSd7NMzENC8s
-         fBKRi6mKljV0+yXTZqNPGam9oqiaHIxCXSqXOfg+XcuAVJHqM9ijxivmUtnDu/Slqq3M
-         REPlAbwQOJLPZmbQ3ngmdd6Rh+wOLjvq8ob79mkCaw1OA80FTo0i6y3h0r8bc8wyY83d
-         rnRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bIgxA3Dicc5Em+9jvdlEZK29bkfLLIMFrYtwXp+us5U=;
-        b=a6Uoq3QQWWZHr/HJV2AwiI+otPGEUQxXpJ0Pg+aIjvAJY681h19+DDJRaePpUEqCHN
-         LOJEmLRY8SWKjU4taMou68VWXi5IXadPYGp0duWT+wnvxYhUQDqADHDdmfPtQg5f1w4w
-         4gJHQ0+N069a+IYJsFu5UPsW7YHsVhtcP8X0ODASqfM285Qi7WqHpzUM6NqI3njlMrQq
-         r4ChK2if2q5KDwKC4h6l1p4NpDFI1UZg4PJyq96c529W5d1eESTuqL/YG0zEKTY+qnDC
-         MhxAKizfkoCbCj6PTcH3vELNExTAj0n2h6MUZXt2u5a40KZTZQp1XJTwpMcBe58TT5x1
-         3Qcw==
-X-Gm-Message-State: APjAAAVkMIQ7HA4jJvspk0gNFsa8KLgHFaqNjnN/M8Ga/rijOaq+16UB
-        VHsz5Xqqhqk8GJ1xqu0o3uoY8rdNN5cYYg==
-X-Google-Smtp-Source: APXvYqxXSZ1dYlR4gh5x8SXVs7IgANnreCUJeM0SkjEhOj33QalvdbIEvLX5R4LLrWMJ9ef1gKsrqQ==
-X-Received: by 2002:a63:1045:: with SMTP id 5mr1612800pgq.165.1566964510195;
-        Tue, 27 Aug 2019 20:55:10 -0700 (PDT)
-Received: from localhost ([61.120.150.70])
-        by smtp.gmail.com with ESMTPSA id i11sm899575pfk.34.2019.08.27.20.55.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 20:55:09 -0700 (PDT)
-From:   Fam Zheng <zhengfeiran@bytedance.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     axboe@kernel.dk, paolo.valente@linaro.org, fam@euphon.net,
-        duanxiongchun@bytedance.com, cgroups@vger.kernel.org,
-        zhangjiachen.jc@bytedance.com, tj@kernel.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH v3 3/3] bfq: Add per-device weight
-Date:   Wed, 28 Aug 2019 11:54:53 +0800
-Message-Id: <20190828035453.18129-4-zhengfeiran@bytedance.com>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20190828035453.18129-1-zhengfeiran@bytedance.com>
-References: <20190828035453.18129-1-zhengfeiran@bytedance.com>
+        Wed, 28 Aug 2019 00:06:44 -0400
+X-Greylist: delayed 916 seconds by postgrey-1.27 at vger.kernel.org; Wed, 28 Aug 2019 00:06:38 EDT
+ARC-Seal: i=1; a=rsa-sha256; t=1566964261; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=nC0x4IFtr5oUkqo7CJopOuSOhRR5Uj5vv7ozu9uG51mRfJHG04y/d8q19F3JJjvyFIue4GIq6lCYQdVAC4rQDOUAOs8nhMo2nupo3oq/oSKfPKH0TE3Q9cmmU6JOBsaNWtmXKDRBvOWpssbX8X8LyzrYX+IDRTO3ZLCPFLGx92k=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1566964261; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To:ARC-Authentication-Results; 
+        bh=kZZ0SaUSYboCypvlsV1KXUwzNEviRw5SwLxgGnE8zzY=; 
+        b=RZWvI+EBuMXc7SdAQBjrfAPV51T1la8dCfa1BgIvCmhQBFM8sIesVFfnVa7Ay/lPCraO//X5XhYfZ/MCYGyYWwRg1bNYk9OyEg1p6JVbuBrl3YopBQLnNSys54inM3FcV/GwWY4abp/58f+eYSlW+RgdThRFIu95xftdh7wunuM=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=euphon.net;
+        spf=pass  smtp.mailfrom=fam@euphon.net;
+        dmarc=pass header.from=<fam@euphon.net> header.from=<fam@euphon.net>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1566964261;
+        s=zoho; d=euphon.net; i=fam@euphon.net;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        l=522; bh=kZZ0SaUSYboCypvlsV1KXUwzNEviRw5SwLxgGnE8zzY=;
+        b=gKntHUbpwtEPWYsG8RAFSvgvTifHJiZkg0vZjQvPumRN9CB0yaXDLVlxxcTjfXxU
+        ZsYBpyud35mPITI8gubkdPsc6N8m82VpRlujPxbqsV6jFCGarVssE8zSEnomCZmJ2gE
+        M0vRNjeXrf8TtvD1IZdzdga5MoM4tn2JwiI/IadU=
+Received: from localhost (120.52.147.46 [120.52.147.46]) by mx.zoho.com.cn
+        with SMTPS id 1566964259915588.9970437337977; Wed, 28 Aug 2019 11:50:59 +0800 (CST)
+Date:   Wed, 28 Aug 2019 11:50:55 +0800
+From:   Fam Zheng <fam@euphon.net>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        Tejun Heo <tj@kernel.org>,
+        Fam Zheng <zhengfeiran@bytedance.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        duanxiongchun@bytedance.com, linux-block@vger.kernel.org,
+        cgroups@vger.kernel.org, zhangjiachen.jc@bytedance.com
+Subject: Re: [PATCH v2 3/3] bfq: Add per-device weight
+Message-ID: <20190828035055.GA16893@magic>
+References: <20190805063807.9494-1-zhengfeiran@bytedance.com>
+ <20190805063807.9494-4-zhengfeiran@bytedance.com>
+ <20190821154402.GI2263813@devbig004.ftw2.facebook.com>
+ <C2F0BE1E-9CAA-4FBD-80D8-C18ECCE3FD4B@linaro.org>
+ <fff76a58-65e7-7060-0329-aef15c422639@kernel.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fff76a58-65e7-7060-0329-aef15c422639@kernel.dk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds to BFQ the missing per-device weight interfaces:
-blkio.bfq.weight_device on legacy and io.bfq.weight on unified. The
-implementation pretty closely resembles what we had in CFQ and the parsing code
-is basically reused.
+On Mon, 08/26 07:59, Jens Axboe wrote:
+> On 8/26/19 12:36 AM, Paolo Valente wrote:
+> > Hi Jens,
+> > do you think this series could now be queued for 5.4?
+> 
+> The most glaring oversight in this series, is that the meat of it,
+> patch #3, doesn't even have a commit message. The cover letter
+> essentially looks like it should have been the commit message for
+> that patch.
+> 
+> Please resend with acks/reviews collected, and ensure that all
+> patches have a reasonable commit message.
 
-Tests
-=====
+Will do. Thanks!
 
-Using two cgroups and three block devices, having weights setup as:
-
-Cgroup          test1           test2
-============================================
-default         100             500
-sda             500             100
-sdb             default         default
-sdc             200             200
-
-cgroup v1 runs
---------------
-
-    sda.test1.out:   READ: bw=913MiB/s
-    sda.test2.out:   READ: bw=183MiB/s
-
-    sdb.test1.out:   READ: bw=213MiB/s
-    sdb.test2.out:   READ: bw=1054MiB/s
-
-    sdc.test1.out:   READ: bw=650MiB/s
-    sdc.test2.out:   READ: bw=650MiB/s
-
-cgroup v2 runs
---------------
-
-    sda.test1.out:   READ: bw=915MiB/s
-    sda.test2.out:   READ: bw=184MiB/s
-
-    sdb.test1.out:   READ: bw=216MiB/s
-    sdb.test2.out:   READ: bw=1069MiB/s
-
-    sdc.test1.out:   READ: bw=621MiB/s
-    sdc.test2.out:   READ: bw=622MiB/s
-
-Signed-off-by: Fam Zheng <zhengfeiran@bytedance.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Paolo Valente <paolo.valente@linaro.org>
----
- block/bfq-cgroup.c  | 95 +++++++++++++++++++++++++++++++++++++++------
- block/bfq-iosched.h |  3 ++
- 2 files changed, 87 insertions(+), 11 deletions(-)
-
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index 28e5a9241237..de4fd8b725aa 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -904,7 +904,7 @@ void bfq_end_wr_async(struct bfq_data *bfqd)
- 	bfq_end_wr_async_queues(bfqd, bfqd->root_group);
- }
- 
--static int bfq_io_show_weight(struct seq_file *sf, void *v)
-+static int bfq_io_show_weight_legacy(struct seq_file *sf, void *v)
- {
- 	struct blkcg *blkcg = css_to_blkcg(seq_css(sf));
- 	struct bfq_group_data *bfqgd = blkcg_to_bfqgd(blkcg);
-@@ -918,8 +918,32 @@ static int bfq_io_show_weight(struct seq_file *sf, void *v)
- 	return 0;
- }
- 
--static void bfq_group_set_weight(struct bfq_group *bfqg, u64 weight)
-+static u64 bfqg_prfill_weight_device(struct seq_file *sf,
-+				     struct blkg_policy_data *pd, int off)
-+{
-+	struct bfq_group *bfqg = pd_to_bfqg(pd);
-+
-+	if (!bfqg->entity.dev_weight)
-+		return 0;
-+	return __blkg_prfill_u64(sf, pd, bfqg->entity.dev_weight);
-+}
-+
-+static int bfq_io_show_weight(struct seq_file *sf, void *v)
-+{
-+	struct blkcg *blkcg = css_to_blkcg(seq_css(sf));
-+	struct bfq_group_data *bfqgd = blkcg_to_bfqgd(blkcg);
-+
-+	seq_printf(sf, "default %u\n", bfqgd->weight);
-+	blkcg_print_blkgs(sf, blkcg, bfqg_prfill_weight_device,
-+			  &blkcg_policy_bfq, 0, false);
-+	return 0;
-+}
-+
-+static void bfq_group_set_weight(struct bfq_group *bfqg, u64 weight, u64 dev_weight)
- {
-+	weight = dev_weight ?: weight;
-+
-+	bfqg->entity.dev_weight = dev_weight;
- 	/*
- 	 * Setting the prio_changed flag of the entity
- 	 * to 1 with new_weight == weight would re-set
-@@ -967,28 +991,71 @@ static int bfq_io_set_weight_legacy(struct cgroup_subsys_state *css,
- 		struct bfq_group *bfqg = blkg_to_bfqg(blkg);
- 
- 		if (bfqg)
--			bfq_group_set_weight(bfqg, val);
-+			bfq_group_set_weight(bfqg, val, 0);
- 	}
- 	spin_unlock_irq(&blkcg->lock);
- 
- 	return ret;
- }
- 
--static ssize_t bfq_io_set_weight(struct kernfs_open_file *of,
--				 char *buf, size_t nbytes,
--				 loff_t off)
-+static ssize_t bfq_io_set_device_weight(struct kernfs_open_file *of,
-+					char *buf, size_t nbytes,
-+					loff_t off)
- {
--	u64 weight;
--	/* First unsigned long found in the file is used */
--	int ret = kstrtoull(strim(buf), 0, &weight);
-+	int ret;
-+	struct blkg_conf_ctx ctx;
-+	struct blkcg *blkcg = css_to_blkcg(of_css(of));
-+	struct bfq_group *bfqg;
-+	u64 v;
- 
-+	ret = blkg_conf_prep(blkcg, &blkcg_policy_bfq, buf, &ctx);
- 	if (ret)
- 		return ret;
- 
--	ret = bfq_io_set_weight_legacy(of_css(of), NULL, weight);
-+	if (sscanf(ctx.body, "%llu", &v) == 1) {
-+		/* require "default" on dfl */
-+		ret = -ERANGE;
-+		if (!v)
-+			goto out;
-+	} else if (!strcmp(strim(ctx.body), "default")) {
-+		v = 0;
-+	} else {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	bfqg = blkg_to_bfqg(ctx.blkg);
-+
-+	ret = -ERANGE;
-+	if (!v || (v >= BFQ_MIN_WEIGHT && v <= BFQ_MAX_WEIGHT)) {
-+		bfq_group_set_weight(bfqg, bfqg->entity.weight, v);
-+		ret = 0;
-+	}
-+out:
-+	blkg_conf_finish(&ctx);
- 	return ret ?: nbytes;
- }
- 
-+static ssize_t bfq_io_set_weight(struct kernfs_open_file *of,
-+				 char *buf, size_t nbytes,
-+				 loff_t off)
-+{
-+	char *endp;
-+	int ret;
-+	u64 v;
-+
-+	buf = strim(buf);
-+
-+	/* "WEIGHT" or "default WEIGHT" sets the default weight */
-+	v = simple_strtoull(buf, &endp, 0);
-+	if (*endp == '\0' || sscanf(buf, "default %llu", &v) == 1) {
-+		ret = bfq_io_set_weight_legacy(of_css(of), NULL, v);
-+		return ret ?: nbytes;
-+	}
-+
-+	return bfq_io_set_device_weight(of, buf, nbytes, off);
-+}
-+
- #ifdef CONFIG_BFQ_CGROUP_DEBUG
- static int bfqg_print_stat(struct seq_file *sf, void *v)
- {
-@@ -1145,9 +1212,15 @@ struct cftype bfq_blkcg_legacy_files[] = {
- 	{
- 		.name = "bfq.weight",
- 		.flags = CFTYPE_NOT_ON_ROOT,
--		.seq_show = bfq_io_show_weight,
-+		.seq_show = bfq_io_show_weight_legacy,
- 		.write_u64 = bfq_io_set_weight_legacy,
- 	},
-+	{
-+		.name = "bfq.weight_device",
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+		.seq_show = bfq_io_show_weight,
-+		.write = bfq_io_set_weight,
-+	},
- 
- 	/* statistics, covers only the tasks in the bfqg */
- 	{
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index e80adf822bbe..5d1a519640f6 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -168,6 +168,9 @@ struct bfq_entity {
- 	/* budget, used also to calculate F_i: F_i = S_i + @budget / @weight */
- 	int budget;
- 
-+	/* device weight, if non-zero, it overrides the default weight of
-+	 * bfq_group_data */
-+	int dev_weight;
- 	/* weight of the queue */
- 	int weight;
- 	/* next weight if a change is in progress */
--- 
-2.22.1
+Fam
 
