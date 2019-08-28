@@ -2,175 +2,131 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3817C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA9CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B587D2189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8EF12189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 11:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfH1LtO (ORCPT
+        id S1726536AbfH1Ltv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 07:49:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:57716 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726400AbfH1LtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 07:49:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9668E344;
-        Wed, 28 Aug 2019 04:49:13 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8917F3F246;
-        Wed, 28 Aug 2019 04:49:11 -0700 (PDT)
-Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        Will Deacon <will.deacon@arm.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Steven Price <steven.price@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190521161102.29620-1-peron.clem@gmail.com>
- <CAAObsKD8bij1ANLqX6y11Y6mDEXiymNjrDkmHmvGWiFLKWu_FA@mail.gmail.com>
- <4ff02295-6c34-791b-49f4-6558a92ad7a3@arm.com>
- <CAAObsKBt1tPw9RKGi_Xey=1zy9Tu3N+A=1te2R8=NuJ5tDBqVg@mail.gmail.com>
- <dc3872a4-8cd9-462b-9f73-0d69a810d985@arm.com>
- <92e9b697-ea0d-9b13-5512-b0a16a39df20@baylibre.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <8433455c-3b74-c176-49a1-388b3f085e9e@arm.com>
-Date:   Wed, 28 Aug 2019 12:49:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 28 Aug 2019 07:49:51 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:40467 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfH1Ltu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 07:49:50 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id B97E581423; Wed, 28 Aug 2019 13:49:34 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 13:49:47 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chen Yu <yu.c.chen@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH 4.19 72/98] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD
+ family 15h/16h
+Message-ID: <20190828114947.GC8052@amd>
+References: <20190827072718.142728620@linuxfoundation.org>
+ <20190827072722.020603090@linuxfoundation.org>
+ <20190827113604.GB18218@amd>
+ <alpine.DEB.2.21.1908271525480.1939@nanos.tec.linutronix.de>
+ <20190828103113.GA14677@amd>
+ <alpine.DEB.2.21.1908281231480.1869@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <92e9b697-ea0d-9b13-5512-b0a16a39df20@baylibre.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="YD3LsXFS42OYHhNZ"
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1908281231480.1869@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
 
-On 28/08/2019 12:28, Neil Armstrong wrote:
-> Hi Robin,
-> 
-> On 31/05/2019 15:47, Robin Murphy wrote:
->> On 31/05/2019 13:04, Tomeu Vizoso wrote:
->>> On Wed, 29 May 2019 at 19:38, Robin Murphy <robin.murphy@arm.com> wrote:
->>>>
->>>> On 29/05/2019 16:09, Tomeu Vizoso wrote:
->>>>> On Tue, 21 May 2019 at 18:11, Clément Péron <peron.clem@gmail.com> wrote:
->>>>>>
->>>>> [snip]
->>>>>> [  345.204813] panfrost 1800000.gpu: mmu irq status=1
->>>>>> [  345.209617] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
->>>>>> 0x0000000002400400
->>>>>
->>>>>    From what I can see here, 0x0000000002400400 points to the first byte
->>>>> of the first submitted job descriptor.
->>>>>
->>>>> So mapping buffers for the GPU doesn't seem to be working at all on
->>>>> 64-bit T-760.
->>>>>
->>>>> Steven, Robin, do you have any idea of why this could be?
->>>>
->>>> I tried rolling back to the old panfrost/nondrm shim, and it works fine
->>>> with kbase, and I also found that T-820 falls over in the exact same
->>>> manner, so the fact that it seemed to be common to the smaller 33-bit
->>>> designs rather than anything to do with the other
->>>> job_descriptor_size/v4/v5 complication turned out to be telling.
->>>
->>> Is this complication something you can explain? I don't know what v4
->>> and v5 are meant here.
->>
->> I was alluding to BASE_HW_FEATURE_V4, which I believe refers to the Midgard architecture version - the older versions implemented by T6xx and T720 seem to be collectively treated as "v4", while T760 and T8xx would effectively be "v5".
->>
->>>> [ as an aside, are 64-bit jobs actually known not to work on v4 GPUs, or
->>>> is it just that nobody's yet observed a 64-bit blob driving one? ]
->>>
->>> I'm looking right now at getting Panfrost working on T720 with 64-bit
->>> descriptors, with the ultimate goal of making Panfrost
->>> 64-bit-descriptor only so we can have a single build of Mesa in
->>> distros.
->>
->> Cool, I'll keep an eye out, and hope that it might be enough for T620 on Juno, too :)
->>
->>>> Long story short, it appears that 'Mali LPAE' is also lacking the start
->>>> level notion of VMSA, and expects a full 4-level table even for <40 bits
->>>> when level 0 effectively redundant. Thus walking the 3-level table that
->>>> io-pgtable comes back with ends up going wildly wrong. The hack below
->>>> seems to do the job for me; if Clément can confirm (on T-720 you'll
->>>> still need the userspace hack to force 32-bit jobs as well) then I think
->>>> I'll cook up a proper refactoring of the allocator to put things right.
->>>
->>> Mmaps seem to work with this patch, thanks.
->>>
->>> The main complication I'm facing right now seems to be that the SFBD
->>> descriptor on T720 seems to be different from the one we already had
->>> (tested on T6xx?).
->>
->> OK - with the 32-bit hack pointed to up-thread, a quick kmscube test gave me the impression that T720 works fine, but on closer inspection some parts of glmark2 do seem to go a bit wonky (although I suspect at least some of it is just down to the FPGA setup being both very slow and lacking in memory bandwidth), and the "nv12-1img" mode of kmscube turns out to render in some delightfully wrong colours.
->>
->> I'll try to get a 'proper' version of the io-pgtable patch posted soon.
-> 
-> I'm trying to collect all the fixes needed to make T820 work again, and
-> I was wondering if you finally have a proper patch for this and "cfg->ias > 48"
-> hack ? Or one I can test ?
+--YD3LsXFS42OYHhNZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I do have a handful of io-pgtable patches written up and ready to go, 
-I'm just treading carefully and waiting for the internal approval box to 
-be ticked before I share anything :(
+Hi!
 
-Robin.
+> > > There is no way to reinitialize RDRAND from the kernel otherwise we w=
+ould
+> > > have exactly done that. If you know how to do that please tell.
+> >=20
+> > Would they? AMD is not exactly doing good job with communication
+>=20
+> Yes they would. Stop making up weird conspiracy theories.
 
-> 
-> Thanks,
-> Neil
-> 
->>
->> Thanks,
->> Robin.
->>
->>>
->>> Cheers,
->>>
->>> Tomeu
->>>
->>>> Robin.
->>>>
->>>>
->>>> ----->8-----
->>>> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
->>>> index 546968d8a349..f29da6e8dc08 100644
->>>> --- a/drivers/iommu/io-pgtable-arm.c
->>>> +++ b/drivers/iommu/io-pgtable-arm.c
->>>> @@ -1023,12 +1023,14 @@ arm_mali_lpae_alloc_pgtable(struct
->>>> io_pgtable_cfg *cfg, void *cookie)
->>>>           iop = arm_64_lpae_alloc_pgtable_s1(cfg, cookie);
->>>>           if (iop) {
->>>>                   u64 mair, ttbr;
->>>> +               struct arm_lpae_io_pgtable *data = io_pgtable_ops_to_data(&iop->ops);
->>>>
->>>> +               data->levels = 4;
->>>>                   /* Copy values as union fields overlap */
->>>>                   mair = cfg->arm_lpae_s1_cfg.mair[0];
->>>>                   ttbr = cfg->arm_lpae_s1_cfg.ttbr[0];
->>>>
->>>> _______________________________________________
->>>> dri-devel mailing list
->>>> dri-devel@lists.freedesktop.org
->>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
+> > here. If BIOS can do it, kernel can do it, too...
+>=20
+> May I recommend to read up on SMM and BIOS being able to lock down access
+> to certain facilities?
+>=20
+> > or do you have information saying otherwise?
+>=20
+> Yes. It was clearly stated by Tom that it can only be done in the
+> BIOS.
+
+Do you have a link for that? Because I don't think I seen that one.
+
+> > > Also disabling it for every BIOS is the only way which can be done be=
+cause
+> > > there is no way to know whether the BIOS is fixed or not at cold boot
+> > > time. And it has to be known there because applications cache the
+> >=20
+> > I'm pretty sure DMI-based whitelist would help here. It should be
+> > reasonably to fill it with the common machines at least.
+>=20
+> Send patches to that effect.
+
+Why should it be my job? AMD screwed this up, they should fix it
+properly. And you should insist on proper fix.
+
+> > Plus, where is the CVE, and does AMD do anything to make BIOS vendors
+> > fix them?
+>=20
+> May I redirect you to: https://www.amd.com/en/corporate/contact
+
+That will certainly make communication easier, right.
+
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--YD3LsXFS42OYHhNZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1malsACgkQMOfwapXb+vKGNQCfex+HxrNNM1zW06KK6370wJxS
+AHgAn3isBqW2j5ATWV822FJMAu++J1j4
+=41iR
+-----END PGP SIGNATURE-----
+
+--YD3LsXFS42OYHhNZ--
