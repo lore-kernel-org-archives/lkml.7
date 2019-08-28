@@ -2,151 +2,214 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16578C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7645C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6A822DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7210F22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:57:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jndXLe5F"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="n+Iz3RNK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfH1Vzl (ORCPT
+        id S1727072AbfH1V5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:55:41 -0400
-Received: from ozlabs.org ([203.11.71.1]:34413 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbfH1Vzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:55:40 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46JfgY6xPMz9sN4;
-        Thu, 29 Aug 2019 07:55:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567029338;
-        bh=trV+YGvYxNvB9BN+5qQZbtfhppivJU4cFdm0cDK2+rI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jndXLe5FjeSEkRjdoULkyHRs40O6jzy/1gv+zySqhMHPo56/IUUWPduUfgmD267jV
-         dg23MSc5wU35nhNVI3NOVWeBu7Aw6lDa/FGx53rolllkjK79GWvEfdm6mBE/30ebCu
-         si2tOf5BIfM/aZO4wflvM/PoSyGPsxwUPjiDxxuqKZpr5NZCUTU79/8PYcGGSHbZiQ
-         H9+0iF9SZpmOsja+bCpUvMMcxilqyJnKm7F5BQhU5sFdEd5LfXwEIjtHOx/XDPSsWS
-         IoUJRgd7rvWhyZYjNWmA1oQ6tGEFshmgwWvwVJOm5+mfPrdKF542aD6tPV/19ED4ep
-         23BWBWx3zsz9Q==
-Date:   Thu, 29 Aug 2019 07:55:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: linux-next: Fixes tags need some work in the mmc-fixes tree
-Message-ID: <20190829075530.6fb7341c@canb.auug.org.au>
+        Wed, 28 Aug 2019 17:57:00 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43669 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfH1V47 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 17:56:59 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k3so411201pgb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 14:56:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Nd+bPWlCXNocXiigb90jYgWHpu3MGjlLHt1H4GIPKsk=;
+        b=n+Iz3RNKIv2G78ZVZ1TXSEKF9j9dLXkEdNpnMNVoicyXdstnIuPLFqkCjqyGSH9iJY
+         o8gawdyeaRKIA7HYM9GwBrmZEUjqEqoQzGDPL6Qjj+hPvALZQLVeqdqiODiTzfmDwDgB
+         jXgqJyq703XAb4M2dMxq/L+kBPkok4Gcf/Gco=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Nd+bPWlCXNocXiigb90jYgWHpu3MGjlLHt1H4GIPKsk=;
+        b=EGDFOQ+4RMfRM2DTdS0tHZ3m78c3nNYEAgD8dkdnGd6AHF+ESP1KuT8odN9rTDj+m6
+         BP2AJlDgWHM1pTNZsCNZXcO/2C2R9nJOeqa+bKSVnMIJMIldsNnaLqIEkoK08p0T7tNK
+         s6bLKp+/+Zl2hibLh4wLq5RHSKdHDf+aeyc/upr1zRCFOJwJ1HhTbrD7XnxRsmOrTRLD
+         CeZREA1GBw1c18Vhk5uFAISNJeggr5ssYFPzUWhi2VV/z2y1dUWrfF6v4YgpLAwJ3vMD
+         fpCCpF4pFBOxV9h7L5qAA695FTulIhlMVwMPXMZcNmx+EjGoCF9VJyoOVFP0akwb2zcF
+         2EkA==
+X-Gm-Message-State: APjAAAVhw2RP8vjCMxxNJsQKUW1QZVEnjwNJY+IwZPnF1lRcjhdn0ghm
+        XuT92FF2UWgRc66FguT1aosrFQ==
+X-Google-Smtp-Source: APXvYqxBWzjFcxT5J+UW/brCQQfj77xr5PR8jRpUK60AFtolo6N4nAisXuYYuZDv08g7jCpB0ygItg==
+X-Received: by 2002:a17:90a:bb91:: with SMTP id v17mr6143826pjr.84.1567029418977;
+        Wed, 28 Aug 2019 14:56:58 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id p20sm144125pgj.47.2019.08.28.14.56.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 14:56:58 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 17:56:57 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC v1 1/2] rcu/tree: Clean up dynticks counter usage
+Message-ID: <20190828215657.GA71365@google.com>
+References: <5d648895.1c69fb81.5e60a.fc6f@mx.google.com>
+ <20190828201344.GR26530@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LLJXSgfWPEA/X.PWOIp2sfa";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828201344.GR26530@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/LLJXSgfWPEA/X.PWOIp2sfa
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Aug 28, 2019 at 01:13:44PM -0700, Paul E. McKenney wrote:
+> On Mon, Aug 26, 2019 at 09:33:53PM -0400, Joel Fernandes (Google) wrote:
+> > The dynticks counter are confusing due to crowbar writes of
+> > DYNTICK_IRQ_NONIDLE whose purpose is to detect half-interrupts (i.e. we
+> > see rcu_irq_enter() but not rcu_irq_exit() due to a usermode upcall) and
+> > if so then do a reset of the dyntick_nmi_nesting counters. This patch
+> > tries to get rid of DYNTICK_IRQ_NONIDLE while still keeping the code
+> > working, fully functional, and less confusing. The confusion recently
+> > has even led to patches forgetting that DYNTICK_IRQ_NONIDLE was written
+> > to which wasted lots of time.
+> > 
+> > The patch has the following changes:
+[snip]
+> >  /*
+> >   * Grace-period counter management.
+> >   */
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 68ebf0eb64c8..255cd6835526 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -81,7 +81,7 @@
+> >  
+> >  static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
+> >  	.dynticks_nesting = 1,
+> > -	.dynticks_nmi_nesting = DYNTICK_IRQ_NONIDLE,
+> > +	.dynticks_nmi_nesting = 0,
+> 
+> C initializes to zero by default, so this can simply be deleted.
 
-Hi all,
+Fixed.
 
-In commit
+> >  	.dynticks = ATOMIC_INIT(RCU_DYNTICK_CTRL_CTR),
+> >  };
+> >  struct rcu_state rcu_state = {
+> > @@ -558,17 +558,18 @@ EXPORT_SYMBOL_GPL(rcutorture_get_gp_data);
+> >  /*
+> >   * Enter an RCU extended quiescent state, which can be either the
+> >   * idle loop or adaptive-tickless usermode execution.
+> > - *
+> > - * We crowbar the ->dynticks_nmi_nesting field to zero to allow for
+> > - * the possibility of usermode upcalls having messed up our count
+> > - * of interrupt nesting level during the prior busy period.
+> >   */
+> >  static void rcu_eqs_enter(bool user)
+> >  {
+> >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> >  
+> > -	WARN_ON_ONCE(rdp->dynticks_nmi_nesting != DYNTICK_IRQ_NONIDLE);
+> > -	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0);
+> > +	/* Entering usermode/idle from interrupt is not handled. These would
+> > +	 * mean usermode upcalls or idle entry happened from interrupts. But,
+> > +	 * reset the counter if we warn.
+> > +	 */
+> 
+> Please either put the "/*" on its own line or use "//"-style comments.
 
-  f93be8a7a366 ("mmc: sdhci-sprd: clear the UHS-I modes read from registers=
-")
+I'll put "/*" on its own line.
 
-Fixes tag
+> >  	WARN_ON_ONCE(rdp->dynticks_nmi_nesting <= 0);
+> >  	WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs());
+> >  
+> > +	WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
+> > +		   rdp->dynticks_nmi_nesting - 1);
+> 
+> This is problematic.  The +/-1 and +/-2 dance is specifically for NMIs, so...
 
-  Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
+This counter is deleted in the following patch so I hope its Ok to leave it
+here for this one. I just kept it split into different patch to make
+testing/review/development easier.
 
-has these problem(s):
+> >  	if (irq)
+> >  		rcu_prepare_for_idle();
+> > @@ -723,10 +728,6 @@ void rcu_irq_exit_irqson(void)
+> >  /*
+> >   * Exit an RCU extended quiescent state, which can be either the
+> >   * idle loop or adaptive-tickless usermode execution.
+> > - *
+> > - * We crowbar the ->dynticks_nmi_nesting field to DYNTICK_IRQ_NONIDLE to
+> > - * allow for the possibility of usermode upcalls messing up our count of
+> > - * interrupt nesting level during the busy period that is just now starting.
+> >   */
+> >  static void rcu_eqs_exit(bool user)
+> >  {
+> > @@ -747,8 +748,13 @@ static void rcu_eqs_exit(bool user)
+> >  	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, rdp->dynticks);
+> >  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+> >  	WRITE_ONCE(rdp->dynticks_nesting, 1);
+> > -	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
+> > -	WRITE_ONCE(rdp->dynticks_nmi_nesting, DYNTICK_IRQ_NONIDLE);
+> > +
+> > +	/* Exiting usermode/idle from interrupt is not handled. These would
+> > +	 * mean usermode upcalls or idle exit happened from interrupts. But,
+> > +	 * reset the counter if we warn.
+> > +	 */
+> > +	if (WARN_ON_ONCE(rdp->dynticks_nmi_nesting != 0))
+> > +		WRITE_ONCE(rdp->dynticks_nmi_nesting, 0);
+> 
+> And here.  Plus this is adding a test and branch in the common case.
+> Given that the location being written to should be hot in the cache,
+> it is not clear that this is a win.
 
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
+The next patch removes the branch itself and just has the warning.
 
-In commit
+> >  	WARN_ON_ONCE(rdp->dynticks_nmi_nesting < 0);
+> >  
+> >  	/*
+> > @@ -826,16 +833,21 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+> >  
+> >  		incby = 1;
+> >  	} else if (tick_nohz_full_cpu(rdp->cpu) &&
+> > -		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+> > -		   rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
+> > +		   !rdp->dynticks_nmi_nesting && rdp->rcu_urgent_qs &&
+> > +		   !rdp->rcu_forced_tick) {
+> 
+> OK.  Though you should be able to save a line by pulling the
+> "rdp->rcu_urgent_qs &&" onto the first line.
 
-  218258427ce0 ("mms: sdhci-sprd: add SDHCI_QUIRK_BROKEN_CARD_DETECTION")
+Fixed.
 
-Fixes tag
+> >  		rdp->rcu_forced_tick = true;
+> >  		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+> >  	}
+> > +
+> 
+> Not clear that the added blank line is a win, here or below.
 
-  Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
+Fixed,
 
-has these problem(s):
+thanks!
 
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
+ - Joel
 
-In commit
-
-  1236e62ef8de ("mmc: sdhci-sprd: add SDHCI_QUIRK2_PRESET_VALUE_BROKEN")
-
-Fixes tag
-
-  Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-In commit
-
-  8180519b1be0 ("mmc: sdhci-sprd: add get_ro hook function")
-
-Fixes tag
-
-  Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-In commit
-
-  b4e4296cc206 ("mmc: sdhci-sprd: fixed incorrect clock divider")
-
-Fixes tag
-
-  Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-Please do not split Fixes tags over more tha one line - even if the line
-is more than 80 characters.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/LLJXSgfWPEA/X.PWOIp2sfa
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1m+FIACgkQAVBC80lX
-0GyFQwgAgLkGu03CvO/syIVoC1fL7M2HVBIxP6yEF4I4GpW42kfTQ1NLT1weKlt7
-TPLWU2y/smCNKxzs5Z+phI4qO1z4eB1oN5zKSRLjzxwGYwIqHpgcphuPev5/XNoy
-0WZL7O6oMUxRjPGPcTnCF8Kl5Fr2R1IfIVmS0CY8cu6S3buITRNC3+jYNMWPiMQW
-sJGBneMrEQqQ43sK3cOWsIoNoEWxuCMidX00yZM/lthpWjpI90FExQDjPNOQ1jcK
-k+fzfA9qKTSo8N4AtVVDyVsfX0YSstfbQsSZH+kXEf54GfPQmobsY02+aN96i5OM
-D0vEQsO46VUVCT+y94ImOgjWQO0p1w==
-=JjJ1
------END PGP SIGNATURE-----
-
---Sig_/LLJXSgfWPEA/X.PWOIp2sfa--
+[snip]
