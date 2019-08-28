@@ -2,310 +2,79 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59838C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AD0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25EE9217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:16:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566987416;
-	bh=/jwyJvL70UUFbASwSHFBsQ8cYOTH8HnBwGQrvFornKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EcC56GS6Bh/z+1SQBIcaE6axwMFqCfJ4dD+80nV0mNt0yshXhfA+rRxZis/DBiS1Q
-	 CABq8nbB8nNw2VI/ds+KA1pp/W5HuKWK+5Rxuu4B7d02S0qbxLRmesJsqmhft/Xn8y
-	 rEci7JG5+ss8ftTsiqXzqmM8OWhFI08XEhs3PzzQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0923922CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfH1KQz (ORCPT
+        id S1727109AbfH1KQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:16:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41214 "EHLO mail.kernel.org"
+        Wed, 28 Aug 2019 06:16:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:56802 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727042AbfH1KQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:16:50 -0400
-Received: from linux-8ccs (ip5f5adbee.dynamic.kabel-deutschland.de [95.90.219.238])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B3292189D;
-        Wed, 28 Aug 2019 10:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566987409;
-        bh=/jwyJvL70UUFbASwSHFBsQ8cYOTH8HnBwGQrvFornKs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aiyBAnLGewxcnn57BlNuRHUIJ+c0J/OJsE68K3nSQX6AQjlwB7yF89VfKCrQdGcm6
-         nu8qI4gbMbOfAUd1/mV3tZ7FT7KhZ371WmhSmVQ9u/IRdNt63P7Uu6ssjdw4+TMz4l
-         1WPSO0sAlCDaIFIN3ls+WZ4CxSj19J/+yxmXFYRA=
-Date:   Wed, 28 Aug 2019 12:16:41 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Matthias Maennich <maennich@google.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        arnd@arndb.de, geert@linux-m68k.org, gregkh@linuxfoundation.org,
-        hpa@zytor.com, joel@joelfernandes.org,
-        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
-        maco@android.com, maco@google.com, michal.lkml@markovi.net,
-        mingo@redhat.com, oneukum@suse.com, pombredanne@nexb.com,
-        sam@ravnborg.org, sspatil@google.com, stern@rowland.harvard.edu,
-        tglx@linutronix.de, usb-storage@lists.one-eyed-alien.net,
-        x86@kernel.org, yamada.masahiro@socionext.com
-Subject: Re: [PATCH v3 04/11] modpost: add support for symbol namespaces
-Message-ID: <20190828101640.GB25048@linux-8ccs>
-References: <20190813121733.52480-1-maennich@google.com>
- <20190821114955.12788-1-maennich@google.com>
- <20190821114955.12788-5-maennich@google.com>
- <20190826162138.GA31739@linux-8ccs>
- <20190827144117.GB102829@google.com>
- <20190828094325.GA25048@linux-8ccs>
- <20190828095546.GA38321@google.com>
+        id S1727075AbfH1KQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 06:16:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8CFA337;
+        Wed, 28 Aug 2019 03:16:54 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D65F13F59C;
+        Wed, 28 Aug 2019 03:16:53 -0700 (PDT)
+Subject: Re: [PATCH v3] sched/fair: don't assign runtime for throttled cfs_rq
+To:     Liangyan <liangyan.peng@linux.alibaba.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Segall <bsegall@google.com>, linux-kernel@vger.kernel.org
+Cc:     shanpeic@linux.alibaba.com, xlpang@linux.alibaba.com
+References: <20190826121633.6538-1-liangyan.peng@linux.alibaba.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <71df56cc-529b-aefb-2905-48e02de5cf86@arm.com>
+Date:   Wed, 28 Aug 2019 11:16:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190828095546.GA38321@google.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190826121633.6538-1-liangyan.peng@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Matthias Maennich [28/08/19 10:55 +0100]:
->On Wed, Aug 28, 2019 at 11:43:26AM +0200, Jessica Yu wrote:
->>+++ Matthias Maennich [27/08/19 15:41 +0100]:
->>>On Mon, Aug 26, 2019 at 06:21:38PM +0200, Jessica Yu wrote:
->>>>+++ Matthias Maennich [21/08/19 12:49 +0100]:
->>>>>Add support for symbols that are exported into namespaces. For that,
->>>>>extract any namespace suffix from the symbol name. In addition, emit a
->>>>>warning whenever a module refers to an exported symbol without
->>>>>explicitly importing the namespace that it is defined in. This patch
->>>>>consistently adds the namespace suffix to symbol names exported into
->>>>>Module.symvers.
->>>>>
->>>>>Example warning emitted by modpost in case of the above violation:
->>>>>
->>>>>WARNING: module ums-usbat uses symbol usb_stor_resume from namespace
->>>>>USB_STORAGE, but does not import it.
->>>>>
->>>>>Co-developed-by: Martijn Coenen <maco@android.com>
->>>>>Signed-off-by: Martijn Coenen <maco@android.com>
->>>>>Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
->>>>>Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>>>Signed-off-by: Matthias Maennich <maennich@google.com>
->>>>>---
->>>>>scripts/mod/modpost.c | 91 +++++++++++++++++++++++++++++++++++++------
->>>>>scripts/mod/modpost.h |  7 ++++
->>>>>2 files changed, 87 insertions(+), 11 deletions(-)
->>>>>
->>>>>diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
->>>>>index f277e116e0eb..538bb24ffee3 100644
->>>>>--- a/scripts/mod/modpost.c
->>>>>+++ b/scripts/mod/modpost.c
->>>>>@@ -164,6 +164,7 @@ struct symbol {
->>>>>	struct module *module;
->>>>>	unsigned int crc;
->>>>>	int crc_valid;
->>>>>+	const char *namespace;
->>>>>	unsigned int weak:1;
->>>>>	unsigned int vmlinux:1;    /* 1 if symbol is defined in vmlinux */
->>>>>	unsigned int kernel:1;     /* 1 if symbol is from kernel
->>>>>@@ -233,6 +234,37 @@ static struct symbol *find_symbol(const char *name)
->>>>>	return NULL;
->>>>>}
->>>>>
->>>>>+static bool contains_namespace(struct namespace_list *list,
->>>>>+			       const char *namespace)
->>>>>+{
->>>>>+	struct namespace_list *ns_entry;
->>>>>+
->>>>>+	for (ns_entry = list; ns_entry != NULL; ns_entry = ns_entry->next)
->>>>>+		if (strcmp(ns_entry->namespace, namespace) == 0)
->>>>>+			return true;
->>>>>+
->>>>>+	return false;
->>>>>+}
->>>>>+
->>>>>+static void add_namespace(struct namespace_list **list, const char *namespace)
->>>>>+{
->>>>>+	struct namespace_list *ns_entry;
->>>>>+
->>>>>+	if (!contains_namespace(*list, namespace)) {
->>>>>+		ns_entry = NOFAIL(malloc(sizeof(struct namespace_list) +
->>>>>+					 strlen(namespace) + 1));
->>>>>+		strcpy(ns_entry->namespace, namespace);
->>>>>+		ns_entry->next = *list;
->>>>>+		*list = ns_entry;
->>>>>+	}
->>>>>+}
->>>>>+
->>>>>+static bool module_imports_namespace(struct module *module,
->>>>>+				     const char *namespace)
->>>>>+{
->>>>>+	return contains_namespace(module->imported_namespaces, namespace);
->>>>>+}
->>>>>+
->>>>>static const struct {
->>>>>	const char *str;
->>>>>	enum export export;
->>>>>@@ -312,6 +344,22 @@ static enum export export_from_sec(struct elf_info *elf, unsigned int sec)
->>>>>		return export_unknown;
->>>>>}
->>>>>
->>>>>+static const char *sym_extract_namespace(const char **symname)
->>>>>+{
->>>>>+	size_t n;
->>>>>+	char *dupsymname;
->>>>>+
->>>>>+	n = strcspn(*symname, ".");
->>>>>+	if (n < strlen(*symname) - 1) {
->>>>>+		dupsymname = NOFAIL(strdup(*symname));
->>>>>+		dupsymname[n] = '\0';
->>>>>+		*symname = dupsymname;
->>>>>+		return dupsymname + n + 1;
->>>>>+	}
->>>>>+
->>>>>+	return NULL;
->>>>>+}
->>>>>+
->>>>>/**
->>>>>* Add an exported symbol - it may have already been added without a
->>>>>* CRC, in this case just update the CRC
->>>>>@@ -319,16 +367,18 @@ static enum export export_from_sec(struct elf_info *elf, unsigned int sec)
->>>>>static struct symbol *sym_add_exported(const char *name, struct module *mod,
->>>>>				       enum export export)
->>>>>{
->>>>>-	struct symbol *s = find_symbol(name);
->>>>>+	const char *symbol_name = name;
->>>>>+	const char *namespace = sym_extract_namespace(&symbol_name);
->>>>>+	struct symbol *s = find_symbol(symbol_name);
->>>>>
->>>>>	if (!s) {
->>>>>-		s = new_symbol(name, mod, export);
->>>>>+		s = new_symbol(symbol_name, mod, export);
->>>>>+		s->namespace = namespace;
->>>>>	} else {
->>>>>		if (!s->preloaded) {
->>>>>-			warn("%s: '%s' exported twice. Previous export "
->>>>>-			     "was in %s%s\n", mod->name, name,
->>>>>-			     s->module->name,
->>>>>-			     is_vmlinux(s->module->name) ?"":".ko");
->>>>>+			warn("%s: '%s' exported twice. Previous export was in %s%s\n",
->>>>>+			     mod->name, symbol_name, s->module->name,
->>>>>+			     is_vmlinux(s->module->name) ? "" : ".ko");
->>>>>		} else {
->>>>>			/* In case Module.symvers was out of date */
->>>>>			s->module = mod;
->>>>>@@ -1943,6 +1993,7 @@ static void read_symbols(const char *modname)
->>>>>	const char *symname;
->>>>>	char *version;
->>>>>	char *license;
->>>>>+	char *namespace;
->>>>>	struct module *mod;
->>>>>	struct elf_info info = { };
->>>>>	Elf_Sym *sym;
->>>>>@@ -1974,6 +2025,12 @@ static void read_symbols(const char *modname)
->>>>>		license = get_next_modinfo(&info, "license", license);
->>>>>	}
->>>>>
->>>>>+	namespace = get_modinfo(&info, "import_ns");
->>>>>+	while (namespace) {
->>>>>+		add_namespace(&mod->imported_namespaces, namespace);
->>>>>+		namespace = get_next_modinfo(&info, "import_ns", namespace);
->>>>>+	}
->>>>>+
->>>>>	for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
->>>>>		symname = remove_dot(info.strtab + sym->st_name);
->>>>>
->>>>>@@ -2118,6 +2175,13 @@ static int check_exports(struct module *mod)
->>>>>			basename++;
->>>>>		else
->>>>>			basename = mod->name;
->>>>>+
->>>>>+		if (exp->namespace &&
->>>>>+		    !module_imports_namespace(mod, exp->namespace)) {
->>>>>+			warn("module %s uses symbol %s from namespace %s, but does not import it.\n",
->>>>>+			     basename, exp->name, exp->namespace);
->>>>>+		}
->>>>>+
->>>>>		if (!mod->gpl_compatible)
->>>>>			check_for_gpl_usage(exp->export, basename, exp->name);
->>>>>		check_for_unused(exp->export, basename, exp->name);
->>>>>@@ -2395,16 +2459,21 @@ static void write_dump(const char *fname)
->>>>>{
->>>>>	struct buffer buf = { };
->>>>>	struct symbol *symbol;
->>>>>+	const char *namespace;
->>>>>	int n;
->>>>>
->>>>>	for (n = 0; n < SYMBOL_HASH_SIZE ; n++) {
->>>>>		symbol = symbolhash[n];
->>>>>		while (symbol) {
->>>>>-			if (dump_sym(symbol))
->>>>>-				buf_printf(&buf, "0x%08x\t%s\t%s\t%s\n",
->>>>>-					symbol->crc, symbol->name,
->>>>>-					symbol->module->name,
->>>>>-					export_str(symbol->export));
->>>>>+			if (dump_sym(symbol)) {
->>>>>+				namespace = symbol->namespace;
->>>>>+				buf_printf(&buf, "0x%08x\t%s%s%s\t%s\t%s\n",
->>>>>+					   symbol->crc, symbol->name,
->>>>>+					   namespace ? "." : "",
->>>>>+					   namespace ? namespace : "",
->>>>
->>>>I think it might be cleaner to just have namespace be a separate
->>>>field in Module.symvers, rather than appending a dot and the
->>>>namespace at the end of a symbol name. Maybe something like
->>>>
->>>><crc> <symbol_name> <namespace> <module>
->>>>
->>>>For symbols without a namespace, we could just have "", with all
->>>>fields delimited by tabs. This is just a stylistic suggestion, what do
->>>>you think?
->>>
->>>I thought of something like that initially, but did not do it to not
->>>break users of this file. But as I am anyway breaking users by changing
->>>the symbol name into symbol.NS, I might as well do it as you suggested.
->>>Since read_dump() also knew already how to extract the namespaces from
->>>symbol.NS, it had already worked without a change to the reading code
->>>of modpost. Are there any other consumers of Module.symvers that we
->>>should be aware of?
->>
->>Maybe we can ease any possible breakage caused by the new format by
->>putting the namespace column last? Then the first 4 fields crc,
->>symbol, module, export type will remain in the same order, with
->>namespace last. In-tree, I think we would need to update
->>scripts/export_report.pl.
->>
->>kmod is likely to be affected too - Lucas, would the addition of a new
->>field (in the order described above) in Module.symvers break any kmod tools?
->>
->
->According to the comment right above read_dump() and having a look a the
->implementation of it, the format is
->
->  0x12345678<tab>symbol<tab>module[[<tab>export]<tab>something]
->
->So, independently of what 'something' is, also export seems to be
->optional. OTOH, write_dump() seems to consistently write
->
->  0x12345678<tab>symbol<tab>module<tab>export
->
->Not sure if there is something modifying Module.symvers afterwards or
->whether this is something that historically needs to be supported, but
->if we could rule that out, I would prefer
->
-> 0x12345678<tab>symbol<tab>namespace<tab>module<tab>export
->
->as you initially suggested.
+On 26/08/2019 13:16, Liangyan wrote:
+> do_sched_cfs_period_timer() will refill cfs_b runtime and call
+> distribute_cfs_runtime to unthrottle cfs_rq, sometimes cfs_b->runtime
+> will allocate all quota to one cfs_rq incorrectly, then other cfs_rqs
+> attached to this cfs_b can't get runtime and will be throttled.
+> 
+> We find that one throttled cfs_rq has non-negative
+> cfs_rq->runtime_remaining and cause an unexpetced cast from s64 to u64
+> in snippet: distribute_cfs_runtime() {
+> runtime = -cfs_rq->runtime_remaining + 1; }.
+> The runtime here will change to a large number and consume all
+> cfs_b->runtime in this cfs_b period.
+> 
+> According to Ben Segall, the throttled cfs_rq can have
+> account_cfs_rq_runtime called on it because it is throttled before
+> idle_balance, and the idle_balance calls update_rq_clock to add time
+> that is accounted to the task.
+> 
+> This commit prevents cfs_rq to be assgined new runtime if it has been
+> throttled until that distribute_cfs_runtime is called.
+> 
+> Signed-off-by: Liangyan <liangyan.peng@linux.alibaba.com>
+> Reviewed-by: Ben Segall <bsegall@google.com>
+> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
 
-I don't mind either format :-) As long as the kmod folks are OK with it.
+@Peter/Ingo, if we care about it I believe it can't hurt to strap
 
-Thanks,
+Cc: <stable@vger.kernel.org>
+Fixes: d3d9dc330236 ("sched: Throttle entities exceeding their allowed bandwidth")
 
-Jessica
-
-
+to the thing.
