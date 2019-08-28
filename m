@@ -2,98 +2,107 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E39C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477B5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45F50217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19DE1217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:17:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTIo+0op"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfH1SRI (ORCPT
+        id S1726785AbfH1SRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:17:08 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:44589 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfH1SRI (ORCPT
+        Wed, 28 Aug 2019 14:17:24 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35835 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbfH1SRY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:17:08 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1i32VH-0004Ux-5M; Wed, 28 Aug 2019 12:17:07 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1i32VG-0000s0-FB; Wed, 28 Aug 2019 12:17:06 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Michal Suchanek <msuchanek@suse.de>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Breno Leitao <leitao@debian.org>,
-        Allison Randal <allison@lohutok.net>,
-        Michael Neuling <mikey@neuling.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <cover.1566936688.git.msuchanek@suse.de>
-        <80b1955b86fb81e4642881d498068b5a540ef029.1566936688.git.msuchanek@suse.de>
-        <8736hlyx8r.fsf@x220.int.ebiederm.org>
-Date:   Wed, 28 Aug 2019 13:16:55 -0500
-In-Reply-To: <8736hlyx8r.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Wed, 28 Aug 2019 13:13:08 -0500")
-Message-ID: <87y2zdxii0.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 28 Aug 2019 14:17:24 -0400
+Received: by mail-wm1-f65.google.com with SMTP id l2so1072048wmg.0;
+        Wed, 28 Aug 2019 11:17:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Gwd3eZyhGra4vRNIIEht3m+fofsrn3t+q1IGOiidRPk=;
+        b=TTIo+0optHj3u5YwkzlBxu0RdDVR4vE92MoIW4kxbEMiAA1dprqkOjeYaZ6r1lioKQ
+         hCSW1RQfNM9F0COF4NbNjCyf3fYY43eoRLgJlA/CTgbjkBEftHJMvVb4smrcy4WHzoFV
+         0s3tmT4AIItZzHLdmJvgTXV0iauHoThAq9kRaf1KP3ZGEeE26TvVKJ+rpk401cyhtZyf
+         ReSquyUvoSqa+bLKSNA89mwjBdHCNH58fh5giDclS5Aw9YTBe8oZB8WAYEy9Poz4+J9f
+         /RVQyetXt7Gdu4gtLwthHqZmFh0lC8IpGgirZ0/8YoQbSEtGIb2hQC4NvAohu2E++C/x
+         2qRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Gwd3eZyhGra4vRNIIEht3m+fofsrn3t+q1IGOiidRPk=;
+        b=cpsPG9g4u4kG1qr3y7ufrj7IuPz1p9f+IRjCosHn1GydveoThxmTpzHqksfYcIMPRU
+         8fi0ocjnyvpEHGyYijONHGQjTFbxASxCanCbODZX/irKl3COR9RxO/Vz0Y5vkJnP02/3
+         QXclsnh0/qUKsAima64PCzV+N7ohnqq/oPu7tBypMRXZLMSUXpA97qya8iBSyHDxapV0
+         sSVCKe5V73XgI5h1A3YD9tWXRtHog1y4hG8zsRGsxW2aYS3muB2V+G94Fy/ZPsJCB1Da
+         lEGkpNjv6WZXXrm2k1q5vL8gKOEXv1Lust6kYYVVcWpuWfkSAP4QYDpa3airxV9TAiBL
+         se0A==
+X-Gm-Message-State: APjAAAXDFrco7PUyExUSK3/Z5twN2t4z+UnnXlApnFgMOEUmB1ZMI8hJ
+        1IPggqO0jWKEzYHb/lDwa2o=
+X-Google-Smtp-Source: APXvYqwxIJymu4cQI6iKhnBrBH3S46XWZYQvB+qHMkAb4pGsWqJFt3qqyCqdrYn2dJOFkK2QrJuAKw==
+X-Received: by 2002:a7b:ce02:: with SMTP id m2mr6761639wmc.7.1567016241750;
+        Wed, 28 Aug 2019 11:17:21 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id g65sm144417wma.21.2019.08.28.11.17.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 11:17:21 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 11:17:19 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] kbuild: refactor scripts/Makefile.extrawarn
+Message-ID: <20190828181719.GA127646@archlinux-threadripper>
+References: <20190828055425.24765-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1i32VG-0000s0-FB;;;mid=<87y2zdxii0.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19FPHoR0c45QWgnOndw3RBOZkvxMXRg2is=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 1/4] fs: always build llseek.
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828055425.24765-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ebiederm@xmission.com (Eric W. Biederman) writes:
+On Wed, Aug 28, 2019 at 02:54:24PM +0900, Masahiro Yamada wrote:
+> Instead of the warning-[123] magic, let's accumulate compiler options
+> to KBUILD_CFLAGS directly as the top Makefile does. I think this makes
+> easier to understand what is going on in this file.
+> 
+> This commit slightly changes the behavior, I think all of which are OK.
+> 
+> [1] Currently, cc-option calls are needlessly evaluated. For example,
+>       warning-3 += $(call cc-option, -Wpacked-bitfield-compat)
+>     needs evaluating only when W=3, but it is actually evaluated for
+>     W=1, W=2 as well. With this commit, only relevant cc-option calls
+>     will be evaluated. This is a slight optimization.
+> 
+> [2] Currently, unsupported level like W=4 is checked by:
+>       $(error W=$(KBUILD_ENABLE_EXTRA_GCC_CHECKS) is unknown)
+>     This will no longer be checked, but I do not think it is a big
+>     deal.
+> 
+> [3] Currently, 4 Clang warnings (Winitializer-overrides, Wformat,
+>     Wsign-compare, Wformat-zero-length) are shown by any of W=1, W=2,
+>     and W=3. With this commit, they will be warned only by W=1. I
+>     think this is a more correct behavior since each warning belongs
+>     to only one warning level.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-> Michal Suchanek <msuchanek@suse.de> writes:
->
->> 64bit !COMPAT does not build because the llseek syscall is in the
->> tables.
->
-> Do I read this right you have a 128 bit offset to llseek on ppc64?
->
-> Looking at the signature it does not appear to make sense to build this
-> function on any 64bit platform.
->
-> Perhaps the proper fix to to take llseek out of your syscall tables?
-
-Sorry I missed seeing the 2 newer version of the patchset in my inbox
-it seems you have already made the change I am suggesting.
-
-Never mind.
-
-Eric
-
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
