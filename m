@@ -2,146 +2,129 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBD1C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C9AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 897672339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:53:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dw9E5NT/"
+	by mail.kernel.org (Postfix) with ESMTP id 10151233FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfH1WxL (ORCPT
+        id S1727126AbfH1Wxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 18:53:11 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36714 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfH1WxK (ORCPT
+        Wed, 28 Aug 2019 18:53:30 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:43121 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726828AbfH1Wx3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 18:53:10 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l21so494797pgm.3;
-        Wed, 28 Aug 2019 15:53:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lf92TMYTkAV1HBDLrWcWD4AfkryDbwsg8QEPhVI9XqM=;
-        b=dw9E5NT/S5IlcMOY5dmeDbu5wcqYHjsGw0cuc+o8UKOktzI5Q/Q7ydVaehF/S46CRR
-         afjghwMDRWb/44PfOzEzuLNzinYgQ0fkr/mgyl0ixImwXIH8km+51Ux93z3y/m8CZaaa
-         IJGYuuL0HNuud3x0ud7+gV2kzfoCm/iyxC+BCsqWQjyCBS73b+urE8IzL7AEPhjyuRPn
-         8GM6UDqiBNFG75eEwdB8RwiqtP/H8V+idWCfI2nJO4rFmAJ2B8YOi1oDWo3kEBxbvEpm
-         20MpxakpWdmUInkF/vjCt7un5mc600k6oH18m/j3t4hE7siPtIqFnxVfcL4pnGmW11dV
-         p+fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lf92TMYTkAV1HBDLrWcWD4AfkryDbwsg8QEPhVI9XqM=;
-        b=RzfX8FN6nyhdQy4BI/5/sPMhxWS/DQUYYAxTrNA71rp4BwMHYsTyXK0TnS1dIkRvz2
-         zgMig+E+FWu2Io6tp/gvVmaxUvFoqnWVNwR347wNIe019rL8PS+GJWIZRCj/6Glsc0ru
-         t9YqZw/ME7r8wLj2CGC8dFKeMcNJqtcpih2A3BMuxUJJIFYOPOohxEUEktmZKOhIB1OK
-         n4HtAgKACfHluqS+MZjPHubCRxrM8wd2NOVChEw1OFkPvk4uLW3iYnxGpKi13/Bn1f6H
-         OSorkiDsmD14VOUyA1ysDi00dmexT/oRwL8kljHMQ1sAwuHCjhgTJBncJOMkBVFwxXpN
-         QLKA==
-X-Gm-Message-State: APjAAAXuVzuVgYsZJ00jRX6TmQjGwrT6WJ3qTVuECzG6/lRyatUkXw/+
-        9chCV+KdMbANAwTmI6g2Gv/dER03
-X-Google-Smtp-Source: APXvYqwWx3LE+RQwvhwpOmj6xk6DTFbtLSJHu+ErxmoykHugwDfmeeAtpVx0t1Q+G5DwsCf3TwRLpw==
-X-Received: by 2002:a65:684c:: with SMTP id q12mr5135156pgt.405.1567032789352;
-        Wed, 28 Aug 2019 15:53:09 -0700 (PDT)
-Received: from Gentoo ([103.231.91.66])
-        by smtp.gmail.com with ESMTPSA id ce7sm185960pjb.16.2019.08.28.15.53.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 15:53:08 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 04:22:56 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Konstantin Ryabitsev <mricon@kernel.org>
-Cc:     Greg KH <greg@kroah.com>, StableKernel <stable@vger.kernel.org>,
-        LinuxKernel <linux-kernel@vger.kernel.org>
-Subject: Re: Latest kernel version no NOT reflecting on kernel.org
-Message-ID: <20190828225253.GA30806@Gentoo>
-References: <20190828135750.GA5841@Gentoo>
- <20190828151353.GA9673@kroah.com>
- <20190828160156.GB26001@chatter.i7.local>
- <20190828170547.GA11688@kroah.com>
- <20190828193908.GC26001@chatter.i7.local>
+        Wed, 28 Aug 2019 18:53:29 -0400
+Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id CA12A43CCB6;
+        Thu, 29 Aug 2019 08:53:23 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1i36oc-000593-22; Thu, 29 Aug 2019 08:53:22 +1000
+Date:   Thu, 29 Aug 2019 08:53:22 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, miklos@szeredi.hu,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        dgilbert@redhat.com, virtio-fs@redhat.com, stefanha@redhat.com,
+        linux-fsdevel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH 01/19] dax: remove block device dependencies
+Message-ID: <20190828225322.GA7777@dread.disaster.area>
+References: <20190821175720.25901-1-vgoyal@redhat.com>
+ <20190821175720.25901-2-vgoyal@redhat.com>
+ <20190826115152.GA21051@infradead.org>
+ <20190827163828.GA6859@redhat.com>
+ <20190828065809.GA27426@infradead.org>
+ <20190828175843.GB912@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828193908.GC26001@chatter.i7.local>
+In-Reply-To: <20190828175843.GB912@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
+        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=7-415B0cAAAA:8 a=9z1Z1eSXHuCprvNSzKUA:9 a=1iKJgKlgsSbnEZhc:21
+        a=ky3KFAHSX3wxvuwk:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 28, 2019 at 01:58:43PM -0400, Vivek Goyal wrote:
+> On Tue, Aug 27, 2019 at 11:58:09PM -0700, Christoph Hellwig wrote:
+> > On Tue, Aug 27, 2019 at 12:38:28PM -0400, Vivek Goyal wrote:
+> > > > For bdev_dax_pgoff
+> > > > I'd much rather have the partition offset if there is on in the daxdev
+> > > > somehow so that we can get rid of the block device entirely.
+> > > 
+> > > IIUC, there is one block_device per partition while there is only one
+> > > dax_device for the whole disk. So we can't directly move bdev logical
+> > > offset into dax_device.
+> > 
+> > Well, then we need to find a way to get partitions for dax devices,
+> > as we really should not expect a block device hiding behind a dax
+> > dev.  That is just a weird legacy assumption - block device need to
+> > layer on top of the dax device optionally.
+> > 
+> > > 
+> > > We probably could put this in "iomap" and leave it to filesystems to
+> > > report offset into dax_dev in iomap that way dax generic code does not
+> > > have to deal with it. But that probably will be a bigger change.
+> > 
+> > And where would the file system get that information from?
+> 
+> File system knows about block device, can it just call get_start_sect()
+> while filling iomap->addr. And this means we don't have to have
+> parition information in dax device. Will something like following work?
+> (Just a proof of concept patch).
+> 
+> 
+> ---
+>  drivers/dax/super.c |   11 +++++++++++
+>  fs/dax.c            |    6 +++---
+>  fs/ext4/inode.c     |    6 +++++-
+>  include/linux/dax.h |    1 +
+>  4 files changed, 20 insertions(+), 4 deletions(-)
+> 
+> Index: rhvgoyal-linux/fs/ext4/inode.c
+> ===================================================================
+> --- rhvgoyal-linux.orig/fs/ext4/inode.c	2019-08-28 13:51:16.051937204 -0400
+> +++ rhvgoyal-linux/fs/ext4/inode.c	2019-08-28 13:51:44.453937204 -0400
+> @@ -3589,7 +3589,11 @@ retry:
+>  			WARN_ON_ONCE(1);
+>  			return -EIO;
+>  		}
+> -		iomap->addr = (u64)map.m_pblk << blkbits;
+> +		if (IS_DAX(inode))
+> +			iomap->addr = ((u64)map.m_pblk << blkbits) +
+> +				      (get_start_sect(iomap->bdev) * 512);
+> +		else
+> +			iomap->addr = (u64)map.m_pblk << blkbits;
 
---xHFwDpU9dbj6ez1V
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm not a fan of returning a physical device sector address from an
+interface where ever other user/caller expects this address to be a
+logical block address into the block device. It creates a landmine
+in the iomap API that callers may not be aware of and that's going
+to cause bugs. We're trying really hard to keep special case hacks
+like this out of the iomap infrastructure, so on those grounds alone
+I'd suggest this is a dead end approach.
 
-On 15:39 Wed 28 Aug 2019, Konstantin Ryabitsev wrote:
->On Wed, Aug 28, 2019 at 07:05:47PM +0200, Greg KH wrote:
->>> > I think there's a way to see which cdn mirror you are hitting when
->>> > you
->>> > ask for "www.kernel.org".  Konstantin, any hints as to see if maybe o=
-ne
->>> > of the mirrors is out of sync?
->>>
->>> Looks like the Singapore mirror was feeling out-of-sorts. It'll start
->>> feeling better shortly.
->>
->>Great, thanks for looking into this!
->
->BTW, the easiest way to figure out which frontend you're hitting is to
->look at the output of "host www.kernel.org", e.g.:
->
->$=A0host www.kernel.org
->www.kernel.org is an alias for git.kernel.org.
->git.kernel.org is an alias for ord.git.kernel.org.
->ord.git.kernel.org has address 147.75.58.133
->ord.git.kernel.org has IPv6 address 2604:1380:4020:600::1
->
->The three-letter airport code should indicate where the frontend is
->located (in my case, ORD =3D Chicago). There are total of 6:
->
->sea.git.kernel.org - Seattle
->lax.git.kernel.org - Los Angeles
->ord.git.kernel.org - Chicago
->fra.git.kernel.org - Frankfurt
->sin.git.kernel.org - Singapore
->syd.git.kernel.org - Sydney
->
->Geodns magic should send you to the nearest one, and if the monitoring
->recognizes that one of them is down, it will be automatically removed
->from the pool until it recovers.
->
->Best,
->-K
+Hence I think that if the dax device needs a physical offset from
+the start of the block device the filesystem sits on, it should be
+set up at dax device instantiation time and so the filesystem/bdev
+never needs to be queried again for this information.
 
-Hmmm...thanks a  bunch!
+Cheers,
 
--Bhaskar
-
---xHFwDpU9dbj6ez1V
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl1nBcIACgkQsjqdtxFL
-KRWi1wgAuvEXO/Ahnx4ym2L5zqYLR9yUyzXeqUorHqvw+idy/6U+blph1ziFurum
-DoxFhwbyWeMdIEFecN99GfUl/Qvvbla6JjdWE27SVDFdQjKzb/+Ias2jqPwwmulw
-lA2WAkXrbWhuLX3W3Y5VgpYrWvSVDxmmjbx+zzIQ7Iqdom3bFzvNScihrjeDHkW9
-/OMecNBD5F9lqz5OnjD/6GYPqK17hnObgej8oOq8GWsFwzjWHa4yuLCzSSPgCopc
-+sezLuyiSXvCcW0fLkS/tjLU4APrtQZ21YyIv9q53GCJAcNxuBrl0ksAJBQocna5
-9phftZUy4rUrhw19lHA0mF/FS8ToTA==
-=uEaJ
------END PGP SIGNATURE-----
-
---xHFwDpU9dbj6ez1V--
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
