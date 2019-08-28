@@ -2,171 +2,146 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65188C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59BAC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3FB217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:55:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RQZ1DIRi"
+	by mail.kernel.org (Postfix) with ESMTP id AB92122CF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:57:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566979032;
+	bh=KhD7PVz0+TTNF5Izk8yzldY+9sneyJhqNlTCNoZ5/Qo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iO5ijEXefiWpPhqE0js5KoeSeqwofDujtFLBrP9Tn9Vwajyl7Z4Nez7B1qHYuVKKj
+	 GO5mzTnv206rgpoCERiVYxlOtbnacxd0Jd+/SjZI+hG04evzkTLm0aRJeCu7RVhKXU
+	 Fpn913d71hg3u/RjWWObYfA3uVJl6H2ZTcJJQoS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfH1HzO (ORCPT
+        id S1726396AbfH1H5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 03:55:14 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34488 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbfH1HzN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:55:13 -0400
-Received: by mail-oi1-f196.google.com with SMTP id g128so1405697oib.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 00:55:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QGf5uExDLqVSJFepg+5EOK0njK0xgdtyZsXSdS638Is=;
-        b=RQZ1DIRip5iFVGB1jBJbo7s3cIvEnWa5dQY/G/eK4GTRkLuPTK2DZMl+Jh2AinnwYD
-         cBLb2XIWRMmRlxHTMUN9vB9IdTsK/W4Wd97XkHCgwSmR0FY1HewwY0kZHgjofcA8cPDM
-         bEIjgaNjTLgj5eTtdQI07MU2xj7Fck8WScdaYW4Sid7H/CU9ZnYDXwRV3E3B+FvTbtmq
-         O/3BMVFNOJgLzhGNFcgfoYj75hJhe57SJM5TkiV05F+3GtuwSxSGFoAGWMnx8DDhWSQ0
-         7ZkuGYcG/U5BZGtq53ZrCdnD5fPIbdnJbqABFhQDFBLSvTeNHvAdNSd9ZZQ0SlqbzF7S
-         IqQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QGf5uExDLqVSJFepg+5EOK0njK0xgdtyZsXSdS638Is=;
-        b=ECMOXoMC8bApWlCg59hrtVh+nd2ypYjSicPlWSbazwPI/G65Ad6EC8ZN0fTN15FnnM
-         mGlxAdrexpAC/Xd/4dbCrVd1GR2BdRXq1EU7Th8FSKXe4OIyADWTvoeqdZCuKXyFmTnY
-         jg6z+vSA+Z0w31PgnARQb55h83JHA/+wCPQGtYq3uwtBp37VN6CBtO6M9P2+ZiW1SNpu
-         e8YhR4wHDngY7ZSLLFn7OmWfBjZzKzfX+SA+/pfjaoBd77D0By2gQvRQdb2mY8Ho6+XE
-         j/SkwPiJfIQYLZhtfuZbYKZbBrA4P2IOVuxBT+tFEDbY6uYF+3myeMcHOTZx7Zggrj5U
-         8pyw==
-X-Gm-Message-State: APjAAAVV3ip73JDgpY0NBGhAyWYTjavNU35dMkdt8AohXp3L4JIyYbps
-        8z1s8shpwDmHjtL/BUMacWZ/iEErcGUd0u0GzE/5HA==
-X-Google-Smtp-Source: APXvYqxfuRjsm98zALpH9qES7Ui44tXIsVlQP5NaBZKe/uP0yYHdn/6rR/wrfjhEuycjLFIH4qH5636ewokO2qDfWtE=
-X-Received: by 2002:aca:5652:: with SMTP id k79mr1817021oib.175.1566978912617;
- Wed, 28 Aug 2019 00:55:12 -0700 (PDT)
+        Wed, 28 Aug 2019 03:57:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42530 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726432AbfH1H5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 03:57:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 62BC6AB98;
+        Wed, 28 Aug 2019 07:57:09 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 09:57:08 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
+        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
+Message-ID: <20190828075708.GF7386@dhcp22.suse.cz>
+References: <20190822152934.w6ztolutdix6kbvc@box>
+ <20190826074035.GD7538@dhcp22.suse.cz>
+ <20190826131538.64twqx3yexmhp6nf@box>
+ <20190827060139.GM7538@dhcp22.suse.cz>
+ <20190827110210.lpe36umisqvvesoa@box>
+ <aaaf9742-56f7-44b7-c3db-ad078b7b2220@suse.cz>
+ <20190827120923.GB7538@dhcp22.suse.cz>
+ <20190827121739.bzbxjloq7bhmroeq@box>
+ <20190827125911.boya23eowxhqmopa@box>
+ <d76ec546-7ae8-23a3-4631-5c531c1b1f40@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20190725131257.6142-1-brgl@bgdev.pl> <CAK8P3a1FXyRRi5q48h-=egFjgoRJvy6_zuO9MQaAOMA-bsJKRA@mail.gmail.com>
- <CAMRc=Me_7aw_RvU_tZnVUgduN2wWYGqJ7hQirQ2RLzxGiPujvQ@mail.gmail.com>
- <CAMRc=MdCviMA4gakqFS3+F-nU2XkdmmZbCb-m1mBJdGRHufKGg@mail.gmail.com> <27eb964a-bc6c-3a0d-c2c4-48e908465986@ti.com>
-In-Reply-To: <27eb964a-bc6c-3a0d-c2c4-48e908465986@ti.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 28 Aug 2019 09:55:01 +0200
-Message-ID: <CAMpxmJX7osgdzx1Lc=627RpHZDs+ha8a6=AnhaQJ5HkLVp-xKg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] ARM: make DaVinci part of the ARM v5 multiplatform build
-To:     Sekhar Nori <nsekhar@ti.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
-        Kevin Hilman <khilman@kernel.org>,
-        David Lechner <david@lechnology.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d76ec546-7ae8-23a3-4631-5c531c1b1f40@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 28 sie 2019 o 09:44 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
->
-> On 28/08/19 1:03 PM, Bartosz Golaszewski wrote:
-> > pon., 5 sie 2019 o 10:31 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=
-=82(a):
-> >>
-> >> czw., 25 lip 2019 o 16:57 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a=
-):
-> >>>
-> >>> On Thu, Jul 25, 2019 at 3:13 PM Bartosz Golaszewski <brgl@bgdev.pl> w=
-rote:
-> >>>>
-> >>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>>>
-> >>>> This series makes DaVinci part of the multiplatform build for ARM v5=
-.
-> >>>>
-> >>>> First three patches fix build errors spotted and fixed by Arnd with =
-v1.
-> >>>>
-> >>>> The fourth patch adds necessary bits and pieces for davinci to suppo=
-rt
-> >>>> multiplatform build and the last one actually adds all davinci board=
-s
-> >>>> to multi_v5_defconfig.
-> >>>>
-> >>>> Tested on da850-lcdk with both multi_v5 as well as davinci_all defco=
-nfigs.
-> >>>>
-> >>>> v1 -> v2:
-> >>>> - added patches from Arnd that fix build errors spotted when buildin=
-g
-> >>>>   random configurations (much appreciated)
-> >>>> - rebased on top of v5.3-rc1
-> >>>
-> >>>> Arnd Bergmann (3):
-> >>>> staging: media/davinci_vpfe: fix pinmux setup compilation
-> >>>>  media: davinci-vpbe: remove obsolete includes
-> >>>>  davinci: fix sleep.S build error on ARMv4
-> >>>>
-> >>>> Bartosz Golaszewski (2):
-> >>>>  ARM: davinci: support multiplatform build for ARM v5
-> >>>>  ARM: multi_v5_defconfig: make DaVinci part of the ARM v5 multiplatf=
-orm build
-> >>>
-> >>>
-> >>> Thanks a lot for reposting the series!
-> >>>
-> >>> I wonder how we shoud deal with the dependencies now that the two med=
-ia
-> >>> patches got merged in the linux-media tree.
-> >>>
-> >>> It would be tempting to just merge the arch/arm/ changes, but that cr=
-eates
-> >>> a bisection problem when the vpbe driver is enabled. I don't care
-> >>> about the staging driver really as that one is broken anyway, but inc=
-luding
-> >>> the "media: davinci-vpbe: remove obsolete includes" fix would be bett=
-er
-> >>> here.
-> >>>
-> >>> Mauro, any idea for how to handle that? Should we apply an identical
-> >>> patch to the davinci tree, or maybe only have it the ARM tree and you
-> >>> drop it from your tree (I don't know if you have a rule against rebas=
-ing).
-> >>> Sorry for not coordinating with Bartosz before I sent the patch again
-> >>> earlier this week.
-> >>>
-> >>>
-> >>>       Arnd
-> >>
-> >> Hi Arnd,
-> >>
-> >> is there any action required from me for this series?
-> >>
-> >> Bart
-> >
-> > Ping.
->
-> I dont think the multi-platform parts can be merged in v5.4 since we
-> dont have DM365 converted successfully to use clocksource driver yet.
->
-> But other parts of the series can be merged and hopefully we resolve
-> that pending issue for v5.5
->
-> Thanks,
-> Sekhar
+On Tue 27-08-19 10:06:20, Yang Shi wrote:
+> 
+> 
+> On 8/27/19 5:59 AM, Kirill A. Shutemov wrote:
+> > On Tue, Aug 27, 2019 at 03:17:39PM +0300, Kirill A. Shutemov wrote:
+> > > On Tue, Aug 27, 2019 at 02:09:23PM +0200, Michal Hocko wrote:
+> > > > On Tue 27-08-19 14:01:56, Vlastimil Babka wrote:
+> > > > > On 8/27/19 1:02 PM, Kirill A. Shutemov wrote:
+> > > > > > On Tue, Aug 27, 2019 at 08:01:39AM +0200, Michal Hocko wrote:
+> > > > > > > On Mon 26-08-19 16:15:38, Kirill A. Shutemov wrote:
+> > > > > > > > Unmapped completely pages will be freed with current code. Deferred split
+> > > > > > > > only applies to partly mapped THPs: at least on 4k of the THP is still
+> > > > > > > > mapped somewhere.
+> > > > > > > Hmm, I am probably misreading the code but at least current Linus' tree
+> > > > > > > reads page_remove_rmap -> [page_remove_anon_compound_rmap ->\ deferred_split_huge_page even
+> > > > > > > for fully mapped THP.
+> > > > > > Well, you read correctly, but it was not intended. I screwed it up at some
+> > > > > > point.
+> > > > > > 
+> > > > > > See the patch below. It should make it work as intened.
+> > > > > > 
+> > > > > > It's not bug as such, but inefficientcy. We add page to the queue where
+> > > > > > it's not needed.
+> > > > > But that adding to queue doesn't affect whether the page will be freed
+> > > > > immediately if there are no more partial mappings, right? I don't see
+> > > > > deferred_split_huge_page() pinning the page.
+> > > > > So your patch wouldn't make THPs freed immediately in cases where they
+> > > > > haven't been freed before immediately, it just fixes a minor
+> > > > > inefficiency with queue manipulation?
+> > > > Ohh, right. I can see that in free_transhuge_page now. So fully mapped
+> > > > THPs really do not matter and what I have considered an odd case is
+> > > > really happening more often.
+> > > > 
+> > > > That being said this will not help at all for what Yang Shi is seeing
+> > > > and we need a more proactive deferred splitting as I've mentioned
+> > > > earlier.
+> > > It was not intended to fix the issue. It's fix for current logic. I'm
+> > > playing with the work approach now.
+> > Below is what I've come up with. It appears to be functional.
+> > 
+> > Any comments?
+> 
+> Thanks, Kirill and Michal. Doing split more proactive is definitely a choice
+> to eliminate huge accumulated deferred split THPs, I did think about this
+> approach before I came up with memcg aware approach. But, I thought this
+> approach has some problems:
+> 
+> First of all, we can't prove if this is a universal win for the most
+> workloads or not. For some workloads (as I mentioned about our usecase), we
+> do see a lot THPs accumulated for a while, but they are very short-lived for
+> other workloads, i.e. kernel build.
+> 
+> Secondly, it may be not fair for some workloads which don't generate too
+> many deferred split THPs or those THPs are short-lived. Actually, the cpu
+> time is abused by the excessive deferred split THPs generators, isn't it?
 
-Actually I tested this without the clocksource conversion and it works
-- the previous driver still selects relevant config options. But I
-think you're right - it's worth picking up all the bug fixes from this
-series and then merging the rest once dm365 issue is fixed.
+Yes this is indeed true. Do we have any idea on how much time that
+actually is?
 
-Bart
+> With memcg awareness, the deferred split THPs actually are isolated and
+> capped by memcg. The long-lived deferred split THPs can't be accumulated too
+> many due to the limit of memcg. And, cpu time spent in splitting them would
+> just account to the memcgs who generate that many deferred split THPs, who
+> generate them who pay for it. This sounds more fair and we could achieve
+> much better isolation.
+
+On the other hand, deferring the split and free up a non trivial amount
+of memory is a problem I consider quite serious because it affects not
+only the memcg workload which has to do the reclaim but also other
+consumers of memory beucase large memory blocks could be used for higher
+order allocations.
+
+> And, I think the discussion is diverted and mislead by the number of
+> excessive deferred split THPs. To be clear, I didn't mean the excessive
+> deferred split THPs are problem for us (I agree it may waste memory to have
+> that many deferred split THPs not usable), the problem is the oom since they
+> couldn't be split by memcg limit reclaim since the shrinker was not memcg
+> aware.
+
+Well, I would like to see how much of a problem the memcg OOM really is
+after deferred splitting is more time constrained. Maybe we will find
+that there is no special memcg aware solution really needed.
+-- 
+Michal Hocko
+SUSE Labs
