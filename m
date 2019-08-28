@@ -2,341 +2,659 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42046C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9899AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15DCF22DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53AEA22CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 13:04:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfH1NDr (ORCPT
+        id S1726795AbfH1NEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 09:03:47 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:47309 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfH1NDq (ORCPT
+        Wed, 28 Aug 2019 09:04:14 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47093 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbfH1NEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 09:03:46 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 14BD5200003;
-        Wed, 28 Aug 2019 13:03:41 +0000 (UTC)
-Date:   Wed, 28 Aug 2019 15:03:41 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Cc:     Jagan Teki <jagan@amarulasolutions.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum rate for
- PLL_MIPI
-Message-ID: <20190828130341.s5z76wejulwdgxlc@flea>
-References: <20190711100100.cty3s6rs3w27low6@flea>
- <CAOf5uw=3fiMuhcj3kDtCaGNTsxHKRrYb79MXZ+yUZtmf0jU10A@mail.gmail.com>
- <20190720065830.zn3txpyduakywcva@flea>
- <CAMty3ZDE1xiNgHVLihH378dY5szzkr14V-fwLZdvPs12tY+G1A@mail.gmail.com>
- <20190720093202.6fn6xmhvsgawscnu@flea>
- <CAMty3ZDpOA1mD77t3RB6hEG7o3+ws8y64m1DU8=3HdZ4zy4AUw@mail.gmail.com>
- <20190724090513.vqnlmya3nqkl6pmu@flea>
- <CAOf5uwkvCs62zHcUoFuJwau_ZZFdnVf8ua6JY_wzUb9m8rLTTw@mail.gmail.com>
- <20190813060502.teeevudz6cjn35tl@flea>
- <CAOf5uw=RcBHibiq735NiX452Jde4ZL7PpfwH+Pkc=hARJBudUw@mail.gmail.com>
+        Wed, 28 Aug 2019 09:04:13 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i2xcE-0003gN-Ej; Wed, 28 Aug 2019 15:03:58 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 198C31C0DE2;
+        Wed, 28 Aug 2019 15:03:58 +0200 (CEST)
+Date:   Wed, 28 Aug 2019 13:03:58 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] x86/intel: Aggregate big core mobile naming
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Tony Luck <tony.luck@intel.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20190827195122.568978530@infradead.org>
+References: <20190827195122.568978530@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kvnkzshhu26acvpd"
-Content-Disposition: inline
-In-Reply-To: <CAOf5uw=RcBHibiq735NiX452Jde4ZL7PpfwH+Pkc=hARJBudUw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Message-ID: <156699743802.792.10881322631764047611.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the x86/cpu branch of tip:
 
---kvnkzshhu26acvpd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Commit-ID:     af239c44e3f976762e9bc052f0d5796b90ea530b
+Gitweb:        https://git.kernel.org/tip/af239c44e3f976762e9bc052f0d5796b90ea530b
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Tue, 27 Aug 2019 21:48:22 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 28 Aug 2019 11:29:31 +02:00
 
-Hi,
+x86/intel: Aggregate big core mobile naming
 
-On Thu, Aug 15, 2019 at 02:25:57PM +0200, Michael Nazzareno Trimarchi wrote:
-> On Tue, Aug 13, 2019 at 8:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > On Mon, Jul 29, 2019 at 08:59:04AM +0200, Michael Nazzareno Trimarchi wrote:
-> > > Hi
-> > >
-> > > On Wed, Jul 24, 2019 at 11:05 AM Maxime Ripard
-> > > <maxime.ripard@bootlin.com> wrote:
-> > > >
-> > > > On Mon, Jul 22, 2019 at 03:51:04PM +0530, Jagan Teki wrote:
-> > > > > Hi Maxime,
-> > > > >
-> > > > > On Sat, Jul 20, 2019 at 3:02 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > >
-> > > > > > On Sat, Jul 20, 2019 at 12:46:27PM +0530, Jagan Teki wrote:
-> > > > > > > On Sat, Jul 20, 2019 at 12:28 PM Maxime Ripard
-> > > > > > > <maxime.ripard@bootlin.com> wrote:
-> > > > > > > >
-> > > > > > > > On Thu, Jul 11, 2019 at 07:43:16PM +0200, Michael Nazzareno Trimarchi wrote:
-> > > > > > > > > > > tcon-pixel clock is the rate that you want to achive on display side
-> > > > > > > > > > > and if you have 4 lanes 32bit or lanes and different bit number that
-> > > > > > > > > > > you need to have a clock that is able to put outside bits and speed
-> > > > > > > > > > > equal to pixel-clock * bits / lanes. so If you want a pixel-clock of
-> > > > > > > > > > > 40 mhz and you have 32bits and 4 lanes you need to have a clock of
-> > > > > > > > > > > 40 * 32 / 4 in no-burst mode. I think that this is done but most of
-> > > > > > > > > > > the display.
-> > > > > > > > > >
-> > > > > > > > > > So this is what the issue is then?
-> > > > > > > > > >
-> > > > > > > > > > This one does make sense, and you should just change the rate in the
-> > > > > > > > > > call to clk_set_rate in sun4i_tcon0_mode_set_cpu.
-> > > > > > > > > >
-> > > > > > > > > > I'm still wondering why that hasn't been brought up in either the
-> > > > > > > > > > discussion or the commit log before though.
-> > > > > > > > > >
-> > > > > > > > > Something like this?
-> > > > > > > > >
-> > > > > > > > > drivers/gpu/drm/sun4i/sun4i_tcon.c     | 20 +++++++++++---------
-> > > > > > > > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  2 --
-> > > > > > > > >  2 files changed, 11 insertions(+), 11 deletions(-)
-> > > > > > > > >
-> > > > > > > > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > > > > > > b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > > > > > > index 64c43ee6bd92..42560d5c327c 100644
-> > > > > > > > > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > > > > > > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > > > > > > @@ -263,10 +263,11 @@ static int sun4i_tcon_get_clk_delay(const struct
-> > > > > > > > > drm_display_mode *mode,
-> > > > > > > > >  }
-> > > > > > > > >
-> > > > > > > > >  static void sun4i_tcon0_mode_set_common(struct sun4i_tcon *tcon,
-> > > > > > > > > -                                       const struct drm_display_mode *mode)
-> > > > > > > > > +                                       const struct drm_display_mode *mode,
-> > > > > > > > > +                                       u32 tcon_mul)
-> > > > > > > > >  {
-> > > > > > > > >         /* Configure the dot clock */
-> > > > > > > > > -       clk_set_rate(tcon->dclk, mode->crtc_clock * 1000);
-> > > > > > > > > +       clk_set_rate(tcon->dclk, mode->crtc_clock * tcon_mul * 1000);
-> > > > > > > > >
-> > > > > > > > >         /* Set the resolution */
-> > > > > > > > >         regmap_write(tcon->regs, SUN4I_TCON0_BASIC0_REG,
-> > > > > > > > > @@ -335,12 +336,13 @@ static void sun4i_tcon0_mode_set_cpu(struct
-> > > > > > > > > sun4i_tcon *tcon,
-> > > > > > > > >         u8 bpp = mipi_dsi_pixel_format_to_bpp(device->format);
-> > > > > > > > >         u8 lanes = device->lanes;
-> > > > > > > > >         u32 block_space, start_delay;
-> > > > > > > > > -       u32 tcon_div;
-> > > > > > > > > +       u32 tcon_div, tcon_mul;
-> > > > > > > > >
-> > > > > > > > > -       tcon->dclk_min_div = SUN6I_DSI_TCON_DIV;
-> > > > > > > > > -       tcon->dclk_max_div = SUN6I_DSI_TCON_DIV;
-> > > > > > > > > +       tcon->dclk_min_div = 4;
-> > > > > > > > > +       tcon->dclk_max_div = 127;
-> > > > > > > > >
-> > > > > > > > > -       sun4i_tcon0_mode_set_common(tcon, mode);
-> > > > > > > > > +       tcon_mul = bpp / lanes;
-> > > > > > > > > +       sun4i_tcon0_mode_set_common(tcon, mode, tcon_mul);
-> > > > > > > > >
-> > > > > > > > >         /* Set dithering if needed */
-> > > > > > > > >         sun4i_tcon0_mode_set_dithering(tcon, sun4i_tcon_get_connector(encoder));
-> > > > > > > > > @@ -366,7 +368,7 @@ static void sun4i_tcon0_mode_set_cpu(struct
-> > > > > > > > > sun4i_tcon *tcon,
-> > > > > > > > >          */
-> > > > > > > > >         regmap_read(tcon->regs, SUN4I_TCON0_DCLK_REG, &tcon_div);
-> > > > > > > > >         tcon_div &= GENMASK(6, 0);
-> > > > > > > > > -       block_space = mode->htotal * bpp / (tcon_div * lanes);
-> > > > > > > > > +       block_space = mode->htotal * tcon_div * tcon_mul;
-> > > > > > > > >         block_space -= mode->hdisplay + 40;
-> > > > > > > > >
-> > > > > > > > >         regmap_write(tcon->regs, SUN4I_TCON0_CPU_TRI0_REG,
-> > > > > > > > > @@ -408,7 +410,7 @@ static void sun4i_tcon0_mode_set_lvds(struct
-> > > > > > > > > sun4i_tcon *tcon,
-> > > > > > > > >
-> > > > > > > > >         tcon->dclk_min_div = 7;
-> > > > > > > > >         tcon->dclk_max_div = 7;
-> > > > > > > > > -       sun4i_tcon0_mode_set_common(tcon, mode);
-> > > > > > > > > +       sun4i_tcon0_mode_set_common(tcon, mode, 1);
-> > > > > > > > >
-> > > > > > > > >         /* Set dithering if needed */
-> > > > > > > > >         sun4i_tcon0_mode_set_dithering(tcon, sun4i_tcon_get_connector(encoder));
-> > > > > > > > > @@ -487,7 +489,7 @@ static void sun4i_tcon0_mode_set_rgb(struct
-> > > > > > > > > sun4i_tcon *tcon,
-> > > > > > > > >
-> > > > > > > > >         tcon->dclk_min_div = 6;
-> > > > > > > > >         tcon->dclk_max_div = 127;
-> > > > > > > > > -       sun4i_tcon0_mode_set_common(tcon, mode);
-> > > > > > > > > +       sun4i_tcon0_mode_set_common(tcon, mode, 1);
-> > > > > > > > >
-> > > > > > > > >         /* Set dithering if needed */
-> > > > > > > > >         sun4i_tcon0_mode_set_dithering(tcon, connector);
-> > > > > > > > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > > > > > > > b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > > > > > > > index 5c3ad5be0690..a07090579f84 100644
-> > > > > > > > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > > > > > > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > > > > > > > @@ -13,8 +13,6 @@
-> > > > > > > > >  #include <drm/drm_encoder.h>
-> > > > > > > > >  #include <drm/drm_mipi_dsi.h>
-> > > > > > > > >
-> > > > > > > > > -#define SUN6I_DSI_TCON_DIV     4
-> > > > > > > > > -
-> > > > > > > > >  struct sun6i_dsi {
-> > > > > > > > >         struct drm_connector    connector;
-> > > > > > > > >         struct drm_encoder      encoder;
-> > > > > > > >
-> > > > > > > > I had more something like this in mind:
-> > > > > > > > http://code.bulix.org/nlp5a4-803511
-> > > > > > >
-> > > > > > > Worth to look at it. was it working on your panel? meanwhile I will check it.
-> > > > > >
-> > > > > > I haven't tested it.
-> > > > > >
-> > > > > > > We have updated with below change [1], seems working on but is
-> > > > > > > actually checking the each divider as before start with 4... till 127.
-> > > > > > >
-> > > > > > > This new approach, is start looking the best divider from 4.. based on
-> > > > > > > the idea vs rounded it will ended up best divider like [2]
-> > > > > >
-> > > > > > But why?
-> > > > > >
-> > > > > > I mean, it's not like it's the first time I'm asking this...
-> > > > > >
-> > > > > > If the issue is what Micheal described, then the divider has nothing
-> > > > > > to do with it. We've had that discussion over and over again.
-> > > > >
-> > > > > This is what Michael is mentioned in above mail "tcon-pixel clock is
-> > > > > the rate that you want to achive on display side and if you have 4
-> > > > > lanes 32bit or lanes and different bit number that you need to have
-> > > > > a clock that is able to put outside bits and speed equal to
-> > > > > pixel-clock * bits / lanes. so If you want a pixel-clock of 40 mhz
-> > > > > and you have 32bits and 4 lanes you need to have a clock of 40 * 32
-> > > > > / 4 in no-burst mode. "
-> > > >
-> > > > Yeah, so we need to change the clock rate.
-> > > >
-> > > > > He is trying to manage the bpp/lanes into dclk_mul (in last mail)
-> > > > > and it can multiply with pixel clock which is rate argument in
-> > > > > sun4i_dclk_round_rate.
-> > > > >
-> > > > > The solution I have mentioned in dclk_min, max is bpp/lanes also
-> > > > > multiple rate in dotclock sun4i_dclk_round_rate.
-> > > > >
-> > > > > In both cases the overall pll_rate depends on dividers, the one that I
-> > > > > have on this patch is based on BSP and the Michael one is more generic
-> > > > > way so-that it can not to touch other functionalities and looping
-> > > > > dividers to find the best one.
-> > > > >
-> > > > > If dclk_min/max is bpp/lanes then dotclock directly using divider 6
-> > > > > (assuming 24-bit and 4 lanes) and return the pll_rate and divider 6
-> > > > > associated.
-> > > > >
-> > > > > if dclk_mul is bpp/lanes, on Michael new change, the dividers start
-> > > > > with 4 and end with 127 but the constant ideal rate which rate *
-> > > > > bpp/lanes but the loop from sun4i_dclk_round_rate computed the divider
-> > > > > as 6 only, ie what I'm mentioned on the above mail.
-> > > >
-> > > > We've been over this a couple of times already.
-> > > >
-> > > > The clock is generated like this:
-> > > >
-> > > > PLL -> TCON Module Clock -> TCON DCLK
-> > > >
-> > > > You want the TCON DCLK to be at the pixel clock rate * bpp /
-> > > > lanes. Fine, that makes sense.
-> > > >
-> > > > Except that the patch you've sent, instead of changing the rate
-> > > > itself, changes the ratio between the module clock and DCLK.
-> > > >
-> > > > And this is where the issue lies. First, from a logical viewpoint, it
-> > > > doesn't make sense. If you want to change the clock rate, then just do
-> > > > it. Don't hack around the multipliers trying to fall back to something
-> > > > that works for you.
-> > > >
-> > > > Then, the ratio itself needs to be set to 4. This is the part that
-> > > > we've discussed way too many times already, but in the Allwinner BSP,
-> > > > that ratio is hardcoded to 4, and we've had panels that need it at
-> > > > that value.
-> > > >
-> > > > So, what you want to do is to have:
-> > > >
-> > > > TCON DCLK = pixel clock * bpp / lanes
-> > > > TCON Module Clock = DCLK * 4
-> > > > PLL = Module Clock * Module Clock Divider (which I believe is 1 in most cases)
-> > >
-> > >   pll-mipi                       1        1        1   178200000
-> > >    0     0  50000
-> > >           tcon0                       2        2        1   178200000
-> > >         0     0  50000
-> > >              tcon-pixel-clock         1        1        1    29700000
-> > >         0     0  50000
-> >
-> > Is this before or after your patches?
-> >
->
-> This is just an example of clock tree to be clear to everyone how they
-> are connected
->
-> > > This is an english problem from my side:
-> > > tcon-pixel-clock is DCLK
-> > > tcon0 must be tcon-pixel-clock * bpp / lanes, because the logic need to
-> > > put a bit every cycle.
-> >
-> > Again, I'm not saying this is wrong, but each time I've looked at it
-> > the BSP was using a 4 divider between the tcon module clock and the
-> > dotclock.
->
-> We have tested on 4-5 displays. Well I don't care on bsp but I care
-> about if it works and if other SoC has similar approach on clock
-> calculation.
+Currently big core mobile chips have either:
 
-Well, it's also breaking another panel.
+ - _L
+ - _ULT
+ - _MOBILE
 
-> > So, please prove me wrong here.
->
-> Having only 10 pages of documentation is a bit difficult.
+Make it uniformly: _L.
 
-The BSP source code will be a fine example too.
+for i in `git grep -l "\(INTEL_FAM6_\|VULNWL_INTEL\|INTEL_CPU_FAM6\).*_\(MOBILE\|ULT\)"`
+do
+	sed -i -e 's/\(\(INTEL_FAM6_\|VULNWL_INTEL\|INTEL_CPU_FAM6\).*\)_\(MOBILE\|ULT\)/\1_L/g' ${i}
+done
 
-> > > One solution can be:
-> > > - set_rate_exclusive to tcon0 and calculate as display pixel clock *
-> > > bpp  / lanes
-> >
-> > I'm not sure what set_rate_exclusive has to do with it. I mean, it's a
-> > good idea to use it, but it shouldn't really change anything to the
-> > discussion.
->
-> Well, this will just do a minimal change on source code and put the constrains
-> to the tcon0
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Cc: x86@kernel.org
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190827195122.568978530@infradead.org
+---
+ arch/x86/events/intel/core.c                 | 20 +++++-----
+ arch/x86/events/intel/cstate.c               | 18 ++++-----
+ arch/x86/events/intel/rapl.c                 | 10 ++---
+ arch/x86/events/intel/uncore.c               |  8 ++--
+ arch/x86/events/msr.c                        |  8 ++--
+ arch/x86/include/asm/intel-family.h          | 10 ++---
+ arch/x86/kernel/apic/apic.c                  |  6 +--
+ arch/x86/kernel/cpu/bugs.c                   |  6 +--
+ arch/x86/kernel/cpu/intel.c                  |  6 +--
+ drivers/acpi/x86/utils.c                     |  4 +-
+ drivers/cpufreq/intel_pstate.c               |  4 +-
+ drivers/idle/intel_idle.c                    |  6 +--
+ drivers/platform/x86/intel_pmc_core.c        |  8 ++--
+ drivers/platform/x86/intel_pmc_core_pltdrv.c |  8 ++--
+ drivers/powercap/intel_rapl_common.c         | 10 ++---
+ tools/power/x86/turbostat/turbostat.c        | 40 +++++++++----------
+ 16 files changed, 86 insertions(+), 86 deletions(-)
 
-I agree, but again, this has nothing to do with the current discussion.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---kvnkzshhu26acvpd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXWZ7rQAKCRDj7w1vZxhR
-xcmRAQCLJGHoS2J79EurFo2IeK+m/l30p3N8YJFWCe4dOigbwAEA6xJK59ZCcJ20
-G2ntOAQLmjLK8/etmCMW6avpZQRi5Qw=
-=2E93
------END PGP SIGNATURE-----
-
---kvnkzshhu26acvpd--
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 76bff3a..22ef9cc 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3965,7 +3965,7 @@ static __init void intel_clovertown_quirk(void)
+ 
+ static const struct x86_cpu_desc isolation_ucodes[] = {
+ 	INTEL_CPU_DESC(INTEL_FAM6_HASWELL,		 3, 0x0000001f),
+-	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_ULT,		 1, 0x0000001e),
++	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_L,		 1, 0x0000001e),
+ 	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_GT3E,		 1, 0x00000015),
+ 	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_X,		 2, 0x00000037),
+ 	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_X,		 4, 0x0000000a),
+@@ -3978,13 +3978,13 @@ static const struct x86_cpu_desc isolation_ucodes[] = {
+ 	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_X,		 2, 0x0b000014),
+ 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		 3, 0x00000021),
+ 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		 4, 0x00000000),
+-	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_MOBILE,	 3, 0x0000007c),
++	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_L,		 3, 0x0000007c),
+ 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE,		 3, 0x0000007c),
+ 	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		 9, 0x0000004e),
+-	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_MOBILE,	 9, 0x0000004e),
+-	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_MOBILE,	10, 0x0000004e),
+-	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_MOBILE,	11, 0x0000004e),
+-	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_MOBILE,	12, 0x0000004e),
++	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_L,		 9, 0x0000004e),
++	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_L,		10, 0x0000004e),
++	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_L,		11, 0x0000004e),
++	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_L,		12, 0x0000004e),
+ 	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		10, 0x0000004e),
+ 	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		11, 0x0000004e),
+ 	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		12, 0x0000004e),
+@@ -4859,7 +4859,7 @@ __init int intel_pmu_init(void)
+ 
+ 	case INTEL_FAM6_HASWELL:
+ 	case INTEL_FAM6_HASWELL_X:
+-	case INTEL_FAM6_HASWELL_ULT:
++	case INTEL_FAM6_HASWELL_L:
+ 	case INTEL_FAM6_HASWELL_GT3E:
+ 		x86_add_quirk(intel_ht_bug);
+ 		x86_add_quirk(intel_pebs_isolation_quirk);
+@@ -4955,9 +4955,9 @@ __init int intel_pmu_init(void)
+ 	case INTEL_FAM6_SKYLAKE_X:
+ 		pmem = true;
+ 		/* fall through */
+-	case INTEL_FAM6_SKYLAKE_MOBILE:
++	case INTEL_FAM6_SKYLAKE_L:
+ 	case INTEL_FAM6_SKYLAKE:
+-	case INTEL_FAM6_KABYLAKE_MOBILE:
++	case INTEL_FAM6_KABYLAKE_L:
+ 	case INTEL_FAM6_KABYLAKE:
+ 		x86_add_quirk(intel_pebs_isolation_quirk);
+ 		x86_pmu.late_ack = true;
+@@ -5005,7 +5005,7 @@ __init int intel_pmu_init(void)
+ 	case INTEL_FAM6_ICELAKE_XEON_D:
+ 		pmem = true;
+ 		/* fall through */
+-	case INTEL_FAM6_ICELAKE_MOBILE:
++	case INTEL_FAM6_ICELAKE_L:
+ 	case INTEL_FAM6_ICELAKE:
+ 		x86_pmu.late_ack = true;
+ 		memcpy(hw_cache_event_ids, skl_hw_cache_event_ids, sizeof(hw_cache_event_ids));
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index 3854400..9b014e8 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -597,7 +597,7 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
+ 	X86_CSTATES_MODEL(INTEL_FAM6_HASWELL_X,	   snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_HASWELL_GT3E, snb_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_HASWELL_ULT, hswult_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_HASWELL_L, hswult_cstates),
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_SILVERMONT,   slm_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_SILVERMONT_X, slm_cstates),
+@@ -608,14 +608,14 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
+ 	X86_CSTATES_MODEL(INTEL_FAM6_BROADWELL_GT3E,   snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_BROADWELL_X,      snb_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_MOBILE, snb_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE,        snb_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_X,      snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_L, snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE,   snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_X, snb_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_MOBILE, hswult_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE,        hswult_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_L, hswult_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE,   hswult_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_CANNONLAKE_MOBILE, cnl_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_CANNONLAKE_L, cnl_cstates),
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_XEON_PHI_KNL, knl_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_XEON_PHI_KNM, knl_cstates),
+@@ -625,8 +625,8 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_PLUS, glm_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_MOBILE, snb_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE,        snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_L, snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE,   snb_cstates),
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
+diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
+index c1278e2..70dcfe9 100644
+--- a/arch/x86/events/intel/rapl.c
++++ b/arch/x86/events/intel/rapl.c
+@@ -722,7 +722,7 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_IVYBRIDGE_X,		model_snbep),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_X,		model_hsx),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_ULT,		model_hsw),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_L,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_GT3E,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_GT3E,		model_hsw),
+@@ -730,16 +730,16 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_XEON_D,	model_hsx),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNL,		model_knl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNM,		model_knl),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_MOBILE,		model_skl),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_L,		model_skl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE,		model_skl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_X,		model_hsx),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE,	model_skl),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_KABYLAKE_L,		model_skl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_KABYLAKE,		model_skl),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_CANNONLAKE_MOBILE,	model_skl),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_CANNONLAKE_L,		model_skl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_X,	model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_PLUS,	model_hsw),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE,		model_skl),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_L,		model_skl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE,		model_skl),
+ 	{},
+ };
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index d5e0915..8428e28 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1452,7 +1452,7 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SANDYBRIDGE,	  snb_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_IVYBRIDGE,	  ivb_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_HASWELL,	  hsw_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_HASWELL_ULT,	  hsw_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_HASWELL_L,	  hsw_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_HASWELL_GT3E,	  hsw_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_BROADWELL,	  bdw_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_BROADWELL_GT3E, bdw_uncore_init),
+@@ -1466,11 +1466,11 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNL,	  knl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNM,	  knl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE,	  skl_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE_MOBILE, skl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE_L,	  skl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE_X,      skx_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE, skl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_L,	  skl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE,	  skl_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE, icl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_L,	  icl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_NNPI,	  icl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE,	  icl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ATOM_TREMONT_X, snr_uncore_init),
+diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
+index 08d320a..12265c1 100644
+--- a/arch/x86/events/msr.c
++++ b/arch/x86/events/msr.c
+@@ -61,7 +61,7 @@ static bool test_intel(int idx, void *data)
+ 
+ 	case INTEL_FAM6_HASWELL:
+ 	case INTEL_FAM6_HASWELL_X:
+-	case INTEL_FAM6_HASWELL_ULT:
++	case INTEL_FAM6_HASWELL_L:
+ 	case INTEL_FAM6_HASWELL_GT3E:
+ 
+ 	case INTEL_FAM6_BROADWELL:
+@@ -84,12 +84,12 @@ static bool test_intel(int idx, void *data)
+ 			return true;
+ 		break;
+ 
+-	case INTEL_FAM6_SKYLAKE_MOBILE:
++	case INTEL_FAM6_SKYLAKE_L:
+ 	case INTEL_FAM6_SKYLAKE:
+ 	case INTEL_FAM6_SKYLAKE_X:
+-	case INTEL_FAM6_KABYLAKE_MOBILE:
++	case INTEL_FAM6_KABYLAKE_L:
+ 	case INTEL_FAM6_KABYLAKE:
+-	case INTEL_FAM6_ICELAKE_MOBILE:
++	case INTEL_FAM6_ICELAKE_L:
+ 		if (idx == PERF_MSR_SMI || idx == PERF_MSR_PPERF)
+ 			return true;
+ 		break;
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 800dd17..25b71d4 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -51,7 +51,7 @@
+ 
+ #define INTEL_FAM6_HASWELL		0x3C
+ #define INTEL_FAM6_HASWELL_X		0x3F
+-#define INTEL_FAM6_HASWELL_ULT		0x45
++#define INTEL_FAM6_HASWELL_L		0x45
+ #define INTEL_FAM6_HASWELL_GT3E		0x46
+ 
+ #define INTEL_FAM6_BROADWELL		0x3D
+@@ -59,18 +59,18 @@
+ #define INTEL_FAM6_BROADWELL_X		0x4F
+ #define INTEL_FAM6_BROADWELL_XEON_D	0x56
+ 
+-#define INTEL_FAM6_SKYLAKE_MOBILE	0x4E
++#define INTEL_FAM6_SKYLAKE_L		0x4E
+ #define INTEL_FAM6_SKYLAKE		0x5E
+ #define INTEL_FAM6_SKYLAKE_X		0x55
+-#define INTEL_FAM6_KABYLAKE_MOBILE	0x8E
++#define INTEL_FAM6_KABYLAKE_L		0x8E
+ #define INTEL_FAM6_KABYLAKE		0x9E
+ 
+-#define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
++#define INTEL_FAM6_CANNONLAKE_L		0x66
+ 
+ #define INTEL_FAM6_ICELAKE_X		0x6A
+ #define INTEL_FAM6_ICELAKE_XEON_D	0x6C
+ #define INTEL_FAM6_ICELAKE		0x7D
+-#define INTEL_FAM6_ICELAKE_MOBILE	0x7E
++#define INTEL_FAM6_ICELAKE_L		0x7E
+ #define INTEL_FAM6_ICELAKE_NNPI		0x9D
+ 
+ /* "Small Core" Processors (Atom) */
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 0527465..adf001d 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -594,16 +594,16 @@ static const struct x86_cpu_id deadline_match[] = {
+ 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_SKYLAKE_X,	skx_deadline_rev),
+ 
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL,		0x22),
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL_ULT,	0x20),
++	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL_L,	0x20),
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL_GT3E,	0x17),
+ 
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL,	0x25),
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_GT3E,	0x17),
+ 
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_SKYLAKE_MOBILE,	0xb2),
++	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_SKYLAKE_L,	0xb2),
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_SKYLAKE,		0xb2),
+ 
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_KABYLAKE_MOBILE,	0x52),
++	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_KABYLAKE_L,	0x52),
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_KABYLAKE,		0x52),
+ 
+ 	{},
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 6c611ab..f435780 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1185,13 +1185,13 @@ static void override_cache_bits(struct cpuinfo_x86 *c)
+ 	case INTEL_FAM6_SANDYBRIDGE:
+ 	case INTEL_FAM6_IVYBRIDGE:
+ 	case INTEL_FAM6_HASWELL:
+-	case INTEL_FAM6_HASWELL_ULT:
++	case INTEL_FAM6_HASWELL_L:
+ 	case INTEL_FAM6_HASWELL_GT3E:
+ 	case INTEL_FAM6_BROADWELL:
+ 	case INTEL_FAM6_BROADWELL_GT3E:
+-	case INTEL_FAM6_SKYLAKE_MOBILE:
++	case INTEL_FAM6_SKYLAKE_L:
+ 	case INTEL_FAM6_SKYLAKE:
+-	case INTEL_FAM6_KABYLAKE_MOBILE:
++	case INTEL_FAM6_KABYLAKE_L:
+ 	case INTEL_FAM6_KABYLAKE:
+ 		if (c->x86_cache_bits < 44)
+ 			c->x86_cache_bits = 44;
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index ca62563..bafa273 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -145,8 +145,8 @@ static const struct sku_microcode spectre_bad_microcodes[] = {
+ 	{ INTEL_FAM6_KABYLAKE,		0x0B,	0x80 },
+ 	{ INTEL_FAM6_KABYLAKE,		0x0A,	0x80 },
+ 	{ INTEL_FAM6_KABYLAKE,		0x09,	0x80 },
+-	{ INTEL_FAM6_KABYLAKE_MOBILE,	0x0A,	0x80 },
+-	{ INTEL_FAM6_KABYLAKE_MOBILE,	0x09,	0x80 },
++	{ INTEL_FAM6_KABYLAKE_L,	0x0A,	0x80 },
++	{ INTEL_FAM6_KABYLAKE_L,	0x09,	0x80 },
+ 	{ INTEL_FAM6_SKYLAKE_X,		0x03,	0x0100013e },
+ 	{ INTEL_FAM6_SKYLAKE_X,		0x04,	0x0200003c },
+ 	{ INTEL_FAM6_BROADWELL,		0x04,	0x28 },
+@@ -154,7 +154,7 @@ static const struct sku_microcode spectre_bad_microcodes[] = {
+ 	{ INTEL_FAM6_BROADWELL_XEON_D,	0x02,	0x14 },
+ 	{ INTEL_FAM6_BROADWELL_XEON_D,	0x03,	0x07000011 },
+ 	{ INTEL_FAM6_BROADWELL_X,	0x01,	0x0b000025 },
+-	{ INTEL_FAM6_HASWELL_ULT,	0x01,	0x21 },
++	{ INTEL_FAM6_HASWELL_L,		0x01,	0x21 },
+ 	{ INTEL_FAM6_HASWELL_GT3E,	0x01,	0x18 },
+ 	{ INTEL_FAM6_HASWELL,		0x03,	0x23 },
+ 	{ INTEL_FAM6_HASWELL_X,		0x02,	0x3b },
+diff --git a/drivers/acpi/x86/utils.c b/drivers/acpi/x86/utils.c
+index ba277cd..697a6b1 100644
+--- a/drivers/acpi/x86/utils.c
++++ b/drivers/acpi/x86/utils.c
+@@ -69,11 +69,11 @@ static const struct always_present_id always_present_ids[] = {
+ 	 * after _SB.PCI0.GFX0.LCD.LCD1._ON gets called has passed
+ 	 * *and* _STA has been called at least 3 times since.
+ 	 */
+-	ENTRY("SYNA7500", "1", ICPU(INTEL_FAM6_HASWELL_ULT), {
++	ENTRY("SYNA7500", "1", ICPU(INTEL_FAM6_HASWELL_L), {
+ 		DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Venue 11 Pro 7130"),
+ 	      }),
+-	ENTRY("SYNA7500", "1", ICPU(INTEL_FAM6_HASWELL_ULT), {
++	ENTRY("SYNA7500", "1", ICPU(INTEL_FAM6_HASWELL_L), {
+ 		DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Venue 11 Pro 7139"),
+ 	      }),
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 17cb9af..6e393aa 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -1875,11 +1875,11 @@ static const struct x86_cpu_id intel_pstate_cpu_ids[] = {
+ 	ICPU(INTEL_FAM6_BROADWELL,		core_funcs),
+ 	ICPU(INTEL_FAM6_IVYBRIDGE_X,		core_funcs),
+ 	ICPU(INTEL_FAM6_HASWELL_X,		core_funcs),
+-	ICPU(INTEL_FAM6_HASWELL_ULT,		core_funcs),
++	ICPU(INTEL_FAM6_HASWELL_L,		core_funcs),
+ 	ICPU(INTEL_FAM6_HASWELL_GT3E,		core_funcs),
+ 	ICPU(INTEL_FAM6_BROADWELL_GT3E,		core_funcs),
+ 	ICPU(INTEL_FAM6_ATOM_AIRMONT,		airmont_funcs),
+-	ICPU(INTEL_FAM6_SKYLAKE_MOBILE,		core_funcs),
++	ICPU(INTEL_FAM6_SKYLAKE_L,		core_funcs),
+ 	ICPU(INTEL_FAM6_BROADWELL_X,		core_funcs),
+ 	ICPU(INTEL_FAM6_SKYLAKE,		core_funcs),
+ 	ICPU(INTEL_FAM6_BROADWELL_XEON_D,	core_funcs),
+diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+index f458989..d0e4f16 100644
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -1074,16 +1074,16 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
+ 	INTEL_CPU_FAM6(IVYBRIDGE_X,		idle_cpu_ivt),
+ 	INTEL_CPU_FAM6(HASWELL,			idle_cpu_hsw),
+ 	INTEL_CPU_FAM6(HASWELL_X,		idle_cpu_hsw),
+-	INTEL_CPU_FAM6(HASWELL_ULT,		idle_cpu_hsw),
++	INTEL_CPU_FAM6(HASWELL_L,		idle_cpu_hsw),
+ 	INTEL_CPU_FAM6(HASWELL_GT3E,		idle_cpu_hsw),
+ 	INTEL_CPU_FAM6(ATOM_SILVERMONT_X,	idle_cpu_avn),
+ 	INTEL_CPU_FAM6(BROADWELL,		idle_cpu_bdw),
+ 	INTEL_CPU_FAM6(BROADWELL_GT3E,		idle_cpu_bdw),
+ 	INTEL_CPU_FAM6(BROADWELL_X,		idle_cpu_bdw),
+ 	INTEL_CPU_FAM6(BROADWELL_XEON_D,	idle_cpu_bdw),
+-	INTEL_CPU_FAM6(SKYLAKE_MOBILE,		idle_cpu_skl),
++	INTEL_CPU_FAM6(SKYLAKE_L,		idle_cpu_skl),
+ 	INTEL_CPU_FAM6(SKYLAKE,			idle_cpu_skl),
+-	INTEL_CPU_FAM6(KABYLAKE_MOBILE,		idle_cpu_skl),
++	INTEL_CPU_FAM6(KABYLAKE_L,		idle_cpu_skl),
+ 	INTEL_CPU_FAM6(KABYLAKE,		idle_cpu_skl),
+ 	INTEL_CPU_FAM6(SKYLAKE_X,		idle_cpu_skx),
+ 	INTEL_CPU_FAM6(XEON_PHI_KNL,		idle_cpu_knl),
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 3a82df4..fd1bfd5 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -806,12 +806,12 @@ static inline void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+ #endif /* CONFIG_DEBUG_FS */
+ 
+ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+-	INTEL_CPU_FAM6(SKYLAKE_MOBILE, spt_reg_map),
++	INTEL_CPU_FAM6(SKYLAKE_L, spt_reg_map),
+ 	INTEL_CPU_FAM6(SKYLAKE, spt_reg_map),
+-	INTEL_CPU_FAM6(KABYLAKE_MOBILE, spt_reg_map),
++	INTEL_CPU_FAM6(KABYLAKE_L, spt_reg_map),
+ 	INTEL_CPU_FAM6(KABYLAKE, spt_reg_map),
+-	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
+-	INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
++	INTEL_CPU_FAM6(CANNONLAKE_L, cnp_reg_map),
++	INTEL_CPU_FAM6(ICELAKE_L, icl_reg_map),
+ 	INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
+ 	{}
+ };
+diff --git a/drivers/platform/x86/intel_pmc_core_pltdrv.c b/drivers/platform/x86/intel_pmc_core_pltdrv.c
+index 52f5bcb..5977e0d 100644
+--- a/drivers/platform/x86/intel_pmc_core_pltdrv.c
++++ b/drivers/platform/x86/intel_pmc_core_pltdrv.c
+@@ -30,12 +30,12 @@ static struct platform_device pmc_core_device = {
+  * other list may grow, but this list should not.
+  */
+ static const struct x86_cpu_id intel_pmc_core_platform_ids[] = {
+-	INTEL_CPU_FAM6(SKYLAKE_MOBILE, pmc_core_device),
++	INTEL_CPU_FAM6(SKYLAKE_L, pmc_core_device),
+ 	INTEL_CPU_FAM6(SKYLAKE, pmc_core_device),
+-	INTEL_CPU_FAM6(KABYLAKE_MOBILE, pmc_core_device),
++	INTEL_CPU_FAM6(KABYLAKE_L, pmc_core_device),
+ 	INTEL_CPU_FAM6(KABYLAKE, pmc_core_device),
+-	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, pmc_core_device),
+-	INTEL_CPU_FAM6(ICELAKE_MOBILE, pmc_core_device),
++	INTEL_CPU_FAM6(CANNONLAKE_L, pmc_core_device),
++	INTEL_CPU_FAM6(ICELAKE_L, pmc_core_device),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
+diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
+index 7c9eb78..ac52a6e 100644
+--- a/drivers/powercap/intel_rapl_common.c
++++ b/drivers/powercap/intel_rapl_common.c
+@@ -958,7 +958,7 @@ static const struct x86_cpu_id rapl_ids[] __initconst = {
+ 	INTEL_CPU_FAM6(IVYBRIDGE_X, rapl_defaults_core),
+ 
+ 	INTEL_CPU_FAM6(HASWELL, rapl_defaults_core),
+-	INTEL_CPU_FAM6(HASWELL_ULT, rapl_defaults_core),
++	INTEL_CPU_FAM6(HASWELL_L, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(HASWELL_GT3E, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(HASWELL_X, rapl_defaults_hsw_server),
+ 
+@@ -968,12 +968,12 @@ static const struct x86_cpu_id rapl_ids[] __initconst = {
+ 	INTEL_CPU_FAM6(BROADWELL_X, rapl_defaults_hsw_server),
+ 
+ 	INTEL_CPU_FAM6(SKYLAKE, rapl_defaults_core),
+-	INTEL_CPU_FAM6(SKYLAKE_MOBILE, rapl_defaults_core),
++	INTEL_CPU_FAM6(SKYLAKE_L, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(SKYLAKE_X, rapl_defaults_hsw_server),
+-	INTEL_CPU_FAM6(KABYLAKE_MOBILE, rapl_defaults_core),
++	INTEL_CPU_FAM6(KABYLAKE_L, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(KABYLAKE, rapl_defaults_core),
+-	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, rapl_defaults_core),
+-	INTEL_CPU_FAM6(ICELAKE_MOBILE, rapl_defaults_core),
++	INTEL_CPU_FAM6(CANNONLAKE_L, rapl_defaults_core),
++	INTEL_CPU_FAM6(ICELAKE_L, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(ICELAKE, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(ICELAKE_NNPI, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(ICELAKE_X, rapl_defaults_hsw_server),
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 8083a35..bb1bef6 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -3213,8 +3213,8 @@ int probe_nhm_msrs(unsigned int family, unsigned int model)
+ 	case INTEL_FAM6_BROADWELL:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_X:	/* BDX */
+-	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+-	case INTEL_FAM6_CANNONLAKE_MOBILE:	/* CNL */
++	case INTEL_FAM6_SKYLAKE_L:	/* SKL */
++	case INTEL_FAM6_CANNONLAKE_L:	/* CNL */
+ 		pkg_cstate_limits = hsw_pkg_cstate_limits;
+ 		has_misc_feature_control = 1;
+ 		break;
+@@ -3409,8 +3409,8 @@ int has_config_tdp(unsigned int family, unsigned int model)
+ 	case INTEL_FAM6_BROADWELL:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_X:	/* BDX */
+-	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+-	case INTEL_FAM6_CANNONLAKE_MOBILE:	/* CNL */
++	case INTEL_FAM6_SKYLAKE_L:	/* SKL */
++	case INTEL_FAM6_CANNONLAKE_L:	/* CNL */
+ 	case INTEL_FAM6_SKYLAKE_X:	/* SKX */
+ 
+ 	case INTEL_FAM6_XEON_PHI_KNL:	/* Knights Landing */
+@@ -3863,8 +3863,8 @@ void rapl_probe_intel(unsigned int family, unsigned int model)
+ 		else
+ 			BIC_PRESENT(BIC_PkgWatt);
+ 		break;
+-	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+-	case INTEL_FAM6_CANNONLAKE_MOBILE:	/* CNL */
++	case INTEL_FAM6_SKYLAKE_L:	/* SKL */
++	case INTEL_FAM6_CANNONLAKE_L:	/* CNL */
+ 		do_rapl = RAPL_PKG | RAPL_CORES | RAPL_CORE_POLICY | RAPL_DRAM | RAPL_DRAM_PERF_STATUS | RAPL_PKG_PERF_STATUS | RAPL_GFX | RAPL_PKG_POWER_INFO;
+ 		BIC_PRESENT(BIC_PKG__);
+ 		BIC_PRESENT(BIC_RAM__);
+@@ -4255,8 +4255,8 @@ int has_snb_msrs(unsigned int family, unsigned int model)
+ 	case INTEL_FAM6_BROADWELL:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_X:	/* BDX */
+-	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+-	case INTEL_FAM6_CANNONLAKE_MOBILE:	/* CNL */
++	case INTEL_FAM6_SKYLAKE_L:	/* SKL */
++	case INTEL_FAM6_CANNONLAKE_L:	/* CNL */
+ 	case INTEL_FAM6_SKYLAKE_X:	/* SKX */
+ 	case INTEL_FAM6_ATOM_GOLDMONT:	/* BXT */
+ 	case INTEL_FAM6_ATOM_GOLDMONT_PLUS:
+@@ -4286,8 +4286,8 @@ int has_hsw_msrs(unsigned int family, unsigned int model)
+ 	switch (model) {
+ 	case INTEL_FAM6_HASWELL:
+ 	case INTEL_FAM6_BROADWELL:	/* BDW */
+-	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+-	case INTEL_FAM6_CANNONLAKE_MOBILE:	/* CNL */
++	case INTEL_FAM6_SKYLAKE_L:	/* SKL */
++	case INTEL_FAM6_CANNONLAKE_L:	/* CNL */
+ 	case INTEL_FAM6_ATOM_GOLDMONT:	/* BXT */
+ 	case INTEL_FAM6_ATOM_GOLDMONT_PLUS:
+ 		return 1;
+@@ -4309,8 +4309,8 @@ int has_skl_msrs(unsigned int family, unsigned int model)
+ 		return 0;
+ 
+ 	switch (model) {
+-	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+-	case INTEL_FAM6_CANNONLAKE_MOBILE:	/* CNL */
++	case INTEL_FAM6_SKYLAKE_L:	/* SKL */
++	case INTEL_FAM6_CANNONLAKE_L:	/* CNL */
+ 		return 1;
+ 	}
+ 	return 0;
+@@ -4345,7 +4345,7 @@ int is_cnl(unsigned int family, unsigned int model)
+ 		return 0;
+ 
+ 	switch (model) {
+-	case INTEL_FAM6_CANNONLAKE_MOBILE: /* CNL */
++	case INTEL_FAM6_CANNONLAKE_L: /* CNL */
+ 		return 1;
+ 	}
+ 
+@@ -4568,21 +4568,21 @@ unsigned int intel_model_duplicates(unsigned int model)
+ 	case INTEL_FAM6_XEON_PHI_KNM:
+ 		return INTEL_FAM6_XEON_PHI_KNL;
+ 
+-	case INTEL_FAM6_HASWELL_ULT:
++	case INTEL_FAM6_HASWELL_L:
+ 		return INTEL_FAM6_HASWELL;
+ 
+ 	case INTEL_FAM6_BROADWELL_X:
+ 	case INTEL_FAM6_BROADWELL_XEON_D:	/* BDX-DE */
+ 		return INTEL_FAM6_BROADWELL_X;
+ 
+-	case INTEL_FAM6_SKYLAKE_MOBILE:
++	case INTEL_FAM6_SKYLAKE_L:
+ 	case INTEL_FAM6_SKYLAKE:
+-	case INTEL_FAM6_KABYLAKE_MOBILE:
++	case INTEL_FAM6_KABYLAKE_L:
+ 	case INTEL_FAM6_KABYLAKE:
+-		return INTEL_FAM6_SKYLAKE_MOBILE;
++		return INTEL_FAM6_SKYLAKE_L;
+ 
+-	case INTEL_FAM6_ICELAKE_MOBILE:
+-		return INTEL_FAM6_CANNONLAKE_MOBILE;
++	case INTEL_FAM6_ICELAKE_L:
++		return INTEL_FAM6_CANNONLAKE_L;
+ 	}
+ 	return model;
+ }
+@@ -4731,7 +4731,7 @@ void process_cpuid()
+ 
+ 			if (crystal_hz == 0)
+ 				switch(model) {
+-				case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
++				case INTEL_FAM6_SKYLAKE_L:	/* SKL */
+ 					crystal_hz = 24000000;	/* 24.0 MHz */
+ 					break;
+ 				case INTEL_FAM6_ATOM_GOLDMONT_X:	/* DNV */
