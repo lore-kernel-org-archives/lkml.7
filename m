@@ -2,188 +2,420 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AA8C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F54C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A618720578
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806CD238C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:01:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfH1JAW (ORCPT
+        id S1726497AbfH1JBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:00:22 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36511 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbfH1JAW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:00:22 -0400
-Received: by mail-qk1-f193.google.com with SMTP id d23so1743674qko.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 02:00:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OUW305HffLjg7EH9ex82HE6wB5d1znsqD2HU0SvH2s0=;
-        b=PVkZBNwLn1A4IJIg0z1hVTbo3Z5N3996Uj+L7RVlU3nwxYykXl5vE1+8ArwEyXBXwq
-         OPW544TeT/E7TUi/NpnAH+8DUPw8cEPIBDfSWIFFwmNP7MFqirsO/toCwWBs6UFz1aYp
-         ZvIY7i7js8RhMjTtin7a2JgkaIQC6fGwTtoaYkBBFgBS8C+euPT7F/LMfkHiW6vtGBTG
-         0Z1RJVZdHZhz9c1Q/XxBVoMCZSQ4NJpQ5nS5m3dYkvs18wruF2n+v6ow+Jp+yPqzGmO+
-         Uazx0T72mKiHTCu3FpHYntjSAnaScjt9vIpRCMKFIdvOvSE7j0lgRPdahQQNhMIHggz+
-         LRaQ==
-X-Gm-Message-State: APjAAAWE5APCQaEvHBOA8+NHOkPqfsJYKQ5bNr13+mP0IjzFSOITNVIG
-        lL4o+VGAPI7KXnwqxcKptCj4wu2X3R01Bf03/es=
-X-Google-Smtp-Source: APXvYqwJOO5I6fF0gr0PYLpYbF/QjxnD+oXCLd1PTBJE1DhdcFGD7pr1erRfXbytnjpGkfq6UNoGb5uQ+ANVrydrN3g=
-X-Received: by 2002:a37:4b0d:: with SMTP id y13mr2720341qka.3.1566982821079;
- Wed, 28 Aug 2019 02:00:21 -0700 (PDT)
+        Wed, 28 Aug 2019 05:01:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:55646 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbfH1JBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 05:01:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 17F56337;
+        Wed, 28 Aug 2019 02:01:11 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6455C3F59C;
+        Wed, 28 Aug 2019 02:01:10 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 10:01:08 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
+ ls1088a and ls2088a
+Message-ID: <20190828090105.GR14582@e119886-lin.cambridge.arm.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-8-xiaowei.bao@nxp.com>
+ <20190823142756.GI14582@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB3299B100D1029E90945CF7DDF5A10@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <20190827133429.GM14582@e119886-lin.cambridge.arm.com>
+ <VI1PR04MB3310F78C86F775BB1F5B7E0CF5A30@VI1PR04MB3310.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <CAK8P3a3G=GCpLtNztuoLR4BuugAB=zpa_Jrz5BSft6Yj-nok1g@mail.gmail.com>
- <20190827145102.p7lmkpytf3mngxbj@treble> <CAHFW8PRsmmCR6TWoXpQ9gyTA7azX9YOerPErCMggcQX-=fAqng@mail.gmail.com>
- <CAK8P3a2TeaMc_tWzzjuqO-eQjZwJdpbR1yH8yzSQbbVKdWCwSg@mail.gmail.com>
- <20190827192255.wbyn732llzckmqmq@treble> <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
- <CAKwvOdnD1mEd-G9sWBtnzfe9oGTeZYws6zNJA7opS69DN08jPg@mail.gmail.com>
-In-Reply-To: <CAKwvOdnD1mEd-G9sWBtnzfe9oGTeZYws6zNJA7opS69DN08jPg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 28 Aug 2019 11:00:04 +0200
-Message-ID: <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
-Subject: Re: objtool warning "uses BP as a scratch register" with clang-9
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR04MB3310F78C86F775BB1F5B7E0CF5A30@VI1PR04MB3310.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 11:22 PM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
-> On Tue, Aug 27, 2019 at 12:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Tue, Aug 27, 2019 at 9:23 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > > On Tue, Aug 27, 2019 at 09:00:52PM +0200, Arnd Bergmann wrote:
-> > > > On Tue, Aug 27, 2019 at 5:00 PM Ilie Halip <ilie.halip@gmail.com> wrote:
-> Thanks for the description of the issue and the reduced test case.  It
-> almost reminds me of
-> https://github.com/ClangBuiltLinux/linux/issues/612.
->
-> I've filed https://bugs.llvm.org/show_bug.cgi?id=43128, anything I
-> should add to the bug report?
+On Wed, Aug 28, 2019 at 04:29:32AM +0000, Xiaowei Bao wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Andrew Murray <andrew.murray@arm.com>
+> > Sent: 2019年8月27日 21:34
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+> > lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
+> > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+> > Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
+> > ls1088a and ls2088a
+> > 
+> > On Mon, Aug 26, 2019 at 09:49:35AM +0000, Xiaowei Bao wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Andrew Murray <andrew.murray@arm.com>
+> > > > Sent: 2019年8月23日 22:28
+> > > > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > > Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> > > > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+> > > > lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org;
+> > M.h.
+> > > > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > > > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> > > > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> > > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+> > > > Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support
+> > > > for ls1088a and ls2088a
+> > > >
+> > > > On Thu, Aug 22, 2019 at 07:22:40PM +0800, Xiaowei Bao wrote:
+> > > > > Add PCIe EP mode support for ls1088a and ls2088a, there are some
+> > > > > difference between LS1 and LS2 platform, so refactor the code of
+> > > > > the EP driver.
+> > > > >
+> > > > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > > > ---
+> > > > > v2:
+> > > > >  - New mechanism for layerscape EP driver.
+> > > >
+> > > > Was there a v1 of this patch?
+> > > >
+> > > > >
+> > > > >  drivers/pci/controller/dwc/pci-layerscape-ep.c | 76
+> > > > > ++++++++++++++++++++------
+> > > > >  1 file changed, 58 insertions(+), 18 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > index 7ca5fe8..2a66f07 100644
+> > > > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > @@ -20,27 +20,29 @@
+> > > > >
+> > > > >  #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
+> > > > >
+> > > > > -struct ls_pcie_ep {
+> > > > > -	struct dw_pcie		*pci;
+> > > > > -	struct pci_epc_features	*ls_epc;
+> > > > > +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> > > > > +
+> > > > > +struct ls_pcie_ep_drvdata {
+> > > > > +	u32				func_offset;
+> > > > > +	const struct dw_pcie_ep_ops	*ops;
+> > > > > +	const struct dw_pcie_ops	*dw_pcie_ops;
+> > > > >  };
+> > > > >
+> > > > > -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> > > > > +struct ls_pcie_ep {
+> > > > > +	struct dw_pcie			*pci;
+> > > > > +	struct pci_epc_features		*ls_epc;
+> > > > > +	const struct ls_pcie_ep_drvdata *drvdata; };
+> > > > >
+> > > > >  static int ls_pcie_establish_link(struct dw_pcie *pci)  {
+> > > > >  	return 0;
+> > > > >  }
+> > > > >
+> > > > > -static const struct dw_pcie_ops ls_pcie_ep_ops = {
+> > > > > +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
+> > > > >  	.start_link = ls_pcie_establish_link,  };
+> > > > >
+> > > > > -static const struct of_device_id ls_pcie_ep_of_match[] = {
+> > > > > -	{ .compatible = "fsl,ls-pcie-ep",},
+> > > > > -	{ },
+> > > > > -};
+> > > > > -
+> > > > >  static const struct pci_epc_features*
+> > > > > ls_pcie_ep_get_features(struct dw_pcie_ep *ep)  { @@ -82,10 +84,44
+> > > > > @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  	}
+> > > > >  }
+> > > > >
+> > > > > -static const struct dw_pcie_ep_ops pcie_ep_ops = {
+> > > > > +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep
+> > *ep,
+> > > > > +						u8 func_no)
+> > > > > +{
+> > > > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > > > +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> > > > > +	u8 header_type;
+> > > > > +
+> > > > > +	header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
+> > > > > +
+> > > > > +	if (header_type & (1 << 7))
+> > > > > +		return pcie->drvdata->func_offset * func_no;
+> > > > > +	else
+> > > > > +		return 0;
+> > > >
+> > > > It looks like there isn't a PCI define for multi function, the
+> > > > nearest I could find was PCI_HEADER_TYPE_MULTIDEVICE in
+> > > > hotplug/ibmphp.h. A comment above the test might be helpful to explain
+> > the test.
+> > >
+> > > OK, I will add a comment above this code.
+> > >
+> > > >
+> > > > As the ls_pcie_ep_drvdata structures are static, the unset
+> > > > .func_offset will be initialised to 0, so you could just drop the test above.
+> > >
+> > > Due to the different PCIe controller have different property, e.g.
+> > > PCIe controller1 support multiple function feature, but PCIe
+> > > controller2 don't support this feature, so I need to check which
+> > > controller support it and return the correct offset value, but each board only
+> > have one ls_pcie_ep_drvdata, ^_^.
+> > 
+> > Yes but if they don't support the feature then func_offset will be 0.
+> > 
+> > >
+> > > >
+> > > > However something to the effect of the following may help spot
+> > > > misconfiguration:
+> > > >
+> > > > WARN_ON(func_no && !pcie->drvdata->func_offset); return
+> > > > pcie->drvdata->func_offset * func_no;
+> > > >
+> > > > The WARN is probably quite useful as if you are attempting to use
+> > > > non-zero functions and func_offset isn't set - then things may
+> > > > appear to work normally but actually will break horribly.
+> > >
+> > > As discussion before, I think the func_offset should not depends on
+> > > the function number, even if other platforms of NXP may be use write
+> > > registers way to access the different function config space.
+> > 
+> > I agree that func_offset is an optional parameter. But if you are attempting to
+> > determine the offset of a function and you are given a non-zero function
+> > number - then something has gone wrong if func_offset is 0.
+> 
+> I have understood you means, maybe I need to set a flag in the driver_data struct,
+> because I may add other platform of NXP, these platform use the write register 
+> method to access different function, e.g. 
+> write func_num to register, then we can access this func_num config space.
+> 
+> I will modify the code like this? Do you have better advice?
+> Case1:
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index 004a7e8..8a0d6df 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -23,6 +23,7 @@
+>  #define to_ls_pcie_ep(x)       dev_get_drvdata((x)->dev)
+> 
+>  struct ls_pcie_ep_drvdata {
+> +       u8                              func_config_flag;
+>         u32                             func_offset;
+>         const struct dw_pcie_ep_ops     *ops;
+>         const struct dw_pcie_ops        *dw_pcie_ops;
+> @@ -97,8 +98,14 @@ static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+>          * Read the Header Type register of config space to check
+>          * whether this PCI device support the multiple function.
+>          */
+> -       if (header_type & (1 << 7))
+> -               return pcie->drvdata->func_offset * func_no;
+> +       if (header_type & (1 << 7)) {
+> +               if (pcie->drvdata->func_config_flag) {
+> +                       iowrite32((func_num << n), pci->dbi_base + PCI_XXXX_XXX);
+> +               } else {
+> +                       WARN_ON(func_no && !pcie->drvdata->func_offset);
+> +                       return pcie->drvdata->func_offset * func_no;
+> +               }
+> +       }
+> 
+>         return 0;
+>  }
+> 
+> Of course, I don't need to set the flag this time, because I don't use the second method(write
+> register method), so the code like this:
+> case2:
+> +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+>                                                u8 func_no) {
+>        struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>        struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+>        u8 header_type;
+> 
+> 	   of course, this code is not requied, due to the 
+> 	   pcie->drvdata->func_offset is 0, but I think this is more clear
+> 	   if use this code.
+>        header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
+> 
+>        /*
+>         * Read the Header Type register of config space to check
+>         * whether this PCI device support the multiple function.
+>         */
+>        if (header_type & (1 << 7)) {
+> 			   WARN_ON(func_no && !pcie->drvdata->func_offset);
+>                return pcie->drvdata->func_offset * func_no; 
+> 		}
+> 		
+>        return 0;
+> }
+> 
+> Or like this:
+> Case3:
+> +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+>                                                u8 func_no) {
+>        struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>        struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> 
+> 	   WARN_ON(func_no && !pcie->drvdata->func_offset);
+>        return pcie->drvdata->func_offset * func_no;
 
-I tried the suggestion to add
+This is better. Given there is only currently one method of calculating
+an offset for layerscape, I'd recommend you add additional methods when
+the need arises.
 
-diff --git a/Makefile b/Makefile
-index 1b23f95db176..97f7bc4c9b4e 100644
---- a/Makefile
-+++ b/Makefile
-@@ -755,7 +755,7 @@ endif
+Thanks,
 
- KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
- ifdef CONFIG_FRAME_POINTER
--KBUILD_CFLAGS  += -fno-omit-frame-pointer -fno-optimize-sibling-calls
-+KBUILD_CFLAGS  += -fno-omit-frame-pointer -fno-optimize-sibling-calls
-$(call cc-option, -mno-omit-leaf-frame-pointer)
- else
- # Some targets (ARM with Thumb2, for example), can't be built with frame
- # pointers.  For those, we don't have FUNCTION_TRACER automatically
+Andrew Murray
 
-from https://bugs.llvm.org/show_bug.cgi?id=43128, this avoids all the
-"uses BP as a scratch register" warnings as well as almost all the "call without
-frame pointer save/setup" warnings I also saw.
-
-Only a few unique objtool warnings remain now, here are the ones I
-currently see,
-along with .config files. Let me know which ones I should investigate further,
-I assume a lot of these are known issues:
-
-http://paste.ubuntu.com/p/XjdDsypRxX/
-0x5BA1B7A1:arch/x86/ia32/ia32_signal.o: warning: objtool:
-ia32_setup_rt_frame()+0x238: call to memset() with UACCESS enabled
-0x5BA1B7A1:arch/x86/kernel/signal.o: warning: objtool:
-__setup_rt_frame()+0x5b8: call to memset() with UACCESS enabled
-0x5BA1B7A1:mm/kasan/common.o: warning: objtool: kasan_report()+0x44:
-call to __stack_chk_fail() with UACCESS enabled
-0x5BA1B7A1:kernel/trace/trace_selftest_dynamic.o: warning: objtool:
-__llvm_gcov_writeout()+0x13: call without frame pointer save/setup
-0x5BA1B7A1:kernel/trace/trace_selftest_dynamic.o: warning: objtool:
-__llvm_gcov_flush()+0x0: call without frame pointer save/setup
-0x5BA1B7A1:kernel/trace/trace_clock.o: warning: objtool:
-__llvm_gcov_writeout()+0x14: call without frame pointer save/setup
-0x5BA1B7A1:kernel/trace/trace_clock.o: warning: objtool:
-__llvm_gcov_flush()+0x0: call without frame pointer save/setup
-0x5BA1B7A1:kernel/trace/*: # many more of the same, all in this directory
-0x5BA1B7A1:kernel/trace/trace_uprobe.o: warning: objtool:
-__llvm_gcov_flush()+0x0: call without frame pointer save/setup
-
-http://paste.ubuntu.com/p/PyYNBK5Yx2/
-0xC1CF60CC:arch/x86/ia32/ia32_signal.o: warning: objtool:
-ia32_setup_rt_frame()+0x205: call to memset() with UACCESS enabled
-0xC1CF60CC:arch/x86/kernel/signal.o: warning: objtool:
-__setup_rt_frame()+0x597: call to memset() with UACCESS enabled
-0xC1CF60CC:arch/x86/kernel/process.o: warning: objtool:
-play_dead()+0x3: unreachable instruction
-0xC1CF60CC:mm/kasan/common.o: warning: objtool: kasan_report()+0x52:
-call to __stack_chk_fail() with UACCESS enabled
-0xC1CF60CC:kernel/sched/idle.o: warning: objtool:
-switched_to_idle()+0x3: unreachable instruction
-0xC1CF60CC:mm/madvise.o: warning: objtool: hugepage_madvise()+0x3:
-unreachable instruction
-0xC1CF60CC:mm/hugetlb.o: warning: objtool: hugetlb_vm_op_fault()+0x3:
-unreachable instruction
-0xC1CF60CC:kernel/exit.o: warning: objtool: abort()+0x3: unreachable instruction
-0xC1CF60CC:fs/hugetlbfs/inode.o: warning: objtool:
-hugetlbfs_write_end()+0x3: unreachable instruction
-0xC1CF60CC:fs/xfs/xfs_super.o: warning: objtool:
-xfs_fs_alloc_inode()+0x3: unreachable instruction
-0xC1CF60CC:drivers/mtd/nand/raw/nand_base.o: warning: objtool:
-nand_read_oob()+0x18d4: unreachable instruction
-
-http://paste.ubuntu.com/p/xCXyJR4Gx6/
-0x99965895:arch/x86/ia32/ia32_signal.o: warning: objtool:
-ia32_setup_rt_frame()+0x1f5: call to memset() with UACCESS enabled
-0x99965895:arch/x86/kernel/signal.o: warning: objtool:
-__setup_rt_frame()+0x57f: call to memset() with UACCESS enabled
-0x99965895:drivers/pinctrl/pinctrl-ingenic.o: warning: objtool:
-ingenic_pinconf_set()+0x10d: sibling call from callable instruction
-with modified stack frame
-
-http://paste.ubuntu.com/p/SFQXxh6zvy/
-0x9278DEDC:drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.o:
-warning: objtool: x_tune_dvbt2_demod_setting()+0x7f6: can't find
-switch jump table
-0x9278DEDC:net/xfrm/xfrm_output.o: warning: objtool:
-xfrm_outer_mode_output()+0x109: unreachable instruction
-0x9278DEDC:net/xfrm/xfrm_output.o: warning: objtool:
-xfrm_outer_mode_output()+0x109: unreachable instruction
-
-http://paste.ubuntu.com/p/9jW8yR6Tph/
-0xE872D410:kernel/trace/trace_branch.o: warning: objtool:
-ftrace_likely_update()+0x6c: call to __stack_chk_fail() with UACCESS
-enabled
-0xE872D410:drivers/hwmon/pmbus/adm1275.o: warning: objtool:
-adm1275_probe()+0x756: unreachable instruction
-
-http://paste.ubuntu.com/p/qg4bxZbxwq/
-0xA833B0C9:drivers/gpu/drm/amd/amdgpu/atom.o: warning: objtool:
-atom_op_move() falls through to next function atom_op_and()
-0xA833B0C9:drivers/gpu/drm/i915/display/intel_combo_phy.o: warning:
-objtool: cnl_set_procmon_ref_values()+0x125: can't find switch jump
-table
-0xA833B0C9:drivers/gpu/drm/radeon/atom.o: warning: objtool:
-atom_op_move() falls through to next function atom_op_and()
-0xA833B0C9:drivers/gpu/drm/radeon/evergreen_cs.o: warning: objtool:
-evergreen_cs_parse() falls through to next function
-evergreen_dma_cs_parse()
-
-http://paste.ubuntu.com/p/W3nq9bSHHZ/
-0xFBCA4E34:drivers/gpu/drm/amd/amdgpu/atom.o: warning: objtool:
-atom_op_move() falls through to next function atom_op_and()
-0xFBCA4E34:drivers/gpu/drm/amd/amdgpu/../display/dc/dce110/dce110_opp_csc_v.o:
-warning: objtool: dce110_opp_v_set_csc_default()+0x2bc: can't find
-switch jump table
-0xFBCA4E34:drivers/gpu/drm/amd/amdgpu/../display/dc/dce110/dce110_mem_input_v.o:
-warning: objtool: dce_mem_input_v_program_pte_vm()+0x27f: can't find
-switch jump table
+> 
+> }
+> Of course, we can return a -1 by adjuring the (func_no && !pcie->drvdata->func_offset) 
+> Valu in case1
+> 
+> Thanks 
+> Xiaowei
+> 
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > >
+> > > I have added the comments above the code, as follow, do you have any
+> > advice?
+> > > +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+> > > +                                               u8 func_no) {
+> > > +       struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > +       struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> > > +       u8 header_type;
+> > > +
+> > > +       header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
+> > > +
+> > > +       /*
+> > > +        * Read the Header Type register of config space to check
+> > > +        * whether this PCI device support the multiple function.
+> > > +        */
+> > > +       if (header_type & (1 << 7))
+> > > +               return pcie->drvdata->func_offset * func_no;
+> > > +
+> > > +       return 0;
+> > > +}
+> > >
+> > > Thanks a lot for your detail comments.
+> > >
+> > > >
+> > > > Thanks,
+> > > >
+> > > > Andrew Murray
+> > > >
+> > > > > +}
+> > > > > +
+> > > > > +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
+> > > > >  	.ep_init = ls_pcie_ep_init,
+> > > > >  	.raise_irq = ls_pcie_ep_raise_irq,
+> > > > >  	.get_features = ls_pcie_ep_get_features,
+> > > > > +	.func_conf_select = ls_pcie_ep_func_conf_select, };
+> > > > > +
+> > > > > +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
+> > > > > +	.ops = &ls_pcie_ep_ops,
+> > > > > +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
+> > > > > +
+> > > > > +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
+> > > > > +	.func_offset = 0x20000,
+> > > > > +	.ops = &ls_pcie_ep_ops,
+> > > > > +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
+> > > > > +
+> > > > > +static const struct of_device_id ls_pcie_ep_of_match[] = {
+> > > > > +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
+> > > > > +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
+> > > > > +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
+> > > > > +	{ },
+> > > > >  };
+> > > > >
+> > > > >  static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie, @@
+> > > > > -98,7
+> > > > > +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep
+> > > > > +*pcie,
+> > > > >  	int ret;
+> > > > >
+> > > > >  	ep = &pci->ep;
+> > > > > -	ep->ops = &pcie_ep_ops;
+> > > > > +	ep->ops = pcie->drvdata->ops;
+> > > > >
+> > > > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > > > "addr_space");
+> > > > >  	if (!res)
+> > > > > @@ -137,14 +173,11 @@ static int __init ls_pcie_ep_probe(struct
+> > > > platform_device *pdev)
+> > > > >  	if (!ls_epc)
+> > > > >  		return -ENOMEM;
+> > > > >
+> > > > > -	dbi_base = platform_get_resource_byname(pdev,
+> > IORESOURCE_MEM,
+> > > > "regs");
+> > > > > -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> > > > > -	if (IS_ERR(pci->dbi_base))
+> > > > > -		return PTR_ERR(pci->dbi_base);
+> > > > > +	pcie->drvdata = of_device_get_match_data(dev);
+> > > > >
+> > > > > -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> > > > >  	pci->dev = dev;
+> > > > > -	pci->ops = &ls_pcie_ep_ops;
+> > > > > +	pci->ops = pcie->drvdata->dw_pcie_ops;
+> > > > > +
+> > > > >  	pcie->pci = pci;
+> > > > >
+> > > > >  	ls_epc->linkup_notifier = false, @@ -152,6 +185,13 @@ static int
+> > > > > __init ls_pcie_ep_probe(struct platform_device *pdev)
+> > > > >
+> > > > >  	pcie->ls_epc = ls_epc;
+> > > > >
+> > > > > +	dbi_base = platform_get_resource_byname(pdev,
+> > IORESOURCE_MEM,
+> > > > "regs");
+> > > > > +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> > > > > +	if (IS_ERR(pci->dbi_base))
+> > > > > +		return PTR_ERR(pci->dbi_base);
+> > > > > +
+> > > > > +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> > > > > +
+> > > > >  	platform_set_drvdata(pdev, pcie);
+> > > > >
+> > > > >  	ret = ls_add_pcie_ep(pcie, pdev);
+> > > > > --
+> > > > > 2.9.5
+> > > > >
