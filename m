@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24938C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD228C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECD9320856
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E11720856
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:12:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfH1JMU (ORCPT
+        id S1726512AbfH1JMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:12:20 -0400
+        Wed, 28 Aug 2019 05:12:12 -0400
 Received: from mailgw01.mediatek.com ([210.61.82.183]:25070 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726828AbfH1JMM (ORCPT
+        with ESMTP id S1726767AbfH1JMK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:12:12 -0400
-X-UUID: fb49be765ec941dd9e7417abefed2d67-20190828
-X-UUID: fb49be765ec941dd9e7417abefed2d67-20190828
+        Wed, 28 Aug 2019 05:12:10 -0400
+X-UUID: a7150fe064c544a9ae4aad5b0ff106f7-20190828
+X-UUID: a7150fe064c544a9ae4aad5b0ff106f7-20190828
 Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
         (envelope-from <weiyi.lu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 142457910; Wed, 28 Aug 2019 17:11:59 +0800
+        with ESMTP id 1395075743; Wed, 28 Aug 2019 17:11:59 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
  mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Wed, 28 Aug 2019 17:12:05 +0800
@@ -44,9 +44,9 @@ CC:     James Liao <jamesjj.liao@mediatek.com>,
         <linux-mediatek@lists.infradead.org>,
         <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>,
         Yong Wu <yong.wu@mediatek.com>
-Subject: [PATCH v7 09/13] soc: mediatek: Add multiple step bus protection control
-Date:   Wed, 28 Aug 2019 17:11:42 +0800
-Message-ID: <1566983506-26598-10-git-send-email-weiyi.lu@mediatek.com>
+Subject: [PATCH v7 13/13] arm64: dts: Add power controller device node of MT8183
+Date:   Wed, 28 Aug 2019 17:11:46 +0800
+Message-ID: <1566983506-26598-14-git-send-email-weiyi.lu@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1566983506-26598-1-git-send-email-weiyi.lu@mediatek.com>
 References: <1566983506-26598-1-git-send-email-weiyi.lu@mediatek.com>
@@ -58,275 +58,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both MT8183 & MT6765 have more control steps of bus protection
-than previous project. And there add more bus protection registers
-reside at infracfg & smi-common. Also add new APIs for multiple
-step bus protection control with more customized arguments.
+Add power controller node and smi-common node for MT8183
+In scpsys node, it contains clocks and regmapping of
+infracfg and smi-common for bus protection.
 
 Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
 ---
- drivers/soc/mediatek/Makefile           |  2 +-
- drivers/soc/mediatek/mtk-scpsys-ext.c   | 99 +++++++++++++++++++++++++++++++++
- drivers/soc/mediatek/mtk-scpsys.c       | 39 +++++++++----
- include/linux/soc/mediatek/scpsys-ext.h | 39 +++++++++++++
- 4 files changed, 168 insertions(+), 11 deletions(-)
- create mode 100644 drivers/soc/mediatek/mtk-scpsys-ext.c
- create mode 100644 include/linux/soc/mediatek/scpsys-ext.h
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 62 ++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
-diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-index b017330..b442be9 100644
---- a/drivers/soc/mediatek/Makefile
-+++ b/drivers/soc/mediatek/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_MTK_CMDQ) += mtk-cmdq-helper.o
--obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
-+obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o mtk-scpsys-ext.o
- obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
- obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
-diff --git a/drivers/soc/mediatek/mtk-scpsys-ext.c b/drivers/soc/mediatek/mtk-scpsys-ext.c
-new file mode 100644
-index 0000000..b24321e
---- /dev/null
-+++ b/drivers/soc/mediatek/mtk-scpsys-ext.c
-@@ -0,0 +1,99 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018 MediaTek Inc.
-+ * Author: Owen Chen <Owen.Chen@mediatek.com>
-+ */
-+#include <linux/ktime.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_device.h>
-+#include <linux/regmap.h>
-+#include <linux/soc/mediatek/scpsys-ext.h>
-+
-+#define MTK_POLL_DELAY_US   10
-+#define MTK_POLL_TIMEOUT    USEC_PER_SEC
-+
-+static int set_bus_protection(struct regmap *map, u32 mask, u32 ack_mask,
-+		u32 reg_set, u32 reg_sta, u32 reg_en)
-+{
-+	u32 val;
-+
-+	if (reg_set)
-+		regmap_write(map, reg_set, mask);
-+	else
-+		regmap_update_bits(map, reg_en, mask, mask);
-+
-+	return regmap_read_poll_timeout(map, reg_sta,
-+			val, (val & ack_mask) == ack_mask,
-+			MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
-+}
-+
-+static int clear_bus_protection(struct regmap *map, u32 mask, u32 ack_mask,
-+		u32 reg_clr, u32 reg_sta, u32 reg_en)
-+{
-+	u32 val;
-+
-+	if (reg_clr)
-+		regmap_write(map, reg_clr, mask);
-+	else
-+		regmap_update_bits(map, reg_en, mask, 0);
-+
-+	return regmap_read_poll_timeout(map, reg_sta,
-+			val, !(val & ack_mask),
-+			MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
-+}
-+
-+int mtk_scpsys_ext_set_bus_protection(const struct bus_prot *bp_table,
-+	struct regmap *infracfg, struct regmap *smi_common)
-+{
-+	int i;
-+
-+	for (i = 0; i < MAX_STEPS; i++) {
-+		struct regmap *map;
-+		int ret;
-+
-+		if (bp_table[i].type == INVALID_TYPE)
-+			continue;
-+		else if (bp_table[i].type == IFR_TYPE)
-+			map = infracfg;
-+		else if (bp_table[i].type == SMI_TYPE)
-+			map = smi_common;
-+
-+		ret = set_bus_protection(map,
-+				bp_table[i].mask, bp_table[i].mask,
-+				bp_table[i].set_ofs, bp_table[i].sta_ofs,
-+				bp_table[i].en_ofs);
-+
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+int mtk_scpsys_ext_clear_bus_protection(const struct bus_prot *bp_table,
-+	struct regmap *infracfg, struct regmap *smi_common)
-+{
-+	int i;
-+
-+	for (i = MAX_STEPS - 1; i >= 0; i--) {
-+		struct regmap *map;
-+		int ret;
-+
-+		if (bp_table[i].type == INVALID_TYPE)
-+			continue;
-+		else if (bp_table[i].type == IFR_TYPE)
-+			map = infracfg;
-+		else if (bp_table[i].type == SMI_TYPE)
-+			map = smi_common;
-+
-+		ret = clear_bus_protection(map,
-+				bp_table[i].mask, bp_table[i].clr_ack_mask,
-+				bp_table[i].clr_ofs, bp_table[i].sta_ofs,
-+				bp_table[i].en_ofs);
-+
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-index d31e1a4..f25101f 100644
---- a/drivers/soc/mediatek/mtk-scpsys.c
-+++ b/drivers/soc/mediatek/mtk-scpsys.c
-@@ -12,6 +12,7 @@
- #include <linux/pm_domain.h>
- #include <linux/regulator/consumer.h>
- #include <linux/soc/mediatek/infracfg.h>
-+#include <linux/soc/mediatek/scpsys-ext.h>
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index c2749c4..66aaa07 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/clock/mt8183-clk.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/power/mt8183-power.h>
+ #include "mt8183-pinfunc.h"
  
- #include <dt-bindings/power/mt2701-power.h>
- #include <dt-bindings/power/mt2712-power.h>
-@@ -120,6 +121,7 @@ enum clk_id {
-  * @basic_clk_id: provide the same purpose with field "clk_id"
-  *                by declaring basic clock prefix name rather than clk_id.
-  * @caps: The flag for active wake-up action.
-+ * @bp_table: The mask table for multiple step bus protection.
-  */
- struct scp_domain_data {
- 	const char *name;
-@@ -131,6 +133,7 @@ struct scp_domain_data {
- 	enum clk_id clk_id[MAX_CLKS];
- 	const char *basic_clk_id[MAX_CLKS];
- 	u8 caps;
-+	struct bus_prot bp_table[MAX_STEPS];
- };
+ / {
+@@ -238,6 +239,62 @@
+ 			#interrupt-cells = <2>;
+ 		};
  
- struct scp;
-@@ -154,6 +157,7 @@ struct scp {
- 	struct device *dev;
- 	void __iomem *base;
- 	struct regmap *infracfg;
-+	struct regmap *smi_common;
- 	struct scp_ctrl_reg ctrl_reg;
- 	bool bus_prot_reg_update;
- };
-@@ -281,24 +285,28 @@ static int scpsys_bus_protect_enable(struct scp_domain *scpd)
- {
- 	struct scp *scp = scpd->scp;
++		scpsys: syscon@10006000 {
++			compatible = "mediatek,mt8183-scpsys", "syscon";
++			#power-domain-cells = <1>;
++			reg = <0 0x10006000 0 0x1000>;
++			clocks = <&topckgen CLK_TOP_MUX_AUD_INTBUS>,
++				 <&infracfg CLK_INFRA_AUDIO>,
++				 <&infracfg CLK_INFRA_AUDIO_26M_BCLK>,
++				 <&topckgen CLK_TOP_MUX_MFG>,
++				 <&topckgen CLK_TOP_MUX_MM>,
++				 <&topckgen CLK_TOP_MUX_CAM>,
++				 <&topckgen CLK_TOP_MUX_IMG>,
++				 <&topckgen CLK_TOP_MUX_IPU_IF>,
++				 <&topckgen CLK_TOP_MUX_DSP>,
++				 <&topckgen CLK_TOP_MUX_DSP1>,
++				 <&topckgen CLK_TOP_MUX_DSP2>,
++				 <&mmsys CLK_MM_SMI_COMMON>,
++				 <&mmsys CLK_MM_SMI_LARB0>,
++				 <&mmsys CLK_MM_SMI_LARB1>,
++				 <&mmsys CLK_MM_GALS_COMM0>,
++				 <&mmsys CLK_MM_GALS_COMM1>,
++				 <&mmsys CLK_MM_GALS_CCU2MM>,
++				 <&mmsys CLK_MM_GALS_IPU12MM>,
++				 <&mmsys CLK_MM_GALS_IMG2MM>,
++				 <&mmsys CLK_MM_GALS_CAM2MM>,
++				 <&mmsys CLK_MM_GALS_IPU2MM>,
++				 <&imgsys CLK_IMG_LARB5>,
++				 <&imgsys CLK_IMG_LARB2>,
++				 <&camsys CLK_CAM_LARB6>,
++				 <&camsys CLK_CAM_LARB3>,
++				 <&camsys CLK_CAM_SENINF>,
++				 <&camsys CLK_CAM_CAMSV0>,
++				 <&camsys CLK_CAM_CAMSV1>,
++				 <&camsys CLK_CAM_CAMSV2>,
++				 <&camsys CLK_CAM_CCU>,
++				 <&ipu_conn CLK_IPU_CONN_IPU>,
++				 <&ipu_conn CLK_IPU_CONN_AHB>,
++				 <&ipu_conn CLK_IPU_CONN_AXI>,
++				 <&ipu_conn CLK_IPU_CONN_ISP>,
++				 <&ipu_conn CLK_IPU_CONN_CAM_ADL>,
++				 <&ipu_conn CLK_IPU_CONN_IMG_ADL>;
++			clock-names = "audio", "audio1", "audio2",
++				      "mfg", "mm", "cam",
++				      "isp", "vpu", "vpu1",
++				      "vpu2", "vpu3", "mm-0",
++				      "mm-1", "mm-2", "mm-3",
++				      "mm-4", "mm-5", "mm-6",
++				      "mm-7", "mm-8", "mm-9",
++				      "isp-0", "isp-1", "cam-0",
++				      "cam-1", "cam-2", "cam-3",
++				      "cam-4", "cam-5", "cam-6",
++				      "vpu-0", "vpu-1", "vpu-2",
++				      "vpu-3", "vpu-4", "vpu-5";
++			infracfg = <&infracfg>;
++			smi_comm = <&smi_common>;
++		};
++
+ 		apmixedsys: syscon@1000c000 {
+ 			compatible = "mediatek,mt8183-apmixedsys", "syscon";
+ 			reg = <0 0x1000c000 0 0x1000>;
+@@ -396,6 +453,11 @@
+ 			#clock-cells = <1>;
+ 		};
  
--	if (!scpd->data->bus_prot_mask)
--		return 0;
-+	if (scpd->data->bus_prot_mask) {
-+		return mtk_infracfg_set_bus_protection(scp->infracfg,
-+				scpd->data->bus_prot_mask,
-+				scp->bus_prot_reg_update);
-+	}
- 
--	return mtk_infracfg_set_bus_protection(scp->infracfg,
--			scpd->data->bus_prot_mask,
--			scp->bus_prot_reg_update);
-+	return mtk_scpsys_ext_set_bus_protection(scpd->data->bp_table,
-+			scp->infracfg, scp->smi_common);
- }
- 
- static int scpsys_bus_protect_disable(struct scp_domain *scpd)
- {
- 	struct scp *scp = scpd->scp;
- 
--	if (!scpd->data->bus_prot_mask)
--		return 0;
-+	if (scpd->data->bus_prot_mask) {
-+		return mtk_infracfg_clear_bus_protection(scp->infracfg,
-+				scpd->data->bus_prot_mask,
-+				scp->bus_prot_reg_update);
-+	}
- 
--	return mtk_infracfg_clear_bus_protection(scp->infracfg,
--			scpd->data->bus_prot_mask,
--			scp->bus_prot_reg_update);
-+	return mtk_scpsys_ext_clear_bus_protection(scpd->data->bp_table,
-+			scp->infracfg, scp->smi_common);
- }
- 
- static int scpsys_power_on(struct generic_pm_domain *genpd)
-@@ -466,6 +474,17 @@ static struct scp *init_scp(struct platform_device *pdev,
- 		return ERR_CAST(scp->infracfg);
- 	}
- 
-+	scp->smi_common = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-+			"smi_comm");
++		smi_common: smi@14019000 {
++			compatible = "mediatek,mt8183-smi-common", "syscon";
++			reg = <0 0x14019000 0 0x1000>;
++		};
 +
-+	if (scp->smi_common == ERR_PTR(-ENODEV)) {
-+		scp->smi_common = NULL;
-+	} else if (IS_ERR(scp->smi_common)) {
-+		dev_err(&pdev->dev, "Cannot find smi_common controller: %ld\n",
-+				PTR_ERR(scp->smi_common));
-+		return ERR_CAST(scp->smi_common);
-+	}
-+
- 	for (i = 0; i < num; i++) {
- 		struct scp_domain *scpd = &scp->domains[i];
- 		const struct scp_domain_data *data = &scp_domain_data[i];
-diff --git a/include/linux/soc/mediatek/scpsys-ext.h b/include/linux/soc/mediatek/scpsys-ext.h
-new file mode 100644
-index 0000000..3e5b84d
---- /dev/null
-+++ b/include/linux/soc/mediatek/scpsys-ext.h
-@@ -0,0 +1,39 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __SOC_MEDIATEK_SCPSYS_EXT_H
-+#define __SOC_MEDIATEK_SCPSYS_EXT_H
-+
-+#define MAX_STEPS	4
-+
-+#define BUS_PROT(_type, _set_ofs, _clr_ofs,			\
-+		_en_ofs, _sta_ofs, _mask, _clr_ack_mask) {	\
-+		.type = _type,					\
-+		.set_ofs = _set_ofs,				\
-+		.clr_ofs = _clr_ofs,				\
-+		.en_ofs = _en_ofs,				\
-+		.sta_ofs = _sta_ofs,				\
-+		.mask = _mask,					\
-+		.clr_ack_mask = _clr_ack_mask,			\
-+	}
-+
-+enum regmap_type {
-+	INVALID_TYPE = 0,
-+	IFR_TYPE,
-+	SMI_TYPE,
-+};
-+
-+struct bus_prot {
-+	enum regmap_type type;
-+	u32 set_ofs;
-+	u32 clr_ofs;
-+	u32 en_ofs;
-+	u32 sta_ofs;
-+	u32 mask;
-+	u32 clr_ack_mask;
-+};
-+
-+int mtk_scpsys_ext_set_bus_protection(const struct bus_prot *bp_table,
-+	struct regmap *infracfg, struct regmap *smi_common);
-+int mtk_scpsys_ext_clear_bus_protection(const struct bus_prot *bp_table,
-+	struct regmap *infracfg, struct regmap *smi_common);
-+
-+#endif /* __SOC_MEDIATEK_SCPSYS_EXT_H */
+ 		imgsys: syscon@15020000 {
+ 			compatible = "mediatek,mt8183-imgsys", "syscon";
+ 			reg = <0 0x15020000 0 0x1000>;
 -- 
 1.8.1.1.dirty
 
