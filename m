@@ -2,197 +2,84 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF21C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FBDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04E902189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:22:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CsodN8Ty"
+	by mail.kernel.org (Postfix) with ESMTP id AAA8020679
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfH1IWJ (ORCPT
+        id S1726561AbfH1IWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:22:09 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46073 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfH1IVz (ORCPT
+        Wed, 28 Aug 2019 04:22:35 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:27809 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726290AbfH1IWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:21:55 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y8so868732plr.12
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 01:21:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zBHpNvufe28nLemPiNmtcBO4lsWCA9oHO3YETBlFgi4=;
-        b=CsodN8TyIXBUvJIf8wrH4ECCazW4cHFoHhyOesxNpaIdhZoxOUHWaSA10IQOlNTD0D
-         KbfLc9iTL244E3wQojl7eL/NeLFhWUCi/ZHveyHaByH30l7mTy1SWPjz7Jq1OUr1w5cb
-         5+jMzeIpWl9EsbExUX8qKFs55sslZwFuXnIKI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zBHpNvufe28nLemPiNmtcBO4lsWCA9oHO3YETBlFgi4=;
-        b=goTYH5MOF6n2Bw+b///InS0mFlhniSEiDoGhXs0MldRAAMW8dl77ZN0AZhwD6+7kBY
-         as30oJ0t/bPcet3zxi5Mbu64wodywsgr+6pnEBIil4ush9AqsO+LzZfisR9pqQWxRz0A
-         06Jt4GJ/NO7zsYmtiSJRoInY7EhmYrBoQq02E6/axqYWtaZWdboL4zONc/kJoR+aGPqQ
-         fFWghP2ZMo8BayUMatNqHb+dQITNctVovvPTE01g15QEhHQlTWr3YvABB2rU8guZBdQq
-         pALXqSI1rWh531znHg0h0WrWT/w5ddLsBXU+/m24Vy32qE9PHhzGMdXAan4blPjuo4m6
-         7fKw==
-X-Gm-Message-State: APjAAAV5jjrDA72b7xWh1FCKi/dIl8N2G1PtF8Kd1O/QM4pcexkdRBtL
-        qZm4y+SXX6DcHSjsbdnLZg3RQQ==
-X-Google-Smtp-Source: APXvYqxNfuZcG+FCfxCwwXrymGrrC78fPo1dlzMiQr2RsEW1DtIZgFw5mh5ldb74v70RfnvZ/HcTuQ==
-X-Received: by 2002:a17:902:1024:: with SMTP id b33mr3126228pla.325.1566980514791;
-        Wed, 28 Aug 2019 01:21:54 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id y10sm1296959pjp.27.2019.08.28.01.21.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 01:21:54 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v5 3/4] tpm: tpm_tis_spi: Introduce a flow control callback
-Date:   Wed, 28 Aug 2019 01:21:49 -0700
-Message-Id: <20190828082150.42194-4-swboyd@chromium.org>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-In-Reply-To: <20190828082150.42194-1-swboyd@chromium.org>
-References: <20190828082150.42194-1-swboyd@chromium.org>
+        Wed, 28 Aug 2019 04:22:35 -0400
+X-UUID: da2ad66d982943dc8b67744764a45c80-20190828
+X-UUID: da2ad66d982943dc8b67744764a45c80-20190828
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 857769133; Wed, 28 Aug 2019 16:22:30 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 28 Aug 2019 16:22:36 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 28 Aug 2019 16:22:35 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Erin Lo <erin.lo@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH v2 1/2] dt-bindings: clock: mediatek: add pericfg for MT8183
+Date:   Wed, 28 Aug 2019 16:22:12 +0800
+Message-ID: <1566980533-28282-1-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 24CF5FCCFEF98A39383D98B9B0EE85FBD6A2695AB226366B63B0A026F1BC62432000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cr50 firmware has a different flow control protocol than the one used by
-this TPM PTP SPI driver. Introduce a flow control callback so we can
-override the standard sequence with the custom one that Cr50 uses.
+This patch adds binding of pericfg for MT8183.
 
-Cc: Andrey Pronin <apronin@chromium.org>
-Cc: Duncan Laurie <dlaurie@chromium.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Guenter Roeck <groeck@chromium.org>
-Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/char/tpm/tpm_tis_spi.c | 62 ++++++++++++++++++++++------------
- 1 file changed, 41 insertions(+), 21 deletions(-)
+v2: no changes
+---
+ .../devicetree/bindings/arm/mediatek/mediatek,pericfg.txt        | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
-index 19513e622053..b3ed85671dd8 100644
---- a/drivers/char/tpm/tpm_tis_spi.c
-+++ b/drivers/char/tpm/tpm_tis_spi.c
-@@ -42,6 +42,8 @@
- struct tpm_tis_spi_phy {
- 	struct tpm_tis_data priv;
- 	struct spi_device *spi_device;
-+	int (*flow_control)(struct tpm_tis_spi_phy *phy,
-+			    struct spi_transfer *xfer);
- 	u8 *iobuf;
- };
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
+index 4c7e478117a0..ecf027a9003a 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
+@@ -14,6 +14,7 @@ Required Properties:
+ 	- "mediatek,mt7629-pericfg", "syscon"
+ 	- "mediatek,mt8135-pericfg", "syscon"
+ 	- "mediatek,mt8173-pericfg", "syscon"
++	- "mediatek,mt8183-pericfg", "syscon"
+ - #clock-cells: Must be 1
+ - #reset-cells: Must be 1
  
-@@ -50,12 +52,46 @@ static inline struct tpm_tis_spi_phy *to_tpm_tis_spi_phy(struct tpm_tis_data *da
- 	return container_of(data, struct tpm_tis_spi_phy, priv);
- }
- 
-+/*
-+ * TCG SPI flow control is documented in section 6.4 of the spec[1]. In short,
-+ * keep trying to read from the device until MISO goes high indicating the
-+ * wait state has ended.
-+ *
-+ * [1] https://trustedcomputinggroup.org/resource/pc-client-platform-tpm-profile-ptp-specification/
-+ */
-+static int tpm_tis_spi_flow_control(struct tpm_tis_spi_phy *phy,
-+				    struct spi_transfer *spi_xfer)
-+{
-+	struct spi_message m;
-+	int ret, i;
-+
-+	if ((phy->iobuf[3] & 0x01) == 0) {
-+		// handle SPI wait states
-+		phy->iobuf[0] = 0;
-+
-+		for (i = 0; i < TPM_RETRY; i++) {
-+			spi_xfer->len = 1;
-+			spi_message_init(&m);
-+			spi_message_add_tail(spi_xfer, &m);
-+			ret = spi_sync_locked(phy->spi_device, &m);
-+			if (ret < 0)
-+				return ret;
-+			if (phy->iobuf[0] & 0x01)
-+				break;
-+		}
-+
-+		if (i == TPM_RETRY)
-+			return -ETIMEDOUT;
-+	}
-+
-+	return 0;
-+}
-+
- static int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
- 				u8 *in, const u8 *out)
- {
- 	struct tpm_tis_spi_phy *phy = to_tpm_tis_spi_phy(data);
- 	int ret = 0;
--	int i;
- 	struct spi_message m;
- 	struct spi_transfer spi_xfer;
- 	u8 transfer_len;
-@@ -82,26 +118,9 @@ static int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
- 		if (ret < 0)
- 			goto exit;
- 
--		if ((phy->iobuf[3] & 0x01) == 0) {
--			// handle SPI wait states
--			phy->iobuf[0] = 0;
--
--			for (i = 0; i < TPM_RETRY; i++) {
--				spi_xfer.len = 1;
--				spi_message_init(&m);
--				spi_message_add_tail(&spi_xfer, &m);
--				ret = spi_sync_locked(phy->spi_device, &m);
--				if (ret < 0)
--					goto exit;
--				if (phy->iobuf[0] & 0x01)
--					break;
--			}
--
--			if (i == TPM_RETRY) {
--				ret = -ETIMEDOUT;
--				goto exit;
--			}
--		}
-+		ret = phy->flow_control(phy, &spi_xfer);
-+		if (ret < 0)
-+			goto exit;
- 
- 		spi_xfer.cs_change = 0;
- 		spi_xfer.len = transfer_len;
-@@ -207,6 +226,7 @@ static int tpm_tis_spi_probe(struct spi_device *dev)
- 	phy->iobuf = devm_kmalloc(&dev->dev, MAX_SPI_FRAMESIZE, GFP_KERNEL);
- 	if (!phy->iobuf)
- 		return -ENOMEM;
-+	phy->flow_control = tpm_tis_spi_flow_control;
- 
- 	/* If the SPI device has an IRQ then use that */
- 	if (dev->irq > 0)
 -- 
-Sent by a computer through tubes
+2.23.0
 
