@@ -2,120 +2,142 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66134C41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AECC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3396D2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567021153;
-	bh=+O2+WK0RVHePe0LpofDfaJD4Rql2yA9nqWNkcSFMagw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w0++hAgeG7Oy7is6JuXZoCLUwnWBlYtD38c2/jOH0YUQmtFZ+MLuXicvbQZ/DDdKa
-	 HdoxhKUoyiPFY/STlMdMHwDCSWopnJ4AQ2JWgUwSb7Ad1Nv/TMHN+rn3MX4r82xz6P
-	 ZSd0HRHFGKK2ZZbIE0kGaDjS6OXWCtmnhlocxQs8=
+	by mail.kernel.org (Postfix) with ESMTP id A189A2189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:42:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfH1TjM (ORCPT
+        id S1726820AbfH1TmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 15:39:12 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41536 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbfH1TjL (ORCPT
+        Wed, 28 Aug 2019 15:42:05 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46804 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfH1TmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 15:39:11 -0400
-Received: by mail-qt1-f195.google.com with SMTP id i4so900923qtj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 12:39:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=jGdjcaObJA+LOjf9Poq4nOPxGm2S+Io4iqVFGT05Sdk=;
-        b=dUDtC6v5RjJEYqLAKrZUvJdgsvtkSt+8hvHatWrvU909wWeyYUjrARoyq3TTvv7ldN
-         5PNasiJf3BZGE9ctTClpN9enOnIh7CoPVcGCsIQvQTj6zn10Rjm5DTvK9LztWamrSjJa
-         AaqsjTmylhES2sNlbFeyf6poXoU7X4PpqBT3Y=
+        Wed, 28 Aug 2019 15:42:05 -0400
+Received: by mail-qk1-f194.google.com with SMTP id p13so789863qkg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 12:42:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=jGdjcaObJA+LOjf9Poq4nOPxGm2S+Io4iqVFGT05Sdk=;
-        b=A/SwWuWA5d6sNkgwuTXO1LY+ZIZyo7+YyF4AxSfbSUIjUP5cj5gvFqXr0ABHwEXMO7
-         SUZg8bE8RPI/18I4+60mziDDxuy461JyWpM9583LzrqFsgCU3VFEJ6daaPTuJDzGZklx
-         Nz14z+bvx4VFGoGius+/baEK+SFE+NjU4H3e+Gedk4G95ssomHu2p4fvTmxCa2mMAXIN
-         EPyHrVjp5MHyY+84SQELPRjwzt51i5fbP9uVJnJoBYta5c+wvkcugWgmwmH27xSRTzMx
-         +JTVX3zDTJz27k5xsr/ExUscQTsHMZEjafF/b4+b8vWSEROMK2Va3NlKa7YP+oOSVIR5
-         We1w==
-X-Gm-Message-State: APjAAAVTxHupe6nFZmWTnJ19Br4UALlbvHO1ZFG9q0vg9vtNzmartpYs
-        /wmZ+UmeIHb4wybiOo0ebb5+0Q==
-X-Google-Smtp-Source: APXvYqzirrx5EnthEZOuvQwfJUjLhmigujMSE/NNOATdgV+CS7t5Zzx8CRnjXpUTmxdUv9iGYk9Fiw==
-X-Received: by 2002:ac8:50b:: with SMTP id u11mr6104045qtg.308.1567021150789;
-        Wed, 28 Aug 2019 12:39:10 -0700 (PDT)
-Received: from chatter.i7.local (192-0-228-88.cpe.teksavvy.com. [192.0.228.88])
-        by smtp.gmail.com with ESMTPSA id v24sm120458qth.33.2019.08.28.12.39.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 12:39:10 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 15:39:08 -0400
-From:   Konstantin Ryabitsev <mricon@kernel.org>
-To:     Greg KH <greg@kroah.com>
-Cc:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        StableKernel <stable@vger.kernel.org>,
-        LinuxKernel <linux-kernel@vger.kernel.org>
-Subject: Re: Latest kernel version no NOT reflecting on kernel.org
-Message-ID: <20190828193908.GC26001@chatter.i7.local>
-References: <20190828135750.GA5841@Gentoo>
- <20190828151353.GA9673@kroah.com>
- <20190828160156.GB26001@chatter.i7.local>
- <20190828170547.GA11688@kroah.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GW0tqEqMsiVVgwwzpWylrg4uBDcBgz1jfCvWma45dGA=;
+        b=pBBNm8yjtROtTr6BcUH88l326fzf/1yTHSAHYUF7KCvMJjsZKCHpVZhra0ubNn1x9v
+         gWsz2Xsl2YZJUP9cWsW1XBykAn2LEdpVhEQGXhLD+YtZK/mAS1xOeR1lYu6EcwXpTrSt
+         jGnuEK6KkFAZ/O9P4y1p5YCxFuD2vuVpjSuqyACQAlgt1kDdYNsko6nBKnsa3dnSLnM6
+         EjAjGLYXoqczQKOej+5jNLBn/g9EONddvFvaUPPxCaVh7lyc1UHjV56I4CpxJeL3keCH
+         iCpazqCQknA3KUP7ZfW7BvTwZOGx5IatSkwK7QUKv65C1z3982srn4+fjZwEG2Sf5RZM
+         WQdw==
+X-Gm-Message-State: APjAAAX9vKyxT1duUfi9MbjIzaaufw+1hC0yW09V9vKiKky6o0je1/xn
+        Bq/eQi85a4ldzDz9BbgsYiHQ+ZgA4nFdGwrymBI=
+X-Google-Smtp-Source: APXvYqzLAvB/Xb/+yr0cNVd+/T5DESTxs1MbrXkH83HBhT3IA8D06GJEO7du4tL3Ed1bHQuUxz5fssaWKyxJVME+34w=
+X-Received: by 2002:a37:bd44:: with SMTP id n65mr5815134qkf.286.1567021323862;
+ Wed, 28 Aug 2019 12:42:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190828170547.GA11688@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <CAK8P3a3G=GCpLtNztuoLR4BuugAB=zpa_Jrz5BSft6Yj-nok1g@mail.gmail.com>
+ <20190827145102.p7lmkpytf3mngxbj@treble> <CAHFW8PRsmmCR6TWoXpQ9gyTA7azX9YOerPErCMggcQX-=fAqng@mail.gmail.com>
+ <CAK8P3a2TeaMc_tWzzjuqO-eQjZwJdpbR1yH8yzSQbbVKdWCwSg@mail.gmail.com>
+ <20190827192255.wbyn732llzckmqmq@treble> <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
+ <CAKwvOdnD1mEd-G9sWBtnzfe9oGTeZYws6zNJA7opS69DN08jPg@mail.gmail.com>
+ <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
+ <20190828145102.o7h3la3ofb2b4aie@treble> <CAK8P3a1gkA4cqbKbLLCAukiX-0tA9fV_FTG6PLTfv+DSHp44GQ@mail.gmail.com>
+ <20190828175713.s7jub3sf6l7vyfoj@treble>
+In-Reply-To: <20190828175713.s7jub3sf6l7vyfoj@treble>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 28 Aug 2019 21:41:47 +0200
+Message-ID: <CAK8P3a0C6jvBqsO2KXOV-j3eQ07zvCjUWqaYdTKDfne72EWUDA@mail.gmail.com>
+Subject: Re: objtool warning "uses BP as a scratch register" with clang-9
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 07:05:47PM +0200, Greg KH wrote:
->> > I think there's a way to see which cdn mirror you are hitting when 
->> > you
->> > ask for "www.kernel.org".  Konstantin, any hints as to see if maybe one
->> > of the mirrors is out of sync?
->>
->> Looks like the Singapore mirror was feeling out-of-sorts. It'll start
->> feeling better shortly.
+On Wed, Aug 28, 2019 at 7:57 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> On Wed, Aug 28, 2019 at 05:29:39PM +0200, Arnd Bergmann wrote:
+> > On Wed, Aug 28, 2019 at 4:51 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> exit.o: warning: objtool: abort()+0x3: unreachable instruction
+> hugetlb.o: warning: objtool: hugetlb_vm_op_fault()+0x3: unreachable instruction
+> idle.o: warning: objtool: switched_to_idle()+0x3: unreachable instruction
+> madvise.o: warning: objtool: hugepage_madvise()+0x3: unreachable instruction
+> privcmd.o: warning: objtool: privcmd_ioctl_mmap_batch()+0x5dd: unreachable instruction
+> process.o: warning: objtool: play_dead()+0x3: unreachable instruction
+> rmap.o: warning: objtool: anon_vma_clone()+0x1c2: unreachable instruction
+> s5c73m3-core.o: warning: objtool: s5c73m3_probe()+0x262: unreachable instruction
+> videobuf2-core.o: warning: objtool: vb2_core_dqbuf()+0xae6: unreachable instruction
+> xfrm_output.o: warning: objtool: xfrm_outer_mode_output()+0x109: unreachable instruction
+> - clang issue: trying to finish frame pointer setup after BUG() in unreachable code path
 >
->Great, thanks for looking into this!
+> pinctrl-ingenic.o: warning: objtool: ingenic_pinconf_set()+0x10d: sibling call from callable instruction with modified stack frame
+> - bad clang bug: sibling call without first popping registers
 
-BTW, the easiest way to figure out which frontend you're hitting is to 
-look at the output of "host www.kernel.org", e.g.:
+I reduced the last one to https://godbolt.org/z/7lZZL3
 
-$ host www.kernel.org
-www.kernel.org is an alias for git.kernel.org.
-git.kernel.org is an alias for ord.git.kernel.org.
-ord.git.kernel.org has address 147.75.58.133
-ord.git.kernel.org has IPv6 address 2604:1380:4020:600::1
+enum { PIN_CONFIG_BIAS_DISABLE } pinconf_to_config_param(void);
+void ingenic_pinconf_set() {
+  switch (pinconf_to_config_param())
+  case PIN_CONFIG_BIAS_DISABLE: {
+    asm("%c0:\n\t.pushsection .discard.unreachable\n\t.long %c0b - "
+        ".\n\t.popsection\n\t"
+        :
+        : "i"(6));
+    __builtin_unreachable();
+  }
+}
+void ingenic_pinconf_group_set() {}
 
-The three-letter airport code should indicate where the frontend is 
-located (in my case, ORD = Chicago). There are total of 6:
+$ clang-9  -Os -mretpoline-external-thunk -fno-omit-frame-pointer -c
+pinctrl-ingenic.i
+$ objtool check  --retpoline --uaccess pinctrl-ingenic.o
+pinctrl-ingenic.o: warning: objtool: ingenic_pinconf_set()+0xb:
+sibling call from callable instruction with modified stack frame
 
-sea.git.kernel.org - Seattle
-lax.git.kernel.org - Los Angeles
-ord.git.kernel.org - Chicago
-fra.git.kernel.org - Frankfurt
-sin.git.kernel.org - Singapore
-syd.git.kernel.org - Sydney
+$objdump -d pinctrl-ingenic.o
+0000000000000000 <ingenic_pinconf_set>:
+   0: 55                    push   %rbp
+   1: 48 89 e5              mov    %rsp,%rbp
+   4: e8 00 00 00 00        callq  9 <ingenic_pinconf_set+0x9>
+5: R_X86_64_PLT32 pinconf_to_config_param-0x4
+   9: 85 c0                test   %eax,%eax
+   b: 74 02                je     f <ingenic_pinconf_group_set>
+   d: 5d                    pop    %rbp
+   e: c3                    retq
 
-Geodns magic should send you to the nearest one, and if the monitoring 
-recognizes that one of them is down, it will be automatically removed 
-from the pool until it recovers.
+000000000000000f <ingenic_pinconf_group_set>:
+   f: c3                    retq
 
-Best,
--K
+I suspect that's actually another variant of the others. It doesn't
+seem to be an
+actual sibling call, just branching into what happens to be the start of the
+next function in an unreachable code path.
+
+Using '-O2' instead of '-0s', I get
+
+pinctrl-ingenic.o: warning: objtool: ingenic_pinconf_set() falls
+through to next function ingenic_pinconf_group_set()
+
+0000000000000000 <ingenic_pinconf_set>:
+   0: 55                    push   %rbp
+   1: 48 89 e5              mov    %rsp,%rbp
+   4: e8 00 00 00 00        callq  9 <ingenic_pinconf_set+0x9>
+5: R_X86_64_PLT32 pinconf_to_config_param-0x4
+   9: 85 c0                test   %eax,%eax
+   b: 74 02                je     f <ingenic_pinconf_set+0xf>
+   d: 5d                    pop    %rbp
+   e: c3                    retq
+   f: 90                    nop
+
+0000000000000010 <ingenic_pinconf_group_set>:
+  10: c3                    retq
+
+        Arnd
