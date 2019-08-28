@@ -2,134 +2,141 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F5DC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E892C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD1123403
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546B32053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:48:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fF1VTJyo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V8Wo5R1g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfH1IrZ (ORCPT
+        id S1726513AbfH1IsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:47:25 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34119 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbfH1IrY (ORCPT
+        Wed, 28 Aug 2019 04:48:08 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42634 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfH1IsI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:47:24 -0400
-Received: by mail-oi1-f193.google.com with SMTP id g128so1503793oib.1;
-        Wed, 28 Aug 2019 01:47:24 -0700 (PDT)
+        Wed, 28 Aug 2019 04:48:08 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b16so1593906wrq.9
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 01:48:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wvXkpVgy6884rDBDub7GSrouN3alYy0RjubNjRU4D8c=;
-        b=fF1VTJyoZfOh/nue2zV6YK0gz/XCdIae5JY/qHfApx9B7F2xZT2NBmDMMpguRZNaZD
-         KPxZJa9DWjfbKJxoKa5zhA3DXFM8IWlFPzwTQ4omHTIo5ZCDmX1QCuQgvNTbo09iOvEp
-         yhAV8mM74MNFpQ8ezqwXpcITtWQAyzmryrBqw0digdqAFDZa0jNCBP9xCDw43BBeKr32
-         scty0zVhhc/5xdluSu6mvF6iBiSx+SNFOSlFOCmDhAISSHTA2q7YTEAX76RvzgkV93i+
-         VUUtDnDXVX8C2dqSyd6/tZIjHxJAFnDJqCsLkCK1euNorCqdpODqosOL+9CUkmkk7EXB
-         +NQA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Lh087UDN3bHwxNKU9oXqXSmgDMXMIewzXIKR9m+6i0E=;
+        b=V8Wo5R1gkblbmEBDK8foSh7C8UDtmz4d0IduZExmjWX/5IB95wO3kIXkuEoGhrZfEH
+         L4H0pBBEJbHaUC8rJ9oAlPItBkDc137JyPrs4bGEaDbmUcknCxqVixzEYbiGA0tnaS4L
+         NYkXtgo3FO3XYNGTGrJisbxOoQDaE0Qzs20m0+fEo2BCdhg5vj5TWvOuR4qaUeToYlC9
+         vjsbILLTw5rhfyHlSFy6LHBIMVv9idAS0aptNCnv5kyuoRFbJju58nUWXVsAo01L+JPu
+         aNbsuPL8QbptuLmqEQ9Tbp9m3YoE0oHfBiBCorWXxDVeN1QNsdVPKrOnGQvXSe9tGYD9
+         w22w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wvXkpVgy6884rDBDub7GSrouN3alYy0RjubNjRU4D8c=;
-        b=qiRrWS/VQ3oYacHXTIkzAZ4LWlHDNbh6lE3kcpSSCdgXmQOHlakU3S/31qJF6Dqyvt
-         Up9eZFf8Nxxq+lu/Zefhj1VoANwk1gT0SYGIzrMSmX8ypqpheSY6cRd0r6sqz2E/0xr7
-         dNm+h2pTvHVt9r26vPAcUowXECsaIiiW6lWWLSyw8XXCIa7hMWT1Zy4xvGFvnrwYmpSb
-         0QGeHJ1uxbRJDON1m5gwtu3TAk30zsCuhHynF4+qdi81msPbm7zpZJYwI93mkag4td48
-         tEaNTym/ZI3XIm/woua71mYsS/nec+CQYf9NGAtU2z1/W3ar6SFi5/AnlSEgwRFro8/q
-         MCHg==
-X-Gm-Message-State: APjAAAXgPsFUwWMku4hRauOp8Q6PNBGlbjOZvzkv1cvso2Femtg4w6MV
-        ohXhyS43P+YXQNeLMJMSm2iVB7zT3obt+gwRTlg=
-X-Google-Smtp-Source: APXvYqypLx3K4rWNLLZYA/GQnRqFih0CeElXVoPUwwnmxm+jKccr7fsFsDB0jQwV9ey6FHJU6J/HlaktN6yEMFzdUmE=
-X-Received: by 2002:aca:d410:: with SMTP id l16mr1887721oig.141.1566982043664;
- Wed, 28 Aug 2019 01:47:23 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Lh087UDN3bHwxNKU9oXqXSmgDMXMIewzXIKR9m+6i0E=;
+        b=Fbmzqbgx75sRoRrDIumvvBv64lTx5dKbYgiMNk7hGDuq+916ApDakx2UCLztQR2gZM
+         WlR11FPLFGQgYU8BGg7bN5WQxlwdhXZd2pkm9pUf7/Ad6551Z0a9mBrZBsREYZThmYU9
+         k5Zxw32sIoJ8ncj1a04pbyjIlDGc9ttS5+l9BN3TIR7uMW457tHmosc5uly//iNleFEa
+         PVX2G88BerNVowhF/sZtUDIyhD+JEEbDoeR3v27ogDb4l7ogzg6DLYHMNtozLM7VEm+r
+         TsHIg+d72zoLBXnhHgjvdSnEm/N+caA5Y63z6uFluzbPdHmeJ00pbO80+7Ky+58B6Zpq
+         IkmA==
+X-Gm-Message-State: APjAAAXIw3sgpv1OJv/piZoXkEOLc0zmZYHXgMfNdbg2KhdneuxqCZQx
+        EigzrDhnuOq9LQ8++7DMpTiW3IygMmg=
+X-Google-Smtp-Source: APXvYqw11HbEWphGzvuO4I/UDjUNi1JYA+PodKeI/bgO/Z9c9hO+gqsdJmZDyLNbvSJsSL/ArGZH0w==
+X-Received: by 2002:adf:ce8d:: with SMTP id r13mr3127105wrn.37.1566982085434;
+        Wed, 28 Aug 2019 01:48:05 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id u6sm1488731wmm.26.2019.08.28.01.48.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 28 Aug 2019 01:48:04 -0700 (PDT)
+Subject: Re: [PATCH 4/5] misc: fastrpc: fix double refcounting on dmabuf
+To:     Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, arnd@arndb.de,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mayank Chopra <mak.chopra@codeaurora.org>
+References: <20190823100622.3892-1-srinivas.kandagatla@linaro.org>
+ <20190823100622.3892-5-srinivas.kandagatla@linaro.org>
+ <CAC8LzUAnz+RZYh+bBbJbXJYP3QDq4H1847W8rJxj-aF1B1J9QQ@mail.gmail.com>
+ <cb003c11-d331-a2c7-1eb4-a89ba025f4c6@linaro.org>
+ <d545f7fc-fc97-c250-b9d2-ebfbc9709780@linaro.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <6a34823b-4a1d-c7de-a4c7-87587705708b@linaro.org>
+Date:   Wed, 28 Aug 2019 09:48:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1564643196-7797-1-git-send-email-wanpengli@tencent.com>
- <7b1e3025-f513-7068-32ac-4830d67b65ac@intel.com> <c3fe182f-627f-88ad-cb4d-a4189202b438@redhat.com>
- <20190803202058.GA9316@amt.cnet> <CANRm+CwtHBOVWFcn+6Z3Ds7dEcNL2JP+b6hLRS=oeUW98A24MQ@mail.gmail.com>
- <20190826204045.GA24697@amt.cnet> <CANRm+Cx0+V67Ek7FhSs61ZqZL3MgV88Wdy17Q6UA369RH7=dgQ@mail.gmail.com>
- <CANRm+CxqYMzgvxYyhZLmEzYd6SLTyHdRzKVaSiHO-4SV+OwZUQ@mail.gmail.com> <CAJZ5v0iQc0-WzqeyAh-6m5O-BLraRMj+Z7sqvRgGwh2u2Hp7cg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iQc0-WzqeyAh-6m5O-BLraRMj+Z7sqvRgGwh2u2Hp7cg@mail.gmail.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 28 Aug 2019 16:48:00 +0800
-Message-ID: <CANRm+CyHwAKDGtEDkKz_u9e5pzrV=h8K5=9CWt7Fv+PzYUheHA@mail.gmail.com>
-Subject: Re: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when dedicated
- physical CPUs are available
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Marcelo Tosatti <mtosatti@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <d545f7fc-fc97-c250-b9d2-ebfbc9709780@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 28 Aug 2019 at 16:45, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Wed, Aug 28, 2019 at 10:34 AM Wanpeng Li <kernellwp@gmail.com> wrote:
-> >
-> > On Tue, 27 Aug 2019 at 08:43, Wanpeng Li <kernellwp@gmail.com> wrote:
-> > >
-> > > Cc Michael S. Tsirkin,
-> > > On Tue, 27 Aug 2019 at 04:42, Marcelo Tosatti <mtosatti@redhat.com> w=
-rote:
-> > > >
-> > > > On Tue, Aug 13, 2019 at 08:55:29AM +0800, Wanpeng Li wrote:
-> > > > > On Sun, 4 Aug 2019 at 04:21, Marcelo Tosatti <mtosatti@redhat.com=
-> wrote:
-> > > > > >
-> > > > > > On Thu, Aug 01, 2019 at 06:54:49PM +0200, Paolo Bonzini wrote:
-> > > > > > > On 01/08/19 18:51, Rafael J. Wysocki wrote:
-> > > > > > > > On 8/1/2019 9:06 AM, Wanpeng Li wrote:
-> > > > > > > >> From: Wanpeng Li <wanpengli@tencent.com>
-> > > > > > > >>
-> > > > > > > >> The downside of guest side polling is that polling is perf=
-ormed even
-> > > > > > > >> with other runnable tasks in the host. However, even if po=
-ll in kvm
-> > > > > > > >> can aware whether or not other runnable tasks in the same =
-pCPU, it
-> > > > > > > >> can still incur extra overhead in over-subscribe scenario.=
- Now we can
-> > > > > > > >> just enable guest polling when dedicated pCPUs are availab=
-le.
-> > > > > > > >>
-> > > > > > > >> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > > > >> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > > > > > > >> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > > > > > > >> Cc: Marcelo Tosatti <mtosatti@redhat.com>
-> > > > > > > >> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > > > > > > >
-> > > > > > > > Paolo, Marcelo, any comments?
-> > > > > > >
-> > > > > > > Yes, it's a good idea.
-> > > > > > >
-> > > > > > > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> >
-> > Hi Marcelo,
-> >
-> > If you don't have more concern, I guess Rafael can apply this patch
-> > now since the merge window is not too far.
->
-> I will likely queue it up later today and it will go to linux-next
-> early next week.
 
-Thank you, Rafael.
 
-Regards,
-Wanpeng Li
+On 28/08/2019 08:50, Jorge Ramirez wrote:
+> On 8/27/19 23:45, Srinivas Kandagatla wrote:
+>> On 23/08/2019 16:23, Jorge Ramirez-Ortiz wrote:
+>>> can you add me as a co-author to this patch please?
+>> No problem I can do that if you feel so!
+> yes please. thanks!
+> 
+>>> since I spent about a day doing the analysis, sent you  a fix that
+>>> maintained the API used by the library and explained you how to
+>>> reproduce the issue I think it is just fair. > the  fact that the api
+>>> could be be modified and the fix be done a bit
+>>> differently- free dma buf ioctl removed- seems just a minor
+>>> implementation detail to me.
+>> No, that's not true, this is a clear fastrpc design issue.
+> IMO the ioctls defines the contract with userspace and the contract
+> establishes that userspace must call deallocate. the kernel wrongly
+> implemented to that contract since it doesn't handle the cases where
+> userspace can't send the release calls which leads to memory leaks. this
+> is what I meant by and implementation issue.
+> 
+> if we had many fastrpc users, rolling out the design change that you
+> propose - removing an ioctl- would definitively have an impact. But
+> since that is not yet the case, there is not doubt that your patch makes
+> more sense.
+
+Exactly before it make a way into other projects!
+
+> 
+> but my point was that there is not a huge gap in efforts between doing
+> one or the other.
+
+Thats not the point, point is about right fix!
+
+> 
+>> Userspace is already doing a refcount via mmap/unmap on that dmabuf fd,
+>> having an additional api adds another level of refcount which is totally
+>> redundant and is the root cause for this leak.
+> yes it is redundant but is not the root cause for this leak. the root
+> cause is that the driver doesnt handle the case where userspace didnt or
+> was not able to call release (and that is no more than adding allocated
+> buffers to a list and clean on exit)
+
+I don't agree with you on that. We should not take an extra refcount in 
+first place in driver.
+
+let me explain it one more time!
+
+dmabuf has to be mmaped in userspace app before it is used, and
+"Memory mappings that were created in the process shall be unmapped 
+before the process is destroyed" so the refcount is taken care by 
+mmap/unmap automatically.
+
+--srini
+
+
+> 
