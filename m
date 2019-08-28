@@ -2,112 +2,174 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLACK,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D720AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C75C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF0C922CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D5B2208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 16:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567008142;
-	bh=pmFShqiGOPaZAwzKDUIhM37wWW87B9gBKhfun8dIi78=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=VfYUg9+AW+7ozQf3hwDE0GpASvP782IJCWMseNOZbwjuLuJQRKyf2WkZu/lSd06gG
-	 KU8LXc+67VJsGYF8KuhhauFrJZ8YChaM7GBuAD2yHgSB/kxe9S2hjTKU3YxaaH2sJC
-	 9BV59/FWXSCowqnrSlwF0H33o6XVwaZtT7bHlkiA=
+	s=default; t=1567008149;
+	bh=KiDWV55+ATzjP+b7UWJ+mKTOtNWcThrxDP4N45Nw+fw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tMeSgGCYgZYVBaRV4igCTMZd0qF8mgQl7svkXGFcUItraB7t2pOzSTzPVt5mA5OmT
+	 9JpYTqLAEZoeDVs8VeX40lP+UvfoVLhFTrHNBhKWlHLMbGjy7xvk3+MuHo1iSnBGCe
+	 YAkJkmW1yC2nsvv9WA+pHJ0iAiIOFK3H/iPFxEIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfH1QCW (ORCPT
+        id S1726965AbfH1QC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 12:02:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:33666 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbfH1QCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 12:02:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E32C028;
-        Wed, 28 Aug 2019 09:02:20 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A84DE3F59C;
-        Wed, 28 Aug 2019 09:02:19 -0700 (PDT)
-Subject: Re: [PATCH 04/13] irqchip: Add driver for Loongson-3 I/O interrupt
- controller
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, chenhc@lemote.com,
-        paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.co, devicetree@vger.kernel.org
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
- <20190827085302.5197-5-jiaxun.yang@flygoat.com>
- <e6a5862f-0f6c-cab0-9f4a-51b7889d38e7@kernel.org>
- <82c4b9ed-7270-74ce-6e10-165182e540dd@flygoat.com>
- <20190828075940.549e1983@why>
- <619b1d35-7bc2-999f-5a51-fb2efdc63f60@flygoat.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <45615c1a-7af8-3496-5369-4b2f174a76e7@kernel.org>
-Date:   Wed, 28 Aug 2019 17:02:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 12:02:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51152 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726450AbfH1QC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 12:02:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E4B59B011;
+        Wed, 28 Aug 2019 16:02:25 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 18:02:24 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Vlastimil Babka <vbabka@suse.cz>, hannes@cmpxchg.org,
+        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
+Message-ID: <20190828160224.GP28313@dhcp22.suse.cz>
+References: <20190827110210.lpe36umisqvvesoa@box>
+ <aaaf9742-56f7-44b7-c3db-ad078b7b2220@suse.cz>
+ <20190827120923.GB7538@dhcp22.suse.cz>
+ <20190827121739.bzbxjloq7bhmroeq@box>
+ <20190827125911.boya23eowxhqmopa@box>
+ <d76ec546-7ae8-23a3-4631-5c531c1b1f40@linux.alibaba.com>
+ <20190828075708.GF7386@dhcp22.suse.cz>
+ <20190828140329.qpcrfzg2hmkccnoq@box>
+ <20190828141253.GM28313@dhcp22.suse.cz>
+ <20190828144658.ar4fajfuffn6k2ki@black.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <619b1d35-7bc2-999f-5a51-fb2efdc63f60@flygoat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828144658.ar4fajfuffn6k2ki@black.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/08/2019 16:31, Jiaxun Yang wrote:
+On Wed 28-08-19 17:46:59, Kirill A. Shutemov wrote:
+> On Wed, Aug 28, 2019 at 02:12:53PM +0000, Michal Hocko wrote:
+> > On Wed 28-08-19 17:03:29, Kirill A. Shutemov wrote:
+> > > On Wed, Aug 28, 2019 at 09:57:08AM +0200, Michal Hocko wrote:
+> > > > On Tue 27-08-19 10:06:20, Yang Shi wrote:
+> > > > > 
+> > > > > 
+> > > > > On 8/27/19 5:59 AM, Kirill A. Shutemov wrote:
+> > > > > > On Tue, Aug 27, 2019 at 03:17:39PM +0300, Kirill A. Shutemov wrote:
+> > > > > > > On Tue, Aug 27, 2019 at 02:09:23PM +0200, Michal Hocko wrote:
+> > > > > > > > On Tue 27-08-19 14:01:56, Vlastimil Babka wrote:
+> > > > > > > > > On 8/27/19 1:02 PM, Kirill A. Shutemov wrote:
+> > > > > > > > > > On Tue, Aug 27, 2019 at 08:01:39AM +0200, Michal Hocko wrote:
+> > > > > > > > > > > On Mon 26-08-19 16:15:38, Kirill A. Shutemov wrote:
+> > > > > > > > > > > > Unmapped completely pages will be freed with current code. Deferred split
+> > > > > > > > > > > > only applies to partly mapped THPs: at least on 4k of the THP is still
+> > > > > > > > > > > > mapped somewhere.
+> > > > > > > > > > > Hmm, I am probably misreading the code but at least current Linus' tree
+> > > > > > > > > > > reads page_remove_rmap -> [page_remove_anon_compound_rmap ->\ deferred_split_huge_page even
+> > > > > > > > > > > for fully mapped THP.
+> > > > > > > > > > Well, you read correctly, but it was not intended. I screwed it up at some
+> > > > > > > > > > point.
+> > > > > > > > > > 
+> > > > > > > > > > See the patch below. It should make it work as intened.
+> > > > > > > > > > 
+> > > > > > > > > > It's not bug as such, but inefficientcy. We add page to the queue where
+> > > > > > > > > > it's not needed.
+> > > > > > > > > But that adding to queue doesn't affect whether the page will be freed
+> > > > > > > > > immediately if there are no more partial mappings, right? I don't see
+> > > > > > > > > deferred_split_huge_page() pinning the page.
+> > > > > > > > > So your patch wouldn't make THPs freed immediately in cases where they
+> > > > > > > > > haven't been freed before immediately, it just fixes a minor
+> > > > > > > > > inefficiency with queue manipulation?
+> > > > > > > > Ohh, right. I can see that in free_transhuge_page now. So fully mapped
+> > > > > > > > THPs really do not matter and what I have considered an odd case is
+> > > > > > > > really happening more often.
+> > > > > > > > 
+> > > > > > > > That being said this will not help at all for what Yang Shi is seeing
+> > > > > > > > and we need a more proactive deferred splitting as I've mentioned
+> > > > > > > > earlier.
+> > > > > > > It was not intended to fix the issue. It's fix for current logic. I'm
+> > > > > > > playing with the work approach now.
+> > > > > > Below is what I've come up with. It appears to be functional.
+> > > > > > 
+> > > > > > Any comments?
+> > > > > 
+> > > > > Thanks, Kirill and Michal. Doing split more proactive is definitely a choice
+> > > > > to eliminate huge accumulated deferred split THPs, I did think about this
+> > > > > approach before I came up with memcg aware approach. But, I thought this
+> > > > > approach has some problems:
+> > > > > 
+> > > > > First of all, we can't prove if this is a universal win for the most
+> > > > > workloads or not. For some workloads (as I mentioned about our usecase), we
+> > > > > do see a lot THPs accumulated for a while, but they are very short-lived for
+> > > > > other workloads, i.e. kernel build.
+> > > > > 
+> > > > > Secondly, it may be not fair for some workloads which don't generate too
+> > > > > many deferred split THPs or those THPs are short-lived. Actually, the cpu
+> > > > > time is abused by the excessive deferred split THPs generators, isn't it?
+> > > > 
+> > > > Yes this is indeed true. Do we have any idea on how much time that
+> > > > actually is?
+> > > 
+> > > For uncontented case, splitting 1G worth of pages (2MiB x 512) takes a bit
+> > > more than 50 ms in my setup. But it's best-case scenario: pages not shared
+> > > across multiple processes, no contention on ptl, page lock, etc.
+> > 
+> > Any idea about a bad case?
 > 
-> On 2019/8/28 下午2:59, Marc Zyngier wrote:
->> On Wed, 28 Aug 2019 08:27:05 +0800
->> Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->>
->>> On 2019/8/28 上午12:45, Marc Zyngier wrote:
->>>> On 27/08/2019 09:52, Jiaxun Yang wrote:
->>>>> +	chained_irq_enter(chip, desc);
->>>>> +
->>>>> +	pending = readl(priv->intc_base + LS3_REG_INTC_EN_STATUS) &
->>>>> +		readl(priv->intc_base + LS3_REG_INTC_STATUS);
->>>> Reading the enabled status from the HW on each interrupt? I'm sure
->>>> that's pretty cheap...
->>> Seems expensive but to deal with a buggy hardware... That's worthy.
->> How broken is it? You very much seem to rely on the HW being correct
->> here, since you trust it exclusively. I'd expect the enable mask to be
->> a SW construct if you didn't blindly trust it
-> Hi Marc
+> Not really.
 > 
-> Thanks for your answering.
-> 
-> The vendor code did this and said there is a HW issue. I just don't have 
-> the guts to remove this check.
-> Seems like sometimes masked interrupt may get ISR set wrongly.
+> How bad you want it to get? How many processes share the page? Access
+> pattern? Locking situation?
 
-And that would just as well avoided by a SW managed mask.
-
->> And if this is truly the right way to do it, please document the
->> various problems with the controller so that we don't break it at a
->> later time.
-> Thanks, will do.
->>
->> Then how comes this comes from the irqchip's DT node? This should be
->> part of the endpoint's interrupt specifier.
+Let's say how hard a regular user can make this?
+ 
+> Worst case scenarion: no progress on splitting due to pins or locking
+> conflicts (trylock failure).
 > 
-> In theory it should be, However if we set different interrupt 
-> lines/cores on that controller, interrupts may get lost. It means we can 
-> only have single parent core/interrupt.
+> > > > > With memcg awareness, the deferred split THPs actually are isolated and
+> > > > > capped by memcg. The long-lived deferred split THPs can't be accumulated too
+> > > > > many due to the limit of memcg. And, cpu time spent in splitting them would
+> > > > > just account to the memcgs who generate that many deferred split THPs, who
+> > > > > generate them who pay for it. This sounds more fair and we could achieve
+> > > > > much better isolation.
+> > > > 
+> > > > On the other hand, deferring the split and free up a non trivial amount
+> > > > of memory is a problem I consider quite serious because it affects not
+> > > > only the memcg workload which has to do the reclaim but also other
+> > > > consumers of memory beucase large memory blocks could be used for higher
+> > > > order allocations.
+> > > 
+> > > Maybe instead of drive the split from number of pages on queue we can take
+> > > a hint from compaction that is struggles to get high order pages?
+> > 
+> > This is still unbounded in time.
 > 
-> So I'd prefer just set them uniformly by controller's dt-binding to 
-> prevent confusing.
+> I'm not sure we should focus on time.
+> 
+> We need to make sure that we don't overal system health worse. Who cares
+> if we have pages on deferred split list as long as we don't have other
+> user for the memory?
 
-And I disagree. You can document the restriction, and even maybe enforce
-it by validating the DT one way or another. But we're not putting what
-ends up being a routing table in the irqchip binding.
+We do care for all those users which do not want to get stalled when
+requesting that memory. And you cannot really predict that, right? So
+the sooner the better. Modulo time wasted for the pointless splitting of
+course. I am afraid defining the best timing here is going to be hard
+but let's focus on workloads that are known to generate partial THPs and
+see how that behaves.
 
-	M.
 -- 
-Jazz is not dead, it just smells funny...
+Michal Hocko
+SUSE Labs
