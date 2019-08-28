@@ -2,116 +2,160 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1693C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFDBC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A021E2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:35:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alpsgroup.onmicrosoft.com header.i=@alpsgroup.onmicrosoft.com header.b="uoXjhGe0"
+	by mail.kernel.org (Postfix) with ESMTP id D17AF2189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 06:37:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbfH1GfT (ORCPT
+        id S1726415AbfH1GhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 02:35:19 -0400
-Received: from mail-eopbgr1410088.outbound.protection.outlook.com ([40.107.141.88]:28275
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726145AbfH1GfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 02:35:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y/eiBScGosncdkqTbi+MTrx/66yZlTfNuNLIDOQFGq3cgXgZA17bTuBSqL7hUxKv/ZZFkbA9fbd7NjfoPUyRntNnvuaeYmwSbjQg7bqcOs88+vLlRWFLHPuOeFptCz38kQZ6+E7jXfti9uwsU50SzCwcEWgTIwM7KGSDFmjlGq8byptS+fZ439eHIEn1Cj7Iq56vUC5ovfuDNBLAM7YH46WPlUI7deZdXcgkC99JKYurBentnrUjVI54D/bt+SHpHbAc8TwqQKpM4oEt7CXfobUkoiMlUUPPW+F2DLDSRV54gX7Rs8c8k43hkh1zYOAFIwAjlcKlTL8PS8hD5CbfOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=26LLCclJbkhO93ZI4E5hRs80MVEzb0qqRzECJSJVvjg=;
- b=UFsZ1KpFHbybSOQf9GbFeEDs+kETwnio2c8ASfcVbK1+cREIL090uXumYq99jN7EBzlZ+93KHkEklMaNJjN9CuUQlwtvMIGhqjVC+k6Oe0s1+fIOowCFenEuPZdRO9tXFr+bTRz/47JEZduFwZwskUqE0jxFisErEtuNQN0feB65vNjdL9TvO9YE2QhdbNnBxyV0aNNi+7LrY5fYH5jGwyEmDNHyudzIFdQXzk2sH+jvYTxJ1TbRuHo5tikTl/MWd/eoi4ed3+tdbiDmcKUHZFAHPdHU3M6Pwn31QQaA/h3M9lM2c7jz0p90JIujnhwsc8/A5GfHlI/gPMFiESl1SA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=alpsalpine.com; dmarc=pass action=none
- header.from=alpsalpine.com; dkim=pass header.d=alpsalpine.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=alpsgroup.onmicrosoft.com; s=selector2-alpsgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=26LLCclJbkhO93ZI4E5hRs80MVEzb0qqRzECJSJVvjg=;
- b=uoXjhGe06NWPM3Gx5yoL848zS/W8GgwyWPhelPbTjWadkWni71j+DO+6y1hVsLp4GuPBNi1o90wxrslnxhXbAvLUgVLnWottFfRAmkMKNuj62+doetSFh0I/PHkPM6W931sUNvgZ+SngxKCK8WLrrIyMvWPZTa7eYeeMppBm2Kw=
-Received: from TYAPR01MB3022.jpnprd01.prod.outlook.com (20.177.102.201) by
- TYAPR01MB3021.jpnprd01.prod.outlook.com (20.177.101.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.20; Wed, 28 Aug 2019 06:35:15 +0000
-Received: from TYAPR01MB3022.jpnprd01.prod.outlook.com
- ([fe80::6dc6:12ba:f9df:233b]) by TYAPR01MB3022.jpnprd01.prod.outlook.com
- ([fe80::6dc6:12ba:f9df:233b%4]) with mapi id 15.20.2199.021; Wed, 28 Aug 2019
- 06:35:15 +0000
-From:   Masaki Ota <masaki.ota@alpsalpine.com>
-To:     Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-CC:     Mario Limonciello <mario.limonciello@dell.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Naoki Saito <naoki.saito@alpsalpine.com>
-Subject: RE: Alps touchpad generates IRQ storm after S3
-Thread-Topic: Alps touchpad generates IRQ storm after S3
-Thread-Index: AQHVXWj4yiA/dCbgb0asvogI8mRWOKcQF8vA
-Date:   Wed, 28 Aug 2019 06:35:15 +0000
-Message-ID: <TYAPR01MB30223CB8A576C7809F6382C1ECA30@TYAPR01MB3022.jpnprd01.prod.outlook.com>
-References: <44F93018-5F13-4932-A5AC-9D288CDF68DD@canonical.com>
-In-Reply-To: <44F93018-5F13-4932-A5AC-9D288CDF68DD@canonical.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=masaki.ota@alpsalpine.com; 
-x-originating-ip: [106.184.109.136]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f01accf6-4e71-4599-5be7-08d72b81e2ea
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TYAPR01MB3021;
-x-ms-traffictypediagnostic: TYAPR01MB3021:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB3021C1E2106958F82EE618DAECA30@TYAPR01MB3021.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 014304E855
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(376002)(136003)(39850400004)(396003)(189003)(199004)(13464003)(4744005)(85182001)(102836004)(71190400001)(86362001)(26005)(14444005)(256004)(186003)(6506007)(76116006)(52536014)(486006)(66476007)(4326008)(64756008)(66556008)(446003)(53546011)(229853002)(5660300002)(66946007)(11346002)(6116002)(14454004)(54906003)(3846002)(81156014)(81166006)(53936002)(99286004)(9686003)(8936002)(6436002)(7696005)(33656002)(107886003)(76176011)(55016002)(8676002)(476003)(66446008)(478600001)(316002)(7736002)(71200400001)(110136005)(6246003)(305945005)(74316002)(2906002)(66066001)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:TYAPR01MB3021;H:TYAPR01MB3022.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: alpsalpine.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2Db9hek4QMKL+hBTPwmJJ1ELm+aFzzPxpPLND2o4VTou4LdKqrIRVq88CiGkG1pnr7sKgHN1kLKp5wtrfkQRrc3sn8aZAasExh5pv9BzC9Ejmc44LVYeaB8HthtPoFhbpKeso/O5ufHRFXdn7UhNFdT9QhVYRo6u1PMdMnA3WRM4IHAIZio5i4cgPLwFF5Xza43VgoPypII9DsJjB31OzvcdoM0eQNQsb83381R6SyLkv/xO+Moo8iSVApHAJztO051w0iINAXcw/Ck7rwQWR5FL+qrVpf57b5VQ95YY+pKeSUH9reW6le2KCP89iNZOPgChT5ZY8fKBZKwL6HOhZ2ZV2PFs+H7OqKDnA3FGLJSXFTvu85Ua3Dj/C6XxfKC1ZpMp0nMAWW8KO6JQh+rtCMjxAFtTt03Vs9is2G4FadU=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 28 Aug 2019 02:37:25 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:55010 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726374AbfH1GhZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 02:37:25 -0400
+X-UUID: bb68fcb6fa36483baf879d51d2ab477f-20190828
+X-UUID: bb68fcb6fa36483baf879d51d2ab477f-20190828
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <vic.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1294171564; Wed, 28 Aug 2019 14:37:20 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 28 Aug 2019 14:37:26 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 28 Aug 2019 14:37:26 +0800
+From:   Vic Wu <vic.wu@mediatek.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     "David S . Miller" <davem@davemloft.net>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        <linux-crypto@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Vic Wu <vic.wu@mediatek.com>
+Subject: [PATCH 1/5] crypto: mediatek: move mtk_aes_find_dev() to the right place
+Date:   Wed, 28 Aug 2019 14:37:12 +0800
+Message-ID: <20190828063716.22689-1-vic.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-X-OriginatorOrg: alpsalpine.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f01accf6-4e71-4599-5be7-08d72b81e2ea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 06:35:15.1461
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 57e76998-77bd-4b82-a424-198f46eb2254
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: C8YCzTvmlvV/CS476kFYcVYpqsylXgLZYxtCYtVf21fbTGgvJ8Kb0X8uJ2mHcb3Cy9HVGp5z5k6Z9PLSxHaRa5blwCHf/9cjGf3AwpCc3WY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3021
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEthaS1IZW5nLA0KDQpTb3JyeSwgSSdtIG5vdCBpbiBjaGFyZ2Ugb2YgTGludXggdGFzayBu
-b3cuDQoNCkhpLCBYaWFvSmlhbiwNCg0KUGxlYXNlIGNoZWNrIHRoZSBmb2xsb3dpbmcgbWFpbC4N
-CklmIHlvdSBoYXZlIGFueSBxdWVzdGlvbiwgcGxlYXNlIGFzayBLYWktSGVuZy4NCg0KQmVzdCBS
-ZWdhcmRzLA0KTWFzYWtpIE90YQ0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEth
-aS1IZW5nIEZlbmcgPGthaS5oZW5nLmZlbmdAY2Fub25pY2FsLmNvbT4gDQpTZW50OiBXZWRuZXNk
-YXksIEF1Z3VzdCAyOCwgMjAxOSAzOjIyIFBNDQpUbzog5aSq55SwIOecn+WWnCBNYXNha2kgT3Rh
-IDxtYXNha2kub3RhQGFscHNhbHBpbmUuY29tPg0KQ2M6IE1hcmlvIExpbW9uY2llbGxvIDxtYXJp
-by5saW1vbmNpZWxsb0BkZWxsLmNvbT47IG9wZW4gbGlzdDpISUQgQ09SRSBMQVlFUiA8bGludXgt
-aW5wdXRAdmdlci5rZXJuZWwub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgt
-a2VybmVsQHZnZXIua2VybmVsLm9yZz4NClN1YmplY3Q6IEFscHMgdG91Y2hwYWQgZ2VuZXJhdGVz
-IElSUSBzdG9ybSBhZnRlciBTMw0KDQpIaSBNYXNha2ksDQoNClRoZSBBbHBzIHRvdWNocGFkICgw
-NDRFOjEyMjApIG9uIERlbGwgUHJlY2lzaW9uIDc1MzAgY2F1c2VzIElSUSBzdG9ybSBhZnRlciBz
-eXN0ZW0gc3VzcGVuZCAoUzMpLg0KQ29tbWl0ICJISUQ6IGkyYy1oaWQ6IERvbid0IHJlc2V0IGRl
-dmljZSB1cG9uIHN5c3RlbSByZXN1bWXigJ0gd2hpY2ggc29sdmVzIHRoZSBzYW1lIGlzc3VlIGZv
-ciBvdGhlciB2ZW5kb3JzLCBjYXVzZSB0aGUgaXNzdWUgb24gQWxwcyB0b3VjaHBhZC4NClNvIEni
-gJlkIGxpa2UgdG8ga25vdyB0aGUgY29ycmVjdCBjb21tYW5kIEFscHMgdG91Y2hwYWQgZXhwZWN0
-cyBhZnRlciBzeXN0ZW0gcmVzdW1lLg0KDQpBbHNvIENjIE1hcmlvIGJlY2F1c2UgdGhpcyBjb3Vs
-ZCByZWxhdGUgdG8gQklPUy4NCg0KS2FpLUhlbmcNCg==
+From: Ryder Lee <ryder.lee@mediatek.com>
+
+Move mtk_aes_find_dev() to right functions as nobody uses the
+'cryp' under current flows.
+
+We can also avoid duplicate checks here and there in this way.
+
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Vic Wu <vic.wu@mediatek.com>
+---
+ drivers/crypto/mediatek/mtk-aes.c | 39 +++++++++++--------------------
+ 1 file changed, 14 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/crypto/mediatek/mtk-aes.c b/drivers/crypto/mediatek/mtk-aes.c
+index 72e4549e..43fcc8b5 100644
+--- a/drivers/crypto/mediatek/mtk-aes.c
++++ b/drivers/crypto/mediatek/mtk-aes.c
+@@ -658,14 +658,19 @@ static int mtk_aes_setkey(struct crypto_ablkcipher *tfm,
+ 
+ static int mtk_aes_crypt(struct ablkcipher_request *req, u64 mode)
+ {
+-	struct mtk_aes_base_ctx *ctx;
++	struct crypto_ablkcipher *ablkcipher = crypto_ablkcipher_reqtfm(req);
++	struct mtk_aes_base_ctx *ctx = crypto_ablkcipher_ctx(ablkcipher);
+ 	struct mtk_aes_reqctx *rctx;
++	struct mtk_cryp *cryp;
++
++	cryp = mtk_aes_find_dev(ctx);
++	if (!cryp)
++		return -ENODEV;
+ 
+-	ctx = crypto_ablkcipher_ctx(crypto_ablkcipher_reqtfm(req));
+ 	rctx = ablkcipher_request_ctx(req);
+ 	rctx->mode = mode;
+ 
+-	return mtk_aes_handle_queue(ctx->cryp, !(mode & AES_FLAGS_ENCRYPT),
++	return mtk_aes_handle_queue(cryp, !(mode & AES_FLAGS_ENCRYPT),
+ 				    &req->base);
+ }
+ 
+@@ -702,13 +707,6 @@ static int mtk_aes_ctr_decrypt(struct ablkcipher_request *req)
+ static int mtk_aes_cra_init(struct crypto_tfm *tfm)
+ {
+ 	struct mtk_aes_ctx *ctx = crypto_tfm_ctx(tfm);
+-	struct mtk_cryp *cryp = NULL;
+-
+-	cryp = mtk_aes_find_dev(&ctx->base);
+-	if (!cryp) {
+-		pr_err("can't find crypto device\n");
+-		return -ENODEV;
+-	}
+ 
+ 	tfm->crt_ablkcipher.reqsize = sizeof(struct mtk_aes_reqctx);
+ 	ctx->base.start = mtk_aes_start;
+@@ -718,13 +716,6 @@ static int mtk_aes_cra_init(struct crypto_tfm *tfm)
+ static int mtk_aes_ctr_cra_init(struct crypto_tfm *tfm)
+ {
+ 	struct mtk_aes_ctx *ctx = crypto_tfm_ctx(tfm);
+-	struct mtk_cryp *cryp = NULL;
+-
+-	cryp = mtk_aes_find_dev(&ctx->base);
+-	if (!cryp) {
+-		pr_err("can't find crypto device\n");
+-		return -ENODEV;
+-	}
+ 
+ 	tfm->crt_ablkcipher.reqsize = sizeof(struct mtk_aes_reqctx);
+ 	ctx->base.start = mtk_aes_ctr_start;
+@@ -930,6 +921,11 @@ static int mtk_aes_gcm_crypt(struct aead_request *req, u64 mode)
+ 	struct mtk_aes_base_ctx *ctx = crypto_aead_ctx(crypto_aead_reqtfm(req));
+ 	struct mtk_aes_gcm_ctx *gctx = mtk_aes_gcm_ctx_cast(ctx);
+ 	struct mtk_aes_reqctx *rctx = aead_request_ctx(req);
++	struct mtk_cryp *cryp;
++
++	cryp = mtk_aes_find_dev(ctx);
++	if (!cryp)
++		return -ENODEV;
+ 
+ 	/* Empty messages are not supported yet */
+ 	if (!gctx->textlen && !req->assoclen)
+@@ -937,7 +933,7 @@ static int mtk_aes_gcm_crypt(struct aead_request *req, u64 mode)
+ 
+ 	rctx->mode = AES_FLAGS_GCM | mode;
+ 
+-	return mtk_aes_handle_queue(ctx->cryp, !!(mode & AES_FLAGS_ENCRYPT),
++	return mtk_aes_handle_queue(cryp, !!(mode & AES_FLAGS_ENCRYPT),
+ 				    &req->base);
+ }
+ 
+@@ -1069,13 +1065,6 @@ static int mtk_aes_gcm_decrypt(struct aead_request *req)
+ static int mtk_aes_gcm_init(struct crypto_aead *aead)
+ {
+ 	struct mtk_aes_gcm_ctx *ctx = crypto_aead_ctx(aead);
+-	struct mtk_cryp *cryp = NULL;
+-
+-	cryp = mtk_aes_find_dev(&ctx->base);
+-	if (!cryp) {
+-		pr_err("can't find crypto device\n");
+-		return -ENODEV;
+-	}
+ 
+ 	ctx->ctr = crypto_alloc_skcipher("ctr(aes)", 0,
+ 					 CRYPTO_ALG_ASYNC);
+-- 
+2.17.1
+
