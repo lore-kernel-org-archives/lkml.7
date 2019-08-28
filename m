@@ -2,93 +2,100 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61959C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D8BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E64E23403
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E714E217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 22:45:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I+M9IpjE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfH1WpI (ORCPT
+        id S1727069AbfH1WpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 18:45:08 -0400
-Received: from mga09.intel.com ([134.134.136.24]:9511 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726400AbfH1WpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 18:45:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 15:45:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="380566759"
-Received: from amathu3-mobl1.amr.corp.intel.com (HELO [10.254.179.245]) ([10.254.179.245])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Aug 2019 15:45:06 -0700
-Subject: Re: mmotm 2019-08-27-20-39 uploaded (sound/hda/intel-nhlt.c)
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>, akpm@linux-foundation.org,
-        broonie@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        moderated for non-subscribers <alsa-devel@alsa-project.org>
-References: <20190828034012.sBvm81sYK%akpm@linux-foundation.org>
- <274054ef-8611-2661-9e67-4aabae5a7728@infradead.org>
- <5ac8a7a7-a9b4-89a5-e0a6-7c97ec1fabc6@linux.intel.com>
- <98ada795-4700-7fcc-6d14-fcc1ab25d509@infradead.org>
- <f0a62b08-cba9-d944-5792-8eac0ea39df1@linux.intel.com>
-Message-ID: <19edfb9a-f7b3-7a89-db5a-33289559aeef@linux.intel.com>
-Date:   Wed, 28 Aug 2019 17:45:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 28 Aug 2019 18:45:12 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45608 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfH1WpL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 18:45:11 -0400
+Received: by mail-pl1-f193.google.com with SMTP id y8so607505plr.12
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 15:45:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wPbPzi8DJAAO/y+OeuN5vBbTcuT9S0RWHExziJUIWRs=;
+        b=I+M9IpjEi2c7+HO8wuU8859y4LphVsN+QPPqN690BbGElE+72ftFGGLPPj1JCusSKT
+         qujvZep9+8ndJjEvCEl2I8lN5EZXrhu3qMAt4W2Slp+bj3F2ZeIx8XCodzcjH+rYW/sN
+         Qr+xajyVcs6034Dv62n5kj4ywTFL+UqSnrvB0E+wKWX6aubGNs3wAY7xR2z8LCg2ckeG
+         3cUJT3eNMCpKGE1EkRGO09HR1VOKrsPczPXG8S1eit7GHIchRfJwt5wf5nVBABybSRer
+         jCRvT4eY3Ot8YJ6q5JIcauarHcC4DwslXKVUDPLqFy4OXe1HPm5xJ2g32ApG0jzGBDnw
+         1EzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wPbPzi8DJAAO/y+OeuN5vBbTcuT9S0RWHExziJUIWRs=;
+        b=DbEEH1LDnB2w1jWk6sSiIqI7n1IjW/hFZ8HQJOgm1+eJMyXM32wueBjgXA8humhrc7
+         bynyuurTImkC6eHkIFdbRIjxpoZ8Yh+nLuNn3E2vgRxyn+45TAuSVc7q43+tH+4dEld7
+         gnMQD9yd0ADyYbBJzWBQ697n1tzLP8HhnN3Me/EP8Su8tKmtWd1C/Rov7rxVS5tjudZr
+         A5XQPKat99EAEkPGZTUTe9AxmOP2F9jSbBT/VhlW5QRDHZex+GzSIC4FFUMxE37NlOg+
+         wdDOX87sJmtrxFiEo5B8REvIKKVZIxWiljHa2Ju7KZhGTBYJugtEaetH885HM+cM8Efl
+         2sOg==
+X-Gm-Message-State: APjAAAVQcrDAX2hZeW8zqEuSgd10GPXARzGtMlbRlYBAkJdOwQ7ce9g8
+        HziKQAhTFsqv7FGH6zZ3EAamnYvF4FEV8rauaroygQ==
+X-Google-Smtp-Source: APXvYqxquwEwH8LScYMriBEm5ULJ4c1c1DFJ0JIRgv5EbkhLd7rjDuHDOAZAMS6OKpRisSxNQ6OOMCofwnlQMO+5x1M=
+X-Received: by 2002:a17:902:8484:: with SMTP id c4mr6645214plo.223.1567032310538;
+ Wed, 28 Aug 2019 15:45:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f0a62b08-cba9-d944-5792-8eac0ea39df1@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190827204007.201890-1-ndesaulniers@google.com> <e8851ba7888c433dac2ffa5d80f3289cd05940a3.camel@perches.com>
+In-Reply-To: <e8851ba7888c433dac2ffa5d80f3289cd05940a3.camel@perches.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 28 Aug 2019 15:44:59 -0700
+Message-ID: <CAKwvOdn6N_hmuFYS0NS1jLkY5m-C591Kouh-aNbceTUjt33N2w@mail.gmail.com>
+Subject: Re: [PATCH v2 00/14] treewide: prefer __section from compiler_attributes.h
+To:     Joe Perches <joe@perches.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        naveen.n.rao@linux.vnet.ibm.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Paul Burton <paul.burton@mips.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 27, 2019 at 7:47 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Tue, 2019-08-27 at 13:39 -0700, Nick Desaulniers wrote:
+> > GCC unescapes escaped string section names while Clang does not. Because
+> > __section uses the `#` stringification operator for the section name, it
+> > doesn't need to be escaped.
+> >
+> > This fixes an Oops observed in distro's that use systemd and not
+> > net.core.bpf_jit_enable=1, when their kernels are compiled with Clang.
+> >
+> > Instead, we should:
+> > 1. Prefer __section(.section_name_no_quotes).
+> > 2. Only use __attribute__((__section(".section"))) when creating the
+>
+> Please use __ before and after section
+>
+> i.e. __attribute__((__section__("<section_name>")))
+>
+>
 
->>> I just checked with Mark Brown's for-next tree 
->>> 8aceffa09b4b9867153bfe0ff6f40517240cee12
->>> and things are fine in i386 mode, see below.
->>>
->>> next-20190828 also works fine for me in i386 mode.
->>>
->>> if you can point me to a tree and configuration that don't work I'll 
->>> look into this, I'd need more info to progress.
->>
->> Please try the attached randconfig file.
->>
->> Thanks for looking.
-> 
-> Ack, I see some errors as well with this config. Likely a missing 
-> dependency somewhere, working on this now.
-
-My bad, I added a fallback with static inline functions in the .h file 
-when ACPI is not defined, but the .c file was still compiled.
-
-The diff below makes next-20190828 compile with Randy's config.
-
-It looks like the alsa-devel server is down btw?
-
-diff --git a/sound/hda/Makefile b/sound/hda/Makefile
-index 8560f6ef1b19..b3af071ce06b 100644
---- a/sound/hda/Makefile
-+++ b/sound/hda/Makefile
-@@ -14,5 +14,7 @@ obj-$(CONFIG_SND_HDA_CORE) += snd-hda-core.o
-  #extended hda
-  obj-$(CONFIG_SND_HDA_EXT_CORE) += ext/
-
-+ifdef CONFIG_ACPI
-  snd-intel-nhlt-objs := intel-nhlt.o
-  obj-$(CONFIG_SND_INTEL_NHLT) += snd-intel-nhlt.o
-+endif
-
+*explitive*!!!
+-- 
+Thanks,
+~Nick Desaulniers
