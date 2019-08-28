@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCA2C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23E5C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E18822CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA6DD22CED
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:25:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbfH1OZt (ORCPT
+        id S1726953AbfH1OZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:25:49 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50216 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726935AbfH1OZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 28 Aug 2019 10:25:45 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 339BC36F8D688E6C83F0;
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41768 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726828AbfH1OZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 10:25:44 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 58660D488D2F89626D47;
         Wed, 28 Aug 2019 22:25:41 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
@@ -29,11 +29,11 @@ From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yonglong Liu <liuyonglong@huawei.com>,
+        <linuxarm@huawei.com>, Zhongzhu Liu <liuzhongzhu@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 06/12] net: hns3: make some reusable codes into a function
-Date:   Wed, 28 Aug 2019 22:23:10 +0800
-Message-ID: <1567002196-63242-7-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 08/12] net: hns3: optimize waiting time for TQP reset
+Date:   Wed, 28 Aug 2019 22:23:12 +0800
+Message-ID: <1567002196-63242-9-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
 References: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,127 +46,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Zhongzhu Liu <liuzhongzhu@huawei.com>
 
-In hclge_dcb.c, these pair of codes:
-	hclge_notify_client(hdev, HNAE3_DOWN_CLIENT);
-	hclge_notify_client(hdev, HNAE3_UNINIT_CLIENT);
-and
-	hclge_notify_client(hdev, HNAE3_INIT_CLIENT);
-	hclge_notify_client(hdev, HNAE3_UP_CLIENT);
-are called many times, so make them into a function.
+This patch optimizes the waiting time for TQP reset.
 
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Zhongzhu Liu <liuzhongzhu@huawei.com>
+Reviewed-by: Yunsheng Lin <linyunsheng@huawei.com>
 Reviewed-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c | 54 +++++++++++-----------
- 1 file changed, 28 insertions(+), 26 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 10 ++++++----
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h |  2 +-
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-index 814e0f0..816f920 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-@@ -198,6 +198,28 @@ static int hclge_client_setup_tc(struct hclge_dev *hdev)
- 	return 0;
- }
- 
-+static int hclge_notify_down_uinit(struct hclge_dev *hdev)
-+{
-+	int ret;
-+
-+	ret = hclge_notify_client(hdev, HNAE3_DOWN_CLIENT);
-+	if (ret)
-+		return ret;
-+
-+	return hclge_notify_client(hdev, HNAE3_UNINIT_CLIENT);
-+}
-+
-+static int hclge_notify_init_up(struct hclge_dev *hdev)
-+{
-+	int ret;
-+
-+	ret = hclge_notify_client(hdev, HNAE3_INIT_CLIENT);
-+	if (ret)
-+		return ret;
-+
-+	return hclge_notify_client(hdev, HNAE3_UP_CLIENT);
-+}
-+
- static int hclge_ieee_setets(struct hnae3_handle *h, struct ieee_ets *ets)
- {
- 	struct hclge_vport *vport = hclge_get_vport(h);
-@@ -218,11 +240,7 @@ static int hclge_ieee_setets(struct hnae3_handle *h, struct ieee_ets *ets)
- 	if (map_changed) {
- 		netif_dbg(h, drv, netdev, "set ets\n");
- 
--		ret = hclge_notify_client(hdev, HNAE3_DOWN_CLIENT);
--		if (ret)
--			return ret;
--
--		ret = hclge_notify_client(hdev, HNAE3_UNINIT_CLIENT);
-+		ret = hclge_notify_down_uinit(hdev);
- 		if (ret)
- 			return ret;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 8a5b81d..f43c298 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -8262,11 +8262,12 @@ int hclge_reset_tqp(struct hnae3_handle *handle, u16 queue_id)
  	}
-@@ -242,11 +260,7 @@ static int hclge_ieee_setets(struct hnae3_handle *h, struct ieee_ets *ets)
- 		if (ret)
- 			goto err_out;
  
--		ret = hclge_notify_client(hdev, HNAE3_INIT_CLIENT);
--		if (ret)
--			return ret;
--
--		ret = hclge_notify_client(hdev, HNAE3_UP_CLIENT);
-+		ret = hclge_notify_init_up(hdev);
- 		if (ret)
- 			return ret;
+ 	while (reset_try_times++ < HCLGE_TQP_RESET_TRY_TIMES) {
+-		/* Wait for tqp hw reset */
+-		msleep(20);
+ 		reset_status = hclge_get_reset_status(hdev, queue_gid);
+ 		if (reset_status)
+ 			break;
++
++		/* Wait for tqp hw reset */
++		usleep_range(1000, 1200);
  	}
-@@ -257,10 +271,8 @@ static int hclge_ieee_setets(struct hnae3_handle *h, struct ieee_ets *ets)
- 	if (!map_changed)
- 		return ret;
  
--	if (hclge_notify_client(hdev, HNAE3_INIT_CLIENT))
--		return ret;
-+	hclge_notify_init_up(hdev);
+ 	if (reset_try_times >= HCLGE_TQP_RESET_TRY_TIMES) {
+@@ -8300,11 +8301,12 @@ void hclge_reset_vf_queue(struct hclge_vport *vport, u16 queue_id)
+ 	}
  
--	hclge_notify_client(hdev, HNAE3_UP_CLIENT);
- 	return ret;
- }
+ 	while (reset_try_times++ < HCLGE_TQP_RESET_TRY_TIMES) {
+-		/* Wait for tqp hw reset */
+-		msleep(20);
+ 		reset_status = hclge_get_reset_status(hdev, queue_gid);
+ 		if (reset_status)
+ 			break;
++
++		/* Wait for tqp hw reset */
++		usleep_range(1000, 1200);
+ 	}
  
-@@ -383,11 +395,7 @@ static int hclge_setup_tc(struct hnae3_handle *h, u8 tc, u8 *prio_tc)
- 	if (ret)
- 		return -EINVAL;
+ 	if (reset_try_times >= HCLGE_TQP_RESET_TRY_TIMES) {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 7ff03b9..00c07f8 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -119,7 +119,7 @@
+ #define HCLGE_DEFAULT_UMV_SPACE_PER_PF \
+ 	(HCLGE_UMV_TBL_SIZE / HCLGE_MAX_PF_NUM)
  
--	ret = hclge_notify_client(hdev, HNAE3_DOWN_CLIENT);
--	if (ret)
--		return ret;
--
--	ret = hclge_notify_client(hdev, HNAE3_UNINIT_CLIENT);
-+	ret = hclge_notify_down_uinit(hdev);
- 	if (ret)
- 		return ret;
+-#define HCLGE_TQP_RESET_TRY_TIMES	10
++#define HCLGE_TQP_RESET_TRY_TIMES	200
  
-@@ -409,17 +417,11 @@ static int hclge_setup_tc(struct hnae3_handle *h, u8 tc, u8 *prio_tc)
- 	else
- 		hdev->flag &= ~HCLGE_FLAG_MQPRIO_ENABLE;
- 
--	ret = hclge_notify_client(hdev, HNAE3_INIT_CLIENT);
--	if (ret)
--		return ret;
--
--	return hclge_notify_client(hdev, HNAE3_UP_CLIENT);
-+	return hclge_notify_init_up(hdev);
- 
- err_out:
--	if (hclge_notify_client(hdev, HNAE3_INIT_CLIENT))
--		return ret;
-+	hclge_notify_init_up(hdev);
- 
--	hclge_notify_client(hdev, HNAE3_UP_CLIENT);
- 	return ret;
- }
- 
+ #define HCLGE_PHY_PAGE_MDIX		0
+ #define HCLGE_PHY_PAGE_COPPER		0
 -- 
 2.7.4
 
