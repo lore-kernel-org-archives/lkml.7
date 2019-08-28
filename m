@@ -2,214 +2,268 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7645C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B41DC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7210F22DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:57:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="n+Iz3RNK"
+	by mail.kernel.org (Postfix) with ESMTP id 38F502339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 21:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567029431;
+	bh=pBsVFoWXbDsglTmnog1lSV4o1jCIEQxKlF1nYS4V9QM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=KAeDjOOPB+ClZ+TVM/DrsGzZ1B05RIdp7eEkt6KaqckEMfeHpPlqVfCzZxErDy9u8
+	 LfyfCrKIxiYHMijxDI1FyoN230byAozQQE4yTbtrZOreuFADsHxJiqBjJ2OvWJ1lL4
+	 xhQkFhkE55/SHO1meWATHPMu+CKLq4J3x/jCxtZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfH1V5A (ORCPT
+        id S1727109AbfH1V5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 17:57:00 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43669 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfH1V47 (ORCPT
+        Wed, 28 Aug 2019 17:57:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49740 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726875AbfH1V5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 17:56:59 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k3so411201pgb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 14:56:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Nd+bPWlCXNocXiigb90jYgWHpu3MGjlLHt1H4GIPKsk=;
-        b=n+Iz3RNKIv2G78ZVZ1TXSEKF9j9dLXkEdNpnMNVoicyXdstnIuPLFqkCjqyGSH9iJY
-         o8gawdyeaRKIA7HYM9GwBrmZEUjqEqoQzGDPL6Qjj+hPvALZQLVeqdqiODiTzfmDwDgB
-         jXgqJyq703XAb4M2dMxq/L+kBPkok4Gcf/Gco=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nd+bPWlCXNocXiigb90jYgWHpu3MGjlLHt1H4GIPKsk=;
-        b=EGDFOQ+4RMfRM2DTdS0tHZ3m78c3nNYEAgD8dkdnGd6AHF+ESP1KuT8odN9rTDj+m6
-         BP2AJlDgWHM1pTNZsCNZXcO/2C2R9nJOeqa+bKSVnMIJMIldsNnaLqIEkoK08p0T7tNK
-         s6bLKp+/+Zl2hibLh4wLq5RHSKdHDf+aeyc/upr1zRCFOJwJ1HhTbrD7XnxRsmOrTRLD
-         CeZREA1GBw1c18Vhk5uFAISNJeggr5ssYFPzUWhi2VV/z2y1dUWrfF6v4YgpLAwJ3vMD
-         fpCCpF4pFBOxV9h7L5qAA695FTulIhlMVwMPXMZcNmx+EjGoCF9VJyoOVFP0akwb2zcF
-         2EkA==
-X-Gm-Message-State: APjAAAVhw2RP8vjCMxxNJsQKUW1QZVEnjwNJY+IwZPnF1lRcjhdn0ghm
-        XuT92FF2UWgRc66FguT1aosrFQ==
-X-Google-Smtp-Source: APXvYqxBWzjFcxT5J+UW/brCQQfj77xr5PR8jRpUK60AFtolo6N4nAisXuYYuZDv08g7jCpB0ygItg==
-X-Received: by 2002:a17:90a:bb91:: with SMTP id v17mr6143826pjr.84.1567029418977;
-        Wed, 28 Aug 2019 14:56:58 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id p20sm144125pgj.47.2019.08.28.14.56.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 14:56:58 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 17:56:57 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Wed, 28 Aug 2019 17:57:09 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SLpnN0091141;
+        Wed, 28 Aug 2019 17:56:36 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2up0etjs4e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 17:56:36 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7SLq4T3091562;
+        Wed, 28 Aug 2019 17:56:36 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2up0etjs42-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 17:56:36 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7SLtUCi019288;
+        Wed, 28 Aug 2019 21:56:35 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma02dal.us.ibm.com with ESMTP id 2un65k2fq7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 21:56:35 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7SLuYsa46596428
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 28 Aug 2019 21:56:34 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 61240B2068;
+        Wed, 28 Aug 2019 21:56:34 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 32D6AB205F;
+        Wed, 28 Aug 2019 21:56:34 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 28 Aug 2019 21:56:34 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 0929316C65C1; Wed, 28 Aug 2019 14:56:36 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 14:56:36 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, byungchul.park@lge.com,
+        Josh Triplett <josh@joshtriplett.org>,
         Lai Jiangshan <jiangshanlai@gmail.com>,
         linux-doc@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC v1 1/2] rcu/tree: Clean up dynticks counter usage
-Message-ID: <20190828215657.GA71365@google.com>
-References: <5d648895.1c69fb81.5e60a.fc6f@mx.google.com>
- <20190828201344.GR26530@linux.ibm.com>
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        kernel-team@android.com
+Subject: Re: [PATCH 5/5] rcu: Remove kfree_call_rcu_nobatch()
+Message-ID: <20190828215636.GA26530@linux.ibm.com>
+Reply-To: paulmck@kernel.org
+References: <5d657e3b.1c69fb81.54250.01e2@mx.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190828201344.GR26530@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5d657e3b.1c69fb81.54250.01e2@mx.google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908280210
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 01:13:44PM -0700, Paul E. McKenney wrote:
-> On Mon, Aug 26, 2019 at 09:33:53PM -0400, Joel Fernandes (Google) wrote:
-> > The dynticks counter are confusing due to crowbar writes of
-> > DYNTICK_IRQ_NONIDLE whose purpose is to detect half-interrupts (i.e. we
-> > see rcu_irq_enter() but not rcu_irq_exit() due to a usermode upcall) and
-> > if so then do a reset of the dyntick_nmi_nesting counters. This patch
-> > tries to get rid of DYNTICK_IRQ_NONIDLE while still keeping the code
-> > working, fully functional, and less confusing. The confusion recently
-> > has even led to patches forgetting that DYNTICK_IRQ_NONIDLE was written
-> > to which wasted lots of time.
-> > 
-> > The patch has the following changes:
-[snip]
-> >  /*
-> >   * Grace-period counter management.
-> >   */
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index 68ebf0eb64c8..255cd6835526 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -81,7 +81,7 @@
-> >  
-> >  static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
-> >  	.dynticks_nesting = 1,
-> > -	.dynticks_nmi_nesting = DYNTICK_IRQ_NONIDLE,
-> > +	.dynticks_nmi_nesting = 0,
+On Tue, Aug 27, 2019 at 03:01:59PM -0400, Joel Fernandes (Google) wrote:
+> Now that kfree_rcu() special casing have been removed from tree RCU,
+> remove kfree_call_rcu_nobatch() since it is not needed.
 > 
-> C initializes to zero by default, so this can simply be deleted.
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Fixed.
+Now -this- one qualifies as a nice negative delta!  ;-)
 
-> >  	.dynticks = ATOMIC_INIT(RCU_DYNTICK_CTRL_CTR),
-> >  };
-> >  struct rcu_state rcu_state = {
-> > @@ -558,17 +558,18 @@ EXPORT_SYMBOL_GPL(rcutorture_get_gp_data);
-> >  /*
-> >   * Enter an RCU extended quiescent state, which can be either the
-> >   * idle loop or adaptive-tickless usermode execution.
-> > - *
-> > - * We crowbar the ->dynticks_nmi_nesting field to zero to allow for
-> > - * the possibility of usermode upcalls having messed up our count
-> > - * of interrupt nesting level during the prior busy period.
-> >   */
-> >  static void rcu_eqs_enter(bool user)
-> >  {
-> >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
-> >  
-> > -	WARN_ON_ONCE(rdp->dynticks_nmi_nesting != DYNTICK_IRQ_NONIDLE);
-> > -	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0);
-> > +	/* Entering usermode/idle from interrupt is not handled. These would
-> > +	 * mean usermode upcalls or idle entry happened from interrupts. But,
-> > +	 * reset the counter if we warn.
-> > +	 */
+A few things below, please fix in next version.
+
+							Thanx, Paul
+
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  4 ---
+>  include/linux/rcutiny.h                       |  5 ---
+>  include/linux/rcutree.h                       |  1 -
+>  kernel/rcu/rcuperf.c                          | 10 +-----
+>  kernel/rcu/tree.c                             | 33 ++++++++-----------
+>  5 files changed, 14 insertions(+), 39 deletions(-)
 > 
-> Please either put the "/*" on its own line or use "//"-style comments.
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 24fe8aefb12c..56be0e30100b 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3909,10 +3909,6 @@
+>  			Number of loops doing rcuperf.kfree_alloc_num number
+>  			of allocations and frees.
+>  
+> -	rcuperf.kfree_no_batch= [KNL]
+> -			Use the non-batching (less efficient) version of kfree_rcu().
+> -			This is useful for comparing with the batched version.
+> -
+>  	rcuperf.nreaders= [KNL]
+>  			Set number of RCU readers.  The value -1 selects
+>  			N, where N is the number of CPUs.  A value
+> diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
+> index 949841f52ec5..7aa93afa5d8d 100644
+> --- a/include/linux/rcutiny.h
+> +++ b/include/linux/rcutiny.h
+> @@ -39,11 +39,6 @@ static inline void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+>  	call_rcu(head, func);
+>  }
+>  
+> -static inline void kfree_call_rcu_nobatch(struct rcu_head *head, rcu_callback_t func)
+> -{
+> -	call_rcu(head, func);
+> -}
+> -
+>  void rcu_qs(void);
+>  
+>  static inline void rcu_softirq_qs(void)
+> diff --git a/include/linux/rcutree.h b/include/linux/rcutree.h
+> index 961b7e05d141..0b68aa952f8b 100644
+> --- a/include/linux/rcutree.h
+> +++ b/include/linux/rcutree.h
+> @@ -34,7 +34,6 @@ static inline void rcu_virt_note_context_switch(int cpu)
+>  
+>  void synchronize_rcu_expedited(void);
+>  void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func);
+> -void kfree_call_rcu_nobatch(struct rcu_head *head, rcu_callback_t func);
+>  
+>  void rcu_barrier(void);
+>  bool rcu_eqs_special_set(int cpu);
+> diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+> index c1e25fd10f2a..da94b89cd531 100644
+> --- a/kernel/rcu/rcuperf.c
+> +++ b/kernel/rcu/rcuperf.c
+> @@ -593,7 +593,6 @@ rcu_perf_shutdown(void *arg)
+>  torture_param(int, kfree_nthreads, -1, "Number of threads running loops of kfree_rcu().");
+>  torture_param(int, kfree_alloc_num, 8000, "Number of allocations and frees done in an iteration.");
+>  torture_param(int, kfree_loops, 10, "Number of loops doing kfree_alloc_num allocations and frees.");
+> -torture_param(int, kfree_no_batch, 0, "Use the non-batching (slower) version of kfree_rcu().");
+>  
+>  static struct task_struct **kfree_reader_tasks;
+>  static int kfree_nrealthreads;
+> @@ -632,14 +631,7 @@ kfree_perf_thread(void *arg)
+>  			if (!alloc_ptr)
+>  				return -ENOMEM;
+>  
+> -			if (!kfree_no_batch) {
+> -				kfree_rcu(alloc_ptr, rh);
+> -			} else {
+> -				rcu_callback_t cb;
+> -
+> -				cb = (rcu_callback_t)(unsigned long)offsetof(struct kfree_obj, rh);
+> -				kfree_call_rcu_nobatch(&(alloc_ptr->rh), cb);
+> -			}
+> +			kfree_rcu(alloc_ptr, rh);
+>  		}
+>  
+>  		cond_resched();
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 12c17e10f2b4..c767973d62ac 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -2777,8 +2777,10 @@ static void kfree_rcu_work(struct work_struct *work)
+>  		rcu_lock_acquire(&rcu_callback_map);
+>  		trace_rcu_invoke_kfree_callback(rcu_state.name, head, offset);
+>  
+> -		/* Could be possible to optimize with kfree_bulk in future */
+> -		kfree((void *)head - offset);
+> +		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset))) {
+> +			/* Could be optimized with kfree_bulk() in future. */
+> +			kfree((void *)head - offset);
+> +		}
 
-I'll put "/*" on its own line.
+This really needs to be in the previous patch until such time as Tiny RCU
+no longer needs the restriction.
 
-> >  	WARN_ON_ONCE(rdp->dynticks_nmi_nesting <= 0);
-> >  	WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs());
-> >  
-> > +	WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
-> > +		   rdp->dynticks_nmi_nesting - 1);
+>  		rcu_lock_release(&rcu_callback_map);
+>  		cond_resched_tasks_rcu_qs();
+> @@ -2856,16 +2858,6 @@ static void kfree_rcu_monitor(struct work_struct *work)
+>  		spin_unlock_irqrestore(&krcp->lock, flags);
+>  }
+>  
+> -/*
+> - * This version of kfree_call_rcu does not do batching of kfree_rcu() requests.
+> - * Used only by rcuperf torture test for comparison with kfree_rcu_batch().
+> - */
+> -void kfree_call_rcu_nobatch(struct rcu_head *head, rcu_callback_t func)
+> -{
+> -	__call_rcu(head, func);
+> -}
+> -EXPORT_SYMBOL_GPL(kfree_call_rcu_nobatch);
+> -
+>  /*
+>   * Queue a request for lazy invocation of kfree() after a grace period.
+>   *
+> @@ -2885,12 +2877,6 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+>  	unsigned long flags;
+>  	struct kfree_rcu_cpu *krcp;
+>  
+> -	/* kfree_call_rcu() batching requires timers to be up. If the scheduler
+> -	 * is not yet up, just skip batching and do the non-batched version.
+> -	 */
+> -	if (rcu_scheduler_active != RCU_SCHEDULER_RUNNING)
+> -		return kfree_call_rcu_nobatch(head, func);
+> -
+>  	if (debug_rcu_head_queue(head)) {
+>  		/* Probable double kfree_rcu() */
+>  		WARN_ONCE(1, "kfree_call_rcu(): Double-freed call. rcu_head %p\n",
+> @@ -2909,8 +2895,15 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+>  	krcp->head = head;
+>  
+>  	/* Schedule monitor for timely drain after KFREE_DRAIN_JIFFIES. */
+> -	if (!xchg(&krcp->monitor_todo, true))
+> -		schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
+> +	if (!xchg(&krcp->monitor_todo, true)) {
+> +		/* Scheduling the monitor requires scheduler/timers to be up,
+> +		 * if it is not, just skip it. An eventual kfree_rcu() will
+> +		 * kick it again.
+> +		 */
+> +		if ((rcu_scheduler_active == RCU_SCHEDULER_RUNNING)) {
+> +			schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
+> +		}
+> +	}
+
+And this also needs to be in an earlier patch.  Bisectability and all that!
+
+Are we really guaranteed that there will be an eventual kfree_rcu()?
+More of a worry for Tiny RCU than for Tree RCU, but still could be
+annoying for someone trying to debug a memory leak.
+
+							Thanx, Paul
+
+>  	spin_unlock(&krcp->lock);
+>  	local_irq_restore(flags);
+> -- 
+> 2.23.0.187.g17f5b7556c-goog
 > 
-> This is problematic.  The +/-1 and +/-2 dance is specifically for NMIs, so...
-
-This counter is deleted in the following patch so I hope its Ok to leave it
-here for this one. I just kept it split into different patch to make
-testing/review/development easier.
-
-> >  	if (irq)
-> >  		rcu_prepare_for_idle();
-> > @@ -723,10 +728,6 @@ void rcu_irq_exit_irqson(void)
-> >  /*
-> >   * Exit an RCU extended quiescent state, which can be either the
-> >   * idle loop or adaptive-tickless usermode execution.
-> > - *
-> > - * We crowbar the ->dynticks_nmi_nesting field to DYNTICK_IRQ_NONIDLE to
-> > - * allow for the possibility of usermode upcalls messing up our count of
-> > - * interrupt nesting level during the busy period that is just now starting.
-> >   */
-> >  static void rcu_eqs_exit(bool user)
-> >  {
-> > @@ -747,8 +748,13 @@ static void rcu_eqs_exit(bool user)
-> >  	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, rdp->dynticks);
-> >  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
-> >  	WRITE_ONCE(rdp->dynticks_nesting, 1);
-> > -	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
-> > -	WRITE_ONCE(rdp->dynticks_nmi_nesting, DYNTICK_IRQ_NONIDLE);
-> > +
-> > +	/* Exiting usermode/idle from interrupt is not handled. These would
-> > +	 * mean usermode upcalls or idle exit happened from interrupts. But,
-> > +	 * reset the counter if we warn.
-> > +	 */
-> > +	if (WARN_ON_ONCE(rdp->dynticks_nmi_nesting != 0))
-> > +		WRITE_ONCE(rdp->dynticks_nmi_nesting, 0);
-> 
-> And here.  Plus this is adding a test and branch in the common case.
-> Given that the location being written to should be hot in the cache,
-> it is not clear that this is a win.
-
-The next patch removes the branch itself and just has the warning.
-
-> >  	WARN_ON_ONCE(rdp->dynticks_nmi_nesting < 0);
-> >  
-> >  	/*
-> > @@ -826,16 +833,21 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
-> >  
-> >  		incby = 1;
-> >  	} else if (tick_nohz_full_cpu(rdp->cpu) &&
-> > -		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
-> > -		   rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-> > +		   !rdp->dynticks_nmi_nesting && rdp->rcu_urgent_qs &&
-> > +		   !rdp->rcu_forced_tick) {
-> 
-> OK.  Though you should be able to save a line by pulling the
-> "rdp->rcu_urgent_qs &&" onto the first line.
-
-Fixed.
-
-> >  		rdp->rcu_forced_tick = true;
-> >  		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
-> >  	}
-> > +
-> 
-> Not clear that the added blank line is a win, here or below.
-
-Fixed,
-
-thanks!
-
- - Joel
-
-[snip]
