@@ -2,93 +2,101 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF696C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A79C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8609F22CF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C2B23404
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfH1TBx (ORCPT
+        id S1726840AbfH1TEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 15:01:53 -0400
-Received: from hera.iit.uni-miskolc.hu ([193.6.5.4]:43628 "EHLO
-        hera.iit.uni-miskolc.hu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbfH1TBw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 15:01:52 -0400
-X-Greylist: delayed 338 seconds by postgrey-1.27 at vger.kernel.org; Wed, 28 Aug 2019 15:01:50 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by hera.iit.uni-miskolc.hu (Postfix) with ESMTP id 2D963126;
-        Wed, 28 Aug 2019 20:56:10 +0200 (CEST)
-X-Virus-Scanned: Kamavis at iit.uni-miskolc.hu
-Received: from hera.iit.uni-miskolc.hu ([127.0.0.1])
-        by localhost (hera.iit.uni-miskolc.hu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 2IDgBeCV0yyp; Wed, 28 Aug 2019 20:56:01 +0200 (CEST)
-Received: from titan.hitronhub.home (unknown [IPv6:2a02:8109:a180:54c:226:9eff:fe30:2af8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: szucst@iit.uni-miskolc.hu)
-        by hera.iit.uni-miskolc.hu (Postfix) with ESMTPSA id 9121C125;
-        Wed, 28 Aug 2019 20:56:00 +0200 (CEST)
-From:   =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org,
-        =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
-Subject: [PATCH] mmc: sdhi: fill in actual_clock
-Date:   Wed, 28 Aug 2019 20:55:18 +0200
-Message-Id: <20190828185518.4340-1-tszucs@protonmail.ch>
-X-Mailer: git-send-email 2.11.0
+        Wed, 28 Aug 2019 15:04:47 -0400
+Received: from mga01.intel.com ([192.55.52.88]:21441 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726541AbfH1TEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 15:04:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 12:04:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
+   d="scan'208";a="171645852"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by orsmga007.jf.intel.com with ESMTP; 28 Aug 2019 12:04:46 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 0A3CD300FC7; Wed, 28 Aug 2019 12:04:46 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 12:04:45 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     kan.liang@linux.intel.com, acme@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, jolsa@kernel.org,
+        eranian@google.com, alexander.shishkin@linux.intel.com
+Subject: Re: [RESEND PATCH V3 3/8] perf/x86/intel: Support hardware TopDown
+ metrics
+Message-ID: <20190828190445.GQ5447@tassilo.jf.intel.com>
+References: <20190826144740.10163-1-kan.liang@linux.intel.com>
+ <20190826144740.10163-4-kan.liang@linux.intel.com>
+ <20190828150238.GC17205@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828150238.GC17205@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Save set clock in mmc_host actual_clock enabling exporting it via debugfs.
-This will indicate the precise SD clock in I/O settings rather than only the
-sometimes misleading requested clock.
+On Wed, Aug 28, 2019 at 05:02:38PM +0200, Peter Zijlstra wrote:
+> > 
+> > To avoid reading the METRICS register multiple times, the metrics and
+> > slots value can only be updated by the first slots/metrics event in a
+> > group. All active slots and metrics events will be updated one time.
+> 
+> Can't we require SLOTS to be the group leader for any Metric group?
 
-Signed-off-by: Tamás Szűcs <tszucs@protonmail.ch>
----
- drivers/mmc/host/renesas_sdhi_core.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Metrics are really useful to collect with any other sampling event
+to give you more context in the program behavior.
 
-diff --git a/drivers/mmc/host/renesas_sdhi_core.c b/drivers/mmc/host/renesas_sdhi_core.c
-index 64d3b5fb7fe5..ae842d0b59f9 100644
---- a/drivers/mmc/host/renesas_sdhi_core.c
-+++ b/drivers/mmc/host/renesas_sdhi_core.c
-@@ -124,7 +124,7 @@ static unsigned int renesas_sdhi_clk_update(struct tmio_mmc_host *host,
- {
- 	struct renesas_sdhi *priv = host_to_priv(host);
- 	unsigned int freq, diff, best_freq = 0, diff_min = ~0;
--	int i, ret;
-+	int i;
- 
- 	/* tested only on R-Car Gen2+ currently; may work for others */
- 	if (!(host->pdata->flags & TMIO_MMC_MIN_RCAR2))
-@@ -153,9 +153,11 @@ static unsigned int renesas_sdhi_clk_update(struct tmio_mmc_host *host,
- 		}
- 	}
- 
--	ret = clk_set_rate(priv->clk, best_freq);
-+	host->mmc->actual_clock =
-+		clk_set_rate(priv->clk, best_freq) == 0 ?
-+			best_freq : clk_get_rate(priv->clk);
- 
--	return ret == 0 ? best_freq : clk_get_rate(priv->clk);
-+	return host->mmc->actual_clock;
- }
- 
- static void renesas_sdhi_set_clock(struct tmio_mmc_host *host,
--- 
-2.11.0
+> Is there ever a case where we want to add other events to a metric
+> group?
+
+Yes. Any normal leader sampling case. You just collect metrics too.
+
+> it also musn't be too cold. But that leaves it unspecified what exactly
+> is the right range.
+> 
+> IOW, you want a Goldilocks number of SLOTS.
+
+That's too strong. You probably don't want minutes, but seconds
+worth of measurement should be ok.
+
+> > NMI
+> > ======
+> > 
+> > The METRICS register may be overflow. The bit 48 of STATUS register
+> > will be set. If so, update all active slots and metrics events.
+> 
+> that happen? It would be useful to get that METRIC_OVF (can we please
+
+This happens when the internal counters that feed the metrics
+overflow.
+
+> If this is so; then we can use this to update/reset PERF_METRICS and
+> nothing else.
+
+It has to be handled in the PMI.
+
+> Then there is no mucking about with that odd counter/metrics msr pair
+> reset nonsense. Becuase that really stinks.
+
+You have to write them to reset the internal counters.
+
+-Andi
 
