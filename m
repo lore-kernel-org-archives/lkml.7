@@ -6,36 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3BCC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D46C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62F7233A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBE2233A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 14:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfH1O0E (ORCPT
+        id S1727124AbfH1O0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 10:26:04 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41714 "EHLO huawei.com"
+        Wed, 28 Aug 2019 10:26:03 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50136 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726832AbfH1OZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726860AbfH1OZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 28 Aug 2019 10:25:44 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4F62DF1709B426F24BEF;
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2F040E633BED0A638460;
         Wed, 28 Aug 2019 22:25:41 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 28 Aug 2019 22:25:30 +0800
+ 14.3.439.0; Wed, 28 Aug 2019 22:25:33 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Guojia Liao <liaoguojia@huawei.com>,
-        Yufeng Mo <moyufeng@huawei.com>,
-        Guangbin Huang <huangguangbin2@huawei.com>,
+        <linuxarm@huawei.com>, Yufeng Mo <moyufeng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 04/12] net: hns3: reduce the parameters of some functions
-Date:   Wed, 28 Aug 2019 22:23:08 +0800
-Message-ID: <1567002196-63242-5-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 12/12] net: hns3: not allow SSU loopback while execute ethtool -t dev
+Date:   Wed, 28 Aug 2019 22:23:16 +0800
+Message-ID: <1567002196-63242-13-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
 References: <1567002196-63242-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,146 +46,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guojia Liao <liaoguojia@huawei.com>
+From: Yufeng Mo <moyufeng@huawei.com>
 
-This patch simplifies parameters of some functions by deleting
-unused parameter.
+The current loopback mode is to add 0x1F to the SMAC address
+as the DMAC address and enable the promiscuous mode.
+However, if the VF address is the same as the DMAC address,
+the loopback test fails.
 
-Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
+Loopback can be enabled in three places: SSU, MAC, and serdes.
+By default, SSU loopback is enabled, so if the SMAC and the DMAC
+are the same, the packets are looped back in the SSU. If SSU loopback
+is disabled, packets can reach MAC even if SMAC is the same as DMAC.
+
+Therefore, this patch disables the SSU loopback before the loopback
+test. In this way, the SMAC and DMAC can be the same, and the
+promiscuous mode does not need to be enabled. And this is not
+valid in version 0x20.
+
+This patch also uses a macro to replace 0x1F.
+
+Fixes: c39c4d98dc65 ("net: hns3: Add mac loopback selftest support in hns3 driver")
 Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
-Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
+Reviewed-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 28 +++++++++++-----------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  9 +++--
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h | 28 ++++++++++++++++
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 38 ++++++++++++++++++++++
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  2 ++
+ 4 files changed, 75 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index dde17be..fa85d9e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -7342,7 +7342,7 @@ static void hclge_enable_vlan_filter(struct hnae3_handle *handle, bool enable)
- }
- 
- static int hclge_set_vf_vlan_common(struct hclge_dev *hdev, u16 vfid,
--				    bool is_kill, u16 vlan, u8 qos,
-+				    bool is_kill, u16 vlan,
- 				    __be16 proto)
- {
- #define HCLGE_MAX_VF_BYTES  16
-@@ -7453,7 +7453,7 @@ static int hclge_set_port_vlan_filter(struct hclge_dev *hdev, __be16 proto,
- }
- 
- static int hclge_set_vlan_filter_hw(struct hclge_dev *hdev, __be16 proto,
--				    u16 vport_id, u16 vlan_id, u8 qos,
-+				    u16 vport_id, u16 vlan_id,
- 				    bool is_kill)
- {
- 	u16 vport_idx, vport_num = 0;
-@@ -7463,7 +7463,7 @@ static int hclge_set_vlan_filter_hw(struct hclge_dev *hdev, __be16 proto,
- 		return 0;
- 
- 	ret = hclge_set_vf_vlan_common(hdev, vport_id, is_kill, vlan_id,
--				       0, proto);
-+				       proto);
- 	if (ret) {
- 		dev_err(&hdev->pdev->dev,
- 			"Set %d vport vlan filter config fail, ret =%d.\n",
-@@ -7750,7 +7750,7 @@ static int hclge_add_vport_all_vlan_table(struct hclge_vport *vport)
- 		if (!vlan->hd_tbl_status) {
- 			ret = hclge_set_vlan_filter_hw(hdev, htons(ETH_P_8021Q),
- 						       vport->vport_id,
--						       vlan->vlan_id, 0, false);
-+						       vlan->vlan_id, false);
- 			if (ret) {
- 				dev_err(&hdev->pdev->dev,
- 					"restore vport vlan list failed, ret=%d\n",
-@@ -7776,7 +7776,7 @@ static void hclge_rm_vport_vlan_table(struct hclge_vport *vport, u16 vlan_id,
- 				hclge_set_vlan_filter_hw(hdev,
- 							 htons(ETH_P_8021Q),
- 							 vport->vport_id,
--							 vlan_id, 0,
-+							 vlan_id,
- 							 true);
- 
- 			list_del(&vlan->node);
-@@ -7796,7 +7796,7 @@ void hclge_rm_vport_all_vlan_table(struct hclge_vport *vport, bool is_del_list)
- 			hclge_set_vlan_filter_hw(hdev,
- 						 htons(ETH_P_8021Q),
- 						 vport->vport_id,
--						 vlan->vlan_id, 0,
-+						 vlan->vlan_id,
- 						 true);
- 
- 		vlan->hd_tbl_status = false;
-@@ -7843,7 +7843,7 @@ static void hclge_restore_vlan_table(struct hnae3_handle *handle)
- 
- 		if (state != HNAE3_PORT_BASE_VLAN_DISABLE) {
- 			hclge_set_vlan_filter_hw(hdev, htons(vlan_proto),
--						 vport->vport_id, vlan_id, qos,
-+						 vport->vport_id, vlan_id,
- 						 false);
- 			continue;
- 		}
-@@ -7853,7 +7853,7 @@ static void hclge_restore_vlan_table(struct hnae3_handle *handle)
- 				hclge_set_vlan_filter_hw(hdev,
- 							 htons(ETH_P_8021Q),
- 							 vport->vport_id,
--							 vlan->vlan_id, 0,
-+							 vlan->vlan_id,
- 							 false);
- 		}
- 	}
-@@ -7893,12 +7893,12 @@ static int hclge_update_vlan_filter_entries(struct hclge_vport *vport,
- 						 htons(new_info->vlan_proto),
- 						 vport->vport_id,
- 						 new_info->vlan_tag,
--						 new_info->qos, false);
-+						 false);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index e219bb1..c52eccc 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -97,7 +97,7 @@ static int hns3_lp_setup(struct net_device *ndev, enum hnae3_loop loop, bool en)
+ 		break;
  	}
  
- 	ret = hclge_set_vlan_filter_hw(hdev, htons(old_info->vlan_proto),
- 				       vport->vport_id, old_info->vlan_tag,
--				       old_info->qos, true);
-+				       true);
- 	if (ret)
+-	if (ret)
++	if (ret || h->pdev->revision >= 0x21)
  		return ret;
  
-@@ -7925,7 +7925,7 @@ int hclge_update_port_base_vlan_cfg(struct hclge_vport *vport, u16 state,
- 					       htons(vlan_info->vlan_proto),
- 					       vport->vport_id,
- 					       vlan_info->vlan_tag,
--					       vlan_info->qos, false);
-+					       false);
- 		if (ret)
- 			return ret;
+ 	if (en) {
+@@ -144,7 +144,10 @@ static int hns3_lp_down(struct net_device *ndev, enum hnae3_loop loop_mode)
  
-@@ -7934,7 +7934,7 @@ int hclge_update_port_base_vlan_cfg(struct hclge_vport *vport, u16 state,
- 					       htons(old_vlan_info->vlan_proto),
- 					       vport->vport_id,
- 					       old_vlan_info->vlan_tag,
--					       old_vlan_info->qos, true);
-+					       true);
- 		if (ret)
- 			return ret;
- 
-@@ -8055,7 +8055,7 @@ int hclge_set_vlan_filter(struct hnae3_handle *handle, __be16 proto,
+ static void hns3_lp_setup_skb(struct sk_buff *skb)
+ {
++#define	HNS3_NIC_LB_DST_MAC_ADDR	0x1f
++
+ 	struct net_device *ndev = skb->dev;
++	struct hnae3_handle *handle;
+ 	unsigned char *packet;
+ 	struct ethhdr *ethh;
+ 	unsigned int i;
+@@ -160,7 +163,9 @@ static void hns3_lp_setup_skb(struct sk_buff *skb)
+ 	 * before the packet reaches mac or serdes, which will defect
+ 	 * the purpose of mac or serdes selftest.
  	 */
- 	if (handle->port_base_vlan_state == HNAE3_PORT_BASE_VLAN_DISABLE) {
- 		ret = hclge_set_vlan_filter_hw(hdev, proto, vport->vport_id,
--					       vlan_id, 0, is_kill);
-+					       vlan_id, is_kill);
- 		writen_to_tbl = true;
- 	}
+-	ethh->h_dest[5] += 0x1f;
++	handle = hns3_get_handle(ndev);
++	if (handle->pdev->revision == 0x20)
++		ethh->h_dest[5] += HNS3_NIC_LB_DST_MAC_ADDR;
+ 	eth_zero_addr(ethh->h_source);
+ 	ethh->h_proto = htons(ETH_P_ARP);
+ 	skb_reset_mac_header(skb);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
+index 29979be..4821fe0 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
+@@ -223,6 +223,9 @@ enum hclge_opcode_type {
+ 	HCLGE_OPC_MAC_ETHTYPE_ADD	    = 0x1010,
+ 	HCLGE_OPC_MAC_ETHTYPE_REMOVE	= 0x1011,
  
-@@ -8091,7 +8091,7 @@ static void hclge_sync_vlan_filter(struct hclge_dev *hdev)
- 		while (vlan_id != VLAN_N_VID) {
- 			ret = hclge_set_vlan_filter_hw(hdev, htons(ETH_P_8021Q),
- 						       vport->vport_id, vlan_id,
--						       0, true);
-+						       true);
- 			if (ret && ret != -EINVAL)
- 				return;
++	/* MAC VLAN commands */
++	HCLGE_OPC_MAC_VLAN_SWITCH_PARAM	= 0x1033,
++
+ 	/* VLAN commands */
+ 	HCLGE_OPC_VLAN_FILTER_CTRL	    = 0x1100,
+ 	HCLGE_OPC_VLAN_FILTER_PF_CFG	= 0x1101,
+@@ -771,6 +774,31 @@ struct hclge_vlan_filter_vf_cfg_cmd {
+ 	u8  vf_bitmap[16];
+ };
  
++#define HCLGE_SWITCH_ANTI_SPOOF_B	0U
++#define HCLGE_SWITCH_ALW_LPBK_B		1U
++#define HCLGE_SWITCH_ALW_LCL_LPBK_B	2U
++#define HCLGE_SWITCH_ALW_DST_OVRD_B	3U
++#define HCLGE_SWITCH_NO_MASK		0x0
++#define HCLGE_SWITCH_ANTI_SPOOF_MASK	0xFE
++#define HCLGE_SWITCH_ALW_LPBK_MASK	0xFD
++#define HCLGE_SWITCH_ALW_LCL_LPBK_MASK	0xFB
++#define HCLGE_SWITCH_LW_DST_OVRD_MASK	0xF7
++
++struct hclge_mac_vlan_switch_cmd {
++	u8 roce_sel;
++	u8 rsv1[3];
++	__le32 func_id;
++	u8 switch_param;
++	u8 rsv2[3];
++	u8 param_mask;
++	u8 rsv3[11];
++};
++
++enum hclge_mac_vlan_cfg_sel {
++	HCLGE_MAC_VLAN_NIC_SEL = 0,
++	HCLGE_MAC_VLAN_ROCE_SEL,
++};
++
+ #define HCLGE_ACCEPT_TAG1_B		0
+ #define HCLGE_ACCEPT_UNTAG1_B		1
+ #define HCLGE_PORT_INS_TAG1_EN_B	2
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index dc22b84..ce4b228 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -6211,6 +6211,30 @@ static void hclge_cfg_mac_mode(struct hclge_dev *hdev, bool enable)
+ 			"mac enable fail, ret =%d.\n", ret);
+ }
+ 
++static int hclge_config_switch_param(struct hclge_dev *hdev, int vfid,
++				     u8 switch_param, u8 param_mask)
++{
++	struct hclge_mac_vlan_switch_cmd *req;
++	struct hclge_desc desc;
++	u32 func_id;
++	int ret;
++
++	func_id = hclge_get_port_number(HOST_PORT, 0, vfid, 0);
++	req = (struct hclge_mac_vlan_switch_cmd *)desc.data;
++	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_MAC_VLAN_SWITCH_PARAM,
++				   false);
++	req->roce_sel = HCLGE_MAC_VLAN_NIC_SEL;
++	req->func_id = cpu_to_le32(func_id);
++	req->switch_param = switch_param;
++	req->param_mask = param_mask;
++
++	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
++	if (ret)
++		dev_err(&hdev->pdev->dev,
++			"set mac vlan switch parameter fail, ret = %d\n", ret);
++	return ret;
++}
++
+ static void hclge_phy_link_status_wait(struct hclge_dev *hdev,
+ 				       int link_ret)
+ {
+@@ -6465,6 +6489,20 @@ static int hclge_set_loopback(struct hnae3_handle *handle,
+ 	struct hclge_dev *hdev = vport->back;
+ 	int i, ret;
+ 
++	/* Loopback can be enabled in three places: SSU, MAC, and serdes. By
++	 * default, SSU loopback is enabled, so if the SMAC and the DMAC are
++	 * the same, the packets are looped back in the SSU. If SSU loopback
++	 * is disabled, packets can reach MAC even if SMAC is the same as DMAC.
++	 */
++	if (hdev->pdev->revision >= 0x21) {
++		u8 switch_param = en ? 0 : BIT(HCLGE_SWITCH_ALW_LPBK_B);
++
++		ret = hclge_config_switch_param(hdev, PF_VPORT_ID, switch_param,
++						HCLGE_SWITCH_ALW_LPBK_MASK);
++		if (ret)
++			return ret;
++	}
++
+ 	switch (loop_mode) {
+ 	case HNAE3_LOOP_APP:
+ 		ret = hclge_set_app_loopback(hdev, en);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 437a9ff..870550f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -148,6 +148,8 @@ enum HLCGE_PORT_TYPE {
+ 	NETWORK_PORT
+ };
+ 
++#define PF_VPORT_ID			0
++
+ #define HCLGE_PF_ID_S			0
+ #define HCLGE_PF_ID_M			GENMASK(2, 0)
+ #define HCLGE_VF_ID_S			3
 -- 
 2.7.4
 
