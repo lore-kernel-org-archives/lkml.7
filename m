@@ -2,203 +2,104 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD1EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6ECC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE01217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D73F208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:09:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566986941;
+	bh=MbS3oc7NrCKE60Ei5jYAwXPyH10LVao3N2dl3+rESSM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y8e4m//IAcYejBWpNAaw4q57R/qY6NuF+XCG0dKqhX0qXSmxsJasK1DcLYiQgV5oZ
+	 kcl7QytJwHAiT5UMIjL3teao8/6I33GnZwaivO8wh1w1was1SfqGP4nYCnrVfTwUBj
+	 z8PIrH6jntdgYoIG67MwSE/lV/Foh1PtgeDGOMfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfH1KIJ (ORCPT
+        id S1726541AbfH1KJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:08:09 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:59212 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726253AbfH1KIJ (ORCPT
+        Wed, 28 Aug 2019 06:09:00 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37622 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbfH1KI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:08:09 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R991e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TagZSlR_1566986882;
-Received: from bn0418deMacBook-Pro.local(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0TagZSlR_1566986882)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 28 Aug 2019 18:08:02 +0800
-Subject: Re: [PATCH v4 3/3] vfio/pci: make use of irq_update_devid and
- optimize irq ops
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        tao.ma@linux.alibaba.com, gerry@linux.alibaba.com,
-        nanhai.zou@linux.alibaba.com, linyunsheng@huawei.com
-References: <cover.1566486156.git.luoben@linux.alibaba.com>
- <8721e56f15dbcb1e0a1d8fc645def7b9bc752988.1566486156.git.luoben@linux.alibaba.com>
- <20190827143305.1ac826e1@x1.home>
-From:   Ben Luo <luoben@linux.alibaba.com>
-Message-ID: <429ae9ed-de9d-f8de-de65-a41c3a0c501d@linux.alibaba.com>
-Date:   Wed, 28 Aug 2019 18:08:02 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Wed, 28 Aug 2019 06:08:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PxI8huNfC6VFO+8riZb4FVf90k7meZB53ciogdQeoxw=; b=EWanL1V5Q1ysiJUkGXj2AZpLA
+        AkKvPbie/CUTWWQtcEDvQ4ZEe9KNvHIA4Ww2o9G1oWRdSQapHeQuYXmaV9oyW1qB2fZNrOlYyC/xO
+        ABBSFHObTB6l64IZ8JM0viW114aCvD8+hum4x5JcpS9SveY9HFFGVN7i0XRZX0qG4odg8=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i2uso-0003Yo-Lg; Wed, 28 Aug 2019 10:08:54 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 432E82742B9F; Wed, 28 Aug 2019 11:08:52 +0100 (BST)
+Date:   Wed, 28 Aug 2019 11:08:52 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2 0/8] regulator: support Silergy SY8824C/SY8824E etc.
+Message-ID: <20190828100852.GA4298@sirena.co.uk>
+References: <20190828135646.52457ac3@xhacker.debian>
 MIME-Version: 1.0
-In-Reply-To: <20190827143305.1ac826e1@x1.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
+Content-Disposition: inline
+In-Reply-To: <20190828135646.52457ac3@xhacker.debian>
+X-Cookie: Oatmeal raisin.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-在 2019/8/28 上午4:33, Alex Williamson 写道:
-> On Thu, 22 Aug 2019 23:34:43 +0800
-> Ben Luo <luoben@linux.alibaba.com> wrote:
->
->> When userspace (e.g. qemu) triggers a switch between KVM
->> irqfd and userspace eventfd, only dev_id of irq action
->> (i.e. the "trigger" in this patch's context) will be
->> changed, but a free-then-request-irq action is taken in
->> current code. And, irq affinity setting in VM will also
->> trigger a free-then-request-irq action, which actually
->> changes nothing, but only fires a producer re-registration
->> to update irte in case that posted-interrupt is in use.
->>
->> This patch makes use of irq_update_devid() and optimize
->> both cases above, which reduces the risk of losing interrupt
->> and also cuts some overhead.
->>
->> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
->> ---
->>   drivers/vfio/pci/vfio_pci_intrs.c | 112 +++++++++++++++++++++++++-------------
->>   1 file changed, 74 insertions(+), 38 deletions(-)
->>
->> diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
->> index 3fa3f72..60d3023 100644
->> --- a/drivers/vfio/pci/vfio_pci_intrs.c
->> +++ b/drivers/vfio/pci/vfio_pci_intrs.c
->> @@ -284,70 +284,106 @@ static int vfio_msi_enable(struct vfio_pci_device *vdev, int nvec, bool msix)
->>   static int vfio_msi_set_vector_signal(struct vfio_pci_device *vdev,
->>   				      int vector, int fd, bool msix)
->>   {
->> +	struct eventfd_ctx *trigger = NULL;
->>   	struct pci_dev *pdev = vdev->pdev;
->> -	struct eventfd_ctx *trigger;
->>   	int irq, ret;
->>   
->>   	if (vector < 0 || vector >= vdev->num_ctx)
->>   		return -EINVAL;
->>   
->> +	if (fd >= 0) {
->> +		trigger = eventfd_ctx_fdget(fd);
->> +		if (IS_ERR(trigger))
->> +			return PTR_ERR(trigger);
->> +	}
-> I think this is a user visible change.  Previously the vector is
-> disabled first, then if an error occurs re-enabling, we return an errno
-> with the vector disabled.  Here we instead fail the ioctl and leave the
-> state as if it had never happened.  For instance with QEMU, if they
-> were trying to change from KVM to userspace signaling and entered this
-> condition, previously the interrupt would signal to neither eventfd, now
-> it would continue signaling to KVM. If QEMU's intent was to emulate
-> vector masking, this could induce unhandled interrupts in the guest.
-> Maybe we need a tear-down on fault here to maintain that behavior, or
-> do you see some justification for the change?
+--zhXaljGHf11kAtnf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for your comments, this reminds me to think more about the 
-effects to users.
+On Wed, Aug 28, 2019 at 06:08:09AM +0000, Jisheng Zhang wrote:
+> Add support for Silergy SY8824C/SY8824E/SY20276/SY20278 regulator.
+>=20
+> Changes since v1:
+>   - use c++ comment style for SPDX header
+>   - add prefix for BUCK_EN and MODE
 
-After I reviewed the related code in Qemu and VFIO, I think maybe there 
-is a problem in current behavior
-for the signal path changing case. Qemu has neither recovery nor retry 
-code in case that ioctl with
-'VFIO_DEVICE_SET_IRQS' command fails, so if the old signal path has been 
-disabled on fault of setting
-up new path, the corresponding vector may be disabled forever. Following 
-is an example from qemu's
-vfio_msix_vector_do_use():
+I already applied v1, please just send incremental updates fixing these
+rather than entirely new versions.  As the message sent when applying
+patches says:
 
-         ret = ioctl(vdev->vbasedev.fd, VFIO_DEVICE_SET_IRQS, irq_set);
-         g_free(irq_set);
-         if (ret) {
-             error_report("vfio: failed to modify vector, %d", ret);
-         }
+| If any updates are required or you are submitting further changes they
+| should be sent as incremental updates against current git, existing
+| patches will not be replaced.
 
-I think the singal path before changing should be still working at this 
-moment and the caller should keep it
-working if the changing fails, so that at least we still have the old 
-path instead of no path.
+--zhXaljGHf11kAtnf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-For masking vector case, the 'fd' should be -1, and the interrupt will 
-be freed as before this patch.
+-----BEGIN PGP SIGNATURE-----
 
->
->> +
->>   	irq = pci_irq_vector(pdev, vector);
->>   
->> +	/*
->> +	 * For KVM-VFIO case, interrupt from passthrough device will be directly
->> +	 * delivered to VM after producer and consumer connected successfully.
->> +	 * If producer and consumer are disconnected, this interrupt process
->> +	 * will fall back to remap mode, where interrupt handler uses 'trigger'
->> +	 * to find the right way to deliver the interrupt to VM. So, it is safe
->> +	 * to do irq_update_devid() before irq_bypass_unregister_producer() which
->> +	 * switches interrupt process to remap mode. To producer and consumer,
->> +	 * 'trigger' is only a token used for pairing them togather.
->> +	 */
->>   	if (vdev->ctx[vector].trigger) {
->> -		free_irq(irq, vdev->ctx[vector].trigger);
->> -		irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
->> -		kfree(vdev->ctx[vector].name);
->> -		eventfd_ctx_put(vdev->ctx[vector].trigger);
->> -		vdev->ctx[vector].trigger = NULL;
->> +		if (vdev->ctx[vector].trigger == trigger) {
->> +			/* switch back to remap mode */
->> +			irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
-> I think we leak the fd context we acquired above in this case.
-Thanks for pointing it out, I will fix this in next version.
->
-> Why do we do anything in this case, couldn't we just 'put' the extra ctx
-> and return 0 here?
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1mUrMACgkQJNaLcl1U
+h9DfAQf/Z/uVU2+OG/dRjjnb9aJg2tEZUnbuMpSBOEc39IJjERea1NqcPGugs1/r
+GoDl/aa1erdGnnA7Thw4iMN9fmyqxvL71eTblz0gQ4KcNFYtOAR7EHWUYqM7rXsX
+STu+D4ytH5fUspWIqeGROG5kVS6+1x3OO3JDRAobTAO23F4u0Hecq85g2vxGHiHn
+ifrjH8uYFs7zExUlvidN4qkF6Lz3vz88XGffPScsoi6ZySBFPQBcmEiWk8namQ+a
+z3yDJoVrW84Api/AQ4Oz+0YvHUk2IPwLW9x9rAAhsZJwdYxURhClQgUQOsV+/XA1
+hiEzWBdNw8Y1TQMUjjISRBJuh3+eTg==
+=kSzK
+-----END PGP SIGNATURE-----
 
-Sorry for confusing and I do this for a reason,  I will add some more 
-comments like this:
-
-Unregistration here is for re-resigtraion later, which will trigger the 
-reconnection of irq_bypass producer
-and consumer, which in turn calls vmx_update_pi_irte() to update IRTE if 
-posted interrupt is in use.
-(vmx_update_pi_irte() will modify IRTE based on the information 
-retrieved from KVM.)
-Whether producer token changed or not, irq_bypass_register_producer() is 
-a way (seems the only way) to
-update IRTE by VFIO for posted interrupt. The IRTE will be used by IOMMU 
-directly to find the target CPU
-for an interrupt posted to VM, since hypervisor is bypassed.
->
->> +		} else if (trigger) {
->> +			ret = irq_update_devid(irq,
->> +					       vdev->ctx[vector].trigger, trigger);
->> +			if (unlikely(ret)) {
->> +				dev_info(&pdev->dev,
->> +					 "update devid of %d (token %p) failed: %d\n",
->> +					 irq, vdev->ctx[vector].trigger, ret);
->> +				eventfd_ctx_put(trigger);
->> +				return ret;
->> +			}
->> +			irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
-> Can you explain this ordering, I would have expected that we'd
-> unregister the bypass before we updated the devid.  Thanks,
->
-> Alex
-Actually, I have explained this in comments above this whole control 
-block. I think it is safe and better to
-update devid before irq_bypass_unregister_producer() which switches 
-interrupt process from posted mode
-to remap mode. So, if update fails, the posted interrupt can still work.
-
-Anyway, to producer and consumer,  'trigger' is only a token used for 
-pairing them togather.
-
-Thanks,
-
-     Ben
-
+--zhXaljGHf11kAtnf--
