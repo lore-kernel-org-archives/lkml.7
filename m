@@ -2,143 +2,154 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAED5C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F612C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B6C2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:53:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BA1KWLcF"
+	by mail.kernel.org (Postfix) with ESMTP id 1E0F02173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 18:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfH1Sxw (ORCPT
+        id S1726820AbfH1Szb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 14:53:52 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41957 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfH1Sxw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 14:53:52 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j16so838687wrr.8;
-        Wed, 28 Aug 2019 11:53:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dNeCU+ZF1utHP7CMktWuXnRZpMmmVHfRi6Kx10bzzBE=;
-        b=BA1KWLcFdAWrtBsaDuNr8g3j/SgOrTjFpsCuTY0hNWE9awNEoFniam51IU2VODgqUe
-         tWSuDD2MmJ6bGKNakIDXno5bS/OvPqmMHwa9fNrX1dfs9gE7XldIToxleEEzi/ehOzO0
-         MKCJAk19lRJbqJCa0+kg7t0a6maVuWyju3oiJA6+iDQmvwhgEJJZycLHj9ayfRmCQ3KC
-         neRbMBVmZagmm9I9yR/9bxQPZx2VJ2Uqvztc/ziKBS9h+fT4z/vSOu5QJUM2DVnqTr/Y
-         MhJj/HDKmHd/d9T+c/olDopKTALXtdiye+EwbIOXaPXRxT4MDLc6wsFk7ksDReqiG183
-         ebbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dNeCU+ZF1utHP7CMktWuXnRZpMmmVHfRi6Kx10bzzBE=;
-        b=rUra5E1d1houWussWPCClDgr8T7z4DORcin+XNTFO0/J2cKFxlyMNueAPKcxcsfX0v
-         o+iojMlH59k8w9WB2yqYKMFhcSZq/oPozw9PlveZiCkTXJ1vDTHFntNb21hwEmRlxjOh
-         8oAAwTazq5qHLHNhYOO0HXAThOYNkTn7gKwkxBk2jgJdEnv1bJQVpBD7NygslsPWTr8y
-         n4WCu7YSRXsEoUnC7p7Uidl+ALGls4UABF8AXNfxi8VXodu5qHRhyFLEpkTPXuyHUyTZ
-         v8scSjv+/2qeJLnLxwM/CarIORrlHXMTzLkh5E+6uNbCjGaUhpPteoxxvR0xoJzfhh6f
-         F9zA==
-X-Gm-Message-State: APjAAAVY6Y50uGElrh/hlhseVyy2+9gGLFw3OEJZ8VICqOUKjPtPraqp
-        QURkHlazwLEc22LCxfoCi+BgBQeObq6sAachaeo=
-X-Google-Smtp-Source: APXvYqweyMAnZ6yIhLJf6sFauZxV8VlmGh+lO4k0uF5jXv7BE29ZuBpN3aPxry2ik8FodDnqX68+X+75s0hzK6URnCM=
-X-Received: by 2002:adf:e286:: with SMTP id v6mr5946246wri.4.1567018429532;
- Wed, 28 Aug 2019 11:53:49 -0700 (PDT)
+        Wed, 28 Aug 2019 14:55:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:35458 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726400AbfH1Sza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 14:55:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8A53337;
+        Wed, 28 Aug 2019 11:55:29 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF12F3F59C;
+        Wed, 28 Aug 2019 11:55:28 -0700 (PDT)
+Subject: Re: [PATCH] arm-smmu: check for generic bindings first
+To:     Stefano Stabellini <sstabellini@kernel.org>, will@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, michal.simek@xilinx.com,
+        git@xilinx.com, linux-kernel@vger.kernel.org,
+        Stefano Stabellini <stefano.stabellini@xilinx.com>
+References: <20190828173837.29617-1-sstabellini@kernel.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f6fe31f1-52e1-8ab8-4ba4-f23db262d1b5@arm.com>
+Date:   Wed, 28 Aug 2019 19:55:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190828034012.sBvm81sYK%akpm@linux-foundation.org> <3e4eba58-7d24-f811-baa1-b6e88334e5a2@infradead.org>
-In-Reply-To: <3e4eba58-7d24-f811-baa1-b6e88334e5a2@infradead.org>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 28 Aug 2019 14:53:37 -0400
-Message-ID: <CADnq5_PHNbSVUsM65sisfUwDxg_4-uEZWZMSQ=u78AWkaRdvtw@mail.gmail.com>
-Subject: Re: mmotm 2019-08-27-20-39 uploaded (gpu/drm/amd/display/)
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mark Brown <broonie@kernel.org>, linux-fsdevel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.cz>, mm-commits@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190828173837.29617-1-sstabellini@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 2:51 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 8/27/19 8:40 PM, akpm@linux-foundation.org wrote:
-> > The mm-of-the-moment snapshot 2019-08-27-20-39 has been uploaded to
-> >
-> >    http://www.ozlabs.org/~akpm/mmotm/
-> >
-> > mmotm-readme.txt says
-> >
-> > README for mm-of-the-moment:
-> >
-> > http://www.ozlabs.org/~akpm/mmotm/
-> >
-> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> > more than once a week.
-> >
-> > You will need quilt to apply these patches to the latest Linus release =
-(5.x
-> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated=
- in
-> > http://ozlabs.org/~akpm/mmotm/series
-> >
-> > The file broken-out.tar.gz contains two datestamp files: .DATE and
-> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss=
-,
-> > followed by the base kernel version against which this patch series is =
-to
-> > be applied.
-> >
-> > This tree is partially included in linux-next.  To see which patches ar=
-e
-> > included in linux-next, consult the `series' file.  Only the patches
-> > within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included i=
-n
-> > linux-next.
->
-> on i386:
->
-> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_hwseq.c: In funct=
-ion =E2=80=98dcn20_hw_sequencer_construct=E2=80=99:
-> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_hwseq.c:2127:28: =
-error: =E2=80=98dcn20_dsc_pg_control=E2=80=99 undeclared (first use in this=
- function); did you mean =E2=80=98dcn20_dpp_pg_control=E2=80=99?
->   dc->hwss.dsc_pg_control =3D dcn20_dsc_pg_control;
->                             ^~~~~~~~~~~~~~~~~~~~
->                             dcn20_dpp_pg_control
->
->
-> Full randconfig file is attached.
+On 28/08/2019 18:38, Stefano Stabellini wrote:
+> From: Stefano Stabellini <stefano.stabellini@xilinx.com>
+> 
+> Today, the arm-smmu driver checks for mmu-masters on device tree, the
+> legacy property, if it is absent it assumes that we are using the new
+> bindings. If it is present it assumes that we are using the legacy
+> bindings. All arm-smmus need to use the same bindings: legacy or new.
+> 
+> There are two issues with this:
+> 
+> - we are not actually checking for the new bindings explicitly
+> It would be better to have an explicit check for the new bindings rather
+> than assuming we must be using the new if the old are not there.
 
-Fixed here:
-https://cgit.freedesktop.org/~agd5f/linux/commit/?h=3Ddrm-next&id=3Dda26ded=
-3b2fff646d28559004195abe353bce49b
+The legacy binding is the special case, though. Isn't it perfectly 
+logical to check for the special case, and assume the normal case 
+otherwise? ;)
 
-Alex
+> - old and new bindings cannot coexist
+> It would be nice to be able to provide both old and new bindings so
+> that software that hasn't been updated yet is still able to get IOMMU
+> information from the legacy bindings while at the same time newer
+> software can get the latest information via the new bindings. (Xen has
+> not been updated to use the new binding yet for instance.) The current
+> code breaks under these circumstances because if the old bindings are
+> present, the new are not even checked.
 
->
-> --
-> ~Randy
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+FWIW that was a deliberate design decision. We didn't want to see DTs 
+with both bindings at once - the legacy binding support remains only for 
+the sake of DTBs deployed in fossilised firmware that can't/won't ever 
+be updated. And I'm pretty sure the intervening 3 years have only 
+reinforced that position. Only a couple more months now until it will 
+have been deprecated for longer than it wasn't :)
+
+Do note that "mmu-masters" isn't just deprecated for giggles either - 
+the binding made some flawed assumptions, and there are Stream ID 
+topologies that it cannot possibly describe, which do exist in the real 
+world.
+
+> This patch changes the scheme by checking for #iommu-cells, which is
+> only present with the new bindings, before checking for mmu-masters.
+> The new bindings are always favored when present. All SMMUs still need
+> to use the same bindings: mix-and-matching new and old bindings between
+> different SMMUs is not allowed.
+> 
+> Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
+> ---
+> 
+> Let me know if you'd like me to turn the two using_*_binding variables
+> into a single one.
+> 
+> Also, please note that this is not meant as an excuse not to get Xen
+> updated to use the new binding.
+
+Fair enough, but conversely, what makes it Linux's responsibility to 
+handle? If Xen wants to deal with funky hybrid DTs then why shouldn't it 
+be Xen's job to just filter deprecated properties out of whatever it 
+presents to Linux?
+
+Robin.
+
+>   drivers/iommu/arm-smmu.c | 22 +++++++++++++---------
+>   1 file changed, 13 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 64977c131ee6..79b518ff215c 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -2118,7 +2118,7 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
+>   {
+>   	const struct arm_smmu_match_data *data;
+>   	struct device *dev = &pdev->dev;
+> -	bool legacy_binding;
+> +	bool legacy_binding, generic_binding;
+>   
+>   	if (of_property_read_u32(dev->of_node, "#global-interrupts",
+>   				 &smmu->num_global_irqs)) {
+> @@ -2132,16 +2132,20 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
+>   
+>   	parse_driver_options(smmu);
+>   
+> -	legacy_binding = of_find_property(dev->of_node, "mmu-masters", NULL);
+> -	if (legacy_binding && !using_generic_binding) {
+> -		if (!using_legacy_binding)
+> -			pr_notice("deprecated \"mmu-masters\" DT property in use; DMA API support unavailable\n");
+> -		using_legacy_binding = true;
+> -	} else if (!legacy_binding && !using_legacy_binding) {
+> +	generic_binding = of_find_property(dev->of_node, "#iommu-cells", NULL);
+> +	if (generic_binding && !using_legacy_binding) {
+>   		using_generic_binding = true;
+>   	} else {
+> -		dev_err(dev, "not probing due to mismatched DT properties\n");
+> -		return -ENODEV;
+> +		legacy_binding = of_find_property(dev->of_node, "mmu-masters",
+> +						  NULL);
+> +		if (legacy_binding && !using_generic_binding) {
+> +			if (!using_legacy_binding)
+> +				pr_notice("deprecated \"mmu-masters\" DT property in use; DMA API support unavailable\n");
+> +			using_legacy_binding = true;
+> +		} else {
+> +			dev_err(dev, "not probing due to mismatched DT properties\n");
+> +			return -ENODEV;
+> +		}
+>   	}
+>   
+>   	if (of_dma_is_coherent(dev->of_node))
+> 
