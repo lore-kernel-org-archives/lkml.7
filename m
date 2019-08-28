@@ -2,104 +2,344 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99E8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1E6C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8899208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:36:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q3/C+voF"
+	by mail.kernel.org (Postfix) with ESMTP id E0BE923406
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 09:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfH1JgQ (ORCPT
+        id S1726520AbfH1Jgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 05:36:16 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:35512 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbfH1JgQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:36:16 -0400
-Received: by mail-yb1-f195.google.com with SMTP id c9so583037ybf.2;
-        Wed, 28 Aug 2019 02:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m8H1ni9yUIvKX3ot84qs9UAKbQ5sv70F7CGKmm49qW4=;
-        b=q3/C+voFtOOZNKoHGbnnO9Lg3fcxIGE+I+t73LnEHRvCavUUPEU4M8v09XScvVHHJ/
-         ef4ZUdZ5B8yrQihlHBLcuYYIbJB8Vg05r8uOCN+HZTg4LKguyrltkFdPoEi1axbGEvEP
-         0iaNoTsbzz/Kk/j4iq1P01lB5wi1il0lHo1pi9NrM9Y64Lbq1yWjFAMy9y09qG4PRb0L
-         VUgYInjsBhqtNX9QPvPVkMhXm27U3ykIq3x3RfMB/oUmAF9WuxrZ84Qw7BDgq43k5jcZ
-         HAeYs1jLgBsjddmJ/B81VMz9bCYJzE5DrRUlq8VR3WBzJPxvFOruPuaj70NUEjBfPqB3
-         BUZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m8H1ni9yUIvKX3ot84qs9UAKbQ5sv70F7CGKmm49qW4=;
-        b=sGf1blZZ0RvrK365nWzw5GBGvItBF5N56zXSmOAw92ROSNG33x+7M2UFLQM18kshLt
-         aDm93eKqCJdoh3Aeks4tp5AiE0RJ+dVfwKW1TBCMBSQ88q7t9xbSp5h5kYaEpfzRNhAl
-         q1wrgmAzupKBaMsRMdh/NDXBgNjLnN+bfyfOywnYL6z6xUx40Dx9er33H1K+m0F5313t
-         djD/QT739HUsBpBKQ0IhF9ffAMSOFaSgeXwkFeMo5e50uQXjBGAwYRz7iKC0AiUhFAjM
-         bzxppKlJm838MywqCvXg8eldfY2fUlRnQSeJRJU5IBFkkDB4Yjn6iNNtxuSjP0g6nMyI
-         h9hQ==
-X-Gm-Message-State: APjAAAWGjikjzZtvg4n3hIj+BWPjAfPtksBCjU7DL5+BodxqELvBrp6J
-        XFTV3qFEpM9Ug1MXHn8MRIi2hqnuehj2jQfqi/k=
-X-Google-Smtp-Source: APXvYqzyAy1t7MyLmD3sjcO183YWsA3wpOmY8Nw7sOWOFmGweBbTSStv7843QVn7kK55nYWg6OxAl6W3a5KktRP/l9M=
-X-Received: by 2002:a25:2f42:: with SMTP id v63mr2232165ybv.228.1566984975242;
- Wed, 28 Aug 2019 02:36:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190826081752.57258-1-kkamagui@gmail.com> <CACdnJutomLNthYDzEc0wFBcBHK5iqnk0p-hkAkp57zQZ38oGPA@mail.gmail.com>
- <CAHjaAcSFhQsDYL2iRwwhyvxh9mH4DhxZ__DNzhtk=iiZZ5JdbA@mail.gmail.com>
- <CACdnJutfR2X-5ksXw4PNUdyH2MJs_mExNCcYPp8NLcPW2EDrYQ@mail.gmail.com>
- <CAHjaAcSpU0eW5PLsEpxTkycwi+wNS67xeizb6_BMM_-qUZYAmg@mail.gmail.com> <20190827171106.owkvt6slwwg5ypyl@srcf.ucam.org>
-In-Reply-To: <20190827171106.owkvt6slwwg5ypyl@srcf.ucam.org>
-From:   Seunghun Han <kkamagui@gmail.com>
-Date:   Wed, 28 Aug 2019 18:36:04 +0900
-Message-ID: <CAHjaAcSu04J3WqT_vnSnaQuYpFQ+xiXXWxhcCeLQccEq6eQGcQ@mail.gmail.com>
-Subject: Re: [PATCH] x86: tpm: Remove a busy bit of the NVS area for
- supporting AMD's fTPM
-To:     Matthew Garrett <mjg59@srcf.ucam.org>
-Cc:     Matthew Garrett <mjg59@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Wed, 28 Aug 2019 05:36:37 -0400
+Received: from mga18.intel.com ([134.134.136.126]:6016 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726378AbfH1Jgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 05:36:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 02:36:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
+   d="scan'208";a="381226739"
+Received: from deyangko-mobl.ccr.corp.intel.com ([10.249.168.35])
+  by fmsmga006.fm.intel.com with ESMTP; 28 Aug 2019 02:36:29 -0700
+Message-ID: <36f8f79c1353622bf0bb109296cd6229ac23e648.camel@intel.com>
+Subject: Re: [PATCH] thermal: mediatek: add suspend/resume callback
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     michael.kao@mediatek.com, Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Louis Yu <louis.yu@mediatek.com>
+Date:   Wed, 28 Aug 2019 17:36:38 +0800
+In-Reply-To: <1562058985-27538-1-git-send-email-michael.kao@mediatek.com>
+References: <1562058985-27538-1-git-send-email-michael.kao@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> On Wed, Aug 28, 2019 at 01:36:30AM +0900, Seunghun Han wrote:
->
-> > I got your point. Is there any problem if some regions which don't
-> > need to be handled in NVS area are saved and restored? If there is a
-> > problem, how about adding code for ignoring the regions in NVS area to
-> > the nvs.c file like Jarkko said? If we add the code, we can save and
-> > restore NVS area without driver's interaction.
->
-> The only thing that knows which regions should be skipped by the NVS
-> driver is the hardware specific driver, so the TPM driver needs to ask
-> the NVS driver to ignore that region and grant control to the TPM
-> driver.
->
-> --
-> Matthew Garrett | mjg59@srcf.ucam.org
+On Tue, 2019-07-02 at 17:16 +0800, michael.kao@mediatek.com wrote:
+> From: Louis Yu <louis.yu@mediatek.com>
+> 
+> Add suspend/resume callback to disable/enable Mediatek thermal sensor
+> respectively. Since thermal power domain is off in suspend, thermal
+> driver
+> needs re-initialization during resume.
+> 
+> Signed-off-by: Louis Yu <louis.yu@mediatek.com>
+> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+> ---
+> This patch series base on these patches [1][2][3].
+> 
+> [1]thermal: mediatek: mt8183: fix bank number settings (
+> https://patchwork.kernel.org/patch/10938817/)
+> [2]thermal: mediatek: add another get_temp ops for thermal sensors (
+> https://patchwork.kernel.org/patch/10938829/)
+> [3]thermal: mediatek: use spinlock to protect PTPCORESEL (
+> https://patchwork.kernel.org/patch/10938841/)
+> 
+all these patches are not sent to linux-pm mailing list, thus they
+never got chance to get merged. please resend them to linux-pm.
 
-Thank you, Matthew and Jarkko.
-It seems that the TPM driver needs to handle the specific case that
-TPM regions are in the NVS. I would make a patch that removes TPM
-regions from the ACPI NVS by requesting to the NVS driver soon.
+I don't know what the first part of the patch set do, so I'm wondering
+if there is any dependency?
 
-Jarkko,
-I would like to get some advice on it. What do you think about
-removing TPM regions from the ACPI NVS in TPM CRB driver? If you don't
-mind, I would make the patch about it.
+thanks,
+rui
 
-Seunghun
+>  drivers/thermal/mtk_thermal.c | 134
+> +++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 125 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/thermal/mtk_thermal.c
+> b/drivers/thermal/mtk_thermal.c
+> index 3d01153..61d4114 100644
+> --- a/drivers/thermal/mtk_thermal.c
+> +++ b/drivers/thermal/mtk_thermal.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/thermal.h>
+>  #include <linux/reset.h>
+>  #include <linux/types.h>
+> +#include <linux/iopoll.h>
+>  
+>  /* AUXADC Registers */
+>  #define AUXADC_CON1_SET_V	0x008
+> @@ -39,6 +40,8 @@
+>  
+>  #define APMIXED_SYS_TS_CON1	0x604
+>  
+> +#define APMIXED_SYS_TS_CON1_BUFFER_OFF	0x30
+> +
+>  /* Thermal Controller Registers */
+>  #define TEMP_MONCTL0		0x000
+>  #define TEMP_MONCTL1		0x004
+> @@ -46,6 +49,7 @@
+>  #define TEMP_MONIDET0		0x014
+>  #define TEMP_MONIDET1		0x018
+>  #define TEMP_MSRCTL0		0x038
+> +#define TEMP_MSRCTL1		0x03c
+>  #define TEMP_AHBPOLL		0x040
+>  #define TEMP_AHBTO		0x044
+>  #define TEMP_ADCPNP0		0x048
+> @@ -95,6 +99,9 @@
+>  #define TEMP_ADCVALIDMASK_VALID_HIGH		BIT(5)
+>  #define TEMP_ADCVALIDMASK_VALID_POS(bit)	(bit)
+>  
+> +#define TEMP_MSRCTL1_BUS_STA	(BIT(0) | BIT(7))
+> +#define TEMP_MSRCTL1_SENSING_POINTS_PAUSE	0x10E
+> +
+>  /* MT8173 thermal sensors */
+>  #define MT8173_TS1	0
+>  #define MT8173_TS2	1
+> @@ -266,6 +273,10 @@ struct mtk_thermal_data {
+>  struct mtk_thermal {
+>  	struct device *dev;
+>  	void __iomem *thermal_base;
+> +	void __iomem *apmixed_base;
+> +	void __iomem *auxadc_base;
+> +	u64 apmixed_phys_base;
+> +	u64 auxadc_phys_base;
+>  
+>  	struct clk *clk_peri_therm;
+>  	struct clk *clk_auxadc;
+> @@ -795,6 +806,42 @@ static void mtk_thermal_init_bank(struct
+> mtk_thermal *mt, int num,
+>  	mtk_thermal_put_bank(bank);
+>  }
+>  
+> +static int mtk_thermal_disable_sensing(struct mtk_thermal *mt, int
+> num)
+> +{
+> +	struct mtk_thermal_bank *bank = &mt->banks[num];
+> +	u32 val;
+> +	unsigned long timeout;
+> +	void __iomem *addr;
+> +	int ret = 0;
+> +
+> +	bank->id = num;
+> +	bank->mt = mt;
+> +
+> +	mtk_thermal_get_bank(bank);
+> +
+> +	val = readl(mt->thermal_base + TEMP_MSRCTL1);
+> +	/* pause periodic temperature measurement for sensing points */
+> +	writel(val | TEMP_MSRCTL1_SENSING_POINTS_PAUSE,
+> +	       mt->thermal_base + TEMP_MSRCTL1);
+> +
+> +	/* wait until temperature measurement bus idle */
+> +	timeout = jiffies + HZ;
+> +	addr = mt->thermal_base + TEMP_MSRCTL1;
+> +
+> +	ret = readl_poll_timeout(addr, val, (val &
+> TEMP_MSRCTL1_BUS_STA) == 0x0,
+> +				 0, timeout);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	/* disable periodic temperature meausrement on sensing points
+> */
+> +	writel(0x0, mt->thermal_base + TEMP_MONCTL0);
+> +
+> +out:
+> +	mtk_thermal_put_bank(bank);
+> +
+> +	return ret;
+> +}
+> +
+>  static u64 of_get_phys_base(struct device_node *np)
+>  {
+>  	u64 size64;
+> @@ -917,7 +964,6 @@ static int mtk_thermal_probe(struct
+> platform_device *pdev)
+>  	struct device_node *auxadc, *apmixedsys, *np = pdev-
+> >dev.of_node;
+>  	struct mtk_thermal *mt;
+>  	struct resource *res;
+> -	u64 auxadc_phys_base, apmixed_phys_base;
+>  	struct thermal_zone_device *tzdev;
+>  	struct mtk_thermal_zone *tz;
+>  
+> @@ -954,11 +1000,11 @@ static int mtk_thermal_probe(struct
+> platform_device *pdev)
+>  		return -ENODEV;
+>  	}
+>  
+> -	auxadc_phys_base = of_get_phys_base(auxadc);
+> +	mt->auxadc_phys_base = of_get_phys_base(auxadc);
+>  
+>  	of_node_put(auxadc);
+>  
+> -	if (auxadc_phys_base == OF_BAD_ADDR) {
+> +	if (mt->auxadc_phys_base == OF_BAD_ADDR) {
+>  		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
+>  		return -EINVAL;
+>  	}
+> @@ -969,11 +1015,12 @@ static int mtk_thermal_probe(struct
+> platform_device *pdev)
+>  		return -ENODEV;
+>  	}
+>  
+> -	apmixed_phys_base = of_get_phys_base(apmixedsys);
+> +	mt->apmixed_phys_base = of_get_phys_base(apmixedsys);
+> +	mt->apmixed_base = of_iomap(apmixedsys, 0);
+>  
+>  	of_node_put(apmixedsys);
+>  
+> -	if (apmixed_phys_base == OF_BAD_ADDR) {
+> +	if (mt->apmixed_phys_base == OF_BAD_ADDR) {
+>  		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
+>  		return -EINVAL;
+>  	}
+> @@ -985,19 +1032,19 @@ static int mtk_thermal_probe(struct
+> platform_device *pdev)
+>  	ret = clk_prepare_enable(mt->clk_auxadc);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n",
+> ret);
+> -		return ret;
+> +		goto err_disable_clk_auxadc;
+>  	}
+>  
+>  	ret = clk_prepare_enable(mt->clk_peri_therm);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Can't enable peri clk: %d\n",
+> ret);
+> -		goto err_disable_clk_auxadc;
+> +		goto err_disable_clk_peri_therm;
+>  	}
+>  
+>  	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ;
+> ctrl_id++)
+>  		for (i = 0; i < mt->conf->num_banks; i++)
+> -			mtk_thermal_init_bank(mt, i, apmixed_phys_base,
+> -					      auxadc_phys_base,
+> ctrl_id);
+> +			mtk_thermal_init_bank(mt, i, mt-
+> >apmixed_phys_base,
+> +					      mt->auxadc_phys_base,
+> ctrl_id);
+>  
+>  	platform_set_drvdata(pdev, mt);
+>  
+> @@ -1041,11 +1088,80 @@ static int mtk_thermal_remove(struct
+> platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int __maybe_unused mtk_thermal_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct mtk_thermal *mt = platform_get_drvdata(pdev);
+> +	int i, ret;
+> +
+> +	for (i = 0; i < mt->conf->num_banks; i++) {
+> +		ret = mtk_thermal_disable_sensing(mt, i);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +
+> +	/* disable buffer */
+> +	writel(readl(mt->apmixed_base + APMIXED_SYS_TS_CON1) |
+> +	       APMIXED_SYS_TS_CON1_BUFFER_OFF,
+> +	       mt->apmixed_base + APMIXED_SYS_TS_CON1);
+> +
+> +	clk_disable_unprepare(mt->clk_peri_therm);
+> +	clk_disable_unprepare(mt->clk_auxadc);
+> +
+> +	return 0;
+> +
+> +out:
+> +	dev_err(&pdev->dev, "Failed to wait until bus idle\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int __maybe_unused mtk_thermal_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct mtk_thermal *mt = platform_get_drvdata(pdev);
+> +	int i, ret, ctrl_id;
+> +
+> +	ret = device_reset(&pdev->dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_prepare_enable(mt->clk_auxadc);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n",
+> ret);
+> +		goto err_disable_clk_auxadc;
+> +	}
+> +
+> +	ret = clk_prepare_enable(mt->clk_peri_therm);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Can't enable peri clk: %d\n",
+> ret);
+> +		goto err_disable_clk_peri_therm;
+> +	}
+> +
+> +	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ;
+> ctrl_id++)
+> +		for (i = 0; i < mt->conf->num_banks; i++)
+> +			mtk_thermal_init_bank(mt, i, mt-
+> >apmixed_phys_base,
+> +					      mt->auxadc_phys_base,
+> ctrl_id);
+> +
+> +	return 0;
+> +
+> +err_disable_clk_peri_therm:
+> +	clk_disable_unprepare(mt->clk_peri_therm);
+> +err_disable_clk_auxadc:
+> +	clk_disable_unprepare(mt->clk_auxadc);
+> +
+> +	return ret;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(mtk_thermal_pm_ops,
+> +			 mtk_thermal_suspend, mtk_thermal_resume);
+> +
+>  static struct platform_driver mtk_thermal_driver = {
+>  	.probe = mtk_thermal_probe,
+>  	.remove = mtk_thermal_remove,
+>  	.driver = {
+>  		.name = "mtk-thermal",
+> +		.pm = &mtk_thermal_pm_ops,
+>  		.of_match_table = mtk_thermal_of_match,
+>  	},
+>  };
+
