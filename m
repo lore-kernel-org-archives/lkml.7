@@ -2,124 +2,188 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75F9C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 678A0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F370208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B6C208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 19:31:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X5FVdJNR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfH1TaK (ORCPT
+        id S1726891AbfH1Tbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 15:30:10 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:50858 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726617AbfH1TaK (ORCPT
+        Wed, 28 Aug 2019 15:31:34 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38053 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbfH1Tbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 15:30:10 -0400
-Received: from mr2.cc.vt.edu (mr2.cc.vt.edu [IPv6:2607:b400:92:8400:0:90:e077:bf22])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x7SJU8D8032035
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 15:30:08 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x7SJU311014487
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 15:30:08 -0400
-Received: by mail-qt1-f200.google.com with SMTP id k47so812573qtc.16
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 12:30:08 -0700 (PDT)
+        Wed, 28 Aug 2019 15:31:33 -0400
+Received: by mail-io1-f65.google.com with SMTP id p12so1920577iog.5
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 12:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OPq6eHkfSEMrDtXlZHggTT9FiJjZ14kSQYk2XHwhvZA=;
+        b=X5FVdJNR8hI2vWzGUiUbRUHPEpCZwqGopCVHHOg1zU6Xv0LSn9tFaafxTc+PSVyUgN
+         Vm9lcNVXvcysI5VUvchwYyYLL8XsUoK3sEf1fG9iKq6VYYFUMHQGb1CWVntYjb2tX9VH
+         TVsEy0gIeCkRNl2gTTDCG0cBfUPu2cWbxHHRT/qXCwcMneOdOeEM4VN3U6oGhdyHqSXl
+         jiGvbNXzLq2WFQU67xGtBr+wsJQ7XK2hMwX35pccBS1AtYoKylZk89YeZCcGzV5E+tw7
+         m3k1o9yvBLyYa0v64T0q03UjqhHP7jRjJrNwFl0OB5mnqZkarX61QVHM6FQxyytmUlCs
+         lGjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=WWW7WkQ7EM9h2Nw/XK0xhQGrzY4/gIDQbxY5oyv/Mws=;
-        b=mEIBCv7M61gCErnxANDe6Zlxk8qwSlzbnsIQ+uum/wWirseX7CrU8BXm73IOPP5C8i
-         PJ2ihUgLIIoms+N17Cszy2Deh03ivVLQHckzWaB5ZrFwDM/02dyb6I2jLXHhjH08/+wC
-         cINA9TScnTiwwCGfru5bL3Ns3aGIbO/CuB1q7pB0PHSSVkPnLs+NrCKLVMWEbhCJxHYH
-         pFmFB+AtR3y08+DNl5mbL8WyHXs/g8aNfbdENnQiI8j412gmIxExC/JHCYq/UJNp9vs/
-         6eL4uFad85sitjJdLQkuErlcCy5j9Mhfw5vvzUHDR8+l+lNCIaXIoPjYXHvo4A+WeZfI
-         HdRQ==
-X-Gm-Message-State: APjAAAUfgqiFinrIRU9jFEFIZmze7QNqkDhC2UhtaAuKb8skur2Z0yTu
-        QJSmUmvZK/V7uuGmy8lFzMJuJdQXWBSe2nZNnaBfDgu8eiyowY3a05ESWdj1GHpNqB/djw1f7oB
-        GmhC2K62PBXCCRG0hj4rJabo3lHGYtutqoqc=
-X-Received: by 2002:ac8:2c5c:: with SMTP id e28mr6257958qta.159.1567020603153;
-        Wed, 28 Aug 2019 12:30:03 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzimlreE7q4z4u6OLfGtwoudD0qGMHFO4+Ipo+SEHkkQj5YeFnjYv0q5nl0Y8iNK5fXi8B4aQ==
-X-Received: by 2002:ac8:2c5c:: with SMTP id e28mr6257930qta.159.1567020602873;
-        Wed, 28 Aug 2019 12:30:02 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4340::ba0])
-        by smtp.gmail.com with ESMTPSA id o18sm86309qtb.53.2019.08.28.12.30.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 12:30:01 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-Subject: Re: next-20190826 - objtool fails to build.
-In-Reply-To: <20190828151003.3px5plk4tp2s5s5c@treble>
-References: <133250.1566965715@turing-police>
- <20190828151003.3px5plk4tp2s5s5c@treble>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1567020600_4251P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 28 Aug 2019 15:30:00 -0400
-Message-ID: <23345.1567020600@turing-police>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OPq6eHkfSEMrDtXlZHggTT9FiJjZ14kSQYk2XHwhvZA=;
+        b=LGNEL7wnQ+BpAN0uaGJHGfMst1nrmq8KCzzSht4TTg30RH2mGQjByE+gWHcXp4hg3r
+         IdJ17V/17sUuBIbIjOZCpfO6OkpcATCeIdFOhOmKfsvabKn3JsrNLDWkTLHCGMMaqeef
+         C+Y+LMy5j0+eB18w9eoAfg5NUh8Ef73f8kODfMTbl0LjfM+Sj8HK4cT0FlykvrFRyaT8
+         iR/GuQXpF6IGz1KU6HJ4L7jqutIqZXnuINhDQPz5Mjub5dJpqYumGNM3NHDIMK9Jym36
+         BegJqjbN74CxXX6lksempvRu/NvkJ/vt7J4WSdbd5C45SxiI5wgsUIkR+ox526tmbb1R
+         6sCg==
+X-Gm-Message-State: APjAAAWPhHFL8mijbmPO6JwQfZ9YlwpTwanYQhVvvfaHRpCRHpveTkIZ
+        Vr61XPOG9vZWMlaUIAG499eoMUpZYsAChT4akB4KSw==
+X-Google-Smtp-Source: APXvYqyZx1HtW0OkfrtQ29V/XqVXQQUk7BQodnXXtHFG8tFy4rV5ofzUcZqV/dV+JMGYWsVQaP5eYfgNSUyhT2J7lQc=
+X-Received: by 2002:a6b:720e:: with SMTP id n14mr2596211ioc.139.1567020692511;
+ Wed, 28 Aug 2019 12:31:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <1566869956-7154-1-git-send-email-ilubashe@akamai.com>
+In-Reply-To: <1566869956-7154-1-git-send-email-ilubashe@akamai.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 28 Aug 2019 13:31:21 -0600
+Message-ID: <CANLsYkwZm9ehopjDMXNw-3JOj8MPeT_shPPJBOeLNe7BUtibmA@mail.gmail.com>
+Subject: Re: [PATCH 0/5] perf: Treat perf_event_paranoid and kptr_restrict
+ like the kernel does it
+To:     Igor Lubashev <ilubashe@akamai.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1567020600_4251P
-Content-Type: text/plain; charset=us-ascii
-
-On Wed, 28 Aug 2019 10:10:04 -0500, Josh Poimboeuf said:
-
-> But I don't see how those warnings could get enabled: -Wsign-compare
-> -Wunused-parameter.
+On Mon, 26 Aug 2019 at 19:40, Igor Lubashev <ilubashe@akamai.com> wrote:
 >
-> Can you "make clean" and do "make V=1 tools/objtool" to show the actual
-> flags?
+> This is a follow up series to the ensure perf treats perf_event_paranoid and
+> kptr_restrict in a way that is similar to the kernel's.  That includes use of
+> capabilities instead of euid==0, when possible, as well as adjusting the logic
+> and fixing bugs.
+>
+> Prior discussion: https://lkml.kernel.org/lkml/cover.1565188228.git.ilubashe@akamai.com
+>
+> ===  Testing notes ===
+>
+> I have tested on x86 with perf binary installed according to
+> Documentation/admin-guide/perf-security.rst (cap_sys_admin, cap_sys_ptrace,
+> cap_syslog assigned to the perf executable).
+>
+> I tested each permutation of:
+>
+>   * 7 commits:
+>       1. HEAD of perf/core
+>       2. patch 01 on top of perf/core
+>       3. patches 01-02 on top of perf/core
+>       4. patches 01-03 on top of perf/core
+>       5. patches 01-04 on top of perf/core
+>       6. patches 01-05 on top of perf/core
+>       7. HEAD of perf/cap (with known bug fixed by patch 01 of this series)
+>
+>   * 2 build environments: with and without libcap-dev
+>
+>   * 3 kernel.kptr_restrict values: 0, 1, 2
+>
+>   * 4 kernel.perf_event_paranoid values: -1, 0, 1, 2
+>
+>   * 2 users: root and non-root
+>
+> Total: 336 permutations
+>
+> Each permutation consisted of:
+>   perf test
+>   perf record -e instructions -- sleep 1
+>
+> All test runs were expected.  Also, as expected, the following permutation (just
+> that permutation) resulted in segmentation failure:
+>  commit:                     perf/cap
+>  build:                      no libcap-dev
+>  kernel.kptr_restrict:       0
+>  kernel.perf_event_paranoid: 2
+>  user:                       non-root
+>
+> The perf/cap commit was included in the test to ensure that we can reproduce the
+> crash and hence test that the patch series fixes the crash, while retaining the
+> desired behavior of perf/cap.
+>
+> === Series Contents ===
+>
+>   01: perf event: Check ref_reloc_sym before using it
+>     Fix the pre-existing cause of the crash above: use of ref_reloc_sym without
+>     a check for NULL
+>
+>   02: perf tools: Use CAP_SYS_ADMIN with perf_event_paranoid checks
+>     Replace the use of euid==0 with a check for CAP_SYS_ADMIN whenever
+>     perf_event_paranoid level is verified.
+>     * This patch has been reviewed previously and is unchanged.
+>     * I kept Acks and Sign-offs.
+>
+>   03: perf util: kernel profiling is disallowed only when perf_event_paranoid>1
+>     Align perf logic regarding perf_event_paranoid to match kernel's.
+>     This has been reported by Arnaldo.
+>
+>   04: perf symbols: Use CAP_SYSLOG with kptr_restrict checks
+>     Replace the use of uid and euid with a check for CAP_SYSLOG when
+>     kptr_restrict is verified (similar to kernel/kallsyms.c and lib/vsprintf.c).
+>     Consult perf_event_paranoid when kptr_restrict==0 (see kernel/kallsyms.c).
+>     * A previous version of this patch has been reviewed previously, but I
+>     * modified it in a non-trivial way, so I removed Acks.
+>
+>   05: perf: warn perf_event_paranoid restrict kernel symbols
+>     Warn that /proc/sys/kernel/perf_event_paranoid can also restrict kernel
+>     symbols.
+>
+> Igor Lubashev (5):
+>   perf event: Check ref_reloc_sym before using it
+>   perf tools: Use CAP_SYS_ADMIN with perf_event_paranoid checks
+>   perf util: kernel profiling is disallowed only when perf_event_paranoid > 1
+>   perf symbols: Use CAP_SYSLOG with kptr_restrict checks
+>   perf: warn that perf_event_paranoid can restrict kernel symbols
+>
+>  tools/perf/arch/arm/util/cs-etm.c    |  3 ++-
 
-And that tells me those warnings in fact don't get specifically enabled.
-(I've added some line breaks for sanity)
+For the coresight part:
 
-  gcc -Wp,-MD,/usr/src/linux-next/tools/objtool/.special.o.d -Wp,-MT,/usr/src/linux-next/tools/objtool/special.o -O2 -D_FORTIFY_SOURCE=2 -Wall -Wextra -Wbad-function-cast
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Found the cause of the mystery - I changed something in a bash profile, and
-as a result...
+>  tools/perf/arch/arm64/util/arm-spe.c |  3 ++-
+>  tools/perf/arch/x86/util/intel-bts.c |  3 ++-
+>  tools/perf/arch/x86/util/intel-pt.c  |  2 +-
+>  tools/perf/builtin-record.c          |  2 +-
+>  tools/perf/builtin-top.c             |  2 +-
+>  tools/perf/builtin-trace.c           |  2 +-
+>  tools/perf/util/event.c              |  7 ++++---
+>  tools/perf/util/evsel.c              |  2 +-
+>  tools/perf/util/symbol.c             | 15 ++++++++++++---
+>  10 files changed, 27 insertions(+), 14 deletions(-)
 
-export CFLAGS="-O2 -D_FORTIFY_SOURCE=2 -Wall -Wextra"
+For the set:
 
-And -Wextra pulls in the things that cause problems. So this is mostly
-self-inflicted.
+Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-The real question then becomes - should the Makefile sanitize CFLAGS or just
-append to whatever the user supplied as it does currently? The rest of the tree
-sanitizes CFLAG, because I don't get deluged in -Wsign-compare warnings all
-over the place...
-
-
---==_Exmh_1567020600_4251P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXWbWNwdmEQWDXROgAQLpHBAAsvfurUruTCbQcjtDzRBtVO67OqU69uoN
-274Tlz95DjQjMyZONImT3QYaMo16f65MSmkNoxjsyBHAgSANhU/ZG4dsmFkKn3fR
-You9kBjuSIVinxvdbrSqVJ/r5kBPItbbDVq4PaS/X4hv6bF1kjb5q+pkTWUqlUUS
-XQG5FnwC/040j8CmC/dFo+49NTCbpT7f2rytF2H3i58DPDbhonsnv16ii++MSAZh
-Ba0Tqdn6Ay6sCgd2WSPkge7/RV1ChZm/UhoR9Tb/1USp3ZWSW7365BcxAJksoNvY
-78fpVa56jz4thtK/7oeZsWrCbRr+oYxiLLHWKMF8o7tc9orh0iF61DAzusA4Eine
-EIi8mZFaMtmGWsJ9o9p5Z1ZM0fUgTlyatmnqb/jp8saSqag3TwoMp39OgzzdNMm+
-QNohp4XMN47jdHuKB5qRBw7Ebqwvn34+rC39nWJmlaM1xggDVYuLrNrVWCMSOe8N
-Jrnxz5IL6lWiFpcZCbPljLvPN0hTkpuyD0hyyaggrcrdwUGqXTBPVF49se2UR8bO
-GTL8KSidHnZ3+oD9hKI4bSKa+TiXjJUbjUW0AYzQ8ws0zWcyhjMWgUQAPO1rJ0Du
-4PX5AY528uqoJnfp7Q31K+JDb4wUwZhDaWa+bzxoP8JvFfmCgdH/oz8rTUqsgFcj
-p18xqip4Xqs=
-=nPp4
------END PGP SIGNATURE-----
-
---==_Exmh_1567020600_4251P--
+>
+> --
+> 2.7.4
+>
