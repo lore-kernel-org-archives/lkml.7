@@ -2,107 +2,238 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9929BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB3CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7133922DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EB3F22CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 10:32:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="LdiAWQz8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cp/+56qd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfH1Kce (ORCPT
+        id S1726965AbfH1Kch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 06:32:34 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44265 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbfH1Kcd (ORCPT
+        Wed, 28 Aug 2019 06:32:37 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:42743 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfH1Kce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 06:32:33 -0400
-Received: by mail-ed1-f66.google.com with SMTP id a21so2399070edt.11
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 03:32:32 -0700 (PDT)
+        Wed, 28 Aug 2019 06:32:34 -0400
+Received: by mail-ua1-f68.google.com with SMTP id n13so649040uap.9
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 03:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=42lKVdjnjP4y6DAxlLSWlI9cd0CLM9DFEKL56/c6DVw=;
-        b=LdiAWQz8Af5L8jx+Wh3U4VqhqVfqQ2nc41g+8FcxYVXCVZgUhXbvRt4IkV8itEgTBW
-         gWFgViHvq+lZ9XXK7aoa9BEnyC+qauttQ/X34wCpfVIVMgf96bcioED+1DFVG6apguD4
-         AVpgddIDLb87Or3hp/EnVICZa3P1EsEx1sabaUWZQqJksQ1jHVZhpmquwmb10/Rhj/N8
-         tJ7arB02huszVrlcJtqiyIwF10FNfBxFNJSk26FXUdsPlH9Y/qsezyKWZXQ+2yLEYH8H
-         DdVYHdquI9Xu/lcf9SDLdVl9EFm8NhN5j4WM+wbL0e6zvmN0lUjIus1My77l9d9ihuhD
-         QpEg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oF7a1jbNbbfi/DhdEHpIDQz29C1JdgCAJx5IOgrXi30=;
+        b=cp/+56qdxFuDpbtqG8L1bmfC561P9jMlzO5urm8esQqmM2W3gBfNZdp+scUb/KB4iB
+         qcXCcj0I8yeqS2BGaoF9CiIPWreZXVneX4W1Luzt07p5wChbYfShdsHS3Osr888EAF4O
+         RScUdSCEqK46D6wtZMBAHaY4yiVC8aYfB6mGWVtzG3imiZbLNGysfDNsRb7tFf/GBT6V
+         CwlWUrgju0whJHM+pQVqIXg8HYwHqJ6hv87myiJUck4Ad6jQ3fVS8ujj1t1NLvmLwkIt
+         KelRcR3YS364Ab3ZM6Cn/7sCdOvHfmtXLeXE5SuqM4gDlsWlwoySuoE7niD/nBoacqZp
+         nOcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=42lKVdjnjP4y6DAxlLSWlI9cd0CLM9DFEKL56/c6DVw=;
-        b=nA68B1V0QIYAhbYJy1j6BB99bOJtGep1Mpgif1V7SvKUEhw8qVdFMuHNudOr3/9+uc
-         v4qJFpVvw0i2av7Ygf6+dm7t0tHaFXCGGVBtqKshPMC0V54enMuM2Q+H422k1spNhbWO
-         11D+xeZBxJj/r/dfpeLI6EsVV1fdtuCc4O5XFIRg975b9ux+iswzv6Tihmwi7nnORfWx
-         POu1XHF//vBVLRL3to03j8dOSp1MDox0avnGFuptkhp5GVkMZbndhEFdLmIfY2UddKGU
-         63uuriUMMg+vT5Ic6To0f2SZqkYyDW5Eo1p66ssrWj4xKtPLTqyONvWqu3RwrBOTbpYk
-         zzLQ==
-X-Gm-Message-State: APjAAAVX2WxUwU+zI0ejVBM8KygA8D3VB1l2HWca7KvaMu39/eo4OzVk
-        63Vz63t40X4NPDJnNFmELK1a8A==
-X-Google-Smtp-Source: APXvYqxtYAhqfsawL7tpy/qloMqvOXRgeb+f/jy3T/I1yom2OrgxLgDW7GEBfCJaXBk5T0R3jZNceg==
-X-Received: by 2002:a17:906:1944:: with SMTP id b4mr2528225eje.44.1566988351953;
-        Wed, 28 Aug 2019 03:32:31 -0700 (PDT)
-Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
-        by smtp.gmail.com with ESMTPSA id z9sm366543edr.54.2019.08.28.03.32.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 03:32:31 -0700 (PDT)
-From:   Martijn Coenen <maco@android.com>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundatio.org, kernel-team@android.com,
-        narayan@google.com, dariofreni@google.com, ioffe@google.com,
-        jiyong@google.com, maco@google.com,
-        Martijn Coenen <maco@android.com>
-Subject: [PATCH] loop: change queue block size to match when using DIO.
-Date:   Wed, 28 Aug 2019 12:32:29 +0200
-Message-Id: <20190828103229.191853-1-maco@android.com>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oF7a1jbNbbfi/DhdEHpIDQz29C1JdgCAJx5IOgrXi30=;
+        b=i/TnwdrW1uu7tCkkW4oPPTjg6TTbxk28djmvZ1/Mn/f/bIzqUiaLrF0Ae8H9Ep2OfI
+         xYh3m2HWgLV3ra2QrEnYN9KE5xbljlHreUG4ycYjfpGxCdnq43x5ziwLuXLa287wkznh
+         2TUlZuOJBEx6o4yOUE++IpUPWCGvGC4lsGOdOI6MY/KgevnVIFw8jJyobbxgLmlXmRsf
+         qgN2wn1Ace1zbySwICe0qMIdW0a75ZzSj+eOR5wyH2YFGjPDNR/Kf2+1BQRGyxY/wb2e
+         NJLHIPcodif9YL4H8NFsNE3cgzgEC+5u5RkyNawG9txAoSg7EememRn4RfJpJKMeA4Ev
+         3uuw==
+X-Gm-Message-State: APjAAAWM6vIVOj9b3LlcJ3XVajP9zFmrH01HGIQMiByJx+Yl+qaERTBV
+        bjw3vJuLq9ghNlabhopaR/kqE06MqDwicSajhjhzzQ==
+X-Google-Smtp-Source: APXvYqxu8e7ouZlP59+4Xx/1uo07ZtNJgW3EppKd0LP9dwxPGjEFMRvCUHleqLWo7lXKmtIi0s8NylMLuJFV+YuvBNo=
+X-Received: by 2002:ab0:6883:: with SMTP id t3mr1585466uar.104.1566988353183;
+ Wed, 28 Aug 2019 03:32:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190827134337.GK13294@shell.armlinux.org.uk> <CAPDyKFp7e2OD_idam3-2sEd0wJU5OcP=H04G1OvHmAUo2Y-bYw@mail.gmail.com>
+ <20190827143634.GL13294@shell.armlinux.org.uk> <20190827145216.GM13294@shell.armlinux.org.uk>
+ <20190827150614.GN13294@shell.armlinux.org.uk>
+In-Reply-To: <20190827150614.GN13294@shell.armlinux.org.uk>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 28 Aug 2019 12:31:56 +0200
+Message-ID: <CAPDyKFoJgT9kRnARcP+snZkqC7rrp3UCd=mA=n3GL_brr2SHBw@mail.gmail.com>
+Subject: Re: Continuous SD IO causes hung task messages
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The loop driver assumes that if the passed in fd is opened with
-O_DIRECT, the caller wants to use direct I/O on the loop device.
-However, if the underlying filesystem has a different block size than
-the loop block queue, direct I/O can't be enabled. Instead of requiring
-userspace to manually change the blocksize and re-enable direct I/O,
-just change the queue block size to match.
+On Tue, 27 Aug 2019 at 17:06, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Tue, Aug 27, 2019 at 03:52:17PM +0100, Russell King - ARM Linux admin wrote:
+> > On Tue, Aug 27, 2019 at 03:36:34PM +0100, Russell King - ARM Linux admin wrote:
+> > > On Tue, Aug 27, 2019 at 03:55:23PM +0200, Ulf Hansson wrote:
+> > > > On Tue, 27 Aug 2019 at 15:43, Russell King - ARM Linux admin
+> > > > <linux@armlinux.org.uk> wrote:
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > While dd'ing the contents of a SD card, I get hung task timeout
+> > > > > messages as per below.  However, the dd is making progress.  Any
+> > > > > ideas?
+> > > > >
+> > > > > Presumably, mmc_rescan doesn't get a look-in while IO is progressing
+> > > > > for the card?
+> > > >
+> > > > Is it a regression?
+> > > >
+> > > > There not much of recent mmc core and mmc block changes, that I can
+> > > > think of at this point.
+> > >
+> > > No idea - I just repaired the SD socket after the D2 line became
+> > > disconnected, and decided to run that command as a test.
+> > >
+> > > > > ARM64 host, Macchiatobin, uSD card.
+> > > >
+> > > > What mmc host driver is it? mmci?
+> > >
+> > > sdhci-xenon.
+> > >
+> > > I'm just trying with one CPU online, then I'll try with two.  My
+> > > suspicion is that there's a problem in the ARM64 arch code where
+> > > unlocking a mutex doesn't get noticed on other CPUs.
+> > >
+> > > Hmm, I thought I'd try bringing another CPU online, but it seems
+> > > like the ARM64 CPU hotplug code is broken:
+> > >
+> > > [ 3552.029689] CPU1: shutdown
+> > > [ 3552.031099] psci: CPU1 killed.
+> > > [ 3949.835212] CPU1: failed to come online
+> > > [ 3949.837753] CPU1: failed in unknown state : 0x0
+> > >
+> > > which means I can only take CPUs down, I can't bring them back
+> > > online without rebooting.
+> >
+> > Okay, running on a single CPU shows no problems.
+> >
+> > Running on four CPUs (as originally) shows that the kworker thread
+> > _never_ gets scheduled, so the warning is not false.
+> >
+> > With three CPUs, same problem.
+> >
+> > root@arm-d06300000000:~# ps aux | grep ' D '
+> > root        34  0.0  0.0      0     0 ?        D    15:38   0:00 [kworker/1:1+events_freezable]
+> > root@arm-d06300000000:~# cat /proc/34/sched
+> > kworker/1:1 (34, #threads: 1)
+> > -------------------------------------------------------------------
+> > se.exec_start                                :        318689.992440
+> > se.vruntime                                  :         37750.882357
+> > se.sum_exec_runtime                          :             9.421240
+> > se.nr_migrations                             :                    0
+> > nr_switches                                  :                 1174
+> > nr_voluntary_switches                        :                 1171
+> > nr_involuntary_switches                      :                    3
+> > se.load.weight                               :              1048576
+> > se.runnable_weight                           :              1048576
+> > se.avg.load_sum                              :                    6
+> > se.avg.runnable_load_sum                     :                    6
+> > se.avg.util_sum                              :                 5170
+> > se.avg.load_avg                              :                    0
+> > se.avg.runnable_load_avg                     :                    0
+> > se.avg.util_avg                              :                    0
+> > se.avg.last_update_time                      :         318689991680
+> > se.avg.util_est.ewma                         :                   10
+> > se.avg.util_est.enqueued                     :                    0
+> > policy                                       :                    0
+> > prio                                         :                  120
+> > clock-delta                                  :                    0
+> >
+> > The only thing that changes there is "clock-delta".  When I kill the
+> > dd, I get:
+> >
+> > root@arm-d06300000000:~# cat /proc/34/sched
+> > kworker/1:1 (34, #threads: 1)
+> > -------------------------------------------------------------------
+> > se.exec_start                                :        574025.791680
+> > se.vruntime                                  :         79996.657300
+> > se.sum_exec_runtime                          :            10.916400
+> > se.nr_migrations                             :                    0
+> > nr_switches                                  :                 1403
+> > nr_voluntary_switches                        :                 1400
+> > nr_involuntary_switches                      :                    3
+> > se.load.weight                               :              1048576
+> > se.runnable_weight                           :              1048576
+> > se.avg.load_sum                              :                   15
+> > se.avg.runnable_load_sum                     :                   15
+> > se.avg.util_sum                              :                15007
+> > se.avg.load_avg                              :                    0
+> > se.avg.runnable_load_avg                     :                    0
+> > se.avg.util_avg                              :                    0
+> > se.avg.last_update_time                      :         574025791488
+> > se.avg.util_est.ewma                         :                   10
+> > se.avg.util_est.enqueued                     :                    0
+> > policy                                       :                    0
+> > prio                                         :                  120
+> > clock-delta                                  :                   40
+> >
+> > so the thread makes forward progress.
+> >
+> > Down to two CPUs:
+> >
+> > root@arm-d06300000000:~# ps aux | grep ' D '
+> > root        34  0.0  0.0      0     0 ?        D    15:38   0:00 [kworker/1:1+events_freezable]
+> >
+> > Same symptoms.  dd and md5sum switch between CPU 0 and CPU1.
+>
+> Hmm.
+>
+> static blk_status_t mmc_mq_queue_rq(struct blk_mq_hw_ctx *hctx,
+>                                     const struct blk_mq_queue_data *bd)
+>
+>         mq->in_flight[issue_type] += 1;
+>         get_card = (mmc_tot_in_flight(mq) == 1);
+>
+>         if (get_card)
+>                 mmc_get_card(card, &mq->ctx);
+>
+> mmc_get_card() gets the host lock according to the card.
+>
+> So, if we always have requests in flight (which is probably the case
+> here) we never drop the host lock, and mmc_rescan() never gets a look
+> in - hence blocking the kworker.
 
-Signed-off-by: Martijn Coenen <maco@android.com>
----
- drivers/block/loop.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Ahh, you are right. However, this isn't a new problem I believe.
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index ab7ca5989097a..1138162ff6c4d 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -994,6 +994,12 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 	if (!(lo_flags & LO_FLAGS_READ_ONLY) && file->f_op->fsync)
- 		blk_queue_write_cache(lo->lo_queue, true, false);
- 
-+	if (io_is_direct(lo->lo_backing_file) && inode->i_sb->s_bdev) {
-+		/* In case of direct I/O, match underlying block size */
-+		blk_queue_logical_block_size(lo->lo_queue,
-+				bdev_logical_block_size(inode->i_sb->s_bdev));
-+	}
-+
- 	loop_update_rotational(lo);
- 	loop_update_dio(lo);
- 	set_capacity(lo->lo_disk, size);
--- 
-2.23.0.187.g17f5b7556c-goog
+Even if we did some re-work of the locking mechanism while converting
+to blk-mq, I still think the worker could starve the mmc_rescan work
+before.
 
+In practice this shouldn't be a problem though, unless I am
+overlooking something. This is because it's not until there is an I/O
+error, that causes the block worker to release the host, to it makes
+sense to let mmc_rescan to claim the host to check for card removal.
+
+>
+> So this is a real issue with MMC, and not down to something in the
+> arch.
+
+Yep, thanks for running the test and providing more details!
+
+>
+> I suspect the reason that single-CPU doesn't show it is because it is
+> unable to keep multiple requests in flight.
+
+Yes, most likely.
+
+Now, how to solve this problem I need to think more about....
+
+FYI: The long term goal has been to try to remove the big fat host
+lock altogether and slowly we have moved more an more things to be
+executed as a part of the block worker, which is one of the needed
+steps. Like the mmc ioctls for example...
+
+Kind regards
+Uffe
