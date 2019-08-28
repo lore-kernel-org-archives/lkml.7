@@ -2,96 +2,179 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C46C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C767BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80DC420679
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9ACA20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfH1RHV (ORCPT
+        id S1726816AbfH1RHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:07:21 -0400
-Received: from mga14.intel.com ([192.55.52.115]:20811 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbfH1RHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:07:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 10:07:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
-   d="scan'208";a="210237523"
-Received: from kmsmsx153.gar.corp.intel.com ([172.21.73.88])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Aug 2019 10:07:18 -0700
-Received: from pgsmsx103.gar.corp.intel.com ([169.254.2.25]) by
- KMSMSX153.gar.corp.intel.com ([169.254.5.69]) with mapi id 14.03.0439.000;
- Thu, 29 Aug 2019 01:07:17 +0800
-From:   "Voon, Weifeng" <weifeng.voon@intel.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>
-Subject: RE: [PATCH v1 net-next] net: stmmac: Add support for MDIO interrupts
-Thread-Topic: [PATCH v1 net-next] net: stmmac: Add support for MDIO
- interrupts
-Thread-Index: AQHVXDYvbcbFOv5jhkKTA358ZQr6KKcNPteAgAA+tgCAA0MwoA==
-Date:   Wed, 28 Aug 2019 17:07:16 +0000
-Message-ID: <D6759987A7968C4889FDA6FA91D5CBC814759747@PGSMSX103.gar.corp.intel.com>
-References: <1566870320-9825-1-git-send-email-weifeng.voon@intel.com>
- <20190826184719.GF2168@lunn.ch>
- <cac5aba0-b47b-00c6-f99b-64c6b385308a@gmail.com>
-In-Reply-To: <cac5aba0-b47b-00c6-f99b-64c6b385308a@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [172.30.20.205]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 28 Aug 2019 13:07:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40676 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726315AbfH1RHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 13:07:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7D55AB662;
+        Wed, 28 Aug 2019 17:07:22 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 19:07:21 +0200
+From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        Hari Bathini <hbathini@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH rebased] powerpc/fadump: when fadump is supported
+ register the fadump sysfs files.
+Message-ID: <20190828190721.555b6337@naga>
+In-Reply-To: <e7fad352-48f3-f01d-1b19-a589a3b95c07@linux.ibm.com>
+References: <20190820181211.14694-1-msuchanek@suse.de>
+        <e7fad352-48f3-f01d-1b19-a589a3b95c07@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+PiBEVyBFUW9TIHY1Lnh4IGNvbnRyb2xsZXJzIGFkZGVkIGNhcGFiaWxpdHkgZm9yIGludGVy
-cnVwdCBnZW5lcmF0aW9uDQo+ID4+IHdoZW4gTURJTyBpbnRlcmZhY2UgaXMgZG9uZSAoR01JSSBC
-dXN5IGJpdCBpcyBjbGVhcmVkKS4NCj4gPj4gVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRo
-aXMgaW50ZXJydXB0IG9uIHN1cHBvcnRlZCBIVyB0byBhdm9pZA0KPiA+PiBwb2xsaW5nIG9uIEdN
-SUkgQnVzeSBiaXQuDQo+ID4+DQo+ID4+IHN0bW1hY19tZGlvX3JlYWQoKSAmIHN0bW1hY19tZGlv
-X3dyaXRlKCkgd2lsbCBzbGVlcCB1bnRpbCB3YWtlX3VwKCkNCj4gPj4gaXMgY2FsbGVkIGJ5IHRo
-ZSBpbnRlcnJ1cHQgaGFuZGxlci4NCj4gPg0KPiA+IEhpIFZvb24NCj4gPg0KPiA+IEkgX3RoaW5r
-XyB0aGVyZSBhcmUgc29tZSBvcmRlciBvZiBvcGVyYXRpb24gaXNzdWVzIGhlcmUuIFRoZSBtZGlv
-YnVzDQo+ID4gaXMgcmVnaXN0ZXJlZCBpbiB0aGUgcHJvYmUgZnVuY3Rpb24uIEFzIHNvb24gYXMg
-b2ZfbWRpb2J1c19yZWdpc3RlcigpDQo+ID4gaXMgY2FsbGVkLCB0aGUgTURJTyBidXMgbXVzdCB3
-b3JrLiBBdCB0aGF0IHBvaW50IE1ESU8gcmVhZC93cml0ZXMgY2FuDQo+ID4gc3RhcnQgdG8gaGFw
-cGVuLg0KPiA+DQo+ID4gQXMgZmFyIGFzIGkgY2FuIHNlZSwgdGhlIGludGVycnVwdCBoYW5kbGVy
-IGlzIG9ubHkgcmVxdWVzdGVkIGluDQo+ID4gc3RtbWFjX29wZW4oKS4gU28gaXQgc2VlbXMgbGlr
-ZSBhbnkgTURJTyBvcGVyYXRpb25zIGFmdGVyIHByb2JlLCBidXQNCj4gPiBiZWZvcmUgb3BlbiBh
-cmUgZ29pbmcgdG8gZmFpbD8NCj4gDQo+IEFGQUlSLCB3YWl0X2V2ZW50X3RpbWVvdXQoKSB3aWxs
-IGNvbnRpbnVlIHRvIGJ1c3kgbG9vcCBhbmQgd2FpdCB1bnRpbA0KPiB0aGUgdGltZW91dCwgYnV0
-IG5vdCByZXR1cm4gYW4gZXJyb3IgYmVjYXVzZSB0aGUgcG9sbGVkIGNvbmRpdGlvbiB3YXMNCj4g
-dHJ1ZSwgYXQgbGVhc3QgdGhhdCBpcyBteSByZWNvbGxlY3Rpb24gZnJvbSBoYXZpbmcgdGhlIHNh
-bWUgaXNzdWUgd2l0aA0KPiB0aGUgYmNtZ2VuZXQgZHJpdmVyIGJlZm9yZSBpdCB3YXMgbW92ZWQg
-dG8gY29ubmVjdGluZyB0byB0aGUgUEhZIGluIHRoZQ0KPiBuZG9fb3BlbigpIGZ1bmN0aW9uLg0K
-PiAtLQ0KPiBGbG9yaWFuDQoNCkZsb3JpYW4gaXMgcmlnaHQgYXMgdGhlIHBvbGwgY29uZGl0aW9u
-IGlzIHN0aWxsIHRydWUgYWZ0ZXIgdGhlIHRpbWVvdXQuIA0KSGVuY2UsIGFueSBtZGlvIG9wZXJh
-dGlvbiBhZnRlciBwcm9iZSBhbmQgYmVmb3JlIG5kb19vcGVuIHdpbGwgc3RpbGwgd29yay4NClRo
-ZSBvbmx5IGNvbnMgaGVyZSBpcyB0aGF0IGF0dGFjaGluZyB0aGUgUEhZIHdpbGwgdGFrZXMgYSBm
-dWxsIGxlbmd0aCBvZiANCnRpbWVvdXQgdGltZSBmb3IgZWFjaCBtZGlvX3JlYWQgYW5kIG1kaW9f
-d3JpdGUuIA0KU28gd2Ugc2hvdWxkIGF0dGFjaCB0aGUgcGh5IG9ubHkgYWZ0ZXIgdGhlIGludGVy
-cnVwdCBoYW5kbGVyIGlzIHJlcXVlc3RlZD8NCiANCg==
+On Tue, 27 Aug 2019 17:57:31 +0530
+Hari Bathini <hbathini@linux.ibm.com> wrote:
+
+> Hi Michal,
+> 
+> Thanks for the patch. 
+> 
+> On 20/08/19 11:42 PM, Michal Suchanek wrote:
+> > Currently it is not possible to distinguish the case when fadump is
+> > supported by firmware and disabled in kernel and completely unsupported
+> > using the kernel sysfs interface. User can investigate the devicetree
+> > but it is more reasonable to provide sysfs files in case we get some
+> > fadumpv2 in the future.
+> > 
+> > With this patch sysfs files are available whenever fadump is supported
+> > by firmware.
+> > 
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > ---
+> > Rebase on top of http://patchwork.ozlabs.org/patch/1150160/
+> > [v5,31/31] powernv/fadump: support holes in kernel boot memory area
+> > ---
+> >  arch/powerpc/kernel/fadump.c | 33 ++++++++++++++++++---------------
+> >  1 file changed, 18 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+> > index 4b1bb3c55cf9..7ad424729e9c 100644
+> > --- a/arch/powerpc/kernel/fadump.c
+> > +++ b/arch/powerpc/kernel/fadump.c
+> > @@ -1319,13 +1319,9 @@ static void fadump_init_files(void)
+> >   */
+> >  int __init setup_fadump(void)
+> >  {
+> > -	if (!fw_dump.fadump_enabled)
+> > -		return 0;
+> > -
+> > -	if (!fw_dump.fadump_supported) {
+> > +	if (!fw_dump.fadump_supported && fw_dump.fadump_enabled) {
+> >  		printk(KERN_ERR "Firmware-assisted dump is not supported on"
+> >  			" this hardware\n");
+> > -		return 0;
+> >  	}
+> >  
+> >  	fadump_show_config();
+> > @@ -1333,19 +1329,26 @@ int __init setup_fadump(void)
+> >  	 * If dump data is available then see if it is valid and prepare for
+> >  	 * saving it to the disk.
+> >  	 */
+> > -	if (fw_dump.dump_active) {
+> > +	if (fw_dump.fadump_enabled) {
+> > +		if (fw_dump.dump_active) {
+> > +			/*
+> > +			 * if dump process fails then invalidate the
+> > +			 * registration and release memory before proceeding
+> > +			 * for re-registration.
+> > +			 */
+> > +			if (fw_dump.ops->fadump_process(&fw_dump) < 0)
+> > +				fadump_invalidate_release_mem();
+> > +		}
+> >  		/*
+> > -		 * if dump process fails then invalidate the registration
+> > -		 * and release memory before proceeding for re-registration.
+> > +		 * Initialize the kernel dump memory structure for FAD
+> > +		 * registration.
+> >  		 */
+> > -		if (fw_dump.ops->fadump_process(&fw_dump) < 0)
+> > -			fadump_invalidate_release_mem();
+> > -	}
+> > -	/* Initialize the kernel dump memory structure for FAD registration. */
+> > -	else if (fw_dump.reserve_dump_area_size)
+> > -		fw_dump.ops->fadump_init_mem_struct(&fw_dump);
+> > +		else if (fw_dump.reserve_dump_area_size)
+> > +			fw_dump.ops->fadump_init_mem_struct(&fw_dump);
+> >  
+> > -	fadump_init_files();
+> > +	}
+> > +	if (fw_dump.fadump_supported)
+> > +		fadump_init_files();
+> >  
+> >  	return 1;
+> >  }
+> >   
+> 
+> 
+> Could you please move up fadump_init_files() call and return after it instead of
+> nesting rest of the function. 
+
+That sounds reasonable.
+
+> Also, get rid of the error message when fadump is
+> not supported as it is already taken care of in fadump_reserve_mem() function.
+
+That should not be called in that case, should it?
+
+Anyway, I find the message right next to the message about reserving
+memory for kdump. So it really looks helpful in the log.
+
+> I mean:
+> 
+> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+> index 2015b1f..0e9b028 100644
+> --- a/arch/powerpc/kernel/fadump.c
+> +++ b/arch/powerpc/kernel/fadump.c
+> @@ -1322,16 +1322,16 @@ static void fadump_init_files(void)
+>   */
+>  int __init setup_fadump(void)
+>  {
+> -       if (!fw_dump.fadump_enabled)
+> +       if (!fw_dump.fadump_supported)
+>                 return 0;
+>  
+> -       if (!fw_dump.fadump_supported) {
+> -               printk(KERN_ERR "Firmware-assisted dump is not supported on"
+> -                       " this hardware\n");
+> -               return 0;
+> -       }
+> +       fadump_init_files();
+>  
+>         fadump_show_config();
+> +
+> +       if (!fw_dump.fadump_enabled)
+> +               return 0;
+
+Should the init function return 0 when it did something that needs to
+be undone later (ie registering the sysfs files)? This is probably not
+very meaningful for fadump but what is the correct way to not set a bad
+example?
+
+Thanks
+
+Michal
