@@ -2,106 +2,94 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95837C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CF0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 760B7233A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320782189D
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 07:32:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfH1Hcg (ORCPT
+        id S1726909AbfH1Hcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 03:32:36 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34554 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbfH1Hcg (ORCPT
+        Wed, 28 Aug 2019 03:32:41 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39783 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbfH1Hck (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:32:36 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c7so1842548otp.1;
-        Wed, 28 Aug 2019 00:32:35 -0700 (PDT)
+        Wed, 28 Aug 2019 03:32:40 -0400
+Received: by mail-ed1-f68.google.com with SMTP id g8so1855179edm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 00:32:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QD99J6UIVZGmimTy0Hqij9Z3+TZVwBN/634gcbM0Yv4=;
-        b=tDQid61jgy0USX448UoUhool+fmWA2rlC+OBvIvYMUgwqscUcuzBCgZwBJIf+JLwo+
-         T8K2Wu/72AQ/7ZuDHHOQiiiBTw2poGVCf5MXNMoIZizGEq9u2oyOoxkc0eLu9yz0sIeR
-         FoyxgBuAGIJaDgQO/FiSb9PNsVDJFlx0jSZ0LVSth7Uph4gliyP0u61oL7CFn9LHzhn8
-         ad0G0aBKggbyB7/F2GUhOFvNKjuTGluWqeybHryaZxDCW96IomGXrs07hRl9xTSzSFMq
-         Otrkm96SuGhDELg3uTpAZZ187LNmUenIvXQ1D3K/efAt4V84x7kf3SkFGwhqOw/96cZ1
-         t73w==
-X-Gm-Message-State: APjAAAXhza930UKeP+mBlh8m/qcWb/9tHedApuyBHlLxd0R/EZNcek/G
-        DDfHdv5E2rtQs5/rCKRVZ2mF2uY6DJciYOObO+c=
-X-Google-Smtp-Source: APXvYqyjpqxjoBfQdEroCM3USq4z3WK8KF4ynWsTexmjyyVEiyc1iC6TSH5m59LwXn2dzLN+wuwlk6qaA8SwDNUYR5U=
-X-Received: by 2002:a9d:2cc:: with SMTP id 70mr2099177otl.145.1566977554932;
- Wed, 28 Aug 2019 00:32:34 -0700 (PDT)
+        bh=FCgA4t/5pcDwS4QgIYXprPCQLaL6xdTakPz+1sovORo=;
+        b=TQ0tmRzuLTGUnB8pstU6sjQ6jP1bLSal64fRbwZxlBvH+SREQl7vTEOADMtnyCiHl2
+         8SXyzoteVcIEuEdPCmk41Mp4RP5cjVFnHyj58auEA6ZNwdGGMiE2Os0uEibpOy72AA2I
+         /i7YImAvevn0FZl3IKstngf1nhFxvHEAlaIAg+OGzb7CUrvp4Gp19BnGiPTjpClOEwI4
+         wVhLBkkb6tPNbC+sYUoqFRq8SDr5MajSGdVh60g05br05/GighkTCF3LV2WV17XC3kf/
+         5wELWwhbwdhnNg/5R6yZdw+ZI+7rWrwwBjbBf0gCiJ/VXxisoFN8MzQU8L+xilVS7OyV
+         j4Yw==
+X-Gm-Message-State: APjAAAUNFG0ul/bg6Ip/Bzqx62hhprNo1AFFlFwVuAnnUPuI66WyvV1i
+        NknWReyi+3vMSjZiTXl8RtQPGmOPdcc=
+X-Google-Smtp-Source: APXvYqyWf5a6inhokdlPaucsclb/zRnVxKM5TpIv9SCwV8PJTtP33X0hMrbctgOtg0YkgLQu+etJ4w==
+X-Received: by 2002:a17:906:1112:: with SMTP id h18mr1880539eja.165.1566977559083;
+        Wed, 28 Aug 2019 00:32:39 -0700 (PDT)
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com. [209.85.128.51])
+        by smtp.gmail.com with ESMTPSA id z9sm283723edr.54.2019.08.28.00.32.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Aug 2019 00:32:38 -0700 (PDT)
+Received: by mail-wm1-f51.google.com with SMTP id k1so1609847wmi.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 00:32:38 -0700 (PDT)
+X-Received: by 2002:a1c:eb0a:: with SMTP id j10mr3019968wmh.125.1566977558460;
+ Wed, 28 Aug 2019 00:32:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-3-jacopo+renesas@jmondi.org> <20190827202945.GA3488@bogus>
-In-Reply-To: <20190827202945.GA3488@bogus>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 28 Aug 2019 09:32:23 +0200
-Message-ID: <CAMuHMdUP1kZF4z=NkAb5LCV74dyCMw9pZACMYjOTFE=r2vvR3A@mail.gmail.com>
-Subject: Re: [PATCH v3 02/14] dt-bindings: display, renesas,du: Document cmms property
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+References: <20190827123131.29129-1-mripard@kernel.org>
+In-Reply-To: <20190827123131.29129-1-mripard@kernel.org>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Wed, 28 Aug 2019 15:32:26 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65d3SjJEU_zqXqEKakTYoOB7tk_fo7OkJ_Gvq5Yok+_=A@mail.gmail.com>
+Message-ID: <CAGb2v65d3SjJEU_zqXqEKakTYoOB7tk_fo7OkJ_Gvq5Yok+_=A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] ASoC: sun4i-i2s: Revert "ASoC: sun4i-i2s: Remove
+ duplicated quirks structure"
+To:     Maxime Ripard <mripard@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Code Kipper <codekipper@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 10:29 PM Rob Herring <robh@kernel.org> wrote:
-> On Sun, Aug 25, 2019 at 03:51:42PM +0200, Jacopo Mondi wrote:
-> > Document the newly added 'cmms' property which accepts a list of phandle
-> > and channel index pairs that point to the CMM units available for each
-> > Display Unit output video channel.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > ---
-> >  Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
-> > index c97dfacad281..c2265e2a1af2 100644
-> > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
-> > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-> > @@ -45,6 +45,10 @@ Required Properties:
-> >      instance that serves the DU channel, and the channel index identifies the
-> >      LIF instance in that VSP.
-> >
-> > +  - cmms: A list of phandles to the CMM instances present in the SoC, one
-> > +    for each available DU channel. The property shall not be specified for
-> > +    SoCs that do not provide any CMM (such as V3M and V3H).
+Hi,
+
+On Tue, Aug 27, 2019 at 8:31 PM Maxime Ripard <mripard@kernel.org> wrote:
 >
-> renesas,cmms
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> This reverts commit 3e9acd7ac6933cdc20c441bbf9a38ed9e42e1490.
+>
+> It turns out that while one I2S controller is described in the A83t
+> datasheet, the driver supports another, undocumented, one that has been
+> inherited from the older SoCs, while the documented one uses the new
+> design.
+>
+> Fixes: 3e9acd7ac693 ("ASoC: sun4i-i2s: Remove duplicated quirks structure")
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-So I guess we really wanted to have the prefix for the vsps property, too?
+This patch got applied as
 
-Gr{oetje,eeting}s,
+    455b1d42e82c ("ASoC: sunxi: Revert initial A83t support")
 
-                        Geert
+The new subject is very confusing. If anything it should read
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+    ASoC: sun4i-i2s: Split H3 and later SoC support from A83T support
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+ChenYu
