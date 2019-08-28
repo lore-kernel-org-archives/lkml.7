@@ -2,124 +2,317 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF42C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278DAC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C141B214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED23214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 08:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfH1If0 (ORCPT
+        id S1726534AbfH1Ifv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 04:35:26 -0400
-Received: from mga02.intel.com ([134.134.136.20]:38561 "EHLO mga02.intel.com"
+        Wed, 28 Aug 2019 04:35:51 -0400
+Received: from mga11.intel.com ([192.55.52.93]:19343 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726253AbfH1IfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 04:35:25 -0400
+        id S1726259AbfH1Ifu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 04:35:50 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 01:35:25 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 01:35:50 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,440,1559545200"; 
-   d="scan'208";a="264571781"
-Received: from deyangko-mobl.ccr.corp.intel.com ([10.249.168.35])
-  by orsmga001.jf.intel.com with ESMTP; 28 Aug 2019 01:35:21 -0700
-Message-ID: <afb235bf7390fb6fbd723c34b08feddd771d1f6c.camel@intel.com>
-Subject: Re: [PATCH V3 1/5] thermal: qoriq: Add clock operations
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Cc:     Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Wed, 28 Aug 2019 16:35:29 +0800
-In-Reply-To: <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
-References: <20190730022126.17883-1-Anson.Huang@nxp.com>
-         <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
-         <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-         <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
-         <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+   d="scan'208";a="181963392"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
+  by fmsmga007.fm.intel.com with ESMTP; 28 Aug 2019 01:35:47 -0700
+Subject: Re: [PATCH V8 2/3] mmc: sdhci-pci-o2micro: Modify get CD status
+ function
+To:     "Shirley Her (SC)" <shirley.her@bayhubtech.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
+        "Shaper Liu (WH)" <shaper.liu@bayhubtech.com>,
+        "Louis Lu (TP)" <louis.lu@bayhubtech.com>,
+        "Max Huang (SC)" <max.huang@bayhubtech.com>
+References: <1566412771-6178-1-git-send-email-shirley.her@bayhubtech.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <67a764af-22bd-f9aa-c915-8c29468b8060@intel.com>
+Date:   Wed, 28 Aug 2019 11:34:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1566412771-6178-1-git-send-email-shirley.her@bayhubtech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-08-28 at 16:32 +0800, Zhang Rui wrote:
-> On Tue, 2019-08-27 at 12:41 +0000, Leonard Crestez wrote:
-> > On 27.08.2019 04:51, Anson Huang wrote:
-> > > > In an earlier series the CLK_IS_CRITICAL flags was removed from
-> > > > the TMU
-> > > > clock so if the thermal driver doesn't explicitly enable it the
-> > > > system will hang
-> > > > on probe. This is what happens in linux-next right now!
-> > > 
-> > > The thermal driver should be built with module, so default kernel
-> > > should can boot
-> > > up, do you modify the thermal driver as built-in?
-> > > 
-> > > > Unless this patches is merged soon we'll end up with a 5.4-rc1
-> > > > that doesn't
-> > > > boot on imx8mq. An easy fix would be to drop/revert commit
-> > > > 951c1aef9691 ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for
-> > > > IMX8MQ_CLK_TMU_ROOT") until the thermal patches are accepted.
-> > > 
-> > > If the thermal driver is built as module, I think no need to
-> > > revert
-> > > the commit, but
-> > > if by default thermal driver is built-in or mod probed, then yes,
-> > > it should NOT break
-> > > kernel boot up.
-> > 
-> > The qoriq_thermal driver is built as a module in defconfig and
-> > when 
-> > modules are properly installed in rootfs they will be automatically
-> > be 
-> > probed on boot and cause a hang.
-> > 
-> > I usually run nfsroot with modules:
-> > 
-> >      make modules_install INSTALL_MOD_PATH=/srv/nfs/imx8-root
-> 
-> so we need this patch shipped in the beginning of the merge window,
-> right?
-> if there is hard dependency between patches, it's better to send them
-> in one series, and get shipped via either tree.
-> 
-> BTW, who is maintaining qoriq driver from NXP? If Anson is
-> maintaining
-> and developing this driver, it's better to update this in the driver
-> or
-> the MAINTAINER file, I will take the driver specific patches as long
-> as
-> we have ACK/Reviewed-By from the driver maintainer.
+On 21/08/19 9:39 PM, Shirley Her (SC) wrote:
+> Modify get CD status function
 
-And also, can you provide your feedback for this one?
-https://patchwork.kernel.org/patch/10974147/
+You have lost the V7 changes to the subject and commit message.
 
-thanks,
-rui
 > 
-> thanks,
-> rui
+> Signed-off-by: Shirley Her <shirley.her@bayhubtech.com>
+> ---
+> change in V8:
+>  1. fix patch format error
 > 
-> > 
-> > --
-> > Regards,
-> > Leonard
+> change in V7:
+>  1. change subject to match the patch
+>  2. move functions in preparation to fix DLL lock phase shift issue
+> 
+> change in V6:
+>  1. change subjec and commit message to match the patch
+>  2. modify the get CD status function
+>  3. re-arrange the order of some functions
+> 
+> change in V5:
+>  1. split 2 patches into 3 patches
+>  2. make dll_adjust_count start from 0
+>  3. fix ret overwritten issue
+>  4. use break instead of goto
+> 
+> change in V4:
+>  1. add a bug fix for V3
+> 
+> change in V3:
+>  1. add more explanation in dll_recovery and execute_tuning function
+>  2. move dll_adjust_count to O2_host struct
+>  3. fix some coding style error
+>  4. renaming O2_PLL_WDT_CONTROL1 TO O2_PLL_DLL_WDT_CONTROL1
+> 
+> change in V2:
+>  1. use usleep_range instead of udelay
+>  2. move dll_adjust_count to sdhci-pci-o2micro.c
+> 
+> chagne in V1:
+>  1. add error recovery function to relock DLL with correct phase
+>  2. retuning HS200 after DLL locked
+> ---
+>  drivers/mmc/host/sdhci-pci-o2micro.c | 187 ++++++++++++++++++-----------------
+>  1 file changed, 94 insertions(+), 93 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+> index b3a33d9..57c8b83 100644
+> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
+> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+> @@ -58,6 +58,100 @@
+>  
+>  #define O2_SD_DETECT_SETTING 0x324
+>  
+> +static void sdhci_o2_wait_card_detect_stable(struct sdhci_host *host)
+> +{
+> +	ktime_t timeout;
+> +	u32 scratch32;
+> +
+> +	/* Wait max 50 ms */
+> +	timeout = ktime_add_ms(ktime_get(), 50);
+> +	while (1) {
+> +		bool timedout = ktime_after(ktime_get(), timeout);
+> +
+> +		scratch32 = sdhci_readl(host, SDHCI_PRESENT_STATE);
+> +		if ((scratch32 & SDHCI_CARD_PRESENT) >> SDHCI_CARD_PRES_SHIFT
+> +		    == (scratch32 & SDHCI_CD_LVL) >> SDHCI_CD_LVL_SHIFT)
+> +			break;
+> +
+> +		if (timedout) {
+> +			pr_err("%s: Card Detect debounce never finished.\n",
+> +			       mmc_hostname(host->mmc));
+> +			sdhci_dumpregs(host);
+> +			return;
+> +		}
+> +		udelay(10);
+> +	}
+> +}
+> +
+> +static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
+> +{
+> +	ktime_t timeout;
+> +	u16 scratch;
+> +	u32 scratch32;
+> +
+> +	/* PLL software reset */
+> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+> +	scratch32 |= O2_PLL_SOFT_RESET;
+> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> +	udelay(1);
+> +	scratch32 &= ~(O2_PLL_SOFT_RESET);
+> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> +
+> +	/* PLL force active */
+> +	scratch32 |= O2_PLL_FORCE_ACTIVE;
+> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> +
+> +	/* Wait max 20 ms */
+> +	timeout = ktime_add_ms(ktime_get(), 20);
+> +	while (1) {
+> +		bool timedout = ktime_after(ktime_get(), timeout);
+> +
+> +		scratch = sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
+> +		if (scratch & O2_PLL_LOCK_STATUS)
+> +			break;
+> +		if (timedout) {
+> +			pr_err("%s: Internal clock never stabilised.\n",
+> +			       mmc_hostname(host->mmc));
+> +			sdhci_dumpregs(host);
+> +			goto out;
+> +		}
+> +		udelay(10);
+> +	}
+> +
+> +	/* Wait for card detect finish */
+> +	udelay(1);
+> +	sdhci_o2_wait_card_detect_stable(host);
+> +
+> +out:
+> +	/* Cancel PLL force active */
+> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+> +	scratch32 &= ~O2_PLL_FORCE_ACTIVE;
+> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> +}
+> +
+> +static int sdhci_o2_get_cd(struct mmc_host *mmc)
+> +{
+> +	struct sdhci_host *host = mmc_priv(mmc);
+> +
+> +	sdhci_o2_enable_internal_clock(host);
+> +
+> +	return !!(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT);
+> +}
+> +
+> +static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
+> +{
+> +	u32 scratch_32;
+> +
+> +	pci_read_config_dword(chip->pdev,
+> +			      O2_SD_PLL_SETTING, &scratch_32);
+> +
+> +	scratch_32 &= 0x0000FFFF;
+> +	scratch_32 |= value;
+> +
+> +	pci_write_config_dword(chip->pdev,
+> +			       O2_SD_PLL_SETTING, scratch_32);
+> +}
+> +
+>  static void sdhci_o2_set_tuning_mode(struct sdhci_host *host)
+>  {
+>  	u16 reg;
+> @@ -136,19 +230,6 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>  	return 0;
+>  }
+>  
+> -static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
+> -{
+> -	u32 scratch_32;
+> -	pci_read_config_dword(chip->pdev,
+> -			      O2_SD_PLL_SETTING, &scratch_32);
+> -
+> -	scratch_32 &= 0x0000FFFF;
+> -	scratch_32 |= value;
+> -
+> -	pci_write_config_dword(chip->pdev,
+> -			       O2_SD_PLL_SETTING, scratch_32);
+> -}
+> -
+>  static void o2_pci_led_enable(struct sdhci_pci_chip *chip)
+>  {
+>  	int ret;
+> @@ -284,86 +365,6 @@ static void sdhci_pci_o2_enable_msi(struct sdhci_pci_chip *chip,
+>  	host->irq = pci_irq_vector(chip->pdev, 0);
+>  }
+>  
+> -static void sdhci_o2_wait_card_detect_stable(struct sdhci_host *host)
+> -{
+> -	ktime_t timeout;
+> -	u32 scratch32;
+> -
+> -	/* Wait max 50 ms */
+> -	timeout = ktime_add_ms(ktime_get(), 50);
+> -	while (1) {
+> -		bool timedout = ktime_after(ktime_get(), timeout);
+> -
+> -		scratch32 = sdhci_readl(host, SDHCI_PRESENT_STATE);
+> -		if ((scratch32 & SDHCI_CARD_PRESENT) >> SDHCI_CARD_PRES_SHIFT
+> -		    == (scratch32 & SDHCI_CD_LVL) >> SDHCI_CD_LVL_SHIFT)
+> -			break;
+> -
+> -		if (timedout) {
+> -			pr_err("%s: Card Detect debounce never finished.\n",
+> -			       mmc_hostname(host->mmc));
+> -			sdhci_dumpregs(host);
+> -			return;
+> -		}
+> -		udelay(10);
+> -	}
+> -}
+> -
+> -static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
+> -{
+> -	ktime_t timeout;
+> -	u16 scratch;
+> -	u32 scratch32;
+> -
+> -	/* PLL software reset */
+> -	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+> -	scratch32 |= O2_PLL_SOFT_RESET;
+> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> -	udelay(1);
+> -	scratch32 &= ~(O2_PLL_SOFT_RESET);
+> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> -
+> -	/* PLL force active */
+> -	scratch32 |= O2_PLL_FORCE_ACTIVE;
+> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> -
+> -	/* Wait max 20 ms */
+> -	timeout = ktime_add_ms(ktime_get(), 20);
+> -	while (1) {
+> -		bool timedout = ktime_after(ktime_get(), timeout);
+> -
+> -		scratch = sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
+> -		if (scratch & O2_PLL_LOCK_STATUS)
+> -			break;
+> -		if (timedout) {
+> -			pr_err("%s: Internal clock never stabilised.\n",
+> -			       mmc_hostname(host->mmc));
+> -			sdhci_dumpregs(host);
+> -			goto out;
+> -		}
+> -		udelay(10);
+> -	}
+> -
+> -	/* Wait for card detect finish */
+> -	udelay(1);
+> -	sdhci_o2_wait_card_detect_stable(host);
+> -
+> -out:
+> -	/* Cancel PLL force active */
+> -	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+> -	scratch32 &= ~O2_PLL_FORCE_ACTIVE;
+> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> -}
+> -
+> -static int sdhci_o2_get_cd(struct mmc_host *mmc)
+> -{
+> -	struct sdhci_host *host = mmc_priv(mmc);
+> -
+> -	sdhci_o2_enable_internal_clock(host);
+> -
+> -	return !!(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT);
+> -}
+> -
+>  static void sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
+>  {
+>  	/* Enable internal clock */
+> 
 
