@@ -2,167 +2,119 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E491C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E34C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB0D22CED
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C1B2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 15:31:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SEja0+k8"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="eMmYwxIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfH1Pbp (ORCPT
+        id S1726909AbfH1Pbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 11:31:45 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48944 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbfH1Pbo (ORCPT
+        Wed, 28 Aug 2019 11:31:53 -0400
+Received: from forward104p.mail.yandex.net ([77.88.28.107]:51019 "EHLO
+        forward104p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726429AbfH1Pbx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:31:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BNOvFVq3jNzK7po4WBGMwj7ptEL02y2Z5cirivFEXtY=; b=SEja0+k8Fq+9+HoOuJ/QTTeRq
-        Sdi8NfzyKIb1XhCeihX6HimJc3fej1rsijjdOZyaCKrlzDQvWustQUQmKT6+TMPUtDafC+Ytb9O3i
-        4cYc1kq1o3kUuP04a3IzLamXbi9UlY+0VqksJOGFIhBkfVJpZMZEypyPp/mI9F3rEMzyRlcIVKSGk
-        c1AawqDkjjmjQxBS/ITBjcJo2jd5oaj0vAX6V+JeWD4BTYWdyGSrCldz3efnMT3d8PSLxKuDphbQD
-        mEtnRfl4QxnD57jR6xMk8XxJQxOlckwgKJqo4X90y/iAx0TpL7V0rHMIUxIu5Lfs2RfPYRvByeHIE
-        yud6kHRDQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2zv2-000543-Qq; Wed, 28 Aug 2019 15:31:33 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F131E980BFD; Wed, 28 Aug 2019 17:19:21 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 17:19:21 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-Subject: Re: [RESEND PATCH V3 3/8] perf/x86/intel: Support hardware TopDown
- metrics
-Message-ID: <20190828151921.GD17205@worktop.programming.kicks-ass.net>
-References: <20190826144740.10163-1-kan.liang@linux.intel.com>
- <20190826144740.10163-4-kan.liang@linux.intel.com>
+        Wed, 28 Aug 2019 11:31:53 -0400
+Received: from mxback7o.mail.yandex.net (mxback7o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::21])
+        by forward104p.mail.yandex.net (Yandex) with ESMTP id D013B4B0094F;
+        Wed, 28 Aug 2019 18:31:48 +0300 (MSK)
+Received: from smtp1j.mail.yandex.net (smtp1j.mail.yandex.net [2a02:6b8:0:801::ab])
+        by mxback7o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id ffjlMBsko1-VlremqIv;
+        Wed, 28 Aug 2019 18:31:48 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1567006308;
+        bh=7RA0sHF5D03f4tAZfj9rCdvuBWfcitbh3YPyvz8e+CI=;
+        h=In-Reply-To:Cc:To:Subject:From:Date:References:Message-ID;
+        b=eMmYwxIXwqY9HlvIBMIYRd49H7lhEAeOX2i3qqRcSXP5K2V0nBHs06yPe3mK8trzt
+         6/omZIndgJtP4AEB16Cim2Iz9aMzI9F9Y/xjR81E+DDJobtA7eFWJkDUYiNerlOfIp
+         uJQYGqzcDbpuCwZl+6eQRSqfPUcTOJ2vsI58TIkM=
+Authentication-Results: mxback7o.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by smtp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id gq3U0rBuMO-VcbGsZJ1;
+        Wed, 28 Aug 2019 18:31:45 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH 04/13] irqchip: Add driver for Loongson-3 I/O interrupt
+ controller
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-mips@vger.kernel.org, chenhc@lemote.com,
+        paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.co, devicetree@vger.kernel.org
+References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
+ <20190827085302.5197-5-jiaxun.yang@flygoat.com>
+ <e6a5862f-0f6c-cab0-9f4a-51b7889d38e7@kernel.org>
+ <82c4b9ed-7270-74ce-6e10-165182e540dd@flygoat.com>
+ <20190828075940.549e1983@why>
+Message-ID: <619b1d35-7bc2-999f-5a51-fb2efdc63f60@flygoat.com>
+Date:   Wed, 28 Aug 2019 23:31:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826144740.10163-4-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190828075940.549e1983@why>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 07:47:35AM -0700, kan.liang@linux.intel.com wrote:
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 54534ff00940..1ae23db5c2d7 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -76,6 +76,8 @@ u64 x86_perf_event_update(struct perf_event *event)
->  	if (idx == INTEL_PMC_IDX_FIXED_BTS)
->  		return 0;
->  
-> +	if (is_topdown_count(event) && x86_pmu.update_topdown_event)
-> +		return x86_pmu.update_topdown_event(event);
 
-If is_topdown_count() is true; it had better bloody well have that
-function. But I really hate this.
+On 2019/8/28 下午2:59, Marc Zyngier wrote:
+> On Wed, 28 Aug 2019 08:27:05 +0800
+> Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+>> On 2019/8/28 上午12:45, Marc Zyngier wrote:
+>>> On 27/08/2019 09:52, Jiaxun Yang wrote:
+>>>> +	chained_irq_enter(chip, desc);
+>>>> +
+>>>> +	pending = readl(priv->intc_base + LS3_REG_INTC_EN_STATUS) &
+>>>> +		readl(priv->intc_base + LS3_REG_INTC_STATUS);
+>>> Reading the enabled status from the HW on each interrupt? I'm sure
+>>> that's pretty cheap...
+>> Seems expensive but to deal with a buggy hardware... That's worthy.
+> How broken is it? You very much seem to rely on the HW being correct
+> here, since you trust it exclusively. I'd expect the enable mask to be
+> a SW construct if you didn't blindly trust it
+Hi Marc
 
->  	/*
->  	 * Careful: an NMI might modify the previous event value.
->  	 *
-> @@ -1003,6 +1005,10 @@ static int collect_events(struct cpu_hw_events *cpuc, struct perf_event *leader,
->  
->  	max_count = x86_pmu.num_counters + x86_pmu.num_counters_fixed;
->  
-> +	/* There are 4 TopDown metrics events. */
-> +	if (x86_pmu.intel_cap.perf_metrics)
-> +		max_count += 4;
+Thanks for your answering.
 
-I'm thinking this is wrong.. this unconditionally allows collecting 4
-extra events on every part that has this metrics crud on.
+The vendor code did this and said there is a HW issue. I just don't have 
+the guts to remove this check.
+Seems like sometimes masked interrupt may get ISR set wrongly.
+> And if this is truly the right way to do it, please document the
+> various problems with the controller so that we don't break it at a
+> later time.
+Thanks, will do.
+>
+> Then how comes this comes from the irqchip's DT node? This should be
+> part of the endpoint's interrupt specifier.
 
->  	/* current number of events already accepted */
->  	n = cpuc->n_events;
->  
-> @@ -1184,6 +1190,10 @@ int x86_perf_event_set_period(struct perf_event *event)
->  	if (idx == INTEL_PMC_IDX_FIXED_BTS)
->  		return 0;
->  
-> +	if (unlikely(is_topdown_count(event)) &&
-> +	    x86_pmu.set_topdown_event_period)
-> +		return x86_pmu.set_topdown_event_period(event);
+In theory it should be, However if we set different interrupt 
+lines/cores on that controller, interrupts may get lost. It means we can 
+only have single parent core/interrupt.
 
-Same as with the other method; and I similarly hates it.
+So I'd prefer just set them uniformly by controller's dt-binding to 
+prevent confusing.
 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index f4d6335a18e2..616313d7f3d7 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-
-> +static int icl_set_topdown_event_period(struct perf_event *event)
-> +{
-> +	struct hw_perf_event *hwc = &event->hw;
-> +	s64 left = local64_read(&hwc->period_left);
-> +
-> +	/*
-> +	 * Clear PERF_METRICS and Fixed counter 3 in initialization.
-> +	 * After that, both MSRs will be cleared for each read.
-> +	 * Don't need to clear them again.
-> +	 */
-> +	if (left == x86_pmu.max_period) {
-> +		wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
-> +		wrmsrl(MSR_PERF_METRICS, 0);
-> +		local64_set(&hwc->period_left, 0);
-> +	}
-
-This really doesn't make sense to me; if you set FIXED_CTR3 := 0, you'll
-never trigger the overflow there; this then seems to suggest the actual
-counter value is irrelevant. Therefore you don't actually need this.
-
-> +
-> +	perf_event_update_userpage(event);
-> +
-> +	return 0;
-> +}
-> +
-> +static u64 icl_get_metrics_event_value(u64 metric, u64 slots, int idx)
-> +{
-> +	u32 val;
-> +
-> +	/*
-> +	 * The metric is reported as an 8bit integer percentage
-
-s/percentage/fraction/
-
-percentage is 1/100, 8bit is 256.
-
-> +	 * suming up to 0xff.
-> +	 * slots-in-metric = (Metric / 0xff) * slots
-> +	 */
-> +	val = (metric >> ((idx - INTEL_PMC_IDX_FIXED_METRIC_BASE) * 8)) & 0xff;
-> +	return  mul_u64_u32_div(slots, val, 0xff);
-
-This really utterly blows.. I'd have wasted range to be able to do a
-power-of-two fraction here. That is use 8 bits with a range [0,128].
-
-But also; x86_64 seems to lack a sane implementation of that function,
-and it currently compiles into utter crap (it can be 2 instructions).
-
-> +}
-
-> +/*
-> + * Update all active Topdown events.
-> + * PMU has to be disabled before calling this function.
-
-Forgets to explain why...
-
-> + */
+>> It's parent IRQ (mti,cpu-interrupt-controller) is a percpu IRQ.
+> But then why is that interrupt described using the "core" property? It
+> should be an interrupt specifier, just like any other interrupt.
+The same.
+>
+>> In design, it allows us to decide affinity at runtime but actually hardware is seriously broken.
+> I understand the HW is terrible. But the binding looks pretty bad too.
+> This needs fixing.
+>
+> 	M.
+--
+Jiaxun Yang
