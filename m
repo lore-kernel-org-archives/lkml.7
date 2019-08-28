@@ -2,281 +2,372 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2917AC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F981C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC2122CF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38159217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 12:49:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r2UC0aW9"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="WvTDiYtP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbfH1Mr5 (ORCPT
+        id S1726466AbfH1MtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 08:47:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45820 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbfH1Mr5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 08:47:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yo8ksqnEdWgOiS8sAppighLlFSGFqNAL1t3ArNRPpJo=; b=r2UC0aW9eqIw0+a2m7yQZmq/r
-        4c4MTWXyyZvHAzXtuaKaMHRgEfLkxiHfJ+sdktKPL/NOPc9W+JXWwfDY1S1Z4MsTog0HHOHrPQSj7
-        +uO2h5BdOAYxBExgrQ798Ap9wh+BCJe1lneyjdIpxY/yPQR5jmg7PTtHhGF6mA7Jowe20cbySGp72
-        sTiFapICYcQmY7lnuJ9HZRQmpWD9i+fjtzxuMz3IrC5BEkTN5KNBr9yOozWnjN3vPvdGCI2imFdbf
-        AkyzbTf9P3A5GXTfHAl6hMpHZM+n5U4UX75eE3LwvobhmE5QHIgVyUGKfavmIUBToI47wiFXlx5Av
-        akpIROLEQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2xMT-0003s8-Nl; Wed, 28 Aug 2019 12:47:42 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BD2E03070F4;
-        Wed, 28 Aug 2019 14:47:04 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B3AF320C7995E; Wed, 28 Aug 2019 14:47:38 +0200 (CEST)
-Date:   Wed, 28 Aug 2019 14:47:38 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kim Phillips <kim.phillips@amd.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Stephane Eranian <eranian@google.com>,
-        Martin Liska <mliska@suse.cz>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Wed, 28 Aug 2019 08:49:19 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:30278 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726253AbfH1MtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 08:49:19 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46JQY75bnJz9txm8;
+        Wed, 28 Aug 2019 14:49:15 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=WvTDiYtP; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id m7bd0W0Uqtud; Wed, 28 Aug 2019 14:49:15 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46JQY74Bh8z9txm7;
+        Wed, 28 Aug 2019 14:49:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566996555; bh=hjs1GSNdUdwzKHEdxEl72TsSfRO1liap1wA03hPf1Jk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WvTDiYtPN2FCuSeiNwOx6rUaE0l1kT7IOpImFYxV4y00H6bk9YOBAsdhCsbmpwnew
+         y3vVnGVaOXyFwo8/zKRsZyLU51JRsspD6rWjeuRwfNeDXK773NciZUARkCrTC8xp4D
+         o44zbJzyHTBa1B39IjdMnnyPhoFEdSt9UUhN98eI=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id F252A8B88E;
+        Wed, 28 Aug 2019 14:49:16 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Zu2RyGK9ljTL; Wed, 28 Aug 2019 14:49:16 +0200 (CEST)
+Received: from [172.25.230.105] (po15451.idsi0.si.c-s.fr [172.25.230.105])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A6DDA8B885;
+        Wed, 28 Aug 2019 14:49:16 +0200 (CEST)
+Subject: Re: [PATCH v2 3/4] powerpc/64: make buildable without CONFIG_COMPAT
+To:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Subject: Re: [RFC] perf/x86/amd: add support for Large Increment per Cycle
- Events
-Message-ID: <20190828124738.GN2332@hirez.programming.kicks-ass.net>
-References: <20190826195915.30680-1-kim.phillips@amd.com>
+        Steven Rostedt <rostedt@goodmis.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Breno Leitao <leitao@debian.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Allison Randal <allison@lohutok.net>,
+        Michael Neuling <mikey@neuling.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <cover.1566987936.git.msuchanek@suse.de>
+ <fbf3f09d2f01e53aceea448ac42578251f424829.1566987936.git.msuchanek@suse.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <fb471a46-5598-1c5c-911f-499b1aad259c@c-s.fr>
+Date:   Wed, 28 Aug 2019 14:49:16 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826195915.30680-1-kim.phillips@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <fbf3f09d2f01e53aceea448ac42578251f424829.1566987936.git.msuchanek@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 02:59:15PM -0500, Kim Phillips wrote:
-> The core AMD PMU has a 4-bit wide per-cycle increment for each
-> performance monitor counter.  That works for most counters, but
-> now with AMD Family 17h and above processors, for some, more than 15
-> events can occur in a cycle.  Those events are called "Large
-> Increment per Cycle" events, and one example is the number of
-> SSE/AVX FLOPs retired (event code 0x003).  In order to count these
-> events, two adjacent h/w PMCs get their count signals merged
-> to form 8 bits per cycle total. 
 
-*groan*
 
-> In addition, the PERF_CTR count
-> registers are merged to be able to count up to 64 bits.
+Le 28/08/2019 à 12:30, Michal Suchanek a écrit :
+> There are numerous references to 32bit functions in generic and 64bit
+> code so ifdef them out.
 
-That is daft; why can't you extend the existing MSR to 64bit?
+As far as possible, avoid opting things out with ifdefs. Ref 
+https://www.kernel.org/doc/html/latest/process/coding-style.html#conditional-compilation
 
-> Normally, events like instructions retired, get programmed on a single
-> counter like so:
+See comment below.
+
 > 
-> PERF_CTL0 (MSR 0xc0010200) 0x000000000053ff0c # event 0x0c, umask 0xff
-> PERF_CTR0 (MSR 0xc0010201) 0x0000800000000001 # r/w 48-bit count
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+> v2:
+> - fix 32bit ifdef condition in signal.c
+> - simplify the compat ifdef condition in vdso.c - 64bit is redundant
+> - simplify the compat ifdef condition in callchain.c - 64bit is redundant
+> ---
+>   arch/powerpc/include/asm/syscall.h |  2 ++
+>   arch/powerpc/kernel/Makefile       | 15 ++++++++++++---
+>   arch/powerpc/kernel/entry_64.S     |  2 ++
+>   arch/powerpc/kernel/signal.c       |  5 +++--
+>   arch/powerpc/kernel/syscall_64.c   |  5 +++--
+>   arch/powerpc/kernel/vdso.c         |  4 +++-
+>   arch/powerpc/perf/callchain.c      | 14 ++++++++++----
+>   7 files changed, 35 insertions(+), 12 deletions(-)
 > 
-> The next counter at MSRs 0xc0010202-3 remains unused, or can be used
-> independently to count something else.
-> 
-> When counting Large Increment per Cycle events, such as FLOPs,
-> however, we now have to reserve the next counter and program the
-> PERF_CTL (config) register with the Merge event (0xFFF), like so:
-> 
-> PERF_CTL0 (msr 0xc0010200) 0x000000000053ff03 # FLOPs event, umask 0xff
-> PERF_CTR0 (msr 0xc0010201) 0x0000800000000001 # read 64-bit count, wr low 48b
-> PERF_CTL1 (msr 0xc0010202) 0x0000000f004000ff # Merge event, enable bit
-> PERF_CTR1 (msr 0xc0010203) 0x0000000000000000 # write higher 16-bits of count
-> 
-> The count is widened from the normal 48-bits to 64 bits by having the
-> second counter carry the higher 16 bits of the count in its lower 16
-> bits of its counter register.  Support for mixed 48- and 64-bit counting
-> is not supported in this version.
+> diff --git a/arch/powerpc/include/asm/syscall.h b/arch/powerpc/include/asm/syscall.h
+> index 38d62acfdce7..3ed3b75541a1 100644
+> --- a/arch/powerpc/include/asm/syscall.h
+> +++ b/arch/powerpc/include/asm/syscall.h
+> @@ -16,7 +16,9 @@
+>   
+>   /* ftrace syscalls requires exporting the sys_call_table */
+>   extern const unsigned long sys_call_table[];
+> +#ifdef CONFIG_COMPAT
+>   extern const unsigned long compat_sys_call_table[];
+> +#endif
 
-This is diguisting.. please talk to your hardware people. I sort of
-understand the pairing, but that upper 16 bit split for writes is just
-woeful crap.
+Leaving the declaration should be harmless.
 
-> For more details, search a Family 17h PPR for the "Large Increment per
-> Cycle Events" section, e.g., section 2.1.15.3 on p. 173 in this version:
-> 
-> https://www.amd.com/system/files/TechDocs/56176_ppr_Family_17h_Model_71h_B0_pub_Rev_3.06.zip
+>   
+>   static inline int syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
+>   {
+> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> index 1d646a94d96c..b0db365b83d8 100644
+> --- a/arch/powerpc/kernel/Makefile
+> +++ b/arch/powerpc/kernel/Makefile
+> @@ -44,16 +44,25 @@ CFLAGS_btext.o += -DDISABLE_BRANCH_PROFILING
+>   endif
+>   
+>   obj-y				:= cputable.o ptrace.o syscalls.o \
+> -				   irq.o align.o signal_32.o pmc.o vdso.o \
+> +				   irq.o align.o pmc.o vdso.o \
+>   				   process.o systbl.o idle.o \
+>   				   signal.o sysfs.o cacheinfo.o time.o \
+>   				   prom.o traps.o setup-common.o \
+>   				   udbg.o misc.o io.o misc_$(BITS).o \
+>   				   of_platform.o prom_parse.o
+> -obj-$(CONFIG_PPC64)		+= setup_64.o sys_ppc32.o \
+> -				   signal_64.o ptrace32.o \
+> +ifndef CONFIG_PPC64
+> +obj-y				+= signal_32.o
+> +else
+> +ifdef CONFIG_COMPAT
+> +obj-y				+= signal_32.o
+> +endif
+> +endif
+> +obj-$(CONFIG_PPC64)		+= setup_64.o signal_64.o \
+>   				   paca.o nvram_64.o firmware.o \
+>   				   syscall_64.o
 
-My mama told me not to open random zip files of the interweb :-)
+That's still a bit messy. You could have:
 
-Also; afaict the only additional information there is that it works in
-odd/even pairs and you have to program the odd one before the even one.
-Surely you could've included that here.
+obj-y = +=signal_$(BITS).o
+obj-$(CONFIG_COMPAT) += signal_32.o
 
-> In order to support reserving the extra counter for a single Large
-> Increment per Cycle event in the perf core, we:
-> 
-> 1. Add a f17h get_event_constraints() that returns only an even counter
-> bitmask, since Large Increment events can only be placed on counters 0,
-> 2, and 4 out of the currently available 0-5.
+> +ifdef CONFIG_COMPAT
+> +obj-$(CONFIG_PPC64)		+= sys_ppc32.o ptrace32.o
+> +endif
 
-So hereby you promise that all LI events are unconstrained, right?
-Also, what marks the paired counter in the used mask? Aaah, you modify
-__perf_sched_find_counter(). Comments below.
+AFAIK, CONFIG_COMPAT is only defined when CONFIG_PP64 is defined, so 
+could be:
 
-> 2. We add a commit_scheduler hook that adds the Merge event (0xFFF) to
-> any Large Increment event being scheduled.  If the event being scheduled
-> is not a Large Increment event, we check for, and remove any
-> pre-existing Large Increment events on the next counter.
+obj-$(CONFIG_COMPAT)		+= sys_ppc32.o ptrace32.o
 
-That is weird at best; the scheduling hooks shouldn't be the one doing
-the programming; that should be done in x86_pmu_enable(). Can't you do
-this by changing amd_pmu::{en,dis}able() ?
-
-(also; we really should rename some of those x86_pmu::ops :/)
-
-> 3. In the main x86 scheduler, we reduce the number of available
-> counters by the number of Large Increment per Cycle events being added.
-> This improves the counter scheduler success rate.
-> 
-> 4. In perf_assign_events(), if a counter is assigned to a Large
-> Increment event, we increment the current counter variable, so the
-> counter used for the Merge event is skipped.
-> 
-> 5. In find_counter(), if a counter has been found for the
-> Large Increment event, we set the next counter as used, to
-> prevent other events from using it.
-> 
-> A side-effect of assigning a new get_constraints function for f17h
-> disables calling the old (prior to f15h) amd_get_event_constraints
-> implementation left enabled by commit e40ed1542dd7 ("perf/x86: Add perf
-> support for AMD family-17h processors"), which is no longer
-> necessary since those North Bridge events are obsolete.
-
-> RFC because I'd like input on the approach, including how to add support
-> for mixed-width (48- and 64-bit) counting for a single PMU.
-
-Ideally I'd tell you to wait for sane hardware :/
+And could be grouped with the above signal_32.o
 
 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 325959d19d9a..4596c141f348 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -787,6 +787,18 @@ static bool __perf_sched_find_counter(struct perf_sched *sched)
->  		if (!__test_and_set_bit(idx, sched->state.used)) {
->  			if (sched->state.nr_gp++ >= sched->max_gp)
->  				return false;
-> +			if (c->flags & PERF_X86_EVENT_LARGE_INC) {
+>   obj-$(CONFIG_VDSO32)		+= vdso32/
+>   obj-$(CONFIG_PPC_WATCHDOG)	+= watchdog.o
+>   obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
+> diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+> index 2ec825a85f5b..a2dbf216f607 100644
+> --- a/arch/powerpc/kernel/entry_64.S
+> +++ b/arch/powerpc/kernel/entry_64.S
+> @@ -51,8 +51,10 @@
+>   SYS_CALL_TABLE:
+>   	.tc sys_call_table[TC],sys_call_table
+>   
+> +#ifdef CONFIG_COMPAT
+>   COMPAT_SYS_CALL_TABLE:
+>   	.tc compat_sys_call_table[TC],compat_sys_call_table
+> +#endif
 
-Can we please call that something like:
+Can we avoid this ifdef ?
 
-  PERF_X86_EVENT_PAIR
+>   
+>   /* This value is used to mark exception frames on the stack. */
+>   exception_marker:
+> diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
+> index 60436432399f..ffd045e9fb57 100644
+> --- a/arch/powerpc/kernel/signal.c
+> +++ b/arch/powerpc/kernel/signal.c
+> @@ -277,14 +277,15 @@ static void do_signal(struct task_struct *tsk)
+>   
+>   	rseq_signal_deliver(&ksig, tsk->thread.regs);
+>   
+> +#if !defined(CONFIG_PPC64) || defined(CONFIG_COMPAT)
+>   	if (is32) {
+>           	if (ksig.ka.sa.sa_flags & SA_SIGINFO)
+>   			ret = handle_rt_signal32(&ksig, oldset, tsk);
+>   		else
+>   			ret = handle_signal32(&ksig, oldset, tsk);
+> -	} else {
+> +	} else
 
-> +				/*
-> +				 * merged events need the Merge event
-> +				 * on the next counter
-> +				 */
-> +				if (__test_and_set_bit(idx + 1,
-> +						       sched->state.used))
-> +					/* next counter already used */
-> +					return false;
+" if only one branch of a conditional statement is a single statement 
+[...] use braces in both branches"
 
-Coding Style wants { } there. Also, remove that line-break.
+Ref 
+https://www.kernel.org/doc/html/latest/process/coding-style.html#placing-braces-and-spaces
 
-> +
-> +				set_bit(idx + 1, sched->state.used);
+> +#endif /* 32bit */
 
-  __set_bit() surely
+Having an #ifdef in a middle of a if/else is gross.
 
-> +			}
->  
->  			goto done;
->  		}
-> @@ -849,14 +861,20 @@ int perf_assign_events(struct event_constraint **constraints, int n,
->  			int wmin, int wmax, int gpmax, int *assign)
->  {
->  	struct perf_sched sched;
-> +	struct event_constraint *c;
-> +
->  
->  	perf_sched_init(&sched, constraints, n, wmin, wmax, gpmax);
->  
->  	do {
->  		if (!perf_sched_find_counter(&sched))
->  			break;	/* failed */
-> -		if (assign)
-> +		if (assign) {
->  			assign[sched.state.event] = sched.state.counter;
-> +			c = constraints[sched.state.event];
-> +			if (c->flags & PERF_X86_EVENT_LARGE_INC)
-> +				sched.state.counter++;
-> +		}
+Check what are the possible values for is32. It will be always true 
+which CONFIG_PPC32.
+If you can make sure it is always false without CONFIG_COMPAT, you are 
+done. If not, then combine the if(is32) with something involving 
+IS_ENABLED(CONFIG_COMPAT).
 
-How about you make __perf_sched_find_count() set the right value? That
-already knows it did this.
+>   		ret = handle_rt_signal64(&ksig, oldset, tsk);
+> -	}
+>   
+>   	tsk->thread.regs->trap = 0;
+>   	signal_setup_done(ret, &ksig, test_thread_flag(TIF_SINGLESTEP));
+> diff --git a/arch/powerpc/kernel/syscall_64.c b/arch/powerpc/kernel/syscall_64.c
+> index 98ed970796d5..3f48262b512d 100644
+> --- a/arch/powerpc/kernel/syscall_64.c
+> +++ b/arch/powerpc/kernel/syscall_64.c
+> @@ -100,6 +100,7 @@ long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8,
+>   	/* May be faster to do array_index_nospec? */
+>   	barrier_nospec();
+>   
+> +#ifdef CONFIG_COMPAT
+>   	if (unlikely(ti_flags & _TIF_32BIT)) {
+>   		f = (void *)compat_sys_call_table[r0];
 
->  	} while (perf_sched_next_event(&sched));
->  
->  	return sched.state.unassigned;
-> @@ -952,6 +970,18 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
->  		    READ_ONCE(cpuc->excl_cntrs->exclusive_present))
->  			gpmax /= 2;
->  
-> +		/*
-> +		 * reduce the amount of available counters
-> +		 * to allow fitting the Merge event along
-> +		 * with their large increment event
-> +		 */
-> +		if (x86_pmu.flags & PMU_FL_MERGE) {
-> +			for (i = 0; i < n; i++) {
-> +				hwc = &cpuc->event_list[i]->hw;
-> +				if (is_lg_inc_event(hwc) && gpmax > 1)
+Don't opt out compat_sys_call_table[] declaration in .h file, and use:
 
-It should not be possible to hit !gpmax; make that a WARN.
+	if (IS_ENABLED(CONFIG_COMPAT) && unlikely(ti_flags & _TIF_32BIT)) {
 
-> +					gpmax--;
-> +			}
+>   
+> @@ -110,9 +111,9 @@ long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8,
+>   		r7 &= 0x00000000ffffffffULL;
+>   		r8 &= 0x00000000ffffffffULL;
+>   
+> -	} else {
+> +	} else
+> +#endif /* CONFIG_COMPAT */
 
-Alternatively you could have collect_events() cound the number of
-'lg_inc' (we really have to come up with a better name) events on the
-cpuc. Then you can do a simple subtraction and avoid the loop.
+Same comment above braces and #ifdefs in the middle of an if/else
 
-> +		}
->  		unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
->  					     wmax, gpmax, assign);
->  	}
-> @@ -1210,6 +1240,13 @@ int x86_perf_event_set_period(struct perf_event *event)
->  
->  	wrmsrl(hwc->event_base, (u64)(-left) & x86_pmu.cntval_mask);
->  
-> +	/*
-> +	 * Clear the Merge event counter's upper 16 bits since
-> +	 * we currently declare a 48-bit counter width
-> +	 */
-> +	if (is_lg_inc_event(hwc))
-> +		wrmsrl(x86_pmu_event_addr(idx + 1), 0);
-> +
+>   		f = (void *)sys_call_table[r0];
+> -	}
+>   
+>   	return f(r3, r4, r5, r6, r7, r8);
+>   }
+> diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
+> index d60598113a9f..a991b5d69010 100644
+> --- a/arch/powerpc/kernel/vdso.c
+> +++ b/arch/powerpc/kernel/vdso.c
+> @@ -667,7 +667,7 @@ static void __init vdso_setup_syscall_map(void)
+>   {
+>   	unsigned int i;
+>   	extern unsigned long *sys_call_table;
+> -#ifdef CONFIG_PPC64
+> +#ifdef CONFIG_COMPAT
 
-*yuck*...
+It should be possible to get rid of that #ifdef completely.
 
->  	/*
->  	 * Due to erratum on certan cpu we need
->  	 * a second write to be sure the register
+>   	extern unsigned long *compat_sys_call_table;
+>   #endif
+>   	extern unsigned long sys_ni_syscall;
+> @@ -678,9 +678,11 @@ static void __init vdso_setup_syscall_map(void)
+>   		if (sys_call_table[i] != sys_ni_syscall)
+>   			vdso_data->syscall_map_64[i >> 5] |=
+>   				0x80000000UL >> (i & 0x1f);
+> +#ifdef CONFIG_COMPAT
+
+Use if (IS_ENABLED(CONFIG_COMPAT && compat_sys_call_table[i] != 
+sys_ni_syscall)
+
+>   		if (compat_sys_call_table[i] != sys_ni_syscall)
+>   			vdso_data->syscall_map_32[i >> 5] |=
+>   				0x80000000UL >> (i & 0x1f);
+> +#endif /* CONFIG_COMPAT */
+>   #else /* CONFIG_PPC64 */
+>   		if (sys_call_table[i] != sys_ni_syscall)
+>   			vdso_data->syscall_map_32[i >> 5] |=
+> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+> index c84bbd4298a0..b3dacc8bc98d 100644
+> --- a/arch/powerpc/perf/callchain.c
+> +++ b/arch/powerpc/perf/callchain.c
+> @@ -15,7 +15,7 @@
+>   #include <asm/sigcontext.h>
+>   #include <asm/ucontext.h>
+>   #include <asm/vdso.h>
+> -#ifdef CONFIG_PPC64
+> +#ifdef CONFIG_COMPAT
+>   #include "../kernel/ppc32.h"
+>   #endif
+>   #include <asm/pte-walk.h>
+> @@ -165,6 +165,7 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
+>   	return read_user_stack_slow(ptr, ret, 8);
+>   }
+>   
+> +#ifdef CONFIG_COMPAT
+
+Unneeded #ifdef
+
+>   static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+>   {
+>   	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+> @@ -180,6 +181,7 @@ static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+>   
+>   	return read_user_stack_slow(ptr, ret, 4);
+>   }
+> +#endif
+>   
+>   static inline int valid_user_sp(unsigned long sp, int is_64)
+>   {
+> @@ -341,6 +343,7 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
+>   
+>   #endif /* CONFIG_PPC64 */
+>   
+> +#if !defined(CONFIG_PPC64) || defined(CONFIG_COMPAT)
+
+You don't need to opt that out.
+
+>   /*
+>    * Layout for non-RT signal frames
+>    */
+> @@ -482,12 +485,15 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+>   		sp = next_sp;
+>   	}
+>   }
+> +#endif /* 32bit */
+>   
+>   void
+>   perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
+>   {
+> -	if (current_is_64bit())
+> -		perf_callchain_user_64(entry, regs);
+> -	else
+> +#if !defined(CONFIG_PPC64) || defined(CONFIG_COMPAT)
+> +	if (!current_is_64bit())
+>   		perf_callchain_user_32(entry, regs);
+> +	else
+> +#endif
+> +		perf_callchain_user_64(entry, regs);
+
+Please rewrite using  IS_ENABLED() instead of #ifdefs.
+
+Christophe
+
