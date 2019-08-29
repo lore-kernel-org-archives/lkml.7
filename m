@@ -2,106 +2,90 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E50EEC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8E2C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E0622CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6F4C233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:02:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbfH2HBY (ORCPT
+        id S1727436AbfH2HCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 03:01:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36720 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727387AbfH2HBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 03:01:24 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 013C3C05AA6B;
-        Thu, 29 Aug 2019 07:01:24 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-117-166.ams2.redhat.com [10.36.117.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1323D1001B14;
-        Thu, 29 Aug 2019 07:01:18 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: [PATCH v3 11/11] mm/memory_hotplug: Cleanup __remove_pages()
-Date:   Thu, 29 Aug 2019 09:00:19 +0200
-Message-Id: <20190829070019.12714-12-david@redhat.com>
-In-Reply-To: <20190829070019.12714-1-david@redhat.com>
-References: <20190829070019.12714-1-david@redhat.com>
+        Thu, 29 Aug 2019 03:02:40 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3953 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725881AbfH2HCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 03:02:39 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 6612FD7DAFD70E48869C;
+        Thu, 29 Aug 2019 15:02:37 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 29 Aug 2019 15:02:36 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Thu, 29 Aug 2019 15:02:36 +0800
+Date:   Thu, 29 Aug 2019 15:01:49 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, <linux-fsdevel@vger.kernel.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Valdis =?gbk?Q?Kl=A8=A5tnieks?= <valdis.kletnieks@vt.edu>,
+        <linux-kernel@vger.kernel.org>, <yuchao0@huawei.com>,
+        <miaoxie@huawei.com>, "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Zefan Li <lizefan@huawei.com>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20190829070149.GA155353@architecture4>
+References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+ <20190828170022.GA7873@kroah.com>
+ <20190829062340.GB3047@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 29 Aug 2019 07:01:24 +0000 (UTC)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190829062340.GB3047@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme717-chm.china.huawei.com (10.1.199.113) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's drop the basically unused section stuff and simplify.
+Hi Christoph,
 
-Also, let's use a shorter variant to calculate the number of pages to
-the next section boundary.
+On Wed, Aug 28, 2019 at 11:23:40PM -0700, Christoph Hellwig wrote:
+> Can we please just review the damn thing and get it into the proper
+> tree?  That whole concept of staging file systems just has been one
+> fricking disaster, including Greg just moving not fully reviewed ones
+> over like erofs just because he feels like it.  I'm getting sick and
+> tired of this scheme.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Wei Yang <richardw.yang@linux.intel.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/memory_hotplug.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+I just want to a word on EROFS stuff (I'm not suitable to comment
+on the current exfat implementation). Since EROFS stuff has been
+in staging tree for more than a year, anyone who wants to review
+it can review this filesystem at any time.
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index fe29c637c0a8..da56cb57a8aa 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -527,25 +527,20 @@ static void __remove_section(unsigned long pfn, unsigned long nr_pages,
- void __remove_pages(unsigned long pfn, unsigned long nr_pages,
- 		    struct vmem_altmap *altmap)
- {
-+	const unsigned long end_pfn = pfn + nr_pages;
-+	unsigned long cur_nr_pages;
- 	unsigned long map_offset = 0;
--	unsigned long nr, start_sec, end_sec;
- 
- 	if (check_pfn_span(pfn, nr_pages, "remove"))
- 		return;
- 
- 	map_offset = vmem_altmap_offset(altmap);
- 
--	start_sec = pfn_to_section_nr(pfn);
--	end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
--	for (nr = start_sec; nr <= end_sec; nr++) {
--		unsigned long pfns;
--
-+	for (; pfn < end_pfn; pfn += cur_nr_pages) {
- 		cond_resched();
--		pfns = min(nr_pages, PAGES_PER_SECTION
--				- (pfn & ~PAGE_SECTION_MASK));
--		__remove_section(pfn, pfns, map_offset, altmap);
--		pfn += pfns;
--		nr_pages -= pfns;
-+		/* Select all remaining pages up to the next section boundary */
-+		cur_nr_pages = min(end_pfn - pfn, -(pfn | PAGE_SECTION_MASK));
-+		__remove_section(pfn, cur_nr_pages, map_offset, altmap);
- 		map_offset = 0;
- 	}
- }
--- 
-2.21.0
+EROFS is not just a homebrew or experimental fs for now, it has been
+widely used for many commerical smartphones, and we will upstream it
+to AOSP for more Android smartphones after it gets merged to upstream.
+I personally cc-ed you for a month, and I didn't get any objection
+from others (including Linus) for about 2 months. That isn't because
+of someone likes it, rather we cannot make no progress compared with
+some exist fs community because this is our love work.
+
+And it's self-contained driver at least, and it's disabled by default,
+It cannot be stayed in staging tree to do a lot of EROFS feature
+improvements itself forever (since it is cleaned enough).
+It has proven its validity as well.
+
+Thanks,
+Gao Xiang
 
