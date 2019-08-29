@@ -3,95 +3,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7894CC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732A2C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDA122CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8692189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:19:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbfH2LSx (ORCPT
+        id S1728026AbfH2LS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:18:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54710 "EHLO mx1.redhat.com"
+        Thu, 29 Aug 2019 07:18:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:42722 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfH2LSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:18:52 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2C72B18C426B;
-        Thu, 29 Aug 2019 11:18:52 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3898D600C1;
-        Thu, 29 Aug 2019 11:18:48 +0000 (UTC)
-Date:   Thu, 29 Aug 2019 13:18:45 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Thomas Huth <thuth@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: s390: Test for bad access register at the start of
- S390_MEM_OP
-Message-ID: <20190829131845.5a72231a.cohuck@redhat.com>
-In-Reply-To: <20190829105356.27805-1-thuth@redhat.com>
-References: <20190829105356.27805-1-thuth@redhat.com>
-Organization: Red Hat GmbH
+        id S1726232AbfH2LS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 07:18:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 843BF1570;
+        Thu, 29 Aug 2019 04:18:57 -0700 (PDT)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13D983F59C;
+        Thu, 29 Aug 2019 04:18:55 -0700 (PDT)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, paul.burton@mips.com,
+        tglx@linutronix.de, salyzyn@android.com, 0x7f454c46@gmail.com,
+        luto@kernel.org
+Subject: [PATCH 0/7] vdso: Complete the conversion to 32bit syscalls
+Date:   Thu, 29 Aug 2019 12:18:36 +0100
+Message-Id: <20190829111843.41003-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Thu, 29 Aug 2019 11:18:52 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 12:53:56 +0200
-Thomas Huth <thuth@redhat.com> wrote:
+This patch series is a follow up to "lib/vdso, x86/vdso: Fix fallout
+from generic VDSO conversion" [1].
 
-> If the KVM_S390_MEM_OP ioctl is called with an access register >= 16,
-> then there is certainly a bug in the calling userspace application.
-> We check for wrong access registers, but only if the vCPU was already
-> in the access register mode before (i.e. the SIE block has recorded
-> it). The check is also buried somewhere deep in the calling chain (in
-> the function ar_translation()), so this is somewhat hard to find.
-> 
-> It's better to always report an error to the userspace in case this
-> field is set wrong, and it's safer in the KVM code if we block wrong
-> values here early instead of relying on a check somewhere deep down
-> the calling chain, so let's add another check to kvm_s390_guest_mem_op()
-> directly.
-> 
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> ---
->  arch/s390/kvm/kvm-s390.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index f329dcb3f44c..725690853cbd 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -4255,7 +4255,7 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu *vcpu,
->  	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
->  				    | KVM_S390_MEMOP_F_CHECK_ONLY;
->  
-> -	if (mop->flags & ~supported_flags)
-> +	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS)
->  		return -EINVAL;
+The main purpose is to complete the 32bit vDSOs conversion to use the
+legacy 32bit syscalls as a fallback. With the conversion of all the
+architectures present in -next complete, this patch series removes as
+well the conditional choice in between 32 and 64 bit for 32bit vDSOs.
 
-This also matches the value that ar_translation would return, so seems
-sane.
+This series has been rebased on linux-next/master.
 
->  
->  	if (mop->size > MEM_OP_MAX_SIZE)
+[1] https://lkml.org/lkml/2019/7/28/86
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-Btw: should Documentation/virt/kvm/api.txt spell out the valid range
-for ar explicitly?
+Vincenzo Frascino (7):
+  arm64: compat: vdso: Expose BUILD_VDSO32
+  lib: vdso: Build 32 bit specific functions in the right context
+  mips: compat: vdso: Use legacy syscalls as fallback
+  lib: vdso: Remove VDSO_HAS_32BIT_FALLBACK
+  arm64: compat: vdso: Remove unused VDSO_HAS_32BIT_FALLBACK
+  mips: vdso: Remove unused VDSO_HAS_32BIT_FALLBACK
+  x86: vdso: Remove unused VDSO_HAS_32BIT_FALLBACK
+
+ .../include/asm/vdso/compat_gettimeofday.h    |  2 +-
+ arch/mips/include/asm/vdso/gettimeofday.h     | 43 +++++++++++++++++++
+ arch/mips/vdso/config-n32-o32-env.c           |  1 +
+ arch/x86/include/asm/vdso/gettimeofday.h      |  2 -
+ lib/vdso/gettimeofday.c                       | 14 ++----
+ 5 files changed, 49 insertions(+), 13 deletions(-)
+
+-- 
+2.23.0
+
