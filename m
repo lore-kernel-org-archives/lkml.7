@@ -2,116 +2,65 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6E7C41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D96C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1443D20828
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567093181;
-	bh=idNuvwNtU578q6+z3/Gps3Uq1Uf2C0rrvmUV35b0YZQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RxNh24TtkYYgOiUEjXiKRzmg1dbNm/yaeE+kPCtDRvClpyCicvsSVkVQBwiK4q2Nt
-	 N1WBrNtYkJH9pG4dRbepNwryDQXranFZ3O8mfYHxGdMYNJ0fMDqxvoGgmGWl0JU9Xe
-	 UB6yvlvSfw/KtfUz6kAhQp1KMxn6vprZNQI03Ovc=
+	by mail.kernel.org (Postfix) with ESMTP id 34BF520828
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbfH2Pjk (ORCPT
+        id S1728031AbfH2Pju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:39:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56820 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726852AbfH2Pjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:39:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B26DDADFB;
-        Thu, 29 Aug 2019 15:39:37 +0000 (UTC)
-Date:   Thu, 29 Aug 2019 17:39:36 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: Re: [PATCH v2 3/6] mm/memory_hotplug: Process all zones when
- removing memory
-Message-ID: <20190829153936.GJ28313@dhcp22.suse.cz>
-References: <20190826101012.10575-1-david@redhat.com>
- <20190826101012.10575-4-david@redhat.com>
+        Thu, 29 Aug 2019 11:39:50 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:50469 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727947AbfH2Pjt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 11:39:49 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id E8D0E240007;
+        Thu, 29 Aug 2019 15:39:47 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 17:39:42 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Anson.Huang@nxp.com
+Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH] rtc: snvs: fix possible race condition
+Message-ID: <20190829153942.GK21922@piout.net>
+References: <20190716071858.36750-1-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190826101012.10575-4-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190716071858.36750-1-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 26-08-19 12:10:09, David Hildenbrand wrote:
-> It is easier than I though to trigger a kernel bug by removing memory that
-> was never onlined. With CONFIG_DEBUG_VM the memmap is initialized with
-> garbage, resulting in the detection of a broken zone when removing memory.
-> Without CONFIG_DEBUG_VM it is less likely - but we could still have
-> garbage in the memmap.
+On 16/07/2019 15:18:58+0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
 > 
-> :/# [   23.912993] BUG: unable to handle page fault for address: 000000000000353d
-> [   23.914219] #PF: supervisor write access in kernel mode
-> [   23.915199] #PF: error_code(0x0002) - not-present page
-> [   23.916160] PGD 0 P4D 0
-> [   23.916627] Oops: 0002 [#1] SMP PTI
-> [   23.917256] CPU: 1 PID: 7 Comm: kworker/u8:0 Not tainted 5.3.0-rc5-next-20190820+ #317
-> [   23.918900] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.4
-> [   23.921194] Workqueue: kacpi_hotplug acpi_hotplug_work_fn
-> [   23.922249] RIP: 0010:clear_zone_contiguous+0x5/0x10
-> [   23.923173] Code: 48 89 c6 48 89 c3 e8 2a fe ff ff 48 85 c0 75 cf 5b 5d c3 c6 85 fd 05 00 00 01 5b 5d c3 0f 1f 840
-> [   23.926876] RSP: 0018:ffffad2400043c98 EFLAGS: 00010246
-> [   23.927928] RAX: 0000000000000000 RBX: 0000000200000000 RCX: 0000000000000000
-> [   23.929458] RDX: 0000000000200000 RSI: 0000000000140000 RDI: 0000000000002f40
-> [   23.930899] RBP: 0000000140000000 R08: 0000000000000000 R09: 0000000000000001
-> [   23.932362] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000140000
-> [   23.933603] R13: 0000000000140000 R14: 0000000000002f40 R15: ffff9e3e7aff3680
-> [   23.934913] FS:  0000000000000000(0000) GS:ffff9e3e7bb00000(0000) knlGS:0000000000000000
-> [   23.936294] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   23.937481] CR2: 000000000000353d CR3: 0000000058610000 CR4: 00000000000006e0
-> [   23.938687] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   23.939889] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [   23.941168] Call Trace:
-> [   23.941580]  __remove_pages+0x4b/0x640
-> [   23.942303]  ? mark_held_locks+0x49/0x70
-> [   23.943149]  arch_remove_memory+0x63/0x8d
-> [   23.943921]  try_remove_memory+0xdb/0x130
-> [   23.944766]  ? walk_memory_blocks+0x7f/0x9e
-> [   23.945616]  __remove_memory+0xa/0x11
-> [   23.946274]  acpi_memory_device_remove+0x70/0x100
-> [   23.947308]  acpi_bus_trim+0x55/0x90
-> [   23.947914]  acpi_device_hotplug+0x227/0x3a0
-> [   23.948714]  acpi_hotplug_work_fn+0x1a/0x30
-> [   23.949433]  process_one_work+0x221/0x550
-> [   23.950190]  worker_thread+0x50/0x3b0
-> [   23.950993]  kthread+0x105/0x140
-> [   23.951644]  ? process_one_work+0x550/0x550
-> [   23.952508]  ? kthread_park+0x80/0x80
-> [   23.953367]  ret_from_fork+0x3a/0x50
-> [   23.954025] Modules linked in:
-> [   23.954613] CR2: 000000000000353d
-> [   23.955248] ---[ end trace 93d982b1fb3e1a69 ]---
+> The RTC IRQ is requested before the struct rtc_device is allocated,
+> this may lead to a NULL pointer dereference in IRQ handler.
+> 
+> To fix this issue, allocating the rtc_device struct before requesting
+> the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
+> to register the RTC device.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/rtc/rtc-snvs.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+Applied, thanks.
 
-Yes, this is indeed nasty. I didin't think of this when separating
-memmap initialization from the hotremove. This means that the zone
-pointer is a garbage in arch_remove_memory already. The proper fix is to
-remove it from that level down. Moreover the zone is only needed for the
-shrinking code and zone continuous thingy. The later belongs to offlining
-code unless I am missing something. I can see that you are removing zone
-parameter in a later patch but wouldn't it be just better to remove the
-whole zone thing in a single patch and have this as a bug fix for a rare
-bug with a fixes tag?
 -- 
-Michal Hocko
-SUSE Labs
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
