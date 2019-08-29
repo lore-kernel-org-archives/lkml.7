@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA937C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A04BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7CC22CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12ABC23403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567076066;
-	bh=l4bD2X66wQYH9bFuxf5F1FvSh18IMJFDWESpsXZ5qBw=;
+	s=default; t=1567076071;
+	bh=9OwpUQxQjkGWdwWltlQKTGXWR2s8Zhgbq2LrY6GIs8I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nhEgAMhU0Lqve80Eqhn4KDyIuK+tY27+5kaBMFfAWeXbHJjuJQlwdXfOj2o29+UdF
-	 s5HelZOdJjfXkJlRxj4vX25vhZdURTZu5HYzqiFkr+FGht7kW2XvxfTkQlcgYiLxz9
-	 JgetjM9bkH03vFn6S4304Ppl9arLsCr06iLMia+M=
+	b=g359wN03xOlxUq94P9JHtf//N02R5HdzH4BDYkQjhjbuj7R4DTYcGp/jW0H4igMYH
+	 GMW3vAK5FEpzWMZvGb2qJbC9OrkaEuAuzQDvG3DtIDK1zvPbWOjDLtZRSQs3P9z5d0
+	 Ia9c5WoCxqPINr6Tl9bIoEcxlWUq66jHL7eEuU5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbfH2Kuc (ORCPT
+        id S1728582AbfH2Ky3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:50:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57644 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 06:54:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727830AbfH2KuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:50:23 -0400
+        id S1728021AbfH2Kua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:50:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98F2D2189D;
-        Thu, 29 Aug 2019 10:50:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB7C02173E;
+        Thu, 29 Aug 2019 10:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075822;
-        bh=l4bD2X66wQYH9bFuxf5F1FvSh18IMJFDWESpsXZ5qBw=;
+        s=default; t=1567075829;
+        bh=9OwpUQxQjkGWdwWltlQKTGXWR2s8Zhgbq2LrY6GIs8I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q3PEA99czadxvoNpw2ANW5bfMHOPi8iDoIgTxOJvq//Tm1DTWzCzSTVPCp5f09Gbd
-         +Pmg8z2jP2X3XFko3z+H2GhD1UjSu0lnF6kBDvEzFsDO2+eZ4DfmOp+RIWzzqpLjBR
-         sj/ziuyWctXt9U4oxZzE6NUd8cOxS6cgL0wSRZl8=
+        b=mFvjoaEScbm2R6FOwxzrEGMFZoYfEgpa8b2+wAsTnEMKfv+FLgNhr3POwCdh7WHED
+         PqZea4ufXFCibqlPG24V36t+b1fetVPXa3voyWAFmSSuN4RkJSH9J5ygTQuMR1KIXD
+         o3NTkqgM1Lh1bsunIbO5ZHrlQaKB5UUwF49ch0dc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyler Hicks <tyhicks@canonical.com>, Todd Kjos <tkjos@android.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.19 11/29] binder: take read mode of mmap_sem in binder_alloc_free_page()
-Date:   Thu, 29 Aug 2019 06:49:51 -0400
-Message-Id: <20190829105009.2265-11-sashal@kernel.org>
+Cc:     Dmitry Voytik <voytikd@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 17/29] arm64: dts: rockchip: enable usb-host regulators at boot on rk3328-rock64
+Date:   Thu, 29 Aug 2019 06:49:57 -0400
+Message-Id: <20190829105009.2265-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829105009.2265-1-sashal@kernel.org>
 References: <20190829105009.2265-1-sashal@kernel.org>
@@ -59,66 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@canonical.com>
+From: Dmitry Voytik <voytikd@gmail.com>
 
-[ Upstream commit 60d4885710836595192c42d3e04b27551d30ec91 ]
+[ Upstream commit 26e2d7b03ea7ff254bf78305aa44dda62e70b78e ]
 
-Restore the behavior of locking mmap_sem for reading in
-binder_alloc_free_page(), as was first done in commit 3013bf62b67a
-("binder: reduce mmap_sem write-side lock"). That change was
-inadvertently reverted by commit 5cec2d2e5839 ("binder: fix race between
-munmap() and direct reclaim").
+After commit ef05bcb60c1a, boot from USB drives is broken.
+Fix this problem by enabling usb-host regulators during boot time.
 
-In addition, change the name of the label for the error path to
-accurately reflect that we're taking the lock for reading.
-
-Backporting note: This fix is only needed when *both* of the commits
-mentioned above are applied. That's an unlikely situation since they
-both landed during the development of v5.1 but only one of them is
-targeted for stable.
-
-Fixes: 5cec2d2e5839 ("binder: fix race between munmap() and direct reclaim")
-Signed-off-by: Tyler Hicks <tyhicks@canonical.com>
-Acked-by: Todd Kjos <tkjos@android.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: ef05bcb60c1a ("arm64: dts: rockchip: fix vcc_host1_5v pin assign on rk3328-rock64")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Voytik <voytikd@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/android/binder_alloc.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_alloc.c
-index a654ccfd1a222..21dc20c52cd4d 100644
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -962,8 +962,8 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
- 	mm = alloc->vma_vm_mm;
- 	if (!mmget_not_zero(mm))
- 		goto err_mmget;
--	if (!down_write_trylock(&mm->mmap_sem))
--		goto err_down_write_mmap_sem_failed;
-+	if (!down_read_trylock(&mm->mmap_sem))
-+		goto err_down_read_mmap_sem_failed;
- 	vma = binder_alloc_get_vma(alloc);
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+index c142169a58fc5..e9147e35b7396 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+@@ -40,6 +40,7 @@
+ 		pinctrl-0 = <&usb30_host_drv>;
+ 		regulator-name = "vcc_host_5v";
+ 		regulator-always-on;
++		regulator-boot-on;
+ 		vin-supply = <&vcc_sys>;
+ 	};
  
- 	list_lru_isolate(lru, item);
-@@ -978,7 +978,7 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
+@@ -50,6 +51,7 @@
+ 		pinctrl-0 = <&usb20_host_drv>;
+ 		regulator-name = "vcc_host1_5v";
+ 		regulator-always-on;
++		regulator-boot-on;
+ 		vin-supply = <&vcc_sys>;
+ 	};
  
- 		trace_binder_unmap_user_end(alloc, index);
- 	}
--	up_write(&mm->mmap_sem);
-+	up_read(&mm->mmap_sem);
- 	mmput(mm);
- 
- 	trace_binder_unmap_kernel_start(alloc, index);
-@@ -993,7 +993,7 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
- 	mutex_unlock(&alloc->mutex);
- 	return LRU_REMOVED_RETRY;
- 
--err_down_write_mmap_sem_failed:
-+err_down_read_mmap_sem_failed:
- 	mmput_async(mm);
- err_mmget:
- err_page_already_freed:
 -- 
 2.20.1
 
