@@ -2,69 +2,127 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCA2C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A297FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3340D2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B9A21874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:28:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzVRRjQV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbfH2R1L (ORCPT
+        id S1728017AbfH2R2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:27:11 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:44648 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfH2R1J (ORCPT
+        Thu, 29 Aug 2019 13:28:52 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41823 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727173AbfH2R2w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:27:09 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.1)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1i3OCN-0005oh-80; Thu, 29 Aug 2019 19:27:03 +0200
-Message-ID: <605f243573cd0e0f14c995f6850984b4dca2a50c.camel@sipsolutions.net>
-Subject: Re: [PATCH] um: Rewrite host RNG driver.
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Dark <dark@volatile.bz>, Richard Weinberger <richard@nod.at>
-Cc:     Richard Weinberger <richard.weinberger@gmail.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        anton ivanov <anton.ivanov@cambridgegreys.com>
-Date:   Thu, 29 Aug 2019 19:27:01 +0200
-In-Reply-To: <20190829130804.5e644540@TheDarkness>
-References: <20190828204609.02a7ff70@TheDarkness>
-         <CAFLxGvyiviQxr_Bj57ibTU4DQ1H5wQC4DE5DNFBtAFoohcgbsg@mail.gmail.com>
-         <20190829103628.61953f50@thedarkness.local>
-         <1851013915.76434.1567092659763.JavaMail.zimbra@nod.at>
-         <20190829130804.5e644540@TheDarkness>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 29 Aug 2019 13:28:52 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 196so2514392pfz.8;
+        Thu, 29 Aug 2019 10:28:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=h3l+cnwgLiAnxdbo1DA0QAVgE8Ahk9WZSlg+KJsywhg=;
+        b=LzVRRjQVaNl26Q1HWhVNlp4y3i6RrjP4ioKujdqMcYLxuWJAyounwHpRRXYbS4a+3I
+         9MBKvFW5dU6A6f6dfiN0meLYZqHzy09lk0Vrrj8OlQLumZh7QeYy8yDmdRY5gh9Jq6TF
+         a3pmCnZ9idbMg9bvifOaRNB/3X+X+gy2+CJ4KD46cpM/cLYQvs33UQcEAkHqup33yWI5
+         J8OuzXHGFKDeZmj2H4FvytpzVwGJA5a/BliZf2y/pIhzRU5UpX6NsmPF+saALZ2ThLn7
+         GqkLp6Wvy8uhJ6zZERLaUGZdasJMqrYHVqYvkrwS/FJAQ30LmXrOYDDN4pAnBxaSnn0W
+         1kqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h3l+cnwgLiAnxdbo1DA0QAVgE8Ahk9WZSlg+KJsywhg=;
+        b=q5JzvQyL7W0ZlvKaS3+8FiNq8h4+9i7ZcU6T3ampeFT4NDiJXJZaCqX8PQS/FtjaP8
+         4BQZFtIGAKrVMul0m6XnU8pLtGdaz0l5amQjIeSFvUdiYHk3yE6CkGgWOc8KB7Eo1flq
+         9X8uUNxxBWVYv7TjK9r13Pp4zp6xsRVPo74aOpAxZTgQ02U9KdslELpFZjbmTj1Us2M0
+         kSciIe0YgkZNlXyZ221Es2IknzsOMQIv71G7M9IupbOziNPETGcO290FWmDLmm10WbHc
+         6IQgvepMuQx0Jn7UVmsbOkLiC1Juf7fej2xEdBfNCfZPHLngo8WHRMZ3GsrlcKfhacMm
+         duOQ==
+X-Gm-Message-State: APjAAAXNQw+hRWP/yqGIUApOstDzpkAIL89hHJO0y3N+9vs9ULQ0rUAS
+        N82YPSrr1yxh0lmscilMfEk=
+X-Google-Smtp-Source: APXvYqw7CbFzyCtt3jbkWG8reMnAoR7kVbwpZwqnxbz7M4tUSwU+i/XccvSM/taww6ip18AttI2NGA==
+X-Received: by 2002:a17:90a:c503:: with SMTP id k3mr11205835pjt.134.1567099731651;
+        Thu, 29 Aug 2019 10:28:51 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id 203sm3881871pfz.107.2019.08.29.10.28.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 10:28:50 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 10:28:48 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        davem@davemloft.net
+Subject: Re: [PATCH v2 2/2] PTP: add support for one-shot output
+Message-ID: <20190829172848.GC2166@localhost>
+References: <20190829095825.2108-1-felipe.balbi@linux.intel.com>
+ <20190829095825.2108-2-felipe.balbi@linux.intel.com>
+ <20190829172509.GB2166@localhost>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829172509.GB2166@localhost>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-29 at 13:10 -0400, Dark wrote:
-> (I'm unsure of how to submit an update
-> to my patch so I'll need a bit of guidence on this.)
 
-Resend the patch, but use --subject-prefix 'PATCH v2' and ideally note
-somewhere in the patch (possibly after a "---" marker after Signed-off-
-by) the changes between the versions, like
+Adding davem onto CC...
 
-[...]
-Signed-off-by: ...
----
-v2:
- * fix -EAGAIN handling
-[...]
+On Thu, Aug 29, 2019 at 12:58:25PM +0300, Felipe Balbi wrote:
+> diff --git a/drivers/ptp/ptp_chardev.c b/drivers/ptp/ptp_chardev.c
+> index 98ec1395544e..a407e5f76e2d 100644
+> --- a/drivers/ptp/ptp_chardev.c
+> +++ b/drivers/ptp/ptp_chardev.c
+> @@ -177,9 +177,8 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+>  			err = -EFAULT;
+>  			break;
+>  		}
+> -		if ((req.perout.flags || req.perout.rsv[0] || req.perout.rsv[1]
+> -				|| req.perout.rsv[2] || req.perout.rsv[3])
+> -			&& cmd == PTP_PEROUT_REQUEST2) {
+> +		if ((req.perout.rsv[0] || req.perout.rsv[1] || req.perout.rsv[2]
+> +			|| req.perout.rsv[3]) && cmd == PTP_PEROUT_REQUEST2) {
 
-Hmm, but looks like you didn't actually use git send-email directly, so
-I guess just put "[PATCH v2]" manually.
+Please check that the reserved bits of req.perout.flags, namely
+~PTP_PEROUT_ONE_SHOT, are clear.
 
-johannes
+>  			err = -EINVAL;
+>  			break;
+>  		} else if (cmd == PTP_PEROUT_REQUEST) {
+> diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
+> index 039cd62ec706..95840e5f5c53 100644
+> --- a/include/uapi/linux/ptp_clock.h
+> +++ b/include/uapi/linux/ptp_clock.h
+> @@ -67,7 +67,9 @@ struct ptp_perout_request {
+>  	struct ptp_clock_time start;  /* Absolute start time. */
+>  	struct ptp_clock_time period; /* Desired period, zero means disable. */
+>  	unsigned int index;           /* Which channel to configure. */
+> -	unsigned int flags;           /* Reserved for future use. */
+> +
+> +#define PTP_PEROUT_ONE_SHOT BIT(0)
+> +	unsigned int flags;
 
+@davem  Any CodingStyle policy on #define within a struct?  (Some
+maintainers won't allow it.)
+
+>  	unsigned int rsv[4];          /* Reserved for future use. */
+>  };
+>  
+> -- 
+> 2.23.0
+> 
+
+Thanks,
+Richard
