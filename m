@@ -2,76 +2,79 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8385C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B56C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE4823403
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4C123403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:19:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OK+VlaS2"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ZCpfD6NX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfH2KRd (ORCPT
+        id S1727040AbfH2KTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:17:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52116 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfH2KRc (ORCPT
+        Thu, 29 Aug 2019 06:19:41 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:36152 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726330AbfH2KTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:17:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=O3+6+Xmit/iBXjGaFlyx+KH2IoPd70pydps7Y3tqLMs=; b=OK+VlaS2swad6FpHWAVwBfPof
-        YrNFFNkHtPbC62y7S+b0GwvxpacKcOoC1ZR3/ICif/qPte7ahF6AoApG2E3LSWqoTXq8zMhPI8+x3
-        CPHvNJ3lzu7jR3MAgU/kO22jYXEGlkFmyRLN23DbcEzt/qaRtwik/Yz573oUMfW+DnJKh9SrxgIbS
-        48lWz1jGHUPB4z8C2/rdb0cQhLDtkSfYN8hRL6eR+egZZsFQUSkM3S+VDr5s1/KvCzuh6dQMB5pAo
-        ah9QvVGENKFE1lkQoBewtDE7dh82osonCH6oZ0ICcR/5mLvh33YRd/KDA2KdEideIVSKtDKpGX2Eb
-        P4OZKxpiA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3HUX-0004xZ-Fo; Thu, 29 Aug 2019 10:17:21 +0000
-Date:   Thu, 29 Aug 2019 03:17:21 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v6 04/24] erofs: add raw address_space operations
-Message-ID: <20190829101721.GD20598@infradead.org>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-5-gaoxiang25@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190802125347.166018-5-gaoxiang25@huawei.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Thu, 29 Aug 2019 06:19:40 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 20432C0391;
+        Thu, 29 Aug 2019 10:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1567073980; bh=od80gmY2zZhh+3Bcew23DiiwRVI+IoD71SEOvgTHG9g=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZCpfD6NXKGjUIDyuyy6P1W/RWFyrnEbssFCR4FlNciPZnoNwnK4hSjHHsciqeGWvj
+         csro7zd7SZAZh0DCnfIBbf3NUL3+o0LR8nfrt/WweoO5Mr2s7sYVuQ3Kr9kqlSHbue
+         SSm8KGVcVawD/Fx3v5AmvjqXgCkwu2ObxiOm0Z1c8vAeEpTEvOAPtXDfI0SrjNhapt
+         xgppE8g+DyxZToCwFV+TDQTHULhTyRGl6/qae1RQxj7g8cMi7/N02EhunlgLKMl+Oz
+         kswwWiVz9H0z4sIjPUfWp+xwNF1Z3Hh9YmZTX8ZQX9pt5kKnPrK0cnOBRBS3sXVfMe
+         uXKrEtyBe4lng==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 37493A005F;
+        Thu, 29 Aug 2019 10:19:38 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id 1176B3B640;
+        Thu, 29 Aug 2019 12:19:38 +0200 (CEST)
+From:   Vitor Soares <Vitor.Soares@synopsys.com>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-i3c@lists.infradead.org
+Cc:     bbrezillon@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Joao.Pinto@synopsys.com, Vitor Soares <Vitor.Soares@synopsys.com>
+Subject: [PATCH 0/4] i3c: remove device if failed on pre_assign_dyn_addr()
+Date:   Thu, 29 Aug 2019 12:19:31 +0200
+Message-Id: <cover.1567071213.git.vitor.soares@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The actual address_space operations seem to largely duplicate
-the iomap versions.  Please use those instead.  Also I don't think
-any new file system should write up ->bmap these days.
+This patch series remove the devices that fail during
+pre_assign_dyn_addr() and were being sent on DEFSVLS command.
+With the change above, during the i3c_master_add_i3c_dev_locked() is
+necessary to check if the device has i3c_boardinfo and try to assign the
+i3c_dev_boardinfo->init_dyn_addr if there no oldev. This change will
+allow to describe in DT device with preferable dynamic address but without
+static address.
+
+Vitor Soares (4):
+  "i3c: detach and free device if pre_assign_dyn_addr fails "
+  i3c: check i3c_boardinfo during i3c_master_add_i3c_dev_locked
+  update i3c bingins
+  i3c: master: dw: Reattach device on first empty location of DAT
+
+ Documentation/devicetree/bindings/i3c/i3c.txt | 13 ++++++++---
+ drivers/i3c/master.c                          | 33 ++++++++++++++++++++++++---
+ drivers/i3c/master/dw-i3c-master.c            | 16 +++++++++++++
+ 3 files changed, 56 insertions(+), 6 deletions(-)
+
+-- 
+2.7.4
+
