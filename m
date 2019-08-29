@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBFCC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD53CC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C222A2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2ED823429
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102980;
-	bh=y70RxuL2YQSZm/gh3pAfFVLXXKVME29NfFRNWeXDYFw=;
+	s=default; t=1567102983;
+	bh=qoqEgI0RDaEh5bLLgfguTtjro2ymvYiXCz+63heuajc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h7GLxbjXoT9kjFCzIBPLYSCLwqdTRhUZCmrDidqdYnlDxQYoRl2Nom+qgAEr9KAI6
-	 b0bz7n6IuweGAoa4PE99gqJwiE1/xIP7dGRUmgOF5yYB8dn2pVHgk5Y8/4UJ1UVSXh
-	 dEEbq+1Q42G37lK8ED7sm8dkHbfjo1ukchxMrLYU=
+	b=zBZruLq7GTTrdod/oKYADV1P23L8ejUCuOimIgPSQHeDdaCl9b3Hhu8zKMvZcg9O3
+	 oM+3R+ajBK0Jrk3qlbF+03dun4stj3/bxTpAcvtrsQ75oVloabpqoaJLcAvqyzrPvF
+	 2knpe9//9dkVC4B2FUtSn/zsPjWFJFdEBrYByDaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbfH2SW7 (ORCPT
+        id S1730098AbfH2SW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:22:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59196 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:22:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729959AbfH2SRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:17:06 -0400
+        id S1729963AbfH2SRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8ABD2189D;
-        Thu, 29 Aug 2019 18:17:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC3F3233FF;
+        Thu, 29 Aug 2019 18:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102625;
-        bh=y70RxuL2YQSZm/gh3pAfFVLXXKVME29NfFRNWeXDYFw=;
+        s=default; t=1567102626;
+        bh=qoqEgI0RDaEh5bLLgfguTtjro2ymvYiXCz+63heuajc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AP2ZA/ZOsp87kT+EyJZTIzt0e2VtzXpWCl56CFupBwPyyFSILLC/qTYIKKQSuT1wA
-         IKF4XONkR4ZxDSlLC60/t1jW/24YFoCTto5Ma3s6QTk4K0moSUyH5YXV0jzY7lOrZM
-         mBQE9VR8y0JNCsfzCZIl6qFdWXxsm7TzFJt9Dj0o=
+        b=EHnYc/DP7mIyeF+DC+luCtpTdQNr8pq1dTqpXFOyY4c7c8MYBdqEr2As4kTPi7Wlv
+         lG9YwStsHC3lxuVD+ZW1AkOjysxNBLulWN0QZ6Ai50ZscwIxsZas3w1/eNeiMQT5tH
+         +RYTwuFRd3rp9oKBWbZLzOC7NkJ9vEvvILXL1cso=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/27] ibmveth: Convert multicast list size for little-endian system
-Date:   Thu, 29 Aug 2019 14:16:32 -0400
-Message-Id: <20190829181655.8741-6-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 07/27] gpio: Fix build error of function redefinition
+Date:   Thu, 29 Aug 2019 14:16:33 -0400
+Message-Id: <20190829181655.8741-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181655.8741-1-sashal@kernel.org>
 References: <20190829181655.8741-1-sashal@kernel.org>
@@ -61,59 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 66cf4710b23ab2adda11155684a2c8826f4fe732 ]
+[ Upstream commit 68e03b85474a51ec1921b4d13204782594ef7223 ]
 
-The ibm,mac-address-filters property defines the maximum number of
-addresses the hypervisor's multicast filter list can support. It is
-encoded as a big-endian integer in the OF device tree, but the virtual
-ethernet driver does not convert it for use by little-endian systems.
-As a result, the driver is not behaving as it should on affected systems
-when a large number of multicast addresses are assigned to the device.
+when do randbuilding, I got this error:
 
-Reported-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
+./include/linux/gpio/driver.h:576:1: error: redefinition of gpiochip_add_pin_range
+ gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+ ^~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
+./include/linux/gpio.h:245:1: note: previous definition of gpiochip_add_pin_range was here
+ gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+ ^~~~~~~~~~~~~~~~~~~~~~
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 964cb341882f ("gpio: move pincontrol calls to <linux/gpio/driver.h>")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20190731123814.46624-1-yuehaibing@huawei.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmveth.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ include/linux/gpio.h | 24 ------------------------
+ 1 file changed, 24 deletions(-)
 
-diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
-index 754dff4c1771e..880d925438c17 100644
---- a/drivers/net/ethernet/ibm/ibmveth.c
-+++ b/drivers/net/ethernet/ibm/ibmveth.c
-@@ -1618,7 +1618,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
- 	struct net_device *netdev;
- 	struct ibmveth_adapter *adapter;
- 	unsigned char *mac_addr_p;
--	unsigned int *mcastFilterSize_p;
-+	__be32 *mcastFilterSize_p;
- 	long ret;
- 	unsigned long ret_attr;
+diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+index 8ef7fc0ce0f0c..b2f103b170a97 100644
+--- a/include/linux/gpio.h
++++ b/include/linux/gpio.h
+@@ -230,30 +230,6 @@ static inline int irq_to_gpio(unsigned irq)
+ 	return -EINVAL;
+ }
  
-@@ -1640,8 +1640,9 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
- 		return -EINVAL;
- 	}
- 
--	mcastFilterSize_p = (unsigned int *)vio_get_attribute(dev,
--						VETH_MCAST_FILTER_SIZE, NULL);
-+	mcastFilterSize_p = (__be32 *)vio_get_attribute(dev,
-+							VETH_MCAST_FILTER_SIZE,
-+							NULL);
- 	if (!mcastFilterSize_p) {
- 		dev_err(&dev->dev, "Can't find VETH_MCAST_FILTER_SIZE "
- 			"attribute\n");
-@@ -1658,7 +1659,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
- 
- 	adapter->vdev = dev;
- 	adapter->netdev = netdev;
--	adapter->mcastFilterSize = *mcastFilterSize_p;
-+	adapter->mcastFilterSize = be32_to_cpu(*mcastFilterSize_p);
- 	adapter->pool_config = 0;
- 
- 	netif_napi_add(netdev, &adapter->napi, ibmveth_poll, 16);
+-static inline int
+-gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+-		       unsigned int gpio_offset, unsigned int pin_offset,
+-		       unsigned int npins)
+-{
+-	WARN_ON(1);
+-	return -EINVAL;
+-}
+-
+-static inline int
+-gpiochip_add_pingroup_range(struct gpio_chip *chip,
+-			struct pinctrl_dev *pctldev,
+-			unsigned int gpio_offset, const char *pin_group)
+-{
+-	WARN_ON(1);
+-	return -EINVAL;
+-}
+-
+-static inline void
+-gpiochip_remove_pin_ranges(struct gpio_chip *chip)
+-{
+-	WARN_ON(1);
+-}
+-
+ static inline int devm_gpio_request(struct device *dev, unsigned gpio,
+ 				    const char *label)
+ {
 -- 
 2.20.1
 
