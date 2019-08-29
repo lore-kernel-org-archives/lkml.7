@@ -2,123 +2,115 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210A2C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DAEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED9DF23426
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85EDB208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567109106;
+	bh=D9OpUDGZzn5yICLfJrkFRAVB2JcJlRQu1hWLLBuIbRQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iC+kYBNS+odE8gfAINe7+nbML43dpDRR2948Rccbd58rjfggrdWvYfVEfke1NDHV0
+	 o8JlFAsKOD5OSDcJKmSGoKDXuDT05Y1pwHI2yWLMb5Pw8KCbgbwfrZ1Xm/jmZBlaxZ
+	 cDW6cDC/7s0UUgcjIZ+QFka+/QFcXIuayEPetbYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbfH2UEv (ORCPT
+        id S1728295AbfH2UFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 16:04:51 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21970 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726512AbfH2UEv (ORCPT
+        Thu, 29 Aug 2019 16:05:05 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36675 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbfH2UFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 16:04:51 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7TK233X040496;
-        Thu, 29 Aug 2019 16:04:10 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2upna189g9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Aug 2019 16:04:10 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7TK3CUI024417;
-        Thu, 29 Aug 2019 20:04:09 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma02wdc.us.ibm.com with ESMTP id 2ujvv6xcru-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Aug 2019 20:04:09 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7TK49RY51642816
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 20:04:09 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 564A2112062;
-        Thu, 29 Aug 2019 20:04:09 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CE290112061;
-        Thu, 29 Aug 2019 20:04:07 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.111])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 29 Aug 2019 20:04:07 +0000 (GMT)
-Message-ID: <db0f02c5b1a995fde174f036540a3d11008cf116.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 1/1] netfilter: nf_tables: fib: Drop IPV6 packages if
- IPv6 is disabled on boot
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Date:   Thu, 29 Aug 2019 17:04:03 -0300
-In-Reply-To: <20190821141505.2394-1-leonardo@linux.ibm.com>
-References: <20190821141505.2394-1-leonardo@linux.ibm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-FHDAs17k+gbMZaWPCpYr"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 29 Aug 2019 16:05:05 -0400
+Received: by mail-oi1-f193.google.com with SMTP id n1so3579400oic.3;
+        Thu, 29 Aug 2019 13:05:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=olD2mIH4m+P4tlheGqCEsNMbY7eNHE8lmUC8IgMGIBs=;
+        b=X+Bkf/yxgIk2/caIYMIFbkS4Ise/Aw6hqwhYqRwjrizB7Z5ATVOh5Snx3kfsMNAWVA
+         Y/KZruo/GAYisLkYaiONlH8bCe1/jiOnlMtz+vSAfn+5vqna7JAWZghXPwLb76YuLAlw
+         +iVz/87NBNGLWq+NzmAwjHZNn0ZJ84RFKm8Z6qVoVaW8rg+mJ7lx+bMdlihwh6uFrHuL
+         cPX/+59zy5+hlkYaehXbvA1/D/vDUJgN4fsZJAbcLlEThTRZTOWcQj/p+OKKZ51+EHzv
+         raBq6gZvqx5jCNz40QaK0Q/XaMB+LvVxYAqOoX1Hr41b7Sloj0+kabG7ZUPpmZyQohTD
+         cZ0Q==
+X-Gm-Message-State: APjAAAWgogj6km7eYk3qmapkJVEsiwkC+P276FwSbf0GJ14q6jw1Vo5P
+        tpXbWFls2zcpsNzux4G/g6npwCE=
+X-Google-Smtp-Source: APXvYqw25K1BL3gwLmn1i6McjlyIKHA3SA6g6v8scCo80RRzPLJIQGfYl6oq/ARM6ji1yUyJh172ig==
+X-Received: by 2002:aca:b445:: with SMTP id d66mr7924251oif.7.1567109104134;
+        Thu, 29 Aug 2019 13:05:04 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v1sm1055259ota.60.2019.08.29.13.05.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 13:05:03 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 15:05:03 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 04/11] dt-bindings: phy-mtk-tphy: add a new reference
+ clock
+Message-ID: <20190829200503.GA2542@bogus>
+References: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
+ <f6ee7d33103b43b2f1e1331c23c36057ef20b20d.1566542697.git.chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=845 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908290200
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f6ee7d33103b43b2f1e1331c23c36057ef20b20d.1566542697.git.chunfeng.yun@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 23, 2019 at 03:00:11PM +0800, Chunfeng Yun wrote:
+> Usually the digital and anolog phys use the same reference clock,
+> but on some platforms, they are separated, so add another optional
+> clock to support it.
+> In order to keep the clock names consistent with PHY IP's, use
+> the da_ref for anolog phy and ref clock for digital phy.
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+> index dbc143ed5999..ed9a2641f204 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+> +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+> @@ -41,9 +41,12 @@ Optional properties (PHY_TYPE_USB2 port (child) node):
+>  - clocks	: a list of phandle + clock-specifier pairs, one for each
+>  		  entry in clock-names
+>  - clock-names	: may contain
+> -		  "ref": 48M reference clock for HighSpeed anolog phy; and 26M
+> -			reference clock for SuperSpeed anolog phy, sometimes is
+> +		  "ref": 48M reference clock for HighSpeed (digital) phy; and 26M
+> +			reference clock for SuperSpeed (digital) phy, sometimes is
+>  			24M, 25M or 27M, depended on platform.
+> +		  "da_ref": the reference clock of anolog phy, used if the clocks
+> +			of anolog and digital phys are separated, otherwise uses
 
---=-FHDAs17k+gbMZaWPCpYr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+s/amolog/analog/
 
-> Thats a good point -- Leonardo, is the
-> "net.bridge.bridge-nf-call-ip6tables" sysctl on?
+> +			"ref" clock only if need.
 
-Running
-# sudo sysctl -a
-I can see:
-net.bridge.bridge-nf-call-ip6tables =3D 1
-=20
-So this packets are sent to host iptables for processing?
+needed.
 
-
-(Sorry for the delay, I did not received the previous e-mails.
-Please include me in to/cc.)
-
---=-FHDAs17k+gbMZaWPCpYr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1oL7MACgkQlQYWtz9S
-ttSUbA/5AUisorNqlRZnWcdh7AysMoIkbIMEP9J2EMxnJap4lGlqu2SG/C1SSRFK
-zOkU8AeQWHoGIwktUdJGxaux1os6s9mY3NQNmwKeQvr6Hc2IjmUfwjxNiDJMHvyE
-oSH5BuAmP8o/DDDRDmH1MHDJVdmBabmnegjxip+II14jj+gOZ9XzyMeNmBIozaYv
-y9puT0TSpYkR0QiwJ4BKOi2/zPlT1wuvDMdK66ywakTwzqNPVgA89X4e8c3EwBcM
-TjBArAtxAD1P7sm8bN00s/Tm7i1E+DTO2McHwUJdpoFbH0K4UTUxjvkhgE5LhFXH
-2aHGIErLQrTiCX7xmqMPNO3/fVC67Y1TW+AOhKWLZaYtwS82WncSzeRMsnOr0TaH
-UqVsqqZS2H56G5kBRypF5iKvf5dMLDPmWiHru7YVupMEb5oKJaofvy0HPUQ5FLam
-6tMT+xC0DUUFyZkc1t+KCxyZr/zD8yxGck7qOQJqsJn0uM3sQZ54W31iYgpr/q0H
-TUoxRZJS9J/rpoJyryVmE7V2tWJmpyP7sMvcNbu6o8odvrRvzjCZXKXN7r6r5ghG
-iTNe70wJMeHrgamx95Xbj3LAXRD7HNAVrIxh0S3nWo5Cc76ByOk3IN0SBTMpxt5G
-D0nlzyVzNorW76LvMIEfxMECpG5KtTC7OInYlnZue0zLblJR9ZU=
-=Idus
------END PGP SIGNATURE-----
-
---=-FHDAs17k+gbMZaWPCpYr--
-
+>  
+>  - mediatek,eye-src	: u32, the value of slew rate calibrate
+>  - mediatek,eye-vrt	: u32, the selection of VRT reference voltage
+> -- 
+> 2.23.0
+> 
