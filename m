@@ -2,73 +2,95 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3E2C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D4EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32EF206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:34:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qDdLEFNf"
+	by mail.kernel.org (Postfix) with ESMTP id 18E44206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:35:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfH2Me4 (ORCPT
+        id S1727739AbfH2Mfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 08:34:56 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58050 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726950AbfH2Me4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 08:34:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jyG+3RbyVo0ge5+B2Y+V/QY+BuDVjerDhPABGwRD/k8=; b=qDdLEFNf19MzqQplwE2CVjWaV
-        YGbIsu6DDcp2lK4ohdBUKOh9yKReu33yIgqDpVz+AP6BzfUnpKO6zm8g9jzgGQ2GTsD/q6NmihmPZ
-        TwjWvFOU8hqXpOrYVvYdhAP3eHV9rhAjwhSkG7cXnw2TpKVJRja02sE7nDy1WzZ37AOf4pkWRG/4C
-        CFjjSC6/ZXgKKiWOzl5zkqcR03Xy22jH2gWVjtVx9BH60RnyWQzzSss/1eBh7A9Z4m4DOgko8FXZ7
-        DvRKd3oRsBAh6dKNU6U6uESHhzepPSD0KSzV0rbq6UMgFZV5D7x0fLe6dAMQiQOyP+inv9rNzhhiB
-        DZ2LiKoZQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3Jdd-0002SG-Od; Thu, 29 Aug 2019 12:34:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 755DB300825;
-        Thu, 29 Aug 2019 14:34:16 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B283B20C9570C; Thu, 29 Aug 2019 14:34:50 +0200 (CEST)
-Date:   Thu, 29 Aug 2019 14:34:50 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 6/8] sched: Replace strncmp with str_has_prefix
-Message-ID: <20190829123450.GP2332@hirez.programming.kicks-ass.net>
-References: <20190809071051.17387-1-hslester96@gmail.com>
+        Thu, 29 Aug 2019 08:35:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43992 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726950AbfH2Mfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 08:35:30 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 79F1A18B3D85;
+        Thu, 29 Aug 2019 12:35:30 +0000 (UTC)
+Received: from localhost (ovpn-117-104.ams2.redhat.com [10.36.117.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0D1B5600C1;
+        Thu, 29 Aug 2019 12:35:29 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 13:35:28 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Vivek Goyal <vgoyal@redhat.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual
+ machines
+Message-ID: <20190829123528.GA18693@stefanha-x1.localdomain>
+References: <20190821173742.24574-1-vgoyal@redhat.com>
+ <CAJfpegv_XS=kLxw_FzWNM2Xao5wsn7oGbk3ow78gU8tpXwo-sg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
 Content-Disposition: inline
-In-Reply-To: <20190809071051.17387-1-hslester96@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAJfpegv_XS=kLxw_FzWNM2Xao5wsn7oGbk3ow78gU8tpXwo-sg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Thu, 29 Aug 2019 12:35:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 03:10:51PM +0800, Chuhong Yuan wrote:
-> strncmp(str, const, len) is error-prone because len
-> is easy to have typo.
 
-I'm thinking that is exactly the easy case for compilers/semantic
-checkers to verify. Now granted, GCC doesn't seem to do that by itself,
-but still.
+--zhXaljGHf11kAtnf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'd buy your argument if the prefix is variable, because in that case
-you can do prefix matching cheaper than strlen+strncmp, but as is, not
-really.
+On Thu, Aug 29, 2019 at 11:28:27AM +0200, Miklos Szeredi wrote:
+> On Wed, Aug 21, 2019 at 7:38 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+
+Thanks!
+
+>  - removed option parsing completely.  Virtiofs config is fixed to "-o
+> rootmode=040000,user_id=0,group_id=0,allow_other,default_permissions".
+> Does this sound reasonable?
+
+That simplifies things for users and I've never seen a need to change
+these options in virtio-fs.  If we need the control for some reason in
+the future we can add options back in again.
+
+> I think we also need something in
+> "Documentation/filesystems/virtiofs.rst" which describes the design
+> (how  request gets to userspace and back) and how to set up the
+> server, etc...  Stefan, Vivek can you do something like that?
+
+Sure.  I'll send a patch.
+
+Stefan
+
+--zhXaljGHf11kAtnf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1nxpAACgkQnKSrs4Gr
+c8jjQwgAvWE4oapn65FxQy/VdB7RtefE3yzw3Eqivc7NYcdOZJxKNpfeU7w5HEgY
+QK6WGmXSW7udfIoPEmVO9MLd9G4+sjbewz5OhGKYm8b0rDfGXPTD9JZO75MkvrSO
+3nTLOX7Qoe2omYOyCcwQRXqFujBerFwsY22L0+QnubAWgHgHuV4+vgUKc1iJ6PlD
+7jDG5W6l0omMY2G7kym4QYr/jk67cRdzUonm3rYTKIy1q0xLzg/XeQta/rvXVfFB
+vCx5+Fks5LZ6bO9Sj+SkzyP3etHAQH8dzYXtcuAsZk7clqcuYqGn4NSAHt+AqNFx
+1e6kZW2gsPPyUfBAAIDYRkFJ28Dy9g==
+=PAGO
+-----END PGP SIGNATURE-----
+
+--zhXaljGHf11kAtnf--
