@@ -2,117 +2,98 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8EFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CE6C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED1A23429
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:14:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F+xj84R5"
+	by mail.kernel.org (Postfix) with ESMTP id 2262420674
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfH2LOT (ORCPT
+        id S1727223AbfH2LP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:14:19 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55326 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727130AbfH2LOP (ORCPT
+        Thu, 29 Aug 2019 07:15:28 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59992 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfH2LP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:14:15 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f72so3260742wmf.5;
-        Thu, 29 Aug 2019 04:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IaiScEIM2pI3Ga2qURu31RnQ0vP3+posJvio/TvHvqg=;
-        b=F+xj84R55A1bQiWth2fqIYGo6UX6UgizupUvoLz120sQwCOcC4uXrlMfUAgcXj24TI
-         +ictMX5b1GqoSUahPBQMokCooAzTr3wSMGpPceFi8ChyQILgqg/XiKu47sm6eO+k/2zO
-         jD6zqWPf1Oz8eXvpidcfVoJe505sZPr99n9GmW/NluuemBu+j5tNN81z4G7rU/BaVXiO
-         6Ls+OoqMSfZSlKaBq2chZJBP8WXng29zEIhaOt5TLB+kQp0xCQ/4AYq+9RHLu+4P7YOF
-         BAt/X3om9seoBn0GBvShIun4Hdkb0EeQRZlv4/sI/MBS6XxB48gGZIAvMvE5cn/If/y/
-         TyIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IaiScEIM2pI3Ga2qURu31RnQ0vP3+posJvio/TvHvqg=;
-        b=GfYKcvjFl6EyzbTksyUGy9QSawmd8KKS9GT+I8RRoSBIBTtnV3KkTLYcAOPAHvXqmJ
-         zBrI9BnZPq1ntdU/FA6IoX2tg6G2RfROxgQHmVIZFq7lMBhhYzghA5PnqArAdaGGHrfc
-         KX0cndza8mekLqMaGkZ01JAqqrzBuEDHamDzIhSJ2b01BnrvdqNTLEfFJorNh4y72+9J
-         UVd9UB67MkJdpgXiYD6F6NK0RdK4mRnFbkfhhJHiYBSrNsT/QOTvXQO1vz20mRdjuy9x
-         o9MEIm8UeKDvfDq8nMrimVAbaGsx/H7kW1ifOZPbL4E7M8WaRuBSDOOEC2hK7+3f00YG
-         s4DQ==
-X-Gm-Message-State: APjAAAW0rGZQuG9+WI7uLEi/XU6iCO5efQECkBmDLcl61a+FlCBsfWz8
-        ASaqgJBNNyH8eZaPA7ZDrXI=
-X-Google-Smtp-Source: APXvYqxxJAd9VKSbtqu650m3xr1fElGjWbcWB3LkSAuhJv9Q6X+YMJCxf4QK1m44yZLZh+CImBf3Ng==
-X-Received: by 2002:a1c:f703:: with SMTP id v3mr10575246wmh.107.1567077252984;
-        Thu, 29 Aug 2019 04:14:12 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id j9sm1823662wrx.66.2019.08.29.04.14.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 04:14:11 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] iommu: dma: Use of_iommu_get_resv_regions()
-Date:   Thu, 29 Aug 2019 13:14:07 +0200
-Message-Id: <20190829111407.17191-3-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190829111407.17191-1-thierry.reding@gmail.com>
-References: <20190829111407.17191-1-thierry.reding@gmail.com>
+        Thu, 29 Aug 2019 07:15:27 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 18C5527900A;
+        Thu, 29 Aug 2019 12:15:24 +0100 (BST)
+Date:   Thu, 29 Aug 2019 13:15:19 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-i3c@lists.infradead.org, bbrezillon@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, Joao.Pinto@synopsys.com
+Subject: Re: [PATCH 4/4] i3c: master: dw: reattach device on first available
+ location of address table
+Message-ID: <20190829131519.3f420c64@collabora.com>
+In-Reply-To: <e03fb41054a8431b27cc84c3d83ada9464172ef7.1567071213.git.vitor.soares@synopsys.com>
+References: <cover.1567071213.git.vitor.soares@synopsys.com>
+        <e03fb41054a8431b27cc84c3d83ada9464172ef7.1567071213.git.vitor.soares@synopsys.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+On Thu, 29 Aug 2019 12:19:35 +0200
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-For device tree nodes, use the standard of_iommu_get_resv_regions()
-implementation to obtain the reserved memory regions associated with a
-device.
+> For today the reattach function only update the device address on the
+> controller.
+> 
+> Update the location to the first available too, will optimize the
+> enumeration process avoiding additional checks to keep the available
+> positions on address table consecutive.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- drivers/iommu/dma-iommu.c | 3 +++
- 1 file changed, 3 insertions(+)
+Given the number of available slots I honestly don't think it makes a
+difference, but I also don't mind this change, so
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index de68b4a02aea..31d48e55ab55 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -19,6 +19,7 @@
- #include <linux/iova.h>
- #include <linux/irq.h>
- #include <linux/mm.h>
-+#include <linux/of_iommu.h>
- #include <linux/pci.h>
- #include <linux/scatterlist.h>
- #include <linux/vmalloc.h>
-@@ -164,6 +165,8 @@ void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
- 	if (!is_of_node(dev_iommu_fwspec_get(dev)->iommu_fwnode))
- 		iort_iommu_msi_get_resv_regions(dev, list);
- 
-+	if (dev->of_node)
-+		of_iommu_get_resv_regions(dev, list);
- }
- EXPORT_SYMBOL(iommu_dma_get_resv_regions);
- 
--- 
-2.22.0
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+
+> 
+> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> ---
+>  drivers/i3c/master/dw-i3c-master.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
+> index 1d83c97..62261ac 100644
+> --- a/drivers/i3c/master/dw-i3c-master.c
+> +++ b/drivers/i3c/master/dw-i3c-master.c
+> @@ -898,6 +898,22 @@ static int dw_i3c_master_reattach_i3c_dev(struct i3c_dev_desc *dev,
+>  	struct dw_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
+>  	struct i3c_master_controller *m = i3c_dev_get_master(dev);
+>  	struct dw_i3c_master *master = to_dw_i3c_master(m);
+> +	int pos;
+> +
+> +	pos = dw_i3c_master_get_free_pos(master);
+> +
+> +	if (data->index > pos && pos > 0) {
+> +		writel(0,
+> +		       master->regs +
+> +		       DEV_ADDR_TABLE_LOC(master->datstartaddr, data->index));
+> +
+> +		master->addrs[data->index] = 0;
+> +		master->free_pos |= BIT(data->index);
+> +
+> +		data->index = pos;
+> +		master->addrs[pos] = dev->info.dyn_addr;
+> +		master->free_pos &= ~BIT(pos);
+> +	}
+>  
+>  	writel(DEV_ADDR_TABLE_DYNAMIC_ADDR(dev->info.dyn_addr),
+>  	       master->regs +
 
