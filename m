@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBCCC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03B0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9734C21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9853B21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:52:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbfH2OwS (ORCPT
+        id S1728726AbfH2Owc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:52:18 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:62839 "EHLO
+        Thu, 29 Aug 2019 10:52:32 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:37019 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728320AbfH2Ovi (ORCPT
+        with ESMTP id S1728194AbfH2OvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:51:38 -0400
-X-UUID: 44c749bcc5714e54be56a868be97e9d8-20190829
-X-UUID: 44c749bcc5714e54be56a868be97e9d8-20190829
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        Thu, 29 Aug 2019 10:51:24 -0400
+X-UUID: 9ee07644bd19488295ffed4a6fa85c82-20190829
+X-UUID: 9ee07644bd19488295ffed4a6fa85c82-20190829
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
         (envelope-from <yongqiang.niu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1573109719; Thu, 29 Aug 2019 22:51:33 +0800
+        with ESMTP id 225393793; Thu, 29 Aug 2019 22:51:21 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 29 Aug 2019 22:51:21 +0800
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 29 Aug 2019 22:51:25 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 29 Aug 2019 22:51:21 +0800
+ Transport; Thu, 29 Aug 2019 22:51:24 +0800
 From:   <yongqiang.niu@mediatek.com>
 To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
@@ -44,15 +44,14 @@ CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH v5, 16/32] drm/mediatek: add component OVL_2L1
-Date:   Thu, 29 Aug 2019 22:50:38 +0800
-Message-ID: <1567090254-15566-17-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v5, 20/32] drm/mediatek: add function to background color input select for ovl/ovl_2l direct link
+Date:   Thu, 29 Aug 2019 22:50:42 +0800
+Message-ID: <1567090254-15566-21-git-send-email-yongqiang.niu@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
 References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 95CB28BC8A4BF116A22F60F00B3B23575927A9989BC1E3F7916C9507B639A9882000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,39 +60,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add component OVL_2L1
+This patch add function to background color input select for ovl/ovl_2l direct link
+for ovl/ovl_2l direct link usecase, we need set background color
+input select for these hardware.
+this is preparation patch for ovl/ovl_2l usecase
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 1 +
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-index 4200f89..af8e872 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-@@ -260,6 +260,7 @@ struct mtk_ddp_comp_match {
- 	[DDP_COMPONENT_OVL0]	= { MTK_DISP_OVL,	0, NULL },
- 	[DDP_COMPONENT_OVL1]	= { MTK_DISP_OVL,	1, NULL },
- 	[DDP_COMPONENT_OVL_2L0]	= { MTK_DISP_OVL_2L,	0, NULL },
-+	[DDP_COMPONENT_OVL_2L1]	= { MTK_DISP_OVL_2L,	1, NULL },
- 	[DDP_COMPONENT_PWM0]	= { MTK_DISP_PWM,	0, NULL },
- 	[DDP_COMPONENT_PWM1]	= { MTK_DISP_PWM,	1, NULL },
- 	[DDP_COMPONENT_PWM2]	= { MTK_DISP_PWM,	2, NULL },
 diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-index 9caec2d..962d14a 100644
+index 85e096a..268d416 100644
 --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
 +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-@@ -52,6 +52,7 @@ enum mtk_ddp_comp_id {
- 	DDP_COMPONENT_OD1,
- 	DDP_COMPONENT_OVL0,
- 	DDP_COMPONENT_OVL_2L0,
-+	DDP_COMPONENT_OVL_2L1,
- 	DDP_COMPONENT_OVL1,
- 	DDP_COMPONENT_PWM0,
- 	DDP_COMPONENT_PWM1,
+@@ -84,6 +84,8 @@ struct mtk_ddp_comp_funcs {
+ 			     struct mtk_plane_state *state);
+ 	void (*gamma_set)(struct mtk_ddp_comp *comp,
+ 			  struct drm_crtc_state *state);
++	void (*bgclr_in_on)(struct mtk_ddp_comp *comp);
++	void (*bgclr_in_off)(struct mtk_ddp_comp *comp);
+ };
+ 
+ struct mtk_ddp_comp {
+@@ -164,6 +166,18 @@ static inline void mtk_ddp_gamma_set(struct mtk_ddp_comp *comp,
+ 		comp->funcs->gamma_set(comp, state);
+ }
+ 
++static inline void mtk_ddp_comp_bgclr_in_on(struct mtk_ddp_comp *comp)
++{
++	if (comp->funcs && comp->funcs->bgclr_in_on)
++		comp->funcs->bgclr_in_on(comp);
++}
++
++static inline void mtk_ddp_comp_bgclr_in_off(struct mtk_ddp_comp *comp)
++{
++	if (comp->funcs && comp->funcs->bgclr_in_off)
++		comp->funcs->bgclr_in_off(comp);
++}
++
+ int mtk_ddp_comp_get_id(struct device_node *node,
+ 			enum mtk_ddp_comp_type comp_type);
+ int mtk_ddp_comp_init(struct device *dev, struct device_node *comp_node,
 -- 
 1.8.1.1.dirty
 
