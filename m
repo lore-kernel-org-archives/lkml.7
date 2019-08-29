@@ -2,337 +2,111 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C6BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1721C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 337F6205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97F7A205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567094759;
+	bh=FG8d4a3h71LpL87UYvSzdLwAtQxizOpK0AdUZANpR3Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uvpm1iHdWtEdVuy+5PF52Ff8McDBYBTXrprHinmreBWqf8LqxsT+mhvHICiTUCfLn
+	 B5rpuW5Gz1I/aD+vO2AS9TT70eEPyM+aC+cVd/AEOthCQMu+/wZgtN/leaCPSi3mUt
+	 l9a6kw7HWvtZ1wg1T4YUtxuCNwJj/ytwxyY/XAns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbfH2QFf (ORCPT
+        id S1727860AbfH2QF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:05:35 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:59142 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726973AbfH2QFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:05:35 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 4C09B35D276DC1393A0C;
-        Fri, 30 Aug 2019 00:05:29 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 30 Aug 2019 00:05:28 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Fri, 30 Aug 2019 00:05:28 +0800
-Date:   Fri, 30 Aug 2019 00:04:41 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-CC:     <devel@driverdev.osuosl.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Valdis =?gbk?Q?Kl=A8=A5tnieks?= <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        <linux-fsdevel@vger.kernel.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20190829160441.GA141079@architecture4>
-References: <20190829062340.GB3047@infradead.org>
- <20190829063955.GA30193@kroah.com>
- <20190829094136.GA28643@infradead.org>
- <20190829095019.GA13557@kroah.com>
- <20190829103749.GA13661@infradead.org>
- <20190829111810.GA23393@kroah.com>
- <20190829151144.GJ23584@kadam>
- <20190829152757.GA125003@architecture4>
- <20190829154346.GK23584@kadam>
- <20190829155127.GA136563@architecture4>
+        Thu, 29 Aug 2019 12:05:58 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36909 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfH2QF6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:05:58 -0400
+Received: by mail-lj1-f195.google.com with SMTP id t14so3601242lji.4
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:05:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9Osc1mf7K5cBOA23NneEW30SjiiTDj6GNMsWDl0iOhg=;
+        b=RlmSVgpnb7UJ4wkvYHqk1Ep2+AI8vdz1gI6MoFUtgeFFWNRmVSSLZ8kRIVrm5WqpB0
+         4tWwJ8w/tVUNjabdqyuGVnc2HGJ8wmHIfk0V8RMUQYWavpgi4E5/gY3aYZnfhZ4PY7dB
+         3RDs8UGUbPykFjCkj5U9hXqWMTbHuKl6EyS84=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Osc1mf7K5cBOA23NneEW30SjiiTDj6GNMsWDl0iOhg=;
+        b=P9DFbAdHB/xLAQlM6uJZexnoyNy4mgVigxE+O1KOnMDCsUU0Yad7vjZzWBpsBDLzhV
+         nGMx02WpF7hnAsuRa0YaXrI/uISB3ddv5aoYNI8gV/4j2a4RPGnobjsFhrrawoOklSSL
+         VT9lZexIbXJ0MIJYMnpCTKC1XkM0mPdMPoyXp/Fd/AiARecI14ZRwEHGJ1Bb7eEBavMW
+         p2Jgc1IXUFzjPUfCF3Bv+ijbxNnHE+Dop8bWvP4K/Tfaj7T3SzS4XYbnLvIznYdoTDWx
+         NcShsql7gcB8FSGV2kt3GqY3YbivF2fyIGsDejTmauOAnr7l3d8NupZccYLkDW9TQE+c
+         7SYg==
+X-Gm-Message-State: APjAAAUxzOKT4mbs9cxj1OAZY8YP71a3zC2a7K3l1Heg/QmpGUl9NPHV
+        pQtB9ad+MABdMQ87c3ocOIqmFUTGg64=
+X-Google-Smtp-Source: APXvYqwp/57F4pZfRpc0ncu5Z9MzvUfL0U1NMxh/X9vRBKzO46WDV4KOfz8lkwosVyRPCgtxxs5rUQ==
+X-Received: by 2002:a2e:894d:: with SMTP id b13mr6002518ljk.38.1567094755863;
+        Thu, 29 Aug 2019 09:05:55 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id o8sm407342ljc.49.2019.08.29.09.05.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Aug 2019 09:05:54 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id f9so3523780ljc.13
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:05:53 -0700 (PDT)
+X-Received: by 2002:a2e:9a84:: with SMTP id p4mr5907101lji.52.1567094752690;
+ Thu, 29 Aug 2019 09:05:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190829155127.GA136563@architecture4>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme703-chm.china.huawei.com (10.1.199.99) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
+In-Reply-To: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 29 Aug 2019 09:05:36 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wihp7KZ_WjA16odsU7eGb-rUfg7J0rhqwhRoD0zjyGHpw@mail.gmail.com>
+Message-ID: <CAHk-=wihp7KZ_WjA16odsU7eGb-rUfg7J0rhqwhRoD0zjyGHpw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/5] make use of gcc 9's "asm inline()"
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+On Thu, Aug 29, 2019 at 1:32 AM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+>
+> But since we #define the identifier inline to attach some attributes,
+> we have to use the alternate spelling __inline__ of that
+> keyword. Unfortunately, we also currently #define that one (to
+> inline), so we first have to get rid of all (mis)uses of
+> __inline__. Hence the huge diffstat.
 
-On Thu, Aug 29, 2019 at 11:51:27PM +0800, Gao Xiang wrote:
-> Hi Dan,
-> 
-> On Thu, Aug 29, 2019 at 06:43:46PM +0300, Dan Carpenter wrote:
-> > > p.s. There are 2947 (un)likely places in fs/ directory.
-> > 
-> > I was complaining about you adding new pointless ones, not existing
-> > ones.  The likely/unlikely annotations are supposed to be functional and
-> > not decorative.  I explained this very clearly.
-> 
-> I don't think that is mostly pointless. I think it has functional use
-> because all error handling paths are rarely happened, or can you remove
-> the unlikely in IS_ERR as well?
-> 
-> > 
-> > Probably most of the annotations in fs/ are wrong but they are also
-> > harmless except for the slight messiness.  However there are definitely
-> > some which are important so removing them all isn't a good idea.
-> > 
-> > > If you like, I will delete them all.
-> > 
-> > But for erofs, I don't think that any of the likely/unlikely calls have
-> > been thought about so I'm fine with removing all of them in one go.
-> 
-> Maybe some misuse but rare, I will show you case by case. Wait a minute.
+Ugh. Not pretty, but I guess we're stuck with it.
 
-Anyway, I'm fine to delete them all if you like, but I think majority of these
-are meaningful.
+However, it worries me a bit that you excluide the UAPI headers where
+we still use "__inline__", and now the semantics of that will change
+for the kernel (for some odd gcc versions).
 
-data.c-		/* page is already locked */
-data.c-		DBG_BUGON(PageUptodate(page));
-data.c-
-data.c:		if (unlikely(err))
-data.c-			SetPageError(page);
-data.c-		else
-data.c-			SetPageUptodate(page);
---
-IO error
+I suspect we should just bite the bullet and you should do it to the
+uapi headers too. We already use "inline" in a lot of them, so it's
+not the case that we're using __inline__ because of some namespace
+issue, as far as I can tell.
 
-data.c-
-data.c-repeat:
-data.c-	page = find_or_create_page(mapping, blkaddr, gfp);
-data.c:	if (unlikely(!page)) {
-data.c-		DBG_BUGON(nofail);
-data.c-		return ERR_PTR(-ENOMEM);
-data.c-	}
---
-NO MEM
+One option might be to just use "__inline" for the asm_inline thing.
+We have way fewer of those. That would make the noise much less for
+this patch series.
 
-
-data.c-		}
-data.c-
-data.c-		err = bio_add_page(bio, page, PAGE_SIZE, 0);
-data.c:		if (unlikely(err != PAGE_SIZE)) {
-data.c-			err = -EFAULT;
-data.c-			goto err_out;
-
-Internal error (since it is a single bio with one page).
-
-data.c-		}
----
-
-data.c-		lock_page(page);
-data.c-
-data.c-		/* this page has been truncated by others */
-data.c:		if (unlikely(page->mapping != mapping)) {
-data.c-unlock_repeat:
-data.c-			unlock_page(page);
-data.c-			put_page(page);
-data.c-			goto repeat;
-data.c-		}
-
-truncated
-
-data.c-
-data.c:		/* more likely a read error */
-data.c:		if (unlikely(!PageUptodate(page))) {
-data.c-			if (io_retries) {
-data.c-				--io_retries;
-data.c-				goto unlock_repeat;
-
-IO err
-
---
-data.c-	nblocks = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
-data.c-	lastblk = nblocks - is_inode_flat_inline(inode);
-data.c-
-data.c:	if (unlikely(offset >= inode->i_size)) {
-data.c-		/* leave out-of-bound access unmapped */
-data.c-		map->m_flags = 0;
-data.c-		map->m_plen = 0;
---
-
-FS corrupted
-
-data.c-int erofs_map_blocks(struct inode *inode,
-data.c-		     struct erofs_map_blocks *map, int flags)
-data.c-{
-data.c:	if (unlikely(is_inode_layout_compression(inode))) {
-
-for compressed files, should call z_erofs_map_blocks_iter since it
-behaves in iterative way. but I think that can be deleted.
-
-data.c-		int err = z_erofs_map_blocks_iter(inode, map, flags);
-data.c-
-data.c-		if (map->mpage) {
---
-data.c-		unsigned int blkoff;
-data.c-
-data.c-		err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
-data.c:		if (unlikely(err))
-data.c-			goto err_out;
-
-Error
-
-data.c-
-data.c-		/* zero out the holed page */
-data.c:		if (unlikely(!(map.m_flags & EROFS_MAP_MAPPED))) {
-
-no hole in erofs.
-
-data.c-			zero_user_segment(page, 0, PAGE_SIZE);
-data.c-			SetPageUptodate(page);
-data.c-
---
-data.c-submit_bio_out:
-data.c-		__submit_bio(bio, REQ_OP_READ, 0);
-data.c-
-data.c:	return unlikely(err) ? ERR_PTR(err) : NULL;
-
-err
-
-data.c-}
-data.c-
-data.c-/*
---
-data.c-	DBG_BUGON(!list_empty(pages));
-data.c-
-data.c-	/* the rare case (end in gaps) */
-data.c:	if (unlikely(bio))
-data.c-		__submit_bio(bio, REQ_OP_READ, 0);
-data.c-	return 0;
-data.c-}
-
-
-decompressor.c-			get_page(victim);
-decompressor.c-		} else {
-decompressor.c-			victim = erofs_allocpage(pagepool, GFP_KERNEL, false);
-decompressor.c:			if (unlikely(!victim))
-decompressor.c-				return -ENOMEM;
-
-nomem
-
-decompressor.c-			victim->mapping = Z_EROFS_MAPPING_STAGING;
-decompressor.c-		}
-
-
-dir.c-			de_namelen = le16_to_cpu(de[1].nameoff) - nameoff;
-dir.c-
-dir.c-		/* a corrupted entry is found */
-dir.c:		if (unlikely(nameoff + de_namelen > maxsize ||
-dir.c-			     de_namelen > EROFS_NAME_LEN)) {
-
-corrupted
-
-dir.c-			errln("bogus dirent @ nid %llu", EROFS_V(dir)->nid);
-dir.c-			DBG_BUGON(1);
---
-dir.c-
-dir.c-		nameoff = le16_to_cpu(de->nameoff);
-dir.c-
-dir.c:		if (unlikely(nameoff < sizeof(struct erofs_dirent) ||
-dir.c-			     nameoff >= PAGE_SIZE)) {
-
-corrupted
-
-dir.c-			errln("%s, invalid de[0].nameoff %u @ nid %llu",
-dir.c-			      __func__, nameoff, EROFS_V(dir)->nid);
---
-dir.c-				dirsize - ctx->pos + ofs, PAGE_SIZE);
-dir.c-
-dir.c-		/* search dirents at the arbitrary position */
-dir.c:		if (unlikely(initial)) {
-
-as comments said
-
-dir.c-			initial = false;
-dir.c-
-dir.c-			ofs = roundup(ofs, sizeof(struct erofs_dirent));
-dir.c:			if (unlikely(ofs >= nameoff))
-dir.c-				goto skip_this;
-dir.c-		}
-dir.c-
---
-dir.c-
-dir.c-		ctx->pos = blknr_to_addr(i) + ofs;
-dir.c-
-dir.c:		if (unlikely(err))
-
-err
-
-dir.c-			break;
-dir.c-		++i;
-dir.c-		ofs = 0;
-
-inode.c-
-inode.c-	vi->datamode = __inode_data_mapping(advise);
-inode.c-
-inode.c:	if (unlikely(vi->datamode >= EROFS_INODE_LAYOUT_MAX)) {
-inode.c-		errln("unsupported data mapping %u of nid %llu",
-inode.c-		      vi->datamode, vi->nid);
-inode.c-		DBG_BUGON(1);
-
-err
-
---
-inode.c-	if (S_ISLNK(inode->i_mode) && inode->i_size < PAGE_SIZE) {
-inode.c-		char *lnk = erofs_kmalloc(sbi, inode->i_size + 1, GFP_KERNEL);
-inode.c-
-inode.c:		if (unlikely(!lnk))
-inode.c-			return -ENOMEM;
-inode.c-
-inode.c-		m_pofs += vi->inode_isize + vi->xattr_isize;
-inode.c-
-inode.c-		/* inline symlink data shouldn't across page boundary as well */
-inode.c:		if (unlikely(m_pofs + inode->i_size > PAGE_SIZE)) {
-inode.c-			kfree(lnk);
-inode.c-			errln("inline data cross block boundary @ nid %llu",
-inode.c-			      vi->nid);
-
-err
-
---
-inode.c-{
-inode.c-	struct inode *inode = erofs_iget_locked(sb, nid);
-inode.c-
-inode.c:	if (unlikely(!inode))
-inode.c-		return ERR_PTR(-ENOMEM);
-
-err
-
-inode.c-
-inode.c-	if (inode->i_state & I_NEW) {
---
-inode.c-		vi->nid = nid;
-inode.c-
-inode.c-		err = fill_inode(inode, isdir);
-inode.c:		if (likely(!err))
-inode.c-			unlock_new_inode(inode);
-inode.c-		else {
-
-err
-
-inode.c-			iget_failed(inode);
-
-I will stop here.
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> Gao Xiang
-> 
-> > 
-> > regards,
-> > dan carpenter
-> > 
+               Linus
