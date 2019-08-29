@@ -2,129 +2,182 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 322EEC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299A5C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1BEC2339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C40F3233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="LN8GkmPQ"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="D/9hcDp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfH2HId (ORCPT
+        id S1727447AbfH2HKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 03:08:33 -0400
-Received: from mail-eopbgr140129.outbound.protection.outlook.com ([40.107.14.129]:28142
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726889AbfH2HIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 03:08:32 -0400
+        Thu, 29 Aug 2019 03:10:32 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:29769 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfH2HKc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 03:10:32 -0400
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 5/0qo1HCxdGeCKfyYhB6fGBs+LflneYCFQb+fOnWfi1fAlsaa3cLDe4R0U2ON99j1lR/4yuHga
+ qIkgJ3DmI3mXVRZzmoi/cvX4vu8fQlEMyVMWs3nd0P1PnjaV7fB95ryZjlV1rboEM4w2dEx0eJ
+ y4fAqE53zoTltaja9TydEtZop4VsdoB64pGQaexqsL2BhB7xCljbrElwcY604ObnG3ecWXarhx
+ mFbgCGZsg6G66y4LItAIhvLFdux7nfK18GjmKG4+sppDV5NGw7mSlnBPVbcw8Tf/AxySNrKpI/
+ Vss=
+X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
+   d="scan'208";a="44117207"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Aug 2019 00:10:30 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 29 Aug 2019 00:10:28 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Thu, 29 Aug 2019 00:10:27 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KGfwNhFcIk3qQa9AkVViXimtlsZ+hAetSmt7xRFbGpcB5Jct7QGMRUg/yugNnjyJU/Ow6JC+X7BV6c84B3NWDS1BzfmMeBFwHKISDt99afOMeTde2igF4mHEoHh3k41H/vU3CAfWeAMyA30j/uylEZzGze6rFewzSxAxlDIiVNYxJJi2IEMccPOf7TuqVXLcMJznKnHT/2pHaFuFOUpy103716g0IW723Ze/GaqV+h10m9gzCN1LrEKjc94WuA2oV0opFexwbak2Sj8avCwlxNj8SxHjqszGVJX02RRWaOcv4CpKC4xX9CilzGttcXP7ROspIW1O0RBoDROSKySOBw==
+ b=IuFoeV66JYBliEMXIZtmKk7qrugdpdhOGC20Uf18fabosvzFdbktii/et29U1qIV+/UoM834CO1hor7aK6b/o5D9C9i+UJLJEl6cLeaED1qr9VM1dAJ4ZQxzAuUsoCKhvE5nqB2Zd0i09W72lHAZq7hT4eOiY9xpzr8BZgZgLhd+iSkoE4QbIWO8XRYTXFvX9SHjtANRCOXX4p5Phaa6hGKlixwatQZdJM84G/hDcr27JgOzKNB6YtuM4KJhnDAf1bA/Cc2TYgdh0rlkpPIgwK6/Ks+SsiB07VjfuH1W/kTGgUAOZZaM5sQACzrCmvRZRa9GG7xDAODXQoYHlV/LLg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T3bZCDKJeJ+GZufTwyzF6KKK9+Ey+RD/JkmbaGPhfik=;
- b=bWl3yczjXJ2M36ulGoNWqc9N43TT7ofGbeZcOWfrC1Jf9u8tGHUlWFzM9VTbjbUFlrjqa7pm6j7ULZ50gxlW1ITeXQoY6tY0nB844viOS+jT+9d5VX5hBtUYSKauFjYOIoEPkbAuSzuZ7P9aj+ouqr4yqz2SzCpC8sX3oxvtwzRYzLKb7n2Aku4Zcjyo5ochVOqwPVhXxJfnmqRo+nluYbgrB5hJ05GuQXILDb10AWa4iTttyXuw6eYp5F/hY3G0wz+ZnILGyyfjrXIZaYpmeYoD3lD7vo4waZV5Vf/D6KjAIX4UyMIyAOGswAyajBSr2O/nigmtXV8GPqV2jE45HA==
+ bh=PPob1TkyCjPs42BUy/9LHTDq35giq10F3hN438CEiSI=;
+ b=dlOQpP8o47LTi9l6ZaC141mVOU+DbXENPZbxtPmes51cZsk7QawZBIiWh+78/kwQJdUf+f04es4SOuh53I1B/asjdWZDRo3Q8gBAL8E+q/BHAuL5Eq5Y+wcTJVJxx5lmA5czlVGSMOgOjYOSD38fhcCy4heP9unMgf8YYWYp3E7zBW46ipnG6b6OE2S+vwkPHtBxBT5l1ZmOuey3MyoKXWIg/rZdgKpAsxENDzuAUbWFKW6Gub+G3feZ48fDrgXZMXSbSBfpXjyVr7lOa1/7aqr46zvSXjX67GKJsgR4h87rJULXyl5szQmsA43+y6GUFvhKVFT/Z0/Rc14IPrqQIA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T3bZCDKJeJ+GZufTwyzF6KKK9+Ey+RD/JkmbaGPhfik=;
- b=LN8GkmPQp0yWJ2TZNhLME0caqyJPtv/niEREoQRjoWQ8vUP84kALI0ZKm4wrQY0sXNO5mG1df1MGtaDtjXMz8xsWr2AXHZ9NmH1u+uPtGq1j3cXQOf9tJwUmq/WWDg/yotRRDo8Z1OzflVbfR9e0n4OG6tR4iOWYYh1jLlNEJl4=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3356.eurprd02.prod.outlook.com (52.134.68.155) with Microsoft SMTP
+ bh=PPob1TkyCjPs42BUy/9LHTDq35giq10F3hN438CEiSI=;
+ b=D/9hcDp8LjhkZTsgGgvcW6/myi8zYRQbZ1ykeSUPrjuNOVXM3KPOkbPsUAslRCNp39HvJrY5gc51zArrleNF1hEnPKU6I4jPzZ4RnSV8FvheXRduv6BIHrXezWgzepRnineaEcgSUpm25o/171Ct/x0nBjA+DGNn11SGed34JAM=
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
+ MN2PR11MB3726.namprd11.prod.outlook.com (20.178.251.209) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Thu, 29 Aug 2019 07:08:27 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::a0df:d7d9:f95e:f3ea]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::a0df:d7d9:f95e:f3ea%3]) with mapi id 15.20.2199.021; Thu, 29 Aug 2019
- 07:08:27 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v3 3/3] fbdev: fbmem: avoid exporting fb_center_logo
-Thread-Topic: [PATCH v3 3/3] fbdev: fbmem: avoid exporting fb_center_logo
-Thread-Index: AQHVXMfjb9HuvMXdNUO0R8iyHBP+3qcO3XKAgALaFgA=
-Date:   Thu, 29 Aug 2019 07:08:26 +0000
-Message-ID: <6cb5ec1b-ae60-5ca4-f0d9-1414f52fed73@axentia.se>
-References: <20190827110854.12574-1-peda@axentia.se>
- <20190827110854.12574-4-peda@axentia.se>
- <CAMuHMdVkqX7x_D5nf01s-kE=o+y5OLM-5fd3q=2RDKGTcpCfHg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVkqX7x_D5nf01s-kE=o+y5OLM-5fd3q=2RDKGTcpCfHg@mail.gmail.com>
-Accept-Language: en-US, sv-SE
+ 15.20.2199.21; Thu, 29 Aug 2019 07:10:28 +0000
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::70c3:e929:4da2:60a5]) by MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::70c3:e929:4da2:60a5%7]) with mapi id 15.20.2199.021; Thu, 29 Aug 2019
+ 07:10:28 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <richard@nod.at>, <miquel.raynal@bootlin.com>, <vigneshr@ti.com>,
+        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <zhuohao@chromium.org>
+CC:     <Tudor.Ambarus@microchip.com>
+Subject: [PATCH 0/2] mtd: mtdcore: add debugfs nodes for querying the flash
+ name and id
+Thread-Topic: [PATCH 0/2] mtd: mtdcore: add debugfs nodes for querying the
+ flash name and id
+Thread-Index: AQHVXjjWn7v6TIwgEkeFwU0X8/uyIQ==
+Date:   Thu, 29 Aug 2019 07:10:28 +0000
+Message-ID: <20190829071019.2495-1-tudor.ambarus@microchip.com>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR05CA0218.eurprd05.prod.outlook.com
- (2603:10a6:3:fa::18) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
+x-clientproxiedby: VI1PR06CA0165.eurprd06.prod.outlook.com
+ (2603:10a6:803:c8::22) To MN2PR11MB4448.namprd11.prod.outlook.com
+ (2603:10b6:208:193::29)
 x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.9.5
+x-originating-ip: [94.177.32.156]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 42dd0384-1e27-4376-e533-08d72c4fb051
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3356;
-x-ms-traffictypediagnostic: DB3PR0202MB3356:
-x-microsoft-antispam-prvs: <DB3PR0202MB3356E418B8E4FBB6D5569C2CBCA20@DB3PR0202MB3356.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-office365-filtering-correlation-id: 8bfd6003-3f7d-4652-6b6e-08d72c4ff885
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR11MB3726;
+x-ms-traffictypediagnostic: MN2PR11MB3726:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB3726C77AAAA84173BB33BD88F0A20@MN2PR11MB3726.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
 x-forefront-prvs: 0144B30E41
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(136003)(376002)(39830400003)(189003)(199004)(6916009)(305945005)(229853002)(25786009)(5660300002)(6512007)(53936002)(508600001)(6246003)(2906002)(8676002)(81156014)(14454004)(81166006)(8936002)(256004)(53546011)(6506007)(86362001)(71190400001)(7736002)(71200400001)(54906003)(58126008)(6436002)(386003)(316002)(4326008)(6486002)(66946007)(31686004)(486006)(476003)(76176011)(2616005)(52116002)(66476007)(64756008)(26005)(186003)(66446008)(3846002)(31696002)(446003)(11346002)(36756003)(102836004)(66556008)(65806001)(65956001)(6116002)(66066001)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3356;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(366004)(396003)(346002)(39860400002)(199004)(189003)(71190400001)(50226002)(66446008)(66556008)(64756008)(66946007)(81156014)(71200400001)(1076003)(3846002)(66476007)(2906002)(14444005)(256004)(305945005)(36756003)(66066001)(5660300002)(7736002)(478600001)(26005)(6512007)(6436002)(81166006)(2616005)(2201001)(486006)(6486002)(4326008)(86362001)(476003)(52116002)(25786009)(99286004)(8936002)(102836004)(6506007)(386003)(6116002)(110136005)(53936002)(186003)(8676002)(316002)(2501003)(14454004)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3726;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WtRfi917UieKwBot5FgZVczZsuHriU4cMK7joE+4+OKUBX+qTQ6CfzobNpo63bCMRSNAvldGL44J04kNFtVjsGxQLC0MGxcjYBwMlp6YTNGyOjDt/n5Eat8ht4QNsv06NmaIMRaw2cVi39B0irhtyA9kuKHcijL1uTX76YbUCOqiPcjFvSvfJw4LpeeDc0oN9Hj974W3sDer+Bmh1IKtLpNrs22K+m2C2tMcdtSkIq2ZJoPtfMP1MHULrIWFN5WCANN3lbzNEAC22ExN+Dz3une1ObYgfqmMzsxxqUpe8QTN5WeEjBN2sC2Xc6IM4/bRZ2kvJUd7yONoOxBeWw4QM8/SKW4Cbs+Z9+LczIKnO9Q1o8sJYGuXOvbMPTZTA9LHsTWid9S/naNBzZWg+CA2UP4HrGwXabeDW+5wtb9F6No=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D9E405F063191F4593B2660CF485CDC6@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: nvmRODBu7Y1+09qtyUyIGd3bGukpSpjkbaQN9i4dFMD6aJUCtZjJTz2gDiA9SHdXLiZVzFxHCJNEfsGTWLvIFXhDSUDJ/W1w2QUASW2KzHhNjbFRUZK1uEElNDKGKqQjgyq5FsbxKbM0SyIjMRmxPZByuxXCQHWCV0Dne/c9pJRgF8IvTaxx+ZMxrk9U+YMWbbU+Sg7tRkRfu8Xxb8cV6DrFHaIeTTwOTTlyw49gzAdoSDLBqhJrhNW4nYGVUf6O5/kT2ZOHCWhmEmrY4cf/f34l3qnWQ1zkqb8MqJKOBiCgb/M6GKRLWK0lqs5RBrIyzATe+SA2Berfbzf2MAlZohqXICmfNiDhqxw7anOzwdc1cfYXzpl84gFybrBf/XhzPMg0+P1MWON70RLzgEvAmjtNFl2n4HMqht1bMvCtY0Q=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 42dd0384-1e27-4376-e533-08d72c4fb051
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 07:08:26.9959
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8bfd6003-3f7d-4652-6b6e-08d72c4ff885
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 07:10:28.3504
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MLoA3G0rfiSllDc7YT83kGR605Yd5+UBK/Tq08HeHH64tj7Wxb53YAJgg0SalEBL
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3356
+X-MS-Exchange-CrossTenant-userprincipalname: tcJvjuMP+eP/hS9LmPfEgRhELj3MODWVEWaHE8kc0rjDwQRZD7c24x05Nlsi921zoQNmqgNw7/s4ECB1DaD96Bf6x+uNPTBx+vk6S/nUEeA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3726
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wOC0yNyAxMzozNSwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KPiBIaSBQZXRl
-ciwNCj4gDQo+IE9uIFR1ZSwgQXVnIDI3LCAyMDE5IGF0IDE6MDkgUE0gUGV0ZXIgUm9zaW4gPHBl
-ZGFAYXhlbnRpYS5zZT4gd3JvdGU6DQo+PiBUaGUgdmFyaWFibGUgaXMgb25seSBldmVyIHVzZWQg
-ZnJvbSBmYmNvbi5jIHdoaWNoIGlzIGxpbmtlZCBpbnRvIHRoZQ0KPj4gc2FtZSBtb2R1bGUuIFRo
-ZXJlZm9yZSwgdGhlIGV4cG9ydCBpcyBub3QgbmVlZGVkLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6
-IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+DQo+IA0KPiBSZXZpZXdlZC1ieTogR2VlcnQg
-VXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4NCj4gDQo+IEJ1dCBub3RlIHRoYXQg
-dGhlIHNhbWUgaXMgdHJ1ZSBmb3IgZmJfY2xhc3MsIHNvIHBlcmhhcHMgaXQgY2FuIGJlIGFkZGVk
-DQo+IChvciBiZXR0ZXIsIHJlbW92ZWQgOy0pPw0KDQpSaWdodC4gU29tZW9uZSBwbGVhc2UgbGV0
-IG1lIGtub3cgaWYgMy8zIG5lZWRzIHRvIGJlIGV4dGVuZGVkLiBJJ20gYWxzbw0KaGFwcHkgdG8g
-anVzdCBkcm9wIGl0Li4uDQoNCj4gT25jZSBkcml2ZXJzL3N0YWdpbmcvb2xwY19kY29uL29scGNf
-ZGNvbi5jIHN0b3BzIGFidXNpbmcgcmVnaXN0ZXJlZF9mYltdDQo+IGFuZCBudW1fcmVnaXN0ZXJl
-ZF9mYiwgdGhvc2UgY2FuIGdvLCB0b28uDQo+IA0KPiBEb2VzIGFueW9uZSByZW1lbWJlIHdoeSBh
-dTEyMDBmYiBjYWxscyBmYl9wcmVwYXJlX2xvZ28oKSBhbmQgZmJfc2hvd19sb2dvKCkNCj4gaXRz
-ZWxmPw0KDQpNYXliZSB0aGVyZSBzaG91bGQgYmUgYSBzbWFsbCBkcml2ZXJzL3ZpZGVvL2ZiZGV2
-L2NvcmUvZmJtZW0uaCBmaWxlIChvcg0Kc29tZXRoaW5nKSB3aXRoIHRoZXNlICJpbnRlcm5hbCIg
-ZGVjbGFyYXRpb25zLCB0byBoaWRlIHNvbWUgY2x1dHRlciBjdXJyZW50bHkNCmluIGluY2x1ZGUv
-bGludXgvZmIuaD8NCg0KRmVlbHMgbGlrZSB0aGF0IGNvdWxkIGJlIGRvbmUgbGF0ZXIsIGFmdGVy
-IHRoZXNlIG90aGVyIGNsZWFudXBzIHlvdSBtZW50aW9uLA0Kc28gdGhhdCB0aGUgbmV3IGZpbGUg
-aGFzIGEgZmV3IG1vcmUgdGhpbmdzIHRvIGRlY2xhcmUuDQoNCkNoZWVycywNClBldGVyDQo=
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
+
+I just rebased Zhuohao's patches and fixed some checkpatch warnings and
+checks. I'll let this a little bit here for some short review, and I intend
+to apply the patches later today.
+
+For patch 1/, I fixed the following:
+CHECK: multiple assignments should be avoided
+#82: FILE: drivers/mtd/mtdcore.c:390:
++	root =3D mtd->dbg.dfs_dir =3D debugfs_create_dir(dev_name(dev),
+
+WARNING: Symbolic permissions 'S_IRUSR' are not preferred. Consider using o=
+ctal permissions '0400'.
+#90: FILE: drivers/mtd/mtdcore.c:398:
++		dent =3D debugfs_create_file("partid", S_IRUSR, root, mtd,
+
+WARNING: Symbolic permissions 'S_IRUSR' are not preferred. Consider using o=
+ctal permissions '0400'.
+#97: FILE: drivers/mtd/mtdcore.c:405:
++		dent =3D debugfs_create_file("partname", S_IRUSR, root, mtd,
+
+
+For patch 2/, I fixed some alignment checks, and I moved the call to
+spi_nor_debugfs_init() immediately after spi_nor_get_flash_info(),
+because it uses some info data set there.
+CHECK: Alignment should match open parenthesis
+#162: FILE: drivers/mtd/spi-nor/spi-nor.c:3939:
++static void spi_nor_debugfs_init(struct spi_nor *nor,
++		const struct flash_info *info)
+
+CHECK: Alignment should match open parenthesis
+#168: FILE: drivers/mtd/spi-nor/spi-nor.c:3945:
++	mtd->dbg.partid =3D devm_kasprintf(nor->dev, GFP_KERNEL,
++					"spi-nor:%*phN",
+
+Zhuohao Lee (2):
+  mtd: mtdcore: add debugfs nodes for querying the flash name and id
+  mtd: spi-nor: enable the debugfs for the partname and partid
+
+ drivers/mtd/mtdcore.c         | 86 ++++++++++++++++++++++++++++++++++++++-=
+----
+ drivers/mtd/spi-nor/spi-nor.c | 12 ++++++
+ include/linux/mtd/mtd.h       |  3 ++
+ 3 files changed, 92 insertions(+), 9 deletions(-)
+
+--=20
+2.9.5
+
