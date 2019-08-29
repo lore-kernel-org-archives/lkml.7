@@ -2,323 +2,285 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0944AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6C1C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74ED2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74FA233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:58:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567105097;
+	bh=duPGYi0KGNL7c268Bpbj1unSZQReY410jyectYXWvfo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JGWC7Ux9zVawAGBuO/pqOdk7SUxAKk209GgcUKD9wz+SvFXT4PPikRQMxSGOFtOqc
+	 TvkrTUHWuioPYsinRgW8QkSIXDQqTtGv4emAgh9JQ77wEwqaaUcw+n4r6INGx6o5SF
+	 OmYQqTrsicXXE5a3SdvA26bbCgn3rLoNXbpkhtKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfH2S4M convert rfc822-to-8bit (ORCPT
+        id S1728213AbfH2S6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:56:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58588 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728212AbfH2S4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:56:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B20A6ABBD;
-        Thu, 29 Aug 2019 18:56:08 +0000 (UTC)
-Date:   Thu, 29 Aug 2019 20:56:05 +0200
-From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Breno Leitao <leitao@debian.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Allison Randal <allison@lohutok.net>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
+        Thu, 29 Aug 2019 14:58:16 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52757 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727146AbfH2S6P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:58:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id t17so4800952wmi.2;
+        Thu, 29 Aug 2019 11:58:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Tq/PqHrqXDOnlXMKWrNZj4Q6pVSfEnpdOdZYupOzAXA=;
+        b=gERnNSXSNGuMolPLg+Aj6WYXZu/sfh6QrcD6yXdZhs6Kk7KNgOusf+W+6C+81paL+k
+         xOIFktapF+5l0zzbZiACPRyn8U/tW67HyrE9MqKAexkqAUVlTsz+p9FSsoq7Yn0TSZr+
+         PkCs3qvfsEk0vUxm3joxrYn2tsOB/HlW8FmTnCGbr1doXWoIA6htCSsGt+loJcr9xlSj
+         BWM+1zu/V2S2lGQSGkiFvWx1hbRBgN2wghIpI+KMKZt4xC17ds7XKNjKbyFPOtWJrF86
+         6JtAgq/nIfcgfBbTxQMPMybH4fTMNC7X2dnLcK0IJjB/1RSctKRjqjicLtuz3yolYC+I
+         Jt1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Tq/PqHrqXDOnlXMKWrNZj4Q6pVSfEnpdOdZYupOzAXA=;
+        b=LgiGvR35pyEIP8WJqc89OsG5v1NZ+1JA7afrQLH4JcNFIbrlZM+Z6mHr5uIf1GZ0Sy
+         Injo9rRTqvyH+417CLELbo/PwEz0HosjLuhUg/TanTKydHREZVfX1yT8TshcyQxbS22J
+         qdzc/zG4ufzaNoVixrAcq7a8xwyqCB4hblSSQMvGQ1fUGfK/AeZiRAiQo8d96UvBi+Th
+         7HRP/e47fB1TGRfbyJWE/0MmHzPtw8ybuzkNkBPk2mnPJtYpwaunppzTlc1xbNiOojqu
+         BDZNUh8p5c2hmT76CJzbgEAbYiczk2mrMVpEEGbtBpjTHWgwb3/aCpXoAQKOa+lhNezL
+         g4kQ==
+X-Gm-Message-State: APjAAAV3N9pQ0XRkwDV6W3yL7nVBMbf+NLWlEk62+IqzeTj8C4OgZ/ZN
+        1y4FbYHThC64Vb42XsX77UA=
+X-Google-Smtp-Source: APXvYqx3z+SNN2fECKA0TyzWw0aXpe9RwPUg6RjWg3VVWJnAvZoeyuEg8KIQ9AA8z2uDXf+u//EmLQ==
+X-Received: by 2002:a1c:cf88:: with SMTP id f130mr13586018wmg.10.1567105091708;
+        Thu, 29 Aug 2019 11:58:11 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id c11sm2847558wrt.25.2019.08.29.11.58.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 11:58:10 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 20:58:07 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Karl Rister <krister@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
         Nicholas Piggin <npiggin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christian Brauner <christian@brauner.io>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>
-Subject: Re: [PATCH v4 3/4] powerpc/64: make buildable without CONFIG_COMPAT
-Message-ID: <20190829205605.25c72774@naga>
-In-Reply-To: <45bdadce-5b44-c941-14f7-240b0be41a7b@c-s.fr>
-References: <cover.1567072270.git.msuchanek@suse.de>
-        <a829dfabed8285161fcdff166d58c7e8f0f6d402.1567072270.git.msuchanek@suse.de>
-        <45bdadce-5b44-c941-14f7-240b0be41a7b@c-s.fr>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Steven Rostedt <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Message-ID: <20190829185807.GA109374@gmail.com>
+References: <20190829143917.29745-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829143917.29745-1-acme@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 19:40:55 +0200
-Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 
-> Le 29/08/2019 à 12:23, Michal Suchanek a écrit :
-> > There are numerous references to 32bit functions in generic and 64bit
-> > code so ifdef them out.
-> > 
-> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> > ---
-> > v2:
-> > - fix 32bit ifdef condition in signal.c
-> > - simplify the compat ifdef condition in vdso.c - 64bit is redundant
-> > - simplify the compat ifdef condition in callchain.c - 64bit is redundant
-> > v3:
-> > - use IS_ENABLED and maybe_unused where possible
-> > - do not ifdef declarations
-> > - clean up Makefile
-> > v4:
-> > - further makefile cleanup
-> > - simplify is_32bit_task conditions
-> > - avoid ifdef in condition by using return
-> > ---
-> >   arch/powerpc/include/asm/thread_info.h |  4 ++--
-> >   arch/powerpc/kernel/Makefile           |  7 +++----
-> >   arch/powerpc/kernel/entry_64.S         |  2 ++
-> >   arch/powerpc/kernel/signal.c           |  3 +--
-> >   arch/powerpc/kernel/syscall_64.c       |  6 ++----
-> >   arch/powerpc/kernel/vdso.c             |  5 ++---
-> >   arch/powerpc/perf/callchain.c          | 14 ++++++++++----
-> >   7 files changed, 22 insertions(+), 19 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/include/asm/thread_info.h b/arch/powerpc/include/asm/thread_info.h
-> > index 8e1d0195ac36..c128d8a48ea3 100644
-> > --- a/arch/powerpc/include/asm/thread_info.h
-> > +++ b/arch/powerpc/include/asm/thread_info.h
-> > @@ -144,10 +144,10 @@ static inline bool test_thread_local_flags(unsigned int flags)
-> >   	return (ti->local_flags & flags) != 0;
-> >   }
-> >   
-> > -#ifdef CONFIG_PPC64
-> > +#ifdef CONFIG_COMPAT
-> >   #define is_32bit_task()	(test_thread_flag(TIF_32BIT))
-> >   #else
-> > -#define is_32bit_task()	(1)
-> > +#define is_32bit_task()	(IS_ENABLED(CONFIG_PPC32))
-> >   #endif
-> >   
-> >   #if defined(CONFIG_PPC64)
-> > diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-> > index 1d646a94d96c..9d8772e863b9 100644
-> > --- a/arch/powerpc/kernel/Makefile
-> > +++ b/arch/powerpc/kernel/Makefile
-> > @@ -44,16 +44,15 @@ CFLAGS_btext.o += -DDISABLE_BRANCH_PROFILING
-> >   endif
-> >   
-> >   obj-y				:= cputable.o ptrace.o syscalls.o \
-> > -				   irq.o align.o signal_32.o pmc.o vdso.o \
-> > +				   irq.o align.o signal_$(BITS).o pmc.o vdso.o \
-> >   				   process.o systbl.o idle.o \
-> >   				   signal.o sysfs.o cacheinfo.o time.o \
-> >   				   prom.o traps.o setup-common.o \
-> >   				   udbg.o misc.o io.o misc_$(BITS).o \
-> >   				   of_platform.o prom_parse.o
-> > -obj-$(CONFIG_PPC64)		+= setup_64.o sys_ppc32.o \
-> > -				   signal_64.o ptrace32.o \
-> > -				   paca.o nvram_64.o firmware.o \
-> > +obj-$(CONFIG_PPC64)		+= setup_64.o paca.o nvram_64.o firmware.o \
-> >   				   syscall_64.o
-> > +obj-$(CONFIG_COMPAT)		+= sys_ppc32.o ptrace32.o signal_32.o
-> >   obj-$(CONFIG_VDSO32)		+= vdso32/
-> >   obj-$(CONFIG_PPC_WATCHDOG)	+= watchdog.o
-> >   obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
-> > diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
-> > index 2ec825a85f5b..a2dbf216f607 100644
-> > --- a/arch/powerpc/kernel/entry_64.S
-> > +++ b/arch/powerpc/kernel/entry_64.S
-> > @@ -51,8 +51,10 @@
-> >   SYS_CALL_TABLE:
-> >   	.tc sys_call_table[TC],sys_call_table
-> >   
-> > +#ifdef CONFIG_COMPAT
-> >   COMPAT_SYS_CALL_TABLE:
-> >   	.tc compat_sys_call_table[TC],compat_sys_call_table
-> > +#endif
-> >   
-> >   /* This value is used to mark exception frames on the stack. */
-> >   exception_marker:
-> > diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
-> > index 60436432399f..61678cb0e6a1 100644
-> > --- a/arch/powerpc/kernel/signal.c
-> > +++ b/arch/powerpc/kernel/signal.c
-> > @@ -247,7 +247,6 @@ static void do_signal(struct task_struct *tsk)
-> >   	sigset_t *oldset = sigmask_to_save();
-> >   	struct ksignal ksig = { .sig = 0 };
-> >   	int ret;
-> > -	int is32 = is_32bit_task();
-> >   
-> >   	BUG_ON(tsk != current);
-> >   
-> > @@ -277,7 +276,7 @@ static void do_signal(struct task_struct *tsk)
-> >   
-> >   	rseq_signal_deliver(&ksig, tsk->thread.regs);
-> >   
-> > -	if (is32) {
-> > +	if (is_32bit_task()) {
-> >           	if (ksig.ka.sa.sa_flags & SA_SIGINFO)
-> >   			ret = handle_rt_signal32(&ksig, oldset, tsk);
-> >   		else
-> > diff --git a/arch/powerpc/kernel/syscall_64.c b/arch/powerpc/kernel/syscall_64.c
-> > index 98ed970796d5..0d5cbbe54cf1 100644
-> > --- a/arch/powerpc/kernel/syscall_64.c
-> > +++ b/arch/powerpc/kernel/syscall_64.c
-> > @@ -38,7 +38,6 @@ typedef long (*syscall_fn)(long, long, long, long, long, long);
-> >   
-> >   long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8, unsigned long r0, struct pt_regs *regs)
-> >   {
-> > -	unsigned long ti_flags;
-> >   	syscall_fn f;
-> >   
-> >   	BUG_ON(!(regs->msr & MSR_PR));
-> > @@ -83,8 +82,7 @@ long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8,
-> >   	 */
-> >   	regs->softe = IRQS_ENABLED;
-> >   
-> > -	ti_flags = current_thread_info()->flags;
-> > -	if (unlikely(ti_flags & _TIF_SYSCALL_DOTRACE)) {
-> > +	if (unlikely(current_thread_info()->flags & _TIF_SYSCALL_DOTRACE)) {
-> >   		/*
-> >   		 * We use the return value of do_syscall_trace_enter() as the
-> >   		 * syscall number. If the syscall was rejected for any reason
-> > @@ -100,7 +98,7 @@ long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8,
-> >   	/* May be faster to do array_index_nospec? */
-> >   	barrier_nospec();
-> >   
-> > -	if (unlikely(ti_flags & _TIF_32BIT)) {
-> > +	if (unlikely(is_32bit_task())) {
-> >   		f = (void *)compat_sys_call_table[r0];
-> >   
-> >   		r3 &= 0x00000000ffffffffULL;
-> > diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
-> > index d60598113a9f..6d4a077f74d6 100644
-> > --- a/arch/powerpc/kernel/vdso.c
-> > +++ b/arch/powerpc/kernel/vdso.c
-> > @@ -667,9 +667,7 @@ static void __init vdso_setup_syscall_map(void)
-> >   {
-> >   	unsigned int i;
-> >   	extern unsigned long *sys_call_table;
-> > -#ifdef CONFIG_PPC64
-> >   	extern unsigned long *compat_sys_call_table;
-> > -#endif
-> >   	extern unsigned long sys_ni_syscall;
-> >   
-> >   
-> > @@ -678,7 +676,8 @@ static void __init vdso_setup_syscall_map(void)
-> >   		if (sys_call_table[i] != sys_ni_syscall)
-> >   			vdso_data->syscall_map_64[i >> 5] |=
-> >   				0x80000000UL >> (i & 0x1f);
-> > -		if (compat_sys_call_table[i] != sys_ni_syscall)
-> > +		if (IS_ENABLED(CONFIG_COMPAT) &&
-> > +		    compat_sys_call_table[i] != sys_ni_syscall)
-> >   			vdso_data->syscall_map_32[i >> 5] |=
-> >   				0x80000000UL >> (i & 0x1f);
-> >   #else /* CONFIG_PPC64 */
-> > diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-> > index c84bbd4298a0..aef8c750d242 100644
-> > --- a/arch/powerpc/perf/callchain.c
-> > +++ b/arch/powerpc/perf/callchain.c
-> > @@ -15,7 +15,7 @@
-> >   #include <asm/sigcontext.h>
-> >   #include <asm/ucontext.h>
-> >   #include <asm/vdso.h>
-> > -#ifdef CONFIG_PPC64
-> > +#ifdef CONFIG_COMPAT  
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> Hi Ingo/Thomas,
 > 
-> Is this ifdef needed at all ? Is it a problem to include it all the time ?
-
-Yes, it is a problem. Some 32bit structures are not defined giving an
-error.
-
+> 	Please consider pulling,
 > 
-> >   #include "../kernel/ppc32.h"
-> >   #endif
-> >   #include <asm/pte-walk.h>
-> > @@ -165,6 +165,7 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
-> >   	return read_user_stack_slow(ptr, ret, 8);
-> >   }
-> >   
-> > +__maybe_unused  
+> Best regards,
 > 
-> I don't like that too much. I see this function is almost identical 
-> between PPC64 and PPC32. It should be possible to have only one, using 
-> IS_ENABLED(CONFIG_PPC64) inside it to call read_user_stack_slow().
-> An define a dummy read_user_stack_slow() for PPC32 as already done for 
-> perf_callchain_user_64().
-
-We need to #ifdef the block below anyway because it needs 32bit
-structures defined which aren't. So can add usage there.
-
+> - Arnaldo
 > 
-> >   static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-> >   {
-> >   	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> > @@ -341,6 +342,7 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
-> >   
-> >   #endif /* CONFIG_PPC64 */
-> >   
-> > +#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
-> >   /*
-> >    * Layout for non-RT signal frames
-> >    */
-> > @@ -482,12 +484,16 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
-> >   		sp = next_sp;
-> >   	}
-> >   }
-> > +#endif /* 32bit */
-> >   
-> >   void
-> >   perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
-> >   {
-> > -	if (current_is_64bit())
-> > -		perf_callchain_user_64(entry, regs);
-> > -	else
-> > +#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
-> > +	if (!current_is_64bit()) {
-> >   		perf_callchain_user_32(entry, regs);
-> > +		return;
-> > +	}
-> > +#endif
-> > +	perf_callchain_user_64(entry, regs);
-> >   }
-> >   
+> Test results at the end of this message, as usual.
 > 
-> Instead of that it could just be:
+> The following changes since commit 42880f726c66f13ae1d9ac9ce4c43abe64ecac84:
 > 
-> 	if (current_is_64bit())
-> 		perf_callchain_user_64(entry, regs);
-> 	else
-> 		perf_callchain_user_32(entry, regs);
+>   perf/x86/intel: Support PEBS output to PT (2019-08-28 11:29:39 +0200)
 > 
+> are available in the Git repository at:
 > 
-> By adding a dummy perf_callchain_user_32() when needed as already done 
-> for perf_callchain_user_64()
-
-and it can do a dummy use of the function above as well.
-
-> And by making sure current_is_64bit() returns IS_ENABLED(CONFIG_PPC64) 
-> when CONFIG_COMPAT is not set, on the same principle as you did for 
-> is_32bit_task()
-Yes, that would make it constant for the !COMPAT cases.
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.4-20190829
 > 
-> And maybe you could think about spliting callchain.c out in a 
-> callchain_32.c and a callchain_64.c that gets selected by the Makefiles 
-> based on the same principle as you did for ptrace_32.c etc...
+> for you to fetch changes up to 301011ba622513cb41ced59973972204e0da2f71:
+> 
+>   tools lib traceevent: Remove unneeded qsort and uses memmove instead (2019-08-29 08:36:12 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> perf top:
+> 
+>   Namhyung Kim:
+> 
+>   - Decay all events in the evlist, we were decaying just the first event
+>     in a group.
+> 
+>   - Fix linking of histograms in different evsels in a event group with more
+>     than two events.
+> 
+>   With the two fixes above a command line such as:
+> 
+>     # perf top -e '{cycles,instructions,cache-misses,cache-references}
+> 
+>     Should work as expected, with four columns and with all of them being
+>     decayed over time, i.e. less weight is given for older samples.
+> 
+> perf record:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Fix collection of build-ids when using setns() to get into namespaces,
+>     which had been broken with the introduction of the extra thread to
+>     react to PERF_RECORD_BPF_EVENT, i.e. to collect extra info for BPF
+>     programs. We need to unshare(CLONE_FS) in that thread so that the
+>     main one can do the setns(CLONE_NEWNS) when collectingthe build-ids.
+>     Without that symbol resolution gets more difficult and potentially
+>     misresolves symbols.
+> 
+> core:
+> 
+>   Igor Lubashev:
+> 
+>   - Further alignment in permission checking via capabilities to how the
+>     kernel checks what tooling tries to do.
+> 
+> PowerPC:
+> 
+>   Naveen N. Rao:
+> 
+>   - Sync powerpc syscall.tbl, so that 'perf trace' gets the definitions
+>     for recent syscalls.
+> 
+> libperf:
+> 
+>   Jiri Olsa:
+> 
+>   - Move the rest of the PERF_RECORD_ metadata struct definitions so that
+>     we can use 'union perf_event'.
+> 
+> libtraceevent:
+> 
+>   Steven Rostedt (VMware):
+> 
+>   - Do not free tep->cmdlines in add_new_comm() on failure.
+> 
+>   - Remove unneeded qsort and uses memmove instead
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (4):
+>       perf tools: Remove needless util.h include from builtin.h
+>       perf evlist: Remove needless util.h from evlist.h
+>       perf clang: Delete needless util-cxx.h header
+>       perf evlist: Use unshare(CLONE_FS) in sb threads to let setns(CLONE_NEWNS) work
+> 
+> Igor Lubashev (5):
+>       perf event: Check ref_reloc_sym before using it
+>       perf tools: Use CAP_SYS_ADMIN with perf_event_paranoid checks
+>       perf evsel: Kernel profiling is disallowed only when perf_event_paranoid > 1
+>       perf symbols: Use CAP_SYSLOG with kptr_restrict checks
+>       perf tools: Warn that perf_event_paranoid can restrict kernel symbols
+> 
+> Jiri Olsa (23):
+>       libperf: Add PERF_RECORD_HEADER_ATTR 'struct attr_event' to perf/event.h
+>       libperf: Add PERF_RECORD_CPU_MAP 'struct cpu_map_event' to perf/event.h
+>       libperf: Add PERF_RECORD_EVENT_UPDATE 'struct event_update_event' to perf/event.h
+>       libperf: Add PERF_RECORD_HEADER_EVENT_TYPE 'struct event_type_event' to perf/event.h
+>       libperf: Add PERF_RECORD_HEADER_TRACING_DATA 'struct tracing_data_event' to perf/event.h
+>       libperf: Add PERF_RECORD_HEADER_BUILD_ID 'struct build_id_event' to perf/event.h
+>       libperf: Add PERF_RECORD_ID_INDEX 'struct id_index_event' to perf/event.h
+>       libperf: Add PERF_RECORD_AUXTRACE_INFO 'struct auxtrace_info_event' to perf/event.h
+>       libperf: Add PERF_RECORD_AUXTRACE 'struct auxtrace_event' to perf/event.h
+>       libperf: Add PERF_RECORD_AUXTRACE_ERROR 'struct auxtrace_error_event' to perf/event.h
+>       libperf: Add PERF_RECORD_AUX 'struct aux_event' to perf/event.h
+>       libperf: Add PERF_RECORD_ITRACE_START 'struct itrace_start_event' to perf/event.h
+>       libperf: Add PERF_RECORD_SWITCH 'struct context_switch_event' to perf/event.h
+>       libperf: Add PERF_RECORD_THREAD_MAP 'struct thread_map_event' to perf/event.h
+>       libperf: Add PERF_RECORD_STAT_CONFIG 'struct stat_config_event' to perf/event.h
+>       libperf: Add PERF_RECORD_STAT 'struct stat_event' to perf/event.h
+>       libperf: Add PERF_RECORD_STAT_ROUND 'struct stat_round_event' to perf/event.h
+>       libperf: Add PERF_RECORD_TIME_CONV 'struct time_conv_event' to perf/event.h
+>       libperf: Add PERF_RECORD_HEADER_FEATURE 'struct feature_event' to perf/event.h
+>       libperf: Add PERF_RECORD_COMPRESSED 'struct compressed_event' to perf/event.h
+>       libperf: Add 'union perf_event' to perf/event.h
+>       libperf: Rename the PERF_RECORD_ structs to have a "perf" prefix
+>       libperf: Move 'enum perf_user_event_type' to perf/event.h
+> 
+> Namhyung Kim (2):
+>       perf top: Decay all events in the evlist
+>       perf top: Fix event group with more than two events
+> 
+> Naveen N. Rao (1):
+>       perf arch powerpc: Sync powerpc syscall.tbl
+> 
+> Steven Rostedt (VMware) (2):
+>       tools lib traceevent: Do not free tep->cmdlines in add_new_comm() on failure
+>       tools lib traceevent: Remove unneeded qsort and uses memmove instead
+> 
+>  tools/lib/traceevent/event-parse.c                 |  58 ++++-
+>  tools/perf/arch/arm/util/cs-etm.c                  |   7 +-
+>  tools/perf/arch/arm64/util/arm-spe.c               |   5 +-
+>  tools/perf/arch/powerpc/entry/syscalls/syscall.tbl | 146 +++++++++--
+>  tools/perf/arch/s390/util/auxtrace.c               |   2 +-
+>  tools/perf/arch/x86/util/intel-bts.c               |   6 +-
+>  tools/perf/arch/x86/util/intel-pt.c                |   7 +-
+>  tools/perf/arch/x86/util/tsc.c                     |   2 +-
+>  tools/perf/builtin-buildid-cache.c                 |   1 +
+>  tools/perf/builtin-record.c                        |   6 +-
+>  tools/perf/builtin-report.c                        |   3 +-
+>  tools/perf/builtin-script.c                        |   3 +-
+>  tools/perf/builtin-stat.c                          |   2 +-
+>  tools/perf/builtin-top.c                           |  47 ++--
+>  tools/perf/builtin-trace.c                         |   3 +-
+>  tools/perf/builtin.h                               |   2 -
+>  tools/perf/lib/include/perf/event.h                | 273 ++++++++++++++++++++
+>  tools/perf/perf.c                                  |   1 +
+>  tools/perf/tests/cpumap.c                          |  12 +-
+>  tools/perf/tests/event_update.c                    |  16 +-
+>  tools/perf/tests/sdt.c                             |   1 +
+>  tools/perf/tests/stat.c                            |   8 +-
+>  tools/perf/tests/thread-map.c                      |   2 +-
+>  tools/perf/util/arm-spe.c                          |   6 +-
+>  tools/perf/util/auxtrace.c                         |  21 +-
+>  tools/perf/util/auxtrace.h                         |   8 +-
+>  tools/perf/util/bpf-loader.c                       |   1 +
+>  tools/perf/util/build-id.c                         |   2 +-
+>  tools/perf/util/c++/clang-c.h                      |   2 +-
+>  tools/perf/util/c++/clang-test.cpp                 |   4 +-
+>  tools/perf/util/cpumap.c                           |   6 +-
+>  tools/perf/util/cpumap.h                           |   4 +-
+>  tools/perf/util/cs-etm.c                           |   4 +-
+>  tools/perf/util/event.c                            |  45 ++--
+>  tools/perf/util/event.h                            | 278 +--------------------
+>  tools/perf/util/evlist.c                           |  10 +
+>  tools/perf/util/evlist.h                           |   1 -
+>  tools/perf/util/evsel.c                            |   3 +-
+>  tools/perf/util/header.c                           |  57 ++---
+>  tools/perf/util/hist.c                             |  39 +--
+>  tools/perf/util/hist.h                             |   1 +
+>  tools/perf/util/intel-bts.c                        |   6 +-
+>  tools/perf/util/intel-pt.c                         |  12 +-
+>  tools/perf/util/python.c                           |   4 +-
+>  tools/perf/util/s390-cpumsf.c                      |   4 +-
+>  tools/perf/util/session.c                          |  29 +--
+>  tools/perf/util/session.h                          |   2 +-
+>  tools/perf/util/stat.c                             |  12 +-
+>  tools/perf/util/symbol.c                           |  15 +-
+>  tools/perf/util/thread_map.c                       |   4 +-
+>  tools/perf/util/thread_map.h                       |   4 +-
+>  tools/perf/util/util-cxx.h                         |  27 --
+>  52 files changed, 684 insertions(+), 540 deletions(-)
+>  delete mode 100644 tools/perf/util/util-cxx.h
 
-I actually did not split those. Can look how splitting is done there
-and if it can be applied to the callchain situation.
+Pulled, thanks a lot Arnaldo!
 
-Thanks
-
-Michal
+	Ingo
