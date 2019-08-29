@@ -2,140 +2,86 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 810B1C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CF5C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55E082189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975632173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:53:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OxBfcrrz";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="caw7Hlmu"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="tT4DAN9g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbfH2RvG (ORCPT
+        id S1727891AbfH2RxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:51:06 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45958 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727686AbfH2RvG (ORCPT
+        Thu, 29 Aug 2019 13:53:04 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39948 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727495AbfH2RxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:51:06 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id F1A5F7D4D2; Thu, 29 Aug 2019 08:54:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567068885;
-        bh=lpXLc5F4QsaDKK2TTF0zihfLK87qJP12kwB4PiEb95k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OxBfcrrzfeTUahg9ajJ34hg9KgU9FYJ97KAAKkNHR4nJOzETQFF5+n74FpQw9c5wL
-         yvwt7H4q9PKnWZiJNI98yspOBFS7m0oIov6H6pO/BbAjH+MzsviOWfC2vXdhdqdXTs
-         Ag8XKnjzHhKQnO1jsECxX0XDOC+PPzXCE5IcNhAI=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id DEAA97D4D2;
-        Thu, 29 Aug 2019 02:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567046287;
-        bh=lpXLc5F4QsaDKK2TTF0zihfLK87qJP12kwB4PiEb95k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=caw7HlmutRgzF374ASAP6arTI7VM0E3MK6sozq/G9a/6B/evXKgsOWHfaSLCZQlPJ
-         WXjfjUmB9fZRjkH2ngP+bg3Z2gW6/BSDEdjiRUL9l1TclfsXMeBshmyxAc7filcbzD
-         NLnTfCUhuZ8uovGECvtm4gvHzdJq3zF84eJKL/a8=
+        Thu, 29 Aug 2019 13:53:04 -0400
+Received: by mail-ed1-f67.google.com with SMTP id h8so4986124edv.7
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 10:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=rQe28KLlHDvRerbTckpdwu9z06KjBNQSCvgEdw6K0Eg=;
+        b=tT4DAN9gN76+WHbhh4TG+YpgAKU/LKtZGbtUHvgNZpZPWwwxb3Pwgp9gY7KmU56bpy
+         Xv1Oq1K0lQufSYgylVI+058laygeoiV6N89ge00rHLiXwHGiNADSAFMw+IREzVPLdmbm
+         29QRSeWyqEjtFKzgmU/Oh4LEis0bpqKyTEXryAK2+G74ogQAz2rvUVehVUUgTm3guAGR
+         tc0wT9c1rWjzmZScMBFDvQx8095V+I/Peg6OfokDBFRF8hCJTN3fBKPdwPvp0YW3qq/0
+         OTHoEIVl0PKVOAilqTaxbMVHTpX3mKVBd8whSWyym6Whg2ycKCFrqVDXraFG8/Rltggo
+         Dqsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=rQe28KLlHDvRerbTckpdwu9z06KjBNQSCvgEdw6K0Eg=;
+        b=un5iAW32SwDOrHhUIp7iCs13SI0t+ajcAxHePT/HYd8xt5NDMQEEn0hjnjW+Mey42f
+         T2KijGpqLoMaArrQo9HIDRyLoc0XdkTt2YvhExB2iBh++HydZM3rKTYxNnl1c9hpq84G
+         sbWXY0wmloB8AKEhFEiJUL3j52oI1C0Y1OtT5xhrvjTlevbFPFZQOgnGCvXcFnCvQXxM
+         LuoHTKPtTjKgd1oJL9N9EH8Rv5iH7LV9P2TViUlNM97NXRQhRLD4IY4nQb4/x0GGukMB
+         6CPi3cUsrlxiPQaGsDB/1AUqexkc6mBQ7B0hZ8JauL5uX0Bk9pqXaCCRKor6fpg5LDxk
+         QafA==
+X-Gm-Message-State: APjAAAV+Y0MkJ1Jm4J7RBVIsrjdXu7GuOKD9oUHT7IZoH6rlJOum7Zgl
+        msjG/1ZTrqe/04tep2SriCR4AQ==
+X-Google-Smtp-Source: APXvYqxnC2uMVrjennbToNj8VdCMI+ckmVLgKgzd1CJo3FT41fg7GQyb9+ZSHDwMlxZVGV+MZnKiFQ==
+X-Received: by 2002:a50:b155:: with SMTP id l21mr11232219edd.186.1567101182497;
+        Thu, 29 Aug 2019 10:53:02 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id w3sm562294edq.12.2019.08.29.10.53.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 10:53:02 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 10:52:37 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <thomas.lendacky@amd.com>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] amd-xgbe: Fix error path in xgbe_mod_init()
+Message-ID: <20190829105237.196722f9@cakuba.netronome.com>
+In-Reply-To: <20190829024600.16052-1-yuehaibing@huawei.com>
+References: <20190829024600.16052-1-yuehaibing@huawei.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 29 Aug 2019 08:08:06 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [RESEND PATCH v2 1/2] dt-bindings: reset: aoss: Add AOSS reset
- binding for SC7180 SoCs
-In-Reply-To: <1566808568.3842.2.camel@pengutronix.de>
-References: <20190824152411.21757-1-sibis@codeaurora.org>
- <20190824152411.21757-2-sibis@codeaurora.org>
- <1566808568.3842.2.camel@pengutronix.de>
-Message-ID: <4a71d26db054be636e57c4d031b0d3ec@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Philipp,
-Thanks for the review!
-
-On 2019-08-26 14:06, Philipp Zabel wrote:
-> On Sat, 2019-08-24 at 20:54 +0530, Sibi Sankar wrote:
->> Add SC7180 AOSS reset to the list of possible bindings.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt 
->> b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->> index 510c748656ec5..3eb6a22ced4bc 100644
->> --- a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->> +++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->> @@ -8,8 +8,8 @@ Required properties:
->>  - compatible:
->>  	Usage: required
->>  	Value type: <string>
->> -	Definition: must be:
->> -		    "qcom,sdm845-aoss-cc"
->> +	Definition: must be one of:
->> +		"qcom,sc7180-aoss-cc", "qcom,sdm845-aoss-cc"
+On Thu, 29 Aug 2019 10:46:00 +0800, YueHaibing wrote:
+> In xgbe_mod_init(), we should do cleanup if some error occurs
 > 
-> Should this emphasize that the common sdm845 compatible always has to 
-> be
-> included?
-> 
-> +	Definition: must be:
-> +		"qcom,sdm845-aoss-cc" for SDM845 or
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: efbaa828330a ("amd-xgbe: Add support to handle device renaming")
+> Fixes: 47f164deab22 ("amd-xgbe: Add PCI device support")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-can we drop the "or" since
-we would need to keep adding
-it in the future.
+Looks correct.
 
-> +		"qcom,sc7180-aoss-cc", "qcom,sdm845-aoss-cc" for SC7180
-
-I prefer ^^ approach for the
-reasons stated below.
-
-> 
-> or like the qcom,kpss-gcc bindings:
-> 
-> +	Definition: should be one of the following. The generic
-> compatible
-> +		"qcom,sdm845-aoss-cc" should also be
-> included.
-> +		"qcom,sc7180-aoss-cc", "qcom,sdm845-aoss-cc"
-> +
-
-It is extremely unlikely that
-future SoCs would maintain same
-number of reset lines/offsets
-due to the constant flux in
-remote processors being added
-to the SoCs. So a generic
-compatible might not make sense
-here.
-
-> 	"qcom,sdm845-aoss-cc"
-> 
-> regards
-> Philipp
-
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+For networking fixes please try to use [PATCH net] as a tag ([PATCH
+net-next] for normal, non-fix patches).
