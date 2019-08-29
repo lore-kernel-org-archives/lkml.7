@@ -2,87 +2,101 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30C4C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8968C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997FB2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9C452073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:12:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jEkJhc78"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbfH2QLI (ORCPT
+        id S1727830AbfH2QMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:11:08 -0400
-Received: from mga02.intel.com ([134.134.136.20]:55966 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727257AbfH2QLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:11:07 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 09:11:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,444,1559545200"; 
-   d="scan'208";a="380819693"
-Received: from friedlmi-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.54.26])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Aug 2019 09:11:03 -0700
-Date:   Thu, 29 Aug 2019 19:10:57 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tpm_tis: Fix interrupt probing
-Message-ID: <20190829161057.22l72j55jy3dyib7@linux.intel.com>
-References: <20190820122517.2086223-1-stefanb@linux.vnet.ibm.com>
- <20190827131400.qchcwa2act24c47b@linux.intel.com>
- <20190827151915.hb4xwr2vik2i5ryb@linux.intel.com>
- <797ff54e-dceb-21d2-dd74-e5244f9c6dfd@linux.ibm.com>
- <20190829132021.6vfc535ecb62jokf@linux.intel.com>
+        Thu, 29 Aug 2019 12:12:14 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42882 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbfH2QMN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:12:13 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p3so1822253pgb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:12:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PTQEC1Y4Yke23JK/LTgM0w8mgR2qZy0PBRnUbbY2XIo=;
+        b=jEkJhc78PLM/JgFtQZWk7kdLuecagNe2WAYo89y8WuOW4zoGzT+kbSB8NIBe0zcalQ
+         8PuF7Tdx7O8kY3LHOmHoCLfdJE91HQsCRyH1tciyLHfk3TBVMVq54nZfsIqsE4hgd3fB
+         +OG0j04f8N9mNquyfOwl+bczuWP6l61lZjAEI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PTQEC1Y4Yke23JK/LTgM0w8mgR2qZy0PBRnUbbY2XIo=;
+        b=J224Bkxf+3i5CcyiT5rJBMcimPcQ+Wdl/sAhK0BNwRkyDSeaSynR4W85sNX99deFPg
+         SP4WtIyKdMndRgSVZXBRAir5qVMJIF6GBgY6Y092E9ZugbuTH8eaH1tuBLZ+AfheIrfm
+         u1/Z9Ln417k6i5mp1byOy8BlSfbaqEXFhKlQA8GRAf/UCS1HfetWhqbzW4DvWCEJ8wCU
+         WoBvrfFxlz++daIFbll8uDiK2Ro72coLUmxG+dVhN4SBKxkGdbB5Gv8jmcXWWGO8HOiM
+         hk2OGBWo+YwZllX816RFdNZck4AyhGJ3Kz/eY1nRU6kcI6HSx8inHVWpX5RS/sWa1g4Q
+         b7gA==
+X-Gm-Message-State: APjAAAXOwxwKIyIRwNQyz/8QR3XbmuPhTm21X56/PM3pr88gNjw0qZGT
+        hccvCuBRb63GKOk3SSwpoA2RMA==
+X-Google-Smtp-Source: APXvYqy1FKWow3z/gmrxsTdklap8cVSHO9/ZQ8Lf2Lm5FnOpYJcBns/BeEGMcIZIyZEJa9XDM04jcg==
+X-Received: by 2002:a63:ff66:: with SMTP id s38mr9209438pgk.363.1567095133110;
+        Thu, 29 Aug 2019 09:12:13 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 1sm3891410pfx.56.2019.08.29.09.12.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 09:12:11 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 09:12:10 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Feng Tang <feng.tang@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception
+ handler
+Message-ID: <201908290910.BA3ED6BDEF@keescook>
+References: <201908200943.601DD59DCE@keescook>
+ <20190822155611.a1a6e26db99ba0876ba9c8bd@linux-foundation.org>
+ <86003539-18ec-f2ff-a46f-764edb820dcd@c-s.fr>
+ <201908241206.D223659@keescook>
+ <4c1ed94a-4dd0-e5cb-0b87-397b512d465e@c-s.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829132021.6vfc535ecb62jokf@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+In-Reply-To: <4c1ed94a-4dd0-e5cb-0b87-397b512d465e@c-s.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 04:20:21PM +0300, Jarkko Sakkinen wrote:
-> On Tue, Aug 27, 2019 at 03:34:36PM -0400, Stefan Berger wrote:
-> > On 8/27/19 11:19 AM, Jarkko Sakkinen wrote:
-> > > On Tue, Aug 27, 2019 at 04:14:00PM +0300, Jarkko Sakkinen wrote:
-> > > > On Tue, Aug 20, 2019 at 08:25:17AM -0400, Stefan Berger wrote:
-> > > > > From: Stefan Berger <stefanb@linux.ibm.com>
-> > > > > 
-> > > > > The interrupt probing of the TPM TIS was broken since we are trying to
-> > > > > run it without an active locality and without the TPM_CHIP_FLAG_IRQ set.
-> > > > > 
-> > > > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> > > > Need these:
-> > > > 
-> > > > Cc: linux-stable@vger.kernel.org
-> > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
-> > > > 
-> > > > Thank you. I'll apply this to my tree.
-> > > > 
-> > > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > The commit went in the following form:
-> > > 
-> > > http://git.infradead.org/users/jjs/linux-tpmdd.git/commit/9b558deab2c5d7dc23d5f7a4064892ede482ad32
-> > 
-> > I saw you dropped the stetting of the IRQ flag - I needed it, otherwise it
-> > wouldn't execute certain code paths.
+On Thu, Aug 29, 2019 at 06:55:59AM +0200, Christophe Leroy wrote:
+> Euh ... only received this mail yesterday. Same for the other answer.
+
+Yeah, my outbound mail was busted. :(
+
+> I think you wanted to use In-reply-to:
+> [...]
+> But still, Andrew is seing double ... And me as well :)
 > 
-> I explained why I removed that part. There was no any reasoning for
-> it. Also, it cannot be in the same commit if it fixes a diffent
-> issue.
+> Fixes: Fixes:
 
-AFAIK they go with different fixes-tags.
+I had a lot of failures in that email. :)
 
-/Jarkko
+Thank you Andrew for cleaning this up.
+
+-- 
+Kees Cook
