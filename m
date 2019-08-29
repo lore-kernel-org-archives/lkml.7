@@ -2,250 +2,101 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36E1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1486EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4212339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:50:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="QIAYzJuL"
+	by mail.kernel.org (Postfix) with ESMTP id DADC5215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:52:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfH2Iux (ORCPT
+        id S1727024AbfH2IwM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 04:50:53 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:35917 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfH2Iuw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 04:50:52 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id BDAC380719;
-        Thu, 29 Aug 2019 20:50:47 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1567068647;
-        bh=dZkJRwlgxjfTFhLsL2/dHbG5QomSoc8bDAoyd48XHpk=;
-        h=From:To:Cc:Subject:Date;
-        b=QIAYzJuLuylFfsdubAJucG9Adgj+eZlTbpzOFIGJsks1a8093r7wqynDhWTE99/ry
-         jPnKhs47ROehHdy2iEVHLfUHhVJG8AgctUb/9vMyuhO6jz8ZGG5Id1dqN2kzNubtv2
-         1RZ7pAVUw6vFkFFdVJO/jKL7aVadFauld+qKZajDpyrR/KfB5Cbfy9xbYQuOTgxE26
-         gS9bVmCNuPRkKlZJJEeSfadHfW+ATvzbtlf7by4MYCg3o+LXCql0RaZvAjoutWBcit
-         a87Ghv4YAWJWQZb2XkLKYcdb0KziK7eWvRTcv7/3ENOxPMjKrbhuxwXF6wTxmJsoTa
-         bvW/LBj9VZlZw==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d6791e50000>; Thu, 29 Aug 2019 20:50:45 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id C287D13EED5;
-        Thu, 29 Aug 2019 20:50:48 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id BCDC92819B1; Thu, 29 Aug 2019 20:50:45 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     wim@linux-watchdog.org, linux@roeck-us.net
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v5] watchdog: orion_wdt: use timer1 as a pretimeout
-Date:   Thu, 29 Aug 2019 20:50:42 +1200
-Message-Id: <20190829085042.30886-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+        Thu, 29 Aug 2019 04:52:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43426 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726009AbfH2IwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 04:52:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0F5C2AFE8;
+        Thu, 29 Aug 2019 08:52:10 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 10:52:09 +0200
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH net-next 06/15] net: sgi: ioc3-eth: get rid of
+ ioc3_clean_rx_ring()
+Message-Id: <20190829105209.0c27c3d4d1c4a2cfb622d464@suse.de>
+In-Reply-To: <20190828160246.7b211f8a@cakuba.netronome.com>
+References: <20190828140315.17048-1-tbogendoerfer@suse.de>
+        <20190828140315.17048-7-tbogendoerfer@suse.de>
+        <20190828160246.7b211f8a@cakuba.netronome.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The orion watchdog can either reset the CPU or generate an interrupt.
-The interrupt would be useful for debugging as it provides panic()
-output about the watchdog expiry, however if the interrupt is used the
-watchdog can't reset the CPU in the event of being stuck in a loop with
-interrupts disabled or if the CPU is prevented from accessing memory
-(e.g. an unterminated DMA).
+On Wed, 28 Aug 2019 16:02:46 -0700
+Jakub Kicinski <jakub.kicinski@netronome.com> wrote:
 
-The Armada SoCs have spare timers that aren't currently used by the
-Linux kernel. We can use timer1 to provide a pre-timeout ahead of the
-watchdog timer and provide the possibility of gathering debug before the
-reset triggers.
+> On Wed, 28 Aug 2019 16:03:05 +0200, Thomas Bogendoerfer wrote:
+> > Clean rx ring is just called once after a new ring is allocated, which
+> > is per definition clean. So there is not need for this function.
+> > 
+> > Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> > ---
+> >  drivers/net/ethernet/sgi/ioc3-eth.c | 21 ---------------------
+> >  1 file changed, 21 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
+> > index 6ca560d4ab79..39631e067b71 100644
+> > --- a/drivers/net/ethernet/sgi/ioc3-eth.c
+> > +++ b/drivers/net/ethernet/sgi/ioc3-eth.c
+> > @@ -761,26 +761,6 @@ static void ioc3_mii_start(struct ioc3_private *ip)
+> >  	add_timer(&ip->ioc3_timer);
+> >  }
+> >  
+> > -static inline void ioc3_clean_rx_ring(struct ioc3_private *ip)
+> > -{
+> > -	struct ioc3_erxbuf *rxb;
+> > -	struct sk_buff *skb;
+> > -	int i;
+> > -
+> > -	for (i = ip->rx_ci; i & 15; i++) {
+> > -		ip->rx_skbs[ip->rx_pi] = ip->rx_skbs[ip->rx_ci];
+> > -		ip->rxr[ip->rx_pi++] = ip->rxr[ip->rx_ci++];
+> > -	}
+> > -	ip->rx_pi &= RX_RING_MASK;
+> > -	ip->rx_ci &= RX_RING_MASK;
+> > -
+> > -	for (i = ip->rx_ci; i != ip->rx_pi; i = (i + 1) & RX_RING_MASK) {
+> > -		skb = ip->rx_skbs[i];
+> > -		rxb = (struct ioc3_erxbuf *)(skb->data - RX_OFFSET);
+> > -		rxb->w0 = 0;
+> 
+> There's gotta be some purpose to setting this w0 word to zero no?
+> ioc3_rx() uses that to see if the descriptor is done, and dutifully
+> clears it after..
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-Changes in v5:
-- Group bit values with register addresses
-- Address review comments from Gunter
-Changes in v4:
-- rebase against linux/master
-Changes in v2:
-- apply changes to armada-38x only
+you are right. I thought this is already done in alloc_rx_bufs, but it isn't.
+I'll add it there and put it into this patch. /me wonders why testing
+didn't show this...
 
- drivers/watchdog/orion_wdt.c | 65 ++++++++++++++++++++++++++++--------
- 1 file changed, 52 insertions(+), 13 deletions(-)
+Thomas.
 
-diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index cdb0d174c5e2..5a23cb448ed5 100644
---- a/drivers/watchdog/orion_wdt.c
-+++ b/drivers/watchdog/orion_wdt.c
-@@ -35,7 +35,15 @@
-  * Watchdog timer block registers.
-  */
- #define TIMER_CTRL		0x0000
--#define TIMER_A370_STATUS	0x04
-+#define TIMER1_FIXED_ENABLE_BIT	BIT(12)
-+#define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
-+#define TIMER1_ENABLE_BIT	BIT(2)
-+
-+#define TIMER_A370_STATUS	0x0004
-+#define WDT_A370_EXPIRED	BIT(31)
-+#define TIMER1_STATUS_BIT	BIT(8)
-+
-+#define TIMER1_VAL_OFF		0x001c
-=20
- #define WDT_MAX_CYCLE_COUNT	0xffffffff
-=20
-@@ -43,9 +51,6 @@
- #define WDT_A370_RATIO_SHIFT	5
- #define WDT_A370_RATIO		(1 << WDT_A370_RATIO_SHIFT)
-=20
--#define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
--#define WDT_A370_EXPIRED	BIT(31)
--
- static bool nowayout =3D WATCHDOG_NOWAYOUT;
- static int heartbeat =3D -1;		/* module parameter (seconds) */
-=20
-@@ -158,6 +163,7 @@ static int armadaxp_wdt_clock_init(struct platform_de=
-vice *pdev,
- 				   struct orion_watchdog *dev)
- {
- 	int ret;
-+	u32 val;
-=20
- 	dev->clk =3D of_clk_get_by_name(pdev->dev.of_node, "fixed");
- 	if (IS_ERR(dev->clk))
-@@ -168,10 +174,9 @@ static int armadaxp_wdt_clock_init(struct platform_d=
-evice *pdev,
- 		return ret;
- 	}
-=20
--	/* Enable the fixed watchdog clock input */
--	atomic_io_modify(dev->reg + TIMER_CTRL,
--			 WDT_AXP_FIXED_ENABLE_BIT,
--			 WDT_AXP_FIXED_ENABLE_BIT);
-+	/* Fix the wdt and timer1 clock freqency to 25MHz */
-+	val =3D WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
-=20
- 	dev->clk_rate =3D clk_get_rate(dev->clk);
- 	return 0;
-@@ -183,6 +188,10 @@ static int orion_wdt_ping(struct watchdog_device *wd=
-t_dev)
- 	/* Reload watchdog duration */
- 	writel(dev->clk_rate * wdt_dev->timeout,
- 	       dev->reg + dev->data->wdt_counter_offset);
-+	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-+		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
-+		       dev->reg + TIMER1_VAL_OFF);
-+
- 	return 0;
- }
-=20
-@@ -194,13 +203,18 @@ static int armada375_start(struct watchdog_device *=
-wdt_dev)
- 	/* Set watchdog duration */
- 	writel(dev->clk_rate * wdt_dev->timeout,
- 	       dev->reg + dev->data->wdt_counter_offset);
-+	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-+		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
-+		       dev->reg + TIMER1_VAL_OFF);
-=20
- 	/* Clear the watchdog expiration bit */
- 	atomic_io_modify(dev->reg + TIMER_A370_STATUS, WDT_A370_EXPIRED, 0);
-=20
- 	/* Enable watchdog timer */
--	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
--						dev->data->wdt_enable_bit);
-+	reg =3D dev->data->wdt_enable_bit;
-+	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-+		reg |=3D TIMER1_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, reg, reg);
-=20
- 	/* Enable reset on watchdog */
- 	reg =3D readl(dev->rstout);
-@@ -277,7 +291,7 @@ static int orion_stop(struct watchdog_device *wdt_dev=
-)
- static int armada375_stop(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
--	u32 reg;
-+	u32 reg, mask;
-=20
- 	/* Disable reset on watchdog */
- 	atomic_io_modify(dev->rstout_mask, dev->data->rstout_mask_bit,
-@@ -287,7 +301,10 @@ static int armada375_stop(struct watchdog_device *wd=
-t_dev)
- 	writel(reg, dev->rstout);
-=20
- 	/* Disable watchdog timer */
--	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
-+	mask =3D dev->data->wdt_enable_bit;
-+	if (wdt_dev->info->options & WDIOF_PRETIMEOUT)
-+		mask &=3D ~TIMER1_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, mask, 0);
-=20
- 	return 0;
- }
-@@ -349,7 +366,7 @@ static unsigned int orion_wdt_get_timeleft(struct wat=
-chdog_device *wdt_dev)
- 	return readl(dev->reg + dev->data->wdt_counter_offset) / dev->clk_rate;
- }
-=20
--static const struct watchdog_info orion_wdt_info =3D {
-+static struct watchdog_info orion_wdt_info =3D {
- 	.options =3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
- 	.identity =3D "Orion Watchdog",
- };
-@@ -368,6 +385,16 @@ static irqreturn_t orion_wdt_irq(int irq, void *devi=
-d)
- 	return IRQ_HANDLED;
- }
-=20
-+static irqreturn_t orion_wdt_pre_irq(int irq, void *devid)
-+{
-+	struct orion_watchdog *dev =3D devid;
-+
-+	atomic_io_modify(dev->reg + TIMER_A370_STATUS,
-+			 TIMER1_STATUS_BIT, 0);
-+	watchdog_notify_pretimeout(&dev->wdt);
-+	return IRQ_HANDLED;
-+}
-+
- /*
-  * The original devicetree binding for this driver specified only
-  * one memory resource, so in order to keep DT backwards compatibility
-@@ -589,6 +616,18 @@ static int orion_wdt_probe(struct platform_device *p=
-dev)
- 		}
- 	}
-=20
-+	irq =3D platform_get_irq(pdev, 1);
-+	if (irq > 0) {
-+		orion_wdt_info.options |=3D WDIOF_PRETIMEOUT;
-+		ret =3D devm_request_irq(&pdev->dev, irq, orion_wdt_pre_irq,
-+				       0, pdev->name, dev);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "failed to request IRQ\n");
-+			goto disable_clk;
-+		}
-+	}
-+
-+
- 	watchdog_set_nowayout(&dev->wdt, nowayout);
- 	ret =3D watchdog_register_device(&dev->wdt);
- 	if (ret)
---=20
-2.23.0
-
+-- 
+SUSE Software Solutions Germany GmbH
+HRB 247165 (AG München)
+Geschäftsführer: Felix Imendörffer
