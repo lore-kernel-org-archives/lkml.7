@@ -2,102 +2,79 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9854DC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4A3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 642B52053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4145A2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tf+IoCMZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RK7ysFei"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbfH2Kzc (ORCPT
+        id S1728057AbfH2K4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:55:32 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:17274 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfH2KuJ (ORCPT
+        Thu, 29 Aug 2019 06:56:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38976 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfH2K4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:50:09 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x7TAnTof013730;
-        Thu, 29 Aug 2019 19:49:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7TAnTof013730
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567075772;
-        bh=bONSGLTFaXqEMmGlC9jNWtPpXwIX2FvApbhg5YEacHY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tf+IoCMZ8FnlxiyVUG2h+Gy5Y+i7OqvaRwxaxqL44y7HIrFVR5O1s87bCOlAVmSDO
-         0d6p10gASi9nIjm3tDfdhjHFq2KynTVYZMS2Hlvk3AOIz/8dDmc2vTMjKCG9jY/Brk
-         nC/tc+Qn1zmMeux84bhSFkZNsGLaRebjUI7E/tWaArsJJJPQcMMfr+cGQz6Zra2blq
-         xjYDwGglnO4+WpI83mNxsv5PgnG6GLm8JdX+aWaIfGZxr3u8WEm2BTUd/0T9kQwbOc
-         Sfuw5ClVm1CZS5pnCftjK0KGbta7/T3IeQ6x7tWiQPE0KlFFxJUwN87qtqg/vvZxqN
-         nGBUW9VnhYAYw==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Piotr Sroka <piotrs@cadence.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] mmc: sdhci-cadence: enable v4_mode to fix ADMA 64-bit addressing
-Date:   Thu, 29 Aug 2019 19:49:26 +0900
-Message-Id: <20190829104928.27404-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 29 Aug 2019 06:56:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zGhLBR0A7qfv6CWZPkKZEbt0N93fufawom5jHSXyEHI=; b=RK7ysFeiNsDXvG/kes172+IWv
+        LMy2DudogAzRVGxvCcqIqdLWIUn7xAhwMJ+rrZhs3zy/czK+l3s7wItfCqxBfqG24W3ss+2Kz530V
+        Gg3lImidY9uYIJ5fOccCQZ8UdPAM4PRWGoTPHqntfjQ3nqqR325acokq2EXI2NcjO+c2eW4c4vI2K
+        weMfwpqRA8ZlOaKgvQG8Va4MI9MJEeMxrA5/NnEeDXtO+pf1xIZAzb6Pb7WpKXtow4NgSOHVM4lv4
+        HqOKuTDV5gXr/LFW7KpA+hdYXtc3BHs2z61F7AVTrU8wWLan8pqRash+CUwMKQugvHrhHE6HndtZZ
+        V5oDci1+w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3I6B-0002Mc-Gt; Thu, 29 Aug 2019 10:56:15 +0000
+Date:   Thu, 29 Aug 2019 03:56:15 -0700
+From:   "hch@infradead.org" <hch@infradead.org>
+To:     Atish Patra <Atish.Patra@wdc.com>
+Cc:     "hch@infradead.org" <hch@infradead.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "alankao@andestech.com" <alankao@andestech.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "anup@brainfault.org" <anup@brainfault.org>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
+        "gary@garyguo.net" <gary@garyguo.net>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+Subject: Re: [RFC PATCH 1/2] RISC-V: Mark existing SBI as legacy SBI.
+Message-ID: <20190829105615.GA8968@infradead.org>
+References: <20190826233256.32383-1-atish.patra@wdc.com>
+ <20190826233256.32383-2-atish.patra@wdc.com>
+ <20190827140304.GA21855@infradead.org>
+ <ac3cfe4502090354a7c49fae277adb757ad900d5.camel@wdc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ac3cfe4502090354a7c49fae277adb757ad900d5.camel@wdc.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The IP datasheet says this controller is compatible with SD Host
-Specification Version v4.00.
+On Tue, Aug 27, 2019 at 08:37:27PM +0000, Atish Patra wrote:
+> That would split the implementation between C file & assembly file for
+> no good reason.
+> 
+> How about moving everything in sbi.c and just write everything inline
+> assembly there.
 
-As it turned out, the ADMA of this IP does not work with 64-bit mode
-when it is in the Version 3.00 compatible mode; it understands the
-old 64-bit descriptor table (as defined in SDHCI v2), but the ADMA
-System Address Register (SDHCI_ADMA_ADDRESS) cannot point to the
-64-bit address.
-
-I noticed this issue only after commit bd2e75633c80 ("dma-contiguous:
-use fallback alloc_pages for single pages"). Prior to that commit,
-dma_set_mask_and_coherent() returned the dma address that fits in
-32-bit range, at least for the default arm64 configuration
-(arch/arm64/configs/defconfig). Now the host->adma_addr exceeds the
-32-bit limit, causing the real problem for the Socionext SoCs.
-(As a side-note, I was also able to reproduce the issue for older
-kernels by turning off CONFIG_DMA_CMA.)
-
-Call sdhci_enable_v4_mode() to fix this.
-
-I think it is better to back-port this, but only possible for v4.20+.
-
-When this driver was merged (v4.10), the v4 mode support did not exist.
-It was added by commit b3f80b434f72 ("mmc: sdhci: Add sd host v4 mode")
-i.e. v4.20.
-
-Cc: <stable@vger.kernel.org> # v4.20+
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- drivers/mmc/host/sdhci-cadence.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
-index 163d1cf4367e..44139fceac24 100644
---- a/drivers/mmc/host/sdhci-cadence.c
-+++ b/drivers/mmc/host/sdhci-cadence.c
-@@ -369,6 +369,7 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
- 	host->mmc_host_ops.execute_tuning = sdhci_cdns_execute_tuning;
- 	host->mmc_host_ops.hs400_enhanced_strobe =
- 				sdhci_cdns_hs400_enhanced_strobe;
-+	sdhci_enable_v4_mode(host);
- 
- 	sdhci_get_of_property(pdev);
- 
--- 
-2.17.1
-
+Well, if we implement it in pure assembly that would be the entire
+implementation, wouldn't it?
