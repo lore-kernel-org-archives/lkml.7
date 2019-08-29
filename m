@@ -2,115 +2,147 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4BEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4F1C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91DC32080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDD12080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:03:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jxWgRXMG"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="j6VdB171"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfH2PBu (ORCPT
+        id S1727707AbfH2PDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:01:50 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49912 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfH2PBu (ORCPT
+        Thu, 29 Aug 2019 11:03:33 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34066 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfH2PDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:01:50 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7TEsQjD152610;
-        Thu, 29 Aug 2019 15:01:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=d8wswmae7bbnm9LXPmWcm4lMM9dtzn7qkr9EcyOkzy4=;
- b=jxWgRXMGGyG6mCXTBbT1yz1FgIBc3hPHTC3WGeSHMOWEvTCYb3IxC0AHtV8kjUOrCgsK
- dm8gF3YZ/o7mRCNH2JJ3frPBQwquNf1iexCSkU2SqmOHWcdsyXgSmFF80wnFYIt49+2s
- G/XiT1kC+R84gqKPBI53fPZM6/7VQHnvSleYosvkNA1F+ipL4v9qqEPrJ4GY8C4MDfH4
- qlxWV71MAiNuvVWfgEfHJvxXuXm7YCrRn0BP9w+1gQCuFBlH1AxFrU+CC10qSgtkUFFP
- byxkQYENUPo8T3ncbEyF8gC2JDL119bJJyZUYlGb85IRhTI6/9iy3M7cvX2MC2JWkbaV 8w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2upgr785f4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 15:01:38 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7TEqlq4082932;
-        Thu, 29 Aug 2019 15:01:37 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2untev5s15-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 15:01:37 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7TF1ZTu005411;
-        Thu, 29 Aug 2019 15:01:36 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 29 Aug 2019 08:01:35 -0700
-Date:   Thu, 29 Aug 2019 08:01:34 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Austin Kim <austindh.kim@gmail.com>, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Use WARN_ON rather than BUG() for bailout
- mount-operation
-Message-ID: <20190829150134.GA5354@magnolia>
-References: <20190828064749.GA165571@LGEARND20B15>
- <20190829075655.GD18966@infradead.org>
+        Thu, 29 Aug 2019 11:03:32 -0400
+Received: by mail-io1-f68.google.com with SMTP id s21so7626085ioa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 08:03:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9zORjbGk69oJ5dfKY3b1CqJAsKNTapFMC7SK80j7yvM=;
+        b=j6VdB1714vSF2YQaaX7iXfHmGH1RD43tZxcwSxpbEk0OT8d23Dt6hUkqGiY4nsTWGs
+         jlZ4H8W2hjcIVXH8dbCxGDpgm7G9HWEw8im9053hWj5MUJATS/KTjJ03vCtiAXSjdEDH
+         Ja69Qn4LE0sSvAzAx9TjEGiXitRltLabCr56GvucPKS66SMC3FieNAjDizJioIhhZUtK
+         u4ixXxOmfpbAiuxqEr20o59W6Bo2xopdUdi6icuPm42FGjclqj/hy4y3VkycolJNPKlC
+         /cCy7kqGQAUS+VX80aqwTyGbS9Pd9gaOhReHPGxJwgi9DoGgmIZ4F974fCXEWHLpGuLz
+         7spg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9zORjbGk69oJ5dfKY3b1CqJAsKNTapFMC7SK80j7yvM=;
+        b=JxEzVjGQSAt3SpNDxbo0kmpz/rLqxlqea+DGSsqqC6Z2gmhtiMdRPnUbDWeYXqGmPL
+         YxlHz87jsoBKcU85H7c13NTgICbUJUF06wY1RF9qd+SUfCFuDr0GR0+aAL8zW/NlY8aW
+         iESBeC8wGlLcDBUbtbtFg4tFpduqx6wCf9bqTmGMIzfPL+qPGxnZdSNoJjZGe1Gnluca
+         chyhfd1WjBBIXJ0KAA2vZ1u+BAzeUqOjE6ci/5EG5pJyYpKNlEkB5K22p+edbLKQQuzj
+         GCPHpOPl1Ep1tQst+54XwqmDxihBF59fkQrq9aEtaiea9MpSXb92uoqF2VvJ4s3kpp8/
+         Y6gw==
+X-Gm-Message-State: APjAAAVJ3NfZCwGJWjCUMO3kHxQOpOQnqQoBa0xcOCDaI5EmMWSEi/1f
+        GpmDGVQqRkvHAC8HUVMhClb61EIQA93mjwyY6JPU3+b8
+X-Google-Smtp-Source: APXvYqx59i598mFm2GBgghGeivK6EaWlSPth0QzEwpZvp75pPj5w+oZSKXR7rqDv3ih969g1f7BxN8U/wVf1ecjdxpU=
+X-Received: by 2002:a6b:8b0b:: with SMTP id n11mr5437384iod.101.1567091011925;
+ Thu, 29 Aug 2019 08:03:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829075655.GD18966@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9363 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908290163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9363 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908290163
+References: <20190826193638.6638-1-echron@arista.com> <20190827071523.GR7538@dhcp22.suse.cz>
+ <CAM3twVRZfarAP6k=LLWH0jEJXu8C8WZKgMXCFKBZdRsTVVFrUQ@mail.gmail.com>
+ <20190828065955.GB7386@dhcp22.suse.cz> <CAM3twVR_OLffQ1U-SgQOdHxuByLNL5sicfnObimpGpPQ1tJ0FQ@mail.gmail.com>
+ <20190829071105.GQ28313@dhcp22.suse.cz> <297cf049-d92e-f13a-1386-403553d86401@i-love.sakura.ne.jp>
+ <20190829115608.GD28313@dhcp22.suse.cz>
+In-Reply-To: <20190829115608.GD28313@dhcp22.suse.cz>
+From:   Edward Chron <echron@arista.com>
+Date:   Thu, 29 Aug 2019 08:03:19 -0700
+Message-ID: <CAM3twVSZm69U8Sg+VxQ67DeycHUMC5C3_f2EpND4_LC4UHx7BA@mail.gmail.com>
+Subject: Re: [PATCH 00/10] OOM Debug print selection and additional information
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 12:56:55AM -0700, Christoph Hellwig wrote:
-> On Wed, Aug 28, 2019 at 03:47:49PM +0900, Austin Kim wrote:
-> > If the CONFIG_BUG is enabled, BUG() is executed and then system is crashed.
-> > However, the bailout for mount is no longer proceeding.
-> > 
-> > For this reason, using WARN_ON rather than BUG() could prevent this situation.
-> > ---
-> >  fs/xfs/xfs_mount.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-> > index 322da69..10fe000 100644
-> > --- a/fs/xfs/xfs_mount.c
-> > +++ b/fs/xfs/xfs_mount.c
-> > @@ -213,8 +213,7 @@ xfs_initialize_perag(
-> >  			goto out_hash_destroy;
-> >  
-> >  		spin_lock(&mp->m_perag_lock);
-> > -		if (radix_tree_insert(&mp->m_perag_tree, index, pag)) {
-> > -			BUG();
-> > +		if (WARN_ON(radix_tree_insert(&mp->m_perag_tree, index, pag))){
-> 
-> Please make this a WARN_ON_ONCE so that we don't see a flodding of
-> messages in case of this error.
+On Thu, Aug 29, 2019 at 4:56 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Thu 29-08-19 19:14:46, Tetsuo Handa wrote:
+> > On 2019/08/29 16:11, Michal Hocko wrote:
+> > > On Wed 28-08-19 12:46:20, Edward Chron wrote:
+> > >> Our belief is if you really think eBPF is the preferred mechanism
+> > >> then move OOM reporting to an eBPF.
+> > >
+> > > I've said that all this additional information has to be dynamically
+> > > extensible rather than a part of the core kernel. Whether eBPF is the
+> > > suitable tool, I do not know. I haven't explored that. There are other
+> > > ways to inject code to the kernel. systemtap/kprobes, kernel modules and
+> > > probably others.
+> >
+> > As for SystemTap, guru mode (an expert mode which disables protection provided
+> > by SystemTap; allowing kernel to crash when something went wrong) could be used
+> > for holding spinlock. However, as far as I know, holding mutex (or doing any
+> > operation that might sleep) from such dynamic hooks is not allowed. Also we will
+> > need to export various symbols in order to allow access from such dynamic hooks.
+>
+> This is the oom path and it should better not use any sleeping locks in
+> the first place.
+>
+> > I'm not familiar with eBPF, but I guess that eBPF is similar.
+> >
+> > But please be aware that, I REPEAT AGAIN, I don't think neither eBPF nor
+> > SystemTap will be suitable for dumping OOM information. OOM situation means
+> > that even single page fault event cannot complete, and temporary memory
+> > allocation for reading from kernel or writing to files cannot complete.
+>
+> And I repeat that no such reporting is going to write to files. This is
+> an OOM path afterall.
+>
+> > Therefore, we will need to hold all information in kernel memory (without
+> > allocating any memory when OOM event happened). Dynamic hooks could hold
+> > a few lines of output, but not all lines we want. The only possible buffer
+> > which is preallocated and large enough would be printk()'s buffer. Thus,
+> > I believe that we will have to use printk() in order to dump OOM information.
+> > At that point,
+>
+> Yes, this is what I've had in mind.
+>
 
-How would it flood?  If the radix tree insertion fails we dump all the
-pag structures and fail log recovery / mount / growfs.  I suppose if
-one were out of memory and hammering the system hard with repeated mount
-calls...
++1: It makes sense to keep the report going to the dmesg to persist.
+That is where it has always gone and there is no reason to change.
+You can have several OOMs back to back and you'd like to retain the output.
+All the information should be kept together in the OOM report.
 
---D
+> >
+> >   static bool (*oom_handler)(struct oom_control *oc) = default_oom_killer;
+> >
+> >   bool out_of_memory(struct oom_control *oc)
+> >   {
+> >           return oom_handler(oc);
+> >   }
+> >
+> > and let in-tree kernel modules override current OOM killer would be
+> > the only practical choice (if we refuse adding many knobs).
+>
+> Or simply provide a hook with the oom_control to be called to report
+> without replacing the whole oom killer behavior. That is not necessary.
+
+For very simple addition, to add a line of output this works.
+It would still be nice to address the fact the existing OOM Report prints
+all of the user processes or none. It would be nice to add some control
+for that. That's what we did.
+
+> --
+> Michal Hocko
+> SUSE Labs
