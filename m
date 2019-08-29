@@ -7,79 +7,153 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0B5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D734DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C143322CED
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8D520578
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:59:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJX6UTWW"
+	dkim=pass (1024-bit key) header.d=protonmail.ch header.i=@protonmail.ch header.b="mp6rq7K1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfH2P7W (ORCPT
+        id S1728251AbfH2P76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:59:22 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43841 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbfH2P7V (ORCPT
+        Thu, 29 Aug 2019 11:59:58 -0400
+Received: from mail-40130.protonmail.ch ([185.70.40.130]:44371 "EHLO
+        mail-40130.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727600AbfH2P75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:59:21 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m2so3357950qkd.10;
-        Thu, 29 Aug 2019 08:59:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7vEGQNkK00oay2WNf1scuzD5dCz2zaDXZdVVYkLCPU8=;
-        b=nJX6UTWWOz4O/nJJw1g67xvjXbYSzxeukliI0SSWNXKuqcs+mikp7hla1sdqB2i0L5
-         IixcwimUb7Mc0K+ea09h9BTp0RxyZjZ1dEJaXhxBZr1D/Atj+wdT496U7FuiDs4xdkNM
-         Ux+fZZpQLjaPn5b9lV0cEseU1tP5V/Px/Mx2RXPV1jK6444JK+HPLMl24fELDSGIIrSa
-         8szCu/WuD6RUOTt0gJTWbDyIY6gwxJUyoFWskdi6A5Yif8IIMzG78PXvDiTASKm6w0oo
-         WAZIROyVJPQ4JA1kg0iWigC6BlIrA35L8+FG+XU27/hPUFpDQmEgK2y+djLvcg7ksCrP
-         5gCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7vEGQNkK00oay2WNf1scuzD5dCz2zaDXZdVVYkLCPU8=;
-        b=lmQ9z55KMtGMBUXqvNIfVq7HKH9Nx0XuEP/MhLhUHQGLpH8S62/nloejJXd4/8nXau
-         6qSC9sVml6J3CzwudrEa75zAMs4Xt76AXvlijKzAPj3pf5CDaWsSWhcz1fxJopNWXHM5
-         hz3ctFSnz7IAVf6f3Atig9gD7MKhB+7a6LRSdOZ5ineM/OWGKckDYj2AjYcuyUgm1UpF
-         nXqDLEuIRj+78av7vhgHBsE6tFXtR/pCZs8SQJt+fbWINkxhesG2VRGNNHb6O0ncI4JH
-         E4bcMnQSBbDy+MhfhVeTNuA9cJwnXtJPQJ/G6CjWcXxV3M1aYzCiixYcpgmCMw4UG+aQ
-         8zWg==
-X-Gm-Message-State: APjAAAXnJgnRNE9bMs0bACjJABGcFKAkQgM3gsc2sn/2yY87jnJqpEgn
-        SjSAmIElIXoF6dIsrXgjI3EnaR0UxJbSQOUbjtA=
-X-Google-Smtp-Source: APXvYqxnfPdkhPWkBv4vKcxMIJY9EXkMbf5eiIhjSD9+q4dX8rj6Ep2ATMFnuG257clW7uB5xLinHhcbyMInhMyoLYc=
-X-Received: by 2002:a05:620a:126c:: with SMTP id b12mr10701992qkl.177.1567094360524;
- Thu, 29 Aug 2019 08:59:20 -0700 (PDT)
+        Thu, 29 Aug 2019 11:59:57 -0400
+Date:   Thu, 29 Aug 2019 15:59:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.ch;
+        s=default; t=1567094393;
+        bh=s0PahgYZsuit8sSrf7wTLbyTQ2qVGl52SRNMyg333Ks=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
+         Feedback-ID:From;
+        b=mp6rq7K16xOW7a7JH2Dr8zmKgqrqZJS+W/BULOYMGrphHtPcy5daClMOl6Q4hiJRD
+         e9R3+q0XHsb8umldAcfRlZ07UoAdwKPQRFt3vq47DeDJL9vpTcPWluVtpADfdVMIPW
+         UnvtbcKwpfiGxn5S7TxrzGhAF/r48M5evKTJpMVY=
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+From:   =?UTF-8?Q?Tam=C3=A1s_Sz=C5=B1cs?= <tszucs@protonmail.ch>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Reply-To: =?UTF-8?Q?Tam=C3=A1s_Sz=C5=B1cs?= <tszucs@protonmail.ch>
+Subject: Re: [PATCH] mmc: sdhi: fill in actual_clock
+Message-ID: <FaBiPuw0MFfdsj60MQTULROSN-8cSV7sNRlgO5SSVPo5jfQopmm9zTq4JT71VxaO32qdcAhisOrhFYG_QLByLNHcBrMgshsI_WwP9rlH2ms=@protonmail.ch>
+In-Reply-To: <CAMuHMdWcp-3B7ZZjbyo02ECyzDX_rQxXF645OCutCkjUu_jWaA@mail.gmail.com>
+References: <20190828185518.4340-1-tszucs@protonmail.ch>
+ <CAMuHMdWcp-3B7ZZjbyo02ECyzDX_rQxXF645OCutCkjUu_jWaA@mail.gmail.com>
+Feedback-ID: nIMxuco3ul2LtVHhzi8PphYHQLjwNa0SMoiI49kuTHKENnPWKUsinAdWedFtAsi63naFGY15tCjh3_itnNk3og==:Ext:ProtonMail
 MIME-Version: 1.0
-References: <20190829000130.7845-1-standby24x7@gmail.com> <20190828171505.105c2cf7@cakuba.netronome.com>
-In-Reply-To: <20190828171505.105c2cf7@cakuba.netronome.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Thu, 29 Aug 2019 08:59:09 -0700
-Message-ID: <CAPhsuW5OhFmcs=4LTzzjnH39f7i5Ks94o_OBbbZ_v+YHnXtaQA@mail.gmail.com>
-Subject: Re: [PATCH] selftests/bpf: Fix a typo in test_offload.py
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Masanari Iida <standby24x7@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 5:15 PM Jakub Kicinski
-<jakub.kicinski@netronome.com> wrote:
->
-> On Thu, 29 Aug 2019 09:01:30 +0900, Masanari Iida wrote:
-> > This patch fix a spelling typo in test_offload.py
-> >
-> > Signed-off-by: Masanari Iida <standby24x7@gmail.com>
->
-> Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Hi Geert,
 
-Acked-by: Song Liu <songliubraving@fb.com>
+It would be possible to call clk_get_rate() unconditionally but there's usu=
+ally no need, thus the ternary. Are you in favor of that though?
+
+It turns out I need to send a followup to fix some glitches. Please stay tu=
+ned.
+
+Kind regards,
+Tamas
+
+
+Tam=C3=A1s Sz=C5=B1cs
+tszucs@protonmail.ch
+
+=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
+ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
+On Thursday, August 29, 2019 9:47 AM, Geert Uytterhoeven <geert@linux-m68k.=
+org> wrote:
+
+> Hi Tam=C3=A1s,
+>
+> On Wed, Aug 28, 2019 at 9:02 PM Tam=C3=A1s Sz=C5=B1cs tszucs@protonmail.c=
+h wrote:
+>
+> > Save set clock in mmc_host actual_clock enabling exporting it via debug=
+fs.
+> > This will indicate the precise SD clock in I/O settings rather than onl=
+y the
+> > sometimes misleading requested clock.
+> > Signed-off-by: Tam=C3=A1s Sz=C5=B1cs tszucs@protonmail.ch
+>
+> Thanks for your patch!
+>
+> > --- a/drivers/mmc/host/renesas_sdhi_core.c
+> > +++ b/drivers/mmc/host/renesas_sdhi_core.c
+> > @@ -124,7 +124,7 @@ static unsigned int renesas_sdhi_clk_update(struct =
+tmio_mmc_host *host,
+> > {
+> > struct renesas_sdhi *priv =3D host_to_priv(host);
+> > unsigned int freq, diff, best_freq =3D 0, diff_min =3D ~0;
+> >
+> > -         int i, ret;
+> >
+> >
+> >
+> > -         int i;
+> >
+> >           /* tested only on R-Car Gen2+ currently; may work for others =
+*/
+> >           if (!(host->pdata->flags & TMIO_MMC_MIN_RCAR2))
+> >
+> >
+> >
+> > @@ -153,9 +153,11 @@ static unsigned int renesas_sdhi_clk_update(struct=
+ tmio_mmc_host *host,
+> > }
+> > }
+> >
+> > -         ret =3D clk_set_rate(priv->clk, best_freq);
+> >
+> >
+> >
+> > -         host->mmc->actual_clock =3D
+> >
+> >
+> > -                 clk_set_rate(priv->clk, best_freq) =3D=3D 0 ?
+> >
+> >
+> > -                         best_freq : clk_get_rate(priv->clk);
+> >
+> >
+>
+> When clk_set_rate() returns 0 to indicate success, it may still have
+> rounded the requested clock rate, no?
+> So wouldn't it be better to always call clk_get_rate()?
+>
+> > -         return ret =3D=3D 0 ? best_freq : clk_get_rate(priv->clk);
+> >
+> >
+> >
+> > -         return host->mmc->actual_clock;
+> >
+> >
+> >
+> > }
+>
+> Gr{oetje,eeting}s,
+>
+> Geert
+>
+> ----------------------------
+>
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+> -- Linus Torvalds
+
+
