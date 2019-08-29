@@ -2,165 +2,189 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EADC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E5BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D002C2073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8DE2073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:32:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="px5h+HqN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbfH2PcJ (ORCPT
+        id S1728070AbfH2Pcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:32:09 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:52686 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727359AbfH2PcI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:32:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id q5so4380338iof.19
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 08:32:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=9jMd6mNwFLX+PQpzzKyalqJyB2DZCmy9IGLW1UJr3iU=;
-        b=bwGjDIkklN9gD5BLSGOQdEWfi54cAn21V8DxfZI56xnHYZL0a5FZk1S68PecgvVggN
-         r+Y93B2C2UBXX/YxMlN8WBTgciFH+kzGI9AgMXEwDKaKwzGVREviFr2TfO4dINE3EDHy
-         C9bZY+VG8GgPy0naAhIAdHo2YvnHm4j/BkL+PzEGgvmVnmjbdCjazoVZ0Cg69A2NUzQR
-         EA/k4yBWHbBbKF1RfKaRcs6qdtWUFVPO3Sg+2ydU3L0ypkjeXiBHSruBtCB1u9KfC+NP
-         QGoOHXaQY5FQb+U3uQztn90obxRiX/r+XdpQVKVN+1lqWcmWetaZYWjPqLVBmC5euVeW
-         kLOA==
-X-Gm-Message-State: APjAAAUPh+aJGP5c3bfu/KI4Z5T2VmudchISDRXSkjDsFIUwwozZi0Fd
-        yyEsDVvBBVVkVhV80S8XTfgeIoZ9/V6fWiEd8uDj7BstkCS3
-X-Google-Smtp-Source: APXvYqwRkvhHX4DsRrb2aW6LnXU//89K++W00MWSrkTYJbPK6vsIHenfAXL3fk+j1Bgmi2Tdw9zqdjK1NZeoTAKKbiFLfzuodlEM
+        Thu, 29 Aug 2019 11:32:50 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:53924 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbfH2Pct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 11:32:49 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46K67K4GkTzB09Zd;
+        Thu, 29 Aug 2019 17:32:45 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=px5h+HqN; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 62p04wlpeZ_B; Thu, 29 Aug 2019 17:32:45 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46K67K350czB09Zc;
+        Thu, 29 Aug 2019 17:32:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1567092765; bh=inLRHSYdeswudIassqlB1giOtBbD3jCpbhs1IAAAaB4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=px5h+HqN8E4nvzuhvJOFy21xelMHFBC2vXdOsZADp/BglnMon4akhKe4KcwxFo3VK
+         kER78wRfz4aoykiKRlIpFQeInHutTZ8CFYpm0BbtRMg7fLOwodDAGGJElpfEDBSRjj
+         WnftFNPcHVvgp4htjaOREYZG2StRS1FI7/eWJagg=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0FB658B8CB;
+        Thu, 29 Aug 2019 17:32:47 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 4AcsCRfvUMpO; Thu, 29 Aug 2019 17:32:46 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A0D2E8B8C1;
+        Thu, 29 Aug 2019 17:32:46 +0200 (CEST)
+Subject: Re: [PATCH v2 13/15] crypto: testmgr - convert hash testing to use
+ testvec_configs
+To:     Eric Biggers <ebiggers@kernel.org>, linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     linux-kernel@vger.kernel.org
+References: <20190201075150.18644-1-ebiggers@kernel.org>
+ <20190201075150.18644-14-ebiggers@kernel.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <e1ce6e9f-dc20-79bc-cd53-faff92481f7a@c-s.fr>
+Date:   Thu, 29 Aug 2019 17:32:46 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a5d:97cf:: with SMTP id k15mr856067ios.151.1567092727431;
- Thu, 29 Aug 2019 08:32:07 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 08:32:07 -0700
-In-Reply-To: <000000000000edc1d5058f5dfa5f@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000594c700591433550@google.com>
-Subject: Re: memory leak in ppp_write
-From:   syzbot <syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, kafai@fb.com, linux-kernel@vger.kernel.org,
-        linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
-        paulus@samba.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190201075150.18644-14-ebiggers@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Hi Eric,
 
-HEAD commit:    6525771f Merge tag 'arc-5.3-rc7' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16dc12a2600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e6131eafb9408877
-dashboard link: https://syzkaller.appspot.com/bug?extid=d9c8bf24e56416d7ce2c
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=116942de600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1179c582600000
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com
+Le 01/02/2019 à 08:51, Eric Biggers a écrit :
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> Convert alg_test_hash() to use the new test framework, adding a list of
+> testvec_configs to test by default.  When the extra self-tests are
+> enabled, randomly generated testvec_configs are tested as well.
+> 
+> This improves hash test coverage mainly because now all algorithms have
+> a variety of data layouts tested, whereas before each algorithm was
+> responsible for declaring its own chunked test cases which were often
+> missing or provided poor test coverage.  The new code also tests both
+> the MAY_SLEEP and !MAY_SLEEP cases and buffers that cross pages.
+> 
+> This already found bugs in the hash walk code and in the arm32 and arm64
+> implementations of crct10dif.
+> 
+> I removed the hash chunked test vectors that were the same as
+> non-chunked ones, but left the ones that were unique.
+> 
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>   crypto/testmgr.c | 795 ++++++++++++++++++++---------------------------
+>   crypto/testmgr.h | 107 +------
+>   2 files changed, 352 insertions(+), 550 deletions(-)
+> 
+> diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+> index 7638090ff1b0a..96aa268ff4184 100644
+> --- a/crypto/testmgr.c
+> +++ b/crypto/testmgr.c
 
-executing program
-executing program
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff88812a17bc00 (size 224):
-   comm "syz-executor673", pid 6952, jiffies 4294942888 (age 13.040s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000d110fff9>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000d110fff9>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<00000000d110fff9>] slab_alloc_node mm/slab.c:3262 [inline]
-     [<00000000d110fff9>] kmem_cache_alloc_node+0x163/0x2f0 mm/slab.c:3574
-     [<000000002d616113>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:197
-     [<000000000167fc45>] alloc_skb include/linux/skbuff.h:1055 [inline]
-     [<000000000167fc45>] ppp_write+0x48/0x120  
-drivers/net/ppp/ppp_generic.c:502
-     [<000000009ab42c0b>] __vfs_write+0x43/0xa0 fs/read_write.c:494
-     [<00000000086b2e22>] vfs_write fs/read_write.c:558 [inline]
-     [<00000000086b2e22>] vfs_write+0xee/0x210 fs/read_write.c:542
-     [<00000000a2b70ef9>] ksys_write+0x7c/0x130 fs/read_write.c:611
-     [<00000000ce5e0fdd>] __do_sys_write fs/read_write.c:623 [inline]
-     [<00000000ce5e0fdd>] __se_sys_write fs/read_write.c:620 [inline]
-     [<00000000ce5e0fdd>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
-     [<00000000d9d7b370>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000006e6d506>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[...]
 
-BUG: memory leak
-unreferenced object 0xffff888121203900 (size 224):
-   comm "syz-executor673", pid 6965, jiffies 4294943430 (age 7.620s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000d110fff9>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000d110fff9>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<00000000d110fff9>] slab_alloc_node mm/slab.c:3262 [inline]
-     [<00000000d110fff9>] kmem_cache_alloc_node+0x163/0x2f0 mm/slab.c:3574
-     [<000000002d616113>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:197
-     [<000000000167fc45>] alloc_skb include/linux/skbuff.h:1055 [inline]
-     [<000000000167fc45>] ppp_write+0x48/0x120  
-drivers/net/ppp/ppp_generic.c:502
-     [<000000009ab42c0b>] __vfs_write+0x43/0xa0 fs/read_write.c:494
-     [<00000000086b2e22>] vfs_write fs/read_write.c:558 [inline]
-     [<00000000086b2e22>] vfs_write+0xee/0x210 fs/read_write.c:542
-     [<00000000a2b70ef9>] ksys_write+0x7c/0x130 fs/read_write.c:611
-     [<00000000ce5e0fdd>] __do_sys_write fs/read_write.c:623 [inline]
-     [<00000000ce5e0fdd>] __se_sys_write fs/read_write.c:620 [inline]
-     [<00000000ce5e0fdd>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
-     [<00000000d9d7b370>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000006e6d506>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-BUG: memory leak
-unreferenced object 0xffff88811d0cf800 (size 512):
-   comm "syz-executor673", pid 6965, jiffies 4294943430 (age 7.620s)
-   hex dump (first 32 bytes):
-     06 00 00 00 05 00 00 00 40 00 00 00 00 00 00 00  ........@.......
-     40 00 40 00 00 00 00 00 40 00 40 00 00 00 00 00  @.@.....@.@.....
-   backtrace:
-     [<00000000b9629d4c>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b9629d4c>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<00000000b9629d4c>] slab_alloc_node mm/slab.c:3262 [inline]
-     [<00000000b9629d4c>] kmem_cache_alloc_node_trace+0x161/0x2f0  
-mm/slab.c:3592
-     [<00000000a9b92035>] __do_kmalloc_node mm/slab.c:3614 [inline]
-     [<00000000a9b92035>] __kmalloc_node_track_caller+0x38/0x50  
-mm/slab.c:3629
-     [<00000000fad050db>] __kmalloc_reserve.isra.0+0x40/0xb0  
-net/core/skbuff.c:141
-     [<00000000a1025904>] __alloc_skb+0xa0/0x210 net/core/skbuff.c:209
-     [<000000000167fc45>] alloc_skb include/linux/skbuff.h:1055 [inline]
-     [<000000000167fc45>] ppp_write+0x48/0x120  
-drivers/net/ppp/ppp_generic.c:502
-     [<000000009ab42c0b>] __vfs_write+0x43/0xa0 fs/read_write.c:494
-     [<00000000086b2e22>] vfs_write fs/read_write.c:558 [inline]
-     [<00000000086b2e22>] vfs_write+0xee/0x210 fs/read_write.c:542
-     [<00000000a2b70ef9>] ksys_write+0x7c/0x130 fs/read_write.c:611
-     [<00000000ce5e0fdd>] __do_sys_write fs/read_write.c:623 [inline]
-     [<00000000ce5e0fdd>] __se_sys_write fs/read_write.c:620 [inline]
-     [<00000000ce5e0fdd>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
-     [<00000000d9d7b370>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000006e6d506>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> -static int __test_hash(struct crypto_ahash *tfm,
+> -		       const struct hash_testvec *template, unsigned int tcount,
+> -		       enum hash_test test_type, const int align_offset)
+> +static int test_hash_vec_cfg(const char *driver,
+> +			     const struct hash_testvec *vec,
+> +			     unsigned int vec_num,
+> +			     const struct testvec_config *cfg,
+> +			     struct ahash_request *req,
+> +			     struct test_sglist *tsgl,
+> +			     u8 *hashstate)
+>   {
+> -	const char *algo = crypto_tfm_alg_driver_name(crypto_ahash_tfm(tfm));
+> -	size_t digest_size = crypto_ahash_digestsize(tfm);
+> -	unsigned int i, j, k, temp;
+> -	struct scatterlist sg[8];
+> -	char *result;
+> -	char *key;
+> -	struct ahash_request *req;
+> -	struct crypto_wait wait;
+> -	void *hash_buff;
+> -	char *xbuf[XBUFSIZE];
+> -	int ret = -ENOMEM;
+> -
+> -	result = kmalloc(digest_size, GFP_KERNEL);
+> -	if (!result)
+> -		return ret;
+> -	key = kmalloc(MAX_KEYLEN, GFP_KERNEL);
+> -	if (!key)
+> -		goto out_nobuf;
+> -	if (testmgr_alloc_buf(xbuf))
+> -		goto out_nobuf;
+> +	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
+> +	const unsigned int alignmask = crypto_ahash_alignmask(tfm);
+> +	const unsigned int digestsize = crypto_ahash_digestsize(tfm);
+> +	const unsigned int statesize = crypto_ahash_statesize(tfm);
+> +	const u32 req_flags = CRYPTO_TFM_REQ_MAY_BACKLOG | cfg->req_flags;
+> +	const struct test_sg_division *divs[XBUFSIZE];
+> +	DECLARE_CRYPTO_WAIT(wait);
+> +	struct kvec _input;
+> +	struct iov_iter input;
+> +	unsigned int i;
+> +	struct scatterlist *pending_sgl;
+> +	unsigned int pending_len;
+> +	u8 result[HASH_MAX_DIGESTSIZE + TESTMGR_POISON_LEN];
 
+Before this patch, result was allocated with kmalloc().
+Now, result is in the stack. Is there a reason for this change ?
+
+Due to this change, the talitos driver fails when using 
+CONFIG_VMAP_STACK, because result is not dma-able anymore.
+
+CONFIG_DEBUG_VIRTUAL warns on:
+
+[    4.276401] WARNING: CPU: 0 PID: 72 at 
+./arch/powerpc/include/asm/io.h:804 dma_direct_map_page+0x50/0x178
+[    4.285725] CPU: 0 PID: 72 Comm: cryptomgr_test Tainted: G        W 
+       5.3.0-rc6-s3k-dev-00897-g03e8e9014403-dirty #2182
+	[snip registers]
+[    4.353542] NIP [c0066eac] dma_direct_map_page+0x50/0x178
+[    4.358872] LR [c0066eac] dma_direct_map_page+0x50/0x178
+[    4.364074] Call Trace:
+[    4.366533] [c9d0fc18] [c0066eac] dma_direct_map_page+0x50/0x178 
+(unreliable)
+[    4.373587] [c9d0fc38] [c033ac38] __map_single_talitos_ptr+0x54/0x9c
+[    4.379869] [c9d0fc48] [c033e878] ahash_process_req+0x318/0x7a8
+[    4.385739] [c9d0fca8] [c0210b68] do_ahash_op.isra.0+0x24/0x70
+[    4.391494] [c9d0fcb8] [c02130e8] test_ahash_vec_cfg+0x478/0x5a8
+[    4.397432] [c9d0fda8] [c0213b40] __alg_test_hash.isra.13+0x16c/0x334
+[    4.403797] [c9d0fe08] [c0213d84] alg_test_hash+0x7c/0x164
+[    4.409218] [c9d0fe28] [c0213f88] alg_test+0xc0/0x384
+[    4.414209] [c9d0fef8] [c020f0ec] cryptomgr_test+0x48/0x50
+[    4.419623] [c9d0ff08] [c003a818] kthread+0xe0/0x10c
+[    4.424539] [c9d0ff38] [c000e1d0] ret_from_kernel_thread+0x14/0x1c
+
+How should this be fixed ?
+
+Christophe
 
