@@ -2,122 +2,126 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E80C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1042BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D921A2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:25:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567106753;
-	bh=Txo0evGgmM5MKTYUKN6LQ7+m2PQGiBL4eX+XI9Hu1Ik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QoiUN7Y1O5l0+8MW5JB2KwMOo/E+kUTHUtM8EYHg+IMXzxFHL1xtviIUX/4e5vJsu
-	 NWTe8+wqIV2Lgi+PkPwD7v0jKyGH99xqGqPsVmG7Iz1ZQP3/6elK6NmrHyulNVMeaS
-	 auVSDajUW0360RxkMOp/Q6u7tr5t3RXe46YXagkU=
+	by mail.kernel.org (Postfix) with ESMTP id D10D1215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:26:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="KvmAoUKs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbfH2TZx (ORCPT
+        id S1728459AbfH2T0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:25:53 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43413 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbfH2TZw (ORCPT
+        Thu, 29 Aug 2019 15:26:05 -0400
+Received: from gateway24.websitewelcome.com ([192.185.51.61]:14150 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728063AbfH2T0E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 15:25:52 -0400
-Received: by mail-oi1-f196.google.com with SMTP id y8so3454960oih.10;
-        Thu, 29 Aug 2019 12:25:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lZ2BYe42I9MJ0wayu5k+436nxyRI7BnkkEeIXJqYPPY=;
-        b=obapb+hOCb4MQ2c7EakepKWZjWg8f1j8M9ujLt9grPoH3SXxNL/9vskA4actWLXK/Z
-         z/PSuHCAPTm66AXx0KAKHscVxAHdFkUSkVQbrr+pm4mDzgcJCPvqBtHhGBIERBxpOSr7
-         0SbBOKF2/ME8s33rHyp4BWGNMFIGkFQzQ1Q4E8dafMNMJSggYBIWrieDn3NeC/EGUATq
-         r7lNOGwiTiIXlAvnyZP8Jo8C1nlg9KJw492qmozfyV2zNHodK6Q7LOJqqrt4TJeP0Ens
-         i3v/esQNBYLon54rIYA7viFqPZKQc9LFIWWdhqJYjIwKf/LH1vP6S3q09WygEZl2x6LA
-         Y9rg==
-X-Gm-Message-State: APjAAAVjK61EdlYTjAX3lv4wQvXW9sirnmnj50y1AXExKVMCIM5qtxvs
-        u+1TOdg/3l4+e3ae8qiydQ==
-X-Google-Smtp-Source: APXvYqxg9o4u0friAhLIFb1wO376me4+33exQL8RzM7lAtGBzLxeG67AR60+ryEQemuydVobqBKytA==
-X-Received: by 2002:a54:4893:: with SMTP id r19mr7711912oic.91.1567106751513;
-        Thu, 29 Aug 2019 12:25:51 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z26sm839164oih.16.2019.08.29.12.25.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 12:25:51 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 14:25:50 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 02/11] dt-bindings: phy-mtk-tphy: make the ref clock
- optional
-Message-ID: <20190829192550.GA29881@bogus>
-References: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
- <a31d78484b64f853a16e7dcb16fae9fc0de45ebb.1566542696.git.chunfeng.yun@mediatek.com>
+        Thu, 29 Aug 2019 15:26:04 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id B9B79859D64
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 14:25:06 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 3Q2ciQ5Lt3Qi03Q2ci5BIM; Thu, 29 Aug 2019 14:25:06 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=QhHaIcHbmOkxpmshf6EBelOsxAfyUIkBYwOyIG9a0zg=; b=KvmAoUKsztt4fQnMMHDt+Hdpvn
+        UrTLi+K5w2M5bZLz+0IIHfZoxPZVb8jMy3w+kYRhVEHJZYhaNq0aWBhs1hiUtAD+BU6HAt2OTw40T
+        GsalC8uW+sFrxxtGf7sDQb0u36lIwYcbWrUQJ/5zf4yM3gdjr6+8d2g88ogZFeyxfC0NAjS5E/kKz
+        qY63RDo+OAYGft+WZD7Q/hLZGINkZ1Rys2mEsNZRC5KB+54ezADXNoZTQBXdKsx6pUfWZ9li/QdeF
+        4tMyjbeWQKcNe40etS7ZEGjZtxdS16EgPET+xFKCRzgEFO7QBzc1EtoEqXOdeE4uE+cgI7c4Bx6TP
+        476ZD4kg==;
+Received: from [189.152.216.116] (port=45278 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i3Q2b-0022NZ-P5; Thu, 29 Aug 2019 14:25:05 -0500
+Date:   Thu, 29 Aug 2019 14:25:03 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] rapidio/rio_mport_cdev: use struct_size() helper
+Message-ID: <20190829192503.GA28957@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a31d78484b64f853a16e7dcb16fae9fc0de45ebb.1566542696.git.chunfeng.yun@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i3Q2b-0022NZ-P5
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.152.216.116]:45278
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 21
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 03:00:09PM +0800, Chunfeng Yun wrote:
-> Make the ref clock optional, then we no need refer to a fixed-clock
-> in DTS anymore when the clock of USB3 PHY comes from oscillator
-> directly
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
->  .../devicetree/bindings/phy/phy-mtk-tphy.txt        | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> index d5b327f85fa2..1c18bf10b2fe 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> @@ -34,12 +34,6 @@ Optional properties (controller (parent) node):
->  
->  Required properties (port (child) node):
->  - reg		: address and length of the register set for the port.
-> -- clocks	: a list of phandle + clock-specifier pairs, one for each
-> -		  entry in clock-names
-> -- clock-names	: must contain
-> -		  "ref": 48M reference clock for HighSpeed analog phy; and 26M
-> -			reference clock for SuperSpeed analog phy, sometimes is
-> -			24M, 25M or 27M, depended on platform.
->  - #phy-cells	: should be 1 (See second example)
->  		  cell after port phandle is phy type from:
->  			- PHY_TYPE_USB2
-> @@ -48,6 +42,13 @@ Required properties (port (child) node):
->  			- PHY_TYPE_SATA
->  
->  Optional properties (PHY_TYPE_USB2 port (child) node):
-> +- clocks	: a list of phandle + clock-specifier pairs, one for each
-> +		  entry in clock-names
-> +- clock-names	: may contain
-> +		  "ref": 48M reference clock for HighSpeed anolog phy; and 26M
-> +			reference clock for SuperSpeed anolog phy, sometimes is
-> +			24M, 25M or 27M, depended on platform.
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-How do you know the frequency when it is not present?
+struct rio_switch {
+	...
+        struct rio_dev *nextdev[0];
+};
 
-> +
->  - mediatek,eye-src	: u32, the value of slew rate calibrate
->  - mediatek,eye-vrt	: u32, the selection of VRT reference voltage
->  - mediatek,eye-term	: u32, the selection of HS_TX TERM reference voltage
-> -- 
-> 2.23.0
-> 
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
+
+So, replace the following form:
+
+(RIO_GET_TOTAL_PORTS(swpinfo) * sizeof(rswitch->nextdev[0])) + sizeof(*rswitch)
+
+with:
+
+struct_size(rswitch, nextdev, RIO_GET_TOTAL_PORTS(swpinfo))
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/rapidio/devices/rio_mport_cdev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
+index 8155f59ece38..2787d2b7694d 100644
+--- a/drivers/rapidio/devices/rio_mport_cdev.c
++++ b/drivers/rapidio/devices/rio_mport_cdev.c
+@@ -1708,8 +1708,8 @@ static int rio_mport_add_riodev(struct mport_cdev_priv *priv,
+ 	if (rval & RIO_PEF_SWITCH) {
+ 		rio_mport_read_config_32(mport, destid, hopcount,
+ 					 RIO_SWP_INFO_CAR, &swpinfo);
+-		size += (RIO_GET_TOTAL_PORTS(swpinfo) *
+-			 sizeof(rswitch->nextdev[0])) + sizeof(*rswitch);
++		size += struct_size(rswitch, nextdev,
++				    RIO_GET_TOTAL_PORTS(swpinfo));
+ 	}
+ 
+ 	rdev = kzalloc(size, GFP_KERNEL);
+-- 
+2.23.0
+
