@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D7CC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855ACC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B6252339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A38233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102678;
-	bh=rEgZYUr3q3alUaupMjNa3I2deZfpH2gUl29KjEUryys=;
+	s=default; t=1567102682;
+	bh=8s7uHJyYdr3pWYZ1sw1kll+haNg/5Bq+5TloACJDxac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fu/CpTkokXHulp4GGbZhkIpDG1Od4xSo7RHDwKZT+tMsuIz3O46aWRWheLznY18pZ
-	 iNjMfvARkAyN3vPW/I5nihNhwPGAXZFzRBi87NFI8vUAmcrhj+k5WmA6YUvlD8Rnfd
-	 5OevNtX1NMTpeI+sgXserqvw7zz9DHv/DH8H7My4=
+	b=p8zWwqKr2gevZEZH9Q2Tb+A9a+IU1ladnN8iwuanvc62Y4MjuDyWsxDEcocaXDYea
+	 bQoaa57wBejwW38JlEyrM/WWqLZSqItJ+hGZCBNqA2MPNJPM/AFKgYlvdc1R/H7J4J
+	 Ye8pq+1GspnojPALDooyU2q/dOMwsZEHW0Z7M/Ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730275AbfH2SR5 (ORCPT
+        id S1730295AbfH2SSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:17:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60000 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:18:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730200AbfH2SRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:17:47 -0400
+        id S1730244AbfH2SRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6236123405;
-        Thu, 29 Aug 2019 18:17:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3A4423405;
+        Thu, 29 Aug 2019 18:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102667;
-        bh=rEgZYUr3q3alUaupMjNa3I2deZfpH2gUl29KjEUryys=;
+        s=default; t=1567102672;
+        bh=8s7uHJyYdr3pWYZ1sw1kll+haNg/5Bq+5TloACJDxac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ow9BpQIzJ3Pwp3W0W3icqI5IXXPtgfsL1YNwOt0h7NCi+7oQ7+RGFfKCBTRIHeiKd
-         T8Ra0HxTa9r19g0brUxVMZJRaCTp8hJy8ECN+loUfKyssY+XcpzRw6PCHaMyTm2YHt
-         OL34Fyg3h07+61jLU2AzhO1/uLr3D7Hze/LDypDo=
+        b=DCNJX3cmtTyJI/9saJPntRuz6jmgBB9f2ihp4ODcRbsgJD+uNqK8J6XAsjs1ddF7d
+         6qAeRdwCVvI6MX48w5qiKGQEP7tcTFJ+EdAVTCo+o7BZAx/28CgbWzt3Q9qkWmPa3N
+         g/yxSqj3ud4LTNoSVAZcl23SjXO6H73l8qY3VUTk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 07/16] net: myri10ge: fix memory leaks
-Date:   Thu, 29 Aug 2019 14:17:25 -0400
-Message-Id: <20190829181736.9040-7-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 09/16] net: kalmia: fix memory leaks
+Date:   Thu, 29 Aug 2019 14:17:27 -0400
+Message-Id: <20190829181736.9040-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181736.9040-1-sashal@kernel.org>
 References: <20190829181736.9040-1-sashal@kernel.org>
@@ -61,34 +62,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 20fb7c7a39b5c719e2e619673b5f5729ee7d2306 ]
+[ Upstream commit f1472cb09f11ddb41d4be84f0650835cb65a9073 ]
 
-In myri10ge_probe(), myri10ge_alloc_slices() is invoked to allocate slices
-related structures. Later on, myri10ge_request_irq() is used to get an irq.
-However, if this process fails, the allocated slices related structures are
-not deallocated, leading to memory leaks. To fix this issue, revise the
-target label of the goto statement to 'abort_with_slices'.
+In kalmia_init_and_get_ethernet_addr(), 'usb_buf' is allocated through
+kmalloc(). In the following execution, if the 'status' returned by
+kalmia_send_init_packet() is not 0, 'usb_buf' is not deallocated, leading
+to memory leaks. To fix this issue, add the 'out' label to free 'usb_buf'.
 
 Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/myricom/myri10ge/myri10ge.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/usb/kalmia.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-index 6d1a956e3f779..02ec326cb1293 100644
---- a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-+++ b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-@@ -4113,7 +4113,7 @@ static int myri10ge_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	 * setup (if available). */
- 	status = myri10ge_request_irq(mgp);
+diff --git a/drivers/net/usb/kalmia.c b/drivers/net/usb/kalmia.c
+index 3e37724d30ae7..0c4f4190c58ee 100644
+--- a/drivers/net/usb/kalmia.c
++++ b/drivers/net/usb/kalmia.c
+@@ -117,16 +117,16 @@ kalmia_init_and_get_ethernet_addr(struct usbnet *dev, u8 *ethernet_addr)
+ 	status = kalmia_send_init_packet(dev, usb_buf, sizeof(init_msg_1)
+ 		/ sizeof(init_msg_1[0]), usb_buf, 24);
  	if (status != 0)
--		goto abort_with_firmware;
-+		goto abort_with_slices;
- 	myri10ge_free_irq(mgp);
+-		return status;
++		goto out;
  
- 	/* Save configuration space to be restored if the
+ 	memcpy(usb_buf, init_msg_2, 12);
+ 	status = kalmia_send_init_packet(dev, usb_buf, sizeof(init_msg_2)
+ 		/ sizeof(init_msg_2[0]), usb_buf, 28);
+ 	if (status != 0)
+-		return status;
++		goto out;
+ 
+ 	memcpy(ethernet_addr, usb_buf + 10, ETH_ALEN);
+-
++out:
+ 	kfree(usb_buf);
+ 	return status;
+ }
 -- 
 2.20.1
 
