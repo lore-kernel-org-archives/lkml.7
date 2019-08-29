@@ -2,110 +2,124 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106B6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A35DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80C02189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52DE92077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:04:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfH2SAO (ORCPT
+        id S1727688AbfH2SEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:00:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50416 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:04:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44918 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726810AbfH2SAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:00:13 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726661AbfH2SEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:04:48 -0400
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31A132070B;
-        Thu, 29 Aug 2019 18:00:12 +0000 (UTC)
-Date:   Thu, 29 Aug 2019 14:00:10 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Patrick McLean <chutzpah@gentoo.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Subject: Re: [PATCH 0/3] tools lib traceevent: Fixing the API to be less
- policy driven
-Message-ID: <20190829140010.60d75297@gandalf.local.home>
-In-Reply-To: <20190805204312.169565525@goodmis.org>
-References: <20190805204312.169565525@goodmis.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9F9F2C0546F2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 18:04:47 +0000 (UTC)
+Received: by mail-qt1-f197.google.com with SMTP id c22so4217739qta.8
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 11:04:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=/g56CbzY6jStnVFv4SmkcoSCqpGf1hqTgm+yJUl5UlM=;
+        b=ll20rw5SFRl02MG9Ta8owM7OsvxUlEbjcxg7+tJCRVyjxenjveaAoxShPRZr7x6JBh
+         jcQWT/nvghaY3dgwp3fqZj4q0+6MQb1rc9YSnT9vq0Z8FUXjMMwz81zNkJDuBVisO1U8
+         TtinX/lHf0+heiV6cf4yIssWPGMHc48IAUIpa8Z5XDAjtq2xN/CXsJX8LfJ9Ou10jh3w
+         8a7dbBTAnP+LRkX6LVA1uPgOIJg7IVqXG2M8SVWvHWCkcreXwQsmc5HtXdIjJ3l9rhuw
+         c1N66hTpjTSCWjs3dK+JMkb9EJB2/0r3jQSasxMVJZFtPRClMbBy3TbwLzJ5QryqERKx
+         Bu7w==
+X-Gm-Message-State: APjAAAV4Y3S71kIL7CHH6rZ/q23o5+8ppx1oSiz2Kx/6uRIkTnzz4J3z
+        9FqfzUOmC/6cnh0dK21zukZ3ae1YuFKykfFr8m0uYl2hSUwMWR/SsyV1r4Xx611/SwbnsJW9/Ur
+        thZnce+iATfwPgj/l/WbUpTav
+X-Received: by 2002:aed:3f47:: with SMTP id q7mr11204042qtf.209.1567101886970;
+        Thu, 29 Aug 2019 11:04:46 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyRJwR4t1+ktKs4jFtCVoCNuKYwztEr1VyG5hto1oCuAaOHgiMXYRCME7xxyoCfhNCc+9WZfw==
+X-Received: by 2002:aed:3f47:: with SMTP id q7mr11203999qtf.209.1567101886606;
+        Thu, 29 Aug 2019 11:04:46 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id t189sm1634698qkd.56.2019.08.29.11.04.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 11:04:45 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 11:04:44 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Alexey Klimov <aklimov@redhat.com>
+Subject: Re: [PATCH 2/2 v2] tpm_tis: override durations for STM tpm with
+ firmware 1.2.8.28
+Message-ID: <20190829180444.jkwqxgithvbjqtfi@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Alexey Klimov <aklimov@redhat.com>
+References: <20190828004621.29050-1-jsnitsel@redhat.com>
+ <20190828004621.29050-3-jsnitsel@redhat.com>
+ <20190829144002.zhuqxnsswgl65pnm@linux.intel.com>
+ <20190829144140.6xaygqkfhsnmm67s@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190829144140.6xaygqkfhsnmm67s@linux.intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 05 Aug 2019 16:43:12 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu Aug 29 19, Jarkko Sakkinen wrote:
+>On Thu, Aug 29, 2019 at 05:40:40PM +0300, Jarkko Sakkinen wrote:
+>> On Tue, Aug 27, 2019 at 05:46:21PM -0700, Jerry Snitselaar wrote:
+>> > There was revealed a bug in the STM TPM chipset used in Dell R415s.
+>> > Bug is observed so far only on chipset firmware 1.2.8.28
+>> > (1.2 TPM, device-id 0x0, rev-id 78). After some number of
+>> > operations chipset hangs and stays in inconsistent state:
+>> >
+>> > tpm_tis 00:09: Operation Timed out
+>> > tpm_tis 00:09: tpm_transmit: tpm_send: error -5
+>> >
+>> > Durations returned by the chip are the same like on other
+>> > firmware revisions but apparently with specifically 1.2.8.28 fw
+>> > durations should be reset to 2 minutes to enable tpm chip work
+>> > properly. No working way of updating firmware was found.
+>> >
+>> > This patch adds implementation of ->update_durations method
+>> > that matches only STM devices with specific firmware version.
+>> >
+>> > Cc: Peter Huewe <peterhuewe@gmx.de>
+>> > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+>> > Signed-off-by: Alexey Klimov <aklimov@redhat.com>
+>> > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>> > ---
+>> > v2: Make suggested changes from Jarkko
+>> >     - change struct field name to durations from durs
+>> >     - formatting cleanups
+>> >     - turn into void function like update_timeouts and
+>> >       use chip->duration_adjusted to track whether adjustment occurred.
+>>
+>> The code repetition looks horrible so I wrote a patch that should help:
+>>
+>> https://patchwork.kernel.org/patch/11121475/
+>>
+>> Read the remar that prepends the diffstat.
+>
+>Forgot from that remark that I did not have TPM 1.x available at hand
+>(WFH today) so please also review and test it.
+>
+>/Jrakko
 
-> Hi Arnaldo and Jiri,
-
-Hi Arnaldo,
-
-I think these fell through the cracks.
-
--- Steve
-
-> 
-> We are still working on getting libtraceevent ready to be a stand alone
-> library. Part of that is to audit all the interfaces. We noticed
-> that the most the tep_print_*() interfaces define policy and limit
-> the way an application can display data. Instead of fixing this later
-> and being stuck with a limiting API that we must maintain for backward
-> compatibility, we removed and replaced most of it. perf was only affected
-> by a single function that was removed. These functions are replaced
-> by a more flexible one that allows the user to place what they want
-> where they want it (timestamps, event info, latency format, COMM, PID, etc).
-> 
-> The other noticeable perf change, is that we changed the location to
-> where the plugins are loaded from:
-> 
->  ${HOME}/.traceevent/plugins
-> 
-> to
-> 
->  ${HOME}/.local/lib/traceevent/plugins
-> 
-> As Patrick McLean (Gentoo package maintainer) informed us of the
-> XGD layout.
-> 
-> Should we have something the warns people if they have plugins in
-> the old directory. Should we move them on install? Currently, we
-> just ignore them.
-> 
-> Anyway, please add these patches to tip.
-> 
-> Thanks!
-> 
-> -- Steve
-> 
-> 
-> Tzvetomir Stoyanov (3):
->       tools/lib/traceevent, tools/perf: Changes in tep_print_event_* APIs
->       tools/lib/traceevent: Remove tep_register_trace_clock()
->       tools/lib/traceevent: Change user's plugin directory
-> 
-> ----
->  tools/lib/traceevent/Makefile            |   6 +-
->  tools/lib/traceevent/event-parse-api.c   |  40 ----
->  tools/lib/traceevent/event-parse-local.h |   6 -
->  tools/lib/traceevent/event-parse.c       | 333 +++++++++++++++++--------------
->  tools/lib/traceevent/event-parse.h       |  30 +--
->  tools/lib/traceevent/event-plugin.c      |   2 +-
->  tools/perf/builtin-kmem.c                |   3 +-
->  tools/perf/util/sort.c                   |   3 +-
->  tools/perf/util/trace-event-parse.c      |   2 +-
->  9 files changed, 207 insertions(+), 218 deletions(-)
-
+I will test it this morning, and once that is done I'll submit a v3 that
+cleans up the version comparison in the update_durations function.
