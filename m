@@ -2,128 +2,111 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787B0C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE60AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFB4205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93329205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:35:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KIgEPVQp";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Nyzgyb8c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tUNmQb+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbfH2SfB (ORCPT
+        id S1728286AbfH2Sft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:35:01 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59502 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfH2SfB (ORCPT
+        Thu, 29 Aug 2019 14:35:49 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41540 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfH2Sft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:35:01 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2F1F9686A4; Thu, 29 Aug 2019 18:12:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567103699;
-        bh=rS68WLR481l1COMdQ2jk/qCVOqr85DyICDhl53r3iQE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KIgEPVQpEQaxoE3SnjaRFx8tjgi/VAre9a+7+dnPGm1pH33cptaNhOKvLnwXrDPNl
-         n2ciXi0FlxHIXKhmpXomZfU3sdQErwalP1QvJMOJzSXb1/mSl34lV0+Kn6hs9MDVFl
-         J4WHpPK4W1+xbMpsiyOnXx+0vn0U7WOBng0fr2Dc=
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B8EB468997;
-        Thu, 29 Aug 2019 18:12:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567102347;
-        bh=rS68WLR481l1COMdQ2jk/qCVOqr85DyICDhl53r3iQE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nyzgyb8c62V8KHiqGWcqXJsfpL1vdt1tW7PnmZou0JbmKQjBHnp62ZrCDdtqj2IEA
-         Np6D7cjv8U7RSZyHLXtWsDuNyOVKmdldOclcfUiZgFMJmFFXI8j5P5eos4CH/92fYf
-         HuCM5eC1yOz4ftXxDl0BHN0nE5lciYqRV4VwP6ak=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B8EB468997
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com,
-        linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
-        Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RFC 09/14] drivers: pinctrl: msm: fix use of deprecated gpiolib APIs
-Date:   Thu, 29 Aug 2019 12:11:58 -0600
-Message-Id: <20190829181203.2660-10-ilina@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190829181203.2660-1-ilina@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org>
+        Thu, 29 Aug 2019 14:35:49 -0400
+Received: by mail-io1-f67.google.com with SMTP id j5so8875254ioj.8;
+        Thu, 29 Aug 2019 11:35:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dE7PRZQ345omAc8kJ4IwmsYptXobZW+/ikZLYjrE7WQ=;
+        b=tUNmQb+LFpYbL1cSRPf5bCe64L++eHLfZ3CowzYJsxcHu6DWB7Khliqd+0WFFTUkut
+         UgliUO5/JyqxYdKS3oPQorxRPZMGv/eyYDZinzXKZUFcL8wfTyTXE54NmzJF+Vo+c7C9
+         /6CxcG+neGPSPOpPtQfvL+hWLHQo3leLd6FTrsSEHeCFcPw6gCq5tkMfnr/hnLWY6L/x
+         hHQ9oTXwrZyOpp4pFqG1Ae7f1l91G0oPB0ISu+2CigxbB/+gg3e8WkinItIZ66L9sl3y
+         sod6Sj1WOSojNdn7hOqcp4ojk/QPz2fC6PhALJTTkADd14rbnYMIbd76D8s9Zygo3Bwj
+         /JgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dE7PRZQ345omAc8kJ4IwmsYptXobZW+/ikZLYjrE7WQ=;
+        b=lr/03c13JUt9Dh/Vfw2PZdxocDFZqmNwcbLL+1lKzB83Lk7QFrZS4E81c6GwA/uaGj
+         ehQq2V0nPGn10cXUtq9xn2OjFdIohMeXptyjmvXrBJGb4vz0Ia5km9iLkltDma4k7ebh
+         Q0C1euk3VtquhJh6FLMHRX1x6TApPVR4YeBVBqB9J/sn8fcAJ1PAuLVUuikJhlzCt83e
+         EsTpESg3oSA/U+4zzdV6fFqXWkeMDWKO4CFUFWLzX/XbTrOuFYWjbUOBya1lPXR/U9K2
+         H7POacCpNlSkRwxGAX1SZzI6dNfpvomfCdez8EQQBifExZLq4cFUWOr7i1QPKCT9tcmq
+         mm6A==
+X-Gm-Message-State: APjAAAWJOEulYxispJTf155z3E7tALGi9rLICiCKE2KJ2wb5ImfTXFB4
+        Dj3Ww6Fd3hAMFI5/S9el1P10wOdfbCvXfSS/60w=
+X-Google-Smtp-Source: APXvYqzg2TrSvQ2sGfxlX6InibTPJ6qPNmnESCZkxiQHWcDZTe8CGM/4kKFmZ8yqnYQphNmu4/FiJ2pT0Ndftf28zJ8=
+X-Received: by 2002:a5d:9bd4:: with SMTP id d20mr1721932ion.243.1567103748387;
+ Thu, 29 Aug 2019 11:35:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190828202723.1145-1-linux.amoon@gmail.com> <8c40f334-c723-b524-857c-73734b7d0827@baylibre.com>
+In-Reply-To: <8c40f334-c723-b524-857c-73734b7d0827@baylibre.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Fri, 30 Aug 2019 00:05:37 +0530
+Message-ID: <CANAwSgShr-K-44UzdxFC7pvpTye_pbEMdS6ug1eWwYhnsVNGdQ@mail.gmail.com>
+Subject: Re: [PATCHv1 0/3] Odroid c2 missing regulator linking
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace gpiochip_irqchip_add() and gpiochip_set_chained_irqchip() calls
-by populating the gpio_irq_chip data structures instead.
+Hi Neil,
 
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+On Thu, 29 Aug 2019 at 13:58, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> On 28/08/2019 22:27, Anand Moon wrote:
+> > Below small changes help re-configure or fix missing inter linking
+> > of regulator node.
+> >
+> > Changes based top on my prevoius series.
+>
+> For the serie:
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+>
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 7f35c196bb3e..76e8528e4d0a 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -1027,7 +1027,19 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
- 	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
- 	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
- 
--	ret = gpiochip_add_data(&pctrl->chip, pctrl);
-+	chip->irq.chip = &pctrl->irq_chip;
-+	chip->irq.default_type = IRQ_TYPE_NONE;
-+	chip->irq.handler = handle_bad_irq;
-+	chip->irq.fwnode = pctrl->dev->fwnode;
-+	chip->irq.parent_handler = msm_gpio_irq_handler;
-+	chip->irq.num_parents = 1;
-+	chip->irq.parents = devm_kcalloc(pctrl->dev, 1,
-+					 sizeof(*chip->irq.parents),
-+					 GFP_KERNEL);
-+	if (!chip->irq.parents)
-+		return -ENOMEM;
-+
-+	ret = devm_gpiochip_add_data(pctrl->dev, chip, pctrl);
- 	if (ret) {
- 		dev_err(pctrl->dev, "Failed register gpiochip\n");
- 		return ret;
-@@ -1053,20 +1065,6 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
- 		}
- 	}
- 
--	ret = gpiochip_irqchip_add(chip,
--				   &pctrl->irq_chip,
--				   0,
--				   handle_edge_irq,
--				   IRQ_TYPE_NONE);
--	if (ret) {
--		dev_err(pctrl->dev, "Failed to add irqchip to gpiochip\n");
--		gpiochip_remove(&pctrl->chip);
--		return -ENOSYS;
--	}
--
--	gpiochip_set_chained_irqchip(chip, &pctrl->irq_chip, pctrl->irq,
--				     msm_gpio_irq_handler);
--
- 	return 0;
- }
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks for your review.
 
+> >
+> > [0] https://patchwork.kernel.org/cover/11113091/
+> >
+> > TOOD: Add support for DVFS GXBB odroid board in next series.
+>
+> I'm curious how you will do this !
+
+I was just studying you previous series on how you have implemented
+this feature for C1, N2 and VIM3 boards.
+
+[0] https://patchwork.kernel.org/cover/11114125/
+
+I started gathering key inputs needed for this ie *clk / pwm*
+like VDDCPU and VDDE clk changes.
+
+But it looks like of the complex clk framework needed, so I leave this to the
+expert like your team of developers to do this much quick and efficiently.
+
+Best Regards,
+-Anand
