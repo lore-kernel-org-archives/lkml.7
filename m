@@ -6,104 +6,137 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A416C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FF0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB90233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A92E23404
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:25:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfH2IZB (ORCPT
+        id S1727042AbfH2IZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 04:25:01 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:3537 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725782AbfH2IZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 04:25:00 -0400
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 66BEA57C469BD2F7E54A;
-        Thu, 29 Aug 2019 16:24:57 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 29 Aug 2019 16:24:56 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Thu, 29 Aug 2019 16:24:56 +0800
-Date:   Thu, 29 Aug 2019 16:24:09 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, <linux-fsdevel@vger.kernel.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Valdis =?gbk?Q?Kl=A8=A5tnieks?= <valdis.kletnieks@vt.edu>,
-        <linux-kernel@vger.kernel.org>, <yuchao0@huawei.com>,
-        <miaoxie@huawei.com>, "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Zefan Li <lizefan@huawei.com>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20190829082409.GA83154@architecture4>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190828170022.GA7873@kroah.com>
- <20190829062340.GB3047@infradead.org>
- <20190829070149.GA155353@architecture4>
+        Thu, 29 Aug 2019 04:25:04 -0400
+Received: from mga04.intel.com ([192.55.52.120]:17081 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727022AbfH2IZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 04:25:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 01:25:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
+   d="scan'208";a="197752669"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Aug 2019 01:24:57 -0700
+Subject: Tracing text poke / kernel self-modifying code (Was: Re: [RFC v2 0/6]
+ x86: dynamic indirect branch promotion)
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Nadav Amit <nadav.amit@gmail.com>, Andi Kleen <ak@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Edward Cree <ecree@solarflare.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        songliubraving@fb.com
+References: <87zhshe66w.fsf@linux.intel.com>
+ <20190107163227.GH14122@hirez.programming.kicks-ass.net>
+ <c4e836e8-1949-27f5-f6a0-ed860f590ec5@intel.com>
+ <20190108092559.GA6808@hirez.programming.kicks-ass.net>
+ <306d38fb-7ce6-a3ec-a351-6c117559ebaa@intel.com>
+ <20190108101058.GB6808@hirez.programming.kicks-ass.net>
+ <20190108172721.GN6118@tassilo.jf.intel.com>
+ <D1A153D5-D23B-45E6-9E7A-EB9CBAE84B7E@gmail.com>
+ <20190108190104.GC1900@hirez.programming.kicks-ass.net>
+ <7EB5F9ED-8743-4225-BE97-8D5C8D8E0F84@gmail.com>
+ <20190109103544.GH1900@hirez.programming.kicks-ass.net>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <7b4952c2-d3e3-488f-3697-2e8b71c58063@intel.com>
+Date:   Thu, 29 Aug 2019 11:23:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190829070149.GA155353@architecture4>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme718-chm.china.huawei.com (10.1.199.114) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190109103544.GH1900@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On 9/01/19 12:35 PM, Peter Zijlstra wrote:
+> On Tue, Jan 08, 2019 at 12:47:42PM -0800, Nadav Amit wrote:
+> 
+>> A general solution is more complicated, however, due to the racy nature of
+>> cross-modifying code. There would need to be TSC recording of the time
+>> before the modifications start and after they are done.
+>>
+>> BTW: I am not sure that static-keys are much better. Their change also
+>> affects the control flow, and they do affect the control flow.
+> 
+> Any text_poke() user is a problem; which is why I suggested a
+> PERF_RECORD_TEXT_POKE that emits the new instruction. Such records are
+> timestamped and can be correlated to the trace.
+> 
+> As to the racy nature of text_poke, yes, this is a wee bit tricky and
+> might need some care. I _think_ we can make it work, but I'm not 100%
+> sure on exactly how PT works, but something like:
+> 
+>  - write INT3 byte
+>  - IPI-SYNC
+> 
+> and ensure the poke_handler preserves the existing control flow (which
+> it currently does not, but should be possible).
+> 
+>  - emit RECORD_TEXT_POKE with the new instruction
+> 
+> at this point the actual control flow will be through the INT3 and
+> handler and not hit the actual instruction, so the actual state is
+> irrelevant.
+> 
+>  - write instruction tail
+>  - IPI-SYNC
+>  - write first byte
+>  - IPI-SYNC
+> 
+> And at this point we start using the new instruction, but this is after
+> the timestamp from the RECORD_TEXT_POKE event and decoding should work
+> just fine.
+> 
 
-On Thu, Aug 29, 2019 at 03:01:49PM +0800, Gao Xiang wrote:
-> Hi Christoph,
-> 
-> On Wed, Aug 28, 2019 at 11:23:40PM -0700, Christoph Hellwig wrote:
-> > Can we please just review the damn thing and get it into the proper
-> > tree?  That whole concept of staging file systems just has been one
-> > fricking disaster, including Greg just moving not fully reviewed ones
-> > over like erofs just because he feels like it.  I'm getting sick and
-> > tired of this scheme.
-> 
-> I just want to a word on EROFS stuff (I'm not suitable to comment
-> on the current exfat implementation). Since EROFS stuff has been
-> in staging tree for more than a year, anyone who wants to review
-> it can review this filesystem at any time.
-> 
-> EROFS is not just a homebrew or experimental fs for now, it has been
-> widely used for many commerical smartphones, and we will upstream it
-> to AOSP for more Android smartphones after it gets merged to upstream.
-> I personally cc-ed you for a month, and I didn't get any objection
-> from others (including Linus) for about 2 months. That isn't because
-> of someone likes it, rather we cannot make no progress compared with
-> some exist fs community because this is our love work.
-> 
-> And it's self-contained driver at least, and it's disabled by default,
-> It cannot be stayed in staging tree to do a lot of EROFS feature
-> improvements itself forever (since it is cleaned enough).
-> It has proven its validity as well.
+Presumably the IPI-SYNC does not guarantee that other CPUs will not already
+have seen the change.  In that case, it is not possible to provide a
+timestamp before which all CPUs executed the old code, and after which all
+CPUs execute the new code.
 
-It seems I misunderstood your idea, sorry about that... EROFS
-properly uses vfs interfaces (e.g. we also considered RCU symlink
-lookup path at the very beginning of our design as Al said [1],
-except for mount interface as Al mentioned [2] (thanks him for
-taking some time on it), it was used for our debugging use),
-and it didn't cause any extra burden to vfs or other subsystems.
+So we need 2 events: one before and one after the text poke.  Then it will
+be up to the tools to figure out which code path was taken in that time
+interval. e.g.
 
-[1] https://lore.kernel.org/r/20190325045744.GK2217@ZenIV.linux.org.uk/
-[2] https://lore.kernel.org/r/20190720224955.GD17978@ZenIV.linux.org.uk/
+	1. emit RECORD_TEXT_POKE
+		flags:	BEFORE (timestamp is before change)
+		method:	INT3 (INT3 method used to change code)
+		ip
+		code size
+		code bytes before
+		code bytes after
 
-Thanks,
-Gao Xiang
+	2. text poke
 
-> 
-> Thanks,
-> Gao Xiang
-> 
+	3. emit RECORD_TEXT_POKE
+		flags:	AFTER (timestamp is after change)
+		method:	INT3 (INT3 method used to change code)
+		ip
+		code size
+		code bytes before
+		code bytes after
+
+Thoughts?
