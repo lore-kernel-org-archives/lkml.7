@@ -2,96 +2,120 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102F7C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6DEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2F023403
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:50:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DVoeJBCf"
+	by mail.kernel.org (Postfix) with ESMTP id B219923403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:50:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567075815;
+	bh=tI7BVHUHMKckWqBXe4y7OV4tqVnz9jbrLOH9mlq0l1M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lu8Fo/XdJzBrpdYpOhV67HflpxlAZ4b4iiUT2vYrFzbFe5iph0VTJozorKNTT5nGt
+	 3mof4ijNiwMAkxadsaldWjn1dQaIjf5jKMV0z85jNu/DKSa/i8B2vEBTNVynkeyzd0
+	 zTJ6Om8ntGTcqNIBev1Vogp/tF3qExzyiecgHO+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfH2KuL (ORCPT
+        id S1727565AbfH2KuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:50:11 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:17272 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfH2KuJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:50:09 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x7TAnToh013730;
-        Thu, 29 Aug 2019 19:49:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7TAnToh013730
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567075773;
-        bh=lYozHE89Wu43zYr2OY/wYXUHm6PW8Z5Hu122oF77ydQ=;
+        Thu, 29 Aug 2019 06:50:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727183AbfH2KuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:50:13 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEED523405;
+        Thu, 29 Aug 2019 10:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567075812;
+        bh=tI7BVHUHMKckWqBXe4y7OV4tqVnz9jbrLOH9mlq0l1M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DVoeJBCfK1a2SJY98pTQua2p/4ENI6cD/18ReVMUkbiY1fGmE1j20A7KskiM7e887
-         ZIOs6yhheiTLUdIt2Sm4idniog4XTjm2fGapOO5WtIkFLTxA1npSBXnyEpo2aFIXQK
-         fyYTHLxSIqBjNTAgHoPsrjTCU6YVBeEUbQER5+2nnEhXULrokb8uk8LSE/kPKUBlZK
-         rdBE4rcE35S1QyM9sISGO0SHpngpMeX0mkeOnduXERg5QKKiCr0M5UyOYxZjR9kUFY
-         nwXjo/vlL/myi40n+XsikxPA8E5HRc/O2F3Upuy4/DiMja3fJUiJkr1HBLZFdthiQi
-         GwCM0HYlmUvBg==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Piotr Sroka <piotrs@cadence.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] mmc: sdhci-cadence: override spec version
-Date:   Thu, 29 Aug 2019 19:49:28 +0900
-Message-Id: <20190829104928.27404-3-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190829104928.27404-1-yamada.masahiro@socionext.com>
-References: <20190829104928.27404-1-yamada.masahiro@socionext.com>
+        b=aI4s/MbEjcRdNxGnRUYsejtMd2cSOi61dlnPQJT5S49UPv7JR7WfgIKjFjsKH3Oy7
+         oar6VbpR/wVoO5hpzHf9AIgtYnzSgLPqkGadlgw7bYadZB4Fh3cLqab49e+S8AtEp2
+         pHUtZAfwig5Nfbq+8kQD206JvT0jJfupxG5JOwZo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 02/29] Revert "dm bufio: fix deadlock with loop device"
+Date:   Thu, 29 Aug 2019 06:49:42 -0400
+Message-Id: <20190829105009.2265-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190829105009.2265-1-sashal@kernel.org>
+References: <20190829105009.2265-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The datasheet of the IP (sd4hc) says it is compiatible with SDHCI v4,
-but the spec version field in the version register is read as 2
-(i.e. SDHCI_SPEC_300) based on the RTL provided by Cadence.
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-Socionext did not fix it up when it integrated the IP into the SoCs.
-So, it is working as SDHCI v3.
+[ Upstream commit cf3591ef832915892f2499b7e54b51d4c578b28c ]
 
-It is not a real problem because there is no difference in the program
-flow in sdhci.c between SDHCI_SPEC_300/400, but set the real version
-just in case.
+Revert the commit bd293d071ffe65e645b4d8104f9d8fe15ea13862. The proper
+fix has been made available with commit d0a255e795ab ("loop: set
+PF_MEMALLOC_NOIO for the worker thread").
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Note that the fix offered by commit bd293d071ffe doesn't really prevent
+the deadlock from occuring - if we look at the stacktrace reported by
+Junxiao Bi, we see that it hangs in bit_wait_io and not on the mutex -
+i.e. it has already successfully taken the mutex. Changing the mutex
+from mutex_lock to mutex_trylock won't help with deadlocks that happen
+afterwards.
+
+PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
+   #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
+   #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
+   #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
+   #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
+   #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
+   #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
+   #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
+   #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
+   #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
+   #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
+  #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
+  #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
+  #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
+  #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
+  #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: bd293d071ffe ("dm bufio: fix deadlock with loop device")
+Depends-on: d0a255e795ab ("loop: set PF_MEMALLOC_NOIO for the worker thread")
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/md/dm-bufio.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
- drivers/mmc/host/sdhci-cadence.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
-index 44139fceac24..9837214685b6 100644
---- a/drivers/mmc/host/sdhci-cadence.c
-+++ b/drivers/mmc/host/sdhci-cadence.c
-@@ -341,6 +341,7 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
- 	unsigned int nr_phy_params;
- 	int ret;
- 	struct device *dev = &pdev->dev;
-+	static const u16 version = SDHCI_SPEC_400 << SDHCI_SPEC_VER_SHIFT;
+diff --git a/drivers/md/dm-bufio.c b/drivers/md/dm-bufio.c
+index b1d0ae2dbd3dd..dc385b70e4c33 100644
+--- a/drivers/md/dm-bufio.c
++++ b/drivers/md/dm-bufio.c
+@@ -1602,7 +1602,9 @@ dm_bufio_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+ 	unsigned long freed;
  
- 	clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(clk))
-@@ -370,6 +371,7 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
- 	host->mmc_host_ops.hs400_enhanced_strobe =
- 				sdhci_cdns_hs400_enhanced_strobe;
- 	sdhci_enable_v4_mode(host);
-+	__sdhci_read_caps(host, &version, NULL, NULL);
+ 	c = container_of(shrink, struct dm_bufio_client, shrinker);
+-	if (!dm_bufio_trylock(c))
++	if (sc->gfp_mask & __GFP_FS)
++		dm_bufio_lock(c);
++	else if (!dm_bufio_trylock(c))
+ 		return SHRINK_STOP;
  
- 	sdhci_get_of_property(pdev);
- 
+ 	freed  = __scan(c, sc->nr_to_scan, sc->gfp_mask);
 -- 
-2.17.1
+2.20.1
 
