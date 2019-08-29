@@ -2,126 +2,184 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10492C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F980C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7EAE214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5787F214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:47:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rGM6ZBGf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GX18bF1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfH2Brk (ORCPT
+        id S1727360AbfH2Brq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 21:47:40 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43549 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbfH2Brj (ORCPT
+        Wed, 28 Aug 2019 21:47:46 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.114]:17852 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727330AbfH2Brl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 21:47:39 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v12so933285pfn.10;
-        Wed, 28 Aug 2019 18:47:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+YooG/gsKARue5F8fzG4z9J/V6/qOmWpJ/qg5upQPNY=;
-        b=rGM6ZBGf7AwZnk5UPwR+TBnQBE6gLM8LicPUp6R0WPMCA8ow5XKV/qfAqVpvGJqzoW
-         RvGjaaUHRXI/TGLHQwsq8Q/UwRmQT9z9/Z9jx9KL1jtiT1HgFAjog9zz1WezWSDgeXuC
-         uypfzLOitDum972jn5iprQTYNWRMB9z/onbXB32+2I5MMU9h2S3DwxHAd7QVc5hT7FrA
-         A3J1C0+cbDIvg07iSYDJ9QSYhB6OZGZoiKu9ZE7doNxyuc2fKXFmkk0vWeF2ej2favaW
-         Hrchu2Oo+feAm6LHnUL3KVbA07giWp7PGSm5h8Y6XPWsJkLEGr2L6FQgAjIIEvkHpiS7
-         gQiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+YooG/gsKARue5F8fzG4z9J/V6/qOmWpJ/qg5upQPNY=;
-        b=DXFXrPY/bO0pl5J3G+HOWmw1WRQ2WbHJS9+omeR8nqBNznyLikU6Mv6L//BmLVyNY9
-         gO6KRLjPMbXHv9EHMDTw9WPFduw65risIQQKIszSKWu1BXZsRGmEbZZLNf2bnbNldY5x
-         dCgTzOo3OA/Ua2zd/d/2ibpzqfxEHmcXfKFt8zGWiKbCvfzUlk7HppJZCKZ+8d9rjuxN
-         nc8wBXpi5mTiZm6YAtnXZQQUwsCvTCcYPfHUuYh23zjz5udGw7kWGtPwvixeFoBE6S7X
-         jIZkZaC4mpJtP30gppUu6jl9AhS5iywEmxlyv4dyW1dLc/4etl4MJt49lbc6men89fWT
-         lpyQ==
-X-Gm-Message-State: APjAAAXJWlCA7L6teBuc6Yf8HPa9z++dSkQrgAS3oP4FKApJQ3w0BlI/
-        P0FfIp7BAVK8udB8GWJT1nE=
-X-Google-Smtp-Source: APXvYqww37NNUf1YQFta0iLgdg5TOPyxa4bK4Dk5DMSY7Z4rC6tU6owwNhWAmzypbTWu1mGlKeZnxg==
-X-Received: by 2002:aa7:9533:: with SMTP id c19mr8186659pfp.153.1567043258491;
-        Wed, 28 Aug 2019 18:47:38 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id j10sm404548pjn.3.2019.08.28.18.47.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 18:47:37 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [RESEND PATCH v2 5/5] mmc: sdhci-sprd: clear the UHS-I modes read from registers
-Date:   Thu, 29 Aug 2019 09:46:45 +0800
-Message-Id: <20190829014645.4479-6-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829014645.4479-1-zhang.lyra@gmail.com>
-References: <20190829014645.4479-1-zhang.lyra@gmail.com>
+        Wed, 28 Aug 2019 21:47:41 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 7337D244E40D
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 20:47:40 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 39XIiwLKl4FKp39XIi0XJB; Wed, 28 Aug 2019 20:47:40 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=cWullUGTic6zMakrg3aKV7VvzCgJI8sz0e/+68+BctU=; b=GX18bF1M3WWE2q21D588RJ0Z6a
+        olkEJP7ZsLP7zA+moCDwwcOGdQV6uiwWBOQ6eY4nhzjugPYbP4Sa0GtwqOS+bNjAiUlJQCY0bbulx
+        QHVudODRIeZz0W2alOaqeGYlxV5n8D5xTUlcQyL314EAQCUrAGJ2EdBj8FtWVlVwwnOVn3i3NwTz1
+        +VaV6D8QOnIhmepCuFmEDw5JTK/s1EL0TpADTce4eNIywW/63PSDY7h7v8831l1iCuvlg7bO9qjYz
+        oC1L4q2WvFb0nqgZ04GpXUnc+BbI5z1ft1q2LxPOPnhXweW1fWsjejUcAazyWSFwhVB69qRQ7nmWW
+        mZ60SXOg==;
+Received: from [189.152.216.116] (port=36158 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i39XI-0002ZH-0y; Wed, 28 Aug 2019 20:47:40 -0500
+Subject: Re: [PATCH] ARC: unwind: Mark expected switch fall-through
+To:     Vineet Gupta <vgupta@synopsys.com>
+Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190821012907.GA29165@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <2c3ef09b-bd07-6caf-05a9-908700a60afd@embeddedor.com>
+Date:   Wed, 28 Aug 2019 20:47:33 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190821012907.GA29165@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i39XI-0002ZH-0y
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [189.152.216.116]:36158
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Hi,
 
-sprd's sd host controller supports SDR50/SDR104/DDR50 though, the UHS-I
-mode used by the specific card can be selected via devicetree only.
+Friendly ping:
 
-Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host controller")
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
-Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
-Tested-by: Baolin Wang <baolin.wang@linaro.org>
----
- drivers/mmc/host/sdhci-sprd.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+Who can take this, please?
 
-diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index 1fecf055682c..d3c3e95676f0 100644
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -509,7 +509,8 @@ static void sdhci_sprd_phy_param_parse(struct sdhci_sprd_host *sprd_host,
- 
- static const struct sdhci_pltfm_data sdhci_sprd_pdata = {
- 	.quirks = SDHCI_QUIRK_BROKEN_CARD_DETECTION |
--		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
-+		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
-+		  SDHCI_QUIRK_MISSING_CAPS,
- 	.quirks2 = SDHCI_QUIRK2_BROKEN_HS200 |
- 		   SDHCI_QUIRK2_USE_32BIT_BLK_CNT |
- 		   SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-@@ -614,6 +615,16 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
- 
- 	sdhci_enable_v4_mode(host);
- 
-+	/*
-+	 * Supply the existing CAPS, but clear the UHS-I modes. This
-+	 * will allow these modes to be specified only by device
-+	 * tree properties through mmc_of_parse().
-+	 */
-+	host->caps = sdhci_readl(host, SDHCI_CAPABILITIES);
-+	host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
-+	host->caps1 &= ~(SDHCI_SUPPORT_SDR50 | SDHCI_SUPPORT_SDR104 |
-+			 SDHCI_SUPPORT_DDR50);
-+
- 	ret = sdhci_setup_host(host);
- 	if (ret)
- 		goto pm_runtime_disable;
--- 
-2.20.1
+Thanks
+--
+Gustavo
 
+On 8/20/19 8:29 PM, Gustavo A. R. Silva wrote:
+> Mark switch cases where we are expecting to fall through.
+> 
+> This patch fixes the following warnings (Building: haps_hs_defconfig arc):
+> 
+> arch/arc/kernel/unwind.c: In function ‘read_pointer’:
+> ./include/linux/compiler.h:328:5: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>   do {        \
+>      ^
+> ./include/linux/compiler.h:338:2: note: in expansion of macro ‘__compiletime_assert’
+>   __compiletime_assert(condition, msg, prefix, suffix)
+>   ^~~~~~~~~~~~~~~~~~~~
+> ./include/linux/compiler.h:350:2: note: in expansion of macro ‘_compiletime_assert’
+>   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>   ^~~~~~~~~~~~~~~~~~~
+> ./include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
+>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>                                      ^~~~~~~~~~~~~~~~~~
+> ./include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
+>   BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+>   ^~~~~~~~~~~~~~~~
+> arch/arc/kernel/unwind.c:573:3: note: in expansion of macro ‘BUILD_BUG_ON’
+>    BUILD_BUG_ON(sizeof(u32) != sizeof(value));
+>    ^~~~~~~~~~~~
+> arch/arc/kernel/unwind.c:575:2: note: here
+>   case DW_EH_PE_native:
+>   ^~~~
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  arch/arc/kernel/unwind.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arc/kernel/unwind.c b/arch/arc/kernel/unwind.c
+> index 445e4d702f43..dc05a63516f5 100644
+> --- a/arch/arc/kernel/unwind.c
+> +++ b/arch/arc/kernel/unwind.c
+> @@ -572,6 +572,7 @@ static unsigned long read_pointer(const u8 **pLoc, const void *end,
+>  #else
+>  		BUILD_BUG_ON(sizeof(u32) != sizeof(value));
+>  #endif
+> +		/* Fall through */
+>  	case DW_EH_PE_native:
+>  		if (end < (const void *)(ptr.pul + 1))
+>  			return 0;
+> 
