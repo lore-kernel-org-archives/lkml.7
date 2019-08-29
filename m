@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 442D2C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC2DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13BD621874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7248321874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103010;
-	bh=JfugwJoZrrcuXr7gxgP+D6FbKzm1spHA1BgCwXHQ4GA=;
+	s=default; t=1567103013;
+	bh=vkDsvW6YxEClSTHDUNfXZoqYbz0eXMOBlKudZDeaniU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n2abiMUNNVjtXDu1T1DixRl4pKkG0ih/z+jJ1ptztdBPZB2riLnWXKM6UAuUvcN9x
-	 QVgdf2DUwh2/Rn7JV3fu5OjxAuVCcv0HLQucSJHigOCKENp8SvhzQIzXmSe3c30812
-	 1IXYSkrO71O4yb8zjuPqYGKpj6kF4wgkR92aIKYo=
+	b=oEARf/DPVmirIYSZSGHRreffyDRHLx124opQyRcNO0Cohn/pSRtRZ42jhtQcPtzuS
+	 +guAYLx5AWNE4QbqISvqsgfBLwMq41vRFR1qlOvqhiAF5gjQOY9eqN5GlzaQOXpNT8
+	 etEiuVzKKNcomebbSYhvlIO18gVxl6WfUZg9bCDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbfH2SX2 (ORCPT
+        id S1729067AbfH2SQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:23:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58926 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:16:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728488AbfH2SQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:51 -0400
+        id S1729845AbfH2SQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:16:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DCBA2189D;
-        Thu, 29 Aug 2019 18:16:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42F102189D;
+        Thu, 29 Aug 2019 18:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102610;
-        bh=JfugwJoZrrcuXr7gxgP+D6FbKzm1spHA1BgCwXHQ4GA=;
+        s=default; t=1567102603;
+        bh=vkDsvW6YxEClSTHDUNfXZoqYbz0eXMOBlKudZDeaniU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dp/Jur9Ya1Hz7dxqlXHVGBWranCQQbnva3yUu8GluHcDH821GnNO6o1lb83yH32aZ
-         vJRKwoH4aCrhK2smDWsK+lKz5NX6KsQ9DWhHc/xn/zZ1HcXX1I4bqPqc4lE028IJBz
-         aHEVUkzHmtYT70KHvgGiBZtLSeZ8JdHg/NVX4eQc=
+        b=2NbKBQZzazUM/CoAfpQJnWhzfUnF6cFc8BekaptQ/ruevqncmyPVBUTYQYGFGUAmJ
+         CIeTWePufwXXoylY1akaQV0rbHArKmWfBLEMi28nNS89nLDLhqTmmmAXWB3JbzrPV6
+         eDPG7e4gOBb50u3Z9Eya0KLUJVCPJ/bOZIi7SqaI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 44/45] afs: Fix leak in afs_lookup_cell_rcu()
-Date:   Thu, 29 Aug 2019 14:15:44 -0400
-Message-Id: <20190829181547.8280-44-sashal@kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 38/45] selftests: kvm: fix state save/load on processors without XSAVE
+Date:   Thu, 29 Aug 2019 14:15:38 -0400
+Message-Id: <20190829181547.8280-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
 References: <20190829181547.8280-1-sashal@kernel.org>
@@ -58,66 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit a5fb8e6c02d6a518fb2b1a2b8c2471fa77b69436 ]
+[ Upstream commit 54577e5018a8c0cb79c9a0fa118a55c68715d398 ]
 
-Fix a leak on the cell refcount in afs_lookup_cell_rcu() due to
-non-clearance of the default error in the case a NULL cell name is passed
-and the workstation default cell is used.
+state_test and smm_test are failing on older processors that do not
+have xcr0.  This is because on those processor KVM does provide
+support for KVM_GET/SET_XSAVE (to avoid having to rely on the older
+KVM_GET/SET_FPU) but not for KVM_GET/SET_XCRS.
 
-Also put a bit at the end to make sure we don't leak a cell ref if we're
-going to be returning an error.
-
-This leak results in an assertion like the following when the kafs module is
-unloaded:
-
-	AFS: Assertion failed
-	2 == 1 is false
-	0x2 == 0x1 is false
-	------------[ cut here ]------------
-	kernel BUG at fs/afs/cell.c:770!
-	...
-	RIP: 0010:afs_manage_cells+0x220/0x42f [kafs]
-	...
-	 process_one_work+0x4c2/0x82c
-	 ? pool_mayday_timeout+0x1e1/0x1e1
-	 ? do_raw_spin_lock+0x134/0x175
-	 worker_thread+0x336/0x4a6
-	 ? rescuer_thread+0x4af/0x4af
-	 kthread+0x1de/0x1ee
-	 ? kthread_park+0xd4/0xd4
-	 ret_from_fork+0x24/0x30
-
-Fixes: 989782dcdc91 ("afs: Overhaul cell database management")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/cell.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/testing/selftests/kvm/lib/x86.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/fs/afs/cell.c b/fs/afs/cell.c
-index 6127f0fcd62c4..ee07162d35c7a 100644
---- a/fs/afs/cell.c
-+++ b/fs/afs/cell.c
-@@ -76,6 +76,7 @@ struct afs_cell *afs_lookup_cell_rcu(struct afs_net *net,
- 			cell = rcu_dereference_raw(net->ws_cell);
- 			if (cell) {
- 				afs_get_cell(cell);
-+				ret = 0;
- 				break;
- 			}
- 			ret = -EDESTADDRREQ;
-@@ -110,6 +111,9 @@ struct afs_cell *afs_lookup_cell_rcu(struct afs_net *net,
+diff --git a/tools/testing/selftests/kvm/lib/x86.c b/tools/testing/selftests/kvm/lib/x86.c
+index a3122f1949a8e..4d35eba73dc97 100644
+--- a/tools/testing/selftests/kvm/lib/x86.c
++++ b/tools/testing/selftests/kvm/lib/x86.c
+@@ -809,9 +809,11 @@ struct kvm_x86_state *vcpu_save_state(struct kvm_vm *vm, uint32_t vcpuid)
+         TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_XSAVE, r: %i",
+                 r);
  
- 	done_seqretry(&net->cells_lock, seq);
+-	r = ioctl(vcpu->fd, KVM_GET_XCRS, &state->xcrs);
+-        TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_XCRS, r: %i",
+-                r);
++	if (kvm_check_cap(KVM_CAP_XCRS)) {
++		r = ioctl(vcpu->fd, KVM_GET_XCRS, &state->xcrs);
++		TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_XCRS, r: %i",
++			    r);
++	}
  
-+	if (ret != 0 && cell)
-+		afs_put_cell(net, cell);
-+
- 	return ret == 0 ? cell : ERR_PTR(ret);
- }
+ 	r = ioctl(vcpu->fd, KVM_GET_SREGS, &state->sregs);
+         TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_SREGS, r: %i",
+@@ -858,9 +860,11 @@ void vcpu_load_state(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_x86_state *s
+         TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_XSAVE, r: %i",
+                 r);
  
+-	r = ioctl(vcpu->fd, KVM_SET_XCRS, &state->xcrs);
+-        TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_XCRS, r: %i",
+-                r);
++	if (kvm_check_cap(KVM_CAP_XCRS)) {
++		r = ioctl(vcpu->fd, KVM_SET_XCRS, &state->xcrs);
++		TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_XCRS, r: %i",
++			    r);
++	}
+ 
+ 	r = ioctl(vcpu->fd, KVM_SET_SREGS, &state->sregs);
+         TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_SREGS, r: %i",
 -- 
 2.20.1
 
