@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC7AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AD2C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6AA233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F1023405
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102589;
-	bh=xCREaTygv8b8nm+QPF3XKV3E36VYjZhtrpivCPCooeI=;
+	s=default; t=1567102593;
+	bh=kpxGeaYPhUCPQgVAFxP07kUxK+mXZySJRP9I+uMrh8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RPqu8OrPvOcSPiGW++QIbetbpaMtsAyQGM7CdbFkyFlDUA4WIghfbfsfw3qmh/zuC
-	 QmrJEQepxArycl0xVSyG83egNVPio3c3sU0gzc1Qfs6xzvKhDf03CW71z9aQnyJyQe
-	 RTDqnlQ06tou6pvfhDI/7B2kFtb6uPfdHw3WDjkU=
+	b=ziQVjxtaXWlTWXzrVyJC2+bBlzlJgDUbEc39oP48s3bQaGhplV8t4v/vzVYfCgE0n
+	 CtoicCViGTdWH/SFe2QPt7rcAMHKHifUcv9XqtL2ZZP2zU6WRSAJksU/fBzxNG0K+s
+	 F2x6MBSRZwHxZIP1UcFAJ21YLT6vsBplNUW82Wx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbfH2SQ1 (ORCPT
+        id S1729788AbfH2SQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:16:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58368 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:16:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729713AbfH2SQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:19 -0400
+        id S1729741AbfH2SQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:16:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB04B2189D;
-        Thu, 29 Aug 2019 18:16:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80D80233FF;
+        Thu, 29 Aug 2019 18:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102579;
-        bh=xCREaTygv8b8nm+QPF3XKV3E36VYjZhtrpivCPCooeI=;
+        s=default; t=1567102583;
+        bh=kpxGeaYPhUCPQgVAFxP07kUxK+mXZySJRP9I+uMrh8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FeAQt5NtmK6JobQP/261HOo0eZP7cec5ZwOGYdmux90H1RqLWhRfbBMl/AYZLR12o
-         vrcgdbTCtFJ7Fjddrg+sLv0w+bHGNV05OxyVpAnWlzYdSB+CoWbRXST3fElUQ486C3
-         DMuWzyfQIDCu2CJRDBKLRjEY/4DRJSf2F/+gRSP0=
+        b=DtEhSwZsMe3c/k2zOYrsZ5nSCcbFH5hMoomuoJmRBCxgv1tl+ORIP78Jl5E1q5GAI
+         IJTwyJb/MUfJ4wGQpL0in448zfXrVF0DK9O+VfhnMAk92M9uV3r7uH2VsCo6mRKuET
+         CCriI+h/IzUqMlF0t32cJaLzLd91syO1OZF5rIY0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
+        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        "Devesh K . Singh" <devesh_singh@in.ibm.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 23/45] cx82310_eth: fix a memory leak bug
-Date:   Thu, 29 Aug 2019 14:15:23 -0400
-Message-Id: <20190829181547.8280-23-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 25/45] ibmvnic: Unmap DMA address of TX descriptor buffers after use
+Date:   Thu, 29 Aug 2019 14:15:25 -0400
+Message-Id: <20190829181547.8280-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
 References: <20190829181547.8280-1-sashal@kernel.org>
@@ -60,38 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit 1eca92eef18719027d394bf1a2d276f43e7cf886 ]
+[ Upstream commit 80f0fe0934cd3daa13a5e4d48a103f469115b160 ]
 
-In cx82310_bind(), 'dev->partial_data' is allocated through kmalloc().
-Then, the execution waits for the firmware to become ready. If the firmware
-is not ready in time, the execution is terminated. However, the allocated
-'dev->partial_data' is not deallocated on this path, leading to a memory
-leak bug. To fix this issue, free 'dev->partial_data' before returning the
-error.
+There's no need to wait until a completion is received to unmap
+TX descriptor buffers that have been passed to the hypervisor.
+Instead unmap it when the hypervisor call has completed. This patch
+avoids the possibility that a buffer will not be unmapped because
+a TX completion is lost or mishandled.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+Tested-by: Devesh K. Singh <devesh_singh@in.ibm.com>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/cx82310_eth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/usb/cx82310_eth.c b/drivers/net/usb/cx82310_eth.c
-index 947bea81d9241..dfbdea22fbad9 100644
---- a/drivers/net/usb/cx82310_eth.c
-+++ b/drivers/net/usb/cx82310_eth.c
-@@ -175,7 +175,8 @@ static int cx82310_bind(struct usbnet *dev, struct usb_interface *intf)
- 	}
- 	if (!timeout) {
- 		dev_err(&udev->dev, "firmware not ready in time\n");
--		return -ETIMEDOUT;
-+		ret = -ETIMEDOUT;
-+		goto err;
- 	}
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 0ae43d27cdcff..255de7d68cd33 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -1586,6 +1586,8 @@ static int ibmvnic_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 		lpar_rc = send_subcrq_indirect(adapter, handle_array[queue_num],
+ 					       (u64)tx_buff->indir_dma,
+ 					       (u64)num_entries);
++		dma_unmap_single(dev, tx_buff->indir_dma,
++				 sizeof(tx_buff->indir_arr), DMA_TO_DEVICE);
+ 	} else {
+ 		tx_buff->num_entries = num_entries;
+ 		lpar_rc = send_subcrq(adapter, handle_array[queue_num],
+@@ -2747,7 +2749,6 @@ static int ibmvnic_complete_tx(struct ibmvnic_adapter *adapter,
+ 	union sub_crq *next;
+ 	int index;
+ 	int i, j;
+-	u8 *first;
  
- 	/* enable ethernet mode (?) */
+ restart_loop:
+ 	while (pending_scrq(adapter, scrq)) {
+@@ -2777,14 +2778,6 @@ static int ibmvnic_complete_tx(struct ibmvnic_adapter *adapter,
+ 
+ 				txbuff->data_dma[j] = 0;
+ 			}
+-			/* if sub_crq was sent indirectly */
+-			first = &txbuff->indir_arr[0].generic.first;
+-			if (*first == IBMVNIC_CRQ_CMD) {
+-				dma_unmap_single(dev, txbuff->indir_dma,
+-						 sizeof(txbuff->indir_arr),
+-						 DMA_TO_DEVICE);
+-				*first = 0;
+-			}
+ 
+ 			if (txbuff->last_frag) {
+ 				dev_kfree_skb_any(txbuff->skb);
 -- 
 2.20.1
 
