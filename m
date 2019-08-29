@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 755C2C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EA3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D3D205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6576E23405
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103362;
-	bh=RWqFe7Un65rshSuXKt6U5B/SGrXFu6/jZLaCmJW8e9Y=;
+	s=default; t=1567103366;
+	bh=9XwVY0/RWITjmF5+saF61bNfNg4hwnNLiBiyFMWHHcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TeCNEvFmU4xCcPRNRunKhQQ/Pudq5qVoSlkN7i5YobLlDF37QYTu+qafSNYHBHeCv
-	 ptBVrJu24P4kK9zmaOmJBl/0bWYQHKX/4QfTuMjVWMt8D2FXCF9GSNrBcTdpNdF1Kz
-	 cqhNJjWW4v7aPZ+X+rXDoqJ049sh9EY6OU3J5ynY=
+	b=2gP3JC9yfxqObSCplCCgXw4ByuEERfi+ZfKiqaPIxI2PVhvYPa2j2bTo0Mom2fl2R
+	 vY15OL665PlXJj4VR3IbiMai3N849DOFJi9ucELKCLDfGpglaSk0K33EsMdYzAeKtF
+	 KC2lbxHGAO9vKtcSoE+LmvmPuGxATr7Civ+vhlBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbfH2S3V (ORCPT
+        id S1729113AbfH2SPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:29:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:15:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729073AbfH2SPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:15:02 -0400
+        id S1729073AbfH2SO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:14:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2C262339E;
-        Thu, 29 Aug 2019 18:15:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6926233FF;
+        Thu, 29 Aug 2019 18:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102501;
-        bh=RWqFe7Un65rshSuXKt6U5B/SGrXFu6/jZLaCmJW8e9Y=;
+        s=default; t=1567102496;
+        bh=9XwVY0/RWITjmF5+saF61bNfNg4hwnNLiBiyFMWHHcI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qk3i03lW1cYcoDti60XM9YYZEygzcx01Sak7eCqBSAwwpGucPxWffdMhdfucol5gH
-         qLHWGAh+f0paJEEfmV5jbTqqxOIl4AhI0YbwXwudAlv9RXyaeSbGO8GADBDPj5sGLm
-         5VX0C4dmK6aecMIxFOfHIhMGCKYLVn5qes1vmRQQ=
+        b=LyUn0fyF/M0jUPmnksCh1re+AlT96Mos9q80aKWiyNNiWPhI4DpB0MckXwQ9GdaYL
+         b9ChIC6VzoC3TjOjfxILVPPnJn0WCW8CS86AV6JIqj57ZefShFuZ4HsFtymPA7G/ni
+         JfxAbPtqRkIXwKEmH5ty7k2XckAI/gAT3u7Znwzw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "Ewan D . Milne" <emilne@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 52/76] scsi: lpfc: Mitigate high memory pre-allocation by SCSI-MQ
-Date:   Thu, 29 Aug 2019 14:12:47 -0400
-Message-Id: <20190829181311.7562-52-sashal@kernel.org>
+Cc:     Even Xu <even.xu@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 49/76] HID: intel-ish-hid: ipc: add EHL device id
+Date:   Thu, 29 Aug 2019 14:12:44 -0400
+Message-Id: <20190829181311.7562-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -62,131 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Even Xu <even.xu@intel.com>
 
-[ Upstream commit 77ffd3465ba837e9dc714e17b014e77b2eae765a ]
+[ Upstream commit b640be5bc8e4673dc8049cf74176ddedecea5597 ]
 
-When SCSI-MQ is enabled, the SCSI-MQ layers will do pre-allocation of MQ
-resources based on shost values set by the driver. In newer cases of the
-driver, which attempts to set nr_hw_queues to the cpu count, the
-multipliers become excessive, with a single shost having SCSI-MQ
-pre-allocation reaching into the multiple GBytes range.  NPIV, which
-creates additional shosts, only multiply this overhead. On lower-memory
-systems, this can exhaust system memory very quickly, resulting in a system
-crash or failures in the driver or elsewhere due to low memory conditions.
+EHL is a new platform using ishtp solution, add its device id
+to support list.
 
-After testing several scenarios, the situation can be mitigated by limiting
-the value set in shost->nr_hw_queues to 4. Although the shost values were
-changed, the driver still had per-cpu hardware queues of its own that
-allowed parallelization per-cpu.  Testing revealed that even with the
-smallish number for nr_hw_queues for SCSI-MQ, performance levels remained
-near maximum with the within-driver affiinitization.
-
-A module parameter was created to allow the value set for the nr_hw_queues
-to be tunable.
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Even Xu <even.xu@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc.h      |  1 +
- drivers/scsi/lpfc/lpfc_attr.c | 15 +++++++++++++++
- drivers/scsi/lpfc/lpfc_init.c | 10 ++++++----
- drivers/scsi/lpfc/lpfc_sli4.h |  5 +++++
- 4 files changed, 27 insertions(+), 4 deletions(-)
+ drivers/hid/intel-ish-hid/ipc/hw-ish.h  | 1 +
+ drivers/hid/intel-ish-hid/ipc/pci-ish.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
-index aafcffaa25f71..4604e1bc334c0 100644
---- a/drivers/scsi/lpfc/lpfc.h
-+++ b/drivers/scsi/lpfc/lpfc.h
-@@ -822,6 +822,7 @@ struct lpfc_hba {
- 	uint32_t cfg_cq_poll_threshold;
- 	uint32_t cfg_cq_max_proc_limit;
- 	uint32_t cfg_fcp_cpu_map;
-+	uint32_t cfg_fcp_mq_threshold;
- 	uint32_t cfg_hdw_queue;
- 	uint32_t cfg_irq_chann;
- 	uint32_t cfg_suppress_rsp;
-diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
-index d4c65e2109e2f..353da12d797ba 100644
---- a/drivers/scsi/lpfc/lpfc_attr.c
-+++ b/drivers/scsi/lpfc/lpfc_attr.c
-@@ -5640,6 +5640,19 @@ LPFC_ATTR_RW(nvme_oas, 0, 0, 1,
- LPFC_ATTR_RW(nvme_embed_cmd, 1, 0, 2,
- 	     "Embed NVME Command in WQE");
+diff --git a/drivers/hid/intel-ish-hid/ipc/hw-ish.h b/drivers/hid/intel-ish-hid/ipc/hw-ish.h
+index 1065692f90e20..5792a104000a9 100644
+--- a/drivers/hid/intel-ish-hid/ipc/hw-ish.h
++++ b/drivers/hid/intel-ish-hid/ipc/hw-ish.h
+@@ -24,6 +24,7 @@
+ #define ICL_MOBILE_DEVICE_ID	0x34FC
+ #define SPT_H_DEVICE_ID		0xA135
+ #define CML_LP_DEVICE_ID	0x02FC
++#define EHL_Ax_DEVICE_ID	0x4BB3
  
-+/*
-+ * lpfc_fcp_mq_threshold: Set the maximum number of Hardware Queues
-+ * the driver will advertise it supports to the SCSI layer.
-+ *
-+ *      0    = Set nr_hw_queues by the number of CPUs or HW queues.
-+ *      1,128 = Manually specify the maximum nr_hw_queue value to be set,
-+ *
-+ * Value range is [0,128]. Default value is 8.
-+ */
-+LPFC_ATTR_R(fcp_mq_threshold, LPFC_FCP_MQ_THRESHOLD_DEF,
-+	    LPFC_FCP_MQ_THRESHOLD_MIN, LPFC_FCP_MQ_THRESHOLD_MAX,
-+	    "Set the number of SCSI Queues advertised");
-+
- /*
-  * lpfc_hdw_queue: Set the number of Hardware Queues the driver
-  * will advertise it supports to the NVME and  SCSI layers. This also
-@@ -5961,6 +5974,7 @@ struct device_attribute *lpfc_hba_attrs[] = {
- 	&dev_attr_lpfc_cq_poll_threshold,
- 	&dev_attr_lpfc_cq_max_proc_limit,
- 	&dev_attr_lpfc_fcp_cpu_map,
-+	&dev_attr_lpfc_fcp_mq_threshold,
- 	&dev_attr_lpfc_hdw_queue,
- 	&dev_attr_lpfc_irq_chann,
- 	&dev_attr_lpfc_suppress_rsp,
-@@ -7042,6 +7056,7 @@ lpfc_get_cfgparam(struct lpfc_hba *phba)
- 	/* Initialize first burst. Target vs Initiator are different. */
- 	lpfc_nvme_enable_fb_init(phba, lpfc_nvme_enable_fb);
- 	lpfc_nvmet_fb_size_init(phba, lpfc_nvmet_fb_size);
-+	lpfc_fcp_mq_threshold_init(phba, lpfc_fcp_mq_threshold);
- 	lpfc_hdw_queue_init(phba, lpfc_hdw_queue);
- 	lpfc_irq_chann_init(phba, lpfc_irq_chann);
- 	lpfc_enable_bbcr_init(phba, lpfc_enable_bbcr);
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index eaaef682de251..2fd8f15f99975 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -4308,10 +4308,12 @@ lpfc_create_port(struct lpfc_hba *phba, int instance, struct device *dev)
- 	shost->max_cmd_len = 16;
- 
- 	if (phba->sli_rev == LPFC_SLI_REV4) {
--		if (phba->cfg_fcp_io_sched == LPFC_FCP_SCHED_BY_HDWQ)
--			shost->nr_hw_queues = phba->cfg_hdw_queue;
--		else
--			shost->nr_hw_queues = phba->sli4_hba.num_present_cpu;
-+		if (!phba->cfg_fcp_mq_threshold ||
-+		    phba->cfg_fcp_mq_threshold > phba->cfg_hdw_queue)
-+			phba->cfg_fcp_mq_threshold = phba->cfg_hdw_queue;
-+
-+		shost->nr_hw_queues = min_t(int, 2 * num_possible_nodes(),
-+					    phba->cfg_fcp_mq_threshold);
- 
- 		shost->dma_boundary =
- 			phba->sli4_hba.pc_sli4_params.sge_supp_len-1;
-diff --git a/drivers/scsi/lpfc/lpfc_sli4.h b/drivers/scsi/lpfc/lpfc_sli4.h
-index 8e4fd1a98023c..986594ec40e2a 100644
---- a/drivers/scsi/lpfc/lpfc_sli4.h
-+++ b/drivers/scsi/lpfc/lpfc_sli4.h
-@@ -44,6 +44,11 @@
- #define LPFC_HBA_HDWQ_MAX	128
- #define LPFC_HBA_HDWQ_DEF	0
- 
-+/* FCP MQ queue count limiting */
-+#define LPFC_FCP_MQ_THRESHOLD_MIN	0
-+#define LPFC_FCP_MQ_THRESHOLD_MAX	128
-+#define LPFC_FCP_MQ_THRESHOLD_DEF	8
-+
- /* Common buffer size to accomidate SCSI and NVME IO buffers */
- #define LPFC_COMMON_IO_BUF_SZ	768
- 
+ #define	REVISION_ID_CHT_A0	0x6
+ #define	REVISION_ID_CHT_Ax_SI	0x0
+diff --git a/drivers/hid/intel-ish-hid/ipc/pci-ish.c b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
+index 17ae49fba920f..8cce3cfe28e08 100644
+--- a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
++++ b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
+@@ -33,6 +33,7 @@ static const struct pci_device_id ish_pci_tbl[] = {
+ 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, ICL_MOBILE_DEVICE_ID)},
+ 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, SPT_H_DEVICE_ID)},
+ 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, CML_LP_DEVICE_ID)},
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, EHL_Ax_DEVICE_ID)},
+ 	{0, }
+ };
+ MODULE_DEVICE_TABLE(pci, ish_pci_tbl);
 -- 
 2.20.1
 
