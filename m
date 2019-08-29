@@ -2,331 +2,257 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D07C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3182C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6252189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB3362189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:48:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfH2Noq (ORCPT
+        id S1727352AbfH2Nso convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:44:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7426 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727565AbfH2Noo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:44:44 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7TDhuaG095731
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:44:44 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2upcyyy5y5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:44:43 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Thu, 29 Aug 2019 14:44:41 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 29 Aug 2019 14:44:39 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7TDicwQ43450592
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 13:44:38 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0CAA042047;
-        Thu, 29 Aug 2019 13:44:38 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AAC1F42049;
-        Thu, 29 Aug 2019 13:44:37 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.51])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 29 Aug 2019 13:44:37 +0000 (GMT)
-Subject: Re: [PATCH v3] KVM: selftests: Add a test for the KVM_S390_MEM_OP
- ioctl
-To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
-        Janosch Frank <frankja@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <20190829130732.580-1-thuth@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- mQINBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
- J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
- CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
- 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
- 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
- +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
- T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
- OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
- /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
- IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABtDRDaHJpc3RpYW4g
- Qm9ybnRyYWVnZXIgKElCTSkgPGJvcm50cmFlZ2VyQGRlLmlibS5jb20+iQI4BBMBAgAiBQJO
- nDz4AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRARe7yAtaYcfOYVD/9sqc6ZdYKD
- bmDIvc2/1LL0g7OgiA8pHJlYN2WHvIhUoZUIqy8Sw2EFny/nlpPVWfG290JizNS2LZ0mCeGZ
- 80yt0EpQNR8tLVzLSSr0GgoY0lwsKhAnx3p3AOrA8WXsPL6prLAu3yJI5D0ym4MJ6KlYVIjU
- ppi4NLWz7ncA2nDwiIqk8PBGxsjdc/W767zOOv7117rwhaGHgrJ2tLxoGWj0uoH3ZVhITP1z
- gqHXYaehPEELDV36WrSKidTarfThCWW0T3y4bH/mjvqi4ji9emp1/pOWs5/fmd4HpKW+44tD
- Yt4rSJRSa8lsXnZaEPaeY3nkbWPcy3vX6qafIey5d8dc8Uyaan39WslnJFNEx8cCqJrC77kI
- vcnl65HaW3y48DezrMDH34t3FsNrSVv5fRQ0mbEed8hbn4jguFAjPt4az1xawSp0YvhzwATJ
- YmZWRMa3LPx/fAxoolq9cNa0UB3D3jmikWktm+Jnp6aPeQ2Db3C0cDyxcOQY/GASYHY3KNra
- z8iwS7vULyq1lVhOXg1EeSm+lXQ1Ciz3ub3AhzE4c0ASqRrIHloVHBmh4favY4DEFN19Xw1p
- 76vBu6QjlsJGjvROW3GRKpLGogQTLslbjCdIYyp3AJq2KkoKxqdeQYm0LZXjtAwtRDbDo71C
- FxS7i/qfvWJv8ie7bE9A6Wsjn7kCDQROnDz4ARAAmPI1e8xB0k23TsEg8O1sBCTXkV8HSEq7
- JlWz7SWyM8oFkJqYAB7E1GTXV5UZcr9iurCMKGSTrSu3ermLja4+k0w71pLxws859V+3z1jr
- nhB3dGzVZEUhCr3EuN0t8eHSLSMyrlPL5qJ11JelnuhToT6535cLOzeTlECc51bp5Xf6/XSx
- SMQaIU1nDM31R13o98oRPQnvSqOeljc25aflKnVkSfqWSrZmb4b0bcWUFFUKVPfQ5Z6JEcJg
- Hp7qPXHW7+tJTgmI1iM/BIkDwQ8qe3Wz8R6rfupde+T70NiId1M9w5rdo0JJsjKAPePKOSDo
- RX1kseJsTZH88wyJ30WuqEqH9zBxif0WtPQUTjz/YgFbmZ8OkB1i+lrBCVHPdcmvathknAxS
- bXL7j37VmYNyVoXez11zPYm+7LA2rvzP9WxR8bPhJvHLhKGk2kZESiNFzP/E4r4Wo24GT4eh
- YrDo7GBHN82V4O9JxWZtjpxBBl8bH9PvGWBmOXky7/bP6h96jFu9ZYzVgIkBP3UYW+Pb1a+b
- w4A83/5ImPwtBrN324bNUxPPqUWNW0ftiR5b81ms/rOcDC/k/VoN1B+IHkXrcBf742VOLID4
- YP+CB9GXrwuF5KyQ5zEPCAjlOqZoq1fX/xGSsumfM7d6/OR8lvUPmqHfAzW3s9n4lZOW5Jfx
- bbkAEQEAAYkCHwQYAQIACQUCTpw8+AIbDAAKCRARe7yAtaYcfPzbD/9WNGVf60oXezNzSVCL
- hfS36l/zy4iy9H9rUZFmmmlBufWOATjiGAXnn0rr/Jh6Zy9NHuvpe3tyNYZLjB9pHT6mRZX7
- Z1vDxeLgMjTv983TQ2hUSlhRSc6e6kGDJyG1WnGQaqymUllCmeC/p9q5m3IRxQrd0skfdN1V
- AMttRwvipmnMduy5SdNayY2YbhWLQ2wS3XHJ39a7D7SQz+gUQfXgE3pf3FlwbwZhRtVR3z5u
- aKjxqjybS3Ojimx4NkWjidwOaUVZTqEecBV+QCzi2oDr9+XtEs0m5YGI4v+Y/kHocNBP0myd
- pF3OoXvcWdTb5atk+OKcc8t4TviKy1WCNujC+yBSq3OM8gbmk6NwCwqhHQzXCibMlVF9hq5a
- FiJb8p4QKSVyLhM8EM3HtiFqFJSV7F+h+2W0kDyzBGyE0D8z3T+L3MOj3JJJkfCwbEbTpk4f
- n8zMboekuNruDw1OADRMPlhoWb+g6exBWx/YN4AY9LbE2KuaScONqph5/HvJDsUldcRN3a5V
- RGIN40QWFVlZvkKIEkzlzqpAyGaRLhXJPv/6tpoQaCQQoSAc5Z9kM/wEd9e2zMeojcWjUXgg
- oWj8A/wY4UXExGBu+UCzzP/6sQRpBiPFgmqPTytrDo/gsUGqjOudLiHQcMU+uunULYQxVghC
- syiRa+UVlsKmx1hsEg==
-Date:   Thu, 29 Aug 2019 15:44:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 09:48:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47458 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726973AbfH2Nso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 09:48:44 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EA72F19D381;
+        Thu, 29 Aug 2019 13:48:43 +0000 (UTC)
+Received: from x1.home (ovpn-116-131.phx2.redhat.com [10.3.116.131])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 673AA19D7A;
+        Thu, 29 Aug 2019 13:48:43 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 07:48:42 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Ben Luo <luoben@linux.alibaba.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        tao.ma@linux.alibaba.com, gerry@linux.alibaba.com,
+        nanhai.zou@linux.alibaba.com, linyunsheng@huawei.com
+Subject: Re: [PATCH v4 3/3] vfio/pci: make use of irq_update_devid and
+ optimize irq ops
+Message-ID: <20190829074842.0f02b5df@x1.home>
+In-Reply-To: <b260e7ff-e5fe-8911-cb43-fc010d6b1195@linux.alibaba.com>
+References: <cover.1566486156.git.luoben@linux.alibaba.com>
+        <8721e56f15dbcb1e0a1d8fc645def7b9bc752988.1566486156.git.luoben@linux.alibaba.com>
+        <20190827143305.1ac826e1@x1.home>
+        <429ae9ed-de9d-f8de-de65-a41c3a0c501d@linux.alibaba.com>
+        <20190828112331.7178af1a@x1.home>
+        <b260e7ff-e5fe-8911-cb43-fc010d6b1195@linux.alibaba.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20190829130732.580-1-thuth@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19082913-0028-0000-0000-000003954736
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082913-0029-0000-0000-0000245787CC
-Message-Id: <0cc74231-d01e-2b2c-5f6d-252f328e547d@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908290151
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 29 Aug 2019 13:48:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-thanks applied. 
+On Thu, 29 Aug 2019 13:40:59 +0800
+Ben Luo <luoben@linux.alibaba.com> wrote:
 
-On 29.08.19 15:07, Thomas Huth wrote:
-> Check that we can write and read the guest memory with this s390x
-> ioctl, and that some error cases are handled correctly.
+> 在 2019/8/29 上午1:23, Alex Williamson 写道:
+> > On Wed, 28 Aug 2019 18:08:02 +0800
+> > Ben Luo <luoben@linux.alibaba.com> wrote:
+> >  
+> >> 在 2019/8/28 上午4:33, Alex Williamson 写道:  
+> >>> On Thu, 22 Aug 2019 23:34:43 +0800
+> >>> Ben Luo <luoben@linux.alibaba.com> wrote:
+> >>>     
+> >>>> When userspace (e.g. qemu) triggers a switch between KVM
+> >>>> irqfd and userspace eventfd, only dev_id of irq action
+> >>>> (i.e. the "trigger" in this patch's context) will be
+> >>>> changed, but a free-then-request-irq action is taken in
+> >>>> current code. And, irq affinity setting in VM will also
+> >>>> trigger a free-then-request-irq action, which actually
+> >>>> changes nothing, but only fires a producer re-registration
+> >>>> to update irte in case that posted-interrupt is in use.
+> >>>>
+> >>>> This patch makes use of irq_update_devid() and optimize
+> >>>> both cases above, which reduces the risk of losing interrupt
+> >>>> and also cuts some overhead.
+> >>>>
+> >>>> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
+> >>>> ---
+> >>>>    drivers/vfio/pci/vfio_pci_intrs.c | 112 +++++++++++++++++++++++++-------------
+> >>>>    1 file changed, 74 insertions(+), 38 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
+> >>>> index 3fa3f72..60d3023 100644
+> >>>> --- a/drivers/vfio/pci/vfio_pci_intrs.c
+> >>>> +++ b/drivers/vfio/pci/vfio_pci_intrs.c
+> >>>> @@ -284,70 +284,106 @@ static int vfio_msi_enable(struct vfio_pci_device *vdev, int nvec, bool msix)
+> >>>>    static int vfio_msi_set_vector_signal(struct vfio_pci_device *vdev,
+> >>>>    				      int vector, int fd, bool msix)
+> >>>>    {
+> >>>> +	struct eventfd_ctx *trigger = NULL;
+> >>>>    	struct pci_dev *pdev = vdev->pdev;
+> >>>> -	struct eventfd_ctx *trigger;
+> >>>>    	int irq, ret;
+> >>>>    
+> >>>>    	if (vector < 0 || vector >= vdev->num_ctx)
+> >>>>    		return -EINVAL;
+> >>>>    
+> >>>> +	if (fd >= 0) {
+> >>>> +		trigger = eventfd_ctx_fdget(fd);
+> >>>> +		if (IS_ERR(trigger))
+> >>>> +			return PTR_ERR(trigger);
+> >>>> +	}  
+> >>> I think this is a user visible change.  Previously the vector is
+> >>> disabled first, then if an error occurs re-enabling, we return an errno
+> >>> with the vector disabled.  Here we instead fail the ioctl and leave the
+> >>> state as if it had never happened.  For instance with QEMU, if they
+> >>> were trying to change from KVM to userspace signaling and entered this
+> >>> condition, previously the interrupt would signal to neither eventfd, now
+> >>> it would continue signaling to KVM. If QEMU's intent was to emulate
+> >>> vector masking, this could induce unhandled interrupts in the guest.
+> >>> Maybe we need a tear-down on fault here to maintain that behavior, or
+> >>> do you see some justification for the change?  
+> >> Thanks for your comments, this reminds me to think more about the
+> >> effects to users.
+> >>
+> >> After I reviewed the related code in Qemu and VFIO, I think maybe there
+> >> is a problem in current behavior
+> >> for the signal path changing case. Qemu has neither recovery nor retry
+> >> code in case that ioctl with
+> >> 'VFIO_DEVICE_SET_IRQS' command fails, so if the old signal path has been
+> >> disabled on fault of setting
+> >> up new path, the corresponding vector may be disabled forever. Following
+> >> is an example from qemu's
+> >> vfio_msix_vector_do_use():
+> >>
+> >>           ret = ioctl(vdev->vbasedev.fd, VFIO_DEVICE_SET_IRQS, irq_set);
+> >>           g_free(irq_set);
+> >>           if (ret) {
+> >>               error_report("vfio: failed to modify vector, %d", ret);
+> >>           }
+> >>
+> >> I think the singal path before changing should be still working at this
+> >> moment and the caller should keep it
+> >> working if the changing fails, so that at least we still have the old
+> >> path instead of no path.
+> >>
+> >> For masking vector case, the 'fd' should be -1, and the interrupt will
+> >> be freed as before this patch.  
+> > QEMU doesn't really have an opportunity to signal an error to the
+> > guest, we're emulating the hardware masking of MSI and MSI-X.  The
+> > guest is simply trying to write a mask bit in the vector, there's no
+> > provision in the PCI spec that setting this bit can fail.  The current
+> > behavior is that the vector is disabled on error.  We can argue whether
+> > that's the optimal behavior, but it's the existing behavior and
+> > changing it would require and evaluation of all existing users.  
 > 
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> ---
->  v3:
->  - Replaced wrong copy-n-pasted report string with a proper one
->  - Check for errno after calling the ioctl with size = 0
->  
->  tools/testing/selftests/kvm/Makefile      |   1 +
->  tools/testing/selftests/kvm/s390x/memop.c | 166 ++++++++++++++++++++++
->  2 files changed, 167 insertions(+)
->  create mode 100644 tools/testing/selftests/kvm/s390x/memop.c
+> I totally agree with you that masking of MSI and MSI-X should follow 
+> current behavior, and my code does follow this behavior when 'fd' == -1, 
+> the interrupt will surely be disabled.
 > 
-> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-> index 1b48a94b4350..62c591f87dab 100644
-> --- a/tools/testing/selftests/kvm/Makefile
-> +++ b/tools/testing/selftests/kvm/Makefile
-> @@ -32,6 +32,7 @@ TEST_GEN_PROGS_aarch64 += clear_dirty_log_test
->  TEST_GEN_PROGS_aarch64 += dirty_log_test
->  TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
->  
-> +TEST_GEN_PROGS_s390x = s390x/memop
->  TEST_GEN_PROGS_s390x += s390x/sync_regs_test
->  TEST_GEN_PROGS_s390x += dirty_log_test
->  TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
-> diff --git a/tools/testing/selftests/kvm/s390x/memop.c b/tools/testing/selftests/kvm/s390x/memop.c
-> new file mode 100644
-> index 000000000000..9edaa9a134ce
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/s390x/memop.c
-> @@ -0,0 +1,166 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Test for s390x KVM_S390_MEM_OP
-> + *
-> + * Copyright (C) 2019, Red Hat, Inc.
-> + */
-> +
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <sys/ioctl.h>
-> +
-> +#include "test_util.h"
-> +#include "kvm_util.h"
-> +
-> +#define VCPU_ID 1
-> +
-> +static uint8_t mem1[65536];
-> +static uint8_t mem2[65536];
-> +
-> +static void guest_code(void)
-> +{
-> +	int i;
-> +
-> +	for (;;) {
-> +		for (i = 0; i < sizeof(mem2); i++)
-> +			mem2[i] = mem1[i];
-> +		GUEST_SYNC(0);
-> +	}
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	struct kvm_vm *vm;
-> +	struct kvm_run *run;
-> +	struct kvm_s390_mem_op ksmo;
-> +	int rv, i, maxsize;
-> +
-> +	setbuf(stdout, NULL);	/* Tell stdout not to buffer its content */
-> +
-> +	maxsize = kvm_check_cap(KVM_CAP_S390_MEM_OP);
-> +	if (!maxsize) {
-> +		fprintf(stderr, "CAP_S390_MEM_OP not supported -> skip test\n");
-> +		exit(KSFT_SKIP);
-> +	}
-> +	if (maxsize > sizeof(mem1))
-> +		maxsize = sizeof(mem1);
-> +
-> +	/* Create VM */
-> +	vm = vm_create_default(VCPU_ID, 0, guest_code);
-> +	run = vcpu_state(vm, VCPU_ID);
-> +
-> +	for (i = 0; i < sizeof(mem1); i++)
-> +		mem1[i] = i * i + i;
-> +
-> +	/* Set the first array */
-> +	ksmo.gaddr = addr_gva2gpa(vm, (uintptr_t)mem1);
-> +	ksmo.flags = 0;
-> +	ksmo.size = maxsize;
-> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
-> +	ksmo.buf = (uintptr_t)mem1;
-> +	ksmo.ar = 0;
-> +	vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-> +
-> +	/* Let the guest code copy the first array to the second */
-> +	vcpu_run(vm, VCPU_ID);
-> +	TEST_ASSERT(run->exit_reason == KVM_EXIT_S390_SIEIC,
-> +		    "Unexpected exit reason: %u (%s)\n",
-> +		    run->exit_reason,
-> +		    exit_reason_str(run->exit_reason));
-> +
-> +	memset(mem2, 0xaa, sizeof(mem2));
-> +
-> +	/* Get the second array */
-> +	ksmo.gaddr = (uintptr_t)mem2;
-> +	ksmo.flags = 0;
-> +	ksmo.size = maxsize;
-> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_READ;
-> +	ksmo.buf = (uintptr_t)mem2;
-> +	ksmo.ar = 0;
-> +	vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-> +
-> +	TEST_ASSERT(!memcmp(mem1, mem2, maxsize),
-> +		    "Memory contents do not match!");
-> +
-> +	/* Check error conditions - first bad size: */
-> +	ksmo.gaddr = (uintptr_t)mem1;
-> +	ksmo.flags = 0;
-> +	ksmo.size = -1;
-> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
-> +	ksmo.buf = (uintptr_t)mem1;
-> +	ksmo.ar = 0;
-> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-> +	TEST_ASSERT(rv == -1 && errno == E2BIG, "ioctl allows insane sizes");
-> +
-> +	/* Zero size: */
-> +	ksmo.gaddr = (uintptr_t)mem1;
-> +	ksmo.flags = 0;
-> +	ksmo.size = 0;
-> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
-> +	ksmo.buf = (uintptr_t)mem1;
-> +	ksmo.ar = 0;
-> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-> +	TEST_ASSERT(rv == -1 && (errno == EINVAL || errno == ENOMEM),
-> +		    "ioctl allows 0 as size");
-> +
-> +	/* Bad flags: */
-> +	ksmo.gaddr = (uintptr_t)mem1;
-> +	ksmo.flags = -1;
-> +	ksmo.size = maxsize;
-> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
-> +	ksmo.buf = (uintptr_t)mem1;
-> +	ksmo.ar = 0;
-> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-> +	TEST_ASSERT(rv == -1 && errno == EINVAL, "ioctl allows all flags");
-> +
-> +	/* Bad operation: */
-> +	ksmo.gaddr = (uintptr_t)mem1;
-> +	ksmo.flags = 0;
-> +	ksmo.size = maxsize;
-> +	ksmo.op = -1;
-> +	ksmo.buf = (uintptr_t)mem1;
-> +	ksmo.ar = 0;
-> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-> +	TEST_ASSERT(rv == -1 && errno == EINVAL, "ioctl allows bad operations");
-> +
-> +	/* Bad guest address: */
-> +	ksmo.gaddr = ~0xfffUL;
-> +	ksmo.flags = KVM_S390_MEMOP_F_CHECK_ONLY;
-> +	ksmo.size = maxsize;
-> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
-> +	ksmo.buf = (uintptr_t)mem1;
-> +	ksmo.ar = 0;
-> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-> +	TEST_ASSERT(rv > 0, "ioctl does not report bad guest memory access");
-> +
-> +	/* Bad host address: */
-> +	ksmo.gaddr = (uintptr_t)mem1;
-> +	ksmo.flags = 0;
-> +	ksmo.size = maxsize;
-> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
-> +	ksmo.buf = 0;
-> +	ksmo.ar = 0;
-> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-> +	TEST_ASSERT(rv == -1 && errno == EFAULT,
-> +		    "ioctl does not report bad host memory address");
-> +
-> +	/* Bad access register: */
-> +	run->psw_mask &= ~(3UL << (63 - 17));
-> +	run->psw_mask |= 1UL << (63 - 17);  /* Enable AR mode */
-> +	vcpu_run(vm, VCPU_ID);              /* To sync new state to SIE block */
-> +	ksmo.gaddr = (uintptr_t)mem1;
-> +	ksmo.flags = 0;
-> +	ksmo.size = maxsize;
-> +	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
-> +	ksmo.buf = (uintptr_t)mem1;
-> +	ksmo.ar = 17;
-> +	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
-> +	TEST_ASSERT(rv == -1 && errno == EINVAL, "ioctl allows ARs > 15");
-> +	run->psw_mask &= ~(3UL << (63 - 17));   /* Disable AR mode */
-> +	vcpu_run(vm, VCPU_ID);                  /* Run to sync new state */
-> +
-> +	kvm_vm_free(vm);
-> +
-> +	return 0;
-> +}
+> There is another case that 'fd' is not -1, means userspace just want to 
+> change the singal path, this time we do have a chance of encountering 
+> error on eventfd_ctx_fdget(fd). So, I think it is better to keep the old 
+> path working in this case.
+> 
+> But, as you said this may break the expectation of existing users, I 
+> make it tear-down on fault in next version.
+> 
+> >  
+> >>>> +
+> >>>>    	irq = pci_irq_vector(pdev, vector);
+> >>>>    
+> >>>> +	/*
+> >>>> +	 * For KVM-VFIO case, interrupt from passthrough device will be directly
+> >>>> +	 * delivered to VM after producer and consumer connected successfully.
+> >>>> +	 * If producer and consumer are disconnected, this interrupt process
+> >>>> +	 * will fall back to remap mode, where interrupt handler uses 'trigger'
+> >>>> +	 * to find the right way to deliver the interrupt to VM. So, it is safe
+> >>>> +	 * to do irq_update_devid() before irq_bypass_unregister_producer() which
+> >>>> +	 * switches interrupt process to remap mode. To producer and consumer,
+> >>>> +	 * 'trigger' is only a token used for pairing them togather.
+> >>>> +	 */
+> >>>>    	if (vdev->ctx[vector].trigger) {
+> >>>> -		free_irq(irq, vdev->ctx[vector].trigger);
+> >>>> -		irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
+> >>>> -		kfree(vdev->ctx[vector].name);
+> >>>> -		eventfd_ctx_put(vdev->ctx[vector].trigger);
+> >>>> -		vdev->ctx[vector].trigger = NULL;
+> >>>> +		if (vdev->ctx[vector].trigger == trigger) {
+> >>>> +			/* switch back to remap mode */
+> >>>> +			irq_bypass_unregister_producer(&vdev->ctx[vector].producer);  
+> >>> I think we leak the fd context we acquired above in this case.  
+> >> Thanks for pointing it out, I will fix this in next version.  
+> >>> Why do we do anything in this case, couldn't we just 'put' the extra ctx
+> >>> and return 0 here?  
+> >> Sorry for confusing and I do this for a reason,  I will add some more
+> >> comments like this:
+> >>
+> >> Unregistration here is for re-resigtraion later, which will trigger the
+> >> reconnection of irq_bypass producer
+> >> and consumer, which in turn calls vmx_update_pi_irte() to update IRTE if
+> >> posted interrupt is in use.
+> >> (vmx_update_pi_irte() will modify IRTE based on the information
+> >> retrieved from KVM.)
+> >> Whether producer token changed or not, irq_bypass_register_producer() is
+> >> a way (seems the only way) to
+> >> update IRTE by VFIO for posted interrupt. The IRTE will be used by IOMMU
+> >> directly to find the target CPU
+> >> for an interrupt posted to VM, since hypervisor is bypassed.  
+> > This is only explaining what the bypass de-registration and
+> > re-registration does, not why we need to perform those actions here.
+> > If the trigger is the same as that already attached to this vector, why
+> > is the IRTE changing?  Seems this ought to be a no-op for this vector.  
+> 
+> Sorry, I think it cannot be a no-op here. The interrupt affinity setting 
+> in guest also triggers the calling of this function and IRTE will be 
+> modified with new affinity information retrieved from KVM's data 
+> structure by vmx_update_pi_irte() when posted interrupt is in use, not 
+> from the 'trigger'.
+
+Aha, this is the key piece of information I was missing.  Please add a
+comment that even if the trigger is unchanged we need to bounce the
+bypass to allow affinity changes in the guest to be realized.  Thanks,
+
+Alex
+
+> >>>> +		} else if (trigger) {
+> >>>> +			ret = irq_update_devid(irq,
+> >>>> +					       vdev->ctx[vector].trigger, trigger);
+> >>>> +			if (unlikely(ret)) {
+> >>>> +				dev_info(&pdev->dev,
+> >>>> +					 "update devid of %d (token %p) failed: %d\n",
+> >>>> +					 irq, vdev->ctx[vector].trigger, ret);
+> >>>> +				eventfd_ctx_put(trigger);
+> >>>> +				return ret;
+> >>>> +			}
+> >>>> +			irq_bypass_unregister_producer(&vdev->ctx[vector].producer);  
+> >>> Can you explain this ordering, I would have expected that we'd
+> >>> unregister the bypass before we updated the devid.  Thanks,
+> >>>
+> >>> Alex  
+> >> Actually, I have explained this in comments above this whole control
+> >> block. I think it is safe and better to
+> >> update devid before irq_bypass_unregister_producer() which switches
+> >> interrupt process from posted mode
+> >> to remap mode. So, if update fails, the posted interrupt can still work.
+> >>
+> >> Anyway, to producer and consumer,  'trigger' is only a token used for
+> >> pairing them togather.  
+> > The bypass is not a guaranteed mechanism, it's an opportunistic
+> > accelerator.  If the devid update fails, what state are we left with?
+> > The irq action may not work, but the bypass does; maybe; maybe not all
+> > the time?  This seems to fall into the same consistency in userspace
+> > behavior issue identified above.  The user ABI is that the vector is
+> > disabled if an error is returned.  Thanks,
+> >
+> > Alex  
+> 
+> Thanks, now I see it is better to unregister the bypass before update 
+> the devid, will change ordering in next version.
+> 
+> Ben
 > 
 
