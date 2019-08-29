@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CEFC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 639FFC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10807233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44F0F233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfH2HAv (ORCPT
+        id S1727935AbfH2HAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 03:00:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48144 "EHLO mx1.redhat.com"
+        Thu, 29 Aug 2019 03:00:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57376 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfH2HAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 03:00:49 -0400
+        id S1725776AbfH2HAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 03:00:51 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5C35388319;
-        Thu, 29 Aug 2019 07:00:49 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 871E43B738;
+        Thu, 29 Aug 2019 07:00:51 +0000 (UTC)
 Received: from t460s.redhat.com (ovpn-117-166.ams2.redhat.com [10.36.117.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 810801001B05;
-        Thu, 29 Aug 2019 07:00:47 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B0D861001B07;
+        Thu, 29 Aug 2019 07:00:49 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
@@ -36,23 +36,27 @@ Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
         Pavel Tatashin <pasha.tatashin@soleen.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Wei Yang <richardw.yang@linux.intel.com>
-Subject: [PATCH v3 04/11] mm/memory_hotplug: Drop local variables in shrink_zone_span()
-Date:   Thu, 29 Aug 2019 09:00:12 +0200
-Message-Id: <20190829070019.12714-5-david@redhat.com>
+Subject: [PATCH v3 05/11] mm/memory_hotplug: Optimize zone shrinking code when checking for holes
+Date:   Thu, 29 Aug 2019 09:00:13 +0200
+Message-Id: <20190829070019.12714-6-david@redhat.com>
 In-Reply-To: <20190829070019.12714-1-david@redhat.com>
 References: <20190829070019.12714-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 29 Aug 2019 07:00:49 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 29 Aug 2019 07:00:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Especially, when checking for "all holes" we can avoid rechecking already
-processed pieces (that we are removing) - use the updated zone data
-instead (possibly already zero).
+... and clarify why this is needed at all right now. It all boils down
+to false positives. We will try to remove the false positives for
+!ZONE_DEVICE memory, soon, however, for ZONE_DEVICE memory we won't be
+able to easily get rid of false positives.
+
+Don't only detect "all holes" but try to shrink using the existing
+functions we have.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Oscar Salvador <osalvador@suse.de>
@@ -63,74 +67,68 @@ Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: Wei Yang <richardw.yang@linux.intel.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- mm/memory_hotplug.c | 26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ mm/memory_hotplug.c | 45 +++++++++++++++++++++++----------------------
+ 1 file changed, 23 insertions(+), 22 deletions(-)
 
 diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 0a21f6f99753..d3c34bbeb36d 100644
+index d3c34bbeb36d..663853bf97ed 100644
 --- a/mm/memory_hotplug.c
 +++ b/mm/memory_hotplug.c
-@@ -374,14 +374,11 @@ static unsigned long find_biggest_section_pfn(int nid, struct zone *zone,
- static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
- 			     unsigned long end_pfn)
- {
--	unsigned long zone_start_pfn = zone->zone_start_pfn;
--	unsigned long z = zone_end_pfn(zone); /* zone_end_pfn namespace clash */
--	unsigned long zone_end_pfn = z;
- 	unsigned long pfn;
- 	int nid = zone_to_nid(zone);
- 
- 	zone_span_writelock(zone);
--	if (zone_start_pfn == start_pfn) {
-+	if (zone->zone_start_pfn == start_pfn) {
- 		/*
- 		 * If the section is smallest section in the zone, it need
- 		 * shrink zone->zone_start_pfn and zone->zone_spanned_pages.
-@@ -389,22 +386,29 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
- 		 * for shrinking zone.
- 		 */
- 		pfn = find_smallest_section_pfn(nid, zone, end_pfn,
--						zone_end_pfn);
-+						zone_end_pfn(zone));
- 		if (pfn) {
-+			zone->spanned_pages = zone_end_pfn(zone) - pfn;
- 			zone->zone_start_pfn = pfn;
--			zone->spanned_pages = zone_end_pfn - pfn;
-+		} else {
-+			zone->zone_start_pfn = 0;
-+			zone->spanned_pages = 0;
+@@ -411,32 +411,33 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
  		}
--	} else if (zone_end_pfn == end_pfn) {
-+	} else if (zone_end_pfn(zone) == end_pfn) {
- 		/*
- 		 * If the section is biggest section in the zone, it need
- 		 * shrink zone->spanned_pages.
- 		 * In this case, we find second biggest valid mem_section for
- 		 * shrinking zone.
- 		 */
--		pfn = find_biggest_section_pfn(nid, zone, zone_start_pfn,
-+		pfn = find_biggest_section_pfn(nid, zone, zone->zone_start_pfn,
- 					       start_pfn);
- 		if (pfn)
--			zone->spanned_pages = pfn - zone_start_pfn + 1;
-+			zone->spanned_pages = pfn - zone->zone_start_pfn + 1;
-+		else {
-+			zone->zone_start_pfn = 0;
-+			zone->spanned_pages = 0;
-+		}
  	}
  
- 	/*
-@@ -413,8 +417,8 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
- 	 * change the zone. But perhaps, the zone has only hole data. Thus
- 	 * it check the zone has only hole or not.
- 	 */
--	pfn = zone_start_pfn;
--	for (; pfn < zone_end_pfn; pfn += PAGES_PER_SUBSECTION) {
-+	for (pfn = zone->zone_start_pfn;
-+	     pfn < zone_end_pfn(zone); pfn += PAGES_PER_SUBSECTION) {
- 		if (unlikely(!pfn_valid(pfn)))
- 			continue;
+-	/*
+-	 * The section is not biggest or smallest mem_section in the zone, it
+-	 * only creates a hole in the zone. So in this case, we need not
+-	 * change the zone. But perhaps, the zone has only hole data. Thus
+-	 * it check the zone has only hole or not.
+-	 */
+-	for (pfn = zone->zone_start_pfn;
+-	     pfn < zone_end_pfn(zone); pfn += PAGES_PER_SUBSECTION) {
+-		if (unlikely(!pfn_valid(pfn)))
+-			continue;
+-
+-		if (page_zone(pfn_to_page(pfn)) != zone)
+-			continue;
+-
+-		/* Skip range to be removed */
+-		if (pfn >= start_pfn && pfn < end_pfn)
+-			continue;
+-
+-		/* If we find valid section, we have nothing to do */
++	if (!zone->spanned_pages) {
+ 		zone_span_writeunlock(zone);
+ 		return;
+ 	}
+ 
+-	/* The zone has no valid section */
+-	zone->zone_start_pfn = 0;
+-	zone->spanned_pages = 0;
++	/*
++	 * Due to false positives in previous skrink attempts, it can happen
++	 * that we can shrink the zones further (possibly to zero). Once we
++	 * can reliably detect which PFNs actually belong to a zone
++	 * (especially for ZONE_DEVICE memory where we don't have online
++	 * sections), this can go.
++	 */
++	pfn = find_smallest_section_pfn(nid, zone, zone->zone_start_pfn,
++					zone_end_pfn(zone));
++	if (pfn) {
++		zone->spanned_pages = zone_end_pfn(zone) - pfn;
++		zone->zone_start_pfn = pfn;
++
++		pfn = find_biggest_section_pfn(nid, zone, zone->zone_start_pfn,
++					       zone_end_pfn(zone));
++		if (pfn)
++			zone->spanned_pages = pfn - zone->zone_start_pfn + 1;
++	}
++	if (!pfn) {
++		zone->zone_start_pfn = 0;
++		zone->spanned_pages = 0;
++	}
+ 	zone_span_writeunlock(zone);
+ }
  
 -- 
 2.21.0
