@@ -2,136 +2,95 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67B9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096D2C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E1D2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6BC92070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="olk4Y4iZ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NuGw5PXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbfH2WEF (ORCPT
+        id S1728161AbfH2WEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 18:04:05 -0400
-Received: from mail-lf1-f49.google.com ([209.85.167.49]:37910 "EHLO
-        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbfH2WEF (ORCPT
+        Thu, 29 Aug 2019 18:04:22 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48586 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbfH2WEV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 18:04:05 -0400
-Received: by mail-lf1-f49.google.com with SMTP id c12so3737869lfh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 15:04:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=qmQAdDRYulUDjSpMspTEPnnb4TRIYFsZQNmhOKS11AU=;
-        b=olk4Y4iZag61wP1hPA3Br9s19D+SI48mrDe97epo/a7ja3nmIUJ1UW8dDTQEudnCot
-         1rnKEtiyP81Axb4ndf5Ni20lVk7FBuW1LOu7/V5wvu5s8axkfpD2k8Its1nqKDucVCrS
-         S8yMPZ8Nw6GPrdw3UkBvomVkp1MQw1CgvQh8WBMnqa5qO0lAfXIzXAi50aOm1UCbg2ai
-         GJ+LzdGBPdyjQ5Eb8a60J9SAQ2dB5ZNFSuvTeLhDZSArZX6uf03nNmd4KBwPQli0UcBZ
-         +8Ce2PdTca8oaDWDIc6NF2csNQVP0JO+LkIGg0U7Q/tgFjsOMYp40upVHb1DBhO4Ok42
-         ZRNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=qmQAdDRYulUDjSpMspTEPnnb4TRIYFsZQNmhOKS11AU=;
-        b=MgaWRYJlbOtLzbIdk8Oj5IULgnd24L5VJFMZA5iyuqkh9hcT6ueu1RENZ9Ed4Yqdxc
-         Z7MJYCR6WUfY5Wzl2JENCyfNNMjbgO7xy+z1t3RQS4lx/lwLNfkceTSH6S/tVT8OPcu1
-         03T22FqY2dCqUKKtZ7DmVLucsCoRZCZdw6ovjzXt/bUoCdROrlx4HXkOYfPZgmJcQd7f
-         KJ3bep9VdFcONze3sc2/FYVqx36ez/uWgG4zWYDFvfpqJ0pCg9SD0Y0gZXmC2+ghLmK9
-         nnejQHw0Ic+PJtqi25kllxQVXhMuKNyY4/xnfICvMfnM2YHbAoOEpKH2b+t0ArwgA/91
-         ZvQw==
-X-Gm-Message-State: APjAAAUcRKfFiMWxfeOCAHXOI7U6l3ZJ/r0uxpRqdQuwzMayG/+bt9Cz
-        H/Ra6LOdQ36kjCmWapq1/6A=
-X-Google-Smtp-Source: APXvYqx5Rzds4epSb/bOTOocRGoYxAjXegirF5KGbnGG+NfeQNJOyfAEBiAXvG0M0ytaQNmDGCVGug==
-X-Received: by 2002:a19:6a12:: with SMTP id u18mr7345008lfu.133.1567116242773;
-        Thu, 29 Aug 2019 15:04:02 -0700 (PDT)
-Received: from localhost.localdomain ([178.214.243.78])
-        by smtp.gmail.com with ESMTPSA id e21sm575402lfj.10.2019.08.29.15.04.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 15:04:02 -0700 (PDT)
-Message-ID: <a07be36905f145f2fb07beee73f9d3805c285022.camel@gmail.com>
-Subject: Re: gnome-shell stuck because of amdgpu driver [5.3 RC5]
-From:   mikhail.v.gavrilov@gmail.com
-To:     Daniel Vetter <daniel@ffwll.ch>, Hillf Danton <hdanton@sina.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Date:   Fri, 30 Aug 2019 03:03:58 +0500
-In-Reply-To: <20190826092408.GA2112@phenom.ffwll.local>
-References: <20190825141305.13984-1-hdanton@sina.com>
-         <20190826092408.GA2112@phenom.ffwll.local>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.33.91 (3.33.91-1.fc32) 
+        Thu, 29 Aug 2019 18:04:21 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7TM4FqN191026;
+        Thu, 29 Aug 2019 22:04:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=tNq8VlHmo3z4uD6dsFqgysoGFKYe16VskF9MdIytmzc=;
+ b=NuGw5PXaRUV0W9EW47gWmep/tHP7OTqC1UEqHSXkB/tF6q7wq6XWhdvvQ2Fn7hZ2+V/V
+ s9g+iOJvq/lmdMizSpFV7IbvwB8Gu2fZWS3HJB8496kVp2gmG+Tm19pZ3hNemcMZHkuH
+ xQUExenqJDsXtE+mJk0W0WaTMywi0l4WNFHbAtZL6Cs5f5Bv99pu/NOrjBIzQxxBF2RG
+ D3o3oBZg8pgOX6AHqYhYajXtscOPNKvgvwGbObArB2LyG5sMs61bwoHPe6//SBbEr3Av
+ k6Mgx8AkeFq7cKVts6UWehysHSX8XymBFfyw4GGq1fcBGzHy7uKGczbYVH7e8rKDSvVa mQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2uppwwr20r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 22:04:15 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7TM46n2099609;
+        Thu, 29 Aug 2019 22:04:12 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2upkrfgs7y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 22:04:12 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7TM3S7j003553;
+        Thu, 29 Aug 2019 22:03:28 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 29 Aug 2019 15:03:28 -0700
+To:     Colin King <colin.king@canonical.com>
+Cc:     qla2xxx-upstream@qlogic.com,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: qla2xxx: fix spelling mistake "initializatin" -> "initialization"
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190822215651.5403-1-colin.king@canonical.com>
+Date:   Thu, 29 Aug 2019 18:03:25 -0400
+In-Reply-To: <20190822215651.5403-1-colin.king@canonical.com> (Colin King's
+        message of "Thu, 22 Aug 2019 22:56:51 +0100")
+Message-ID: <yq1lfvbr5n6.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=722
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908290220
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=799 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908290220
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 10:13:05PM +0800, Hillf Danton wrote:
-> Can we try to add the fallback timer manually?
-> 
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-> @@ -322,6 +322,10 @@ int amdgpu_fence_wait_empty(struct amdgp
->         }
->         rcu_read_unlock();
->  
-> +       if (!timer_pending(&ring->fence_drv.fallback_timer))
-> +               mod_timer(&ring->fence_drv.fallback_timer,
-> +                       jiffies + (AMDGPU_FENCE_JIFFIES_TIMEOUT <<
-> 1));
-> +
->         r = dma_fence_wait(fence, false);
->         dma_fence_put(fence);
->         return r;
-> --
-> 
-> Or simply wait with an ear on signal and timeout if adding timer
-> seems to go a bit too far?
-> 
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-> @@ -322,7 +322,12 @@ int amdgpu_fence_wait_empty(struct amdgp
->         }
->         rcu_read_unlock();
->  
-> -       r = dma_fence_wait(fence, false);
-> +       if (0 < dma_fence_wait_timeout(fence, true,
-> +                               AMDGPU_FENCE_JIFFIES_TIMEOUT +
-> +                               (AMDGPU_FENCE_JIFFIES_TIMEOUT >> 3)))
-> +               r = 0;
-> +       else
-> +               r = -EINVAL;
->         dma_fence_put(fence);
->         return r;
->  }
 
-I tested both patches on top of 5.3 RC6. Each patch I was tested more
-than 24 hours and I don't seen any regressions or problems with them.
+Colin,
 
+> There is a spelling mistake in a ql_log message. Fix it.
 
-On Mon, 2019-08-26 at 11:24 +0200, Daniel Vetter wrote:
-> 
-> This will paper over the issue, but won't fix it. dma_fences have to
-> complete, at least for normal operations, otherwise your desktop will
-> start feeling like the gpu hangs all the time.
-> 
-> I think would be much more interesting to dump which fence isn't
-> completing here in time, i.e. not just the timeout, but lots of debug
-> printks.
-> -Daniel
+Applied to 5.4/scsi-queue, thanks.
 
-As I am understood none of these patches couldn't be merged because
-they do not fix the root cause they eliminate only the consequences?
-Eliminating consequences has any negative effects? And we will never
-know the root cause because not having enough debugging information.
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
