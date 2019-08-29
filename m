@@ -2,95 +2,84 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7512FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F22C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE492077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:44:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="CjUWiJmE"
+	by mail.kernel.org (Postfix) with ESMTP id 8DE2A2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:44:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbfH2QoM (ORCPT
+        id S1728024AbfH2Qog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:44:12 -0400
-Received: from mail-ed1-f41.google.com ([209.85.208.41]:45965 "EHLO
-        mail-ed1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbfH2QoM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:44:12 -0400
-Received: by mail-ed1-f41.google.com with SMTP id x19so4713996eda.12
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:44:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=J0mIptJpgCrji3rnOXUkwAg2sK122VXt0E9fIlxztOM=;
-        b=CjUWiJmEnPc7cpwJ/wsprTOwzmCKVjptR7CYO147EQ8lCVLk9PNsUUNihGjDi0yAiU
-         AdhSK4kl0aEt2i34anAuJ5CHeotYjHF8tIYEm3pizhouRuUK1YrIQE9k7itxJ0YcnexA
-         2xxmCkBC+zU1PddIE30q0E+GQLwS5xXelvTGwgwTgCRHUc1mpEfEbNdN9FaevS84+w0A
-         KKda+pmQs9qgR1c9qFKdc00Mlryh7p5phtUGHaZ50O+d2E8lL9LWq8PdysrjSDlD/08l
-         rDCf6VUX8OHUCdYLvFfNVFqqKJyeiQ3PwuqXv0ooKBfDDDwygOUbgOX0gZqeldc+118y
-         0m1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=J0mIptJpgCrji3rnOXUkwAg2sK122VXt0E9fIlxztOM=;
-        b=rT5l54nwonyWI8ISn5fC5K2YxuYxJj/9geNSJnk4qYz8Bzi7PEMkZSyUtmuFEjDM1Z
-         NYnoOPSHcUUnnj8jDSwRzDrRxS0R7qnWKqtktTLgyRgvk91njgNEGxdmwUJwMDH7qe9s
-         KiYqgbvDbecI77JPN0bT5yts1FCj3f1xGgU1J3Y3hX90b3mPL2mpPZiNCHVzbi5OJL3y
-         unC9AHXgIl0E7QoOiNoe5iFKFuhBXWv3it1B6ONuLrpokIU6/Q7fDFV904bNX0X9+ZRU
-         ybpUAV6zJ5nJ4sNcazTtNKoXEx6KoUQE0DoyQ+BlK6sHFEb3Hgt6OqTpwu/Ja/YeBt2N
-         Mubw==
-X-Gm-Message-State: APjAAAXEDGXMa4+mgEEMq92oDS1yaGS52rs3cy6vAWm5aPIWp6OWWria
-        IVrmzliiNjdQ3umDn/+HOyu2HA==
-X-Google-Smtp-Source: APXvYqw5Xs+f6YJcpXnaAvDOyRlabm5hOEmNVZx7gCr2PPOar2OUA5f1/a+08qrVc12CFDoVIZHybA==
-X-Received: by 2002:a50:884b:: with SMTP id c11mr10893613edc.138.1567097050284;
-        Thu, 29 Aug 2019 09:44:10 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id o11sm444273ejd.68.2019.08.29.09.44.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 09:44:09 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 09:43:43 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     john.fastabend@gmail.com,
-        syzbot <syzbot+7a6ee4d0078eac6bf782@syzkaller.appspotmail.com>,
-        aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
-        davejwatson@fb.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: general protection fault in tls_sk_proto_close (2)
-Message-ID: <20190829094343.0248c61c@cakuba.netronome.com>
-In-Reply-To: <20190829035200.3340-1-hdanton@sina.com>
-References: <000000000000c3c461059127a1c4@google.com>
-        <20190829035200.3340-1-hdanton@sina.com>
-Organization: Netronome Systems, Ltd.
+        Thu, 29 Aug 2019 12:44:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42572 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727022AbfH2Qog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:44:36 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 16DE118B3D83;
+        Thu, 29 Aug 2019 16:44:36 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9659F5D9D3;
+        Thu, 29 Aug 2019 16:44:34 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 18:44:32 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Huth <thuth@redhat.com>
+Subject: Re: [PATCH v2 1/4] KVM: selftests: Move vm type into _vm_create()
+ internally
+Message-ID: <20190829164432.e5kxt4e2f5ncxwlc@kamzik.brq.redhat.com>
+References: <20190829022117.10191-1-peterx@redhat.com>
+ <20190829022117.10191-2-peterx@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829022117.10191-2-peterx@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Thu, 29 Aug 2019 16:44:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 11:52:00 +0800, Hillf Danton wrote:
-> Alternatively work is done if sock is closed again. Anyway ctx is reset
-> under sock's callback lock in write mode.
+On Thu, Aug 29, 2019 at 10:21:14AM +0800, Peter Xu wrote:
+> Rather than passing the vm type from the top level to the end of vm
+> creation, let's simply keep that as an internal of kvm_vm struct and
+> decide the type in _vm_create().  Several reasons for doing this:
 > 
-> --- a/net/tls/tls_main.c
-> +++ b/net/tls/tls_main.c
-> @@ -295,6 +295,8 @@ static void tls_sk_proto_close(struct so
->  	long timeo = sock_sndtimeo(sk, 0);
->  	bool free_ctx;
->  
-> +	if (!ctx)
-> +		return;
->  	if (ctx->tx_conf == TLS_SW)
->  		tls_sw_cancel_work_tx(ctx);
+> - The vm type is only decided by physical address width and currently
+>   only used in aarch64, so we've got enough information as long as
+>   we're passing vm_guest_mode into _vm_create(),
+> 
+> - This removes a loop dependency between the vm->type and creation of
+>   vms.  That's why now we need to parse vm_guest_mode twice sometimes,
+>   once in run_test() and then again in _vm_create().  The follow up
+>   patches will move on to clean up that as well so we can have a
+>   single place to decide guest machine types and so.
+> 
+> Note that this patch will slightly change the behavior of aarch64
+> tests in that previously most vm_create() callers will directly pass
+> in type==0 into _vm_create() but now the type will depend on
+> vm_guest_mode, however it shouldn't affect any user because all
+> vm_create() users of aarch64 will be using VM_MODE_DEFAULT guest
+> mode (which is VM_MODE_P40V48_4K) so at last type will still be zero.
+> 
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  tools/testing/selftests/kvm/dirty_log_test.c  | 13 +++---------
+>  .../testing/selftests/kvm/include/kvm_util.h  |  3 +--
+>  tools/testing/selftests/kvm/lib/kvm_util.c    | 21 ++++++++++++-------
+>  3 files changed, 17 insertions(+), 20 deletions(-)
+>
 
-That's no bueno, the real socket's close will never get called.
+Reviewed-by: Andrew Jones <drjones@redhat.com>
