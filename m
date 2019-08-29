@@ -2,83 +2,95 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9169DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1AEC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E4B215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3C2215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:43:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="I8IES4vN"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aqxWGZfO";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hZG8Qr4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbfH2Sm3 (ORCPT
+        id S1728506AbfH2Sno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:42:29 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:36808 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728061AbfH2Sm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:42:29 -0400
-Received: from zn.tnic (p200300EC2F0D0C00900D2DBE0F932EDD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:c00:900d:2dbe:f93:2edd])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 29 Aug 2019 14:43:44 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53652 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727779AbfH2Snn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:43:43 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7F956675E1; Thu, 29 Aug 2019 18:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567104222;
+        bh=/sOoz74UPGyBboFaMGdZyPO+sOZ6PBTKdK3o6MAKGHA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aqxWGZfOvSzqn1LDCrvQXCsmpBkvl7aODdeYzgVyt7oXFG7QHPDMIc3m7CTJPIYt1
+         AdtmabNN6B6TRhpHw6qyTzrQAI9gQLLCNEcrj/WtHF+Y1b7vzMbcTrzVLoIxQI+T6v
+         QPU5p1Updd9bkWoJVLo86epvl0l2N8VyY+PsJ8Nc=
+Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 006101EC0A9C;
-        Thu, 29 Aug 2019 20:42:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1567104147;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=JILc7dKyp7SkywcuYgBtqa757bPtRNzeLCwcvrp1BWE=;
-        b=I8IES4vN/ocyX8rwm8qs8F/7m/gGvf8VavvgXe2WHNmvNCOejPGqJYb/MtWnsp63s0F/Zz
-        fWCuD+9F8U7MV8QEU+yw6t7Qic2h16ROti+Rt28oSUc3kGMtmkaQ6P1kDwcZZMlYQCQWdQ
-        AOSDfroT2zrr6CKgLk6UUvTX4ABvINg=
-Date:   Thu, 29 Aug 2019 20:42:22 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [RFC PATCH 0/5] make use of gcc 9's "asm inline()"
-Message-ID: <20190829184222.GE1312@zn.tnic>
-References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
- <CAKwvOdnUXiX_cAUTSpqgYJTUERoRF-=3LfaydvwBWC6HtzfEdg@mail.gmail.com>
- <CAHk-=wgZ7Ge8QUkkSZLCfJBsHRsre65DkfTyZ2Kt5VPwa=dkuA@mail.gmail.com>
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7BA8768A9D;
+        Thu, 29 Aug 2019 18:12:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567102354;
+        bh=/sOoz74UPGyBboFaMGdZyPO+sOZ6PBTKdK3o6MAKGHA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hZG8Qr4fdVY+rC2UORwJh1tT1eBgNorNNMKsb0LwZN6Kv94b2LFyz7Ks0vBvphc4o
+         wEKncnbv0mlFwJ+MaWzUcZqUXpLm/jiasJvoI9ae+eJfdd4GfIYVXPuwt/onobtKNN
+         /P80GowTsvHU6NV66jirRZIrPA1U+C8Ok6GU1AZ8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7BA8768A9D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com,
+        linus.walleij@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
+        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
+        Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH RFC 13/14] arm64: dts: qcom: setup PDC as the wakeup parent for TLMM on SDM845
+Date:   Thu, 29 Aug 2019 12:12:02 -0600
+Message-Id: <20190829181203.2660-14-ilina@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190829181203.2660-1-ilina@codeaurora.org>
+References: <20190829181203.2660-1-ilina@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgZ7Ge8QUkkSZLCfJBsHRsre65DkfTyZ2Kt5VPwa=dkuA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 11:15:04AM -0700, Linus Torvalds wrote:
-> Un-inlining a function because it contains a single inline asm
-> instruction is not productive. Yes, it might result in a smaller
-> binary over-all (because all those other non-code sections do take up
-> some space), but it actually results in a bigger code footprint.
+PDC always-on interrupt controller can detect certain GPIOs even when
+the TLMM interrupt controller is powered off. Link the PDC as TLMM's
+wakeup parent.
 
-... and also, like one of the gcc guys said at the time, we should be
-careful when using this asm inlining, because, well, if we inline it
-everywhere just like always_inline functions and the code footprint
-grows considerably, then we get what we deserve.
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-So the onus is on us to keep such sequences small.
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index ffe28b3e41d8..3002793ee688 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1358,6 +1358,7 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+ 			gpio-ranges = <&tlmm 0 0 150>;
++			wakeup-parent = <&pdc_intc>;
+ 
+ 			qspi_clk: qspi-clk {
+ 				pinmux {
 -- 
-Regards/Gruss,
-    Boris.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
