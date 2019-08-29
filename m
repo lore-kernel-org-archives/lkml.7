@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B00C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B06FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7FD2341C
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E930B23404
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102564;
-	bh=3LAmf5iuO2TGOiJ96bwKJ56XKMm78CvAPwSFPJtHAMQ=;
+	s=default; t=1567102568;
+	bh=NdQeV4T6pZxdqhEfIDTGO1OxlCJ9LTIydgRJdXQjKEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u2oZiS4+y6+zWO32fqu47xR4dRKZyvuzrX5+hfKUBkfjiIQGIkyjmgGNutmL0DEsW
-	 949sDOywpW1fqlFqW6vBb0hFAG+l+SI0mvBUgWo9TQ52GZAsloQYJG9U6QKFFzgm65
-	 c/z2mJxJl6JTV3V1RBwWX5l+ib/5BySvOYM2fUJU=
+	b=FAMtHXlADIZARivjugZ9vj6T5MDrH9ENyz+Go8pQDrC//7TwSUvKWesZ0Ap5Dw+xu
+	 GUUzMI1VIHYMv4kqEEdwqF1LEBkQ8b6sXEaMOryQnQPtvr3tnrwup67nut7AC6Pl++
+	 16AIBvCEgAvjxxNqEGLyprBHGZ6BgjgRL88QtsBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729579AbfH2SQE (ORCPT
+        id S1729604AbfH2SQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:16:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57954 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:16:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729537AbfH2SQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:02 -0400
+        id S1729537AbfH2SQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:16:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ECE02339E;
-        Thu, 29 Aug 2019 18:16:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97F7D2339E;
+        Thu, 29 Aug 2019 18:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102560;
-        bh=3LAmf5iuO2TGOiJ96bwKJ56XKMm78CvAPwSFPJtHAMQ=;
+        s=default; t=1567102564;
+        bh=NdQeV4T6pZxdqhEfIDTGO1OxlCJ9LTIydgRJdXQjKEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HhgHb1J9rIydioefoA+Xc5cX/tw38sk4OhZ/jCkrDtDTBjjRH8Ymzw74u63Z5iTlB
-         DkB1drDpHii+GyzFVz62VBVV40R7qiYRYQ0Gm91Ksu7PY/qEoWFNMLIHTIvEdOFQpJ
-         adpFfA2Tda3HU6V3L1KZT/f9X8Kk78LB5GrnNLx8=
+        b=WGO6ng+AFqcpJzvcJxBMRg5HmZrZBXtoFSlnj+phfy04av9QnUrwPBh+1BvDa8/4+
+         plnegxylzbuCiH9k7I/p69lDG+/LBqqn0rj2J8wXJDs3zurPCqb+UvksYoXxMJ/bJb
+         S04FZPPCT9itjWvMsGO0q/G0d5BSWzLtLQ3k0KA8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabian Henneke <fabian.henneke@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 08/45] Bluetooth: hidp: Let hidp_send_message return number of queued bytes
-Date:   Thu, 29 Aug 2019 14:15:08 -0400
-Message-Id: <20190829181547.8280-8-sashal@kernel.org>
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 11/45] netfilter: nft_flow_offload: skip tcp rst and fin packets
+Date:   Thu, 29 Aug 2019 14:15:11 -0400
+Message-Id: <20190829181547.8280-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
 References: <20190829181547.8280-1-sashal@kernel.org>
@@ -60,59 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabian Henneke <fabian.henneke@gmail.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 48d9cc9d85dde37c87abb7ac9bbec6598ba44b56 ]
+[ Upstream commit dfe42be15fde16232340b8b2a57c359f51cc10d9 ]
 
-Let hidp_send_message return the number of successfully queued bytes
-instead of an unconditional 0.
+TCP rst and fin packets do not qualify to place a flow into the
+flowtable. Most likely there will be no more packets after connection
+closure. Without this patch, this flow entry expires and connection
+tracking picks up the entry in ESTABLISHED state using the fixup
+timeout, which makes this look inconsistent to the user for a connection
+that is actually already closed.
 
-With the return value fixed to 0, other drivers relying on hidp, such as
-hidraw, can not return meaningful values from their respective
-implementations of write(). In particular, with the current behavior, a
-hidraw device's write() will have different return values depending on
-whether the device is connected via USB or Bluetooth, which makes it
-harder to abstract away the transport layer.
-
-Signed-off-by: Fabian Henneke <fabian.henneke@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hidp/core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/netfilter/nft_flow_offload.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/net/bluetooth/hidp/core.c b/net/bluetooth/hidp/core.c
-index 253975cce943e..7a31aec0c4a36 100644
---- a/net/bluetooth/hidp/core.c
-+++ b/net/bluetooth/hidp/core.c
-@@ -101,6 +101,7 @@ static int hidp_send_message(struct hidp_session *session, struct socket *sock,
+diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
+index 6e0c26025ab13..69decbe2c9884 100644
+--- a/net/netfilter/nft_flow_offload.c
++++ b/net/netfilter/nft_flow_offload.c
+@@ -71,11 +71,11 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
  {
- 	struct sk_buff *skb;
- 	struct sock *sk = sock->sk;
-+	int ret;
+ 	struct nft_flow_offload *priv = nft_expr_priv(expr);
+ 	struct nf_flowtable *flowtable = &priv->flowtable->data;
++	struct tcphdr _tcph, *tcph = NULL;
+ 	enum ip_conntrack_info ctinfo;
+ 	struct nf_flow_route route;
+ 	struct flow_offload *flow;
+ 	enum ip_conntrack_dir dir;
+-	bool is_tcp = false;
+ 	struct nf_conn *ct;
+ 	int ret;
  
- 	BT_DBG("session %p data %p size %d", session, data, size);
+@@ -88,7 +88,10 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
  
-@@ -114,13 +115,17 @@ static int hidp_send_message(struct hidp_session *session, struct socket *sock,
+ 	switch (ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple.dst.protonum) {
+ 	case IPPROTO_TCP:
+-		is_tcp = true;
++		tcph = skb_header_pointer(pkt->skb, pkt->xt.thoff,
++					  sizeof(_tcph), &_tcph);
++		if (unlikely(!tcph || tcph->fin || tcph->rst))
++			goto out;
+ 		break;
+ 	case IPPROTO_UDP:
+ 		break;
+@@ -115,7 +118,7 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
+ 	if (!flow)
+ 		goto err_flow_alloc;
+ 
+-	if (is_tcp) {
++	if (tcph) {
+ 		ct->proto.tcp.seen[0].flags |= IP_CT_TCP_FLAG_BE_LIBERAL;
+ 		ct->proto.tcp.seen[1].flags |= IP_CT_TCP_FLAG_BE_LIBERAL;
  	}
- 
- 	skb_put_u8(skb, hdr);
--	if (data && size > 0)
-+	if (data && size > 0) {
- 		skb_put_data(skb, data, size);
-+		ret = size;
-+	} else {
-+		ret = 0;
-+	}
- 
- 	skb_queue_tail(transmit, skb);
- 	wake_up_interruptible(sk_sleep(sk));
- 
--	return 0;
-+	return ret;
- }
- 
- static int hidp_send_ctrl_message(struct hidp_session *session,
 -- 
 2.20.1
 
