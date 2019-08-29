@@ -2,84 +2,68 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1699EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 517F4C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D875D2339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:41:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="BdfA7qON"
+	by mail.kernel.org (Postfix) with ESMTP id 2EBCD2189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbfH2Nlk (ORCPT
+        id S1727500AbfH2Nmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:41:40 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36507 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbfH2Nlj (ORCPT
+        Thu, 29 Aug 2019 09:42:49 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33388 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbfH2Nms (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:41:39 -0400
-Received: by mail-io1-f67.google.com with SMTP id o9so7003137iom.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 06:41:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ul0ttpZX8OaU+EBmALZ96xYYyCTstLYpC4GnYFarZNw=;
-        b=BdfA7qONrUsx4A59nrxQQRxyjZMRkrGbqIPEVHms5IqmXTPPwE1mOuiPUmLjh3idfb
-         qaC5Ifvf8wMelanxFTmnu/IIA21Q8dVP2kH44Urk3sHVXB1taDT3p9kO0Bf0wtJn8NPb
-         33QKwni3K68F/+upvxd3jimKoGWOkSBUfSxu0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ul0ttpZX8OaU+EBmALZ96xYYyCTstLYpC4GnYFarZNw=;
-        b=jcXHpHCZiz3tbe0o1iBp5ixmzO4dH46WbG1LYGQuQFT5FvRKUGaUXXDWnC72OxxbYx
-         PrspY5Oq7+fACb56V/iipNrA6KL++c9g+oTM5N08wyxnLiv4gDDEKq6V9thfhqN3gCnX
-         5UnJI5OvgTl6ncY0Xilj52k+E1LSPqDmGU7n4BE3G0VCGiuuKCKPO4MnM2lj55HnMd7l
-         +Scyc1VVWCebCWTYzvIvyTIXaPgQ//54cYVZg+IcAmIQs6x7xVqL8LK9X8GPpTE3SohT
-         wnIpcTKI1ylDLatFE7a4zvf5aJzyOgTUrPLRgvFMac7Ms++SZ8TqYp7d/4qHxri7YYwZ
-         f5YA==
-X-Gm-Message-State: APjAAAWqS5QAZ1jj9tUwhu4+kLCN0ibe+gIIGQOvYxQLENkRyR67z6Cf
-        uxA5SeuXWzuwREul5rP/z7oSOV//2WJTnCAc1crhwA==
-X-Google-Smtp-Source: APXvYqxfpG+jMqi5qihZJi9IHh9FiDX9js/5q0ycE73tZwZBFFnEG8Lz+l/93G/VZExz+enUcOKKN0q3BCm8e/kHvME=
-X-Received: by 2002:a5e:aa03:: with SMTP id s3mr3381601ioe.212.1567086099021;
- Thu, 29 Aug 2019 06:41:39 -0700 (PDT)
+        Thu, 29 Aug 2019 09:42:48 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 41E8628D4D8
+Subject: Re: [PATCH v4] platform/chrome: cros_ec_trace: update generating
+ script
+To:     Tzung-Bi Shih <tzungbi@google.com>,
+        Raul Rangel <rrangel@chromium.org>
+Cc:     bleung@chromium.org, groeck@chromium.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jimmy Cheng-Yi Chiang <cychiang@google.com>,
+        Dylan Reid <dgreid@google.com>
+References: <20190730134704.44515-1-tzungbi@google.com>
+ <CA+Px+wXetT1mQZW+3zc2vNDP4Jf3zKqGNz=Hq0yHn0Fvf=y-FQ@mail.gmail.com>
+ <106711f8-117a-d0df-9b66-dc6be6431d07@collabora.com>
+ <CA+Px+wU=V0cGZeAxoqSJeVTLcO+v9=tPQKxKBTp-npsgqXo3yQ@mail.gmail.com>
+ <89aac768-b096-c51c-2ec7-5c135b089a31@collabora.com>
+ <20190801145050.GA154523@google.com>
+ <CA+Px+wUzyFB6vRM91PTFkY_fBfp2xybegy34rbW_D9zzNX6-8Q@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <a75bd837-6b24-6a64-00d8-0b3fe9d5a784@collabora.com>
+Date:   Thu, 29 Aug 2019 15:42:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190821173742.24574-1-vgoyal@redhat.com> <CAJfpegv_XS=kLxw_FzWNM2Xao5wsn7oGbk3ow78gU8tpXwo-sg@mail.gmail.com>
- <20190829132949.GA6744@redhat.com>
-In-Reply-To: <20190829132949.GA6744@redhat.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 29 Aug 2019 15:41:26 +0200
-Message-ID: <CAJfpegtd-MQNbUW9YuL4xdXDkGR8K6LMHCqDG2Ppu9F_Hyk2RQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual machines
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CA+Px+wUzyFB6vRM91PTFkY_fBfp2xybegy34rbW_D9zzNX6-8Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 3:29 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+Hi Tzung-Bi,
 
-> #ifdef CONFIG_VIRTIO_FS
->         /** virtio-fs's physically contiguous buffer for in and out args */
->         void *argbuf;
-> #endif
->
-> It should have worked. Not sure why it is not working.
+On 29/8/19 6:19, Tzung-Bi Shih wrote:
+> Hi Enric and Raul,
+> 
+> Do you have any further concerns on this patch?
 
-Needs to be changed to
+This patch will conflict with [2] which hopefully will be merged on next merge
+window through Lee's tree. As this patch is only changing the doc I'm willing to
+wait after [2] lands. It's on my radar and don't need to resend, I'll do the
+required changes.
 
-#if IS_ENABLED(CONFIG_VIRTIO_FS)
-
-Pushed out fixed version.
-
-Thanks,
-Miklos
+Best Regards,
+ Enric
