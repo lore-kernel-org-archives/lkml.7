@@ -2,109 +2,193 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93039C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE6FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A383215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:15:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WbNRVsGD"
+	by mail.kernel.org (Postfix) with ESMTP id 508F2215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfH2NP4 (ORCPT
+        id S1727315AbfH2NTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:15:56 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:40692 "EHLO vps0.lunn.ch"
+        Thu, 29 Aug 2019 09:19:42 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:52156 "EHLO mx2.mailbox.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727109AbfH2NPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:15:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=jFMdGRkchqnYEBrx24o+aDmbK62nouD4dZcC7gAUcKw=; b=WbNRVsGDr16eD5VFXzibrYWSTw
-        ZUvdxn6w6eSnOtiO9raQPa7u48PVNYr6HKxUr1eMHyoeH+UtrualQdcUrg9o1h04pYW95Ua9WozwZ
-        0Nns1CYUZhYi+isiGmWoY5LTaDwxJJSVBq3xJfImOiEff9sr/XRFpVp3i4WFewiD2CMk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i3KH9-0002EA-FC; Thu, 29 Aug 2019 15:15:43 +0200
-Date:   Thu, 29 Aug 2019 15:15:43 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Ivan Vecera <ivecera@redhat.com>
-Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Jiri Pirko <jiri@resnulli.us>, alexandre.belloni@bootlin.com,
-        UNGLinuxDriver@microchip.com, davem@davemloft.net,
-        allan.nielsen@microchip.com, f.fainelli@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
-Message-ID: <20190829131543.GB6998@lunn.ch>
-References: <1567070549-29255-1-git-send-email-horatiu.vultur@microchip.com>
- <1567070549-29255-2-git-send-email-horatiu.vultur@microchip.com>
- <20190829095100.GH2312@nanopsycho>
- <20190829105650.btgvytgja63sx6wx@soft-dev3.microsemi.net>
- <20190829121811.GI2312@nanopsycho>
- <20190829124412.nrlpz5tzx3fkdoiw@soft-dev3.microsemi.net>
- <20190829145518.393fb99d@ceranb>
+        id S1726283AbfH2NTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 09:19:41 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id C76B2A10EE;
+        Thu, 29 Aug 2019 15:19:33 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id YERUiiJJutp0; Thu, 29 Aug 2019 15:19:27 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 23:19:04 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        sparclinux@vger.kernel.org
+Subject: Re: [PATCH RESEND v11 7/8] open: openat2(2) syscall
+Message-ID: <20190829131904.bkbalbtqt6j3gwcp@yavin>
+References: <20190820033406.29796-1-cyphar@cyphar.com>
+ <20190820033406.29796-8-cyphar@cyphar.com>
+ <CAKOZuesfxRBJe314rkTKXtjXdz6ki3uAUBYVbu5Q2rd3=ADphQ@mail.gmail.com>
+ <20190829121527.u2uvdyeatme5cgkb@yavin>
+ <899401fa-ff0a-2ce9-8826-09904efab2d2@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="itirvnprc6jjrbl3"
 Content-Disposition: inline
-In-Reply-To: <20190829145518.393fb99d@ceranb>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <899401fa-ff0a-2ce9-8826-09904efab2d2@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 02:55:18PM +0200, Ivan Vecera wrote:
-> On Thu, 29 Aug 2019 14:44:14 +0200
-> Horatiu Vultur <horatiu.vultur@microchip.com> wrote:
-> 
-> > When a port is added to a bridge, then the port gets in promisc mode.
-> > But in our case the HW has bridge capabilities so it is not required
-> > to set the port in promisc mode.
-> > But if someone else requires the port to be in promisc mode (tcpdump
-> > or any other application) then I would like to set the port in promisc
-> > mode.
-> > In previous emails Andrew came with the suggestion to look at
-> > dev->promiscuity and check if the port is a bridge port. Using this
-> > information I could see when to add the port in promisc mode. He also
-> > suggested to add a new switchdev call(maybe I missunderstood him, or I
-> > have done it at the wrong place) in case there are no callbacks in the
-> > driver to get this information.
-> 
-> I would use the 1st suggestion.
-> 
-> for/in your driver:
-> if (dev->promiscuity > 0) {
-> 	if (dev->promiscuity == 1 && netif_is_bridge_port(dev)) {
-> 		/* no need to set promisc mode because promiscuity
-> 		 * was requested by bridge
-> 		 */
-> 		...
-> 	} else {
-> 		/* need to set promisc mode as someone else requested
-> 		 * promiscuity
-> 		 */
+
+--itirvnprc6jjrbl3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2019-08-29, Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
+> On 29/08/2019 14.15, Aleksa Sarai wrote:
+> > On 2019-08-24, Daniel Colascione <dancol@google.com> wrote:
+>=20
+> >> Why pad the structure when new functionality (perhaps accommodated via
+> >> a larger structure) could be signaled by passing a new flag? Adding
+> >> reserved fields to a structure with a size embedded in the ABI makes a
+> >> lot of sense --- e.g., pthread_mutex_t can't grow. But this structure
+> >> can grow, so the reservation seems needless to me.
+> >=20
+> > Quite a few folks have said that ->reserved is either unnecessary or
+> > too big. I will be changing this, though I am not clear what the best
+> > way of extending the structure is. If anyone has a strong opinion on
+> > this (or an alternative to the ones listed below), please chime in. I
+> > don't have any really strong attachment to this aspect of the API.
+> >=20
+> > There appear to be a few ways we can do it (that all have precedence
+> > with other syscalls):
+> >=20
+> >  1. Use O_* flags to indicate extensions.
+> >  2. A separate "version" field that is incremented when we change.
+> >  3. Add a size_t argument to openat2(2).
+> >  4. Reserve space (as in this patchset).
+> >=20
+> > (My personal preference would be (3), followed closely by (2).)
+>=20
+> 3, definitely, and instead of having to invent a new scheme for every
+> new syscall, make that the default pattern by providing a helper
+
+Sure (though hopefully I don't need to immediately go and refactor all
+the existing size_t syscalls). I will be presenting about this patchset
+at the containers microconference at LPC (in a few weeks), so I'll hold
+of on any API-related rewrites until after that.
+
+> int __copy_abi_struct(void *kernel, size_t ksize, const void __user
+> *user, size_t usize)
+> {
+> 	size_t copy =3D min(ksize, usize);
+>=20
+> 	if (copy_from_user(kernel, user, copy))
+> 		return -EFAULT;
+>=20
+> 	if (usize > ksize) {
+> 		/* maybe a separate "return user_is_zero(user + ksize, usize -
+> ksize);" helper */
+> 		char c;
+> 		user +=3D ksize;
+> 		usize -=3D ksize;
+> 		while (usize--) {
+> 			if (get_user(c, user++))
+> 				return -EFAULT;
+> 			if (c)
+> 				return -EINVAL;
+
+This part would probably be better done with memchr_inv() and
+copy_from_user() (and probably should put an upper limit on usize), but
+I get what you mean.
+
+> 		}
+> 	} else if (ksize > usize) {
+> 		memset(kernel + usize, 0, ksize - usize);
 > 	}
+> 	return 0;
 > }
+> #define copy_abi_struct(kernel, user, usize)	\
+> 	__copy_abi_struct(kernel, sizeof(*kernel), user, usize)
+>
+> > Both (1) and (2) have the problem that the "struct version" is inside
+> > the struct so we'd need to copy_from_user() twice. This isn't the end of
+> > the world, it just feels a bit less clean than is ideal. (3) fixes that
+> > problem, at the cost of making the API slightly more cumbersome to use
+> > directly (though again glibc could wrap that away).
+>=20
+> I don't see how 3 is cumbersome to use directly. Userspace code does
+> struct openat_of_the_day args =3D {.field1 =3D x, .field3 =3D y} and pass=
+es
+> &args, sizeof(args). What does glibc need to do beyond its usual munging
+> of the userspace ABI registers to the syscall ABI registers?
 
-Hi Ivan
+I'd argue that
 
-The problem with this is, the driver only gets called when promisc
-goes from 0 to !0. So, the port is added to the bridge. Promisc goes
-0->1, and the driver gets called. We can evaluate as you said above,
-and leave the port filtering frames, not forwarding everything. When
-tcpdump is started, the core does promisc 1->2, but does not call into
-the driver. Also, currently sending a notification is not
-unconditional.
+    ret =3D openat2(AT_FDCWD, "foo", &how, sizeof(how)); // (3)
 
-What this patch adds is an unconditional call into the switchdev
-driver so it can evaluate the condition above, with every change to
-the promisc counter.
+is slightly less pretty than
 
-    Andrew
+    ret =3D openat2(AT_FDCWD, "foo", &how); // (1), (2), (4)
+
+But it's not really that bad. Forget I said anything.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--itirvnprc6jjrbl3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXWfQxQAKCRCdlLljIbnQ
+EoMSAP9J0uy3xcD3flC3cANph5LKQ2g0JWnMb61ew5LWDORVogD/UGWciY+tdPiy
+YNHs2UcBt9SEH1MNpEIgf2GN6RoyaQI=
+=ne2z
+-----END PGP SIGNATURE-----
+
+--itirvnprc6jjrbl3--
