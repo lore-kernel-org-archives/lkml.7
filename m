@@ -2,73 +2,72 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 893F9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C42C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B882073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DDED2073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:34:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/G1nb0C"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="YEkpOy3y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbfH2IdA (ORCPT
+        id S1727994AbfH2IeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 04:33:00 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33039 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727746AbfH2Ic4 (ORCPT
+        Thu, 29 Aug 2019 04:34:08 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43750 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727788AbfH2Ic4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 29 Aug 2019 04:32:56 -0400
-Received: by mail-pl1-f195.google.com with SMTP id go14so1251508plb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:32:55 -0700 (PDT)
+Received: by mail-lf1-f65.google.com with SMTP id q27so1807511lfo.10
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:32:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zlq2IBLuceVbdXIR+sbqYK0JGHzJ0OSTvlG77al8JWo=;
-        b=X/G1nb0CpuyCr2vmt/DOG4mIhMEOEUjXfMvBys+/IGiUF0k6kUnuGuGLHnh3X4pnVT
-         NRujSQX1YQFG5dGedXWlF/01SrXfRBUrB7BVEUOLALNY4YQB7co6JbhIons6rdpHuC4M
-         4Z7mNXM3vCQCj3GWmRz7/mrjscfOw683/VyIFlRDr5oG33fmTJZrownWVwKMwmNQHU87
-         mpkz3zs1jpgoQi2KUfoyGAwnnAsOLYTylN8H7MV15NBn0j0Q1drjROO2+sro6zxuDyYy
-         buyWSZYDsxQ0X61IjGrW9eRdsDjetddKwFEU0nsF49GUX3HovMB0XYMF53KQTRHoItsP
-         c/Kg==
+        bh=6P0N9+OtzBQ/+pWxgapquiOAPv3FZmW3I9CzZ8KtwA0=;
+        b=YEkpOy3y52sYFpekXF5SsnslyuHmOvVTH8W30KxlWAeLUPrCxTbcMPCtmShJaWANVF
+         UXHh8crLiDMyDxwPz00RvTLUQN3xxGftGCvtBOQ8uc6+y7Ak4vTynsLyUtaK0djb0e2M
+         KRJ8469XXV8VOgk/5naodAqkWR2fZuxzY28yM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zlq2IBLuceVbdXIR+sbqYK0JGHzJ0OSTvlG77al8JWo=;
-        b=tDVFGHuNNo2M/SuDCZFf9TQHKDVaP5wGfgJpQGPvj4gOepHunsPANvc0WrYAtsmfgN
-         wRbNdHjN54Lb1Vo42DN935ub/2E5Y3e+jrNvGMdglfs+K7PRySA01SJVdD48Hduys+WA
-         8ZS243E/HSNiGryk9GqQrkwGTngczjZROH46tIKyMN9JOofmx2YE2CF/INOYpHOE9R22
-         ISkW5y6BwcU5oQ52qyqULf/b3UGQ9V+/OE1jw4FWA8q9bk/wzxEWfmJe2PcGgAH6mQIf
-         raT8rKPK63YaCjyFWNn66+uKDE14vjRpqpkLUNvkWPN/sYUEuUJgr6qfuAn9CR1qbZ1V
-         l7iw==
-X-Gm-Message-State: APjAAAXF0dlVAPh7sT1MqNYS5erc2PaKZVrmz6h+mi19LHBGwy7t3XJH
-        1s+EmPGLZWy/MR+utRvkOO8=
-X-Google-Smtp-Source: APXvYqxqMAfbGmC0nk2I8KBtEU+uUwaElXic1ahMn3oG5486dMGvUStQIFNfXYRscPZ5vym3lFUrVQ==
-X-Received: by 2002:a17:902:8a87:: with SMTP id p7mr8633372plo.240.1567067575250;
-        Thu, 29 Aug 2019 01:32:55 -0700 (PDT)
-Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id v22sm1260155pgk.69.2019.08.29.01.32.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 01:32:54 -0700 (PDT)
-From:   Yuyang Du <duyuyang@gmail.com>
-To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
-Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        longman@redhat.com, paulmck@linux.vnet.ibm.com,
-        boqun.feng@gmail.com, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v4 18/30] ocking/lockdep: Add read-write type for a lock dependency
-Date:   Thu, 29 Aug 2019 16:31:20 +0800
-Message-Id: <20190829083132.22394-19-duyuyang@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20190829083132.22394-1-duyuyang@gmail.com>
-References: <20190829083132.22394-1-duyuyang@gmail.com>
+        bh=6P0N9+OtzBQ/+pWxgapquiOAPv3FZmW3I9CzZ8KtwA0=;
+        b=MVLAnrHj3W7iwgJFe5okR49Ftox9g9pJErJr5LBCDKrTUYyWKAwRAm6fdJIIMA1bKd
+         MO2SkL2FdHgttx1CTDfUpLBafRokvVHDK37gWXCfRDWLlWtxlyqMlLKUjS+DLNMaMPn1
+         GXeg1D8a2AnGh09ftpCfzn9mVHhWbjdJ93Cm4cXyh5xenACAcQx3Fu6Uvg2PvezauYcj
+         0/peC5dNYaz5kmoLd/3ubSmUpzyjhlDYJEGJYql4INLY7ByA3lC1On6FpC0Xb4txPva/
+         KgRey5t6W0pNBnLU4lOkujUEIu6ZDcD3nyhLsis43Rj0seGoitZrwxBgbJWG+BMXPrZH
+         SK2g==
+X-Gm-Message-State: APjAAAXwMx8+5LuJtEwMCb5VqKBPsSVyrnLnWt7m+a7etwK7gEKT8Xye
+        EEvzREqo4PvZ5zlhjlZOV1AgRg==
+X-Google-Smtp-Source: APXvYqyf1Lzadr9tMyJSzoWA+LFKwx5oiJj5n4TOy6bd0AYG5wf7UjgXqtCn9rgmhc/yaRiu8MruZw==
+X-Received: by 2002:a19:6a12:: with SMTP id u18mr5260201lfu.133.1567067573970;
+        Thu, 29 Aug 2019 01:32:53 -0700 (PDT)
+Received: from prevas-ravi.prevas.se ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id o20sm248087ljg.31.2019.08.29.01.32.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 01:32:53 -0700 (PDT)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        ndesaulniers@google.com,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [RFC PATCH 4/5] x86: alternative.h: use asm_inline for all alternative variants
+Date:   Thu, 29 Aug 2019 10:32:32 +0200
+Message-Id: <20190829083233.24162-5-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
+References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,119 +75,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Direct dependencies need to keep track of their read-write lock types.
-Two bit fields, which share the distance field, are added to lock_list
-struct to store the types.
+Most, if not all, uses of the alternative* family just provide one or
+two instructions in .text, but the string literal can be quite large,
+causing gcc to overestimate the size of the generated code. That in
+turn affects its decisions about inlining of the function containing
+the alternative() asm statement.
 
-With a dependecy lock1 -> lock2, lock_type1 has the type for lock1 and
-lock_type2 has the type for lock2, where the values are one of the
-lock_type enums.
+gcc >= 9.1 allows one to overrule the estimated size by using "asm
+inline" instead of just "asm". So replace asm by the helper
+asm_inline, which for older gccs just expands to asm.
 
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- include/linux/lockdep.h  | 15 ++++++++++++++-
- kernel/locking/lockdep.c | 25 +++++++++++++++++++++++--
- 2 files changed, 37 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/alternative.h | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 2335447..eab8a90 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -182,6 +182,8 @@ static inline void lockdep_copy_map(struct lockdep_map *to,
- 		to->class_cache[i] = NULL;
- }
+diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
+index 094fbc9c0b1c..13adca37c99a 100644
+--- a/arch/x86/include/asm/alternative.h
++++ b/arch/x86/include/asm/alternative.h
+@@ -201,10 +201,10 @@ static inline int alternatives_text_reserved(void *start, void *end)
+  * without volatile and memory clobber.
+  */
+ #define alternative(oldinstr, newinstr, feature)			\
+-	asm volatile (ALTERNATIVE(oldinstr, newinstr, feature) : : : "memory")
++	asm_inline volatile (ALTERNATIVE(oldinstr, newinstr, feature) : : : "memory")
  
-+#define LOCK_TYPE_BITS	2
-+
- /*
-  * Every lock has a list of other locks that were taken after or before
-  * it as lock dependencies. These dependencies constitute a graph, which
-@@ -204,7 +206,17 @@ struct lock_list {
- 	struct list_head		chains;
- 	struct lock_class		*class[2];
- 	const struct lock_trace		*trace;
--	int				distance;
-+
-+	/*
-+	 * The lock_type fields keep track of the lock type of this
-+	 * dependency.
-+	 *
-+	 * With L1 -> L2, lock_type1 stores the lock type of L1, and
-+	 * lock_type2 stores that of L2.
-+	 */
-+	unsigned int			lock_type1 : LOCK_TYPE_BITS,
-+					lock_type2 : LOCK_TYPE_BITS,
-+					distance   : 32 - 2*LOCK_TYPE_BITS;
- 
- 	/*
- 	 * The parent field is used to implement breadth-first search.
-@@ -359,6 +371,7 @@ enum lock_type {
- 	LOCK_TYPE_WRITE		= 0,
- 	LOCK_TYPE_READ,
- 	LOCK_TYPE_RECURSIVE,
-+	NR_LOCK_TYPE,
- };
+ #define alternative_2(oldinstr, newinstr1, feature1, newinstr2, feature2) \
+-	asm volatile(ALTERNATIVE_2(oldinstr, newinstr1, feature1, newinstr2, feature2) ::: "memory")
++	asm_inline volatile(ALTERNATIVE_2(oldinstr, newinstr1, feature1, newinstr2, feature2) ::: "memory")
  
  /*
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index bdc7e94..18303ff 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1379,9 +1379,17 @@ static int add_lock_to_list(struct lock_class *lock1,
- 			    struct lock_class *lock2,
- 			    unsigned long ip, int distance,
- 			    const struct lock_trace *trace,
--			    struct lock_chain *chain)
-+			    struct lock_chain *chain,
-+			    int lock_type1, int lock_type2)
- {
- 	struct lock_list *entry;
-+
-+	/*
-+	 * The distance bit field in struct lock_list must be large
-+	 * enough to hold the maximum lock depth.
-+	 */
-+	BUILD_BUG_ON((1 << (32 - 2*LOCK_TYPE_BITS)) < MAX_LOCK_DEPTH);
-+
- 	/*
- 	 * Lock not present yet - get a new dependency struct and
- 	 * add it to the list:
-@@ -1394,6 +1402,8 @@ static int add_lock_to_list(struct lock_class *lock1,
- 	entry->class[1] = lock2;
- 	entry->distance = distance;
- 	entry->trace = trace;
-+	entry->lock_type1 = lock_type1;
-+	entry->lock_type2 = lock_type2;
+  * Alternative inline assembly with input.
+@@ -218,7 +218,7 @@ static inline int alternatives_text_reserved(void *start, void *end)
+  * Leaving an unused argument 0 to keep API compatibility.
+  */
+ #define alternative_input(oldinstr, newinstr, feature, input...)	\
+-	asm volatile (ALTERNATIVE(oldinstr, newinstr, feature)		\
++	asm_inline volatile (ALTERNATIVE(oldinstr, newinstr, feature)	\
+ 		: : "i" (0), ## input)
  
- 	/*
- 	 * Both allocation and removal are done under the graph lock; but
-@@ -1537,6 +1547,16 @@ static inline struct list_head *get_dep_list(struct lock_list *lock, int forward
- 	return &class->dep_list[forward];
- }
- 
-+static inline int get_lock_type1(struct lock_list *lock)
-+{
-+	return lock->lock_type1;
-+}
-+
-+static inline int get_lock_type2(struct lock_list *lock)
-+{
-+	return lock->lock_type2;
-+}
-+
  /*
-  * Forward- or backward-dependency search, used for both circular dependency
-  * checking and hardirq-unsafe/softirq-unsafe checking.
-@@ -2580,7 +2600,8 @@ static inline void inc_chains(void)
- 	 * dependency list of the previous lock <prev>:
- 	 */
- 	ret = add_lock_to_list(hlock_class(prev), hlock_class(next),
--			       next->acquire_ip, distance, *trace, chain);
-+			       next->acquire_ip, distance, *trace, chain,
-+			       prev->read, next->read);
- 	if (!ret)
- 		return 0;
+@@ -231,18 +231,18 @@ static inline int alternatives_text_reserved(void *start, void *end)
+  */
+ #define alternative_input_2(oldinstr, newinstr1, feature1, newinstr2,	     \
+ 			   feature2, input...)				     \
+-	asm volatile(ALTERNATIVE_2(oldinstr, newinstr1, feature1,	     \
++	asm_inline volatile(ALTERNATIVE_2(oldinstr, newinstr1, feature1,     \
+ 		newinstr2, feature2)					     \
+ 		: : "i" (0), ## input)
  
+ /* Like alternative_input, but with a single output argument */
+ #define alternative_io(oldinstr, newinstr, feature, output, input...)	\
+-	asm volatile (ALTERNATIVE(oldinstr, newinstr, feature)		\
++	asm_inline volatile (ALTERNATIVE(oldinstr, newinstr, feature)	\
+ 		: output : "i" (0), ## input)
+ 
+ /* Like alternative_io, but for replacing a direct call with another one. */
+ #define alternative_call(oldfunc, newfunc, feature, output, input...)	\
+-	asm volatile (ALTERNATIVE("call %P[old]", "call %P[new]", feature) \
++	asm_inline volatile (ALTERNATIVE("call %P[old]", "call %P[new]", feature) \
+ 		: output : [old] "i" (oldfunc), [new] "i" (newfunc), ## input)
+ 
+ /*
+@@ -253,7 +253,7 @@ static inline int alternatives_text_reserved(void *start, void *end)
+  */
+ #define alternative_call_2(oldfunc, newfunc1, feature1, newfunc2, feature2,   \
+ 			   output, input...)				      \
+-	asm volatile (ALTERNATIVE_2("call %P[old]", "call %P[new1]", feature1,\
++	asm_inline volatile (ALTERNATIVE_2("call %P[old]", "call %P[new1]", feature1,\
+ 		"call %P[new2]", feature2)				      \
+ 		: output, ASM_CALL_CONSTRAINT				      \
+ 		: [old] "i" (oldfunc), [new1] "i" (newfunc1),		      \
 -- 
-1.8.3.1
+2.20.1
 
