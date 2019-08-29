@@ -2,132 +2,98 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA4EC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8C8C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0E02339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:05:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Rf+LakrM"
+	by mail.kernel.org (Postfix) with ESMTP id 1EEDF2339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbfH2KFw (ORCPT
+        id S1727097AbfH2KHA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:05:52 -0400
-Received: from ozlabs.org ([203.11.71.1]:35671 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfH2KFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:05:52 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Jyt45h40z9s4Y;
-        Thu, 29 Aug 2019 20:05:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567073149;
-        bh=tf1ypQjpP9xJVJX8gDPglx7QvW/vyQ5w0EeNCZAjaZk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Rf+LakrMJi3Ly9wRsysR6j+BSTKi1WG9tqSgbDFJwkPgEDTu9PeFF7MnAI28J3/+b
-         IlJIqH6rOgVuBiszuRDpOl8krgh37lYuMWz9gAQuTwSzbX2Xa2LlxU7Kq7thtMfORQ
-         tL8riXi/0eROZAGqgLph6Sh3pPS6+bummMgjX6//9VekptBpC8u5uIAAKnSvNps77Y
-         z7CvlUZp3Re/VczRR5wmBv1jFwsQ2wXbV3FdK3rGkV/QneJI4VqKAB1UZr0doXsF0w
-         H2tsdQmLk4KACN+sdbFsEpqCvUQRJszdkUQb7QBrrNi0n3RLG8X9tF1wE1QpTgovUq
-         vaA5snTCxahAQ==
-Date:   Thu, 29 Aug 2019 20:05:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Voon Weifeng <weifeng.voon@intel.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>
-Subject: linux-next: build failure after merge of the net-next tree
-Message-ID: <20190829200546.7b9af296@canb.auug.org.au>
+        Thu, 29 Aug 2019 06:07:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50942 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726081AbfH2KHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:07:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 90B1DABD0;
+        Thu, 29 Aug 2019 10:06:58 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 12:06:57 +0200
+From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Breno Leitao <leitao@debian.org>,
+        Michael Neuling <mikey@neuling.org>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Allison Randal <allison@lohutok.net>,
+        Joel Stanley <joel@jms.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH 1/4] fs: always build llseek.
+Message-ID: <20190829120657.400ee915@naga>
+In-Reply-To: <20190829062200.GA3047@infradead.org>
+References: <cover.1566936688.git.msuchanek@suse.de>
+        <80b1955b86fb81e4642881d498068b5a540ef029.1566936688.git.msuchanek@suse.de>
+        <20190828151552.GA16855@infradead.org>
+        <20190828181540.21fa33a4@naga>
+        <20190829062200.GA3047@infradead.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=Mx0oFyYb3enaJjPSrlGF8N";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/=Mx0oFyYb3enaJjPSrlGF8N
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, 28 Aug 2019 23:22:00 -0700
+Christoph Hellwig <hch@infradead.org> wrote:
 
-Hi all,
+> On Wed, Aug 28, 2019 at 06:15:40PM +0200, Michal Suchánek wrote:
+> > On Wed, 28 Aug 2019 08:15:52 -0700
+> > Christoph Hellwig <hch@infradead.org> wrote:
+> >   
+> > > On Tue, Aug 27, 2019 at 10:21:06PM +0200, Michal Suchanek wrote:  
+> > > > 64bit !COMPAT does not build because the llseek syscall is in the tables.    
+> > > 
+> > > Well, this will bloat thinkgs like 64-bit RISC-V for no good reason.
+> > > Please introduce a WANT_LSEEK like symbol that ppc64 can select instead.  
+> > 
+> > It also builds when llseek is marked as 32bit only in syscall.tbl
+> > 
+> > It seems it was handled specially in some way before syscall.tbl was
+> > added, though (removed in ab66dcc76d6ab8fae9d69d149ae38c42605e7fc5)  
+> 
+> Independ of if you need it on a purely 64-bit build on powerpc (which
+> I'll let the experts figure out) it is not needed on a purely 64-bit
+> build on other platforms.  So please make sure it is still built
+> conditional, just possibly with an opt-in for powerpc.
 
-After merging the net-next tree, today's linux-next build (powepc
-allmodconfig) failed like this:
+AFAICT it is needed for all 64bit platforms with unified syscall.tbl.
 
-ld: drivers/net/ethernet/stmicro/stmmac/stmmac_pci.o: in function `.stmmac_=
-pci_remove':
-stmmac_pci.c:(.text.stmmac_pci_remove+0x68): undefined reference to `.clk_u=
-nregister_fixed_rate'
-ld: drivers/net/ethernet/stmicro/stmmac/stmmac_pci.o: in function `.intel_m=
-gbe_common_data':
-stmmac_pci.c:(.text.intel_mgbe_common_data+0x2a8): undefined reference to `=
-.clk_register_fixed_rate'
+I modified the syscall.tbl for powerpc to not need the syscall with
+64bit only build but other platforms are still broken. There are a few
+platforms that use multiple tables and on those the 64bit one indeed
+does not contain llseek.
 
-Caused by commit
+Thanks
 
-  190f73ab4c43 ("net: stmmac: setup higher frequency clk support for EHL & =
-TGL")
-
-CONFIG_COMMON_CLK is not set for this build.
-
-I have added the following patch for today:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 29 Aug 2019 19:49:27 +1000
-Subject: [PATCH] net: stmmac: depend on COMMON_CLK
-
-Fixes: 190f73ab4c43 ("net: stmmac: setup higher frequency clk support for E=
-HL & TGL")
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/net/ethernet/stmicro/stmmac/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethe=
-rnet/stmicro/stmmac/Kconfig
-index 2325b40dff6e..338e25a6374e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-+++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-@@ -200,6 +200,7 @@ endif
- config STMMAC_PCI
- 	tristate "STMMAC PCI bus support"
- 	depends on STMMAC_ETH && PCI
-+	depends on COMMON_CLK
- 	---help---
- 	  This selects the platform specific bus support for the stmmac driver.
- 	  This driver was tested on XLINX XC2V3000 FF1152AMT0221
---=20
-2.20.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/=Mx0oFyYb3enaJjPSrlGF8N
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1no3oACgkQAVBC80lX
-0GwYJQf5AW95Yd94wttbI+/ilAUaktT8zLlhPKRd3YkkIDeOsMxRrgnyseGd8hbS
-xHLwNqbx0R8JGKZ2Dpi1d+KwR9vuSaOmK4bCM5DeS6j2WGDZeh/qpyiSaJOLfCqD
-whVLXmwqoLLzAbLJ/nWwFlOqmMKJYXpc/rc6yGdmihjv8Sdl/YZarKhH9SvJavmY
-TZpSNwN8PCIesO5ryTrMdlgDveRYzMFnJ+l2EWEMziH0iUOfPVdzivuaKmzPh8bV
-Z3a1iAhLuUawtpngWfaLpot6Zt8InSYXvSN/frQyrMIqNeKkU3nA79OQlwqmMNOu
-jbuw4/OtFyPXOwrj750ckXq/1trRuA==
-=sMh9
------END PGP SIGNATURE-----
-
---Sig_/=Mx0oFyYb3enaJjPSrlGF8N--
+Michal
