@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C89DC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA378C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57062339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882432189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102424;
-	bh=9ACL6Y5floZ1bdzEYnHFCfiFYuRsK9W3Q0GQxmWY1WQ=;
+	s=default; t=1567102426;
+	bh=dkhchyWdtMxa8jcjPXHapPWPE4rhmniDAp/Qs15YCTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WenVlH8nsdCuoHWF9tZ48l7xsa+dCbrBINgYC7kJ+1GEfn5ONB+u9F9ewR65uELCY
-	 mGlp9HqET5Hzi757Az184ZdC63UypAQqC4XtJgx2coMTzqpvBc1zDE592vXRo2J+ag
-	 gPXleVC+tB/5cMm09IAMxxrE31VH6bz5RKwapfxU=
+	b=mZNlPgxLhlJcT2pwqz7+rmUePaz3lu+A+XZFQcP6i5MxFuffS0r69XKC6A2gyENz0
+	 OL8LLJaZkmvZxjWJUoTLgoP12WyOYKML+vEy2PEp+6pYt2rYsLe/dwYvxGlBUqhLsV
+	 J9VEJdwVCdzWhKnawFm++qzcF8n0pklfzIAOtJlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbfH2SNn (ORCPT
+        id S1728499AbfH2SNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:13:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55358 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:13:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728372AbfH2SNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:13:39 -0400
+        id S1728395AbfH2SNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:13:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1130E23407;
-        Thu, 29 Aug 2019 18:13:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 542B32189D;
+        Thu, 29 Aug 2019 18:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102417;
-        bh=9ACL6Y5floZ1bdzEYnHFCfiFYuRsK9W3Q0GQxmWY1WQ=;
+        s=default; t=1567102419;
+        bh=dkhchyWdtMxa8jcjPXHapPWPE4rhmniDAp/Qs15YCTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XRjfKx70RYH/j3ErNKAw9BXGjexkewx+Lvn+DWSv2mDeIWcXL1c6Ln+4q84lAW3js
-         AwcK6QaghZLldVNiBl9Wqs3xQms2dKtelNlHpf4anuM7bWjZatNhvq8WYOlYHdzla1
-         fMJnYFKxfUoDD7Z4EDuoHQqdnK+UCe8Rcof73150=
+        b=ei3R/AIepm5x8fmRuA7bGr2p4oXeNNyCCRXCbe5XV99Pi/bf4UdQJxyvZPUGybT0s
+         h22DiHW+5ZFDDN6oG0ddRWpMkMNUtWcRsi9jd+udMgqQrx68zR5/0NOkuU7T+RmbNT
+         7oFAATNfsnZcVt4TRHj72OjNkkfouOKjITaDWwLI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+Cc:     David Howells <dhowells@redhat.com>,
+        syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 12/76] netfilter: nf_flow_table: teardown flow timeout race
-Date:   Thu, 29 Aug 2019 14:12:07 -0400
-Message-Id: <20190829181311.7562-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 13/76] rxrpc: Fix local endpoint refcounting
+Date:   Thu, 29 Aug 2019 14:12:08 -0400
+Message-Id: <20190829181311.7562-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -60,104 +60,288 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 1e5b2471bcc4838df298080ae1ec042c2cbc9ce9 ]
+[ Upstream commit 730c5fd42c1e3652a065448fd235cb9fafb2bd10 ]
 
-Flows that are in teardown state (due to RST / FIN TCP packet) still
-have their offload flag set on. Hence, the conntrack garbage collector
-may race to undo the timeout adjustment that the fixup routine performs,
-leaving the conntrack entry in place with the internal offload timeout
-(one day).
+The object lifetime management on the rxrpc_local struct is broken in that
+the rxrpc_local_processor() function is expected to clean up and remove an
+object - but it may get requeued by packets coming in on the backing UDP
+socket once it starts running.
 
-Update teardown flow state to ESTABLISHED and set tracking to liberal,
-then once the offload bit is cleared, adjust timeout if it is more than
-the default fixup timeout (conntrack might already have set a lower
-timeout from the packet path).
+This may result in the assertion in rxrpc_local_rcu() firing because the
+memory has been scheduled for RCU destruction whilst still queued:
 
-Fixes: da5984e51063 ("netfilter: nf_flow_table: add support for sending flows back to the slow path")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+	rxrpc: Assertion failed
+	------------[ cut here ]------------
+	kernel BUG at net/rxrpc/local_object.c:468!
+
+Note that if the processor comes around before the RCU free function, it
+will just do nothing because ->dead is true.
+
+Fix this by adding a separate refcount to count active users of the
+endpoint that causes the endpoint to be destroyed when it reaches 0.
+
+The original refcount can then be used to refcount objects through the work
+processor and cause the memory to be rcu freed when that reaches 0.
+
+Fixes: 4f95dd78a77e ("rxrpc: Rework local endpoint management")
+Reported-by: syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_flow_table_core.c | 34 ++++++++++++++++++++++--------
- 1 file changed, 25 insertions(+), 9 deletions(-)
+ net/rxrpc/af_rxrpc.c     |  4 +-
+ net/rxrpc/ar-internal.h  |  5 ++-
+ net/rxrpc/input.c        | 16 ++++++--
+ net/rxrpc/local_object.c | 86 +++++++++++++++++++++++++---------------
+ 4 files changed, 72 insertions(+), 39 deletions(-)
 
-diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
-index 4254e42605135..49248fe5847a1 100644
---- a/net/netfilter/nf_flow_table_core.c
-+++ b/net/netfilter/nf_flow_table_core.c
-@@ -112,15 +112,16 @@ static void flow_offload_fixup_tcp(struct ip_ct_tcp *tcp)
- #define NF_FLOWTABLE_TCP_PICKUP_TIMEOUT	(120 * HZ)
- #define NF_FLOWTABLE_UDP_PICKUP_TIMEOUT	(30 * HZ)
+diff --git a/net/rxrpc/af_rxrpc.c b/net/rxrpc/af_rxrpc.c
+index d09eaf1535441..8c9bd3ae9edf7 100644
+--- a/net/rxrpc/af_rxrpc.c
++++ b/net/rxrpc/af_rxrpc.c
+@@ -193,7 +193,7 @@ static int rxrpc_bind(struct socket *sock, struct sockaddr *saddr, int len)
  
--static void flow_offload_fixup_ct(struct nf_conn *ct)
-+static inline __s32 nf_flow_timeout_delta(unsigned int timeout)
-+{
-+	return (__s32)(timeout - (u32)jiffies);
-+}
-+
-+static void flow_offload_fixup_ct_timeout(struct nf_conn *ct)
+ service_in_use:
+ 	write_unlock(&local->services_lock);
+-	rxrpc_put_local(local);
++	rxrpc_unuse_local(local);
+ 	ret = -EADDRINUSE;
+ error_unlock:
+ 	release_sock(&rx->sk);
+@@ -901,7 +901,7 @@ static int rxrpc_release_sock(struct sock *sk)
+ 	rxrpc_queue_work(&rxnet->service_conn_reaper);
+ 	rxrpc_queue_work(&rxnet->client_conn_reaper);
+ 
+-	rxrpc_put_local(rx->local);
++	rxrpc_unuse_local(rx->local);
+ 	rx->local = NULL;
+ 	key_put(rx->key);
+ 	rx->key = NULL;
+diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
+index 80335b4ee4fd6..6a231c8f43066 100644
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -254,7 +254,8 @@ struct rxrpc_security {
+  */
+ struct rxrpc_local {
+ 	struct rcu_head		rcu;
+-	atomic_t		usage;
++	atomic_t		active_users;	/* Number of users of the local endpoint */
++	atomic_t		usage;		/* Number of references to the structure */
+ 	struct rxrpc_net	*rxnet;		/* The network ns in which this resides */
+ 	struct list_head	link;
+ 	struct socket		*socket;	/* my UDP socket */
+@@ -1002,6 +1003,8 @@ struct rxrpc_local *rxrpc_lookup_local(struct net *, const struct sockaddr_rxrpc
+ struct rxrpc_local *rxrpc_get_local(struct rxrpc_local *);
+ struct rxrpc_local *rxrpc_get_local_maybe(struct rxrpc_local *);
+ void rxrpc_put_local(struct rxrpc_local *);
++struct rxrpc_local *rxrpc_use_local(struct rxrpc_local *);
++void rxrpc_unuse_local(struct rxrpc_local *);
+ void rxrpc_queue_local(struct rxrpc_local *);
+ void rxrpc_destroy_all_locals(struct rxrpc_net *);
+ 
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index 5bd6f1546e5c6..ee95d1cd1cdf2 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -1108,8 +1108,12 @@ static void rxrpc_post_packet_to_local(struct rxrpc_local *local,
  {
- 	const struct nf_conntrack_l4proto *l4proto;
-+	int l4num = nf_ct_protonum(ct);
- 	unsigned int timeout;
--	int l4num;
+ 	_enter("%p,%p", local, skb);
+ 
+-	skb_queue_tail(&local->event_queue, skb);
+-	rxrpc_queue_local(local);
++	if (rxrpc_get_local_maybe(local)) {
++		skb_queue_tail(&local->event_queue, skb);
++		rxrpc_queue_local(local);
++	} else {
++		rxrpc_free_skb(skb, rxrpc_skb_rx_freed);
++	}
+ }
+ 
+ /*
+@@ -1119,8 +1123,12 @@ static void rxrpc_reject_packet(struct rxrpc_local *local, struct sk_buff *skb)
+ {
+ 	CHECK_SLAB_OKAY(&local->usage);
+ 
+-	skb_queue_tail(&local->reject_queue, skb);
+-	rxrpc_queue_local(local);
++	if (rxrpc_get_local_maybe(local)) {
++		skb_queue_tail(&local->reject_queue, skb);
++		rxrpc_queue_local(local);
++	} else {
++		rxrpc_free_skb(skb, rxrpc_skb_rx_freed);
++	}
+ }
+ 
+ /*
+diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
+index b1c71bad510b7..9798159ee65fa 100644
+--- a/net/rxrpc/local_object.c
++++ b/net/rxrpc/local_object.c
+@@ -79,6 +79,7 @@ static struct rxrpc_local *rxrpc_alloc_local(struct rxrpc_net *rxnet,
+ 	local = kzalloc(sizeof(struct rxrpc_local), GFP_KERNEL);
+ 	if (local) {
+ 		atomic_set(&local->usage, 1);
++		atomic_set(&local->active_users, 1);
+ 		local->rxnet = rxnet;
+ 		INIT_LIST_HEAD(&local->link);
+ 		INIT_WORK(&local->processor, rxrpc_local_processor);
+@@ -266,11 +267,8 @@ struct rxrpc_local *rxrpc_lookup_local(struct net *net,
+ 		 * bind the transport socket may still fail if we're attempting
+ 		 * to use a local address that the dying object is still using.
+ 		 */
+-		if (!rxrpc_get_local_maybe(local)) {
+-			cursor = cursor->next;
+-			list_del_init(&local->link);
++		if (!rxrpc_use_local(local))
+ 			break;
+-		}
+ 
+ 		age = "old";
+ 		goto found;
+@@ -284,7 +282,10 @@ struct rxrpc_local *rxrpc_lookup_local(struct net *net,
+ 	if (ret < 0)
+ 		goto sock_error;
+ 
+-	list_add_tail(&local->link, cursor);
++	if (cursor != &rxnet->local_endpoints)
++		list_replace(cursor, &local->link);
++	else
++		list_add_tail(&local->link, cursor);
+ 	age = "new";
+ 
+ found:
+@@ -342,7 +343,8 @@ struct rxrpc_local *rxrpc_get_local_maybe(struct rxrpc_local *local)
+ }
+ 
+ /*
+- * Queue a local endpoint.
++ * Queue a local endpoint unless it has become unreferenced and pass the
++ * caller's reference to the work item.
+  */
+ void rxrpc_queue_local(struct rxrpc_local *local)
+ {
+@@ -351,15 +353,8 @@ void rxrpc_queue_local(struct rxrpc_local *local)
+ 	if (rxrpc_queue_work(&local->processor))
+ 		trace_rxrpc_local(local, rxrpc_local_queued,
+ 				  atomic_read(&local->usage), here);
+-}
 -
--	l4num = nf_ct_protonum(ct);
--	if (l4num == IPPROTO_TCP)
--		flow_offload_fixup_tcp(&ct->proto.tcp);
- 
- 	l4proto = nf_ct_l4proto_find(l4num);
- 	if (!l4proto)
-@@ -133,7 +134,20 @@ static void flow_offload_fixup_ct(struct nf_conn *ct)
- 	else
- 		return;
- 
--	ct->timeout = nfct_time_stamp + timeout;
-+	if (nf_flow_timeout_delta(ct->timeout) > (__s32)timeout)
-+		ct->timeout = nfct_time_stamp + timeout;
-+}
-+
-+static void flow_offload_fixup_ct_state(struct nf_conn *ct)
-+{
-+	if (nf_ct_protonum(ct) == IPPROTO_TCP)
-+		flow_offload_fixup_tcp(&ct->proto.tcp);
-+}
-+
-+static void flow_offload_fixup_ct(struct nf_conn *ct)
-+{
-+	flow_offload_fixup_ct_state(ct);
-+	flow_offload_fixup_ct_timeout(ct);
+-/*
+- * A local endpoint reached its end of life.
+- */
+-static void __rxrpc_put_local(struct rxrpc_local *local)
+-{
+-	_enter("%d", local->debug_id);
+-	rxrpc_queue_work(&local->processor);
++	else
++		rxrpc_put_local(local);
  }
  
- void flow_offload_free(struct flow_offload *flow)
-@@ -211,7 +225,7 @@ EXPORT_SYMBOL_GPL(flow_offload_add);
+ /*
+@@ -375,10 +370,45 @@ void rxrpc_put_local(struct rxrpc_local *local)
+ 		trace_rxrpc_local(local, rxrpc_local_put, n, here);
  
- static inline bool nf_flow_has_expired(const struct flow_offload *flow)
+ 		if (n == 0)
+-			__rxrpc_put_local(local);
++			call_rcu(&local->rcu, rxrpc_local_rcu);
+ 	}
+ }
+ 
++/*
++ * Start using a local endpoint.
++ */
++struct rxrpc_local *rxrpc_use_local(struct rxrpc_local *local)
++{
++	unsigned int au;
++
++	local = rxrpc_get_local_maybe(local);
++	if (!local)
++		return NULL;
++
++	au = atomic_fetch_add_unless(&local->active_users, 1, 0);
++	if (au == 0) {
++		rxrpc_put_local(local);
++		return NULL;
++	}
++
++	return local;
++}
++
++/*
++ * Cease using a local endpoint.  Once the number of active users reaches 0, we
++ * start the closure of the transport in the work processor.
++ */
++void rxrpc_unuse_local(struct rxrpc_local *local)
++{
++	unsigned int au;
++
++	au = atomic_dec_return(&local->active_users);
++	if (au == 0)
++		rxrpc_queue_local(local);
++	else
++		rxrpc_put_local(local);
++}
++
+ /*
+  * Destroy a local endpoint's socket and then hand the record to RCU to dispose
+  * of.
+@@ -393,16 +423,6 @@ static void rxrpc_local_destroyer(struct rxrpc_local *local)
+ 
+ 	_enter("%d", local->debug_id);
+ 
+-	/* We can get a race between an incoming call packet queueing the
+-	 * processor again and the work processor starting the destruction
+-	 * process which will shut down the UDP socket.
+-	 */
+-	if (local->dead) {
+-		_leave(" [already dead]");
+-		return;
+-	}
+-	local->dead = true;
+-
+ 	mutex_lock(&rxnet->local_mutex);
+ 	list_del_init(&local->link);
+ 	mutex_unlock(&rxnet->local_mutex);
+@@ -422,13 +442,11 @@ static void rxrpc_local_destroyer(struct rxrpc_local *local)
+ 	 */
+ 	rxrpc_purge_queue(&local->reject_queue);
+ 	rxrpc_purge_queue(&local->event_queue);
+-
+-	_debug("rcu local %d", local->debug_id);
+-	call_rcu(&local->rcu, rxrpc_local_rcu);
+ }
+ 
+ /*
+- * Process events on an endpoint
++ * Process events on an endpoint.  The work item carries a ref which
++ * we must release.
+  */
+ static void rxrpc_local_processor(struct work_struct *work)
  {
--	return (__s32)(flow->timeout - (u32)jiffies) <= 0;
-+	return nf_flow_timeout_delta(flow->timeout) <= 0;
+@@ -441,8 +459,10 @@ static void rxrpc_local_processor(struct work_struct *work)
+ 
+ 	do {
+ 		again = false;
+-		if (atomic_read(&local->usage) == 0)
+-			return rxrpc_local_destroyer(local);
++		if (atomic_read(&local->active_users) == 0) {
++			rxrpc_local_destroyer(local);
++			break;
++		}
+ 
+ 		if (!skb_queue_empty(&local->reject_queue)) {
+ 			rxrpc_reject_packets(local);
+@@ -454,6 +474,8 @@ static void rxrpc_local_processor(struct work_struct *work)
+ 			again = true;
+ 		}
+ 	} while (again);
++
++	rxrpc_put_local(local);
  }
  
- static void flow_offload_del(struct nf_flowtable *flow_table,
-@@ -231,6 +245,8 @@ static void flow_offload_del(struct nf_flowtable *flow_table,
- 
- 	if (nf_flow_has_expired(flow))
- 		flow_offload_fixup_ct(e->ct);
-+	else if (flow->flags & FLOW_OFFLOAD_TEARDOWN)
-+		flow_offload_fixup_ct_timeout(e->ct);
- 
- 	flow_offload_free(flow);
- }
-@@ -242,7 +258,7 @@ void flow_offload_teardown(struct flow_offload *flow)
- 	flow->flags |= FLOW_OFFLOAD_TEARDOWN;
- 
- 	e = container_of(flow, struct flow_offload_entry, flow);
--	flow_offload_fixup_ct(e->ct);
-+	flow_offload_fixup_ct_state(e->ct);
- }
- EXPORT_SYMBOL_GPL(flow_offload_teardown);
- 
+ /*
 -- 
 2.20.1
 
