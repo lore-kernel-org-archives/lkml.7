@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94319C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB5FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3C22189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1A12189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102443;
-	bh=hGzTm4jDH5Y0WsNa/Vw17G8zXJmTDBmqLYC2f/tuNCw=;
+	s=default; t=1567102446;
+	bh=3dCUh5B5V/+pwIdVufiDbzWGJ3Fse06EB+uMp16XkV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l6d2UJC4/TOVf6vFxRWiVYVOQTa+dmCZPvShnM7xe5EhhXDsCCILkz/0WwJYMBDPt
-	 dhvj2/8NvfK84dTkcESJ+VCQoMjDxbOHprRFnzfTMjxQSY2G5I3/Hz7CHbU0709nKn
-	 ABodp6moNWvo4nm3/s2A5yqKXqL5DiOQeyDKpO2g=
+	b=tXJ1PzO6oN2rfmub/rwQweleWp32wbTXxaDg5MbQlNzrJyQgDnQcqj4PaBxgLC8h4
+	 mlFar/gzY55QXBvijmfUuFlux3hSJUW3bTyH+UYGpkHaj9MpoSu6HLNUkLw2vLlWmr
+	 +By0czvC9Dq4iJrXfisz68cQ6IGvhlpJdGGYFO7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfH2SOC (ORCPT
+        id S1728726AbfH2SOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:14:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55646 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:14:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728614AbfH2SNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:13:55 -0400
+        id S1728628AbfH2SN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:13:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A648B2189D;
-        Thu, 29 Aug 2019 18:13:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE8DD2341B;
+        Thu, 29 Aug 2019 18:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102434;
-        bh=hGzTm4jDH5Y0WsNa/Vw17G8zXJmTDBmqLYC2f/tuNCw=;
+        s=default; t=1567102435;
+        bh=3dCUh5B5V/+pwIdVufiDbzWGJ3Fse06EB+uMp16XkV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2I5O4I7XPWdZrxGnB79Q0cuI7Ohcghxw11BRpyfnx8JOTFRh3FrsPOzfFRD9T/HAX
-         gY8MRhqk5KIZ8pNECmB958Tqp1zMkzPfVTZ49pVAWc5cLw3UMSlSQpw7/yIJZiUVrY
-         q1wRbRLc/k7+1wn0cMhd8GYn23VHB5Z8wbcQkhys=
+        b=v1CGOWP7r6ENB7eKqAawcPPKhvOLvfxBWM+XB+vM5Gj9WOKK+Q5uT2zGPc0by9Pa2
+         TKP3Tkpg13ZbwoFXnhvS1GMFESnjpGjmf7A6imf/caDCb9XdpgHymyWwIL7yodlTzW
+         jMDYILpA1vyNdTQ4beR1zF2PUx4SfAWrv5GS1F10=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 23/76] gpio: Fix build error of function redefinition
-Date:   Thu, 29 Aug 2019 14:12:18 -0400
-Message-Id: <20190829181311.7562-23-sashal@kernel.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 24/76] netfilter: nft_flow_offload: skip tcp rst and fin packets
+Date:   Thu, 29 Aug 2019 14:12:19 -0400
+Message-Id: <20190829181311.7562-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -59,66 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 68e03b85474a51ec1921b4d13204782594ef7223 ]
+[ Upstream commit dfe42be15fde16232340b8b2a57c359f51cc10d9 ]
 
-when do randbuilding, I got this error:
+TCP rst and fin packets do not qualify to place a flow into the
+flowtable. Most likely there will be no more packets after connection
+closure. Without this patch, this flow entry expires and connection
+tracking picks up the entry in ESTABLISHED state using the fixup
+timeout, which makes this look inconsistent to the user for a connection
+that is actually already closed.
 
-In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
-./include/linux/gpio/driver.h:576:1: error: redefinition of gpiochip_add_pin_range
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- ^~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
-./include/linux/gpio.h:245:1: note: previous definition of gpiochip_add_pin_range was here
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- ^~~~~~~~~~~~~~~~~~~~~~
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 964cb341882f ("gpio: move pincontrol calls to <linux/gpio/driver.h>")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190731123814.46624-1-yuehaibing@huawei.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/gpio.h | 24 ------------------------
- 1 file changed, 24 deletions(-)
+ net/netfilter/nft_flow_offload.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index 39745b8bdd65d..b3115d1a7d494 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -240,30 +240,6 @@ static inline int irq_to_gpio(unsigned irq)
- 	return -EINVAL;
- }
- 
--static inline int
--gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
--		       unsigned int gpio_offset, unsigned int pin_offset,
--		       unsigned int npins)
--{
--	WARN_ON(1);
--	return -EINVAL;
--}
--
--static inline int
--gpiochip_add_pingroup_range(struct gpio_chip *chip,
--			struct pinctrl_dev *pctldev,
--			unsigned int gpio_offset, const char *pin_group)
--{
--	WARN_ON(1);
--	return -EINVAL;
--}
--
--static inline void
--gpiochip_remove_pin_ranges(struct gpio_chip *chip)
--{
--	WARN_ON(1);
--}
--
- static inline int devm_gpio_request(struct device *dev, unsigned gpio,
- 				    const char *label)
+diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
+index aa5f571d43619..060a4ed46d5e6 100644
+--- a/net/netfilter/nft_flow_offload.c
++++ b/net/netfilter/nft_flow_offload.c
+@@ -72,11 +72,11 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
  {
+ 	struct nft_flow_offload *priv = nft_expr_priv(expr);
+ 	struct nf_flowtable *flowtable = &priv->flowtable->data;
++	struct tcphdr _tcph, *tcph = NULL;
+ 	enum ip_conntrack_info ctinfo;
+ 	struct nf_flow_route route;
+ 	struct flow_offload *flow;
+ 	enum ip_conntrack_dir dir;
+-	bool is_tcp = false;
+ 	struct nf_conn *ct;
+ 	int ret;
+ 
+@@ -89,7 +89,10 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
+ 
+ 	switch (ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple.dst.protonum) {
+ 	case IPPROTO_TCP:
+-		is_tcp = true;
++		tcph = skb_header_pointer(pkt->skb, pkt->xt.thoff,
++					  sizeof(_tcph), &_tcph);
++		if (unlikely(!tcph || tcph->fin || tcph->rst))
++			goto out;
+ 		break;
+ 	case IPPROTO_UDP:
+ 		break;
+@@ -115,7 +118,7 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
+ 	if (!flow)
+ 		goto err_flow_alloc;
+ 
+-	if (is_tcp) {
++	if (tcph) {
+ 		ct->proto.tcp.seen[0].flags |= IP_CT_TCP_FLAG_BE_LIBERAL;
+ 		ct->proto.tcp.seen[1].flags |= IP_CT_TCP_FLAG_BE_LIBERAL;
+ 	}
 -- 
 2.20.1
 
