@@ -2,189 +2,329 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428C7C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F96BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB3D205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487D821726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:30:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mbPBUhs7";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aMOVPZYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729867AbfH2SaG (ORCPT
+        id S1730022AbfH2SaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:30:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47228 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728826AbfH2SaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:30:03 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 29 Aug 2019 14:30:10 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:45574 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727673AbfH2SaI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:30:08 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 312EC681CA; Thu, 29 Aug 2019 18:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567103407;
+        bh=PuRxldOBN+wEmnBAMw0JNVPaMahVZnx4ztwUFy/rSuM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mbPBUhs7fko5DmEDXeobtJDxqpRkMLTpBj+2pp2AaSH2q2/x/O2zy2YQ+kybYCePe
+         6/MOPorC+mEEvfAK+08vf2VkBjMO6DQi16vqZVsSiWd4l/rDoenS20hTT7BShF+v/N
+         gylKW46LJHaCiM5iBRMi0a1ysNd7xaSjvSotMcjU=
+Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 268188CF1A5;
-        Thu, 29 Aug 2019 18:30:02 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 540D754527;
-        Thu, 29 Aug 2019 18:29:59 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 01/11] uapi: General notification ring definitions [ver #6]
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>, dhowells@redhat.com,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 29 Aug 2019 19:29:58 +0100
-Message-ID: <156710339856.10009.1556595458056359912.stgit@warthog.procyon.org.uk>
-In-Reply-To: <156710338860.10009.12524626894838499011.stgit@warthog.procyon.org.uk>
-References: <156710338860.10009.12524626894838499011.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3726568867;
+        Thu, 29 Aug 2019 18:12:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567102336;
+        bh=PuRxldOBN+wEmnBAMw0JNVPaMahVZnx4ztwUFy/rSuM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aMOVPZYkhWyJP3HYnxpyCW50jxxsg+s3Mk4ipgWM7vSKJF+wBZWkLSyXf5ID/rwuO
+         rjxRqP2vmwPc5J8NwelznsDHL7a6vaNi4/u6v3S+JZZaHl3cIhlvwZSLHvIbUJGtSY
+         5kZy3SqG/Rair3s+2L38A/HdBLGGt8O8DHXli0WM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3726568867
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com,
+        linus.walleij@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
+        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
+        Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH RFC 03/14] drivers: irqchip: add PDC irqdomain for wakeup capable GPIOs
+Date:   Thu, 29 Aug 2019 12:11:52 -0600
+Message-Id: <20190829181203.2660-4-ilina@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190829181203.2660-1-ilina@codeaurora.org>
+References: <20190829181203.2660-1-ilina@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 29 Aug 2019 18:30:02 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add UAPI definitions for the general notification ring, including the
-following pieces:
+Introduce a new domain for wakeup capable GPIOs. The domain can be
+requested using the bus token DOMAIN_BUS_WAKEUP. In the following
+patches, we will specify PDC as the wakeup-parent for the TLMM GPIO
+irqchip. Requesting a wakeup GPIO will setup the GPIO and the
+corresponding PDC interrupt as its parent.
 
- (1) struct watch_notification.
-
-     This is the metadata header for each entry in the ring.  It includes a
-     type and subtype that indicate the source of the message
-     (eg. WATCH_TYPE_MOUNT_NOTIFY) and the kind of the message
-     (eg. NOTIFY_MOUNT_NEW_MOUNT).
-
-     The header also contains an information field that conveys the
-     following information:
-
-	- WATCH_INFO_LENGTH.  The size of the entry (entries are variable
-          length).
-
-	- WATCH_INFO_ID.  The watch ID specified when the watchpoint was
-          set.
-
-	- WATCH_INFO_TYPE_INFO.  (Sub)type-specific information.
-
-	- WATCH_INFO_FLAG_*.  Flag bits overlain on the type-specific
-          information.  For use by the type.
-
-     All the information in the header can be used in filtering messages at
-     the point of writing into the buffer.
-
- (2) struct watch_queue_buffer.
-
-     This describes the layout of the ring.  Note that the first slots in
-     the ring contain a special metadata entry that contains the ring
-     pointers.  The producer in the kernel knows to skip this and it has a
-     proper header (WATCH_TYPE_META, WATCH_META_SKIP_NOTIFICATION) that
-     indicates the size so that the ring consumer can handle it the same as
-     any other record and just skip it.
-
-     Note that this means that ring entries can never be split over the end
-     of the ring, so if an entry would need to be split, a skip record is
-     inserted to wrap the ring first; this is also WATCH_TYPE_META,
-     WATCH_META_SKIP_NOTIFICATION.
-
- (3) WATCH_INFO_NOTIFICATIONS_LOST.
-
-     This is a flag that can be set in the metadata header by the kernel to
-     indicate that at least one message was lost since it was last cleared
-     by userspace.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Co-developed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 ---
+ drivers/irqchip/qcom-pdc.c   | 104 ++++++++++++++++++++++++++++++++---
+ include/linux/soc/qcom/irq.h |  34 ++++++++++++
+ 2 files changed, 129 insertions(+), 9 deletions(-)
+ create mode 100644 include/linux/soc/qcom/irq.h
 
- include/uapi/linux/watch_queue.h |   67 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
- create mode 100644 include/uapi/linux/watch_queue.h
-
-diff --git a/include/uapi/linux/watch_queue.h b/include/uapi/linux/watch_queue.h
+diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+index 338fae604af5..ad1faf634bcf 100644
+--- a/drivers/irqchip/qcom-pdc.c
++++ b/drivers/irqchip/qcom-pdc.c
+@@ -13,12 +13,13 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
++#include <linux/soc/qcom/irq.h>
+ #include <linux/spinlock.h>
+-#include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ 
+ #define PDC_MAX_IRQS		126
++#define PDC_MAX_GPIO_IRQS	256
+ 
+ #define CLEAR_INTR(reg, intr)	(reg & ~(1 << intr))
+ #define ENABLE_INTR(reg, intr)	(reg | (1 << intr))
+@@ -26,6 +27,8 @@
+ #define IRQ_ENABLE_BANK		0x10
+ #define IRQ_i_CFG		0x110
+ 
++#define PDC_NO_PARENT_IRQ	~0UL
++
+ struct pdc_pin_region {
+ 	u32 pin_base;
+ 	u32 parent_base;
+@@ -65,23 +68,35 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
+ 
+ static void qcom_pdc_gic_disable(struct irq_data *d)
+ {
++	if (d->hwirq == GPIO_NO_WAKE_IRQ)
++		return;
++
+ 	pdc_enable_intr(d, false);
+ 	irq_chip_disable_parent(d);
+ }
+ 
+ static void qcom_pdc_gic_enable(struct irq_data *d)
+ {
++	if (d->hwirq == GPIO_NO_WAKE_IRQ)
++		return;
++
+ 	pdc_enable_intr(d, true);
+ 	irq_chip_enable_parent(d);
+ }
+ 
+ static void qcom_pdc_gic_mask(struct irq_data *d)
+ {
++	if (d->hwirq == GPIO_NO_WAKE_IRQ)
++		return;
++
+ 	irq_chip_mask_parent(d);
+ }
+ 
+ static void qcom_pdc_gic_unmask(struct irq_data *d)
+ {
++	if (d->hwirq == GPIO_NO_WAKE_IRQ)
++		return;
++
+ 	irq_chip_unmask_parent(d);
+ }
+ 
+@@ -124,6 +139,9 @@ static int qcom_pdc_gic_set_type(struct irq_data *d, unsigned int type)
+ 	int pin_out = d->hwirq;
+ 	enum pdc_irq_config_bits pdc_type;
+ 
++	if (pin_out == GPIO_NO_WAKE_IRQ)
++		return 0;
++
+ 	switch (type) {
+ 	case IRQ_TYPE_EDGE_RISING:
+ 		pdc_type = PDC_EDGE_RISING;
+@@ -181,8 +199,7 @@ static irq_hw_number_t get_parent_hwirq(int pin)
+ 			return (region->parent_base + pin - region->pin_base);
+ 	}
+ 
+-	WARN_ON(1);
+-	return ~0UL;
++	return PDC_NO_PARENT_IRQ;
+ }
+ 
+ static int qcom_pdc_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
+@@ -211,17 +228,17 @@ static int qcom_pdc_alloc(struct irq_domain *domain, unsigned int virq,
+ 
+ 	ret = qcom_pdc_translate(domain, fwspec, &hwirq, &type);
+ 	if (ret)
+-		return -EINVAL;
+-
+-	parent_hwirq = get_parent_hwirq(hwirq);
+-	if (parent_hwirq == ~0UL)
+-		return -EINVAL;
++		return ret;
+ 
+ 	ret  = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
+ 					     &qcom_pdc_gic_chip, NULL);
+ 	if (ret)
+ 		return ret;
+ 
++	parent_hwirq = get_parent_hwirq(hwirq);
++	if (parent_hwirq == PDC_NO_PARENT_IRQ)
++		return 0;
++
+ 	if (type & IRQ_TYPE_EDGE_BOTH)
+ 		type = IRQ_TYPE_EDGE_RISING;
+ 
+@@ -244,6 +261,60 @@ static const struct irq_domain_ops qcom_pdc_ops = {
+ 	.free		= irq_domain_free_irqs_common,
+ };
+ 
++static int qcom_pdc_gpio_alloc(struct irq_domain *domain, unsigned int virq,
++			       unsigned int nr_irqs, void *data)
++{
++	struct irq_fwspec *fwspec = data;
++	struct irq_fwspec parent_fwspec;
++	irq_hw_number_t hwirq, parent_hwirq;
++	unsigned int type;
++	int ret;
++
++	ret = qcom_pdc_translate(domain, fwspec, &hwirq, &type);
++	if (ret)
++		return ret;
++
++	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
++					    &qcom_pdc_gic_chip, NULL);
++	if (ret)
++		return ret;
++
++	if (hwirq == GPIO_NO_WAKE_IRQ)
++		return 0;
++
++	parent_hwirq = get_parent_hwirq(hwirq);
++	if (parent_hwirq == PDC_NO_PARENT_IRQ)
++		return 0;
++
++	if (type & IRQ_TYPE_EDGE_BOTH)
++		type = IRQ_TYPE_EDGE_RISING;
++
++	if (type & IRQ_TYPE_LEVEL_MASK)
++		type = IRQ_TYPE_LEVEL_HIGH;
++
++	parent_fwspec.fwnode      = domain->parent->fwnode;
++	parent_fwspec.param_count = 3;
++	parent_fwspec.param[0]    = 0;
++	parent_fwspec.param[1]    = parent_hwirq;
++	parent_fwspec.param[2]    = type;
++
++	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
++					    &parent_fwspec);
++}
++
++static int qcom_pdc_gpio_domain_select(struct irq_domain *d,
++				       struct irq_fwspec *fwspec,
++				       enum irq_domain_bus_token bus_token)
++{
++	return (bus_token == DOMAIN_BUS_WAKEUP);
++}
++
++static const struct irq_domain_ops qcom_pdc_gpio_ops = {
++	.select		= qcom_pdc_gpio_domain_select,
++	.alloc		= qcom_pdc_gpio_alloc,
++	.free		= irq_domain_free_irqs_common,
++};
++
+ static int pdc_setup_pin_mapping(struct device_node *np)
+ {
+ 	int ret, n;
+@@ -282,7 +353,7 @@ static int pdc_setup_pin_mapping(struct device_node *np)
+ 
+ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
+ {
+-	struct irq_domain *parent_domain, *pdc_domain;
++	struct irq_domain *parent_domain, *pdc_domain, *pdc_gpio_domain;
+ 	int ret;
+ 
+ 	pdc_base = of_iomap(node, 0);
+@@ -313,8 +384,23 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
+ 		goto fail;
+ 	}
+ 
++	pdc_gpio_domain = irq_domain_create_hierarchy(parent_domain,
++						      IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP,
++						      PDC_MAX_GPIO_IRQS,
++						      of_fwnode_handle(node),
++						      &qcom_pdc_gpio_ops, NULL);
++	if (!pdc_gpio_domain) {
++		pr_err("%pOF: GIC domain add failed for GPIO domain\n", node);
++		ret = -ENOMEM;
++		goto remove;
++	}
++
++	irq_domain_update_bus_token(pdc_gpio_domain, DOMAIN_BUS_WAKEUP);
++
+ 	return 0;
+ 
++remove:
++	irq_domain_remove(pdc_domain);
+ fail:
+ 	kfree(pdc_region);
+ 	iounmap(pdc_base);
+diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
 new file mode 100644
-index 000000000000..70f575099968
+index 000000000000..73239917dc38
 --- /dev/null
-+++ b/include/uapi/linux/watch_queue.h
-@@ -0,0 +1,67 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _UAPI_LINUX_WATCH_QUEUE_H
-+#define _UAPI_LINUX_WATCH_QUEUE_H
++++ b/include/linux/soc/qcom/irq.h
+@@ -0,0 +1,34 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
 +
-+#include <linux/types.h>
++#ifndef __QCOM_IRQ_H
++#define __QCOM_IRQ_H
 +
-+enum watch_notification_type {
-+	WATCH_TYPE_META		= 0,	/* Special record */
-+	WATCH_TYPE___NR		= 1
-+};
++#include <linux/irqdomain.h>
 +
-+enum watch_meta_notification_subtype {
-+	WATCH_META_SKIP_NOTIFICATION	= 0,	/* Just skip this record */
-+	WATCH_META_REMOVAL_NOTIFICATION	= 1,	/* Watched object was removed */
-+};
++#define GPIO_NO_WAKE_IRQ	~0U
 +
-+#define WATCH_LENGTH_GRANULARITY sizeof(__u64)
-+
-+/*
-+ * Notification record header.  This is aligned to 64-bits so that subclasses
-+ * can contain __u64 fields.
++/**
++ * QCOM specific IRQ domain flags that distinguishes the handling of wakeup
++ * capable interrupts by different interrupt controllers.
++ *
++ * IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP: Line must be masked at TLMM and the
++ *                                  interrupt configuration is done at PDC
++ * IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP: Interrupt configuration is handled at TLMM
 + */
-+struct watch_notification {
-+	__u32			type:24;	/* enum watch_notification_type */
-+	__u32			subtype:8;	/* Type-specific subtype (filterable) */
-+	__u32			info;
-+#define WATCH_INFO_LENGTH	0x0000003f	/* Length of record / sizeof(watch_notification) */
-+#define WATCH_INFO_LENGTH__SHIFT 0
-+#define WATCH_INFO_ID		0x0000ff00	/* ID of watchpoint, if type-appropriate */
-+#define WATCH_INFO_ID__SHIFT	8
-+#define WATCH_INFO_TYPE_INFO	0xffff0000	/* Type-specific info */
-+#define WATCH_INFO_TYPE_INFO__SHIFT 16
-+#define WATCH_INFO_FLAG_0	0x00010000	/* Type-specific info, flag bit 0 */
-+#define WATCH_INFO_FLAG_1	0x00020000	/* ... */
-+#define WATCH_INFO_FLAG_2	0x00040000
-+#define WATCH_INFO_FLAG_3	0x00080000
-+#define WATCH_INFO_FLAG_4	0x00100000
-+#define WATCH_INFO_FLAG_5	0x00200000
-+#define WATCH_INFO_FLAG_6	0x00400000
-+#define WATCH_INFO_FLAG_7	0x00800000
-+} __attribute__((aligned(WATCH_LENGTH_GRANULARITY)));
++#define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP		(1 << 17)
++#define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP		(1 << 18)
 +
-+struct watch_queue_buffer {
-+	union {
-+		/* The first few entries are special, containing the
-+		 * ring management variables.
-+		 */
-+		struct {
-+			struct watch_notification watch; /* WATCH_TYPE_META */
-+			__u32		head;		/* Ring head index */
-+			__u32		tail;		/* Ring tail index */
-+			__u32		mask;		/* Ring index mask */
-+			__u32		__reserved;
-+		} meta;
-+		struct watch_notification slots[0];
-+	};
-+};
-+
-+/*
-+ * The Metadata pseudo-notification message uses a flag bits in the information
-+ * field to convey the fact that messages have been lost.  We can only use a
-+ * single bit in this manner per word as some arches that support SMP
-+ * (eg. parisc) have no kernel<->user atomic bit ops.
++/**
++ * irq_domain_qcom_handle_wakeup: Return if the domain handles interrupt
++ *                                configuration
++ * @parent: irq domain
++ *
++ * This QCOM specific irq domain call returns if the interrupt controller
++ * requires the interrupt be masked at the child interrupt controller.
 + */
-+#define WATCH_INFO_NOTIFICATIONS_LOST WATCH_INFO_FLAG_0
++static inline bool irq_domain_qcom_handle_wakeup(struct irq_domain *parent)
++{
++	return (parent->flags & IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP);
++}
 +
-+#endif /* _UAPI_LINUX_WATCH_QUEUE_H */
++#endif
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
