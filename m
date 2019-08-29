@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9020C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F1BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF9A2339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ADEA21874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfH2Rcb (ORCPT
+        id S1727437AbfH2Rcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:32:31 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:48886 "EHLO
+        Thu, 29 Aug 2019 13:32:35 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:48890 "EHLO
         www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727173AbfH2Rcb (ORCPT
+        with ESMTP id S1727173AbfH2Rcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:32:31 -0400
-Received: from fsav301.sakura.ne.jp (fsav301.sakura.ne.jp [153.120.85.132])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7THWCqf023729;
+        Thu, 29 Aug 2019 13:32:33 -0400
+Received: from fsav104.sakura.ne.jp (fsav104.sakura.ne.jp [27.133.134.231])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7THWBEB023717;
         Fri, 30 Aug 2019 02:32:12 +0900 (JST)
         (envelope-from katsuhiro@katsuster.net)
 Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav301.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav301.sakura.ne.jp);
- Fri, 30 Aug 2019 02:32:12 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav301.sakura.ne.jp)
+ by fsav104.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav104.sakura.ne.jp);
+ Fri, 30 Aug 2019 02:32:11 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav104.sakura.ne.jp)
 Received: from localhost.localdomain (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
         (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7THW6NO023682
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7THW6NM023682
         (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Fri, 30 Aug 2019 02:32:12 +0900 (JST)
+        Fri, 30 Aug 2019 02:32:11 +0900 (JST)
         (envelope-from katsuhiro@katsuster.net)
 From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
 To:     Mark Brown <broonie@kernel.org>,
@@ -41,12 +41,10 @@ To:     Mark Brown <broonie@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>
 Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Subject: [PATCH 3/3] ASoC: es8316: add DT-bindings
-Date:   Fri, 30 Aug 2019 02:32:05 +0900
-Message-Id: <20190829173205.11805-3-katsuhiro@katsuster.net>
+Subject: [PATCH 1/3] ASoC: es8316: judge PCM rate at later timing
+Date:   Fri, 30 Aug 2019 02:32:03 +0900
+Message-Id: <20190829173205.11805-1-katsuhiro@katsuster.net>
 X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20190829173205.11805-1-katsuhiro@katsuster.net>
-References: <20190829173205.11805-1-katsuhiro@katsuster.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,40 +52,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds missing DT-bindings document for Everest ES8316.
+This patch change the judge timing about playing/capturing PCM rate.
+
+Original code set constraints list of PCM rate limits at set_sysclk.
+This strategy works well if system is using fixed rate clock.
+
+But some boards and SoC (such as RockPro64 and RockChip I2S) has
+connected SoC MCLK out to ES8316 MCLK in. In this case, SoC side I2S
+will choose suitable frequency of MCLK such as fs * mclk-fs when
+user starts playing or capturing.
+
+Bad scenario as follows (mclk-fs = 256):
+  - Initialize sysclk by correct value (Ex. 12.288MHz)
+    - ES8316 set constraints of PCM rate by sysclk
+      48kHz (1/256), 32kHz (1/384), 30.720kHz (1/400),
+      24kHz (1/512), 16kHz (1/768), 12kHz (1/1024)
+  - Play 48kHz sound, it's acceptable
+  - Sysclk is not changed
+
+  - Play 32kHz sound, it's acceptable
+  - Set sysclk by 8.192MHz (= fs * mclk-fs = 32k * 256)
+    - ES8316 set constraints of PCM rate by sysclk
+      32kHz (1/256), 21.33kHz (1/384), 20.48kHz (1/400),
+      16kHz (1/512), 10.66kHz (1/768), 8kHz (1/1024)
+
+  - Play 48kHz again, but it's NOT acceptable because constraints
+    list does not allow 48kHz
+
+Root cause of this strange behavior is changing constraints list at
+set_sysclk timing. It seems that is too early to determine. So this
+patch does not use constraints list and check PCM rate limit more
+later timing at hw_params.
 
 Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 ---
- .../bindings/sound/everest,es8316.txt         | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/everest,es8316.txt
+ sound/soc/codecs/es8316.c | 37 +++++++++++++++----------------------
+ 1 file changed, 15 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/everest,es8316.txt b/Documentation/devicetree/bindings/sound/everest,es8316.txt
-new file mode 100644
-index 000000000000..aefcff9c48a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/everest,es8316.txt
-@@ -0,0 +1,20 @@
-+Everest ES8316 audio CODEC
+diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
+index ed2959dbe1fb..229808fa627c 100644
+--- a/sound/soc/codecs/es8316.c
++++ b/sound/soc/codecs/es8316.c
+@@ -363,27 +363,12 @@ static int es8316_set_dai_sysclk(struct snd_soc_dai *codec_dai,
+ {
+ 	struct snd_soc_component *component = codec_dai->component;
+ 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
+-	int i;
+-	int count = 0;
+ 
+ 	es8316->sysclk = freq;
+ 
+ 	if (freq == 0)
+ 		return 0;
+ 
+-	/* Limit supported sample rates to ones that can be autodetected
+-	 * by the codec running in slave mode.
+-	 */
+-	for (i = 0; i < NR_SUPPORTED_MCLK_LRCK_RATIOS; i++) {
+-		const unsigned int ratio = supported_mclk_lrck_ratios[i];
+-
+-		if (freq % ratio == 0)
+-			es8316->allowed_rates[count++] = freq / ratio;
+-	}
+-
+-	es8316->sysclk_constraints.list = es8316->allowed_rates;
+-	es8316->sysclk_constraints.count = count;
+-
+ 	return 0;
+ }
+ 
+@@ -449,13 +434,6 @@ static int es8316_pcm_startup(struct snd_pcm_substream *substream,
+ 		return -EINVAL;
+ 	}
+ 
+-	/* The set of sample rates that can be supported depends on the
+-	 * MCLK supplied to the CODEC.
+-	 */
+-	snd_pcm_hw_constraint_list(substream->runtime, 0,
+-				   SNDRV_PCM_HW_PARAM_RATE,
+-				   &es8316->sysclk_constraints);
+-
+ 	return 0;
+ }
+ 
+@@ -466,12 +444,27 @@ static int es8316_pcm_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_soc_component *component = dai->component;
+ 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
+ 	u8 wordlen = 0;
++	int i;
+ 
+ 	if (!es8316->sysclk) {
+ 		dev_err(component->dev, "No MCLK configured\n");
+ 		return -EINVAL;
+ 	}
+ 
++	/* Limit supported sample rates to ones that can be autodetected
++	 * by the codec running in slave mode.
++	 */
++	for (i = 0; i < NR_SUPPORTED_MCLK_LRCK_RATIOS; i++) {
++		const unsigned int ratio = supported_mclk_lrck_ratios[i];
 +
-+This device supports both I2C and SPI.
++		if (es8316->sysclk % ratio != 0)
++			continue;
++		if (es8316->sysclk / ratio == params_rate(params))
++			break;
++	}
++	if (i == NR_SUPPORTED_MCLK_LRCK_RATIOS)
++		return -EINVAL;
 +
-+Required properties:
-+
-+  - compatible  : should be "everest,es8316"
-+  - reg : the I2C address of the device for I2C
-+  - clocks : a list of phandle, should contain entries for clock-names
-+  - clock-names : should include as follows:
-+         "mclk" : master clock (MCLK) of the device
-+
-+Example:
-+
-+es8316: codec@11 {
-+	compatible = "everest,es8316";
-+	reg = <0x11>;
-+	clocks = <&clks 10>;
-+	clock-names = "mclk";
-+};
+ 	switch (params_format(params)) {
+ 	case SNDRV_PCM_FORMAT_S16_LE:
+ 		wordlen = ES8316_SERDATA2_LEN_16;
 -- 
 2.23.0.rc1
 
