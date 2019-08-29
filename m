@@ -2,179 +2,315 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EF3C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE90C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36D78205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C482205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:54:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QUBfjXSY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbfH2Pyk (ORCPT
+        id S1728203AbfH2Pyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:54:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34968 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727347AbfH2Pyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:54:39 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CA785308A9E0;
-        Thu, 29 Aug 2019 15:54:38 +0000 (UTC)
-Received: from [10.36.117.243] (ovpn-117-243.ams2.redhat.com [10.36.117.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B96A11001938;
-        Thu, 29 Aug 2019 15:54:36 +0000 (UTC)
-Subject: Re: [PATCH v2 3/6] mm/memory_hotplug: Process all zones when removing
- memory
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-References: <20190826101012.10575-1-david@redhat.com>
- <20190826101012.10575-4-david@redhat.com>
- <20190829153936.GJ28313@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <c01ceaab-4032-49cd-3888-45838cb46e11@redhat.com>
-Date:   Thu, 29 Aug 2019 17:54:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190829153936.GJ28313@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 29 Aug 2019 15:54:38 +0000 (UTC)
+        Thu, 29 Aug 2019 11:54:45 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36558 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728120AbfH2Pyn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 11:54:43 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y19so3986638wrd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 08:54:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Zw711UFue2XPJvQrIxeq0cr2kqhiz3iXHpuDshtFUe8=;
+        b=QUBfjXSYRxN6j2dnL9EOI7t00MQ5GLhmzbKOOrVE90CSXNHDc6LeOE1cy9l0QdVcYI
+         kjW9bgiR+DUaeBSGnfzEHr8BhRuL8edDDB4emPHNGTQOrhFiAiMabt84P2JYTnWdIQf2
+         gf81Xblr7fjZqDIM0Nr9K9KZlwfsEg5qw2Yv+Xds1P9UiO5lOhhxQlisQCwNGnsB8fxY
+         W2ERaNkLcRDNB4dqfubJg/dk6Y1rh5iu+f/w3mfiA71g20V+V7OFEytEzU1UvB1FpEN3
+         OuKbPiFIhcYegCuIMakfjvA88477mnjRNhdnjpEYzD3ly1amCZ64M7jaiuLw6Vbq81zf
+         2CNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Zw711UFue2XPJvQrIxeq0cr2kqhiz3iXHpuDshtFUe8=;
+        b=ixyXBvgQF2oYfuK3KdNdALO9D4dbIZprqb6Fl9i7Pk74A/RZ2jFjreuFaXvz/psIq7
+         JVFJb0EKL2fV+EQ/9nuUlLxOoAAn0yBQcrhpbMzN3x3339a5srFOX57TXkHFE2f3pEMs
+         fBEVxYOqIQak03Jk3DgSmQV3wrUdYQAdjTeE2Kr8Xyeu+4STeGWKOqRP2HCtEz62zdo2
+         i92RwVM31WGNYYhAQMiO1bUFi5eN+thypEiYBN8I5Ug9eFFNhv/6+flPa72DL4Y3JTt4
+         5XceI2am8RenTymkUq0gIjwbe/E8WgPiDbi9ptdd9dFCdmiUujbNyM5FqmM5LrrL3ILd
+         Gh8g==
+X-Gm-Message-State: APjAAAVDmbaC0lZELAKvvgCifRFUxZoxysI5dWgDOlR8OarU7hwb1NHa
+        Qj/vnsRae/NQkoOQS6zM+o5r7Q==
+X-Google-Smtp-Source: APXvYqxQydwc9C9FFhpf9zL2uKn3Hf8jJrLzxtPPRxn7IkRgx7b3G1ZFtNIV9bDV1dutNSSQwL4EQA==
+X-Received: by 2002:adf:dbcd:: with SMTP id e13mr11977331wrj.314.1567094080292;
+        Thu, 29 Aug 2019 08:54:40 -0700 (PDT)
+Received: from [192.168.0.102] (88-147-32-64.dyn.eolo.it. [88.147.32.64])
+        by smtp.gmail.com with ESMTPSA id r16sm5534583wrc.81.2019.08.29.08.54.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 29 Aug 2019 08:54:39 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCHSET v3 block/for-linus] IO cost model based work-conserving
+ porportional controller
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20190828220600.2527417-1-tj@kernel.org>
+Date:   Thu, 29 Aug 2019 17:54:38 +0200
+Cc:     Jens Axboe <axboe@kernel.dk>, newella@fb.com, clm@fb.com,
+        Josef Bacik <josef@toxicpanda.com>, dennisz@fb.com,
+        Li Zefan <lizefan@huawei.com>, hannes@cmpxchg.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        kernel-team@fb.com, cgroups@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <50384CF8-39F1-461C-9EC0-7314671E5604@linaro.org>
+References: <20190828220600.2527417-1-tj@kernel.org>
+To:     Tejun Heo <tj@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.08.19 17:39, Michal Hocko wrote:
-> On Mon 26-08-19 12:10:09, David Hildenbrand wrote:
->> It is easier than I though to trigger a kernel bug by removing memory that
->> was never onlined. With CONFIG_DEBUG_VM the memmap is initialized with
->> garbage, resulting in the detection of a broken zone when removing memory.
->> Without CONFIG_DEBUG_VM it is less likely - but we could still have
->> garbage in the memmap.
->>
->> :/# [   23.912993] BUG: unable to handle page fault for address: 000000000000353d
->> [   23.914219] #PF: supervisor write access in kernel mode
->> [   23.915199] #PF: error_code(0x0002) - not-present page
->> [   23.916160] PGD 0 P4D 0
->> [   23.916627] Oops: 0002 [#1] SMP PTI
->> [   23.917256] CPU: 1 PID: 7 Comm: kworker/u8:0 Not tainted 5.3.0-rc5-next-20190820+ #317
->> [   23.918900] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.4
->> [   23.921194] Workqueue: kacpi_hotplug acpi_hotplug_work_fn
->> [   23.922249] RIP: 0010:clear_zone_contiguous+0x5/0x10
->> [   23.923173] Code: 48 89 c6 48 89 c3 e8 2a fe ff ff 48 85 c0 75 cf 5b 5d c3 c6 85 fd 05 00 00 01 5b 5d c3 0f 1f 840
->> [   23.926876] RSP: 0018:ffffad2400043c98 EFLAGS: 00010246
->> [   23.927928] RAX: 0000000000000000 RBX: 0000000200000000 RCX: 0000000000000000
->> [   23.929458] RDX: 0000000000200000 RSI: 0000000000140000 RDI: 0000000000002f40
->> [   23.930899] RBP: 0000000140000000 R08: 0000000000000000 R09: 0000000000000001
->> [   23.932362] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000140000
->> [   23.933603] R13: 0000000000140000 R14: 0000000000002f40 R15: ffff9e3e7aff3680
->> [   23.934913] FS:  0000000000000000(0000) GS:ffff9e3e7bb00000(0000) knlGS:0000000000000000
->> [   23.936294] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   23.937481] CR2: 000000000000353d CR3: 0000000058610000 CR4: 00000000000006e0
->> [   23.938687] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> [   23.939889] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> [   23.941168] Call Trace:
->> [   23.941580]  __remove_pages+0x4b/0x640
->> [   23.942303]  ? mark_held_locks+0x49/0x70
->> [   23.943149]  arch_remove_memory+0x63/0x8d
->> [   23.943921]  try_remove_memory+0xdb/0x130
->> [   23.944766]  ? walk_memory_blocks+0x7f/0x9e
->> [   23.945616]  __remove_memory+0xa/0x11
->> [   23.946274]  acpi_memory_device_remove+0x70/0x100
->> [   23.947308]  acpi_bus_trim+0x55/0x90
->> [   23.947914]  acpi_device_hotplug+0x227/0x3a0
->> [   23.948714]  acpi_hotplug_work_fn+0x1a/0x30
->> [   23.949433]  process_one_work+0x221/0x550
->> [   23.950190]  worker_thread+0x50/0x3b0
->> [   23.950993]  kthread+0x105/0x140
->> [   23.951644]  ? process_one_work+0x550/0x550
->> [   23.952508]  ? kthread_park+0x80/0x80
->> [   23.953367]  ret_from_fork+0x3a/0x50
->> [   23.954025] Modules linked in:
->> [   23.954613] CR2: 000000000000353d
->> [   23.955248] ---[ end trace 93d982b1fb3e1a69 ]---
-> 
-> Yes, this is indeed nasty. I didin't think of this when separating
-> memmap initialization from the hotremove. This means that the zone
-> pointer is a garbage in arch_remove_memory already. The proper fix is to
-> remove it from that level down. Moreover the zone is only needed for the
-> shrinking code and zone continuous thingy. The later belongs to offlining
-> code unless I am missing something. I can see that you are removing zone
-> parameter in a later patch but wouldn't it be just better to remove the
-> whole zone thing in a single patch and have this as a bug fix for a rare
-> bug with a fixes tag?
-> 
-
-If I remember correctly, this patch already fixed the issue for me,
-without the other cleanup (removing the zone parameter). But I might be
-wrong.
-
-Anyhow, I'll send a v4 shortly (either this evening or tomorrow), so you
-can safe yourself some review time and wait for that one :)
-
-I'll try to see if I can attach fixes tags to selected commits. But if
-it makes review harder, I prefer keeping this split (this has been
-broken for a long time either way).
-
--- 
+Hi,
+I see an important interface problem.  Userspace has been waiting for
+io.weight to become eventually the file name for setting the weight
+for the proportional-share policy [1,2].  If you use that name, how
+will we solve this?
 
 Thanks,
+Paolo
 
-David / dhildenb
+[1] =
+https://github.com/systemd/systemd/issues/7057#issuecomment-522747575
+[2] https://github.com/systemd/systemd/pull/13335#issuecomment-523035303
+
+> Il giorno 29 ago 2019, alle ore 00:05, Tejun Heo <tj@kernel.org> ha =
+scritto:
+>=20
+> Changes from v2[2]:
+>=20
+> * Fixed a divide-by-zero bug in current_hweight().
+>=20
+> * pre_start_time and friends renamed to alloc_time and now has its own
+>  CONFIG option which is selected by IOCOST.
+>=20
+> Changes from v1[1]:
+>=20
+> * Prerequisite patchsets had cosmetic changes and merged.  Refreshed
+>  on top.
+>=20
+> * Renamed from ioweight to iocost.  All source code and tools are
+>  updated accordingly.  Control knobs io.weight.qos and
+>  io.weight.cost_model are renamed to io.cost.qos and io.cost.model
+>  respectively.  This is a more fitting name which won't become a
+>  misnomer when, for example, cost based io.max is added.
+>=20
+> * Various bug fixes and improvements.  A few bugs were discovered
+>  while testing against high-iops nvme device.  Auto parameter
+>  selection improved and verified across different classes of SSDs.
+>=20
+> * Dropped bpf iocost support for now.
+>=20
+> * Added coef generation script.
+>=20
+> * Verified on high-iops nvme device.  Result is included below.
+>=20
+> One challenge of controlling IO resources is the lack of trivially
+> observable cost metric.  This is distinguished from CPU and memory
+> where wallclock time and the number of bytes can serve as accurate
+> enough approximations.
+>=20
+> Bandwidth and iops are the most commonly used metrics for IO devices
+> but depending on the type and specifics of the device, different IO
+> patterns easily lead to multiple orders of magnitude variations
+> rendering them useless for the purpose of IO capacity distribution.
+> While on-device time, with a lot of clutches, could serve as a useful
+> approximation for non-queued rotational devices, this is no longer
+> viable with modern devices, even the rotational ones.
+>=20
+> While there is no cost metric we can trivially observe, it isn't a
+> complete mystery.  For example, on a rotational device, seek cost
+> dominates while a contiguous transfer contributes a smaller amount
+> proportional to the size.  If we can characterize at least the
+> relative costs of these different types of IOs, it should be possible
+> to implement a reasonable work-conserving proportional IO resource
+> distribution.
+>=20
+> This patchset implements IO cost model based work-conserving
+> proportional controller.  It currently has a simple linear cost model
+> builtin where each IO is classified as sequential or random and given
+> a base cost accordingly and additional size-proportional cost is added
+> on top.  Each IO is given a cost based on the model and the controller
+> issues IOs for each cgroup according to their hierarchical weight.
+>=20
+> By default, the controller adapts its overall IO rate so that it
+> doesn't build up buffer bloat in the request_queue layer, which
+> guarantees that the controller doesn't lose significant amount of
+> total work.  However, this may not provide sufficient differentiation
+> as the underlying device may have a deep queue and not be fair in how
+> the queued IOs are serviced.  The controller provides extra QoS
+> control knobs which allow tightening control feedback loop as
+> necessary.
+>=20
+> For more details on the control mechanism, implementation and
+> interface, please refer to the comment at the top of
+> block/blk-iocost.c and Documentation/admin-guide/cgroup-v2.rst changes
+> in the "blkcg: implement blk-iocost" patch.
+>=20
+> Here are some test results.  Each test run goes through the following
+> combinations with each combination running for a minute.  All tests
+> are performed against regular files on btrfs w/ deadline as the IO
+> scheduler.  Random IOs are direct w/ queue depth of 64.  Sequential
+> are normal buffered IOs.
+>=20
+>        high priority (weight=3D500)      low priority (weight=3D100)
+>=20
+>        Rand read                       None
+>        ditto                           Rand read
+>        ditto                           Seq  read
+>        ditto                           Rand write
+>        ditto                           Seq  write
+>        Seq  read                       None
+>        ditto                           Rand read
+>        ditto                           Seq  read
+>        ditto                           Rand write
+>        ditto                           Seq  write
+>        Rand write                      None
+>        ditto                           Rand read
+>        ditto                           Seq  read
+>        ditto                           Rand write
+>        ditto                           Seq  write
+>        Seq  write                      None
+>        ditto                           Rand read
+>        ditto                           Seq  read
+>        ditto                           Rand write
+>        ditto                           Seq  write
+>=20
+> * 7200RPM SATA hard disk
+>  * No IO control
+>    https://photos.app.goo.gl/1KBHn7ykpC1LXRkB8
+>  * iocost, QoS: None
+>    https://photos.app.goo.gl/MLNQGxCtBQ8wAmjm7
+>  * iocost, QoS: rpct=3D95.00 rlat=3D40000 wpct=3D95.00 wlat=3D40000 =
+min=3D25.00 max=3D200.00
+>    https://photos.app.goo.gl/XqXHm3Mkbm9w6Db46
+> * NCQ-blacklisted SATA SSD (QD=3D=3D1)
+>  * No IO control
+>    https://photos.app.goo.gl/wCTXeu2uJ6LYL4pk8
+>  * iocost, QoS: None
+>    https://photos.app.goo.gl/T2HedKD2sywQgj7R9
+>  * iocost, QoS: rpct=3D95.00 rlat=3D20000 wpct=3D95.00 wlat=3D20000 =
+min=3D50.00 max=3D200.00
+>    https://photos.app.goo.gl/urBTV8XQc1UqPJJw7
+> * SATA SSD (QD=3D=3D32)
+>  * No IO control
+>    https://photos.app.goo.gl/TjEVykuVudSQcryh6
+>  * iocost, QoS: None
+>    https://photos.app.goo.gl/iyQBsky7bmM54Xiq7
+>  * iocost, QoS: rpct=3D95.00 rlat=3D10000 wpct=3D95.00 wlat=3D20000 =
+min=3D50.00 max=3D400.00
+>    https://photos.app.goo.gl/q1a6URLDxPLMrnHy5
+> * NVME SSD (ran with 8 concurrent fio jobs to achieve saturation)
+>  * No IO control
+>    https://photos.app.goo.gl/S6xjEVTJzcfb3w1j7
+>  * iocost, QoS: None
+>    https://photos.app.goo.gl/SjQUUotJBAGr7vqz7
+>  * iocost, QoS: rpct=3D95.00 rlat=3D5000 wpct=3D95.00 wlat=3D5000 =
+min=3D1.00 max=3D10000.00
+>    https://photos.app.goo.gl/RsaYBd2muX7CegoN7
+>=20
+> Even without explicit QoS configuration, read-heavy scenarios can
+> obtain acceptable differentiation.  However, when write-heavy, the
+> deep buffering on the device side makes it difficult to maintain
+> control.  With QoS parameters set, the differentiation is acceptable
+> across all combinations.
+>=20
+> The implementation comes with default cost model parameters which are
+> selected automatically which should provide acceptable behavior across
+> most common devices.  The parameters for hdd and consumer-grade SSDs
+> seem pretty robust.  The default parameter set and selection criteria
+> for highend SSDs might need further adjustments.
+>=20
+> It is fairly easy to configure the QoS parameters and, if needed, cost
+> model coefficients.  We'll follow up with tooling and further
+> documentation.  Also, the last RFC patch in the series implements
+> support for bpf-based custom cost function.  Originally we thought
+> that we'd need per-device-type cost functions but the simple linear
+> model now seem good enough to cover all common device classes.  In
+> case custom cost functions become necessary, we can fully develop the
+> bpf based extension and also easily add different builtin cost models.
+>=20
+> Andy Newell did the heavy lifting of analyzing IO workloads and device
+> characteristics, exploring various cost models, determining the
+> default model and parameters to use.
+>=20
+> Josef Bacik implemented a prototype which explored the use of
+> different types of cost metrics including on-device time and Andy's
+> linear model.
+>=20
+> This patchset is on top of the current block/for-next 53fc55c817c3
+> ("Merge branch 'for-5.4/block' into for-next") and contains the
+> following 10 patches.
+>=20
+> 0001-blkcg-pass-q-and-blkcg-into-blkcg_pol_alloc_pd_fn.patch
+> 0002-blkcg-make-cpd_init_fn-optional.patch
+> 0003-blkcg-separate-blkcg_conf_get_disk-out-of-blkg_conf_.patch
+> 0004-block-rq_qos-add-rq_qos_merge.patch
+> 0005-block-rq_qos-implement-rq_qos_ops-queue_depth_change.patch
+> 0006-blkcg-s-RQ_QOS_CGROUP-RQ_QOS_LATENCY.patch
+> 0007-blk-mq-add-optional-request-alloc_time_ns.patch
+> 0008-blkcg-implement-blk-iocost.patch
+> 0009-blkcg-add-tools-cgroup-iocost_monitor.py.patch
+> 0010-blkcg-add-tools-cgroup-iocost_coef_gen.py.patch
+>=20
+> 0001-0007 are prep patches.
+> 0008 implements blk-iocost.
+> 0009 adds monitoring script.
+> 0010 adds linear cost model coefficient generation script.
+>=20
+> The patchset is also available in the following git branch.
+>=20
+> git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git =
+review-iow-v2
+>=20
+> diffstat follows, Thanks.
+>=20
+> Documentation/admin-guide/cgroup-v2.rst |   97 +
+> block/Kconfig                           |   13=20
+> block/Makefile                          |    1=20
+> block/bfq-cgroup.c                      |    5=20
+> block/blk-cgroup.c                      |   71=20
+> block/blk-core.c                        |    4=20
+> block/blk-iocost.c                      | 2395 =
+++++++++++++++++++++++++++++++++
+> block/blk-iolatency.c                   |    8=20
+> block/blk-mq.c                          |   13=20
+> block/blk-rq-qos.c                      |   18=20
+> block/blk-rq-qos.h                      |   28=20
+> block/blk-settings.c                    |    2=20
+> block/blk-throttle.c                    |    6=20
+> block/blk-wbt.c                         |   18=20
+> block/blk-wbt.h                         |    4=20
+> include/linux/blk-cgroup.h              |    4=20
+> include/linux/blk_types.h               |    3=20
+> include/linux/blkdev.h                  |   13=20
+> include/trace/events/iocost.h           |  174 ++
+> tools/cgroup/iocost_coef_gen.py         |  178 ++
+> tools/cgroup/iocost_monitor.py          |  270 +++
+> 21 files changed, 3272 insertions(+), 53 deletions(-)
+>=20
+> --
+> tejun
+>=20
+> [1] http://lkml.kernel.org/r/20190614015620.1587672-1-tj@kernel.org
+> [2] http://lkml.kernel.org/r/20190710205128.1316483-1-tj@kernel.org
+>=20
+
