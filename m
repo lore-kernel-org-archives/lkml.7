@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430A8C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BC8C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 210932166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FAA23405
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbfH2TCN (ORCPT
+        id S1728911AbfH2TCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:02:13 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51499 "EHLO
+        Thu, 29 Aug 2019 15:02:15 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51511 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728294AbfH2TCJ (ORCPT
+        with ESMTP id S1728178AbfH2TCL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 15:02:09 -0400
+        Thu, 29 Aug 2019 15:02:11 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i3PgG-0005Bt-Jt; Thu, 29 Aug 2019 21:02:00 +0200
+        id 1i3Pg4-00051j-H2; Thu, 29 Aug 2019 21:01:48 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 333991C07C3;
-        Thu, 29 Aug 2019 21:01:57 +0200 (CEST)
-Date:   Thu, 29 Aug 2019 19:01:57 -0000
-From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E90F61C07C3;
+        Thu, 29 Aug 2019 21:01:47 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 19:01:47 -0000
+From:   "tip-bot2 for Igor Lubashev" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] libperf: Add PERF_RECORD_SWITCH 'struct
- context_switch_event' to perf/event.h
-Cc:     Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/core] perf symbols: Use CAP_SYSLOG with kptr_restrict checks
+Cc:     Igor Lubashev <ilubashe@akamai.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190828135717.7245-14-jolsa@kernel.org>
-References: <20190828135717.7245-14-jolsa@kernel.org>
+In-Reply-To: <1566869956-7154-5-git-send-email-ilubashe@akamai.com>
+References: <1566869956-7154-5-git-send-email-ilubashe@akamai.com>
 MIME-Version: 1.0
-Message-ID: <156710531709.10580.2357952494652911320.tip-bot2@tip-bot2>
+Message-ID: <156710530783.10520.13944020347498949771.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,63 +65,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     6b49aaebd05fdbb29a4ab6e28b4fa91539c64877
-Gitweb:        https://git.kernel.org/tip/6b49aaebd05fdbb29a4ab6e28b4fa91539c64877
-Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Wed, 28 Aug 2019 15:57:07 +02:00
+Commit-ID:     8859aedefefe7eeea5e67968b7fe39c828d589a0
+Gitweb:        https://git.kernel.org/tip/8859aedefefe7eeea5e67968b7fe39c828d589a0
+Author:        Igor Lubashev <ilubashe@akamai.com>
+AuthorDate:    Mon, 26 Aug 2019 21:39:15 -04:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 29 Aug 2019 08:36:11 -03:00
+CommitterDate: Wed, 28 Aug 2019 17:19:19 -03:00
 
-libperf: Add PERF_RECORD_SWITCH 'struct context_switch_event' to perf/event.h
+perf symbols: Use CAP_SYSLOG with kptr_restrict checks
 
-Move the PERF_RECORD_SWITCH event definition to libperf's event.h.
+The kernel is using CAP_SYSLOG capability instead of uid==0 and euid==0
+when checking kptr_restrict. Make perf do the same.
 
-In order to keep libperf simple, we switch 'u64/u32/u16/u8' types used
-events to their generic '__u*' versions.
+Also, the kernel is a more restrictive than "no restrictions" in case of
+kptr_restrict==0, so add the same logic to perf.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
+Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190828135717.7245-14-jolsa@kernel.org
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/1566869956-7154-5-git-send-email-ilubashe@akamai.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/perf/event.h | 6 ++++++
- tools/perf/util/event.h             | 6 ------
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ tools/perf/util/symbol.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
-index 3bcbc1e..a7b0344 100644
---- a/tools/perf/lib/include/perf/event.h
-+++ b/tools/perf/lib/include/perf/event.h
-@@ -110,6 +110,12 @@ struct perf_record_sample {
- 	__u64			 array[];
- };
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 4efde78..035f2e7 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -4,6 +4,7 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
++#include <linux/capability.h>
+ #include <linux/kernel.h>
+ #include <linux/mman.h>
+ #include <linux/time64.h>
+@@ -15,8 +16,10 @@
+ #include <inttypes.h>
+ #include "annotate.h"
+ #include "build-id.h"
++#include "cap.h"
+ #include "util.h"
+ #include "debug.h"
++#include "event.h"
+ #include "machine.h"
+ #include "map.h"
+ #include "symbol.h"
+@@ -2195,13 +2198,19 @@ static bool symbol__read_kptr_restrict(void)
+ 		char line[8];
  
-+struct context_switch_event {
-+	struct perf_event_header header;
-+	__u32			 next_prev_pid;
-+	__u32			 next_prev_tid;
-+};
+ 		if (fgets(line, sizeof(line), fp) != NULL)
+-			value = ((geteuid() != 0) || (getuid() != 0)) ?
+-					(atoi(line) != 0) :
+-					(atoi(line) == 2);
++			value = perf_cap__capable(CAP_SYSLOG) ?
++					(atoi(line) >= 2) :
++					(atoi(line) != 0);
+ 
+ 		fclose(fp);
+ 	}
+ 
++	/* Per kernel/kallsyms.c:
++	 * we also restrict when perf_event_paranoid > 1 w/o CAP_SYSLOG
++	 */
++	if (perf_event_paranoid() > 1 && !perf_cap__capable(CAP_SYSLOG))
++		value = true;
 +
- struct attr_event {
- 	struct perf_event_header header;
- 	struct perf_event_attr	 attr;
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index f89e8dd..012b2ba 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -332,12 +332,6 @@ struct events_stats {
- 	u32 nr_proc_map_timeout;
- };
+ 	return value;
+ }
  
--struct context_switch_event {
--	struct perf_event_header header;
--	u32 next_prev_pid;
--	u32 next_prev_tid;
--};
--
- struct thread_map_event_entry {
- 	u64	pid;
- 	char	comm[16];
