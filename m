@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2EFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571AAC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8782064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3393422CEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:03:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbfH2TCy (ORCPT
+        id S1729267AbfH2TC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:02:54 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51582 "EHLO
+        Thu, 29 Aug 2019 15:02:59 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51585 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729201AbfH2TCv (ORCPT
+        with ESMTP id S1729229AbfH2TCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 15:02:51 -0400
+        Thu, 29 Aug 2019 15:02:55 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i3Pgz-0005PB-Ks; Thu, 29 Aug 2019 21:02:45 +0200
+        id 1i3Ph0-0005PD-6a; Thu, 29 Aug 2019 21:02:46 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4EE851C07C3;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BAAD41C0DE6;
         Thu, 29 Aug 2019 21:02:45 +0200 (CEST)
 Date:   Thu, 29 Aug 2019 19:02:45 -0000
-From:   "tip-bot2 for Song Liu" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/pti] x86/mm/pti: Handle unaligned address gracefully in
- pti_clone_pagetable()
-Cc:     Song Liu <songliubraving@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Subject: [tip: x86/pti] x86/mm/pti: Do not invoke PTI functions when PTI is disabled
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Ingo Molnar <mingo@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <alpine.DEB.2.21.1908282352470.1938@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1908282352470.1938@nanos.tec.linutronix.de>
+In-Reply-To: <20190828143124.063353972@linutronix.de>
+References: <20190828143124.063353972@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <156710536517.11132.5891479982921579440.tip-bot2@tip-bot2>
+Message-ID: <156710536567.11135.4843469499808900617.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,59 +59,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/pti branch of tip:
 
-Commit-ID:     825d0b73cd7526b0bb186798583fae810091cbac
-Gitweb:        https://git.kernel.org/tip/825d0b73cd7526b0bb186798583fae810091cbac
-Author:        Song Liu <songliubraving@fb.com>
-AuthorDate:    Wed, 28 Aug 2019 23:54:55 +02:00
+Commit-ID:     990784b57731192b7d90c8d4049e6318d81e887d
+Gitweb:        https://git.kernel.org/tip/990784b57731192b7d90c8d4049e6318d81e887d
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Wed, 28 Aug 2019 16:24:47 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 29 Aug 2019 20:52:52 +02:00
+CommitterDate: Thu, 29 Aug 2019 20:52:53 +02:00
 
-x86/mm/pti: Handle unaligned address gracefully in pti_clone_pagetable()
+x86/mm/pti: Do not invoke PTI functions when PTI is disabled
 
-pti_clone_pmds() assumes that the supplied address is either:
+When PTI is disabled at boot time either because the CPU is not affected or
+PTI has been disabled on the command line, the boot code still calls into
+pti_finalize() which then unconditionally invokes:
 
- - properly PUD/PMD aligned
-or
- - the address is actually mapped which means that independently
-   of the mapping level (PUD/PMD/PTE) the next higher mapping
-   exists.
+     pti_clone_entry_text()
+     pti_clone_kernel_text()
 
-If that's not the case the unaligned address can be incremented by PUD or
-PMD size incorrectly. All callers supply mapped and/or aligned addresses,
-but for the sake of robustness it's better to handle that case properly and
-to emit a warning.
+pti_clone_kernel_text() was called unconditionally before the 32bit support
+was added and 32bit added the call to pti_clone_entry_text().
 
-[ tglx: Rewrote changelog and added WARN_ON_ONCE() ]
+The call has no side effects as cloning the page tables into the available
+second one, which was allocated for PTI does not create damage. But it does
+not make sense either and in case that this functionality would be extended
+later this might actually lead to hard to diagnose issues.
 
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Neither function should be called when PTI is runtime disabled. Make the
+invocation conditional.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Acked-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Song Liu <songliubraving@fb.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1908282352470.1938@nanos.tec.linutronix.de
+Link: https://lkml.kernel.org/r/20190828143124.063353972@linutronix.de
 
 ---
- arch/x86/mm/pti.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/mm/pti.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index b196524..a24487b 100644
+index a24487b..7f21404 100644
 --- a/arch/x86/mm/pti.c
 +++ b/arch/x86/mm/pti.c
-@@ -330,13 +330,15 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
- 
- 		pud = pud_offset(p4d, addr);
- 		if (pud_none(*pud)) {
--			addr += PUD_SIZE;
-+			WARN_ON_ONCE(addr & ~PUD_MASK);
-+			addr = round_up(addr + 1, PUD_SIZE);
- 			continue;
- 		}
- 
- 		pmd = pmd_offset(pud, addr);
- 		if (pmd_none(*pmd)) {
--			addr += PMD_SIZE;
-+			WARN_ON_ONCE(addr & ~PMD_MASK);
-+			addr = round_up(addr + 1, PMD_SIZE);
- 			continue;
- 		}
- 
+@@ -668,6 +668,8 @@ void __init pti_init(void)
+  */
+ void pti_finalize(void)
+ {
++	if (!boot_cpu_has(X86_FEATURE_PTI))
++		return;
+ 	/*
+ 	 * We need to clone everything (again) that maps parts of the
+ 	 * kernel image.
