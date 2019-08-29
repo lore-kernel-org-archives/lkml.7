@@ -2,101 +2,72 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A6CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61717C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE552189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:47:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ov21A1G4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="E/u4IlOj"
+	by mail.kernel.org (Postfix) with ESMTP id 38A1421874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfH2Sre (ORCPT
+        id S1728592AbfH2Ssg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:47:34 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:35714 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbfH2Sre (ORCPT
+        Thu, 29 Aug 2019 14:48:36 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:44010 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbfH2Ssf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:47:34 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E556A694B2; Thu, 29 Aug 2019 18:12:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567104453;
-        bh=aZZpAgEtM8Id45U6CuX5S0qyC0RSjoNEmA5BfPWcAGg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ov21A1G42E7QKGF9E4OUvXkh3mhX1MPH0SYwpdYsL2djJExm/+HczxiBWNsKcaSEU
-         YJ3SYl8950Esrr2pVzADwlmyK3E20csr/ih4xF4XdTTx/A+isJywHRbEpbx3Zc4zgI
-         FKMVlyFWRBbBBg+/2/hNKsmTxAnzDjMeHwc+Zwmg=
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D47C0687FA;
-        Thu, 29 Aug 2019 18:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567102333;
-        bh=aZZpAgEtM8Id45U6CuX5S0qyC0RSjoNEmA5BfPWcAGg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E/u4IlOjRFXMG+Q6scsxflg2M9dogTX+2cs3a2prPwC7a0sHKvKASBxYqzgWs6ZZB
-         oGy5VLDwJSqyPoPTWzb5cpt1CpgAfctgiPb/lsz8NMJ7S9urhyTwulshdDw4fvgllX
-         votNpEZk5O1ZeemKz1gEq+LPOAkv5s+F6+zgQOH0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D47C0687FA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com,
-        linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
-        Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RFC 01/14] irqdomain: add bus token DOMAIN_BUS_WAKEUP
-Date:   Thu, 29 Aug 2019 12:11:50 -0600
-Message-Id: <20190829181203.2660-2-ilina@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190829181203.2660-1-ilina@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org>
+        Thu, 29 Aug 2019 14:48:35 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id C4E306083139;
+        Thu, 29 Aug 2019 20:48:33 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 1Kd5qkvw6zL2; Thu, 29 Aug 2019 20:48:33 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 5803C608313E;
+        Thu, 29 Aug 2019 20:48:33 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id gKEIOWC7ulNc; Thu, 29 Aug 2019 20:48:33 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 2C4146083139;
+        Thu, 29 Aug 2019 20:48:33 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 20:48:33 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     Dark <dark@volatile.bz>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        Richard Weinberger <richard.weinberger@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>
+Message-ID: <899887272.76523.1567104513068.JavaMail.zimbra@nod.at>
+In-Reply-To: <20190829135001.6a5ff940@TheDarkness.local>
+References: <20190829135001.6a5ff940@TheDarkness.local>
+Subject: Re: [PATCH v2] um: Rewrite host RNG driver.
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
+Thread-Topic: Rewrite host RNG driver.
+Thread-Index: qvTZJZ8xtx+bL8b8xJ5JayPYviXAMg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A single controller can handle normal interrupts and wake-up interrupts
-independently, with a different numbering space. It is thus crucial to
-allow the driver for such a controller discriminate between the two.
+----- Ursprüngliche Mail -----
+> Von: "Dark" <dark@volatile.bz>
+> +	// Returning -EAGAIN to userspace is not nice.
+> +	if (err == -EAGAIN)
+> +		return 0;
 
-A simple way to do so is to tag the wake-up irqdomain with a "bus token"
-that indicates the wake-up domain. This slightly abuses the notion of
-bus, but also radically simplifies the design of such a driver. Between
-two evils, we choose the least damaging.
+Hmm, doesn't this result in a short read?
+The current drives sets the calling task to sleep and wakes
+it up as soon data is available again. I'd assumes ti have the
+same behavior for the new driver.
 
-Suggested-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- include/linux/irqdomain.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 07ec8b390161..cc846abeff28 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -83,6 +83,7 @@ enum irq_domain_bus_token {
- 	DOMAIN_BUS_IPI,
- 	DOMAIN_BUS_FSL_MC_MSI,
- 	DOMAIN_BUS_TI_SCI_INTA_MSI,
-+	DOMAIN_BUS_WAKEUP,
- };
- 
- /**
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Thanks,
+//richard
