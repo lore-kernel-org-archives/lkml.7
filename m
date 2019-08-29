@@ -2,108 +2,119 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1634AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4399C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0D8233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE1122CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:48:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QyLERRmy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbfH2Hro convert rfc822-to-8bit (ORCPT
+        id S1727999AbfH2HsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 03:47:44 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42747 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfH2Hrn (ORCPT
+        Thu, 29 Aug 2019 03:48:04 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57148 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbfH2HsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 03:47:43 -0400
-Received: by mail-oi1-f196.google.com with SMTP id o6so1811700oic.9;
-        Thu, 29 Aug 2019 00:47:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=p4LEbbLsvpFF7jH9kHTSE0avC1YlCtP3CflXztbc43s=;
-        b=kM4GiVQRNujKYhPPpy/Gu6uzAI9jcPNg3CnFexP6VLJ+1NX44666LnA+XVfDSfjXKu
-         nWazwPMwyD8W/JO3CALvZyibaP638HXxGcHl3orKuBQZ77+eFQWicWs4mKa3ShMsyIWe
-         mhd0se0DUswxj+wfEm6j97OQS/k6ZHgBTnOzgSSkirM4RHeuKAf6V3PdSseTDrdFJvPC
-         Tqb2+BdCDbd8bvTXMoUFxF/VOLjyhIMV4LkgTbjCnWxoRO5LxGIpr3oTYY56Ytp/st0J
-         tpv81W6T2dEDXaLFUv72CEdxfnF8x/+adCAtp3oc2sVH4bnXG3Hr8V9kGh8NflxAIQaG
-         lfbw==
-X-Gm-Message-State: APjAAAV0B9XNZVdHhPxW0o8xMrNvqUQfLgLDCQpUAUAssIMtv7g7TK/A
-        goUzVhzWGocHIZkkNdBhV7P897MAjdi76SfXw0wal9hA
-X-Google-Smtp-Source: APXvYqyQyUkjAPJJp2g82LOpwiPdkN4Na5zs21h0McVF0Ksd8Ij+wdlFfUg7ih9GsQPN9znYKcpLlmod1GCOFsRIY+M=
-X-Received: by 2002:aca:ea82:: with SMTP id i124mr5292700oih.153.1567064862697;
- Thu, 29 Aug 2019 00:47:42 -0700 (PDT)
+        Thu, 29 Aug 2019 03:48:04 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7T7ljtP121389;
+        Thu, 29 Aug 2019 02:47:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1567064865;
+        bh=X+Fj4hIsR5gYR6FlIPa0m9Wu/dW1+GCcIhAdJVX2QZQ=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=QyLERRmyS4eQPIIkKg8MbpQZIbNUSHXbOTIHOzBWD0Av8QxbQqnIPnMU+Ld/tpneN
+         rCwm2TAtC5Dug9nTTT/ZJDQ+YSsKPOgWDRoj2T025KXf/TZ2JBofU3tGz9Dizb1Rc/
+         z0Th/zk/fgh2RNpDYwlZI3rwoE+jsDLoU/y2BGqU=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7T7ljgS057052
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 29 Aug 2019 02:47:45 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 29
+ Aug 2019 02:47:45 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 29 Aug 2019 02:47:45 -0500
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7T7lg7h121088;
+        Thu, 29 Aug 2019 02:47:43 -0500
+Subject: Re: [PATCH] mtd: spi-nor: remove superfluous pass of
+ nor->info->sector_size
+To:     <Tudor.Ambarus@microchip.com>, <marek.vasut@gmail.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20190828103423.8232-1-tudor.ambarus@microchip.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <804122ef-683e-3ff8-0912-2b380444f92e@ti.com>
+Date:   Thu, 29 Aug 2019 13:18:20 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190828185518.4340-1-tszucs@protonmail.ch>
-In-Reply-To: <20190828185518.4340-1-tszucs@protonmail.ch>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 29 Aug 2019 09:47:31 +0200
-Message-ID: <CAMuHMdWcp-3B7ZZjbyo02ECyzDX_rQxXF645OCutCkjUu_jWaA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhi: fill in actual_clock
-To:     =?UTF-8?B?VGFtw6FzIFN6xbFjcw==?= <tszucs@protonmail.ch>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190828103423.8232-1-tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tamás,
 
-On Wed, Aug 28, 2019 at 9:02 PM Tamás Szűcs <tszucs@protonmail.ch> wrote:
-> Save set clock in mmc_host actual_clock enabling exporting it via debugfs.
-> This will indicate the precise SD clock in I/O settings rather than only the
-> sometimes misleading requested clock.
->
-> Signed-off-by: Tamás Szűcs <tszucs@protonmail.ch>
 
-Thanks for your patch!
+On 28/08/19 4:05 PM, Tudor.Ambarus@microchip.com wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> We already pass a pointer to nor, we can obtain the sector_size
+> by dereferencing it.
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> ---
 
-> --- a/drivers/mmc/host/renesas_sdhi_core.c
-> +++ b/drivers/mmc/host/renesas_sdhi_core.c
-> @@ -124,7 +124,7 @@ static unsigned int renesas_sdhi_clk_update(struct tmio_mmc_host *host,
->  {
->         struct renesas_sdhi *priv = host_to_priv(host);
->         unsigned int freq, diff, best_freq = 0, diff_min = ~0;
-> -       int i, ret;
-> +       int i;
->
->         /* tested only on R-Car Gen2+ currently; may work for others */
->         if (!(host->pdata->flags & TMIO_MMC_MIN_RCAR2))
-> @@ -153,9 +153,11 @@ static unsigned int renesas_sdhi_clk_update(struct tmio_mmc_host *host,
->                 }
->         }
->
-> -       ret = clk_set_rate(priv->clk, best_freq);
-> +       host->mmc->actual_clock =
-> +               clk_set_rate(priv->clk, best_freq) == 0 ?
-> +                       best_freq : clk_get_rate(priv->clk);
+Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
 
-When clk_set_rate() returns 0 to indicate success, it may still have
-rounded the requested clock rate, no?
-So wouldn't it be better to always call clk_get_rate()?
->
-> -       return ret == 0 ? best_freq : clk_get_rate(priv->clk);
-> +       return host->mmc->actual_clock;
+Regards
+Vignesh
+
+>  drivers/mtd/spi-nor/spi-nor.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 79c8f1dd8c6b..69532573dba9 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -4257,11 +4257,12 @@ spi_nor_select_uniform_erase(struct spi_nor_erase_map *map,
+>  	return erase;
 >  }
+>  
+> -static int spi_nor_select_erase(struct spi_nor *nor, u32 wanted_size)
+> +static int spi_nor_select_erase(struct spi_nor *nor)
+>  {
+>  	struct spi_nor_erase_map *map = &nor->params.erase_map;
+>  	const struct spi_nor_erase_type *erase = NULL;
+>  	struct mtd_info *mtd = &nor->mtd;
+> +	u32 wanted_size = nor->info->sector_size;
+>  	int i;
+>  
+>  	/*
+> @@ -4355,7 +4356,7 @@ static int spi_nor_default_setup(struct spi_nor *nor,
+>  	}
+>  
+>  	/* Select the Sector Erase command. */
+> -	err = spi_nor_select_erase(nor, nor->info->sector_size);
+> +	err = spi_nor_select_erase(nor);
+>  	if (err) {
+>  		dev_err(nor->dev,
+>  			"can't select erase settings supported by both the SPI controller and memory.\n");
+> 
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
