@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BE9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2E7C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCFD22CEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190362189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:03:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbfH2TCK (ORCPT
+        id S1729387AbfH2TD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:02:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51476 "EHLO
+        Thu, 29 Aug 2019 15:03:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51464 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728753AbfH2TCH (ORCPT
+        with ESMTP id S1728735AbfH2TCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 29 Aug 2019 15:02:07 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i3Pg3-00051f-S7; Thu, 29 Aug 2019 21:01:48 +0200
+        id 1i3PgD-00059p-Cy; Thu, 29 Aug 2019 21:01:57 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5DB431C0DE6;
-        Thu, 29 Aug 2019 21:01:47 +0200 (CEST)
-Date:   Thu, 29 Aug 2019 19:01:47 -0000
-From:   "tip-bot2 for Igor Lubashev" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5B24A1C0DEA;
+        Thu, 29 Aug 2019 21:01:55 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 19:01:55 -0000
+From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf evsel: Kernel profiling is disallowed only when
- perf_event_paranoid > 1
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+Subject: [tip: perf/core] libperf: Add PERF_RECORD_AUXTRACE 'struct
+ auxtrace_event' to perf/event.h
+Cc:     Jiri Olsa <jolsa@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@kernel.org>,
+        Michael Petlan <mpetlan@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <1566869956-7154-4-git-send-email-ilubashe@akamai.com>
-References: <1566869956-7154-4-git-send-email-ilubashe@akamai.com>
+In-Reply-To: <20190828135717.7245-10-jolsa@kernel.org>
+References: <20190828135717.7245-10-jolsa@kernel.org>
 MIME-Version: 1.0
-Message-ID: <156710530726.10517.14742815139500868393.tip-bot2@tip-bot2>
+Message-ID: <156710531528.10568.3815035679236242059.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,123 +62,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     aa97293ff129f504e7c8589e56007ecfe3e3e835
-Gitweb:        https://git.kernel.org/tip/aa97293ff129f504e7c8589e56007ecfe3e3e835
-Author:        Igor Lubashev <ilubashe@akamai.com>
-AuthorDate:    Mon, 26 Aug 2019 21:39:14 -04:00
+Commit-ID:     306c9d24c09d84d80ae54b36f7f907c8b8fa537a
+Gitweb:        https://git.kernel.org/tip/306c9d24c09d84d80ae54b36f7f907c8b8fa537a
+Author:        Jiri Olsa <jolsa@kernel.org>
+AuthorDate:    Wed, 28 Aug 2019 15:57:03 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Wed, 28 Aug 2019 17:19:05 -03:00
+CommitterDate: Thu, 29 Aug 2019 08:36:11 -03:00
 
-perf evsel: Kernel profiling is disallowed only when perf_event_paranoid > 1
+libperf: Add PERF_RECORD_AUXTRACE 'struct auxtrace_event' to perf/event.h
 
-Perf was too restrictive about sysctl kernel.perf_event_paranoid. The
-kernel only disallows profiling when perf_event_paranoid > 1. Make perf
-do the same.
+Move the PERF_RECORD_AUXTRACE event definition to libperf's event.h.
 
-Committer testing:
+Ipn order to keep libperf simple, we switch 'u64/u32/u16/u8'
+types used events to their generic '__u*' versions.
 
-For a non-root user:
-
-  $ id
-  uid=1000(acme) gid=1000(acme) groups=1000(acme),10(wheel) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
-  $
-
-Before:
-
-We were restricting it to just userspace (:u suffix) even for a
-workload started by the user:
-
-  $ perf record sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.001 MB perf.data (8 samples) ]
-  $ perf evlist
-  cycles:u
-  $ perf evlist -v
-  cycles:u: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERIOD, read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-  $ perf report --stdio
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 8  of event 'cycles:u'
-  # Event count (approx.): 1040396
-  #
-  # Overhead  Command  Shared Object     Symbol
-  # ........  .......  ................  ......................
-  #
-      68.36%  sleep    libc-2.29.so      [.] _dl_addr
-      27.33%  sleep    ld-2.29.so        [.] dl_main
-       3.80%  sleep    ld-2.29.so        [.] _dl_setup_hash
-  #
-  # (Tip: Order by the overhead of source file name and line number: perf report -s srcline)
-  #
-  $
-  $
-
-After:
-
-When the kernel allows profiling the kernel in that scenario:
-
-  $ perf record sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.023 MB perf.data (11 samples) ]
-  $ perf evlist
-  cycles
-  $ perf evlist -v
-  cycles: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERIOD, read_format: ID, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-  $
-  $ perf report --stdio
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 11  of event 'cycles'
-  # Event count (approx.): 1601964
-  #
-  # Overhead  Command  Shared Object     Symbol
-  # ........  .......  ................  ..........................
-  #
-      28.14%  sleep    [kernel.vmlinux]  [k] __rb_erase_color
-      27.21%  sleep    [kernel.vmlinux]  [k] unmap_page_range
-      27.20%  sleep    ld-2.29.so        [.] __tunable_get_val
-      15.24%  sleep    [kernel.vmlinux]  [k] thp_get_unmapped_area
-       1.96%  perf     [kernel.vmlinux]  [k] perf_event_exec
-       0.22%  perf     [kernel.vmlinux]  [k] native_sched_clock
-       0.02%  perf     [kernel.vmlinux]  [k] intel_bts_enable_local
-       0.00%  perf     [kernel.vmlinux]  [k] native_write_msr
-  #
-  # (Tip: Boolean options have negative forms, e.g.: perf report --no-children)
-  #
-  $
-
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/1566869956-7154-4-git-send-email-ilubashe@akamai.com
+Link: http://lkml.kernel.org/r/20190828135717.7245-10-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/lib/include/perf/event.h | 11 +++++++++++
+ tools/perf/util/auxtrace.c          |  2 +-
+ tools/perf/util/event.h             | 11 -----------
+ 3 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 7c704b8..d4540bf 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -282,7 +282,7 @@ struct evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx)
+diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
+index 02da734..78001c2 100644
+--- a/tools/perf/lib/include/perf/event.h
++++ b/tools/perf/lib/include/perf/event.h
+@@ -208,4 +208,15 @@ struct auxtrace_info_event {
+ 	__u64			 priv[];
+ };
  
- static bool perf_event_can_profile_kernel(void)
- {
--	return perf_event_paranoid_check(-1);
-+	return perf_event_paranoid_check(1);
- }
++struct auxtrace_event {
++	struct perf_event_header header;
++	__u64			 size;
++	__u64			 offset;
++	__u64			 reference;
++	__u32			 idx;
++	__u32			 tid;
++	__u32			 cpu;
++	__u32			 reserved__; /* For alignment */
++};
++
+ #endif /* __LIBPERF_EVENT_H */
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 112c24a..5edec71 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -943,7 +943,7 @@ s64 perf_event__process_auxtrace(struct perf_session *session,
+ 	s64 err;
  
- struct evsel *perf_evsel__new_cycles(bool precise)
+ 	if (dump_trace)
+-		fprintf(stdout, " size: %#"PRIx64"  offset: %#"PRIx64"  ref: %#"PRIx64"  idx: %u  tid: %d  cpu: %d\n",
++		fprintf(stdout, " size: %#"PRI_lx64"  offset: %#"PRI_lx64"  ref: %#"PRI_lx64"  idx: %u  tid: %d  cpu: %d\n",
+ 			event->auxtrace.size, event->auxtrace.offset,
+ 			event->auxtrace.reference, event->auxtrace.idx,
+ 			event->auxtrace.tid, event->auxtrace.cpu);
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index ca2cae3..60895a3 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -332,17 +332,6 @@ struct events_stats {
+ 	u32 nr_proc_map_timeout;
+ };
+ 
+-struct auxtrace_event {
+-	struct perf_event_header header;
+-	u64 size;
+-	u64 offset;
+-	u64 reference;
+-	u32 idx;
+-	u32 tid;
+-	u32 cpu;
+-	u32 reserved__; /* For alignment */
+-};
+-
+ #define MAX_AUXTRACE_ERROR_MSG 64
+ 
+ struct auxtrace_error_event {
