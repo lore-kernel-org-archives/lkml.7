@@ -2,51 +2,52 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5678C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AA3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7BD205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE36421726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103590;
-	bh=wpmruaQbL2KAE/UKd4qy1TFFndrVLSjSXyqVxwP3wFQ=;
+	s=default; t=1567103595;
+	bh=/APi8MhdMaI1X9POkFVoeegdl5V7Rfg/wP5JWu/pxf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uE+xNrM6KuLRYnIwBdIMa82xdmbKT3ONHxAVmL5/3mHGruRvY2yRELXxnVMp52Z/N
-	 HbP8MUyLCyq2wYWTJRO48Vjo9kAH1l+mUcKCIzAPBcEXd7o/gVYrR0G4Wq5gGo7dRl
-	 7E0QvmwSLjgw0sl/yrimX9i339vknCHdjAEA1Tv0=
+	b=T4s2yZ2UBeF7fuGdwJxiwck7qOj4SanCrGvP15JwaKZbxw7C8ZNfISItxcmTABaye
+	 zmCz56D1wGK8uJ8hpG1vBLnb41GIbKjuhoVrHHisIYGEQrondZ15qgAGUhYOKQ8iHM
+	 krutdglKJjk0sfHyJ/zSJpJ0O0dWa27eEiwmItT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbfH2SdJ (ORCPT
+        id S1728582AbfH2SNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:33:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55610 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:13:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbfH2SNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:13:53 -0400
+        id S1728503AbfH2SNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:13:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67529233FF;
-        Thu, 29 Aug 2019 18:13:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2D082339E;
+        Thu, 29 Aug 2019 18:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102432;
-        bh=wpmruaQbL2KAE/UKd4qy1TFFndrVLSjSXyqVxwP3wFQ=;
+        s=default; t=1567102426;
+        bh=/APi8MhdMaI1X9POkFVoeegdl5V7Rfg/wP5JWu/pxf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZN2qb1PtZ7C9yXDqiRA/eKTYnWk8wb4NWLzSxjBLdDb4ANC6uP7xco/pVfO/fF0xm
-         6XcUoIjI4H0br9Iknqx+qeEnb0pTM9kRD3P2/adNaoWbDk0txCSpa9rIHH3sPUo/te
-         TwIcoe8vOxnzUNx3NYHA1QtSgRtpIu9KLKRJxwuQ=
+        b=NEf62xWtvGCcmfYsfNa0m7sONMphArwetnyjj65+bjWY66RQERfqzLV+CrjEUWdB+
+         WmgpOYFMrOtQEjR3V5un8yMoX+yBzlTIJnjMR5WB67lMI8kCPbF3IfrySN6Q2o55h/
+         MQWm772AM5EC2frpRd3SY+zQRh/wWIXRIfuNKX04=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 21/76] s390/qeth: serialize cmd reply with concurrent timeout
-Date:   Thu, 29 Aug 2019 14:12:16 -0400
-Message-Id: <20190829181311.7562-21-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.2 17/76] net: tc35815: Explicitly check NET_IP_ALIGN is not zero in tc35815_rx
+Date:   Thu, 29 Aug 2019 14:12:12 -0400
+Message-Id: <20190829181311.7562-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -59,96 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 072f79400032f74917726cf76f4248367ea2b5b8 ]
+[ Upstream commit 125b7e0949d4e72b15c2b1a1590f8cece985a918 ]
 
-Callbacks for a cmd reply run outside the protection of card->lock, to
-allow for additional cmds to be issued & enqueued in parallel.
+clang warns:
 
-When qeth_send_control_data() bails out for a cmd without having
-received a reply (eg. due to timeout), its callback may concurrently be
-processing a reply that just arrived. In this case, the callback
-potentially accesses a stale reply->reply_param area that eg. was
-on-stack and has already been released.
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: warning: use of logical
+'&&' with constant operand [-Wconstant-logical-operand]
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                  ^  ~~~~~~~~~~~~
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: note: use '&' for a
+bitwise operation
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                  ^~
+                                                  &
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: note: remove constant to
+silence this warning
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                 ~^~~~~~~~~~~~~~~
+1 warning generated.
 
-To avoid this race, add some locking so that qeth_send_control_data()
-can (1) wait for a concurrently running callback, and (2) zap any
-pending callback that still wants to run.
+Explicitly check that NET_IP_ALIGN is not zero, which matches how this
+is checked in other parts of the tree. Because NET_IP_ALIGN is a build
+time constant, this check will be constant folded away during
+optimization.
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 82a9928db560 ("tc35815: Enable StripCRC feature")
+Link: https://github.com/ClangBuiltLinux/linux/issues/608
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core.h      |  1 +
- drivers/s390/net/qeth_core_main.c | 20 ++++++++++++++++++++
- 2 files changed, 21 insertions(+)
+ drivers/net/ethernet/toshiba/tc35815.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index 784a2e76a1b04..c5f60f95e8db9 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -640,6 +640,7 @@ struct qeth_seqno {
- struct qeth_reply {
- 	struct list_head list;
- 	struct completion received;
-+	spinlock_t lock;
- 	int (*callback)(struct qeth_card *, struct qeth_reply *,
- 		unsigned long);
- 	u32 seqno;
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index b1823d75dd35c..6b8f99e7d8a81 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -548,6 +548,7 @@ static struct qeth_reply *qeth_alloc_reply(struct qeth_card *card)
- 	if (reply) {
- 		refcount_set(&reply->refcnt, 1);
- 		init_completion(&reply->received);
-+		spin_lock_init(&reply->lock);
- 	}
- 	return reply;
- }
-@@ -832,6 +833,13 @@ static void qeth_issue_next_read_cb(struct qeth_card *card,
- 
- 	if (!reply->callback) {
- 		rc = 0;
-+		goto no_callback;
-+	}
-+
-+	spin_lock_irqsave(&reply->lock, flags);
-+	if (reply->rc) {
-+		/* Bail out when the requestor has already left: */
-+		rc = reply->rc;
- 	} else {
- 		if (cmd) {
- 			reply->offset = (u16)((char *)cmd - (char *)iob->data);
-@@ -840,7 +848,9 @@ static void qeth_issue_next_read_cb(struct qeth_card *card,
- 			rc = reply->callback(card, reply, (unsigned long)iob);
- 		}
- 	}
-+	spin_unlock_irqrestore(&reply->lock, flags);
- 
-+no_callback:
- 	if (rc <= 0)
- 		qeth_notify_reply(reply, rc);
- 	qeth_put_reply(reply);
-@@ -1880,6 +1890,16 @@ static int qeth_send_control_data(struct qeth_card *card, int len,
- 		rc = (timeout == -ERESTARTSYS) ? -EINTR : -ETIME;
- 
- 	qeth_dequeue_reply(card, reply);
-+
-+	if (reply_cb) {
-+		/* Wait until the callback for a late reply has completed: */
-+		spin_lock_irq(&reply->lock);
-+		if (rc)
-+			/* Zap any callback that's still pending: */
-+			reply->rc = rc;
-+		spin_unlock_irq(&reply->lock);
-+	}
-+
- 	if (!rc)
- 		rc = reply->rc;
- 	qeth_put_reply(reply);
+diff --git a/drivers/net/ethernet/toshiba/tc35815.c b/drivers/net/ethernet/toshiba/tc35815.c
+index c50a9772f4aff..3b5a26b05295f 100644
+--- a/drivers/net/ethernet/toshiba/tc35815.c
++++ b/drivers/net/ethernet/toshiba/tc35815.c
+@@ -1504,7 +1504,7 @@ tc35815_rx(struct net_device *dev, int limit)
+ 			pci_unmap_single(lp->pci_dev,
+ 					 lp->rx_skbs[cur_bd].skb_dma,
+ 					 RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
+-			if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
++			if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN != 0)
+ 				memmove(skb->data, skb->data - NET_IP_ALIGN,
+ 					pkt_len);
+ 			data = skb_put(skb, pkt_len);
 -- 
 2.20.1
 
