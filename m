@@ -4,37 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E749AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F0DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD79D20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C3F20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbfH2LTL (ORCPT
+        id S1728103AbfH2LTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:19:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:42750 "EHLO foss.arm.com"
+        Thu, 29 Aug 2019 07:19:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:42772 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfH2LTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:19:10 -0400
+        id S1726232AbfH2LTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 07:19:12 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC30F360;
-        Thu, 29 Aug 2019 04:19:09 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C3E31570;
+        Thu, 29 Aug 2019 04:19:11 -0700 (PDT)
 Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 441B93F59C;
-        Thu, 29 Aug 2019 04:19:08 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0E733F59C;
+        Thu, 29 Aug 2019 04:19:09 -0700 (PDT)
 From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
 To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
 Cc:     catalin.marinas@arm.com, will@kernel.org, paul.burton@mips.com,
         tglx@linutronix.de, salyzyn@android.com, 0x7f454c46@gmail.com,
         luto@kernel.org
-Subject: [PATCH 1/7] arm64: compat: vdso: Expose BUILD_VDSO32
-Date:   Thu, 29 Aug 2019 12:18:37 +0100
-Message-Id: <20190829111843.41003-2-vincenzo.frascino@arm.com>
+Subject: [PATCH 2/7] lib: vdso: Build 32 bit specific functions in the right context
+Date:   Thu, 29 Aug 2019 12:18:38 +0100
+Message-Id: <20190829111843.41003-3-vincenzo.frascino@arm.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190829111843.41003-1-vincenzo.frascino@arm.com>
 References: <20190829111843.41003-1-vincenzo.frascino@arm.com>
@@ -45,31 +44,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clock_gettime32 and clock_getres_time32 should be compiled only with the
+clock_gettime32 and clock_getres_time32 should be compiled only with a
 32 bit vdso library.
 
-Expose BUILD_VDSO32 when arm64 compat is compiled, to provide an
-indication to the generic library to include these symbols.
+Exclude these symbols when BUILD_VDSO32 is not defined.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 ---
- arch/arm64/include/asm/vdso/compat_gettimeofday.h | 1 +
- 1 file changed, 1 insertion(+)
+ lib/vdso/gettimeofday.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-index c50ee1b7d5cd..fe7afe0f1a3d 100644
---- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-@@ -17,6 +17,7 @@
- #define VDSO_HAS_CLOCK_GETRES		1
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index e630e7ff57f1..a86e89e6dedc 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -117,6 +117,7 @@ __cvdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
+ 	return 0;
+ }
  
- #define VDSO_HAS_32BIT_FALLBACK		1
-+#define BUILD_VDSO32			1
++#ifdef BUILD_VDSO32
+ static __maybe_unused int
+ __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
+ {
+@@ -139,6 +140,7 @@ __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
+ 	}
+ 	return ret;
+ }
++#endif /* BUILD_VDSO32 */
  
- static __always_inline
- int gettimeofday_fallback(struct __kernel_old_timeval *_tv,
+ static __maybe_unused int
+ __cvdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
+@@ -229,6 +231,7 @@ int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
+ 	return 0;
+ }
+ 
++#ifdef BUILD_VDSO32
+ static __maybe_unused int
+ __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
+ {
+@@ -251,4 +254,5 @@ __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
+ 	}
+ 	return ret;
+ }
++#endif /* BUILD_VDSO32 */
+ #endif /* VDSO_HAS_CLOCK_GETRES */
 -- 
 2.23.0
 
