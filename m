@@ -2,172 +2,238 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C149C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E29E6C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4789122CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LkeEdFyG"
+	by mail.kernel.org (Postfix) with ESMTP id B63882173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfH2Ctk (ORCPT
+        id S1727204AbfH2CvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 22:49:40 -0400
-Received: from mail-eopbgr80081.outbound.protection.outlook.com ([40.107.8.81]:54453
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726369AbfH2Ctj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 22:49:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NYbk+KIwpzXObYCmJTwJshBAXfgO7Q1kILwJahdR0VIYFl4tFo3yYB8i/1bSslsdvMicfoJUTMiOSjQ/f9qR+74okJGJBMASAFhvE7Jee12BHTUwyCXjYLu04TPGvEaA8o9l8BCatrU1E+IIKHGsoFVi27SQghLQQBvVWvssfRf3t8/8RD3LI8anOCt5ufQ8LuO3/1ZJpTvSttXmua0Q3jWcvF0txCw6TXzXYDpGmcQj9+tyhrXNJDG+FIkISYgpns9LrodgxEMWRdDlRpOSQKYHxwY+vjHkPIAsLsFPbTD5wY8brsHWQ5HFATEWz+GSfclDXFpSOyQGh8ZA7BgFOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZJkFNnOFwvYqfDdSeAkg2VX+LHTBe+CkAIK3zLYSjSM=;
- b=IuPqKjHOPg/5L/F5aSDsGbPxmh/8bl1Zuei5ONQFOjOSUAyIQVB+2Jd257wX50J4j85wSJf6wu2MqK28SJnWiAAzYc5HDQqnSFaGhmcQ7jKSyYEfZHYZWwcbSqYwo8444cSJJV08MhAdnX2hwpfPEppLyH9+Fbe6w5qGdbWHqxgIap9O0WPeZHxGT+K27lqdLiP4+U+RLlmDThXuP99jzGxQiHTyoE5C6IXH5VJqP9Vie/HzivBauXE1wUBclN99ajCSgyC8WE3XLaiy+RBfHZK0vhRkD3UZ89IwECsM42K2al6jfo7ouJ5ZIWJbGUcom/OQeFahX4PLVDs9LzniZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZJkFNnOFwvYqfDdSeAkg2VX+LHTBe+CkAIK3zLYSjSM=;
- b=LkeEdFyG0UVS13+VSct3tBinuBjNzfzIPT3I9wiYZ4QLnfayRvVmfysEAST1kT83xxlXS3B6gRsFN9PI2Oj6pSmhX0oqzgNNSCQ/yrdqUnCqWIJKetz5h4ZUoEMZbXPw1NfWwzlspQG969MiQu8x1vSONpq/3I8M7mN7K/ddc1A=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3756.eurprd04.prod.outlook.com (52.134.73.29) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.19; Thu, 29 Aug 2019 02:49:32 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8958:299c:bc54:2a38]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8958:299c:bc54:2a38%7]) with mapi id 15.20.2199.021; Thu, 29 Aug 2019
- 02:49:32 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>
-CC:     Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: RE: [PATCH V3 1/5] thermal: qoriq: Add clock operations
-Thread-Topic: [PATCH V3 1/5] thermal: qoriq: Add clock operations
-Thread-Index: AQHVRn7U0xGc5nAWcEuPNmwDSS0IiacQaSEAgAAE+eCAAAPjgIAAAXqAgAEnrCA=
-Date:   Thu, 29 Aug 2019 02:49:32 +0000
-Message-ID: <DB3PR0402MB3916372A08E2FF3A9C15E0A6F5A20@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190730022126.17883-1-Anson.Huang@nxp.com>
-         <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
-         <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-         <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
-         <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
-         <DB3PR0402MB3916D1492F43D77E3679E3B1F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <3f268ab0e05b795c04dbb3490f0c93da998e3b2c.camel@intel.com>
- <DB3PR0402MB39168DA42F69336EB2B231E8F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB39168DA42F69336EB2B231E8F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6ba1ca74-d396-4099-5ffe-08d72c2b8543
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB3PR0402MB3756;
-x-ms-traffictypediagnostic: DB3PR0402MB3756:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3756012A981634B8143C7B7BF5A20@DB3PR0402MB3756.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0144B30E41
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(366004)(39860400002)(346002)(376002)(199004)(189003)(4326008)(66446008)(64756008)(66556008)(14444005)(66476007)(44832011)(66946007)(76116006)(14454004)(256004)(81166006)(74316002)(8676002)(81156014)(66066001)(316002)(71200400001)(71190400001)(86362001)(6116002)(3846002)(8936002)(7416002)(11346002)(33656002)(229853002)(6436002)(110136005)(25786009)(486006)(6506007)(6246003)(9686003)(53546011)(476003)(55016002)(52536014)(446003)(102836004)(7696005)(99286004)(76176011)(2906002)(53936002)(7736002)(305945005)(26005)(478600001)(5660300002)(54906003)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3756;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: zrpacQTs9DZT7kOa6zE0vclBeKhPquf3Cgj6iIaabjLpVQMBbzbSCfg6gKd7xHwgrthFhYPBoSSmctoszSWoQ4IKwDRct40kJ+fSWNGx0izd9bGgQCmEZ12pQeOVhkl+2AmnnzAhb6AyYv3avYf9qUikRJC+NfOTdKa8ZfD4dM8h0GLtgO/ezK4c3s9AMPdhvZVfTbnTUVyonF/FXI/iYyHIyqEC0oMTN3cR/zASJKrL9VxemdDguLIK78IcV61ZXnDz9cLCUxb80ToP7do7M0FIurRWQh1KFbWVIE/+pgHBh9LKTqrSlwXD8qQCnyuTMOaWDmzt2MC3QTT4klgfSuxbsF/QcCTSdecutNEk4u6pznvroIYtsf0F32NLKoYY1OiOEv9J9b9Ax2+HUtojSoNH3pulEoOWKQ4Gz5uoxMk=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 28 Aug 2019 22:51:02 -0400
+Received: from mga12.intel.com ([192.55.52.136]:57717 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725993AbfH2CvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 22:51:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 19:51:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
+   d="scan'208";a="180741962"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 28 Aug 2019 19:51:01 -0700
+Received: from [10.226.39.5] (leichuan-mobl.gar.corp.intel.com [10.226.39.5])
+        by linux.intel.com (Postfix) with ESMTP id E0356580107;
+        Wed, 28 Aug 2019 19:50:58 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     eswara.kota@linux.intel.com, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        p.zabel@pengutronix.de, qi-ming.wu@intel.com, robh@kernel.org,
+        Hauke Mehrtens <hauke@hauke-m.de>
+References: <90cc600d6f7ded68f5a618b626bd9cffa5edf5c3.1566531960.git.eswara.kota@linux.intel.com>
+ <20190824211158.5900-1-martin.blumenstingl@googlemail.com>
+ <3813e658-1600-d878-61a4-29b4fe51b281@linux.intel.com>
+ <CAFBinCA_B9psNGBeDyhkewhoutNh6HsLUN+TRfO_8vuNqhis4Q@mail.gmail.com>
+ <48b90943-e23d-a27a-c743-f321345c9151@linux.intel.com>
+ <CAFBinCD1oKxYm8QD7XfZUWq_HC5A4GLMmLCnZrcRvpTxrKo30w@mail.gmail.com>
+ <19719490-178a-18fd-64f2-f77d955897f7@linux.intel.com>
+ <CAFBinCDmi4HN4Ayg4T8aKUeu4hrUmVQ+z-hTN-6XMhiOCUcHjg@mail.gmail.com>
+From:   "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
+Message-ID: <34336c9a-8e87-8f84-2ae8-032b7967928f@linux.intel.com>
+Date:   Thu, 29 Aug 2019 10:50:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ba1ca74-d396-4099-5ffe-08d72c2b8543
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 02:49:32.6126
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FGDQYzNxqS+XsMMKiYEJCY0KXYkDG/DSra/udIDCdrEJf+7bCGFX1frAxkTZwENx5GwP/PxYosykhGsLrV7U0Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3756
+In-Reply-To: <CAFBinCDmi4HN4Ayg4T8aKUeu4hrUmVQ+z-hTN-6XMhiOCUcHjg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFJ1aQ0KDQo+ID4gT24gV2VkLCAyMDE5LTA4LTI4IGF0IDA4OjUxICswMDAwLCBBbnNvbiBI
-dWFuZyB3cm90ZToNCj4gPiA+IEhpLCBSdWkNCj4gPiA+DQo+ID4gPiA+IE9uIFR1ZSwgMjAxOS0w
-OC0yNyBhdCAxMjo0MSArMDAwMCwgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOg0KPiA+ID4gPiA+IE9u
-IDI3LjA4LjIwMTkgMDQ6NTEsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+ID4gPiA+ID4gPiBJbiBh
-biBlYXJsaWVyIHNlcmllcyB0aGUgQ0xLX0lTX0NSSVRJQ0FMIGZsYWdzIHdhcyByZW1vdmVkDQo+
-ID4gPiA+ID4gPiA+IGZyb20gdGhlIFRNVSBjbG9jayBzbyBpZiB0aGUgdGhlcm1hbCBkcml2ZXIg
-ZG9lc24ndA0KPiA+ID4gPiA+ID4gPiBleHBsaWNpdGx5IGVuYWJsZSBpdCB0aGUgc3lzdGVtIHdp
-bGwgaGFuZyBvbiBwcm9iZS4gVGhpcyBpcw0KPiA+ID4gPiA+ID4gPiB3aGF0IGhhcHBlbnMgaW4g
-bGludXgtbmV4dCByaWdodCBub3chDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gVGhlIHRoZXJt
-YWwgZHJpdmVyIHNob3VsZCBiZSBidWlsdCB3aXRoIG1vZHVsZSwgc28gZGVmYXVsdA0KPiA+ID4g
-PiA+ID4ga2VybmVsIHNob3VsZCBjYW4gYm9vdCB1cCwgZG8geW91IG1vZGlmeSB0aGUgdGhlcm1h
-bCBkcml2ZXIgYXMNCj4gPiA+ID4gPiA+IGJ1aWx0LSBpbj8NCj4gPiA+ID4gPiA+DQo+ID4gPiA+
-ID4gPiA+IFVubGVzcyB0aGlzIHBhdGNoZXMgaXMgbWVyZ2VkIHNvb24gd2UnbGwgZW5kIHVwIHdp
-dGggYSA1LjQtDQo+ID4gPiA+ID4gPiA+IHJjMQ0KPiA+ID4gPiA+ID4gPiB0aGF0IGRvZXNuJ3Qg
-Ym9vdCBvbiBpbXg4bXEuIEFuIGVhc3kgZml4IHdvdWxkIGJlIHRvDQo+ID4gPiA+ID4gPiA+IGRy
-b3AvcmV2ZXJ0IGNvbW1pdA0KPiA+ID4gPiA+ID4gPiA5NTFjMWFlZjk2OTEgKCJjbGs6IGlteDht
-cTogUmVtb3ZlIENMS19JU19DUklUSUNBTCBmbGFnIGZvcg0KPiA+ID4gPiA+ID4gPiBJTVg4TVFf
-Q0xLX1RNVV9ST09UIikgdW50aWwgdGhlIHRoZXJtYWwgcGF0Y2hlcyBhcmUNCj4gYWNjZXB0ZWQu
-DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gSWYgdGhlIHRoZXJtYWwgZHJpdmVyIGlzIGJ1aWx0
-IGFzIG1vZHVsZSwgSSB0aGluayBubyBuZWVkIHRvDQo+ID4gPiA+ID4gPiByZXZlcnQgdGhlIGNv
-bW1pdCwgYnV0IGlmIGJ5IGRlZmF1bHQgdGhlcm1hbCBkcml2ZXIgaXMNCj4gPiA+ID4gPiA+IGJ1
-aWx0LWluIG9yIG1vZCBwcm9iZWQsIHRoZW4geWVzLCBpdCBzaG91bGQgTk9UIGJyZWFrIGtlcm5l
-bCBib290DQo+IHVwLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gVGhlIHFvcmlxX3RoZXJtYWwgZHJp
-dmVyIGlzIGJ1aWx0IGFzIGEgbW9kdWxlIGluIGRlZmNvbmZpZyBhbmQNCj4gPiA+ID4gPiB3aGVu
-IG1vZHVsZXMgYXJlIHByb3Blcmx5IGluc3RhbGxlZCBpbiByb290ZnMgdGhleSB3aWxsIGJlDQo+
-ID4gPiA+ID4gYXV0b21hdGljYWxseSBiZSBwcm9iZWQgb24gYm9vdCBhbmQgY2F1c2UgYSBoYW5n
-Lg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gSSB1c3VhbGx5IHJ1biBuZnNyb290IHdpdGggbW9kdWxl
-czoNCj4gPiA+ID4gPg0KPiA+ID4gPiA+ICAgICAgbWFrZSBtb2R1bGVzX2luc3RhbGwgSU5TVEFM
-TF9NT0RfUEFUSD0vc3J2L25mcy9pbXg4LXJvb3QNCj4gPiA+ID4NCj4gPiA+ID4gc28gd2UgbmVl
-ZCB0aGlzIHBhdGNoIHNoaXBwZWQgaW4gdGhlIGJlZ2lubmluZyBvZiB0aGUgbWVyZ2UNCj4gPiA+
-ID4gd2luZG93LCByaWdodD8NCj4gPiA+ID4gaWYgdGhlcmUgaXMgaGFyZCBkZXBlbmRlbmN5IGJl
-dHdlZW4gcGF0Y2hlcywgaXQncyBiZXR0ZXIgdG8gc2VuZA0KPiA+ID4gPiB0aGVtIGluIG9uZSBz
-ZXJpZXMsIGFuZCBnZXQgc2hpcHBlZCB2aWEgZWl0aGVyIHRyZWUuDQo+ID4gPg0KPiA+ID4gVGhl
-cmUgaXMgbm8gaGFyZCBkZXBlbmRlbmN5IGluIHRoaXMgcGF0Y2ggc2VyaWVzLiBQcmV2aW91cyBm
-b3IgdGhlDQo+ID4gPiBUTVUgY2xvY2sgZGlzYWJsZWQgcGF0Y2gsIHNpbmNlIHRoZXJtYWwgZHJp
-dmVyIGlzIGJ1aWx0IGFzIG1vZHVsZSBzbw0KPiA+ID4gSSBkaWQgTk9UIGZvdW5kIHRoZSBpc3N1
-ZS4gVGhlIHBhdGNoIHNlcmllcyBpcyB0aGUgY29ycmVjdCBmaXguDQo+ID4gPg0KPiA+IEdvdCBp
-dC4NCj4gPiB0aGUgY2xvY2sgcGF0Y2ggaXMgYWxzbyBxdWV1ZWQgZm9yIDUuNC1yYzEsIHJpZ2h0
-Pw0KPiA+IEkgd2lsbCBhcHBseSB0aGlzIHNlcmllcyBhbmQgdHJ5IHRvIHB1c2ggaXQgYXMgZWFy
-bHkgYXMgcG9zc2libGUNCj4gPiBkdXJpbmcgdGhlIG1lcmdlIHdpbmRvdy4NCj4gDQo+IFRoZSBj
-bG9jayBwYXRjaCBpcyBhcyBiZWxvdyBpbiBMaW51eC1uZXh0IHRyZWUsIHdoaWxlIEkgZGlkIE5P
-VCBzZWUgaXQgaW4gdjUuMy0NCj4gcmM2LCBzbyBpdCBzaG91bGQgYmUgcXVldWVkIGZvciA1LjQt
-cmMxLCByaWdodD8NCj4gVGhhbmtzIGZvciB0YWtpbmcgdGhlIHBhdGNoIHNlcmllcyENCg0KU29y
-cnkgZm9yIHB1c2hpbmcsIHNvIHlvdSB3aWxsIGFwcGx5IHRoaXMgcGF0Y2ggc2VyaWVzIHRvIGF2
-b2lkIHRoZSBpLk1YOE1RIGtlcm5lbCBib290IHVwIGhhbmcNCmNhdXNlZCBieSBpbnNtb2QgcW9y
-aXEgdGhlcm1hbCBkcml2ZXIsIHJpZ2h0PyBUaGVuIHdlIG5vIG5lZWQgdG8gcmV2ZXJ0IHRoYXQg
-VE1VIGNsb2NrIHBhdGNoDQo5NTFjMWFlZjk2OTEgKCJjbGs6IGlteDhtcTogUmVtb3ZlIENMS19J
-U19DUklUSUNBTCBmbGFnIGZvciBJTVg4TVFfQ0xLX1RNVV9ST09UIikuDQoNClRoYW5rcywNCkFu
-c29uDQoNCj4gDQo+IA0KPiBjb21taXQgOTUxYzFhZWY5NjkxNDkxZGRmNGRkNWFhYjc2ZjI2NjVk
-NTZiZDVkMw0KPiBBdXRob3I6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiBE
-YXRlOiAgIEZyaSBKdWwgNSAxMjo1NjoxMSAyMDE5ICswODAwDQo+IA0KPiAgICAgY2xrOiBpbXg4
-bXE6IFJlbW92ZSBDTEtfSVNfQ1JJVElDQUwgZmxhZyBmb3IgSU1YOE1RX0NMS19UTVVfUk9PVA0K
-PiANCj4gICAgIElNWDhNUV9DTEtfVE1VX1JPT1QgaXMgT05MWSB1c2VkIGZvciB0aGVybWFsIG1v
-ZHVsZSwgdGhlIGRyaXZlcg0KPiAgICAgc2hvdWxkIG1hbmFnZSB0aGlzIGNsb2NrLCBzbyBubyBu
-ZWVkIHRvIGhhdmUgQ0xLX0lTX0NSSVRJQ0FMIGZsYWcNCj4gICAgIHNldC4NCj4gDQo+ICAgICBT
-aWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gICAgIFJl
-dmlld2VkLWJ5OiBBYmVsIFZlc2EgPGFiZWwudmVzYUBueHAuY29tPg0KPiAgICAgQWNrZWQtYnk6
-IFN0ZXBoZW4gQm95ZCA8c2JveWRAa2VybmVsLm9yZz4NCj4gICAgIFNpZ25lZC1vZmYtYnk6IFNo
-YXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gDQo+IGRyaXZlcnMvY2xrL2lteC9jbGst
-aW14OG1xLmMNCj4gDQo+IA0KPiBUaGFua3MsDQo+IEFuc29uDQo=
+
+On 8/29/2019 4:01 AM, Martin Blumenstingl wrote:
+> Hi,
+>
+> On Wed, Aug 28, 2019 at 3:53 AM Chuan Hua, Lei
+> <chuanhua.lei@linux.intel.com> wrote:
+> [...]
+>>>>>> 1. reset-lantiq.c use index instead of register offset + bit position.
+>>>>>> index reset is good for a small system (< 64). However, it will become very
+>>>>>> difficult to use if you have  > 100 reset. So we use register offset +
+>>>>>> bit position
+>>>>> reset-lantiq uses bit bit positions for specifying the reset line.
+>>>>> for example this is from OpenWrt's vr9.dtsi:
+>>>>>      reset0: reset-controller@10 {
+>>>>>        ...
+>>>>>        reg = <0x10 4>, <0x14 4>;
+>>>>>        #reset-cells = <2>;
+>>>>>      };
+>>>>>
+>>>>>      gphy0: gphy@20 {
+>>>>>        ...
+>>>>>        resets = <&reset0 31 30>, <&reset1 7 7>;
+>>>>>        reset-names = "gphy", "gphy2";
+>>>>>      };
+>>>>>
+>>>>> in my own words this means:
+>>>>> - all reset0 reset bits are at offset 0x10 (parent is RCU)
+>>>>> - all reset0 status bits are at offset 0x14 (parent is RCU)
+>>>>> - the first reset line uses reset bit 31 and status bit 30
+>>>>> - the second reset line uses reset bit 7 and status bit 7
+>>>>> - there can be multiple reset-controller instances, each taking the
+>>>>> reset and status offsets (OpenWrt's vr9.dtsi specifies the second RCU
+>>>>> reset controller "reset1" with reset offset 0x48 and status offset
+>>>>> 0x24)
+>>>> in reset-lantiq.c, we split each reset request /status pair into one
+>>>> reset controller.
+>>>>
+>>>> Each reset controller handles up to 32 resets. It will create up to 9
+>>>> even more
+>>>> reset controllers in the new SoCs. In reality, there is only one RCU
+>>>> controller for all
+>>>> SoCs. These designs worked but did not follow what hardware implemented.
+>>>>
+>>>> After checking the existing code and referring to other implementation,
+>>>> we decided to
+>>>> use register offset + bit position method. It can support all SoCs with
+>>>> this methods
+>>>> without code change(device tree change only).
+>>> maybe I have a different interpretation of what "RCU" does.
+>>> let me explain it in my own words based on my knowledge about VRX200:
+>>> - in my own words it is a multi function device with the following
+>>> functionality:
+>>> - it contains two reset controllers (reset at 0x10, status 0x14 and
+>>> reset at 0x48, status at 0x24)
+>>> - it contains two USB2 PHYs (PHY registers at 0x18, ANA cfg at 0x38
+>>> and PHY registers at 0x34, ANA cfg at 0x3c)
+>>> - it contains the configuration for the two GPHY IP blocks (at 0x20 and 0x68)
+>>> - it contains endianness configuration registers (for PCI, PCIe, ...)
+>>> - it contains the watchdog boot status (whether the SoC was previously
+>>> reset by the WDT)
+>>> - maybe more, but I don't know anything else about it
+>> In fact, there is only one reset controller for all SoCs even it doesn't
+>> prevent software from virtualizing multiple reset controllers. Reset
+>> control does include some misc stuff which has been moved to chiptop in
+>> new SoCs so that RCU has a clean job.
+> just to confirm that I understand this correctly:
+> even the VRX200 SoC only has one physical reset controller?
+> instead of a contiguous register area (let's say: 0x10 to 0x1c) it
+> uses four separate registers:
+> - 0x10 for asserting/deasserting/pulsing the first 32 reset lines
+> - 0x14 for the status of the first 32 reset lines
+> - 0x48 for asserting/deasserting/pulsing the second 32 reset lines
+> - 0x28 for the status of the second 32 reset lines
+
+Yes, but for VRX200, reset controller registers include some other misc 
+registers. At that time,
+
+hardware doesn't use chiptop concept, they put some misc registers into 
+CGU/RCU which makes it quite messy.
+
+We also prefer to have 0x10~0x1c. However, when developing VRX200, 0x18, 
+0x20 and other address had been used by other registers. system becomes 
+more complex, need more reset bits for new modules, then hardware just 
+added them to any available place. From another angle, hardware people 
+also tried to keep backward compatible with old products like Danube.
+
+>
+> I'm not surprised that we got some of the IP block layout for the
+> VRX200 RCU "wrong" - all "documentation" we have is the old Lantiq UGW
+> (BSP).
+> with proper documentation (as in a "public datasheet for the SoC") it
+> would be easy to spot these mistakes (at least I assume that the
+> quality of the Infineon / Lantiq datasheets is excellent).
+>
+> back to reset-intel-syscon:
+> assigning only one job to the RCU hardware is a good idea (in my opinion).
+> that brings up a question: why do we need the "syscon" compatible for
+> the RCU node?
+> this is typically used when registers are accessed by another IP block
+> and the other driver has to access these registers as well. does this
+> mean that there's more hidden in the RCU registers?
+As I mentioned, some other misc registers are put into RCU even they 
+don't belong to reset functions. In MIPS, global software reset handled 
+in arch/mips/, only recently, this situation changed. This means we have 
+at least two places to access this module.
+>
+>>>>>> 2. reset-lantiq.c does not support device restart which is part of the
+>>>>>> reset in
+>>>>>> old lantiq SoC. It moved this part into arch/mips/lantiq directory.
+>>>>> it was moved to the .dts instead of the arch code. again from
+>>>>> OpenWrt's vr9.dtsi [0]:
+>>>>>      reboot {
+>>>>>        compatible = "syscon-reboot";
+>>>>>        regmap = <&rcu0>;
+>>>>>        offset = <0x10>;
+>>>>>        mask = <0xe0000000>;
+>>>>>      };
+>>>>>
+>>>>> this sets the reset0 reset bits 31, 30 and 29 at reboot
+>>>> ok. but not sure why we need to reset bit 31 and 29. global softwre
+>>>> reset is bit 30.
+>>> I don't know either. depending on what the LGM SoCs need you can
+>>> change the "mask" property to the value that fits that SoC best
+>>>
+>>> [...]
+>> All SoCs have only one global software reset bit.
+> OK
+> you can still use syscon-reboot to set the soft reset bit if Rob
+> (dt-binding maintainer) doesn't like the "intel,global-reset" property
+Dilip should check and do the necessary change.
+> [...]
+>>>>>> 4. Code not optimized and intel internal review not assessed.
+>>>>> insights from you (like the issue with the reset callback) are very
+>>>>> valuable - this shows that we should focus on having one driver.
+>>>>>
+>>>>>> Based on the above findings, I would suggest reset-lantiq.c to move to
+>>>>>> reset-intel-syscon.c
+>>>>> my concern with having two separate drivers is that it will be hard to
+>>>>> migrate from reset-lantiq to the "optimized" reset-intel-syscon
+>>>>> driver.
+>>>>> I don't have access to the datasheets for the any Lantiq/Intel SoC
+>>>>> (VRX200 and even older).
+>>>>> so debugging issues after switching from one driver to another is
+>>>>> tedious because I cannot tell which part of the driver is causing a
+>>>>> problem (it's either "all code from driver A" vs "all code from driver
+>>>>> B", meaning it's hard to narrow it down).
+>>>>> with separate commits/patches that are improving the reset-lantiq
+>>>>> driver I can do git bisect to find the cause of a problem on the older
+>>>>> SoCs (VRX200 for example)
+>>>> Our internal version supports XRX350/XRX500/PRX300(MIPS based) and
+>>>> latest Lighting Mountain(X86 based). Migration to reset-intel-syscon.c
+>>>> should be straight forward.
+>>> what about the _reset callback on the XRX350/XRX500/PRX300 SoCs - do
+>>> they only use level resets (_assert and _deassert) or are some reset
+>>> lines using reset pulses (_reset)?
+>>>
+>>> when we wanted to switch from reset-lantiq.c to reset-intel-syscon.c
+>>> we still had to add support for the _reset callback as this is missing
+>>> in reset-intel-syscon.c currently
+>> Yes. We have reset pulse(assert, then check the reset status).
+> only now I realized that the reset-intel-syscon driver does not seem
+> to use the status registers (instead it's looking at the reset
+> registers when checking the status).
+> what happened to the status registers - do they still exist in newer
+> SoCs (like LGM)? why are they not used?
+Reset status check is there. regmap_read_poll_timeout to check status 
+big. Status register offset <4) from request register. For legacy, there 
+is one exception, we can add soc specific data to handle it.
+> on VRX200 for example there seem to be some cases where the bits in
+> the reset and status registers are different (for example: the first
+> GPHY seems to use reset bit 31 but status bit 30)
+> this is currently not supported in reset-intel-syscon
+This is most tricky and ugly part for VRX200/Danube. Do you have any 
+idea to handle this nicely?
+>
+>
+> Martin
