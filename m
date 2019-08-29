@@ -2,96 +2,189 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A438C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 428C7C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 479D3205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103403;
-	bh=baCRx9JVUqRa9cCGCXJT1DbEF8aU4ZfGASvfIub9WjI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w+uuB28tJHW5sJegmTVKzGP+WnzBzw8Iq6vq8cVf46NclRl/2hJSWIja3OAwRY8+j
-	 rO7nUkd0ClRV+rqRoHU1Yas4oTg9SADHPtVG3yhzhJyxFALwYIbnVXMAsEd+UaEIHJ
-	 ohwSrGjc+rXUUo1QsW9Gew1muzIbr3FAf+ROImCw=
+	by mail.kernel.org (Postfix) with ESMTP id 1FB3D205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbfH2SOq (ORCPT
+        id S1729867AbfH2SaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:14:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56290 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:30:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47228 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728949AbfH2SOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:14:40 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728826AbfH2SaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:30:03 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4F8E2339E;
-        Thu, 29 Aug 2019 18:14:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102479;
-        bh=baCRx9JVUqRa9cCGCXJT1DbEF8aU4ZfGASvfIub9WjI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WoUOBfx2QKCTHcSfolNg+8xu2tWLk5CKoi4vDznXY2bihR/kJHfXjE60vPWEd2wtP
-         EMLA6qs4RSaYCmDx+whhdngvc+e2cPkgtm3nAyf/zoxeTUgAcVvxeM+r7/FtjVqdT6
-         YtltlZJ5vZWYQWUkZzODvsw2BBnNg6yNjg3jLMzA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 41/76] cx82310_eth: fix a memory leak bug
-Date:   Thu, 29 Aug 2019 14:12:36 -0400
-Message-Id: <20190829181311.7562-41-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
-References: <20190829181311.7562-1-sashal@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 268188CF1A5;
+        Thu, 29 Aug 2019 18:30:02 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 540D754527;
+        Thu, 29 Aug 2019 18:29:59 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 01/11] uapi: General notification ring definitions [ver #6]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>, dhowells@redhat.com,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 29 Aug 2019 19:29:58 +0100
+Message-ID: <156710339856.10009.1556595458056359912.stgit@warthog.procyon.org.uk>
+In-Reply-To: <156710338860.10009.12524626894838499011.stgit@warthog.procyon.org.uk>
+References: <156710338860.10009.12524626894838499011.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 29 Aug 2019 18:30:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+Add UAPI definitions for the general notification ring, including the
+following pieces:
 
-[ Upstream commit 1eca92eef18719027d394bf1a2d276f43e7cf886 ]
+ (1) struct watch_notification.
 
-In cx82310_bind(), 'dev->partial_data' is allocated through kmalloc().
-Then, the execution waits for the firmware to become ready. If the firmware
-is not ready in time, the execution is terminated. However, the allocated
-'dev->partial_data' is not deallocated on this path, leading to a memory
-leak bug. To fix this issue, free 'dev->partial_data' before returning the
-error.
+     This is the metadata header for each entry in the ring.  It includes a
+     type and subtype that indicate the source of the message
+     (eg. WATCH_TYPE_MOUNT_NOTIFY) and the kind of the message
+     (eg. NOTIFY_MOUNT_NEW_MOUNT).
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+     The header also contains an information field that conveys the
+     following information:
+
+	- WATCH_INFO_LENGTH.  The size of the entry (entries are variable
+          length).
+
+	- WATCH_INFO_ID.  The watch ID specified when the watchpoint was
+          set.
+
+	- WATCH_INFO_TYPE_INFO.  (Sub)type-specific information.
+
+	- WATCH_INFO_FLAG_*.  Flag bits overlain on the type-specific
+          information.  For use by the type.
+
+     All the information in the header can be used in filtering messages at
+     the point of writing into the buffer.
+
+ (2) struct watch_queue_buffer.
+
+     This describes the layout of the ring.  Note that the first slots in
+     the ring contain a special metadata entry that contains the ring
+     pointers.  The producer in the kernel knows to skip this and it has a
+     proper header (WATCH_TYPE_META, WATCH_META_SKIP_NOTIFICATION) that
+     indicates the size so that the ring consumer can handle it the same as
+     any other record and just skip it.
+
+     Note that this means that ring entries can never be split over the end
+     of the ring, so if an entry would need to be split, a skip record is
+     inserted to wrap the ring first; this is also WATCH_TYPE_META,
+     WATCH_META_SKIP_NOTIFICATION.
+
+ (3) WATCH_INFO_NOTIFICATIONS_LOST.
+
+     This is a flag that can be set in the metadata header by the kernel to
+     indicate that at least one message was lost since it was last cleared
+     by userspace.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/cx82310_eth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/cx82310_eth.c b/drivers/net/usb/cx82310_eth.c
-index 5519248a791eb..32b08b18e1208 100644
---- a/drivers/net/usb/cx82310_eth.c
-+++ b/drivers/net/usb/cx82310_eth.c
-@@ -163,7 +163,8 @@ static int cx82310_bind(struct usbnet *dev, struct usb_interface *intf)
- 	}
- 	if (!timeout) {
- 		dev_err(&udev->dev, "firmware not ready in time\n");
--		return -ETIMEDOUT;
-+		ret = -ETIMEDOUT;
-+		goto err;
- 	}
- 
- 	/* enable ethernet mode (?) */
--- 
-2.20.1
+ include/uapi/linux/watch_queue.h |   67 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 include/uapi/linux/watch_queue.h
+
+diff --git a/include/uapi/linux/watch_queue.h b/include/uapi/linux/watch_queue.h
+new file mode 100644
+index 000000000000..70f575099968
+--- /dev/null
++++ b/include/uapi/linux/watch_queue.h
+@@ -0,0 +1,67 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef _UAPI_LINUX_WATCH_QUEUE_H
++#define _UAPI_LINUX_WATCH_QUEUE_H
++
++#include <linux/types.h>
++
++enum watch_notification_type {
++	WATCH_TYPE_META		= 0,	/* Special record */
++	WATCH_TYPE___NR		= 1
++};
++
++enum watch_meta_notification_subtype {
++	WATCH_META_SKIP_NOTIFICATION	= 0,	/* Just skip this record */
++	WATCH_META_REMOVAL_NOTIFICATION	= 1,	/* Watched object was removed */
++};
++
++#define WATCH_LENGTH_GRANULARITY sizeof(__u64)
++
++/*
++ * Notification record header.  This is aligned to 64-bits so that subclasses
++ * can contain __u64 fields.
++ */
++struct watch_notification {
++	__u32			type:24;	/* enum watch_notification_type */
++	__u32			subtype:8;	/* Type-specific subtype (filterable) */
++	__u32			info;
++#define WATCH_INFO_LENGTH	0x0000003f	/* Length of record / sizeof(watch_notification) */
++#define WATCH_INFO_LENGTH__SHIFT 0
++#define WATCH_INFO_ID		0x0000ff00	/* ID of watchpoint, if type-appropriate */
++#define WATCH_INFO_ID__SHIFT	8
++#define WATCH_INFO_TYPE_INFO	0xffff0000	/* Type-specific info */
++#define WATCH_INFO_TYPE_INFO__SHIFT 16
++#define WATCH_INFO_FLAG_0	0x00010000	/* Type-specific info, flag bit 0 */
++#define WATCH_INFO_FLAG_1	0x00020000	/* ... */
++#define WATCH_INFO_FLAG_2	0x00040000
++#define WATCH_INFO_FLAG_3	0x00080000
++#define WATCH_INFO_FLAG_4	0x00100000
++#define WATCH_INFO_FLAG_5	0x00200000
++#define WATCH_INFO_FLAG_6	0x00400000
++#define WATCH_INFO_FLAG_7	0x00800000
++} __attribute__((aligned(WATCH_LENGTH_GRANULARITY)));
++
++struct watch_queue_buffer {
++	union {
++		/* The first few entries are special, containing the
++		 * ring management variables.
++		 */
++		struct {
++			struct watch_notification watch; /* WATCH_TYPE_META */
++			__u32		head;		/* Ring head index */
++			__u32		tail;		/* Ring tail index */
++			__u32		mask;		/* Ring index mask */
++			__u32		__reserved;
++		} meta;
++		struct watch_notification slots[0];
++	};
++};
++
++/*
++ * The Metadata pseudo-notification message uses a flag bits in the information
++ * field to convey the fact that messages have been lost.  We can only use a
++ * single bit in this manner per word as some arches that support SMP
++ * (eg. parisc) have no kernel<->user atomic bit ops.
++ */
++#define WATCH_INFO_NOTIFICATIONS_LOST WATCH_INFO_FLAG_0
++
++#endif /* _UAPI_LINUX_WATCH_QUEUE_H */
 
