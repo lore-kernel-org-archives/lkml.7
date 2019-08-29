@@ -2,147 +2,224 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4F1C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527CFC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EDD12080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165102080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:05:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="j6VdB171"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="LbYAGKZp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbfH2PDd (ORCPT
+        id S1727751AbfH2PFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:03:33 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34066 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfH2PDc (ORCPT
+        Thu, 29 Aug 2019 11:05:45 -0400
+Received: from gateway34.websitewelcome.com ([192.185.148.204]:18307 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727171AbfH2PFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:03:32 -0400
-Received: by mail-io1-f68.google.com with SMTP id s21so7626085ioa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 08:03:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9zORjbGk69oJ5dfKY3b1CqJAsKNTapFMC7SK80j7yvM=;
-        b=j6VdB1714vSF2YQaaX7iXfHmGH1RD43tZxcwSxpbEk0OT8d23Dt6hUkqGiY4nsTWGs
-         jlZ4H8W2hjcIVXH8dbCxGDpgm7G9HWEw8im9053hWj5MUJATS/KTjJ03vCtiAXSjdEDH
-         Ja69Qn4LE0sSvAzAx9TjEGiXitRltLabCr56GvucPKS66SMC3FieNAjDizJioIhhZUtK
-         u4ixXxOmfpbAiuxqEr20o59W6Bo2xopdUdi6icuPm42FGjclqj/hy4y3VkycolJNPKlC
-         /cCy7kqGQAUS+VX80aqwTyGbS9Pd9gaOhReHPGxJwgi9DoGgmIZ4F974fCXEWHLpGuLz
-         7spg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9zORjbGk69oJ5dfKY3b1CqJAsKNTapFMC7SK80j7yvM=;
-        b=JxEzVjGQSAt3SpNDxbo0kmpz/rLqxlqea+DGSsqqC6Z2gmhtiMdRPnUbDWeYXqGmPL
-         YxlHz87jsoBKcU85H7c13NTgICbUJUF06wY1RF9qd+SUfCFuDr0GR0+aAL8zW/NlY8aW
-         iESBeC8wGlLcDBUbtbtFg4tFpduqx6wCf9bqTmGMIzfPL+qPGxnZdSNoJjZGe1Gnluca
-         chyhfd1WjBBIXJ0KAA2vZ1u+BAzeUqOjE6ci/5EG5pJyYpKNlEkB5K22p+edbLKQQuzj
-         GCPHpOPl1Ep1tQst+54XwqmDxihBF59fkQrq9aEtaiea9MpSXb92uoqF2VvJ4s3kpp8/
-         Y6gw==
-X-Gm-Message-State: APjAAAVJ3NfZCwGJWjCUMO3kHxQOpOQnqQoBa0xcOCDaI5EmMWSEi/1f
-        GpmDGVQqRkvHAC8HUVMhClb61EIQA93mjwyY6JPU3+b8
-X-Google-Smtp-Source: APXvYqx59i598mFm2GBgghGeivK6EaWlSPth0QzEwpZvp75pPj5w+oZSKXR7rqDv3ih969g1f7BxN8U/wVf1ecjdxpU=
-X-Received: by 2002:a6b:8b0b:: with SMTP id n11mr5437384iod.101.1567091011925;
- Thu, 29 Aug 2019 08:03:31 -0700 (PDT)
+        Thu, 29 Aug 2019 11:05:44 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 5049AF2F8C2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 10:05:43 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 3LzbiPpsO2qH73LzbiMT0x; Thu, 29 Aug 2019 10:05:43 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=gDTUo2D0Mo8wgkKSB/31pi8yOfJeGqDuIhAYtLa6IVc=; b=LbYAGKZp8x+ZJeThpZpiYoM0l+
+        YlX9fRIOcHQttl9K8rb4XwXi6/8AxWfl3ZaaqcExcIJWLDkOG9jwP73c4yh/kZliwS5VodsLX1G1x
+        iOBuLw6GeUJQJ/W+Wbm8eSltERIYhBQxZ0eT4BgZHxM5+jmGorw7VQ+rl34/yZyjZmqGC/ZV1E6ho
+        9RxzD7+WJcHrTCL1QLGAQYMoDGhoIU3Mb2bGiVyH2PLxG/kGBY6eKidisA7XlRGuKwFr/76SBcz+M
+        ftCH/Twd2nHGsB02RKZjf2sb6jt7O/HXrtuwM78kThIOunpWkJKHvESgxhM/WlKRri66WGof8+gM8
+        be7vecwg==;
+Received: from [189.152.216.116] (port=40698 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i3Lza-003rCx-LI; Thu, 29 Aug 2019 10:05:43 -0500
+Subject: Re: [PATCH] ARC: unwind: Mark expected switch fall-through
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc:     "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+References: <20190821012907.GA29165@embeddedor>
+ <2c3ef09b-bd07-6caf-05a9-908700a60afd@embeddedor.com>
+ <BY5PR12MB403422F37413E42066FCA9BEDEA20@BY5PR12MB4034.namprd12.prod.outlook.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <1496d4b7-f07b-01e1-c33d-b2d4c501d9dc@embeddedor.com>
+Date:   Thu, 29 Aug 2019 10:05:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190826193638.6638-1-echron@arista.com> <20190827071523.GR7538@dhcp22.suse.cz>
- <CAM3twVRZfarAP6k=LLWH0jEJXu8C8WZKgMXCFKBZdRsTVVFrUQ@mail.gmail.com>
- <20190828065955.GB7386@dhcp22.suse.cz> <CAM3twVR_OLffQ1U-SgQOdHxuByLNL5sicfnObimpGpPQ1tJ0FQ@mail.gmail.com>
- <20190829071105.GQ28313@dhcp22.suse.cz> <297cf049-d92e-f13a-1386-403553d86401@i-love.sakura.ne.jp>
- <20190829115608.GD28313@dhcp22.suse.cz>
-In-Reply-To: <20190829115608.GD28313@dhcp22.suse.cz>
-From:   Edward Chron <echron@arista.com>
-Date:   Thu, 29 Aug 2019 08:03:19 -0700
-Message-ID: <CAM3twVSZm69U8Sg+VxQ67DeycHUMC5C3_f2EpND4_LC4UHx7BA@mail.gmail.com>
-Subject: Re: [PATCH 00/10] OOM Debug print selection and additional information
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <BY5PR12MB403422F37413E42066FCA9BEDEA20@BY5PR12MB4034.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i3Lza-003rCx-LI
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [189.152.216.116]:40698
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 4:56 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Thu 29-08-19 19:14:46, Tetsuo Handa wrote:
-> > On 2019/08/29 16:11, Michal Hocko wrote:
-> > > On Wed 28-08-19 12:46:20, Edward Chron wrote:
-> > >> Our belief is if you really think eBPF is the preferred mechanism
-> > >> then move OOM reporting to an eBPF.
-> > >
-> > > I've said that all this additional information has to be dynamically
-> > > extensible rather than a part of the core kernel. Whether eBPF is the
-> > > suitable tool, I do not know. I haven't explored that. There are other
-> > > ways to inject code to the kernel. systemtap/kprobes, kernel modules and
-> > > probably others.
-> >
-> > As for SystemTap, guru mode (an expert mode which disables protection provided
-> > by SystemTap; allowing kernel to crash when something went wrong) could be used
-> > for holding spinlock. However, as far as I know, holding mutex (or doing any
-> > operation that might sleep) from such dynamic hooks is not allowed. Also we will
-> > need to export various symbols in order to allow access from such dynamic hooks.
->
-> This is the oom path and it should better not use any sleeping locks in
-> the first place.
->
-> > I'm not familiar with eBPF, but I guess that eBPF is similar.
-> >
-> > But please be aware that, I REPEAT AGAIN, I don't think neither eBPF nor
-> > SystemTap will be suitable for dumping OOM information. OOM situation means
-> > that even single page fault event cannot complete, and temporary memory
-> > allocation for reading from kernel or writing to files cannot complete.
->
-> And I repeat that no such reporting is going to write to files. This is
-> an OOM path afterall.
->
-> > Therefore, we will need to hold all information in kernel memory (without
-> > allocating any memory when OOM event happened). Dynamic hooks could hold
-> > a few lines of output, but not all lines we want. The only possible buffer
-> > which is preallocated and large enough would be printk()'s buffer. Thus,
-> > I believe that we will have to use printk() in order to dump OOM information.
-> > At that point,
->
-> Yes, this is what I've had in mind.
->
+Hi Eugeniy,
 
-+1: It makes sense to keep the report going to the dmesg to persist.
-That is where it has always gone and there is no reason to change.
-You can have several OOMs back to back and you'd like to retain the output.
-All the information should be kept together in the OOM report.
 
-> >
-> >   static bool (*oom_handler)(struct oom_control *oc) = default_oom_killer;
-> >
-> >   bool out_of_memory(struct oom_control *oc)
-> >   {
-> >           return oom_handler(oc);
-> >   }
-> >
-> > and let in-tree kernel modules override current OOM killer would be
-> > the only practical choice (if we refuse adding many knobs).
->
-> Or simply provide a hook with the oom_control to be called to report
-> without replacing the whole oom killer behavior. That is not necessary.
+On 8/29/19 6:25 AM, Eugeniy Paltsev wrote:
+> Hi Gustavo,
+> 
+> I guess this patch is already sent as a pull request to 'v5.3-rc7' by Vineet:
+> https://www.mail-archive.com/linux-snps-arc@lists.infradead.org/msg05854.html
+> 
 
-For very simple addition, to add a line of output this works.
-It would still be nice to address the fact the existing OOM Report prints
-all of the user processes or none. It would be nice to add some control
-for that. That's what we did.
+No. This is a different one. Notice that the subject lines differ by one
+letter.
 
+Thanks
+--
+Gustavo
+
+
+> ---
+>  Eugeniy Paltsev
+> 
+> 
+> ________________________________________
+> From: linux-snps-arc <linux-snps-arc-bounces@lists.infradead.org> on behalf of Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Sent: Thursday, August 29, 2019 04:47
+> To: Vineet Gupta
+> Cc: linux-snps-arc@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH] ARC: unwind: Mark expected switch fall-through
+> 
+> Hi,
+> 
+> Friendly ping:
+> 
+> Who can take this, please?
+> 
+> Thanks
 > --
-> Michal Hocko
-> SUSE Labs
+> Gustavo
+> 
+> On 8/20/19 8:29 PM, Gustavo A. R. Silva wrote:
+>> Mark switch cases where we are expecting to fall through.
+>>
+>> This patch fixes the following warnings (Building: haps_hs_defconfig arc):
+>>
+>> arch/arc/kernel/unwind.c: In function ‘read_pointer’:
+>> ./include/linux/compiler.h:328:5: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>   do {        \
+>>      ^
+>> ./include/linux/compiler.h:338:2: note: in expansion of macro ‘__compiletime_assert’
+>>   __compiletime_assert(condition, msg, prefix, suffix)
+>>   ^~~~~~~~~~~~~~~~~~~~
+>> ./include/linux/compiler.h:350:2: note: in expansion of macro ‘_compiletime_assert’
+>>   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>>   ^~~~~~~~~~~~~~~~~~~
+>> ./include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
+>>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>>                                      ^~~~~~~~~~~~~~~~~~
+>> ./include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
+>>   BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+>>   ^~~~~~~~~~~~~~~~
+>> arch/arc/kernel/unwind.c:573:3: note: in expansion of macro ‘BUILD_BUG_ON’
+>>    BUILD_BUG_ON(sizeof(u32) != sizeof(value));
+>>    ^~~~~~~~~~~~
+>> arch/arc/kernel/unwind.c:575:2: note: here
+>>   case DW_EH_PE_native:
+>>   ^~~~
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>>  arch/arc/kernel/unwind.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arc/kernel/unwind.c b/arch/arc/kernel/unwind.c
+>> index 445e4d702f43..dc05a63516f5 100644
+>> --- a/arch/arc/kernel/unwind.c
+>> +++ b/arch/arc/kernel/unwind.c
+>> @@ -572,6 +572,7 @@ static unsigned long read_pointer(const u8 **pLoc, const void *end,
+>>  #else
+>>               BUILD_BUG_ON(sizeof(u32) != sizeof(value));
+>>  #endif
+>> +             /* Fall through */
+>>       case DW_EH_PE_native:
+>>               if (end < (const void *)(ptr.pul + 1))
+>>                       return 0;
+>>
+> 
+> _______________________________________________
+> linux-snps-arc mailing list
+> linux-snps-arc@lists.infradead.org
+> https://urldefense.proofpoint.com/v2/url?u=http-3A__lists.infradead.org_mailman_listinfo_linux-2Dsnps-2Darc&d=DwIGaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=ZlJN1MriPUTkBKCrPSx67GmaplEUGcAEk9yPtCLdUXI&m=GJ6OJTL5qRgb-RdlLBhiFzZH5ZmLXf2lxjuQgwbw7n8&s=1TapZixYsKQRFCCPkofjhki-eZ34KmyqojUdAxceNNA&e=
+> 
