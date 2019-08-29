@@ -2,137 +2,152 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25420C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD7FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBAFC2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:22:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="iDDG+wOV"
+	by mail.kernel.org (Postfix) with ESMTP id 6B85F23429
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:23:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfH2LWm (ORCPT
+        id S1727528AbfH2LXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:22:42 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:62421 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbfH2LWl (ORCPT
+        Thu, 29 Aug 2019 07:23:36 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:57851 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726416AbfH2LXg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:22:41 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x7TBMDjE007183;
-        Thu, 29 Aug 2019 20:22:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7TBMDjE007183
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567077734;
-        bh=358U2uqPbl6qXFC9SXmqT9U+KgkSDo6eJ4UtGlqT3Kw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iDDG+wOVXM/+21lGdyYLTmVoNK3HTjUTLOSnC6ELrsr289u4SiLK5ziYZWGKrbpNO
-         xnETFHkR+5UdmQwOcRXT3LDqWkL6WZRDuymXkgxhYJQqA/rlq9GUuwdxCAvkVlLMit
-         JpSvTfHKUXTWK3s+55EOvYH2SW0PZd5yB882M7G1n5iLjYEA7tVcvbTgnEkR3ym3nt
-         bQmjX2g6M82XGvnpNxEEWeTPHdffHKu/sanvCOw5IAH+3JQeNEgmeNf4Pf9U57layo
-         DaUSaTEbNJ2HRNnYR+Pwqa/JOezFT/+i2zaDGH0GGYz/2jtCnQTusuQQlPLlgF2yiP
-         D/1Zu32494mrQ==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Piotr Sroka <piotrs@cadence.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] mmc: sdhci: use lower/upper_32_bits() macros for DMA addresses
-Date:   Thu, 29 Aug 2019 20:22:06 +0900
-Message-Id: <20190829112206.22213-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 29 Aug 2019 07:23:36 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id 3IWXiRDXJDqPe3IWbiNius; Thu, 29 Aug 2019 13:23:33 +0200
+Subject: Re: [PATCH 7/8] media: cedrus: Add support for holding capture buffer
+To:     Jernej Skrabec <jernej.skrabec@siol.net>, mchehab@kernel.org,
+        paul.kocialkowski@bootlin.com, mripard@kernel.org
+Cc:     pawel@osciak.com, m.szyprowski@samsung.com,
+        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
+        acourbot@chromium.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        ezequiel@collabora.com, jonas@kwiboo.se
+References: <20190822194500.2071-1-jernej.skrabec@siol.net>
+ <20190822194500.2071-8-jernej.skrabec@siol.net>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <f105990c-e059-6bdd-433f-074388e3a2dc@xs4all.nl>
+Date:   Thu, 29 Aug 2019 13:23:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190822194500.2071-8-jernej.skrabec@siol.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfEvKT+YAX69YOdWPyoQUh8SffH6qqUV6kZn+ESAP2YPgGYwvqviMJ64VZXwp1TtZ/ePLbU0022q51PrAyBsGo/nnPeQJp9Tng6TOHDFy/MyvejmD4sc3
+ 5odX7zb2VaFTSpoZdO3Ca/9I/6Hkl3qEkiZDTMRueAwwOcCbETnTqaOHl8zKt9F7zDxEPPO10o0PfJQ+Vfz/abxmnzC03UDuguQGOgacPIoGim6tMUIIwMxB
+ A1oDxXQdNbhQzmt6U3A1ahSYmhRpYjCAv+BUr6CAbaTA6K3dx8E2pJeMPTLxflEq0FvzPgSHeTl9i86g1EZZfW5DPLqFi8lhcLvfUge4rU9all+OPl2G4wz7
+ +gRj9Jf0ycYsk5j6PaebzSCFvXkZtHesfWUOF/r0ybt4qDPprDpguXjXurxOE0aW0SPuKOUM79iio94IWFRqadpH/YimyRR1KWGv7+34MB/Jnx5jSYcV8k20
+ yEqRlVvXWdupr//PmhDXcE0DevUoBQI0W6/JFYWhnX5LKVbhSa/8axDc7+5u7gHmPY3W2LTfbm4dbUFuoHJOsXGULzaiDIsJ+F9OP7WiSq5+YmC9An+/jQII
+ Xz7MUUZx2LWCmPVsNXNr1Y9WqICnjYPxC5zSpiLKFnCKj9yzFQcjl828QX4XzWWV42zmQLQXjMnvpovCtNWG9RDdeiwj0CSQDNNetVuN8GgOdjdt+izXFCEE
+ oVnAVOLpvvW+PccO4sMh9NDhwTKmMVOI
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the DMA addresses are casted to (u64) for the upper 32bits
-to avoid "right shift count >= width of type" warning.
+On 8/22/19 9:44 PM, Jernej Skrabec wrote:
+> When frame contains multiple slices and driver works in slice mode, it's
+> more efficient to hold capture buffer in queue until all slices of a
+> same frame are decoded.
+> 
+> Add support for that to Cedrus driver by exposing and implementing
+> V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF capability.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/staging/media/sunxi/cedrus/cedrus_dec.c   | 9 +++++++++
+>  drivers/staging/media/sunxi/cedrus/cedrus_hw.c    | 8 +++++---
+>  drivers/staging/media/sunxi/cedrus/cedrus_video.c | 1 +
+>  3 files changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> index d7b54accfe83..68462b99750e 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> @@ -31,6 +31,14 @@ void cedrus_device_run(void *priv)
+>  
+>  	run.src = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+>  	run.dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> +
+> +	if (v4l2_m2m_release_capture_buf(run.src, run.dst)) {
+> +		v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+> +		v4l2_m2m_buf_done(run.dst, VB2_BUF_STATE_DONE);
+> +		run.dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> +	}
+> +	run.dst->is_held = run.src->flags & V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
+> +
+>  	run.first_slice =
+>  		run.src->vb2_buf.timestamp != run.dst->vb2_buf.timestamp;
+>  
+> @@ -46,6 +54,7 @@ void cedrus_device_run(void *priv)
+>  			V4L2_CID_MPEG_VIDEO_MPEG2_SLICE_PARAMS);
+>  		run.mpeg2.quantization = cedrus_find_control_data(ctx,
+>  			V4L2_CID_MPEG_VIDEO_MPEG2_QUANTIZATION);
+> +		run.dst->is_held = false;
+>  		break;
+>  
+>  	case V4L2_PIX_FMT_H264_SLICE:
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+> index a942cd9bed57..99fedec80224 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+> @@ -122,7 +122,7 @@ static irqreturn_t cedrus_irq(int irq, void *data)
+>  	dev->dec_ops[ctx->current_codec]->irq_clear(ctx);
+>  
+>  	src_buf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
+> -	dst_buf = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+> +	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+>  
+>  	if (!src_buf || !dst_buf) {
+>  		v4l2_err(&dev->v4l2_dev,
+> @@ -136,8 +136,10 @@ static irqreturn_t cedrus_irq(int irq, void *data)
+>  		state = VB2_BUF_STATE_DONE;
+>  
+>  	v4l2_m2m_buf_done(src_buf, state);
+> -	v4l2_m2m_buf_done(dst_buf, state);
+> -
+> +	if (!dst_buf->is_held) {
+> +		v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+> +		v4l2_m2m_buf_done(dst_buf, state);
+> +	}
+>  	v4l2_m2m_job_finish(ctx->dev->m2m_dev, ctx->fh.m2m_ctx);
+>  
+>  	return IRQ_HANDLED;
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+> index eeee3efd247b..5153b2bba21e 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+> @@ -515,6 +515,7 @@ int cedrus_queue_init(void *priv, struct vb2_queue *src_vq,
+>  	src_vq->type = V4L2_BUF_TYPE_VIDEO_OUTPUT;
+>  	src_vq->io_modes = VB2_MMAP | VB2_DMABUF;
+>  	src_vq->drv_priv = ctx;
+> +	src_vq->subsystem_flags = VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF;
 
-<linux/kernel.h> provides macros to address this, and I like the macro
-names are self-documenting.
+This isn't quite right: this flag should only be set for formats that support
+slicing. So cedrus_s_fmt_vid_out() should set this for H264, but clear it for
+MPEG2.
 
-I introduced a new helper, sdhci_set_adma_addr() to avoid the code
-duplication.
+Looking at the cedrus code it seems that it does not set an initial default output
+format after opening the video device. This seems wrong to me. If it did set a
+default output format, then src_vq->subsystem_flags should set this flag corresponding
+to the default output format.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+>  	src_vq->buf_struct_size = sizeof(struct cedrus_buffer);
+>  	src_vq->min_buffers_needed = 1;
+>  	src_vq->ops = &cedrus_qops;
+> 
 
-Changes in v2:
-  - Another way to reduce linu wrapping
+Regards,
 
- drivers/mmc/host/sdhci.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 08cc0792c174..66c2cf89ee22 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -668,10 +668,10 @@ void sdhci_adma_write_desc(struct sdhci_host *host, void **desc,
- 	/* 32-bit and 64-bit descriptors have these members in same position */
- 	dma_desc->cmd = cpu_to_le16(cmd);
- 	dma_desc->len = cpu_to_le16(len);
--	dma_desc->addr_lo = cpu_to_le32((u32)addr);
-+	dma_desc->addr_lo = cpu_to_le32(lower_32_bits(addr));
- 
- 	if (host->flags & SDHCI_USE_64_BIT_DMA)
--		dma_desc->addr_hi = cpu_to_le32((u64)addr >> 32);
-+		dma_desc->addr_hi = cpu_to_le32(upper_32_bits(addr));
- 
- 	*desc += host->desc_sz;
- }
-@@ -816,6 +816,13 @@ static void sdhci_adma_table_post(struct sdhci_host *host,
- 	}
- }
- 
-+static void sdhci_set_adma_addr(struct sdhci_host *host, dma_addr_t addr)
-+{
-+	sdhci_writel(host, lower_32_bits(addr), SDHCI_ADMA_ADDRESS);
-+	if (host->flags & SDHCI_USE_64_BIT_DMA)
-+		sdhci_writel(host, upper_32_bits(addr), SDHCI_ADMA_ADDRESS_HI);
-+}
-+
- static dma_addr_t sdhci_sdma_address(struct sdhci_host *host)
- {
- 	if (host->bounce_buffer)
-@@ -826,13 +833,10 @@ static dma_addr_t sdhci_sdma_address(struct sdhci_host *host)
- 
- static void sdhci_set_sdma_addr(struct sdhci_host *host, dma_addr_t addr)
- {
--	if (host->v4_mode) {
--		sdhci_writel(host, addr, SDHCI_ADMA_ADDRESS);
--		if (host->flags & SDHCI_USE_64_BIT_DMA)
--			sdhci_writel(host, (u64)addr >> 32, SDHCI_ADMA_ADDRESS_HI);
--	} else {
-+	if (host->v4_mode)
-+		sdhci_set_adma_addr(host, addr);
-+	else
- 		sdhci_writel(host, addr, SDHCI_DMA_ADDRESS);
--	}
- }
- 
- static unsigned int sdhci_target_timeout(struct sdhci_host *host,
-@@ -1095,12 +1099,7 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
- 			host->flags &= ~SDHCI_REQ_USE_DMA;
- 		} else if (host->flags & SDHCI_USE_ADMA) {
- 			sdhci_adma_table_pre(host, data, sg_cnt);
--
--			sdhci_writel(host, host->adma_addr, SDHCI_ADMA_ADDRESS);
--			if (host->flags & SDHCI_USE_64_BIT_DMA)
--				sdhci_writel(host,
--					     (u64)host->adma_addr >> 32,
--					     SDHCI_ADMA_ADDRESS_HI);
-+			sdhci_set_adma_addr(host, host->adma_addr);
- 		} else {
- 			WARN_ON(sg_cnt != 1);
- 			sdhci_set_sdma_addr(host, sdhci_sdma_address(host));
--- 
-2.17.1
-
+	Hans
