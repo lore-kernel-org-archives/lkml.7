@@ -2,116 +2,204 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53D8C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 05:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295DFC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 05:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4053206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 05:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EABA822CED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 05:30:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jkAex+PU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727371AbfH2F2Z (ORCPT
+        id S1727384AbfH2Fav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 01:28:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39648 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725837AbfH2F2Z (ORCPT
+        Thu, 29 Aug 2019 01:30:51 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:44679 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbfH2Fav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 01:28:25 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7T5RThf041550
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:28:24 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2up31jg2b3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:28:23 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <hbathini@linux.ibm.com>;
-        Thu, 29 Aug 2019 06:28:21 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 29 Aug 2019 06:28:19 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7T5SIQY56492196
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 05:28:18 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B0700A405C;
-        Thu, 29 Aug 2019 05:28:18 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5CDF5A405B;
-        Thu, 29 Aug 2019 05:28:17 +0000 (GMT)
-Received: from [9.124.31.87] (unknown [9.124.31.87])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 29 Aug 2019 05:28:17 +0000 (GMT)
-Subject: Re: [PATCH v2] powerpc/fadump: when fadump is supported register the
- fadump sysfs files.
-To:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        Hari Bathini <hbathini@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <e7fad352-48f3-f01d-1b19-a589a3b95c07@linux.ibm.com>
- <20190828172742.18378-1-msuchanek@suse.de>
-From:   Hari Bathini <hbathini@linux.ibm.com>
-Date:   Thu, 29 Aug 2019 10:58:16 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190828172742.18378-1-msuchanek@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19082905-0028-0000-0000-0000039521B8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082905-0029-0000-0000-00002457606B
-Message-Id: <15be95b0-4cb2-1cf1-2fc1-ec313b9aa6f0@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908290059
+        Thu, 29 Aug 2019 01:30:51 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190829053049euoutp02afe9be47049c63d84866f27f7d958253~-Tbhx7B2v3210332103euoutp02R
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 05:30:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190829053049euoutp02afe9be47049c63d84866f27f7d958253~-Tbhx7B2v3210332103euoutp02R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1567056649;
+        bh=8i0ZsJoTCw9igACp/Y80+zUSsANQc6ilNqp2fm8mj+w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jkAex+PUGM0UzkGup/lsyzvyFXaXLxmGHIfJEAFDO4/APVdsmRRM+8CsLhjLSN+sb
+         k1BIQCGq9lR++VEoC/J2UdPxKqYpW4az6iNgDU3VAVwD2CzywLW90bdxh+jBdnRpi3
+         W/YHTd0BynGgOsy/QfFB9tgV1cjZIWuyorR7uITw=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190829053049eucas1p19f2698838b20e78fba38d0b16bf44b71~-TbhGU0TO0697306973eucas1p1p;
+        Thu, 29 Aug 2019 05:30:49 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id AF.1B.04469.803676D5; Thu, 29
+        Aug 2019 06:30:48 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190829053048eucas1p1f6549a72d7374812b2aa3cf93862794e~-TbgKE0qJ2620626206eucas1p16;
+        Thu, 29 Aug 2019 05:30:48 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190829053047eusmtrp189a30599d35ed8b49a69bd087c6a06f0~-Tbf7y6bG1101011010eusmtrp1E;
+        Thu, 29 Aug 2019 05:30:47 +0000 (GMT)
+X-AuditID: cbfec7f2-54fff70000001175-7e-5d67630854cf
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id B6.EC.04117.703676D5; Thu, 29
+        Aug 2019 06:30:47 +0100 (BST)
+Received: from AMDC2765.DIGITAL.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190829053047eusmtip173d9461db18a05736a4e9e8197ce07ed~-TbfU3H2p1820418204eusmtip1N;
+        Thu, 29 Aug 2019 05:30:47 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jochen Sprickerhof <jochen@sprickerhof.de>,
+        Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH v2 1/2 RESEND] usb: core: phy: add support for PHY
+ calibration
+Date:   Thu, 29 Aug 2019 07:30:27 +0200
+Message-Id: <20190829053028.32438-2-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190829053028.32438-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGKsWRmVeSWpSXmKPExsWy7djP87ocyemxBhsvmlpsnLGe1eJY2xN2
+        i+bF69kslv69x2hx/vwGdovLu+awWcw4v4/JYtGyVmaLdRtvsVusPXKX3eLYopMsFs2bprA6
+        8HjsnHWX3ePphMnsHov3vGTy2LSqk81j/9w17B59W1YxemzY8o/F4/MmuQCOKC6blNSczLLU
+        In27BK6My+8b2AoWi1c0r1nI3MD4WLiLkZNDQsBEYtHHDrYuRi4OIYEVjBLN/esYIZwvjBJH
+        d+yDcj4zSqz9upQRpuXgmYPsEInljBK/f59jgms587YXrIpNwFCi620XG4gtIuAgsWTpHbAl
+        zAK7mSX2/nwHlhAWCJCY/e0vO4jNIqAqcfX+JrBmXgFbiT/ve1kh1slLrN5wgBnE5hSwk3jw
+        uhFsm4TAKnaJE9O3s0AUuUj8+rWDDcIWlnh1fAs7hC0jcXpyDwtEQzOjxMNza9khnB5GictN
+        M6A+spY4fPwi0DoOoPs0Jdbv0ocIO0o8OnkLLCwhwCdx460gSJgZyJy0bTozRJhXoqNNCKJa
+        TWLW8XVwaw9euMQMYXtIbG89Dg2hiYwSS2e8YJ7AKD8LYdkCRsZVjOKppcW56anFhnmp5XrF
+        ibnFpXnpesn5uZsYgann9L/jn3Ywfr2UdIhRgINRiYeXIzEtVog1say4MvcQowQHs5II7yOV
+        1Fgh3pTEyqrUovz4otKc1OJDjNIcLErivNUMD6KFBNITS1KzU1MLUotgskwcnFINjEam001s
+        b0yI/3dn7nzHCZVVbTNyRb+ZVYbc255mLeT65OMMnmAWo9dreGrjc7/E8HtZbrIV0C75teXO
+        AZ4O+QJf2f3f9D43qX/vr01NKN/81e7CXodXtWs+rf+adtqjMErgXuC8f/lyvy9uETM6Urbo
+        +nyddSs+VqY0/NZ1fnXnd7aM8MWcLCWW4oxEQy3mouJEAHvCXI45AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42I5/e/4XV325PRYgyl7TC02zljPanGs7Qm7
+        RfPi9WwWS//eY7Q4f34Du8XlXXPYLGac38dksWhZK7PFuo232C3WHrnLbnFs0UkWi+ZNU1gd
+        eDx2zrrL7vF0wmR2j8V7XjJ5bFrVyeaxf+4ado++LasYPTZs+cfi8XmTXABHlJ5NUX5pSapC
+        Rn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G5fcNbAWLxSua1yxk
+        bmB8LNzFyMkhIWAicfDMQfYuRi4OIYGljBKfep8yQSRkJE5Oa2CFsIUl/lzrYoMo+sQocX7R
+        HEaQBJuAoUTXW5AEJ4eIgJNE59rTYEXMAgeZJS5e3MsOkhAW8JM49+wzWAOLgKrE1fubwGxe
+        AVuJP+97oTbIS6zecIAZxOYUsJN48LoR7AohoJpXNx8wT2DkW8DIsIpRJLW0ODc9t9hIrzgx
+        t7g0L10vOT93EyMwDrYd+7llB2PXu+BDjAIcjEo8vAnJabFCrIllxZW5hxglOJiVRHgfqaTG
+        CvGmJFZWpRblxxeV5qQWH2I0BTpqIrOUaHI+MEbzSuINTQ3NLSwNzY3Njc0slMR5OwQOxggJ
+        pCeWpGanphakFsH0MXFwSjUw6qeGfBA72GEVzBxTu4z3v6mUmPvNEK0zB+4YcOi8nbd7H/NR
+        53dKF2dWznWZZ353xe+dd4qVlax1EmctaaycaXQ2dM3CXzHm0StWv1jBvf+hre/yVe4TWhde
+        NFh50CmSK66ogZVR7lGdm9R7hm/cUz51299z1el+9rDIPPHIlwl5kW+vCOupK7EUZyQaajEX
+        FScCAEJBmrKZAgAA
+X-CMS-MailID: 20190829053048eucas1p1f6549a72d7374812b2aa3cf93862794e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190829053048eucas1p1f6549a72d7374812b2aa3cf93862794e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190829053048eucas1p1f6549a72d7374812b2aa3cf93862794e
+References: <20190829053028.32438-1-m.szyprowski@samsung.com>
+        <CGME20190829053048eucas1p1f6549a72d7374812b2aa3cf93862794e@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some PHYs (for example Exynos5 USB3.0 DRD PHY) require calibration to be
+done after every USB HCD reset. Generic PHY framework has been already
+extended with phy_calibrate() function in commit 36914111e682 ("drivers:
+phy: add calibrate method"). This patch adds support for it to generic
+PHY handling code in USB HCD core.
 
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Anand Moon <linux.amoon@gmail.com>
+Tested-by: Jochen Sprickerhof <jochen@sprickerhof.de>
+---
+ drivers/usb/core/hcd.c |  7 +++++++
+ drivers/usb/core/phy.c | 21 +++++++++++++++++++++
+ drivers/usb/core/phy.h |  1 +
+ 3 files changed, 29 insertions(+)
 
-On 28/08/19 10:57 PM, Michal Suchanek wrote:
-> Currently it is not possible to distinguish the case when fadump is
-> supported by firmware and disabled in kernel and completely unsupported
-> using the kernel sysfs interface. User can investigate the devicetree
-> but it is more reasonable to provide sysfs files in case we get some
-> fadumpv2 in the future.
-> 
-> With this patch sysfs files are available whenever fadump is supported
-> by firmware.
-> 
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
-
-[...]
-
-> -	if (!fw_dump.fadump_supported) {
-> +	if (!fw_dump.fadump_supported && fw_dump.fadump_enabled) {
->  		printk(KERN_ERR "Firmware-assisted dump is not supported on"
->  			" this hardware\n");
-> -		return 0;
->  	}
-
-The above hunk is redundant with similar message already logged during
-early boot in fadump_reserve_mem() function. I am not strongly against
-this though. So...
-
-
-Acked-by: Hari Bathini <hbathini@linux.ibm.com>
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index 88533938ce19..b89936c1df23 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -2291,6 +2291,9 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
+ 	hcd->state = HC_STATE_RESUMING;
+ 	status = hcd->driver->bus_resume(hcd);
+ 	clear_bit(HCD_FLAG_WAKEUP_PENDING, &hcd->flags);
++	if (status == 0)
++		status = usb_phy_roothub_calibrate(hcd->phy_roothub);
++
+ 	if (status == 0) {
+ 		struct usb_device *udev;
+ 		int port1;
+@@ -2864,6 +2867,10 @@ int usb_add_hcd(struct usb_hcd *hcd,
+ 	}
+ 	hcd->rh_pollable = 1;
+ 
++	retval = usb_phy_roothub_calibrate(hcd->phy_roothub);
++	if (retval)
++		goto err_hcd_driver_setup;
++
+ 	/* NOTE: root hub and controller capabilities may not be the same */
+ 	if (device_can_wakeup(hcd->self.controller)
+ 			&& device_can_wakeup(&hcd->self.root_hub->dev))
+diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
+index 7580493b867a..fb1588e7c282 100644
+--- a/drivers/usb/core/phy.c
++++ b/drivers/usb/core/phy.c
+@@ -151,6 +151,27 @@ int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
+ }
+ EXPORT_SYMBOL_GPL(usb_phy_roothub_set_mode);
+ 
++int usb_phy_roothub_calibrate(struct usb_phy_roothub *phy_roothub)
++{
++	struct usb_phy_roothub *roothub_entry;
++	struct list_head *head;
++	int err;
++
++	if (!phy_roothub)
++		return 0;
++
++	head = &phy_roothub->list;
++
++	list_for_each_entry(roothub_entry, head, list) {
++		err = phy_calibrate(roothub_entry->phy);
++		if (err)
++			return err;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(usb_phy_roothub_calibrate);
++
+ int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub)
+ {
+ 	struct usb_phy_roothub *roothub_entry;
+diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
+index dad564e2d2d4..20a267cd986b 100644
+--- a/drivers/usb/core/phy.h
++++ b/drivers/usb/core/phy.h
+@@ -18,6 +18,7 @@ int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
+ 
+ int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
+ 			     enum phy_mode mode);
++int usb_phy_roothub_calibrate(struct usb_phy_roothub *phy_roothub);
+ int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
+ void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
+ 
+-- 
+2.17.1
 
