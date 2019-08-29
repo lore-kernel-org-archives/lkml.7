@@ -2,126 +2,102 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBD8C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEDFC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE432189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0311D2189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3zJNkLb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CW91Qg5X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfH2NvX (ORCPT
+        id S1727691AbfH2Nv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:51:23 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44788 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbfH2NvX (ORCPT
+        Thu, 29 Aug 2019 09:51:27 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42338 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbfH2NvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:51:23 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t14so1595550plr.11
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 06:51:22 -0700 (PDT)
+        Thu, 29 Aug 2019 09:51:24 -0400
+Received: by mail-qt1-f196.google.com with SMTP id t12so3694569qtp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 06:51:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=fW3k8zWPWk6FVp5QrWdqwjUBdQ4RebiwFEy2lJKDFrw=;
-        b=a3zJNkLb0Tq4GidOYWeFBl+BOSSAnzsk8SKjd1/mq6SDr0Bi28W3HnkIm7ZP9qZERZ
-         PJDjnROIewGZ3HWRr68Q1bMrWF9HikksxywFuLri5Tt+xcCyRIdaZ8zAbPZwkEVkKEtS
-         kWNhJojo3SH32dQLAgUzUmTnM9Eulr+lV2PhDaRxaw/cGI0UA5y9T814yEIPvANy0QQB
-         jqM5SzZpgwH0S5XYSM8e+ZL+7ev1Ygu7DQwiVvH/1+t+mYLqBz65cXFC0mj1t/q1Zh5w
-         sdhSGQZdbP3ua0iAYc4Tu2tbuKEbbGDceYIZrmkubnB68pTXo9ZHMIc8NJGpepjA/lmk
-         PUtg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=KrzCEKKNAi4VHbtHRw7x95sb6UYGohg8TR20YevudW8=;
+        b=CW91Qg5X9VDKVEUs6SGcwws+rIhmQfjiPVAxjZxPn+aN58G2uyUmYjJOWD7VaemjSa
+         T0LxG+g9ZtgnMiqm2yvENw66bx2hZgQzHxujLU2liAspqIZSqGLPaoFFiOisAYQE6PfN
+         uSt5yWkF6J0NLlTyDf+OXG4BE7gYZNmyI8lJVVJR5w7QgZF/zcL8Q2HPCOB+2i02KYtA
+         2PqBCBTBVyaYKxLIJgx1KH4obcgoyF0TC4PbWl90LOziN5ejvDw1qZz2rY0ckOhURjpD
+         nsBLglB6rEKuMkAbOH4qWugQ+lNqrteLbrZFCFxj91ecOKl+c5mT+lXyVLiE/974DzfA
+         3uNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=fW3k8zWPWk6FVp5QrWdqwjUBdQ4RebiwFEy2lJKDFrw=;
-        b=FFzPNi/Ah0zrHbQZUB492l1QbZtPVodacVQcYE9cy1KEEZ/h5QJ/GWY0HvZJCU1gVC
-         D+ER4nyVPOHmAetdyEwEro1dtSt/WHV95IS2qB+sm7xMYGKMie4VVWd50PiUXsSDvVUy
-         dn6i0+6MX99745sX4zjLcrqo5d0GlCvXkcAGyB+BUl5W5FVgG1braHk9CC18+JrIC0jF
-         ePbA31nFJO8fAMtUYaoenRLW1oIId486Z/fyNBaWcPuO67iWU2WAm8YBAfQohdxzn1sa
-         7pid+BKMAmLsd68YhdvW4aShLkBlYH0grQw+OlkLNZ3dhnEkN7dS6a3TgS67N4XIvqtD
-         egAQ==
-X-Gm-Message-State: APjAAAWk1rBPkam9XtyFEeMyamoHA6nQvCE+3Zow+uza/j4sSJ602NfD
-        J6VDzVGkSJ9Bdspzb86Z2Jw=
-X-Google-Smtp-Source: APXvYqxtmbM6WXnKoiaNk54ZgSjFsVFn9WynUjYzmF6o52O3dElyrmgEaX2U+RxbfprFvvaJ3DRfdA==
-X-Received: by 2002:a17:902:fe0e:: with SMTP id g14mr4519162plj.307.1567086682624;
-        Thu, 29 Aug 2019 06:51:22 -0700 (PDT)
-Received: from VM_12_95_centos.localdomain ([58.87.109.34])
-        by smtp.googlemail.com with ESMTPSA id w6sm2950630pgg.2.2019.08.29.06.51.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 06:51:21 -0700 (PDT)
-From:   Zhigang Lu <totty.lu@gmail.com>
-To:     luzhigang001@gmail.com, mike.kravetz@oracle.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Zhigang Lu <tonnylu@tencent.com>
-Subject: [PATCH v2] mm/hugetlb: avoid looping to the same hugepage if !pages and !vmas
-Date:   Thu, 29 Aug 2019 21:50:57 +0800
-Message-Id: <1567086657-22528-1-git-send-email-totty.lu@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KrzCEKKNAi4VHbtHRw7x95sb6UYGohg8TR20YevudW8=;
+        b=dfFZrIBwd26QYJBl/7Fwd4Fnd8R5xWb99NZ/2rHbw4x+iq/x+jWnbg6cE44a210Ziq
+         SJl7lZWaL4n+pzB6GChruR/oaaZXwsMJMDv/BPk0IdX/Grkvu0uQ5EsSgIZD7jqsuZV2
+         tLwFlWHitj7JML8K06fB3wDO1W5sREkJe4vWgkjYi1V7RkvRyUEIcTwE9IgEdHAGvYhb
+         JhXDSEvUoAu8u/7SqpRprJEgI+i844EurPcVBpOxZFRQz6av3chw9JlFjvPZzwlOpfY0
+         xgU5EEhKWUu/V1r3wl/Oo/vVNX5wQP7kYxiR7hL6x1bVMzSK2yiPyMgMQnKh0R9AAvvt
+         e1Lw==
+X-Gm-Message-State: APjAAAXOWvIm1D+eWZirXBQ372HONdyLwTBU+mYY2H7TZgXEWbA/TBeb
+        PpLL2qUkYZ5xu4FmTT0wjNJMq/KIeZJVDt4JB6A=
+X-Google-Smtp-Source: APXvYqyOOSefB7FXx2RWUFf4qV/+2+PyFA0D3HJpZpLP9x7qqXq1OSfWujHiolBHL+HMeIMTvuqikgcErK/oRSpcxI4=
+X-Received: by 2002:a0c:b192:: with SMTP id v18mr6639478qvd.163.1567086683107;
+ Thu, 29 Aug 2019 06:51:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190730134704.44515-1-tzungbi@google.com> <CA+Px+wXetT1mQZW+3zc2vNDP4Jf3zKqGNz=Hq0yHn0Fvf=y-FQ@mail.gmail.com>
+ <106711f8-117a-d0df-9b66-dc6be6431d07@collabora.com> <CA+Px+wU=V0cGZeAxoqSJeVTLcO+v9=tPQKxKBTp-npsgqXo3yQ@mail.gmail.com>
+ <89aac768-b096-c51c-2ec7-5c135b089a31@collabora.com> <20190801145050.GA154523@google.com>
+ <CA+Px+wUzyFB6vRM91PTFkY_fBfp2xybegy34rbW_D9zzNX6-8Q@mail.gmail.com> <a75bd837-6b24-6a64-00d8-0b3fe9d5a784@collabora.com>
+In-Reply-To: <a75bd837-6b24-6a64-00d8-0b3fe9d5a784@collabora.com>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Thu, 29 Aug 2019 15:51:11 +0200
+Message-ID: <CAFqH_51HLLDfJHheAOid9N6WYHHDrNxg1QOtDOOVLNLH_kRDXg@mail.gmail.com>
+Subject: Re: [PATCH v4] platform/chrome: cros_ec_trace: update generating script
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Tzung-Bi Shih <tzungbi@google.com>,
+        Raul Rangel <rrangel@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jimmy Cheng-Yi Chiang <cychiang@google.com>,
+        Dylan Reid <dgreid@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhigang Lu <tonnylu@tencent.com>
+Missatge de Enric Balletbo i Serra <enric.balletbo@collabora.com> del
+dia dj., 29 d=E2=80=99ag. 2019 a les 15:44:
+>
+> Hi Tzung-Bi,
+>
+> On 29/8/19 6:19, Tzung-Bi Shih wrote:
+> > Hi Enric and Raul,
+> >
+> > Do you have any further concerns on this patch?
+>
+> This patch will conflict with [2] which hopefully will be merged on next =
+merge
+> window through Lee's tree. As this patch is only changing the doc I'm wil=
+ling to
+> wait after [2] lands. It's on my radar and don't need to resend, I'll do =
+the
+> required changes.
+>
+> Best Regards,
+>  Enric
 
-When mmapping an existing hugetlbfs file with MAP_POPULATE, we find
-it is very time consuming. For example, mmapping a 128GB file takes
-about 50 milliseconds. Sampling with perfevent shows it spends 99%
-time in the same_page loop in follow_hugetlb_page().
+I missed the patch link
 
-samples: 205  of event 'cycles', Event count (approx.): 136686374
--  99.04%  test_mmap_huget  [kernel.kallsyms]  [k] follow_hugetlb_page
-        follow_hugetlb_page
-        __get_user_pages
-        __mlock_vma_pages_range
-        __mm_populate
-        vm_mmap_pgoff
-        sys_mmap_pgoff
-        sys_mmap
-        system_call_fastpath
-        __mmap64
-
-follow_hugetlb_page() is called with pages=NULL and vmas=NULL, so for
-each hugepage, we run into the same_page loop for pages_per_huge_page()
-times, but doing nothing. With this change, it takes less then 1
-millisecond to mmap a 128GB file in hugetlbfs.
-
-Signed-off-by: Zhigang Lu <tonnylu@tencent.com>
-Reviewed-by: Haozhong Zhang <hzhongzhang@tencent.com>
-Reviewed-by: Zongming Zhang <knightzhang@tencent.com>
-Acked-by: Matthew Wilcox <willy@infradead.org>
----
- mm/hugetlb.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 6d7296d..2df941a 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4391,6 +4391,17 @@ long follow_hugetlb_page(struct mm_struct *mm, struct vm_area_struct *vma,
- 				break;
- 			}
- 		}
-+
-+		if (!pages && !vmas && !pfn_offset &&
-+		    (vaddr + huge_page_size(h) < vma->vm_end) &&
-+		    (remainder >= pages_per_huge_page(h))) {
-+			vaddr += huge_page_size(h);
-+			remainder -= pages_per_huge_page(h);
-+			i += pages_per_huge_page(h);
-+			spin_unlock(ptl);
-+			continue;
-+		}
-+
- same_page:
- 		if (pages) {
- 			pages[i] = mem_map_offset(page, pfn_offset);
--- 
-1.8.3.1
-
+[2] https://lkml.org/lkml/2019/8/23/475
