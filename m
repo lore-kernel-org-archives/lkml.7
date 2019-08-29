@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44263C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B127C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACDD23405
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434392342A
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102664;
-	bh=GMoAzwSR+XjclkVLdBs2F+bB87N7Ju4xv4DHWUbv9HM=;
+	s=default; t=1567102667;
+	bh=DN0AQ5ZP7UkNa371gPSud2SGopdr6FMEecB5qk17XgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=itsCo+STNUxVt5EHEbNzLIbPA8BdvmMgpDpGsWJ3kQGMQuXCMS27m7jBNOlJEsTpc
-	 s9qK9IXjUxt4Oz4OZnteQCQKeYFgEoPkdZ+qH9jjjCe3X2G8ma6lyKU+LZ8CzY6pVL
-	 CybakqmNe2FjQXnHNHmJbFGwjwhgGVWRWmFyR9LY=
+	b=AECZxux+Ul0FpWBu0qhFs+9rXQNHQ9ObMZBDe1OAJkC/xmwVv6zBs9thxbmk2uFKq
+	 naJ0bfYHd4mM1NHX5Y3ewHDClwzZ/m5qLd6xTmS2bMeBUEIQr8Ri31bcXa5yHNOLm9
+	 OwfL/2GQuEhIwWy3tWxEYZSYMFxdBcjedhRY4yOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbfH2SRn (ORCPT
+        id S1730196AbfH2SRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:17:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59668 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:17:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730063AbfH2SR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:17:28 -0400
+        id S1728744AbfH2SRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D0F92189D;
-        Thu, 29 Aug 2019 18:17:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA0B02339E;
+        Thu, 29 Aug 2019 18:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102647;
-        bh=GMoAzwSR+XjclkVLdBs2F+bB87N7Ju4xv4DHWUbv9HM=;
+        s=default; t=1567102650;
+        bh=DN0AQ5ZP7UkNa371gPSud2SGopdr6FMEecB5qk17XgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oTyiH3hVH3jrjsW8PjtXc9gbURu52B8hQJX6vcrkn7rCquPOv39xhvQkUJLLD4kZC
-         h/sobMROfGGj0DEBXXf+Ls6NnH5TD9lDKXo3L/gNY4D4is4cyzSXDUmg/68oeW9pel
-         Gn+knJM0nUmQFV3F8ncHOJ6qQ8hoPN94kpPajKqk=
+        b=1o3gdIEhl9NTeQFtbllQg/X+fPF7Bulswz2Y+tEIdOIqR74EZfKenhBSIOBEF74jf
+         2kGBv09oSVAiiqhM3Js+STuuvmKjOvcjkNc9RYOOiDdvCeBlR5ZMQ1CqR9nnH3G9CQ
+         D2/m76OmyByy8rVXMWtbF0Fp4hJy0b/HvXfz9uls=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 21/27] Input: hyperv-keyboard: Use in-place iterator API in the channel callback
-Date:   Thu, 29 Aug 2019 14:16:47 -0400
-Message-Id: <20190829181655.8741-21-sashal@kernel.org>
+Cc:     Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 24/27] ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
+Date:   Thu, 29 Aug 2019 14:16:50 -0400
+Message-Id: <20190829181655.8741-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181655.8741-1-sashal@kernel.org>
 References: <20190829181655.8741-1-sashal@kernel.org>
@@ -60,73 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Luis Henriques <lhenriques@suse.com>
 
-[ Upstream commit d09bc83640d524b8467a660db7b1d15e6562a1de ]
+[ Upstream commit 86968ef21596515958d5f0a40233d02be78ecec0 ]
 
-Simplify the ring buffer handling with the in-place API.
+Calling ceph_buffer_put() in __ceph_setxattr() may end up freeing the
+i_xattrs.prealloc_blob buffer while holding the i_ceph_lock.  This can be
+fixed by postponing the call until later, when the lock is released.
 
-Also avoid the dynamic allocation and the memory leak in the channel
-callback function.
+The following backtrace was triggered by fstests generic/117.
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+  BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
+  in_atomic(): 1, irqs_disabled(): 0, pid: 650, name: fsstress
+  3 locks held by fsstress/650:
+   #0: 00000000870a0fe8 (sb_writers#8){.+.+}, at: mnt_want_write+0x20/0x50
+   #1: 00000000ba0c4c74 (&type->i_mutex_dir_key#6){++++}, at: vfs_setxattr+0x55/0xa0
+   #2: 000000008dfbb3f2 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: __ceph_setxattr+0x297/0x810
+  CPU: 1 PID: 650 Comm: fsstress Not tainted 5.2.0+ #437
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
+  Call Trace:
+   dump_stack+0x67/0x90
+   ___might_sleep.cold+0x9f/0xb1
+   vfree+0x4b/0x60
+   ceph_buffer_release+0x1b/0x60
+   __ceph_setxattr+0x2b4/0x810
+   __vfs_setxattr+0x66/0x80
+   __vfs_setxattr_noperm+0x59/0xf0
+   vfs_setxattr+0x81/0xa0
+   setxattr+0x115/0x230
+   ? filename_lookup+0xc9/0x140
+   ? rcu_read_lock_sched_held+0x74/0x80
+   ? rcu_sync_lockdep_assert+0x2e/0x60
+   ? __sb_start_write+0x142/0x1a0
+   ? mnt_want_write+0x20/0x50
+   path_setxattr+0xba/0xd0
+   __x64_sys_lsetxattr+0x24/0x30
+   do_syscall_64+0x50/0x1c0
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x7ff23514359a
+
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/serio/hyperv-keyboard.c | 35 +++++----------------------
- 1 file changed, 6 insertions(+), 29 deletions(-)
+ fs/ceph/xattr.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
-index 55288a026e4e2..c137ffa6fdec8 100644
---- a/drivers/input/serio/hyperv-keyboard.c
-+++ b/drivers/input/serio/hyperv-keyboard.c
-@@ -245,40 +245,17 @@ static void hv_kbd_handle_received_packet(struct hv_device *hv_dev,
+diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+index 0376db8a74f85..932c6cdc22d66 100644
+--- a/fs/ceph/xattr.c
++++ b/fs/ceph/xattr.c
+@@ -955,6 +955,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
+ 	struct ceph_inode_info *ci = ceph_inode(inode);
+ 	struct ceph_mds_client *mdsc = ceph_sb_to_client(inode->i_sb)->mdsc;
+ 	struct ceph_cap_flush *prealloc_cf = NULL;
++	struct ceph_buffer *old_blob = NULL;
+ 	int issued;
+ 	int err;
+ 	int dirty = 0;
+@@ -1023,13 +1024,15 @@ int __ceph_setxattr(struct inode *inode, const char *name,
+ 		struct ceph_buffer *blob;
  
- static void hv_kbd_on_channel_callback(void *context)
- {
-+	struct vmpacket_descriptor *desc;
- 	struct hv_device *hv_dev = context;
--	void *buffer;
--	int bufferlen = 0x100; /* Start with sensible size */
- 	u32 bytes_recvd;
- 	u64 req_id;
--	int error;
- 
--	buffer = kmalloc(bufferlen, GFP_ATOMIC);
--	if (!buffer)
--		return;
--
--	while (1) {
--		error = vmbus_recvpacket_raw(hv_dev->channel, buffer, bufferlen,
--					     &bytes_recvd, &req_id);
--		switch (error) {
--		case 0:
--			if (bytes_recvd == 0) {
--				kfree(buffer);
--				return;
--			}
--
--			hv_kbd_handle_received_packet(hv_dev, buffer,
--						      bytes_recvd, req_id);
--			break;
-+	foreach_vmbus_pkt(desc, hv_dev->channel) {
-+		bytes_recvd = desc->len8 * 8;
-+		req_id = desc->trans_id;
- 
--		case -ENOBUFS:
--			kfree(buffer);
--			/* Handle large packet */
--			bufferlen = bytes_recvd;
--			buffer = kmalloc(bytes_recvd, GFP_ATOMIC);
--			if (!buffer)
--				return;
--			break;
--		}
-+		hv_kbd_handle_received_packet(hv_dev, desc, bytes_recvd,
-+					      req_id);
+ 		spin_unlock(&ci->i_ceph_lock);
+-		dout(" preaallocating new blob size=%d\n", required_blob_size);
++		ceph_buffer_put(old_blob); /* Shouldn't be required */
++		dout(" pre-allocating new blob size=%d\n", required_blob_size);
+ 		blob = ceph_buffer_new(required_blob_size, GFP_NOFS);
+ 		if (!blob)
+ 			goto do_sync_unlocked;
+ 		spin_lock(&ci->i_ceph_lock);
++		/* prealloc_blob can't be released while holding i_ceph_lock */
+ 		if (ci->i_xattrs.prealloc_blob)
+-			ceph_buffer_put(ci->i_xattrs.prealloc_blob);
++			old_blob = ci->i_xattrs.prealloc_blob;
+ 		ci->i_xattrs.prealloc_blob = blob;
+ 		goto retry;
  	}
- }
+@@ -1045,6 +1048,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
+ 	}
  
+ 	spin_unlock(&ci->i_ceph_lock);
++	ceph_buffer_put(old_blob);
+ 	if (lock_snap_rwsem)
+ 		up_read(&mdsc->snap_rwsem);
+ 	if (dirty)
 -- 
 2.20.1
 
