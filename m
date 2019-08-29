@@ -2,114 +2,110 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036B0C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AE6C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B552073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E42233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:09:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Z64hx8aY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfH2JJi (ORCPT
+        id S1727255AbfH2JJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:09:38 -0400
-Received: from mga11.intel.com ([192.55.52.93]:1913 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbfH2JJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:09:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 02:09:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="380707285"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Aug 2019 02:09:36 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Micha=c5=82_Wajdeczko?= <michal.wajdeczko@intel.com>
-Subject: Re: [RFC PATCH] iommu/vt-d: Fix IOMMU field not populated on device
- hot re-plug
-To:     Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-References: <20190822142922.31526-1-janusz.krzysztofik@linux.intel.com>
- <3275480.HMaYE7B3nd@jkrzyszt-desk.ger.corp.intel.com>
- <0cf4e930-1132-1e7f-815b-57a08a1fe5de@linux.intel.com>
- <3255251.C7nBVfOIaa@jkrzyszt-desk.ger.corp.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <ccb1434d-281c-abae-0726-7fd924041315@linux.intel.com>
-Date:   Thu, 29 Aug 2019 17:08:18 +0800
+        Thu, 29 Aug 2019 05:09:51 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36832 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfH2JJv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 05:09:51 -0400
+Received: by mail-lj1-f196.google.com with SMTP id u15so2294145ljl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 02:09:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=489FQGjJLqXDSKSlEr9geJrL+c7/49Z600Juares+AY=;
+        b=Z64hx8aYxKDT1yQBt+9mE+5YSVj95qMujrRDTYi50my74gMq0cNlWOYCbUqIeoVFhg
+         jZnAb1B6fKq6cOas5/PxOwzDbhOkP+9iNSbocSqG1WsLlEEQPZYGb+YKnKiQ9BLV0l5h
+         8/RK1EyRP5i8CEFyG81o0PhyW6p8ZVV9IiUMc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=489FQGjJLqXDSKSlEr9geJrL+c7/49Z600Juares+AY=;
+        b=UOM878N9cqiM4eOZ062Vw/ZPjLwhPiewe/JeIfb/cOOUAMDgOhsfeRHGOq28O9xJV2
+         NyjiFxCknC2rvG5YxakkaK7n21VxJeMQSABwc1YZeM8oqFULSZsu77oYw5ZpEMPV8ys2
+         5fNO1mLdIgspu9gZPqrnron05JXBt/avM7jzaKImp/GqAT3Wia8bh+w90EDFa1HWpC+v
+         p5dqmek0NfMda7VRCre5XGAikKTmUKWbK3WW7itfIvvfVwMKNTyhUm5h5vgvFVgfFJS5
+         7MsyhEVJ0pOtM9xRynO9vYiD8fivQ+WD7UuZ8Jy7KyLm0kg2si98W2SwZ/UqOteoPpBJ
+         Yk3w==
+X-Gm-Message-State: APjAAAUHkPtTvGlwoIC7Gv4sBIz1mwybxx8E5m9FIbPCJgPEiKABOfgA
+        Its0L469lSyORujGWrxysJyZtTl9DjJf5O/e
+X-Google-Smtp-Source: APXvYqzV7OlXH2nJCS1ZKsuXiWBHCy7VrQyQdigDb0HhJ8/pdOTlG/NXHxIi8zuyjb8PS/msNi+GIA==
+X-Received: by 2002:a2e:3109:: with SMTP id x9mr4525887ljx.19.1567069788536;
+        Thu, 29 Aug 2019 02:09:48 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id v20sm261658ljj.47.2019.08.29.02.09.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 29 Aug 2019 02:09:48 -0700 (PDT)
+Subject: Re: [PATCH v2] vsprintf: introduce %dE for error constants
+To:     Juergen Gross <jgross@suse.com>, Petr Mladek <pmladek@suse.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        metux IT consult Enrico Weigelt <lkml@metux.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190827211244.7210-1-uwe@kleine-koenig.org>
+ <20190828113216.p2yiha4xyupkbcbs@pathway.suse.cz>
+ <74303921-aa95-9962-2254-27e556af54f4@kleine-koenig.org>
+ <20190829081249.3zvvsa4ggb5pfozl@pathway.suse.cz>
+ <45cd5b50-9854-fce7-5f08-f7660abb8691@suse.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <a83449cf-3a4a-f3e0-210a-dc7c39505355@rasmusvillemoes.dk>
+Date:   Thu, 29 Aug 2019 11:09:46 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <3255251.C7nBVfOIaa@jkrzyszt-desk.ger.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <45cd5b50-9854-fce7-5f08-f7660abb8691@suse.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 8/29/19 3:58 PM, Janusz Krzysztofik wrote:
-> Hi Baolu,
-> 
-> On Thursday, August 29, 2019 3:43:31 AM CEST Lu Baolu wrote:
->> Hi Janusz,
->>
->> On 8/28/19 10:17 PM, Janusz Krzysztofik wrote:
->>>> We should avoid kernel panic when a intel_unmap() is called against
->>>> a non-existent domain.
->>> Does that mean you suggest to replace
->>> 	BUG_ON(!domain);
->>> with something like
->>> 	if (WARN_ON(!domain))
->>> 		return;
->>> and to not care of orphaned mappings left allocated?  Is there a way to
-> inform
->>> users that their active DMA mappings are no longer valid and they
-> shouldn't
->>> call dma_unmap_*()?
+On 29/08/2019 10.27, Juergen Gross wrote:
+> On 29.08.19 10:12, Petr Mladek wrote:
+>> On Wed 2019-08-28 21:18:37, Uwe Kleine-König  wrote:
 >>>
->>>> But we shouldn't expect the IOMMU driver not
->>>> cleaning up the domain info when a device remove notification comes and
->>>> wait until all file descriptors being closed, right?
->>> Shouldn't then the IOMMU driver take care of cleaning up resources still
->>> allocated on device remove before it invalidates and forgets their
-> pointers?
->>>
+>>> I'd like to postpone the discussion about "how" until we agreed about
+>>> the "if at all".
 >>
->> You are right. We need to wait until all allocated resources (iova and
->> mappings) to be released.
->>
->> How about registering a callback for BUS_NOTIFY_UNBOUND_DRIVER, and
->> removing the domain info when the driver detachment completes?
+>> It seems that all people like this feature.
 > 
-> Device core calls BUS_NOTIFY_UNBOUND_DRIVER on each driver unbind, regardless
-> of a device being removed or not.  As long as the device is not unplugged and
-> the BUS_NOTIFY_REMOVED_DEVICE notification not generated, an unbound driver is
-> not a problem here.
-> Morever, BUS_NOTIFY_UNBOUND_DRIVER  is called even before
-> BUS_NOTIFY_REMOVED_DEVICE so that wouldn't help anyway.
-> Last but not least, bus events are independent of the IOMMU driver use via
-> DMA-API it exposes.
-
-Fair enough.
-
+> Hmm, what about already existing format strings conatining "%dE"?
 > 
-> If keeping data for unplugged devices and reusing it on device re-plug is not
-> acceptable then maybe the IOMMU driver should perform reference counting of
-> its internal resources occupied by DMA-API users and perform cleanups on last
-> release?
+> Yes, I could find only one (drivers/staging/speakup/speakup_bns.c), but
+> nevertheless...
 
-I am not saying that keeping data is not acceptable. I just want to
-check whether there are any other solutions.
+Indeed, Uwe still needs to respond to how he wants to handle that. I
+still prefer making it %pE, both because it's easier to convert integers
+to ERR_PTRs than having to worry about the type of PTR_ERR() being long
+and not int, and because alphanumerics after %p have been ignored for a
+long time (10 years?) whether or not those characters have been
+recognized as a %p extension, so nobody relies on %pE putting an E after
+the %p output. It also keeps the non-standard extensions in the same
+"namespace", so to speak.
 
-Best regards,
-Baolu
+Oh, 'E' is taken, well, make it 'e' then.
+
+Rasmus
