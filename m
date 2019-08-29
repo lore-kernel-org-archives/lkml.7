@@ -2,126 +2,143 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1042BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8455BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10D1215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:26:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="KvmAoUKs"
+	by mail.kernel.org (Postfix) with ESMTP id 43D0A2189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:30:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567107035;
+	bh=P8Okz1ioDyQ5iQhhZdadmnrkWaz9o8uYiuS0d0WDRvU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=u5pM80hD9XWTtr2+Q+VWAc0ADvVn784dS4ufirK8MJocBNFQWzDQ3a+XrzWlWzCf0
+	 NvknwB4vdYA2KNPlq7edP64IO0FZu0alw61Uj58VioQliH1K9h8Z5ESQVP8aFz9SRb
+	 BJ9zW82fauDmUKyUG24xSgx0CxRilTzzymlWGqrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbfH2T0F (ORCPT
+        id S1727108AbfH2Tae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:26:05 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.61]:14150 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728063AbfH2T0E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 15:26:04 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id B9B79859D64
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 14:25:06 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 3Q2ciQ5Lt3Qi03Q2ci5BIM; Thu, 29 Aug 2019 14:25:06 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QhHaIcHbmOkxpmshf6EBelOsxAfyUIkBYwOyIG9a0zg=; b=KvmAoUKsztt4fQnMMHDt+Hdpvn
-        UrTLi+K5w2M5bZLz+0IIHfZoxPZVb8jMy3w+kYRhVEHJZYhaNq0aWBhs1hiUtAD+BU6HAt2OTw40T
-        GsalC8uW+sFrxxtGf7sDQb0u36lIwYcbWrUQJ/5zf4yM3gdjr6+8d2g88ogZFeyxfC0NAjS5E/kKz
-        qY63RDo+OAYGft+WZD7Q/hLZGINkZ1Rys2mEsNZRC5KB+54ezADXNoZTQBXdKsx6pUfWZ9li/QdeF
-        4tMyjbeWQKcNe40etS7ZEGjZtxdS16EgPET+xFKCRzgEFO7QBzc1EtoEqXOdeE4uE+cgI7c4Bx6TP
-        476ZD4kg==;
-Received: from [189.152.216.116] (port=45278 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1i3Q2b-0022NZ-P5; Thu, 29 Aug 2019 14:25:05 -0500
-Date:   Thu, 29 Aug 2019 14:25:03 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] rapidio/rio_mport_cdev: use struct_size() helper
-Message-ID: <20190829192503.GA28957@embeddedor>
+        Thu, 29 Aug 2019 15:30:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726245AbfH2Tae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 15:30:34 -0400
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9062922CF5;
+        Thu, 29 Aug 2019 19:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567107032;
+        bh=P8Okz1ioDyQ5iQhhZdadmnrkWaz9o8uYiuS0d0WDRvU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KCEFp0U6rFSC8fIUYAgYeOAPSqvJeCAi1y4HpyDJjcC/XELXgJd3q28f97XeSRotf
+         Em3O6VdjKFphBdvLxx3GLXXZNZpPYp4m0Z7KIPGkz+TYVqOVaWAZ2Fp82r0uZfPa+g
+         tciw54shUTMXr6RuyRkAt88LL65IrR7IyWGV+GuE=
+Received: by mail-qk1-f180.google.com with SMTP id c189so2471341qkg.2;
+        Thu, 29 Aug 2019 12:30:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAXzHHdhLk/WuawXfnXLuqY/PWDL5c/rGa80PwxKKGnKJ+TlIt4Y
+        jdnTWOdqH10B33wj5PNI4d6iBMUh6V0WVbN87g==
+X-Google-Smtp-Source: APXvYqzkIC+v5aIBr2WVnHist8Ob0TXXTVPct/ifT/ce+i4zRLnYa43TF25d7xt3ZDfB1IBglTWwTXNJUva+39sy1q0=
+X-Received: by 2002:ae9:e212:: with SMTP id c18mr5379641qkc.254.1567107031751;
+ Thu, 29 Aug 2019 12:30:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.216.116
-X-Source-L: No
-X-Exim-ID: 1i3Q2b-0022NZ-P5
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.152.216.116]:45278
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 21
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190829144442.6210-1-srinivas.kandagatla@linaro.org>
+ <20190829144442.6210-4-srinivas.kandagatla@linaro.org> <CAL_JsqLOHA+r9UCTwyvj+_BzWSrsVDZw5vp-1XhYYvQxncx0sw@mail.gmail.com>
+ <ef01465e-25d6-059c-1f5d-8e8ebd6b887d@linaro.org>
+In-Reply-To: <ef01465e-25d6-059c-1f5d-8e8ebd6b887d@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 29 Aug 2019 14:30:19 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL9p9fF4KZ4DSfhC0+XTDe0OaR8CZ0mmDNPTxaoi38FFA@mail.gmail.com>
+Message-ID: <CAL_JsqL9p9fF4KZ4DSfhC0+XTDe0OaR8CZ0mmDNPTxaoi38FFA@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] dt-bindings: ASoC: Add WSA881x bindings
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Mark Brown <broonie@kernel.org>, Vinod <vkoul@kernel.org>,
+        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+On Thu, Aug 29, 2019 at 10:52 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+> Thanks for the review!
+>
+> On 29/08/2019 16:46, Rob Herring wrote:
+> > On Thu, Aug 29, 2019 at 9:45 AM Srinivas Kandagatla
+> > <srinivas.kandagatla@linaro.org> wrote:
+> >>
+> >> This patch adds bindings for WSA8810/WSA8815 Class-D Smart Speaker
+> >> Amplifier. This Amplifier also has a simple thermal sensor for
+> >> over temperature and speaker protection.
+> >>
+> >> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> >> ---
+> >>   .../bindings/sound/qcom,wsa881x.yaml          | 41 +++++++++++++++++++
+> >>   1 file changed, 41 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+> >> new file mode 100644
+> >> index 000000000000..7a486c024732
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+> >> @@ -0,0 +1,41 @@
+> >> +# SPDX-License-Identifier: GPL-2.0
+> >
+> > Dual license please.
+> >
+> Will do that!
+>
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/sound/qcom,wsa881x.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Bindings for Qualcomm WSA8810/WSA8815 Class-D Smart Speaker Amplifier
+> >> +
+> >> +maintainers:
+> >> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> >> +
+> >> +description: |
+> >> +  WSA8810 is a class-D smart speaker amplifier and WSA8815
+> >> +  is a high-output power class-D smart speaker amplifier.
+> >> +  Their primary operating mode uses a SoundWire digital audio
+> >> +  interface. This binding is for SoundWire interface.
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: "sdw10217201000"
+> >
+> > No need for quotes.
+>
+> Did not knew that! Still getting used to yaml stuff :-)
+>
+> >
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >
+> >> +  powerdown-gpios:
+> >> +    description: GPIO spec for Powerdown/Shutdown line to use
+> >> +    maxItems: 1
+> >> +
+> >> +  '#thermal-sensor-cells':
+> >> +    const: 0
+> >
+> > Either of these required?
+> >
+>
+> "make dt_binding_check" was complaining when I added this! Let me retry it!
 
-struct rio_switch {
-	...
-        struct rio_dev *nextdev[0];
-};
-
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
-
-So, replace the following form:
-
-(RIO_GET_TOTAL_PORTS(swpinfo) * sizeof(rswitch->nextdev[0])) + sizeof(*rswitch)
-
-with:
-
-struct_size(rswitch, nextdev, RIO_GET_TOTAL_PORTS(swpinfo))
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/rapidio/devices/rio_mport_cdev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
-index 8155f59ece38..2787d2b7694d 100644
---- a/drivers/rapidio/devices/rio_mport_cdev.c
-+++ b/drivers/rapidio/devices/rio_mport_cdev.c
-@@ -1708,8 +1708,8 @@ static int rio_mport_add_riodev(struct mport_cdev_priv *priv,
- 	if (rval & RIO_PEF_SWITCH) {
- 		rio_mport_read_config_32(mport, destid, hopcount,
- 					 RIO_SWP_INFO_CAR, &swpinfo);
--		size += (RIO_GET_TOTAL_PORTS(swpinfo) *
--			 sizeof(rswitch->nextdev[0])) + sizeof(*rswitch);
-+		size += struct_size(rswitch, nextdev,
-+				    RIO_GET_TOTAL_PORTS(swpinfo));
- 	}
- 
- 	rdev = kzalloc(size, GFP_KERNEL);
--- 
-2.23.0
-
+Because the example in soundwire-controller.yaml will no longer be valid... :)
