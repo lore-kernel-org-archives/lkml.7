@@ -2,177 +2,168 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F97AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0073CC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E320F233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2592233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfH2K46 (ORCPT
+        id S1727985AbfH2K5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:56:58 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:58891 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727123AbfH2K45 (ORCPT
+        Thu, 29 Aug 2019 06:57:34 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:53497 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726379AbfH2K5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:56:57 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: kF1RWub9CXK6jgsNDuMyJeTx+jQyYj0BBM+qp3iaZc6Z3VJvJA8g6AyYGnKLzKWwj8fxBoby7V
- l/x4S3KXk4xCn5JTHE6gStzK/nhksXncpn7mbQYJwfWgoqXREWpfi7YdWvTPVsuGARz0tCw9/z
- UIOqbcrb0Ew9fZL5Uy3H32/cdv7aaWE4ItiWEmQoWYwOLcrOD4xc5dYnNnjeXC0gD44Cc3Xpbt
- yOmbLiG3ZUlxgTmrN7I22ayxTRpcATfE1YL0duemHcwbB8DZUH7tHCaH8MRQcRijcYLOfvZEQZ
- md0=
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="46989148"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Aug 2019 03:56:56 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 29 Aug 2019 03:56:53 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Thu, 29 Aug 2019 03:56:56 -0700
-Date:   Thu, 29 Aug 2019 12:56:54 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Jiri Pirko <jiri@resnulli.us>
-CC:     <alexandre.belloni@bootlin.com>, <UNGLinuxDriver@microchip.com>,
-        <davem@davemloft.net>, <andrew@lunn.ch>,
-        <allan.nielsen@microchip.com>, <ivecera@redhat.com>,
-        <f.fainelli@gmail.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
-Message-ID: <20190829105650.btgvytgja63sx6wx@soft-dev3.microsemi.net>
-References: <1567070549-29255-1-git-send-email-horatiu.vultur@microchip.com>
- <1567070549-29255-2-git-send-email-horatiu.vultur@microchip.com>
- <20190829095100.GH2312@nanopsycho>
+        Thu, 29 Aug 2019 06:57:34 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id 3I7MiR37RDqPe3I7PiNc09; Thu, 29 Aug 2019 12:57:32 +0200
+Subject: Re: [PATCH v3 5/7] media: v4l2-core: Add new helper for area controls
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jacopo Mondi <jacopo@jmondi.org>
+References: <20190823123737.7774-1-ribalda@kernel.org>
+ <20190823123737.7774-5-ribalda@kernel.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <83a58290-efa2-a4c4-17dc-0380c6b91ce9@xs4all.nl>
+Date:   Thu, 29 Aug 2019 12:57:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20190829095100.GH2312@nanopsycho>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190823123737.7774-5-ribalda@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfN8Qe9smLVrh7So1TIE2OftNPD0kSTIHJaTGKdn9RiKFxwIu672Y4iuUfXam3c7F+WA6GzDewtQw/Dm5a4x4aQ0IE01NBGBpY+IVCHLYFi25HT666jJa
+ zC7QjRz2tT3LAQT/wzR7mwCrP07Xy1VN//V0K1lE2hHgM+SLexjzzJTU1yDiO9MIlSEI8lUJ+NPhbjpfzl0gczN401p0LqVkVqvT1J9ADylsPf9fCkKgs3jA
+ YZEA34Ue5W5sI6n6wWsvWVeArYh/KI9BFd2cwOY2EAyvhcVx6nGXMeEbK8X3Ejs0J8+zRdlTRrf/4Y/SjeR+0+bDoSPexla6VO++HAL6vWisLD5bVWpJNnI6
+ S6SSEy7gRv14KmDBIy738uKSLyX0dOzTfofhLYVS7J+X8ewG09M=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 08/29/2019 11:51, Jiri Pirko wrote:
-> External E-Mail
+On 8/23/19 2:37 PM, Ricardo Ribalda Delgado wrote:
+> Adding a V4L2_CID_UNIT_CELL_SIZE control requires a lot of boilerplate,
+> try to minimize it by adding a new helper.
 > 
+> Suggested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> ---
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 25 ++++++++++++++++++++++++-
+>  include/media/v4l2-ctrls.h           | 16 ++++++++++++++++
+>  2 files changed, 40 insertions(+), 1 deletion(-)
 > 
-> Thu, Aug 29, 2019 at 11:22:28AM CEST, horatiu.vultur@microchip.com wrote:
-> >Add the SWITCHDEV_ATTR_ID_PORT_PROMISCUITY switchdev notification type,
-> >used to indicate whenever the dev promiscuity counter is changed.
-> >
-> >The notification doesn't use any switchdev_attr attribute because in the
-> >notifier callbacks is it possible to get the dev and read directly
-> >the promiscuity value.
-> >
-> >Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> >---
-> > include/net/switchdev.h | 1 +
-> > net/core/dev.c          | 9 +++++++++
-> > 2 files changed, 10 insertions(+)
-> >
-> >diff --git a/include/net/switchdev.h b/include/net/switchdev.h
-> >index aee86a1..14b1617 100644
-> >--- a/include/net/switchdev.h
-> >+++ b/include/net/switchdev.h
-> >@@ -40,6 +40,7 @@ enum switchdev_attr_id {
-> > 	SWITCHDEV_ATTR_ID_BRIDGE_VLAN_FILTERING,
-> > 	SWITCHDEV_ATTR_ID_BRIDGE_MC_DISABLED,
-> > 	SWITCHDEV_ATTR_ID_BRIDGE_MROUTER,
-> >+	SWITCHDEV_ATTR_ID_PORT_PROMISCUITY,
-> > };
-> > 
-> > struct switchdev_attr {
-> >diff --git a/net/core/dev.c b/net/core/dev.c
-> >index 49589ed..40c74f2 100644
-> >--- a/net/core/dev.c
-> >+++ b/net/core/dev.c
-> >@@ -142,6 +142,7 @@
-> > #include <linux/net_namespace.h>
-> > #include <linux/indirect_call_wrapper.h>
-> > #include <net/devlink.h>
-> >+#include <net/switchdev.h>
-> > 
-> > #include "net-sysfs.h"
-> > 
-> >@@ -7377,6 +7378,11 @@ static void dev_change_rx_flags(struct net_device *dev, int flags)
-> > static int __dev_set_promiscuity(struct net_device *dev, int inc, bool notify)
-> > {
-> > 	unsigned int old_flags = dev->flags;
-> >+	struct switchdev_attr attr = {
-> >+		.orig_dev = dev,
-> >+		.id = SWITCHDEV_ATTR_ID_PORT_PROMISCUITY,
-> >+		.flags = SWITCHDEV_F_DEFER,
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index b3bf458df7f7..33e48f0aec1a 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -2660,7 +2660,6 @@ struct v4l2_ctrl *v4l2_ctrl_new_std_menu_items(struct v4l2_ctrl_handler *hdl,
+>  }
+>  EXPORT_SYMBOL(v4l2_ctrl_new_std_menu_items);
+>  
+> -/* Helper function for standard integer menu controls */
+
+Huh?
+
+>  struct v4l2_ctrl *v4l2_ctrl_new_int_menu(struct v4l2_ctrl_handler *hdl,
+>  			const struct v4l2_ctrl_ops *ops,
+>  			u32 id, u8 _max, u8 _def, const s64 *qmenu_int)
+> @@ -2684,6 +2683,30 @@ struct v4l2_ctrl *v4l2_ctrl_new_int_menu(struct v4l2_ctrl_handler *hdl,
+>  }
+>  EXPORT_SYMBOL(v4l2_ctrl_new_int_menu);
+>  
+> +static void area_init(const struct v4l2_ctrl *ctrl, u32 idx,
+> +		union v4l2_ctrl_ptr ptr)
+> +{
+> +	memcpy(ptr.p_area, ctrl->priv, sizeof(*ptr.p_area));
+
+This can be used in an array, so you have to honor the idx field.
+
+> +}
+> +
+> +static const struct v4l2_ctrl_type_ops area_ops = {
+> +	.init = area_init,
+> +};
+
+This is a standard control type, so just add support for it the std_type_ops
+functions.
+
+> +
+> +struct v4l2_ctrl *v4l2_ctrl_new_area(struct v4l2_ctrl_handler *hdl,
+> +				     const struct v4l2_ctrl_ops *ops,
+> +				     u32 id, const struct v4l2_area *area)
+> +{
+> +	static struct v4l2_ctrl_config ctrl = {
+> +		.id = V4L2_CID_UNIT_CELL_SIZE,
+
+This should be set to the passed id, not hardcoded.
+
+> +		.type_ops = &area_ops,
+
+And just drop this line.
+
+> +	};
+> +
+> +	return v4l2_ctrl_new_custom(hdl, &ctrl, (void *)area);
+
+Don't pass area as a priv pointer. Instead the core will just initialize the
+area to some default value (1x1), and then you can call set_ctrl()
+after creating the control to set it to the proper value.
+
+The READ_ONLY flag applies to the public API, but the kernel API still has
+to be able to change it.
+
+> +}
+> +EXPORT_SYMBOL(v4l2_ctrl_new_area);
+> +
+> +/* Helper function for standard integer menu controls */
+
+This comment doesn't belong here.
+
+>  /* Add the controls from another handler to our own. */
+>  int v4l2_ctrl_add_handler(struct v4l2_ctrl_handler *hdl,
+>  			  struct v4l2_ctrl_handler *add,
+> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> index 9a3d11350e67..36f0712ea6dd 100644
+> --- a/include/media/v4l2-ctrls.h
+> +++ b/include/media/v4l2-ctrls.h
+> @@ -669,6 +669,22 @@ struct v4l2_ctrl *v4l2_ctrl_new_int_menu(struct v4l2_ctrl_handler *hdl,
+>  					 u32 id, u8 max, u8 def,
+>  					 const s64 *qmenu_int);
+>  
+> +/**
+> + * v4l2_ctrl_new_area() - Allocate and initialize a V4L2_CTRL_TYPE_AREA control.
+> + *
+> + * @hdl:	The control handler.
+> + * @ops:	The control ops.
+> + * @id:	The control ID.
+> + * @area:	The width and height of the area in a struct v4l2_area.
+
+Specifically, this is the initial width and height.
+
+> + *
+> + * If the &v4l2_ctrl struct could not be allocated then NULL is returned
+> + * and @hdl->error is set to the error code (if it wasn't set already).
+> + */
+> +
+> +struct v4l2_ctrl *v4l2_ctrl_new_area(struct v4l2_ctrl_handler *hdl,
+> +				     const struct v4l2_ctrl_ops *ops,
+> +				     u32 id, const struct v4l2_area *area);
+> +
+>  /**
+>   * typedef v4l2_ctrl_filter - Typedef to define the filter function to be
+>   *	used when adding a control handler.
 > 
 
-Hi Jiri,
+Regards,
 
-> NACK
-> 
-> This is invalid usecase for switchdev infra. Switchdev is there for
-> bridge offload purposes only.
-> 
-> For promiscuity changes, the infrastructure is already present in the
-> code. See __dev_notify_flags(). it calls:
-> call_netdevice_notifiers_info(NETDEV_CHANGE, &change_info.info)
-> and you can actually see the changed flag in ".flags_changed".
-Yes, you are right. But in case the port is part of a bridge and then
-enable promisc mode by a user space application(tpcdump) then the drivers
-will not be notified. The reason is that the dev->flags will still be the
-same(because IFF_PROMISC was already set) and only promiscuity will be
-changed.
-
-One fix could be to call __dev_notify_flags() no matter when the
-promisc is enable or disabled.
-
-> 
-> You just have to register netdev notifier block in your driver. Grep
-> for: register_netdevice_notifier
-> 
-> 
-> >+	};
-> > 	kuid_t uid;
-> > 	kgid_t gid;
-> > 
-> >@@ -7419,6 +7425,9 @@ static int __dev_set_promiscuity(struct net_device *dev, int inc, bool notify)
-> > 	}
-> > 	if (notify)
-> > 		__dev_notify_flags(dev, old_flags, IFF_PROMISC);
-> >+
-> >+	switchdev_port_attr_set(dev, &attr);
-> >+
-> > 	return 0;
-> > }
-> > 
-> >-- 
-> >2.7.4
-> >
-> 
-
--- 
-/Horatiu
+	Hans
