@@ -2,98 +2,66 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D07C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDBCC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C752070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:14:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dh5LHnRd"
+	by mail.kernel.org (Postfix) with ESMTP id 63E782070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:14:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfH2OOx (ORCPT
+        id S1727675AbfH2OO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:14:53 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41300 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbfH2OOw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:14:52 -0400
-Received: by mail-io1-f65.google.com with SMTP id j5so7155258ioj.8;
-        Thu, 29 Aug 2019 07:14:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=s9nj00c44ZcrCWQury7LyQ1TrCISIn5HIH3ngd+T6zw=;
-        b=dh5LHnRdRd+KpHFl6WXt6JN9LbutGQYdzEXUVYh1xZ5CV8NJa++Fuodd+f9xfS1ZR/
-         OiaJdolQPaidwuF7UGYtTASOw7ZnAsGeMGn4FNhvOKVRp0mrDr7XOX2VixIRazQqs6Zd
-         BI2lo/5lij3VSTVJpzddsKWotHKl+0aknndag1mFsE7AX8uM/F+LeDGaExSZMtAEdyWE
-         f/KGc759QrXhUILvmx2++otFJ6uznTnT/vYrC2zUOxfznuRwfFa1Xs4MtgCF+lrGJ6Kw
-         KeWLBs5cnlxvVW+JUx2kBU44FRjxxCWFhw992lFvDqjHHJRZNh1iAyLgrNueYkIL4KZp
-         orew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=s9nj00c44ZcrCWQury7LyQ1TrCISIn5HIH3ngd+T6zw=;
-        b=ltvAj7z86E1JQDjD2Qu2+PZ0O1W6pjHPuTOng0TcQNm9Lk00ZB01RzcKNrPCZnsvqr
-         07pyNgpLAVeEI6lZBAm5/CoYVa0IPSzP+DiJbuS/vVJvJLx8xcImZxyg8622uWsz8WKV
-         Mx5OD0NuT+bK4MvoineUjnTDe1VWSn1r58qRdtUvAczvLWCxKVPIRgWM+7EKyVeIYRxP
-         7FBdkpMYySrVr2MpGvztREGhA6cx70z2mSbhxuymwJmQTb5qcaC5txVwYZSIHxU92Gc8
-         A6AIk+tCAbwRdED146C/M4d6WnibOt43RmSRupL9cfebdHxTCqjuZr/DRDkRF8zR982I
-         1yhw==
-X-Gm-Message-State: APjAAAVTpsGt1qUg5oDIwy9gutGO+0z5VCTw1mxs4tKtv8ca9xWRG3Z0
-        7JJHeCUoGzmPt1j56SeUsj2PMjEzOQ==
-X-Google-Smtp-Source: APXvYqyCfY9RoPdnKe4PH/ErhJrmi+udFSF2b81KHRMcknbukvk7M2l1bqdkeaxAAZC6MtHbdaxsSQ==
-X-Received: by 2002:a05:6602:25d3:: with SMTP id d19mr11915001iop.206.1567088091713;
-        Thu, 29 Aug 2019 07:14:51 -0700 (PDT)
-Received: from threadripper.novatech-llc.local ([216.21.169.52])
-        by smtp.gmail.com with ESMTPSA id k3sm2149242ioq.18.2019.08.29.07.14.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 07:14:51 -0700 (PDT)
-From:   George McCollister <george.mccollister@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Woojung Huh <woojung.huh@microchip.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
-        Marek Vasut <marex@denx.de>, linux-kernel@vger.kernel.org,
-        George McCollister <george.mccollister@gmail.com>
-Subject: [PATCH] net: dsa: microchip: fill regmap_config name
-Date:   Thu, 29 Aug 2019 09:14:41 -0500
-Message-Id: <20190829141441.70063-1-george.mccollister@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 29 Aug 2019 10:14:58 -0400
+Received: from verein.lst.de ([213.95.11.211]:46641 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726852AbfH2OO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 10:14:57 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 2351F68B20; Thu, 29 Aug 2019 16:14:54 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 16:14:53 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Derrick, Jonathan" <jonathan.derrick@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/5] PCI/vmd: Stop overriding dma_map_ops
+Message-ID: <20190829141453.GC18677@lst.de>
+References: <20190828141443.5253-1-hch@lst.de> <20190828141443.5253-5-hch@lst.de> <20190828150106.GD23412@localhost.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828150106.GD23412@localhost.localdomain>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the register value width as the regmap_config name to prevent the
-following error when the second and third regmap_configs are
-initialized.
- "debugfs: Directory '${bus-id}' with parent 'regmap' already present!"
+On Wed, Aug 28, 2019 at 09:01:06AM -0600, Keith Busch wrote:
+> On Wed, Aug 28, 2019 at 07:14:42AM -0700, Christoph Hellwig wrote:
+> > With a little tweak to the intel-iommu code we should be able to work
+> > around the VMD mess for the requester IDs without having to create giant
+> > amounts of boilerplate DMA ops wrapping code.  The other advantage of
+> > this scheme is that we can respect the real DMA masks for the actual
+> > devices, and I bet it will only be a matter of time until we'll see the
+> > first DMA challeneged NVMe devices.
+> 
+> This tests out fine on VMD hardware, but it's quite different than the
+> previous patch. In v1, the original dev was used in iommu_need_mapping(),
+> but this time it's the vmd device. Is this still using the actual device's
+> DMA mask then?
 
-Signed-off-by: George McCollister <george.mccollister@gmail.com>
----
- drivers/net/dsa/microchip/ksz_common.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
-index ee7096d8af07..72ec250b9540 100644
---- a/drivers/net/dsa/microchip/ksz_common.h
-+++ b/drivers/net/dsa/microchip/ksz_common.h
-@@ -128,6 +128,7 @@ static inline void ksz_pwrite32(struct ksz_device *dev, int port, int offset,
- 
- #define KSZ_REGMAP_ENTRY(width, swp, regbits, regpad, regalign)		\
- 	{								\
-+		.name = #width,						\
- 		.val_bits = (width),					\
- 		.reg_stride = (width) / 8,				\
- 		.reg_bits = (regbits) + (regalign),			\
--- 
-2.11.0
-
+True.  But then again I think the old one was broken as well, as it
+will pass the wrong dev to identity_mapping() or
+iommu_request_dma_domain_for_dev.   So I guess I'll need to respin it
+a bit to do the work in iommu_need_mapping again, and then factor
+that one to make it obvious what device we deal with.
