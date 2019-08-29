@@ -2,96 +2,73 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7967C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B706C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8976C2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4990E2189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfH2Mbu (ORCPT
+        id S1727650AbfH2McG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 08:31:50 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:36572 "EHLO huawei.com"
+        Thu, 29 Aug 2019 08:32:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36388 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727069AbfH2Mbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 08:31:50 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3226DFB200799E2FEAAB;
-        Thu, 29 Aug 2019 20:31:48 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 29 Aug 2019
- 20:31:45 +0800
-Subject: Re: [PATCH v2 2/6] mdev: Make mdev alias unique among all mdevs
-To:     Parav Pandit <parav@mellanox.com>, <alex.williamson@redhat.com>,
-        <jiri@mellanox.com>, <kwankhede@nvidia.com>, <cohuck@redhat.com>,
-        <davem@davemloft.net>
-CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>
-References: <20190826204119.54386-1-parav@mellanox.com>
- <20190829111904.16042-1-parav@mellanox.com>
- <20190829111904.16042-3-parav@mellanox.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <56a88778-c90e-1ac6-9a31-d1aaa5dec97b@huawei.com>
-Date:   Thu, 29 Aug 2019 20:31:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        id S1727069AbfH2McF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 08:32:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 741ECAFB6;
+        Thu, 29 Aug 2019 12:32:04 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        "Manoj N. Kumar" <manoj@linux.ibm.com>,
+        "Matthew R. Ochs" <mrochs@linux.ibm.com>,
+        Uma Krishnan <ukrishn@linux.ibm.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Cyr <mikecyr@linux.ibm.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH 0/3] Fix fallthrough warnings.
+Date:   Thu, 29 Aug 2019 14:31:59 +0200
+Message-Id: <cover.1567081143.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20190829111904.16042-3-parav@mellanox.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/29 19:19, Parav Pandit wrote:
-> Mdev alias should be unique among all the mdevs, so that when such alias
-> is used by the mdev users to derive other objects, there is no
-> collision in a given system.
-> 
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> 
-> ---
-> Changelog:
-> v1->v2:
->  - Moved alias NULL check at beginning
-> v0->v1:
->  - Fixed inclusiong of alias for NULL check
->  - Added ratelimited debug print for sha1 hash collision error
-> ---
->  drivers/vfio/mdev/mdev_core.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> index 3bdff0469607..c9bf2ac362b9 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -388,6 +388,13 @@ int mdev_device_create(struct kobject *kobj, struct device *dev,
->  			ret = -EEXIST;
->  			goto mdev_fail;
->  		}
-> +		if (alias && tmp->alias && strcmp(alias, tmp->alias) == 0) {
+Build with recent compiler results in numerous fallthrough warnings.
 
-!strcmp(alias, tmp->alias) is a more common kernel pattern.
+The code looks correct to me so just adding the comments to quiet gcc.
 
-Also if we limit max len of the alias in patch 1, maybe use that to limit the
-string compare too.
+Please review if the fallthrough was really intentional.
 
-> +			mutex_unlock(&mdev_list_lock);
-> +			ret = -EEXIST;
-> +			dev_dbg_ratelimited(dev, "Hash collision in alias creation for UUID %pUl\n",
-> +					    uuid);
-> +			goto mdev_fail;
-> +		}
->  	}
->  
->  	mdev = kzalloc(sizeof(*mdev), GFP_KERNEL);
-> 
+Thanks
+
+Michal
+
+Michal Suchanek (3):
+  scsi: cxlflash: Fix fallthrough warnings.
+  scsi: ibmvfc: Fix fallthrough warnings.
+  scsi: ibmvscsi: tgt: Fix fallthrough warnings.
+
+ drivers/scsi/cxlflash/main.c             | 8 ++++++++
+ drivers/scsi/ibmvscsi/ibmvfc.c           | 3 +++
+ drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c | 3 +++
+ 3 files changed, 14 insertions(+)
+
+-- 
+2.12.3
 
