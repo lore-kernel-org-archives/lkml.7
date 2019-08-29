@@ -2,90 +2,93 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3736C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FF0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA9D21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:12:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SNx8bxK8"
+	by mail.kernel.org (Postfix) with ESMTP id 7D4A92339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:13:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567102395;
+	bh=eF5DfDYj7vzJJwsDctZbpjiYwWB/aovBZTyRp1T5PMk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=efBpajB+ufXLmJGK26n6+RLi9yh23UJUJjI+x5qqEeR/0XEe6hfX7DaQaGjhKczoK
+	 sY3RIEr+JDD1lCieJBguljmf+PoVL9GlB6n4LX2l9ImJ8mQSchsCVgz93dqhpCf1Oa
+	 zDEgLdoT7NH+6fFUBdw1yps7FGiBoqkVNnVpJFTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfH2SMr (ORCPT
+        id S1728041AbfH2SNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:12:47 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46588 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbfH2SMr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:12:47 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q139so2580897pfc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 11:12:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=A7u147Wje9ZAoxZSgxkGO16cCmIS7cio1ghCQtK3PnA=;
-        b=SNx8bxK8xYtZf3R7Yb6iVttjoaWALJFDJgJjneuJzwyKfowwLpbo5ms7zt9efOvBCy
-         miktAVtmawMZD4lK/vKTOCq9oWHw+IEfyM326Pv0UsQO1Hha7gZS6+dII3Idtc/EVdui
-         M9jFVFVUpx37kIz4OKg6Tb+629yPn9oyoaJdb30ZrIWEWHbQZoIw9/eYllSzStvW0Vvm
-         RKafHCsNAmWtNSyGBrwcS1/aImhOlwl1LWF5Llp6/JhdMMI7x+UjMzk5fXi6DXQ8mVrf
-         XpxJw1BB1gA9Hl1MY6VyWlijaUserMvM2vQVjuElJwkGufBSanZYzmw7yj3dTM1fLcXj
-         Ai8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=A7u147Wje9ZAoxZSgxkGO16cCmIS7cio1ghCQtK3PnA=;
-        b=W44HX/vVEOwRfNg2iUXKBNwhgqoCodhnKlDHHfc+fjSGGWAYQ9aTtQrVVtRQKvh9ek
-         6bAgy/3v9etFdXy+YbIr7VwQGnQuDeHvYQSAduTsWknx1dbxLNXVX4dcQrxJn4Ht8zs6
-         bP05uM2Kp4ZSJ8i3/rDTbqAEqqNPDk5RQvoODBq4NypvRU4u30v/azwGnIiD+cGlZM/Z
-         QI2YV5D6hzbAzLQ8u4hmnErLwZkEikLYuMnXKLwmqLaNcVx0PU5LSrLyXdnOFZTiK8z5
-         19qLx3Oe5csG4PJJ0P2GOWnCLXt8fw73aEitRBdHY1TJBMNpzenshcm5TphVcfC0mran
-         bDVw==
-X-Gm-Message-State: APjAAAV3stv+AxwO3+WTM0+62Mv8RxYiZWg3MCNfSaoU/ZSZIr3ILAdi
-        LsnwEwp5Q4umxIHNJ+isH6Es6YmKtC4=
-X-Google-Smtp-Source: APXvYqw15bSJm6EPYsc5pmdAEw1JAIB1W9K5w1rWrHlK7Wx3GTV7qbdBrmB0HKBLDd8e52fp2WCxzg==
-X-Received: by 2002:a62:6801:: with SMTP id d1mr12909483pfc.117.1567102366420;
-        Thu, 29 Aug 2019 11:12:46 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id 185sm4284988pff.54.2019.08.29.11.12.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 29 Aug 2019 11:12:45 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] arm64: dts: meson-sm1-sei610: add stdout-path property back
-In-Reply-To: <20190829132728.20042-1-narmstrong@baylibre.com>
-References: <20190829132728.20042-1-narmstrong@baylibre.com>
-Date:   Thu, 29 Aug 2019 11:12:45 -0700
-Message-ID: <7hv9ufrgbm.fsf@baylibre.com>
+        Thu, 29 Aug 2019 14:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbfH2SNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:13:14 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 307E521874;
+        Thu, 29 Aug 2019 18:13:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567102393;
+        bh=eF5DfDYj7vzJJwsDctZbpjiYwWB/aovBZTyRp1T5PMk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VqD7Uf5BeVR8hNnKS695qezuXsuaSrUwMnGxFsCigvfuoI87La7FAStI9fabVdBSH
+         Abeqlci+iYFB1ZHBJsHvccFSxs3p4up/AUw6eYL5fACmNPINSn3HZlX3SzBSV1STLe
+         UPKWJq/LNgtZQO/tD8N0Kuc8axs+d/iXW88Ro7vQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 01/76] batman-adv: Fix netlink dumping of all mcast_flags buckets
+Date:   Thu, 29 Aug 2019 14:11:56 -0400
+Message-Id: <20190829181311.7562-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+From: Sven Eckelmann <sven@narfation.org>
 
-> The commit d4609acce187 ("arm64: dts: meson-sm1-sei610: enable DVFS")
-> incorrectly removed the chosen node and the stdout-path property.
->
-> Add these back.
->
-> Fixes: d4609acce187 ("arm64: dts: meson-sm1-sei610: enable DVFS")
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+[ Upstream commit fa3a03da549a889fc9dbc0d3c5908eb7882cac8f ]
 
-Queued for v5.4,
+The bucket variable is only updated outside the loop over the mcast_flags
+buckets. It will only be updated during a dumping run when the dumping has
+to be interrupted and a new message has to be started.
 
-I'll probably squash with the original.
+This could result in repeated or missing entries when the multicast flags
+are dumped to userspace.
 
-Thanks,
+Fixes: d2d489b7d851 ("batman-adv: Add inconsistent multicast netlink dump detection")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/batman-adv/multicast.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Kevin
+diff --git a/net/batman-adv/multicast.c b/net/batman-adv/multicast.c
+index ec54e236e3454..50fe9dfb088b6 100644
+--- a/net/batman-adv/multicast.c
++++ b/net/batman-adv/multicast.c
+@@ -1653,7 +1653,7 @@ __batadv_mcast_flags_dump(struct sk_buff *msg, u32 portid,
+ 
+ 	while (bucket_tmp < hash->size) {
+ 		if (batadv_mcast_flags_dump_bucket(msg, portid, cb, hash,
+-						   *bucket, &idx_tmp))
++						   bucket_tmp, &idx_tmp))
+ 			break;
+ 
+ 		bucket_tmp++;
+-- 
+2.20.1
+
