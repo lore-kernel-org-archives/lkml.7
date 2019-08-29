@@ -2,140 +2,314 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDF2C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC20BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A58D6233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4DD9233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbfH2JmG (ORCPT
+        id S1726988AbfH2JpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:42:06 -0400
-Received: from mga11.intel.com ([192.55.52.93]:4341 "EHLO mga11.intel.com"
+        Thu, 29 Aug 2019 05:45:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51708 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbfH2JmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:42:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 02:42:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="197765648"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Aug 2019 02:42:01 -0700
-Subject: Re: Tracing text poke / kernel self-modifying code (Was: Re: [RFC v2
- 0/6] x86: dynamic indirect branch promotion)
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Nadav Amit <nadav.amit@gmail.com>, Andi Kleen <ak@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Edward Cree <ecree@solarflare.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        songliubraving@fb.com
-References: <c4e836e8-1949-27f5-f6a0-ed860f590ec5@intel.com>
- <20190108092559.GA6808@hirez.programming.kicks-ass.net>
- <306d38fb-7ce6-a3ec-a351-6c117559ebaa@intel.com>
- <20190108101058.GB6808@hirez.programming.kicks-ass.net>
- <20190108172721.GN6118@tassilo.jf.intel.com>
- <D1A153D5-D23B-45E6-9E7A-EB9CBAE84B7E@gmail.com>
- <20190108190104.GC1900@hirez.programming.kicks-ass.net>
- <7EB5F9ED-8743-4225-BE97-8D5C8D8E0F84@gmail.com>
- <20190109103544.GH1900@hirez.programming.kicks-ass.net>
- <7b4952c2-d3e3-488f-3697-2e8b71c58063@intel.com>
- <20190829085339.GN2369@hirez.programming.kicks-ass.net>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <d37f678f-cf1d-5c98-228f-05bed99f2112@intel.com>
-Date:   Thu, 29 Aug 2019 12:40:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725782AbfH2JpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 05:45:23 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 973AA106E28E;
+        Thu, 29 Aug 2019 09:45:22 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EFA5A19C4F;
+        Thu, 29 Aug 2019 09:45:18 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 11:45:16 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Huth <thuth@redhat.com>
+Subject: Re: [PATCH v2 3/4] KVM: selftests: Introduce VM_MODE_PXXV48_4K
+Message-ID: <20190829094516.fyfhgz7ma2nfazoq@kamzik.brq.redhat.com>
+References: <20190829022117.10191-1-peterx@redhat.com>
+ <20190829022117.10191-4-peterx@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190829085339.GN2369@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829022117.10191-4-peterx@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Thu, 29 Aug 2019 09:45:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/08/19 11:53 AM, Peter Zijlstra wrote:
-> On Thu, Aug 29, 2019 at 11:23:52AM +0300, Adrian Hunter wrote:
->> On 9/01/19 12:35 PM, Peter Zijlstra wrote:
->>> On Tue, Jan 08, 2019 at 12:47:42PM -0800, Nadav Amit wrote:
->>>
->>>> A general solution is more complicated, however, due to the racy nature of
->>>> cross-modifying code. There would need to be TSC recording of the time
->>>> before the modifications start and after they are done.
->>>>
->>>> BTW: I am not sure that static-keys are much better. Their change also
->>>> affects the control flow, and they do affect the control flow.
->>>
->>> Any text_poke() user is a problem; which is why I suggested a
->>> PERF_RECORD_TEXT_POKE that emits the new instruction. Such records are
->>> timestamped and can be correlated to the trace.
->>>
->>> As to the racy nature of text_poke, yes, this is a wee bit tricky and
->>> might need some care. I _think_ we can make it work, but I'm not 100%
->>> sure on exactly how PT works, but something like:
->>>
->>>  - write INT3 byte
->>>  - IPI-SYNC
->>>
->>> and ensure the poke_handler preserves the existing control flow (which
->>> it currently does not, but should be possible).
->>>
->>>  - emit RECORD_TEXT_POKE with the new instruction
->>>
->>> at this point the actual control flow will be through the INT3 and
->>> handler and not hit the actual instruction, so the actual state is
->>> irrelevant.
->>>
->>>  - write instruction tail
->>>  - IPI-SYNC
->>>  - write first byte
->>>  - IPI-SYNC
->>>
->>> And at this point we start using the new instruction, but this is after
->>> the timestamp from the RECORD_TEXT_POKE event and decoding should work
->>> just fine.
->>>
->>
->> Presumably the IPI-SYNC does not guarantee that other CPUs will not already
->> have seen the change.  In that case, it is not possible to provide a
->> timestamp before which all CPUs executed the old code, and after which all
->> CPUs execute the new code.
+On Thu, Aug 29, 2019 at 10:21:16AM +0800, Peter Xu wrote:
+> The naming VM_MODE_P52V48_4K is explicit but unclear when used on
+> x86_64 machines, because x86_64 machines are having various physical
+> address width rather than some static values.  Here's some examples:
 > 
-> 'the change' is an INT3 poke, so either you see the old code flow, or
-> you see an INT3 emulate the old flow in your trace.
+>   - Intel Xeon E3-1220:  36 bits
+>   - Intel Core i7-8650:  39 bits
+>   - AMD   EPYC 7251:     48 bits
 > 
-> That should be unambiguous.
+> All of them are using 48 bits linear address width but with totally
+> different physical address width (and most of the old machines should
+> be less than 52 bits).
 > 
-> Then you emit the RECORD_TEXT_POKE with the new instruction on. This
-> prepares the decoder to accept a new reality.
+> Let's create a new guest mode called VM_MODE_PXXV48_4K for current
+> x86_64 tests and make it as the default to replace the old naming of
+> VM_MODE_P52V48_4K because it shows more clearly that the PA width is
+> not really a constant.  Meanwhile we also stop assuming all the x86
+> machines are having 52 bits PA width but instead we fetch the real
+> vm->pa_bits from CPUID 0x80000008 during runtime.
 > 
-> Then we finish the instruction poke.
+> We currently make this exclusively used by x86_64 but no other arch.
 > 
-> And then when the trace no longer shows INT3 exceptions, you know the
-> new code is in effect.
+> As a slight touch up, moving DEBUG macro from dirty_log_test.c to
+> kvm_util.h so lib can use it too.
 > 
-> How is this ambiguous?
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  tools/testing/selftests/kvm/dirty_log_test.c  |  5 ++--
+>  .../testing/selftests/kvm/include/kvm_util.h  |  9 +++++-
+>  .../selftests/kvm/include/x86_64/processor.h  |  3 ++
+>  .../selftests/kvm/lib/aarch64/processor.c     |  3 ++
+>  tools/testing/selftests/kvm/lib/kvm_util.c    | 29 ++++++++++++++----
+>  .../selftests/kvm/lib/x86_64/processor.c      | 30 ++++++++++++++++---
+>  6 files changed, 65 insertions(+), 14 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+> index efb7746a7e99..c86f83cb33e5 100644
+> --- a/tools/testing/selftests/kvm/dirty_log_test.c
+> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
+> @@ -19,8 +19,6 @@
+>  #include "kvm_util.h"
+>  #include "processor.h"
+>  
+> -#define DEBUG printf
+> -
+>  #define VCPU_ID				1
+>  
+>  /* The memory slot index to track dirty pages */
+> @@ -256,6 +254,7 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
+>  
+>  	switch (mode) {
+>  	case VM_MODE_P52V48_4K:
+> +	case VM_MODE_PXXV48_4K:
+>  		guest_pa_bits = 52;
+>  		guest_page_shift = 12;
+>  		break;
+> @@ -446,7 +445,7 @@ int main(int argc, char *argv[])
+>  #endif
+>  
+>  #ifdef __x86_64__
+> -	vm_guest_mode_params_init(VM_MODE_P52V48_4K, true, true);
+> +	vm_guest_mode_params_init(VM_MODE_PXXV48_4K, true, true);
+>  #endif
+>  #ifdef __aarch64__
+>  	vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
+> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+> index c78faa2ff7f3..430edbacb9b2 100644
+> --- a/tools/testing/selftests/kvm/include/kvm_util.h
+> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
+> @@ -24,6 +24,10 @@ struct kvm_vm;
+>  typedef uint64_t vm_paddr_t; /* Virtual Machine (Guest) physical address */
+>  typedef uint64_t vm_vaddr_t; /* Virtual Machine (Guest) virtual address */
+>  
+> +#ifndef DEBUG
+> +#define DEBUG printf
+> +#endif
 
-It's not.  I didn't get that from the first read, sorry.
+There's no way to turn this off without modifying code. I suggested
 
-Can you expand on "and ensure the poke_handler preserves the existing
-control flow"?  Whatever the INT3-handler does will be traced normally so
-long as it does not itself execute self-modified code.
+#ifndef NDEBUG
+#define dprintf printf
+#endif
+
+which allows the dprintf(...) statements to be removed by compiling with
+-DNDEBUG added to CFLAGS. And that would also disable all the asserts().
+That's probably not all that useful, but then again, defining printf() as
+DEBUG() isn't useful either if the intention is to always print.
+
+> +
+>  /* Minimum allocated guest virtual and physical addresses */
+>  #define KVM_UTIL_MIN_VADDR		0x2000
+>  
+> @@ -38,11 +42,14 @@ enum vm_guest_mode {
+>  	VM_MODE_P48V48_64K,
+>  	VM_MODE_P40V48_4K,
+>  	VM_MODE_P40V48_64K,
+> +	VM_MODE_PXXV48_4K,	/* For 48bits VA but ANY bits PA */
+>  	NUM_VM_MODES,
+>  };
+>  
+> -#ifdef __aarch64__
+> +#if defined(__aarch64__)
+>  #define VM_MODE_DEFAULT VM_MODE_P40V48_4K
+> +#elif defined(__x86_64__)
+> +#define VM_MODE_DEFAULT VM_MODE_PXXV48_4K
+>  #else
+>  #define VM_MODE_DEFAULT VM_MODE_P52V48_4K
+>  #endif
+> diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
+> index 80d19740d2dc..0c17f2ee685e 100644
+> --- a/tools/testing/selftests/kvm/include/x86_64/processor.h
+> +++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
+> @@ -325,6 +325,9 @@ uint64_t vcpu_get_msr(struct kvm_vm *vm, uint32_t vcpuid, uint64_t msr_index);
+>  void vcpu_set_msr(struct kvm_vm *vm, uint32_t vcpuid, uint64_t msr_index,
+>  	  	  uint64_t msr_value);
+>  
+> +uint32_t kvm_get_cpuid_max(void);
+> +void kvm_get_cpu_address_width(unsigned int *pa_bits, unsigned int *va_bits);
+> +
+>  /*
+>   * Basic CPU control in CR0
+>   */
+> diff --git a/tools/testing/selftests/kvm/lib/aarch64/processor.c b/tools/testing/selftests/kvm/lib/aarch64/processor.c
+> index 486400a97374..86036a59a668 100644
+> --- a/tools/testing/selftests/kvm/lib/aarch64/processor.c
+> +++ b/tools/testing/selftests/kvm/lib/aarch64/processor.c
+> @@ -264,6 +264,9 @@ void aarch64_vcpu_setup(struct kvm_vm *vm, int vcpuid, struct kvm_vcpu_init *ini
+>  	case VM_MODE_P52V48_4K:
+>  		TEST_ASSERT(false, "AArch64 does not support 4K sized pages "
+>  				   "with 52-bit physical address ranges");
+> +	case VM_MODE_PXXV48_4K:
+> +		TEST_ASSERT(false, "AArch64 does not support 4K sized pages "
+> +				   "with ANY-bit physical address ranges");
+>  	case VM_MODE_P52V48_64K:
+>  		tcr_el1 |= 1ul << 14; /* TG0 = 64KB */
+>  		tcr_el1 |= 6ul << 32; /* IPS = 52 bits */
+> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> index 34a8a6572c7c..bb8f993b25fb 100644
+> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> @@ -8,6 +8,7 @@
+>  #include "test_util.h"
+>  #include "kvm_util.h"
+>  #include "kvm_util_internal.h"
+> +#include "processor.h"
+>  
+>  #include <assert.h>
+>  #include <sys/mman.h>
+> @@ -101,12 +102,13 @@ static void vm_open(struct kvm_vm *vm, int perm)
+>  }
+>  
+>  const char * const vm_guest_mode_string[] = {
+> -	"PA-bits:52, VA-bits:48, 4K pages",
+> -	"PA-bits:52, VA-bits:48, 64K pages",
+> -	"PA-bits:48, VA-bits:48, 4K pages",
+> -	"PA-bits:48, VA-bits:48, 64K pages",
+> -	"PA-bits:40, VA-bits:48, 4K pages",
+> -	"PA-bits:40, VA-bits:48, 64K pages",
+> +	"PA-bits:52,  VA-bits:48,  4K pages",
+> +	"PA-bits:52,  VA-bits:48, 64K pages",
+> +	"PA-bits:48,  VA-bits:48,  4K pages",
+> +	"PA-bits:48,  VA-bits:48, 64K pages",
+> +	"PA-bits:40,  VA-bits:48,  4K pages",
+> +	"PA-bits:40,  VA-bits:48, 64K pages",
+> +	"PA-bits:ANY, VA-bits:48,  4K pages",
+>  };
+>  _Static_assert(sizeof(vm_guest_mode_string)/sizeof(char *) == NUM_VM_MODES,
+>  	       "Missing new mode strings?");
+> @@ -184,6 +186,21 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
+>  		vm->page_size = 0x10000;
+>  		vm->page_shift = 16;
+>  		break;
+> +	case VM_MODE_PXXV48_4K:
+> +#ifdef __x86_64__
+> +		kvm_get_cpu_address_width(&vm->pa_bits, &vm->va_bits);
+> +		TEST_ASSERT(vm->va_bits == 48, "Linear address width "
+> +			    "(%d bits) not supported", vm->va_bits);
+> +		vm->pgtable_levels = 4;
+> +		vm->page_size = 0x1000;
+> +		vm->page_shift = 12;
+> +		DEBUG("Guest physical address width detected: %d\n",
+> +		      vm->pa_bits);
+> +#else
+> +		TEST_ASSERT(false, "VM_MODE_PXXV48_4K not supported on "
+> +			    "non-x86 platforms");
+> +#endif
+> +		break;
+>  	default:
+>  		TEST_ASSERT(false, "Unknown guest mode, mode: 0x%x", mode);
+>  	}
+> diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
+> index 6cb34a0fa200..48467210ccfc 100644
+> --- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
+> +++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
+> @@ -228,7 +228,7 @@ void sregs_dump(FILE *stream, struct kvm_sregs *sregs,
+>  
+>  void virt_pgd_alloc(struct kvm_vm *vm, uint32_t pgd_memslot)
+>  {
+> -	TEST_ASSERT(vm->mode == VM_MODE_P52V48_4K, "Attempt to use "
+> +	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
+>  		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
+>  
+>  	/* If needed, create page map l4 table. */
+> @@ -261,7 +261,7 @@ void virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
+>  	uint16_t index[4];
+>  	struct pageMapL4Entry *pml4e;
+>  
+> -	TEST_ASSERT(vm->mode == VM_MODE_P52V48_4K, "Attempt to use "
+> +	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
+>  		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
+>  
+>  	TEST_ASSERT((vaddr % vm->page_size) == 0,
+> @@ -547,7 +547,7 @@ vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
+>  	struct pageDirectoryEntry *pde;
+>  	struct pageTableEntry *pte;
+>  
+> -	TEST_ASSERT(vm->mode == VM_MODE_P52V48_4K, "Attempt to use "
+> +	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
+>  		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
+>  
+>  	index[0] = (gva >> 12) & 0x1ffu;
+> @@ -621,7 +621,7 @@ static void vcpu_setup(struct kvm_vm *vm, int vcpuid, int pgd_memslot, int gdt_m
+>  	kvm_setup_gdt(vm, &sregs.gdt, gdt_memslot, pgd_memslot);
+>  
+>  	switch (vm->mode) {
+> -	case VM_MODE_P52V48_4K:
+> +	case VM_MODE_PXXV48_4K:
+>  		sregs.cr0 = X86_CR0_PE | X86_CR0_NE | X86_CR0_PG;
+>  		sregs.cr4 |= X86_CR4_PAE | X86_CR4_OSFXSR;
+>  		sregs.efer |= (EFER_LME | EFER_LMA | EFER_NX);
+> @@ -1153,3 +1153,25 @@ bool is_intel_cpu(void)
+>  	chunk = (const uint32_t *)("GenuineIntel");
+>  	return (ebx == chunk[0] && edx == chunk[1] && ecx == chunk[2]);
+>  }
+> +
+> +uint32_t kvm_get_cpuid_max(void)
+> +{
+> +	return kvm_get_supported_cpuid_entry(0x80000000)->eax;
+> +}
+> +
+> +void kvm_get_cpu_address_width(unsigned int *pa_bits, unsigned int *va_bits)
+> +{
+> +	struct kvm_cpuid_entry2 *entry;
+> +	bool pae;
+> +
+> +	/* SDM 4.1.4 */
+> +	if (kvm_get_cpuid_max() < 0x80000008) {
+> +		pae = kvm_get_supported_cpuid_entry(1)->edx & (1 << 6);
+> +		*pa_bits = pae ? 36 : 32;
+> +		*va_bits = 32;
+> +	} else {
+> +		entry = kvm_get_supported_cpuid_entry(0x80000008);
+> +		*pa_bits = entry->eax & 0xff;
+> +		*va_bits = (entry->eax >> 8) & 0xff;
+> +	}
+> +}
+> -- 
+> 2.21.0
+>
+
+Thanks,
+drew 
