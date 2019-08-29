@@ -2,126 +2,149 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9061BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969C5C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 663852189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69CBF2339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:49:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="u0db09ug"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FhQ3RzRU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfH2It1 (ORCPT
+        id S1727066AbfH2Itf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 04:49:27 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:36661 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726070AbfH2It1 (ORCPT
+        Thu, 29 Aug 2019 04:49:35 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:44845 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfH2Itf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 04:49:27 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7T8kxr5031268;
-        Thu, 29 Aug 2019 10:48:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
- : from : message-id : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=NlGM32ocdpPWCJcOtDVLjpgH+SvU7mlXgBdhDT7M+X8=;
- b=u0db09ugjsVglBswXP+mVOWomLQtCDERzWqyS+4Tpnl9MaCsmoTNFiPCKzdfA50T6D7C
- C+GbQFCz9y6h5qxvB99GS73qVvw+KBZ69vEVNNDHZmhmS15jbzNJVBCyDo2rYNVPA0M7
- AyM0nNRswqEa8rgxhWc9dSev0UQYkJERN5IjBULZUiyCR/eN9O5v/jIbbg2kSa8HokzD
- rtGaXJ45MtbkV2OIbOKlJc3uFrOvxL1SpY0kxAVa5WkVxmObe6Qqx27tr3PO4f2e0oac
- pDQVtheQDemuJ/HUlrZ3smKV1zedt2eG+UZXZqQCz4eKkIaj21L5ZvS8MsZ+wsLUnvfD 2g== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2unujk470g-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 29 Aug 2019 10:48:55 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8F4B04D;
-        Thu, 29 Aug 2019 08:48:47 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E22742AD3F3;
-        Thu, 29 Aug 2019 10:48:46 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 29 Aug
- 2019 10:48:46 +0200
-Subject: Re: [PATCH v3 5/5] ARM: dts: stm32: add ddrperfm on stm32mp157c
-To:     Gerald BAEZA <gerald.baeza@st.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-References: <1566918464-23927-1-git-send-email-gerald.baeza@st.com>
- <1566918464-23927-6-git-send-email-gerald.baeza@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <8e3170a3-c814-d06e-f1f9-6d4e6a4bed71@st.com>
-Date:   Thu, 29 Aug 2019 10:48:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 04:49:35 -0400
+Received: by mail-vk1-f196.google.com with SMTP id 82so609707vkf.11
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oMHReu8t0qb2bsvbvFDIXyQ12gJM8CStkHATkFqVA1M=;
+        b=FhQ3RzRUr0ZEqyb3slVM2yr8eLBdMMYyM27K0UcPDO3+1DTMXzLKZyjCtzgDO8L0Nc
+         9t4Lhh3fsq/VIlmgJNOEAa4JzhUQMLxRCGPgzl9FFqTUCYo+ZTSU/fNFOJSnqJaWDKYO
+         ryg43JAHliyftzWwHA08iKHh73Hc7/e3jWqGnvdmSil5OfeWYqIxdk7U1nEmiy0Wjzyn
+         lsL+PhqRNaaOB8dLLlMAgWztyZizGYtnpNBeWU3V54r2HR1dn9tXcjIr7Fio/RGMZHEV
+         e/maOD172OZ1cyQdxgjA4ZE/cYfCd8j64ES5cZ2TgNORSWbSq8GxlYkoSUvAwCxHdEVw
+         DDvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oMHReu8t0qb2bsvbvFDIXyQ12gJM8CStkHATkFqVA1M=;
+        b=kQuHt04sDc39HZNefODpqncQZCl4gG+MUlyb/D5sezbxlMWwLZwirzySdXIThYidcr
+         rlC6nKVcSXUc1raa1jc3aJqGmZhK2FEas2foRJdCCyxreUOGivuvtc7+4cLb0y389pYb
+         /3rY1SLGHe4FX5kRWyfVkXEr2zVWLv4VDY2hmoQKkrQLRHIH26h/i4VvheBGU06r+QRJ
+         yPN4u7wBb2g7om95nOjzjz0ss8erP53agk9DTQaNZBQrmcDVGbIO+BGVU1GB5JqL/yup
+         iy9JhzAUy+VrqhvbaLEU9e/yg4/RQlfxbmdjCagXOe6BL0I7EDti8lQlHoafJ93fui27
+         RN4Q==
+X-Gm-Message-State: APjAAAXCsjXeZqnc+4NbxeCw+dA8nF904zDZ0dRFDIorkWft/QK6WHwC
+        jMWfKaBSboUeqEyMScPKQRs16S39HMebfA4QVa+1wQ==
+X-Google-Smtp-Source: APXvYqytFUxVF3De7rSg8RJLMo+rynossC62ogl1jMOOp6Klec0ZbUtAL3c+78swdI23w/XQRRaeQr022HItpPO5qeI=
+X-Received: by 2002:a1f:5185:: with SMTP id f127mr4406033vkb.52.1567068574138;
+ Thu, 29 Aug 2019 01:49:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1566918464-23927-6-git-send-email-gerald.baeza@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_05:,,
- signatures=0
+References: <20190828214620.66003-1-mka@chromium.org> <20190828214620.66003-2-mka@chromium.org>
+In-Reply-To: <20190828214620.66003-2-mka@chromium.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 29 Aug 2019 10:48:58 +0200
+Message-ID: <CAPDyKFr2R-ta5Xob12-6k=+mXXt0NowJ=dpLGJu10qhn7cB1HQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mmc: core: Run handlers for pending SDIO interrupts
+ on resume
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gerald
+On Wed, 28 Aug 2019 at 23:46, Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> With commit 83293386bc95 ("mmc: core: Prevent processing SDIO IRQs
+> when the card is suspended") SDIO interrupts are dropped if they
+> occur while the card is suspended. Dropping the interrupts can cause
+> problems after resume with cards that remain powered during suspend
+> and preserve their state. These cards may end up in an inconsistent
+> state since the event that triggered the interrupt is never processed
+> and remains pending. One example is the Bluetooth function of the
+> Marvell 8997, SDIO is broken on resume (for both Bluetooth and WiFi)
+> when processing of a pending HCI event is skipped.
+>
+> For cards that remained powered during suspend check on resume if
+> SDIO interrupts are pending, and trigger interrupt processing if
+> needed.
 
-On 8/27/19 5:08 PM, Gerald BAEZA wrote:
-> The DDRPERFM is the DDR Performance Monitor embedded
-> in STM32MP1 SOC.
-> 
-> Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
+Thanks for the detailed changelog, much appreciated!
+
+>
+> Fixes: 83293386bc95 ("mmc: core: Prevent processing SDIO IRQs when the card is suspended")
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
->   arch/arm/boot/dts/stm32mp157c.dtsi | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi 
-> b/arch/arm/boot/dts/stm32mp157c.dtsi
-> index 0c4e6eb..6ea6933 100644
-> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-> @@ -1378,6 +1378,14 @@
->                           };
->                   };
-> 
-> +               ddrperfm: perf@5a007000 {
-> +                       compatible = "st,stm32-ddr-pmu";
-> +                       reg = <0x5a007000 0x400>;
-> +                       clocks = <&rcc DDRPERFM>;
-> +                       resets = <&rcc DDRPERFM_R>;
-> +                       status = "okay";
-
-No need to add "status = "okay"" here.
-
-regards
-Alex
-
-> +               };
+>  drivers/mmc/core/sdio.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
+> index 8dd8fc32ecca..a6b4742a91c6 100644
+> --- a/drivers/mmc/core/sdio.c
+> +++ b/drivers/mmc/core/sdio.c
+> @@ -975,6 +975,7 @@ static int mmc_sdio_suspend(struct mmc_host *host)
+>  static int mmc_sdio_resume(struct mmc_host *host)
+>  {
+>         int err = 0;
+> +       u8 pending = 0;
+>
+>         /* Basic card reinitialization. */
+>         mmc_claim_host(host);
+> @@ -1009,6 +1010,14 @@ static int mmc_sdio_resume(struct mmc_host *host)
+>         /* Allow SDIO IRQs to be processed again. */
+>         mmc_card_clr_suspended(host->card);
+>
+> +       if (!mmc_card_keep_power(host))
+> +               goto skip_pending_irqs;
 > +
->                   usart1: serial@5c000000 {
->                           compatible = "st,stm32h7-uart";
->                           reg = <0x5c000000 0x400>;
-> -- 
-> 2.7.4
+> +       if (!sdio_get_pending_irqs(host, &pending) &&
+> +           pending != 0)
+> +               sdio_signal_irq(host);
+
+In one way, this change makes sense as it adopts the legacy behavior,
+signaling "cached" SDIO IRQs also for the new SDIO irq work interface.
+
+However, there is at least one major concern I see with this approach.
+That is, in the execution path for sdio_signal_irq() (or calling
+wake_up_process() for the legacy path), we may end up invoking the
+SDIO func's ->irq_handler() callback, as to let the SDIO func driver
+to consume the SDIO IRQ.
+
+The problem with this is, that the corresponding SDIO func driver may
+not have been system resumed, when the ->irq_handler() callback is
+invoked. If the SDIO func driver would have configured the IRQ as a
+wakeup, then I would expect this to work, but not just by having a
+maintained power to the card.
+
+In the end, I think we need to deal with synchronizations for this,
+through the mmc/sdio core, in one way or the other - before we kick
+SDIO IRQs during system resume.
+
+> +
+> +skip_pending_irqs:
+>         if (host->sdio_irqs) {
+>                 if (!(host->caps2 & MMC_CAP2_SDIO_IRQ_NOTHREAD))
+>                         wake_up_process(host->sdio_irq_thread);
+> --
+> 2.23.0.187.g17f5b7556c-goog
+>
+
+Kind regards
+Uffe
