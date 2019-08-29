@@ -2,175 +2,101 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C84C8C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08316C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCEF2073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D38362189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:08:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OrEbQDx9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmeB65EJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfH2AF5 (ORCPT
+        id S1727123AbfH2AIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 20:05:57 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36677 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfH2AF5 (ORCPT
+        Wed, 28 Aug 2019 20:08:35 -0400
+Received: from mail-ed1-f52.google.com ([209.85.208.52]:43806 "EHLO
+        mail-ed1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfH2AIe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 20:05:57 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y19so1552773wrd.3;
-        Wed, 28 Aug 2019 17:05:54 -0700 (PDT)
+        Wed, 28 Aug 2019 20:08:34 -0400
+Received: by mail-ed1-f52.google.com with SMTP id h13so1924296edq.10;
+        Wed, 28 Aug 2019 17:08:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gCMPxZVoHiSuQIWWRJ0Qttndb5+aZBERg8YRY+XH0I8=;
-        b=OrEbQDx9JHiXvFAAkRhBZCo40dT7uqo/z+yARTZHWuKT0sJ1SsJaIsCy5sxWQmnlM+
-         88Tv1x5iYIHNh2Xm8zsrOVsmmBctW8A8+7xq/QposQip8KIv0z/dtbBoOE0rERz6JSY6
-         w/cCcvBnHVgd/m6ltjLioki/oVEMvl+MHN8SqgLN/6/iLGd2DXZ0tPINzWaYfqVxOcD3
-         7yYbCprTfB+DkfXny746BaQoj/xksNB4c7Kls/a8d7PwWFqCDepZ8LW57lzAJWQhALgR
-         XlzeKr8P1BPG/OyThx2/nBm4jpSNVAYoJHRnu1GD/FRgcq1cpwGGDoS0wNckUXEf4fOy
-         zfsw==
+        h=date:from:subject:to:cc:message-id:references:mime-version;
+        bh=xumOPnbGJ7cJyCLuLqJrCbBhj31yluZcv0TSABm5hIk=;
+        b=nmeB65EJ5fgm04f8+vY6gdupp0VzYKYF4aI+eQq5CPypfrXPu9BVwGB6vGXHMLE7qG
+         WuZGkaAxUDx9xCoD7p0tdgKDce8/jJDKHPvbeMwhEclDkQDOA6Ryl83jq7qEWyGgA6tx
+         yqShHQDtgNlcBZkuaF4BQpjst6+8iHTBPfzWWlGXGfElIAtMfk9L0G1+CCpobJf8xCnm
+         ElURu0OUyZXoVNXhV9Gx2vhp5oFfNBL/rs9qBJHG71Jv3oRFAzlDvd5x2Z6Q/sG7v4cf
+         nPW17JRaFXRzdQaORNebyvyzRKpuPUgeND5B4dQiYuMXtv+RwkG679BYdEldhWtXkASV
+         PXlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gCMPxZVoHiSuQIWWRJ0Qttndb5+aZBERg8YRY+XH0I8=;
-        b=QS6FeoON8UkUdFWXxGyALX7lVUGSyW8S4EZ9jhn0+gZPR4lm6LG7FFIcExNbB6oAJs
-         lEbVYzhfGA07Q/LSuF/QFaOaOu7Qouj7ZaIesLHWErq3PYo3xL9jhXvUOUUE6KSM7a7t
-         9k7d0TD2yZL9KEDA6CeDZYmyRBKDdBs3PC1PzrCjJ5E++36yVP6ESS6JwoVLWTJzWXJX
-         4aDRpyCGdc3ZOMvGsaxE+/8yDM5o/DPONIwWC8p7tN2YMqJlpy7SBtd4YTL3djLDy0RT
-         dz77FsBcTUpEhOCPy33YBvoai7S3tc7aCU0Lw7q1ry2BYx5qz/LYtkRG/JZ4G/2wRxqX
-         5aTQ==
-X-Gm-Message-State: APjAAAUzGjPfdhcU9AekZYIc48H2u+DN3pFB2ohjdTpZmwJjaeLtPdQ6
-        Ls5WxdLuEO5rYrN7jJtqrEI=
-X-Google-Smtp-Source: APXvYqxobm+0QzlDnBCAltTC9mN+DzSswyuw4a17MJh4Z1gN0Ra0mgRZx6gJBerdembNaAEpXWshJA==
-X-Received: by 2002:adf:e846:: with SMTP id d6mr7410153wrn.263.1567037153482;
-        Wed, 28 Aug 2019 17:05:53 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id n8sm536310wro.89.2019.08.28.17.05.52
+        h=x-gm-message-state:date:from:subject:to:cc:message-id:references
+         :mime-version;
+        bh=xumOPnbGJ7cJyCLuLqJrCbBhj31yluZcv0TSABm5hIk=;
+        b=ira3mHqUtp2gv4MXxaImuTA46ZbvGli5YVX0EnueH+fwCBg4AqBijLoQ9vYCegz8KS
+         tIV2RyXGjO7TYiGbuU01TiiISIQvptgNhnKzzcRXwlyKc0FtQKvfLpR5Ksgf6ukCRPGC
+         iCiXvpG+Xa5+NEs98bV9ZU6FyeSy2u+rVUnjzifdS8UIsXsNHKHRtn3WV0FVxrZDoPbi
+         aNEvKqlPGr10VivJSSKjDcYTmtMvr2JHLBeC4yKdyvhCNiA17qOo5uAugqyvkmdWuS4E
+         8bMo1MumR52NqDm0EApV35or31Zs1gapzLU5ISDS1mro93fMI6qmso+2e9mgljys4J6V
+         9GbA==
+X-Gm-Message-State: APjAAAVqAcRA8DIG2tVoLQxaUyNLG8f/pJIDRtj4pW2QX2Nayyk0iWtP
+        W5iHXbp7TUbWuQ1v6FxbGpc=
+X-Google-Smtp-Source: APXvYqwnztlHP9wejSKsy5GjOEek1bCp/Na5WdTXLcyY0Ufnex1Cu88ug20O0hBMzgorn2dRL5G03A==
+X-Received: by 2002:a50:f19a:: with SMTP id x26mr6846144edl.144.1567037312658;
+        Wed, 28 Aug 2019 17:08:32 -0700 (PDT)
+Received: from [192.168.1.105] (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id h6sm122868eds.48.2019.08.28.17.08.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 17:05:52 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 17:05:51 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Sven Schnelle <svens@stackframe.org>,
-        Xiaozhou Liu <liuxiaozhou@bytedance.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] kbuild: allow Clang to find unused static inline
- functions for W=1 build
-Message-ID: <20190829000551.GA62731@archlinux-threadripper>
-References: <20190828055425.24765-1-yamada.masahiro@socionext.com>
- <20190828055425.24765-2-yamada.masahiro@socionext.com>
- <20190828182017.GB127646@archlinux-threadripper>
- <CAKwvOd=r5Y8hQQBeKZ6zAokPdyeT2AVKFsdviTvwV5AyDQQHrw@mail.gmail.com>
+        Wed, 28 Aug 2019 17:08:31 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 02:08:29 +0200
+From:   Krzysztof Wilczynski <kswilczynski@gmail.com>
+Subject: RE: [PATCH v2] PCI: hv: Make functions only used locally static in
+ pci-hyperv.c
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Message-Id: <1567037309.11524.1@gmail.com>
+References: <20190826154159.9005-1-kw@linux.com>
+        <20190828221846.6672-1-kw@linux.com>
+        <DM6PR21MB133796BB3D4A41278C513332CAA30@DM6PR21MB1337.namprd21.prod.outlook.com>
+X-Mailer: geary/3.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=r5Y8hQQBeKZ6zAokPdyeT2AVKFsdviTvwV5AyDQQHrw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 04:28:30PM -0700, Nick Desaulniers wrote:
-> On Wed, Aug 28, 2019 at 11:20 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > On Wed, Aug 28, 2019 at 02:54:25PM +0900, Masahiro Yamada wrote:
-> > > GCC and Clang have different policy for -Wunused-function; GCC does not
-> > > warn unused static inline functions at all whereas Clang does if they
-> > > are defined in source files instead of included headers although it has
-> > > been suppressed since commit abb2ea7dfd82 ("compiler, clang: suppress
-> > > warning for unused static inline functions").
-> > >
-> > > We often miss to delete unused functions where 'static inline' is used
-> > > in *.c files since there is no tool to detect them. Unused code remains
-> > > until somebody notices. For example, commit 075ddd75680f ("regulator:
-> > > core: remove unused rdev_get_supply()").
-> > >
-> > > Let's remove __maybe_unused from the inline macro to allow Clang to
-> > > start finding unused static inline functions. For now, we do this only
-> > > for W=1 build since it is not a good idea to sprinkle warnings for the
-> > > normal build.
-> > >
-> > > My initial attempt was to add -Wno-unused-function for no W=1 build
-> > > (https://lore.kernel.org/patchwork/patch/1120594/)
-> > >
-> > > Nathan Chancellor pointed out that would weaken Clang's checks since
-> > > we would no longer get -Wunused-function without W=1. It is true GCC
-> > > would detect unused static non-inline functions, but it would weaken
-> > > Clang as a standalone compiler at least.
-> 
-> Got it. No problem.
-> 
-> > >
-> > > Here is a counter implementation. The current problem is, W=... only
-> > > controls compiler flags, which are globally effective. There is no way
-> > > to narrow the scope to only 'static inline' functions.
-> > >
-> > > This commit defines KBUILD_EXTRA_WARN[123] corresponding to W=[123].
-> > > When KBUILD_EXTRA_WARN1 is defined, __maybe_unused is omitted from
-> > > the 'inline' macro.
-> > >
-> > > This makes the code a bit uglier, so personally I do not want to carry
-> > > this forever. If we can manage to fix most of the warnings, we can
-> > > drop this entirely, then enable -Wunused-function all the time.
-> 
-> How many warnings?
+Hello Haiyang,
 
-In an x86 defconfig build (one of the smallest builds we do), I see an
-additional 35 warnings that crop up:
+Thank you for feedback.
 
-https://gist.github.com/003ba86ba60b4ac7e8109089d6cb1a5a
+[...]
+> The second line should be aligned next to the "(" on the first line.
+> Also the first line is now over 80 chars.
 
-> > >
-> > > If you contribute to code clean-up, please run "make CC=clang W=1"
-> > > and check -Wunused-function warnings. You will find lots of unused
-> > > functions.
-> > >
-> > > Some of them are false-positives because the call-sites are disabled
-> > > by #ifdef. I do not like to abuse the inline keyword for suppressing
-> > > unused-function warnings because it is intended to be a hint for the
-> > > compiler optimization. I prefer #ifdef around the definition, or
-> > > __maybe_unused if #ifdef would make the code too ugly.
-> > >
-> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> >
-> > I can still see warnings from static unused functions and with W=1, I
-> > see plenty more. I agree that this is uglier because of the
-> > __inline_maybe_unused but I think this is better for regular developers.
-> > I will try to work on these unused-function warnings!
-> 
-> How many are we talking here?
-> 
-> >
-> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> > Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-> 
-> This is getting kind of messy.  I was more ok when the goal seemed to
-> be simplifying the definition of `inline`, but this is worse IMO.
+Sorry about this.  I will fix it in v3.  Thank you for pointing this 
+out.
 
-I guess if you want, we can just go back to v1 and have all unused
-function warnings hidden by default with clang. Fixing these warnings
-will take a significant amount of time given there will probably be a
-few hundred so I don't think having this warning hidden behind W=1 for
-that long is a good thing.
+To address both the alignment and line length of 
+hv_register_block_invalidate(),
+I took a hint from the way how hv_compose_msi_req_v1() is current 
+formatted.  I
+hope that this would be acceptable.
 
-Cheers,
-Nathan
+Krzysztof
+
+
