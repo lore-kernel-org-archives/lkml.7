@@ -2,94 +2,141 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6EAC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C6AC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A0920644
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19114233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:42:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567089728;
+	bh=eLaGrTGsgZaXe/OR0bfIYNLE9wDIHPmyaNZGgp83mcA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SFniXRVFK1kDRKYQjCYb76Zx7hGNAeTxEAly9ubHhYC3PHR8lLiYuar0obhduLrnZ
+	 IbuvBEd5TTpHGg68M448NBy601tpkvhhH0Z8MiaxMx6T/DQtTUf0Idr5st77y4jQG6
+	 4z/fWNNVwE9zehA3CYTb87/wBdjMJJxgs+ShIStQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbfH2OmD (ORCPT
+        id S1728679AbfH2Okp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:42:03 -0400
-Received: from mga11.intel.com ([192.55.52.93]:28334 "EHLO mga11.intel.com"
+        Thu, 29 Aug 2019 10:40:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727794AbfH2OmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:42:01 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 07:42:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,443,1559545200"; 
-   d="scan'208";a="332533478"
-Received: from friedlmi-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.54.26])
-  by orsmga004.jf.intel.com with ESMTP; 29 Aug 2019 07:41:56 -0700
-Date:   Thu, 29 Aug 2019 17:41:54 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jerry Snitselaar <jsnitsel@redhat.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Alexey Klimov <aklimov@redhat.com>
-Subject: Re: [PATCH 2/2 v2] tpm_tis: override durations for STM tpm with
- firmware 1.2.8.28
-Message-ID: <20190829144140.6xaygqkfhsnmm67s@linux.intel.com>
-References: <20190828004621.29050-1-jsnitsel@redhat.com>
- <20190828004621.29050-3-jsnitsel@redhat.com>
- <20190829144002.zhuqxnsswgl65pnm@linux.intel.com>
+        id S1728653AbfH2Okn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 10:40:43 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C12522CED;
+        Thu, 29 Aug 2019 14:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567089641;
+        bh=eLaGrTGsgZaXe/OR0bfIYNLE9wDIHPmyaNZGgp83mcA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=icQxrucSAoeJKXacuim2VkDfOqDJ1W7qwMo+CPBBknoKez9RuR8vzfuHGUuecnBwi
+         Vq1n1a1eQgWtTTidw/Tf2+9ifBxjoCEDw6gHfRXOWNUulvZVWGvjXD89sd1+Tr8RTA
+         j5J5O6yPea3fZnBm9Zi0pY/JACm5pJqi9LScr1HY=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 20/37] libperf: Add PERF_RECORD_AUXTRACE 'struct auxtrace_event' to perf/event.h
+Date:   Thu, 29 Aug 2019 11:39:00 -0300
+Message-Id: <20190829143917.29745-21-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190829143917.29745-1-acme@kernel.org>
+References: <20190829143917.29745-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829144002.zhuqxnsswgl65pnm@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 05:40:40PM +0300, Jarkko Sakkinen wrote:
-> On Tue, Aug 27, 2019 at 05:46:21PM -0700, Jerry Snitselaar wrote:
-> > There was revealed a bug in the STM TPM chipset used in Dell R415s.
-> > Bug is observed so far only on chipset firmware 1.2.8.28
-> > (1.2 TPM, device-id 0x0, rev-id 78). After some number of
-> > operations chipset hangs and stays in inconsistent state:
-> > 
-> > tpm_tis 00:09: Operation Timed out
-> > tpm_tis 00:09: tpm_transmit: tpm_send: error -5
-> > 
-> > Durations returned by the chip are the same like on other
-> > firmware revisions but apparently with specifically 1.2.8.28 fw
-> > durations should be reset to 2 minutes to enable tpm chip work
-> > properly. No working way of updating firmware was found.
-> > 
-> > This patch adds implementation of ->update_durations method
-> > that matches only STM devices with specific firmware version.
-> > 
-> > Cc: Peter Huewe <peterhuewe@gmx.de>
-> > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > Signed-off-by: Alexey Klimov <aklimov@redhat.com>
-> > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> > ---
-> > v2: Make suggested changes from Jarkko
-> >     - change struct field name to durations from durs
-> >     - formatting cleanups
-> >     - turn into void function like update_timeouts and
-> >       use chip->duration_adjusted to track whether adjustment occurred.
-> 
-> The code repetition looks horrible so I wrote a patch that should help:
-> 
-> https://patchwork.kernel.org/patch/11121475/
-> 
-> Read the remar that prepends the diffstat.
+From: Jiri Olsa <jolsa@kernel.org>
 
-Forgot from that remark that I did not have TPM 1.x available at hand
-(WFH today) so please also review and test it.
+Move the PERF_RECORD_AUXTRACE event definition to libperf's event.h.
 
-/Jrakko
+Ipn order to keep libperf simple, we switch 'u64/u32/u16/u8'
+types used events to their generic '__u*' versions.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190828135717.7245-10-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/lib/include/perf/event.h | 11 +++++++++++
+ tools/perf/util/auxtrace.c          |  2 +-
+ tools/perf/util/event.h             | 11 -----------
+ 3 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
+index 02da73491451..78001c2973b6 100644
+--- a/tools/perf/lib/include/perf/event.h
++++ b/tools/perf/lib/include/perf/event.h
+@@ -208,4 +208,15 @@ struct auxtrace_info_event {
+ 	__u64			 priv[];
+ };
+ 
++struct auxtrace_event {
++	struct perf_event_header header;
++	__u64			 size;
++	__u64			 offset;
++	__u64			 reference;
++	__u32			 idx;
++	__u32			 tid;
++	__u32			 cpu;
++	__u32			 reserved__; /* For alignment */
++};
++
+ #endif /* __LIBPERF_EVENT_H */
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 112c24aa2cf2..5edec7123328 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -943,7 +943,7 @@ s64 perf_event__process_auxtrace(struct perf_session *session,
+ 	s64 err;
+ 
+ 	if (dump_trace)
+-		fprintf(stdout, " size: %#"PRIx64"  offset: %#"PRIx64"  ref: %#"PRIx64"  idx: %u  tid: %d  cpu: %d\n",
++		fprintf(stdout, " size: %#"PRI_lx64"  offset: %#"PRI_lx64"  ref: %#"PRI_lx64"  idx: %u  tid: %d  cpu: %d\n",
+ 			event->auxtrace.size, event->auxtrace.offset,
+ 			event->auxtrace.reference, event->auxtrace.idx,
+ 			event->auxtrace.tid, event->auxtrace.cpu);
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index ca2cae332c43..60895a3b2c85 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -332,17 +332,6 @@ struct events_stats {
+ 	u32 nr_proc_map_timeout;
+ };
+ 
+-struct auxtrace_event {
+-	struct perf_event_header header;
+-	u64 size;
+-	u64 offset;
+-	u64 reference;
+-	u32 idx;
+-	u32 tid;
+-	u32 cpu;
+-	u32 reserved__; /* For alignment */
+-};
+-
+ #define MAX_AUXTRACE_ERROR_MSG 64
+ 
+ struct auxtrace_error_event {
+-- 
+2.21.0
+
