@@ -2,148 +2,214 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3AFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0BEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3EEE2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 385972189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:56:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NS3pQoXO"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="OBGYB9aZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbfH2Rzl (ORCPT
+        id S1727943AbfH2R44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:55:41 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41538 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727314AbfH2Rzl (ORCPT
+        Thu, 29 Aug 2019 13:56:56 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:59845 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727228AbfH2R4z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:55:41 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 196so2565012pfz.8
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 10:55:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nTiBhHkHMJRRmQp07hUV0eTzQBNN9VPe28f+dHC32dM=;
-        b=NS3pQoXOlk00UmrmHrPEqnCHWkBOdmybZhoBYlRrrTrQU4XeHRJlHepqqzCHaudweq
-         nozNVhD6dU3HvOMUJoSosGKcZo6Wml/oo8lo9ByhvBDc9FIAZvk+KRHuZ1v9VevA9gLk
-         td8G6R4rcfnAMfcTDBIonCHxcHaG5Vb3j4Emd0gBswHlS687CitNrP2YSbdbSgYfBIxt
-         2DQY8vQG8buTm7B9zF8YNNBk4101xhrLsWIaZYvYPWwpNqmfPN8qFw0wV9R/FG12jye6
-         JzcEXtr3XUPcJxQSIG5ggs3ue0i0/ZPXIsurvTwkPoc92xzUuSmx4H0wzpdohrk1GZOq
-         If6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nTiBhHkHMJRRmQp07hUV0eTzQBNN9VPe28f+dHC32dM=;
-        b=I43NA0/wnRQpJrb0AeCcQiivCOgcPAhjDcyXG9ejqIlBhsju15gVJrprKq1lje9dvq
-         2Rx3JlbdgAkKYOuyem+g2GYM75XWT6hw7oytAYIbVppHLfS0jtwkEA/1o2kEHYfv219M
-         cG+XOXL5kCYFuDuJQmg9w+5LdpprVCQTGQXgYYGq1DertXNVvEqkAb7cwVhWk7ZTzSZ1
-         R9tmVmjD5Vl5imfxl6VQLVKEzUtUkzSVGaFDR7DSpOUdHey944Q0lodLuDJB+Y+pTnZx
-         B4fHEeAywH8fUNmIKOMspOAmeiZIiWr8EDTOJlgbajVnilttQSReqc70lACd3ehOXksF
-         PW3Q==
-X-Gm-Message-State: APjAAAUQKukITjn9M9WNMgiCcZDvWo04AHRTK3ozVgxEH+RaqcFV7naN
-        Sz3IEnj+ZTz/nbfCv99405swVuAgOjn2C43DKIfETQ==
-X-Google-Smtp-Source: APXvYqwmiSojdNKlubI2KCVcr3kC3Pv2OqAeJD8KlOzXov8+oindrhkau4GKVBYmSkoU6p6dVPaOPeMV5OZOmuzhjtg=
-X-Received: by 2002:a62:cec4:: with SMTP id y187mr12922205pfg.84.1567101339951;
- Thu, 29 Aug 2019 10:55:39 -0700 (PDT)
+        Thu, 29 Aug 2019 13:56:55 -0400
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x7THuibw013002;
+        Fri, 30 Aug 2019 02:56:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x7THuibw013002
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567101405;
+        bh=MW+hZu1IB+bIDNljAtQpjP42JfvhjUHw3b7UQJQXPyM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OBGYB9aZB2FdRo35Tgnv6Qd4KTJwwE9y8JejC6SEF2wLx0ogGG81+LYqFb8o7k+ni
+         4sWjDdnSdoXhOEgiOHs3X3GjMTgFp+oXGNJdcvsGMrExn9xFfsCTso0b04GZdeScZX
+         KCUEI47ngMVjMe/1JUHgaNqAnM4iIM+lAIL1F+oobNLY3NFnjvSLqyapA6ggRDbYoU
+         9mdFpkZtcv+FD/MiaA42Sdc2fZRLd6ivbYE5w/P6Nrp4ZyIav2au7wEqxqLuDh1V3m
+         EkoTjBQ3QiGR9aWi3NGceNwkpBAhJL70d51QKm4lO1I/XDtkqCdPdIICD1B4lpCHtf
+         rpgDTpw5FXL9Q==
+X-Nifty-SrcIP: [209.85.221.172]
+Received: by mail-vk1-f172.google.com with SMTP id 82so975087vkf.11;
+        Thu, 29 Aug 2019 10:56:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAXt47dvIk43ieLkIEvS2+QAX+ry0BydEegP62VQRQJz7ork/LFc
+        g4x3GZYKh807rVkUNBcZvEkz+idPkn1B1YNRKkE=
+X-Google-Smtp-Source: APXvYqzwUdSURp41hkziRu+CcBQEZqmFIGNDRtSjvqk0WGcuFs/bA1awubaIGArhJAs3XqtuGOzWXHFfWdjpGlMuiSU=
+X-Received: by 2002:a1f:5d83:: with SMTP id r125mr1999066vkb.64.1567101403448;
+ Thu, 29 Aug 2019 10:56:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190829062635.45609-1-natechancellor@gmail.com>
-In-Reply-To: <20190829062635.45609-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 29 Aug 2019 10:55:28 -0700
-Message-ID: <CAKwvOdkXSWE+_JCZsuQdkCSrK5pJSp9n_Cd27asFP0mHBfHg6w@mail.gmail.com>
-Subject: Re: [PATCH] ARM: Emit __gnu_mcount_nc when using Clang 10.0.0 or newer
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20190828055425.24765-1-yamada.masahiro@socionext.com>
+ <CA+icZUWigJkh-VtJc4=xE06oMgE=ci2Mfdo2JaDv0fth8PKH+A@mail.gmail.com> <CA+icZUUhhOLfOgwoKP4nKOdPakNJF7XafJ09ERP6r7dOUduMsg@mail.gmail.com>
+In-Reply-To: <CA+icZUUhhOLfOgwoKP4nKOdPakNJF7XafJ09ERP6r7dOUduMsg@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 30 Aug 2019 02:56:07 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ+do3HNWYtBFgtGU817ryOrBvcqaxuS2xZif2nBjUNtQ@mail.gmail.com>
+Message-ID: <CAK7LNAQ+do3HNWYtBFgtGU817ryOrBvcqaxuS2xZif2nBjUNtQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] kbuild: refactor scripts/Makefile.extrawarn
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 11:27 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
+On Wed, Aug 28, 2019 at 11:19 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
 >
-> Currently, multi_v7_defconfig + CONFIG_FUNCTION_TRACER fails to build
-> with clang:
->
-> arm-linux-gnueabi-ld: kernel/softirq.o: in function `_local_bh_enable':
-> softirq.c:(.text+0x504): undefined reference to `mcount'
-> arm-linux-gnueabi-ld: kernel/softirq.o: in function `__local_bh_enable_ip':
-> softirq.c:(.text+0x58c): undefined reference to `mcount'
-> arm-linux-gnueabi-ld: kernel/softirq.o: in function `do_softirq':
-> softirq.c:(.text+0x6c8): undefined reference to `mcount'
-> arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_enter':
-> softirq.c:(.text+0x75c): undefined reference to `mcount'
-> arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_exit':
-> softirq.c:(.text+0x840): undefined reference to `mcount'
-> arm-linux-gnueabi-ld: kernel/softirq.o:softirq.c:(.text+0xa50): more undefined references to `mcount' follow
->
-> clang can emit a working mcount symbol, __gnu_mcount_nc, when
-> '-meabi gnu' is passed to it. Until r369147 in LLVM, this was
-> broken and caused the kernel not to boot because the calling
-> convention was not correct. Now that it is fixed, add this to
-> the command line when clang is 10.0.0 or newer so everything
-> works properly.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/35
-> Link: https://bugs.llvm.org/show_bug.cgi?id=33845
-> Link: https://github.com/llvm/llvm-project/commit/16fa8b09702378bacfa3d07081afe6b353b99e60
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  arch/arm/Makefile | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index c3624ca6c0bc..7b5a26a866fc 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -112,6 +112,12 @@ ifeq ($(CONFIG_ARM_UNWIND),y)
->  CFLAGS_ABI     +=-funwind-tables
->  endif
->
-> +ifeq ($(CONFIG_CC_IS_CLANG),y)
-> +ifeq ($(shell test $(CONFIG_CLANG_VERSION) -ge 100000; echo $$?),0)
-> +CFLAGS_ABI     +=-meabi gnu
-> +endif
-> +endif
-> +
+> On Wed, Aug 28, 2019 at 9:20 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >
+> > On Wed, Aug 28, 2019 at 7:55 AM Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> > >
+> > > Instead of the warning-[123] magic, let's accumulate compiler options
+> > > to KBUILD_CFLAGS directly as the top Makefile does. I think this makes
+> > > easier to understand what is going on in this file.
+> > >
+> > > This commit slightly changes the behavior, I think all of which are OK.
+> > >
+> > > [1] Currently, cc-option calls are needlessly evaluated. For example,
+> > >       warning-3 += $(call cc-option, -Wpacked-bitfield-compat)
+> > >     needs evaluating only when W=3, but it is actually evaluated for
+> > >     W=1, W=2 as well. With this commit, only relevant cc-option calls
+> > >     will be evaluated. This is a slight optimization.
+> > >
+> > > [2] Currently, unsupported level like W=4 is checked by:
+> > >       $(error W=$(KBUILD_ENABLE_EXTRA_GCC_CHECKS) is unknown)
+> > >     This will no longer be checked, but I do not think it is a big
+> > >     deal.
+> > >
+> >
+> > Hi Masahiro Yamada,
+> >
+> > thanks for your patch series.
+> >
+> > If KBUILD_ENABLE_EXTRA_GCC_CHECKS does extra(-warning)-checks for GCC and Clang,
+> > please rename the Kconfig into...
 
-Thanks for the patch!  I think this is one of the final issues w/ 32b
-ARM configs when building w/ Clang.
-
-I'm not super enthused about the version check.  The flag is indeed
-not recognized by GCC, but I think it would actually be more concise
-with $(cc-option) and no compiler or version check.
-
-Further, I think that the working __gnu_mcount_nc in Clang would
-better be represented as marking the arch/arm/KConfig option for
-CONFIG_FUNCTION_TRACER for dependent on a version of Clang greater
-than or equal to Clang 10, not conditionally adding this flag. (We
-should always add the flag when supported, IMO.  __gnu_mcount_nc's
-calling convention being broken is orthogonal to the choice of
-__gnu_mcount_nc vs mcount, and it's the former's that should be
-checked, not the latter as in this patch.
-
->  # Accept old syntax despite ".syntax unified"
->  AFLAGS_NOWARN  :=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
->
-> --
-> 2.23.0
->
+You repeatedly mentioned "Kconfig" in your posts,
+where there is nothing related to Kconfig.
 
 
--- 
-Thanks,
-~Nick Desaulniers
+> >
+> > KBUILD_ENABLE_EXTRA_CC_CHECKS
+
+You missed the fact this is already used
+not only for C compilers, but also for Device Tree compiler.
+(see scripts/Makefile.lib)
+
+One more thing, this is the environment variable
+that Kbuild officially supports.
+Keeping the backward compatibility is must.
+
+
+When I mentioned to rename this before,
+Arnd suggested to keep it as is.
+https://patchwork.kernel.org/patch/10172331/#21385013
+
+I do not know whether he is still planning that rework, though.
+
+
+> > ...or something similiar (and maybe with some notes in its Kconfig help-text?).
+
+What did you mean by "Kconfig help-text" ?
+
+
+
+> >
+>
+> I have tested both patches against recent kbuild-next and can boot on
+> bare metal with clang.
+>
+> I have *not* passed any W= to my make, but I see that clang's W=1
+> kbuild-cflags are active.
+>
+> [ scripts/Makefile.extrawarn ]
+>
+> ifeq ("$(origin W)", "command line")
+>   export KBUILD_ENABLE_EXTRA_GCC_CHECKS := $(W)
+> endif
+>
+> #
+> # W=1 - warnings that may be relevant and does not occur too often
+> #
+> ifneq ($(findstring 1, $(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
+> [ ... ]
+> KBUILD_CPPFLAGS += -DKBUILD_EXTRA_WARN1
+>
+> else
+>
+> # W=1 also stops suppressing some warnings
+>
+> ifdef CONFIG_CC_IS_CLANG
+> KBUILD_CFLAGS += -Wno-initializer-overrides
+> KBUILD_CFLAGS += -Wno-format
+> KBUILD_CFLAGS += -Wno-sign-compare
+> KBUILD_CFLAGS += -Wno-format-zero-length
+> endif # CONFIG_CC_IS_CLANG
+>
+> endif # KBUILD_ENABLE_EXTRA_GCC_CHECKS
+>
+> These clang KBUILD_CFLAGS are active independently of passing W=1.
+>
+> $ grep '\-Wno-initializer-overrides'
+> build-log_5.3.0-rc6-2-amd64-cbl-asmgoto.txt | wc -l
+> 27195
+>
+> So the above comment is misleading?
+>
+> Is W=1 activated by default?
+>
+> Or do I miss something?
+
+
+I won't comment back to your long analysis.
+
+Instead, I will post v2.
+I hope you will notice something.
+
+
+
+
+
+> [ Documentation/kbuild/kbuild.rst ]
+>
+> KBUILD_ENABLE_EXTRA_GCC_CHECKS
+> ------------------------------
+> If enabled over the make command line with "W=1", it turns on additional
+> gcc -W... options for more extensive build-time checking.
+>
+> What about?
+>
+> KBUILD_CC_EXTRA_CHECKS (or KBUILD_EXTRA_CC_CHECKS)
+> ------------------------------
+> If enabled over the make command line with "W=...", it turns on additional
+> compiler warning options like -Wmissing-declarations for more extensive
+> build-time checking. For more details see <Documentation/kbuild/kbuild.rst>.
+>
+> W=1 - warnings that may be relevant and does not occur too often
+> W=1 - also stops suppressing some warnings
+> W=2 - warnings that occur quite often but may still be relevant
+> W=3 - the more obscure warnings, can most likely be ignored
+>
+> - Sedat -
+
+
+
+--
+Best Regards
+
+Masahiro Yamada
