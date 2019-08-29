@@ -2,63 +2,63 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 151E0C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE40C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E041023403
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05FC423403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:34:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mjlYQJZX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R7Y/+uHZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbfH2Nen (ORCPT
+        id S1727779AbfH2Ner (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:34:43 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:43967 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726950AbfH2Nel (ORCPT
+        Thu, 29 Aug 2019 09:34:47 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:40590 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbfH2Nep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:34:41 -0400
-Received: by mail-vs1-f67.google.com with SMTP id l63so2389010vsl.10
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 06:34:40 -0700 (PDT)
+        Thu, 29 Aug 2019 09:34:45 -0400
+Received: by mail-vs1-f68.google.com with SMTP id i128so2406379vsc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 06:34:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SZQRw3RVA3EaoAr0WIMQeD6W5AQqkz7QcXOAzySMDsY=;
-        b=mjlYQJZXOCLmvYeLiazuIx+UY3wq5N7PVqOoMMGdiGRuWszrbjeeG5BdKIii+kFHf/
-         zhlLgNOZDNfFJXEdvpQSldMZMsfy3EAJU813E8s8mZ+LwtLBw1/xuvT9iVLTWp5kBDr0
-         XwgPt6sJe9MH17Gypg7IM3bSIV0w3vqZrnGDTNkHo9HKv9QPubEQ64tjw3T4vW/y1qWd
-         P+3wZ/TYKCfoLGt9fjKNW32dtfxb28uZucnpAUmnSnWu6OoBM32fBZAXuRoGoxr1yJS4
-         7QdSZ0ebZfNHcA+OWcb9389vfghhRPbVUuIXr5DfUxHNQFkXnLPg4+DzWZRh5ppANMTA
-         C4HA==
+        bh=0LwGddfzeX4mOzZ5JoPgRwznEXqsWR+GA5wz76u8ncg=;
+        b=R7Y/+uHZ9h7ZpNJZej4KVWDiSM2Jsx86a+2rjv3viGQT70JryZyZZt4cNvtB0oX2/w
+         DvmTYK1CIdpNQooHQdGj+3W1x7TabAOJNngFN2DFwYGMoo360fE+iEzbn+HyTS9wPfp4
+         sKItf31dCS+KDtU9DnekStb2wihbWiJs680hvwuko6xU2ss+NvsOSzwDaOaIADiKvbx8
+         ihe9RzO8uf4gfY62Gym89Uv0jHKVdUp91Opy5WWQv3hWUqstfoKVgRgqvOlPkkDorwkB
+         7PvnkYTHuk1GDba4J/RB0LmaA7sRNLMUmrA0dso5gqvCJFchEc+fhv8yKi0eaCzxLEZq
+         HP/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SZQRw3RVA3EaoAr0WIMQeD6W5AQqkz7QcXOAzySMDsY=;
-        b=mZXEqfER/tXYlY16cbIs9f8Nb8gUz96zJJ1hJoWlV0R7mX7PJpuv5XbMGJhq/2c19d
-         u9IdcF9Hsx/4sMyWS5fifvnJpfDVKwuL3TCnemxwEDhEiLGO4hWD0Dksm6pAAP7OSEkp
-         QPgopeJl1KXPSa301xb/iApq2cKGLg6XdjVTNv/xm6i4QW5f+bBKpRKzznr5vMk8Y+k5
-         GXDjgXGQC+K7BsGodssXvwcDKQ4VLsWqfcC/xB6ZLAh9rzjY+kiP6GHGUs941kSmxAfM
-         cui3wCZ1o7mivm/RscStZfgXWVGsGdLOu41e7aCoIdzp+zu5o0w1XKWM2fb8VV8zTXgs
-         DQ8Q==
-X-Gm-Message-State: APjAAAWZyni7rJpbXxUu/T1lHutFcs1ilgf30igElPrfgVkCmPF8J2Vx
-        qZq+/Tk56/w/oUtzon3vn7gWBVppbT1m6L4Zc9tcdA==
-X-Google-Smtp-Source: APXvYqxSPI3MRvojNzwX5Kyfz8EeaTkMx9wZb2I0g1wcY8R05FbnpvYzEDKCeOjDJ8VD8Z/lKEJxNPHt2Bumu0b0w/s=
-X-Received: by 2002:a67:32c5:: with SMTP id y188mr5483153vsy.191.1567085680040;
- Thu, 29 Aug 2019 06:34:40 -0700 (PDT)
+        bh=0LwGddfzeX4mOzZ5JoPgRwznEXqsWR+GA5wz76u8ncg=;
+        b=mfrFiI28AVtXeGPSQykNNBRgtmoZMBdiKeae60AvVEPmMSToeX8Dn2t5GMktRiefmM
+         8PkF7pkACkAaDdumdu9Ge7mRNGp3phkdvMGwavuvdQZSvLUsqnzuCnEBcFiOZXEfcvBI
+         HQkqZBDufioS4/dcaLgNQ00ouSVZ6pYOP64IMf3sK8Sc2bL9XBSnZMP3drMsvo9XK1YY
+         BMJ+iHclU7UZsMsGY4mggcM/GXxhS53AxZDuQ/TuYL9sxbdZxdvwTJEI1DSKTotRVseQ
+         i2YUPPupG0+H8rE+aCrydXmjPYIFeoWx24ljs+NEcR907PbZHoo24cJJR/ZGM9zOCD63
+         qakQ==
+X-Gm-Message-State: APjAAAXot88fyCIUZicButtoUzDmbqlWVNiBXKV7Opqtn2Qr6Zk+KKej
+        +PGLPla7LXb7Yxxg3T5or32/QxdwOSJnK1mdUXewYKck
+X-Google-Smtp-Source: APXvYqxirmJH4cL7eOUn3SpAsT/GI4gJKeANjViJ2y2P3ZBRhl2NHvAa8yLs3iWPeSiRlqzxQFoA7JJgfGfBFLCetWo=
+X-Received: by 2002:a67:61c7:: with SMTP id v190mr5467601vsb.165.1567085684495;
+ Thu, 29 Aug 2019 06:34:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190829104928.27404-1-yamada.masahiro@socionext.com> <20190829104928.27404-3-yamada.masahiro@socionext.com>
-In-Reply-To: <20190829104928.27404-3-yamada.masahiro@socionext.com>
+References: <20190829112206.22213-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190829112206.22213-1-yamada.masahiro@socionext.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 29 Aug 2019 15:34:04 +0200
-Message-ID: <CAPDyKFrcvVKXmLpMdjtkX+OZ=VfyYa0hS_dStEiawUN3zMtbvA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] mmc: sdhci-cadence: override spec version
+Date:   Thu, 29 Aug 2019 15:34:08 +0200
+Message-ID: <CAPDyKFqrQF8nBfLOHNyqM_LfPx7XjRCHT_PVzDKb98qxVjdSGQ@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: sdhci: use lower/upper_32_bits() macros for DMA addresses
 To:     Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
@@ -70,19 +70,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 at 12:49, Masahiro Yamada
+On Thu, 29 Aug 2019 at 13:22, Masahiro Yamada
 <yamada.masahiro@socionext.com> wrote:
 >
-> The datasheet of the IP (sd4hc) says it is compiatible with SDHCI v4,
-> but the spec version field in the version register is read as 2
-> (i.e. SDHCI_SPEC_300) based on the RTL provided by Cadence.
+> Currently, the DMA addresses are casted to (u64) for the upper 32bits
+> to avoid "right shift count >= width of type" warning.
 >
-> Socionext did not fix it up when it integrated the IP into the SoCs.
-> So, it is working as SDHCI v3.
+> <linux/kernel.h> provides macros to address this, and I like the macro
+> names are self-documenting.
 >
-> It is not a real problem because there is no difference in the program
-> flow in sdhci.c between SDHCI_SPEC_300/400, but set the real version
-> just in case.
+> I introduced a new helper, sdhci_set_adma_addr() to avoid the code
+> duplication.
 >
 > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
@@ -94,29 +92,74 @@ Uffe
 
 > ---
 >
->  drivers/mmc/host/sdhci-cadence.c | 2 ++
->  1 file changed, 2 insertions(+)
+> Changes in v2:
+>   - Another way to reduce linu wrapping
 >
-> diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
-> index 44139fceac24..9837214685b6 100644
-> --- a/drivers/mmc/host/sdhci-cadence.c
-> +++ b/drivers/mmc/host/sdhci-cadence.c
-> @@ -341,6 +341,7 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
->         unsigned int nr_phy_params;
->         int ret;
->         struct device *dev = &pdev->dev;
-> +       static const u16 version = SDHCI_SPEC_400 << SDHCI_SPEC_VER_SHIFT;
+>  drivers/mmc/host/sdhci.c | 27 +++++++++++++--------------
+>  1 file changed, 13 insertions(+), 14 deletions(-)
 >
->         clk = devm_clk_get(dev, NULL);
->         if (IS_ERR(clk))
-> @@ -370,6 +371,7 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
->         host->mmc_host_ops.hs400_enhanced_strobe =
->                                 sdhci_cdns_hs400_enhanced_strobe;
->         sdhci_enable_v4_mode(host);
-> +       __sdhci_read_caps(host, &version, NULL, NULL);
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 08cc0792c174..66c2cf89ee22 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -668,10 +668,10 @@ void sdhci_adma_write_desc(struct sdhci_host *host, void **desc,
+>         /* 32-bit and 64-bit descriptors have these members in same position */
+>         dma_desc->cmd = cpu_to_le16(cmd);
+>         dma_desc->len = cpu_to_le16(len);
+> -       dma_desc->addr_lo = cpu_to_le32((u32)addr);
+> +       dma_desc->addr_lo = cpu_to_le32(lower_32_bits(addr));
 >
->         sdhci_get_of_property(pdev);
+>         if (host->flags & SDHCI_USE_64_BIT_DMA)
+> -               dma_desc->addr_hi = cpu_to_le32((u64)addr >> 32);
+> +               dma_desc->addr_hi = cpu_to_le32(upper_32_bits(addr));
 >
+>         *desc += host->desc_sz;
+>  }
+> @@ -816,6 +816,13 @@ static void sdhci_adma_table_post(struct sdhci_host *host,
+>         }
+>  }
+>
+> +static void sdhci_set_adma_addr(struct sdhci_host *host, dma_addr_t addr)
+> +{
+> +       sdhci_writel(host, lower_32_bits(addr), SDHCI_ADMA_ADDRESS);
+> +       if (host->flags & SDHCI_USE_64_BIT_DMA)
+> +               sdhci_writel(host, upper_32_bits(addr), SDHCI_ADMA_ADDRESS_HI);
+> +}
+> +
+>  static dma_addr_t sdhci_sdma_address(struct sdhci_host *host)
+>  {
+>         if (host->bounce_buffer)
+> @@ -826,13 +833,10 @@ static dma_addr_t sdhci_sdma_address(struct sdhci_host *host)
+>
+>  static void sdhci_set_sdma_addr(struct sdhci_host *host, dma_addr_t addr)
+>  {
+> -       if (host->v4_mode) {
+> -               sdhci_writel(host, addr, SDHCI_ADMA_ADDRESS);
+> -               if (host->flags & SDHCI_USE_64_BIT_DMA)
+> -                       sdhci_writel(host, (u64)addr >> 32, SDHCI_ADMA_ADDRESS_HI);
+> -       } else {
+> +       if (host->v4_mode)
+> +               sdhci_set_adma_addr(host, addr);
+> +       else
+>                 sdhci_writel(host, addr, SDHCI_DMA_ADDRESS);
+> -       }
+>  }
+>
+>  static unsigned int sdhci_target_timeout(struct sdhci_host *host,
+> @@ -1095,12 +1099,7 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
+>                         host->flags &= ~SDHCI_REQ_USE_DMA;
+>                 } else if (host->flags & SDHCI_USE_ADMA) {
+>                         sdhci_adma_table_pre(host, data, sg_cnt);
+> -
+> -                       sdhci_writel(host, host->adma_addr, SDHCI_ADMA_ADDRESS);
+> -                       if (host->flags & SDHCI_USE_64_BIT_DMA)
+> -                               sdhci_writel(host,
+> -                                            (u64)host->adma_addr >> 32,
+> -                                            SDHCI_ADMA_ADDRESS_HI);
+> +                       sdhci_set_adma_addr(host, host->adma_addr);
+>                 } else {
+>                         WARN_ON(sg_cnt != 1);
+>                         sdhci_set_sdma_addr(host, sdhci_sdma_address(host));
 > --
 > 2.17.1
 >
