@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167D1C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53852C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D253B2080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BEB92080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:00:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ljvhUTB5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EwHFoY3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbfH2UAL (ORCPT
+        id S1726619AbfH2UAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 16:00:11 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39964 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728116AbfH2UAJ (ORCPT
+        Thu, 29 Aug 2019 16:00:12 -0400
+Received: from mail-pf1-f182.google.com ([209.85.210.182]:36005 "EHLO
+        mail-pf1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728107AbfH2UAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 16:00:09 -0400
-Received: by mail-pl1-f193.google.com with SMTP id h3so2080447pls.7
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 13:00:09 -0700 (PDT)
+        Thu, 29 Aug 2019 16:00:08 -0400
+Received: by mail-pf1-f182.google.com with SMTP id w2so2807543pfi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 13:00:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LnwOSHW+qkIfwX+CEo6pre2vAtIHSJHM7Ipb0uTKcN8=;
-        b=ljvhUTB5kgie6mZn/Katfok8X2WrFwgXFmGKAsJBCEExxJK+Nxf6/5JnDHhk1LxGzy
-         GYRAppVUeZ1sd1GoWZIlw7jgdNHty21ipU5Xwbsjv2pDu76zTUuu2M0TYKjBIGiG+5/U
-         z01+UGUU35QOWpFRzt7fPcfbQ99aFBb2fmxT0/oIwQsg9/ldDduJhzRqeDTeL/2cT+fn
-         xZEkAhbQh16HdO3N3dLit2heuBIRhD2aWB6bocU4JidBTKhPZUvGLVHHMbcSP5Om8Rkn
-         fjF4IfC7pe9zuVYT61BgDPYNoG1OUc1oLDYMoO1xaeTde3LKzueqjrs2vOyE7CXBh8Pc
-         jvRQ==
+        bh=leAjuo9QrYfGsQp+lWwGPaf44FJzdIsTdXXe6kBTcvQ=;
+        b=EwHFoY3nn78Ablhc+fvFTk63+ihmkRvuN2b9otTYYBLJ/20wMokgUtop/hP29hf8Ss
+         JdtCG3A2s67swE9FFPf0Jn+PmiCySXAL8wwZW4h1dWPNwTUU0OJvimlv7euDgKnQOI0H
+         dGcfTjNrOk+RUaAs/nmRNL6f5930YGwO+xPmerXZ3YLIx3T4GB15/JNvn/WKFJkiPNSh
+         JSGhphPYJfykXMMRch+fpjVH5JYudf5o7RljVoXQc8rIl3R5Wt9ClH9N90i/eEYtQIfH
+         U7UKjZIIr6lociKHiO8DTHScDkrVxuqSHtCT0pJuou4Ml1+ekF7rLvtgaf+1OlCmupbW
+         YbfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=LnwOSHW+qkIfwX+CEo6pre2vAtIHSJHM7Ipb0uTKcN8=;
-        b=joRug1EdC34Qk69nMtL1a3jtw1mgJspAXsmXppBagAssm8/ZHtcZ2gxr4Z3i7q3RYv
-         q9HncXAGo8/MYjcYV0XUl+ndXVLjZCI072owmUzX9rimpPNqcaRYqTe6yFHpABXxNPt8
-         PjgvMWKoaVmb18d/2pq6qg0J/7mp2EhaMyTeVsCVFpfyo2dLRtB8kLwJ3cE5WRaE96u4
-         NcI/6P7PM1xKe4BSU1py9LHlDC11+hZh4KX4TAS5fOhubLCTcz6u79ZvhyXdo6x+sv14
-         HYbS8GZ6f9GtvUGOIykGUbAijWlgHXRVmfCuCX/stZxCgB47adGXWY36e04OYwVA6VNl
-         biIA==
-X-Gm-Message-State: APjAAAVb82oCQTA1dAxgrDrbp4McdattkPqu1CpuuzQDRdq0ybimRW2v
-        1SbLKFWGmOu6NbNtcvJk/mOPCw==
-X-Google-Smtp-Source: APXvYqwdxPRjNZXc7J371kYMqpuaaLwSfZc+tGFJrILbQTyvwMq61GQBgGE76g8xmKy3HX0ZAhYEFg==
-X-Received: by 2002:a17:902:9a07:: with SMTP id v7mr12015218plp.245.1567108808730;
-        Thu, 29 Aug 2019 13:00:08 -0700 (PDT)
+        bh=leAjuo9QrYfGsQp+lWwGPaf44FJzdIsTdXXe6kBTcvQ=;
+        b=mjr0jH3vzG4w2RdS/zVFDfLTWVS2/DGFHViyxVkoiwQApPr1XdCUb6OyjswZzEyQHP
+         IgEpVUTkWTDiAd70Jl7dzRmNpZoKibgg92NHKxIhUwPHnJL7t4Yyk/T+4USrE4mc+n3k
+         tBnC1mU+f2napuhotSuB7CntXGNseh3Loe0Zj9y7CezF/IL06wQWjOlCihHUArfIo950
+         OqR1wAq7+3vqHssUJ6IosSGY0YqHdZaOuvhBiLwkw+UBQiU3lmTqVC+0/WnML/YNFW3W
+         gBCRrk+jtAfLAloNzDY5ugxBETWHlpuYNa9tLvxdVI8pv2I6ADPYUn1G+OxiLIwQ8NLR
+         HEZg==
+X-Gm-Message-State: APjAAAXNKiAC/XOCBWAu1svFH3G6Kr5KquaW89nQw3InPuJsDyCn8qqI
+        ko6OoJKHTxVVCll0WZI17IS7Dw==
+X-Google-Smtp-Source: APXvYqxmRtZml8EdnZ16J1Jmfc6FgL+TVFfQC+dCMCvoM/+VMjg+z1xJm3jSCGVPmaKApRCFQG6kdw==
+X-Received: by 2002:a63:1f1b:: with SMTP id f27mr9740387pgf.233.1567108807182;
+        Thu, 29 Aug 2019 13:00:07 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id u7sm3053766pgr.94.2019.08.29.13.00.07
+        by smtp.gmail.com with ESMTPSA id u7sm3053766pgr.94.2019.08.29.13.00.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 13:00:08 -0700 (PDT)
+        Thu, 29 Aug 2019 13:00:06 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     stable@vger.kernel.org
 Cc:     architt@codeaurora.org, a.hajda@samsung.com,
@@ -63,9 +63,9 @@ Cc:     architt@codeaurora.org, a.hajda@samsung.com,
         jejb@linux.vnet.ibm.com, martin.petersen@oracle.com,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-scsi@vger.kernel.org
-Subject: [BACKPORT 4.19.y 3/3] drm/tilcdc: Register cpufreq notifier after we have initialized crtc
-Date:   Thu, 29 Aug 2019 14:00:01 -0600
-Message-Id: <20190829200001.17092-4-mathieu.poirier@linaro.org>
+Subject: [BACKPORT 4.19.y 2/3] scsi: ufs: Fix RX_TERMINATION_FORCE_ENABLE define value
+Date:   Thu, 29 Aug 2019 14:00:00 -0600
+Message-Id: <20190829200001.17092-3-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190829200001.17092-1-mathieu.poirier@linaro.org>
 References: <20190829200001.17092-1-mathieu.poirier@linaro.org>
@@ -74,87 +74,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jyri Sarha <jsarha@ti.com>
+From: Pedro Sousa <sousa@synopsys.com>
 
-commit 432973fd3a20102840d5f7e61af9f1a03c217a4c upstream
+commit ebcb8f8508c5edf428f52525cec74d28edea7bcb upstream
 
-Register cpufreq notifier after we have initialized the crtc and
-unregister it before we remove the ctrc. Receiving a cpufreq notify
-without crtc causes a crash.
+Fix RX_TERMINATION_FORCE_ENABLE define value from 0x0089 to 0x00A9
+according to MIPI Alliance MPHY specification.
 
-Reported-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
+Fixes: e785060ea3a1 ("ufs: definitions for phy interface")
+Signed-off-by: Pedro Sousa <sousa@synopsys.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/gpu/drm/tilcdc/tilcdc_drv.c | 34 ++++++++++++++---------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+ drivers/scsi/ufs/unipro.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_drv.c b/drivers/gpu/drm/tilcdc/tilcdc_drv.c
-index 0fb300d41a09..e1868776da25 100644
---- a/drivers/gpu/drm/tilcdc/tilcdc_drv.c
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_drv.c
-@@ -184,6 +184,12 @@ static void tilcdc_fini(struct drm_device *dev)
- {
- 	struct tilcdc_drm_private *priv = dev->dev_private;
- 
-+#ifdef CONFIG_CPU_FREQ
-+	if (priv->freq_transition.notifier_call)
-+		cpufreq_unregister_notifier(&priv->freq_transition,
-+					    CPUFREQ_TRANSITION_NOTIFIER);
-+#endif
-+
- 	if (priv->crtc)
- 		tilcdc_crtc_shutdown(priv->crtc);
- 
-@@ -198,12 +204,6 @@ static void tilcdc_fini(struct drm_device *dev)
- 	drm_mode_config_cleanup(dev);
- 	tilcdc_remove_external_device(dev);
- 
--#ifdef CONFIG_CPU_FREQ
--	if (priv->freq_transition.notifier_call)
--		cpufreq_unregister_notifier(&priv->freq_transition,
--					    CPUFREQ_TRANSITION_NOTIFIER);
--#endif
--
- 	if (priv->clk)
- 		clk_put(priv->clk);
- 
-@@ -274,17 +274,6 @@ static int tilcdc_init(struct drm_driver *ddrv, struct device *dev)
- 		goto init_failed;
- 	}
- 
--#ifdef CONFIG_CPU_FREQ
--	priv->freq_transition.notifier_call = cpufreq_transition;
--	ret = cpufreq_register_notifier(&priv->freq_transition,
--			CPUFREQ_TRANSITION_NOTIFIER);
--	if (ret) {
--		dev_err(dev, "failed to register cpufreq notifier\n");
--		priv->freq_transition.notifier_call = NULL;
--		goto init_failed;
--	}
--#endif
--
- 	if (of_property_read_u32(node, "max-bandwidth", &priv->max_bandwidth))
- 		priv->max_bandwidth = TILCDC_DEFAULT_MAX_BANDWIDTH;
- 
-@@ -361,6 +350,17 @@ static int tilcdc_init(struct drm_driver *ddrv, struct device *dev)
- 	}
- 	modeset_init(ddev);
- 
-+#ifdef CONFIG_CPU_FREQ
-+	priv->freq_transition.notifier_call = cpufreq_transition;
-+	ret = cpufreq_register_notifier(&priv->freq_transition,
-+			CPUFREQ_TRANSITION_NOTIFIER);
-+	if (ret) {
-+		dev_err(dev, "failed to register cpufreq notifier\n");
-+		priv->freq_transition.notifier_call = NULL;
-+		goto init_failed;
-+	}
-+#endif
-+
- 	if (priv->is_componentized) {
- 		ret = component_bind_all(dev, ddev);
- 		if (ret < 0)
+diff --git a/drivers/scsi/ufs/unipro.h b/drivers/scsi/ufs/unipro.h
+index 23129d7b2678..c77e36526447 100644
+--- a/drivers/scsi/ufs/unipro.h
++++ b/drivers/scsi/ufs/unipro.h
+@@ -52,7 +52,7 @@
+ #define RX_HS_UNTERMINATED_ENABLE		0x00A6
+ #define RX_ENTER_HIBERN8			0x00A7
+ #define RX_BYPASS_8B10B_ENABLE			0x00A8
+-#define RX_TERMINATION_FORCE_ENABLE		0x0089
++#define RX_TERMINATION_FORCE_ENABLE		0x00A9
+ #define RX_MIN_ACTIVATETIME_CAPABILITY		0x008F
+ #define RX_HIBERN8TIME_CAPABILITY		0x0092
+ #define RX_REFCLKFREQ				0x00EB
 -- 
 2.17.1
 
