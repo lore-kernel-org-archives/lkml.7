@@ -4,50 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7503C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C762EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD07A233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 992B82173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:51:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567075888;
-	bh=W9/8cZ2NH+5BLpKFeiMoDnXmV9ygV43yv2Ej3121GIY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=nZBIm4wV+hUr9xHdEXKqVRMcnU4NiZXJ8bW4pIfLPyvHyP9t6tOjzw5lpZhItQyJX
-	 tdPkb7axpMBn5yeQUQ+TePcy/A2fF4lDCLTyu4eGIlo97f/jarmqPitYHJ8cdgyxng
-	 qE9vjEA++xH8O+kZ5Xit4J6ECK9G85DET2+nsVNA=
+	s=default; t=1567075892;
+	bh=imuHXRV4QcrRgGXQAC81XYtejf4eEqNDiZEY/XxI8SE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sbOiiKdU/FeckzZWPr8HuVjoDK58QxEjsynQ+EFZyGLguCCqroeDpAx1X92Q3CNi+
+	 AjG/iFZFeTJFSCfsIv5CNXg1cfDIuEAQwj5fytJM2TU4xZ4AydeVDO4Yibngm2rnAq
+	 ovc55BWl77TcAh2vdRCFzqkge7trhuORvXcQdHb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbfH2Kv1 (ORCPT
+        id S1728665AbfH2Kvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:51:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58712 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 06:51:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728406AbfH2KvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:51:03 -0400
+        id S1728457AbfH2KvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:51:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE07123427;
-        Thu, 29 Aug 2019 10:51:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94BBE23407;
+        Thu, 29 Aug 2019 10:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075862;
-        bh=W9/8cZ2NH+5BLpKFeiMoDnXmV9ygV43yv2Ej3121GIY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=f6m0pJree6dZZkdpfsQF+jXYHHNUpieX4K/OitJqNjKXp4bcQwKsH/mJejHZWyhqo
-         b4m3vXq5dUBhWpg084tdvnOeEaTdVWmfFrzuCR9Sy3N00+t3tTrwaDTa+ECfMYSezy
-         4888n2SnNl2iqbr01Gsq44qWW+d5JnhXSnNzU/d8=
+        s=default; t=1567075866;
+        bh=imuHXRV4QcrRgGXQAC81XYtejf4eEqNDiZEY/XxI8SE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OQUlcxiHh4EOut2ZjELcteKgIB3rbnby+hz9D4O5R2s17VPwOzYf549RovupIvtpi
+         4V15wq9qYd/nn2SwtUeJuWYjeJ4cpprNxaOfZq9rU5M8FI0lHJpzRE/EJcMyi0vAxV
+         N7ZxLJdKtO/uEXbhfDZcOjsirIOGWIwoNEEUaeoU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 1/8] Revert "dm bufio: fix deadlock with loop device"
-Date:   Thu, 29 Aug 2019 06:50:53 -0400
-Message-Id: <20190829105100.2649-1-sashal@kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jann Horn <jannh@google.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 4/8] userfaultfd_release: always remove uffd flags and clear vm_userfaultfd_ctx
+Date:   Thu, 29 Aug 2019 06:50:56 -0400
+Message-Id: <20190829105100.2649-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190829105100.2649-1-sashal@kernel.org>
+References: <20190829105100.2649-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,63 +68,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Oleg Nesterov <oleg@redhat.com>
 
-[ Upstream commit cf3591ef832915892f2499b7e54b51d4c578b28c ]
+[ Upstream commit 46d0b24c5ee10a15dfb25e20642f5a5ed59c5003 ]
 
-Revert the commit bd293d071ffe65e645b4d8104f9d8fe15ea13862. The proper
-fix has been made available with commit d0a255e795ab ("loop: set
-PF_MEMALLOC_NOIO for the worker thread").
+userfaultfd_release() should clear vm_flags/vm_userfaultfd_ctx even if
+mm->core_state != NULL.
 
-Note that the fix offered by commit bd293d071ffe doesn't really prevent
-the deadlock from occuring - if we look at the stacktrace reported by
-Junxiao Bi, we see that it hangs in bit_wait_io and not on the mutex -
-i.e. it has already successfully taken the mutex. Changing the mutex
-from mutex_lock to mutex_trylock won't help with deadlocks that happen
-afterwards.
+Otherwise a page fault can see userfaultfd_missing() == T and use an
+already freed userfaultfd_ctx.
 
-PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
-   #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
-   #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
-   #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
-   #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
-   #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
-   #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
-   #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
-   #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
-   #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
-   #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
-  #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
-  #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
-  #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
-  #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
-  #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: bd293d071ffe ("dm bufio: fix deadlock with loop device")
-Depends-on: d0a255e795ab ("loop: set PF_MEMALLOC_NOIO for the worker thread")
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Link: http://lkml.kernel.org/r/20190820160237.GB4983@redhat.com
+Fixes: 04f5866e41fb ("coredump: fix race condition between mmget_not_zero()/get_task_mm() and core dumping")
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
+Tested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-bufio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/userfaultfd.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/md/dm-bufio.c b/drivers/md/dm-bufio.c
-index 673ce38735ff7..c837defb5e4dd 100644
---- a/drivers/md/dm-bufio.c
-+++ b/drivers/md/dm-bufio.c
-@@ -1585,7 +1585,9 @@ dm_bufio_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
- 	unsigned long freed;
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index 8bf425a103f05..de63d4e2dfba1 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -464,6 +464,7 @@ static int userfaultfd_release(struct inode *inode, struct file *file)
+ 	/* len == 0 means wake all */
+ 	struct userfaultfd_wake_range range = { .len = 0, };
+ 	unsigned long new_flags;
++	bool still_valid;
  
- 	c = container_of(shrink, struct dm_bufio_client, shrinker);
--	if (!dm_bufio_trylock(c))
-+	if (sc->gfp_mask & __GFP_FS)
-+		dm_bufio_lock(c);
-+	else if (!dm_bufio_trylock(c))
- 		return SHRINK_STOP;
+ 	ACCESS_ONCE(ctx->released) = true;
  
- 	freed  = __scan(c, sc->nr_to_scan, sc->gfp_mask);
+@@ -479,8 +480,7 @@ static int userfaultfd_release(struct inode *inode, struct file *file)
+ 	 * taking the mmap_sem for writing.
+ 	 */
+ 	down_write(&mm->mmap_sem);
+-	if (!mmget_still_valid(mm))
+-		goto skip_mm;
++	still_valid = mmget_still_valid(mm);
+ 	prev = NULL;
+ 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
+ 		cond_resched();
+@@ -491,19 +491,20 @@ static int userfaultfd_release(struct inode *inode, struct file *file)
+ 			continue;
+ 		}
+ 		new_flags = vma->vm_flags & ~(VM_UFFD_MISSING | VM_UFFD_WP);
+-		prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
+-				 new_flags, vma->anon_vma,
+-				 vma->vm_file, vma->vm_pgoff,
+-				 vma_policy(vma),
+-				 NULL_VM_UFFD_CTX);
+-		if (prev)
+-			vma = prev;
+-		else
+-			prev = vma;
++		if (still_valid) {
++			prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
++					 new_flags, vma->anon_vma,
++					 vma->vm_file, vma->vm_pgoff,
++					 vma_policy(vma),
++					 NULL_VM_UFFD_CTX);
++			if (prev)
++				vma = prev;
++			else
++				prev = vma;
++		}
+ 		vma->vm_flags = new_flags;
+ 		vma->vm_userfaultfd_ctx = NULL_VM_UFFD_CTX;
+ 	}
+-skip_mm:
+ 	up_write(&mm->mmap_sem);
+ 	mmput(mm);
+ wakeup:
 -- 
 2.20.1
 
