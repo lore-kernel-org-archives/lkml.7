@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7FBC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9DDC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B525B2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 326EA2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567076003;
-	bh=ZlNBSvxOBubH0FyO6ewgPXm4xdY2h/Z/C2aqRYjt77Y=;
+	s=default; t=1567076008;
+	bh=7pQ3zLdVbcKZHrcATLCC4qK5jFKHe/pZSZMuUtpgVME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QfwivtTe+8p8lJCkKD9ZirOL+eQE5Pooo294FftaMLPEYh3j7euYoP1khvHDH3iSb
-	 r8ES/0zzGwccgFamNjxcmFuKuXH0HHtk1nntXRaFCnM1FBN0xJDrQaJMFoWOt676xX
-	 R8X4CwjMkg4g54sGifkZwsHkUO793I4abjS+T+rc=
+	b=0SEwJbrdU8KrHj4xENFF8jQxf3IQrovP1Fc3jS9o0kg956pTibol33akI3kg+qLGm
+	 cyDUgGAjLq/3LFtETH8l4aYVVHwuVRTi5PhmjC8p5J6hCCAVxmyGjbhbnaCZhF9nX/
+	 8rx2fkasGvHyNDQRJjQI1qOR+G52mIFeXhqMMJws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbfH2KxW (ORCPT
+        id S1728256AbfH2Kus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:53:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58378 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 06:50:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbfH2Kuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:50:52 -0400
+        id S1728079AbfH2Kue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:50:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A94E23403;
-        Thu, 29 Aug 2019 10:50:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 207282173E;
+        Thu, 29 Aug 2019 10:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075851;
-        bh=ZlNBSvxOBubH0FyO6ewgPXm4xdY2h/Z/C2aqRYjt77Y=;
+        s=default; t=1567075832;
+        bh=7pQ3zLdVbcKZHrcATLCC4qK5jFKHe/pZSZMuUtpgVME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MOgPTqyiCiW0SyuGqC25voDdnPhYC76sBsc5fNdqVbjKu4ubh8/5qRYqFj2jmJ0pA
-         tfrl1rZup3ivBrWEZaeWp2tR+WFKWszxp+ijLzJ5G5+eGpdhGFtgGz/iEBduxYDLua
-         YyJayPIp5ZNux6aru87mgTS9fY2w9Fo3l6FuSVPs=
+        b=1po/dyOi0EAVgH/Z2L8NrMSjReJSLZonpI5Hzp74vqamTX4ee+1yXkVz6GIqe08cK
+         WNpTEWIp5nRyEbPALXsf/EpfvZozo+8mQcuJUk0LTAoz+QHSIrXauBHn0YuDDn8g5S
+         99jG0DLFK+afvp/5Q7/LiEL/Q9htU+g1cPRbPBRo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Russell Currey <ruscur@russell.cc>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 06/14] powerpc/64: mark start_here_multiplatform as __ref
-Date:   Thu, 29 Aug 2019 06:50:35 -0400
-Message-Id: <20190829105043.2508-6-sashal@kernel.org>
+Cc:     Andrew Jones <drjones@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 20/29] KVM: arm/arm64: Only skip MMIO insn once
+Date:   Thu, 29 Aug 2019 06:50:00 -0400
+Message-Id: <20190829105009.2265-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829105043.2508-1-sashal@kernel.org>
-References: <20190829105043.2508-1-sashal@kernel.org>
+In-Reply-To: <20190829105009.2265-1-sashal@kernel.org>
+References: <20190829105009.2265-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,47 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Andrew Jones <drjones@redhat.com>
 
-[ Upstream commit 9c4e4c90ec24652921e31e9551fcaedc26eec86d ]
+[ Upstream commit 2113c5f62b7423e4a72b890bd479704aa85c81ba ]
 
-Otherwise, the following warning is encountered:
+If after an MMIO exit to userspace a VCPU is immediately run with an
+immediate_exit request, such as when a signal is delivered or an MMIO
+emulation completion is needed, then the VCPU completes the MMIO
+emulation and immediately returns to userspace. As the exit_reason
+does not get changed from KVM_EXIT_MMIO in these cases we have to
+be careful not to complete the MMIO emulation again, when the VCPU is
+eventually run again, because the emulation does an instruction skip
+(and doing too many skips would be a waste of guest code :-) We need
+to use additional VCPU state to track if the emulation is complete.
+As luck would have it, we already have 'mmio_needed', which even
+appears to be used in this way by other architectures already.
 
-WARNING: vmlinux.o(.text+0x3dc6): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup()
-The function start_here_multiplatform() references
-the function __init .early_setup().
-This is often because start_here_multiplatform lacks a __init
-annotation or the annotation of .early_setup is wrong.
-
-Fixes: 56c46bba9bbf ("powerpc/64: Fix booting large kernels with STRICT_KERNEL_RWX")
-Cc: Russell Currey <ruscur@russell.cc>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 0d640732dbeb ("arm64: KVM: Skip MMIO insn after emulation")
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Andrew Jones <drjones@redhat.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/head_64.S | 2 ++
- 1 file changed, 2 insertions(+)
+ virt/kvm/arm/mmio.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
-index 4f2e18266e34a..8c04c51a6e148 100644
---- a/arch/powerpc/kernel/head_64.S
-+++ b/arch/powerpc/kernel/head_64.S
-@@ -897,6 +897,7 @@ p_toc:	.8byte	__toc_start + 0x8000 - 0b
- /*
-  * This is where the main kernel code starts.
-  */
-+__REF
- start_here_multiplatform:
- 	/* set up the TOC */
- 	bl      relative_toc
-@@ -972,6 +973,7 @@ start_here_multiplatform:
- 	RFI
- 	b	.	/* prevent speculative execution */
+diff --git a/virt/kvm/arm/mmio.c b/virt/kvm/arm/mmio.c
+index 08443a15e6be8..3caee91bca089 100644
+--- a/virt/kvm/arm/mmio.c
++++ b/virt/kvm/arm/mmio.c
+@@ -98,6 +98,12 @@ int kvm_handle_mmio_return(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ 	unsigned int len;
+ 	int mask;
  
-+	.previous
- 	/* This is where all platforms converge execution */
++	/* Detect an already handled MMIO return */
++	if (unlikely(!vcpu->mmio_needed))
++		return 0;
++
++	vcpu->mmio_needed = 0;
++
+ 	if (!run->mmio.is_write) {
+ 		len = run->mmio.len;
+ 		if (len > sizeof(unsigned long))
+@@ -200,6 +206,7 @@ int io_mem_abort(struct kvm_vcpu *vcpu, struct kvm_run *run,
+ 	run->mmio.is_write	= is_write;
+ 	run->mmio.phys_addr	= fault_ipa;
+ 	run->mmio.len		= len;
++	vcpu->mmio_needed	= 1;
  
- start_here_common:
+ 	if (!ret) {
+ 		/* We handled the access successfully in the kernel. */
 -- 
 2.20.1
 
