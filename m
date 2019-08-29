@@ -2,184 +2,126 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01844C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 04:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A3CC41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 04:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AAB2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 04:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B95862173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 04:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EGnf5BXO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTpepsNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbfH2EIb (ORCPT
+        id S1726460AbfH2EJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 00:08:31 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45423 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbfH2EIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 00:08:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Jpxm6mc8z9sBp;
-        Thu, 29 Aug 2019 14:08:28 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567051709;
-        bh=V594ezHRVBgHby2RxzNrXyfkuC0Hrx0Pn6E+PGG67L4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EGnf5BXOID37/RjbUsYEbphS+MA/Cz+qKUujDaz8ZwbOlmAmkKchj0TTvl7VMF92n
-         m75G8pQ0Se9ezhdBPC6dDFoNlmyHegGTnz4su1my4xKiyJtg63Nl4rPEXP+UCArCMi
-         0Zy8eWuK4u6uY8q6CfXfSI4i7orqKTicwX1wNy+USuNB7ioUcANbXjdlmVwM5wXlb3
-         R3gS06Ss6KYtsmrUEZ+x4yZD+17EEbJe6NRk1tJYQz+O7Nh8YWte949AMotp2485qW
-         BDgFyJIrRvoN86iHPV2zabzQs7YOvovfzC7Af9NQJrjcEttVQfc0qjEzH5TYxxStB8
-         eUqJ13znukxBw==
-Date:   Thu, 29 Aug 2019 14:08:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>
-Subject: Re: linux-next: build warning after merge of the block tree
-Message-ID: <20190829140828.39e05c27@canb.auug.org.au>
-In-Reply-To: <20190829135150.4f0e533a@canb.auug.org.au>
-References: <20190829135150.4f0e533a@canb.auug.org.au>
+        Thu, 29 Aug 2019 00:09:49 -0400
+Received: from mail-io1-f51.google.com ([209.85.166.51]:34717 "EHLO
+        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfH2EJs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 00:09:48 -0400
+Received: by mail-io1-f51.google.com with SMTP id s21so4202420ioa.1;
+        Wed, 28 Aug 2019 21:09:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YU1YHjbF48DNiDGJ/sscFH+VTiFvXEQv14JcR6j+IMU=;
+        b=bTpepsNJjZwXWh3JW5H4Ce7efx57U0QBAypMjHr2aJhmxYvbZ4l9uUtc6UMlNwMCVJ
+         rLlM8Vuv3UZLoMQqhxPfSciTslDnYspvytfvb/vz8K2fmL1kCztbZVNCT5neQNLSfNkp
+         qWBHRHtafx3W65LeuqM2KbWB2E3HPtZsAI/KMVTjkBAIPdQN7XKEbIKijAU6vjg9Fuaf
+         bp0Pn17+wxMtNr9KWvB+NPLxdLh1yE9mQhv4Mb2tA8gukZv0oRe5fsDjlDKE4B8fJ/bJ
+         XqKYm9LeOOGfR66D2NLd8hFML4RtuW4fzzWLP6+mCHpTLLGaGIuz1+mGmeSk0/c85frc
+         andQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YU1YHjbF48DNiDGJ/sscFH+VTiFvXEQv14JcR6j+IMU=;
+        b=eLAWz4fngJKjXbzazP5gCM8VvF4EOgaYMVzeKIxzNq3Gmjy3DB9de0+MVvkbylZcZB
+         IbzxcF9KkR/kv7QvWIE5wpzZjBffGk0jT2G0EZlS8c/AJ25SYjEdFYrUZadmbLTKv4gr
+         W6D8zJBlJfcO4nYCDiRXqqgmYOz/ziPY7cqWvEjZmERlBcHCGWH8SRDto3E1FYXr6YHH
+         gt+QkFBEvEYuqQQS12qD+HM3iK0kH6efe8ikmMWZ9Yoqowy/moNqvuquMpcF1mYpqlOc
+         fh88KQhxtTgIFDfg2czYfrtzUDaHYcv2mzx8xENxhvIb7WkbQVhl6c3IaBd+UUaazVPT
+         hp/g==
+X-Gm-Message-State: APjAAAUoQN0OwQ3c9taNIq1aCuB8P7/pRey86aF+JXdrykNCeATsn+xV
+        lH3JGR/zSYzBuByXp9V5D8hq//JvI+B6FteAGNaBTg==
+X-Google-Smtp-Source: APXvYqwjBWoTXise9Yyur+0EvpWqlBurQEVkTw/X47GmfjP60IPzgICVqLLRTVW8GZeXgC76n+oVDlvxAVlDDLuFDis=
+X-Received: by 2002:a5e:da48:: with SMTP id o8mr8716584iop.252.1567051787467;
+ Wed, 28 Aug 2019 21:09:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LPEdhd6/ifEKkTjJu1CE_N.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190829000006.24187-1-colin.king@canonical.com> <CAH2r5mtSSwS7_E2WkS3Lsk02BEf_UwZ4H9oCEFTSf94U=4Cm9Q@mail.gmail.com>
+In-Reply-To: <CAH2r5mtSSwS7_E2WkS3Lsk02BEf_UwZ4H9oCEFTSf94U=4Cm9Q@mail.gmail.com>
+From:   ronnie sahlberg <ronniesahlberg@gmail.com>
+Date:   Thu, 29 Aug 2019 14:09:35 +1000
+Message-ID: <CAN05THSTwX_a7hry4EpD86EEr7NaZ75XUhDKpr_Dgwqqt+rBuw@mail.gmail.com>
+Subject: Re: [PATCH][cifs-next] cifs: ensure variable rc is initialized at the
+ after_open label
+To:     Steve French <smfrench@gmail.com>
+Cc:     Colin King <colin.king@canonical.com>,
+        Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        kernel-janitors <kernel-janitors@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/LPEdhd6/ifEKkTjJu1CE_N.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Thu, 29 Aug 2019 13:51:50 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Thu, Aug 29, 2019 at 2:00 PM Steve French <smfrench@gmail.com> wrote:
 >
-> After merging the block tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
->=20
-> In file included from include/trace/events/iocost.h:8,
->                  from <command-line>:
-> include/trace/events/iocost.h:12:57: warning: 'struct ioc_now' declared i=
-nside parameter list will not be visible outside of this definition or decl=
-aration
->   TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
->                                                          ^~~~~~~
-> include/linux/tracepoint.h:233:34: note: in definition of macro '__DECLAR=
-E_TRACE'
->   static inline void trace_##name(proto)    \
->                                   ^~~~~
-> include/linux/tracepoint.h:396:24: note: in expansion of macro 'PARAMS'
->   __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),  \
->                         ^~~~~~
-> include/linux/tracepoint.h:532:2: note: in expansion of macro 'DECLARE_TR=
-ACE'
->   DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
->   ^~~~~~~~~~~~~
-> include/linux/tracepoint.h:532:22: note: in expansion of macro 'PARAMS'
->   DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
->                       ^~~~~~
-> include/trace/events/iocost.h:10:1: note: in expansion of macro 'TRACE_EV=
-ENT'
->  TRACE_EVENT(iocost_iocg_activate,
->  ^~~~~~~~~~~
-> include/trace/events/iocost.h:12:2: note: in expansion of macro 'TP_PROTO'
->   TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
->   ^~~~~~~~
-> include/trace/events/iocost.h:12:18: warning: 'struct ioc_gq' declared in=
-side parameter list will not be visible outside of this definition or decla=
-ration
->   TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
->                   ^~~~~~
-> include/linux/tracepoint.h:233:34: note: in definition of macro '__DECLAR=
-E_TRACE'
->   static inline void trace_##name(proto)    \
->                                   ^~~~~
-> include/linux/tracepoint.h:396:24: note: in expansion of macro 'PARAMS'
->   __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),  \
->                         ^~~~~~
-> include/linux/tracepoint.h:532:2: note: in expansion of macro 'DECLARE_TR=
-ACE'
->   DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
->   ^~~~~~~~~~~~~
-> include/linux/tracepoint.h:532:22: note: in expansion of macro 'PARAMS'
->   DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
->                       ^~~~~~
-> include/trace/events/iocost.h:10:1: note: in expansion of macro 'TRACE_EV=
-ENT'
->  TRACE_EVENT(iocost_iocg_activate,
->  ^~~~~~~~~~~
-> include/trace/events/iocost.h:12:2: note: in expansion of macro 'TP_PROTO'
->   TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
->   ^~~~~~~~
->=20
-> (and many more)
->=20
-> Introduced by commit
->=20
->   7caa47151ab2 ("blkcg: implement blk-iocost")
->=20
-> To get these warnings you need to build with CONFIG_HEADER_TEST and
-> CONFIG_KERNEL_HEADER_TEST (and maybe CONFIG_UAPI_HEADER_TEST).
-> allmodconfig does that.
+> Merged into cifs-2.6.git for-next
+>
+> Ronnie,
+> You ok with merging this as a distinct patch?
 
-I have applied this patch to linux-next for today:
+Sure thing.
+Thanks for the fix Colin.
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 29 Aug 2019 14:03:43 +1000
-Subject: [PATCH] blkcg: blk-iocost: predeclare used structs
 
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- include/trace/events/iocost.h | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/include/trace/events/iocost.h b/include/trace/events/iocost.h
-index ec2217dd57ac..7ecaa65b7106 100644
---- a/include/trace/events/iocost.h
-+++ b/include/trace/events/iocost.h
-@@ -2,6 +2,10 @@
- #undef TRACE_SYSTEM
- #define TRACE_SYSTEM iocost
-=20
-+struct ioc;
-+struct ioc_now;
-+struct ioc_gq;
-+
- #if !defined(_TRACE_BLK_IOCOST_H) || defined(TRACE_HEADER_MULTI_READ)
- #define _TRACE_BLK_IOCOST_H
-=20
---=20
-2.20.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/LPEdhd6/ifEKkTjJu1CE_N.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1nT7wACgkQAVBC80lX
-0GxmyQf/V2S8PWyQciwZmRgs0stJeCed4Sth4fT+Zel8Nz7uxvPQV7cKEsCf1Zbf
-HgseK5dhgIVgiZfvdxRnOVQ0PnU5NrXziLbOryUniQHa/WAhvkNekpTBDEzX9aEE
-JVr+AgBU/SXhwus/NPWnNVWnt2Eh7DvnJfR6hu7JaSpxDECIHejV/IqLvAu8+yCV
-gGKvHFkoMOMFnNie4OX0OiyGdtcv8O7Fp3jdo5DMnPJl92EyD9lKggeSvkuxI2Os
-gB1OY5FB5C5rbY9kUHvEVA4RfjPV9ibkightrB7xEf/GyW5VDZPwQoDEOj5l8YJX
-gvHA283UnopdNH4VKsAJlI2yoBmNEQ==
-=mqdU
------END PGP SIGNATURE-----
-
---Sig_/LPEdhd6/ifEKkTjJu1CE_N.--
+>
+> On Wed, Aug 28, 2019 at 7:02 PM Colin King <colin.king@canonical.com> wrote:
+> >
+> > From: Colin Ian King <colin.king@canonical.com>
+> >
+> > A previous fix added a jump to after_open which now leaves variable
+> > rc in a uninitialized state. A couple of the cases in the following
+> > switch statement do not set variable rc, hence the error check on rc
+> > at the end of the switch statement is reading a garbage value in rc
+> > for those specific cases. Fix this by initializing rc to zero before
+> > the switch statement.
+> >
+> > Fixes: 955a9c5b39379 ("cifs: create a helper to find a writeable handle by path name")
+> > Addresses-Coverity: ("Uninitialized scalar variable")
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > ---
+> >  fs/cifs/smb2inode.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/fs/cifs/smb2inode.c b/fs/cifs/smb2inode.c
+> > index 70342bcd89b4..939fc7b2234c 100644
+> > --- a/fs/cifs/smb2inode.c
+> > +++ b/fs/cifs/smb2inode.c
+> > @@ -116,6 +116,7 @@ smb2_compound_op(const unsigned int xid, struct cifs_tcon *tcon,
+> >         smb2_set_next_command(tcon, &rqst[num_rqst]);
+> >   after_open:
+> >         num_rqst++;
+> > +       rc = 0;
+> >
+> >         /* Operation */
+> >         switch (command) {
+> > --
+> > 2.20.1
+> >
+>
+>
+> --
+> Thanks,
+>
+> Steve
