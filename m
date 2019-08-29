@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED30AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3DAC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBFFB2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0BF32053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567075999;
-	bh=SpQSLdYBvyq82meyXXWCtVnYVpt4u878OvYEkOU5qS0=;
+	s=default; t=1567076000;
+	bh=16fTqFdG9M6Y56zMIAUmBN+BNC2ON1gMz7VKsrMtRFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kzwsHIm8fbwNKxPh8bt53ur9OpBjqSJpj9pCkezajVVP12hS9WTPxmyuwFUy/T+GU
-	 HH8tE6Czk6wDGoCeejZk/gYxgAaLuz3uxpgGDmZ4qkmP9P4HXDIktz0Ge5qPHFMuDs
-	 506G+8bNiuDLTAPnD2+wzX/xuOzwy6xeocqdnT9s=
+	b=aNvUV6Qs/AUvFunUBlaYsnow4fc3GC9lWulcZwQc6MQtq5OONixGhIEbLC0CCx8hq
+	 FAFQLnkXiQFS491YhoNPApKjo0eMtV3OETrcrGnqSMOWbeRo+nvdiFZEzYuzx9C5Wh
+	 b70u67RGZeWUwzrved+2d7cJilfST04jp47Zbr3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbfH2Kux (ORCPT
+        id S1728297AbfH2Kuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:50:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58016 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 06:50:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbfH2Kui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:50:38 -0400
+        id S1728100AbfH2Kuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:50:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D49CA2342B;
-        Thu, 29 Aug 2019 10:50:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CE2E2341B;
+        Thu, 29 Aug 2019 10:50:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075837;
-        bh=SpQSLdYBvyq82meyXXWCtVnYVpt4u878OvYEkOU5qS0=;
+        s=default; t=1567075834;
+        bh=16fTqFdG9M6Y56zMIAUmBN+BNC2ON1gMz7VKsrMtRFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qTA6bGvxlhbxgT2HeFR8Q6yjPBdza8DjKL32zeBy4ZIqLFc9uv12SaFxGKxcI5Rng
-         +6orEfvlKGwv8kVWCwMjnCBlXg2V9Hx0lduKeOWnEmMiM1RaClfnOSZ9On2HEKa9mR
-         pj58K6SJjDcomfD1H6N4hf5oaZcbBXRJ1UUoU4XM=
+        b=JZasuvFj07H2Ibug+zXTjiSK56l0voJTwT3mQasMiq5MSF/B0KPAc3QgRBThCiXEd
+         aorFFL//OUT/hy5ecfEgCyX3ZFQVVXCbdn9Eo2X8BJMr/bPbjCe3LdR4oDEoQx4iIM
+         cm232DrWVY3pdUis8B6lLZy2ODPLxaBT1FehNdgY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 24/29] riscv: remove unused variable in ftrace
-Date:   Thu, 29 Aug 2019 06:50:04 -0400
-Message-Id: <20190829105009.2265-24-sashal@kernel.org>
+Cc:     Stefano Brivio <sbrivio@redhat.com>, Chen Yi <yiche@redhat.com>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 21/29] netfilter: ipset: Actually allow destination MAC address for hash:ip,mac sets too
+Date:   Thu, 29 Aug 2019 06:50:01 -0400
+Message-Id: <20190829105009.2265-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829105009.2265-1-sashal@kernel.org>
 References: <20190829105009.2265-1-sashal@kernel.org>
@@ -61,42 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Abdurachmanov <david.abdurachmanov@gmail.com>
+From: Stefano Brivio <sbrivio@redhat.com>
 
-[ Upstream commit 397182e0db56b8894a43631ce72de14d90a29834 ]
+[ Upstream commit b89d15480d0cacacae1a0fe0b3da01b529f2914f ]
 
-Noticed while building kernel-4.20.0-0.rc5.git2.1.fc30 for
-Fedora 30/RISCV.
+In commit 8cc4ccf58379 ("ipset: Allow matching on destination MAC address
+for mac and ipmac sets"), ipset.git commit 1543514c46a7, I removed the
+KADT check that prevents matching on destination MAC addresses for
+hash:mac sets, but forgot to remove the same check for hash:ip,mac set.
 
-[..]
-BUILDSTDERR: arch/riscv/kernel/ftrace.c: In function 'prepare_ftrace_return':
-BUILDSTDERR: arch/riscv/kernel/ftrace.c:135:6: warning: unused variable 'err' [-Wunused-variable]
-BUILDSTDERR:   int err;
-BUILDSTDERR:       ^~~
-[..]
+Drop this check: functionality is now commented in man pages and there's
+no reason to restrict to source MAC address matching anymore.
 
-Signed-off-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
-Fixes: e949b6db51dc1 ("riscv/function_graph: Simplify with function_graph_enter()")
-Reviewed-by: Olof Johansson <olof@lixom.net>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+Reported-by: Chen Yi <yiche@redhat.com>
+Fixes: 8cc4ccf58379 ("ipset: Allow matching on destination MAC address for mac and ipmac sets")
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kernel/ftrace.c | 1 -
- 1 file changed, 1 deletion(-)
+ net/netfilter/ipset/ip_set_hash_ipmac.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index c433f6d3dd64f..a840b7d074f7d 100644
---- a/arch/riscv/kernel/ftrace.c
-+++ b/arch/riscv/kernel/ftrace.c
-@@ -132,7 +132,6 @@ void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr,
- {
- 	unsigned long return_hooker = (unsigned long)&return_to_handler;
- 	unsigned long old;
--	int err;
+diff --git a/net/netfilter/ipset/ip_set_hash_ipmac.c b/net/netfilter/ipset/ip_set_hash_ipmac.c
+index fd87de3ed55b3..75c21c8b76514 100644
+--- a/net/netfilter/ipset/ip_set_hash_ipmac.c
++++ b/net/netfilter/ipset/ip_set_hash_ipmac.c
+@@ -95,10 +95,6 @@ hash_ipmac4_kadt(struct ip_set *set, const struct sk_buff *skb,
+ 	struct hash_ipmac4_elem e = { .ip = 0, { .foo[0] = 0, .foo[1] = 0 } };
+ 	struct ip_set_ext ext = IP_SET_INIT_KEXT(skb, opt, set);
  
- 	if (unlikely(atomic_read(&current->tracing_graph_pause)))
- 		return;
+-	 /* MAC can be src only */
+-	if (!(opt->flags & IPSET_DIM_TWO_SRC))
+-		return 0;
+-
+ 	if (skb_mac_header(skb) < skb->head ||
+ 	    (skb_mac_header(skb) + ETH_HLEN) > skb->data)
+ 		return -EINVAL;
 -- 
 2.20.1
 
