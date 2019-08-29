@@ -2,119 +2,90 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC94CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E659DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4BC21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567120721;
-	bh=AH5ObS311XGO7RKzoWI2/U/YlNrE6TQMsHRmMBUDIv8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wB9r1zk3Krrxc3eUV4nmleoTmyehzWb7pjx3z9j/iR4KPFNwJ9q99cZBfonG2J9yn
-	 1jvDRqQh0x2UGBHkJ99QiqU8Usfc1Y6wHR2UPe7lug1ZxfER1+BHuxfCQw7HJK7Rdt
-	 iSqaEtHdvQUfl8C57DQS64MqI0SZ4tDoFcI2abhk=
+	by mail.kernel.org (Postfix) with ESMTP id 9E8EA21670
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:21:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="Ie4C9ynj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbfH2XSk (ORCPT
+        id S1728210AbfH2XVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 19:18:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727907AbfH2XSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 19:18:40 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11C2721670;
-        Thu, 29 Aug 2019 23:18:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567120719;
-        bh=AH5ObS311XGO7RKzoWI2/U/YlNrE6TQMsHRmMBUDIv8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jIOpA2Oa8YGYXtDJ4MbC2lmRCETIDlVUrQYTE3YiuS9ERORcq9MNpe1b9m6oT3m1w
-         26n+KmbiYTb/sVRa4ZMpnyXpimlWXP2KM7xmNON91E6HOb8yclGyrzgbU1Dx1cgV35
-         zYn8Ee727w3B2X9VxuzmVMU6dM8aEYYyHGM525LY=
-Date:   Thu, 29 Aug 2019 18:18:37 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     gregkh@linuxfoundation.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rajatxjain@gmail.com
-Subject: Re: [PATCH v3 2/2] PCI/AER: Split the AER stats into multiple sysfs
- attributes
-Message-ID: <20190829231837.GA18204@google.com>
-References: <20190827062309.GA30987@kroah.com>
- <20190827222145.32642-1-rajatja@google.com>
- <20190827222145.32642-2-rajatja@google.com>
+        Thu, 29 Aug 2019 19:21:20 -0400
+Received: from mail-pf1-f169.google.com ([209.85.210.169]:45346 "EHLO
+        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727802AbfH2XVT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 19:21:19 -0400
+Received: by mail-pf1-f169.google.com with SMTP id w26so3157369pfq.12
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 16:21:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qylN9i4xaRuIu/7tRX9HS4iq7VIt3+GlRK/+MNDbrNg=;
+        b=Ie4C9ynjICNmD8YI/lrwt+CuSoJ4jS2F45DzqTE5d/yp5txlNNfrkIfxw070/P0ESM
+         djnJjJZFKTlq5Huyr7zYeGh1+u+qvmHRacfJgfkzgeTC9PpGF+wFoCDSiRg7oceXCUKO
+         BxeV3BPhy82yYFWNMzh3As0D36lVKI4L/hNfHp46O05tHiXnh0IpR2JByJnElnVBkaAm
+         gjvllZBT9LPT7hJOFIeq5P7Xs1MNPb7eebGQ4DW5FptSBQEPLHmfZh7NF5c5C48kieIr
+         hAQtrRby4yOAAVvLGEzUGd4rTqS3megv7gd/kwEr4/TB6CUzokDCrfr5tdzvG3CTjTG1
+         Inkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qylN9i4xaRuIu/7tRX9HS4iq7VIt3+GlRK/+MNDbrNg=;
+        b=kWge8zpkwEcYI7B0gThCB19Ue64oayqkGRGaYcfAtFxjf+R3ZMudMOA2S/alNIjkCJ
+         IvGZYbZbvC/yldlKciA1WZD7nv5ESAzh/VPvlv6Z7zjDXv5jGMuwrLynaJU+nkTQg4M+
+         hg44oBmglpGov9rZb9Eb19sYq39V6XnHBX3uYVwL/w8qRp7jGNeBJ8cQiACPVym6xsBW
+         Syp1Lm3ndOIK1fr9HisRJt7k+Iql0iqnBhFHkyESw0zGMrfSAP7Z00sxiZujcUkFNH7M
+         W86TgRoPmka4PfUuXN+jaqOhp39fH7p6Ru5LZnYQ2Un3NPLkcKXgWgCisbbkUvrM3nF3
+         +uYQ==
+X-Gm-Message-State: APjAAAWqqi/2TSsqoHpp9HikJXt2FzWrGOZlVKA9fHoA/XewaakGwuD4
+        IkVnh0Ch+nwtMIyQzx38qmQS/A==
+X-Google-Smtp-Source: APXvYqwzUfSkqIcFKaXDQZeFwsZiRgKFyEpVVe9g6ARNrlQQDUlfVtgVtSD5Foj7gS5xRWRl8LPyKg==
+X-Received: by 2002:aa7:96dc:: with SMTP id h28mr14608679pfq.86.1567120878639;
+        Thu, 29 Aug 2019 16:21:18 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id x128sm4088989pfd.52.2019.08.29.16.21.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 16:21:18 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 16:21:15 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     David Dai <zdai@linux.vnet.ibm.com>
+Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zdai@us.ibm.com
+Subject: Re: [v1] iproute2: police: support 64bit rate and peakrate in tc
+ utility
+Message-ID: <20190829162115.2644488d@hermes.lan>
+In-Reply-To: <1567032776-1118-1-git-send-email-zdai@linux.vnet.ibm.com>
+References: <1567032776-1118-1-git-send-email-zdai@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827222145.32642-2-rajatja@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rajat,
+On Wed, 28 Aug 2019 17:52:56 -0500
+David Dai <zdai@linux.vnet.ibm.com> wrote:
 
-On Tue, Aug 27, 2019 at 03:21:45PM -0700, Rajat Jain wrote:
-> Split the AER stats into multiple sysfs atributes. Note that
-> this changes the ABI of the AER stats, but hopefully, there
-> aren't active users that need to change. This is how the AERs
-> are being exposed now:
+> For high speed adapter like Mellanox CX-5 card, it can reach upto
+> 100 Gbits per second bandwidth. Currently htb already supports 64bit rate
+> in tc utility. However police action rate and peakrate are still limited
+> to 32bit value (upto 32 Gbits per second). Taking advantage of the 2 new
+> attributes TCA_POLICE_RATE64 and TCA_POLICE_PEAKRATE64 from kernel,
+> tc can use them to break the 32bit limit, and still keep the backward 
+> binary compatibility.
 > 
-> localhost /sys/devices/pci0000:00/0000:00:1c.0/aer_stats # ls -l
+> Tested-by: David Dai <zdai@linux.vnet.ibm.com>
+> Signed-off-by: David Dai <zdai@linux.vnet.ibm.com>
 
-Possible s/aer_stats/aer/ to make the path shorter?
-
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit0_RxErr
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit12_Timeout
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit13_NonFatalErr
-> ...
-
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit0_Undefined
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit12_TLP
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit13_FCP
-> ...
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit0_Undefined
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit12_TLP
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit13_FCP
-> ...
-
-The AER registers are named "Correctable Error Status" and
-"Uncorrectable Error Status".  Fatal & nonfatal errors are both
-reported in the Uncorrectable Error Status register; the distinction
-comes from the Uncorrectable Error Severity register.
-
-E.g., there's only one bit in the Uncorrectable Error Status register
-for "Poisoned TLB Received" ("bit12_TLP" above), and it's fatal or
-nonfatal depending on the Error Severity setting.
-
-So I propose that you expose "correctable" files and "uncorrectable"
-files instead of "correctable", "fatal", and "nonfatal".  Then if you
-need the severity information you could add a new file for
-"uncorrectable severity".
-
-IIUC these files are counts of how many errors have been logged.
-Maybe add "_count" at the end?  I think that would be more informative
-than the "bitN" part, although it's not completely obvious how to map
-some of these (TLP, FCP, DLP, SDES) to the spec; maybe they could be
-expanded?
-
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_device_err_cor
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_device_err_fatal
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_device_err_nonfatal
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_rootport_err_cor
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_rootport_err_fatal
-> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_rootport_err_nonfatal
-> localhost /sys/devices/pci0000:00/0000:00:1c.0/aer_stats #
-> 
-> Each file is has a single counter value. Single file containing all
-
-s/is has/contains/
-
-Bjorn
+This needs to go to iproute2-next not iproute2
