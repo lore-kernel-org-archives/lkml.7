@@ -2,120 +2,360 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387CDC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4D3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B2F2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:26:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="SZGvIs6E"
+	by mail.kernel.org (Postfix) with ESMTP id 3D98321874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbfH2V0k (ORCPT
+        id S1728083AbfH2V2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 17:26:40 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33532 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727546AbfH2V0j (ORCPT
+        Thu, 29 Aug 2019 17:28:07 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:48893 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727928AbfH2V2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 17:26:39 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n190so2287653pgn.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 14:26:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pensando.io; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=GWW8DLxytIiCzhfA2BJxy+/D87jQXnHMbpMx/kGEXeU=;
-        b=SZGvIs6E9TskHAVTLovdtnJ3wivDhHJPTxAcX2m2/O1Wt5ZB7JkMLW3C/v0a5DlJxr
-         kjzCc0WgKXUVgNOgxXOQ7+n9XK0EqyIfi5o5jL95OK457mBy/xfRT7k+/qgv7XA0NeDb
-         y7kSQTHOux1UP/gcY1ok2//XPPs84aEiEh1sH34eRHiUcUxmdrxWoX9OlPh6xLAqUJ8+
-         9EengEykizGIUvi9nrVmOWE0jEoiC7Hb5vnkHtIX4Tc989bmaW53jkxPE7c7C5hSquY/
-         8uz2XnV9v7Rv7MZg+uWTtl6GYByJIbw4MFDqFTYOEJK5is/VxOuY3EEc38vbskFjl2I2
-         PDRw==
+        Thu, 29 Aug 2019 17:28:07 -0400
+Received: by mail-io1-f72.google.com with SMTP id z23so1866830ioj.15
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 14:28:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=GWW8DLxytIiCzhfA2BJxy+/D87jQXnHMbpMx/kGEXeU=;
-        b=Hc2bUhthBwacvK6aMKvP8iiz3pJFKfIpCSei74WoR8Fl+YDh6eix+uVGUA/95RiViV
-         gcuXk+gFn9qOr57MzhaaDJt7Gwv1d2zfjCH7v1JY/24ZVnsLVJpoFym1wBkMDw+3GvRe
-         QUH17CmYl9YX973UhG4gFBC3rM+BhthyHbL4N47ypPbAZy7n2I/yhIOtALb7mXmJYO8a
-         GCt36cBcpu2xbl9im+FUM5uB5H4TEDvrSIn+Kd69TNeSCoFilKHwP2LM9RyFvVTVbA7B
-         KdkaknVXARbsPNKwyOCCJq4ofz7/WBjsrnVX81AfHgQDGhu1Q5paclr7GaIR5/joAbaQ
-         evRg==
-X-Gm-Message-State: APjAAAUVIOc+ofSS6Ib7+/FlsJ6O3tbs3nGQYc/jxQfzG+dC8ahsSOJI
-        BQReu5XBdXcDxyVzmM18PYMRRA==
-X-Google-Smtp-Source: APXvYqzgsuapLgy6KYdw7jRoVvKrtPqUVQIKBUbs4nUAFFRMYUPAiPFENsbmkHB/pRiOPNxRcrVZ9Q==
-X-Received: by 2002:a63:4a51:: with SMTP id j17mr10144639pgl.284.1567113998895;
-        Thu, 29 Aug 2019 14:26:38 -0700 (PDT)
-Received: from Shannons-MacBook-Pro.local ([12.1.37.26])
-        by smtp.gmail.com with ESMTPSA id v67sm6499918pfb.45.2019.08.29.14.26.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 14:26:38 -0700 (PDT)
-Subject: Re: [PATCH v2 net-next 02/15] MIPS: SGI-IP27: restructure ioc3
- register access
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20190829155014.9229-1-tbogendoerfer@suse.de>
- <20190829155014.9229-3-tbogendoerfer@suse.de>
-From:   Shannon Nelson <snelson@pensando.io>
-Message-ID: <d9192f8c-a8a6-86aa-62eb-91826163bb43@pensando.io>
-Date:   Thu, 29 Aug 2019 14:26:35 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=0qah2YrmKlYa9CBvGdatqIu3yhFEo3PR9EVpUHYelBs=;
+        b=Cdz1zC4hSAo9shTrDkQZMSfjqutOnlSFgBSi71rerdX4oXk15Pa5+dvTA4ElehLR08
+         SiTFK9Qgh5QhtSFG/Mibal67OMdMOVooX9isRxBmXRgJWPcw68I4AwaqpnfC6I3CczsZ
+         heMXYjgtxp3naTm8Fj6zu7zv5j94rxY9DKdpZrW+OymmUSXbJjG95SzFHOe99iq5dwgU
+         wXZ/fFuP8s4vFlqNNU286HKoZdKmIAVQGwQky2heM0U3X04PVj3+ZKBYnZe6A2mskCgI
+         3dBOkgf7OMKCT/Ni15sc8ePfG+8rpZp6EC6WclQmesUA1Bcji/yo7oF9WaZtKOh6CTgs
+         tUTw==
+X-Gm-Message-State: APjAAAWIZXTaKwr8oihwKQ4couEMIiY3hEymSMETTw//XOtGCFMw2rNo
+        2PC/ERDHMQj8eNJiSiLI7DF3+ihJk2McYaorjkFro8PEq8tK
+X-Google-Smtp-Source: APXvYqwOqa3J6xvglB4U9KppXygvDxAqmsjBMk05NDRlFwul95VDIIaGSOgC4YaiN5l4x9vNHjLXP81VFimCcTVDaehwenhQCgIA
 MIME-Version: 1.0
-In-Reply-To: <20190829155014.9229-3-tbogendoerfer@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Received: by 2002:a6b:6b01:: with SMTP id g1mr3648274ioc.196.1567114086145;
+ Thu, 29 Aug 2019 14:28:06 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 14:28:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006d68b60591482e7b@google.com>
+Subject: memory leak in tty_init_dev
+From:   syzbot <syzbot+f303e045423e617d2cad@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/19 8:50 AM, Thomas Bogendoerfer wrote:
-> Break up the big ioc3 register struct into functional pieces to
-> make use in sub-function drivers more straightforward. And while
-> doing that get rid of all volatile access by using readX/writeX.
->
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> ---
+Hello,
 
-> diff --git a/arch/mips/sgi-ip27/ip27-console.c b/arch/mips/sgi-ip27/ip27-console.c
-> index 6bdb48d41276..5886bee89d06 100644
-> --- a/arch/mips/sgi-ip27/ip27-console.c
-> +++ b/arch/mips/sgi-ip27/ip27-console.c
-> @@ -35,6 +35,7 @@ void prom_putchar(char c)
->   {
->   	struct ioc3_uartregs *uart = console_uart();
->   
-> -	while ((uart->iu_lsr & 0x20) == 0);
-> -	uart->iu_thr = c;
-> +	while ((readb(&uart->iu_lsr) & 0x20) == 0)
-> +		;
-> +	writeb(c, &uart->iu_thr);
->   }
+syzbot found the following crash on:
 
-Is it ever possible to never see your bit get set?
-Instead of a tight forever spin, you might add a short delay and a retry 
-limit.
+HEAD commit:    e67095fd Merge tag 'dma-mapping-5.3-5' of git://git.infrad..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13c3d12e600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=54b8fd94a3dbefa6
+dashboard link: https://syzkaller.appspot.com/bug?extid=f303e045423e617d2cad
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1012efac600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16c55b5a600000
 
-I see this in several other times in the following code as well.  It 
-might be interesting to see how many times through and perhaps how many 
-usecs are normally spent in these loops.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f303e045423e617d2cad@syzkaller.appspotmail.com
 
-Not a binding request, just a thought...
+executing program
+BUG: memory leak
+unreferenced object 0xffff88810c784400 (size 1024):
+   comm "syz-executor944", pid 6967, jiffies 4294954446 (age 24.290s)
+   hex dump (first 32 bytes):
+     01 54 00 00 01 00 00 00 00 00 00 00 00 00 00 00  .T..............
+     40 0e f4 19 82 88 ff ff c0 80 9b 83 ff ff ff ff  @...............
+   backtrace:
+     [<000000007df0b09a>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000007df0b09a>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<000000007df0b09a>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000007df0b09a>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+     [<000000005f2271b8>] kmalloc include/linux/slab.h:552 [inline]
+     [<000000005f2271b8>] kzalloc include/linux/slab.h:748 [inline]
+     [<000000005f2271b8>] alloc_tty_struct+0x3f/0x290  
+drivers/tty/tty_io.c:2981
+     [<000000003fdbcff2>] tty_init_dev drivers/tty/tty_io.c:1333 [inline]
+     [<000000003fdbcff2>] tty_init_dev+0x4b/0x210 drivers/tty/tty_io.c:1317
+     [<00000000e9e89905>] ptmx_open drivers/tty/pty.c:845 [inline]
+     [<00000000e9e89905>] ptmx_open+0xba/0x1c0 drivers/tty/pty.c:811
+     [<00000000fb3f1a7b>] chrdev_open+0xe3/0x290 fs/char_dev.c:414
+     [<000000008bb452a9>] do_dentry_open+0x199/0x4f0 fs/open.c:797
+     [<00000000040a1756>] vfs_open+0x35/0x40 fs/open.c:906
+     [<00000000bc82caf4>] do_last fs/namei.c:3416 [inline]
+     [<00000000bc82caf4>] path_openat+0x854/0x1cd0 fs/namei.c:3533
+     [<00000000451a136c>] do_filp_open+0xaa/0x130 fs/namei.c:3563
+     [<00000000dc54a590>] do_sys_open+0x253/0x330 fs/open.c:1089
+     [<00000000b9b63e44>] __do_sys_openat fs/open.c:1116 [inline]
+     [<00000000b9b63e44>] __se_sys_openat fs/open.c:1110 [inline]
+     [<00000000b9b63e44>] __x64_sys_openat+0x24/0x30 fs/open.c:1110
+     [<00000000d5a75d56>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:296
+     [<00000000949e5897>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-sln
+BUG: memory leak
+unreferenced object 0xffff88810b349a00 (size 512):
+   comm "syz-executor944", pid 6967, jiffies 4294954446 (age 24.290s)
+   hex dump (first 32 bytes):
+     50 9a 34 0b 81 88 ff ff e0 ff ff ff 0f 00 00 00  P.4.............
+     10 9a 34 0b 81 88 ff ff 10 9a 34 0b 81 88 ff ff  ..4.......4.....
+   backtrace:
+     [<000000007df0b09a>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000007df0b09a>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<000000007df0b09a>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000007df0b09a>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+     [<000000000720d4d4>] kmalloc include/linux/slab.h:552 [inline]
+     [<000000000720d4d4>] pty_common_install+0x67/0x2b0 drivers/tty/pty.c:392
+     [<000000006f2c2dd7>] pty_unix98_install+0x20/0x30 drivers/tty/pty.c:740
+     [<000000005420e709>] tty_driver_install_tty drivers/tty/tty_io.c:1227  
+[inline]
+     [<000000005420e709>] tty_init_dev drivers/tty/tty_io.c:1340 [inline]
+     [<000000005420e709>] tty_init_dev+0x86/0x210 drivers/tty/tty_io.c:1317
+     [<00000000e9e89905>] ptmx_open drivers/tty/pty.c:845 [inline]
+     [<00000000e9e89905>] ptmx_open+0xba/0x1c0 drivers/tty/pty.c:811
+     [<00000000fb3f1a7b>] chrdev_open+0xe3/0x290 fs/char_dev.c:414
+     [<000000008bb452a9>] do_dentry_open+0x199/0x4f0 fs/open.c:797
+     [<00000000040a1756>] vfs_open+0x35/0x40 fs/open.c:906
+     [<00000000bc82caf4>] do_last fs/namei.c:3416 [inline]
+     [<00000000bc82caf4>] path_openat+0x854/0x1cd0 fs/namei.c:3533
+     [<00000000451a136c>] do_filp_open+0xaa/0x130 fs/namei.c:3563
+     [<00000000dc54a590>] do_sys_open+0x253/0x330 fs/open.c:1089
+     [<00000000b9b63e44>] __do_sys_openat fs/open.c:1116 [inline]
+     [<00000000b9b63e44>] __se_sys_openat fs/open.c:1110 [inline]
+     [<00000000b9b63e44>] __x64_sys_openat+0x24/0x30 fs/open.c:1110
+     [<00000000d5a75d56>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:296
+     [<00000000949e5897>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88810c784400 (size 1024):
+   comm "syz-executor944", pid 6967, jiffies 4294954446 (age 26.910s)
+   hex dump (first 32 bytes):
+     01 54 00 00 01 00 00 00 00 00 00 00 00 00 00 00  .T..............
+     40 0e f4 19 82 88 ff ff c0 80 9b 83 ff ff ff ff  @...............
+   backtrace:
+     [<000000007df0b09a>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000007df0b09a>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<000000007df0b09a>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000007df0b09a>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+     [<000000005f2271b8>] kmalloc include/linux/slab.h:552 [inline]
+     [<000000005f2271b8>] kzalloc include/linux/slab.h:748 [inline]
+     [<000000005f2271b8>] alloc_tty_struct+0x3f/0x290  
+drivers/tty/tty_io.c:2981
+     [<000000003fdbcff2>] tty_init_dev drivers/tty/tty_io.c:1333 [inline]
+     [<000000003fdbcff2>] tty_init_dev+0x4b/0x210 drivers/tty/tty_io.c:1317
+     [<00000000e9e89905>] ptmx_open drivers/tty/pty.c:845 [inline]
+     [<00000000e9e89905>] ptmx_open+0xba/0x1c0 drivers/tty/pty.c:811
+     [<00000000fb3f1a7b>] chrdev_open+0xe3/0x290 fs/char_dev.c:414
+     [<000000008bb452a9>] do_dentry_open+0x199/0x4f0 fs/open.c:797
+     [<00000000040a1756>] vfs_open+0x35/0x40 fs/open.c:906
+     [<00000000bc82caf4>] do_last fs/namei.c:3416 [inline]
+     [<00000000bc82caf4>] path_openat+0x854/0x1cd0 fs/namei.c:3533
+     [<00000000451a136c>] do_filp_open+0xaa/0x130 fs/namei.c:3563
+     [<00000000dc54a590>] do_sys_open+0x253/0x330 fs/open.c:1089
+     [<00000000b9b63e44>] __do_sys_openat fs/open.c:1116 [inline]
+     [<00000000b9b63e44>] __se_sys_openat fs/open.c:1110 [inline]
+     [<00000000b9b63e44>] __x64_sys_openat+0x24/0x30 fs/open.c:1110
+     [<00000000d5a75d56>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:296
+     [<00000000949e5897>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88810b349a00 (size 512):
+   comm "syz-executor944", pid 6967, jiffies 4294954446 (age 26.910s)
+   hex dump (first 32 bytes):
+     50 9a 34 0b 81 88 ff ff e0 ff ff ff 0f 00 00 00  P.4.............
+     10 9a 34 0b 81 88 ff ff 10 9a 34 0b 81 88 ff ff  ..4.......4.....
+   backtrace:
+     [<000000007df0b09a>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000007df0b09a>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<000000007df0b09a>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000007df0b09a>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+     [<000000000720d4d4>] kmalloc include/linux/slab.h:552 [inline]
+     [<000000000720d4d4>] pty_common_install+0x67/0x2b0 drivers/tty/pty.c:392
+     [<000000006f2c2dd7>] pty_unix98_install+0x20/0x30 drivers/tty/pty.c:740
+     [<000000005420e709>] tty_driver_install_tty drivers/tty/tty_io.c:1227  
+[inline]
+     [<000000005420e709>] tty_init_dev drivers/tty/tty_io.c:1340 [inline]
+     [<000000005420e709>] tty_init_dev+0x86/0x210 drivers/tty/tty_io.c:1317
+     [<00000000e9e89905>] ptmx_open drivers/tty/pty.c:845 [inline]
+     [<00000000e9e89905>] ptmx_open+0xba/0x1c0 drivers/tty/pty.c:811
+     [<00000000fb3f1a7b>] chrdev_open+0xe3/0x290 fs/char_dev.c:414
+     [<000000008bb452a9>] do_dentry_open+0x199/0x4f0 fs/open.c:797
+     [<00000000040a1756>] vfs_open+0x35/0x40 fs/open.c:906
+     [<00000000bc82caf4>] do_last fs/namei.c:3416 [inline]
+     [<00000000bc82caf4>] path_openat+0x854/0x1cd0 fs/namei.c:3533
+     [<00000000451a136c>] do_filp_open+0xaa/0x130 fs/namei.c:3563
+     [<00000000dc54a590>] do_sys_open+0x253/0x330 fs/open.c:1089
+     [<00000000b9b63e44>] __do_sys_openat fs/open.c:1116 [inline]
+     [<00000000b9b63e44>] __se_sys_openat fs/open.c:1110 [inline]
+     [<00000000b9b63e44>] __x64_sys_openat+0x24/0x30 fs/open.c:1110
+     [<00000000d5a75d56>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:296
+     [<00000000949e5897>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88810c784400 (size 1024):
+   comm "syz-executor944", pid 6967, jiffies 4294954446 (age 29.510s)
+   hex dump (first 32 bytes):
+     01 54 00 00 01 00 00 00 00 00 00 00 00 00 00 00  .T..............
+     40 0e f4 19 82 88 ff ff c0 80 9b 83 ff ff ff ff  @...............
+   backtrace:
+     [<000000007df0b09a>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000007df0b09a>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<000000007df0b09a>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000007df0b09a>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+     [<000000005f2271b8>] kmalloc include/linux/slab.h:552 [inline]
+     [<000000005f2271b8>] kzalloc include/linux/slab.h:748 [inline]
+     [<000000005f2271b8>] alloc_tty_struct+0x3f/0x290  
+drivers/tty/tty_io.c:2981
+     [<000000003fdbcff2>] tty_init_dev drivers/tty/tty_io.c:1333 [inline]
+     [<000000003fdbcff2>] tty_init_dev+0x4b/0x210 drivers/tty/tty_io.c:1317
+     [<00000000e9e89905>] ptmx_open drivers/tty/pty.c:845 [inline]
+     [<00000000e9e89905>] ptmx_open+0xba/0x1c0 drivers/tty/pty.c:811
+     [<00000000fb3f1a7b>] chrdev_open+0xe3/0x290 fs/char_dev.c:414
+     [<000000008bb452a9>] do_dentry_open+0x199/0x4f0 fs/open.c:797
+     [<00000000040a1756>] vfs_open+0x35/0x40 fs/open.c:906
+     [<00000000bc82caf4>] do_last fs/namei.c:3416 [inline]
+     [<00000000bc82caf4>] path_openat+0x854/0x1cd0 fs/namei.c:3533
+     [<00000000451a136c>] do_filp_open+0xaa/0x130 fs/namei.c:3563
+     [<00000000dc54a590>] do_sys_open+0x253/0x330 fs/open.c:1089
+     [<00000000b9b63e44>] __do_sys_openat fs/open.c:1116 [inline]
+     [<00000000b9b63e44>] __se_sys_openat fs/open.c:1110 [inline]
+     [<00000000b9b63e44>] __x64_sys_openat+0x24/0x30 fs/open.c:1110
+     [<00000000d5a75d56>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:296
+     [<00000000949e5897>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88810b349a00 (size 512):
+   comm "syz-executor944", pid 6967, jiffies 4294954446 (age 29.510s)
+   hex dump (first 32 bytes):
+     50 9a 34 0b 81 88 ff ff e0 ff ff ff 0f 00 00 00  P.4.............
+     10 9a 34 0b 81 88 ff ff 10 9a 34 0b 81 88 ff ff  ..4.......4.....
+   backtrace:
+     [<000000007df0b09a>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000007df0b09a>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<000000007df0b09a>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000007df0b09a>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+     [<000000000720d4d4>] kmalloc include/linux/slab.h:552 [inline]
+     [<000000000720d4d4>] pty_common_install+0x67/0x2b0 drivers/tty/pty.c:392
+     [<000000006f2c2dd7>] pty_unix98_install+0x20/0x30 drivers/tty/pty.c:740
+     [<000000005420e709>] tty_driver_install_tty drivers/tty/tty_io.c:1227  
+[inline]
+     [<000000005420e709>] tty_init_dev drivers/tty/tty_io.c:1340 [inline]
+     [<000000005420e709>] tty_init_dev+0x86/0x210 drivers/tty/tty_io.c:1317
+     [<00000000e9e89905>] ptmx_open drivers/tty/pty.c:845 [inline]
+     [<00000000e9e89905>] ptmx_open+0xba/0x1c0 drivers/tty/pty.c:811
+     [<00000000fb3f1a7b>] chrdev_open+0xe3/0x290 fs/char_dev.c:414
+     [<000000008bb452a9>] do_dentry_open+0x199/0x4f0 fs/open.c:797
+     [<00000000040a1756>] vfs_open+0x35/0x40 fs/open.c:906
+     [<00000000bc82caf4>] do_last fs/namei.c:3416 [inline]
+     [<00000000bc82caf4>] path_openat+0x854/0x1cd0 fs/namei.c:3533
+     [<00000000451a136c>] do_filp_open+0xaa/0x130 fs/namei.c:3563
+     [<00000000dc54a590>] do_sys_open+0x253/0x330 fs/open.c:1089
+     [<00000000b9b63e44>] __do_sys_openat fs/open.c:1116 [inline]
+     [<00000000b9b63e44>] __se_sys_openat fs/open.c:1110 [inline]
+     [<00000000b9b63e44>] __x64_sys_openat+0x24/0x30 fs/open.c:1110
+     [<00000000d5a75d56>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:296
+     [<00000000949e5897>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88810c784400 (size 1024):
+   comm "syz-executor944", pid 6967, jiffies 4294954446 (age 30.840s)
+   hex dump (first 32 bytes):
+     01 54 00 00 01 00 00 00 00 00 00 00 00 00 00 00  .T..............
+     40 0e f4 19 82 88 ff ff c0 80 9b 83 ff ff ff ff  @...............
+   backtrace:
+     [<000000007df0b09a>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000007df0b09a>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<000000007df0b09a>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000007df0b09a>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+     [<000000005f2271b8>] kmalloc include/linux/slab.h:552 [inline]
+     [<000000005f2271b8>] kzalloc include/linux/slab.h:748 [inline]
+     [<000000005f2271b8>] alloc_tty_struct+0x3f/0x290  
+drivers/tty/tty_io.c:2981
+     [<000000003fdbcff2>] tty_init_dev drivers/tty/tty_io.c:1333 [inline]
+     [<000000003fdbcff2>] tty_init_dev+0x4b/0x210 drivers/tty/tty_io.c:1317
+     [<00000000e9e89905>] ptmx_open drivers/tty/pty.c:845 [inline]
+     [<00000000e9e89905>] ptmx_open+0xba/0x1c0 drivers/tty/pty.c:811
+     [<00000000fb3f1a7b>] chrdev_open+0xe3/0x290 fs/char_dev.c:414
+     [<000000008bb452a9>] do_dentry_open+0x199/0x4f0 fs/open.c:797
+     [<00000000040a1756>] vfs_open+0x35/0x40 fs/open.c:906
+     [<00000000bc82caf4>] do_last fs/namei.c:3416 [inline]
+     [<00000000bc82caf4>] path_openat+0x854/0x1cd0 fs/namei.c:3533
+     [<00000000451a136c>] do_filp_open+0xaa/0x130 fs/namei.c:3563
+     [<00000000dc54a590>] do_sys_open+0x253/0x330 fs/open.c:1089
+     [<00000000b9b63e44>] __do_sys_openat fs/open.c:1116 [inline]
+     [<00000000b9b63e44>] __se_sys_openat fs/open.c:1110 [inline]
+     [<00000000b9b63e44>] __x64_sys_openat+0x24/0x30 fs/open.c:1110
+     [<00000000d5a75d56>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:296
+     [<00000000949e5897>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88810b349a00 (size 512):
+   comm "syz-executor944", pid 6967, jiffies 4294954446 (age 30.840s)
+   hex dump (first 32 bytes):
+     50 9a 34 0b 81 88 ff ff e0 ff ff ff 0f 00 00 00  P.4.............
+     10 9a 34 0b 81 88 ff ff 10 9a 34 0b 81 88 ff ff  ..4.......4.....
+   backtrace:
+     [<000000007df0b09a>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000007df0b09a>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<000000007df0b09a>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000007df0b09a>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+     [<000000000720d4d4>] kmalloc include/linux/slab.h:552 [inline]
+     [<000000000720d4d4>] pty_common_install+0x67/0x2b0 drivers/tty/pty.c:392
+     [<000000006f2c2dd7>] pty_unix98_install+0x20/0x30 drivers/tty/pty.c:740
+     [<000000005420e709>] tty_driver_install_tty drivers/tty/tty_io.c:1227  
+[inline]
+     [<000000005420e709>] tty_init_dev drivers/tty/tty_io.c:1340 [inline]
+     [<000000005420e709>] tty_init_dev+0x86/0x210 drivers/tty/tty_io.c:1317
+     [<00000000e9e89905>] ptmx_open drivers/tty/pty.c:845 [inline]
+     [<00000000e9e89905>] ptmx_open+0xba/0x1c0 drivers/tty/pty.c:811
+     [<00000000fb3f1a7b>] chrdev_open+0xe3/0x290 fs/char_dev.c:414
+     [<000000008bb452a9>] do_dentry_open+0x199/0x4f0 fs/open.c:797
+     [<00000000040a1756>] vfs_open+0x35/0x40 fs/open.c:906
+     [<00000000bc82caf4>] do_last fs/namei.c:3416 [inline]
+     [<00000000bc82caf4>] path_openat+0x854/0x1cd0 fs/namei.c:3533
+     [<00000000451a136c>] do_filp_open+0xaa/0x130 fs/namei.c:3563
+     [<00000000dc54a590>] do_sys_open+0x253/0x330 fs/open.c:1089
+     [<00000000b9b63e44>] __do_sys_openat fs/open.c:1116 [inline]
+     [<00000000b9b63e44>] __se_sys_openat fs/open.c:1110 [inline]
+     [<00000000b9b63e44>] __x64_sys_openat+0x24/0x30 fs/open.c:1110
+     [<00000000d5a75d56>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:296
+     [<00000000949e5897>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+executing program
+executing program
 
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
