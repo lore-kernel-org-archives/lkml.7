@@ -2,144 +2,100 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD4CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A20C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2C8D2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16984205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:46:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="FR2lZSyo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SYG5sitU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfH2LqJ (ORCPT
+        id S1727360AbfH2LqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:46:09 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:43802 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfH2LqJ (ORCPT
+        Thu, 29 Aug 2019 07:46:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55966 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727099AbfH2LqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:46:09 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x7TBk4T6015443;
-        Thu, 29 Aug 2019 20:46:05 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x7TBk4T6015443
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567079165;
-        bh=jJHAKRHFRUzF/5jWYYKHoeNpyJFG8X4zd/Hk645vV1s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FR2lZSyoTN0KEKnwc4pXOJULo6oFfgZ4oMDCJPqQws/UAF4tOiv/G9gNRRlylUM70
-         /HDF76gpmnV29LClsim6CYan+gHWKmIA8zouhAArtdeWnHkYTEMTO3z57gkZ3RE3Op
-         H7XCYN867bK/c/Y5yxEzevUmbQQZl/KsaJVUX5btY2kuTwUsSnkq8pe8glDLnzmBUX
-         wGy7fvvpxBxmpu+H8gSnB/sVHwtepY0c/dM7R9TYoiuVHjMI+oPn1gmhIYcNEolY/O
-         2SgUdaZ+jrxcE/PuE8ualfGbOt9kOfSxoKrDoWDRaPTeFu7b+bN7zstzTpQLPM8W5w
-         5j6MuK6hAKafQ==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id 62so2182884vsl.5;
-        Thu, 29 Aug 2019 04:46:05 -0700 (PDT)
-X-Gm-Message-State: APjAAAW+TJpJ1K3UPd88XF79Q2VXCxvffeoCRouuduckjz1pAxihV84K
-        JDixXzYmbY3Zkm9AdenxlZaTEWaIO/r0DXUM4gI=
-X-Google-Smtp-Source: APXvYqySzvmeE9kiWjvNGM1iaAxnZ+QgH8m0ESiSIlhk3/0sUZoqbPgAj7pYaewNuKSsBX5H2zvSqil85IeqcrkN9II=
-X-Received: by 2002:a67:fe12:: with SMTP id l18mr5139562vsr.54.1567079164044;
- Thu, 29 Aug 2019 04:46:04 -0700 (PDT)
+        Thu, 29 Aug 2019 07:46:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=39FDEvdYRnlxX1A3HP6Hj2NjJAwRtcnGcB3gr3LYtD0=; b=SYG5sitUw8Ft+7l2eYZCLoAWl
+        OOlm38WwtEms64hVeF3eOA+IGgqkHeA8AAHlZei78k+V7y0n3yfF14fxA9jQtIMWehj4xBlx6LNQo
+        7TILupR7KvpNP0D9mAjia+AiTWgfaUub7L58dpGGH3CWMyK1alm8Edmb4sKAkwY8IxQWYVz7JWc8A
+        gbvRIvY0Lrm/64yYAvbHNnl9TeSuSDoYZS9xm4XxV+dAl071KYrcqg8C+7uqJiTBXpAbfeLr0Hw+L
+        wskBTlz4iXhTCMGEAB4Jn8g/K+/PLwKFscj550nSvbM3lt5dFeF445N4oJVXg2jJUrAaNlOPxa/ns
+        s4KkOxeXw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3IsP-0000W2-CG; Thu, 29 Aug 2019 11:46:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EBD3C3074C6;
+        Thu, 29 Aug 2019 13:45:27 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 311E22021D1A2; Thu, 29 Aug 2019 13:46:02 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 13:46:02 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Nadav Amit <nadav.amit@gmail.com>, Andi Kleen <ak@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Edward Cree <ecree@solarflare.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        songliubraving@fb.com
+Subject: Re: Tracing text poke / kernel self-modifying code (Was: Re: [RFC v2
+ 0/6] x86: dynamic indirect branch promotion)
+Message-ID: <20190829114602.GR2369@hirez.programming.kicks-ass.net>
+References: <306d38fb-7ce6-a3ec-a351-6c117559ebaa@intel.com>
+ <20190108101058.GB6808@hirez.programming.kicks-ass.net>
+ <20190108172721.GN6118@tassilo.jf.intel.com>
+ <D1A153D5-D23B-45E6-9E7A-EB9CBAE84B7E@gmail.com>
+ <20190108190104.GC1900@hirez.programming.kicks-ass.net>
+ <7EB5F9ED-8743-4225-BE97-8D5C8D8E0F84@gmail.com>
+ <20190109103544.GH1900@hirez.programming.kicks-ass.net>
+ <7b4952c2-d3e3-488f-3697-2e8b71c58063@intel.com>
+ <20190829085339.GN2369@hirez.programming.kicks-ass.net>
+ <d37f678f-cf1d-5c98-228f-05bed99f2112@intel.com>
 MIME-Version: 1.0
-References: <20190506223334.1834-1-nicoleotsuka@gmail.com> <20190506223334.1834-3-nicoleotsuka@gmail.com>
- <CAK7LNARacEorb38mVBw_V-Zvz-znWgBma1AP1-z_5B_xZU4ogg@mail.gmail.com>
- <CAK7LNAQfYBCoChMV=MOwcUyVoqRkrPWs7DaWdzDqjBe18gGiAQ@mail.gmail.com>
- <20190825011025.GA23410@lst.de> <CAK7LNAQb1ZHr=DiHLNeNRaQExMuXdDOV4sFghoGbco_Q=Qzb8g@mail.gmail.com>
- <20190826073320.GA11712@lst.de> <CAK7LNATYOLEboUTO4qPx2z7cqwDrHBO1HFHG8VzZEJ15STv+nw@mail.gmail.com>
- <20190827075021.GA953@lst.de> <CAK7LNAQZ+bueZZzSoMADmgLjWNvijHRV=wLQzN_kvLG3b5Uu+w@mail.gmail.com>
- <20190827115541.GB5921@lst.de> <CAK7LNAQ_nQcBt=xH1-h+=co85mTxFgbe+_46Gu4LaNsDSm+kYA@mail.gmail.com>
- <CAK7LNATvz=TTe+3OyLrtUqDuTUTn1dg9Sk-t3BD_OFZfViCPMw@mail.gmail.com>
-In-Reply-To: <CAK7LNATvz=TTe+3OyLrtUqDuTUTn1dg9Sk-t3BD_OFZfViCPMw@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 29 Aug 2019 20:45:27 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASs2qkpGY_BkL--hvmKm3FJ9sEK4+v5VVYc1_CrowAB4w@mail.gmail.com>
-Message-ID: <CAK7LNASs2qkpGY_BkL--hvmKm3FJ9sEK4+v5VVYc1_CrowAB4w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dma-contiguous: Use fallback alloc_pages for
- single pages
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Nicolin Chen <nicoleotsuka@gmail.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>, vdumpa@nvidia.com,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thierry Reding <treding@nvidia.com>,
-        Kees Cook <keescook@chromium.org>, iamjoonsoo.kim@lge.com,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d37f678f-cf1d-5c98-228f-05bed99f2112@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 9:23 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Wed, Aug 28, 2019 at 7:53 PM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > Hi Christoph,
-> >
-> > On Tue, Aug 27, 2019 at 8:55 PM Christoph Hellwig <hch@lst.de> wrote:
-> > >
-> > > On Tue, Aug 27, 2019 at 06:03:14PM +0900, Masahiro Yamada wrote:
-> > > > Yes, this makes my driver working again
-> > > > when CONFIG_DMA_CMA=y.
-> > > >
-> > > >
-> > > > If I apply the following, my driver gets back working
-> > > > irrespective of CONFIG_DMA_CMA.
-> > >
-> > > That sounds a lot like the device simply isn't 64-bit DMA capable, and
-> > > previously always got CMA allocations under the limit it actually
-> > > supported.  I suggest that you submit this quirk to the mmc maintainers.
-> >
-> >
-> > I tested v5.2 and my MMC host controller works with
-> > dma_address that exceeds 32-bit physical address.
-> >
-> > So, I believe my MMC device is 64-bit DMA capable.
-> >
-> > I am still looking into the code
-> > to find out what was changed.
->
->
-> I retract this comment.
->
-> Prior to bd2e75633c8012fc8a7431c82fda66237133bf7e,
-> the descriptor table for ADMA is placed within the
-> 32-bit phys address range, not exceeds the 32-bit limit.
->
-> Probably, my device is not 64-bit capable.
->
-> I will talk to the hardware engineer,
-> and check the hardware spec just in case.
->
+On Thu, Aug 29, 2019 at 12:40:56PM +0300, Adrian Hunter wrote:
+> Can you expand on "and ensure the poke_handler preserves the existing
+> control flow"?  Whatever the INT3-handler does will be traced normally so
+> long as it does not itself execute self-modified code.
+
+My thinking was that the code shouldn't change semantics before emitting
+the RECORD_TEXT_POKE; but you're right in that that doesn't seem to
+matter much.
+
+Either we run the old code or INT3 does 'something'.  Then we get
+RECORD_TEXT_POKE and finish the poke.  Which tells that the moment INT3
+stops the new text is in place.
+
+I suppose that works too, and requires less changes.
 
 
-After looking more into my hardware,
-I found out how to fix my driver:
-https://lore.kernel.org/patchwork/patch/1121600/
-
-
-
--- 
-Best Regards
-Masahiro Yamada
