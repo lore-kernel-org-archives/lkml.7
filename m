@@ -2,110 +2,72 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9C5C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F281C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE2321874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2AD72189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567095309;
+	bh=WTpIdLvaLoglhAbyijHyx/3yZK7koc4yT9tfo593Q34=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=VmAKU3/z0Ls+6P8vA1RqCX+wU3nX/3Vj0KNi+Xp7HnbAR5Y/gp0HV4LaNqyudivQA
+	 6WmdfYlHXjwnxbBFR/HWyTipgK1Ke6iN6LRBTZxTy5Risa5yeRbNC7l33I/ZNytjKI
+	 zCw7jcv4s+IiSHeKgYEsNogbxsR6yquCWczOoXXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbfH2QOa (ORCPT
+        id S1727791AbfH2QPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:14:30 -0400
-Received: from mga02.intel.com ([134.134.136.20]:56270 "EHLO mga02.intel.com"
+        Thu, 29 Aug 2019 12:15:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727426AbfH2QOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:14:30 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 09:14:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,444,1559545200"; 
-   d="scan'208";a="171947177"
-Received: from friedlmi-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.54.26])
-  by orsmga007.jf.intel.com with ESMTP; 29 Aug 2019 09:14:24 -0700
-Date:   Thu, 29 Aug 2019 19:14:17 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Andrey Pronin <apronin@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: tpm: document properties for cr50
-Message-ID: <20190829161417.tzk4wewlupr4udgd@linux.intel.com>
-References: <20190828082150.42194-1-swboyd@chromium.org>
- <20190828082150.42194-2-swboyd@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828082150.42194-2-swboyd@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+        id S1727255AbfH2QPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:15:07 -0400
+Subject: Re: [GIT PULL] mtd: Fixes for -rc7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567095307;
+        bh=WTpIdLvaLoglhAbyijHyx/3yZK7koc4yT9tfo593Q34=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=bGn8KcdcLHdGEsPai3B34D/fYykSI13X9qOOxFmskGYOBmWX54VKJlgd3RNruHHeq
+         o8Grjvv79Fw70FHSbQpwL/Eug5c+AIHoHpgDNb5NUTJzQ/1vZUnFal6j0N6WJRptsC
+         d5mN8glHj3CC/JBv4qyGQGq/lDplnP60dbDlvuB8=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190829144428.3cb4d481@xps13>
+References: <20190829144428.3cb4d481@xps13>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190829144428.3cb4d481@xps13>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
+ tags/mtd/fixes-for-5.3-rc7
+X-PR-Tracked-Commit-Id: dc9cfd2692225a2164f4f20b7deaf38ca8645de3
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4e73079d39f62a5a46fbc30260acb0bd890c28df
+Message-Id: <156709530703.2214.13976882612421454190.pr-tracker-bot@kernel.org>
+Date:   Thu, 29 Aug 2019 16:15:07 +0000
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 01:21:47AM -0700, Stephen Boyd wrote:
-> From: Andrey Pronin <apronin@chromium.org>
-> 
-> Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
-> firmware.
-> 
-> Cc: Andrey Pronin <apronin@chromium.org>
-> Cc: Duncan Laurie <dlaurie@chromium.org>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Signed-off-by: Andrey Pronin <apronin@chromium.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  .../bindings/security/tpm/google,cr50.txt     | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.txt b/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
-> new file mode 100644
-> index 000000000000..cd69c2efdd37
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
-> @@ -0,0 +1,19 @@
-> +* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
-> +
-> +H1 Secure Microcontroller running Cr50 firmware provides several
-> +functions, including TPM-like functionality. It communicates over
-> +SPI using the FIFO protocol described in the PTP Spec, section 6.
-> +
-> +Required properties:
-> +- compatible: Should be "google,cr50".
-> +- spi-max-frequency: Maximum SPI frequency.
-> +
-> +Example:
-> +
-> +&spi0 {
-> +	tpm@0 {
-> +		compatible = "google,cr50";
-> +		reg = <0>;
-> +		spi-max-frequency = <800000>;
-> +	};
-> +};
-> -- 
-> Sent by a computer through tubes
-> 
+The pull request you sent on Thu, 29 Aug 2019 14:44:28 +0200:
 
-Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/fixes-for-5.3-rc7
 
-/Jarkko
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4e73079d39f62a5a46fbc30260acb0bd890c28df
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
