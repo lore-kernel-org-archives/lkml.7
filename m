@@ -2,223 +2,152 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089D4C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4C5C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C069823404
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61FCB2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:41:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nr51xhgt"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Qu0zmSOZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbfH2QlW (ORCPT
+        id S1727891AbfH2Qlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:41:22 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36892 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbfH2QlW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:41:22 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z11so4137968wrt.4;
-        Thu, 29 Aug 2019 09:41:19 -0700 (PDT)
+        Thu, 29 Aug 2019 12:41:52 -0400
+Received: from mail-eopbgr760071.outbound.protection.outlook.com ([40.107.76.71]:4737
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727115AbfH2Qlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:41:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kIBDqxXREYlC87iZ6t4DqXlLO7Zsi0R9CtVQ4+hCuuOgt6ZJogIH2/Jzjrfd7AzXr1X4ez72DCCiRLsRf2TVqspDZJfNPMbgWkeHkujknCJ1YfkXJwPwCiZWVIjr4xyc4XsmcWV1zF9aTHe4iK0am8vMaL8KVNVz2Vjbn5AWdA8Y3V08omCktK4OeAdoPFHmNZEZCtI1ykHyFz0DD5BydH4iOZvMn37U0/G3lCUz0zuuTNMIqLANh5ya/WIaFxxqGMEoqbtdsxAv4rbLM/V8uHi4ed1f+6HtfDxaJKW5xEo1IEAZlW7L8a9DJJnnfKVmKVdXOAoUUNf27nEzkuIhow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yYaac3Wu8j0cQ5wf1a2j968qmXvov6EmpSm3YMgu0dY=;
+ b=Aez8mRlQ5cYlxaB5lRGPYCsdeRc0PJyDCuCNx2QpVIkc0XvwLHwqVUsk3UMXTk2Ax/eRtu4j63wGAvZVFATk0rMi9GJT+yCWgnhDb1GDdzh3k/WKiMtwbgd4/mRCACu7FYU34qDtdLcX6Lw1mjPOc4HYJtytrA4nCZaJHJw0AxnmTEK3ZTfOpXhY0eslW6YYGIeerMV51/0JyoA0qB+GcXMxEsMOlzEhVWyvGwAIU7Ce9bClHzfLbQ5X7NOUA86W0hJ/Bl/19cSRLVLukj9VEtnxuwSqbAPODAjDo5C47PG0qJwtHkvMKdaw+ItAvtXiv5kg+naNnj4+A7ZjHlEv5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7yR+2btUdVZzugNInICo4vnQNuN1EMp975yLN+tXmcs=;
-        b=Nr51xhgt9tORYUWvBQQm95aMApchSwYclJnaXP/uN2D3PCnFROMeV96h47hEqCZtFq
-         jd2Mp/8M0EoSfJLApxXhqm7cUoLqCSUjbOCu48TbMNufS9t2Ml1/z58Lx25+PKfbjP6/
-         DtSUtMiXvQtBXJsxgNxyU2xGgSRI6WA+/wJjYWLVncs+CxNLYXP2mwhO/HekUlslp9eM
-         rng+dCtd6tZ9lwQdaQhIyMEUVZT2vPtf26jsE03Xx7+4GaH8VvIyyM49gErUvkyyhqOM
-         MoTnitGGbFgUyQXNCpqvElfqYeV+iPo2B6+BrC7Y1o8jWndezMS2efOabGZwIHbtleeX
-         OjTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7yR+2btUdVZzugNInICo4vnQNuN1EMp975yLN+tXmcs=;
-        b=XiM85cX16KD7PYwLFy8Gel0jVSyUpwzsISXxJ/I4ypONGQfsCW5hEgsIrBWpn4O7RK
-         wOJyGDUjiubmX3xCTeoWD3qs9zqXTq0sWtKiANTIG88sMNCy6qa+H0uC5Z2QjzF93RGR
-         Z7cBYp0ZN24VY+Px6lBOB+KB5jaN9vG0xJe4RUJoFhoA5uGDfGExSc0issJ+QRySVpMZ
-         mWs5yzE58FH13RhKAR81GtkWMinYufzGTv1dzDfrgwQDUdKForiJXjpu/BjT8fdlGRtt
-         b2T1i9RU0NBPmo1NSFwqrbc+qLUXjO8Zosc7s0L6X5k9+8aSao0H5MR1fbiwjrSryXry
-         o01w==
-X-Gm-Message-State: APjAAAUVUN4yuE8iTKhpQoswL3mJ0dep89Ty4F3gz3i6gD2hsBa+yC2x
-        gn66iJijmolETbihnLbru6E=
-X-Google-Smtp-Source: APXvYqzH/Fb2rRJgC7QIBqkUDelILLM7o7FXNLzJWMFGznShGN50OrlVbmIDnTmkWuRLO1lAUsOcRA==
-X-Received: by 2002:adf:ee41:: with SMTP id w1mr12591389wro.102.1567096878914;
-        Thu, 29 Aug 2019 09:41:18 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id s64sm6260070wmf.16.2019.08.29.09.41.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 09:41:17 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 18:41:15 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 2/6] dt-bindings: PCI: tegra: Add PCIe slot supplies
- regulator entries
-Message-ID: <20190829164115.GD19842@ulmo>
-References: <20190828172850.19871-1-vidyas@nvidia.com>
- <20190828172850.19871-3-vidyas@nvidia.com>
- <20190829120329.GC13187@ulmo>
- <cd106d64-e06c-e7a2-d807-f5f080625363@nvidia.com>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yYaac3Wu8j0cQ5wf1a2j968qmXvov6EmpSm3YMgu0dY=;
+ b=Qu0zmSOZIh5GG2iSkfHFjd4r7dpf9EhqrDtFPAHXBHUE+skumKejMXnLBpbTPqxExhFu6pneoyWssCzyXGPwycBeP1RlEpjtlgW9iXAQ1SCYwPxs1TmZCIr3k5PvjyWWH2YoK8c8own3EpKdVWVJ9tyxvNcel02Giz3bnr2LLYk=
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com (20.176.118.13) by
+ DM6PR12MB2970.namprd12.prod.outlook.com (20.178.29.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Thu, 29 Aug 2019 16:41:50 +0000
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::a410:b3e6:1557:7450]) by DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::a410:b3e6:1557:7450%6]) with mapi id 15.20.2199.021; Thu, 29 Aug 2019
+ 16:41:50 +0000
+From:   "Singh, Brijesh" <brijesh.singh@amd.com>
+To:     Borislav Petkov <bp@suse.de>
+CC:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 09/11] KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP
+ ioctl
+Thread-Topic: [PATCH v3 09/11] KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP
+ ioctl
+Thread-Index: AQHVN1vlxpPTIlj8306352DSevx+a6cSnlyAgAAEOQA=
+Date:   Thu, 29 Aug 2019 16:41:50 +0000
+Message-ID: <f347e7f3-133f-2199-eeec-583a10c43e3c@amd.com>
+References: <20190710201244.25195-1-brijesh.singh@amd.com>
+ <20190710201244.25195-10-brijesh.singh@amd.com>
+ <20190829162641.GB2132@zn.tnic>
+In-Reply-To: <20190829162641.GB2132@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0601CA0004.namprd06.prod.outlook.com
+ (2603:10b6:803:2f::14) To DM6PR12MB2682.namprd12.prod.outlook.com
+ (2603:10b6:5:42::13)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=brijesh.singh@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fd8db703-fd94-4e6b-4c34-08d72c9fca46
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR12MB2970;
+x-ms-traffictypediagnostic: DM6PR12MB2970:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB29701ECEE0D7BAB2CA9F7DB9E5A20@DM6PR12MB2970.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:510;
+x-forefront-prvs: 0144B30E41
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(39860400002)(366004)(396003)(199004)(189003)(66946007)(6246003)(3846002)(6116002)(6512007)(6436002)(102836004)(478600001)(186003)(76176011)(86362001)(8936002)(14454004)(229853002)(99286004)(26005)(256004)(53936002)(52116002)(36756003)(31686004)(66446008)(66556008)(64756008)(66476007)(6486002)(6916009)(305945005)(446003)(71200400001)(5660300002)(31696002)(81156014)(81166006)(476003)(2906002)(11346002)(7736002)(316002)(2616005)(4326008)(54906003)(66066001)(7416002)(486006)(8676002)(25786009)(71190400001)(6506007)(386003)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2970;H:DM6PR12MB2682.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: yC/IOaVFmrSJW1RndFQqMrlq/0GuhsVzIIej2HtuUJGnwtmHBpUitVKPMtn4TxCkRvC0CwUviUMTuq0yEJgyWoUgtE4gle2j3eTlmSRNxD7emhI8kVpJVUoXl29e8i+yAA/hpMLGf2xsWWnEJS5bL3ssRxyjFLThTgEUfGu2EvHSAjNCLxdz6DxFR0gNCYF3DtTpeSZe4kUlSA5xhYsmov2iZe6E6PFzytg3ALu7nJfRoNZ4Lo0KqIOV+wtkdMcmmqSvKo9LoNKsyZgQjAT83OQKz0vavjkmWYMl6TQkl9HLzbbWntjhV0ifnRwnlgixxfUNUR7mqGwbPm/qfyrk1X+Bopx/4hpLc6czUu2gj9fgkw/hXbX1css0yDDJ4BO/GAiPx2O+0y3a1p+QxrR8Fi2wItRxqawG/k6+mLtAAf8=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CB0D7ADC58F7CF458A03B47D609DC5F6@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DiL7RhKs8rK9YGuF"
-Content-Disposition: inline
-In-Reply-To: <cd106d64-e06c-e7a2-d807-f5f080625363@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd8db703-fd94-4e6b-4c34-08d72c9fca46
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 16:41:50.3656
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2ygINi2I76eQlunMVExiIL9qccIEGF1iii6JYsU0ZCaZAxsvBwYLWuSB46Ii21ZGklRS+iIrj+K6mtH7mysrbg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2970
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---DiL7RhKs8rK9YGuF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Aug 29, 2019 at 08:48:39PM +0530, Vidya Sagar wrote:
-> On 8/29/2019 5:33 PM, Thierry Reding wrote:
-> > On Wed, Aug 28, 2019 at 10:58:46PM +0530, Vidya Sagar wrote:
-> > > Add optional bindings "vpcie3v3-supply" and "vpcie12v-supply" to desc=
-ribe
-> > > regulators of a PCIe slot's supplies 3.3V and 12V provided the platfo=
-rm
-> > > is designed to have regulator controlled slot supplies.
-> > >=20
-> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > ---
-> > > V3:
-> > > * None
-> > >=20
-> > > V2:
-> > > * None
-> > >=20
-> > >   .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt      | 8 +++++=
-+++
-> > >   1 file changed, 8 insertions(+)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pc=
-ie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> > > index 0ac1b867ac24..b739f92da58e 100644
-> > > --- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> > > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> > > @@ -104,6 +104,12 @@ Optional properties:
-> > >      specified in microseconds
-> > >   - nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to=
- be
-> > >      specified in microseconds
-> > > +- vpcie3v3-supply: A phandle to the regulator node that supplies 3.3=
-V to the slot
-> > > +  if the platform has one such slot. (Ex:- x16 slot owned by C5 cont=
-roller
-> > > +  in p2972-0000 platform).
-> > > +- vpcie12v-supply: A phandle to the regulator node that supplies 12V=
- to the slot
-> > > +  if the platform has one such slot. (Ex:- x16 slot owned by C5 cont=
-roller
-> > > +  in p2972-0000 platform).
-> >=20
-> > There's an ongoing discussion regarding the use of optional power
-> > supplies and I'm wondering if we're not abusing this here. Why exactly
-> > are these regulators optional?
-> I made them optional because, the number and type of supplies typically d=
-epend on the
-> kind of slot the controller is owning. If it is a CEM slot, then, it need=
-s 3.3V & 12V
-> supplies and if it is an M.2 Key-E/M slot, it needs only 3.3V supply. Als=
-o, if there are
-> on-board PCIe endpoint devices, supplies may vary again from vendor to ve=
-ndor.
-> Considering all these, I made them optional instead of mandatory.
-> Also, I agree that regulator framework supplies a dummy regulator if we m=
-ake them mandatory
-> but doesn't supply one, but it does so with a warning print in the log wh=
-ich I feel is
-> an unwanted alert and to avoid that one has to supply dummy/fixed regulat=
-ors which again
-> seems an overkill when all of this can be addressed by making slot regula=
-tors optional.
-
-Okay. That sounds like a good reason to make these optional indeed.
-There is no way for the PCI controller to know exactly which regulators
-will be needed. The only case where it is known is that of the regular
-PCIe slot where the 3.3 V and 12 V are mandatory. But since it isn't
-always a standard PCIe slot that the controller drives, I think optional
-is okay in this case.
-
-Thierry
-
-> > The distinction is somewhat subtle, but the other way to look at
-> > modelling this in DT is that the supplies are in fact required, but may
-> > be connected to an always-on regulator with a fixed voltage. Or in some
-> > cases they may also be shorted to ground. In both cases the PCI
-> > controller, or rather the slot that the controller connects to, actually
-> > "requires" the supplies, it's just that we can get away without
-> > describing them because they can't be controlled anyway.
-> >=20
-> > Looking at the PCI connector pinout for PCI Express, I do see a bunch of
-> > +3.3 V and +12 V pins. To me that indicates that the 3.3 V and 12 V
-> > supplies are indeed required for PCI slots. I'm not sure about devices
-> > that are directly connected to the PCI controller, though. I'll need to
-> > go look at some schematics to get a better understanding of these.
-> >=20
-> > Bottom line: I'm wondering if we shouldn't really make these supplies
-> > mandatory and in case where we don't care either just leave them away
-> > (the regulator framework will supply a dummy regulator in that case) or
-> > hook them up to a fixed regulator if that matches the hardware design.
-> >=20
-> > Any thoughts?
-> >=20
-> > Thierry
-> >=20
-> > >   Examples:
-> > >   =3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > @@ -156,6 +162,8 @@ Tegra194:
-> > >   			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /=
-* prefetchable memory (16GB) */
-> > >   		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> > > +		vpcie3v3-supply =3D <&vdd_3v3_pcie>;
-> > > +		vpcie12v-supply =3D <&vdd_12v_pcie>;
-> > >   		phys =3D <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
-> > >   		       <&p2u_hsio_5>;
-> > > --=20
-> > > 2.17.1
-> > >=20
->=20
-
---DiL7RhKs8rK9YGuF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1oACkACgkQ3SOs138+
-s6EGvw//aC8g/p1/uH6bQaFYayqHbvSXJkcs+qLM1pXP6sQs+Y78dkyd0bFY5d3I
-eWq7JMsg5syZh6vKYm8rYUQoOvmhKvgGJ2ICfXTe5Jj9F3pS2pK6PCcF3OpZIopk
-N9rsnpwUm/N5966NBkZyikA9iQat2EPJXSJA917kV8bAhs2uu4/xxBO2joG9GLPb
-hWD6EtgywvtYlRhpJ7irFlVjJ8VOj5j3zUi6ZpedMrtU8Bx/llbz+1bnrvyVlMjY
-HtcN2ndkRacf4nwu8/nB5GIzucOAE6jiKmwjpfv0PwV1GHkj8QggDZ6U8YEK98i3
-cYBL2iGlQw+k3dJgPl5poUrHmyHxvphHt3eEnrbOqXwe3jFtC/z4cKtc0d2h0omo
-5OQzeXZ9DNP26b2NvCkz/JCQlSGzlCp6M/MiJQu4Iu53DTAR9S2T650QG4s/hMVF
-cBujoyFuAc9rXwB+uxrkHHcHZZFNXDTawC8LQJgWIAfa5v8bhgfWKdaHbjhb0Bee
-R7fHHclqVSU2J1K6cRJ1d1daqme8VloCxg+eClg72UxXXnEPqRPP/PJS7tyX9Dzp
-uJMC4JfgRu+xShFywcXH9oif3ufSqHBnfIUiWNnKefLu5w6Y3Fg10nj5Shj0k0UL
-Jjk6JzRLE/h8QkgmNs49r3r7NkjzFfm4GZ5xBC0n/VAeVRxxW/8=
-=RTQ7
------END PGP SIGNATURE-----
-
---DiL7RhKs8rK9YGuF--
+DQoNCk9uIDgvMjkvMTkgMTE6MjYgQU0sIEJvcmlzbGF2IFBldGtvdiB3cm90ZToNCj4gT24gV2Vk
+LCBKdWwgMTAsIDIwMTkgYXQgMDg6MTM6MTBQTSArMDAwMCwgU2luZ2gsIEJyaWplc2ggd3JvdGU6
+DQo+PiBAQCAtNzc2Nyw3ICs3ODA4LDggQEAgc3RhdGljIHN0cnVjdCBrdm1feDg2X29wcyBzdm1f
+eDg2X29wcyBfX3JvX2FmdGVyX2luaXQgPSB7DQo+PiAgIA0KPj4gICAJLm5lZWRfZW11bGF0aW9u
+X29uX3BhZ2VfZmF1bHQgPSBzdm1fbmVlZF9lbXVsYXRpb25fb25fcGFnZV9mYXVsdCwNCj4+ICAg
+DQo+PiAtCS5wYWdlX2VuY19zdGF0dXNfaGMgPSBzdm1fcGFnZV9lbmNfc3RhdHVzX2hjDQo+PiAr
+CS5wYWdlX2VuY19zdGF0dXNfaGMgPSBzdm1fcGFnZV9lbmNfc3RhdHVzX2hjLA0KPj4gKwkuZ2V0
+X3BhZ2VfZW5jX2JpdG1hcCA9IHN2bV9nZXRfcGFnZV9lbmNfYml0bWFwDQo+PiAgIH07DQo+PiAg
+IA0KPj4gICBzdGF0aWMgaW50IF9faW5pdCBzdm1faW5pdCh2b2lkKQ0KPj4gZGlmZiAtLWdpdCBh
+L2FyY2gveDg2L2t2bS94ODYuYyBiL2FyY2gveDg2L2t2bS94ODYuYw0KPj4gaW5kZXggNmJhZjQ4
+ZWMwZWQ0Li41OWFlNDliMWI5MTQgMTAwNjQ0DQo+PiAtLS0gYS9hcmNoL3g4Ni9rdm0veDg2LmMN
+Cj4+ICsrKyBiL2FyY2gveDg2L2t2bS94ODYuYw0KPj4gQEAgLTQ5MjcsNiArNDkyNywxOCBAQCBs
+b25nIGt2bV9hcmNoX3ZtX2lvY3RsKHN0cnVjdCBmaWxlICpmaWxwLA0KPj4gICAJCXIgPSBrdm1f
+dm1faW9jdGxfaHZfZXZlbnRmZChrdm0sICZodmV2ZmQpOw0KPj4gICAJCWJyZWFrOw0KPj4gICAJ
+fQ0KPj4gKwljYXNlIEtWTV9HRVRfUEFHRV9FTkNfQklUTUFQOiB7DQo+PiArCQlzdHJ1Y3Qga3Zt
+X3BhZ2VfZW5jX2JpdG1hcCBiaXRtYXA7DQo+PiArDQo+PiArCQlyID0gLUVGQVVMVDsNCj4+ICsJ
+CWlmIChjb3B5X2Zyb21fdXNlcigmYml0bWFwLCBhcmdwLCBzaXplb2YoYml0bWFwKSkpDQo+PiAr
+CQkJZ290byBvdXQ7DQo+PiArDQo+PiArCQlyID0gLUVOT1RUWTsNCj4+ICsJCWlmIChrdm1feDg2
+X29wcy0+Z2V0X3BhZ2VfZW5jX2JpdG1hcCkNCj4+ICsJCQlyID0ga3ZtX3g4Nl9vcHMtPmdldF9w
+YWdlX2VuY19iaXRtYXAoa3ZtLCAmYml0bWFwKTsNCj4gDQo+IEkgZG9uJ3Qga25vdyB3aGF0IHRy
+ZWUgeW91J3ZlIGRvbmUgdGhvc2UgcGF0Y2hlcyBhZ2FpbnN0IGJ1dCBhZ2FpbnN0IC1yYzYrLCB0
+aGUNCj4gZmlyc3QgYXJndW1lbnQgYWJvdmUgbmVlZHMgdG8gYmUgdmNwdS0+a3ZtOg0KPiANCj4g
+YXJjaC94ODYva3ZtL3g4Ni5jOiBJbiBmdW5jdGlvbiDigJhrdm1fYXJjaF92Y3B1X2lvY3Rs4oCZ
+Og0KPiBhcmNoL3g4Ni9rdm0veDg2LmM6NDM0Mzo0MTogZXJyb3I6IOKAmGt2beKAmSB1bmRlY2xh
+cmVkIChmaXJzdCB1c2UgaW4gdGhpcyBmdW5jdGlvbikNCj4gICAgICByID0ga3ZtX3g4Nl9vcHMt
+PmdldF9wYWdlX2VuY19iaXRtYXAoa3ZtLCAmYml0bWFwKTsNCj4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgXn5+DQo+IGFyY2gveDg2L2t2bS94ODYuYzo0MzQzOjQx
+OiBub3RlOiBlYWNoIHVuZGVjbGFyZWQgaWRlbnRpZmllciBpcyByZXBvcnRlZCBvbmx5IG9uY2Ug
+Zm9yIGVhY2ggZnVuY3Rpb24gaXQgYXBwZWFycyBpbg0KPiBtYWtlWzJdOiAqKiogW3NjcmlwdHMv
+TWFrZWZpbGUuYnVpbGQ6MjgwOiBhcmNoL3g4Ni9rdm0veDg2Lm9dIEVycm9yIDENCj4gbWFrZVsy
+XTogKioqIFdhaXRpbmcgZm9yIHVuZmluaXNoZWQgam9icy4uLi4NCj4gbWFrZVsxXTogKioqIFtz
+Y3JpcHRzL01ha2VmaWxlLmJ1aWxkOjQ5NzogYXJjaC94ODYva3ZtXSBFcnJvciAyDQo+IG1ha2Vb
+MV06ICoqKiBXYWl0aW5nIGZvciB1bmZpbmlzaGVkIGpvYnMuLi4uDQo+IG1ha2U6ICoqKiBbTWFr
+ZWZpbGU6MTA4MzogYXJjaC94ODZdIEVycm9yIDINCj4gbWFrZTogKioqIFdhaXRpbmcgZm9yIHVu
+ZmluaXNoZWQgam9icy4uLi4NCj4gDQoNClRoZSBwYXRjaGVzIHdlcmUgYmFzZWQgb24gS1ZNIHRy
+ZWUgSnVseSA5dGgNCg0KY29tbWl0IGlkOiBlOWE4M2JkMjMyMjAzNWVkOWQ3ZGNmMzU3NTNkM2Y5
+ODRkNzZjNmE1DQoNCkkgaGF2ZSBiZWVuIHdhaXRpbmcgZm9yIHNvbWUgZmVlZGJhY2sgYmVmb3Jl
+IHJlZnJlc2hpbmcgaXQuIElmIHlvdSB3YW50DQp0aGVuIEkgY2FuIHJlZnJlc2ggdGhlIHBhdGNo
+IHdpdGggbGF0ZXN0IGZyb20gTGludXMgYW5kIHNlbmQgdjQuDQoNCnRoYW5rcw0K
