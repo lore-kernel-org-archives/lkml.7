@@ -2,97 +2,188 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1E0C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B95C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4577A21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:30:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="oUA4l5+H"
+	by mail.kernel.org (Postfix) with ESMTP id AAC8021726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbfH2SaQ (ORCPT
+        id S1729381AbfH2SaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:30:16 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:41730 "EHLO vps0.lunn.ch"
+        Thu, 29 Aug 2019 14:30:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50608 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730019AbfH2SaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728426AbfH2SaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 29 Aug 2019 14:30:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=SxqYvv49yqmIIqleMdsHFqKFHskcW+8pUjR7rwMTuP0=; b=oUA4l5+HGnWxmXp/tiI7FHZZEh
-        s1vQyf/zy8GyvMEe32SQXw/YV4dSxoMd3p7rknNMcTgQ/NZQCtn7jEEAvW0NHy+bRPFAfk5wLi0WL
-        dCFZLLDKmQSpccVrnR234OJdaFEGCLGRFtkL9q40/NC1BM8/CFIqk6IBIkCB4O30O2PA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i3PBF-0004wy-Lu; Thu, 29 Aug 2019 20:29:57 +0200
-Date:   Thu, 29 Aug 2019 20:29:57 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Ido Schimmel <idosch@idosch.org>
-Cc:     Jiri Pirko <jiri@resnulli.us>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        davem@davemloft.net, allan.nielsen@microchip.com,
-        ivecera@redhat.com, f.fainelli@gmail.com, netdev@vger.kernel.org,
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 337D4308402E;
+        Thu, 29 Aug 2019 18:30:11 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 38B8719D7A;
+        Thu, 29 Aug 2019 18:30:08 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 02/11] security: Add hooks to rule on setting a watch [ver
+ #6]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>, dhowells@redhat.com,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
-Message-ID: <20190829182957.GA17530@lunn.ch>
-References: <1567070549-29255-1-git-send-email-horatiu.vultur@microchip.com>
- <1567070549-29255-2-git-send-email-horatiu.vultur@microchip.com>
- <20190829095100.GH2312@nanopsycho>
- <20190829132611.GC6998@lunn.ch>
- <20190829134901.GJ2312@nanopsycho>
- <20190829143732.GB17864@lunn.ch>
- <20190829175759.GA19471@splinter>
+Date:   Thu, 29 Aug 2019 19:30:07 +0100
+Message-ID: <156710340735.10009.5077888091140004991.stgit@warthog.procyon.org.uk>
+In-Reply-To: <156710338860.10009.12524626894838499011.stgit@warthog.procyon.org.uk>
+References: <156710338860.10009.12524626894838499011.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829175759.GA19471@splinter>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 29 Aug 2019 18:30:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hi Andrew,
-> 
-> What happens when you run tcpdump on a routed interface without putting
-> it in promiscuous mode ('-p')? If it is a pure software switch, then you
-> see all unicast packets addressed to your interface's MAC address. What
-> happens when the same is done on a hardware switch? With the proposed
-> solution you will not get the same result.
-> 
-> On a software switch, when you run tcpdump without '-p', do you incur
-> major packet loss? No. Will this happen when you punt several Tbps to
-> your CPU on the hardware switch? Yes.
+Add security hooks that will allow an LSM to rule on whether or not a watch
+may be set.  More than one hook is required as the watches watch different
+types of object.
 
-Hi Ido
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Casey Schaufler <casey@schaufler-ca.com>
+cc: Stephen Smalley <sds@tycho.nsa.gov>
+cc: linux-security-module@vger.kernel.org
+---
 
-Please think about the general case, not your hardware. A DSA switch
-generally has 1G ports. And the connection to the host is generally
-1G, maybe 2.5G. So if i put one interface into promisc mode, i will
-probably receive the majority of the traffic on that port, so long as
-there is not too much traffic from other ports towards the CPU.
+ include/linux/lsm_hooks.h |   22 ++++++++++++++++++++++
+ include/linux/security.h  |   15 +++++++++++++++
+ security/security.c       |   13 +++++++++++++
+ 3 files changed, 50 insertions(+)
 
-I also don't expect any major packet loss in the switch. It is still
-hardware switching, but also sending a copy to the CPU. That copy will
-have the offload_fwd_mark bit set, so the bridge will discard the
-frame. The switch egress queue towards the CPU might overflow, but
-that means tcpdump does not get to see all the frames, and some
-traffic which is actually heading to the CPU is lost. But that can
-happen anyway.
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index df1318d85f7d..19108185b254 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -1413,6 +1413,20 @@
+  *	@ctx is a pointer in which to place the allocated security context.
+  *	@ctxlen points to the place to put the length of @ctx.
+  *
++ * Security hooks for the general notification queue:
++ *
++ * @watch_key:
++ *	Check to see if a process is allowed to watch for event notifications
++ *	from a key or keyring.
++ *	@watch: The watch object
++ *	@key: The key to watch.
++ *
++ * @watch_devices:
++ *	Check to see if a process is allowed to watch for event notifications
++ *	from devices (as a global set).
++ *	@watch: The watch object
++ *
++ *
+  * Security hooks for using the eBPF maps and programs functionalities through
+  * eBPF syscalls.
+  *
+@@ -1688,6 +1702,10 @@ union security_list_options {
+ 	int (*inode_notifysecctx)(struct inode *inode, void *ctx, u32 ctxlen);
+ 	int (*inode_setsecctx)(struct dentry *dentry, void *ctx, u32 ctxlen);
+ 	int (*inode_getsecctx)(struct inode *inode, void **ctx, u32 *ctxlen);
++#ifdef CONFIG_WATCH_QUEUE
++	int (*watch_key)(struct watch *watch, struct key *key);
++	int (*watch_devices)(struct watch *watch);
++#endif /* CONFIG_WATCH_QUEUE */
+ 
+ #ifdef CONFIG_SECURITY_NETWORK
+ 	int (*unix_stream_connect)(struct sock *sock, struct sock *other,
+@@ -1964,6 +1982,10 @@ struct security_hook_heads {
+ 	struct hlist_head inode_notifysecctx;
+ 	struct hlist_head inode_setsecctx;
+ 	struct hlist_head inode_getsecctx;
++#ifdef CONFIG_WATCH_QUEUE
++	struct hlist_head watch_key;
++	struct hlist_head watch_devices;
++#endif /* CONFIG_WATCH_QUEUE */
+ #ifdef CONFIG_SECURITY_NETWORK
+ 	struct hlist_head unix_stream_connect;
+ 	struct hlist_head unix_may_send;
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 5f7441abbf42..feeade454308 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -57,6 +57,7 @@ struct mm_struct;
+ struct fs_context;
+ struct fs_parameter;
+ enum fs_value_type;
++struct watch;
+ 
+ /* Default (no) options for the capable function */
+ #define CAP_OPT_NONE 0x0
+@@ -392,6 +393,10 @@ void security_inode_invalidate_secctx(struct inode *inode);
+ int security_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen);
+ int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen);
+ int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
++#ifdef CONFIG_WATCH_QUEUE
++int security_watch_key(struct watch *watch, struct key *key);
++int security_watch_devices(struct watch *watch);
++#endif /* CONFIG_WATCH_QUEUE */
+ #else /* CONFIG_SECURITY */
+ 
+ static inline int call_blocking_lsm_notifier(enum lsm_event event, void *data)
+@@ -1204,6 +1209,16 @@ static inline int security_inode_getsecctx(struct inode *inode, void **ctx, u32
+ {
+ 	return -EOPNOTSUPP;
+ }
++#ifdef CONFIG_WATCH_QUEUE
++static inline int security_watch_key(struct watch *watch, struct key *key)
++{
++	return 0;
++}
++static inline int security_watch_devices(struct watch *watch)
++{
++	return 0;
++}
++#endif /* CONFIG_WATCH_QUEUE */
+ #endif	/* CONFIG_SECURITY */
+ 
+ #ifdef CONFIG_SECURITY_NETWORK
+diff --git a/security/security.c b/security/security.c
+index 250ee2d76406..1ebd2c936a57 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -1916,6 +1916,19 @@ int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
+ }
+ EXPORT_SYMBOL(security_inode_getsecctx);
+ 
++#ifdef CONFIG_WATCH_QUEUE
++int security_watch_key(struct watch *watch, struct key *key)
++{
++	return call_int_hook(watch_key, 0, watch, key);
++}
++
++int security_watch_devices(struct watch *watch)
++{
++	return call_int_hook(watch_devices, 0, watch);
++}
++
++#endif /* CONFIG_WATCH_QUEUE */
++
+ #ifdef CONFIG_SECURITY_NETWORK
+ 
+ int security_unix_stream_connect(struct sock *sock, struct sock *other, struct sock *newsk)
 
-We should also think about the different classes of users. Somebody
-using a TOR switch with a NOS is very different to a user of a SOHO
-switch in their WiFi access point. The first probably knows tc very
-well, the second has probably never heard of it, and just wants
-tcpdump to work like on their desktop.
-
-	 Andrew
