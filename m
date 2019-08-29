@@ -2,86 +2,51 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC1CC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2041AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCEAB2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:49:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H6PCbsL4"
+	by mail.kernel.org (Postfix) with ESMTP id E99402189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567097412;
+	bh=Hslj8UGkEo+uEL+vuwTBz4V9Schqb3dk989zc+CeNYE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=JjacwCERWz7JzJjaKYc+xi7AbDzotRoNmIJz0LmcZgomL6BmCnT6S5QJgj8rCpfG4
+	 9CeNXs7C53yP4G6zEm5AOeiEooZq3+XkNgxEaqPrGXiccimLDirYmTo/29iv5x118t
+	 NlusEkRgUIiFi7qLP0v6P9rAdNl31VoQ9OoUYlHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbfH2QtH (ORCPT
+        id S1727736AbfH2QuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:49:07 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46655 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbfH2QtG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:49:06 -0400
-Received: by mail-pg1-f194.google.com with SMTP id m3so1865796pgv.13;
-        Thu, 29 Aug 2019 09:49:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+npB6gUnTr3XNVbB8y8PFXfDiZznn6tH9wpAPdNtoUY=;
-        b=H6PCbsL4lkrK49kVBBw7zNbF2XUqct4jZEBExuqbxGaqcHnBLk6MWn6QLAgnza710W
-         JGNb16n+DysidYP3kakhXN15EUuJ+qLDiX96yNuKm+s1Vk3bSXCgX0Kajimk/WQNyJmU
-         6UNX6hrLBZR1lbTrJIxyOrGYmE0P3ijlx1K7rPwVdCcjacCNPYGZjPze69HcJA30yVkM
-         9alFhTfuEIxNUCAMyFC7fmRR9tFf++1Zf9YPYFRsgEyWuCAsQXZZotGfBgG1fMlNOObD
-         QXu/0M31fbjOU+3HI0dE1l65vOHT/dGR/1IJ3zKz3zqjkNgRV1b79XkKya0zM80m/1bR
-         Mpxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+npB6gUnTr3XNVbB8y8PFXfDiZznn6tH9wpAPdNtoUY=;
-        b=LS+edH2E65Ku+2I38gZYnYZp1wySZQymNQi1lqwSkWstldYi0y0YrXus9grbG24Ix/
-         gG1QE5sP3sXJhyY9Al/ThZPlXaono/p7naiyo1zWV2WHF+7UkpC2QfGNUB3U1SON0ftP
-         jerpr1D2bk2Biv9ZCVMNsrZ9TN1TgKk69ODYRTkeAoJ1xvjnd7CfNtDdS0D/TRSDuMVD
-         ldIdgRJ/dmqvLwsaA6sMHwxtkODyn/OZYTw+W90CdYLqt7RmEXY0/xDTQKs7Ya8gdf+6
-         YH3AGYyy/mBIlqf0RshyBvtp1hvztLzdQtOWv+wwNyH2Do1aHicYWaYAE+AHWaIfPzfa
-         jpSQ==
-X-Gm-Message-State: APjAAAVNQYbrQcmd8Kb9sOavSzIOMiWlKkIm+jnwpkgzGcs0KoIkhsef
-        lQEEoU3SqJ8ZcBmj8ILoS3A=
-X-Google-Smtp-Source: APXvYqxLUVD6+RHIyQbQ5RzIhVdLH8xfXFQXctXy0PMz8f8mfl97Hj12wgCKW6hQnaI6O8GFBBO2BA==
-X-Received: by 2002:a17:90a:c08f:: with SMTP id o15mr11133504pjs.31.1567097345796;
-        Thu, 29 Aug 2019 09:49:05 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id y9sm3548671pfn.152.2019.08.29.09.49.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 09:49:05 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Bruce Wang <bzwang@chromium.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Enrico Weigelt <info@metux.net>,
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), Georgi Djakov <georgi.djakov@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        linux-kernel@vger.kernel.org (open list),
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 00/10] drm/msm: async commit support (v2)
-Date:   Thu, 29 Aug 2019 09:45:08 -0700
-Message-Id: <20190829164601.11615-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 29 Aug 2019 12:50:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726973AbfH2QuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:50:10 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBAC9208CB;
+        Thu, 29 Aug 2019 16:50:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567097409;
+        bh=Hslj8UGkEo+uEL+vuwTBz4V9Schqb3dk989zc+CeNYE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BWIBnFoCvnav1ZFWTSGjiXYAqgdO6IavKgAGKHeWQ68Cc1JGSC2R8HG/ChKL+FbEq
+         q+SP4H7f3RZ/XFAQedch6EeKn8vQf3q/We5z94rbTYMiOKvPzYwsaDNHQyJRVx6qyf
+         Z1jhCqpYdPUGisEw3PHHzp6C+/zAWX590OKClHR4=
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH] f2fs: fix flushing node pages when checkpoint is disabled
+Date:   Thu, 29 Aug 2019 09:50:08 -0700
+Message-Id: <20190829165008.71226-1-jaegeuk@kernel.org>
+X-Mailer: git-send-email 2.19.0.605.g01d371f741-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -89,79 +54,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+This patch fixes skipping node page writes when checkpoint is disabled.
+In this period, we can't rely on checkpoint to flush node pages.
 
-Currently the dpu backend attempts to handle async commits.  But it
-is racey and could result in flushing multiple times in a frame, or
-modifying hw state (such as scanout address or cursor position) after
-the previous flush, but before vblank, causing underflows (which
-manifest as brief black flashes).
+Fixes: fd8c8caf7e7c ("f2fs: let checkpoint flush dnode page of regular")
+Fixes: 4354994f097d ("f2fs: checkpoint disabling")
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+---
+ fs/f2fs/node.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-This patchset removes the previous dpu async commit handling, and
-reworks the internal kms backend API to decouple flushing.  And in
-the end introduces an hrtimer to flush async updates.  The overall
-approach is:
-
- 1) Move flushing various hw state out of encoder/crtc atomic commit
-    (which is anyways an improvement over the current state, where
-    we either flush from crtc or encoder, depending on whether it is
-    a full modeset)
-
- 2) Switch to crtc_mask for anything that completes after atomic
-    _commit_tail(), so we do not need to keep the atomic state
-    around.  Ie. from drm core's perspective, an async commit
-    completes immediately.
-
-    This avoids fighting with drm core about the lifecycle of an
-    atomic state object.
-
- 3) Track a bitmask of crtcs w/ pending async flush, and setup
-    an hrtimer with expiration 1ms before vblank, to trigger
-    the flush.  For async commits, we push the state down to
-    the double buffered hw registers immediately, and only
-    defer writing the flush registers.
-
-Current patchset only includes the dpu backend support for async
-commits.. mdp4 and mdp5 should be relatively trivial (less layers
-of indirection involved).  But I won't have access to any mdp4 hw
-for a few more weeks, so at least that part I might punt on for
-now.
-
-v2: couple small cosmetic updates, re-work locking to avoid stalls,
-    add some tracepoints
-
-Rob Clark (10):
-  drm/msm/dpu: unwind async commit handling
-  drm/msm/dpu: add real wait_for_commit_done()
-  drm/msm/dpu: handle_frame_done() from vblank irq
-  drm/msm: add kms->wait_flush()
-  drm/msm: convert kms->complete_commit() to crtc_mask
-  drm/msm: add kms->flush_commit()
-  drm/msm: split power control from prepare/complete_commit
-  drm/msm: async commit support
-  drm/msm/dpu: async commit support
-  drm/msm: add atomic traces
-
- drivers/gpu/drm/msm/Makefile                  |   1 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c      |  48 +---
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h      |   7 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c   |  46 ++--
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h   |   8 +-
- .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  |  39 +--
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |  99 +++++---
- drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c      |  48 ++--
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c      |  47 ++--
- drivers/gpu/drm/msm/msm_atomic.c              | 233 +++++++++++++++---
- drivers/gpu/drm/msm/msm_atomic_trace.h        | 110 +++++++++
- drivers/gpu/drm/msm/msm_atomic_tracepoints.c  |   3 +
- drivers/gpu/drm/msm/msm_drv.c                 |   1 +
- drivers/gpu/drm/msm/msm_drv.h                 |   4 +
- drivers/gpu/drm/msm/msm_gpu_trace.h           |   2 +-
- drivers/gpu/drm/msm/msm_kms.h                 | 108 +++++++-
- 16 files changed, 603 insertions(+), 201 deletions(-)
- create mode 100644 drivers/gpu/drm/msm/msm_atomic_trace.h
- create mode 100644 drivers/gpu/drm/msm/msm_atomic_tracepoints.c
-
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index e5044eec8097..8b66bc4c004b 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1524,7 +1524,8 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
+ 	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
+ 		goto redirty_out;
+ 
+-	if (wbc->sync_mode == WB_SYNC_NONE &&
++	if (!is_sbi_flag_set(sbi, SBI_CP_DISABLED) &&
++			wbc->sync_mode == WB_SYNC_NONE &&
+ 			IS_DNODE(page) && is_cold_node(page))
+ 		goto redirty_out;
+ 
+@@ -1909,7 +1910,8 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
+ 	}
+ 
+ 	if (step < 2) {
+-		if (wbc->sync_mode == WB_SYNC_NONE && step == 1)
++		if (!is_sbi_flag_set(sbi, SBI_CP_DISABLED) &&
++				wbc->sync_mode == WB_SYNC_NONE && step == 1)
+ 			goto out;
+ 		step++;
+ 		goto next_step;
 -- 
-2.21.0
+2.19.0.605.g01d371f741-goog
 
