@@ -2,243 +2,236 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67891C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263D1C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D2822CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:20:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lgRcL1QG"
+	by mail.kernel.org (Postfix) with ESMTP id 084F822CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbfH2KUN (ORCPT
+        id S1727372AbfH2KVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:20:13 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36703 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfH2KUM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:20:12 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l21so1360070pgm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 03:20:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SNZX4eqtl2El6LWT9bac5sFO3bj8HKaIdZCKDqJ8x5s=;
-        b=lgRcL1QGXy+z69wlZhv+t9AFDVWDyn+OVcHqrhcKetbMCc6nkkPUzivEa5/dRurtGC
-         iWkz//mI8+6v+PvhylBPDiX+auE086H8vv1Rqmto1vJLR0iBXULC7Gdw0DCpGjIQ8Glv
-         DJKDNSCoGSTLAEgXuCyoToBXW96D5yHbeEwA0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SNZX4eqtl2El6LWT9bac5sFO3bj8HKaIdZCKDqJ8x5s=;
-        b=Rbt9cAzNCAD5geMoFT7mczFebtzYN+AgLR5ZfCchhwlZEZz9th5D5zMknfAvGnpd/C
-         WnDGFHRGPJw9gneQtROVnGideriKmUToUaldmuaoH5Sjlp9dGjpJnJbFxeyEMrpjktAo
-         0KfISoyGmpr25VyVrcjbCmFr4YCO4cjnn5TDr/nLd6qRb7dmThrM4E33PQiMbaas4Kgn
-         VBOLTB5piKIFT2SDTGv8mfU96k5lUFd9GpkgL6CFuzsqrbq4+Njh46czH5lZO76rgyRg
-         jPgxiQ7hO7LU3P2+4/ntykgQ5beT1LJGkKxZlLWPberttSUkOMPBUApTQ6mc0xNcKWGU
-         ucMQ==
-X-Gm-Message-State: APjAAAV2nbmwWqZTwHq00xDdHjJ4wmhLf04v/ce9b62/Y9skTaBQqiIC
-        jBER3GY+zNUCJf9W0k+ol6i6jA==
-X-Google-Smtp-Source: APXvYqwsKk8oeaVMwvzWeXaqs+5Qhxt8m9ljjHSFlY1KhRFo36mrlFYpLVkOTHy4kZfWtmBmiVIybg==
-X-Received: by 2002:a62:7912:: with SMTP id u18mr10910327pfc.254.1567074011787;
-        Thu, 29 Aug 2019 03:20:11 -0700 (PDT)
-Received: from hungte-p920.tpe.corp.google.com ([2401:fa00:1:10:76a7:bbc0:2929:253d])
-        by smtp.googlemail.com with ESMTPSA id y10sm2156255pjp.27.2019.08.29.03.20.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 03:20:11 -0700 (PDT)
-From:   Hung-Te Lin <hungte@chromium.org>
-Cc:     hungte@chromium.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Allison Randal <allison@lohutok.net>,
-        Colin Ian King <colin.king@canonical.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Julius Werner <jwerner@chromium.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] firmware: google: update vpd_decode from upstream
-Date:   Thu, 29 Aug 2019 18:19:45 +0800
-Message-Id: <20190829101949.36275-1-hungte@chromium.org>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-In-Reply-To: <525c3cdd-ba15-5898-b9de-daaa42b4b87e@roeck-us.net>
-References: <525c3cdd-ba15-5898-b9de-daaa42b4b87e@roeck-us.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 29 Aug 2019 06:21:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57672 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfH2KU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:20:59 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 015E785536;
+        Thu, 29 Aug 2019 10:20:59 +0000 (UTC)
+Received: from thuth.com (ovpn-116-53.ams2.redhat.com [10.36.116.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8AB011001284;
+        Thu, 29 Aug 2019 10:20:54 +0000 (UTC)
+From:   Thomas Huth <thuth@redhat.com>
+To:     kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH] KVM: selftests: Add a test for the KVM_S390_MEM_OP ioctl
+Date:   Thu, 29 Aug 2019 12:20:50 +0200
+Message-Id: <20190829102050.26703-1-thuth@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 29 Aug 2019 10:20:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VPD implementation from Chromium Vital Product Data project used to
-parse data from untrusted input without checking if there is invalid
-data (for example the if the size becomes negative, or larger than whole
-input buffer), which may cause buffer overflow on corrupted data.
+Check that we can write and read the guest memory with this s390x
+ioctl, and that some error cases are handled correctly.
 
-To fix that, the upstream driver 'vpd_decode' has changed size
-parameters to unsigned integer (u32), and refactored the parsing of
-entry header so the size is always checked properly.
-
-Fixes: ad2ac9d5c5e0 ("firmware: Google VPD: import lib_vpd source files")
-Signed-off-by: Hung-Te Lin <hungte@chromium.org>
+Signed-off-by: Thomas Huth <thuth@redhat.com>
 ---
-Changes in v2:
-- removed renaming of enum
-- prevent undoing other patches that have gone upstream.
-- dropped cosmetic changes
-- changed *consume to local variable
+ This test uses the ucall() interface, so this patch needs to be applied
+ on top of my "Implement ucall() for s390x" patch (which is not merged to
+ master yet)
 
- drivers/firmware/google/vpd.c        |  4 +-
- drivers/firmware/google/vpd_decode.c | 55 ++++++++++++++++------------
- drivers/firmware/google/vpd_decode.h |  9 ++---
- 3 files changed, 38 insertions(+), 30 deletions(-)
+ tools/testing/selftests/kvm/Makefile      |   1 +
+ tools/testing/selftests/kvm/s390x/memop.c | 155 ++++++++++++++++++++++
+ 2 files changed, 156 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/s390x/memop.c
 
-diff --git a/drivers/firmware/google/vpd.c b/drivers/firmware/google/vpd.c
-index 0739f3b70347..db0812263d46 100644
---- a/drivers/firmware/google/vpd.c
-+++ b/drivers/firmware/google/vpd.c
-@@ -92,8 +92,8 @@ static int vpd_section_check_key_name(const u8 *key, s32 key_len)
- 	return VPD_OK;
- }
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index 1b48a94b4350..62c591f87dab 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -32,6 +32,7 @@ TEST_GEN_PROGS_aarch64 += clear_dirty_log_test
+ TEST_GEN_PROGS_aarch64 += dirty_log_test
+ TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
  
--static int vpd_section_attrib_add(const u8 *key, s32 key_len,
--				  const u8 *value, s32 value_len,
-+static int vpd_section_attrib_add(const u8 *key, u32 key_len,
-+				  const u8 *value, u32 value_len,
- 				  void *arg)
- {
- 	int ret;
-diff --git a/drivers/firmware/google/vpd_decode.c b/drivers/firmware/google/vpd_decode.c
-index 92e3258552fc..7a5b0c72db00 100644
---- a/drivers/firmware/google/vpd_decode.c
-+++ b/drivers/firmware/google/vpd_decode.c
-@@ -9,8 +9,8 @@
- 
- #include "vpd_decode.h"
- 
--static int vpd_decode_len(const s32 max_len, const u8 *in,
--			  s32 *length, s32 *decoded_len)
-+static int vpd_decode_len(const u32 max_len, const u8 *in, u32 *length,
-+			  u32 *decoded_len)
- {
- 	u8 more;
- 	int i = 0;
-@@ -30,18 +30,39 @@ static int vpd_decode_len(const s32 max_len, const u8 *in,
- 	} while (more);
- 
- 	*decoded_len = i;
-+	return VPD_OK;
++TEST_GEN_PROGS_s390x = s390x/memop
+ TEST_GEN_PROGS_s390x += s390x/sync_regs_test
+ TEST_GEN_PROGS_s390x += dirty_log_test
+ TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
+diff --git a/tools/testing/selftests/kvm/s390x/memop.c b/tools/testing/selftests/kvm/s390x/memop.c
+new file mode 100644
+index 000000000000..25b100d9fdda
+--- /dev/null
++++ b/tools/testing/selftests/kvm/s390x/memop.c
+@@ -0,0 +1,155 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Test for s390x KVM_S390_MEM_OP
++ *
++ * Copyright (C) 2019, Red Hat, Inc.
++ */
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/ioctl.h>
++
++#include "test_util.h"
++#include "kvm_util.h"
++
++#define VCPU_ID 1
++
++static uint8_t mem1[65536];
++static uint8_t mem2[65536];
++
++static void guest_code(void)
++{
++	int i;
++
++	for (;;) {
++		for (i = 0; i < sizeof(mem2); i++)
++			mem2[i] = mem1[i];
++		GUEST_SYNC(0);
++	}
 +}
 +
-+static int vpd_decode_entry(const u32 max_len, const u8 *input_buf,
-+			    u32 *_consumed, const u8 **entry, u32 *entry_len)
++int main(int argc, char *argv[])
 +{
-+	u32 decoded_len;
-+	u32 consumed = *_consumed;
++	struct kvm_vm *vm;
++	struct kvm_run *run;
++	struct kvm_s390_mem_op ksmo;
++	int rv, i, maxsize;
 +
-+	if (vpd_decode_len(max_len - consumed, &input_buf[consumed],
-+			   entry_len, &decoded_len) != VPD_OK)
-+		return VPD_FAIL;
-+	if (max_len - consumed < decoded_len)
-+		return VPD_FAIL;
++	setbuf(stdout, NULL);	/* Tell stdout not to buffer its content */
 +
-+	consumed += decoded_len;
-+	*entry = input_buf + consumed;
++	maxsize = kvm_check_cap(KVM_CAP_S390_MEM_OP);
++	if (!maxsize) {
++		fprintf(stderr, "CAP_S390_MEM_OP not supported -> skip test\n");
++		exit(KSFT_SKIP);
++	}
++	if (maxsize > sizeof(mem1))
++		maxsize = sizeof(mem1);
 +
-+	/* entry_len is untrusted data and must be checked again. */
-+	if (max_len - consumed < *entry_len)
-+		return VPD_FAIL;
- 
-+	consumed += decoded_len;
-+	*_consumed = consumed;
- 	return VPD_OK;
- }
- 
--int vpd_decode_string(const s32 max_len, const u8 *input_buf, s32 *consumed,
-+int vpd_decode_string(const u32 max_len, const u8 *input_buf, u32 *consumed,
- 		      vpd_decode_callback callback, void *callback_arg)
- {
- 	int type;
--	int res;
--	s32 key_len;
--	s32 value_len;
--	s32 decoded_len;
-+	u32 key_len;
-+	u32 value_len;
- 	const u8 *key;
- 	const u8 *value;
- 
-@@ -56,26 +77,14 @@ int vpd_decode_string(const s32 max_len, const u8 *input_buf, s32 *consumed,
- 	case VPD_TYPE_STRING:
- 		(*consumed)++;
- 
--		/* key */
--		res = vpd_decode_len(max_len - *consumed, &input_buf[*consumed],
--				     &key_len, &decoded_len);
--		if (res != VPD_OK || *consumed + decoded_len >= max_len)
-+		if (vpd_decode_entry(max_len, input_buf, consumed, &key,
-+				     &key_len) != VPD_OK)
- 			return VPD_FAIL;
- 
--		*consumed += decoded_len;
--		key = &input_buf[*consumed];
--		*consumed += key_len;
--
--		/* value */
--		res = vpd_decode_len(max_len - *consumed, &input_buf[*consumed],
--				     &value_len, &decoded_len);
--		if (res != VPD_OK || *consumed + decoded_len > max_len)
-+		if (vpd_decode_entry(max_len, input_buf, consumed, &value,
-+				     &value_len) != VPD_OK)
- 			return VPD_FAIL;
- 
--		*consumed += decoded_len;
--		value = &input_buf[*consumed];
--		*consumed += value_len;
--
- 		if (type == VPD_TYPE_STRING)
- 			return callback(key, key_len, value, value_len,
- 					callback_arg);
-diff --git a/drivers/firmware/google/vpd_decode.h b/drivers/firmware/google/vpd_decode.h
-index cf8c2ace155a..b65d246a6804 100644
---- a/drivers/firmware/google/vpd_decode.h
-+++ b/drivers/firmware/google/vpd_decode.h
-@@ -25,15 +25,14 @@ enum {
- };
- 
- /* Callback for vpd_decode_string to invoke. */
--typedef int vpd_decode_callback(const u8 *key, s32 key_len,
--				const u8 *value, s32 value_len,
--				void *arg);
-+typedef int vpd_decode_callback(const u8 *key, u32 key_len, const u8 *value,
-+				u32 value_len, void *arg);
- 
- /*
-  * vpd_decode_string
-  *
-  * Given the encoded string, this function invokes callback with extracted
-- * (key, value). The *consumed will be plused the number of bytes consumed in
-+ * (key, value). The *consumed will be plused by the number of bytes consumed in
-  * this function.
-  *
-  * The input_buf points to the first byte of the input buffer.
-@@ -44,7 +43,7 @@ typedef int vpd_decode_callback(const u8 *key, s32 key_len,
-  * If one entry is successfully decoded, sends it to callback and returns the
-  * result.
-  */
--int vpd_decode_string(const s32 max_len, const u8 *input_buf, s32 *consumed,
-+int vpd_decode_string(const u32 max_len, const u8 *input_buf, u32 *consumed,
- 		      vpd_decode_callback callback, void *callback_arg);
- 
- #endif  /* __VPD_DECODE_H */
++	/* Create VM */
++	vm = vm_create_default(VCPU_ID, 0, guest_code);
++	run = vcpu_state(vm, VCPU_ID);
++
++	for (i = 0; i < sizeof(mem1); i++)
++		mem1[i] = i * i + i;
++
++	/* Set the first array */
++	ksmo.gaddr = addr_gva2gpa(vm, (uintptr_t)mem1);
++	ksmo.flags = 0;
++	ksmo.size = maxsize;
++	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
++	ksmo.buf = (uintptr_t)mem1;
++	ksmo.ar = 0;
++	vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
++
++	/* Let the guest code copy the first array to the second */
++	vcpu_run(vm, VCPU_ID);
++	TEST_ASSERT(run->exit_reason == KVM_EXIT_S390_SIEIC,
++		    "Unexpected exit reason: %u (%s)\n",
++		    run->exit_reason,
++		    exit_reason_str(run->exit_reason));
++
++	memset(mem2, 0xaa, sizeof(mem2));
++
++	/* Get the second array */
++	ksmo.gaddr = (uintptr_t)mem2;
++	ksmo.flags = 0;
++	ksmo.size = maxsize;
++	ksmo.op = KVM_S390_MEMOP_LOGICAL_READ;
++	ksmo.buf = (uintptr_t)mem2;
++	ksmo.ar = 0;
++	vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
++
++	TEST_ASSERT(!memcmp(mem1, mem2, maxsize),
++		    "Memory contents do not match!");
++
++	/* Check error conditions - first bad size: */
++	ksmo.gaddr = (uintptr_t)mem1;
++	ksmo.flags = 0;
++	ksmo.size = -1;
++	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
++	ksmo.buf = (uintptr_t)mem1;
++	ksmo.ar = 0;
++	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
++	TEST_ASSERT(rv == -1 && errno == E2BIG, "ioctl allows insane sizes");
++
++	/* Bad flags: */
++	ksmo.gaddr = (uintptr_t)mem1;
++	ksmo.flags = -1;
++	ksmo.size = maxsize;
++	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
++	ksmo.buf = (uintptr_t)mem1;
++	ksmo.ar = 0;
++	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
++	TEST_ASSERT(rv == -1 && errno == EINVAL, "ioctl allows all flags?");
++
++	/* Bad operation: */
++	ksmo.gaddr = (uintptr_t)mem1;
++	ksmo.flags = 0;
++	ksmo.size = maxsize;
++	ksmo.op = -1;
++	ksmo.buf = (uintptr_t)mem1;
++	ksmo.ar = 0;
++	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
++	TEST_ASSERT(rv == -1 && errno == EINVAL, "ioctl allows all flags?");
++
++	/* Bad guest address: */
++	ksmo.gaddr = ~0xfffUL;
++	ksmo.flags = KVM_S390_MEMOP_F_CHECK_ONLY;
++	ksmo.size = maxsize;
++	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
++	ksmo.buf = (uintptr_t)mem1;
++	ksmo.ar = 0;
++	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
++	TEST_ASSERT(rv > 0, "ioctl does not report bad guest memory access");
++
++	/* Bad host address: */
++	ksmo.gaddr = (uintptr_t)mem1;
++	ksmo.flags = 0;
++	ksmo.size = maxsize;
++	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
++	ksmo.buf = 0;
++	ksmo.ar = 0;
++	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
++	TEST_ASSERT(rv == -1 && errno == EFAULT,
++		    "ioctl does not report bad host memory address");
++
++	/* Bad access register: */
++	run->psw_mask &= ~(3UL << (63 - 17));
++	run->psw_mask |= 1UL << (63 - 17);  /* Enable AR mode */
++	vcpu_run(vm, VCPU_ID);              /* To sync new state to SIE block */
++	ksmo.gaddr = (uintptr_t)mem1;
++	ksmo.flags = 0;
++	ksmo.size = maxsize;
++	ksmo.op = KVM_S390_MEMOP_LOGICAL_WRITE;
++	ksmo.buf = (uintptr_t)mem1;
++	ksmo.ar = 17;
++	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_S390_MEM_OP, &ksmo);
++	TEST_ASSERT(rv == -1 && errno == EINVAL, "ioctl allows ARs > 15");
++	run->psw_mask &= ~(3UL << (63 - 17));   /* Disable AR mode */
++	vcpu_run(vm, VCPU_ID);                  /* Run to sync new state */
++
++	kvm_vm_free(vm);
++
++	return 0;
++}
 -- 
-2.23.0.187.g17f5b7556c-goog
+2.18.1
 
