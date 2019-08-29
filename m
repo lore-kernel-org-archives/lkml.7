@@ -2,101 +2,97 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D030C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42685C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0042522CEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:59:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YOczcEhg"
+	by mail.kernel.org (Postfix) with ESMTP id 1B83122CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:01:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbfH2V7N (ORCPT
+        id S1728171AbfH2WBB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 17:59:13 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42863 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727956AbfH2V7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 17:59:13 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46KGj86KKWz9sDB;
-        Fri, 30 Aug 2019 07:59:08 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567115950;
-        bh=+dWKz4qdfHg7KwKEzWI+jshc8JO5ef2SjhmNbS20et0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YOczcEhg7sJbnnbMLCJLzuztDxmTFEx+RUMmK/okTxyLtdDjmzRx03sJbEdlJKssf
-         6q1URJrh2E5670FJJaQ+Lnxo36OMLqusnP5upZgYvEt7cTVbuPmfRKAU9f2l09sC31
-         tMebANhTYB6Vht4cNJrA4oycBKrdI26Ofuc6KCJT4ZHhk6PVvjItwfQDJ14dQjoatp
-         x4/LUjgofm6cPg4p/n14TkSraAEoiZ/dgTUUuiB9gjFlcSH3VyqFUcV++RemowatuT
-         c9l4EU0ysf6Z9TfClOoD9JSR7C7N+a2sxz/btaM1x4ycq3hpm8dwV6THLBilRaPFXU
-         dKmSEf/Vf8ddQ==
-Date:   Fri, 30 Aug 2019 07:59:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warnings from Linus' tree
-Message-ID: <20190830075902.255b9c70@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/YIpyK4wjFksG+_d6t+fNZa6";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Thu, 29 Aug 2019 18:01:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50518 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727969AbfH2WBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 18:01:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6404BAEFB;
+        Thu, 29 Aug 2019 22:00:59 +0000 (UTC)
+Date:   Fri, 30 Aug 2019 00:00:58 +0200
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v2 net-next 05/15] net: sgi: ioc3-eth: allocate space
+ for desc rings only once
+Message-Id: <20190830000058.882feb357058437cddc71315@suse.de>
+In-Reply-To: <20190829140537.68abfc9f@cakuba.netronome.com>
+References: <20190829155014.9229-1-tbogendoerfer@suse.de>
+        <20190829155014.9229-6-tbogendoerfer@suse.de>
+        <20190829140537.68abfc9f@cakuba.netronome.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/YIpyK4wjFksG+_d6t+fNZa6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 29 Aug 2019 14:05:37 -0700
+Jakub Kicinski <jakub.kicinski@netronome.com> wrote:
 
-Hi all,
+> On Thu, 29 Aug 2019 17:50:03 +0200, Thomas Bogendoerfer wrote:
+> > +		if (skb)
+> > +			dev_kfree_skb_any(skb);
+> 
+> I think dev_kfree_skb_any() accepts NULL
 
-With just Linus' tree, today's linux-next build (ppc64le perf) produced
-these warnings:
+yes, I'll drop the if
 
-util/parse-events.y:1.1-12: warning: deprecated directive, use '%define api=
-.pure' [-Wdeprecated]
-    1 | %pure-parser
-      | ^~~~~~~~~~~~
-util/parse-events.y: warning: fix-its can be applied.  Rerun with option '-=
--update'. [-Wother]
-util/expr.y:13.1-12: warning: deprecated directive, use '%define api.pure' =
-[-Wdeprecated]
-   13 | %pure-parser
-      | ^~~~~~~~~~~~
-util/expr.y: warning: fix-its can be applied.  Rerun with option '--update'=
-. [-Wother]
+> > +
+> > +	/* Allocate and rx ring.  4kb = 512 entries  */
+> > +	ip->rxr = (unsigned long *)get_zeroed_page(GFP_ATOMIC);
+> > +	if (!ip->rxr) {
+> > +		pr_err("ioc3-eth: rx ring allocation failed\n");
+> > +		err = -ENOMEM;
+> > +		goto out_stop;
+> > +	}
+> > +
+> > +	/* Allocate tx rings.  16kb = 128 bufs.  */
+> > +	ip->txr = (struct ioc3_etxd *)__get_free_pages(GFP_KERNEL, 2);
+> > +	if (!ip->txr) {
+> > +		pr_err("ioc3-eth: tx ring allocation failed\n");
+> > +		err = -ENOMEM;
+> > +		goto out_stop;
+> > +	}
+> 
+> Please just use kcalloc()/kmalloc_array() here,
 
-I assume this is because I have upgraded bison to version 3.4.1 (from
-3.3.2).
+both allocation will be replaced in patch 11 with dma_direct_alloc_pages.
+So I hope I don't need to change it here.
 
---=20
-Cheers,
-Stephen Rothwell
+Out of curiosity does kcalloc/kmalloc_array give me the same guarantees about
+alignment ? rx ring needs to be 4KB aligned, tx ring 16KB aligned.
 
---Sig_/YIpyK4wjFksG+_d6t+fNZa6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+>, and make sure the flags
+> are set to GFP_KERNEL whenever possible. Here and in ioc3_alloc_rings()
+> it looks like GFP_ATOMIC is unnecessary.
 
------BEGIN PGP SIGNATURE-----
+yes, I'll change it
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1oSqYACgkQAVBC80lX
-0Gy1FggAmpbr9SA0QbuTeCDiwUYJQdaEQ5UN5uvZMV9MMwu9tBiACdPGb2GFfrBF
-0dlEq/QMnQfxvWqSvWmxt7AiMiDT1ecO7GRWli4jV/mUC7ec0xLGVTATcxBw7/x7
-kJigr9sLDFaLoGDInpByUFL//h2cPgQp5r0eeZTDayVJi5jMwR2noT5S5SvbbT7R
-E3B92tqfCM+SONgT5qtxLoFZ3Kg6AUHfe3WTjPAmOwX9iruaDIKJuNpZduw0OWmP
-WOC0v42Od7JoU6YbYBaOFclWEIEPOerhJ7UjjL2xjXwice47Ge3iPMPaMytOvXmM
-I4v05H4EghDb66r/GrLLoCtT9Z6r1g==
-=fAa3
------END PGP SIGNATURE-----
+Thomas.
 
---Sig_/YIpyK4wjFksG+_d6t+fNZa6--
+-- 
+SUSE Software Solutions Germany GmbH
+HRB 247165 (AG München)
+Geschäftsführer: Felix Imendörffer
