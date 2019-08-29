@@ -2,80 +2,145 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422EEC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662B2C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1485123405
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C4022CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567076055;
+	bh=8kno17t5G0+IQF9Amfj1SsO5zRRh4PZmqZoEBgEN3Kk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rWrhdsGU4sx4pKfmDjJgDRA9vGEcQZYDhuqFZuwPaWblZrp5ZaZ3odZG+w9aMefwF
+	 2MUcDvs2CxvVAA9GfQUi2MQzDX3mWTuOuux3nVvwvftGw4UvT7mQ1ztpkwGudZZSRu
+	 TzBTzI0bOqCMzl9tOGL32JDO8O4mU1yRxt+ymiw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbfH2KyH (ORCPT
+        id S1728818AbfH2KyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:54:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:3732 "EHLO mx1.redhat.com"
+        Thu, 29 Aug 2019 06:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727075AbfH2KyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:54:06 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728122AbfH2Kug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:50:36 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BE03C3C93E;
-        Thu, 29 Aug 2019 10:54:05 +0000 (UTC)
-Received: from thuth.com (ovpn-116-53.ams2.redhat.com [10.36.116.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 676CD5C1D6;
-        Thu, 29 Aug 2019 10:54:00 +0000 (UTC)
-From:   Thomas Huth <thuth@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: s390: Test for bad access register at the start of S390_MEM_OP
-Date:   Thu, 29 Aug 2019 12:53:56 +0200
-Message-Id: <20190829105356.27805-1-thuth@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 29 Aug 2019 10:54:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC8B923426;
+        Thu, 29 Aug 2019 10:50:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567075835;
+        bh=8kno17t5G0+IQF9Amfj1SsO5zRRh4PZmqZoEBgEN3Kk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wA9IY1BT1HHoYYGelF785HIQ0hMnu1SgT169GKQsPrO3xEgG/mjihlKKpMbZ9hMa8
+         0UWPGNXk/Hw9dW3M104PfJBIMa8oIzaVwPMGjzuGO6xn6fPaznnb1gj0mCKOdtwuZY
+         pNCyb6pyCBwKc2Plpz0isJMk3YA0fL122TUKj1go=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Stefano Brivio <sbrivio@redhat.com>, Chen Yi <yiche@redhat.com>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 22/29] netfilter: ipset: Copy the right MAC address in bitmap:ip,mac and hash:ip,mac sets
+Date:   Thu, 29 Aug 2019 06:50:02 -0400
+Message-Id: <20190829105009.2265-22-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190829105009.2265-1-sashal@kernel.org>
+References: <20190829105009.2265-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the KVM_S390_MEM_OP ioctl is called with an access register >= 16,
-then there is certainly a bug in the calling userspace application.
-We check for wrong access registers, but only if the vCPU was already
-in the access register mode before (i.e. the SIE block has recorded
-it). The check is also buried somewhere deep in the calling chain (in
-the function ar_translation()), so this is somewhat hard to find.
+From: Stefano Brivio <sbrivio@redhat.com>
 
-It's better to always report an error to the userspace in case this
-field is set wrong, and it's safer in the KVM code if we block wrong
-values here early instead of relying on a check somewhere deep down
-the calling chain, so let's add another check to kvm_s390_guest_mem_op()
-directly.
+[ Upstream commit 1b4a75108d5bc153daf965d334e77e8e94534f96 ]
 
-Signed-off-by: Thomas Huth <thuth@redhat.com>
+In commit 8cc4ccf58379 ("ipset: Allow matching on destination MAC address
+for mac and ipmac sets"), ipset.git commit 1543514c46a7, I added to the
+KADT functions for sets matching on MAC addreses the copy of source or
+destination MAC address depending on the configured match.
+
+This was done correctly for hash:mac, but for hash:ip,mac and
+bitmap:ip,mac, copying and pasting the same code block presents an
+obvious problem: in these two set types, the MAC address is the second
+dimension, not the first one, and we are actually selecting the MAC
+address depending on whether the first dimension (IP address) specifies
+source or destination.
+
+Fix this by checking for the IPSET_DIM_TWO_SRC flag in option flags.
+
+This way, mixing source and destination matches for the two dimensions
+of ip,mac set types works as expected. With this setup:
+
+  ip netns add A
+  ip link add veth1 type veth peer name veth2 netns A
+  ip addr add 192.0.2.1/24 dev veth1
+  ip -net A addr add 192.0.2.2/24 dev veth2
+  ip link set veth1 up
+  ip -net A link set veth2 up
+
+  dst=$(ip netns exec A cat /sys/class/net/veth2/address)
+
+  ip netns exec A ipset create test_bitmap bitmap:ip,mac range 192.0.0.0/16
+  ip netns exec A ipset add test_bitmap 192.0.2.1,${dst}
+  ip netns exec A iptables -A INPUT -m set ! --match-set test_bitmap src,dst -j DROP
+
+  ip netns exec A ipset create test_hash hash:ip,mac
+  ip netns exec A ipset add test_hash 192.0.2.1,${dst}
+  ip netns exec A iptables -A INPUT -m set ! --match-set test_hash src,dst -j DROP
+
+ipset correctly matches a test packet:
+
+  # ping -c1 192.0.2.2 >/dev/null
+  # echo $?
+  0
+
+Reported-by: Chen Yi <yiche@redhat.com>
+Fixes: 8cc4ccf58379 ("ipset: Allow matching on destination MAC address for mac and ipmac sets")
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kvm/kvm-s390.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/ipset/ip_set_bitmap_ipmac.c | 2 +-
+ net/netfilter/ipset/ip_set_hash_ipmac.c   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index f329dcb3f44c..725690853cbd 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -4255,7 +4255,7 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu *vcpu,
- 	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
- 				    | KVM_S390_MEMOP_F_CHECK_ONLY;
+diff --git a/net/netfilter/ipset/ip_set_bitmap_ipmac.c b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
+index 13ade5782847b..4f01321e793ce 100644
+--- a/net/netfilter/ipset/ip_set_bitmap_ipmac.c
++++ b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
+@@ -230,7 +230,7 @@ bitmap_ipmac_kadt(struct ip_set *set, const struct sk_buff *skb,
  
--	if (mop->flags & ~supported_flags)
-+	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS)
+ 	e.id = ip_to_id(map, ip);
+ 
+-	if (opt->flags & IPSET_DIM_ONE_SRC)
++	if (opt->flags & IPSET_DIM_TWO_SRC)
+ 		ether_addr_copy(e.ether, eth_hdr(skb)->h_source);
+ 	else
+ 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
+diff --git a/net/netfilter/ipset/ip_set_hash_ipmac.c b/net/netfilter/ipset/ip_set_hash_ipmac.c
+index 75c21c8b76514..16ec822e40447 100644
+--- a/net/netfilter/ipset/ip_set_hash_ipmac.c
++++ b/net/netfilter/ipset/ip_set_hash_ipmac.c
+@@ -99,7 +99,7 @@ hash_ipmac4_kadt(struct ip_set *set, const struct sk_buff *skb,
+ 	    (skb_mac_header(skb) + ETH_HLEN) > skb->data)
  		return -EINVAL;
  
- 	if (mop->size > MEM_OP_MAX_SIZE)
+-	if (opt->flags & IPSET_DIM_ONE_SRC)
++	if (opt->flags & IPSET_DIM_TWO_SRC)
+ 		ether_addr_copy(e.ether, eth_hdr(skb)->h_source);
+ 	else
+ 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
 -- 
-2.18.1
+2.20.1
 
