@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE05C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBC8C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 806032341B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6808523403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102522;
-	bh=nXmAoySra2wHVmQxvsxSHEs4TACze4t9dD+qq2bM55I=;
+	s=default; t=1567102528;
+	bh=xZ797pCM1tLIzZS874oxi5NFfTKdvU9VX9OBr3G4RuE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XWllrUnekHYIh8cInm3Z//lif5+8QJueN9qSs+fMzPH7TFJR5ecJbOdn1/ZZgzGQr
-	 TQQ6cnek9B0gJy5kvzhWBb8/23KDdI0Q70riZfByzjz1PStAs9kU1Rv4Cz6A4Kp4Bg
-	 fuTBSZgmA/WDqdKOafJuHzS2DuZyPyH0Oa58LQF0=
+	b=fwX69FzFijXDBDqaEGf6iHEL6DmnFj3p2NL28dlgMA7w8RzhDrSsjNpaVH5cBy91v
+	 vMGJS7pJ5HlWwog3MW6KkAGzLYzzKp+wFaNMJf4l7B8MdHcra+dTgrYSHrplwBQf4V
+	 uAzMSf0xOrHBWi2iOZYXt45RQwG5hRgVUAopLrGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbfH2SPV (ORCPT
+        id S1728485AbfH2SP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:15:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56926 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:15:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729216AbfH2SPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:15:14 -0400
+        id S1729216AbfH2SPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:15:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 921DA23426;
-        Thu, 29 Aug 2019 18:15:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9FB823405;
+        Thu, 29 Aug 2019 18:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102513;
-        bh=nXmAoySra2wHVmQxvsxSHEs4TACze4t9dD+qq2bM55I=;
+        s=default; t=1567102521;
+        bh=xZ797pCM1tLIzZS874oxi5NFfTKdvU9VX9OBr3G4RuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cyWUx2goZDQRTnxjQ1HMeuiDO5fpABNJ/1io7H9vqH5KcoKcupvBBh1yWYIfI6cPc
-         TqcJW2GDTDvxZSTTRvbQBYyKvONvee2HJq87IO8oGTgKFefmfEBCO7IRmH6Ai3Gt5t
-         RqOjT2TfnyEsUcNeTxhudyR8xb2WyCoaedn+Wlyc=
+        b=U3tnSUA0O2q1Cj+T8u/OHFEJ1TH+mA/jsmO7VFxICH+vICQcdyO0fQn0HcUPFrjh6
+         lCl4QuwuqfZv/ZNI62UIQUdrnnqvQ4nW8KFP1xQOG4AVlg9etVQMJjq5/VWPArnX0h
+         XekDhGP97sJebplOXcBGCkKfDrn3H8OWhYA5Dwgw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 61/76] infiniband: hfi1: fix a memory leak bug
-Date:   Thu, 29 Aug 2019 14:12:56 -0400
-Message-Id: <20190829181311.7562-61-sashal@kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 63/76] selftests: kvm: fix state save/load on processors without XSAVE
+Date:   Thu, 29 Aug 2019 14:12:58 -0400
+Message-Id: <20190829181311.7562-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -61,45 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit b08afa064c320e5d85cdc27228426b696c4c8dae ]
+[ Upstream commit 54577e5018a8c0cb79c9a0fa118a55c68715d398 ]
 
-In fault_opcodes_read(), 'data' is not deallocated if debugfs_file_get()
-fails, leading to a memory leak. To fix this bug, introduce the 'free_data'
-label to free 'data' before returning the error.
+state_test and smm_test are failing on older processors that do not
+have xcr0.  This is because on those processor KVM does provide
+support for KVM_GET/SET_XSAVE (to avoid having to rely on the older
+KVM_GET/SET_FPU) but not for KVM_GET/SET_XCRS.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Acked-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Link: https://lore.kernel.org/r/1566156571-4335-1-git-send-email-wenwen@cs.uga.edu
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/fault.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../testing/selftests/kvm/lib/x86_64/processor.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/fault.c b/drivers/infiniband/hw/hfi1/fault.c
-index 93613e5def9b7..814324d172950 100644
---- a/drivers/infiniband/hw/hfi1/fault.c
-+++ b/drivers/infiniband/hw/hfi1/fault.c
-@@ -214,7 +214,7 @@ static ssize_t fault_opcodes_read(struct file *file, char __user *buf,
- 		return -ENOMEM;
- 	ret = debugfs_file_get(file->f_path.dentry);
- 	if (unlikely(ret))
--		return ret;
-+		goto free_data;
- 	bit = find_first_bit(fault->opcodes, bitsize);
- 	while (bit < bitsize) {
- 		zero = find_next_zero_bit(fault->opcodes, bitsize, bit);
-@@ -232,6 +232,7 @@ static ssize_t fault_opcodes_read(struct file *file, char __user *buf,
- 	data[size - 1] = '\n';
- 	data[size] = '\0';
- 	ret = simple_read_from_buffer(buf, len, pos, data, size);
-+free_data:
- 	kfree(data);
- 	return ret;
- }
+diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
+index d2ad85fb01ac0..5f1ba3da2dbd3 100644
+--- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
++++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
+@@ -1059,9 +1059,11 @@ struct kvm_x86_state *vcpu_save_state(struct kvm_vm *vm, uint32_t vcpuid)
+         TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_XSAVE, r: %i",
+                 r);
+ 
+-	r = ioctl(vcpu->fd, KVM_GET_XCRS, &state->xcrs);
+-        TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_XCRS, r: %i",
+-                r);
++	if (kvm_check_cap(KVM_CAP_XCRS)) {
++		r = ioctl(vcpu->fd, KVM_GET_XCRS, &state->xcrs);
++		TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_XCRS, r: %i",
++			    r);
++	}
+ 
+ 	r = ioctl(vcpu->fd, KVM_GET_SREGS, &state->sregs);
+         TEST_ASSERT(r == 0, "Unexpected result from KVM_GET_SREGS, r: %i",
+@@ -1102,9 +1104,11 @@ void vcpu_load_state(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_x86_state *s
+         TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_XSAVE, r: %i",
+                 r);
+ 
+-	r = ioctl(vcpu->fd, KVM_SET_XCRS, &state->xcrs);
+-        TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_XCRS, r: %i",
+-                r);
++	if (kvm_check_cap(KVM_CAP_XCRS)) {
++		r = ioctl(vcpu->fd, KVM_SET_XCRS, &state->xcrs);
++		TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_XCRS, r: %i",
++			    r);
++	}
+ 
+ 	r = ioctl(vcpu->fd, KVM_SET_SREGS, &state->sregs);
+         TEST_ASSERT(r == 0, "Unexpected result from KVM_SET_SREGS, r: %i",
 -- 
 2.20.1
 
