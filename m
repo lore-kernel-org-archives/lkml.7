@@ -2,337 +2,372 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E25C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE3FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66ADD21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4006922CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:41:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="AqoXS8ih"
+	dkim=pass (1024-bit key) header.d=towerbridgetechnology.onmicrosoft.com header.i=@towerbridgetechnology.onmicrosoft.com header.b="C6syHjZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfH2Rk7 (ORCPT
+        id S1728121AbfH2RlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:40:59 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:34073 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727481AbfH2Rk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:40:59 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46K8zC2qTyz9vBLv;
-        Thu, 29 Aug 2019 19:40:55 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=AqoXS8ih; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id lr4j0t6S-BAw; Thu, 29 Aug 2019 19:40:55 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46K8zC1NlSz9vBLt;
-        Thu, 29 Aug 2019 19:40:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1567100455; bh=G1cKrIpvDdOaMbhgFSVnyPJvPtIPAoaDARluVHVPBec=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=AqoXS8ihJEzrDP/XO3yOowQXrRYw6NYD+CGpMVQ33NoTsEZqyWBTv2krrS+pKKWO1
-         3ItqSWg+4FRlZmF4wp6NHv5HyEvZSpxOJZon0nSm5zz38Yf+jYviq6o4ngboeBnkg0
-         eCjOOUGQY6LDPmGyQttsMnsha6Eaa9M8IbYwqCTU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E70AA8B8CF;
-        Thu, 29 Aug 2019 19:40:56 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id oTlHII4GT2F5; Thu, 29 Aug 2019 19:40:56 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 98BF88B8C1;
-        Thu, 29 Aug 2019 19:40:55 +0200 (CEST)
-Subject: Re: [PATCH v4 3/4] powerpc/64: make buildable without CONFIG_COMPAT
-To:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Breno Leitao <leitao@debian.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Nicolai Stange <nstange@suse.de>,
-        Michael Neuling <mikey@neuling.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Brauner <christian@brauner.io>,
-        David Howells <dhowells@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org
-References: <cover.1567072270.git.msuchanek@suse.de>
- <a829dfabed8285161fcdff166d58c7e8f0f6d402.1567072270.git.msuchanek@suse.de>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <45bdadce-5b44-c941-14f7-240b0be41a7b@c-s.fr>
-Date:   Thu, 29 Aug 2019 19:40:55 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 13:41:03 -0400
+Received: from mail-eopbgr720126.outbound.protection.outlook.com ([40.107.72.126]:29888
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727481AbfH2RlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 13:41:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SXwztxWvpuhMYpePGZUiOyFKXCFxWBAaKrlmOI0YG42hb0PlzP7Mbm1HpAiKe5sPfabKV9fPupHqP1vK7fd8Vs+UblF/P8ts9pKdbKsGqEEG5lbSIRgupWd2L8O1gS3jBG0X95EVQFPytlhZCUAAOW+TdLU6F76uqilLxttWK1aTbABV3cyCJctSvUToilOKT2rnoM6A3D+F1rxDRHNvvp24TNEDqppMrO+IRi0q9vn1Mc2scFBPq0t3UcdBIQ4pbCzW8kQ8sQaxDMk0PJ8oCpuaYn/ZokQaE/So4gfRJo2r5zMWn6iypMVR8jlxVyEIjaoysTcuXUWcLWCH+0ZNgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iF62lCNsz3cITZ/X0d65xdQ9Pmh8WLe6sxBkgWVn6bk=;
+ b=kqQ2egnDzaPOI/pEGr6FzhSOYGyXnHSecuYxFjGNxxckEaHM8ceFHk0SRxvYFBLtOZfp3qgko87b2yBOLC50lGJMJ4XReWz8yu+JyS3ZX0Q8/nh7l2BxpINjF50ZaJ/+qP739KnhDZ2l4EUiwfkMJPK65BNfHQJZfS1QY3f1q/NKpMZztB3zwUiad/vgBS8yHks2VVKiut0bU9KMU9rXXeevq2jdyw5EfGmdVd6IujE6HhO0M+W929AlAuAluIGOcdT/GMejSB+ZWbakB/zyElgt5iIXPr25V7IDhFkvuvK8i24nqYqwMJWMRkIxhfpkPS7w4WdZql3kmQ1kXYiaxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bayhubtech.com; dmarc=pass action=none
+ header.from=bayhubtech.com; dkim=pass header.d=bayhubtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=towerbridgetechnology.onmicrosoft.com;
+ s=selector2-towerbridgetechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iF62lCNsz3cITZ/X0d65xdQ9Pmh8WLe6sxBkgWVn6bk=;
+ b=C6syHjZZEy+VpsYpSA81njfXCAEX30fW2OjytUMwWZzzqYx5QLYOdaCz/9ngawkuqbEe2BTSPuWjiOytU1ktGu2SuQ+zTTDWe0Tic/c6zI9FjCQxZDwQWI8esnra5rojem31a9XZFHVXW7JjXQef/+obH3q5DeBjNdeCYW23ie8=
+Received: from MWHPR16MB1455.namprd16.prod.outlook.com (10.175.5.21) by
+ MWHPR16MB0110.namprd16.prod.outlook.com (10.172.97.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.18; Thu, 29 Aug 2019 17:40:57 +0000
+Received: from MWHPR16MB1455.namprd16.prod.outlook.com
+ ([fe80::48f4:c6d9:3a8:e7dd]) by MWHPR16MB1455.namprd16.prod.outlook.com
+ ([fe80::48f4:c6d9:3a8:e7dd%4]) with mapi id 15.20.2220.013; Thu, 29 Aug 2019
+ 17:40:57 +0000
+From:   "Shirley Her (SC)" <shirley.her@bayhubtech.com>
+To:     "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
+        "Shaper Liu (WH)" <shaper.liu@bayhubtech.com>,
+        "Louis Lu (TP)" <louis.lu@bayhubtech.com>,
+        "Xiaoguang Yu (WH)" <xiaoguang.yu@bayhubtech.com>,
+        "Max Huang (SC)" <max.huang@bayhubtech.com>,
+        "Shirley Her (SC)" <shirley.her@bayhubtech.com>
+Subject: [PATCH V9 2/3] mmc: sdhci-pci-o2micro: Move functions in preparation
+ to fix DLL lock phase shift issue
+Thread-Topic: [PATCH V9 2/3] mmc: sdhci-pci-o2micro: Move functions in
+ preparation to fix DLL lock phase shift issue
+Thread-Index: AQHVXpDqqVggdWx2XESNdLxRh+b02Q==
+Date:   Thu, 29 Aug 2019 17:40:57 +0000
+Message-ID: <1567100454-5905-1-git-send-email-shirley.her@bayhubtech.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR02CA0062.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::39) To MWHPR16MB1455.namprd16.prod.outlook.com
+ (2603:10b6:320:28::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shirley.her@bayhubtech.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [209.36.105.184]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 021fd66d-4568-4b99-a8c2-08d72ca80c57
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR16MB0110;
+x-ms-traffictypediagnostic: MWHPR16MB0110:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR16MB01101B75144C946D7BDD80AB8BA20@MWHPR16MB0110.namprd16.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:126;
+x-forefront-prvs: 0144B30E41
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39840400004)(366004)(346002)(396003)(376002)(199004)(189003)(2616005)(6436002)(486006)(476003)(14444005)(36756003)(256004)(71190400001)(71200400001)(26005)(14454004)(102836004)(386003)(6506007)(186003)(52116002)(3846002)(305945005)(6116002)(7736002)(8936002)(50226002)(508600001)(2501003)(99286004)(54906003)(316002)(110136005)(2201001)(86362001)(6486002)(8676002)(81156014)(81166006)(66946007)(66446008)(64756008)(66556008)(25786009)(4326008)(53936002)(5660300002)(107886003)(6512007)(2906002)(66066001)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR16MB0110;H:MWHPR16MB1455.namprd16.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: bayhubtech.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: wm1irtOY1MUqusKpc3wmKJnoIzRT/G+ul7NUdLlhcdzntLerpw7Lbk7raRlcr9CoWVc+T/wCj+P7obLNrfPV9HdtKMcAEHvW0mWtdc+zNTnajHCrUA9/PmtuggPUj8+SVs7+hAeDOCh9PIuZYzbjlCkhn1HDuzNdRK7/ME0gj/gQtS8hvnhp+ky4/Sub0TNfWi1zPGT3CA3qLpxobvm+367Ya9EvXaO6OMMxYmu5P9GaaVjNATB4dx0KoziujxrtOvoYp88dITjoEilQPFfSdl8dGIpGTGO2EegXqOf0w2CnPbFNCq7hpGe7xDjSqea8PK3gdOs2bvGs71lKnyAn9k0N0IMHIU8F9e4+Q2bpkaOhSRFnJ6ALZIlZfxr2f80BTrWnBo6Nc1x9TIOR0rX9Y9+EE7lL/meecXlJcmVdnxY=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <a829dfabed8285161fcdff166d58c7e8f0f6d402.1567072270.git.msuchanek@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: bayhubtech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 021fd66d-4568-4b99-a8c2-08d72ca80c57
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 17:40:57.2772
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0a7aae2b-8f2e-44df-ba2f-42de7f93c642
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aZRbPkQI0JXlp6i15/qip+OxD2sICL0H1DjVnfe+31LN4nUWAtKVO1Hz0nS2TAUbGmN/mEqjUgkyDD+znz/ilL7ULJdD3FkaSae1M5fm+Kk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR16MB0110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Move functions in preparation to fix DLL lock phase shift issue
 
+Signed-off-by: Shirley Her <shirley.her@bayhubtech.com>
+---
+change in V9:
+ 1. modify subject and commit message to match the patch
 
-Le 29/08/2019 à 12:23, Michal Suchanek a écrit :
-> There are numerous references to 32bit functions in generic and 64bit
-> code so ifdef them out.
-> 
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
-> v2:
-> - fix 32bit ifdef condition in signal.c
-> - simplify the compat ifdef condition in vdso.c - 64bit is redundant
-> - simplify the compat ifdef condition in callchain.c - 64bit is redundant
-> v3:
-> - use IS_ENABLED and maybe_unused where possible
-> - do not ifdef declarations
-> - clean up Makefile
-> v4:
-> - further makefile cleanup
-> - simplify is_32bit_task conditions
-> - avoid ifdef in condition by using return
-> ---
->   arch/powerpc/include/asm/thread_info.h |  4 ++--
->   arch/powerpc/kernel/Makefile           |  7 +++----
->   arch/powerpc/kernel/entry_64.S         |  2 ++
->   arch/powerpc/kernel/signal.c           |  3 +--
->   arch/powerpc/kernel/syscall_64.c       |  6 ++----
->   arch/powerpc/kernel/vdso.c             |  5 ++---
->   arch/powerpc/perf/callchain.c          | 14 ++++++++++----
->   7 files changed, 22 insertions(+), 19 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/thread_info.h b/arch/powerpc/include/asm/thread_info.h
-> index 8e1d0195ac36..c128d8a48ea3 100644
-> --- a/arch/powerpc/include/asm/thread_info.h
-> +++ b/arch/powerpc/include/asm/thread_info.h
-> @@ -144,10 +144,10 @@ static inline bool test_thread_local_flags(unsigned int flags)
->   	return (ti->local_flags & flags) != 0;
->   }
->   
-> -#ifdef CONFIG_PPC64
-> +#ifdef CONFIG_COMPAT
->   #define is_32bit_task()	(test_thread_flag(TIF_32BIT))
->   #else
-> -#define is_32bit_task()	(1)
-> +#define is_32bit_task()	(IS_ENABLED(CONFIG_PPC32))
->   #endif
->   
->   #if defined(CONFIG_PPC64)
-> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-> index 1d646a94d96c..9d8772e863b9 100644
-> --- a/arch/powerpc/kernel/Makefile
-> +++ b/arch/powerpc/kernel/Makefile
-> @@ -44,16 +44,15 @@ CFLAGS_btext.o += -DDISABLE_BRANCH_PROFILING
->   endif
->   
->   obj-y				:= cputable.o ptrace.o syscalls.o \
-> -				   irq.o align.o signal_32.o pmc.o vdso.o \
-> +				   irq.o align.o signal_$(BITS).o pmc.o vdso.o \
->   				   process.o systbl.o idle.o \
->   				   signal.o sysfs.o cacheinfo.o time.o \
->   				   prom.o traps.o setup-common.o \
->   				   udbg.o misc.o io.o misc_$(BITS).o \
->   				   of_platform.o prom_parse.o
-> -obj-$(CONFIG_PPC64)		+= setup_64.o sys_ppc32.o \
-> -				   signal_64.o ptrace32.o \
-> -				   paca.o nvram_64.o firmware.o \
-> +obj-$(CONFIG_PPC64)		+= setup_64.o paca.o nvram_64.o firmware.o \
->   				   syscall_64.o
-> +obj-$(CONFIG_COMPAT)		+= sys_ppc32.o ptrace32.o signal_32.o
->   obj-$(CONFIG_VDSO32)		+= vdso32/
->   obj-$(CONFIG_PPC_WATCHDOG)	+= watchdog.o
->   obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
-> diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
-> index 2ec825a85f5b..a2dbf216f607 100644
-> --- a/arch/powerpc/kernel/entry_64.S
-> +++ b/arch/powerpc/kernel/entry_64.S
-> @@ -51,8 +51,10 @@
->   SYS_CALL_TABLE:
->   	.tc sys_call_table[TC],sys_call_table
->   
-> +#ifdef CONFIG_COMPAT
->   COMPAT_SYS_CALL_TABLE:
->   	.tc compat_sys_call_table[TC],compat_sys_call_table
-> +#endif
->   
->   /* This value is used to mark exception frames on the stack. */
->   exception_marker:
-> diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
-> index 60436432399f..61678cb0e6a1 100644
-> --- a/arch/powerpc/kernel/signal.c
-> +++ b/arch/powerpc/kernel/signal.c
-> @@ -247,7 +247,6 @@ static void do_signal(struct task_struct *tsk)
->   	sigset_t *oldset = sigmask_to_save();
->   	struct ksignal ksig = { .sig = 0 };
->   	int ret;
-> -	int is32 = is_32bit_task();
->   
->   	BUG_ON(tsk != current);
->   
-> @@ -277,7 +276,7 @@ static void do_signal(struct task_struct *tsk)
->   
->   	rseq_signal_deliver(&ksig, tsk->thread.regs);
->   
-> -	if (is32) {
-> +	if (is_32bit_task()) {
->           	if (ksig.ka.sa.sa_flags & SA_SIGINFO)
->   			ret = handle_rt_signal32(&ksig, oldset, tsk);
->   		else
-> diff --git a/arch/powerpc/kernel/syscall_64.c b/arch/powerpc/kernel/syscall_64.c
-> index 98ed970796d5..0d5cbbe54cf1 100644
-> --- a/arch/powerpc/kernel/syscall_64.c
-> +++ b/arch/powerpc/kernel/syscall_64.c
-> @@ -38,7 +38,6 @@ typedef long (*syscall_fn)(long, long, long, long, long, long);
->   
->   long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8, unsigned long r0, struct pt_regs *regs)
->   {
-> -	unsigned long ti_flags;
->   	syscall_fn f;
->   
->   	BUG_ON(!(regs->msr & MSR_PR));
-> @@ -83,8 +82,7 @@ long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8,
->   	 */
->   	regs->softe = IRQS_ENABLED;
->   
-> -	ti_flags = current_thread_info()->flags;
-> -	if (unlikely(ti_flags & _TIF_SYSCALL_DOTRACE)) {
-> +	if (unlikely(current_thread_info()->flags & _TIF_SYSCALL_DOTRACE)) {
->   		/*
->   		 * We use the return value of do_syscall_trace_enter() as the
->   		 * syscall number. If the syscall was rejected for any reason
-> @@ -100,7 +98,7 @@ long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8,
->   	/* May be faster to do array_index_nospec? */
->   	barrier_nospec();
->   
-> -	if (unlikely(ti_flags & _TIF_32BIT)) {
-> +	if (unlikely(is_32bit_task())) {
->   		f = (void *)compat_sys_call_table[r0];
->   
->   		r3 &= 0x00000000ffffffffULL;
-> diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
-> index d60598113a9f..6d4a077f74d6 100644
-> --- a/arch/powerpc/kernel/vdso.c
-> +++ b/arch/powerpc/kernel/vdso.c
-> @@ -667,9 +667,7 @@ static void __init vdso_setup_syscall_map(void)
->   {
->   	unsigned int i;
->   	extern unsigned long *sys_call_table;
-> -#ifdef CONFIG_PPC64
->   	extern unsigned long *compat_sys_call_table;
-> -#endif
->   	extern unsigned long sys_ni_syscall;
->   
->   
-> @@ -678,7 +676,8 @@ static void __init vdso_setup_syscall_map(void)
->   		if (sys_call_table[i] != sys_ni_syscall)
->   			vdso_data->syscall_map_64[i >> 5] |=
->   				0x80000000UL >> (i & 0x1f);
-> -		if (compat_sys_call_table[i] != sys_ni_syscall)
-> +		if (IS_ENABLED(CONFIG_COMPAT) &&
-> +		    compat_sys_call_table[i] != sys_ni_syscall)
->   			vdso_data->syscall_map_32[i >> 5] |=
->   				0x80000000UL >> (i & 0x1f);
->   #else /* CONFIG_PPC64 */
-> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-> index c84bbd4298a0..aef8c750d242 100644
-> --- a/arch/powerpc/perf/callchain.c
-> +++ b/arch/powerpc/perf/callchain.c
-> @@ -15,7 +15,7 @@
->   #include <asm/sigcontext.h>
->   #include <asm/ucontext.h>
->   #include <asm/vdso.h>
-> -#ifdef CONFIG_PPC64
-> +#ifdef CONFIG_COMPAT
+change in V8:
+ 1. fix patch format error
 
-Is this ifdef needed at all ? Is it a problem to include it all the time ?
+change in V7:
+ 1. change subject to match the patch
+ 2. move functions in preparation to fix DLL lock phase shift issue
 
->   #include "../kernel/ppc32.h"
->   #endif
->   #include <asm/pte-walk.h>
-> @@ -165,6 +165,7 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
->   	return read_user_stack_slow(ptr, ret, 8);
->   }
->   
-> +__maybe_unused
+change in V6:
+ 1. change subject and commit message to match the patch
+ 2. modify the get CD status function
+ 3. re-arrange the order of some functions
 
-I don't like that too much. I see this function is almost identical 
-between PPC64 and PPC32. It should be possible to have only one, using 
-IS_ENABLED(CONFIG_PPC64) inside it to call read_user_stack_slow().
-An define a dummy read_user_stack_slow() for PPC32 as already done for 
-perf_callchain_user_64().
+change in V5:
+ 1. split 2 patches into 3 patches
+ 2. make dll_adjust_count start from 0
+ 3. fix ret overwritten issue
+ 4. use break instead of goto
 
->   static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
->   {
->   	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> @@ -341,6 +342,7 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
->   
->   #endif /* CONFIG_PPC64 */
->   
-> +#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
->   /*
->    * Layout for non-RT signal frames
->    */
-> @@ -482,12 +484,16 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
->   		sp = next_sp;
->   	}
->   }
-> +#endif /* 32bit */
->   
->   void
->   perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
->   {
-> -	if (current_is_64bit())
-> -		perf_callchain_user_64(entry, regs);
-> -	else
-> +#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
-> +	if (!current_is_64bit()) {
->   		perf_callchain_user_32(entry, regs);
-> +		return;
-> +	}
-> +#endif
-> +	perf_callchain_user_64(entry, regs);
->   }
-> 
+change in V4:
+ 1. add a bug fix for V3
 
-Instead of that it could just be:
+change in V3:
+ 1. add more explanation in dll_recovery and execute_tuning function
+ 2. move dll_adjust_count to O2_host struct
+ 3. fix some coding style error
+ 4. renaming O2_PLL_WDT_CONTROL1 TO O2_PLL_DLL_WDT_CONTROL1
 
-	if (current_is_64bit())
-		perf_callchain_user_64(entry, regs);
-	else
-		perf_callchain_user_32(entry, regs);
+change in V2:
+ 1. use usleep_range instead of udelay
+ 2. move dll_adjust_count to sdhci-pci-o2micro.c
 
+chagne in V1:
+ 1. add error recovery function to relock DLL with correct phase
+ 2. retuning HS200 after DLL locked
+---
+ drivers/mmc/host/sdhci-pci-o2micro.c | 187 ++++++++++++++++++-------------=
+----
+ 1 file changed, 94 insertions(+), 93 deletions(-)
 
-By adding a dummy perf_callchain_user_32() when needed as already done 
-for perf_callchain_user_64()
-And by making sure current_is_64bit() returns IS_ENABLED(CONFIG_PPC64) 
-when CONFIG_COMPAT is not set, on the same principle as you did for 
-is_32bit_task()
+diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-=
+pci-o2micro.c
+index b3a33d9..57c8b83 100644
+--- a/drivers/mmc/host/sdhci-pci-o2micro.c
++++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+@@ -58,6 +58,100 @@
+=20
+ #define O2_SD_DETECT_SETTING 0x324
+=20
++static void sdhci_o2_wait_card_detect_stable(struct sdhci_host *host)
++{
++	ktime_t timeout;
++	u32 scratch32;
++
++	/* Wait max 50 ms */
++	timeout =3D ktime_add_ms(ktime_get(), 50);
++	while (1) {
++		bool timedout =3D ktime_after(ktime_get(), timeout);
++
++		scratch32 =3D sdhci_readl(host, SDHCI_PRESENT_STATE);
++		if ((scratch32 & SDHCI_CARD_PRESENT) >> SDHCI_CARD_PRES_SHIFT
++		    =3D=3D (scratch32 & SDHCI_CD_LVL) >> SDHCI_CD_LVL_SHIFT)
++			break;
++
++		if (timedout) {
++			pr_err("%s: Card Detect debounce never finished.\n",
++			       mmc_hostname(host->mmc));
++			sdhci_dumpregs(host);
++			return;
++		}
++		udelay(10);
++	}
++}
++
++static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
++{
++	ktime_t timeout;
++	u16 scratch;
++	u32 scratch32;
++
++	/* PLL software reset */
++	scratch32 =3D sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
++	scratch32 |=3D O2_PLL_SOFT_RESET;
++	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
++	udelay(1);
++	scratch32 &=3D ~(O2_PLL_SOFT_RESET);
++	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
++
++	/* PLL force active */
++	scratch32 |=3D O2_PLL_FORCE_ACTIVE;
++	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
++
++	/* Wait max 20 ms */
++	timeout =3D ktime_add_ms(ktime_get(), 20);
++	while (1) {
++		bool timedout =3D ktime_after(ktime_get(), timeout);
++
++		scratch =3D sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
++		if (scratch & O2_PLL_LOCK_STATUS)
++			break;
++		if (timedout) {
++			pr_err("%s: Internal clock never stabilised.\n",
++			       mmc_hostname(host->mmc));
++			sdhci_dumpregs(host);
++			goto out;
++		}
++		udelay(10);
++	}
++
++	/* Wait for card detect finish */
++	udelay(1);
++	sdhci_o2_wait_card_detect_stable(host);
++
++out:
++	/* Cancel PLL force active */
++	scratch32 =3D sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
++	scratch32 &=3D ~O2_PLL_FORCE_ACTIVE;
++	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
++}
++
++static int sdhci_o2_get_cd(struct mmc_host *mmc)
++{
++	struct sdhci_host *host =3D mmc_priv(mmc);
++
++	sdhci_o2_enable_internal_clock(host);
++
++	return !!(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT);
++}
++
++static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
++{
++	u32 scratch_32;
++
++	pci_read_config_dword(chip->pdev,
++			      O2_SD_PLL_SETTING, &scratch_32);
++
++	scratch_32 &=3D 0x0000FFFF;
++	scratch_32 |=3D value;
++
++	pci_write_config_dword(chip->pdev,
++			       O2_SD_PLL_SETTING, scratch_32);
++}
++
+ static void sdhci_o2_set_tuning_mode(struct sdhci_host *host)
+ {
+ 	u16 reg;
+@@ -136,19 +230,6 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mm=
+c, u32 opcode)
+ 	return 0;
+ }
+=20
+-static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
+-{
+-	u32 scratch_32;
+-	pci_read_config_dword(chip->pdev,
+-			      O2_SD_PLL_SETTING, &scratch_32);
+-
+-	scratch_32 &=3D 0x0000FFFF;
+-	scratch_32 |=3D value;
+-
+-	pci_write_config_dword(chip->pdev,
+-			       O2_SD_PLL_SETTING, scratch_32);
+-}
+-
+ static void o2_pci_led_enable(struct sdhci_pci_chip *chip)
+ {
+ 	int ret;
+@@ -284,86 +365,6 @@ static void sdhci_pci_o2_enable_msi(struct sdhci_pci_c=
+hip *chip,
+ 	host->irq =3D pci_irq_vector(chip->pdev, 0);
+ }
+=20
+-static void sdhci_o2_wait_card_detect_stable(struct sdhci_host *host)
+-{
+-	ktime_t timeout;
+-	u32 scratch32;
+-
+-	/* Wait max 50 ms */
+-	timeout =3D ktime_add_ms(ktime_get(), 50);
+-	while (1) {
+-		bool timedout =3D ktime_after(ktime_get(), timeout);
+-
+-		scratch32 =3D sdhci_readl(host, SDHCI_PRESENT_STATE);
+-		if ((scratch32 & SDHCI_CARD_PRESENT) >> SDHCI_CARD_PRES_SHIFT
+-		    =3D=3D (scratch32 & SDHCI_CD_LVL) >> SDHCI_CD_LVL_SHIFT)
+-			break;
+-
+-		if (timedout) {
+-			pr_err("%s: Card Detect debounce never finished.\n",
+-			       mmc_hostname(host->mmc));
+-			sdhci_dumpregs(host);
+-			return;
+-		}
+-		udelay(10);
+-	}
+-}
+-
+-static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
+-{
+-	ktime_t timeout;
+-	u16 scratch;
+-	u32 scratch32;
+-
+-	/* PLL software reset */
+-	scratch32 =3D sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+-	scratch32 |=3D O2_PLL_SOFT_RESET;
+-	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+-	udelay(1);
+-	scratch32 &=3D ~(O2_PLL_SOFT_RESET);
+-	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+-
+-	/* PLL force active */
+-	scratch32 |=3D O2_PLL_FORCE_ACTIVE;
+-	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+-
+-	/* Wait max 20 ms */
+-	timeout =3D ktime_add_ms(ktime_get(), 20);
+-	while (1) {
+-		bool timedout =3D ktime_after(ktime_get(), timeout);
+-
+-		scratch =3D sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
+-		if (scratch & O2_PLL_LOCK_STATUS)
+-			break;
+-		if (timedout) {
+-			pr_err("%s: Internal clock never stabilised.\n",
+-			       mmc_hostname(host->mmc));
+-			sdhci_dumpregs(host);
+-			goto out;
+-		}
+-		udelay(10);
+-	}
+-
+-	/* Wait for card detect finish */
+-	udelay(1);
+-	sdhci_o2_wait_card_detect_stable(host);
+-
+-out:
+-	/* Cancel PLL force active */
+-	scratch32 =3D sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+-	scratch32 &=3D ~O2_PLL_FORCE_ACTIVE;
+-	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+-}
+-
+-static int sdhci_o2_get_cd(struct mmc_host *mmc)
+-{
+-	struct sdhci_host *host =3D mmc_priv(mmc);
+-
+-	sdhci_o2_enable_internal_clock(host);
+-
+-	return !!(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT);
+-}
+-
+ static void sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
+ {
+ 	/* Enable internal clock */
+--=20
+2.7.4
 
-And maybe you could think about spliting callchain.c out in a 
-callchain_32.c and a callchain_64.c that gets selected by the Makefiles 
-based on the same principle as you did for ptrace_32.c etc...
-
-Christophe
