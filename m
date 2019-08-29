@@ -2,192 +2,115 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD355C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA732C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 709A1208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A91C92189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:28:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EDduhXAF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lHE8Rghi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfH2O1F (ORCPT
+        id S1727578AbfH2O26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:27:05 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43340 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbfH2O1F (ORCPT
+        Thu, 29 Aug 2019 10:28:58 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:37670 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbfH2O25 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:27:05 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h15so3217449ljg.10
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:27:03 -0700 (PDT)
+        Thu, 29 Aug 2019 10:28:57 -0400
+Received: by mail-vs1-f66.google.com with SMTP id q188so2550167vsa.4
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:28:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EMqqQLuyfElFbLLOsaCUr3eYEOpdSEM8uXe2pL2MbaE=;
-        b=EDduhXAFG+AQ7D7DtK611pTH41HFef90zeeLyE52JD5tDI0YXwpntclBMhaiA7tdHH
-         BZSGHv6RuJqEur1KwbRi7G/F6syfd7jDtuUwzT0RcNY5pLGVN3OoSPtq9Z/J9h1vN5ro
-         6LW9WYHr8l/OnkpkRd+vwIwx0dNBA90kx/exRh/1zwA4WmcXeDt+1TPKaib/p3UsObeq
-         j+PkykBoi7FCkQ23RL9L8xAIfNuZR6flzuerXbI8n7A4a7S4dvQarP+ul9Bi74N8jGLq
-         uq5am90UcOWwG3WjOmp1SIZhuR/drTPIFeP1zI/KdJuqPh1IdxzlIzKU3Us1+KokSx4D
-         ua2A==
+        bh=mIpyQ3wOb9bWqvkX0Kpr4MtQFBTIPyZmoRnHAHX/iC4=;
+        b=lHE8RghiwfW1Za7MXZfEj+tcRA5+wrEWmVF5Keow8qTDcQOlGf4062XfDSUn6uEXDh
+         lZNKY9YudWj2VwmIGrrk0z96f7MCwqTmToJ0qUx7s9qo5fMEKYT63v3iilBq/ykKVI0k
+         4uQGf2L0Qu4GxqfenZnbk3+E1Hyft/0qcstmSQbMSOP0hSUEeCdV4ho5986Zq2vC8vFd
+         /3xTmD1TXSCXRTRhGGM9PJzXP4mIJTDL8Uz9uL0aFnR4Pv2X7S+q6R+YjGzN16IA04xd
+         G/zNaTE1nZDJiQiJwhAZUOdxXwX36xfy+KGbSTMV406iQO+PaEU3HTP2Bd2sUPzNjmH9
+         9DGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EMqqQLuyfElFbLLOsaCUr3eYEOpdSEM8uXe2pL2MbaE=;
-        b=AH/XecbMfJwvJkdWk/OtlpeyDwSf8AMH9ISCKouQXihCsCc9dg4VBe3j6P/EKDN+Ss
-         GnXQBNKs6I62JxsqaJeMMFSA7p1e0mAIJMuQ/ArcW6N2UZpG1a3hex0XkuCCqCzn4iDH
-         qYWcKIHXuc2Z3Nsth3iuULVj/rgRtOZWk7lIR3fS0D1Hiugl2nISDoOyIlY4XwUaJAII
-         RSxSORcVmvKj22BlCMCDHZ5SkB0PZtaNScLueuQmOGxTykqJHrdt6gGoxZmNB9CoEN5y
-         48PvltN/iu5gWpJTskaBMFCAljQzIgn4/hkVuGrUuoDsktnromoilH1Jp7FDMMnEbEEn
-         PvTg==
-X-Gm-Message-State: APjAAAXE7eZDoFbphQ1BNlAuzSMFfVgCtEVa1h9SAQmbpDu593z2BjWU
-        vQloUOnLN89hRcUb/xBTLDHCPqs9bsBf/XvZsaTiuw==
-X-Google-Smtp-Source: APXvYqwo5s/6PFvJvwDdSVDFq8Cr/g9F4ADuCcO2pbf/GOj/kI5/8O4teI+r9kG2/JEe9L5khMzU0vwuZLQz5FdkvWg=
-X-Received: by 2002:a2e:875a:: with SMTP id q26mr5684502ljj.107.1567088822137;
- Thu, 29 Aug 2019 07:27:02 -0700 (PDT)
+        bh=mIpyQ3wOb9bWqvkX0Kpr4MtQFBTIPyZmoRnHAHX/iC4=;
+        b=mhUYvow6dVvIbVpnxipHSwewwRUQJk1bApJAuTrK1SENDNkVLeZvulfes48KFAlSud
+         K+ZGYj1Zttgu73VYXRFR/6qoIIhR5v4u6QdsxYNajuuDAPtmyhSdoL+vr1JCYKDYTzV3
+         IhxQ+kvuyQq367eohEeMxA9qNC3Bh4AkaHZyuYu021ih+GUKc55pYkXa024InIwGkcga
+         BBVJoNlUIJ5ivt+RsftiakFuaG3TooMdZHtuFWZGf8n3pNlwigPXPpuRAbtTryoSgNOw
+         wJMrjZocF+sdEeU68hTeFUnz7sT4xbMGEkzwGO0yWUSY/8gzuOZ6LjdzHMPDpIzpc9wf
+         PuXg==
+X-Gm-Message-State: APjAAAV8d9YkZxAqZ6IrNcwzvrOt5zh2/KyWFpecjdUS9WkPz6dWLGwm
+        yynsFiRSCGzRQvsamsFaw2O7loH1MC+HX10Y1mofeg==
+X-Google-Smtp-Source: APXvYqzYJ6oqRwamIEDLJ3VtjU+XaOg77kkXW1O2XB+w4FxGCSBbCRCZltm1LjnvJjPK+WsK0l7De0RJSAqYnMnKyvI=
+X-Received: by 2002:a67:b009:: with SMTP id z9mr5725405vse.27.1567088936391;
+ Thu, 29 Aug 2019 07:28:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <1564670424-26023-1-git-send-email-vincent.guittot@linaro.org>
- <1564670424-26023-5-git-send-email-vincent.guittot@linaro.org>
- <74bb33d7-3ba4-aabe-c7a2-3865d5759281@arm.com> <CAKfTPtA_=_ukj-8cQL4+5qU7bLHX5v4wuPODcGsX6a+o2HmBDQ@mail.gmail.com>
- <a42542e5-8338-c00c-5d55-d30c0daf1701@arm.com>
-In-Reply-To: <a42542e5-8338-c00c-5d55-d30c0daf1701@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 29 Aug 2019 16:26:49 +0200
-Message-ID: <CAKfTPtAnHSZ9Lb+JUktA8Z_90V9egzU=M5ErrE=PUGy8qUWLBQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] sched/fair: rework load_balance
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>
+References: <cover.1566907161.git.amit.kucheria@linaro.org>
+ <93fa782bde9c66845993ff883532b3f1f02d99e4.1566907161.git.amit.kucheria@linaro.org>
+ <20190829140459.szauzhennltrwvg4@holly.lan>
+In-Reply-To: <20190829140459.szauzhennltrwvg4@holly.lan>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 29 Aug 2019 19:58:45 +0530
+Message-ID: <CAHLCerNuycWTLmCvdffM0=GdG7UZ7zNoj0Jb0CeLTULzVmfSJw@mail.gmail.com>
+Subject: Re: [PATCH v2 03/15] drivers: thermal: tsens: Add __func__ identifier
+ to debug statements
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM list <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 28 Aug 2019 at 16:19, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
+On Thu, Aug 29, 2019 at 7:35 PM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
 >
-> On 26/08/2019 11:11, Vincent Guittot wrote:
-> >>> +     case group_fully_busy:
-> >>> +             /*
-> >>> +              * Select the fully busy group with highest avg_load.
-> >>> +              * In theory, there is no need to pull task from such
-> >>> +              * kind of group because tasks have all compute
-> >>> +              * capacity that they need but we can still improve the
-> >>> +              * overall throughput by reducing contention when
-> >>> +              * accessing shared HW resources.
-> >>> +              * XXX for now avg_load is not computed and always 0 so
-> >>> +              * we select the 1st one.
-> >>> +              */
-> >>
-> >> What's wrong with unconditionally computing avg_load in update_sg_lb_stats()?
+> On Tue, Aug 27, 2019 at 05:43:59PM +0530, Amit Kucheria wrote:
+> > Printing the function name when enabling debugging makes logs easier to
+> > read.
 > >
-> > removing useless division which can be expensive
-> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> > Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 >
-> Seeing how much stuff we already do in just computing the stats, do we
-> really save that much by doing this? I'd expect it to be negligible with
-> modern architectures and all of the OoO/voodoo, but maybe I need a
-> refresher course.
+> This should need to be manually added at each call site; it is already
+> built into the logging system (the f flag for dynamic debug)?
 
-We are not only running on top/latest architecture
+I assume you meant "shouldn't".
 
->
-> >> We already unconditionally accumulate group_load anyway.
-> >
-> > accumulation must be done while looping on the group whereas computing
-> > avg_load can be done only when needed
-> >
-> >>
-> >> If it's to make way for patch 6/8 (using load instead of runnable load),
-> >> then I think you are doing things in the wrong order. IMO in this patch we
-> >> should unconditionally compute avg_load (using runnable load), and then
-> >> you could tweak it up in a subsequent patch.
-> >
-> > In fact, it's not link to patch 6/8.
-> > It's only that I initially wanted to used load only when overloaded
-> > but then I got this case and thought that comparing avg_load could be
-> > interesting but without any proof that it's worth.
-> > As mentioned in the comment, tasks in this group have enough capacity
-> > and there is no need to move task in theory. This is there mainly to
-> > trigger the discuss and keep in mind a possible area of improvement in
-> > a next step.
-> > I haven't run tests or done more study on this particular case to make
-> > sure that there would be some benefit to compare avg_load.
-> >
-> > So in the future, we might end up always computing avg_load and
-> > comparing it for selecting busiest fully busy group
-> >
->
-> Okay, that definitely wants testing then.
->
-> [...]
-> >>> +     if (busiest->group_type == group_misfit_task) {
-> >>> +             /* Set imbalance to allow misfit task to be balanced. */
-> >>> +             env->balance_type = migrate_misfit;
-> >>> +             env->imbalance = busiest->group_misfit_task_load;
-> >>
-> >> AFAICT we don't ever use this value, other than setting it to 0 in
-> >> detach_tasks(), so what we actually set it to doesn't matter (as long as
-> >> it's > 0).
-> >
-> > not yet.
-> > it's only in patch 8/8 that we check if the tasks fits the cpu's
-> > capacity during the detach_tasks
-> >
->
-> But that doesn't use env->imbalance, right? With that v3 patch it's just
-> the task util's, so AFAICT my comment still stands.
+I haven't yet integrated dynamic debug into my daily workflow.
 
-no, misfit case keeps using load and imbalance like the current
-implementation in this patch.
-The modifications on the way to handle misfit task are all in patch 8
+Last time I looked at it, it was a bit bothersome to use because I
+needed to lookup exact line numbers to trigger useful information. And
+those line numbers constantly keep changing as I work on the driver,
+so it was a bit painful to script. Not to mention the syntax to frob
+the correct files in debugfs to enable this functionality.
 
->
-> >>
-> >> I'd re-suggest folding migrate_misfit into migrate_task, which is doable if
-> >> we re-instore lb_env.src_grp_type (or rather, not delete it in this patch),
-> >> though it makes some other places somewhat uglier. The good thing is that
-> >> it actually does end up being implemented as a special kind of task
-> >> migration, rather than being loosely related.
-> >
-> > I prefer to keep it separate instead of adding a sub case in migrate_task
-> >
->
-> My argument here is that ideally they shouldn't be separated, since the misfit
-> migration is a subcase of task migration (or an extension of it - in any
-> case, they're related). I haven't found a nicer way to express it though,
-> and I agree that the special casing in detach_tasks()/fbq()/etc is meh.
->
-> [...]
-> >>> @@ -8765,7 +8942,7 @@ static int load_balance(int this_cpu, struct rq *this_rq,
-> >>>       env.src_rq = busiest;
-> >>>
-> >>>       ld_moved = 0;
-> >>> -     if (busiest->cfs.h_nr_running > 1) {
-> >>> +     if (busiest->nr_running > 1) {
-> >>
-> >> Shouldn't that stay h_nr_running ? We can't do much if those aren't CFS
-> >> tasks.
-> >
-> > There is the case raised by srikar where we have for example 1 RT task
-> > and 1 CFS task. cfs.h_nr_running==1 but we don't need active balance
-> > because CFS is not the running task
-> >
-> >>
-> >>>               /*
-> >>>                * Attempt to move tasks. If find_busiest_group has found
-> >>>                * an imbalance but busiest->nr_running <= 1, the group is
-> >>>
+As opposed to this, adding the following to the makefile is so easy. :-)
+
+CFLAGS_tsens-common.o          := -DDEBUG
+
+Perhaps I am using it all wrong? How would I go about using dynamic
+debug instead of this patch?
+
+Regards,
+Amit
