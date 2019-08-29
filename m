@@ -2,31 +2,31 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FCFC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4730BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9105122CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2579D22CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfH2KV6 (ORCPT
+        id S1727188AbfH2KWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:21:58 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:15283 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726723AbfH2KV6 (ORCPT
+        Thu, 29 Aug 2019 06:22:04 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:20299 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726723AbfH2KWD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:21:58 -0400
+        Thu, 29 Aug 2019 06:22:03 -0400
 X-IronPort-AV: E=Sophos;i="5.64,442,1559487600"; 
-   d="scan'208";a="25244310"
+   d="scan'208";a="25025781"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 29 Aug 2019 19:21:55 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 29 Aug 2019 19:22:00 +0900
 Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 3F25F40B3513;
-        Thu, 29 Aug 2019 19:21:51 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 30BFC40B3513;
+        Thu, 29 Aug 2019 19:21:55 +0900 (JST)
 From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
@@ -46,35 +46,103 @@ Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
         Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
         Jacopo Mondi <jacopo+renesas@jmondi.org>,
         xu_shunji@hoperun.com, ebiharaml@si-linux.co.jp
-Subject: [PATCH 0/2] Add LVDS panel support to HiHope RZ/G2M
-Date:   Thu, 29 Aug 2019 11:21:45 +0100
-Message-Id: <1567074107-4899-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 1/2] dt-bindings: display: Add idk-1110wr binding
+Date:   Thu, 29 Aug 2019 11:21:46 +0100
+Message-Id: <1567074107-4899-2-git-send-email-fabrizio.castro@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1567074107-4899-1-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1567074107-4899-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear All,
+Add binding for the idk-1110wr LVDS panel from Advantech.
 
-the HiHope RZ/G2M is advertised as supporting panel idk-1110wr from
-Advantech, but the panel doesn't come with the board, it has to purchased
-separatey, therefore this series adds panel support to a new DT.
+Some panel-specific documentation can be found here:
+https://buy.advantech.eu/Displays/Embedded-LCD-Kits-LCD-Kit-Modules/model-IDK-1110WR-55WSA1E.htm
 
-Thanks,
-Fab
-
-Fabrizio Castro (2):
-  dt-bindings: display: Add idk-1110wr binding
-  arm64: dts: renesas: Add HiHope RZ/G2M board with idk-1110wr display
-
- .../display/panel/advantech,idk-1110wr.yaml        | 69 +++++++++++++++++
- arch/arm64/boot/dts/renesas/Makefile               |  1 +
- .../r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts        | 86 ++++++++++++++++++++++
- 3 files changed, 156 insertions(+)
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+---
+ .../display/panel/advantech,idk-1110wr.yaml        | 69 ++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
 
+diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml b/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
+new file mode 100644
+index 0000000..e5fdaa0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/advantech,idk-1110wr.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Advantech IDK-1110WR 10.1" WSVGA LVDS Display Panel
++
++maintainers:
++  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
++  - Thierry Reding <thierry.reding@gmail.com>
++
++allOf:
++  - $ref: lvds.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: advantech,idk-1110wr
++      - {} # panel-lvds, but not listed here to avoid false select
++
++  data-mapping:
++    const: jeida-24
++
++  width-mm:
++    const: 223
++
++  height-mm:
++    const: 125
++
++  panel-timing: true
++  port: true
++
++additionalProperties: false
++
++required:
++  - compatible
++
++examples:
++  - |+
++    panel {
++      compatible = "advantech,idk-1110wr", "panel-lvds";
++
++      width-mm = <223>;
++      height-mm = <125>;
++
++      data-mapping = "jeida-24";
++
++      panel-timing {
++        /* 1024x600 @60Hz */
++        clock-frequency = <51200000>;
++        hactive = <1024>;
++        vactive = <600>;
++        hsync-len = <240>;
++        hfront-porch = <40>;
++        hback-porch = <40>;
++        vsync-len = <10>;
++        vfront-porch = <15>;
++        vback-porch = <10>;
++      };
++
++      port {
++        panel_in: endpoint {
++          remote-endpoint = <&lvds_encoder>;
++        };
++      };
++    };
++
++...
 -- 
 2.7.4
 
