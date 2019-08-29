@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848CDC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC16C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 558132166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5594E20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103218;
-	bh=mbc88SK90w/+Uoyl1A5Z9fHXLSXvvuFhUGHwFq5VEjA=;
+	s=default; t=1567103228;
+	bh=pbhhtTjqHGaVTb6b/qL8/sUcq+cEXuTLSfp3vcATJdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mhgOwAJCGcJ1rPWdixHI1m8nNWjS0MynFhAZXa3QxT0xNz7ctlC/FRxqhLnQX2lQV
-	 y/+9yIQew2BI6zamQaKr2RHs1fL7iEmcwLEYbUXsxCm9RAx3oKDVO2TuOXSSGq4rya
-	 eDhhFZwdKeONeSqKoydjB8q91/5SIieKcEvU3AGA=
+	b=Otq5emRXeI4oyqmhRWUzdf/ahSRz9khAAD0MPilxUmD/0tbhFdTm8xbNYbA4I5skI
+	 TZLor4weVxVjlVuWEGy03CAsxOucyNy4jaBAGR8HkzQaOsqcltdfezYgWBHc+JpjBe
+	 /nDu/4yzil2m1+Q+rd5FpH52seHv766fhZ3XXWfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbfH2S04 (ORCPT
+        id S1729026AbfH2S1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:26:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57482 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:27:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728558AbfH2SPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:15:42 -0400
+        id S1729372AbfH2SPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:15:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D2D42342C;
-        Thu, 29 Aug 2019 18:15:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDED023427;
+        Thu, 29 Aug 2019 18:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102541;
-        bh=mbc88SK90w/+Uoyl1A5Z9fHXLSXvvuFhUGHwFq5VEjA=;
+        s=default; t=1567102537;
+        bh=pbhhtTjqHGaVTb6b/qL8/sUcq+cEXuTLSfp3vcATJdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LPxdlt4jc51i344ngRHxG5qcsbiAkd3xYeNa04aHazXAwxq1rwWkEKyE8j323ii7S
-         OyKjyxYreIXbPwZkqhKsdXkLScthARpfWsUlt/3YAxv9S3749QEhbayuSf6f16CP/i
-         CboIi1Pnpn4y3wotVCICF8d8EJW9B/Jo+JdCMmcM=
+        b=dzsb+bDuGpQ76IWR2il2hw5XYHgeKCuTHhmUj4+ZW9+jEU8nLrHVq2M/nLOh5muM2
+         f6c9IYLMVVPzL1u1qIRVwrnjpN26ZuzYJK31KfEVRlt1i3OjAsteOi+1Xf8x+EbCFe
+         of3y+X9jUvS0eekvpVyvsycqqQblAF2O8WJbQsjs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Wei Xu <xuwei5@hisilicon.com>, Sasha Levin <sashal@kernel.org>,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 75/76] gpio: Fix irqchip initialization order
-Date:   Thu, 29 Aug 2019 14:13:10 -0400
-Message-Id: <20190829181311.7562-75-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 72/76] afs: use correct afs_call_type in yfs_fs_store_opaque_acl2
+Date:   Thu, 29 Aug 2019 14:13:07 -0400
+Message-Id: <20190829181311.7562-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -62,109 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 48057ed1840fde9239b1e000bea1a0a1f07c5e99 ]
+[ Upstream commit 7533be858f5b9a036b9f91556a3ed70786abca8e ]
 
-The new API for registering a gpio_irq_chip along with a
-gpio_chip has a different semantic ordering than the old
-API which added the irqchip explicitly after registering
-the gpio_chip.
+It seems that 'yfs_RXYFSStoreOpaqueACL2' should be use in
+yfs_fs_store_opaque_acl2().
 
-Move the calls to add the gpio_irq_chip *last* in the
-function, so that the different hooks setting up OF and
-ACPI and machine gpio_chips are called *before* we try
-to register the interrupts, preserving the elder semantic
-order.
-
-This cropped up in the PL061 driver which used to work
-fine with no special ACPI quirks, but started to misbehave
-using the new API.
-
-Fixes: e0d897289813 ("gpio: Implement tighter IRQ chip integration")
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reported-by: Wei Xu <xuwei5@hisilicon.com>
-Tested-by: Wei Xu <xuwei5@hisilicon.com>
-Reported-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20190820080527.11796-1-linus.walleij@linaro.org
+Fixes: f5e4546347bc ("afs: Implement YFS ACL setting")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ fs/afs/yfsclient.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 4f333d6f2e230..42f9e00ff4d1b 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1371,21 +1371,13 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 	if (status)
- 		goto err_remove_from_list;
+diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
+index 18722aaeda33a..a1baf3f1f14d1 100644
+--- a/fs/afs/yfsclient.c
++++ b/fs/afs/yfsclient.c
+@@ -2155,7 +2155,7 @@ int yfs_fs_store_opaque_acl2(struct afs_fs_cursor *fc, const struct afs_acl *acl
+ 	       key_serial(fc->key), vnode->fid.vid, vnode->fid.vnode);
  
--	status = gpiochip_irqchip_init_valid_mask(chip);
--	if (status)
--		goto err_remove_from_list;
--
- 	status = gpiochip_alloc_valid_mask(chip);
- 	if (status)
--		goto err_remove_irqchip_mask;
--
--	status = gpiochip_add_irqchip(chip, lock_key, request_key);
--	if (status)
--		goto err_free_gpiochip_mask;
-+		goto err_remove_from_list;
- 
- 	status = of_gpiochip_add(chip);
- 	if (status)
--		goto err_remove_chip;
-+		goto err_free_gpiochip_mask;
- 
- 	status = gpiochip_init_valid_mask(chip);
- 	if (status)
-@@ -1411,6 +1403,14 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 
- 	machine_gpiochip_add(chip);
- 
-+	status = gpiochip_irqchip_init_valid_mask(chip);
-+	if (status)
-+		goto err_remove_acpi_chip;
-+
-+	status = gpiochip_add_irqchip(chip, lock_key, request_key);
-+	if (status)
-+		goto err_remove_irqchip_mask;
-+
- 	/*
- 	 * By first adding the chardev, and then adding the device,
- 	 * we get a device node entry in sysfs under
-@@ -1422,21 +1422,21 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 	if (gpiolib_initialized) {
- 		status = gpiochip_setup_dev(gdev);
- 		if (status)
--			goto err_remove_acpi_chip;
-+			goto err_remove_irqchip;
- 	}
- 	return 0;
- 
-+err_remove_irqchip:
-+	gpiochip_irqchip_remove(chip);
-+err_remove_irqchip_mask:
-+	gpiochip_irqchip_free_valid_mask(chip);
- err_remove_acpi_chip:
- 	acpi_gpiochip_remove(chip);
- err_remove_of_chip:
- 	gpiochip_free_hogs(chip);
- 	of_gpiochip_remove(chip);
--err_remove_chip:
--	gpiochip_irqchip_remove(chip);
- err_free_gpiochip_mask:
- 	gpiochip_free_valid_mask(chip);
--err_remove_irqchip_mask:
--	gpiochip_irqchip_free_valid_mask(chip);
- err_remove_from_list:
- 	spin_lock_irqsave(&gpio_lock, flags);
- 	list_del(&gdev->list);
+ 	size = round_up(acl->size, 4);
+-	call = afs_alloc_flat_call(net, &yfs_RXYFSStoreStatus,
++	call = afs_alloc_flat_call(net, &yfs_RXYFSStoreOpaqueACL2,
+ 				   sizeof(__be32) * 2 +
+ 				   sizeof(struct yfs_xdr_YFSFid) +
+ 				   sizeof(__be32) + size,
 -- 
 2.20.1
 
