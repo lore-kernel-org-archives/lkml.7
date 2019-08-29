@@ -2,188 +2,97 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A848AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1299C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4EB205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:28:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hnGcdSvC";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MmrHriln"
+	by mail.kernel.org (Postfix) with ESMTP id 98FAE205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:28:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567103335;
+	bh=7Duq5gO18jH/qa/5J91ieVvtbecfCbQ9i5hLM1vO4xI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sSzcOnvLi0Zy9vxJk4bQIzMDBp/v0FZj4zLumoPbkvC3Q+j6mQyTesPaj8NC4W2Ax
+	 PUn0euqdrOIiljtF2rLTdsKlbFdsNn4g+ghQiGj39B0kbe+mAqMKL/Ks/rtJW2/yui
+	 4PKh36LUwP31jcDWZFg+ucq3oY/iURmT3ebeUxSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfH2S2h (ORCPT
+        id S1729189AbfH2SPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:28:37 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39694 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728503AbfH2S2D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:28:03 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 58621694DF; Thu, 29 Aug 2019 18:12:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567103282;
-        bh=KRYbwxgKTx0pR8Tqhajtg5Ur7vEwP9WSyPmjMrZBHXw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hnGcdSvCulgmGYcKBDX+L6qvVWpB7Tj4AKhIg50ejHFTE4PF+O02odcPl41KOYt1i
-         CX5C6TPZv3SvFRuo9neluaQBV/nedJ5X31p2y98ZV+8D4qz4QS0ptz2z6wzyNWpkzq
-         ZCFIapZgIxtyWLwQTOf+081XBG6udfIky0and/Hk=
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 29 Aug 2019 14:15:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729125AbfH2SPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:15:04 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 425D068A3E;
-        Thu, 29 Aug 2019 18:12:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567102351;
-        bh=KRYbwxgKTx0pR8Tqhajtg5Ur7vEwP9WSyPmjMrZBHXw=;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1305B23407;
+        Thu, 29 Aug 2019 18:15:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567102503;
+        bh=7Duq5gO18jH/qa/5J91ieVvtbecfCbQ9i5hLM1vO4xI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MmrHrilnyHUHaYN4DJEQd+ldJQ3LIfwLHvfXQdJNkGHkO3PVjMEEqGB20uBdQ1awO
-         vQGLC1BmIZuEWcwldfti6dex6n6lTNkCb/wU9ZjH7c89p081ABfJzQf6ykbVtOqCWP
-         uUQQ8aamVcyufnyPyQXo0auGiU0pc4D6kGEDw+8A=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 425D068A3E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com,
-        linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
-        Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RFC 11/14] drivers: pinctrl: sdm845: add PDC wakeup interrupt map for GPIOs
-Date:   Thu, 29 Aug 2019 12:12:00 -0600
-Message-Id: <20190829181203.2660-12-ilina@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190829181203.2660-1-ilina@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org>
+        b=IzCht8j124mUZtLsUokwbfFUX7FfL3FGZHWsPaZcdh5tRb2XdUtFGMEgpjoocC+UD
+         BmdzHfKksX8eWSxb+6miofxufBRC/6rw055YmvEdZZ6YpWJRBlwf2LsduY0Gj9PsIL
+         ytpYi+75jhieUds4ZIKqRlo2jt2cRlKKgy51/DxQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 54/76] Tools: hv: kvp: eliminate 'may be used uninitialized' warning
+Date:   Thu, 29 Aug 2019 14:12:49 -0400
+Message-Id: <20190829181311.7562-54-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
+References: <20190829181311.7562-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add interrupt parents for wakeup capable GPIOs for Qualcomm SDM845 SoC.
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+[ Upstream commit 89eb4d8d25722a0a0194cf7fa47ba602e32a6da7 ]
+
+When building hv_kvp_daemon GCC-8.3 complains:
+
+hv_kvp_daemon.c: In function ‘kvp_get_ip_info.constprop’:
+hv_kvp_daemon.c:812:30: warning: ‘ip_buffer’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  struct hv_kvp_ipaddr_value *ip_buffer;
+
+this seems to be a false positive: we only use ip_buffer when
+op == KVP_OP_GET_IP_INFO and it is only unset when op == KVP_OP_ENUMERATE.
+
+Silence the warning by initializing ip_buffer to NULL.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/qcom/pinctrl-sdm845.c | 83 ++++++++++++++++++++++++++-
- 1 file changed, 82 insertions(+), 1 deletion(-)
+ tools/hv/hv_kvp_daemon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-index 39f498c09906..5f43dabcd8eb 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
-  */
- 
- #include <linux/acpi.h>
-@@ -1282,6 +1282,84 @@ static const int sdm845_acpi_reserved_gpios[] = {
- 	0, 1, 2, 3, 81, 82, 83, 84, -1
- };
- 
-+static const struct msm_gpio_wakeirq_map sdm845_pdc_map[] = {
-+	{1, 30},
-+	{3, 31},
-+	{5, 32},
-+	{10, 33},
-+	{11, 34},
-+	{20, 35},
-+	{22, 36},
-+	{24, 37},
-+	{26, 38},
-+	{30, 39},
-+	{31, 117},
-+	{32, 41},
-+	{34, 42},
-+	{36, 43},
-+	{37, 44},
-+	{38, 45},
-+	{39, 46},
-+	{40, 47},
-+	{41, 115},
-+	{43, 49},
-+	{44, 50},
-+	{46, 51},
-+	{48, 52},
-+	{49, 118},
-+	{52, 54},
-+	{53, 55},
-+	{54, 56},
-+	{56, 57},
-+	{57, 58},
-+	{58, 59},
-+	{59, 60},
-+	{60, 61},
-+	{61, 62},
-+	{62, 63},
-+	{63, 64},
-+	{64, 65},
-+	{66, 66},
-+	{68, 67},
-+	{71, 68},
-+	{73, 69},
-+	{77, 70},
-+	{78, 71},
-+	{79, 72},
-+	{80, 73},
-+	{84, 74},
-+	{85, 75},
-+	{86, 76},
-+	{88, 77},
-+	{89, 116},
-+	{91, 79},
-+	{92, 80},
-+	{95, 81},
-+	{96, 82},
-+	{97, 83},
-+	{101, 84},
-+	{103, 85},
-+	{104, 86},
-+	{115, 90},
-+	{116, 91},
-+	{117, 92},
-+	{118, 93},
-+	{119, 94},
-+	{120, 95},
-+	{121, 96},
-+	{122, 97},
-+	{123, 98},
-+	{124, 99},
-+	{125, 100},
-+	{127, 102},
-+	{128, 103},
-+	{129, 104},
-+	{130, 105},
-+	{132, 106},
-+	{133, 107},
-+	{145, 108},
-+};
-+
- static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
- 	.pins = sdm845_pins,
- 	.npins = ARRAY_SIZE(sdm845_pins),
-@@ -1290,6 +1368,9 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
- 	.groups = sdm845_groups,
- 	.ngroups = ARRAY_SIZE(sdm845_groups),
- 	.ngpios = 151,
-+	.wakeirq_map = sdm845_pdc_map,
-+	.nwakeirq_map = ARRAY_SIZE(sdm845_pdc_map),
-+
- };
- 
- static const struct msm_pinctrl_soc_data sdm845_acpi_pinctrl = {
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index d7e06fe0270ee..6d809abaf338a 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -809,7 +809,7 @@ kvp_get_ip_info(int family, char *if_name, int op,
+ 	int sn_offset = 0;
+ 	int error = 0;
+ 	char *buffer;
+-	struct hv_kvp_ipaddr_value *ip_buffer;
++	struct hv_kvp_ipaddr_value *ip_buffer = NULL;
+ 	char cidr_mask[5]; /* /xyz */
+ 	int weight;
+ 	int i;
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.20.1
 
