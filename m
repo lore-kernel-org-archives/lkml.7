@@ -2,98 +2,101 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1644FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D030C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAEE9208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0042522CEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:59:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kSGOFUNW"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YOczcEhg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbfH2VyO (ORCPT
+        id S1728143AbfH2V7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 17:54:14 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:36536 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbfH2VyN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 17:54:13 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7TLrmNb195158;
-        Thu, 29 Aug 2019 21:54:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=DoDotwQCm8A/eCKdq9o1ZHvkhzi+Ht7puHnU4k/TCps=;
- b=kSGOFUNWHkaPHOoVkI0FoJN6+oaglGCGAaViIsyqaXJaBcu7WyCsYkOiCtI+PxNLHwKp
- RelNsHdyaK1AZV5rabRVDrT81tGX3Zc+TE4As0SkUr6u3uWfDSkPFsiC3W6xVhythbwS
- +OJC6wG9+7pcOKCOszMzeJvfJesMOP1MF+O33Jcl6zBYr4wboN/9Ity4tfizWQ4t4kJe
- G5GvQLKsKVy0XjyTCwNcel6+oPdTyR9eZk9ZmatJ3qWVTvTXwF+WbpVwxfyS7IReGcT4
- /yD86O3w0UHGkuU8s+EV7oZ767tprEnHByUzJc/GGajk6c79pC4pWmZmRtONYIMZtX/d 9A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2uppr9r2ys-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 21:54:11 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7TLnDjk160627;
-        Thu, 29 Aug 2019 21:52:10 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2uphaubkj8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 21:52:10 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7TLq6Il010100;
-        Thu, 29 Aug 2019 21:52:06 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 29 Aug 2019 14:52:05 -0700
-To:     Konstantin Khorenko <khorenko@virtuozzo.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sagar Biradar <sagar.biradar@microchip.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-Subject: Re: [PATCH v3 0/1] aacraid: Host adapter Adaptec 6405 constantly resets under high io load
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <yq15zo86nvk.fsf@oracle.com>
-        <20190819163546.915-1-khorenko@virtuozzo.com>
-Date:   Thu, 29 Aug 2019 17:52:03 -0400
-In-Reply-To: <20190819163546.915-1-khorenko@virtuozzo.com> (Konstantin
-        Khorenko's message of "Mon, 19 Aug 2019 19:35:45 +0300")
-Message-ID: <yq136hjskqk.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Thu, 29 Aug 2019 17:59:13 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42863 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727956AbfH2V7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 17:59:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46KGj86KKWz9sDB;
+        Fri, 30 Aug 2019 07:59:08 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567115950;
+        bh=+dWKz4qdfHg7KwKEzWI+jshc8JO5ef2SjhmNbS20et0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YOczcEhg7sJbnnbMLCJLzuztDxmTFEx+RUMmK/okTxyLtdDjmzRx03sJbEdlJKssf
+         6q1URJrh2E5670FJJaQ+Lnxo36OMLqusnP5upZgYvEt7cTVbuPmfRKAU9f2l09sC31
+         tMebANhTYB6Vht4cNJrA4oycBKrdI26Ofuc6KCJT4ZHhk6PVvjItwfQDJ14dQjoatp
+         x4/LUjgofm6cPg4p/n14TkSraAEoiZ/dgTUUuiB9gjFlcSH3VyqFUcV++RemowatuT
+         c9l4EU0ysf6Z9TfClOoD9JSR7C7N+a2sxz/btaM1x4ycq3hpm8dwV6THLBilRaPFXU
+         dKmSEf/Vf8ddQ==
+Date:   Fri, 30 Aug 2019 07:59:02 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warnings from Linus' tree
+Message-ID: <20190830075902.255b9c70@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=914
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908290217
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=981 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908290218
+Content-Type: multipart/signed; boundary="Sig_/YIpyK4wjFksG+_d6t+fNZa6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/YIpyK4wjFksG+_d6t+fNZa6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> Problem description:
-> ====================
-> A node with Adaptec 6405 controller, latest BIOS V5.3-0[19204] A lot
-> of disks attached to the controller.  Simple test: running mkfs.ext4
-> on many disks on the same controller in parallel (mkfs is not
-> important here, any serious io load triggers controller aborts)
+Hi all,
 
-Microchip folks: Please review!
+With just Linus' tree, today's linux-next build (ppc64le perf) produced
+these warnings:
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+util/parse-events.y:1.1-12: warning: deprecated directive, use '%define api=
+.pure' [-Wdeprecated]
+    1 | %pure-parser
+      | ^~~~~~~~~~~~
+util/parse-events.y: warning: fix-its can be applied.  Rerun with option '-=
+-update'. [-Wother]
+util/expr.y:13.1-12: warning: deprecated directive, use '%define api.pure' =
+[-Wdeprecated]
+   13 | %pure-parser
+      | ^~~~~~~~~~~~
+util/expr.y: warning: fix-its can be applied.  Rerun with option '--update'=
+. [-Wother]
+
+I assume this is because I have upgraded bison to version 3.4.1 (from
+3.3.2).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/YIpyK4wjFksG+_d6t+fNZa6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1oSqYACgkQAVBC80lX
+0Gy1FggAmpbr9SA0QbuTeCDiwUYJQdaEQ5UN5uvZMV9MMwu9tBiACdPGb2GFfrBF
+0dlEq/QMnQfxvWqSvWmxt7AiMiDT1ecO7GRWli4jV/mUC7ec0xLGVTATcxBw7/x7
+kJigr9sLDFaLoGDInpByUFL//h2cPgQp5r0eeZTDayVJi5jMwR2noT5S5SvbbT7R
+E3B92tqfCM+SONgT5qtxLoFZ3Kg6AUHfe3WTjPAmOwX9iruaDIKJuNpZduw0OWmP
+WOC0v42Od7JoU6YbYBaOFclWEIEPOerhJ7UjjL2xjXwice47Ge3iPMPaMytOvXmM
+I4v05H4EghDb66r/GrLLoCtT9Z6r1g==
+=fAa3
+-----END PGP SIGNATURE-----
+
+--Sig_/YIpyK4wjFksG+_d6t+fNZa6--
