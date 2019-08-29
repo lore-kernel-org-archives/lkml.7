@@ -2,99 +2,107 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70874C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCD2C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4702822CED
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:01:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnP8qDwm"
+	by mail.kernel.org (Postfix) with ESMTP id CFC942073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:01:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfH2ABq (ORCPT
+        id S1727096AbfH2ABr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 20:01:46 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43071 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfH2ABq (ORCPT
+        Wed, 28 Aug 2019 20:01:47 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38498 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727002AbfH2ABr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 20:01:46 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k3so553686pgb.10;
-        Wed, 28 Aug 2019 17:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+xL/Oj30ungnv7AXXKEXXc2ijUo+geLZ+6VixKgBmaI=;
-        b=LnP8qDwmC568ICHNp5X4e3Me3bgQ1MS4TmeAket+k/S9bNYaRQbWXvtxpZbflN52ID
-         cqHHfqWLapFZ4Un9/GVlrZ5xNbG+pxfF/GbZEy9dgC2M4JGM8mGkzXOAwfxgz467bt/5
-         9CIwOOcmDgwmv11Ro5n7QgufcHzqnJlkS8svK0O6mL06fuqfWxs/qDiS/fMEzFPXVRPr
-         v4fRA3LAZR3w4GhDLJ8X0t0SYQGI7RITGnd21qQv5lghBlcVTXWBEfnXvbWjXtHOfZaa
-         Q6uS78IWI2Y8KEdT1EFRwVOrwyi00Y9GH0W/PxBJg3K1zuGQ6bdp2LC9Ewhe2amfPsEk
-         MEgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+xL/Oj30ungnv7AXXKEXXc2ijUo+geLZ+6VixKgBmaI=;
-        b=d9DCEl/cmybYdZCPYH3hyR1SYdS7dl596HsF7/prfN2g7wjW+hKN6hFfY/YohYtaMb
-         EcMh+FPuuwNNB9edS9csw5S3xdpmYVoJyoj7w1mSFgrcS4juRramPtN2sbUloOm2AXyP
-         2Nvbx/9l54k+wyN/2Fi7y7amwfWT1vv0cdUVP2FxHkoRWyRI0svoI2zTwldJ3sIn0Q/+
-         wvfnCTGJDTMPsRU0nRFsvCdZiR23tyJyOaAvsOpd72Ps3gcSu81N/hajoGNkpZXe2aSB
-         AKdne90eJXfJvd3tTQyhj4/1oSKZEebnTGg4v/ldECyxbLRhy3om9/Gwy6eA9X7oePbD
-         p9pQ==
-X-Gm-Message-State: APjAAAUBQzFE4SiQoLMSPB/RvKa4xsIoaImLM9q4EdTD8/+dQ29QPYDC
-        PGmnE5hF+DLESgiHM+oMOMQthizR
-X-Google-Smtp-Source: APXvYqwkb50dVh1LsEmevzcBW8xq0HTr8GOVnv0hQTgH4Tc05RGyLNRErIMMR6mRVV0ZvzpdRTupNg==
-X-Received: by 2002:a65:5b09:: with SMTP id y9mr5874979pgq.345.1567036905268;
-        Wed, 28 Aug 2019 17:01:45 -0700 (PDT)
-Received: from masabert (150-66-70-147m5.mineo.jp. [150.66.70.147])
-        by smtp.gmail.com with ESMTPSA id y10sm277114pjp.27.2019.08.28.17.01.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 17:01:44 -0700 (PDT)
-Received: by masabert (Postfix, from userid 1000)
-        id 010D42011A3; Thu, 29 Aug 2019 09:01:31 +0900 (JST)
-From:   Masanari Iida <standby24x7@gmail.com>
-To:     linux-kernel@vger.kernel.org, shuah@kernel.org,
-        bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com
-Cc:     Masanari Iida <standby24x7@gmail.com>
-Subject: [PATCH] selftests/bpf: Fix a typo in test_offload.py
-Date:   Thu, 29 Aug 2019 09:01:30 +0900
-Message-Id: <20190829000130.7845-1-standby24x7@gmail.com>
-X-Mailer: git-send-email 2.23.0.37.g745f6812895b
-MIME-Version: 1.0
+        Wed, 28 Aug 2019 20:01:47 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7SNv3T0087175
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 20:01:45 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2up2mvhpw6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 20:01:45 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 29 Aug 2019 01:01:43 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 29 Aug 2019 01:01:40 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7T01dRp21168142
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 00:01:39 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2D3F342042;
+        Thu, 29 Aug 2019 00:01:39 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B61F34207D;
+        Thu, 29 Aug 2019 00:01:37 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.129.156])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 29 Aug 2019 00:01:37 +0000 (GMT)
+Subject: Re: [PATCH v1] sefltest/ima: support appended signatures (modsig)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, Petr Vorel <pvorel@suse.cz>,
+        Jessica Yu <jeyu@kernel.org>, Dave Young <dyoung@redhat.com>,
+        shuah <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Wed, 28 Aug 2019 20:01:37 -0400
+In-Reply-To: <87o908eu7l.fsf@morokweng.localdomain>
+References: <1567005240-12912-1-git-send-email-zohar@linux.ibm.com>
+         <87o908eu7l.fsf@morokweng.localdomain>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19082900-0016-0000-0000-000002A41152
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082900-0017-0000-0000-0000330463C3
+Message-Id: <1567036897.6115.94.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-28_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=797 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908280221
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fix a spelling typo in test_offload.py
+On Wed, 2019-08-28 at 20:38 -0300, Thiago Jung Bauermann wrote:
+> Hello Mimi,
+> 
+> Mimi Zohar <zohar@linux.ibm.com> writes:
+> 
+> > In addition to the PE/COFF and IMA xattr signatures, the kexec kernel
+> > image can be signed with an appended signature, using the same
+> > scripts/sign-file tool that is used to sign kernel modules.
+> >
+> > This patch adds support for detecting a kernel image signed with an
+> > appended signature and updates the existing test messages
+> > appropriately.
+> >
+> > Reviewed-by: Petr Vorel <pvorel@suse.cz>
+> > Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> 
+> Thanks for doing this!
 
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
----
- tools/testing/selftests/bpf/test_offload.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You're welcome.  This isn't in lieu of a proper regression test that
+verifies the IMA measurement list template modsig and d-modsig data
+fields.  That still needs to be written.
 
-diff --git a/tools/testing/selftests/bpf/test_offload.py b/tools/testing/selftests/bpf/test_offload.py
-index 425f9ed27c3b..15a666329a34 100755
---- a/tools/testing/selftests/bpf/test_offload.py
-+++ b/tools/testing/selftests/bpf/test_offload.py
-@@ -1353,7 +1353,7 @@ try:
-     bpftool_prog_list_wait(expected=1)
- 
-     ifnameB = bpftool("prog show %s" % (progB))[1]["dev"]["ifname"]
--    fail(ifnameB != simB1['ifname'], "program not bound to originial device")
-+    fail(ifnameB != simB1['ifname'], "program not bound to original device")
-     simB1.remove()
-     bpftool_prog_list_wait(expected=1)
- 
--- 
-2.23.0.37.g745f6812895b
+thanks,
+
+Mimi
 
