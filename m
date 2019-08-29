@@ -2,119 +2,143 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEF1C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84337C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8432D20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:53:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cP79UUZk"
+	by mail.kernel.org (Postfix) with ESMTP id 6478222CED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbfH2OxH (ORCPT
+        id S1728330AbfH2Ow7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:53:07 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40556 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728852AbfH2OxF (ORCPT
+        Thu, 29 Aug 2019 10:52:59 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:50166 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728084AbfH2OvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:53:05 -0400
-Received: by mail-pl1-f194.google.com with SMTP id h3so1686588pls.7
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:53:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=IVt1U8oT+FQK7aUwrMR2Tp9XbQQNNH4JQiQH6Rt7qf4=;
-        b=cP79UUZk928DGL+GxphxoDqthoR4vlD+VEpiHJe8dJnI74dSK5hHZDn/8xoNtlwaLH
-         IkL9g+CPoO3ERIm4twApQ3fSHH+/cFNlISlAnPCINnupwLmEXMmKVkw35ldVMfLUUOXK
-         yToPL4+v5EmLSwhPC+E3qcL0teiSDB+eD/bXw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=IVt1U8oT+FQK7aUwrMR2Tp9XbQQNNH4JQiQH6Rt7qf4=;
-        b=eS0JBJRoXBqPfOuG2rgB3RyStlEQE1PJRrMRUwjd76RNXh53d+h+df0MV6e0UzLdgs
-         sFYCP+PIBVJDf+grlzgN2xuZZU49G+64hhPvRgy2zF3RoXNy28e0jNwPQuMKoxdV9jzm
-         uBByBTzlpr+gtirvF0Q+k7SUWHFu3II2tqmJ18ElHIYoby/OQjODtWuI4fR1D0XAt+Or
-         uuwbbHvyhTA3ZkpmC+dMXQl8fTBmTPXm5CSsrJJOSFZk/WphL7OApzU+E37xkR/vZzFg
-         5092M2c3eweS2R1zY93RpCYovAsn6UUDqdXDEL0IY7sD/z5nKOpKjaSnDiIqFLrn5ZW+
-         AneA==
-X-Gm-Message-State: APjAAAUNomCta6lROlBsqSGsgaulFGiw9mBHSYOYVAfR/fVi9fqfH+Fb
-        i0qFocUAcwDVz4DTkTtjNdZOSA==
-X-Google-Smtp-Source: APXvYqxCLdj3EhSbQwuRFHN9HLXmn0KH0bqkF8GZwr3xBMF5lOEAwyd/+Ll4gbD0AERbHDMcrTdDfg==
-X-Received: by 2002:a17:902:f217:: with SMTP id gn23mr10280979plb.21.1567090384357;
-        Thu, 29 Aug 2019 07:53:04 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id ev3sm16476457pjb.3.2019.08.29.07.53.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 07:53:03 -0700 (PDT)
-Message-ID: <5d67e6cf.1c69fb81.5aec9.3b71@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAP245DWWKsZBHnvSqC40XOH48kGd-hykd+fr-UZfWTmvuG2KaA@mail.gmail.com>
-References: <cover.1566907161.git.amit.kucheria@linaro.org> <66ac3d3707d6296ef85bf1fa321f7f1ee0c02131.1566907161.git.amit.kucheria@linaro.org> <5d65cbe9.1c69fb81.1ceb.2374@mx.google.com> <CAP245DWWKsZBHnvSqC40XOH48kGd-hykd+fr-UZfWTmvuG2KaA@mail.gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Thu, 29 Aug 2019 10:51:19 -0400
+X-UUID: 813655c447fa40b3a3d8bbc9181b1351-20190829
+X-UUID: 813655c447fa40b3a3d8bbc9181b1351-20190829
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <yongqiang.niu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 901347666; Thu, 29 Aug 2019 22:51:10 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 29 Aug 2019 22:51:14 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 29 Aug 2019 22:51:13 +0800
+From:   <yongqiang.niu@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Brian Masney <masneyb@onstation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 07/15] dt: thermal: tsens: Document interrupt support in tsens driver
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 29 Aug 2019 07:53:02 -0700
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Yongqiang Niu <yongqiang.niu@mediatek.com>
+Subject: [PATCH v5, 08/32] drm/mediatek: add mutex mod register offset into ddp private data
+Date:   Thu, 29 Aug 2019 22:50:30 +0800
+Message-ID: <1567090254-15566-9-git-send-email-yongqiang.niu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Amit Kucheria (2019-08-29 01:48:27)
-> On Wed, Aug 28, 2019 at 6:03 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > Quoting Amit Kucheria (2019-08-27 05:14:03)
-> > > Define two new required properties to define interrupts and
-> > > interrupt-names for tsens.
-> > >
-> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt=
- b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > > index 673cc1831ee9d..686bede72f846 100644
-> > > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > > @@ -22,6 +22,8 @@ Required properties:
-> > >
-> > >  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a descr=
-iption.
-> > >  - #qcom,sensors: Number of sensors in tsens block
-> > > +- interrupts: Interrupts generated from Always-On subsystem (AOSS)
-> >
-> > Is it always one? interrupt-names makes it sound like it.
-> >
-> > > +- interrupt-names: Must be one of the following: "uplow", "critical"
->=20
-> Will fix to "one or more of the following"
->=20
+From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-Can we get a known quantity of interrupts for a particular compatible
-string instead? Let's be as specific as possible. The index matters too,
-so please list them in the order that is desired.
+mutex mod register offset will be private data of ddp.
+
+Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index b6cc3d8..ae22e21 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -33,12 +33,14 @@
+ #define DISP_REG_CONFIG_DSI_SEL			0x050
+ #define DISP_REG_CONFIG_DPI_SEL			0x064
+ 
+-#define DISP_REG_MUTEX_EN(n)	(0x20 + 0x20 * (n))
+-#define DISP_REG_MUTEX(n)	(0x24 + 0x20 * (n))
+-#define DISP_REG_MUTEX_RST(n)	(0x28 + 0x20 * (n))
+-#define DISP_REG_MUTEX_MOD(n)	(0x2c + 0x20 * (n))
+-#define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
+-#define DISP_REG_MUTEX_MOD2(n)	(0x34 + 0x20 * (n))
++#define MT2701_DISP_MUTEX0_MOD0			0x2c
++
++#define DISP_REG_MUTEX_EN(n)			(0x20 + 0x20 * (n))
++#define DISP_REG_MUTEX(n)			(0x24 + 0x20 * (n))
++#define DISP_REG_MUTEX_RST(n)			(0x28 + 0x20 * (n))
++#define DISP_REG_MUTEX_MOD(mutex_mod_reg, n)	(mutex_mod_reg + 0x20 * (n))
++#define DISP_REG_MUTEX_SOF(n)			(0x30 + 0x20 * (n))
++#define DISP_REG_MUTEX_MOD2(n)			(0x34 + 0x20 * (n))
+ 
+ #define INT_MUTEX				BIT(1)
+ 
+@@ -141,6 +143,7 @@ struct mtk_disp_mutex {
+ 
+ struct mtk_ddp_data {
+ 	const unsigned int *mutex_mod;
++	const unsigned int mutex_mod_reg;
+ };
+ 
+ struct mtk_ddp {
+@@ -200,14 +203,17 @@ struct mtk_ddp {
+ 
+ static const struct mtk_ddp_data mt2701_ddp_driver_data = {
+ 	.mutex_mod = mt2701_mutex_mod,
++	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+ };
+ 
+ static const struct mtk_ddp_data mt2712_ddp_driver_data = {
+ 	.mutex_mod = mt2712_mutex_mod,
++	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+ };
+ 
+ static const struct mtk_ddp_data mt8173_ddp_driver_data = {
+ 	.mutex_mod = mt8173_mutex_mod,
++	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+ };
+ 
+ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+@@ -473,7 +479,8 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+ 		break;
+ 	default:
+ 		if (ddp->data->mutex_mod[id] < 32) {
+-			offset = DISP_REG_MUTEX_MOD(mutex->id);
++			offset = DISP_REG_MUTEX_MOD(ddp->data->mutex_mod_reg,
++						    mutex->id);
+ 			reg = readl_relaxed(ddp->regs + offset);
+ 			reg |= 1 << ddp->data->mutex_mod[id];
+ 			writel_relaxed(reg, ddp->regs + offset);
+@@ -511,7 +518,8 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+ 		break;
+ 	default:
+ 		if (ddp->data->mutex_mod[id] < 32) {
+-			offset = DISP_REG_MUTEX_MOD(mutex->id);
++			offset = DISP_REG_MUTEX_MOD(ddp->data->mutex_mod_reg,
++						    mutex->id);
+ 			reg = readl_relaxed(ddp->regs + offset);
+ 			reg &= ~(1 << ddp->data->mutex_mod[id]);
+ 			writel_relaxed(reg, ddp->regs + offset);
+-- 
+1.8.1.1.dirty
 
