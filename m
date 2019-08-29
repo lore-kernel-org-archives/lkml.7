@@ -2,101 +2,131 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8968C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63633C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9C452073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EF52073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:13:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jEkJhc78"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kg0eD7aN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbfH2QMO (ORCPT
+        id S1727928AbfH2QNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:12:14 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42882 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbfH2QMN (ORCPT
+        Thu, 29 Aug 2019 12:13:06 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:37450 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbfH2QNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:12:13 -0400
-Received: by mail-pg1-f193.google.com with SMTP id p3so1822253pgb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:12:13 -0700 (PDT)
+        Thu, 29 Aug 2019 12:13:05 -0400
+Received: by mail-yb1-f196.google.com with SMTP id t5so1382436ybt.4;
+        Thu, 29 Aug 2019 09:13:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PTQEC1Y4Yke23JK/LTgM0w8mgR2qZy0PBRnUbbY2XIo=;
-        b=jEkJhc78PLM/JgFtQZWk7kdLuecagNe2WAYo89y8WuOW4zoGzT+kbSB8NIBe0zcalQ
-         8PuF7Tdx7O8kY3LHOmHoCLfdJE91HQsCRyH1tciyLHfk3TBVMVq54nZfsIqsE4hgd3fB
-         +OG0j04f8N9mNquyfOwl+bczuWP6l61lZjAEI=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kNznxc1elQs9GK9cu3jq6YkqkQEUKZhFLbPtaGv0C7o=;
+        b=Kg0eD7aNyxUxwwHK5ETgxsz5XldzcAgvsJUzNfvpReGhHOVR2p+874TdwEXnXR9zQ2
+         K9h3T4xDrjrK8j4+dYWIXFkFPPpKRg7Tw76OfrkTNwwV8dzbGtTE3Vx9uSi7skwRwiXL
+         Wz7QG0/CBZ0++nKYNWMsl4mgSFICLzr7VLX1x7QbzZt5D2MEkkRQ8BE4A3Dk79c8I5dk
+         X8RHnt18Ofzeh3b9D7E8hnI97l58deFHhK+/NyftX5pRcqTaY/vRzCCLgAUiKT/SgEUF
+         1B5fixfjE4QImmhs+0/1xvvFK+xXN2T2wl+RZ0mjgVDw9NAr+w2vadGJqEGjDtVsYrY+
+         VaTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PTQEC1Y4Yke23JK/LTgM0w8mgR2qZy0PBRnUbbY2XIo=;
-        b=J224Bkxf+3i5CcyiT5rJBMcimPcQ+Wdl/sAhK0BNwRkyDSeaSynR4W85sNX99deFPg
-         SP4WtIyKdMndRgSVZXBRAir5qVMJIF6GBgY6Y092E9ZugbuTH8eaH1tuBLZ+AfheIrfm
-         u1/Z9Ln417k6i5mp1byOy8BlSfbaqEXFhKlQA8GRAf/UCS1HfetWhqbzW4DvWCEJ8wCU
-         WoBvrfFxlz++daIFbll8uDiK2Ro72coLUmxG+dVhN4SBKxkGdbB5Gv8jmcXWWGO8HOiM
-         hk2OGBWo+YwZllX816RFdNZck4AyhGJ3Kz/eY1nRU6kcI6HSx8inHVWpX5RS/sWa1g4Q
-         b7gA==
-X-Gm-Message-State: APjAAAXOwxwKIyIRwNQyz/8QR3XbmuPhTm21X56/PM3pr88gNjw0qZGT
-        hccvCuBRb63GKOk3SSwpoA2RMA==
-X-Google-Smtp-Source: APXvYqy1FKWow3z/gmrxsTdklap8cVSHO9/ZQ8Lf2Lm5FnOpYJcBns/BeEGMcIZIyZEJa9XDM04jcg==
-X-Received: by 2002:a63:ff66:: with SMTP id s38mr9209438pgk.363.1567095133110;
-        Thu, 29 Aug 2019 09:12:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 1sm3891410pfx.56.2019.08.29.09.12.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 09:12:11 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 09:12:10 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Feng Tang <feng.tang@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception
- handler
-Message-ID: <201908290910.BA3ED6BDEF@keescook>
-References: <201908200943.601DD59DCE@keescook>
- <20190822155611.a1a6e26db99ba0876ba9c8bd@linux-foundation.org>
- <86003539-18ec-f2ff-a46f-764edb820dcd@c-s.fr>
- <201908241206.D223659@keescook>
- <4c1ed94a-4dd0-e5cb-0b87-397b512d465e@c-s.fr>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kNznxc1elQs9GK9cu3jq6YkqkQEUKZhFLbPtaGv0C7o=;
+        b=adk9d0Dwfc6Kew0WVc1tly3JbjLDW8Gd0Cv8QSnjCERA4Je0LwmMu2xOywhtcTpxaO
+         +zDQj3mQ+KKYp1SH6c7M56F9Jtbpgb1rybiNsRkn8i9R0eEm7d1fyn2BI6zW40FB6y3v
+         2PcysyDIh44skUBo8zDVL1UTc146AQe5nSuyLXNIDbU9iW3+NM/zXKn45QY/zEjTLcFO
+         YjP/WnbO+N61IU0rzHsx6n1zbNRgbN70a4kJwosmfOBQkvfO9KSOZs2lsOrL9Mz21vyr
+         Nwf6wDGbpnITkJ3O/NIsl39Z1bjjUe2tRhm0ZqJgS/KlgEKTqpywbWXD0MCNzQLiXgTF
+         GlBg==
+X-Gm-Message-State: APjAAAUsHXRtOD3RQSRIrxdRCbEI0b12rnwLipYxe5JYmXSXwlI0PKNo
+        XVfTUCK82yIpUfRd0vmpu9JFuA5qffvHnc3MiPA=
+X-Google-Smtp-Source: APXvYqxOiciOtyiybUGhnpKGmM1DjYJIs5IYPSDqHbwUFYOmyJV/fnnpTn6QkBGE0FEPgWf28bsP8P7NLrHxQy9Y8Rk=
+X-Received: by 2002:a25:9cc9:: with SMTP id z9mr7850415ybo.496.1567095184713;
+ Thu, 29 Aug 2019 09:13:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c1ed94a-4dd0-e5cb-0b87-397b512d465e@c-s.fr>
+References: <20190826081752.57258-1-kkamagui@gmail.com> <CACdnJutomLNthYDzEc0wFBcBHK5iqnk0p-hkAkp57zQZ38oGPA@mail.gmail.com>
+ <CAHjaAcSFhQsDYL2iRwwhyvxh9mH4DhxZ__DNzhtk=iiZZ5JdbA@mail.gmail.com>
+ <CACdnJutfR2X-5ksXw4PNUdyH2MJs_mExNCcYPp8NLcPW2EDrYQ@mail.gmail.com>
+ <CAHjaAcSpU0eW5PLsEpxTkycwi+wNS67xeizb6_BMM_-qUZYAmg@mail.gmail.com>
+ <20190827171106.owkvt6slwwg5ypyl@srcf.ucam.org> <CAHjaAcSu04J3WqT_vnSnaQuYpFQ+xiXXWxhcCeLQccEq6eQGcQ@mail.gmail.com>
+ <20190829153437.gjcqfolsc26vyt4x@linux.intel.com> <20190829153917.glq6eoka2eufy42w@linux.intel.com>
+In-Reply-To: <20190829153917.glq6eoka2eufy42w@linux.intel.com>
+From:   Seunghun Han <kkamagui@gmail.com>
+Date:   Fri, 30 Aug 2019 01:12:53 +0900
+Message-ID: <CAHjaAcQ2OmrFO2wWCXocR9xO_aTRYU4vLf3aBr4v5Fn2A89wvg@mail.gmail.com>
+Subject: Re: [PATCH] x86: tpm: Remove a busy bit of the NVS area for
+ supporting AMD's fTPM
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 06:55:59AM +0200, Christophe Leroy wrote:
-> Euh ... only received this mail yesterday. Same for the other answer.
+>
+> On Thu, Aug 29, 2019 at 06:34:37PM +0300, Jarkko Sakkinen wrote:
+> > On Wed, Aug 28, 2019 at 06:36:04PM +0900, Seunghun Han wrote:
+> > > >
+> > > > On Wed, Aug 28, 2019 at 01:36:30AM +0900, Seunghun Han wrote:
+> > > >
+> > > > > I got your point. Is there any problem if some regions which don't
+> > > > > need to be handled in NVS area are saved and restored? If there is a
+> > > > > problem, how about adding code for ignoring the regions in NVS area to
+> > > > > the nvs.c file like Jarkko said? If we add the code, we can save and
+> > > > > restore NVS area without driver's interaction.
+> > > >
+> > > > The only thing that knows which regions should be skipped by the NVS
+> > > > driver is the hardware specific driver, so the TPM driver needs to ask
+> > > > the NVS driver to ignore that region and grant control to the TPM
+> > > > driver.
+> > > >
+> > > > --
+> > > > Matthew Garrett | mjg59@srcf.ucam.org
+> > >
+> > > Thank you, Matthew and Jarkko.
+> > > It seems that the TPM driver needs to handle the specific case that
+> > > TPM regions are in the NVS. I would make a patch that removes TPM
+> > > regions from the ACPI NVS by requesting to the NVS driver soon.
+> > >
+> > > Jarkko,
+> > > I would like to get some advice on it. What do you think about
+> > > removing TPM regions from the ACPI NVS in TPM CRB driver? If you don't
+> > > mind, I would make the patch about it.
+> >
+> > I'm not sure if ignoring is right call. Then the hibernation behaviour
+> > for TPM regions would break.
+> >
+> > Thus, should be "ask access" rather than "grant control".
 
-Yeah, my outbound mail was busted. :(
+I agree with your idea. It seems to make trouble. So, I would like to
+do like your idea below.
 
-> I think you wanted to use In-reply-to:
-> [...]
-> But still, Andrew is seing double ... And me as well :)
-> 
-> Fixes: Fixes:
+> Or "reserve access" as NVS driver does not have intelligence to do any
+> policy based decision here.
+>
+> A function that gets region and then checks if NVS driver has matching
+> one and returns true/false based on that should be good enough. Then
+> you raw ioremap() in the TPM driver.
+>
+> /Jarkko
 
-I had a lot of failures in that email. :)
+This solution is great and clear to me. I will make a new patch on
+your advice and test it in my machine. After that, I will send it
+again soon.
+I really appreciate it.
 
-Thank you Andrew for cleaning this up.
-
--- 
-Kees Cook
+Seunghun
