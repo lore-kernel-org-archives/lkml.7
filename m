@@ -2,84 +2,71 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F22C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B913DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE2A2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F22E2189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:45:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567097108;
+	bh=qihyy7S1W4r7GXG2gcMAKEgrqcDz1i+xZRSpyUxJicw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=tp92c8Cl9YoxE3S5Y6CtO14eNRbOezscLl2X5sLpI5Z5Lroz5TY22ZaaEi2zNkaNU
+	 3B81ouS+j+Z+QiTb/UuSTTcdw+thuBE8wVoJ3o8kOrWCE/9G2IlxMun3K32KogYdNY
+	 klUHo4tFteIn+inyQbq+mdoRSvh1b+pYK7+Rweno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbfH2Qog (ORCPT
+        id S1728042AbfH2QpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:44:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42572 "EHLO mx1.redhat.com"
+        Thu, 29 Aug 2019 12:45:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbfH2Qog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:44:36 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 16DE118B3D83;
-        Thu, 29 Aug 2019 16:44:36 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9659F5D9D3;
-        Thu, 29 Aug 2019 16:44:34 +0000 (UTC)
-Date:   Thu, 29 Aug 2019 18:44:32 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH v2 1/4] KVM: selftests: Move vm type into _vm_create()
- internally
-Message-ID: <20190829164432.e5kxt4e2f5ncxwlc@kamzik.brq.redhat.com>
-References: <20190829022117.10191-1-peterx@redhat.com>
- <20190829022117.10191-2-peterx@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829022117.10191-2-peterx@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Thu, 29 Aug 2019 16:44:36 +0000 (UTC)
+        id S1727022AbfH2QpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:45:07 -0400
+Subject: Re: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567097106;
+        bh=qihyy7S1W4r7GXG2gcMAKEgrqcDz1i+xZRSpyUxJicw=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=O5n2/70wObdWeANZHvsrlOVWQL81xBPhw8e2XqRynKDCUwCPXzemdkccLsTzE/YRG
+         4HtzAijlyJUntjqhiGymig+ZxGgcPpHHg0ueozv3TY3WKkSUoiofk5Io4MfTeXQdN1
+         pWNNr45gLN6NUnxhT3mYRHaYL0Fax3ASE63GJNy4=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190829161639.GA18147@embeddedor>
+References: <20190829161639.GA18147@embeddedor>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190829161639.GA18147@embeddedor>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git
+ tags/Wimplicit-fallthrough-5.3-rc7
+X-PR-Tracked-Commit-Id: 7c9eb2dbd770b7c9980d5839dd305a70fbc5df67
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4a64489cf8e21a17fd6dd88935818ba7307ba996
+Message-Id: <156709710665.30085.5726463718274551620.pr-tracker-bot@kernel.org>
+Date:   Thu, 29 Aug 2019 16:45:06 +0000
+To:     "Gustavo A. R. Silva" <gustavo@linux.embeddedor.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 10:21:14AM +0800, Peter Xu wrote:
-> Rather than passing the vm type from the top level to the end of vm
-> creation, let's simply keep that as an internal of kvm_vm struct and
-> decide the type in _vm_create().  Several reasons for doing this:
-> 
-> - The vm type is only decided by physical address width and currently
->   only used in aarch64, so we've got enough information as long as
->   we're passing vm_guest_mode into _vm_create(),
-> 
-> - This removes a loop dependency between the vm->type and creation of
->   vms.  That's why now we need to parse vm_guest_mode twice sometimes,
->   once in run_test() and then again in _vm_create().  The follow up
->   patches will move on to clean up that as well so we can have a
->   single place to decide guest machine types and so.
-> 
-> Note that this patch will slightly change the behavior of aarch64
-> tests in that previously most vm_create() callers will directly pass
-> in type==0 into _vm_create() but now the type will depend on
-> vm_guest_mode, however it shouldn't affect any user because all
-> vm_create() users of aarch64 will be using VM_MODE_DEFAULT guest
-> mode (which is VM_MODE_P40V48_4K) so at last type will still be zero.
-> 
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  tools/testing/selftests/kvm/dirty_log_test.c  | 13 +++---------
->  .../testing/selftests/kvm/include/kvm_util.h  |  3 +--
->  tools/testing/selftests/kvm/lib/kvm_util.c    | 21 ++++++++++++-------
->  3 files changed, 17 insertions(+), 20 deletions(-)
->
+The pull request you sent on Thu, 29 Aug 2019 11:16:39 -0500:
 
-Reviewed-by: Andrew Jones <drjones@redhat.com>
+> git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wimplicit-fallthrough-5.3-rc7
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4a64489cf8e21a17fd6dd88935818ba7307ba996
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
