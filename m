@@ -2,139 +2,134 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C68C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362EDC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9A12189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C1D215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:53:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LlGZy+/D"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n/5qsmvg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfH2Nvz (ORCPT
+        id S1727735AbfH2NxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:51:55 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:38072 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbfH2Nvz (ORCPT
+        Thu, 29 Aug 2019 09:53:09 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58844 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727063AbfH2NxJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:51:55 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7TDnNxP095592;
-        Thu, 29 Aug 2019 13:50:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=Fd9hv6LyJBtuu9ZkSbuId7vkAVpMFdpT9DAMePfpKUs=;
- b=LlGZy+/DG+OXEKjb+xgSZmFbX6eKUKcb8gVa0bmQ4CG/Nft6uZ7A55vWkTZ8J8gf0Jqv
- bkwlXEK43cZ2rRynMhqsvtgTcWlgbG0SnaCO9mEcW679IAmJ2y5yRRe9nv/5zXCrtYC5
- dLPADKS7e9opjOwx3OC2auQu9H58xe6zqbkGOziog91lNWaYK+/jv4vGXxfKcuc0JAdW
- a443/QnB0NWV0yYwTQYGeO9hHwIP/ZQSp7KLoXxg/y898dqdKsyvKlgKksvfhXGc7uAc
- KTezwu6PkHpNnf1VTzILbXK/dJWSaNpbKPgsS2B4mGv0ZOn6xo0+pzpaCNPiljXiJR4y wg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2upfwx808j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 13:50:31 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7TDm7t2074044;
-        Thu, 29 Aug 2019 13:50:30 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2untev2f8a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 13:50:30 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7TDoRYU028608;
-        Thu, 29 Aug 2019 13:50:27 GMT
-Received: from [10.175.160.184] (/10.175.160.184)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 29 Aug 2019 13:50:27 +0000
-Subject: Re: [PATCH v1] cpuidle-haltpoll: vcpu hotplug support
-To:     Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-References: <20190828185650.16923-1-joao.m.martins@oracle.com>
- <20190829115634.GA4949@amt.cnet>
-From:   Joao Martins <joao.m.martins@oracle.com>
-Message-ID: <8c459d91-bc47-2ff4-7d3b-243ed4e466cb@oracle.com>
-Date:   Thu, 29 Aug 2019 14:50:21 +0100
+        Thu, 29 Aug 2019 09:53:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zZ5dIDLPt1Nso49/uiRsureRpg7rvs2R4X3SF+2XaOA=; b=n/5qsmvgT6yVyYOrprJemW4eO
+        K/p/fUfTe9nfZ77ynJ2k5zM8QZ9pzTT07SGpBYJhtYl1AY/cjB2Fi/9LsngmyDGOmvtDX2FfVQhV4
+        qLkZfuLv+5rzYF4UlMlmu99VJw8iPmw2jVGh/FlbYuf6JqF5wyg1nSMQrhExi2EbguGS2NX/0nBm+
+        ih0OQShQ5Tc7ftsvLbdMqUGD5nlN/gb3b6DJ4A9PtKc4SAq7H0Q4ah9V3GO749icczvAygC4JzAbS
+        ZaBz7zT3E08ltBVLqkbjQ+ZZz7b09yHWkKPWXqnawXIsl6iuzE7JUZEpUkUDmEKYz4wCQVlW0LYmd
+        AVb0fQEAg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3KrD-0003DJ-9b; Thu, 29 Aug 2019 13:52:59 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6C6FA301174;
+        Thu, 29 Aug 2019 15:52:22 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A73E320CA3889; Thu, 29 Aug 2019 15:52:56 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 15:52:56 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [RESEND PATCH V3 3/8] perf/x86/intel: Support hardware TopDown
+ metrics
+Message-ID: <20190829135256.GW2369@hirez.programming.kicks-ass.net>
+References: <20190826144740.10163-1-kan.liang@linux.intel.com>
+ <20190826144740.10163-4-kan.liang@linux.intel.com>
+ <20190828151921.GD17205@worktop.programming.kicks-ass.net>
+ <fd95a255-4499-2907-8af9-d340f157da68@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190829115634.GA4949@amt.cnet>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9363 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=5 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=978
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908290152
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9363 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=5 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908290152
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fd95a255-4499-2907-8af9-d340f157da68@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/19 12:56 PM, Marcelo Tosatti wrote:
-> Hi Joao,
+On Thu, Aug 29, 2019 at 09:31:37AM -0400, Liang, Kan wrote:
+> On 8/28/2019 11:19 AM, Peter Zijlstra wrote:
+> > > +static int icl_set_topdown_event_period(struct perf_event *event)
+> > > +{
+> > > +	struct hw_perf_event *hwc = &event->hw;
+> > > +	s64 left = local64_read(&hwc->period_left);
+> > > +
+> > > +	/*
+> > > +	 * Clear PERF_METRICS and Fixed counter 3 in initialization.
+> > > +	 * After that, both MSRs will be cleared for each read.
+> > > +	 * Don't need to clear them again.
+> > > +	 */
+> > > +	if (left == x86_pmu.max_period) {
+> > > +		wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
+> > > +		wrmsrl(MSR_PERF_METRICS, 0);
+> > > +		local64_set(&hwc->period_left, 0);
+> > > +	}
+> > This really doesn't make sense to me; if you set FIXED_CTR3 := 0, you'll
+> > never trigger the overflow there; this then seems to suggest the actual
+> > counter value is irrelevant. Therefore you don't actually need this.
+> > 
 > 
-> On Wed, Aug 28, 2019 at 07:56:50PM +0100, Joao Martins wrote:
->> +static void haltpoll_uninit(void)
->> +{
->> +	unsigned int cpu;
->> +
->> +	cpus_read_lock();
->> +
->> +	for_each_online_cpu(cpu) {
->> +		struct cpuidle_device *dev =
->> +			per_cpu_ptr(haltpoll_cpuidle_devices, cpu);
->> +
->> +		if (!dev->registered)
->> +			continue;
->> +
->> +		arch_haltpoll_disable(cpu);
->> +		cpuidle_unregister_device(dev);
->> +	}
-> 
-> 1)
-> 
->> +
->> +	cpuidle_unregister(&haltpoll_driver);
-> 
-> cpuidle_unregister_driver.
+> Could you please elaborate on why initialization to 0 never triggers an
+> overflow?
 
-Will fix -- this was an oversight.
+Well, 'never' as in a 'long' time.
 
-> 
->> +	free_percpu(haltpoll_cpuidle_devices);
->> +	haltpoll_cpuidle_devices = NULL;
->> +
->> +	cpus_read_unlock();
-> 
-> Any reason you can't cpus_read_unlock() at 1) ?
-> 
-No, let me adjust that too.
+> As of my understanding, initialization to 0 only means that it will take
+> more time than initialization to -max_period (0x8000 0000 0001) to trigger
+> an overflow.
 
-> Looks good otherwise.
-> 
-> Thanks!
-> 
-Thanks for the review!
+Only twice as long. And why do we care about that?
 
-	Joao
+The problem with it is though that you get the overflow at the end of
+the whole period, instead of halfway through, so reconstruction is
+trickier.
+
+> Maybe 0 is too tricky. We can set the initial value to 1.
+
+That's even worse. I'm still not understanding why we can't use the
+normal code.
+
+> I think the bottom line is that we need a small initial value for FIXED_CTR3
+> here.
+
+But why?!
+
+> PERF_METRICS reports an 8bit integer fraction which is something like 0xff *
+> internal counters / FIXCTR3.
+> The internal counters only start counting from 0. (SW cannot set an
+> arbitrary initial value for internal counters.)
+> If the initial value of FIXED_CTR3 is too big, PERF_METRICS could always
+> remain constant, e.g. 0.
+
+What what? The PERF_METRICS contents depends on the FIXCTR3 value ?!
+That's bloody insane. /me goes find the SDM. The SDM is bloody useless
+:-(.
+
+Please give a complete and coherent description of all of this. I can't
+very well review any of this until I know how the hardware works, now
+can I.
+
+In this write-up, include the exact condition for METRICS_OVF (the SDM
+states: 'it indicates that PERF_METRIC counter has overflowed', which is
+gramatically incorrect and makes no sense even with the missing article
+injected).
