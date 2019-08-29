@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D9FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635D9C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 979B322CED
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376F922CED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:47:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HMfbYmXr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BvU4rec9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727173AbfH2BrO (ORCPT
+        id S1727207AbfH2Br3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 21:47:14 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45879 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfH2BrO (ORCPT
+        Wed, 28 Aug 2019 21:47:29 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46870 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbfH2Br2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 21:47:14 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w26so927217pfq.12;
-        Wed, 28 Aug 2019 18:47:13 -0700 (PDT)
+        Wed, 28 Aug 2019 21:47:28 -0400
+Received: by mail-pg1-f194.google.com with SMTP id m3so668518pgv.13;
+        Wed, 28 Aug 2019 18:47:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=y7wOWVtdgYba6/53ys0NFahWK28JeB5ybGeALkzArW8=;
-        b=HMfbYmXrGhQlZrN+Dirv92vf0BKDbMHhEQvLcy6xcrHiI5GYD3Nd3ocunD6XJWO4tD
-         WtoD4XgJrzo/FPZhZbWfR4zZjz41sx/HPX+dxRSKQbbeki5IRRFxYIYQL+UDn9/Oco1U
-         zZ3H4FV9zGczGk//AKCnk0DuBw36LJO7t0CgDMoaWLH8wmZmLxOSut3qnrUevQP2ARmn
-         iU22F8iK6bibUnJ4YddJ9/YHZU8TFb7QbLCrluZTTa/bIjjNxzpkD3EVN8SA/GSj9t3o
-         v8fB3v5mSU+aT669LKNhtc4U80cnhcnoqd/Wf7PnURVycLRNF16Nexq1lAvkB1I43a0v
-         JPjw==
+        bh=YGoXtAO0ftV52GZRH7pV8AYEqnIRYcSzCikRX7NepxI=;
+        b=BvU4rec9mQ2H/jsLvyZftYbPBdWw8JV4F13Ey+a+isv76gZ8mKf4IQc6O3vqdaXC86
+         1XzFseQZO6YHxzHn9pVoe8QTz2bAMI3nXlPWfY6fm/IdrTGMs+zINQ/BW/64z6JHjxJN
+         nPzVrAQMJjoQuDipUZ8h7mBRSGlE5I0rnVjLCi3MTrahbhVDNxpFOBT9yZPfFR+cqnM1
+         A4jtt5k9gnM6z4IsdBgEloO1o4ZTG6eo7PFGv1dD7IdZ8GP3bNuNXz2uErLs4mmHYJ2b
+         YmRaHLacW0x5jMHOtMVy9gtlArPs+kbOo28DOk7hLjv8Q5X8jAnOzxkECqw4GhPCNwpr
+         2k0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=y7wOWVtdgYba6/53ys0NFahWK28JeB5ybGeALkzArW8=;
-        b=pKM+IsAQUb6b0rhZQyBeu06+IZPT4wOuwYGxvq/m3cZ1EeUm7pO21hn3EPQFWODLVl
-         aXlfTQExfkxCnsB3uOtBoxbN4pZvjh+6FKKPbP75JqM/qerMd4mZgLT8eiYctNipT0t7
-         pSaS41YK8zmMW+xm52RR5v3s7wqU1avmA+hJSErqTJW995VWOJKOvlndV33nnnZvMyMO
-         t6y3e2uTzR9SylURoDDNka9Y4JmM5WNaoZcrlNeUsUM62bIwL17F5LRYopuIBm0NJ/eK
-         yVsHZjnfGTEp/IHaC2no1wxsBlaPJMoGQ+irY/Ui/LAN8Fu/5AvbACHgzZaFdj9kURiP
-         MpwA==
-X-Gm-Message-State: APjAAAVCIgPbx3LH3Tre3AVuAb6rNdVWqdyYuNJBFiGnIKuXudOKC1gx
-        VZFBEd6a2qT8FA9RxH0DMpE=
-X-Google-Smtp-Source: APXvYqxJipM17YPzMwW+3SNGpQyE5L/9TRGBeccWoC20It9zh4vlAA7Pfqe6KQDBAt+MgBe2zhZYGA==
-X-Received: by 2002:a65:504c:: with SMTP id k12mr6128625pgo.252.1567043233298;
-        Wed, 28 Aug 2019 18:47:13 -0700 (PDT)
+        bh=YGoXtAO0ftV52GZRH7pV8AYEqnIRYcSzCikRX7NepxI=;
+        b=oYFqkSMjIBJngQ2HL5Zh8fbqXGOaHvPYS62YriYFHng7fzcuTMeVSPc4njnQL69izR
+         WpSio/jl/LRbAicf44lTHsDRsKpz0W55t9nj0P2oi9YuxJ/0V5Wc7XTUD7wBJ3YYN2FH
+         iw7zqR/zB6bAdAsNmvP3hXGpxLQuJq6bsCJzLbpcv6f9ZxauC+kq022RKCUwR/yXPrAG
+         PCdJ5MBc5bw3pCDp9tY91PYxqV7E+ZM6LURbZ4+BxsOinKsJAPLR8t6qZUM6IHLtVxsT
+         B66hU/7aFBDaDb9WKgDlNKIi+zpr9QQ+9jYLKGHxtoCkYtnavfD79XehavIY3Wcp/HoX
+         CtpA==
+X-Gm-Message-State: APjAAAU25cqe2feQZcfJ09wPKYGB2VR98oAbjdJjXwCxflX98Yu3ASwL
+        ceAdQSvl+eyRb0UFogKwFDk=
+X-Google-Smtp-Source: APXvYqxdXG8zDdX/WeI7C+KfUWzlvGqrK4voiDbCRBZJ2PdoJdni6lMSsuMcK4vEJRMSWZdjMylcBw==
+X-Received: by 2002:a17:90a:f011:: with SMTP id bt17mr7455588pjb.42.1567043248202;
+        Wed, 28 Aug 2019 18:47:28 -0700 (PDT)
 Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id j10sm404548pjn.3.2019.08.28.18.47.10
+        by smtp.gmail.com with ESMTPSA id j10sm404548pjn.3.2019.08.28.18.47.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 18:47:12 -0700 (PDT)
+        Wed, 28 Aug 2019 18:47:27 -0700 (PDT)
 From:   Chunyan Zhang <zhang.lyra@gmail.com>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
@@ -64,9 +64,9 @@ To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Baolin Wang <baolin.wang@linaro.org>
 Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [RESEND PATCH v2 1/5] mmc: sdhci-sprd: fixed incorrect clock divider
-Date:   Thu, 29 Aug 2019 09:46:41 +0800
-Message-Id: <20190829014645.4479-2-zhang.lyra@gmail.com>
+Subject: [RESEND PATCH v2 2/5] mmc: sdhci-sprd: add get_ro hook function
+Date:   Thu, 29 Aug 2019 09:46:42 +0800
+Message-Id: <20190829014645.4479-3-zhang.lyra@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829014645.4479-1-zhang.lyra@gmail.com>
 References: <20190829014645.4479-1-zhang.lyra@gmail.com>
@@ -79,9 +79,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-The register SDHCI_CLOCK_CONTROL should be cleared before config clock
-divider, otherwise the frequency configured maybe lower than we
-expected.
+sprd's sd host controller doesn't support write protect to sd card.
 
 Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host controller")
 Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
@@ -89,28 +87,33 @@ Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
 Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
 Tested-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/mmc/host/sdhci-sprd.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/mmc/host/sdhci-sprd.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index 6ee340a3fb3a..d5871865a1e9 100644
+index d5871865a1e9..90cb2af91159 100644
 --- a/drivers/mmc/host/sdhci-sprd.c
 +++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -217,10 +217,11 @@ static inline void _sdhci_sprd_set_clock(struct sdhci_host *host,
- 	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
- 	u32 div, val, mask;
+@@ -374,6 +374,11 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
+ 	return 1 << 31;
+ }
  
--	div = sdhci_sprd_calc_div(sprd_host->base_rate, clk);
-+	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
++static unsigned int sdhci_sprd_get_ro(struct sdhci_host *host)
++{
++	return 0;
++}
++
+ static struct sdhci_ops sdhci_sprd_ops = {
+ 	.read_l = sdhci_sprd_readl,
+ 	.write_l = sdhci_sprd_writel,
+@@ -386,6 +391,7 @@ static struct sdhci_ops sdhci_sprd_ops = {
+ 	.set_uhs_signaling = sdhci_sprd_set_uhs_signaling,
+ 	.hw_reset = sdhci_sprd_hw_reset,
+ 	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
++	.get_ro = sdhci_sprd_get_ro,
+ };
  
--	clk |= ((div & 0x300) >> 2) | ((div & 0xFF) << 8);
--	sdhci_enable_clk(host, clk);
-+	div = sdhci_sprd_calc_div(sprd_host->base_rate, clk);
-+	div = ((div & 0x300) >> 2) | ((div & 0xFF) << 8);
-+	sdhci_enable_clk(host, div);
- 
- 	/* enable auto gate sdhc_enable_auto_gate */
- 	val = sdhci_readl(host, SDHCI_SPRD_REG_32_BUSY_POSI);
+ static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 -- 
 2.20.1
 
