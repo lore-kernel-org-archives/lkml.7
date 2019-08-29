@@ -2,86 +2,273 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08754C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1C0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD67D22CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374F822CEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:46:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="UYQHthzH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MKlJ6W8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfH2WqB (ORCPT
+        id S1728676AbfH2WqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 18:46:01 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37507 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728581AbfH2Wp7 (ORCPT
+        Thu, 29 Aug 2019 18:46:07 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9635 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727907AbfH2Wpo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 18:45:59 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 97so2245233otr.4
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 15:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AIuig4xjj1okPm1v+nckMKBMxCFTk/w+YVlFEyiN+6I=;
-        b=UYQHthzH50nn10Fq77yoEj2YvcrNXNY6o18RXam9bIfpl1wHeEULO4yuuCSRI/Ru2K
-         RLreXb965cYq9f3IqoESXN6C24GqPvA0ZrmEimO02Cts4PIULu8eTSRXN1IJsCJpfuRT
-         +BxwrrliSYijoXLFR2JXb4Dd9dixmo7nx0t/SCzsYhC6j9bvK86j3oNNTrtP+EVJSHkr
-         99Pi3kPcsOf6m/wOqSI9Rwe2C2ZMhHPCJ4mFEsr7TfAmthneIydvqyFqOfcrDZTd1ej9
-         rYDVYNrMO2OaS4qmIqAoNyXXvTyMb6cGBOK+FkHL6xZJdSGVe9V9M57hTVctnR+W3nW/
-         RkxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AIuig4xjj1okPm1v+nckMKBMxCFTk/w+YVlFEyiN+6I=;
-        b=YMmXAa0JFW51anrQpkTOaz955Rahb7SayNVTB7EMhZSz8qeou0mUZ8S4OtqbX2zgh8
-         QFgmJyBFWNbCT16gEHlWHrB4R10L4GIy9iXjXCZQld7aicEbA38o43WUons+1ipcFZ3a
-         SryA8IAu70DK1jEAZoIqDXhcItY21g8o/GY0vQxbKwCD8lqJkv7QnCCjDnE1XFEOH3G2
-         ZM+1upL06RZ8L49ckWgY+Rzh38mF+uLEuJsAZvtwRZuo3rlYR8qNW6Y6uIbeHaJyY1qc
-         5NtZBau7YljfGPECsW/W1b46T6f1bFmTyQnD6ecaKPDg2AhzqSESTnjax+lBO2bkjOyi
-         7mHQ==
-X-Gm-Message-State: APjAAAVZ6NMkGxvlz4RCugola3oqMG9gl/mLzxWdRROdlNCYmvuw87kA
-        P624fIHp6HRiTC9xQtH3Pfba5kdauFBdz6EUqRYocw==
-X-Google-Smtp-Source: APXvYqy2RByDJRCk/msHyU5rudzz0l2j2S1qCHXaP4lkineatCLBMlR9sdECn9SSUKEhV7aUFLo14KwjqemHdp5tUtA=
-X-Received: by 2002:a05:6830:1e05:: with SMTP id s5mr9281786otr.247.1567118758900;
- Thu, 29 Aug 2019 15:45:58 -0700 (PDT)
+        Thu, 29 Aug 2019 18:45:44 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d6855980001>; Thu, 29 Aug 2019 15:45:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 29 Aug 2019 15:45:42 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 29 Aug 2019 15:45:42 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 29 Aug
+ 2019 22:45:42 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 29 Aug 2019 22:45:42 +0000
+Received: from vdumpa-ubuntu.nvidia.com (Not Verified[172.17.173.140]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d6855960002>; Thu, 29 Aug 2019 15:45:42 -0700
+From:   Krishna Reddy <vdumpa@nvidia.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <treding@nvidia.com>,
+        <yhsu@nvidia.com>, <snikam@nvidia.com>, <praithatha@nvidia.com>,
+        <talho@nvidia.com>, <avanbrunt@nvidia.com>, <thomasz@nvidia.com>,
+        <olof@lixom.net>, <jtukkinen@nvidia.com>, <mperttunen@nvidia.com>,
+        Krishna Reddy <vdumpa@nvidia.com>
+Subject: [PATCH 1/7] iommu/arm-smmu: add Nvidia SMMUv2 implementation
+Date:   Thu, 29 Aug 2019 15:47:01 -0700
+Message-ID: <1567118827-26358-2-git-send-email-vdumpa@nvidia.com>
+X-Mailer: git-send-email 2.1.4
+In-Reply-To: <1567118827-26358-1-git-send-email-vdumpa@nvidia.com>
+References: <1567118827-26358-1-git-send-email-vdumpa@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20190830080855.45421fa0@canb.auug.org.au>
-In-Reply-To: <20190830080855.45421fa0@canb.auug.org.au>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 29 Aug 2019 15:45:48 -0700
-Message-ID: <CAPcyv4iWUa-HVoODtbj-G2jxS0Tm-x_=s4PNQ-M-FvDibYFgFw@mail.gmail.com>
-Subject: Re: linux-next: Fixes tag needs some work in the nvdimm-fixes tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeff Moyer <jmoyer@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1567118744; bh=sYUobdUNL+/HqQeY66knX+3kptunAwB14i4cE6aqGZ4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=MKlJ6W8+IfrtPCVtFmdB02/bRW9w60dMSsZxIjs9PE4pUmsF2CTmZs7gMSeimGHga
+         4NcQjxcxv1WIh1m8ttqSTxp4DS17c/8Ns4b8ltUeDRjvsqPO5m0ylu2gBxbtrbkDHa
+         x0m9rAerzbyPMlC7G1sKMv1oKRH6rZ2Hx2l3c8apN5BXHbPjjudUHV05sUxAAWo7P4
+         gaHdx8qN/owbB4MtNHb8FX+MLZhVBmWXr7owjRKJbSWas0LpdrqLSeeztwjYOgMBZq
+         HUwnQBFe6ABHgD60xNqGIDag09JoZe378p/3TUjacIBHSNFhcCQ1Sd4j0dUyYMSpAA
+         sxEQTzYU22Yvw==
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 3:09 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> In commit
->
->   dcbce3cd20be ("libnvdimm/pfn: Fix namespace creation on misaligned addresses")
->
-> Fixes tag
->
->   Fixes: commit a3619190d62e ("libnvdimm/pfn: stop padding pmem namespaces ...")
->
-> has these problem(s):
->
->   - leading word 'commit' unexpected
+Add Nvidia SMMUv2 implementation and model info.
 
-"Fixes" fixed, thanks Stephen.
+Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+---
+ MAINTAINERS                     |  2 +
+ drivers/iommu/Makefile          |  2 +-
+ drivers/iommu/arm-smmu-impl.c   |  2 +
+ drivers/iommu/arm-smmu-nvidia.c | 97 +++++++++++++++++++++++++++++++++++++++++
+ drivers/iommu/arm-smmu.c        |  2 +
+ drivers/iommu/arm-smmu.h        |  2 +
+ 6 files changed, 106 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/iommu/arm-smmu-nvidia.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 289fb06..b9d59e51 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15785,9 +15785,11 @@ F:	drivers/i2c/busses/i2c-tegra.c
+ 
+ TEGRA IOMMU DRIVERS
+ M:	Thierry Reding <thierry.reding@gmail.com>
++R:	Krishna Reddy <vdumpa@nvidia.com>
+ L:	linux-tegra@vger.kernel.org
+ S:	Supported
+ F:	drivers/iommu/tegra*
++F:	drivers/iommu/arm-smmu-nvidia.c
+ 
+ TEGRA KBC DRIVER
+ M:	Laxman Dewangan <ldewangan@nvidia.com>
+diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+index a2729aa..7f5489e 100644
+--- a/drivers/iommu/Makefile
++++ b/drivers/iommu/Makefile
+@@ -13,7 +13,7 @@ obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
+ obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o
+ obj-$(CONFIG_AMD_IOMMU_DEBUGFS) += amd_iommu_debugfs.o
+ obj-$(CONFIG_AMD_IOMMU_V2) += amd_iommu_v2.o
+-obj-$(CONFIG_ARM_SMMU) += arm-smmu.o arm-smmu-impl.o
++obj-$(CONFIG_ARM_SMMU) += arm-smmu.o arm-smmu-impl.o arm-smmu-nvidia.o
+ obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
+ obj-$(CONFIG_DMAR_TABLE) += dmar.o
+ obj-$(CONFIG_INTEL_IOMMU) += intel-iommu.o intel-pasid.o
+diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
+index 5c87a38..e5e595f 100644
+--- a/drivers/iommu/arm-smmu-impl.c
++++ b/drivers/iommu/arm-smmu-impl.c
+@@ -162,6 +162,8 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+ 		break;
+ 	case CAVIUM_SMMUV2:
+ 		return cavium_smmu_impl_init(smmu);
++	case NVIDIA_SMMUV2:
++		return nvidia_smmu_impl_init(smmu);
+ 	default:
+ 		break;
+ 	}
+diff --git a/drivers/iommu/arm-smmu-nvidia.c b/drivers/iommu/arm-smmu-nvidia.c
+new file mode 100644
+index 0000000..d93ceda
+--- /dev/null
++++ b/drivers/iommu/arm-smmu-nvidia.c
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Nvidia ARM SMMU v2 implementation quirks
++// Copyright (C) 2019 NVIDIA CORPORATION.  All rights reserved.
++
++#define pr_fmt(fmt) "nvidia-smmu: " fmt
++
++#include <linux/bitfield.h>
++#include <linux/delay.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++
++#include "arm-smmu.h"
++
++#define NUM_SMMU_INSTANCES 3
++
++struct nvidia_smmu {
++	struct arm_smmu_device	smmu;
++	int			num_inst;
++	void __iomem		*bases[NUM_SMMU_INSTANCES];
++};
++
++#define to_nsmmu(s)	container_of(s, struct nvidia_smmu, smmu)
++
++#define nsmmu_page(smmu, inst, page) \
++	(((inst) ? to_nsmmu(smmu)->bases[(inst)] : smmu->base) + \
++	((page) << smmu->pgshift))
++
++static u32 nsmmu_read_reg(struct arm_smmu_device *smmu,
++			      int page, int offset)
++{
++	return readl_relaxed(nsmmu_page(smmu, 0, page) + offset);
++}
++
++static void nsmmu_write_reg(struct arm_smmu_device *smmu,
++				int page, int offset, u32 val)
++{
++	int i;
++
++	for (i = 0; i < to_nsmmu(smmu)->num_inst; i++)
++		writel_relaxed(val, nsmmu_page(smmu, i, page) + offset);
++}
++
++static u64 nsmmu_read_reg64(struct arm_smmu_device *smmu,
++				int page, int offset)
++{
++	return readq_relaxed(nsmmu_page(smmu, 0, page) + offset);
++}
++
++static void nsmmu_write_reg64(struct arm_smmu_device *smmu,
++				  int page, int offset, u64 val)
++{
++	int i;
++
++	for (i = 0; i < to_nsmmu(smmu)->num_inst; i++)
++		writeq_relaxed(val, nsmmu_page(smmu, i, page) + offset);
++}
++
++static const struct arm_smmu_impl nsmmu_impl = {
++	.read_reg = nsmmu_read_reg,
++	.write_reg = nsmmu_write_reg,
++	.read_reg64 = nsmmu_read_reg64,
++	.write_reg64 = nsmmu_write_reg64,
++};
++
++struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu)
++{
++	int i;
++	struct nvidia_smmu *nsmmu;
++	struct resource *res;
++	struct device *dev = smmu->dev;
++	struct platform_device *pdev = to_platform_device(smmu->dev);
++
++	nsmmu = devm_kzalloc(smmu->dev, sizeof(*nsmmu), GFP_KERNEL);
++	if (!nsmmu)
++		return ERR_PTR(-ENOMEM);
++
++	nsmmu->smmu = *smmu;
++	/* Instance 0 is ioremapped by arm-smmu.c */
++	nsmmu->num_inst = 1;
++
++	for (i = 1; i < NUM_SMMU_INSTANCES; i++) {
++		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
++		if (!res)
++			break;
++		nsmmu->bases[i] = devm_ioremap_resource(dev, res);
++		if (IS_ERR(nsmmu->bases[i]))
++			return (struct arm_smmu_device *)nsmmu->bases[i];
++		nsmmu->num_inst++;
++	}
++
++	nsmmu->smmu.impl = &nsmmu_impl;
++	devm_kfree(smmu->dev, smmu);
++	pr_info("Nvidia SMMUv2, Instances=%d\n", nsmmu->num_inst);
++
++	return &nsmmu->smmu;
++}
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 5b93c79..46e1641 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -1871,6 +1871,7 @@ ARM_SMMU_MATCH_DATA(arm_mmu401, ARM_SMMU_V1_64K, GENERIC_SMMU);
+ ARM_SMMU_MATCH_DATA(arm_mmu500, ARM_SMMU_V2, ARM_MMU500);
+ ARM_SMMU_MATCH_DATA(cavium_smmuv2, ARM_SMMU_V2, CAVIUM_SMMUV2);
+ ARM_SMMU_MATCH_DATA(qcom_smmuv2, ARM_SMMU_V2, QCOM_SMMUV2);
++ARM_SMMU_MATCH_DATA(nvidia_smmuv2, ARM_SMMU_V2, NVIDIA_SMMUV2);
+ 
+ static const struct of_device_id arm_smmu_of_match[] = {
+ 	{ .compatible = "arm,smmu-v1", .data = &smmu_generic_v1 },
+@@ -1880,6 +1881,7 @@ static const struct of_device_id arm_smmu_of_match[] = {
+ 	{ .compatible = "arm,mmu-500", .data = &arm_mmu500 },
+ 	{ .compatible = "cavium,smmu-v2", .data = &cavium_smmuv2 },
+ 	{ .compatible = "qcom,smmu-v2", .data = &qcom_smmuv2 },
++	{ .compatible = "nvidia,smmu-v2", .data = &nvidia_smmuv2 },
+ 	{ },
+ };
+ 
+diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+index b19b6ca..9645bf1 100644
+--- a/drivers/iommu/arm-smmu.h
++++ b/drivers/iommu/arm-smmu.h
+@@ -220,6 +220,7 @@ enum arm_smmu_implementation {
+ 	ARM_MMU500,
+ 	CAVIUM_SMMUV2,
+ 	QCOM_SMMUV2,
++	NVIDIA_SMMUV2,
+ };
+ 
+ struct arm_smmu_device {
+@@ -398,5 +399,6 @@ static inline void arm_smmu_writeq(struct arm_smmu_device *smmu, int page,
+ 	arm_smmu_writeq((s), ARM_SMMU_CB((s), (n)), (o), (v))
+ 
+ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu);
++struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu);
+ 
+ #endif /* _ARM_SMMU_H */
+-- 
+2.1.4
+
