@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BB4C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 725BEC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B439205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F96F205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:34:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103663;
-	bh=1INPA2/FoQpndSSJunCkoNJ7Pr5YjxALkzj1u7Kv3hA=;
+	s=default; t=1567103668;
+	bh=hkBnbXIj4Ow5ukHzAWFpSqN0IRB8d7dNXP7A+zZpRBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RTLcg2SaT4rPWHTLmKJgNC6haMFdYiop3ANOppER+Po6lkg3EXCoCzKEwAIF2Fqf9
-	 e5/Hc77THRzRAQq2YWAMLf6DrpeWR6zLTPBeI0m6G8muoEnavqJO/6RLzJ9FQ+U2Os
-	 Lca4eoCIhddoXg85Cpy3YZGSOAVNcNLR/8hHl6NI=
+	b=i0n5MXskySxfr/YjEarkILi40W+Kzc8iGb9YKJVljAAtQtdv1ijh7K8Z3KwLonr4j
+	 2NB5tFp5p4F75Jo5GiTzM7f6cmB7IRcPUcRGwnkSBTamApAISUbWFr1tJIO+RIRY1T
+	 f6WSr+JpeZg3Hv0053vaTwh1hqKdf7+SWHnXOzPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbfH2SeW (ORCPT
+        id S1728161AbfH2SNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:34:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55228 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:13:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727437AbfH2SNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:13:32 -0400
+        id S1727087AbfH2SNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:13:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC37C22CF5;
-        Thu, 29 Aug 2019 18:13:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67AC12189D;
+        Thu, 29 Aug 2019 18:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102411;
-        bh=1INPA2/FoQpndSSJunCkoNJ7Pr5YjxALkzj1u7Kv3hA=;
+        s=default; t=1567102396;
+        bh=hkBnbXIj4Ow5ukHzAWFpSqN0IRB8d7dNXP7A+zZpRBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xNaDkFrchchUbSJWp34T/B9dNXVffUEX1UwacUqr34LtneSVIpMd6lX4G/tQbfImy
-         2aPmAHcyMb9nDLkienwgQyb6RqwM7OZel644RF4z7fcLmKHlrylprMv9DuEJxrJh8t
-         am6649EOxwe8kgnfdLO6/yMzjLHyk0gbyoGZLvxE=
+        b=Qtxi24umdUcuSRIwdfk7cQXF9cWXQuDwXySud/jP4Yb1VydCYv1vxcTVEmOFlYLix
+         DnOO0zrNtbjc7N5iw5smu2WgFVdqBeRRrn/pCf0RADLso02pyRUR40r5wgBvH7oqLr
+         NhoRCbGxY4kMc8AcjRPeclf+lUt1g1TI+QBbHrY8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 08/76] clk: samsung: exynos542x: Move MSCL subsystem clocks to its sub-CMU
-Date:   Thu, 29 Aug 2019 14:12:03 -0400
-Message-Id: <20190829181311.7562-8-sashal@kernel.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>, Andrey Ignatov <rdna@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 03/76] libbpf: set BTF FD for prog only when there is supported .BTF.ext data
+Date:   Thu, 29 Aug 2019 14:11:58 -0400
+Message-Id: <20190829181311.7562-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -60,123 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit baf7b79e1ad79a41fafd8ab8597b9a96962d822d ]
+[ Upstream commit 3415ec643e7bd644b03026efbe2f2b36cbe9b34b ]
 
-M2M scaler clocks require special handling of their parent bus clock during
-power domain on/off sequences. MSCL clocks were not initially added to the
-sub-CMU handler, because that time there was no driver for the M2M scaler
-device and it was not possible to test it.
+5d01ab7bac46 ("libbpf: fix erroneous multi-closing of BTF FD")
+introduced backwards-compatibility issue, manifesting itself as -E2BIG
+error returned on program load due to unknown non-zero btf_fd attribute
+value for BPF_PROG_LOAD sys_bpf() sub-command.
 
-This patch fixes this issue. Parent clock for M2M scaler devices is now
-properly preserved during MSC power domain on/off sequence. This gives M2M
-scaler devices proper performance: fullHD XRGB32 image 1000 rotations test
-takes 3.17s instead of 45.08s.
+This patch fixes bug by ensuring that we only ever associate BTF FD with
+program if there is a BTF.ext data that was successfully loaded into
+kernel, which automatically means kernel supports func_info/line_info
+and associated BTF FD for progs (checked and ensured also by BTF
+sanitization code).
 
-Fixes: b06a532bf1fa ("clk: samsung: Add Exynos5 sub-CMU clock driver")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Link: https://lkml.kernel.org/r/20190808121839.23892-1-m.szyprowski@samsung.com
-Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 5d01ab7bac46 ("libbpf: fix erroneous multi-closing of BTF FD")
+Reported-by: Andrey Ignatov <rdna@fb.com>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos5420.c | 48 ++++++++++++++++++++--------
- 1 file changed, 34 insertions(+), 14 deletions(-)
+ tools/lib/bpf/libbpf.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 5eb0ce4b2648b..893697e00d2aa 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -870,9 +870,6 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
- 	/* GSCL Block */
- 	DIV(0, "dout_gscl_blk_333", "aclk333_432_gscl", DIV2_RATIO0, 6, 2),
- 
--	/* MSCL Block */
--	DIV(0, "dout_mscl_blk", "aclk400_mscl", DIV2_RATIO0, 28, 2),
--
- 	/* PSGEN */
- 	DIV(0, "dout_gen_blk", "mout_user_aclk266", DIV2_RATIO0, 8, 1),
- 	DIV(0, "dout_jpg_blk", "aclk166", DIV2_RATIO0, 20, 1),
-@@ -1136,17 +1133,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
- 	GATE(CLK_FIMC_LITE3, "fimc_lite3", "aclk333_432_gscl",
- 			GATE_IP_GSCL1, 17, 0, 0),
- 
--	/* MSCL Block */
--	GATE(CLK_MSCL0, "mscl0", "aclk400_mscl", GATE_IP_MSCL, 0, 0, 0),
--	GATE(CLK_MSCL1, "mscl1", "aclk400_mscl", GATE_IP_MSCL, 1, 0, 0),
--	GATE(CLK_MSCL2, "mscl2", "aclk400_mscl", GATE_IP_MSCL, 2, 0, 0),
--	GATE(CLK_SMMU_MSCL0, "smmu_mscl0", "dout_mscl_blk",
--			GATE_IP_MSCL, 8, 0, 0),
--	GATE(CLK_SMMU_MSCL1, "smmu_mscl1", "dout_mscl_blk",
--			GATE_IP_MSCL, 9, 0, 0),
--	GATE(CLK_SMMU_MSCL2, "smmu_mscl2", "dout_mscl_blk",
--			GATE_IP_MSCL, 10, 0, 0),
--
- 	/* ISP */
- 	GATE(CLK_SCLK_UART_ISP, "sclk_uart_isp", "dout_uart_isp",
- 			GATE_TOP_SCLK_ISP, 0, CLK_SET_RATE_PARENT, 0),
-@@ -1229,6 +1215,28 @@ static struct exynos5_subcmu_reg_dump exynos5x_mfc_suspend_regs[] = {
- 	{ DIV4_RATIO, 0, 0x3 },			/* DIV dout_mfc_blk */
- };
- 
-+static const struct samsung_gate_clock exynos5x_mscl_gate_clks[] __initconst = {
-+	/* MSCL Block */
-+	GATE(CLK_MSCL0, "mscl0", "aclk400_mscl", GATE_IP_MSCL, 0, 0, 0),
-+	GATE(CLK_MSCL1, "mscl1", "aclk400_mscl", GATE_IP_MSCL, 1, 0, 0),
-+	GATE(CLK_MSCL2, "mscl2", "aclk400_mscl", GATE_IP_MSCL, 2, 0, 0),
-+	GATE(CLK_SMMU_MSCL0, "smmu_mscl0", "dout_mscl_blk",
-+			GATE_IP_MSCL, 8, 0, 0),
-+	GATE(CLK_SMMU_MSCL1, "smmu_mscl1", "dout_mscl_blk",
-+			GATE_IP_MSCL, 9, 0, 0),
-+	GATE(CLK_SMMU_MSCL2, "smmu_mscl2", "dout_mscl_blk",
-+			GATE_IP_MSCL, 10, 0, 0),
-+};
-+
-+static const struct samsung_div_clock exynos5x_mscl_div_clks[] __initconst = {
-+	DIV(0, "dout_mscl_blk", "aclk400_mscl", DIV2_RATIO0, 28, 2),
-+};
-+
-+static struct exynos5_subcmu_reg_dump exynos5x_mscl_suspend_regs[] = {
-+	{ GATE_IP_MSCL, 0xffffffff, 0xffffffff }, /* MSCL gates */
-+	{ SRC_TOP3, 0, BIT(4) },		/* MUX mout_user_aclk400_mscl */
-+	{ DIV2_RATIO0, 0, 0x30000000 },		/* DIV dout_mscl_blk */
-+};
- 
- static const struct samsung_gate_clock exynos5800_mau_gate_clks[] __initconst = {
- 	GATE(CLK_MAU_EPLL, "mau_epll", "mout_user_mau_epll",
-@@ -1273,6 +1281,16 @@ static const struct exynos5_subcmu_info exynos5x_mfc_subcmu = {
- 	.pd_name	= "MFC",
- };
- 
-+static const struct exynos5_subcmu_info exynos5x_mscl_subcmu = {
-+	.div_clks	= exynos5x_mscl_div_clks,
-+	.nr_div_clks	= ARRAY_SIZE(exynos5x_mscl_div_clks),
-+	.gate_clks	= exynos5x_mscl_gate_clks,
-+	.nr_gate_clks	= ARRAY_SIZE(exynos5x_mscl_gate_clks),
-+	.suspend_regs	= exynos5x_mscl_suspend_regs,
-+	.nr_suspend_regs = ARRAY_SIZE(exynos5x_mscl_suspend_regs),
-+	.pd_name	= "MSC",
-+};
-+
- static const struct exynos5_subcmu_info exynos5800_mau_subcmu = {
- 	.gate_clks	= exynos5800_mau_gate_clks,
- 	.nr_gate_clks	= ARRAY_SIZE(exynos5800_mau_gate_clks),
-@@ -1285,12 +1303,14 @@ static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
- 	&exynos5x_disp_subcmu,
- 	&exynos5x_gsc_subcmu,
- 	&exynos5x_mfc_subcmu,
-+	&exynos5x_mscl_subcmu,
- };
- 
- static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
- 	&exynos5x_disp_subcmu,
- 	&exynos5x_gsc_subcmu,
- 	&exynos5x_mfc_subcmu,
-+	&exynos5x_mscl_subcmu,
- 	&exynos5800_mau_subcmu,
- };
- 
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index e308fcf16cdd0..ce579e3654d60 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -2066,7 +2066,11 @@ load_program(struct bpf_program *prog, struct bpf_insn *insns, int insns_cnt,
+ 	load_attr.license = license;
+ 	load_attr.kern_version = kern_version;
+ 	load_attr.prog_ifindex = prog->prog_ifindex;
+-	btf_fd = bpf_object__btf_fd(prog->obj);
++	/* if .BTF.ext was loaded, kernel supports associated BTF for prog */
++	if (prog->obj->btf_ext)
++		btf_fd = bpf_object__btf_fd(prog->obj);
++	else
++		btf_fd = -1;
+ 	load_attr.prog_btf_fd = btf_fd >= 0 ? btf_fd : 0;
+ 	load_attr.func_info = prog->func_info;
+ 	load_attr.func_info_rec_size = prog->func_info_rec_size;
 -- 
 2.20.1
 
