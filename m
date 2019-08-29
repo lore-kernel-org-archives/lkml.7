@@ -2,229 +2,215 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6717C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B197C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B38B722CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F9722CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:46:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNwrYHMP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BlBlZcZo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfH2HoO (ORCPT
+        id S1727815AbfH2HqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 03:44:14 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37636 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfH2HoO (ORCPT
+        Thu, 29 Aug 2019 03:46:10 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:48419 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfH2HqJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 03:44:14 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z11so2351631wrt.4;
-        Thu, 29 Aug 2019 00:44:11 -0700 (PDT)
+        Thu, 29 Aug 2019 03:46:09 -0400
+Received: by mail-pg1-f202.google.com with SMTP id k20so1493420pgg.15
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 00:46:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FxMZVBtYGnfVGlhM9QLt+9596i7ieWLb8OER0jk2Ipw=;
-        b=HNwrYHMPoYIdG+g7d39xvzQYiLAE/nt8sMfzbAHgVzYA7OWIMHnBB8Um6znmXwpyFF
-         i74i0+oSH9etNExu7GZxttszVFc1xFOH/I/fAA8qkhMgX0ow5v8HfAhPLB6XBDOhvWlG
-         dzJ64yodlfUFXSrCh5LKMZauL4Ou+mihzZpgzrcJttGLfm3L+W7Blfle7Ew0svT70UNL
-         9SHvCJzb/g77Un/p5xPifb3l1JHE0IuUpq4lXtz3kAHd/QM3z+8bEYUjitZ3CeU5RF8R
-         rNrWAIfZ+72Tkci/DHXTMNbEr1zsNBLFTCaxQlY9XoEwk/ga7TEn1clmtfU8Q0q/oZUH
-         1lag==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=W1PmjVL/6s5ZXXFzVRoWXIYsoDfmFEis3kh7AY5/b/U=;
+        b=BlBlZcZoKDjgUAr7XG6MtHOGce0R3ksWhAYokbXmmIBoBJml3QfGoVZnzlSpGJZ7fo
+         ctBud1He4pmoya0E8XD2Q32uvOOZ0BdedmzPEab50lAtOEa+5NeR03NsNnFtyn3WRkTE
+         g3GM3mZhgXqy4srOHzbGLNj8cSyz+++EWnPSUacRg70jS7mzrzEM+zqmkOEE8qMbOon7
+         5JWBj0P+lhdTL7oESqnUj3SisI1jTDbiiABGWvDD8AqArQBJXi820TWLlnBCxW6YvuSX
+         LgaKO0ZVZPjezsn1SEIfqZvIaXIZNMVbBPdSuSd0rbrNZSILWVwusSRflGEGf5Z83xwa
+         Xv3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FxMZVBtYGnfVGlhM9QLt+9596i7ieWLb8OER0jk2Ipw=;
-        b=plkDNR4CHfMGOeKBFSkziQAcuKCPMiC/8oO7a/+3bJHvKdGNFid+cphrfaVbKavWUv
-         Hg9crOvoqhNk5t0apZg4KqE4JM64wQra9p1I8PpSScxjMnyfTxcFGij9+ezJ7QauPUo0
-         UNtSGz2QvUYJISyLT1ysTbGWGgKtvZivczks/H1hXAkbfMdqTGv7b5emO+Wi89AOSTX4
-         bvEA5UOP3QxHfqPwGW7hcNyTqFwAoYA8D5dxe9fS3p8yJImC3pR7327CrWAWZJclOqXg
-         ojeb1zFDgR4mCSIOhx1F0XsyrJ2WCS/RaEwtjm8ZzcghRwJ/r/1wg2Wfn0wHNSKZ/4w5
-         Kf9Q==
-X-Gm-Message-State: APjAAAVAQxqmICjE9ntifT8709PMXZeM6bN4HB3j2mPP9oIfTs3gV1Fv
-        TkoBlTSR/A/uVi5Z/U+efrE=
-X-Google-Smtp-Source: APXvYqwUVVXc03pYRsk6RuBUUg7oF+TPDARWunZZGWodZF4up1Bs/2UETd7qHQKSWwkI0Iu0NdzhiA==
-X-Received: by 2002:a05:6000:cb:: with SMTP id q11mr10197361wrx.50.1567064650942;
-        Thu, 29 Aug 2019 00:44:10 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id t22sm1421459wmi.11.2019.08.29.00.44.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 00:44:09 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 09:44:08 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Stephen Boyd <swboyd@chromium.org>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] driver core: platform: Introduce
- platform_get_irq_optional()
-Message-ID: <20190829074408.GA17754@ulmo>
-References: <20190828083411.2496-1-thierry.reding@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hHWLQfXTYDoKhP50"
-Content-Disposition: inline
-In-Reply-To: <20190828083411.2496-1-thierry.reding@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=W1PmjVL/6s5ZXXFzVRoWXIYsoDfmFEis3kh7AY5/b/U=;
+        b=INtw5wvyLWAKsOqrLz6CoSucxEn/8RBTqnDnr5BK2ZzTy0Dq9/Ff1wZYGg0CuwefVR
+         GXELQK79dDaBFd+OZmW9ntarZvN4tWe3juQdR0CaBrqMNjRCeq4tNFCs08hnzcHDtUHj
+         AleTHBKLdAdCoPDrCkfNVvcNVPr2E470WmgIJZ0iV2cLONCLxMPBm9nsHegIuEXY80BI
+         BRf3w5RGSke49wa0f9N0TrEYbSuafGw7zRlhmnfa0NGyPPnPQVCm/7Cd3WJJ59CqxCG4
+         /KYglUY/0J41173XK9rHuWUL29KfZzewKgg7QRMIr1prUDNXMpmU4wJE6hJdJpGSRs5M
+         bmig==
+X-Gm-Message-State: APjAAAWM4Pmq+Uj54bFSwVDnJexWuG6jk9ebdMsIemQFfRVsirmgnF57
+        AeOedi6uLF9IDoPJv0NbShqGwdZx5Ka3Z3g=
+X-Google-Smtp-Source: APXvYqx8b6RNwtvC8vhWCgQOo7SditWRgK6j21AF90oa0Vxuu2xB7Qykx4b8MpO0DR/c1K1mehO1tLGPMlWRAhs=
+X-Received: by 2002:a63:6901:: with SMTP id e1mr6839120pgc.390.1567064768278;
+ Thu, 29 Aug 2019 00:46:08 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 00:45:56 -0700
+Message-Id: <20190829074603.70424-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+Subject: [PATCH v10 0/7] Solve postboot supplier cleanup and optimize probe ordering
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-acpi@vger.kernel.org, clang-built-linux@googlegroups.com,
+        David Collins <collinsd@codeaurora.org>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add device-links to track functional dependencies between devices
+after they are created (but before they are probed) by looking at
+their common DT bindings like clocks, interconnects, etc.
 
---hHWLQfXTYDoKhP50
-Content-Type: multipart/mixed; boundary="MGYHOYXEY6WxJCY8"
-Content-Disposition: inline
+Having functional dependencies automatically added before the devices
+are probed, provides the following benefits:
 
+- Optimizes device probe order and avoids the useless work of
+  attempting probes of devices that will not probe successfully
+  (because their suppliers aren't present or haven't probed yet).
 
---MGYHOYXEY6WxJCY8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  For example, in a commonly available mobile SoC, registering just
+  one consumer device's driver at an initcall level earlier than the
+  supplier device's driver causes 11 failed probe attempts before the
+  consumer device probes successfully. This was with a kernel with all
+  the drivers statically compiled in. This problem gets a lot worse if
+  all the drivers are loaded as modules without direct symbol
+  dependencies.
 
-On Wed, Aug 28, 2019 at 10:34:10AM +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
->=20
-> In some cases the interrupt line of a device is optional. Introduce a
-> new platform_get_irq_optional() that works much like platform_get_irq()
-> but does not output an error on failure to find the interrupt.
->=20
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  drivers/base/platform.c         | 22 ++++++++++++++++++++++
->  include/linux/platform_device.h |  1 +
->  2 files changed, 23 insertions(+)
->=20
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 8ad701068c11..0dda6ade50fd 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -192,6 +192,28 @@ int platform_get_irq(struct platform_device *dev, un=
-signed int num)
->  }
->  EXPORT_SYMBOL_GPL(platform_get_irq);
-> =20
-> +/**
-> + * platform_get_irq_optional - get an optional IRQ for a device
-> + * @dev: platform device
-> + * @num: IRQ number index
-> + *
-> + * Gets an IRQ for a platform device. Device drivers should check the re=
-turn
-> + * value for errors so as to not pass a negative integer value to the
-> + * request_irq() APIs. This is the same as platform_get_irq(), except th=
-at it
-> + * does not print an error message if an IRQ can not be obtained.
-> + *
-> + * Example:
-> + *		int irq =3D platform_get_irq_optional(pdev, 0);
-> + *		if (irq < 0)
-> + *			return irq;
-> + *
-> + * Return: IRQ number on success, negative error number on failure.
-> + */
-> +int platform_get_irq_optional(struct platform_device *dev, unsigned int =
-num)
-> +{
-> +	return __platform_get_irq(dev, num);
-> +}
+- Supplier devices like clock providers, interconnect providers, etc
+  need to keep the resources they provide active and at a particular
+  state(s) during boot up even if their current set of consumers don't
+  request the resource to be active. This is because the rest of the
+  consumers might not have probed yet and turning off the resource
+  before all the consumers have probed could lead to a hang or
+  undesired user experience.
 
-Oh my... this is embarrassing, but the kbuild test robot reported that
-the second patch here fails to build because I forgot to export this
-symbol. I've attached a patch that fixes it.
+  Some frameworks (Eg: regulator) handle this today by turning off
+  "unused" resources at late_initcall_sync and hoping all the devices
+  have probed by then. This is not a valid assumption for systems with
+  loadable modules. Other frameworks (Eg: clock) just don't handle
+  this due to the lack of a clear signal for when they can turn off
+  resources. This leads to downstream hacks to handle cases like this
+  that can easily be solved in the upstream kernel.
 
-Thierry
+  By linking devices before they are probed, we give suppliers a clear
+  count of the number of dependent consumers. Once all of the
+  consumers are active, the suppliers can turn off the unused
+  resources without making assumptions about the number of consumers.
 
-> +
->  /**
->   * platform_irq_count - Count the number of IRQs a platform device uses
->   * @dev: platform device
-> diff --git a/include/linux/platform_device.h b/include/linux/platform_dev=
-ice.h
-> index 37e15a935a42..35bc4355a9df 100644
-> --- a/include/linux/platform_device.h
-> +++ b/include/linux/platform_device.h
-> @@ -58,6 +58,7 @@ extern void __iomem *
->  devm_platform_ioremap_resource(struct platform_device *pdev,
->  			       unsigned int index);
->  extern int platform_get_irq(struct platform_device *, unsigned int);
-> +extern int platform_get_irq_optional(struct platform_device *, unsigned =
-int);
->  extern int platform_irq_count(struct platform_device *);
->  extern struct resource *platform_get_resource_byname(struct platform_dev=
-ice *,
->  						     unsigned int,
-> --=20
-> 2.22.0
->=20
+By default we just add device-links to track "driver presence" (probe
+succeeded) of the supplier device. If any other functionality provided
+by device-links are needed, it is left to the consumer/supplier
+devices to change the link when they probe.
 
---MGYHOYXEY6WxJCY8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline;
-	filename="0001-driver-core-platform-Export-platform_get_irq_optiona.patch"
-Content-Transfer-Encoding: quoted-printable
+v1 -> v2:
+- Drop patch to speed up of_find_device_by_node()
+- Drop depends-on property and use existing bindings
 
-=46rom 0f7695c4d3f30b2946c97160b717de03c3deb73f Mon Sep 17 00:00:00 2001
-=46rom: Thierry Reding <treding@nvidia.com>
-Date: Thu, 29 Aug 2019 09:29:32 +0200
-Subject: [PATCH] driver core: platform: Export platform_get_irq_optional()
+v2 -> v3:
+- Refactor the code to have driver core initiate the linking of devs
+- Have driver core link consumers to supplier before it's probed
+- Add support for drivers to edit the device links before probing
 
-This function can be used by modules, so it needs to be exported.
+v3 -> v4:
+- Tested edit_links() on system with cyclic dependency. Works.
+- Added some checks to make sure device link isn't attempted from
+  parent device node to child device node.
+- Added way to pause/resume sync_state callbacks across
+  of_platform_populate().
+- Recursively parse DT node to create device links from parent to
+  suppliers of parent and all child nodes.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- drivers/base/platform.c | 1 +
- 1 file changed, 1 insertion(+)
+v4 -> v5:
+- Fixed copy-pasta bugs with linked list handling
+- Walk up the phandle reference till I find an actual device (needed
+  for regulators to work)
+- Added support for linking devices from regulator DT bindings
+- Tested the whole series again to make sure cyclic dependencies are
+  broken with edit_links() and regulator links are created properly.
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 014dc07b0056..b6c6c7d97d5b 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -194,6 +194,7 @@ int platform_get_irq_optional(struct platform_device *d=
-ev, unsigned int num)
- {
- 	return __platform_get_irq(dev, num);
- }
-+EXPORT_SYMBOL_GPL(platform_get_irq_optional);
-=20
- /**
-  * platform_irq_count - Count the number of IRQs a platform device uses
---=20
-2.22.0
+v5 -> v6:
+- Split, squashed and reordered some of the patches.
+- Refactored the device linking code to follow the same code pattern for
+  any property.
 
+v6 -> v7:
+- No functional changes.
+- Renamed i to index
+- Added comment to clarify not having to check property name for every
+  index
+- Added "matched" variable to clarify code. No functional change.
+- Added comments to include/linux/device.h for add_links()
 
---MGYHOYXEY6WxJCY8--
+v7 -> v8:
+- Rebased on top of linux-next to handle device link changes in [1]
 
---hHWLQfXTYDoKhP50
-Content-Type: application/pgp-signature; name="signature.asc"
+v8 -> v9:
+- Fixed kbuild test bot reported errors (docs and const)
 
------BEGIN PGP SIGNATURE-----
+v9->v10:
+- Changes made based on reviews on LKML [2] and discussions at ELC [3]
+- Dropped the edit_links() patch
+- Dropped the patch that skips linking for default bus nodes
+- 1/7: Changed from bus.add_links() to fwnode.ops.add_links() 
+- 1/7: Update device link doc
+- 1/7: Lots of comments/fn doc updates
+- 1/7: Renamed device_link_check_waiting_consumers() to
+  device_link_add_missing_supplier_links()
+- 2/7: Moved DT parsing/linking code from of/platform.c to of/property.c
+- 2/7: Lots of comments/fn doc updates
+- 2/7: Returned errors for all error cases in of_link_to_phandle()
+- 2/7: Some minor code refactor to remove "bool done"
+- 2/7: Added debug messages when links not created due permanent errors
+- 3/7: Minor comments update
+- Added 2 new patches 6/7 and 7/7 to handle cyclic dependencies using
+  depends-on
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1ngkUACgkQ3SOs138+
-s6FDcBAAv/ED0K5uDmDTXC6R6UUt5I2AwLY3sIuy1Zl6pYWoJw7pjk0071hlLcSm
-iPPJraLkVdNR5NQVrRAVTVIdyaGnmMsQzjOmCSiyi4hVrlgo94cSeff8/XWozCDQ
-FHmAyz6dKJ7XPdrrzmo0pMJ2MW6uvIy7jtKUQf5tLaAeGyNbec5SGqojbgktBz3f
-8DGixdHIKuyf5zNbtCE3hfws0Q9TND+bQj6BW1cpXPzvzqc8RgUCWG2B3pdP5g8g
-+matb4hndmPOow8EQEBRDWcjTxxEwck8l7XeFCaeT3Ext916QZQsWTGDX6VtrkWy
-gJ1QfNWOX0W8B9KlAF0WJm2NC8rLjCv6DWElfbTAkifYu/lTkE1SrkpuQIwr4CtN
-HNXIUIHj4dkwPAiipXQnokac+jJtdhCXczBCshxGn3p0O+4QGiGZkQ+v+i/YnCIF
-xmdVVVVYdNmpSvqex4fRO25GkVADS81O1INhFf1mrll4mZLiHY2Y2nvWW2iXjFBT
-EiddQoT8hI2ldJjfEuqCMzoIGj+YniSSZ8gBHQfeWhMOJwkxrYjPw7qvONrNc+er
-N/VBcuQQmExQSuRF8PD/DAhl3QZDSxN+tXJDBSgDgV3gXADvFNVfjfssomkHGKuN
-kKPAGitlE9wZGSOYpdcHwCEdrQk6of87ChXhQDeg2ku8De/UYA0=
-=fB2o
------END PGP SIGNATURE-----
+[1] - https://lore.kernel.org/lkml/2305283.AStDPdUUnE@kreacher/
+[2] - https://lore.kernel.org/lkml/20190724001100.133423-2-saravanak@google.com/
+[3] - https://lore.kernel.org/lkml/CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com/
 
---hHWLQfXTYDoKhP50--
+-Saravana
+
+Saravana Kannan (7):
+  driver core: Add support for linking devices during device addition
+  of: property: Add functional dependency link from DT bindings
+  driver core: Add sync_state driver/bus callback
+  of/platform: Pause/resume sync state during init and
+    of_platform_populate()
+  of: property: Create device links for all child-supplier depencencies
+  dt-bindings: Add depends-on property to break cyclic inferred
+    dependencies
+  of: property: Add "depends-on" parsing support to
+    of_fwnode_add_links()
+
+ .../admin-guide/kernel-parameters.rst         |   1 +
+ .../admin-guide/kernel-parameters.txt         |   6 +
+ .../devicetree/bindings/depends-on.txt        |  46 ++++
+ Documentation/driver-api/device_link.rst      |   3 +-
+ drivers/base/core.c                           | 154 +++++++++++
+ drivers/of/platform.c                         |  12 +
+ drivers/of/property.c                         | 258 ++++++++++++++++++
+ include/linux/device.h                        |  26 ++
+ include/linux/fwnode.h                        |  17 ++
+ 9 files changed, 522 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/depends-on.txt
+
+-- 
+2.23.0.187.g17f5b7556c-goog
+
