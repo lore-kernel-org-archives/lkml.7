@@ -2,175 +2,196 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BCAC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5183C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 363652189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D7DC233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="VwOF8bMU"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="U9H25fzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfH2NFL (ORCPT
+        id S1727827AbfH2NFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:05:11 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34958 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727578AbfH2NFK (ORCPT
+        Thu, 29 Aug 2019 09:05:19 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:34289 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727061AbfH2NFT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:05:10 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h27so2488997lfp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 06:05:09 -0700 (PDT)
+        Thu, 29 Aug 2019 09:05:19 -0400
+Received: by mail-yb1-f195.google.com with SMTP id u68so1166356ybg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 06:05:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+pz1tJCvEpXqhYntc4a+eXdQw4YkeZzY/CUqzEnQfhI=;
-        b=VwOF8bMUMlpcVPjnH7KLm7q9YPGAJyoJCaqTHg0eB7cJNs33HPtWse0a6S+38yOz8O
-         NHVqczdRdynKQIjzWAF9I3YpK+wBqgWsLCV+xSrpqG8v5x5MeuksDGvoajweRjwbjZ5a
-         38t56VL/f1C5Tbh/lNpCLIQcFzQtYKavA1iaY=
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oB2V2oDizn+bNjnsA+L5QLEbTNlVkIvvrIN1uWftWrg=;
+        b=U9H25fzzLjdZoYhtHqFGUY3b98H0cDFO731+o/hSSZ0eioY2hFRWZdjBuvMpRQ0xHv
+         AMOD3Cyc9cIexJAtUUv1IbVzWyPJe2IDpPBoxBnxIcEMqrqkDvtw9xwOmYk9gBKR4SR6
+         LH9WXux5/7elAEqCOdhP2eyfgpXTFTxz2g1yV02yPQOhdKwhPu+EhJ3GGZCTdMCeSUYX
+         7ZC8Nh5RF20p7Byg5crPUB8WY6iBT1V0FGX7z7dqHG30MEdC6in/EhKUfGQXiHZzr/dF
+         f2wk95GvwBeR5gLJ4JrucKTdwQ1oo55H1lWzJNpnHTvkzMSgADu+PLyedpto83ree3JT
+         7XnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+pz1tJCvEpXqhYntc4a+eXdQw4YkeZzY/CUqzEnQfhI=;
-        b=b4YDrg9NkwdSVlBsh4V4uQOPoESWoB28JUsWA7/EyGfnyzTHEd4hOcv6EFzVs1PRVO
-         B+Y81Blf55cRhJPb6UvmajCh4zgttnh+MFc3uOsm7rKATfi25XAwqdWu/zGzflMz0CS0
-         wwzUt+WIacbsW+1eiWHCj3Fjxp2V9KmCabuh6D0ZB5v1aJySNcsMEJ7ztnp2QN6J6BIo
-         glJ6uT0HSMjBuTz7+l8+LuLoSFnenKhX8C/lMTc2kgKgEPXCsL/cANBiVIvEoc93FkYi
-         12JOty48pZ0QovZ4xu0pYZJPovPgZweGhTjonMwEKbYX+qDoTLkUeo3j76nN0fd8XgL2
-         5y4A==
-X-Gm-Message-State: APjAAAVcM/1HyvvOObiU/aBhStTy5UQC2lznShRIVrYSgyMhpzRA9zYJ
-        nbnmqmmDcXWtsMYgo19boWvXbQ==
-X-Google-Smtp-Source: APXvYqzC/znEm7g6SWABzaV06VBY2y9BWKEbRXRSbaRH8cAy80Qu1m8PhCO/oz8TivPdICdvt4gS+A==
-X-Received: by 2002:a19:ef05:: with SMTP id n5mr6063058lfh.192.1567083908173;
-        Thu, 29 Aug 2019 06:05:08 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id j23sm346381ljc.6.2019.08.29.06.05.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 06:05:07 -0700 (PDT)
-Subject: Re: [PATCH RESEND v11 7/8] open: openat2(2) syscall
-To:     Aleksa Sarai <cyphar@cyphar.com>,
-        Daniel Colascione <dancol@google.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        sparclinux@vger.kernel.org
-References: <20190820033406.29796-1-cyphar@cyphar.com>
- <20190820033406.29796-8-cyphar@cyphar.com>
- <CAKOZuesfxRBJe314rkTKXtjXdz6ki3uAUBYVbu5Q2rd3=ADphQ@mail.gmail.com>
- <20190829121527.u2uvdyeatme5cgkb@yavin>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <899401fa-ff0a-2ce9-8826-09904efab2d2@rasmusvillemoes.dk>
-Date:   Thu, 29 Aug 2019 15:05:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oB2V2oDizn+bNjnsA+L5QLEbTNlVkIvvrIN1uWftWrg=;
+        b=RPQ9M6EuEQiUpNGg0ce/A0Pc1220HddL8ydYlrh1qQ85X3fUwbYtArh3d6yi5a7QE+
+         Fc7xTQKJj0G+FeDTmOmkPPFoc2yj74FHUapbEMBDc2llGmyV2LnFwxDUTfsDKMzr93D/
+         guWmOZE1ZycYTCzEEm1rKpyQ2Sp74gmbLDX3OvC3F8WS+IfgeD8boKRHZbODo4X429fH
+         ywGwhoNVjVEGpDkN7puXmAU06R+8hlexhoJIaTCvz+z7032pm/boWeAAj2wm4lwnmD59
+         UC2T+aEngN/7gj5zjgb1dmQNrioWqMSpUnSnn0G3e7kBOxY+t0XMt4EUGixiokZW2DcF
+         t8sw==
+X-Gm-Message-State: APjAAAW2LU7REQ5/3SjnZ4ySTsrOnhArw5nkvfzQ8f2m/w9zq2SmHAhA
+        Uui4I910VZY4DKOFGVgFmkAoFw==
+X-Google-Smtp-Source: APXvYqy3wdzMLg3v5Q+SrsMPjUG+o+wglzgDVSqgPFv2VxRd+X3LU/XXXvGIlxHb+l+DdNIc3Rwk4g==
+X-Received: by 2002:a25:747:: with SMTP id 68mr7097126ybh.41.1567083917958;
+        Thu, 29 Aug 2019 06:05:17 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id l4sm467267ywd.0.2019.08.29.06.05.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 06:05:17 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 09:05:17 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Bruce Wang <bzwang@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/9] drm/msm/dpu: handle_frame_done() from vblank irq
+Message-ID: <20190829130517.GH218215@art_vandelay>
+References: <20190827213421.21917-1-robdclark@gmail.com>
+ <20190827213421.21917-4-robdclark@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190829121527.u2uvdyeatme5cgkb@yavin>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827213421.21917-4-robdclark@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/08/2019 14.15, Aleksa Sarai wrote:
-> On 2019-08-24, Daniel Colascione <dancol@google.com> wrote:
-
->> Why pad the structure when new functionality (perhaps accommodated via
->> a larger structure) could be signaled by passing a new flag? Adding
->> reserved fields to a structure with a size embedded in the ABI makes a
->> lot of sense --- e.g., pthread_mutex_t can't grow. But this structure
->> can grow, so the reservation seems needless to me.
+On Tue, Aug 27, 2019 at 02:33:33PM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
 > 
-> Quite a few folks have said that ->reserved is either unnecessary or
-> too big. I will be changing this, though I am not clear what the best
-> way of extending the structure is. If anyone has a strong opinion on
-> this (or an alternative to the ones listed below), please chime in. I
-> don't have any really strong attachment to this aspect of the API.
+> Previously the callback was called from whoever called wait_for_vblank(),
+> but that isn't a great plan when wait_for_vblank() stops getting called,
+> and results in frame_done_timer expiring.
 > 
-> There appear to be a few ways we can do it (that all have precedence
-> with other syscalls):
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+
+Reviewed-by: Sean Paul <sean@poorly.run>
+
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c      |  7 +-----
+>  .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  | 25 ++++++-------------
+>  2 files changed, 9 insertions(+), 23 deletions(-)
 > 
->  1. Use O_* flags to indicate extensions.
->  2. A separate "version" field that is incremented when we change.
->  3. Add a size_t argument to openat2(2).
->  4. Reserve space (as in this patchset).
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> index c3f7154017c4..e7354aef9805 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> @@ -311,12 +311,7 @@ static void dpu_crtc_frame_event_work(struct kthread_work *work)
+>  				| DPU_ENCODER_FRAME_EVENT_PANEL_DEAD)) {
+>  
+>  		if (atomic_read(&dpu_crtc->frame_pending) < 1) {
+> -			/* this should not happen */
+> -			DRM_ERROR("crtc%d ev:%u ts:%lld frame_pending:%d\n",
+> -					crtc->base.id,
+> -					fevent->event,
+> -					ktime_to_ns(fevent->ts),
+> -					atomic_read(&dpu_crtc->frame_pending));
+> +			/* ignore vblank when not pending */
+>  		} else if (atomic_dec_return(&dpu_crtc->frame_pending) == 0) {
+>  			/* release bandwidth and other resources */
+>  			trace_dpu_crtc_frame_event_done(DRMID(crtc),
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+> index 7c73b09894f0..b9c84fb4d4a1 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+> @@ -324,6 +324,10 @@ static void dpu_encoder_phys_vid_vblank_irq(void *arg, int irq_idx)
+>  
+>  	/* Signal any waiting atomic commit thread */
+>  	wake_up_all(&phys_enc->pending_kickoff_wq);
+> +
+> +	phys_enc->parent_ops->handle_frame_done(phys_enc->parent, phys_enc,
+> +			DPU_ENCODER_FRAME_EVENT_DONE);
+> +
+>  	DPU_ATRACE_END("vblank_irq");
+>  }
+>  
+> @@ -483,8 +487,8 @@ static void dpu_encoder_phys_vid_get_hw_resources(
+>  	hw_res->intfs[phys_enc->intf_idx - INTF_0] = INTF_MODE_VIDEO;
+>  }
+>  
+> -static int _dpu_encoder_phys_vid_wait_for_vblank(
+> -		struct dpu_encoder_phys *phys_enc, bool notify)
+> +static int dpu_encoder_phys_vid_wait_for_vblank(
+> +		struct dpu_encoder_phys *phys_enc)
+>  {
+>  	struct dpu_encoder_wait_info wait_info;
+>  	int ret;
+> @@ -499,10 +503,6 @@ static int _dpu_encoder_phys_vid_wait_for_vblank(
+>  	wait_info.timeout_ms = KICKOFF_TIMEOUT_MS;
+>  
+>  	if (!dpu_encoder_phys_vid_is_master(phys_enc)) {
+> -		if (notify && phys_enc->parent_ops->handle_frame_done)
+> -			phys_enc->parent_ops->handle_frame_done(
+> -					phys_enc->parent, phys_enc,
+> -					DPU_ENCODER_FRAME_EVENT_DONE);
+>  		return 0;
+>  	}
+>  
+> @@ -512,20 +512,11 @@ static int _dpu_encoder_phys_vid_wait_for_vblank(
+>  
+>  	if (ret == -ETIMEDOUT) {
+>  		dpu_encoder_helper_report_irq_timeout(phys_enc, INTR_IDX_VSYNC);
+> -	} else if (!ret && notify && phys_enc->parent_ops->handle_frame_done)
+> -		phys_enc->parent_ops->handle_frame_done(
+> -				phys_enc->parent, phys_enc,
+> -				DPU_ENCODER_FRAME_EVENT_DONE);
+> +	}
+>  
+>  	return ret;
+>  }
+>  
+> -static int dpu_encoder_phys_vid_wait_for_vblank(
+> -		struct dpu_encoder_phys *phys_enc)
+> -{
+> -	return _dpu_encoder_phys_vid_wait_for_vblank(phys_enc, true);
+> -}
+> -
+>  static int dpu_encoder_phys_vid_wait_for_commit_done(
+>  		struct dpu_encoder_phys *phys_enc)
+>  {
+> @@ -615,7 +606,7 @@ static void dpu_encoder_phys_vid_disable(struct dpu_encoder_phys *phys_enc)
+>  	 * scanout buffer) don't latch properly..
+>  	 */
+>  	if (dpu_encoder_phys_vid_is_master(phys_enc)) {
+> -		ret = _dpu_encoder_phys_vid_wait_for_vblank(phys_enc, false);
+> +		ret = dpu_encoder_phys_vid_wait_for_vblank(phys_enc);
+>  		if (ret) {
+>  			atomic_set(&phys_enc->pending_kickoff_cnt, 0);
+>  			DRM_ERROR("wait disable failed: id:%u intf:%d ret:%d\n",
+> -- 
+> 2.21.0
 > 
-> (My personal preference would be (3), followed closely by (2).)
 
-3, definitely, and instead of having to invent a new scheme for every
-new syscall, make that the default pattern by providing a helper
-
-int __copy_abi_struct(void *kernel, size_t ksize, const void __user
-*user, size_t usize)
-{
-	size_t copy = min(ksize, usize);
-
-	if (copy_from_user(kernel, user, copy))
-		return -EFAULT;
-
-	if (usize > ksize) {
-		/* maybe a separate "return user_is_zero(user + ksize, usize -
-ksize);" helper */
-		char c;
-		user += ksize;
-		usize -= ksize;
-		while (usize--) {
-			if (get_user(c, user++))
-				return -EFAULT;
-			if (c)
-				return -EINVAL;
-		}
-	} else if (ksize > usize) {
-		memset(kernel + usize, 0, ksize - usize);
-	}
-	return 0;
-}
-#define copy_abi_struct(kernel, user, usize)	\
-	__copy_abi_struct(kernel, sizeof(*kernel), user, usize)
-
-> Both (1) and (2) have the problem that the "struct version" is inside
-> the struct so we'd need to copy_from_user() twice. This isn't the end of
-> the world, it just feels a bit less clean than is ideal. (3) fixes that
-> problem, at the cost of making the API slightly more cumbersome to use
-> directly (though again glibc could wrap that away).
-
-I don't see how 3 is cumbersome to use directly. Userspace code does
-struct openat_of_the_day args = {.field1 = x, .field3 = y} and passes
-&args, sizeof(args). What does glibc need to do beyond its usual munging
-of the userspace ABI registers to the syscall ABI registers?
-
-Rasmus
-
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
