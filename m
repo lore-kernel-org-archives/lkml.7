@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C71C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7048FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82F822CED
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE5422CED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbfH2Bs7 (ORCPT
+        id S1727698AbfH2BtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 21:48:59 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:47807 "EHLO
+        Wed, 28 Aug 2019 21:49:10 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:21395 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727383AbfH2Bsd (ORCPT
+        with ESMTP id S1726079AbfH2Bsc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 21:48:33 -0400
-X-UUID: 25b3501976324c0f9197d0c3001df43f-20190829
-X-UUID: 25b3501976324c0f9197d0c3001df43f-20190829
+        Wed, 28 Aug 2019 21:48:32 -0400
+X-UUID: 7c0761ffff2d4647b4d90932746ee98a-20190829
+X-UUID: 7c0761ffff2d4647b4d90932746ee98a-20190829
 Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
         (envelope-from <bibby.hsieh@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1492988589; Thu, 29 Aug 2019 09:48:27 +0800
+        with ESMTP id 2131518739; Thu, 29 Aug 2019 09:48:27 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
  mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Thu, 29 Aug 2019 09:48:32 +0800
@@ -45,9 +45,9 @@ CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
         Houlong Wei <houlong.wei@mediatek.com>,
         Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v14 10/10] arm64: dts: add gce node for mt8183
-Date:   Thu, 29 Aug 2019 09:48:17 +0800
-Message-ID: <20190829014817.25482-12-bibby.hsieh@mediatek.com>
+Subject: [PATCH v14 09/10] soc: mediatek: cmdq: add cmdq_dev_get_client_reg function
+Date:   Thu, 29 Aug 2019 09:48:16 +0800
+Message-ID: <20190829014817.25482-11-bibby.hsieh@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190829014817.25482-1-bibby.hsieh@mediatek.com>
 References: <20190829014817.25482-1-bibby.hsieh@mediatek.com>
@@ -59,41 +59,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add gce device node for mt8183
+GCE cannot know the register base address, this function
+can help cmdq client to get the cmdq_client_reg structure.
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Reviewed-by: Houlong Wei <houlong.wei@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/soc/mediatek/mtk-cmdq-helper.c | 29 ++++++++++++++++++++++++++
+ include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++
+ 2 files changed, 50 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 66aaa07f6cec..52b9af38a00a 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -9,6 +9,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/power/mt8183-power.h>
-+#include <dt-bindings/gce/mt8183-gce.h>
- #include "mt8183-pinfunc.h"
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index bec7bb6c3988..3037fbf206ef 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -27,6 +27,35 @@ struct cmdq_instruction {
+ 	u8 op;
+ };
  
- / {
-@@ -321,6 +322,15 @@
- 			status = "disabled";
- 		};
- 
-+		gce: mailbox@10238000 {
-+			compatible = "mediatek,mt8183-gce";
-+			reg = <0 0x10238000 0 0x4000>;
-+			interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_LOW>;
-+			#mbox-cells = <3>;
-+			clocks = <&infracfg CLK_INFRA_GCE>;
-+			clock-names = "gce";
-+		};
++int cmdq_dev_get_client_reg(struct device *dev,
++			    struct cmdq_client_reg *client_reg, int idx)
++{
++	struct of_phandle_args spec;
++	int err;
 +
- 		uart0: serial@11002000 {
- 			compatible = "mediatek,mt8183-uart",
- 				     "mediatek,mt6577-uart";
++	if (!client_reg)
++		return -ENOENT;
++
++	err = of_parse_phandle_with_fixed_args(dev->of_node,
++					       "mediatek,gce-client-reg",
++					       3, idx, &spec);
++	if (err < 0) {
++		dev_err(dev,
++			"error %d can't parse gce-client-reg property (%d)",
++			err, idx);
++
++		return err;
++	}
++
++	client_reg->subsys = (u8)spec.args[0];
++	client_reg->offset = (u16)spec.args[1];
++	client_reg->size = (u16)spec.args[2];
++	of_node_put(spec.np);
++
++	return 0;
++}
++EXPORT_SYMBOL(cmdq_dev_get_client_reg);
++
+ static void cmdq_client_timeout(struct timer_list *t)
+ {
+ 	struct cmdq_client *client = from_timer(client, t, timer);
+diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+index 92bd5b5c6341..a74c1d5acdf3 100644
+--- a/include/linux/soc/mediatek/mtk-cmdq.h
++++ b/include/linux/soc/mediatek/mtk-cmdq.h
+@@ -15,6 +15,12 @@
+ 
+ struct cmdq_pkt;
+ 
++struct cmdq_client_reg {
++	u8 subsys;
++	u16 offset;
++	u16 size;
++};
++
+ struct cmdq_client {
+ 	spinlock_t lock;
+ 	u32 pkt_cnt;
+@@ -24,6 +30,21 @@ struct cmdq_client {
+ 	u32 timeout_ms; /* in unit of microsecond */
+ };
+ 
++/**
++ * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
++ *			       node of CMDQ client
++ * @dev:	device of CMDQ mailbox client
++ * @client_reg: CMDQ client reg pointer
++ * @idx:	the index of desired reg
++ *
++ * Return: 0 for success; else the error code is returned
++ *
++ * Help CMDQ client parsing the cmdq client reg
++ * from the device node of CMDQ client.
++ */
++int cmdq_dev_get_client_reg(struct device *dev,
++			    struct cmdq_client_reg *client_reg, int idx);
++
+ /**
+  * cmdq_mbox_create() - create CMDQ mailbox client and channel
+  * @dev:	device of CMDQ mailbox client
 -- 
 2.18.0
 
