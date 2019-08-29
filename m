@@ -2,419 +2,185 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 449A4C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8D3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12922215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3281622CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:58:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xZX4jG1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbfH2G50 (ORCPT
+        id S1727505AbfH2G6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 02:57:26 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:60802 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725883AbfH2G5Z (ORCPT
+        Thu, 29 Aug 2019 02:58:39 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:40420 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfH2G6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 02:57:25 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.25575-0.00953499-0.734715;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16368;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=9;RT=9;SR=0;TI=SMTPD_---.FKpOiGz_1567061830;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.FKpOiGz_1567061830)
-          by smtp.aliyun-inc.com(10.147.41.178);
-          Thu, 29 Aug 2019 14:57:11 +0800
-From:   Mao Han <han_mao@c-sky.com>
-To:     linux-riscv@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
-        Mao Han <han_mao@c-sky.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Christoph Hellwig <hch@lst.de>, Guo Ren <guoren@kernel.org>
-Subject: [PATCH V6 3/3] riscv: Add support for libdw
-Date:   Thu, 29 Aug 2019 14:57:02 +0800
-Message-Id: <4cba2dfb6b1ef0df01185c6bce78a0a2867d0a7d.1567060834.git.han_mao@c-sky.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1567060834.git.han_mao@c-sky.com>
-References: <cover.1567060834.git.han_mao@c-sky.com>
-In-Reply-To: <cover.1567060834.git.han_mao@c-sky.com>
-References: <cover.1567060834.git.han_mao@c-sky.com>
+        Thu, 29 Aug 2019 02:58:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gD1AMkI8FpRbArgAWS2NSX6iE7kz1rPPHG4idT8fdBw=; b=xZX4jG1YMmq087sHk0zLDOE4A
+        2vh6QhH5yMkwjsM9Kp11ycPtWMPsStMqPB1gsYmPeQdU38/CrelMbY3AY5qXGh7tbpAdjCZ5KHE9/
+        NmqwyVPivxGrlgR4xRYn/lBEzt1XreknQwkBCd86UmMXaL8QSc1ODlJX4myltGfVg4M2B5CVqY38z
+        pc/rLqCT7mUNevoTr9erFmiC8W79S+0INBApxqn5Zk0xTuH2xN+DZo1BXELzkj+YUQa9XvNKFtlIO
+        kQUMZ2cg1Rvls+xM+2ms7dtOLb7ist29TMzT3KiqClUBUwKBE+MQhKWB/UVb/SCAkH+k2lga92QD6
+        K+kDl6+Jw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39344)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1i3ENH-0007HG-J3; Thu, 29 Aug 2019 07:57:39 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1i3EN7-0007UX-9P; Thu, 29 Aug 2019 07:57:29 +0100
+Date:   Thu, 29 Aug 2019 07:57:29 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v2 3/3] arm: Add support for function error injection
+Message-ID: <20190829065729.GU13294@shell.armlinux.org.uk>
+References: <20190806100015.11256-1-leo.yan@linaro.org>
+ <20190806100015.11256-4-leo.yan@linaro.org>
+ <20190819091808.GB5599@leoy-ThinkPad-X240s>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819091808.GB5599@leoy-ThinkPad-X240s>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add support for DWARF register mappings and libdw registers
-initialization, which is used by perf callchain analyzing when
---call-graph=dwarf is given.
+I'm sorry, I can't apply this, it produces loads of:
 
-Signed-off-by: Mao Han <han_mao@c-sky.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Greentime Hu <green.hu@gmail.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: linux-riscv <linux-riscv@lists.infradead.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Guo Ren <guoren@kernel.org>
----
- tools/arch/riscv/include/uapi/asm/perf_regs.h | 42 ++++++++++++
- tools/perf/Makefile.config                    |  6 +-
- tools/perf/arch/riscv/Build                   |  1 +
- tools/perf/arch/riscv/Makefile                |  4 ++
- tools/perf/arch/riscv/include/perf_regs.h     | 96 +++++++++++++++++++++++++++
- tools/perf/arch/riscv/util/Build              |  2 +
- tools/perf/arch/riscv/util/dwarf-regs.c       | 72 ++++++++++++++++++++
- tools/perf/arch/riscv/util/unwind-libdw.c     | 57 ++++++++++++++++
- 8 files changed, 279 insertions(+), 1 deletion(-)
- create mode 100644 tools/arch/riscv/include/uapi/asm/perf_regs.h
- create mode 100644 tools/perf/arch/riscv/Build
- create mode 100644 tools/perf/arch/riscv/Makefile
- create mode 100644 tools/perf/arch/riscv/include/perf_regs.h
- create mode 100644 tools/perf/arch/riscv/util/Build
- create mode 100644 tools/perf/arch/riscv/util/dwarf-regs.c
- create mode 100644 tools/perf/arch/riscv/util/unwind-libdw.c
+include/linux/error-injection.h:7:10: fatal error: asm/error-injection.h: No such file or directory
 
-diff --git a/tools/arch/riscv/include/uapi/asm/perf_regs.h b/tools/arch/riscv/include/uapi/asm/perf_regs.h
-new file mode 100644
-index 0000000..df1a581
---- /dev/null
-+++ b/tools/arch/riscv/include/uapi/asm/perf_regs.h
-@@ -0,0 +1,42 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd. */
-+
-+#ifndef _ASM_RISCV_PERF_REGS_H
-+#define _ASM_RISCV_PERF_REGS_H
-+
-+enum perf_event_riscv_regs {
-+	PERF_REG_RISCV_PC,
-+	PERF_REG_RISCV_RA,
-+	PERF_REG_RISCV_SP,
-+	PERF_REG_RISCV_GP,
-+	PERF_REG_RISCV_TP,
-+	PERF_REG_RISCV_T0,
-+	PERF_REG_RISCV_T1,
-+	PERF_REG_RISCV_T2,
-+	PERF_REG_RISCV_S0,
-+	PERF_REG_RISCV_S1,
-+	PERF_REG_RISCV_A0,
-+	PERF_REG_RISCV_A1,
-+	PERF_REG_RISCV_A2,
-+	PERF_REG_RISCV_A3,
-+	PERF_REG_RISCV_A4,
-+	PERF_REG_RISCV_A5,
-+	PERF_REG_RISCV_A6,
-+	PERF_REG_RISCV_A7,
-+	PERF_REG_RISCV_S2,
-+	PERF_REG_RISCV_S3,
-+	PERF_REG_RISCV_S4,
-+	PERF_REG_RISCV_S5,
-+	PERF_REG_RISCV_S6,
-+	PERF_REG_RISCV_S7,
-+	PERF_REG_RISCV_S8,
-+	PERF_REG_RISCV_S9,
-+	PERF_REG_RISCV_S10,
-+	PERF_REG_RISCV_S11,
-+	PERF_REG_RISCV_T3,
-+	PERF_REG_RISCV_T4,
-+	PERF_REG_RISCV_T5,
-+	PERF_REG_RISCV_T6,
-+	PERF_REG_RISCV_MAX,
-+};
-+#endif /* _ASM_RISCV_PERF_REGS_H */
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 89ac5a1..eaf25ee 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -60,6 +60,10 @@ ifeq ($(SRCARCH),arm64)
-   LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
- endif
- 
-+ifeq ($(SRCARCH),riscv)
-+  NO_PERF_REGS := 0
-+endif
-+
- ifeq ($(SRCARCH),csky)
-   NO_PERF_REGS := 0
- endif
-@@ -82,7 +86,7 @@ endif
- # Disable it on all other architectures in case libdw unwind
- # support is detected in system. Add supported architectures
- # to the check.
--ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390 csky))
-+ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390 csky riscv))
-   NO_LIBDW_DWARF_UNWIND := 1
- endif
- 
-diff --git a/tools/perf/arch/riscv/Build b/tools/perf/arch/riscv/Build
-new file mode 100644
-index 0000000..e4e5f33
---- /dev/null
-+++ b/tools/perf/arch/riscv/Build
-@@ -0,0 +1 @@
-+perf-y += util/
-diff --git a/tools/perf/arch/riscv/Makefile b/tools/perf/arch/riscv/Makefile
-new file mode 100644
-index 0000000..1aa9dd7
---- /dev/null
-+++ b/tools/perf/arch/riscv/Makefile
-@@ -0,0 +1,4 @@
-+ifndef NO_DWARF
-+PERF_HAVE_DWARF_REGS := 1
-+endif
-+PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
-diff --git a/tools/perf/arch/riscv/include/perf_regs.h b/tools/perf/arch/riscv/include/perf_regs.h
-new file mode 100644
-index 0000000..7a8bcde
---- /dev/null
-+++ b/tools/perf/arch/riscv/include/perf_regs.h
-@@ -0,0 +1,96 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd. */
-+
-+#ifndef ARCH_PERF_REGS_H
-+#define ARCH_PERF_REGS_H
-+
-+#include <stdlib.h>
-+#include <linux/types.h>
-+#include <asm/perf_regs.h>
-+
-+#define PERF_REGS_MASK	((1ULL << PERF_REG_RISCV_MAX) - 1)
-+#define PERF_REGS_MAX	PERF_REG_RISCV_MAX
-+#if __riscv_xlen == 64
-+#define PERF_SAMPLE_REGS_ABI    PERF_SAMPLE_REGS_ABI_64
-+#else
-+#define PERF_SAMPLE_REGS_ABI	PERF_SAMPLE_REGS_ABI_32
-+#endif
-+
-+#define PERF_REG_IP	PERF_REG_RISCV_PC
-+#define PERF_REG_SP	PERF_REG_RISCV_SP
-+
-+static inline const char *perf_reg_name(int id)
-+{
-+	switch (id) {
-+	case PERF_REG_RISCV_PC:
-+		return "pc";
-+	case PERF_REG_RISCV_RA:
-+		return "ra";
-+	case PERF_REG_RISCV_SP:
-+		return "sp";
-+	case PERF_REG_RISCV_GP:
-+		return "gp";
-+	case PERF_REG_RISCV_TP:
-+		return "tp";
-+	case PERF_REG_RISCV_T0:
-+		return "t0";
-+	case PERF_REG_RISCV_T1:
-+		return "t1";
-+	case PERF_REG_RISCV_T2:
-+		return "t2";
-+	case PERF_REG_RISCV_S0:
-+		return "s0";
-+	case PERF_REG_RISCV_S1:
-+		return "s1";
-+	case PERF_REG_RISCV_A0:
-+		return "a0";
-+	case PERF_REG_RISCV_A1:
-+		return "a1";
-+	case PERF_REG_RISCV_A2:
-+		return "a2";
-+	case PERF_REG_RISCV_A3:
-+		return "a3";
-+	case PERF_REG_RISCV_A4:
-+		return "a4";
-+	case PERF_REG_RISCV_A5:
-+		return "a5";
-+	case PERF_REG_RISCV_A6:
-+		return "a6";
-+	case PERF_REG_RISCV_A7:
-+		return "a7";
-+	case PERF_REG_RISCV_S2:
-+		return "s2";
-+	case PERF_REG_RISCV_S3:
-+		return "s3";
-+	case PERF_REG_RISCV_S4:
-+		return "s4";
-+	case PERF_REG_RISCV_S5:
-+		return "s5";
-+	case PERF_REG_RISCV_S6:
-+		return "s6";
-+	case PERF_REG_RISCV_S7:
-+		return "s7";
-+	case PERF_REG_RISCV_S8:
-+		return "s8";
-+	case PERF_REG_RISCV_S9:
-+		return "s9";
-+	case PERF_REG_RISCV_S10:
-+		return "s10";
-+	case PERF_REG_RISCV_S11:
-+		return "s11";
-+	case PERF_REG_RISCV_T3:
-+		return "t3";
-+	case PERF_REG_RISCV_T4:
-+		return "t4";
-+	case PERF_REG_RISCV_T5:
-+		return "t5";
-+	case PERF_REG_RISCV_T6:
-+		return "t6";
-+	default:
-+		return NULL;
-+	}
-+
-+	return NULL;
-+}
-+
-+#endif /* ARCH_PERF_REGS_H */
-diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
-new file mode 100644
-index 0000000..1160bb2
---- /dev/null
-+++ b/tools/perf/arch/riscv/util/Build
-@@ -0,0 +1,2 @@
-+perf-$(CONFIG_DWARF) += dwarf-regs.o
-+perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-diff --git a/tools/perf/arch/riscv/util/dwarf-regs.c b/tools/perf/arch/riscv/util/dwarf-regs.c
-new file mode 100644
-index 0000000..f3555f6
---- /dev/null
-+++ b/tools/perf/arch/riscv/util/dwarf-regs.c
-@@ -0,0 +1,72 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
-+ * Mapping of DWARF debug register numbers into register names.
-+ */
-+
-+#include <stddef.h>
-+#include <errno.h> /* for EINVAL */
-+#include <string.h> /* for strcmp */
-+#include <dwarf-regs.h>
-+
-+struct pt_regs_dwarfnum {
-+	const char *name;
-+	unsigned int dwarfnum;
-+};
-+
-+#define REG_DWARFNUM_NAME(r, num) {.name = r, .dwarfnum = num}
-+#define REG_DWARFNUM_END {.name = NULL, .dwarfnum = 0}
-+
-+struct pt_regs_dwarfnum riscv_dwarf_regs_table[] = {
-+	REG_DWARFNUM_NAME("%zero", 0),
-+	REG_DWARFNUM_NAME("%ra", 1),
-+	REG_DWARFNUM_NAME("%sp", 2),
-+	REG_DWARFNUM_NAME("%gp", 3),
-+	REG_DWARFNUM_NAME("%tp", 4),
-+	REG_DWARFNUM_NAME("%t0", 5),
-+	REG_DWARFNUM_NAME("%t1", 6),
-+	REG_DWARFNUM_NAME("%t2", 7),
-+	REG_DWARFNUM_NAME("%s0", 8),
-+	REG_DWARFNUM_NAME("%s1", 9),
-+	REG_DWARFNUM_NAME("%a0", 10),
-+	REG_DWARFNUM_NAME("%a1", 11),
-+	REG_DWARFNUM_NAME("%a2", 12),
-+	REG_DWARFNUM_NAME("%a3", 13),
-+	REG_DWARFNUM_NAME("%a4", 14),
-+	REG_DWARFNUM_NAME("%a5", 15),
-+	REG_DWARFNUM_NAME("%a6", 16),
-+	REG_DWARFNUM_NAME("%a7", 17),
-+	REG_DWARFNUM_NAME("%s2", 18),
-+	REG_DWARFNUM_NAME("%s3", 19),
-+	REG_DWARFNUM_NAME("%s4", 20),
-+	REG_DWARFNUM_NAME("%s5", 21),
-+	REG_DWARFNUM_NAME("%s6", 22),
-+	REG_DWARFNUM_NAME("%s7", 23),
-+	REG_DWARFNUM_NAME("%s8", 24),
-+	REG_DWARFNUM_NAME("%s9", 25),
-+	REG_DWARFNUM_NAME("%s10", 26),
-+	REG_DWARFNUM_NAME("%s11", 27),
-+	REG_DWARFNUM_NAME("%t3", 28),
-+	REG_DWARFNUM_NAME("%t4", 29),
-+	REG_DWARFNUM_NAME("%t5", 30),
-+	REG_DWARFNUM_NAME("%t6", 31),
-+	REG_DWARFNUM_END,
-+};
-+
-+#define RISCV_MAX_REGS ((sizeof(riscv_dwarf_regs_table) / \
-+		 sizeof(riscv_dwarf_regs_table[0])) - 1)
-+
-+const char *get_arch_regstr(unsigned int n)
-+{
-+	return (n < RISCV_MAX_REGS) ? riscv_dwarf_regs_table[n].name : NULL;
-+}
-+
-+int regs_query_register_offset(const char *name)
-+{
-+	const struct pt_regs_dwarfnum *roff;
-+
-+	for (roff = riscv_dwarf_regs_table; roff->name != NULL; roff++)
-+		if (!strcmp(roff->name, name))
-+			return roff->dwarfnum;
-+	return -EINVAL;
-+}
-diff --git a/tools/perf/arch/riscv/util/unwind-libdw.c b/tools/perf/arch/riscv/util/unwind-libdw.c
-new file mode 100644
-index 0000000..19536e1
---- /dev/null
-+++ b/tools/perf/arch/riscv/util/unwind-libdw.c
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd. */
-+
-+#include <elfutils/libdwfl.h>
-+#include "../../util/unwind-libdw.h"
-+#include "../../util/perf_regs.h"
-+#include "../../util/event.h"
-+
-+bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
-+{
-+	struct unwind_info *ui = arg;
-+	struct regs_dump *user_regs = &ui->sample->user_regs;
-+	Dwarf_Word dwarf_regs[32];
-+
-+#define REG(r) ({						\
-+	Dwarf_Word val = 0;					\
-+	perf_reg_value(&val, user_regs, PERF_REG_RISCV_##r);	\
-+	val;							\
-+})
-+
-+	dwarf_regs[0]  = 0;
-+	dwarf_regs[1]  = REG(RA);
-+	dwarf_regs[2]  = REG(SP);
-+	dwarf_regs[3]  = REG(GP);
-+	dwarf_regs[4]  = REG(TP);
-+	dwarf_regs[5]  = REG(T0);
-+	dwarf_regs[6]  = REG(T1);
-+	dwarf_regs[7]  = REG(T2);
-+	dwarf_regs[8]  = REG(S0);
-+	dwarf_regs[9]  = REG(S1);
-+	dwarf_regs[10] = REG(A0);
-+	dwarf_regs[11] = REG(A1);
-+	dwarf_regs[12] = REG(A2);
-+	dwarf_regs[13] = REG(A3);
-+	dwarf_regs[14] = REG(A4);
-+	dwarf_regs[15] = REG(A5);
-+	dwarf_regs[16] = REG(A6);
-+	dwarf_regs[17] = REG(A7);
-+	dwarf_regs[18] = REG(S2);
-+	dwarf_regs[19] = REG(S3);
-+	dwarf_regs[20] = REG(S4);
-+	dwarf_regs[21] = REG(S5);
-+	dwarf_regs[22] = REG(S6);
-+	dwarf_regs[23] = REG(S7);
-+	dwarf_regs[24] = REG(S8);
-+	dwarf_regs[25] = REG(S9);
-+	dwarf_regs[26] = REG(S10);
-+	dwarf_regs[27] = REG(S11);
-+	dwarf_regs[28] = REG(T3);
-+	dwarf_regs[29] = REG(T4);
-+	dwarf_regs[30] = REG(T5);
-+	dwarf_regs[31] = REG(T6);
-+	dwfl_thread_state_register_pc(thread, REG(PC));
-+
-+	return dwfl_thread_state_registers(thread, 0, PERF_REG_RISCV_MAX,
-+					   dwarf_regs);
-+}
+Since your patch 1 has been merged by the ARM64 people, I can't take
+it until next cycle.
+
+On Mon, Aug 19, 2019 at 05:18:08PM +0800, Leo Yan wrote:
+> Hi Russell,
+> 
+> On Tue, Aug 06, 2019 at 06:00:15PM +0800, Leo Yan wrote:
+> > This patch implements arm specific functions regs_set_return_value() and
+> > override_function_with_return() to support function error injection.
+> > 
+> > In the exception flow, it updates pt_regs::ARM_pc with pt_regs::ARM_lr
+> > so can override the probed function return.
+> 
+> Gentle ping ...  Could you review this patch?
+> 
+> Thanks,
+> Leo.
+> 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  arch/arm/Kconfig              |  1 +
+> >  arch/arm/include/asm/ptrace.h |  5 +++++
+> >  arch/arm/lib/Makefile         |  2 ++
+> >  arch/arm/lib/error-inject.c   | 19 +++++++++++++++++++
+> >  4 files changed, 27 insertions(+)
+> >  create mode 100644 arch/arm/lib/error-inject.c
+> > 
+> > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> > index 33b00579beff..2d3d44a037f6 100644
+> > --- a/arch/arm/Kconfig
+> > +++ b/arch/arm/Kconfig
+> > @@ -77,6 +77,7 @@ config ARM
+> >  	select HAVE_EXIT_THREAD
+> >  	select HAVE_FAST_GUP if ARM_LPAE
+> >  	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+> > +	select HAVE_FUNCTION_ERROR_INJECTION if !THUMB2_KERNEL
+> >  	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
+> >  	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
+> >  	select HAVE_GCC_PLUGINS
+> > diff --git a/arch/arm/include/asm/ptrace.h b/arch/arm/include/asm/ptrace.h
+> > index 91d6b7856be4..3b41f37b361a 100644
+> > --- a/arch/arm/include/asm/ptrace.h
+> > +++ b/arch/arm/include/asm/ptrace.h
+> > @@ -89,6 +89,11 @@ static inline long regs_return_value(struct pt_regs *regs)
+> >  	return regs->ARM_r0;
+> >  }
+> >  
+> > +static inline void regs_set_return_value(struct pt_regs *regs, unsigned long rc)
+> > +{
+> > +	regs->ARM_r0 = rc;
+> > +}
+> > +
+> >  #define instruction_pointer(regs)	(regs)->ARM_pc
+> >  
+> >  #ifdef CONFIG_THUMB2_KERNEL
+> > diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
+> > index b25c54585048..8f56484a7156 100644
+> > --- a/arch/arm/lib/Makefile
+> > +++ b/arch/arm/lib/Makefile
+> > @@ -42,3 +42,5 @@ ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
+> >    CFLAGS_xor-neon.o		+= $(NEON_FLAGS)
+> >    obj-$(CONFIG_XOR_BLOCKS)	+= xor-neon.o
+> >  endif
+> > +
+> > +obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
+> > diff --git a/arch/arm/lib/error-inject.c b/arch/arm/lib/error-inject.c
+> > new file mode 100644
+> > index 000000000000..2d696dc94893
+> > --- /dev/null
+> > +++ b/arch/arm/lib/error-inject.c
+> > @@ -0,0 +1,19 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +#include <linux/error-injection.h>
+> > +#include <linux/kprobes.h>
+> > +
+> > +void override_function_with_return(struct pt_regs *regs)
+> > +{
+> > +	/*
+> > +	 * 'regs' represents the state on entry of a predefined function in
+> > +	 * the kernel/module and which is captured on a kprobe.
+> > +	 *
+> > +	 * 'regs->ARM_lr' contains the the link register for the probed
+> > +	 * function, when kprobe returns back from exception it will override
+> > +	 * the end of probed function and directly return to the predefined
+> > +	 * function's caller.
+> > +	 */
+> > +	instruction_pointer_set(regs, regs->ARM_lr);
+> > +}
+> > +NOKPROBE_SYMBOL(override_function_with_return);
+> > -- 
+> > 2.17.1
+> > 
+> 
+
 -- 
-2.7.4
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
