@@ -2,111 +2,116 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AA8C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075C2C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C482166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBBB92339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="mCW/mV+2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ILi2D94O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbfH2Qfd (ORCPT
+        id S1727780AbfH2Qgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:35:33 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39027 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727474AbfH2Qfc (ORCPT
+        Thu, 29 Aug 2019 12:36:38 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46174 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbfH2Qgh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:35:32 -0400
-Received: by mail-io1-f67.google.com with SMTP id d25so5654994iob.6
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:35:32 -0700 (PDT)
+        Thu, 29 Aug 2019 12:36:37 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h7so2779091wrt.13
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:36:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gWrfmUvmczY9Ye+Pr2g0BSFcyfcAgL193u3fjIy1N4Y=;
-        b=mCW/mV+2Zet4DnsT0J9ry/QEDNvvfWVPRxF+fU90EoDLur8DOlh0dzN52gBa3d/dsY
-         S5OybsNUGwjUhHRpdv/Rk1mN9zWng8ehkcHS2iZLITSjc24tUX906mFaR8L86AH+jncZ
-         ia3ueIIt0kz4cMjOnYFL3DnEp7BnEwqR0yvGQjyQBGwTN1NOj0P4U+novHoEUURgEmXd
-         1gWv3cvtZEnhok9SYTOVFkDHuX4z7g4w8J2Fel0eCd9RHhO6EMvjXWHOBBkD/myvSby/
-         fHQ7b7YnU5skMwBByLvB8XavyuRWZGWFvQMx3yR3ZU9GOFiOz9tbbhWwTJo++cehM7S2
-         OBMw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N+c0qA0XM3CJtKzSOyldE7zb5NKzBbtoCRXB4ExOIbU=;
+        b=ILi2D94OAOQwwctQJ3w2ApbF1WkWInktVYqIS55gOb8Ugdl0wE1ny8VP9sSvWelKlX
+         hlZrFOecE0RCikC+Hr0LnSzMXqUQrhmMHQ6gWvFPDtIOfSec8yagELdOWLrI9QJE7ITW
+         I8n7kp71OEqALz6VefXsWjdvQICRVkrq9TpNOYbmIYWIJiTysdeOwGc5/n4I4EIJJp14
+         3qgN1gNIibA+7B3ls4IaUhmPxTj/RnwzRy5nzdO6YKsAEt+AzzYSjQRtKN2Zxb9/b30m
+         PvMtJ3Wmpovn6Sf5JixDwUQahojbgiQIESTmVF9vnP6UVP5EwgJjTpHWiCid2hf9c66O
+         u2+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gWrfmUvmczY9Ye+Pr2g0BSFcyfcAgL193u3fjIy1N4Y=;
-        b=JwBi5IrWYkrM/IW1BZY2t0uwR1W9mrg7uusZlmwzwxLPhTIqSwdRbShicch6rjr/UO
-         /BIwqIcsEyGKKOm6fgsrKr5Mue+ioukos+8/+iOvmplcWxgA55bRXzSXn22fmjgBLgCJ
-         EqDsjWn8bTTd3NClZZGPrFS7PVGDPF+YTjaPJZ1s9/Mc2eDdwrGjGjmvCa9gKdahuSU3
-         OzA8xHrP6mRBhjlN1YZ0hobxrTSYmn6u6dA4X+QoKnSqWgsIqEsAuAZUhSDcYTO221O8
-         Llx5kvoMrEF1VzcyLxw76rGp0oeHuWUAWe08bJjt5COx2j4srBgH0B83AzsvxgmhVVVK
-         D0wA==
-X-Gm-Message-State: APjAAAWCOt0i78uRxGUUlTjg67uqRfWnUGP5GBUm61qoTHLp5X7gLBjt
-        V2XmYl+LVShUNyWaYcLVPc19qqVyqwfAztdmkuSo6Q==
-X-Google-Smtp-Source: APXvYqyUIN6VsTk2LP68rWn3MkN0M1tAJqRkiSTgbDqKxN8krqoELN2nCECCECeJ3LUjgUO7Tizggbnn64p8Wn6EONQ=
-X-Received: by 2002:a5d:8591:: with SMTP id f17mr1731248ioj.5.1567096531180;
- Thu, 29 Aug 2019 09:35:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N+c0qA0XM3CJtKzSOyldE7zb5NKzBbtoCRXB4ExOIbU=;
+        b=tUca2GPQdli6QWbuuo77zr+TvSvKwJFrGjQt7xzLbqKkaiZBXTzPhFJ/ld1iy747e1
+         pZNexLgRbsjlLAG1P4HJen5EunWco9JYWAnDnhBh0WG8NZE7YqLsLPfvP7Ok5T+GKEq7
+         9HodpEnhE+mWJsCyRXT+gBmQrWhGxIswRVTcBw79A4SG3itrHP7BDvFxzSXU/ben4z53
+         kKzOOrWU9pKMDtQyiSHJWxD2yhTMiPYeo+f+uZqR7EaliNz1k2gzj6vGhSz8VHHKFmIu
+         93sD3vIPWD65mmJPnLgsPXLufXgxhwjuvDnqOxZGqT4jgYz+KOAacEEDMN27kbZeTojn
+         HbYg==
+X-Gm-Message-State: APjAAAXP8Cx1dVeqjbNEy2MWmYEq+m/Dw2jCVP5cSiCmbONLgOq40D5H
+        dEub5friVeS6um4fMcwriZUNww==
+X-Google-Smtp-Source: APXvYqycd8fi72Kcd8HMVvxvRzc0dAVNmyoMC+kJmLPG7uQ3k/lN/mNd0JQBtiMLUhXA93Y8EAKJAA==
+X-Received: by 2002:a5d:5343:: with SMTP id t3mr12508573wrv.156.1567096595281;
+        Thu, 29 Aug 2019 09:36:35 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id k9sm4398243wrq.15.2019.08.29.09.36.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 09:36:34 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
+Cc:     spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, devicetree@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v6 0/4] ASoC: codecs: Add WSA881x Smart Speaker amplifier support
+Date:   Thu, 29 Aug 2019 17:35:10 +0100
+Message-Id: <20190829163514.11221-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190826193638.6638-1-echron@arista.com> <20190827071523.GR7538@dhcp22.suse.cz>
- <CAM3twVRZfarAP6k=LLWH0jEJXu8C8WZKgMXCFKBZdRsTVVFrUQ@mail.gmail.com>
- <20190828065955.GB7386@dhcp22.suse.cz> <CAM3twVR_OLffQ1U-SgQOdHxuByLNL5sicfnObimpGpPQ1tJ0FQ@mail.gmail.com>
- <20190829071105.GQ28313@dhcp22.suse.cz> <297cf049-d92e-f13a-1386-403553d86401@i-love.sakura.ne.jp>
- <20190829115608.GD28313@dhcp22.suse.cz> <CAM3twVSZm69U8Sg+VxQ67DeycHUMC5C3_f2EpND4_LC4UHx7BA@mail.gmail.com>
- <20190829161759.GK28313@dhcp22.suse.cz>
-In-Reply-To: <20190829161759.GK28313@dhcp22.suse.cz>
-From:   Edward Chron <echron@arista.com>
-Date:   Thu, 29 Aug 2019 09:35:19 -0700
-Message-ID: <CAM3twVS+yAyBAzNHs7C8NLVXT6MmSamemXNMpmvmkzkFwu5b_A@mail.gmail.com>
-Subject: Re: [PATCH 00/10] OOM Debug print selection and additional information
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 9:18 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Thu 29-08-19 08:03:19, Edward Chron wrote:
-> > On Thu, Aug 29, 2019 at 4:56 AM Michal Hocko <mhocko@kernel.org> wrote:
-> [...]
-> > > Or simply provide a hook with the oom_control to be called to report
-> > > without replacing the whole oom killer behavior. That is not necessary.
-> >
-> > For very simple addition, to add a line of output this works.
->
-> Why would a hook be limited to small stuff?
+This patchset adds support to WSA8810/WSA8815 Class-D Smart Speaker
+Amplifier which is SoundWire interfaced.
+This also adds support to some missing bits in SoundWire bus layer like
+Device Tree support.
 
-It could be larger but the few items we added were just a line or
-two of output.
+This patchset along with DB845c machine driver and WCD934x codec driver
+has been tested on SDM845 SoC based DragonBoard DB845c with two
+WSA8810 speakers.
 
-The vmalloc, slabs and processes can print many entries so we
-added a control for those.
+Most of the code in this driver is rework of Qualcomm downstream drivers
+used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
 
->
-> > It would still be nice to address the fact the existing OOM Report prints
-> > all of the user processes or none. It would be nice to add some control
-> > for that. That's what we did.
->
-> TBH, I am not really convinced partial taks list is desirable nor easy
-> to configure. What is the criterion? oom_score (with potentially unstable
-> metric)? Rss? Something else?
+TODO:
+        Add thermal sensor support in WSA881x.
 
-We used an estimate of the memory footprint of the process:
-rss, swap pages and page table pages.
+Thanks,
+srini
 
-> --
-> Michal Hocko
-> SUSE Labs
+Changes since v5:
+ - updated slave bindings with proper licencing and fixed up examples.
+
+Srinivas Kandagatla (4):
+  dt-bindings: soundwire: add slave bindings
+  soundwire: core: add device tree support for slave devices
+  dt-bindings: ASoC: Add WSA881x bindings
+  ASoC: codecs: add wsa881x amplifier support
+
+ .../bindings/sound/qcom,wsa881x.yaml          |   62 +
+ .../soundwire/soundwire-controller.yaml       |   82 ++
+ drivers/soundwire/bus.c                       |    2 +
+ drivers/soundwire/bus.h                       |    1 +
+ drivers/soundwire/slave.c                     |   52 +
+ sound/soc/codecs/Kconfig                      |   10 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/wsa881x.c                    | 1134 +++++++++++++++++
+ 8 files changed, 1345 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+ create mode 100644 Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+ create mode 100644 sound/soc/codecs/wsa881x.c
+
+-- 
+2.21.0
+
