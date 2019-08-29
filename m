@@ -2,52 +2,52 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B5EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2FFC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56FB42166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3289821726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103157;
-	bh=4MiuGwnoZ0OIyLYJEgWI1x++IDymfDDOIbhzOsLTO80=;
+	s=default; t=1567103169;
+	bh=O1EYD+mSrrIKSbPQmCF5Ywc4o5fhlICEumH33oOznOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=thxLR5g6iC9zvA15hdfdVndLeu8ewY09KbHlS92AP70/fciOyw+izuBexEmCV39dP
-	 PCexpou9SfJHmWMNCTfMPYgfsYEySz1eB76wprwR6VRE9QiZMm0/1bYFVp1Ac1yJfn
-	 ktgMqoQowbbjOGHI6m0XJ+LiHNYAE4m48aX+jeO0=
+	b=wHmWIry042F8N+pgeRDwiv0BneY6X2Dh8u5RbZWMc5XA0u8WsX43ELM6faaajq4xI
+	 vO65tV4/s1C4xOUsWX1mrCvNBcnhy6EFuJ1t28ZcviA2gLJ5NCQ3Bn6rR6p5/MYsHJ
+	 1CNyOcDgAv4oZuqbJ5CnH8s1evg9kXYxnMNYnEuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfH2SQC (ORCPT
+        id S1729860AbfH2S0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57878 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:26:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729521AbfH2SP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:15:59 -0400
+        id S1729506AbfH2SP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:15:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFE7623405;
-        Thu, 29 Aug 2019 18:15:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92F9C233FF;
+        Thu, 29 Aug 2019 18:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102558;
-        bh=4MiuGwnoZ0OIyLYJEgWI1x++IDymfDDOIbhzOsLTO80=;
+        s=default; t=1567102557;
+        bh=O1EYD+mSrrIKSbPQmCF5Ywc4o5fhlICEumH33oOznOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tbu5PDRhUju6FtQLhV+ECTeAGNgCA2G12WeAn9LaC4vP3MZVMgmJV9q++uEmKC5un
-         6UB7qp9XHDGduhmfE19bUOD17aCooRHGj/PfkYj3djlWas/eihWeFLE4dbNlj9L4Sd
-         dDAOs13pBA6wjyZzJDUXzj7XmdEE+vdtuPRTP9Qw=
+        b=nh4gFIziJf2gCjn3dNVAzXfYdzAV5lBokmIEwyWCKZNS7EuqgwnONkspIOS3gt4DL
+         lBlvUeDVo2FiIDaYGXFpQY4yzDhrj4wOsmkZo2UwWfmeyB9AEp1J3C09zdWs85syJO
+         F4ZrtpNh9Xl26hU8IM4aNh+nKNOQm756772Zyiz8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 07/45] Bluetooth: btqca: Add a short delay before downloading the NVM
-Date:   Thu, 29 Aug 2019 14:15:07 -0400
-Message-Id: <20190829181547.8280-7-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 06/45] net: tc35815: Explicitly check NET_IP_ALIGN is not zero in tc35815_rx
+Date:   Thu, 29 Aug 2019 14:15:06 -0400
+Message-Id: <20190829181547.8280-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
 References: <20190829181547.8280-1-sashal@kernel.org>
@@ -60,42 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Kaehlcke <mka@chromium.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 8059ba0bd0e4694e51c2ee6438a77b325f06c0d5 ]
+[ Upstream commit 125b7e0949d4e72b15c2b1a1590f8cece985a918 ]
 
-On WCN3990 downloading the NVM sometimes fails with a "TLV response
-size mismatch" error:
+clang warns:
 
-[  174.949955] Bluetooth: btqca.c:qca_download_firmware() hci0: QCA Downloading qca/crnv21.bin
-[  174.958718] Bluetooth: btqca.c:qca_tlv_send_segment() hci0: QCA TLV response size mismatch
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: warning: use of logical
+'&&' with constant operand [-Wconstant-logical-operand]
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                  ^  ~~~~~~~~~~~~
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: note: use '&' for a
+bitwise operation
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                  ^~
+                                                  &
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: note: remove constant to
+silence this warning
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                 ~^~~~~~~~~~~~~~~
+1 warning generated.
 
-It seems the controller needs a short time after downloading the
-firmware before it is ready for the NVM. A delay as short as 1 ms
-seems sufficient, make it 10 ms just in case. No event is received
-during the delay, hence we don't just silently drop an extra event.
+Explicitly check that NET_IP_ALIGN is not zero, which matches how this
+is checked in other parts of the tree. Because NET_IP_ALIGN is a build
+time constant, this check will be constant folded away during
+optimization.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 82a9928db560 ("tc35815: Enable StripCRC feature")
+Link: https://github.com/ClangBuiltLinux/linux/issues/608
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btqca.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/toshiba/tc35815.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-index ec9e03a6b7786..9e70f7c7e5659 100644
---- a/drivers/bluetooth/btqca.c
-+++ b/drivers/bluetooth/btqca.c
-@@ -363,6 +363,9 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
- 		return err;
- 	}
- 
-+	/* Give the controller some time to get ready to receive the NVM */
-+	msleep(10);
-+
- 	/* Download NVM configuration */
- 	config.type = TLV_TYPE_NVM;
- 	if (soc_type == QCA_WCN3990)
+diff --git a/drivers/net/ethernet/toshiba/tc35815.c b/drivers/net/ethernet/toshiba/tc35815.c
+index cce9c9ed46aa9..9146068979d2c 100644
+--- a/drivers/net/ethernet/toshiba/tc35815.c
++++ b/drivers/net/ethernet/toshiba/tc35815.c
+@@ -1497,7 +1497,7 @@ tc35815_rx(struct net_device *dev, int limit)
+ 			pci_unmap_single(lp->pci_dev,
+ 					 lp->rx_skbs[cur_bd].skb_dma,
+ 					 RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
+-			if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
++			if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN != 0)
+ 				memmove(skb->data, skb->data - NET_IP_ALIGN,
+ 					pkt_len);
+ 			data = skb_put(skb, pkt_len);
 -- 
 2.20.1
 
