@@ -2,100 +2,195 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70009C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF70C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50DD920828
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D2052341C
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfH2NKs (ORCPT
+        id S1727483AbfH2NL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:10:48 -0400
-Received: from mga17.intel.com ([192.55.52.151]:11999 "EHLO mga17.intel.com"
+        Thu, 29 Aug 2019 09:11:28 -0400
+Received: from sauhun.de ([88.99.104.3]:38986 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727315AbfH2NKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:10:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 06:10:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,443,1559545200"; 
-   d="scan'208";a="197802055"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Aug 2019 06:10:38 -0700
-Subject: Re: [PATCH 2/3] mmc: sdhci: constify references of parameters to
- __sdhci_read_caps()
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Piotr Sroka <piotrs@cadence.com>, linux-kernel@vger.kernel.org
-References: <20190829104928.27404-1-yamada.masahiro@socionext.com>
- <20190829104928.27404-2-yamada.masahiro@socionext.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <a3500d7d-8b53-da7c-c279-799152cc2240@intel.com>
-Date:   Thu, 29 Aug 2019 16:09:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727182AbfH2NL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 09:11:28 -0400
+Received: from localhost (p54B33070.dip0.t-ipconnect.de [84.179.48.112])
+        by pokefinder.org (Postfix) with ESMTPSA id C78242C001C;
+        Thu, 29 Aug 2019 15:11:24 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 15:11:24 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Zhang Rui <rui.zhang@intel.com>, Simon Horman <horms@verge.net.au>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Nathan Huckleberry <nhuck@google.com>, edubezval@gmail.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Yoshihiro Kaneko <ykaneko0929@gmail.com>,
+        wsa+renesas@sang-engineering.com
+Subject: Re: [PATCH] thermal: rcar_gen3_thermal: Fix Wshift-negative-value
+Message-ID: <20190829131124.GA2437@kunai>
+References: <20190613211228.34092-1-nhuck@google.com>
+ <fd8b8a48-dfb7-1478-2d8d-0953acee39d3@linaro.org>
+ <82458318837ed1154a183be0b96337fc7809c645.camel@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190829104928.27404-2-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
+Content-Disposition: inline
+In-Reply-To: <82458318837ed1154a183be0b96337fc7809c645.camel@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/08/19 1:49 PM, Masahiro Yamada wrote:
-> __sdhci_read_caps() does not modify *ver, *caps, or *caps1.
-> 
-> Probably, the caller of this function will want to constifythe
-> parameters passed in.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+--zhXaljGHf11kAtnf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ---
-> 
->  drivers/mmc/host/sdhci.c | 3 ++-
->  drivers/mmc/host/sdhci.h | 4 ++--
->  2 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index a5dc5aae973e..08cc0792c174 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -3565,7 +3565,8 @@ static int sdhci_set_dma_mask(struct sdhci_host *host)
->  	return ret;
->  }
->  
-> -void __sdhci_read_caps(struct sdhci_host *host, u16 *ver, u32 *caps, u32 *caps1)
-> +void __sdhci_read_caps(struct sdhci_host *host, const u16 *ver,
-> +		       const u32 *caps, const u32 *caps1)
->  {
->  	u16 v;
->  	u64 dt_caps_mask = 0;
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 902f855efe8f..81e23784475a 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -738,8 +738,8 @@ static inline void *sdhci_priv(struct sdhci_host *host)
->  }
->  
->  void sdhci_card_detect(struct sdhci_host *host);
-> -void __sdhci_read_caps(struct sdhci_host *host, u16 *ver, u32 *caps,
-> -		       u32 *caps1);
-> +void __sdhci_read_caps(struct sdhci_host *host, const u16 *ver,
-> +		       const u32 *caps, const u32 *caps1);
->  int sdhci_setup_host(struct sdhci_host *host);
->  void sdhci_cleanup_host(struct sdhci_host *host);
->  int __sdhci_add_host(struct sdhci_host *host);
-> 
+On Wed, Aug 28, 2019 at 04:52:20PM +0800, Zhang Rui wrote:
+> On Fri, 2019-06-14 at 12:52 +0200, Daniel Lezcano wrote:
+> > Hi Nathan,
+> >=20
+> > On 13/06/2019 23:12, Nathan Huckleberry wrote:
+> > > Clang produces the following warning
+> > >=20
+> > > vers/thermal/rcar_gen3_thermal.c:147:33: warning: shifting a
+> > > negative
+> > > signed value is undefined [-Wshift-negative-value] / (ptat[0] -
+> > > ptat[2])) +
+> > > FIXPT_INT(TJ_3); ^~~~~~~~~~~~~~~
+> > > drivers/thermal/rcar_gen3_thermal.c:126:29
+> > > note: expanded from macro 'FIXPT_INT' #define FIXPT_INT(_x) ((_x)
+> > > <<
+> > > FIXPT_SHIFT) ~~~~ ^ drivers/thermal/rcar_gen3_thermal.c:150:18:
+> > > warning:
+> > > shifting a negative signed value is undefined [-Wshift-negative-
+> > > value]
+> > > tsc->tj_t - FIXPT_INT(TJ_3)); ~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+> > >=20
+> > > Upon further investigating it looks like there is no real reason
+> > > for
+> > > TJ_3 to be -41. Usages subtract -41, code would be cleaner to just
+> > > add.
+> >=20
+> > All the code seems broken regarding the negative value shifting as
+> > the
+> > macros pass an integer:
+> >=20
+> > eg.
+> >         tsc->coef.a2 =3D FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]),
+> >                                  tsc->tj_t - FIXPT_INT(ths_tj_1));
+> >=20
+> > thcode[1] is always < than thcode[0],
+> >=20
+> > thcode[1] - thcode[0] < 0
+> >=20
+> > FIXPT_INT(thcode[1] - thcode[0]) is undefined
+> >=20
+> >=20
+> > Is it done on purpose FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]) ?
+> >=20
+> > Try developing the macro with the coef.a2 computation ...
+> >=20
+> > The code quality of this driver could be better, it deserves a rework
+> > IMHO ...
+> >=20
+> > I suggest to revert:
+> >=20
+> > 4eb39f79ef443fa566d36bd43f1f578d5c140305
+> > bdc4480a669d476814061b4da6bb006f7048c8e5
+> > 6a310f8f97bb8bc2e2bb9db6f49a1b8678c8d144
+> >=20
+> > Rework the coefficient computation and re-introduce what was reverted
+> > in
+> > a nicer way.
+>=20
+> Sounds reasonable to me.
+>=20
+> Yoshihiro,
+> can you please clarify on this? Or else I will revert the above commits
+> first?
+>=20
+> Also CC Wolfram Sang, the driver author.
 
+CCing Simon Horman who worked with Kaneko-san on these changes.
+
+> thanks,
+> rui
+> >=20
+> >=20
+> > > Fixes: 4eb39f79ef44 ("thermal: rcar_gen3_thermal: Update value of
+> > > Tj_1")
+> > > Cc: clang-built-linux@googlegroups.com
+> > > Link: https://github.com/ClangBuiltLinux/linux/issues/531
+> > > Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> > > ---
+> > >  drivers/thermal/rcar_gen3_thermal.c | 8 ++++----
+> > >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > >=20
+> > > diff --git a/drivers/thermal/rcar_gen3_thermal.c
+> > > b/drivers/thermal/rcar_gen3_thermal.c
+> > > index a56463308694..f4b4558c08e9 100644
+> > > --- a/drivers/thermal/rcar_gen3_thermal.c
+> > > +++ b/drivers/thermal/rcar_gen3_thermal.c
+> > > @@ -131,7 +131,7 @@ static inline void
+> > > rcar_gen3_thermal_write(struct rcar_gen3_thermal_tsc *tsc,
+> > >  #define RCAR3_THERMAL_GRAN 500 /* mili Celsius */
+> > > =20
+> > >  /* no idea where these constants come from */
+> > > -#define TJ_3 -41
+> > > +#define TJ_3 41
+> > > =20
+> > >  static void rcar_gen3_thermal_calc_coefs(struct
+> > > rcar_gen3_thermal_tsc *tsc,
+> > >  					 int *ptat, const int *thcode,
+> > > @@ -144,11 +144,11 @@ static void
+> > > rcar_gen3_thermal_calc_coefs(struct rcar_gen3_thermal_tsc *tsc,
+> > >  	 * the dividend (4095 * 4095 << 14 > INT_MAX) so keep it
+> > > unscaled
+> > >  	 */
+> > >  	tsc->tj_t =3D (FIXPT_INT((ptat[1] - ptat[2]) * 157)
+> > > -		     / (ptat[0] - ptat[2])) + FIXPT_INT(TJ_3);
+> > > +		     / (ptat[0] - ptat[2])) - FIXPT_INT(TJ_3);
+> > > =20
+> > >  	tsc->coef.a1 =3D FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[2]),
+> > > -				 tsc->tj_t - FIXPT_INT(TJ_3));
+> > > -	tsc->coef.b1 =3D FIXPT_INT(thcode[2]) - tsc->coef.a1 * TJ_3;
+> > > +				 tsc->tj_t + FIXPT_INT(TJ_3));
+> > > +	tsc->coef.b1 =3D FIXPT_INT(thcode[2]) + tsc->coef.a1 * TJ_3;
+> > > =20
+> > >  	tsc->coef.a2 =3D FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]),
+> > >  				 tsc->tj_t - FIXPT_INT(ths_tj_1));
+> > >=20
+> >=20
+> >=20
+>=20
+
+--zhXaljGHf11kAtnf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1nzvgACgkQFA3kzBSg
+KbYx+g//f5G/Zdl+qgCmmyNNWXxl8l6bbTgwmYs9qlm05wSREnJW80SFptJOOmVX
+105JuRkTrXtoUnAmCxF/Z55HYly0hG4s0HByxuALCLpb3j+rcU+G0hdXrSdNICRk
+tN9HkHzYmKGszT5yaZY2EF730nUnpv71Pc4Z3wTY/H+5wz8uDv/6mW4IpcYM3Tnr
+9ueuEBNYWwGiR/29dGwgaVnh0f/nIZllMEQbuYKeCxRuY58gqQFA9Ng5bEDfNFHV
+qR5n9jKoQetVx3zacipFHYjwv9d1rnAfHonBmvp5FjkZ/5/U0EBhkeouPxFTIRuW
+u1e2DzblJ1hGPHyVlwrl5294e9bujd6iVEMetJZnEU21n6aGb3lenQnYy6ER6cUB
+J6Pg9fnwoGFYH9WUkQwQ8V1tLO1zRf2SvJexYZmQK40n/D1M5oUUqfbTBd7wwofv
+WvXAkuVfACXvWiLVhOtlGGIX+C+IRlvdbl1L/12eAT2PW28k+aUzV7HHxHykfGjW
+CgLj4Kli7gsQO2NF4hQcG79FZDTnx/FPYGGT0U1SUaLfBBnYMOZ6HJbko4TJmnII
+FrcgDCPNHS/yGT/PcOM1XfqXwMlODu1aeneScG8bxbZT46iWRFDS7PL0zH8qrDr0
+aCtkS4xv3uPyh6A9+o8Qpg/XEmoPpmZO1Z2bNR6B8wcYIuv3YDc=
+=a7UP
+-----END PGP SIGNATURE-----
+
+--zhXaljGHf11kAtnf--
