@@ -2,98 +2,144 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 762B2C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF97C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F2B2073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D2F233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:18:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bt0mD2ko"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="do7KSNX1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfH2JRX (ORCPT
+        id S1727161AbfH2JSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:17:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47410 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfH2JRW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:17:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eIzWRNGWJobqw1vcpia7FMnV9L9vEghQ28H7qz8p/sc=; b=Bt0mD2koMaJnTwNtUTNfkl2l+
-        SBYE1pgVGkyFMKwYP7Aq2ba552NQ7+vD/jeUXIK2RyPT9ArG3eHYEM90U/1Y44wpu8UsC1Mqy8w/b
-        j0YsqziOH+0uHqI/NscSslD1loyN+Pnefrhf0aDYA7atnp+ZhMtj1UT8pTNtdgqHX3hoUkYTue1xY
-        WQx78CBsoNJFSF1J2/FgTxVLx6vX4Nop9uppDXYSHomn54Gk6oWxQRgg5MtAXA/OpDq+0gVOzi1UB
-        4xYabpGbu9DGdpl00ctUe0N1n3HKKlnh0ZC0PYThpfCBYdOM2czRskat1lyoQNA58H3jPjLjrq5FQ
-        JEdUOfFHg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3GYQ-0007Ad-O1; Thu, 29 Aug 2019 09:17:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 98F0E3075FF;
-        Thu, 29 Aug 2019 11:16:42 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C4C1A2022F842; Thu, 29 Aug 2019 11:17:16 +0200 (CEST)
-Date:   Thu, 29 Aug 2019 11:17:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     kan.liang@linux.intel.com, acme@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, jolsa@kernel.org,
-        eranian@google.com, alexander.shishkin@linux.intel.com
-Subject: Re: [RESEND PATCH V3 3/8] perf/x86/intel: Support hardware TopDown
- metrics
-Message-ID: <20190829091716.GO2369@hirez.programming.kicks-ass.net>
-References: <20190826144740.10163-1-kan.liang@linux.intel.com>
- <20190826144740.10163-4-kan.liang@linux.intel.com>
- <20190828151921.GD17205@worktop.programming.kicks-ass.net>
- <20190828161754.GP5447@tassilo.jf.intel.com>
- <20190828162857.GO2332@hirez.programming.kicks-ass.net>
- <20190829031151.GR5447@tassilo.jf.intel.com>
+        Thu, 29 Aug 2019 05:18:12 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33143 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725776AbfH2JSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 05:18:11 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Jxq31mxpz9s4Y;
+        Thu, 29 Aug 2019 19:18:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567070288;
+        bh=KAIwHO1y6ELSe8undG9p709vSkqOpU/LQP6LzzEF5q8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=do7KSNX1yVTsQFfBDzpn6NRtg5jYP10YZ3Jp5lBJqkM8olxDsQsD8sFEZl8ulCpCY
+         D3nblWYDGK7cadcYbUzoWIlGPIPP5vDp94jUBxAok27SkbiBu8t8CieNYq/1n/wpf6
+         5OmgvsckkCBiJu826GgkKYEj2CUlKrEiC/Rlgf4qQQnowKY8XgeXq7ApWchcEb5bLy
+         ndbiw3NMhDFv50BFExEVI2n2jzabvbPeqJx1zgb8iKBUG93/QGjgbANapTqmBASDuR
+         eAlgDWmLgMG9rWvXOMHP/Re6I9uxV9eUrgxWvaIcmwJB+dWz9XPetWwDvQ9uQTq0JO
+         NaF1eBOfmWBRg==
+Date:   Thu, 29 Aug 2019 19:18:00 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Bandan Das <bsd@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the tip tree
+Message-ID: <20190829191800.28cd34c2@canb.auug.org.au>
+In-Reply-To: <jpgwoewnzra.fsf@linux.bootlegged.copy>
+References: <20190829080633.07c7a422@canb.auug.org.au>
+        <jpgwoewnzra.fsf@linux.bootlegged.copy>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829031151.GR5447@tassilo.jf.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/nUfsEhJhRKB3HXl5Y4kgmEs";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 08:11:51PM -0700, Andi Kleen wrote:
-> On Wed, Aug 28, 2019 at 06:28:57PM +0200, Peter Zijlstra wrote:
-> > On Wed, Aug 28, 2019 at 09:17:54AM -0700, Andi Kleen wrote:
-> > > > This really doesn't make sense to me; if you set FIXED_CTR3 := 0, you'll
-> > > > never trigger the overflow there; this then seems to suggest the actual
-> > > 
-> > > The 48bit counter might overflow in a few hours.
-> > 
-> > Sure; the point is? Kan said it should not be too big; a full 48bit wrap
-> > around must be too big or nothing is.
-> 
-> We expect users to avoid making it too big, but we cannot rule it out.
-> 
-> Actually for the common perf stat for a long time case you can make it fairly
-> big because the percentages still work out over the complete run time.
-> 
-> The problem with letting it accumulate too much is mainly if you
-> want to use a continuously running metrics counter to time smaller
-> regions by taking deltas, for example using RDPMC. 
-> 
-> In this case the small regions would be too inaccurate after some time.
-> 
-> But to make the first case work absolutely need to handle the overflow
-> case. Otherwise the metrics would just randomly stop at some
-> point.
+--Sig_/nUfsEhJhRKB3HXl5Y4kgmEs
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-But then you need -max_period, not 0. By using half the period, there is
-no ambiguity on overflow.
+Hi Bandan,
+
+On Thu, 29 Aug 2019 04:26:33 -0400 Bandan Das <bsd@redhat.com> wrote:
+>
+> Stephen Rothwell <sfr@canb.auug.org.au> writes:
+>=20
+> > In commit
+> >
+> >   bae3a8d3308e ("x86/apic: Do not initialize LDR and DFR for bigsmp")
+> >
+> > Fixes tag
+> >
+> >   Fixes: db7b9e9f26b8 ("[PATCH] Clustered APIC setup for >8 CPU systems=
+")
+> >
+> > has these problem(s):
+> >
+> >   - Target SHA1 does not exist
+> > =20
+>=20
+> I tried to dig this up and I believe that this is from pre-git.
+> I went back as far as commit 1da177e4c3f41524e886b7f1b8a0c1fc7321cac2
+> Author: Linus Torvalds <torvalds@ppc970.osdl.org>
+> Date:   Sat Apr 16 15:20:36 2005 -0700
+>=20
+>     Linux-2.6.12-rc2
+>    =20
+>     Initial git repository build. I'm not bothering with the full history,
+>     even though we have it. We can create a separate "historical" git
+>     archive of that later if we want to, and in the meantime it's about
+>     3.2GB when imported into git - space that would just make the early
+>     git days unnecessarily complicated, when we don't have a lot of good
+>     infrastructure for it.
+>    =20
+>     Let it rip!
+>=20
+> which adds init_apic_ldr() in include/asm-i386/mach-bigsmp/mach_apic.h wi=
+th
+> the following:
+>=20
+> +static inline void init_apic_ldr(void)
+> +{
+> +       unsigned long val;
+> +
+> +       apic_write_around(APIC_DFR, APIC_DFR_VALUE);
+> +       val =3D apic_read(APIC_LDR) & ~APIC_LDR_MASK;
+> +       val =3D calculate_ldr(val);
+> +       apic_write_around(APIC_LDR, val);
+> +}
+> ...
+>=20
+>=20
+> So, the bug seems to be present here as well...
+
+Ah ha!
+
+commit db7b9e9f26b8 ("[PATCH] Clustered APIC setup for >8 CPU systems")
+is from Thomas' history git tree ...  I should have read more of the
+commit message :-(  Sorry for the noise.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/nUfsEhJhRKB3HXl5Y4kgmEs
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1nmEgACgkQAVBC80lX
+0GxxSQf/esmj39P5SVTIqrCg5vFAtZSW+yvsY/+aXlL/KgpjzcYb+QoHdtOpggez
+82a6eTmnyc2GbO0qq4YdoHULwQ1enK6W4J2ftEX3k9ougLC5ZbD2y98yFdrzUWQv
+OISKd8JWMlMaMKV97GX3NoDl/qm+A3zRxrK2lqy4ptHTGY6DswEa67Q9h9L49h8k
+fNoRH0EdAodf0wxFGk5MEkokkqxfItoE+Axp5fMw+QGpfVWPWsiAObP+ENmdD4iy
+2Cxq4e9cjlmrStiFiQZEu2pXLBkzz+ln+yl4hDywvHjXaOXv4i9/vfx5kF+/4z3L
+eG7rgD9Oa5qdAhOlZ4k8RKHY8Msmew==
+=mSCw
+-----END PGP SIGNATURE-----
+
+--Sig_/nUfsEhJhRKB3HXl5Y4kgmEs--
