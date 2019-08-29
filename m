@@ -2,187 +2,97 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF7BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD76C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535AE2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFB502166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:20:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bobbriscoe.net header.i=@bobbriscoe.net header.b="krbbBjcb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wHVCvNK3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbfH2WTD (ORCPT
+        id S1728256AbfH2WUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 18:19:03 -0400
-Received: from server.dnsblock1.com ([85.13.236.178]:51322 "EHLO
-        server.dnsblock1.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727929AbfH2WTA (ORCPT
+        Thu, 29 Aug 2019 18:20:18 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42636 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727973AbfH2WUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 18:19:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=bobbriscoe.net; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=a5y89oFqcqjD8K/8XhfL0RZLvQb+BW7KI5B6TlDthRU=; b=krbbBjcb9nyl37yC9owhMQkO0k
-        i+PJCGKk3klXrS4lfqHpAG81YVu0o4wKX0T+O6GorNCjVtnwRrgt1x6c1U5Cf8KwSGS/mhnJQBPT5
-        lIgZnfkn3bsgTsGURggRyB9nO+8OE7e2COGo9+hdhkjz3VB9fvfS8jfnPSV6MHawRZqS+aj2bQWHX
-        EEkJAkqZVZbif+fa6kQI0LlUmklyzSl2A4kfDmhyk3q/PGLZBY7uU/WNp1YHqVRqyg9hJ9VTVPvzR
-        q2fFel38yj8Y479rMx75pgZ/jAZoU72hgD7u2vnJC8J4Hryv+6OLC5QvM+ZCUBPUu6CuIJGBmeXgS
-        89xoLahw==;
-Received: from [31.185.128.31] (port=33096 helo=[192.168.0.7])
-        by server.dnsblock1.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <research@bobbriscoe.net>)
-        id 1i3Skq-0000ql-47; Thu, 29 Aug 2019 23:18:56 +0100
-Subject: Re: [PATCH net-next v5] sched: Add dualpi2 qdisc
-To:     Dave Taht <dave.taht@gmail.com>
-Cc:     "Tilmans, Olivier (Nokia - BE/Antwerp)" 
-        <olivier.tilmans@nokia-bell-labs.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Olga Albisser <olga@albisser.org>,
-        "De Schepper, Koen (Nokia - BE/Antwerp)" 
-        <koen.de_schepper@nokia-bell-labs.com>,
-        Henrik Steen <henrist@henrist.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <20190822080045.27609-1-olivier.tilmans@nokia-bell-labs.com>
- <CAA93jw5_LN_-zhHh=zZA8r6Zvv1CvA_AikT_rCgWyT8ytQM_rg@mail.gmail.com>
- <20190823125130.4y3kcg6ghewghbxg@nokia-bell-labs.com>
- <bded966b-5176-69c8-4ac3-70d81d344c22@bobbriscoe.net>
- <CAA93jw5R2QWSngdKX5RSvGR5NEvFTH-Sp5__k+EroxkkQkfzcw@mail.gmail.com>
-From:   Bob Briscoe <research@bobbriscoe.net>
-Message-ID: <523cb76f-fddb-7ba9-1f5d-bf76bc3517be@bobbriscoe.net>
-Date:   Thu, 29 Aug 2019 23:18:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 29 Aug 2019 18:20:18 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p3so2330256pgb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 15:20:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=GVOqYmM2Y9fBLs59pkcO9sFEhdR0n+gm/H+kyKc15XE=;
+        b=wHVCvNK39KHNNY4HF3wY3NkJLZfOQdCUJiXGoeP3T/UDxPop1ECLnAFxcV0rEx8o+V
+         JII5v6i7ZKHZbB05yBaZWYkEkvtpXIxCOQ9/Ngr78cCBrGPq2H9YRnlZLgd1JgeB7TzQ
+         Mg/ABGmKuMRLYkfv48QYdY2hw5qmbwl+S0vr1J9xwOT8koG0uEqPixqdHtw13NjbG5BJ
+         DaUulH0se+pqYeKc75oa4Nn2nZUfEypOub+1sR5ZzZAf8fLFoJFDE8gDt8ujD6W9+ucV
+         6UbeWaISsva/vvH4dDm5VeQ30cP4V3iK4XVKpqdzdjq89ujQQl02u4rinAEi2ei8MXW5
+         e5iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=GVOqYmM2Y9fBLs59pkcO9sFEhdR0n+gm/H+kyKc15XE=;
+        b=hfNUEcajRKWe4Kq5d4yk3+MzkZLinqD2JiAnroncAvIox1XMBvUbMLLRq8hUVqCDvu
+         LGqeqP3ZqauIiuDQN9eckRGZnCBUqjQZdoKYZB34hozVD5XRYi3wGQOSoaA525VDNV9x
+         gUvZQPEhkpu3ZoFQ6megvewzpq3sJGs0G858n86BP2J4Kevi4KQGspO46Wdg/TslQ5KQ
+         9i7jVQ7c/aRhla9sATx8Y5fpNvF1QxbdsUUnzLMRTzOUcGXF51JWFNifFwkgbphxDBCZ
+         eBzhmj292vQwUE5vuiRrAbmmZiQNf9NWG8cop8aD4Pm4QeUhh0c07vUpEeXtcQA9IHMQ
+         rOZQ==
+X-Gm-Message-State: APjAAAWhJzkV1BRZTs1f22kaw7Q3lWSWdRYAfUONEMVpuwQ8SvtMceuv
+        Hf7k932qIRXfXlr49flWI+L0Ew==
+X-Google-Smtp-Source: APXvYqxgGNtSETr5KkzHixZs4r45yt16y5jHxbUeBtQDByzuSiKUcb6Zwakv3bXp3jdYqS+grlvf1Q==
+X-Received: by 2002:a17:90a:22c9:: with SMTP id s67mr12304024pjc.22.1567117217328;
+        Thu, 29 Aug 2019 15:20:17 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id e189sm3157869pgc.15.2019.08.29.15.20.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 15:20:16 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 15:20:16 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Michal Hocko <mhocko@kernel.org>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH] mm, oom: consider present pages for the node size
+In-Reply-To: <20190829163443.899-1-mhocko@kernel.org>
+Message-ID: <alpine.DEB.2.21.1908291519580.54347@chino.kir.corp.google.com>
+References: <20190829163443.899-1-mhocko@kernel.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <CAA93jw5R2QWSngdKX5RSvGR5NEvFTH-Sp5__k+EroxkkQkfzcw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.dnsblock1.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - bobbriscoe.net
-X-Get-Message-Sender-Via: server.dnsblock1.com: authenticated_id: in@bobbriscoe.net
-X-Authenticated-Sender: server.dnsblock1.com: in@bobbriscoe.net
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave,
+On Thu, 29 Aug 2019, Michal Hocko wrote:
 
-On 28/08/2019 17:55, Dave Taht wrote:
-> On Wed, Aug 28, 2019 at 7:00 AM Bob Briscoe <research@bobbriscoe.net> wrote:
->> Olivier, Dave,
->>
->> On 23/08/2019 13:59, Tilmans, Olivier (Nokia - BE/Antwerp) wrote:
->>
->> as best as I can
->> tell (but could be wrong) the NQB idea wants to put something into the
->> l4s fast queue? Or is NQB supposed to
->> be a third queue?
->>
->> NQB is not supported in this release of the code. But FYI, it's not for a third queue.
-> At the time of my code review of dualpi I had not gone back to review
-> the NQB draft fully.
->
->> We can add support for NQB in the future, by expanding the
->> dualpi2_skb_classify() function. This is however out of scope at the
->> moment as NQB is not yet adopted by the TSV WG. I'd guess we may want more
->> than just the NQB DSCP codepoint in the L queue, which then warrant
->> another way to classify traffic, e.g., using tc filter hints.
-> Yes, you'll find find folk are fans of being able to put tc (and ebpf)
-> filters in front of various qdiscs for classification, logging, and/or
-> dropping behavior.
->
-> A fairly typical stanza is here:
-> https://github.com/torvalds/linux/blob/master/net/sched/sch_sfq.c#L171
-> to line 193.
-Yes, I got a student to add hooks for the Linux classification 
-architecture (either adding more, or overriding the defaults) a couple 
-of years ago, along with creating a classful structure. But his 
-unfinished branch got left dangling once he graduated and is now way out 
-of date. it's still our intention to take that direction tho.
+> From: Michal Hocko <mhocko@suse.com>
+> 
+> constrained_alloc calculates the size of the oom domain by using
+> node_spanned_pages which is incorrect because this is the full range of
+> the physical memory range that the numa node occupies rather than the
+> memory that backs that range which is represented by node_present_pages.
+> 
+> Sparsely populated nodes (e.g. after memory hot remove or simply sparse
+> due to memory layout) can have really a large difference between the
+> two. This shouldn't really cause any real user observable problems
+> because the oom calculates a ratio against totalpages and used memory
+> cannot exceed present pages but it is confusing and wrong from code
+> point of view.
+> 
+> Noticed-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
 
->
->> The IETF adopted the NQB draft at the meeting just passed in July, but the draft has not yet been updated to reflect that: https://tools.ietf.org/html/draft-white-tsvwg-nqb-02
-> Hmmm... no. I think oliver's statement was correct.
->
-> NQB was put into the "call for adoption into tsvwg" state (
-> https://mailarchive.ietf.org/arch/msg/tsvwg/fjyYQgU9xQCNalwPO7v9-al6mGk
-> ) in the tsvwg aug 21st, which
-> doesn't mean "adopted by the ietf", either.
-You're right.
-
-I've been away from all this for a while. In the tsvwg meeting there 
-were perhaps a couple of dozen folks stating support and no-one against, 
-so I had (wrongly) extrapolated from that - I should have checked the 
-status of the ML discussion first.
-
-> In response to that call
-> several folk did put in (rather pithy),
-> comments on the current state of the NQB idea and internet draft, starting here:
->
-> https://mailarchive.ietf.org/arch/msg/tsvwg/hZGjm899t87YZl9JJUOWQq4KBsk
-
-> While using up ECT1 in the L4S code as an identifier and not as a
-> congestion indicator is very controversial for me (
-> https://lwn.net/Articles/783673/ ), AND I'd rather it not be baked
-> into the linux api for dualpi should this identifier not be chosen by
-> the wg (thus my suggestion of a mask or lookup table)...
-That ship has sailed. You can consider it controversial if you want, but 
-the tsvwg decided to use ECT(1) as an identifier for L4S after long 
-discussions back in 2016. Years of a large number of people's work was 
-predicated on that decision. So the dualpi2 code reflects the way the 
-IETF is approaching this.
-
-
->
-> ... I also dearly would like both sides of this code - dualpi and tcp
-> prague - in a simultaneously testable and high quality state. Without
-> that, many core ideas in dualpi cannot be tested, nor objectively
-> evaluated against other tcps and qdiscs using rfc3168 behavior along
-> the path. Multiple experimental ideas in RFC8311 (such as those in
-> section 4.3) have also not been re-evaluated in any context.
-We're working on that - top priority now.
->
-> Is the known to work reference codebase for "tcp prague" still 3.19 based?
-It is, but Olivier recently found the elusive cause of the problem that 
-made later versions bursty. So we're getting close.
-
-
-
-
-Bob
->> Bob
->>
->> --
->> ________________________________________________________________
->> Bob Briscoe                               http://bobbriscoe.net/
->
->
-> --
->
-> Dave Täht
-> CTO, TekLibre, LLC
-> http://www.teklibre.com
-> Tel: 1-831-205-9740
-
--- 
-________________________________________________________________
-Bob Briscoe                               http://bobbriscoe.net/
-
+Acked-by: David Rientjes <rientjes@google.com>
