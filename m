@@ -2,123 +2,257 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B209BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 367E5C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928822070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FEB82070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfH2R7B (ORCPT
+        id S1728061AbfH2R7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:59:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42736 "EHLO mx1.redhat.com"
+        Thu, 29 Aug 2019 13:59:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35050 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727546AbfH2R7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:59:01 -0400
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726810AbfH2R7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 13:59:35 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CAD3D4E83C
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 17:59:00 +0000 (UTC)
-Received: by mail-ed1-f71.google.com with SMTP id x40so2649321edm.4
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 10:59:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=vXyDcpJzTd5p/KMVvOob/xE2M48IW9jsvqrOA8CmTz0=;
-        b=Hvbv1lXf5TEkhVF0Z+j+tCbathRIdAWAbmQMdie8pjf9ovw6bnHGHo4ZjzQtH/2iYW
-         NZbgH3osWBS4nkqcRWe09owghPd5eZqLV9V9zQmlrciaJrcFlWN180cpRBkgWYE4vEpO
-         ZRkpYzsZ4aItgkq/ma/7e8x+kWnfzn5h5M5b9EGXuK+xihC1fDwqr8Y1W5mfL/LOZKGi
-         XPQBQUC44WPeAlVUmw4/GO1GBSm2htvAEGRBlk43PVztGkK7DINCXk0VOD/6tSzoRMQ0
-         hpcrbaPoc/9FofGLTlsfrMYavYqaSTFYB1xS2BeTi4FjFFTR1zTpZ6v3gDlDgpIuFR1N
-         z6FQ==
-X-Gm-Message-State: APjAAAXjkA3fDRWUhYvrPaPqkWDK2HSiVqao8wj8TWhvCWI4jBwgacc3
-        lp9f3dR+hCwqWEJLaCOHl7SlM+bLkq/T2P4oRrGDtBYttHGsZnnlyFMOhSt1BED7bOfcv7FAo6q
-        GC/lEhp+Qns6oba+p55j2alYd
-X-Received: by 2002:a17:906:a2cd:: with SMTP id by13mr9362199ejb.182.1567101539496;
-        Thu, 29 Aug 2019 10:58:59 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyPz4t6r4A7CUfYi5mhv6MVRoXML2uPaai3OXbXjjP76nMbNjhhJGFBX9NOilRFWF4msKGbwg==
-X-Received: by 2002:a17:906:a2cd:: with SMTP id by13mr9362185ejb.182.1567101539293;
-        Thu, 29 Aug 2019 10:58:59 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk (borgediget.toke.dk. [85.204.121.218])
-        by smtp.gmail.com with ESMTPSA id i18sm469032ejy.74.2019.08.29.10.58.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 10:58:58 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id D9138181C2E; Thu, 29 Aug 2019 19:58:57 +0200 (CEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     "David Z. Dai" <zdai@linux.vnet.ibm.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zdai@us.ibm.com
-Subject: Re: [v1] net_sched: act_police: add 2 new attributes to support police 64bit rate and peakrate
-In-Reply-To: <1567100185.20025.3.camel@oc5348122405>
-References: <1567032687-973-1-git-send-email-zdai@linux.vnet.ibm.com> <7a8a5024-bbff-7443-71b3-9e3976af269f@gmail.com> <1567100185.20025.3.camel@oc5348122405>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Thu, 29 Aug 2019 19:58:57 +0200
-Message-ID: <87lfvbhmzi.fsf@toke.dk>
+        by mx1.redhat.com (Postfix) with ESMTPS id 913003086258;
+        Thu, 29 Aug 2019 17:59:34 +0000 (UTC)
+Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D9CA600C1;
+        Thu, 29 Aug 2019 17:59:33 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 12:59:31 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: linux-next: Tree for Aug 27 (objtool)
+Message-ID: <20190829175931.sru23aud33hrdqbj@treble>
+References: <20190827190526.6f27e763@canb.auug.org.au>
+ <6c42e32f-901d-be78-e69b-cb9ff8703932@infradead.org>
+ <20190827155911.ct2zzo2zhcrauf3z@treble>
+ <2e8b18a0-a09c-b67e-c99f-45066ab9d511@infradead.org>
+ <20190828155147.v6eowc7rr7upr7dr@treble>
+ <f354f4be-99c7-346f-c7c5-ac5ce8a72a16@infradead.org>
+ <20190828161331.kvikro257blxtzu5@treble>
+ <20190828163433.4ltoxmtuujkqspar@treble>
+ <20190829105356.1fd4859f49c142945146855f@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190829105356.1fd4859f49c142945146855f@kernel.org>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 29 Aug 2019 17:59:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"David Z. Dai" <zdai@linux.vnet.ibm.com> writes:
+On Thu, Aug 29, 2019 at 10:53:56AM +0900, Masami Hiramatsu wrote:
+> Hi Josh,
+> 
+> On Wed, 28 Aug 2019 11:34:33 -0500
+> Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> 
+> > On Wed, Aug 28, 2019 at 11:13:31AM -0500, Josh Poimboeuf wrote:
+> > > Turns out this patch does break something:
+> > > 
+> > >   arch/x86/xen/enlighten_pv.o: warning: objtool: xen_cpuid()+0x25: can't find jump dest instruction at .text+0x9c
+> > > 
+> > > I'll need to figure out a better way to whitelist that
+> > > XEN_EMULATE_PREFIX fake instruction thing.  I'll probably just teach
+> > > the objtool decoder about it.
+> > 
+> > Hi Masami,
+> > 
+> > Is it possible for the kernel x86 decoder to recognize the
+> > XEN_EMULATE_PREFIX prefix?
+> > 
+> >         asm(XEN_EMULATE_PREFIX "cpuid"
+> >                 : "=a" (*ax),
+> >                   "=b" (*bx),
+> >                   "=c" (*cx),
+> >                   "=d" (*dx)
+> >                 : "0" (*ax), "2" (*cx));
+> > 
+> > is disassembled to:
+> > 
+> >       33:       0f 0b                   ud2
+> >       35:       78 65                   js     9c <xen_store_tr+0xc>
+> >       37:       6e                      outsb  %ds:(%rsi),(%dx)
+> >       38:       0f a2                   cpuid
+> > 
+> > which confuses objtool.  Presumably that would confuse other users of
+> > the decoder as well.
+> 
+> Good catch! It should be problematic, since x86 decoder sanity test is
+> based on objtool.
 
-> On Thu, 2019-08-29 at 10:32 +0200, Eric Dumazet wrote:
->> 
->> On 8/29/19 12:51 AM, David Dai wrote:
->> > For high speed adapter like Mellanox CX-5 card, it can reach upto
->> > 100 Gbits per second bandwidth. Currently htb already supports 64bit rate
->> > in tc utility. However police action rate and peakrate are still limited
->> > to 32bit value (upto 32 Gbits per second). Add 2 new attributes
->> > TCA_POLICE_RATE64 and TCA_POLICE_RATE64 in kernel for 64bit support
->> > so that tc utility can use them for 64bit rate and peakrate value to
->> > break the 32bit limit, and still keep the backward binary compatibility.
->> > 
->> > Tested-by: David Dai <zdai@linux.vnet.ibm.com>
->> > Signed-off-by: David Dai <zdai@linux.vnet.ibm.com>
->> > ---
->> >  include/uapi/linux/pkt_cls.h |    2 ++
->> >  net/sched/act_police.c       |   27 +++++++++++++++++++++++----
->> >  2 files changed, 25 insertions(+), 4 deletions(-)
->> > 
->> > diff --git a/include/uapi/linux/pkt_cls.h b/include/uapi/linux/pkt_cls.h
->> > index b057aee..eb4ea4d 100644
->> > --- a/include/uapi/linux/pkt_cls.h
->> > +++ b/include/uapi/linux/pkt_cls.h
->> > @@ -159,6 +159,8 @@ enum {
->> >  	TCA_POLICE_AVRATE,
->> >  	TCA_POLICE_RESULT,
->> >  	TCA_POLICE_TM,
->> > +	TCA_POLICE_RATE64,
->> > +	TCA_POLICE_PEAKRATE64,
->> >  	TCA_POLICE_PAD,
->> >  	__TCA_POLICE_MAX
->> >  #define TCA_POLICE_RESULT TCA_POLICE_RESULT
->> 
->> Never insert new attributes, as this breaks compatibility with old binaries (including
->> old kernels)
-> Thanks for reviewing it!
-> My change is only contained within the police part. I am trying to
-> follow the same way htb and tbf support their 64 bit rate.
->
-> I tested the old tc binary with the newly patched kernel. It works fine.
->
-> I agree the newly compiled tc binary that has these 2 new attributes can
-> cause backward compatibility issue when running on the old kernel.
->
-> If can't insert new attribute, is there any
-> comment/suggestion/alternative on how to support 64bit police rate and
-> still keep the backward compatibility?
+I think you mean the decoder test is based on objdump, not objtool?
 
-Just put the new attributes *after* PAD instead of before :)
+Actually I wonder if X86_DECODER_SELFTEST is even still needed these
+days, since objtool is enabled on default configs.  Objtool already uses
+the decoder to disassemble every instruction in the kernel (except for a
+few whitelisted files).
 
--Toke
+> But I don't want to change the test code itself,
+> because this problem is highly depending on Xen.
+> 
+> > That's a highly unlikely sequence of instructions, maybe the kernel
+> > decoder should recognize it as a single instruction.
+> 
+> OK, it is better to be done in decoder (only for CONFIG_XEN_PVHVM)
+> 
+> BTW, could you also share what test case would you using?
+
+Enable CONFIG_XEN_PV and CONFIG_STACK_VALIDATION, and remove the
+STACK_FRAME_NON_STANDARD(xen_cpuid) line from
+arch/x86/xen/enlighten_pv.c.  objtool will complain:
+
+  arch/x86/xen/enlighten_pv.o: warning: objtool: xen_cpuid()+0x25: can't find jump dest instruction at .text+0x9c
+
+Basing it on CONFIG_XEN_PVHVM may be problematic.  The decoder is
+duplicated in the tools directory so objtool can use it.  But the tools
+don't know about kernel configs.
+
+BTW, I'm not sure if you're aware of this, but both objtool and perf
+have identical copies of the decoder.  The makefiles warn if they get
+out of sync with the kernel version.
+
+We will always need at least one copy of the decoder in tools, because
+the tools subdir is supposed to be standalone from the rest of the
+kernel.  Still, I may look at combining the perf and objtool copies into
+a single shared copy.
+
+> And what about attached patch? (just compile checked with/without CONFIG_XEN_PVHVM)
+
+I copied the decoder to objtool, removed the CONFIG_XEN_PVHVM ifdef, and
+played a bit with the includes, and got it to compile with objtool, but
+it still fails:
+
+  $ make arch/x86/xen/enlighten_pv.o
+  arch/x86/xen/enlighten_pv.o: warning: objtool: xen_cpuid()+0x25: can't find jump dest instruction at .text+0x9c
+
+Patch below:
+
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 58f79ab32358..dbba9b2dc408 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -193,7 +193,6 @@ static void xen_cpuid(unsigned int *ax, unsigned int *bx,
+ 
+ 	*bx &= maskebx;
+ }
+-STACK_FRAME_NON_STANDARD(xen_cpuid); /* XEN_EMULATE_PREFIX */
+ 
+ static bool __init xen_check_mwait(void)
+ {
+diff --git a/tools/objtool/arch/x86/include/asm/xen/interface.h b/tools/objtool/arch/x86/include/asm/xen/interface.h
+new file mode 100644
+index 000000000000..c11286eac21c
+--- /dev/null
++++ b/tools/objtool/arch/x86/include/asm/xen/interface.h
+@@ -0,0 +1,38 @@
++/******************************************************************************
++ * arch-x86_32.h
++ *
++ * Guest OS interface to x86 Xen.
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a copy
++ * of this software and associated documentation files (the "Software"), to
++ * deal in the Software without restriction, including without limitation the
++ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
++ * sell copies of the Software, and to permit persons to whom the Software is
++ * furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be included in
++ * all copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++ * DEALINGS IN THE SOFTWARE.
++ *
++ * Copyright (c) 2004-2006, K A Fraser
++ */
++#ifndef _ASM_X86_XEN_INTERFACE_H
++#define _ASM_X86_XEN_INTERFACE_H
++
++#include <linux/stringify.h>
++/*
++ * Prefix forces emulation of some non-trapping instructions.
++ * Currently only CPUID.
++ */
++#define __XEN_EMULATE_PREFIX  0x0f,0x0b,0x78,0x65,0x6e
++#define __XEN_EMULATE_PREFIX_STR  __stringify(__XEN_EMULATE_PREFIX)
++#define XEN_EMULATE_PREFIX ".byte " __XEN_EMULATE_PREFIX_STR " ; "
++
++#endif /* _ASM_X86_XEN_INTERFACE_H */
+diff --git a/tools/objtool/arch/x86/lib/insn.c b/tools/objtool/arch/x86/lib/insn.c
+index 0b5862ba6a75..bc77f607932e 100644
+--- a/tools/objtool/arch/x86/lib/insn.c
++++ b/tools/objtool/arch/x86/lib/insn.c
+@@ -10,6 +10,8 @@
+ #else
+ #include <string.h>
+ #endif
++#include <linux/kernel.h>
++#include <asm/xen/interface.h>
+ #include <asm/inat.h>
+ #include <asm/insn.h>
+ 
+@@ -58,6 +60,30 @@ void insn_init(struct insn *insn, const void *kaddr, int buf_len, int x86_64)
+ 		insn->addr_bytes = 4;
+ }
+ 
++static const insn_byte_t xen_prefix[] = { XEN_EMULATE_PREFIX };
++
++static int insn_xen_prefix(struct insn *insn, insn_byte_t b)
++{
++	struct insn_field *prefixes = &insn->prefixes;
++	int i = 0;
++
++	while (i < ARRAY_SIZE(xen_prefix) && b == xen_prefix[i])
++		b = peek_nbyte_next(insn_byte_t, insn, ++i);
++
++	if (unlikely(i == ARRAY_SIZE(xen_prefix))) {
++		memcpy(prefixes->bytes, xen_prefix, 3);
++		prefixes->bytes[3] = xen_prefix[ARRAY_SIZE(xen_prefix) - 1];
++		prefixes->nbytes = ARRAY_SIZE(xen_prefix);
++		insn->next_byte += prefixes->nbytes;
++		prefixes->got = 1;
++
++		return 1;
++	}
++
++err_out:
++	return 0;
++}
++
+ /**
+  * insn_get_prefixes - scan x86 instruction prefix bytes
+  * @insn:	&struct insn containing instruction
+@@ -79,6 +105,10 @@ void insn_get_prefixes(struct insn *insn)
+ 	nb = 0;
+ 	lb = 0;
+ 	b = peek_next(insn_byte_t, insn);
++
++	if (insn_xen_prefix(insn, b))
++		return;
++
+ 	attr = inat_get_opcode_attribute(b);
+ 	while (inat_is_legacy_prefix(attr)) {
+ 		/* Skip if same prefix */
