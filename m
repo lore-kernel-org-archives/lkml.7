@@ -2,130 +2,141 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36435C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE60C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0070F2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:35:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="biWGoeyf"
+	by mail.kernel.org (Postfix) with ESMTP id EC0CC2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbfH2XfN (ORCPT
+        id S1727110AbfH2Xhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 19:35:13 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42120 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbfH2XfM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 19:35:12 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g111so2136041otg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 16:35:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w7I+vTCF8MoRhaFpK08T7rrw/DewwWxf4o+4A7aaGhM=;
-        b=biWGoeyfg87WAVV9jfzPsO0CvuI+vFgmGePiq3Ubf5qve9suqY4yqgfZnPY8o8Q0iT
-         ldqbICZnsF2Z0PcJJv2YH3XLpdVsolvfwJKa93jFo1FNW745Zj62Y68Db8HP69B8yI25
-         FhG4qRqeJbCGxQ393M/TXty/F9pEEPrqLGEgDfA3uIL9CbNCSU0hB6KNTZrks1TU3TWB
-         N+hF1FIw9xfqtVHhstS7aQVZ8LNPNoJxBZvklZrW/o0fwLvD6NMJO014nVOsKc6jM+1X
-         7N27G0dsJ+Vqt3bcnxmg7RIHC0eUgH2lx8ZBSQmf49kc4EMM9HJShs4e9+O7yLgHbDhk
-         vFkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w7I+vTCF8MoRhaFpK08T7rrw/DewwWxf4o+4A7aaGhM=;
-        b=n3X7BHdjadyQJ5DM6fqJ7AiMmT4iJqIB+vWwUiiMausoCQokQhPwgrfZsgbS7flgAQ
-         0x29AiZCcvA/ayZGAO5o18ixmr/V+em7/2+IQZ9YHaLW7c+2DkNVLDffe1g+CMudjjKk
-         54XlVU9P+URVDbo/6qUWWH6Az27deXZvVl+bb0GZbklb620TZLeIvUx8lTNiUs4xDMPg
-         g3xZuQgTe/0w8Hzd/p6QvJ4JqEJVq9uxDm5+mx51GrGhqXhfz1YwjcjCgwAS22m6uBau
-         cwiDdsPyd99mxe2HfefmarYZdhkNUvZ5rPA0/mT11vvOYMXqAXweQq+So8/CVCopbvbT
-         IV/w==
-X-Gm-Message-State: APjAAAUHscdG3dNR3YujuncNS41Dyfkyf4x6RWs8/h2yz0Fd4jgcnfN2
-        XlgyFUElCYQAzEGpt0bM8CF+XgIFHVVohQqE0keI7w==
-X-Google-Smtp-Source: APXvYqyCgFlGZVk6JvnxAvkATHGZWNhCzYn7EP5r7tl1z1c7LpgffQZCiIV9wIvV+Z/O+Cof0dtgknD1/eoqnT+gXWU=
-X-Received: by 2002:a05:6830:1e05:: with SMTP id s5mr9416289otr.247.1567121711247;
- Thu, 29 Aug 2019 16:35:11 -0700 (PDT)
+        Thu, 29 Aug 2019 19:37:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45210 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbfH2Xhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 19:37:39 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4F807317528C;
+        Thu, 29 Aug 2019 23:37:39 +0000 (UTC)
+Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D0B9C608C1;
+        Thu, 29 Aug 2019 23:37:37 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 18:37:35 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, akpm@linux-foundation.org,
+        broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+Subject: Re: mmotm 2019-08-27-20-39 uploaded (objtool: xen)
+Message-ID: <20190829233735.yp3mwhg6er353qw5@treble>
+References: <20190828034012.sBvm81sYK%akpm@linux-foundation.org>
+ <8b09d93a-bc42-bd8e-29ee-cd37765f4899@infradead.org>
+ <20190828171923.4sir3sxwsnc2pvjy@treble>
+ <57d6ab2e-1bae-dca3-2544-4f6e6a936c3a@infradead.org>
+ <20190828200134.d3lwgyunlpxc6cbn@treble>
+ <20190829082445.GM2369@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <156712072444.1601704.7392596435870876837.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <156712072444.1601704.7392596435870876837.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 29 Aug 2019 16:35:00 -0700
-Message-ID: <CAPcyv4jGOy+WsdFrPfS9Pr9UiJHrogfdYqUcXxC0GxBsFefpWw@mail.gmail.com>
-Subject: Re: [PATCH v2] libata/ahci: Drop PCS quirk for Denverton and beyond
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Stephen Douthit <stephend@silicom-usa.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "IDE/ATA development list" <linux-ide@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190829082445.GM2369@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 29 Aug 2019 23:37:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 4:33 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> The Linux ahci driver has historically implemented a configuration fixup
-> for platforms / platform-firmware that fails to enable the ports prior
-> to OS hand-off at boot. The fixup was originally implemented way back
-> before ahci moved from drivers/scsi/ to drivers/ata/, and was updated in
-> 2007 via commit 49f290903935 "ahci: update PCS programming". The quirk
-> sets a port-enable bitmap in the PCS register at offset 0x92.
->
-> This quirk could be applied generically up until the arrival of the
-> Denverton (DNV) platform. The DNV AHCI controller architecture supports
-> more than 6 ports and along with that the PCS register location and
-> format were updated to allow for more possible ports in the bitmap. DNV
-> AHCI expands the register to 32-bits and moves it to offset 0x94.
->
-> As it stands there are no known problem reports with existing Linux
-> trying to set bits at offset 0x92 which indicates that the quirk is not
-> applicable. Likely it is not applicable on a wider range of platforms,
-> but it is difficult to discern which platforms if any still depend on
-> the quirk.
->
-> Rather than try to fix the PCS quirk to consider the DNV register layout
-> instead require explicit opt-in. The assumption is that the OS driver
-> need not touch this register, and platforms can be added with a new
-> boad_ahci_pcs7 board-id when / if problematic platforms are found in the
-> future. The logic in ahci_intel_pcs_quirk() looks for all Intel AHCI
-> instances with "legacy" board-ids and otherwise skips the quirk if the
-> board was matched by class-code.
->
-> Reported-by: Stephen Douthit <stephend@silicom-usa.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
-> Changes since v1 [1]:
-> - Find a way to not duplicate a large portion of the ahci_pci_tbl[]
->   array (Stephen).
-> - Add a definition for the PCS register offset rather than hard code
->   (Stephen)
->
-> [1]: https://lore.kernel.org/r/a04c0ae7-ef4d-4275-de05-b74beaeef86c@silicom-usa.com/
->
->  drivers/ata/ahci.c |   70 ++++++++++++++++++++++++++++++++--------------------
->  drivers/ata/ahci.h |    2 +
->  2 files changed, 45 insertions(+), 27 deletions(-)
->
-> diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-> index f7652baa6337..847e3796d505 100644
-> --- a/drivers/ata/ahci.c
-> +++ b/drivers/ata/ahci.c
-> @@ -65,6 +65,12 @@ enum board_ids {
->         board_ahci_sb700,       /* for SB700 and SB800 */
->         board_ahci_vt8251,
->
-> +       /*
-> +        * board IDs for Intel chipsets that support more than 6 ports
-> +        * *and* end up needing the PCS quirk.
-> +        */
+On Thu, Aug 29, 2019 at 10:24:45AM +0200, Peter Zijlstra wrote:
+> On Wed, Aug 28, 2019 at 03:01:34PM -0500, Josh Poimboeuf wrote:
+> > On Wed, Aug 28, 2019 at 10:56:25AM -0700, Randy Dunlap wrote:
+> > > >> drivers/xen/gntdev.o: warning: objtool: gntdev_copy()+0x229: call to __ubsan_handle_out_of_bounds() with UACCESS enabled
+> > > > 
+> > > > Easy one :-)
+> > > > 
+> > > > diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> > > > index 0c8e17f946cd..6a935ab93149 100644
+> > > > --- a/tools/objtool/check.c
+> > > > +++ b/tools/objtool/check.c
+> > > > @@ -483,6 +483,7 @@ static const char *uaccess_safe_builtin[] = {
+> > > >  	"ubsan_type_mismatch_common",
+> > > >  	"__ubsan_handle_type_mismatch",
+> > > >  	"__ubsan_handle_type_mismatch_v1",
+> > > > +	"__ubsan_handle_out_of_bounds",
+> > > >  	/* misc */
+> > > >  	"csum_partial_copy_generic",
+> > > >  	"__memcpy_mcsafe",
+> > > > 
+> > > 
+> > > 
+> > > then I get this one:
+> > > 
+> > > lib/ubsan.o: warning: objtool: __ubsan_handle_out_of_bounds()+0x5d: call to ubsan_prologue() with UACCESS enabled
+> > 
+> > And of course I jinxed it by calling it easy.
+> > 
+> > Peter, how do you want to handle this?
+> > 
+> > Should we just disable UACCESS checking in lib/ubsan.c?
+> 
+> No, that is actually unsafe and could break things (as would you patch
+> above).
 
-Ugh, sorry, I just realized I did not opt Denverton out of this... v3
-on the way.
+Oops.  -EFIXINGTOOMANYOBJTOOLISSUESATONCE
+
+> I'm thinking the below patch ought to cure things:
+> 
+> ---
+> Subject: x86/uaccess: Don't leak the AC flags into __get_user() argument evalidation
+
+s/evalidation/evaluation
+
+> Identical to __put_user(); the __get_user() argument evalution will too
+> leak UBSAN crud into the __uaccess_begin() / __uaccess_end() region.
+> While uncommon this was observed to happen for:
+> 
+>   drivers/xen/gntdev.c: if (__get_user(old_status, batch->status[i]))
+> 
+> where UBSAN added array bound checking.
+> 
+> This complements commit:
+> 
+>   6ae865615fc4 ("x86/uaccess: Dont leak the AC flag into __put_user() argument evaluation")
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: luto@kernel.org
+> ---
+>  arch/x86/include/asm/uaccess.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+> index 9c4435307ff8..35c225ede0e4 100644
+> --- a/arch/x86/include/asm/uaccess.h
+> +++ b/arch/x86/include/asm/uaccess.h
+> @@ -444,8 +444,10 @@ __pu_label:							\
+>  ({									\
+>  	int __gu_err;							\
+>  	__inttype(*(ptr)) __gu_val;					\
+> +	__typeof__(ptr) __gu_ptr = (ptr);				\
+> +	__typeof__(size) __gu_size = (size);				\
+>  	__uaccess_begin_nospec();					\
+> -	__get_user_size(__gu_val, (ptr), (size), __gu_err, -EFAULT);	\
+> +	__get_user_size(__gu_val, __gu_ptr, __gu_size, __gu_err, -EFAULT);	\
+>  	__uaccess_end();						\
+>  	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
+>  	__builtin_expect(__gu_err, 0);					\
+
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+
+-- 
+Josh
