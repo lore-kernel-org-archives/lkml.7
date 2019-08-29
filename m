@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEBBC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2269CC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D23D2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25202173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102856;
-	bh=+bs89cEYyUrafzKG8RpR8ZzVUyzW8xI26AKZj8csKOs=;
+	s=default; t=1567102866;
+	bh=9gibLIc0qUWQLQwpjzQZH9b3iqCocGJytZPOvxXWjLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ibkKj3huC5jBdqtXSc1MPDbgXoJbwND4HSREJWyX3B56TTrQBUzZRpgfibKiQUOM4
-	 5m8b7fQZw1tzTX3QZUHDg2fMZJ9J1enL2gxXItBEQeI8E+r0syefsmnF+UPXvOSumY
-	 ExAg1pezJeooQ/yeax66Vo6xFSoaNjMs56cMr2no=
+	b=Ct922nfBAhk6Bdrf4ZVYCO93uW8TlETE6zfZKWDtqOOe4GC2fdU0hibFgiDFgF0K9
+	 7/DXS4O2hK/K8/DKlQg5sxulhkBf4AXApM+I+z0Soe/eEFfmv92cYNBr0q4yEmG3ZE
+	 ksjrC+bxSprEIC6wVcEjr5M2ElNZv93J4nAKjSlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730175AbfH2SRp (ORCPT
+        id S1730134AbfH2SRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:17:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59734 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:17:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729225AbfH2SRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:17:30 -0400
+        id S1730060AbfH2SR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AB132341B;
-        Thu, 29 Aug 2019 18:17:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7537123403;
+        Thu, 29 Aug 2019 18:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102649;
-        bh=+bs89cEYyUrafzKG8RpR8ZzVUyzW8xI26AKZj8csKOs=;
+        s=default; t=1567102646;
+        bh=9gibLIc0qUWQLQwpjzQZH9b3iqCocGJytZPOvxXWjLA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e7GryBBGPVmjlSSj4WU7k4MtDfTsIQdBehfggSsYHXdp5cWFQjHDYUdhYPMX04KAX
-         LhN4VlbE9rUykrZxHOH2YraeuUCajG2rreakTnIN5jdDJI+X1D1qkVLM8Qst0o8Q8G
-         gNHLZs1muJl7N9N7yfRzx/OspP9MglJedSkcmNU4=
+        b=KAEhaathwkAkoA6xYtcYDjXRpIbGz/otTqNxK+NcSvfFPHhn4SV5lyyOzTdRq1JE6
+         7XbTsKNAVH+ISeE0wzYciYPNQX98MoZScdOrCaJOlDFcrcUKSkE0twjDmoUNulbWhO
+         /eWDXjkNL3H0RpFwYyYxjr8XCLXPtsQ4aKSAjA88=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 23/27] IB/mlx4: Fix memory leaks
-Date:   Thu, 29 Aug 2019 14:16:49 -0400
-Message-Id: <20190829181655.8741-23-sashal@kernel.org>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 20/27] HID: cp2112: prevent sleeping function called from invalid context
+Date:   Thu, 29 Aug 2019 14:16:46 -0400
+Message-Id: <20190829181655.8741-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181655.8741-1-sashal@kernel.org>
 References: <20190829181655.8741-1-sashal@kernel.org>
@@ -60,46 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
-[ Upstream commit 5c1baaa82cea2c815a5180ded402a7cd455d1810 ]
+[ Upstream commit 2d05dba2b25ecb0f8fc3a0b4eb2232da6454a47b ]
 
-In mlx4_ib_alloc_pv_bufs(), 'tun_qp->tx_ring' is allocated through
-kcalloc(). However, it is not always deallocated in the following execution
-if an error occurs, leading to memory leaks. To fix this issue, free
-'tun_qp->tx_ring' whenever an error occurs.
+When calling request_threaded_irq() with a CP2112, the function
+cp2112_gpio_irq_startup() is called in a IRQ context.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Acked-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/1566159781-4642-1-git-send-email-wenwen@cs.uga.edu
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Therefore we can not sleep, and we can not call
+cp2112_gpio_direction_input() there.
+
+Move the call to cp2112_gpio_direction_input() earlier to have a working
+driver.
+
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/mad.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hid/hid-cp2112.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/mad.c b/drivers/infiniband/hw/mlx4/mad.c
-index d604b3d5aa3e4..c69158ccab822 100644
---- a/drivers/infiniband/hw/mlx4/mad.c
-+++ b/drivers/infiniband/hw/mlx4/mad.c
-@@ -1680,8 +1680,6 @@ static int mlx4_ib_alloc_pv_bufs(struct mlx4_ib_demux_pv_ctx *ctx,
- 				    tx_buf_size, DMA_TO_DEVICE);
- 		kfree(tun_qp->tx_ring[i].buf.addr);
+diff --git a/drivers/hid/hid-cp2112.c b/drivers/hid/hid-cp2112.c
+index 4e940a096b2ac..abf1079457664 100644
+--- a/drivers/hid/hid-cp2112.c
++++ b/drivers/hid/hid-cp2112.c
+@@ -1149,8 +1149,6 @@ static unsigned int cp2112_gpio_irq_startup(struct irq_data *d)
+ 
+ 	INIT_DELAYED_WORK(&dev->gpio_poll_worker, cp2112_gpio_poll_callback);
+ 
+-	cp2112_gpio_direction_input(gc, d->hwirq);
+-
+ 	if (!dev->gpio_poll) {
+ 		dev->gpio_poll = true;
+ 		schedule_delayed_work(&dev->gpio_poll_worker, 0);
+@@ -1198,6 +1196,12 @@ static int __maybe_unused cp2112_allocate_irq(struct cp2112_device *dev,
+ 		return PTR_ERR(dev->desc[pin]);
  	}
--	kfree(tun_qp->tx_ring);
--	tun_qp->tx_ring = NULL;
- 	i = MLX4_NUM_TUNNEL_BUFS;
- err:
- 	while (i > 0) {
-@@ -1690,6 +1688,8 @@ static int mlx4_ib_alloc_pv_bufs(struct mlx4_ib_demux_pv_ctx *ctx,
- 				    rx_buf_size, DMA_FROM_DEVICE);
- 		kfree(tun_qp->ring[i].addr);
- 	}
-+	kfree(tun_qp->tx_ring);
-+	tun_qp->tx_ring = NULL;
- 	kfree(tun_qp->ring);
- 	tun_qp->ring = NULL;
- 	return -ENOMEM;
+ 
++	ret = cp2112_gpio_direction_input(&dev->gc, pin);
++	if (ret < 0) {
++		dev_err(dev->gc.parent, "Failed to set GPIO to input dir\n");
++		goto err_desc;
++	}
++
+ 	ret = gpiochip_lock_as_irq(&dev->gc, pin);
+ 	if (ret) {
+ 		dev_err(dev->gc.parent, "Failed to lock GPIO as interrupt\n");
 -- 
 2.20.1
 
