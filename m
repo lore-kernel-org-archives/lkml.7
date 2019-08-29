@@ -2,127 +2,130 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44403C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2421C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A982173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 861382173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:10:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="P1pISjr6"
+	dkim=pass (1024-bit key) header.d=volatile.bz header.i=@volatile.bz header.b="d0uj69xo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfH2RJt (ORCPT
+        id S1727857AbfH2RKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:09:49 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37542 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727602AbfH2RJs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:09:48 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y9so2491306pfl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 10:09:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=kSCvC7aVTpQ+5LOQ01CXKZx0peCTBxlJNW1z1aZAAro=;
-        b=P1pISjr61U4xB0MG3dgJBQVHmfOJJWK90GKoue2kLfUe0Fop2XP6stoFZIBeKcvh9+
-         shq44hi6CMZn/Oltt7P6xvh0S7ywrEOkSw6SctxmynGF466/3BmPev8K/1uF84zI6RbH
-         4tS7AOhquP4b/VwP5sK2pyxdHWR0sd48ydHizuoNqCGrGHy/2tY66wc8oyBPKyKmtpRt
-         AI+JAUYpZLI1a/7Z+Ku0X6hfkQ8fYiCKUfnBl/knEfCapbe7VPhk5RsMTBJHHjf1e3+U
-         2a0hfwcPclnAeZ8QC5JArj1K4yj2KMlbOlIKDFGpXaXoruQ9mj1hfhzBGPZpmM4OU3Wu
-         6oZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=kSCvC7aVTpQ+5LOQ01CXKZx0peCTBxlJNW1z1aZAAro=;
-        b=PLVeMg1lhMAYV6uOo6WgbYFX084BZ+wMpfCJcz8aJHivQBHalRBEZpQR1noz0As00G
-         P9t/OtXiUCbujKG9u5TafAqqE6DwIYWJxANTfjoebFOrMDcQ+3rGeIS4cdjpSLI+VF3E
-         7b7ladCTC8HTtnPpMkx7pDYO/dX0+5+ynq1ZxPbZql5rx6RPKHnsnsFSO2UZHd5yFGri
-         fdVJUkW9ogX122WhsRCM3QB1thfjInPRx0x7Ob0HA41eKRxZc+c6Xi8A/7ni+SjJF7IL
-         24atieNC97uL3xaMxZXrz9hzMmnyEWoHDcBZpJA3/RzBBC4N/tENvrHU6DbQOMk/9+O6
-         Wl6g==
-X-Gm-Message-State: APjAAAUu2P2yKda4gKlrQylt7wowPE/q1lChZ68lQAdTckIYwcHEck/R
-        445PZbu46qti6jrJM8rTi5qxCg==
-X-Google-Smtp-Source: APXvYqywtLj0EIwj8vrGaKEIe6n3GWqW4YuS6SjpLbQ2EYDKhDAJrlcrmdCGxwFe+Qvstx8Qi3oH8g==
-X-Received: by 2002:a17:90b:907:: with SMTP id bo7mr11106379pjb.107.1567098588093;
-        Thu, 29 Aug 2019 10:09:48 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id i9sm2554788pgg.38.2019.08.29.10.09.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 29 Aug 2019 10:09:47 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] arm64: meson-sm1: add support for the SM1 based VIM3L
-In-Reply-To: <70d75312-68f0-351c-26b8-0f357721dd9e@baylibre.com>
-References: <20190828141816.16328-1-narmstrong@baylibre.com> <7hblw9rx8f.fsf@baylibre.com> <70d75312-68f0-351c-26b8-0f357721dd9e@baylibre.com>
-Date:   Thu, 29 Aug 2019 10:09:46 -0700
-Message-ID: <7h1rx3sxt1.fsf@baylibre.com>
+        Thu, 29 Aug 2019 13:10:11 -0400
+Received: from mx1.volatile.bz ([185.163.46.97]:38298 "EHLO mx1.volatile.bz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726739AbfH2RKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 13:10:11 -0400
+Received: from TheDarkness.local (unknown [IPv6:2600:6c5d:4200:1e2a:a077:9bc9:2f0:8eb9])
+        by mx1.volatile.bz (Postfix) with ESMTPSA id C72EB590;
+        Thu, 29 Aug 2019 17:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=volatile.bz;
+        s=default; t=1567098606;
+        bh=S+o2J+owdblBkkWC9LHtU/ruSRBVwfwplyhgfA2Ch4E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=d0uj69xoJI1nnoh2dMn+f6LJn2KwnUep+KVGsYedDdqJwM1oLZAg8nihhIcv3hfId
+         Ocxad7wXbbWNCT8DDTmvaJViquVM/1eB+UiOOsxhkM73BKDYT7aOfv/S6KfFeOquCR
+         +De78K+qoZKmkd3qZPOGRiLomi8bKD1bWiEFb0kY=
+Date:   Thu, 29 Aug 2019 13:10:01 -0400
+From:   Dark <dark@volatile.bz>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Richard Weinberger <richard.weinberger@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        anton ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-um <linux-um@lists.infradead.org>
+Subject: Re: [PATCH] um: Rewrite host RNG driver.
+Message-ID: <20190829130804.5e644540@TheDarkness>
+In-Reply-To: <1851013915.76434.1567092659763.JavaMail.zimbra@nod.at>
+References: <20190828204609.02a7ff70@TheDarkness>
+ <CAFLxGvyiviQxr_Bj57ibTU4DQ1H5wQC4DE5DNFBtAFoohcgbsg@mail.gmail.com>
+ <20190829103628.61953f50@thedarkness.local>
+ <1851013915.76434.1567092659763.JavaMail.zimbra@nod.at>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+> Well, it does not block but passing -EAGAIN directly back is not nice.
+> Or does the hw_random framework handle this?
 
-> On 28/08/2019 19:55, Kevin Hilman wrote:
->> Neil Armstrong <narmstrong@baylibre.com> writes:
->> 
->>> This patchset adds support for the Amlogic SM1 based Khadas VIM3L variant.
->>>
->>> The S903D3 package variant of SM1 is pin-to-pin compatible with the
->>> S922X and A311d, so only internal DT changes are needed :
->>> - DVFS support is different
->>> - Audio support not yet available for SM1
->>>
->>> This patchset moved all the non-g12b nodes to meson-khadas-vim3.dtsi
->>> and add the sm1 specific nodes into meson-sm1-khadas-vim3l.dts.
->> 
->> Reviewed-by: Kevin Hilman <khilman@baylibre.com>
->> Tested-by: Kevin Hilman <khilman@baylibre.com>
->> 
->> Basic boot test + suspend/resume test OK on my vim3L (thanks to Khadas
->> for the board!)
->> 
->>> Display has a color conversion bug on SM1 by using a more recent vendor
->>> bootloader on the SM1 based VIM3, this is out of scope of this patchset
->>> and will be fixed in the drm/meson driver.
->>>
->>> Dependencies:
->>> - patch 1,2: None
->>> - patch 3: Depends on the "arm64: meson-sm1: add support for DVFS" patchset at [1]
->> 
->> I tested in my integ branch where this series is applied, but I'm not
->> seeing any OPPs created (/sys/devices/system/cpu/cpufreq/)
->
-> These patches were sent from your integ branch, on top of :
-> commit 395df5af4c782ad19fb34b9a2009ca240eeb9749 (khilman-amlogic/v5.4/integ)
-> Merge: 2fcc5666dd45 9557737987bb
-> Author: Kevin Hilman <khilman@baylibre.com>
-> Date:   Tue Aug 27 15:39:46 2019 -0700
->
->     Merge branch 'v5.4/testing' into tmp/aml-rebuild
->
-> Rebuilt and retested, and I get the OPPs just fine :
-> # cat /sys/bus/cpu/devices/cpu0/cpufreq/scaling_available_frequencies
-> 100000 250000 500000 666666 1000000 1200000 1404000 1500000 1608000 1704000 1800000 1908000
+The framework is passing -EAGAIN to userspace which isn't very nice at
+all. Luckily, handling it is pretty trival so I went ahead and made an
+updated patch to address this. (I'm unsure of how to submit an update
+to my patch so I'll need a bit of guidence on this.)
 
-Thanks for confirming.
+> Maybe our -EAGAIN handling is buggy.
+> That said I'm all for changing the driver to use the right framework
+> but please make sure that we don't drop useful stuff like -EAGAIN handlin=
+g.
 
-Indeed, there was an issue with my most recent `integ` branch (it was
-missing the driver side of some SM1 clocks.)  Fixing that issue, and
-retesting this series it all works well.
+Most of the old code was pulled from the framework anyway so it's very
+unlikely that anything else would be dropped here.
 
-Queuing for v5.4,
+On Thu, 29 Aug 2019 17:30:59 +0200 (CEST), Richard Weinberger <richard@nod.=
+at> wrote:
 
-Thanks,
+> ----- Urspr=C3=BCngliche Mail -----
+> > Von: "Dark" <dark@volatile.bz>
+> > An: "Richard Weinberger" <richard.weinberger@gmail.com>, "linux-kernel"=
+ <linux-kernel@vger.kernel.org>
+> > CC: "richard" <richard@nod.at>, "anton ivanov" <anton.ivanov@cambridgeg=
+reys.com>, "linux-um"
+> > <linux-um@lists.infradead.org>
+> > Gesendet: Donnerstag, 29. August 2019 16:36:28
+> > Betreff: Re: [PATCH] um: Rewrite host RNG driver. =20
+>=20
+> > On Thu, 29 Aug 2019 15:26:24 +0200, Richard Weinberger
+> > <richard.weinberger@gmail.com> wrote: =20
+> >> So, you removed -EAGAIN handling, made everything synchronous,
+> >> and changed the interface.t
+> >> I'm not sure if this really a much better option. =20
+> >=20
+> > I should have been more clear here that I'm using the interfaces
+> > provided by `drivers/char/hw_random/core.c` for consistency with the
+> > other hardware RNG drivers and to avoid reimplementing stuff that's
+> > already there. =20
+>=20
+> I got this, and this is a good thing!
+> =20
+> > It might be a bit hard to see in the diff, but I pass the file
+> > descriptor to `os_set_fd_async()` to prevent it from blocking. =20
+>=20
+> Well, it does not block but passing -EAGAIN directly back is not nice.
+> Or does the hw_random framework handle this?
+>=20
+> > For the -EAGAIN handling, I'm passing it onto the caller. Since you
+> > mentioned it, It would be better to handle it in the driver itself
+> > so I'll update the patch to address that.
+> >  =20
+> >> Rewriting the driver in a modern manner is a good thing, but throwing =
+the
+> >> old one way with a little hand weaving just because of a unspecified i=
+ssue
+> >> is a little harsh.
+> >> Can you at lest provide more infos what problem you're facing with the
+> >> old driver? =20
+> >=20
+> > Most of it boiled down to it silently breaking if /dev/random on the
+> > host were to block for any reason, and there was the userspace tool
+> > requirement to properly make use of it. With that said, the interface
+> > was also inconsistent with the other hardware RNG drivers which would
+> > require a rewrite to address anyway. =20
+>=20
+> Maybe our -EAGAIN handling is buggy.
+> That said I'm all for changing the driver to use the right framework
+> but please make sure that we don't drop useful stuff like -EAGAIN handlin=
+g.
+>=20
+> Thanks,
+> //richard
 
-Kevin
