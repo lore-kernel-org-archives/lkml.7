@@ -2,139 +2,118 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E58C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C6FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4372166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA532166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:01:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="d0VFIDow"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XzU33u+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbfH2TAt (ORCPT
+        id S1727953AbfH2TBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:00:49 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38711 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728156AbfH2TAt (ORCPT
+        Thu, 29 Aug 2019 15:01:47 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43183 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727437AbfH2TBr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 15:00:49 -0400
-Received: by mail-pf1-f194.google.com with SMTP id o70so2699685pfg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 12:00:48 -0700 (PDT)
+        Thu, 29 Aug 2019 15:01:47 -0400
+Received: by mail-io1-f68.google.com with SMTP id u185so5258723iod.10
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 12:01:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YFO4ToJTqzSQELe3odwwkEfeFs84ACj71p8BdwBVqGc=;
-        b=d0VFIDowYpvAl/u3SmvC0to24Kdmxtpz2/UnnHd8VZyq1Od8buoXAZgDmyshy3xKpv
-         E4JQSe8CmUGbPMBhy30yzfA9+zY3kE2Oveu4m/7CuPoW/IOsvPx2E/fQ8csrW2zCDVFZ
-         YCaTL8mvBoul3+p5hEYzMhXdMc/Th4xD/Oc+c=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C0GoqTcetNrsUYVAfNmMyDqTNMHiKZd1X2n4rg0Xzqw=;
+        b=XzU33u+W1B0k9YCWc5RlZojrPzqvliMOZTJajeaB1y7KqVJuusocLKxgHiaNO1/QB4
+         hAxEnYxtc81Lz9kkcPpJICN2SpCCFR2TEihyt7eVSLUADJhMQvJAXRBN0XwoRjBsQSsO
+         3iu5LbmRvzsM5DjCuQsVlJaiCbcWdAqJYl+idwcfVXMhI7aWqMoy5SQv0BnG/DPimIoD
+         QYYUXdzpkn8Vd7p85TZ5ATinFawqlUJN6Gpx29OJ7EzNEJC9yMJZe5oUZGpqxZ2EVPzB
+         7PjEYSdvQA3EamflN9hXPebOSjyyMqyo41yciS2NqD/n2G7F72q/roZ5Y+Y57DuMkHTf
+         cPTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YFO4ToJTqzSQELe3odwwkEfeFs84ACj71p8BdwBVqGc=;
-        b=r9VHQOIxyW7QqTD2vtzf0iQdhppXO/8alBoZyxmB2AkUGVJqSxLr6Z5b8a7tGmxU6A
-         f+H8FgzPsWFnkhzgDKD+/zuEvjrr6MhQNOlu9DwpCFtok6B5ZTMZyNVMEVuXDIvOdvO6
-         /qwZ1TZMGi08M/EveDUYv3KcQrykCYd46jd5Xy0xthcJq9zUqXsmOAAnAhh/kF7c5ZRQ
-         1sbS5zoT0glYIqTb/NFF/vNPpuJtN2y9qoaDlttwUzKBRmY9G+Q+Q1hM03nSzO0N+S13
-         NC2vqNWfJL4z6Nra5DrgsiU7Dj8JhWNjVXTRebzaJ1xehNOz/VI0FnCrqqvF/uq3rJQ+
-         i9UQ==
-X-Gm-Message-State: APjAAAV3iK4q24q7BRsF3/hqKloP8BwCe4SXubSBvGPxIyUJpN5x+/ff
-        nLLaxNdLHsQOnwQkp0IqFj5cu4d8CPw=
-X-Google-Smtp-Source: APXvYqw8LkU0kSGTofdVPMh2aqBnJCfeAMn73MuHa4izANAy35sEF6IaMEn0o0lntDwre+4hF5klZA==
-X-Received: by 2002:a17:90a:d345:: with SMTP id i5mr11528135pjx.16.1567105248246;
-        Thu, 29 Aug 2019 12:00:48 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 5sm2846842pgh.93.2019.08.29.12.00.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 12:00:47 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 15:00:46 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC v1 2/2] rcu/tree: Remove dynticks_nmi_nesting counter
-Message-ID: <20190829190046.GB115245@google.com>
-References: <20190828214241.GD75931@google.com>
- <20190828220108.GC26530@linux.ibm.com>
- <20190828221444.GA100789@google.com>
- <20190828231247.GE26530@linux.ibm.com>
- <20190829015155.GB100789@google.com>
- <20190829034336.GD4125@linux.ibm.com>
- <20190829144355.GE63638@google.com>
- <20190829160946.GP4125@linux.ibm.com>
- <CALCETrWNPOOdTrFabTDd=H7+wc6xJ9rJceg6OL1S0rTV5pfSsA@mail.gmail.com>
- <20190829165407.GT4125@linux.ibm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C0GoqTcetNrsUYVAfNmMyDqTNMHiKZd1X2n4rg0Xzqw=;
+        b=aiQOJOT7bEgl5tr3Rt2vnhQkHGBGAPDxRYIt/ma01nbIXwbrH4ZUvuwFun9L6N5Ub6
+         /vW3uNni3/9XpUha/JhaVPpDoW+ps6sNRDOVVFDZXJbnb6J5Oy5HAKdXyF6y31nplf8A
+         oHAmZekiy1lbh5+1nijWsuydre4SDYPLM2F42NnsaCcwAOQ1qf+aoBPcNqiKRkPSDFUT
+         FktPACR03hJ731rwiaxWSi27QFL8lGB+x7YANxQfM+udBuQaQGR42kmww0kYbrkjpAl+
+         mTiuGCo/c3fImpKUZLV2GQ+WiAttJQtoCfOGMyGpAvK2WRGO7u1hRV9YrNj6FvdJfowt
+         Khog==
+X-Gm-Message-State: APjAAAUdKHNdjBMEh67TkjW+b5y3qacDD/SNKj8Kf/CNryEzjHWrbJI3
+        tCKk8VtipBoYcTtpFchSd0G+SG9qP9X73NO06I9TJQ==
+X-Google-Smtp-Source: APXvYqx/Nd1FoK/WJw+5huELXgYRT9e9xB16tDB/tJa16xuUVF91FMNgbcDHx+F/2Bi6FnUbidggsHmYSy3SOhPd92I=
+X-Received: by 2002:a5d:8e15:: with SMTP id e21mr6809020iod.296.1567105306039;
+ Thu, 29 Aug 2019 12:01:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829165407.GT4125@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1567056849-14608-1-git-send-email-luwei.kang@intel.com> <1567056849-14608-2-git-send-email-luwei.kang@intel.com>
+In-Reply-To: <1567056849-14608-2-git-send-email-luwei.kang@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 29 Aug 2019 12:01:34 -0700
+Message-ID: <CALMp9eS0-OfAR1=mrvABrOg85V+-yM64KuOff3A1_wCKDYZNxw@mail.gmail.com>
+Subject: Re: [RFC v1 1/9] KVM: x86: Add base address parameter for
+ get_fixed_pmc function
+To:     Luwei Kang <luwei.kang@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Wed, Aug 28, 2019 at 10:38 PM Luwei Kang <luwei.kang@intel.com> wrote:
+>
+> PEBS output Inte PT introduces some new MSRs (MSR_RELOAD_FIXED_CTRx)
+> for fixed function counters that use for autoload the preset value
+> after writing out a PEBS event.
+>
+> Introduce base MSRs address parameter to make this function can get
+> performance monitor counter structure by MSR_RELOAD_FIXED_CTRx registers.
+>
+> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> ---
+>  arch/x86/kvm/pmu.h           |  5 ++---
+>  arch/x86/kvm/vmx/pmu_intel.c | 14 +++++++++-----
+>  2 files changed, 11 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+> index 58265f7..c62a1ff 100644
+> --- a/arch/x86/kvm/pmu.h
+> +++ b/arch/x86/kvm/pmu.h
+> @@ -93,10 +93,9 @@ static inline struct kvm_pmc *get_gp_pmc(struct kvm_pmu *pmu, u32 msr,
+>  }
+>
+>  /* returns fixed PMC with the specified MSR */
+> -static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)
+> +static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr,
+> +                                                               int base)
+>  {
+> -       int base = MSR_CORE_PERF_FIXED_CTR0;
+> -
+>         if (msr >= base && msr < base + pmu->nr_arch_fixed_counters)
+>                 return &pmu->fixed_counters[msr - base];
 
-On Thu, Aug 29, 2019 at 09:54:07AM -0700, Paul E. McKenney wrote:
-> On Thu, Aug 29, 2019 at 09:21:46AM -0700, Andy Lutomirski wrote:
-> > On Thu, Aug 29, 2019 at 9:10 AM Paul E. McKenney <paulmck@kernel.org> wrote:
-> > >
-> > > On Thu, Aug 29, 2019 at 10:43:55AM -0400, Joel Fernandes wrote:
-> > >
-> > > [ . . . ]
-> > >
-> > > > Paul, do we also nuke rcu_eqs_special_set()?  Currently I don't see anyone
-> > > > using it. And also remove the bottom most bit of dynticks?
-> > > >
-> > > > Also what happens if a TLB flush broadcast is needed? Do we IPI nohz or idle
-> > > > CPUs are the moment?
-> > > >
-> > > > All of this was introduced in:
-> > > > b8c17e6664c4 ("rcu: Maintain special bits at bottom of ->dynticks counter")
-> > >
-> > > Adding Andy Lutomirski on CC.
-> > >
-> > > Andy, is this going to be used in the near term, or should we just get
-> > > rid of it?
-> > 
-> > Let's get rid of it.  I'm not actually convinced it *can* be used as designed.
-> > 
-> > For those who forgot the history or weren't cc'd on all of it: I had
-> > this clever idea about how we could reduce TLB flushes.  I implemented
-> > some of it (but not the part that would have used this RCU feature),
-> > and it exploded in nasty and subtle ways.  This caused me to learn
-> > that speculative TLB fills were a problem that I had entirely failed
-> > to account for.  Then PTI happened and thoroughly muddied the water.
-> 
-> Yeah, PTI was quite annoying.  Still is, from what I can see.  :-/
-> 
-> > So I think we should just drop this :(
-> 
-> OK, thank you!  I will put a tag into -rcu marking its removal in case
-> it should prove useful whenever for whatever.
-> 
-> Joel, would you like to remove this, or would you rather that I did?
-> It is in code you are working with right now, so if I do it, I need to
-> wait until yours is finalized.  Which wouldn't be a problem.
-
-I can remove it in my series, made a note to do so.
-
-thanks,
-
- - Joel
-
+IIUC, these new MSRs aren't new fixed PMCs, but are values to be
+reloaded into the existing fixed PMCs when a PEBS event has been
+written. This change makes it look like you are introducing an
+additional set of fixed PMCs.
