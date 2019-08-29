@@ -2,169 +2,147 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74BBC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 265A0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 994BE2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12D82173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:17:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e1+GxIGE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Or/9/iBr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbfH2RQB (ORCPT
+        id S1727940AbfH2RRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:16:01 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40156 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbfH2RQA (ORCPT
+        Thu, 29 Aug 2019 13:17:03 -0400
+Received: from gateway33.websitewelcome.com ([192.185.146.97]:20602 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726973AbfH2RRC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:16:00 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w10so1926097pgj.7
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 10:15:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=v9QIC9uqWuh335lvbA5rrf8b+cViWD5hzPNIv1CMU/w=;
-        b=e1+GxIGE2miaSf8ZW4+1g6xP5pAOGsKxYDXgwRImxxPExwzEjMUAgrYi/cqAbwasI1
-         eKSIvq1Ch0ihNhgbm8lprYEZCdZQVAsCuy2/2byfzSHEuSU5dkLL9CFycxP7m3ofNddh
-         0nX5TMYJS679JL2tNOdAO74fkerjaKmM1Sze8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v9QIC9uqWuh335lvbA5rrf8b+cViWD5hzPNIv1CMU/w=;
-        b=LZsGdKzN320VhXCrSq6vbJHVZ0uTIyM/O9ZEoBKG1wao/dNrNUdUbIwLem4oEuUwQH
-         F7v4k9I9tYUQ+RMGuiP1AUFkHkW+sajN/8ApatJ3Y245CMD2HGt3M1b1RzrboUOcOEJO
-         KsInZO2X/RUJ5L3XYdNyOfDwHiECgacVa47zqynfGvI4vJACEjLszukXcE+abh0Bfe3L
-         DA8Jq2+reVL3HPqhsmaHQSmnt8x+StW4eTb9rdR34RPL6oK9TwsXBcQASTZ3HLumNj0L
-         jb4MLbwxCDe2mYWPF9ZjGj70cReYvFsK/yhNvi1W7EVh1QYqS6KxT1rbXU4Gpz01NHEi
-         HNZw==
-X-Gm-Message-State: APjAAAW1dFUQdLZ4+gMiee2Xs6qUNQ3VxJi2/OLBgDnZ51r/GgztYAf8
-        hGw+OjAphxqfDuHMVy9yGYlUCg==
-X-Google-Smtp-Source: APXvYqyffBBor/+6EeLCqrmL1gEoek3Q0TR8w35ZfJMYLUYqpXAFRGScFK2JXzJeUQrD8UOcC7Cp5g==
-X-Received: by 2002:a65:5183:: with SMTP id h3mr9380839pgq.250.1567098959224;
-        Thu, 29 Aug 2019 10:15:59 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id y6sm2413295pjp.15.2019.08.29.10.15.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Aug 2019 10:15:58 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 10:15:55 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 2/2] mmc: core: Run handlers for pending SDIO interrupts
- on resume
-Message-ID: <20190829171555.GD70797@google.com>
-References: <20190828214620.66003-1-mka@chromium.org>
- <20190828214620.66003-2-mka@chromium.org>
- <CAPDyKFr2R-ta5Xob12-6k=+mXXt0NowJ=dpLGJu10qhn7cB1HQ@mail.gmail.com>
+        Thu, 29 Aug 2019 13:17:02 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 7F7FC7639AE
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 12:16:59 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 3O2diQoWI90on3O2diCg9w; Thu, 29 Aug 2019 12:16:59 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=MOSc5GBHUs5PIGML2+f2XXQt+oLYxzpaPEYOGylzKSM=; b=Or/9/iBroqiVy5TUVe76myUerB
+        eegJNPXRJmLFR9ef8RtXYgFJ9VB4EBUYUuorF3wlgegSpe7dcjYmxE2RmNBgEs7tfx7+R66Zj0bnf
+        N+tCZMg4cjTl2ArSI2jEpEQgLBkihrEz08y6X1M1Dx1B/UiOPDBUmM1uN3js/rMwUZ5sz4ra+R1BS
+        ngNBOhRCLmoa9cqbFQTQzQ72YdhPNG2HebiMaj7Q+qMAe+HgnV+JhCVjpzpTqeH+LYPJloNpNIet9
+        jqEF7OuycxqUF2HR3T4g7KwphMVW8OK5Y70CrsWYQs2dIhZRtvkIGcRYYCEqmEVHAMv01oM1cP3Vo
+        oU9Jw1CQ==;
+Received: from [189.152.216.116] (port=46000 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i3O2c-000nC0-JW; Thu, 29 Aug 2019 12:16:58 -0500
+Subject: Re: [PATCH] ima: use struct_size() in kzalloc()
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190529165343.GA2584@embeddedor>
+ <671185b9-5c91-5235-b5ea-96d3449bf716@embeddedor.com>
+ <1567050355.11493.3.camel@linux.ibm.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <cb5743ed-aca0-8546-74bf-a8903e0dd518@embeddedor.com>
+Date:   Thu, 29 Aug 2019 12:16:55 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <1567050355.11493.3.camel@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFr2R-ta5Xob12-6k=+mXXt0NowJ=dpLGJu10qhn7cB1HQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i3O2c-000nC0-JW
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [189.152.216.116]:46000
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ulf,
+Hi Mimi,
 
-On Thu, Aug 29, 2019 at 10:48:58AM +0200, Ulf Hansson wrote:
-> On Wed, 28 Aug 2019 at 23:46, Matthias Kaehlcke <mka@chromium.org> wrote:
-> >
-> > With commit 83293386bc95 ("mmc: core: Prevent processing SDIO IRQs
-> > when the card is suspended") SDIO interrupts are dropped if they
-> > occur while the card is suspended. Dropping the interrupts can cause
-> > problems after resume with cards that remain powered during suspend
-> > and preserve their state. These cards may end up in an inconsistent
-> > state since the event that triggered the interrupt is never processed
-> > and remains pending. One example is the Bluetooth function of the
-> > Marvell 8997, SDIO is broken on resume (for both Bluetooth and WiFi)
-> > when processing of a pending HCI event is skipped.
-> >
-> > For cards that remained powered during suspend check on resume if
-> > SDIO interrupts are pending, and trigger interrupt processing if
-> > needed.
+On 8/28/19 10:45 PM, Mimi Zohar wrote:
+
 > 
-> Thanks for the detailed changelog, much appreciated!
+> The same usage exists in ima_api.c: ima_alloc_init_template().  Did
+> you want to make the change there as well?
 > 
-> >
-> > Fixes: 83293386bc95 ("mmc: core: Prevent processing SDIO IRQs when the card is suspended")
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> >  drivers/mmc/core/sdio.c | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> >
-> > diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
-> > index 8dd8fc32ecca..a6b4742a91c6 100644
-> > --- a/drivers/mmc/core/sdio.c
-> > +++ b/drivers/mmc/core/sdio.c
-> > @@ -975,6 +975,7 @@ static int mmc_sdio_suspend(struct mmc_host *host)
-> >  static int mmc_sdio_resume(struct mmc_host *host)
-> >  {
-> >         int err = 0;
-> > +       u8 pending = 0;
-> >
-> >         /* Basic card reinitialization. */
-> >         mmc_claim_host(host);
-> > @@ -1009,6 +1010,14 @@ static int mmc_sdio_resume(struct mmc_host *host)
-> >         /* Allow SDIO IRQs to be processed again. */
-> >         mmc_card_clr_suspended(host->card);
-> >
-> > +       if (!mmc_card_keep_power(host))
-> > +               goto skip_pending_irqs;
-> > +
-> > +       if (!sdio_get_pending_irqs(host, &pending) &&
-> > +           pending != 0)
-> > +               sdio_signal_irq(host);
-> 
-> In one way, this change makes sense as it adopts the legacy behavior,
-> signaling "cached" SDIO IRQs also for the new SDIO irq work interface.
-> 
-> However, there is at least one major concern I see with this approach.
-> That is, in the execution path for sdio_signal_irq() (or calling
-> wake_up_process() for the legacy path), we may end up invoking the
-> SDIO func's ->irq_handler() callback, as to let the SDIO func driver
-> to consume the SDIO IRQ.
-> 
-> The problem with this is, that the corresponding SDIO func driver may
-> not have been system resumed, when the ->irq_handler() callback is
-> invoked.
 
-While debugging the the problem with btmrvl I found that this is
-already the case without the patch, just not during resume, but when
-suspending. The func driver suspends before the SDIO bus and
-interrupts can keep coming in. These are processed while the func
-driver is suspended, until the SDIO core starts dropping the
-interrupts.
+Yep. I'll write a patch for that one too.
 
-And I think it is also already true at resume time: mmc_sdio_resume()
-re-enables SDIO IRQs and disables dropping them.
-
-> If the SDIO func driver would have configured the IRQ as a
-> wakeup, then I would expect this to work, but not just by having a
-> maintained power to the card.
-
-Is the assumption that no IRQs are generated after SDIO func suspend
-unless wakeup is enabled?
-
-On the system I'm currently debugging OOB wakeup is not working,
-which might be part of the problem.
-
-> In the end, I think we need to deal with synchronizations for this,
-> through the mmc/sdio core, in one way or the other - before we kick
-> SDIO IRQs during system resume.
-> 
-> > +
-> > +skip_pending_irqs:
-> >         if (host->sdio_irqs) {
-> >                 if (!(host->caps2 & MMC_CAP2_SDIO_IRQ_NOTHREAD))
-> >                         wake_up_process(host->sdio_irq_thread);
+Thanks
+--
+Gustavo
