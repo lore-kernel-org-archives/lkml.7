@@ -2,104 +2,124 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659B0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03FBC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C98B233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC68233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfH2I0g (ORCPT
+        id S1727026AbfH2I1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 04:26:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58688 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfH2I0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 04:26:36 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B34C7C0546F2;
-        Thu, 29 Aug 2019 08:26:35 +0000 (UTC)
-Received: from gigantic.usersys.redhat.com (helium.bos.redhat.com [10.18.17.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6111D1001925;
-        Thu, 29 Aug 2019 08:26:34 +0000 (UTC)
-From:   Bandan Das <bsd@redhat.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the tip tree
-References: <20190829080633.07c7a422@canb.auug.org.au>
-Date:   Thu, 29 Aug 2019 04:26:33 -0400
-In-Reply-To: <20190829080633.07c7a422@canb.auug.org.au> (Stephen Rothwell's
-        message of "Thu, 29 Aug 2019 08:06:33 +1000")
-Message-ID: <jpgwoewnzra.fsf@linux.bootlegged.copy>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 29 Aug 2019 04:27:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34120 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725776AbfH2I1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 04:27:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EFD47AFF9;
+        Thu, 29 Aug 2019 08:27:05 +0000 (UTC)
+Subject: Re: [PATCH v2] vsprintf: introduce %dE for error constants
+To:     Petr Mladek <pmladek@suse.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        metux IT consult Enrico Weigelt <lkml@metux.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190827211244.7210-1-uwe@kleine-koenig.org>
+ <20190828113216.p2yiha4xyupkbcbs@pathway.suse.cz>
+ <74303921-aa95-9962-2254-27e556af54f4@kleine-koenig.org>
+ <20190829081249.3zvvsa4ggb5pfozl@pathway.suse.cz>
+From:   Juergen Gross <jgross@suse.com>
+Message-ID: <45cd5b50-9854-fce7-5f08-f7660abb8691@suse.com>
+Date:   Thu, 29 Aug 2019 10:27:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 29 Aug 2019 08:26:36 +0000 (UTC)
+In-Reply-To: <20190829081249.3zvvsa4ggb5pfozl@pathway.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
+On 29.08.19 10:12, Petr Mladek wrote:
+> On Wed 2019-08-28 21:18:37, Uwe Kleine-König  wrote:
+>> Hello Petr,
+>>
+>> On 8/28/19 1:32 PM, Petr Mladek wrote:
+>>> On Tue 2019-08-27 23:12:44, Uwe Kleine-König  wrote:
+>>>> Petr Mladek had some concerns:
+>>>>> There are ideas to make the code even more tricky to reduce
+>>>>> the size, keep it fast.
+>>>>
+>>>> I think Enrico Weigelt's suggestion to use a case is the best
+>>>> performance-wise so that's what I picked up. Also I hope that
+>>>> performance isn't that important because the need to print an error
+>>>> should not be so common that it really hurts in production.
+> 
+> This is contadicting. The "best" performance-wise solution was
+> choosen in favor of space. The next sentence says that performance
+> is not important.
+> 
+>>> I personally do not like switch/case. It is a lot of code.
+>>> I wonder if it even saved some space.
+>>
+>> I guess we have to die either way. Either it is quick or it is space
+>> efficient.
+> 
+> I am more concerned about the size. Well, array of strings will
+> be both fast and size efficient.
+> 
+>> With the big case I trust the compiler to pick something
+>> sensible expecting that it adapts for example to -Osize.
+> 
+> I am not sure what are the expectations here. I can't imagine
+> another translation than:
+> 
+>     if (val == 1)
+>       str = "EPERM";
+>     else if (val == 2)
+>       str = "ENOENT"
+>     else if (val == 3)
+>       str = "ESRCH"
+>     ...
+> 
+> It means that all constans will be hardcoded in the code instead
+> of in data section. Plus there will be instructions for each
+> if/else part.
+> 
+>>> If you want to safe space, I would use u16 to store the numbers.
+>>> Or I would use array of strings. There will be only few holes.
+>>>
+>>> You might also consider handling only the most commonly
+>>> used codes from errno.h and errno-base.h (1..133). There will
+>>> be no holes and the codes are stable.
+>>
+>> I'd like to postpone the discussion about "how" until we agreed about
+>> the "if at all".
+> 
+> It seems that all people like this feature.
 
-> Hi all,
->
-> In commit
->
->   bae3a8d3308e ("x86/apic: Do not initialize LDR and DFR for bigsmp")
->
-> Fixes tag
->
->   Fixes: db7b9e9f26b8 ("[PATCH] Clustered APIC setup for >8 CPU systems")
->
-> has these problem(s):
->
->   - Target SHA1 does not exist
->
+Hmm, what about already existing format strings conatining "%dE"?
 
-I tried to dig this up and I believe that this is from pre-git.
-I went back as far as commit 1da177e4c3f41524e886b7f1b8a0c1fc7321cac2
-Author: Linus Torvalds <torvalds@ppc970.osdl.org>
-Date:   Sat Apr 16 15:20:36 2005 -0700
+Yes, I could find only one (drivers/staging/speakup/speakup_bns.c), but
+nevertheless...
 
-    Linux-2.6.12-rc2
-    
-    Initial git repository build. I'm not bothering with the full history,
-    even though we have it. We can create a separate "historical" git
-    archive of that later if we want to, and in the meantime it's about
-    3.2GB when imported into git - space that would just make the early
-    git days unnecessarily complicated, when we don't have a lot of good
-    infrastructure for it.
-    
-    Let it rip!
+> 
+> BTW: I though more about generating or cut&pasting the arrary.
+> I can't find any reasonable way how to generate it.
 
-which adds init_apic_ldr() in include/asm-i386/mach-bigsmp/mach_apic.h with
-the following:
-
-+static inline void init_apic_ldr(void)
-+{
-+       unsigned long val;
-+
-+       apic_write_around(APIC_DFR, APIC_DFR_VALUE);
-+       val = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
-+       val = calculate_ldr(val);
-+       apic_write_around(APIC_LDR, val);
-+}
-...
+Generate the array and errno.h/errno-base.h from the same source?
 
 
-So, the bug seems to be present here as well...
-
-Bandan
-
-> I could not quickly find an obvious match.
+Juergen
