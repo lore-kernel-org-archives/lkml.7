@@ -2,137 +2,98 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 861FEC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCBBC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C41205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:36:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103760;
-	bh=vm7PlOFMrhdiuuOeVzjw28rou+yhF1NIk/jyUsin+3A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f1t1BKd9MKoqEyvZLF9GTYKjnlagSh4/fZ+DhL3CIUno59ArCWn1AaP3WPMsrpZFi
-	 xMZn2fmM2Z2jqTChNs8ZgpYy33oPDKSll8SEJekJHBswlTr5q0v3iTC86YMgpjVGvD
-	 +FqOOqFZFR9pBpqHUixlL7YLOZ66BXpNH+lhJjwI=
+	by mail.kernel.org (Postfix) with ESMTP id A543A2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:36:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t3zQUyJM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbfH2SeA (ORCPT
+        id S1728313AbfH2Sga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:34:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728330AbfH2SNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:13:38 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7B102339E;
-        Thu, 29 Aug 2019 18:13:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102416;
-        bh=vm7PlOFMrhdiuuOeVzjw28rou+yhF1NIk/jyUsin+3A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RYFFzKXc19SD4IH1cfJCE/ozlcj/nuKaYQHjk3aO/e0+5lRjLFOQvy/Qd/M1iRH9I
-         hfr8e66JGWgSiVTzaz2TmgwkZ4yFmJh5OApGORUH31194UOTsuay4bLXGlQ8jNBTHE
-         66C6dJmbzkTfYfQ7d72bugbXInAMkIlu/WATc/EM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 11/76] netfilter: nf_flow_table: conntrack picks up expired flows
-Date:   Thu, 29 Aug 2019 14:12:06 -0400
-Message-Id: <20190829181311.7562-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
-References: <20190829181311.7562-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Thu, 29 Aug 2019 14:36:30 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34491 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728061AbfH2Sga (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:36:30 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n9so2053930pgc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 11:36:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=KbKypMZEMo628Sx98GbFT2Lyxp3a3o8vbOSGro2hqs8=;
+        b=t3zQUyJMxStChnSzVBHngExmp8QsLonx59qyC0ffBqgubbjGeOyOFMOsHJf8uf6HkB
+         CojAknqMdbyB8D+o/RuZItXS57kNsGGjly1qq2ZpZ9joOvjLQ5RVfWeJcCMLtQBpw/zH
+         eepAT69hr+gc0hwxvBjbl90PN9iyk0QDzHp5MV7YLfKc5W0wOQ7zGHWbDhWf+GrfcdTh
+         wPK7Sxg25ZX5mWRup3BIgWX38rdvTV+rGjVQfpKopTCfmhGLIoh5TTogX8eiT9lPG+F4
+         t34bu1vWoK9BI1Ryd083tz1DsL+ZG6939oGqr1RuXw/GymWIu89dLRkNTx/6QIyGSRjj
+         NN8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KbKypMZEMo628Sx98GbFT2Lyxp3a3o8vbOSGro2hqs8=;
+        b=o3S4lJxe/82Lu7LqHmIPl48nEe/yQBQ5pR3E4ov7a+sD6V+sEpj7WpQrUxeJh29lX0
+         Dmh7jyvW/Ur0h9NPp96AS5m88zfEfy9icgtuP3ZSk4O2eqx56ksO46vOFiSVkWfYJFRr
+         Tb9SfP15Bc5CJ8ljIOs0plNpN6ukGcO8HZJFgHa6bz8wHax+bedQzoIvh0Yx3jNLWIRN
+         hwln/Ema95qGAQH2X63vGaK5g7+2aPOOzOzf6Us/F/D6W7CdlH0b/TH2z8SKTc1QCZ5q
+         dqQGa5mNHGRJeDBTqThEfOwWfGMecWYv0SilofEG98ubTr5ZHB0EbJm2s9k8Z3VRK2by
+         zVCg==
+X-Gm-Message-State: APjAAAUXBlAc2iUfOAn2EEGiitwkOa8Ipdn+wAQNB0PR5d28/V0Lvjto
+        95vxOO8Wa8vURuiQpIn0x6JV8w==
+X-Google-Smtp-Source: APXvYqxpv+GziRN1zBpbr421YfeGoyK+5VQeDsDe4w/JmyFKe9EoDJcwIteI02M7WGql0t//MIrfew==
+X-Received: by 2002:a62:5c5:: with SMTP id 188mr13311302pff.227.1567103789574;
+        Thu, 29 Aug 2019 11:36:29 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id ay7sm2840574pjb.4.2019.08.29.11.36.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 29 Aug 2019 11:36:28 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] rpmsg: glink-smem: Name the edge based on parent remoteproc
+Date:   Thu, 29 Aug 2019 11:36:25 -0700
+Message-Id: <20190829183625.32244-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+Naming the glink edge device on the parent of_node short name causes
+collisions when multiple remoteproc instances with only different unit
+address are described on the platform_bus in DeviceTree.
 
-[ Upstream commit 3e68db2f6422d711550a32cbc87abd97bb6efab3 ]
+Base the edge's name on the parent remoteproc's name instead, to ensure
+that it's unique.
 
-Update conntrack entry to pick up expired flows, otherwise the conntrack
-entry gets stuck with the internal offload timeout (one day). The TCP
-state also needs to be adjusted to ESTABLISHED state and tracking is set
-to liberal mode in order to give conntrack a chance to pick up the
-expired flow.
-
-Fixes: ac2a66665e23 ("netfilter: add generic flow table infrastructure")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- net/netfilter/nf_flow_table_core.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/rpmsg/qcom_glink_smem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
-index 948b4ebbe3fbd..4254e42605135 100644
---- a/net/netfilter/nf_flow_table_core.c
-+++ b/net/netfilter/nf_flow_table_core.c
-@@ -112,7 +112,7 @@ static void flow_offload_fixup_tcp(struct ip_ct_tcp *tcp)
- #define NF_FLOWTABLE_TCP_PICKUP_TIMEOUT	(120 * HZ)
- #define NF_FLOWTABLE_UDP_PICKUP_TIMEOUT	(30 * HZ)
- 
--static void flow_offload_fixup_ct_state(struct nf_conn *ct)
-+static void flow_offload_fixup_ct(struct nf_conn *ct)
- {
- 	const struct nf_conntrack_l4proto *l4proto;
- 	unsigned int timeout;
-@@ -209,6 +209,11 @@ int flow_offload_add(struct nf_flowtable *flow_table, struct flow_offload *flow)
- }
- EXPORT_SYMBOL_GPL(flow_offload_add);
- 
-+static inline bool nf_flow_has_expired(const struct flow_offload *flow)
-+{
-+	return (__s32)(flow->timeout - (u32)jiffies) <= 0;
-+}
-+
- static void flow_offload_del(struct nf_flowtable *flow_table,
- 			     struct flow_offload *flow)
- {
-@@ -224,6 +229,9 @@ static void flow_offload_del(struct nf_flowtable *flow_table,
- 	e = container_of(flow, struct flow_offload_entry, flow);
- 	clear_bit(IPS_OFFLOAD_BIT, &e->ct->status);
- 
-+	if (nf_flow_has_expired(flow))
-+		flow_offload_fixup_ct(e->ct);
-+
- 	flow_offload_free(flow);
- }
- 
-@@ -234,7 +242,7 @@ void flow_offload_teardown(struct flow_offload *flow)
- 	flow->flags |= FLOW_OFFLOAD_TEARDOWN;
- 
- 	e = container_of(flow, struct flow_offload_entry, flow);
--	flow_offload_fixup_ct_state(e->ct);
-+	flow_offload_fixup_ct(e->ct);
- }
- EXPORT_SYMBOL_GPL(flow_offload_teardown);
- 
-@@ -299,11 +307,6 @@ nf_flow_table_iterate(struct nf_flowtable *flow_table,
- 	return err;
- }
- 
--static inline bool nf_flow_has_expired(const struct flow_offload *flow)
--{
--	return (__s32)(flow->timeout - (u32)jiffies) <= 0;
--}
--
- static void nf_flow_offload_gc_step(struct flow_offload *flow, void *data)
- {
- 	struct nf_flowtable *flow_table = data;
+diff --git a/drivers/rpmsg/qcom_glink_smem.c b/drivers/rpmsg/qcom_glink_smem.c
+index 64a5ce324c7f..4238383d8685 100644
+--- a/drivers/rpmsg/qcom_glink_smem.c
++++ b/drivers/rpmsg/qcom_glink_smem.c
+@@ -201,7 +201,7 @@ struct qcom_glink *qcom_glink_smem_register(struct device *parent,
+ 	dev->parent = parent;
+ 	dev->of_node = node;
+ 	dev->release = qcom_glink_smem_release;
+-	dev_set_name(dev, "%pOFn:%pOFn", node->parent, node);
++	dev_set_name(dev, "%s:%pOFn", dev_name(parent->parent), node);
+ 	ret = device_register(dev);
+ 	if (ret) {
+ 		pr_err("failed to register glink edge\n");
 -- 
-2.20.1
+2.18.0
 
