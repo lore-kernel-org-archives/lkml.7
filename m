@@ -2,131 +2,97 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F25C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F09BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F132070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C516208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:37:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="clb8vgnf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPUqryHr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbfH2Ub6 (ORCPT
+        id S1727859AbfH2Uhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 16:31:58 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:47512 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfH2Ub5 (ORCPT
+        Thu, 29 Aug 2019 16:37:37 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50426 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbfH2Uhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 16:31:57 -0400
-Received: by mail-pl1-f201.google.com with SMTP id j12so2649164pll.14
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 13:31:57 -0700 (PDT)
+        Thu, 29 Aug 2019 16:37:37 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v15so5075287wml.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 13:37:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=geHtoFXurL0uoZHjOhgaOZVjBMzfZ9r5aS+mHaqaGKA=;
-        b=clb8vgnfdAWejSqdYesxGEEQnx4giF3KnWD9AiidlIHSstMsGWsGy5pi0M0JJt14PR
-         oYpbacQ7W+rsBrVExXVXJ4anZmp0jL84zhjJvFId3vj95RMAe8GdttHBbsWBaHuHcP42
-         Q2LXVjKc27IwhIz/Qnb0Kbv8NlEskVG5j9GhD7dM/r0Gtg5Way7BtwKntEsyPOk5O8/Z
-         cTWU+RZgNMJMHywTXWh3H8drfMAfUmysLJzfn4+Lj7kai3KiAhc7L5GtkVP61Eu1UKaY
-         77K380nwQWhYnUgNtnUwbV1BJ4QvxkXmgSz6ZAvI8KB7LaKpCuzuuRb2HQxu1a0b649F
-         shcg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=4ntHy8qnLbvltzVHdmKX4Hf7t3TRxi31vLBSSClDxqI=;
+        b=GPUqryHr9ZAzl3WbDifnBpLLMrSrRUKhrn5jIgV6sHE3bYkxc7UZo11aH11NXOFQzx
+         9w6nSExWKFIWDMhwYoXfqtalNZ1R+rqWUdF4zQxhvky+XjfWida5OtXsn8HEHlMQ4wYY
+         Pv8CppKVPD46jjQMOPCbHN/B45G/yyKRjM/ubUKSwakI6y+CHJq7ll8o4IGgu8k2uG07
+         lp1cDiyV48vd4aqYUt8T85oFFjk0n7A0at41Z+b5JB+UMbSqGrGKepPtIUuL7K9FiMVw
+         u57Q8qsPJZj9z894iXneK4oQUOmHoprWWElXBKtt0P/kqelJFltygw1NnTINYTqA5QEv
+         hGqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=geHtoFXurL0uoZHjOhgaOZVjBMzfZ9r5aS+mHaqaGKA=;
-        b=nnlrYd9eKLy888KBLoUPxy8re8IlgtD4C7lL9ItBz5kbYGrekuHmQUfFcL0WhaiWkV
-         u8/zdAle8/973yb/MUY3GDes1trhvWjZAT6tnG0jV90yeYhpz/fJkkBItQLuivrqeZmT
-         jSNySIHX9HNjfUVmNvdNEnheY6Gcplsp22rE1ZOqOdy26pQ+IWVTN3QzaBLxNwbgsdpJ
-         kFj1MaNL0iOSbmfPYkuLUAeXDaZo0sEepZ/hepKIv95swkag11bftknq2E3wMA8Hy5Qt
-         RG1R4JnOvGE02Xoi52UktbnhSsgRib18vccGz8is9/bTEfTZLywWD7O4MXzDqit3M8wx
-         zYxA==
-X-Gm-Message-State: APjAAAWwLYoF0pZPTjSIqFSnxYIpaPNXBuGMtEE2CqVGrBPdyf32wgp5
-        z+n9trs6BmzhV+XeRyqvndOrNhrgx6zg1Q==
-X-Google-Smtp-Source: APXvYqw6jTDiw5RFZN+vIR41RyOP9xsg4tXKrl+EiImbjrdsMxY4mqDerTnQl3fwg7DsBEt0qE524hAjLzYavg==
-X-Received: by 2002:a63:30c6:: with SMTP id w189mr9624802pgw.398.1567110716648;
- Thu, 29 Aug 2019 13:31:56 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 13:31:10 -0700
-Message-Id: <20190829203110.129263-1-shakeelb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH] mm: memcontrol: fix percpu vmstats and vmevents flush
-From:   Shakeel Butt <shakeelb@google.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=4ntHy8qnLbvltzVHdmKX4Hf7t3TRxi31vLBSSClDxqI=;
+        b=Te7g/H0GfUrbhatEXa+0Y0OQNMuoNMzij+zB6aU4+9udou/L8gP3i2lPhcJitjAzEY
+         P56NR4mjw+L7Cl1QD0SAWVkMfeKA3r0wvMggiP4sQYrbd7Fh9Mj53qOg6QJBdLtC8GCw
+         iJLU3KCPECmjR8VPT7jHbvTVV9gcQla/bb4ENVRmRdfxNVMJ+AUDhG1doOEVO4HB1rJ1
+         /6rQxDaPaPxU+FmyZuzeJdj9H++LMhZkUWyPBS9qLKKRJ/kZpAjHziHynUDbRhhekEZ9
+         /rW/+Fz/gskwW1nxBprXc2QDA9FNIZ+tS/fueyeUrH1MBRquphbzv3znzZbUmemdvAaN
+         sPMw==
+X-Gm-Message-State: APjAAAXJhhWmJ3TKhbHLm8d4yXzb2UkG0LmTllGfAfhHyb+Pmd7V2KxN
+        hLmBcvIqrvpc630QWv76MOH147LDthkVXy/+z5Y=
+X-Google-Smtp-Source: APXvYqx2WpzAiKrB02C0yYvWAiFObW37TDnFKI2EGSeI0yuO5w7AJEx8KIoJDRvldRo0IHzdmEWiW/MAlWdN88MsK+c=
+X-Received: by 2002:a7b:cf21:: with SMTP id m1mr2287775wmg.150.1567111054983;
+ Thu, 29 Aug 2019 13:37:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190828225535.49592-1-ndesaulniers@google.com> <CANiq72niUcQv-TFn=_0Ui7nEM9ESKNC7n6GPQs2AKXVsg6ZV=A@mail.gmail.com>
+In-Reply-To: <CANiq72niUcQv-TFn=_0Ui7nEM9ESKNC7n6GPQs2AKXVsg6ZV=A@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Thu, 29 Aug 2019 22:37:23 +0200
+Message-ID: <CA+icZUUi9Tsjha+unG+DasXZ9oBb6XcuZvj+N9h=b4XH7cHmqg@mail.gmail.com>
+Subject: Re: [PATCH v3 00/14] treewide: prefer __section from compiler_attributes.h
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        naveen.n.rao@linux.vnet.ibm.com,
+        David Miller <davem@davemloft.net>,
+        Paul Burton <paul.burton@mips.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using raw_cpu_read() use per_cpu() to read the actual data of
-the corresponding cpu otherwise we will be reading the data of the
-current cpu for the number of online CPUs.
+On Thu, Aug 29, 2019 at 10:24 PM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Thu, Aug 29, 2019 at 12:55 AM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+> >
+> > Changes V2 -> V3:
+> > * s/__attribute__((__section/__attribute__((__section__ in commit
+> >   messages as per Joe.
+>
+> I have uploaded to -next v3 so that we get some feedback tomorrow
+> rather than waiting for Monday.
+>
+> I added a few changes, please take a look at the commits:
+>
+>   https://github.com/ojeda/linux/commits/compiler-attributes
+>
 
-Fixes: bb65f89b7d3d ("mm: memcontrol: flush percpu vmevents before releasing memcg")
-Fixes: c350a99ea2b1 ("mm: memcontrol: flush percpu vmstats before releasing memcg")
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: <stable@vger.kernel.org>
----
+Thanks for taking care and bringing this to linux-next asap.
 
-Note: The buggy patches were marked for stable therefore adding Cc to
-stable.
-
- mm/memcontrol.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 26e2999af608..f4e60ee8b845 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -3271,7 +3271,7 @@ static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg)
- 
- 	for_each_online_cpu(cpu)
- 		for (i = 0; i < MEMCG_NR_STAT; i++)
--			stat[i] += raw_cpu_read(memcg->vmstats_percpu->stat[i]);
-+			stat[i] += per_cpu(memcg->vmstats_percpu->stat[i], cpu);
- 
- 	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
- 		for (i = 0; i < MEMCG_NR_STAT; i++)
-@@ -3286,8 +3286,8 @@ static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg)
- 
- 		for_each_online_cpu(cpu)
- 			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
--				stat[i] += raw_cpu_read(
--					pn->lruvec_stat_cpu->count[i]);
-+				stat[i] += per_cpu(
-+					pn->lruvec_stat_cpu->count[i], cpu);
- 
- 		for (pi = pn; pi; pi = parent_nodeinfo(pi, node))
- 			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
-@@ -3306,8 +3306,8 @@ static void memcg_flush_percpu_vmevents(struct mem_cgroup *memcg)
- 
- 	for_each_online_cpu(cpu)
- 		for (i = 0; i < NR_VM_EVENT_ITEMS; i++)
--			events[i] += raw_cpu_read(
--				memcg->vmstats_percpu->events[i]);
-+			events[i] += per_cpu(memcg->vmstats_percpu->events[i],
-+					     cpu);
- 
- 	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
- 		for (i = 0; i < NR_VM_EVENT_ITEMS; i++)
--- 
-2.23.0.187.g17f5b7556c-goog
-
+- Sedat -
