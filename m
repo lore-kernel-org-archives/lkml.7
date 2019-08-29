@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D017C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF87C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34AA820578
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649AD20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103243;
-	bh=1AygM8Vd3GSX/fOlcCAGnWCFxkFENZvDPuie4ftI3pU=;
+	s=default; t=1567103246;
+	bh=daF/PX4Ijm80cFU8SbPUPm1tciP79fQ1UuLIBgd+6cQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jnm9G+rYnP1LXLe9y4CY0ToiMuZvGjDaGbqtogQGkCFxiQYhAj1VwEbG9gI7fMVCN
-	 zCVs7DMNIHMZGwe0+pFfDihsxfSsQzNrIuDAO058tXhxSOdcIAU/dmMF4363E2N9S1
-	 VRSmRNlhZsv6kg0RoEMPnJ874JiFOoANmPJuzrDU=
+	b=dIrVRQ4tOxep02cuxp2QqAKMdTMd5dCeJqQjo698wjPLI3u5AgShK7rZCmZwNui8Z
+	 TsmssRgYYdvkoscI5MuO2l3qppd/1IUR5ZDy6mbQQKFmmhc1K8y9CQxfpoC/RcS3Dv
+	 V5huRB/6cYIlle25RR4mZQgudetpWPMDZ7C6ZHRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbfH2S1V (ORCPT
+        id S1729332AbfH2SPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:27:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729326AbfH2SPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 29 Aug 2019 14:15:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729307AbfH2SPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:15:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B06FD2342B;
-        Thu, 29 Aug 2019 18:15:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09DAC23403;
+        Thu, 29 Aug 2019 18:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102533;
-        bh=1AygM8Vd3GSX/fOlcCAGnWCFxkFENZvDPuie4ftI3pU=;
+        s=default; t=1567102529;
+        bh=daF/PX4Ijm80cFU8SbPUPm1tciP79fQ1UuLIBgd+6cQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ew2xJK/o3U8uUfOIFSwJe4dgI6VxNIxRq/0FAzOE6vA/CBP1WSbBWcH2fYHCjStja
-         6/h1WxWsBq/+Gkc9Zl8txUH33gq+60mv5mlre410UkPF53H4gsMamWz3nhem/IaImr
-         YPkh5t5zfVXpoof/W3lGT8cw6GSxf3uHvAkNdOXA=
+        b=ekIR7PTNPIiLkcRN2lZpzqWOCTeHU+qlFkpxr2MdvtnRkJ6pn+/Nv/GQec1BcJWip
+         7yz0/Nn48qGiWXJxEscfPPH2sFkaJqQhSsXZHjNvL6i6qB1490zz0jq/mwEFD37Pgc
+         bJvC2HxvjJ3ARCH+/5yVhP9j76q5GRqLU9Z6YU+o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 68/76] ceph: fix buffer free while holding i_ceph_lock in fill_inode()
-Date:   Thu, 29 Aug 2019 14:13:03 -0400
-Message-Id: <20190829181311.7562-68-sashal@kernel.org>
+Cc:     =?UTF-8?q?Nicolai=20H=C3=A4hnle?= <nicolai.haehnle@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 65/76] drm/amdgpu: prevent memory leaks in AMDGPU_CS ioctl
+Date:   Thu, 29 Aug 2019 14:13:00 -0400
+Message-Id: <20190829181311.7562-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,87 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <lhenriques@suse.com>
+From: Nicolai Hähnle <nicolai.haehnle@amd.com>
 
-[ Upstream commit af8a85a41734f37b67ba8ce69d56b685bee4ac48 ]
+[ Upstream commit 1a701ea924815b0518733aa8d5d05c1f6fa87062 ]
 
-Calling ceph_buffer_put() in fill_inode() may result in freeing the
-i_xattrs.blob buffer while holding the i_ceph_lock.  This can be fixed by
-postponing the call until later, when the lock is released.
+Error out if the AMDGPU_CS ioctl is called with multiple SYNCOBJ_OUT and/or
+TIMELINE_SIGNAL chunks, since otherwise the last chunk wins while the
+allocated array as well as the reference counts of sync objects are leaked.
 
-The following backtrace was triggered by fstests generic/070.
-
-  BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
-  in_atomic(): 1, irqs_disabled(): 0, pid: 3852, name: kworker/0:4
-  6 locks held by kworker/0:4/3852:
-   #0: 000000004270f6bb ((wq_completion)ceph-msgr){+.+.}, at: process_one_work+0x1b8/0x5f0
-   #1: 00000000eb420803 ((work_completion)(&(&con->work)->work)){+.+.}, at: process_one_work+0x1b8/0x5f0
-   #2: 00000000be1c53a4 (&s->s_mutex){+.+.}, at: dispatch+0x288/0x1476
-   #3: 00000000559cb958 (&mdsc->snap_rwsem){++++}, at: dispatch+0x2eb/0x1476
-   #4: 000000000d5ebbae (&req->r_fill_mutex){+.+.}, at: dispatch+0x2fc/0x1476
-   #5: 00000000a83d0514 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: fill_inode.isra.0+0xf8/0xf70
-  CPU: 0 PID: 3852 Comm: kworker/0:4 Not tainted 5.2.0+ #441
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
-  Workqueue: ceph-msgr ceph_con_workfn
-  Call Trace:
-   dump_stack+0x67/0x90
-   ___might_sleep.cold+0x9f/0xb1
-   vfree+0x4b/0x60
-   ceph_buffer_release+0x1b/0x60
-   fill_inode.isra.0+0xa9b/0xf70
-   ceph_fill_trace+0x13b/0xc70
-   ? dispatch+0x2eb/0x1476
-   dispatch+0x320/0x1476
-   ? __mutex_unlock_slowpath+0x4d/0x2a0
-   ceph_con_workfn+0xc97/0x2ec0
-   ? process_one_work+0x1b8/0x5f0
-   process_one_work+0x244/0x5f0
-   worker_thread+0x4d/0x3e0
-   kthread+0x105/0x140
-   ? process_one_work+0x5f0/0x5f0
-   ? kthread_park+0x90/0x90
-   ret_from_fork+0x3a/0x50
-
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Nicolai Hähnle <nicolai.haehnle@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/inode.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-index 3c7a32779574b..ca3821b0309f7 100644
---- a/fs/ceph/inode.c
-+++ b/fs/ceph/inode.c
-@@ -743,6 +743,7 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
- 	int issued, new_issued, info_caps;
- 	struct timespec64 mtime, atime, ctime;
- 	struct ceph_buffer *xattr_blob = NULL;
-+	struct ceph_buffer *old_blob = NULL;
- 	struct ceph_string *pool_ns = NULL;
- 	struct ceph_cap *new_cap = NULL;
- 	int err = 0;
-@@ -883,7 +884,7 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
- 	if ((ci->i_xattrs.version == 0 || !(issued & CEPH_CAP_XATTR_EXCL))  &&
- 	    le64_to_cpu(info->xattr_version) > ci->i_xattrs.version) {
- 		if (ci->i_xattrs.blob)
--			ceph_buffer_put(ci->i_xattrs.blob);
-+			old_blob = ci->i_xattrs.blob;
- 		ci->i_xattrs.blob = xattr_blob;
- 		if (xattr_blob)
- 			memcpy(ci->i_xattrs.blob->vec.iov_base,
-@@ -1023,8 +1024,8 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
- out:
- 	if (new_cap)
- 		ceph_put_cap(mdsc, new_cap);
--	if (xattr_blob)
--		ceph_buffer_put(xattr_blob);
-+	ceph_buffer_put(old_blob);
-+	ceph_buffer_put(xattr_blob);
- 	ceph_put_string(pool_ns);
- 	return err;
- }
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+index fe028561dc0e6..bc40d6eabce7d 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+@@ -1192,6 +1192,9 @@ static int amdgpu_cs_process_syncobj_out_dep(struct amdgpu_cs_parser *p,
+ 	num_deps = chunk->length_dw * 4 /
+ 		sizeof(struct drm_amdgpu_cs_chunk_sem);
+ 
++	if (p->post_deps)
++		return -EINVAL;
++
+ 	p->post_deps = kmalloc_array(num_deps, sizeof(*p->post_deps),
+ 				     GFP_KERNEL);
+ 	p->num_post_deps = 0;
+@@ -1215,8 +1218,7 @@ static int amdgpu_cs_process_syncobj_out_dep(struct amdgpu_cs_parser *p,
+ 
+ 
+ static int amdgpu_cs_process_syncobj_timeline_out_dep(struct amdgpu_cs_parser *p,
+-						      struct amdgpu_cs_chunk
+-						      *chunk)
++						      struct amdgpu_cs_chunk *chunk)
+ {
+ 	struct drm_amdgpu_cs_chunk_syncobj *syncobj_deps;
+ 	unsigned num_deps;
+@@ -1226,6 +1228,9 @@ static int amdgpu_cs_process_syncobj_timeline_out_dep(struct amdgpu_cs_parser *p
+ 	num_deps = chunk->length_dw * 4 /
+ 		sizeof(struct drm_amdgpu_cs_chunk_syncobj);
+ 
++	if (p->post_deps)
++		return -EINVAL;
++
+ 	p->post_deps = kmalloc_array(num_deps, sizeof(*p->post_deps),
+ 				     GFP_KERNEL);
+ 	p->num_post_deps = 0;
 -- 
 2.20.1
 
