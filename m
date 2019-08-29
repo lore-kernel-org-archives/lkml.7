@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30308C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 037AEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07E1C23403
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA09B233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="goztYIZL"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Gn5aTJaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbfH2OiT (ORCPT
+        id S1728049AbfH2OiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:38:19 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51706 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727973AbfH2OiO (ORCPT
+        Thu, 29 Aug 2019 10:38:23 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51706 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727985AbfH2OiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:38:14 -0400
-Received: by mail-wm1-f68.google.com with SMTP id k1so3997819wmi.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:38:13 -0700 (PDT)
+        Thu, 29 Aug 2019 10:38:15 -0400
+Received: by mail-wm1-f65.google.com with SMTP id k1so3997887wmi.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:38:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0MCSm3PwhLeVZkLTF5crXAvat1wv6lwOmpNcM2aNtkA=;
-        b=goztYIZL91fhNd7Q0e26K36T37XhDMhY9r1mWBqLUP77R6Fca/IWYIh+pU/sYypGqo
-         AIG/cl+IQsJe92KLYVP7WYP+kzkACZsg7acw0iy+0WZx20r844FMHvhbeOKMJMv/dhP9
-         9u74rEDU8/G1ig3+CkThjhsIivLAjuuwAx7sWCga3Rd+lrYBmBgJvR0GvuzZxKjMHpt3
-         2z2HfVRae22htdzMQrUZx+GKJ+yvVnsBwQJf9J34KxztRFUCbnTCI3NZoNbexHBsqm8u
-         07vKriwVFgPbjcGmcHNRWIhhOl7N8L8er8KugnPooYnDy99GFGGcfC/UVPfNEEUFCQrr
-         Y1qg==
+        bh=wvm5jhfZdBAjiVI0fMQa3wyfT8pVsOoRMdM2UQ5EVAc=;
+        b=Gn5aTJaW0lhbDQWyYFqDBkrdNnFy2pGrPIg9uFcSU0QDrKLANwjVThGZPuAKLE95y6
+         PXgyzsxKFqZzbh35PUrCyLRVoJ6/TM5gO3zvjyXoIGe2F+a44h45x4ntyUH2R9K/8cer
+         BeLiukfqMO5AwUsbhhH+vawbOADQgyod20IzadiyA9ufUf4775gkItruHuFcBiZ+BFVO
+         OfDktx/jfQqMWmlIB0pvioN4mmJ2KnMbs3Z4fCMXu7cQr+0MgZ6j1tz2YEHxpUare8iy
+         RpQ8bZzMq7EY7hZuuUVYJ0ULMsjbZIwfeG16WX1G2RrY2rGVkY5CnetDJwPeb1Lms6T5
+         VNvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0MCSm3PwhLeVZkLTF5crXAvat1wv6lwOmpNcM2aNtkA=;
-        b=SwsywQq4JUY+5qyi9D3JfhYDdi0UwG+YFiVQCywRdvdCCMstKjgtoPz6j2wWrOS9He
-         dRsFdmlEOtN4IYmwIC9leQfzVQfLsAu3GFvv6taiT1oDkldfdIZ15rYciivLejkkiJxO
-         WdxhKTHJ8PwfE3EQNqE8ViVQBHSaBRzHwERODahbLdDtyZmdQvoQi0zI/WbdjudP0R8O
-         JuF3IGTtbCuDjVNuZy3LxBssFkI5KUSuywBpKIsxIYPmOi/0dZYO4jZdEuwlCRETSa9U
-         S4HN58l4NyBLbIkb904MM6EhLanYmxAlcaR078MFGhOd4+QnmTDMn1vD+Bp71tfIfvn7
-         opjw==
-X-Gm-Message-State: APjAAAXX0Ru8Lm53QlFBqK2EfTB99D/bI4mGGv1RuGwHFiwceRKIttpD
-        cMi6FO16Q8tYzReqJYhZ0fExbg==
-X-Google-Smtp-Source: APXvYqx9ZRM6jA7Xi+MPZwFdPZ5Ui7XDERLRN1q9Q5CY6ZlmVljwQAixjqmpTApxKlfRhibyItWZGQ==
-X-Received: by 2002:a05:600c:254e:: with SMTP id e14mr1004275wma.150.1567089492368;
-        Thu, 29 Aug 2019 07:38:12 -0700 (PDT)
+        bh=wvm5jhfZdBAjiVI0fMQa3wyfT8pVsOoRMdM2UQ5EVAc=;
+        b=G2CCeGnX5FCvj1wivHzS7tAsfbOOlcr8+ujzXOSQoDTwJPEDsU7MeACiGLypzRPaaH
+         s1mjE8Xh34PI/lYBOkG5YHXXujeNEC8urqR+yzo4mJZ4BFB5wRw5YOl00OwhNE62N2Dd
+         Vg9byfQ45ys0kTOKYc3XmsbcbWIkmUbxfDyUwNtkLXh0eqFqjaIXdi+9tsOsFl+Yu3fF
+         SfzpS0JPFBrhraUkh14nT4HG35j1Sq7M64Z+Y/yWGsY+GNTcCZbqps6pzMRZrUXQXlOw
+         oEDbrpk0QO/NqP3ra0ELgq1/3XgXi8tq6UEPTgsjWx8876RLhcHVQh2X+1n9idZNrPcD
+         c7pQ==
+X-Gm-Message-State: APjAAAVMq4BnjrRQO3WeiT7mye15tLIptiTUAoGJ228VR8xxzAzcQ0+l
+        6b/jlFVB6HlHUu4H8GXaU19gCA==
+X-Google-Smtp-Source: APXvYqyIGe38MXQx8iatCV54dE9UCR5qWcasMJ6961l0x1sY1UGN6+ZmbFEIsoWLeRqF7iEbp26wzA==
+X-Received: by 2002:a7b:cbce:: with SMTP id n14mr11150614wmi.47.1567089493399;
+        Thu, 29 Aug 2019 07:38:13 -0700 (PDT)
 Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id g15sm3241925wrp.29.2019.08.29.07.38.11
+        by smtp.gmail.com with ESMTPSA id g15sm3241925wrp.29.2019.08.29.07.38.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 07:38:11 -0700 (PDT)
+        Thu, 29 Aug 2019 07:38:12 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -67,9 +67,9 @@ To:     Jonathan Corbet <corbet@lwn.net>,
 Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 8/9] gpio: xgene: use devm_platform_ioremap_resource_nocache()
-Date:   Thu, 29 Aug 2019 16:37:41 +0200
-Message-Id: <20190829143742.24726-9-brgl@bgdev.pl>
+Subject: [PATCH 9/9] misc: sram: use devm_platform_ioremap_resource_wc()
+Date:   Thu, 29 Aug 2019 16:37:42 +0200
+Message-Id: <20190829143742.24726-10-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190829143742.24726-1-brgl@bgdev.pl>
 References: <20190829143742.24726-1-brgl@bgdev.pl>
@@ -82,46 +82,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Use the new devm_platform_ioremap_resource_nocache() helper for memory
-range mapping instead of devm_ioremap_nocache() combined with a call to
-platform_get_resource().
+Use the new devm_platform_ioremap_resource_wc() helper instead of
+devm_ioremap_wc() combinded with a call to platform_get_resource().
+Also use devm_platform_ioremap_resource() where applicable.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/gpio/gpio-xgene.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/misc/sram.c | 28 ++++++++--------------------
+ 1 file changed, 8 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpio/gpio-xgene.c b/drivers/gpio/gpio-xgene.c
-index 2918363884de..559b8e53c2e0 100644
---- a/drivers/gpio/gpio-xgene.c
-+++ b/drivers/gpio/gpio-xgene.c
-@@ -155,7 +155,6 @@ static SIMPLE_DEV_PM_OPS(xgene_gpio_pm, xgene_gpio_suspend, xgene_gpio_resume);
- 
- static int xgene_gpio_probe(struct platform_device *pdev)
+diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
+index f30448bf3a63..6c1a23cb3e8c 100644
+--- a/drivers/misc/sram.c
++++ b/drivers/misc/sram.c
+@@ -340,8 +340,6 @@ static const struct of_device_id sram_dt_ids[] = {
+ static int sram_probe(struct platform_device *pdev)
  {
+ 	struct sram_dev *sram;
 -	struct resource *res;
- 	struct xgene_gpio *gpio;
- 	int err = 0;
+-	size_t size;
+ 	int ret;
+ 	int (*init_func)(void);
  
-@@ -165,16 +164,9 @@ static int xgene_gpio_probe(struct platform_device *pdev)
- 		goto err;
- 	}
+@@ -351,25 +349,14 @@ static int sram_probe(struct platform_device *pdev)
+ 
+ 	sram->dev = &pdev->dev;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 -	if (!res) {
--		err = -EINVAL;
--		goto err;
+-		dev_err(sram->dev, "found no memory resource\n");
+-		return -EINVAL;
 -	}
 -
--	gpio->base = devm_ioremap_nocache(&pdev->dev, res->start,
--							resource_size(res));
--	if (!gpio->base) {
--		err = -ENOMEM;
-+	gpio->base = devm_platform_ioremap_resource_nocache(pdev, 0);
-+	if (IS_ERR(gpio->base)) {
-+		err = PTR_ERR(gpio->base);
- 		goto err;
- 	}
+-	size = resource_size(res);
+-
+-	if (!devm_request_mem_region(sram->dev, res->start, size, pdev->name)) {
+-		dev_err(sram->dev, "could not request region for resource\n");
+-		return -EBUSY;
+-	}
+-
+ 	if (of_property_read_bool(pdev->dev.of_node, "no-memory-wc"))
+-		sram->virt_base = devm_ioremap(sram->dev, res->start, size);
++		sram->virt_base = devm_platform_ioremap_resource(pdev, 0);
+ 	else
+-		sram->virt_base = devm_ioremap_wc(sram->dev, res->start, size);
+-	if (!sram->virt_base)
+-		return -ENOMEM;
++		sram->virt_base = devm_platform_ioremap_resource_wc(pdev, 0);
++	if (IS_ERR(sram->virt_base)) {
++		dev_err(&pdev->dev, "could not map SRAM registers\n");
++		return PTR_ERR(sram->virt_base);
++	}
+ 
+ 	sram->pool = devm_gen_pool_create(sram->dev, ilog2(SRAM_GRANULARITY),
+ 					  NUMA_NO_NODE, NULL);
+@@ -382,7 +369,8 @@ static int sram_probe(struct platform_device *pdev)
+ 	else
+ 		clk_prepare_enable(sram->clk);
+ 
+-	ret = sram_reserve_regions(sram, res);
++	ret = sram_reserve_regions(sram,
++			platform_get_resource(pdev, IORESOURCE_MEM, 0));
+ 	if (ret)
+ 		goto err_disable_clk;
  
 -- 
 2.21.0
