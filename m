@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69220C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30308C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B48520644
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07E1C23403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="OHA6ZMLq"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="goztYIZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfH2OiP (ORCPT
+        id S1728027AbfH2OiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:38:15 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40670 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727956AbfH2OiN (ORCPT
+        Thu, 29 Aug 2019 10:38:19 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51706 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727973AbfH2OiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:38:13 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t9so4117590wmi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:38:11 -0700 (PDT)
+        Thu, 29 Aug 2019 10:38:14 -0400
+Received: by mail-wm1-f68.google.com with SMTP id k1so3997819wmi.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:38:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rgfAZbIXAtNJprrW3SR0FliLWlC8AUtP5591I4qRBtY=;
-        b=OHA6ZMLqe/FTFL2xNuAXTK+TBgAKyi+kqTTKdnKXX1LoJLLUaqfpaIDH80qz5G53lj
-         QOcrfIIT8VtYsVJ+uzUnnAr9ePxDPZ0U3SmOPSVHkGdgKBcBKeQkagn5uIrnyXbsXZ2S
-         pk+qv3B052Jku7CFwX9WO3ZSvzmGoA4DQKbVXfjF0RIb8e/i5HDsR/eZFIxK8GhUnG+g
-         veayX5RYCXnynnzo2FraoNmeHpg83yGR5Q+9H9MXM7iDDwOgDTQ1WkzUYSZEnFhEC8r2
-         2zFaWnuJWNAoJPB6E2ykJqQ4W/wzlViTWG1Xw9469/MIt0hutmGw9FrgF+l4L7Zw7Cw8
-         WYVg==
+        bh=0MCSm3PwhLeVZkLTF5crXAvat1wv6lwOmpNcM2aNtkA=;
+        b=goztYIZL91fhNd7Q0e26K36T37XhDMhY9r1mWBqLUP77R6Fca/IWYIh+pU/sYypGqo
+         AIG/cl+IQsJe92KLYVP7WYP+kzkACZsg7acw0iy+0WZx20r844FMHvhbeOKMJMv/dhP9
+         9u74rEDU8/G1ig3+CkThjhsIivLAjuuwAx7sWCga3Rd+lrYBmBgJvR0GvuzZxKjMHpt3
+         2z2HfVRae22htdzMQrUZx+GKJ+yvVnsBwQJf9J34KxztRFUCbnTCI3NZoNbexHBsqm8u
+         07vKriwVFgPbjcGmcHNRWIhhOl7N8L8er8KugnPooYnDy99GFGGcfC/UVPfNEEUFCQrr
+         Y1qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rgfAZbIXAtNJprrW3SR0FliLWlC8AUtP5591I4qRBtY=;
-        b=Zy4dDxhRyYlvfg1Nn0e07UOPWagZYubAhkUVBOstc25qv2lJ8ZCWltSDT3NlNJjvLA
-         lvCA8EvmdowWxIE8Wosd6RUx4pY6+QhLlRI0ivr+t5Qzn/Y7GRNbrosK7rW8SCECebKM
-         aNFSKyEdTspFVOR2dZoOXeqsfb/727RPrnNtETROtv6WOG0Wdl8Q3niupafDmCVj9gEV
-         3clNuXDZd3WYBq4rCLlc8dN2+RZLEKfdr7trFnSajzyMGPFsKuaZI+sLcMCkmywKfi4m
-         q9U3OvJs8S5qBi4PaQiLluGBjNJUxUlhYlnpg/MLbGhmL2dUZShCvp75zMbq7fjIlHVe
-         dBYA==
-X-Gm-Message-State: APjAAAVBSAnUdf+VEmRk8TkhLoLmxST7el0ey58RFS9qs13WY6lgCjSj
-        kk+VEmNGHRy5Mg21T5KQAXVaMA==
-X-Google-Smtp-Source: APXvYqx+mVH1b84lDgcY8MIGudq3AQBFxK3n8O8b4xXyWDNctXSvSXo7mIwyPPqoRATFo5+lYE7kaQ==
-X-Received: by 2002:a7b:c3d4:: with SMTP id t20mr11652532wmj.71.1567089491346;
-        Thu, 29 Aug 2019 07:38:11 -0700 (PDT)
+        bh=0MCSm3PwhLeVZkLTF5crXAvat1wv6lwOmpNcM2aNtkA=;
+        b=SwsywQq4JUY+5qyi9D3JfhYDdi0UwG+YFiVQCywRdvdCCMstKjgtoPz6j2wWrOS9He
+         dRsFdmlEOtN4IYmwIC9leQfzVQfLsAu3GFvv6taiT1oDkldfdIZ15rYciivLejkkiJxO
+         WdxhKTHJ8PwfE3EQNqE8ViVQBHSaBRzHwERODahbLdDtyZmdQvoQi0zI/WbdjudP0R8O
+         JuF3IGTtbCuDjVNuZy3LxBssFkI5KUSuywBpKIsxIYPmOi/0dZYO4jZdEuwlCRETSa9U
+         S4HN58l4NyBLbIkb904MM6EhLanYmxAlcaR078MFGhOd4+QnmTDMn1vD+Bp71tfIfvn7
+         opjw==
+X-Gm-Message-State: APjAAAXX0Ru8Lm53QlFBqK2EfTB99D/bI4mGGv1RuGwHFiwceRKIttpD
+        cMi6FO16Q8tYzReqJYhZ0fExbg==
+X-Google-Smtp-Source: APXvYqx9ZRM6jA7Xi+MPZwFdPZ5Ui7XDERLRN1q9Q5CY6ZlmVljwQAixjqmpTApxKlfRhibyItWZGQ==
+X-Received: by 2002:a05:600c:254e:: with SMTP id e14mr1004275wma.150.1567089492368;
+        Thu, 29 Aug 2019 07:38:12 -0700 (PDT)
 Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id g15sm3241925wrp.29.2019.08.29.07.38.10
+        by smtp.gmail.com with ESMTPSA id g15sm3241925wrp.29.2019.08.29.07.38.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 07:38:10 -0700 (PDT)
+        Thu, 29 Aug 2019 07:38:11 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -67,9 +67,9 @@ To:     Jonathan Corbet <corbet@lwn.net>,
 Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 7/9] gpio: htc-egpio: use devm_platform_ioremap_resource_nocache()
-Date:   Thu, 29 Aug 2019 16:37:40 +0200
-Message-Id: <20190829143742.24726-8-brgl@bgdev.pl>
+Subject: [PATCH 8/9] gpio: xgene: use devm_platform_ioremap_resource_nocache()
+Date:   Thu, 29 Aug 2019 16:37:41 +0200
+Message-Id: <20190829143742.24726-9-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190829143742.24726-1-brgl@bgdev.pl>
 References: <20190829143742.24726-1-brgl@bgdev.pl>
@@ -88,34 +88,41 @@ platform_get_resource().
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/gpio/gpio-htc-egpio.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/gpio/gpio-xgene.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpio/gpio-htc-egpio.c b/drivers/gpio/gpio-htc-egpio.c
-index 9d3ac51a765c..7d8548e03226 100644
---- a/drivers/gpio/gpio-htc-egpio.c
-+++ b/drivers/gpio/gpio-htc-egpio.c
-@@ -295,14 +295,13 @@ static int __init egpio_probe(struct platform_device *pdev)
- 		ei->chained_irq = res->start;
+diff --git a/drivers/gpio/gpio-xgene.c b/drivers/gpio/gpio-xgene.c
+index 2918363884de..559b8e53c2e0 100644
+--- a/drivers/gpio/gpio-xgene.c
++++ b/drivers/gpio/gpio-xgene.c
+@@ -155,7 +155,6 @@ static SIMPLE_DEV_PM_OPS(xgene_gpio_pm, xgene_gpio_suspend, xgene_gpio_resume);
  
- 	/* Map egpio chip into virtual address space. */
+ static int xgene_gpio_probe(struct platform_device *pdev)
+ {
+-	struct resource *res;
+ 	struct xgene_gpio *gpio;
+ 	int err = 0;
+ 
+@@ -165,16 +164,9 @@ static int xgene_gpio_probe(struct platform_device *pdev)
+ 		goto err;
+ 	}
+ 
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res)
-+	ei->base_addr = devm_platform_ioremap_resource_nocache(pdev, 0);
-+	if (IS_ERR(ei->base_addr)) {
-+		ret = PTR_ERR(ei->base_addr);
- 		goto fail;
--	ei->base_addr = devm_ioremap_nocache(&pdev->dev, res->start,
--					     resource_size(res));
--	if (!ei->base_addr)
--		goto fail;
--	pr_debug("EGPIO phys=%08x virt=%p\n", (u32)res->start, ei->base_addr);
-+	}
-+	pr_debug("EGPIO phys=%08x virt=%p\n",
-+		 virt_to_phys(ei->base_addr), ei->base_addr);
+-	if (!res) {
+-		err = -EINVAL;
+-		goto err;
+-	}
+-
+-	gpio->base = devm_ioremap_nocache(&pdev->dev, res->start,
+-							resource_size(res));
+-	if (!gpio->base) {
+-		err = -ENOMEM;
++	gpio->base = devm_platform_ioremap_resource_nocache(pdev, 0);
++	if (IS_ERR(gpio->base)) {
++		err = PTR_ERR(gpio->base);
+ 		goto err;
+ 	}
  
- 	if ((pdata->bus_width != 16) && (pdata->bus_width != 32))
- 		goto fail;
 -- 
 2.21.0
 
