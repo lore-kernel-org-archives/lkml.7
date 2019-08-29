@@ -2,194 +2,140 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0B5C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3495EC41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 999C621874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA4820828
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:53:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="umYgseE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfH2Qw1 (ORCPT
+        id S1727914AbfH2Qxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:52:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37824 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727565AbfH2Qw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:52:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4C677AF95;
-        Thu, 29 Aug 2019 16:52:24 +0000 (UTC)
-Date:   Thu, 29 Aug 2019 18:52:18 +0200
-From:   Borislav Petkov <bp@suse.de>
-To:     "Singh, Brijesh" <brijesh.singh@amd.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Thu, 29 Aug 2019 12:53:41 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46666 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727248AbfH2Qxl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:53:41 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q139so2433706pfc.13;
+        Thu, 29 Aug 2019 09:53:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ROI1h6BX8pjgc4LOx6piYuvxJZlEcDiZCUSCssETQu4=;
+        b=umYgseE/IeMY4l4arKqAwbmSODhJ/VeVn3EFJswXmJNpSbkJchJgfXvHIH83VVwJwQ
+         yCYvK9ytBhP3BHxuqQXyy64qEhljg2MbEZqVhv7m3uTWL0rIYAbCQU7cB3vajV6YMyIz
+         f0wsG2c3x1lA+FuGW7YqfjYH48X5zEum+NEeUWe+n2JssQoyWaiLWOx/CpnYNr4IsApP
+         UJwvlIpYGojqAitsRIASDdMQQLpsodbzAn8qLnH0+MKRNFOtpH3dq0xz6GHXv5xR/d04
+         AejDSYGqxUmobdlfF2OSWPGeCZbcsH6oHZam0QtDtHfL/sph99u5kUEFnv0/3vALqX7Q
+         9RtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ROI1h6BX8pjgc4LOx6piYuvxJZlEcDiZCUSCssETQu4=;
+        b=oSsMEGAJ7E+BRe9B3P2mGb+nNlF1fetPeIyKoyNiYjEQ+ax0xkYab9KclpbZPiD5/M
+         18Qx1NuDD4FYAj/mmJOVGEatn/mbjdig7nxucq/Q3HM1ClawoUh2wf90F4l+6/VWnSGU
+         ER0tr+MfvsO/VI0WxJwaJ4dR+nTKJDYVkjYzORGeRYiCfIhprInxpov+Db4qkkPrN0+m
+         RhPSzeO/ZkPdCehoRJQXxCzjc8E4Q3RxHTYXA6sObL1H7Y6JY8hmiRGd9rCLAjjfnp7a
+         kMBeHimMEVfKKBXKdwFs60rj8NPf9KZ7CcEHgYb8ozlXgVD8NQu+z+uPxW/TGkDfAkCA
+         w1UA==
+X-Gm-Message-State: APjAAAXow/m5Gr3jkso0Ez1zbAHGgwfjAcj+pumqKDkl1nZylJLoB8hO
+        cpOWEvaKJKxz2ijFEZ8cjto=
+X-Google-Smtp-Source: APXvYqzs2mYLo/bTNzZZh5PG+LuBi+qAUwwV5VKV77PeHu8CnzLx7ZZPeu0/rN7i/RfGRdaixrXBhw==
+X-Received: by 2002:a65:64c6:: with SMTP id t6mr9421160pgv.323.1567097620246;
+        Thu, 29 Aug 2019 09:53:40 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id w2sm3023576pjr.27.2019.08.29.09.53.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 09:53:39 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>, Sean Paul <sean@poorly.run>,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 10/11] mm: x86: Invoke hypercall when page encryption
- status is changed
-Message-ID: <20190829165218.GD2132@zn.tnic>
-References: <20190710201244.25195-1-brijesh.singh@amd.com>
- <20190710201244.25195-11-brijesh.singh@amd.com>
+        Bruce Wang <bzwang@chromium.org>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 02/10] drm/msm/dpu: add real wait_for_commit_done()
+Date:   Thu, 29 Aug 2019 09:45:10 -0700
+Message-Id: <20190829164601.11615-3-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190829164601.11615-1-robdclark@gmail.com>
+References: <20190829164601.11615-1-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190710201244.25195-11-brijesh.singh@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 08:13:11PM +0000, Singh, Brijesh wrote:
+From: Rob Clark <robdclark@chromium.org>
 
-> Subject: Re: [PATCH v3 10/11] mm: x86: Invoke hypercall when page encryption status is changed
+Just waiting for next vblank isn't ideal.. we should really be looking
+at the hw FLUSH register value to know if there is still an in-progress
+flush without stalling unnecessarily when there is no pending flush.
 
-Subject prefix: "x86/mm: Invoke ..."
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Sean Paul <sean@poorly.run>
+---
+ .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  | 22 ++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-git log <filename> would usually show you how the prefixing should look
-like.
-
-> Invoke a hypercall when a memory region is changed from encrypted ->
-> decrypted and vice versa. Hypervisor need to know the page encryption
-> status during the guest migration.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: x86@kernel.org
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
->  arch/x86/include/asm/mem_encrypt.h |  3 ++
->  arch/x86/mm/mem_encrypt.c          | 45 +++++++++++++++++++++++++++++-
->  arch/x86/mm/pageattr.c             | 15 ++++++++++
->  3 files changed, 62 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-> index 0c196c47d621..6e654ab5a8e4 100644
-> --- a/arch/x86/include/asm/mem_encrypt.h
-> +++ b/arch/x86/include/asm/mem_encrypt.h
-> @@ -94,4 +94,7 @@ extern char __start_bss_decrypted[], __end_bss_decrypted[], __start_bss_decrypte
->  
->  #endif	/* __ASSEMBLY__ */
->  
-> +extern void set_memory_enc_dec_hypercall(unsigned long vaddr,
-> +					 unsigned long size, bool enc);
-> +
->  #endif	/* __X86_MEM_ENCRYPT_H__ */
-> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-> index e0df96fdfe46..f3fda1de2869 100644
-> --- a/arch/x86/mm/mem_encrypt.c
-> +++ b/arch/x86/mm/mem_encrypt.c
-> @@ -15,6 +15,7 @@
->  #include <linux/dma-direct.h>
->  #include <linux/swiotlb.h>
->  #include <linux/mem_encrypt.h>
-> +#include <linux/kvm_para.h>
->  
->  #include <asm/tlbflush.h>
->  #include <asm/fixmap.h>
-> @@ -25,6 +26,7 @@
->  #include <asm/processor-flags.h>
->  #include <asm/msr.h>
->  #include <asm/cmdline.h>
-> +#include <asm/kvm_para.h>
->  
->  #include "mm_internal.h"
->  
-> @@ -192,6 +194,45 @@ void __init sme_early_init(void)
->  		swiotlb_force = SWIOTLB_FORCE;
->  }
->  
-> +void set_memory_enc_dec_hypercall(unsigned long vaddr, unsigned long sz, bool enc)
-> +{
-> +	unsigned long vaddr_end, vaddr_next;
-> +
-> +	vaddr_end = vaddr + sz;
-> +
-> +	for (; vaddr < vaddr_end; vaddr = vaddr_next) {
-> +		int psize, pmask, level;
-> +		unsigned long pfn;
-> +		pte_t *kpte;
-> +
-> +		kpte = lookup_address(vaddr, &level);
-> +		if (!kpte || pte_none(*kpte))
-> +			return;
-> +
-> +		switch (level) {
-> +		case PG_LEVEL_4K:
-> +			pfn = pte_pfn(*kpte);
-> +			break;
-> +		case PG_LEVEL_2M:
-> +			pfn = pmd_pfn(*(pmd_t *)kpte);
-> +			break;
-> +		case PG_LEVEL_1G:
-> +			pfn = pud_pfn(*(pud_t *)kpte);
-> +			break;
-> +		default:
-> +			return;
-> +		}
-> +
-> +		psize = page_level_size(level);
-> +		pmask = page_level_mask(level);
-> +
-> +		kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
-> +				   pfn << PAGE_SHIFT, psize >> PAGE_SHIFT, enc);
-> +
-> +		vaddr_next = (vaddr & pmask) + psize;
-> +	}
-> +}
-> +
->  static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
->  {
->  	pgprot_t old_prot, new_prot;
-> @@ -249,12 +290,13 @@ static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
->  static int __init early_set_memory_enc_dec(unsigned long vaddr,
->  					   unsigned long size, bool enc)
->  {
-> -	unsigned long vaddr_end, vaddr_next;
-> +	unsigned long vaddr_end, vaddr_next, start;
->  	unsigned long psize, pmask;
->  	int split_page_size_mask;
->  	int level, ret;
->  	pte_t *kpte;
->  
-> +	start = vaddr;
->  	vaddr_next = vaddr;
->  	vaddr_end = vaddr + size;
->  
-> @@ -309,6 +351,7 @@ static int __init early_set_memory_enc_dec(unsigned long vaddr,
->  
->  	ret = 0;
->  
-> +	set_memory_enc_dec_hypercall(start, size, enc);
-
-That function iterates the same way over the virtual addresses as
-early_set_memory_enc_dec() does. Please call kvm_sev_hypercall3(),
-wrapped of course, directly from early_set_memory_enc_dec(), for
-each iteration of the loop instead of iterating over all the virtual
-addresses a second time in set_memory_enc_dec_hypercall().
-
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+index 737fe963a490..7c73b09894f0 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+@@ -526,6 +526,26 @@ static int dpu_encoder_phys_vid_wait_for_vblank(
+ 	return _dpu_encoder_phys_vid_wait_for_vblank(phys_enc, true);
+ }
+ 
++static int dpu_encoder_phys_vid_wait_for_commit_done(
++		struct dpu_encoder_phys *phys_enc)
++{
++	struct dpu_hw_ctl *hw_ctl = phys_enc->hw_ctl;
++	int ret;
++
++	if (!hw_ctl)
++		return 0;
++
++	ret = wait_event_timeout(phys_enc->pending_kickoff_wq,
++		(hw_ctl->ops.get_flush_register(hw_ctl) == 0),
++		msecs_to_jiffies(50));
++	if (ret <= 0) {
++		DPU_ERROR("vblank timeout\n");
++		return -ETIMEDOUT;
++	}
++
++	return 0;
++}
++
+ static void dpu_encoder_phys_vid_prepare_for_kickoff(
+ 		struct dpu_encoder_phys *phys_enc)
+ {
+@@ -676,7 +696,7 @@ static void dpu_encoder_phys_vid_init_ops(struct dpu_encoder_phys_ops *ops)
+ 	ops->destroy = dpu_encoder_phys_vid_destroy;
+ 	ops->get_hw_resources = dpu_encoder_phys_vid_get_hw_resources;
+ 	ops->control_vblank_irq = dpu_encoder_phys_vid_control_vblank_irq;
+-	ops->wait_for_commit_done = dpu_encoder_phys_vid_wait_for_vblank;
++	ops->wait_for_commit_done = dpu_encoder_phys_vid_wait_for_commit_done;
+ 	ops->wait_for_vblank = dpu_encoder_phys_vid_wait_for_vblank;
+ 	ops->wait_for_tx_complete = dpu_encoder_phys_vid_wait_for_vblank;
+ 	ops->irq_control = dpu_encoder_phys_vid_irq_control;
 -- 
-Regards/Gruss,
-    Boris.
+2.21.0
 
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 247165, AG München
