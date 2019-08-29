@@ -3,55 +3,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E29E6C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E19DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B63882173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F55523407
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:54:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727204AbfH2CvC (ORCPT
+        id S1727130AbfH2Cyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 22:51:02 -0400
-Received: from mga12.intel.com ([192.55.52.136]:57717 "EHLO mga12.intel.com"
+        Wed, 28 Aug 2019 22:54:36 -0400
+Received: from mga01.intel.com ([192.55.52.88]:56354 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725993AbfH2CvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 22:51:01 -0400
+        id S1725993AbfH2Cyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 22:54:36 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 19:51:01 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 19:54:35 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="180741962"
+   d="scan'208";a="332367936"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 28 Aug 2019 19:51:01 -0700
+  by orsmga004.jf.intel.com with ESMTP; 28 Aug 2019 19:54:35 -0700
 Received: from [10.226.39.5] (leichuan-mobl.gar.corp.intel.com [10.226.39.5])
-        by linux.intel.com (Postfix) with ESMTP id E0356580107;
-        Wed, 28 Aug 2019 19:50:58 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
+        by linux.intel.com (Postfix) with ESMTP id A9FCD580423;
+        Wed, 28 Aug 2019 19:54:32 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     eswara.kota@linux.intel.com, cheol.yong.kim@intel.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        p.zabel@pengutronix.de, qi-ming.wu@intel.com, robh@kernel.org,
-        Hauke Mehrtens <hauke@hauke-m.de>
-References: <90cc600d6f7ded68f5a618b626bd9cffa5edf5c3.1566531960.git.eswara.kota@linux.intel.com>
- <20190824211158.5900-1-martin.blumenstingl@googlemail.com>
- <3813e658-1600-d878-61a4-29b4fe51b281@linux.intel.com>
- <CAFBinCA_B9psNGBeDyhkewhoutNh6HsLUN+TRfO_8vuNqhis4Q@mail.gmail.com>
- <48b90943-e23d-a27a-c743-f321345c9151@linux.intel.com>
- <CAFBinCD1oKxYm8QD7XfZUWq_HC5A4GLMmLCnZrcRvpTxrKo30w@mail.gmail.com>
- <19719490-178a-18fd-64f2-f77d955897f7@linux.intel.com>
- <CAFBinCDmi4HN4Ayg4T8aKUeu4hrUmVQ+z-hTN-6XMhiOCUcHjg@mail.gmail.com>
+Cc:     eswara.kota@linux.intel.com, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
+        gustavo.pimentel@synopsys.com, hch@infradead.org,
+        jingoohan1@gmail.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, qi-ming.wu@intel.com, kishon@ti.com
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com>
+ <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
+ <9ba19f08-e25a-4d15-8854-8dc4f9b6faca@linux.intel.com>
+ <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
+ <7c0fd56f-ecc5-40c2-c435-3805ca1f97c7@linux.intel.com>
+ <CAFBinCBa9G+E+vjmQCGBx=zRG80ad1am_1TrNbAMvqKCQU38gw@mail.gmail.com>
 From:   "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
-Message-ID: <34336c9a-8e87-8f84-2ae8-032b7967928f@linux.intel.com>
-Date:   Thu, 29 Aug 2019 10:50:57 +0800
+Message-ID: <ee561743-d4bc-0aa4-ded7-bfa6bd3a509b@linux.intel.com>
+Date:   Thu, 29 Aug 2019 10:54:31 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.0
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCDmi4HN4Ayg4T8aKUeu4hrUmVQ+z-hTN-6XMhiOCUcHjg@mail.gmail.com>
+In-Reply-To: <CAFBinCBa9G+E+vjmQCGBx=zRG80ad1am_1TrNbAMvqKCQU38gw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -61,179 +62,88 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 8/29/2019 4:01 AM, Martin Blumenstingl wrote:
-> Hi,
->
-> On Wed, Aug 28, 2019 at 3:53 AM Chuan Hua, Lei
+On 8/29/2019 3:36 AM, Martin Blumenstingl wrote:
+> On Wed, Aug 28, 2019 at 5:35 AM Chuan Hua, Lei
 > <chuanhua.lei@linux.intel.com> wrote:
 > [...]
->>>>>> 1. reset-lantiq.c use index instead of register offset + bit position.
->>>>>> index reset is good for a small system (< 64). However, it will become very
->>>>>> difficult to use if you have  > 100 reset. So we use register offset +
->>>>>> bit position
->>>>> reset-lantiq uses bit bit positions for specifying the reset line.
->>>>> for example this is from OpenWrt's vr9.dtsi:
->>>>>      reset0: reset-controller@10 {
->>>>>        ...
->>>>>        reg = <0x10 4>, <0x14 4>;
->>>>>        #reset-cells = <2>;
->>>>>      };
->>>>>
->>>>>      gphy0: gphy@20 {
->>>>>        ...
->>>>>        resets = <&reset0 31 30>, <&reset1 7 7>;
->>>>>        reset-names = "gphy", "gphy2";
->>>>>      };
->>>>>
->>>>> in my own words this means:
->>>>> - all reset0 reset bits are at offset 0x10 (parent is RCU)
->>>>> - all reset0 status bits are at offset 0x14 (parent is RCU)
->>>>> - the first reset line uses reset bit 31 and status bit 30
->>>>> - the second reset line uses reset bit 7 and status bit 7
->>>>> - there can be multiple reset-controller instances, each taking the
->>>>> reset and status offsets (OpenWrt's vr9.dtsi specifies the second RCU
->>>>> reset controller "reset1" with reset offset 0x48 and status offset
->>>>> 0x24)
->>>> in reset-lantiq.c, we split each reset request /status pair into one
->>>> reset controller.
->>>>
->>>> Each reset controller handles up to 32 resets. It will create up to 9
->>>> even more
->>>> reset controllers in the new SoCs. In reality, there is only one RCU
->>>> controller for all
->>>> SoCs. These designs worked but did not follow what hardware implemented.
->>>>
->>>> After checking the existing code and referring to other implementation,
->>>> we decided to
->>>> use register offset + bit position method. It can support all SoCs with
->>>> this methods
->>>> without code change(device tree change only).
->>> maybe I have a different interpretation of what "RCU" does.
->>> let me explain it in my own words based on my knowledge about VRX200:
->>> - in my own words it is a multi function device with the following
->>> functionality:
->>> - it contains two reset controllers (reset at 0x10, status 0x14 and
->>> reset at 0x48, status at 0x24)
->>> - it contains two USB2 PHYs (PHY registers at 0x18, ANA cfg at 0x38
->>> and PHY registers at 0x34, ANA cfg at 0x3c)
->>> - it contains the configuration for the two GPHY IP blocks (at 0x20 and 0x68)
->>> - it contains endianness configuration registers (for PCI, PCIe, ...)
->>> - it contains the watchdog boot status (whether the SoC was previously
->>> reset by the WDT)
->>> - maybe more, but I don't know anything else about it
->> In fact, there is only one reset controller for all SoCs even it doesn't
->> prevent software from virtualizing multiple reset controllers. Reset
->> control does include some misc stuff which has been moved to chiptop in
->> new SoCs so that RCU has a clean job.
-> just to confirm that I understand this correctly:
-> even the VRX200 SoC only has one physical reset controller?
-> instead of a contiguous register area (let's say: 0x10 to 0x1c) it
-> uses four separate registers:
-> - 0x10 for asserting/deasserting/pulsing the first 32 reset lines
-> - 0x14 for the status of the first 32 reset lines
-> - 0x48 for asserting/deasserting/pulsing the second 32 reset lines
-> - 0x28 for the status of the second 32 reset lines
-
-Yes, but for VRX200, reset controller registers include some other misc 
-registers. At that time,
-
-hardware doesn't use chiptop concept, they put some misc registers into 
-CGU/RCU which makes it quite messy.
-
-We also prefer to have 0x10~0x1c. However, when developing VRX200, 0x18, 
-0x20 and other address had been used by other registers. system becomes 
-more complex, need more reset bits for new modules, then hardware just 
-added them to any available place. From another angle, hardware people 
-also tried to keep backward compatible with old products like Danube.
-
->
-> I'm not surprised that we got some of the IP block layout for the
-> VRX200 RCU "wrong" - all "documentation" we have is the old Lantiq UGW
-> (BSP).
-> with proper documentation (as in a "public datasheet for the SoC") it
-> would be easy to spot these mistakes (at least I assume that the
-> quality of the Infineon / Lantiq datasheets is excellent).
->
-> back to reset-intel-syscon:
-> assigning only one job to the RCU hardware is a good idea (in my opinion).
-> that brings up a question: why do we need the "syscon" compatible for
-> the RCU node?
-> this is typically used when registers are accessed by another IP block
-> and the other driver has to access these registers as well. does this
-> mean that there's more hidden in the RCU registers?
-As I mentioned, some other misc registers are put into RCU even they 
-don't belong to reset functions. In MIPS, global software reset handled 
-in arch/mips/, only recently, this situation changed. This means we have 
-at least two places to access this module.
->
->>>>>> 2. reset-lantiq.c does not support device restart which is part of the
->>>>>> reset in
->>>>>> old lantiq SoC. It moved this part into arch/mips/lantiq directory.
->>>>> it was moved to the .dts instead of the arch code. again from
->>>>> OpenWrt's vr9.dtsi [0]:
->>>>>      reboot {
->>>>>        compatible = "syscon-reboot";
->>>>>        regmap = <&rcu0>;
->>>>>        offset = <0x10>;
->>>>>        mask = <0xe0000000>;
->>>>>      };
->>>>>
->>>>> this sets the reset0 reset bits 31, 30 and 29 at reboot
->>>> ok. but not sure why we need to reset bit 31 and 29. global softwre
->>>> reset is bit 30.
->>> I don't know either. depending on what the LGM SoCs need you can
->>> change the "mask" property to the value that fits that SoC best
+>>>>>>>> +static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
+>>>>>>>> +{
+>>>>>>>> +    struct device *dev = lpp->pci->dev;
+>>>>>>>> +    int ret = 0;
+>>>>>>>> +
+>>>>>>>> +    lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+>>>>>>>> +    if (IS_ERR(lpp->reset_gpio)) {
+>>>>>>>> +            ret = PTR_ERR(lpp->reset_gpio);
+>>>>>>>> +            if (ret != -EPROBE_DEFER)
+>>>>>>>> +                    dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
+>>>>>>>> +            return ret;
+>>>>>>>> +    }
+>>>>>>>> +    /* Make initial reset last for 100ms */
+>>>>>>>> +    msleep(100);
+>>>>>>> why is there lpp->rst_interval when you hardcode 100ms here?
+>>>>>> There are different purpose. rst_interval is purely for asserted reset
+>>>>>> pulse.
+>>>>>>
+>>>>>> Here 100ms is to make sure the initial state keeps at least 100ms, then we
+>>>>>> can reset.
+>>>>> my interpretation is that it totally depends on the board design or
+>>>>> the bootloader setup.
+>>>> Partially, you are right. However, we should not add some dependency
+>>>> here from
+>>>> bootloader and board. rst_interval is just to make sure the pulse (low
+>>>> active or high active)
+>>>> lasts the specified the time.
+>>> +Cc Kishon
 >>>
->>> [...]
->> All SoCs have only one global software reset bit.
-> OK
-> you can still use syscon-reboot to set the soft reset bit if Rob
-> (dt-binding maintainer) doesn't like the "intel,global-reset" property
-Dilip should check and do the necessary change.
+>>> he recently added support for a GPIO reset line to the
+>>> pcie-cadence-host.c [0] and I believe he's also maintaining
+>>> pci-keystone.c which are both using a 100uS delay (instead of 100ms).
+>>> I don't know the PCIe spec so maybe Kishon can comment on the values
+>>> that should be used according to the spec.
+>>> if there's then a reason why values other than the ones from the spec
+>>> are needed then there should be a comment explaining why different
+>>> values are needed (what problem does it solve).
+>> spec doesn't guide this part. It is a board or SoC specific setting.
+>> 100us also should work. spec only requirs reset duration should last
+>> 100ms. The idea is that before reset assert and deassert, make sure the
+>> default deassert status keeps some time. We take this value from
+>> hardware suggestion long time back. We can reduce this value to 100us,
+>> but we need to test on the board.
+> OK. I don't know how other PCI controller drivers manage this. if the
+> PCI maintainers are happy with this then I am as well
+> maybe it's worth changing the comment to indicate that this delay was
+> suggested by the hardware team (so it's clear that this is not coming
+> from the PCI spec)
+Dilip will change to 100us delay and run the test. I also need to run 
+some tests for old boards(XRX350/550/PRX300) to confirm this has no 
+impact on function.
 > [...]
->>>>>> 4. Code not optimized and intel internal review not assessed.
->>>>> insights from you (like the issue with the reset callback) are very
->>>>> valuable - this shows that we should focus on having one driver.
->>>>>
->>>>>> Based on the above findings, I would suggest reset-lantiq.c to move to
->>>>>> reset-intel-syscon.c
->>>>> my concern with having two separate drivers is that it will be hard to
->>>>> migrate from reset-lantiq to the "optimized" reset-intel-syscon
->>>>> driver.
->>>>> I don't have access to the datasheets for the any Lantiq/Intel SoC
->>>>> (VRX200 and even older).
->>>>> so debugging issues after switching from one driver to another is
->>>>> tedious because I cannot tell which part of the driver is causing a
->>>>> problem (it's either "all code from driver A" vs "all code from driver
->>>>> B", meaning it's hard to narrow it down).
->>>>> with separate commits/patches that are improving the reset-lantiq
->>>>> driver I can do git bisect to find the cause of a problem on the older
->>>>> SoCs (VRX200 for example)
->>>> Our internal version supports XRX350/XRX500/PRX300(MIPS based) and
->>>> latest Lighting Mountain(X86 based). Migration to reset-intel-syscon.c
->>>> should be straight forward.
->>> what about the _reset callback on the XRX350/XRX500/PRX300 SoCs - do
->>> they only use level resets (_assert and _deassert) or are some reset
->>> lines using reset pulses (_reset)?
->>>
->>> when we wanted to switch from reset-lantiq.c to reset-intel-syscon.c
->>> we still had to add support for the _reset callback as this is missing
->>> in reset-intel-syscon.c currently
->> Yes. We have reset pulse(assert, then check the reset status).
-> only now I realized that the reset-intel-syscon driver does not seem
-> to use the status registers (instead it's looking at the reset
-> registers when checking the status).
-> what happened to the status registers - do they still exist in newer
-> SoCs (like LGM)? why are they not used?
-Reset status check is there. regmap_read_poll_timeout to check status 
-big. Status register offset <4) from request register. For legacy, there 
-is one exception, we can add soc specific data to handle it.
-> on VRX200 for example there seem to be some cases where the bits in
-> the reset and status registers are different (for example: the first
-> GPHY seems to use reset bit 31 but status bit 30)
-> this is currently not supported in reset-intel-syscon
-This is most tricky and ugly part for VRX200/Danube. Do you have any 
-idea to handle this nicely?
+>>>>>>>> +static void __intel_pcie_remove(struct intel_pcie_port *lpp)
+>>>>>>>> +{
+>>>>>>>> +    pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER,
+>>>>>>>> +                        0, PCI_COMMAND);
+>>>>>>> I expect logic like this to be part of the PCI subsystem in Linux.
+>>>>>>> why is this needed?
+>>>>>>>
+>>>>>>> [...]
+>>>>>> bind/unbind case we use this. For extreme cases, we use unbind and bind
+>>>>>> to reset
+>>>>>> PCI instead of rebooting.
+>>>>> OK, but this does not seem Intel/Lantiq specific at all
+>>>>> why isn't this managed by either pcie-designware-host.c or the generic
+>>>>> PCI/PCIe subsystem in Linux?
+>>>> I doubt if other RC driver will support bind/unbind. We do have this
+>>>> requirement due to power management from WiFi devices.
+>>> pcie-designware-host.c will gain .remove() support in Linux 5.4
+>>> I don't understand how .remove() and then .probe() again is different
+>>> from .unbind() followed by a .bind()
+>> Good. If this is the case, bind/unbind eventually goes to probe/remove,
+>> so we can remove this.
+> OK. as far as I understand you need to call dw_pcie_host_deinit from
+> the .remove() callback (which is missing in this version)
+> (I'm using drivers/pci/controller/dwc/pcie-tegra194.c as an example,
+> this driver is in linux-next and thus will appear in Linux 5.4)
+Thanks for your information. We should adapt this in next version.
 >
 >
 > Martin
