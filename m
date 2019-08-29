@@ -2,128 +2,173 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21455C41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D75C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7579233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:27:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/6PpjyS"
+	by mail.kernel.org (Postfix) with ESMTP id 077462189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfH2G1D (ORCPT
+        id S1727474AbfH2G1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 29 Aug 2019 02:27:03 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36963 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfH2G1C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 02:27:02 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z11so2143427wrt.4
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 23:27:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KytG/7ymtFjDfAwGsiRAdcQCUZ/+jD07+aAcotArQAM=;
-        b=F/6PpjySuPHO3Vr9pJbSHRO8eFA76qOZDoN+BIsD25VHDwsqT4l7APHSnI+ns0V1mt
-         xb+V0irdZafTDreUDZrgDPZJViG0japf/Tq1/yL1BsK5KwXZP4gDzMhyWmumnbKHUesu
-         n+CsBpVJA2gjEhkDVC4nSckyeJSZTujLCYRMb7RtrbLqCi1KKmoFplhR6wgScRiLeNm5
-         OLZdGwtvOsQY9/Ar6SP0dWSYeM7eFlJhi2f5n5G2F2SVQtaurQx8g5dCt9djeGbVRoGe
-         mJQ3sHflXbMd55+/rH+/aYPKyOw/wAqLx0J5o8LC2ogC1Puc9ZDzfC7uPC7NQjr7DAip
-         wJeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KytG/7ymtFjDfAwGsiRAdcQCUZ/+jD07+aAcotArQAM=;
-        b=nylYY5p/YG91i0AXsx3bh6xPs2RzdK9g+fKggZUjXFO8rQW2pmbGW9ZDpCUgu5eiC6
-         4r0OACwl+4vWccjsbR/A+0/56CRESM/VtYDEDC8F3nSYE9+xVeaOaYkxL4iKXKqmHBDz
-         NH5bKvXreBZtup4oZwc+1UbU0PiH+o8mSAFhaeo8tc32HJQBBGvd/nwV6awVtjRqPE/C
-         6nxvn3ik0kILDXd1QE49ia7CtXTYZYBU0rH/OLWR5IxFiJoDx7DTUWcDQqDB07Wpox/2
-         UPeC8z4JQ7+aFWLsbNYwswxRZ2hnmvIC6EizEjPZgzALx11xlU4u2FJLY/NmKU6UVTap
-         PWBA==
-X-Gm-Message-State: APjAAAU18gr0YIL7hyd6MuEllrbOoiiqWVz+xpftamqkp6egSzZFe9rj
-        DO/t7iHWxOROiyUmx2nXWyk=
-X-Google-Smtp-Source: APXvYqzv88pWkKrssjgISe1F1+aut5Zg+6TquaOWUXCZ2Bm7vgCSCNnrgxZhLfuIfdh0BkswyrsoSA==
-X-Received: by 2002:adf:f801:: with SMTP id s1mr9347320wrp.320.1567060020018;
-        Wed, 28 Aug 2019 23:27:00 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id c201sm3095530wmd.33.2019.08.28.23.26.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 23:26:59 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] ARM: Emit __gnu_mcount_nc when using Clang 10.0.0 or newer
-Date:   Wed, 28 Aug 2019 23:26:35 -0700
-Message-Id: <20190829062635.45609-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.23.0
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53382 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726016AbfH2G1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 02:27:03 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B5D623BD6BCA87A6F7C9;
+        Thu, 29 Aug 2019 14:26:58 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.203) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 29 Aug 2019
+ 14:26:49 +0800
+Subject: Re: [PATCH v6 06/12] powerpc/fsl_booke/32: implement KASLR
+ infrastructure
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Scott Wood <oss@buserror.net>
+CC:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
+        <diana.craciun@nxp.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>,
+        <wangkefeng.wang@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <jingxiangfeng@huawei.com>, <zhaohongjiang@huawei.com>,
+        <thunder.leizhen@huawei.com>, <fanchengyang@huawei.com>,
+        <yebin10@huawei.com>
+References: <20190809100800.5426-1-yanaijie@huawei.com>
+ <20190809100800.5426-7-yanaijie@huawei.com>
+ <20190828045454.GB17757@home.buserror.net>
+ <2db76c55-df5f-5ca8-f0a6-bcee75b8edaa@c-s.fr>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <11ef88f7-e418-c48e-f96c-1256c1179bca@huawei.com>
+Date:   Thu, 29 Aug 2019 14:26:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
+In-Reply-To: <2db76c55-df5f-5ca8-f0a6-bcee75b8edaa@c-s.fr>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.96.203]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, multi_v7_defconfig + CONFIG_FUNCTION_TRACER fails to build
-with clang:
 
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `_local_bh_enable':
-softirq.c:(.text+0x504): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `__local_bh_enable_ip':
-softirq.c:(.text+0x58c): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `do_softirq':
-softirq.c:(.text+0x6c8): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_enter':
-softirq.c:(.text+0x75c): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_exit':
-softirq.c:(.text+0x840): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o:softirq.c:(.text+0xa50): more undefined references to `mcount' follow
 
-clang can emit a working mcount symbol, __gnu_mcount_nc, when
-'-meabi gnu' is passed to it. Until r369147 in LLVM, this was
-broken and caused the kernel not to boot because the calling
-convention was not correct. Now that it is fixed, add this to
-the command line when clang is 10.0.0 or newer so everything
-works properly.
+On 2019/8/28 13:47, Christophe Leroy wrote:
+> 
+> 
+> Le 28/08/2019 à 06:54, Scott Wood a écrit :
+>> On Fri, Aug 09, 2019 at 06:07:54PM +0800, Jason Yan wrote:
+>>> This patch add support to boot kernel from places other than KERNELBASE.
+>>> Since CONFIG_RELOCATABLE has already supported, what we need to do is
+>>> map or copy kernel to a proper place and relocate. Freescale Book-E
+>>> parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
+>>> entries are not suitable to map the kernel directly in a randomized
+>>> region, so we chose to copy the kernel to a proper place and restart to
+>>> relocate.
+>>>
+>>> The offset of the kernel was not randomized yet(a fixed 64M is set). We
+>>> will randomize it in the next patch.
+>>>
+>>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+>>> Cc: Diana Craciun <diana.craciun@nxp.com>
+>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>>> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+>>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>>> Cc: Paul Mackerras <paulus@samba.org>
+>>> Cc: Nicholas Piggin <npiggin@gmail.com>
+>>> Cc: Kees Cook <keescook@chromium.org>
+>>> Tested-by: Diana Craciun <diana.craciun@nxp.com>
+>>> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>> ---
+>>>   arch/powerpc/Kconfig                          | 11 ++++
+>>>   arch/powerpc/kernel/Makefile                  |  1 +
+>>>   arch/powerpc/kernel/early_32.c                |  2 +-
+>>>   arch/powerpc/kernel/fsl_booke_entry_mapping.S | 17 +++--
+>>>   arch/powerpc/kernel/head_fsl_booke.S          | 13 +++-
+>>>   arch/powerpc/kernel/kaslr_booke.c             | 62 +++++++++++++++++++
+>>>   arch/powerpc/mm/mmu_decl.h                    |  7 +++
+>>>   arch/powerpc/mm/nohash/fsl_booke.c            |  7 ++-
+>>>   8 files changed, 105 insertions(+), 15 deletions(-)
+>>>   create mode 100644 arch/powerpc/kernel/kaslr_booke.c
+>>>
+> 
+> [...]
+> 
+>>> diff --git a/arch/powerpc/kernel/kaslr_booke.c 
+>>> b/arch/powerpc/kernel/kaslr_booke.c
+>>> new file mode 100644
+>>> index 000000000000..f8dc60534ac1
+>>> --- /dev/null
+>>> +++ b/arch/powerpc/kernel/kaslr_booke.c
+>>
+>> Shouldn't this go under arch/powerpc/mm/nohash?
+>>
+>>> +/*
+>>> + * To see if we need to relocate the kernel to a random offset
+>>> + * void *dt_ptr - address of the device tree
+>>> + * phys_addr_t size - size of the first memory block
+>>> + */
+>>> +notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
+>>> +{
+>>> +    unsigned long tlb_virt;
+>>> +    phys_addr_t tlb_phys;
+>>> +    unsigned long offset;
+>>> +    unsigned long kernel_sz;
+>>> +
+>>> +    kernel_sz = (unsigned long)_end - KERNELBASE;
+>>
+>> Why KERNELBASE and not kernstart_addr?
+>>
+>>> +
+>>> +    offset = kaslr_choose_location(dt_ptr, size, kernel_sz);
+>>> +
+>>> +    if (offset == 0)
+>>> +        return;
+>>> +
+>>> +    kernstart_virt_addr += offset;
+>>> +    kernstart_addr += offset;
+>>> +
+>>> +    is_second_reloc = 1;
+>>> +
+>>> +    if (offset >= SZ_64M) {
+>>> +        tlb_virt = round_down(kernstart_virt_addr, SZ_64M);
+>>> +        tlb_phys = round_down(kernstart_addr, SZ_64M);
+>>
+>> If kernstart_addr wasn't 64M-aligned before adding offset, then "offset
+>>> = SZ_64M" is not necessarily going to detect when you've crossed a
+>> mapping boundary.
+>>
+>>> +
+>>> +        /* Create kernel map to relocate in */
+>>> +        create_tlb_entry(tlb_phys, tlb_virt, 1);
+>>> +    }
+>>> +
+>>> +    /* Copy the kernel to it's new location and run */
+>>> +    memcpy((void *)kernstart_virt_addr, (void *)KERNELBASE, kernel_sz);
+>>> +
+>>> +    reloc_kernel_entry(dt_ptr, kernstart_virt_addr);
+>>> +}
+>>
+>> After copying, call flush_icache_range() on the destination.
+> 
+> Function copy_and_flush() does the copy and the flush. I think it should 
+> be used instead of memcpy() + flush_icache_range()
+> 
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/35
-Link: https://bugs.llvm.org/show_bug.cgi?id=33845
-Link: https://github.com/llvm/llvm-project/commit/16fa8b09702378bacfa3d07081afe6b353b99e60
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- arch/arm/Makefile | 6 ++++++
- 1 file changed, 6 insertions(+)
+Hi Christophe,
 
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index c3624ca6c0bc..7b5a26a866fc 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -112,6 +112,12 @@ ifeq ($(CONFIG_ARM_UNWIND),y)
- CFLAGS_ABI	+=-funwind-tables
- endif
- 
-+ifeq ($(CONFIG_CC_IS_CLANG),y)
-+ifeq ($(shell test $(CONFIG_CLANG_VERSION) -ge 100000; echo $$?),0)
-+CFLAGS_ABI	+=-meabi gnu
-+endif
-+endif
-+
- # Accept old syntax despite ".syntax unified"
- AFLAGS_NOWARN	:=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
- 
--- 
-2.23.0
+Thanks for the suggestion. But I think copy_and_flush() is not included 
+in fsl booke code, maybe move this function to misc.S?
+
+> Christophe
+> 
+> .
+> 
 
