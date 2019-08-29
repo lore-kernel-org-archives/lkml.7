@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEE6C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBC8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98CC5233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3281123404
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:33:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbfH2Kdr (ORCPT
+        id S1727963AbfH2Kdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:33:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42258 "EHLO mx1.redhat.com"
+        Thu, 29 Aug 2019 06:33:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38654 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727308AbfH2KdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727320AbfH2KdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 29 Aug 2019 06:33:08 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4996330832DC;
+        by mx1.redhat.com (Postfix) with ESMTPS id A9E3B18C4271;
         Thu, 29 Aug 2019 10:33:08 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-95.ams2.redhat.com [10.36.116.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F13C45D772;
-        Thu, 29 Aug 2019 10:33:07 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C57771001944;
+        Thu, 29 Aug 2019 10:33:02 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id DC66131F1F; Thu, 29 Aug 2019 12:33:03 +0200 (CEST)
+        id 12F6631E7F; Thu, 29 Aug 2019 12:33:02 +0200 (CEST)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     olvaffe@gmail.com, gurchetansingh@chromium.org,
@@ -37,91 +37,42 @@ Cc:     olvaffe@gmail.com, gurchetansingh@chromium.org,
         Daniel Vetter <daniel@ffwll.ch>,
         virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v9 13/18] drm/virtio: drop virtio_gpu_object_list_validate/virtio_gpu_unref_list
-Date:   Thu, 29 Aug 2019 12:32:56 +0200
-Message-Id: <20190829103301.3539-14-kraxel@redhat.com>
+Subject: [PATCH v9 01/18] drm/virtio: pass gem reservation object to ttm init
+Date:   Thu, 29 Aug 2019 12:32:44 +0200
+Message-Id: <20190829103301.3539-2-kraxel@redhat.com>
 In-Reply-To: <20190829103301.3539-1-kraxel@redhat.com>
 References: <20190829103301.3539-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 29 Aug 2019 10:33:08 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Thu, 29 Aug 2019 10:33:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No users left.
+With this gem and ttm will use the same reservation object,
+so mixing and matching ttm / gem reservation helpers should
+work fine.
 
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 ---
- drivers/gpu/drm/virtio/virtgpu_drv.h   |  3 --
- drivers/gpu/drm/virtio/virtgpu_ioctl.c | 39 --------------------------
- 2 files changed, 42 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_object.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index d5ef2514d2bd..1266a8e64961 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -223,9 +223,6 @@ struct virtio_gpu_fpriv {
- /* virtio_ioctl.c */
- #define DRM_VIRTIO_NUM_IOCTLS 10
- extern struct drm_ioctl_desc virtio_gpu_ioctls[DRM_VIRTIO_NUM_IOCTLS];
--int virtio_gpu_object_list_validate(struct ww_acquire_ctx *ticket,
--				    struct list_head *head);
--void virtio_gpu_unref_list(struct list_head *head);
- 
- /* virtio_kms.c */
- int virtio_gpu_init(struct drm_device *dev);
-diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-index 677d844d88bc..e36ab3d6d162 100644
---- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-@@ -56,45 +56,6 @@ static int virtio_gpu_map_ioctl(struct drm_device *dev, void *data,
- 					 &virtio_gpu_map->offset);
- }
- 
--int virtio_gpu_object_list_validate(struct ww_acquire_ctx *ticket,
--				    struct list_head *head)
--{
--	struct ttm_operation_ctx ctx = { false, false };
--	struct ttm_validate_buffer *buf;
--	struct ttm_buffer_object *bo;
--	struct virtio_gpu_object *qobj;
--	int ret;
--
--	ret = ttm_eu_reserve_buffers(ticket, head, true, NULL, true);
--	if (ret != 0)
--		return ret;
--
--	list_for_each_entry(buf, head, head) {
--		bo = buf->bo;
--		qobj = container_of(bo, struct virtio_gpu_object, tbo);
--		ret = ttm_bo_validate(bo, &qobj->placement, &ctx);
--		if (ret) {
--			ttm_eu_backoff_reservation(ticket, head);
--			return ret;
--		}
--	}
--	return 0;
--}
--
--void virtio_gpu_unref_list(struct list_head *head)
--{
--	struct ttm_validate_buffer *buf;
--	struct ttm_buffer_object *bo;
--	struct virtio_gpu_object *qobj;
--
--	list_for_each_entry(buf, head, head) {
--		bo = buf->bo;
--		qobj = container_of(bo, struct virtio_gpu_object, tbo);
--
--		drm_gem_object_put_unlocked(&qobj->gem_base);
--	}
--}
--
- /*
-  * Usage of execbuffer:
-  * Relocations need to take into account the full VIRTIO_GPUDrawable size.
+diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+index ab33b65167f6..eb4d42f9d1d3 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_object.c
++++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+@@ -138,7 +138,8 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
+ 	virtio_gpu_init_ttm_placement(bo);
+ 	ret = ttm_bo_init(&vgdev->mman.bdev, &bo->tbo, params->size,
+ 			  ttm_bo_type_device, &bo->placement, 0,
+-			  true, acc_size, NULL, NULL,
++			  true, acc_size, NULL,
++			  bo->gem_base.resv,
+ 			  &virtio_gpu_ttm_bo_destroy);
+ 	/* ttm_bo_init failure will call the destroy */
+ 	if (ret != 0)
 -- 
 2.18.1
 
