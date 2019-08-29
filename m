@@ -2,132 +2,108 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C2FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78B6C41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E5B2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF63C21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:46:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567093574;
+	bh=K1DC5a8M0SmiDc8LclIbau54Wi3kHL5WsQYED1zUqlY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Drf+dIEfWo0xa1robtx/JGRBjl/MTNcPAx4gA8B4bX3xCMIQj0+6h5w+DPjnVKE3z
+	 ko3jkOFsKx2l7roQGAzuF/+AhPc+hC1RoD1mzmO+QOxJicpZMG3vV+WD6DsUcvzefI
+	 Un3eGvPHfuHIgbOdjaGbECzmvFlAshlNufbLMal4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfH2Ppy (ORCPT
+        id S1728143AbfH2PqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:45:54 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:56739 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfH2Ppy (ORCPT
+        Thu, 29 Aug 2019 11:46:14 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38573 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbfH2PqN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:45:54 -0400
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Thu, 29 Aug 2019 11:45:52 EDT
-IronPort-SDR: kiHa/Oosnu7Ea9b/XkJZXA6lua53A8G/iXOGUR8RPOeIHoH4f2xzkjkhQBNf2a8UkECndWTrPf
- j/1HklCgSgTnjollSqxpe6ziEwZpnNl5hB6w+/sVU3jkRKSp/ePJoguzPYL8xZLeU3EQa7/94A
- Qq1dRbaKjgQpIRjwIT2/2HWpN+63qvixb0D45fIiuknPqLonhA/7zR0NbUk8OMXJDoKhY/8oyb
- 5srO6Q3i4qAD5xOEE7lDLBIwT32Jwqbz3HUYbAtqwoQ7a9YPBfIb88q8+7xaRBN/Ztcji8Eg9A
- Kjs=
-X-IronPort-AV: E=Sophos;i="5.64,443,1559548800"; 
-   d="scan'208";a="42686256"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa1.mentor.iphmx.com with ESMTP; 29 Aug 2019 07:38:46 -0800
-IronPort-SDR: B8Uc1qwoyjI0XWDom6ANkzkGpdNxBQDqWna/CNLxvDgZZ7LWBK5OX0c0ykNKAb/N0YKQvwRcot
- ZS9yZpP1H9eRekSubrwti2SU3UtRl8u0czbKMLdIAz3+3ZyUQl26aNEq+SRRGsXqL5H3lLTSDM
- 1+xBJqaIZ6/qxKjxnKcVNspjwZ3+CUP3GkGGwWkynmJbQwsLuHgI2lbI5MjYoEENwVKTDiixtt
- CYuP/wRW1pOi/ILV7+oly5imw87YbEQBlpRcleubhB9cvnfERH1IOl1V+HqDmrcybZpFvyOCoo
- /xU=
-Date:   Thu, 29 Aug 2019 11:38:43 -0400
-From:   "George G. Davis" <george_davis@mentor.com>
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-CC:     Shuah Khan <shuah@kernel.org>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH] selftests: watchdog: Add optional file argument
-Message-ID: <20190829153842.GC4028@mam-gdavis-lt>
-References: <1567053566-18971-1-git-send-email-george_davis@mentor.com>
- <20190829143814.GA3424@vmlxhi-102.adit-jv.com>
+        Thu, 29 Aug 2019 11:46:13 -0400
+Received: by mail-qt1-f194.google.com with SMTP id b2so695561qtq.5;
+        Thu, 29 Aug 2019 08:46:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aegqxwkNQfcl+Wg+uXNzhfA96N2TVnZEqWU/pVTp7O0=;
+        b=SYTOMOQY9y4DHxazFL0VJ5Esl3I6kjkjeY0wH2mN1HPH/S+CJKwCkJ9ApmUWzpIltd
+         7mJTwhspOUW+Xq1yyt6HsCav03dKy3i8mHcOeUt+mYUBpY0Scdy6du0IdP5UGhKYWKR4
+         uO9gCZM6CksSTlpE/JECpZ/UtrIVw4ggrkWHKzVoykbTt3IfBI/zajFxcXk5E/VTWwHz
+         RHQBykyBHBb/8qCtJR6BCiUAf21PHnWpn6uGQvPH2tRR/eEiZQhk+FPlqF/+32rRDSgD
+         WwxUJYxcBZ4ZLQbdgQJDNQyHCJ1vtyy7JdkUZ9bxQdOZd2BI7CS43lRjQqsx224uAh4h
+         F56w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aegqxwkNQfcl+Wg+uXNzhfA96N2TVnZEqWU/pVTp7O0=;
+        b=RzGAA9/t1uy9W4FmUE7fpNbp6L0B8Eg8hCEz85gcX1y52xNxBoVj52j2faeNuNRkIp
+         izC/Ey/quYQ2emuYsRvPm9tw5Enwk1hVCNsyu1P88UVlLl5FQaLiSEXTjjvmRSsbyMcd
+         384vF/LKyNHiFmcs+bR4ipVC5C4orTGtuFd40ENaTUBQ/A0+Wdnu48B2bok5dcF8g9TF
+         HJwwipEEpb0YWgb4RtwqrcvuqGZGR7kHzut0VCsjC3Q0cDvUg6+L1fuuV71mCDqQ6v1o
+         rNb+QKwepDjnde0wE0gyR9NfIs8NDKz5w6ipMYdMEuldBSOg6HiSyR4TJ4PXMbzrvfxm
+         pk2g==
+X-Gm-Message-State: APjAAAUzyTH1bW73y1+fP+R3gi+gwiZdGAXUuGx2UfCY1A+lsErj7Sbm
+        vXJR8NFW27jXttfHcld/28k=
+X-Google-Smtp-Source: APXvYqzjcJkE7617DYDqIr3PG4ZNC8XGG7HEcgfFWkDmRvAS0Ibl+uE1pNYw7GOE8LHelm+6jWMe2A==
+X-Received: by 2002:ac8:3449:: with SMTP id v9mr10473377qtb.163.1567093572550;
+        Thu, 29 Aug 2019 08:46:12 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:7e32])
+        by smtp.gmail.com with ESMTPSA id k11sm1194357qtp.26.2019.08.29.08.46.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 29 Aug 2019 08:46:10 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 08:46:09 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     axboe@kernel.dk, newella@fb.com, clm@fb.com, josef@toxicpanda.com,
+        dennisz@fb.com, lizefan@huawei.com, hannes@cmpxchg.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        kernel-team@fb.com, cgroups@vger.kernel.org,
+        Josef Bacik <jbacik@fb.com>, Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH 08/10] blkcg: implement blk-iocost
+Message-ID: <20190829154609.GU2263813@devbig004.ftw2.facebook.com>
+References: <20190828220600.2527417-1-tj@kernel.org>
+ <20190829133928.16192-1-hdanton@sina.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829143814.GA3424@vmlxhi-102.adit-jv.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+In-Reply-To: <20190829133928.16192-1-hdanton@sina.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Eugeniu,
+Hello,
 
-On Thu, Aug 29, 2019 at 04:38:14PM +0200, Eugeniu Rosca wrote:
-> Hi George,
-> 
-> On Thu, Aug 29, 2019 at 12:39:25AM -0400, George G. Davis wrote:
-> > Some systems have multiple watchdog devices where the first device
-> > registered is assigned to the /dev/watchdog device file.
-> 
-> Confirmed on R-Car H3-Salvator-X:
-> 
-> root@rcar-gen3:~# ls -al /dev/watchdog*
-> crw-------    1 root     root       10, 130 Aug 21 09:38 /dev/watchdog
-> crw-------    1 root     root      247,   0 Aug 21 09:38 /dev/watchdog0
-
-What you see there is the typical case where there is only one watchdog in
-the system, /dev/watchdog0, which is registered as the default watchdog
-via /dev/watchdog. If you have another watchdog enabled, e.g. softdog, you
-will see:
-
-root@h3ulcb:~# ls -l /dev/watchdog*
-crw-------    1 root     root       10, 130 Mar 28 20:37 /dev/watchdog
-crw-------    1 root     root      247,   0 Mar 28 20:37 /dev/watchdog0
-crw-------    1 root     root      247,   1 Mar 28 20:37 /dev/watchdog1
-
-In the above case, `watchdog0` is aliased to `watchdog` but you may prefer
-to test the non-default `watchdog1` instead (rather than changing your
-kernel config if one or more are built-in, preventing testing of the
-non-default watchdog).
-
-> [..]
-> 
-> > -	fd = open("/dev/watchdog", O_WRONLY);
-> > +	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
-> > +		if (c == 'f')
-> > +			file = optarg;
-> > +	}
+On Thu, Aug 29, 2019 at 09:39:28PM +0800, Hillf Danton wrote:
+> > +	on_q_ns = ktime_get_ns() - rq->alloc_time_ns;
+> > +	rq_wait_ns = rq->start_time_ns - rq->alloc_time_ns;
 > > +
-> > +	fd = open(file, O_WRONLY);
+> ehm... alloc_time makes no sense wrt start_time if this is their only
+> use. What are you trying to measure with the two stamps if they are
+> meaningfully apart?
+
+Queue depth depletion.
+
+> > +	rq_qos_add(q, rqos);
+> > +	ret = blkcg_activate_policy(q, &blkcg_policy_iocost);
+> > +	if (ret) {
+> > +		rq_qos_del(q, rqos);
 > 
-> Would it be possible to improve below not so helpful and slightly
-> misleading printout:
-> 
-> $ ./watchdog-test -d -t 10 -p 5 -e -f /dev/watch
-> Watchdog device not enabled.
+> 		free_percpu(ioc->pcpu_stat);
 
-Oops, right, thanks for that report.
+Good catch.  Will send a follow up patch.
 
-I'll add the following in the next update:
-
-diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
-index ebeb684552b9..9f17cae61007 100644
---- a/tools/testing/selftests/watchdog/watchdog-test.c
-+++ b/tools/testing/selftests/watchdog/watchdog-test.c
-@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
- 
- 	if (fd == -1) {
- 		if (errno == ENOENT)
--			printf("Watchdog device not enabled.\n");
-+			printf("Watchdog device (%s) not found.\n", file);
- 		else if (errno == EACCES)
- 			printf("Run watchdog as root.\n");
- 		else
-
-
-Thanks!
+Thanks.
 
 -- 
-Regards,
-George
+tejun
