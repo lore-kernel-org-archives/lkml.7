@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E38C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1500C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C11F205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A95C72166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103533;
-	bh=ENnQuLStlcZZoMrEABGmkjS1ER3wIKINVJAynfvsm4o=;
+	s=default; t=1567103541;
+	bh=ELasd/krHemGHvL2GqE3FAxmL4MQO+r/h4KTacutGvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zMCM07f7Zw56c1UitmEycZQzP3r406311tZDxlPeglS+ISk2nj30o7v6t/6H2ekvu
-	 8sHp+Kz5LNoMtubY1aO5ECV+488ZpCNHnzQerLeNmWwmJLdrKPEghBH1VOpJTdtMvJ
-	 XMC5dkagULI5NbE97qLcav6KCeG+HbX2ElSyo54s=
+	b=lvJ3NP4idsDD8ytafw9Zg0s0kyGo0vLD3rXdvg7YRNmmvUlx7C7bt9DzFPrq3sfBO
+	 bKpuqaV9LJKzcNV6pBmC8pTenFaTjPv2xGmGztoLOV6G7rNJS/av62219Ex5tjSDhu
+	 2WF2bCnEciq8OPeei4Bwv5jdTCUOpMEJlrsRItzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfH2SOd (ORCPT
+        id S1728819AbfH2SO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:14:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56164 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:14:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727867AbfH2SOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:14:31 -0400
+        id S1728708AbfH2SOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:14:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ADB8233FF;
-        Thu, 29 Aug 2019 18:14:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 923D5233FF;
+        Thu, 29 Aug 2019 18:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102471;
-        bh=ENnQuLStlcZZoMrEABGmkjS1ER3wIKINVJAynfvsm4o=;
+        s=default; t=1567102442;
+        bh=ELasd/krHemGHvL2GqE3FAxmL4MQO+r/h4KTacutGvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ztvsSULnZYLgFrxMGhcVPnS/zw2lbvc4AwFZ/okL18zHtgKerG7qLCynqt4LqzTkd
-         MeWXj4uWFxsz9RWL8tOH+sLOgpdI50IcfwDCUNgCHW5EBdjuKilhxzTd3KLgCDuML5
-         ZCVda9+alnYoZeayljHC4pxkqqzHyVixLYKceRF4=
+        b=aB+Pt/XeB4nI2bXDn6jo67aYqMKUtctORiEnxL2vZa4FPHHE5uOyQdwfjVwKFNiAC
+         v+zwZ+r5mPpub6Op7+EgJ8FTcTcTLP62QfBA/v6c/Xzg+E2nJkTM4A5V/ThDamb795
+         ribWY5x0sfOwfiWIV7BykjMidoipv0yY0SyVTKgY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 35/76] liquidio: add cleanup in octeon_setup_iq()
-Date:   Thu, 29 Aug 2019 14:12:30 -0400
-Message-Id: <20190829181311.7562-35-sashal@kernel.org>
+Cc:     Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Mike Christie <mchristi@redhat.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 30/76] scsi: target: tcmu: avoid use-after-free after command timeout
+Date:   Thu, 29 Aug 2019 14:12:25 -0400
+Message-Id: <20190829181311.7562-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -59,37 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
 
-[ Upstream commit 6f967f8b1be7001b31c46429f2ee7d275af2190f ]
+[ Upstream commit a86a75865ff4d8c05f355d1750a5250aec89ab15 ]
 
-If oct->fn_list.enable_io_queues() fails, no cleanup is executed, leading
-to memory/resource leaks. To fix this issue, invoke
-octeon_delete_instr_queue() before returning from the function.
+In tcmu_handle_completion() function, the variable called read_len is
+always initialized with a value taken from se_cmd structure. If this
+function is called to complete an expired (timed out) out command, the
+session command pointed by se_cmd is likely to be already deallocated by
+the target core at that moment. As the result, this access triggers a
+use-after-free warning from KASAN.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch fixes the code not to touch se_cmd when completing timed out
+TCMU commands. It also resets the pointer to se_cmd at the time when the
+TCMU_CMD_BIT_EXPIRED flag is set because it is going to become invalid
+after calling target_complete_cmd() later in the same function,
+tcmu_check_expired_cmd().
+
+Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+Acked-by: Mike Christie <mchristi@redhat.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cavium/liquidio/request_manager.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/target/target_core_user.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/cavium/liquidio/request_manager.c b/drivers/net/ethernet/cavium/liquidio/request_manager.c
-index fcf20a8f92d94..6a823710987da 100644
---- a/drivers/net/ethernet/cavium/liquidio/request_manager.c
-+++ b/drivers/net/ethernet/cavium/liquidio/request_manager.c
-@@ -239,8 +239,10 @@ int octeon_setup_iq(struct octeon_device *oct,
- 	}
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index b43d6385a1a09..95b2371fb67b6 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -1132,14 +1132,16 @@ static void tcmu_handle_completion(struct tcmu_cmd *cmd, struct tcmu_cmd_entry *
+ 	struct se_cmd *se_cmd = cmd->se_cmd;
+ 	struct tcmu_dev *udev = cmd->tcmu_dev;
+ 	bool read_len_valid = false;
+-	uint32_t read_len = se_cmd->data_length;
++	uint32_t read_len;
  
- 	oct->num_iqs++;
--	if (oct->fn_list.enable_io_queues(oct))
-+	if (oct->fn_list.enable_io_queues(oct)) {
-+		octeon_delete_instr_queue(oct, iq_no);
- 		return 1;
+ 	/*
+ 	 * cmd has been completed already from timeout, just reclaim
+ 	 * data area space and free cmd
+ 	 */
+-	if (test_bit(TCMU_CMD_BIT_EXPIRED, &cmd->flags))
++	if (test_bit(TCMU_CMD_BIT_EXPIRED, &cmd->flags)) {
++		WARN_ON_ONCE(se_cmd);
+ 		goto out;
 +	}
  
- 	return 0;
- }
+ 	list_del_init(&cmd->queue_entry);
+ 
+@@ -1152,6 +1154,7 @@ static void tcmu_handle_completion(struct tcmu_cmd *cmd, struct tcmu_cmd_entry *
+ 		goto done;
+ 	}
+ 
++	read_len = se_cmd->data_length;
+ 	if (se_cmd->data_direction == DMA_FROM_DEVICE &&
+ 	    (entry->hdr.uflags & TCMU_UFLAG_READ_LEN) && entry->rsp.read_len) {
+ 		read_len_valid = true;
+@@ -1307,6 +1310,7 @@ static int tcmu_check_expired_cmd(int id, void *p, void *data)
+ 		 */
+ 		scsi_status = SAM_STAT_CHECK_CONDITION;
+ 		list_del_init(&cmd->queue_entry);
++		cmd->se_cmd = NULL;
+ 	} else {
+ 		list_del_init(&cmd->queue_entry);
+ 		idr_remove(&udev->commands, id);
+@@ -2024,6 +2028,7 @@ static void tcmu_reset_ring(struct tcmu_dev *udev, u8 err_level)
+ 
+ 		idr_remove(&udev->commands, i);
+ 		if (!test_bit(TCMU_CMD_BIT_EXPIRED, &cmd->flags)) {
++			WARN_ON(!cmd->se_cmd);
+ 			list_del_init(&cmd->queue_entry);
+ 			if (err_level == 1) {
+ 				/*
 -- 
 2.20.1
 
