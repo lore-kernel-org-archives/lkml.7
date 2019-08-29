@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D866C41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E12C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E4F2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666672166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102790;
-	bh=xCREaTygv8b8nm+QPF3XKV3E36VYjZhtrpivCPCooeI=;
+	s=default; t=1567102796;
+	bh=szrB/sf1vVLKzmNKJA770muwa7kw0B3BXftuLhjYmrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mg7vuRJ2OIb+pogDQM1gvhGhuDsbMq1A/H212E7TZEORez+rbfDjA2rsbTVgtz+A6
-	 fJ3NSnafDg3AtJsKbkLz/qwCHXrU4cH/y2khUH7ogEvVmKZ3g9iZtAv6iNIDFNa05/
-	 9tw1YnRkCD//Ws4ntrGixmfuW+5pm1loel9NFsv0=
+	b=WsU34dheEbLaAPJFhV80JEB/SIpz/T8gw74UMDLKJrAalhVDYuouxgrusxG5W69le
+	 /5UoFwETWb7rfu6yABwvKFf9LSGE9jrAsHDaGZ6rLPZWCajCO8i+UeAij4Uu0MFqlv
+	 35Ojg31fdcHo1vcOf3Pk9DqMj5Ha+jHqOUZvPFh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbfH2SSA (ORCPT
+        id S1730002AbfH2STz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:18:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60052 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:19:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728939AbfH2SRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:17:51 -0400
+        id S1730276AbfH2SR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4655A2189D;
-        Thu, 29 Aug 2019 18:17:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5F582189D;
+        Thu, 29 Aug 2019 18:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102670;
-        bh=xCREaTygv8b8nm+QPF3XKV3E36VYjZhtrpivCPCooeI=;
+        s=default; t=1567102677;
+        bh=szrB/sf1vVLKzmNKJA770muwa7kw0B3BXftuLhjYmrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aUNYCriMUrIC5DmgsPmiUgJs5ZaWp/m0Uu3QWKDWOKZ27kGauogtzebmV7Xy5PXqT
-         vMNoxHczYlGP12Cz1C+3j8u/XdKTw8hBPaG02EWCsQT8ezqxgmrf4LPzQikT0fk5iS
-         J9FF5x0ZBiWNO7+ddwFhV6nt2bLJEHMQ8GFBgy+A=
+        b=KCUvwO51xz9NgI8S2lxTi10C4Flr8xfRmHssbZndaxnXG3AS0GvgYQ8UqKO4qdUn4
+         6sAZemCfhGLWGo6INlSAo3RpXRzhBnw6E1tenPR5+jfTM1fApk4zDkoGc1cFzhWojI
+         AkbAKE9V6I0w1bs2rQM+F8ONQpfrxLdQAmCpfrFY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/16] cx82310_eth: fix a memory leak bug
-Date:   Thu, 29 Aug 2019 14:17:26 -0400
-Message-Id: <20190829181736.9040-8-sashal@kernel.org>
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 13/16] IB/mlx4: Fix memory leaks
+Date:   Thu, 29 Aug 2019 14:17:31 -0400
+Message-Id: <20190829181736.9040-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181736.9040-1-sashal@kernel.org>
 References: <20190829181736.9040-1-sashal@kernel.org>
@@ -62,36 +62,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 1eca92eef18719027d394bf1a2d276f43e7cf886 ]
+[ Upstream commit 5c1baaa82cea2c815a5180ded402a7cd455d1810 ]
 
-In cx82310_bind(), 'dev->partial_data' is allocated through kmalloc().
-Then, the execution waits for the firmware to become ready. If the firmware
-is not ready in time, the execution is terminated. However, the allocated
-'dev->partial_data' is not deallocated on this path, leading to a memory
-leak bug. To fix this issue, free 'dev->partial_data' before returning the
-error.
+In mlx4_ib_alloc_pv_bufs(), 'tun_qp->tx_ring' is allocated through
+kcalloc(). However, it is not always deallocated in the following execution
+if an error occurs, leading to memory leaks. To fix this issue, free
+'tun_qp->tx_ring' whenever an error occurs.
 
 Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Acked-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/1566159781-4642-1-git-send-email-wenwen@cs.uga.edu
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/cx82310_eth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx4/mad.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/usb/cx82310_eth.c b/drivers/net/usb/cx82310_eth.c
-index 947bea81d9241..dfbdea22fbad9 100644
---- a/drivers/net/usb/cx82310_eth.c
-+++ b/drivers/net/usb/cx82310_eth.c
-@@ -175,7 +175,8 @@ static int cx82310_bind(struct usbnet *dev, struct usb_interface *intf)
+diff --git a/drivers/infiniband/hw/mlx4/mad.c b/drivers/infiniband/hw/mlx4/mad.c
+index d9323d7c479c3..f32ffd74ec476 100644
+--- a/drivers/infiniband/hw/mlx4/mad.c
++++ b/drivers/infiniband/hw/mlx4/mad.c
+@@ -1643,8 +1643,6 @@ static int mlx4_ib_alloc_pv_bufs(struct mlx4_ib_demux_pv_ctx *ctx,
+ 				    tx_buf_size, DMA_TO_DEVICE);
+ 		kfree(tun_qp->tx_ring[i].buf.addr);
  	}
- 	if (!timeout) {
- 		dev_err(&udev->dev, "firmware not ready in time\n");
--		return -ETIMEDOUT;
-+		ret = -ETIMEDOUT;
-+		goto err;
+-	kfree(tun_qp->tx_ring);
+-	tun_qp->tx_ring = NULL;
+ 	i = MLX4_NUM_TUNNEL_BUFS;
+ err:
+ 	while (i > 0) {
+@@ -1653,6 +1651,8 @@ static int mlx4_ib_alloc_pv_bufs(struct mlx4_ib_demux_pv_ctx *ctx,
+ 				    rx_buf_size, DMA_FROM_DEVICE);
+ 		kfree(tun_qp->ring[i].addr);
  	}
- 
- 	/* enable ethernet mode (?) */
++	kfree(tun_qp->tx_ring);
++	tun_qp->tx_ring = NULL;
+ 	kfree(tun_qp->ring);
+ 	tun_qp->ring = NULL;
+ 	return -ENOMEM;
 -- 
 2.20.1
 
