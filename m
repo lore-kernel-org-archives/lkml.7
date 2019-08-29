@@ -2,124 +2,147 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 743E4C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FC4C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3958B215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2327D21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sXXYtAAa"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="dl9qohKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbfH2SoE (ORCPT
+        id S1728386AbfH2SoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:44:04 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41593 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728595AbfH2SoE (ORCPT
+        Thu, 29 Aug 2019 14:44:08 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45607 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728595AbfH2SoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:44:04 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m9so1979065pls.8
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 11:44:03 -0700 (PDT)
+        Thu, 29 Aug 2019 14:44:05 -0400
+Received: by mail-qk1-f195.google.com with SMTP id m2so3852381qki.12
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 11:44:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=v1Wo1j2tnlDDBx+9tVoNxVDQEbVVitJMbE6zkrCsNYQ=;
-        b=sXXYtAAaVMdonPdNFmCLacc1yMs7M1edc94O5lELRYJxadC3JjUM5YbUwWi4dWK0jJ
-         zN29PrPjete6yiziQDuS3B95q7jfnVD8wxKih2rukf/ma6btEa7zj5D+Yc/L3IS1sn3U
-         Wzo+4s7a1O06d9y0kvd5ashlirrH5iOvhibysr7HVY69SnScODa2J78ftUOVJxT1EWW3
-         9om/44Pa0e6rQamyCftba66Zw3RTmOnxK8wAbFNqJ2qRomcgzemIdJxt+QbsO18zv/Nq
-         zzUYrsM5YSe2WqLJp4NWtD/ZnQTypUYO3+AYtZiL7/gQb+E0qjUlhkq1YrIt1qDMwOfE
-         HcAA==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=QDRi/Xd9XfnkQ5sOxj7EVRPPb6YjOhNvBvKil4zJw/0=;
+        b=dl9qohKF185MJTvsc/xIx5y2bsPkyUgeQyPr5ffE0hZoRxnas8wTSWNEjE47IMjSQt
+         ClxH/8EVTw9Ka+9M0wwX+9B/tIxd5c9tbC4bJVP6ZwyImFCUqm28A7X+yPLCqQJFBBAV
+         3DR877YtrSKP77RLHhkN9aaVXjjdSnAuMQixQQV6IvlbzoGtwvQjTLJTjwZMLpdTQDgx
+         ewvCMg70knxrpix/UuQ1dzA8dmHi5pooHb91SW/yA0O3o0XTnVkP1+7DUQVBU/n2yWRZ
+         YvrEv8swmwRvi3EEp2XB0vErOGppjRla558g1r6lB4UaSNmoXh8pnI+WpxL6iTq7jsfA
+         L4Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=v1Wo1j2tnlDDBx+9tVoNxVDQEbVVitJMbE6zkrCsNYQ=;
-        b=r9sAW1leEOv50yq1TwayEavdBXU6I4Fbe4ehIOcZz6mCGVkyKt3W73IzCApXdar/op
-         iW+tKrgMM1zeLUxKCZvjkgOAFZZNaapJQmXBANJtwLqIg1dRS+4fbR7DHtxWDwjnXIZm
-         80eLyoVZizPE1mja9a/gxK4i3IgbR7Vyi7utGQxMzF0AMrJN7eIuwSFnVwXdZWB/H6lZ
-         hT8OwuGZUdTu1LGOgxrmCgCTwR1LU8SxnVTNcAwWxWs/eeHtm0kX9ve2fZAwvqC/NAPC
-         bFP0UE+j/TFHbANMFPhKR8PQsScgFPhUAdVJPacPYB3bYeLXHvTX1qZfItVMJ6+CVOu4
-         aI9g==
-X-Gm-Message-State: APjAAAUaLVQwbOdAPBUVWlEvhL2hwTVHOrfAlYW5TOobZ1dv3+TYNfyF
-        H5B/jhzvypJ8tjlqdvHF7BPVTA==
-X-Google-Smtp-Source: APXvYqySV7f6ZMmiEy8g7xUfSMB1MLLk+cK+esN7+JKSPp3z46QGrwido2SYzkKtN/oLNUGfcjySEw==
-X-Received: by 2002:a17:902:ba16:: with SMTP id j22mr10261299pls.253.1567104243423;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=QDRi/Xd9XfnkQ5sOxj7EVRPPb6YjOhNvBvKil4zJw/0=;
+        b=CJlcpzquIv0katJMVe48iu3EiJFELHGJKDJKjXySaFxgjDbdPVFVHwThp5L5QaioB9
+         ZYLyhv0AYL5MA58EPlAldVMN8T0hwX5t6B7NEjV3vBmx+VEj2BebvwFnrRIBozW7lGqQ
+         vR+zpw4BYJs1xx1i0LePafKadkw5SaFhsT39RjAy41aje+OnYZrpCLAOZj6nhNvA+J9M
+         LQmlre4Fciz0+mk77H9B+UE5WfrabJvJG8q0jqSTDQ/939pmIOgyuGFbf3tKALr7uuW2
+         8y48XohkNkFkfJD7Lw4xsOcUKeujW01IzVaco8VV8iV4701O6vqNsHGQQ9TwoxiCFA4j
+         8ang==
+X-Gm-Message-State: APjAAAXwf3O3wztAO1WRD1fc1fhn/pE3OFpKV7bUVIyidymxSjh0ZXNC
+        zOZeHqBpWmHOHr7lF2hpgp7w/w==
+X-Google-Smtp-Source: APXvYqzKqT4R8SObC1LwMgc7oT0iO2TSaMYUPaXWhrxP6+vgf7kWzLYoE22jClWrLF5LNRYQJ+U22A==
+X-Received: by 2002:a37:98f:: with SMTP id 137mr11278917qkj.188.1567104244278;
+        Thu, 29 Aug 2019 11:44:04 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id u7sm1494346qkj.113.2019.08.29.11.44.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Thu, 29 Aug 2019 11:44:03 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id z189sm6021212pfb.137.2019.08.29.11.44.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 29 Aug 2019 11:44:02 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] irqchip/meson-gpio: Add support for meson sm1 SoCs
-In-Reply-To: <20190829161635.25067-3-jbrunet@baylibre.com>
-References: <20190829161635.25067-1-jbrunet@baylibre.com> <20190829161635.25067-3-jbrunet@baylibre.com>
-Date:   Thu, 29 Aug 2019 11:43:59 -0700
-Message-ID: <7h1rx3revk.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <1567104241.5576.30.camel@lca.pw>
+Subject: Re: [PATCH 00/10] OOM Debug print selection and additional
+ information
+From:   Qian Cai <cai@lca.pw>
+To:     Edward Chron <echron@arista.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
+Date:   Thu, 29 Aug 2019 14:44:01 -0400
+In-Reply-To: <CAM3twVSgJdFKbzkg1V+7voFMi-SYQTCz6jCBobLBQ72Cg8k5VQ@mail.gmail.com>
+References: <20190826193638.6638-1-echron@arista.com>
+         <20190827071523.GR7538@dhcp22.suse.cz>
+         <CAM3twVRZfarAP6k=LLWH0jEJXu8C8WZKgMXCFKBZdRsTVVFrUQ@mail.gmail.com>
+         <20190828065955.GB7386@dhcp22.suse.cz>
+         <CAM3twVR_OLffQ1U-SgQOdHxuByLNL5sicfnObimpGpPQ1tJ0FQ@mail.gmail.com>
+         <20190829071105.GQ28313@dhcp22.suse.cz>
+         <297cf049-d92e-f13a-1386-403553d86401@i-love.sakura.ne.jp>
+         <20190829115608.GD28313@dhcp22.suse.cz>
+         <CAM3twVSZm69U8Sg+VxQ67DeycHUMC5C3_f2EpND4_LC4UHx7BA@mail.gmail.com>
+         <1567093344.5576.23.camel@lca.pw>
+         <CAM3twVSgJdFKbzkg1V+7voFMi-SYQTCz6jCBobLBQ72Cg8k5VQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+On Thu, 2019-08-29 at 09:09 -0700, Edward Chron wrote:
 
-> The meson sm1 SoCs uses the same type of GPIO interrupt controller IP
-> block as the other meson SoCs, A total of 100 pins can be spied on:
->
-> - 223:100 undefined (no interrupt)
-> - 99:97   3 pins on bank GPIOE
-> - 96:77   20 pins on bank GPIOX
-> - 76:61   16 pins on bank GPIOA
-> - 60:53   8 pins on bank GPIOC
-> - 52:37   16 pins on bank BOOT
-> - 36:28   9 pins on bank GPIOH
-> - 27:12   16 pins on bank GPIOZ
-> - 11:0    12 pins in the AO domain
->
-> Mapping is the same as the g12a family but the sm1 controller
-> allows to trig an irq on both edges of the input signal. This was
-> not possible with the previous SoCs families
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > Feel like you are going in circles to "sell" without any new information. If
+> > you
+> > need to deal with OOM that often, it might also worth working with FB on
+> > oomd.
+> > 
+> > https://github.com/facebookincubator/oomd
+> > 
+> > It is well-known that kernel OOM could be slow and painful to deal with, so
+> > I
+> > don't buy-in the argument that kernel OOM recover is better/faster than a
+> > kdump
+> > reboot.
+> > 
+> > It is not unusual that when the system is triggering a kernel OOM, it is
+> > almost
+> > trashed/dead. Although developers are working hard to improve the recovery
+> > after
+> > OOM, there are still many error-paths that are not going to survive which
+> > would
+> > leak memories, introduce undefined behaviors, corrupt memory etc.
+> 
+> But as you have pointed out many people are happy with current OOM processing
+> which is the report and recovery so for those people a kdump reboot is
+> overkill.
+> Making the OOM report at least optionally a bit more informative has value.
+> Also
+> making sure it doesn't produce excessive output is desirable.
+> 
+> I do agree for developers having to have all the system state a kdump
+> provides that
+> and as long as you can reproduce the OOM event that works well. But
+> that is not the
+> common case as has already been discussed.
+> 
+> Also, OOM events that are due to kernel bugs could leak memory and over time
+> and cause a crash, true. But that is not what we typically see. In
+> fact we've had
+> customers come back and report issues on systems that have been in continuous
+> operation for years. No point in crashing their system. Linux if
+> properly maintained
+> is thankfully quite stable. But OOMs do happen and root causing them to
+> prevent
+> future occurrences is desired.
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
+This is not what I meant. After an OOM event happens, many kernel memory
+allocations could fail. Since very few people are testing those error-paths due
+to allocation failures, it is considered one of those most buggy areas in the
+kernel. Developers have mostly been focus on making sure the kernel OOM should
+not happen in the first place.
 
-> ---
->  drivers/irqchip/irq-meson-gpio.c | 52 +++++++++++++++++++++++---------
->  1 file changed, 38 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
-> index dcdc23b9dce6..829084b568fa 100644
-> --- a/drivers/irqchip/irq-meson-gpio.c
-> +++ b/drivers/irqchip/irq-meson-gpio.c
-> @@ -24,14 +24,25 @@
->  #define REG_PIN_47_SEL	0x08
->  #define REG_FILTER_SEL	0x0c
->  
-> -#define REG_EDGE_POL_MASK(x)	(BIT(x) | BIT(16 + (x)))
-> +/*
-> + * Note: The S905X3 datasheet reports that BOTH_EDGE is controlled by
-> + * bits 24 to 31. Tests on the actual HW show that these bits are
-> + * stuck at 0. Bits 8 to 15 are responsive and have the expected
-> + * effect.
-> + */
+I still think the time is better spending on improving things like eBPF, oomd
+and kdump etc to solve your problem, but leave the kernel OOM report code alone.
 
-nice catch!
-
-Kevin
