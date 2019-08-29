@@ -2,118 +2,133 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A28C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 469F8C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029702166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1F92166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:18:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="lOLmUE9y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MyLzrazQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbfH2WRW (ORCPT
+        id S1728169AbfH2WS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 18:17:22 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36489 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727686AbfH2WRV (ORCPT
+        Thu, 29 Aug 2019 18:18:57 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45799 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727929AbfH2WS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 18:17:21 -0400
-Received: by mail-ed1-f68.google.com with SMTP id g24so5767510edu.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 15:17:20 -0700 (PDT)
+        Thu, 29 Aug 2019 18:18:56 -0400
+Received: by mail-io1-f67.google.com with SMTP id t3so10042592ioj.12;
+        Thu, 29 Aug 2019 15:18:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VaTFhxoCm9hWeOCO0ElTE9V4VLgj8vESshlNLr9lSt8=;
-        b=lOLmUE9y33VatAZwocCWLzD5p0QcedDPRQUx62l97hcFeMqSJqi/P9dFD60pebIFqY
-         Xy6sqfSrR8KfT6Z2s3v0QJzxKssQO82njUFDD728x+m0Jl+BjkOgfNDiRKdXcgKa4a2r
-         XuLdiP/LUwvPyPUcX8Y6FNvOQ2i/Uk6XYxHrVO7mma9ftj9GL7D+V4K5qGdHPaUlhufZ
-         npXFlaOntKEr+Moaf8sCpL6XmOl355INUWSQp+jkxtsRMsPScK9pabEQHw1ahp6HMVAI
-         WtOj1CmHg/pBJCEbiDlM3pKaIbEIkPHEV7d8WLkWqWG8A5h+sMlXmeAHPVVtmvMu/AAl
-         AiNw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=NMzxTj9QgBh2Pr7Ne/3+OQ1awCT7xR3SvdwiV+lU5kA=;
+        b=MyLzrazQhX13DC7Ra6s73Pf+C0n1A5aU0ML4n8KJN3BhOX+4zDH2Q3czsXDo77LaXh
+         WqJRfFEvUMQPw53Ja7xCvFA3QPN6gY/AvDitALBHQ/eM3HGKVwPmtWPjUJZb9dqAbomd
+         b9CerBqFccvAHBoRWxkcF81IE9N61nKtwIMCVeP4KauUAdEqh2Yu3lvO3pH5LxyeaZsc
+         wVs4pZMsJQacyjs74+yeSAhEPMafF1mPnk08K8oWMt4eiYUtKtTeK8BwW5HY8MYrRMzl
+         U0o6wiVVyLE7FHSUt/gSI78JUZ0znvQNfiGRh/YHfjXklKD9di3J/6J6XG276KxPQz12
+         wjQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VaTFhxoCm9hWeOCO0ElTE9V4VLgj8vESshlNLr9lSt8=;
-        b=gdbq8yKhJrmgrP4E2xpy6nCtPYw+aDNNOIbVK06WNkNyQVMRxeWU2Yk6jgEG6zsEA/
-         NGuzSPd4jorUHjz0pB/CaSTyvm1OQhmNBWae7c81kBqHfc0HBRy3T8F+Xa3pR070u6Kr
-         214sYTjAypHKS6pqsbXh71sGr1QsobLNCJa8srkloBVmlhPREml5mQlhzWT+uc7Fm0HG
-         f53vDF7qMIZoiM7GPvPLh+cTFBN2Gfe7qcUv4jaAS6HaTp8umQOidB1xb2d1bNMam44l
-         jfSupTgc+qmuHfxso+13vOVzY5gLSVMyN64hn4XSum+xQHDBeWrmBk4VKfMT7fSHzXJJ
-         Avxg==
-X-Gm-Message-State: APjAAAVbXDiwiPm0hMEraaDjzV3JbvfoXK3Zvw7teWKmdqi/fDkl5IVA
-        kvHqrgPfp3QISrl4NEy+2sWrOQ==
-X-Google-Smtp-Source: APXvYqw52tG87FkxH5gtCxt1n5cfLEGSFeSVwA4DyF85KDHKVvHgE7gEHO1VVWF/TpY4Z8/AugtmRQ==
-X-Received: by 2002:a50:ef04:: with SMTP id m4mr12624736eds.155.1567117040075;
-        Thu, 29 Aug 2019 15:17:20 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id l27sm543544ejd.31.2019.08.29.15.17.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 15:17:19 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 287CB10212D; Fri, 30 Aug 2019 01:17:23 +0300 (+03)
-Date:   Fri, 30 Aug 2019 01:17:23 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
-Subject: Re: [PATCH AUTOSEL 5.2 51/76] x86/boot/compressed/64: Fix boot on
- machines with broken E820 table
-Message-ID: <20190829221723.eicsws3q7gp6nx37@box>
-References: <20190829181311.7562-1-sashal@kernel.org>
- <20190829181311.7562-51-sashal@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829181311.7562-51-sashal@kernel.org>
-User-Agent: NeoMutt/20180716
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=NMzxTj9QgBh2Pr7Ne/3+OQ1awCT7xR3SvdwiV+lU5kA=;
+        b=MI0ih3eITixAYaMeWlBtCH4HOf5663seZlgm/BwI2Rr6slEJ2ONaOZ9tno6Lcb6oKS
+         Q2imIu4oA70krNcJj/3PVpDWHydfeydVscPTmdr+oTxmChF6HSI90IVWpR5IOP2UZIB1
+         slpFVe8pg+71qoc9pAohtC0SWyGWDxWfOGBp+p+BEcMT4GBsVWcdoAwveSzd7umYQGnw
+         ajhWPRoZ6qmEgq3PngJEsdrUKNR1tnqTau+DE5B2U/isX3bjfu2q7xgoEdQgLh+m5mB/
+         6Iy/4ig/D8wb2LfYj736hJYvShrWdB61z47Hud1jbJ4biL1rIlU/Yg94Ie7UlvWydgci
+         cKSQ==
+X-Gm-Message-State: APjAAAWGyxrEBfn0jSuS3IoZaAN9RDOSBudA5X12mnBnaCgTgb5IaK9m
+        zAWB/CeJmHkTZswmCLNVaTQ=
+X-Google-Smtp-Source: APXvYqxB3S1p4Y72kgiUDMNzk+Z03PVRglDS/xCD8jxWK/TxgKb5gUvU1Vau2O9BBlhMeyAqb35EQQ==
+X-Received: by 2002:a5d:97d7:: with SMTP id k23mr13736369ios.129.1567117135905;
+        Thu, 29 Aug 2019 15:18:55 -0700 (PDT)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id n25sm2821784iop.3.2019.08.29.15.18.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 15:18:55 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 15:18:46 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+7a6ee4d0078eac6bf782@syzkaller.appspotmail.com>,
+        aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
+        davejwatson@fb.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Message-ID: <5d684f46b5c51_6192b27353185bcf7@john-XPS-13-9370.notmuch>
+In-Reply-To: <20190829115315.5686c18f@cakuba.netronome.com>
+References: <000000000000c3c461059127a1c4@google.com>
+ <20190829035200.3340-1-hdanton@sina.com>
+ <20190829094343.0248c61c@cakuba.netronome.com>
+ <5d681e0011c7b_6b462ad11252c5c084@john-XPS-13-9370.notmuch>
+ <20190829115315.5686c18f@cakuba.netronome.com>
+Subject: Re: general protection fault in tls_sk_proto_close (2)
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 02:12:46PM -0400, Sasha Levin wrote:
-> From: "Kirill A. Shutemov" <kirill@shutemov.name>
+Jakub Kicinski wrote:
+> On Thu, 29 Aug 2019 11:48:32 -0700, John Fastabend wrote:
+> > Jakub Kicinski wrote:
+> > > On Thu, 29 Aug 2019 11:52:00 +0800, Hillf Danton wrote:  
+> > > > Alternatively work is done if sock is closed again. Anyway ctx is reset
+> > > > under sock's callback lock in write mode.
+> > > > 
+> > > > --- a/net/tls/tls_main.c
+> > > > +++ b/net/tls/tls_main.c
+> > > > @@ -295,6 +295,8 @@ static void tls_sk_proto_close(struct so
+> > > >  	long timeo = sock_sndtimeo(sk, 0);
+> > > >  	bool free_ctx;
+> > > >  
+> > > > +	if (!ctx)
+> > > > +		return;
+> > > >  	if (ctx->tx_conf == TLS_SW)
+> > > >  		tls_sw_cancel_work_tx(ctx);  
+> > > 
+> > > That's no bueno, the real socket's close will never get called.  
+> > 
+> > Seems when we refactored BPF side we dropped the check for ULP on one
+> > path so I'll add that back now. It would be nice and seems we are
+> > getting closer now that tls side is a bit more dynamic if the ordering
+> > didn't matter.
 > 
-> [ Upstream commit 0a46fff2f9108c2c44218380a43a736cf4612541 ]
+> We'd probably need some more generic way of communicating the changes
+> in sk_proto stack, e.g. by moving the update into one of sk_proto
+> callbacks? but yes.
 > 
-> BIOS on Samsung 500C Chromebook reports very rudimentary E820 table that
-> consists of 2 entries:
+> > diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+> > index 1330a7442e5b..30d11558740e 100644
+> > --- a/net/core/sock_map.c
+> > +++ b/net/core/sock_map.c
+> > @@ -666,6 +666,8 @@ static int sock_hash_update_common(struct bpf_map *map, void *key,
+> >         WARN_ON_ONCE(!rcu_read_lock_held());
+> >         if (unlikely(flags > BPF_EXIST))
+> >                 return -EINVAL;
+> > +       if (unlikely(icsk->icsk_ulp_data))
+> > +               return -EINVAL;
+> > 
+> >         link = sk_psock_init_link();
+> >         if (!link)
 > 
->   BIOS-e820: [mem 0x0000000000000000-0x0000000000000fff] usable
->   BIOS-e820: [mem 0x00000000fffff000-0x00000000ffffffff] reserved
-> 
-> It breaks logic in find_trampoline_placement(): bios_start lands on the
-> end of the first 4k page and trampoline start gets placed below 0.
-> 
-> Detect underflow and don't touch bios_start for such cases. It makes
-> kernel ignore E820 table on machines that doesn't have two usable pages
-> below BIOS_START_MAX.
-> 
-> Fixes: 1b3a62643660 ("x86/boot/compressed/64: Validate trampoline placement against E820")
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: x86-ml <x86@kernel.org>
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203463
-> Link: https://lkml.kernel.org/r/20190813131654.24378-1-kirill.shutemov@linux.intel.com
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Thanks! That looks good, if you feel like submitting officially feel
+> free to add my Reviewed-by!
 
-Please postpone backporting the patch (and into other trees). There's a
-fixup for it:
+I'll send it out this evening after running the selftests.
 
-http://lore.kernel.org/r/20190826133326.7cxb4vbmiawffv2r@box
-
--- 
- Kirill A. Shutemov
+.John
