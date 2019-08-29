@@ -2,41 +2,40 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F0DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2E0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C3F20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1112189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbfH2LTO (ORCPT
+        id S1728153AbfH2LTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:19:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:42772 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfH2LTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:19:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C3E31570;
-        Thu, 29 Aug 2019 04:19:11 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0E733F59C;
-        Thu, 29 Aug 2019 04:19:09 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, paul.burton@mips.com,
-        tglx@linutronix.de, salyzyn@android.com, 0x7f454c46@gmail.com,
-        luto@kernel.org
-Subject: [PATCH 2/7] lib: vdso: Build 32 bit specific functions in the right context
-Date:   Thu, 29 Aug 2019 12:18:38 +0100
-Message-Id: <20190829111843.41003-3-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190829111843.41003-1-vincenzo.frascino@arm.com>
-References: <20190829111843.41003-1-vincenzo.frascino@arm.com>
+        Thu, 29 Aug 2019 07:19:18 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:43721 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728084AbfH2LTP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 07:19:15 -0400
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from parav@mellanox.com)
+        with ESMTPS (AES256-SHA encrypted); 29 Aug 2019 14:19:11 +0300
+Received: from sw-mtx-036.mtx.labs.mlnx (sw-mtx-036.mtx.labs.mlnx [10.12.150.149])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x7TBJ8v1020002;
+        Thu, 29 Aug 2019 14:19:09 +0300
+From:   Parav Pandit <parav@mellanox.com>
+To:     alex.williamson@redhat.com, jiri@mellanox.com,
+        kwankhede@nvidia.com, cohuck@redhat.com, davem@davemloft.net
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Parav Pandit <parav@mellanox.com>
+Subject: [PATCH v2 0/6] Introduce variable length mdev alias
+Date:   Thu, 29 Aug 2019 06:18:58 -0500
+Message-Id: <20190829111904.16042-1-parav@mellanox.com>
+X-Mailer: git-send-email 2.19.2
+In-Reply-To: <20190826204119.54386-1-parav@mellanox.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,52 +43,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clock_gettime32 and clock_getres_time32 should be compiled only with a
-32 bit vdso library.
+To have consistent naming for the netdevice of a mdev and to have
+consistent naming of the devlink port [1] of a mdev, which is formed using
+phys_port_name of the devlink port, current UUID is not usable because
+UUID is too long.
 
-Exclude these symbols when BUILD_VDSO32 is not defined.
+UUID in string format is 36-characters long and in binary 128-bit.
+Both formats are not able to fit within 15 characters limit of netdev
+name.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+It is desired to have mdev device naming consistent using UUID.
+So that widely used user space framework such as ovs [2] can make use
+of mdev representor in similar way as PCIe SR-IOV VF and PF representors.
+
+Hence,
+(a) mdev alias is created which is derived using sha1 from the mdev name.
+(b) Vendor driver describes how long an alias should be for the child mdev
+created for a given parent.
+(c) Mdev aliases are unique at system level.
+(d) alias is created optionally whenever parent requested.
+This ensures that non networking mdev parents can function without alias
+creation overhead.
+
+This design is discussed at [3].
+
+An example systemd/udev extension will have,
+
+1. netdev name created using mdev alias available in sysfs.
+
+mdev UUID=83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
+mdev 12 character alias=cd5b146a80a5
+
+netdev name of this mdev = enmcd5b146a80a5
+Here en = Ethernet link
+m = mediated device
+
+2. devlink port phys_port_name created using mdev alias.
+devlink phys_port_name=pcd5b146a80a5
+
+This patchset enables mdev core to maintain unique alias for a mdev.
+
+Patch-1 Introduces mdev alias using sha1.
+Patch-2 Ensures that mdev alias is unique in a system.
+Patch-3 Exposes mdev alias in a sysfs hirerchy.
+Patch-4 Introduces mdev_alias() API.
+Patch-5 Updated sysfs documentation
+Patch-6 Extends mtty driver to optionally provide alias generation.
+This also enables to test UUID based sha1 collision and trigger
+error handling for duplicate sha1 results.
+
+[1] http://man7.org/linux/man-pages/man8/devlink-port.8.html
+[2] https://docs.openstack.org/os-vif/latest/user/plugins/ovs.html
+[3] https://patchwork.kernel.org/cover/11084231/
+
 ---
- lib/vdso/gettimeofday.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Changelog:
+v1->v2:
+ - Corrected a typo from 'and' to 'an'
+ - Addressed comments from Alex Williamson
+ - Kept mdev_device naturally aligned
+ - Added error checking for crypt_*() calls
+ - Moved alias NULL check at beginning
+ - Added mdev_alias() API
+ - Updated mtty driver to show example mdev_alias() usage
+ - Changed return type of generate_alias() from int to char*
+v0->v1:
+ - Addressed comments from Alex Williamson, Cornelia Hunk and Mark Bloch
+ - Moved alias length check outside of the parent lock
+ - Moved alias and digest allocation from kvzalloc to kzalloc
+ - &alias[0] changed to alias
+ - alias_length check is nested under get_alias_length callback check
+ - Changed comments to start with an empty line
+ - Added comment where alias memory ownership is handed over to mdev device
+ - Fixed cleaunup of hash if mdev_bus_register() fails
+ - Updated documentation for new sysfs alias file
+ - Improved commit logs to make description more clear
+ - Fixed inclusiong of alias for NULL check
+ - Added ratelimited debug print for sha1 hash collision error
 
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index e630e7ff57f1..a86e89e6dedc 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -117,6 +117,7 @@ __cvdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
- 	return 0;
- }
- 
-+#ifdef BUILD_VDSO32
- static __maybe_unused int
- __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
- {
-@@ -139,6 +140,7 @@ __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
- 	}
- 	return ret;
- }
-+#endif /* BUILD_VDSO32 */
- 
- static __maybe_unused int
- __cvdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
-@@ -229,6 +231,7 @@ int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
- 	return 0;
- }
- 
-+#ifdef BUILD_VDSO32
- static __maybe_unused int
- __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
- {
-@@ -251,4 +254,5 @@ __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
- 	}
- 	return ret;
- }
-+#endif /* BUILD_VDSO32 */
- #endif /* VDSO_HAS_CLOCK_GETRES */
+Parav Pandit (6):
+  mdev: Introduce sha1 based mdev alias
+  mdev: Make mdev alias unique among all mdevs
+  mdev: Expose mdev alias in sysfs tree
+  mdev: Introduce an API mdev_alias
+  mdev: Update sysfs documentation
+  mtty: Optionally support mtty alias
+
+ .../driver-api/vfio-mediated-device.rst       |   5 +
+ drivers/vfio/mdev/mdev_core.c                 | 142 +++++++++++++++++-
+ drivers/vfio/mdev/mdev_private.h              |   5 +-
+ drivers/vfio/mdev/mdev_sysfs.c                |  26 +++-
+ include/linux/mdev.h                          |   5 +
+ samples/vfio-mdev/mtty.c                      |  13 ++
+ 6 files changed, 186 insertions(+), 10 deletions(-)
+
 -- 
-2.23.0
+2.19.2
 
