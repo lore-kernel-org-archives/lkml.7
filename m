@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D12C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5622FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C3212189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F8952189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102453;
-	bh=9J6tgIBdn5EzmWaOuyi4pYjxZ4aRUf4lrRb3sOcTqBg=;
+	s=default; t=1567102458;
+	bh=u2HAGG7hT+Bcz8+BAkrHj6sRlGaGgfU6rFtQSDz5A+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bjR5Jra/vMEQkhaSUcefdoIu58vG1BW5bDBkaxebSgjZ5ip3nzVfJx5qgVmYD+IAo
-	 2iRQrIYajRMpCggLM2ER9w4C+cetf1vM5AmIxDklkk/dJCXrzuYoBBadFKakH7d4t+
-	 lCjIoixhfQZpNz6EI2lPHnpEvT+95PDLftMaVY4Q=
+	b=LUIxT6c2hEwjL733BUk9O2j3S1qjMpgafi35AQjZt4VK3OlUpe4STzenFhE7u+GfP
+	 NBinTpoC554/kFmq2qPz8dmFtF6f6Rb82pkmwUdCE23vZwetZ+8WXJ6BZrQ5YRR1Vb
+	 k83geQdJ+/UXgczTXhBw3A++8D/XLkf39+mdVt74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbfH2SOK (ORCPT
+        id S1728755AbfH2SOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:14:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55910 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728756AbfH2SOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:14:09 -0400
+        id S1728153AbfH2SOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:14:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FB24233FF;
-        Thu, 29 Aug 2019 18:14:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AC4823427;
+        Thu, 29 Aug 2019 18:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102448;
-        bh=9J6tgIBdn5EzmWaOuyi4pYjxZ4aRUf4lrRb3sOcTqBg=;
+        s=default; t=1567102440;
+        bh=u2HAGG7hT+Bcz8+BAkrHj6sRlGaGgfU6rFtQSDz5A+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pPCPXPvyCbnUgyqiPg/WW6t8FczwS0dAMtlEpjbzpbGRwU+bcycAm9NjWAX53dQwl
-         HtwxhDgV3h36+BeqxTvYEbFqtAX3GIKpq3gm26XcVgl9W11cYgBd8KGFK9vtHt+257
-         3L9Vr+8roDqU0R/nigzhy9Rtr55ouv3Kke/ZfDYQ=
+        b=XkB/9n2uGbTac40D81tk1ciyh7hKal+d7lDcYKVLp18775TVi9DWvNBpOEoBxThCx
+         vC4+GPHJ/xQbzDRZTm0yin3cwyZ5u7gHVDI6jPiHhCwVpJO94kLbE7YpoDj9LA7axC
+         o7IFsOLoS93s/2lwlRz3uO+ChEK/yrT918DzUpag=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 32/76] selftests: kvm: do not try running the VM in vmx_set_nested_state_test
-Date:   Thu, 29 Aug 2019 14:12:27 -0400
-Message-Id: <20190829181311.7562-32-sashal@kernel.org>
+Cc:     Alexandre Courbot <acourbot@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>, CK Hu <ck.hu@mediatek.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 28/76] drm/mediatek: set DMA max segment size
+Date:   Thu, 29 Aug 2019 14:12:23 -0400
+Message-Id: <20190829181311.7562-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -59,60 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Alexandre Courbot <acourbot@chromium.org>
 
-[ Upstream commit 92cd0f0be3d7adb63611c28693ec0399beded837 ]
+[ Upstream commit 070955558e820b9a89c570b91b1f21762f62b288 ]
 
-This test is only covering various edge cases of the
-KVM_SET_NESTED_STATE ioctl.  Running the VM does not really
-add anything.
+This driver requires imported PRIME buffers to appear contiguously in
+its IO address space. Make sure this is the case by setting the maximum
+DMA segment size to a more suitable value than the default 64KB.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../kvm/x86_64/vmx_set_nested_state_test.c        | 15 ---------------
- 1 file changed, 15 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 35 ++++++++++++++++++++++++--
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h |  2 ++
+ 2 files changed, 35 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-index ed7218d166da6..a99fc66dafeb6 100644
---- a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-@@ -27,22 +27,13 @@
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index 8b18a00a58c7e..c021d4c8324f5 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -213,6 +213,7 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+ 	struct mtk_drm_private *private = drm->dev_private;
+ 	struct platform_device *pdev;
+ 	struct device_node *np;
++	struct device *dma_dev;
+ 	int ret;
  
- void test_nested_state(struct kvm_vm *vm, struct kvm_nested_state *state)
+ 	if (!iommu_present(&platform_bus_type))
+@@ -275,7 +276,29 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+ 		goto err_component_unbind;
+ 	}
+ 
+-	private->dma_dev = &pdev->dev;
++	dma_dev = &pdev->dev;
++	private->dma_dev = dma_dev;
++
++	/*
++	 * Configure the DMA segment size to make sure we get contiguous IOVA
++	 * when importing PRIME buffers.
++	 */
++	if (!dma_dev->dma_parms) {
++		private->dma_parms_allocated = true;
++		dma_dev->dma_parms =
++			devm_kzalloc(drm->dev, sizeof(*dma_dev->dma_parms),
++				     GFP_KERNEL);
++	}
++	if (!dma_dev->dma_parms) {
++		ret = -ENOMEM;
++		goto err_component_unbind;
++	}
++
++	ret = dma_set_max_seg_size(dma_dev, (unsigned int)DMA_BIT_MASK(32));
++	if (ret) {
++		dev_err(dma_dev, "Failed to set DMA segment size\n");
++		goto err_unset_dma_parms;
++	}
+ 
+ 	/*
+ 	 * We don't use the drm_irq_install() helpers provided by the DRM
+@@ -285,13 +308,16 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+ 	drm->irq_enabled = true;
+ 	ret = drm_vblank_init(drm, MAX_CRTC);
+ 	if (ret < 0)
+-		goto err_component_unbind;
++		goto err_unset_dma_parms;
+ 
+ 	drm_kms_helper_poll_init(drm);
+ 	drm_mode_config_reset(drm);
+ 
+ 	return 0;
+ 
++err_unset_dma_parms:
++	if (private->dma_parms_allocated)
++		dma_dev->dma_parms = NULL;
+ err_component_unbind:
+ 	component_unbind_all(drm->dev, drm);
+ err_config_cleanup:
+@@ -302,9 +328,14 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+ 
+ static void mtk_drm_kms_deinit(struct drm_device *drm)
  {
--	volatile struct kvm_run *run;
--
- 	vcpu_nested_state_set(vm, VCPU_ID, state, false);
--	run = vcpu_state(vm, VCPU_ID);
--	vcpu_run(vm, VCPU_ID);
--	TEST_ASSERT(run->exit_reason == KVM_EXIT_SHUTDOWN,
--		"Got exit_reason other than KVM_EXIT_SHUTDOWN: %u (%s),\n",
--		run->exit_reason,
--		exit_reason_str(run->exit_reason));
++	struct mtk_drm_private *private = drm->dev_private;
++
+ 	drm_kms_helper_poll_fini(drm);
+ 	drm_atomic_helper_shutdown(drm);
+ 
++	if (private->dma_parms_allocated)
++		private->dma_dev->dma_parms = NULL;
++
+ 	component_unbind_all(drm->dev, drm);
+ 	drm_mode_config_cleanup(drm);
  }
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+index 598ff3e704465..e03fea12ff598 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+@@ -51,6 +51,8 @@ struct mtk_drm_private {
+ 	} commit;
  
- void test_nested_state_expect_errno(struct kvm_vm *vm,
- 				    struct kvm_nested_state *state,
- 				    int expected_errno)
- {
--	volatile struct kvm_run *run;
- 	int rv;
+ 	struct drm_atomic_state *suspend_state;
++
++	bool dma_parms_allocated;
+ };
  
- 	rv = vcpu_nested_state_set(vm, VCPU_ID, state, true);
-@@ -50,12 +41,6 @@ void test_nested_state_expect_errno(struct kvm_vm *vm,
- 		"Expected %s (%d) from vcpu_nested_state_set but got rv: %i errno: %s (%d)",
- 		strerror(expected_errno), expected_errno, rv, strerror(errno),
- 		errno);
--	run = vcpu_state(vm, VCPU_ID);
--	vcpu_run(vm, VCPU_ID);
--	TEST_ASSERT(run->exit_reason == KVM_EXIT_SHUTDOWN,
--		"Got exit_reason other than KVM_EXIT_SHUTDOWN: %u (%s),\n",
--		run->exit_reason,
--		exit_reason_str(run->exit_reason));
- }
- 
- void test_nested_state_expect_einval(struct kvm_vm *vm,
+ extern struct platform_driver mtk_ddp_driver;
 -- 
 2.20.1
 
