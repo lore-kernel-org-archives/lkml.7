@@ -2,122 +2,356 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E1CC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87D3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A12F233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC15233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:28:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NeaPl8zt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ycdb5dkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfH2N1l (ORCPT
+        id S1727900AbfH2N2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:27:41 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:43408 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfH2N1k (ORCPT
+        Thu, 29 Aug 2019 09:28:02 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32802 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbfH2N2B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:27:40 -0400
-Received: by mail-vs1-f65.google.com with SMTP id l63so2372357vsl.10
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 06:27:40 -0700 (PDT)
+        Thu, 29 Aug 2019 09:28:01 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n190so1616008pgn.0;
+        Thu, 29 Aug 2019 06:28:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZHPJ2CX8ytGZ59Fh54fNpJL5kK4m1cHIPf+TD22z6+o=;
-        b=NeaPl8ztoK8Qgdcm1+9gPoJDy8U3vejd9FkPsydEcY67n3MnWOq+NaObq3ozxUJ5Rk
-         DwuiKOIEv1nIHZsB/vk+DkE2/fghIqX3BE2c3KQzYmprvcAaDqLw3Nh+8cwLxYuBrewg
-         ylebGR/9Rc/fZ5+HwC9njjO3tJ4KcfsEjQoagoqlXBHQMoD+N2o7klC3HPzUcNiWlpX1
-         fm7KsQ/qoQsxBoNSjtRp5kI8h28S4gwjEIZFP5THgEgyanEG0EDd02a9Fx8l7b+ty0I5
-         ZtvPoOLmPPKTI3+szjIA8ewjhbuGKx8ae5OyYEAVu3xoguAAqQhIIugSUjLkZuxcFxWy
-         NGtg==
+         :cc:content-transfer-encoding;
+        bh=2Y6BpN7Uupv7X4I2rysVn7jUz/GHrmd0Z9b9CcxKoxs=;
+        b=Ycdb5dkvqqq+4NIpkaAupgTLIDvX14i7bpzIKjFlPl3+BAx5Z4ux339GbCiXB8RFii
+         KYI/1UWZhaVcbvMVjlqnN0cWuaycw9VQELtYcvwDXdzjw4hYAf7xh681C93k2DzWa8HF
+         b2xmoN+7bprc8Ez94NBFrEfyiQqxUTI5VOlO3acgw8I3+y10RWZ74FlwgZZZnoQdc1WL
+         lu8urWcjz+eAmbYR/8sDH4xc7Sva1FtH2dNweORLRl72vollVCx+BfNBl0SI+vrX6NoP
+         7j/hGqbW+KUiJwYBydeg21FmieYDDbXt6qAJwiHLnNV3iriEK5Vx4cajJE0bcp8ournT
+         HKPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZHPJ2CX8ytGZ59Fh54fNpJL5kK4m1cHIPf+TD22z6+o=;
-        b=HYSA5kMuYQ+3JKNgOirdb5gODBXe1UlQZ+u/shpswpjB1+9vwwvYaHw9/Ma6ztA3RZ
-         t9wEd6xJJZW6xx7QdeihQqE6E7XEkMDmNMyI3zxvclgmzjng2GB7+QZcy90o7+Ikefui
-         PrUZwMMWXLUctj28LjFcEj58Od5oW/TyB/M+/rDCNBODaz0Io3UHH6+4xxNptUXtyp52
-         rizjE/m/Mi93SPBPl8DuR9GIGbrzaqbjdJcB4hsl8ir/TNG2S2/elhTtFSCkifu01icC
-         IVfFuKsAX0amt/8YVuzmyF8VqR40zVxIQNjV4pVf2Swc9ZS7+64rGnltJyxso0nyufqE
-         5uKQ==
-X-Gm-Message-State: APjAAAWb0idbiw9UVlWg/3vgr2PbS+sVBHEEzaeIFMGedk5ryCmsKG1R
-        Vq5pFF6PUTvkiw2bEXvPg3fIjwHMwnUvs1hyZgYXdg==
-X-Google-Smtp-Source: APXvYqxmdPqLidkuXh1dij1W2bRIM9XWVMRet2NViucbtCc8v+TuYKNJF1B7rF32WXPVTp8r+I+BJd7U8e9e1K/UlRw=
-X-Received: by 2002:a67:e287:: with SMTP id g7mr5409930vsf.200.1567085259869;
- Thu, 29 Aug 2019 06:27:39 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2Y6BpN7Uupv7X4I2rysVn7jUz/GHrmd0Z9b9CcxKoxs=;
+        b=BEgRGiGFt1+oq/bIJp+xOvY4/a4GCLQErlKmjaxb0DdI0p8dicWNh7zcMzmFTM9qnO
+         BvFejYpwGD16uHn5ic19UaGCaDDBcRis0N0rAyXbFQfZayKJ+wnZx+ygc6XIf4OGxXwU
+         2eQfVKHE1dc6Z8mHSn6j1SG8aEedLUK9uvJIssQQ06pD3ON2enSU1G4d6RpvOnjFK8M7
+         MwNSpCYbsZQzZ5VMAK6RoPaoXTyD0BFvOq2+G3r/179jRNaeTtexG4Jy0OmcOXAns331
+         kt3j6hdWFUNvCkFPk285Qz/hcT3eaz0BVY9t9seQD4Uj4v6ugGWSzNgf6Up3I2RUl1b4
+         c5Iw==
+X-Gm-Message-State: APjAAAVfMv+8uIeLv24fg7XswWpl/SRySpxL8POtvWQuv6HuxzP0pVPY
+        5e6Ur3ZvTMzIuiQ+1Mm8NX3c7Hsgd0Zk6oMUNng=
+X-Google-Smtp-Source: APXvYqx4YSUU2osDY9JdW85z12G2w/UvYdFaEaqz3Z5+lCelyQCVM7HmagT+5t2YxPCEJ95Uyc+Y0i2MTZHASo/160k=
+X-Received: by 2002:a63:c842:: with SMTP id l2mr6905808pgi.4.1567085280639;
+ Thu, 29 Aug 2019 06:28:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190829104928.27404-1-yamada.masahiro@socionext.com>
- <CAPDyKFooFQgBgK3N1Ob9rsT_7-5kqC9i7PeMxkkeAbnDP+Fwnw@mail.gmail.com> <CAK7LNASDfJQrMq4jjwDjrQF-4E9A_BZtgh+K-duTAo8zRVZA0g@mail.gmail.com>
-In-Reply-To: <CAK7LNASDfJQrMq4jjwDjrQF-4E9A_BZtgh+K-duTAo8zRVZA0g@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 29 Aug 2019 15:27:03 +0200
-Message-ID: <CAPDyKFpnRbtVpYkpM7CDYfxvdBjqybB4SVWyuSrS1jpYduTbCw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] mmc: sdhci-cadence: enable v4_mode to fix ADMA 64-bit addressing
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Piotr Sroka <piotrs@cadence.com>,
-        "# 4.0+" <stable@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190824233724.1775-1-uwe@kleine-koenig.org>
+In-Reply-To: <20190824233724.1775-1-uwe@kleine-koenig.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 29 Aug 2019 16:27:49 +0300
+Message-ID: <CAHp75Veuxt40U8CotL5KHJGxNPOJ7a-DCcKWN7+mgoPJAieTDA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] vsprintf: introduce %dE for error constants
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 at 14:05, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+On Sun, Aug 25, 2019 at 2:40 AM Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.or=
+g> wrote:
 >
-> On Thu, Aug 29, 2019 at 8:48 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >
-> > On Thu, 29 Aug 2019 at 12:49, Masahiro Yamada
-> > <yamada.masahiro@socionext.com> wrote:
-> > >
-> > > The IP datasheet says this controller is compatible with SD Host
-> > > Specification Version v4.00.
-> > >
-> > > As it turned out, the ADMA of this IP does not work with 64-bit mode
-> > > when it is in the Version 3.00 compatible mode; it understands the
-> > > old 64-bit descriptor table (as defined in SDHCI v2), but the ADMA
-> > > System Address Register (SDHCI_ADMA_ADDRESS) cannot point to the
-> > > 64-bit address.
-> > >
-> > > I noticed this issue only after commit bd2e75633c80 ("dma-contiguous:
-> > > use fallback alloc_pages for single pages"). Prior to that commit,
-> > > dma_set_mask_and_coherent() returned the dma address that fits in
-> > > 32-bit range, at least for the default arm64 configuration
-> > > (arch/arm64/configs/defconfig). Now the host->adma_addr exceeds the
-> > > 32-bit limit, causing the real problem for the Socionext SoCs.
-> > > (As a side-note, I was also able to reproduce the issue for older
-> > > kernels by turning off CONFIG_DMA_CMA.)
-> > >
-> > > Call sdhci_enable_v4_mode() to fix this.
-> > >
-> > > I think it is better to back-port this, but only possible for v4.20+.
-> > >
-> > > When this driver was merged (v4.10), the v4 mode support did not exist.
-> > > It was added by commit b3f80b434f72 ("mmc: sdhci: Add sd host v4 mode")
-> > > i.e. v4.20.
-> > >
-> > > Cc: <stable@vger.kernel.org> # v4.20+
-> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> >
-> > Applied for fixes, by adding below tag, thanks!
-> >
-> > Fixes: b3f80b434f72 ("mmc: sdhci: Add sd host v4 mode")
+>         pr_info("probing failed (%dE)\n", ret);
 >
-> This is not a bug commit.
+> expands to
+>
+>         probing failed (EIO)
+>
+> if ret holds -EIO (or EIO). This introduces an array of error codes. If
+> the error code is missing, %dE falls back to %d and so prints the plain
+> number.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org>
+> ---
+> Hello
+>
+> there are many code sites that benefit from this. Just grep for
+> "(%d)" ...
+>
+> As an example the follow up patch converts a printk to use this new
+> format escape.
+>
 
-Right, but it can't be applied before this commit, hence why I added
-it. Not sure that it matters, but I can remove the tag if you
-insists!?
+Let's not do this!
 
-Kind regards
-Uffe
+We have already a lot of pain with pointer extension, but here is just
+a misleading stuff.
+Besides above, how you print (float) number out of kernel in sysfs in
+very well standard format?
+Please, use %p<SMTH> instead.
+
+> Best regards
+> Uwe
+>
+>  Documentation/core-api/printk-formats.rst |   3 +
+>  lib/vsprintf.c                            | 193 +++++++++++++++++++++-
+>  2 files changed, 195 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/co=
+re-api/printk-formats.rst
+> index c6224d039bcb..81002414f956 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -35,6 +35,9 @@ Integer types
+>                 u64                     %llu or %llx
+>
+>
+> +To print the name that corresponds to an integer error constant, use %dE=
+ and
+> +pass the int.
+> +
+>  If <type> is dependent on a config option for its size (e.g., sector_t,
+>  blkcnt_t) or is architecture-dependent for its size (e.g., tcflag_t), us=
+e a
+>  format specifier of its largest possible type and explicitly cast to it.
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index b0967cf17137..672eab8dab84 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -533,6 +533,192 @@ char *number(char *buf, char *end, unsigned long lo=
+ng num,
+>         return buf;
+>  }
+>
+> +#define ERRORCODE(x) { .str =3D #x, .err =3D x }
+> +
+> +static const struct {
+> +       const char *str;
+> +       int err;
+> +} errorcodes[] =3D {
+> +       ERRORCODE(EPERM),
+> +       ERRORCODE(ENOENT),
+> +       ERRORCODE(ESRCH),
+> +       ERRORCODE(EINTR),
+> +       ERRORCODE(EIO),
+> +       ERRORCODE(ENXIO),
+> +       ERRORCODE(E2BIG),
+> +       ERRORCODE(ENOEXEC),
+> +       ERRORCODE(EBADF),
+> +       ERRORCODE(ECHILD),
+> +       ERRORCODE(EAGAIN),
+> +       ERRORCODE(ENOMEM),
+> +       ERRORCODE(EACCES),
+> +       ERRORCODE(EFAULT),
+> +       ERRORCODE(ENOTBLK),
+> +       ERRORCODE(EBUSY),
+> +       ERRORCODE(EEXIST),
+> +       ERRORCODE(EXDEV),
+> +       ERRORCODE(ENODEV),
+> +       ERRORCODE(ENOTDIR),
+> +       ERRORCODE(EISDIR),
+> +       ERRORCODE(EINVAL),
+> +       ERRORCODE(ENFILE),
+> +       ERRORCODE(EMFILE),
+> +       ERRORCODE(ENOTTY),
+> +       ERRORCODE(ETXTBSY),
+> +       ERRORCODE(EFBIG),
+> +       ERRORCODE(ENOSPC),
+> +       ERRORCODE(ESPIPE),
+> +       ERRORCODE(EROFS),
+> +       ERRORCODE(EMLINK),
+> +       ERRORCODE(EPIPE),
+> +       ERRORCODE(EDOM),
+> +       ERRORCODE(ERANGE),
+> +       ERRORCODE(EDEADLK),
+> +       ERRORCODE(ENAMETOOLONG),
+> +       ERRORCODE(ENOLCK),
+> +       ERRORCODE(ENOSYS),
+> +       ERRORCODE(ENOTEMPTY),
+> +       ERRORCODE(ELOOP),
+> +       ERRORCODE(EWOULDBLOCK),
+> +       ERRORCODE(ENOMSG),
+> +       ERRORCODE(EIDRM),
+> +       ERRORCODE(ECHRNG),
+> +       ERRORCODE(EL2NSYNC),
+> +       ERRORCODE(EL3HLT),
+> +       ERRORCODE(EL3RST),
+> +       ERRORCODE(ELNRNG),
+> +       ERRORCODE(EUNATCH),
+> +       ERRORCODE(ENOCSI),
+> +       ERRORCODE(EL2HLT),
+> +       ERRORCODE(EBADE),
+> +       ERRORCODE(EBADR),
+> +       ERRORCODE(EXFULL),
+> +       ERRORCODE(ENOANO),
+> +       ERRORCODE(EBADRQC),
+> +       ERRORCODE(EBADSLT),
+> +       ERRORCODE(EBFONT),
+> +       ERRORCODE(ENOSTR),
+> +       ERRORCODE(ENODATA),
+> +       ERRORCODE(ETIME),
+> +       ERRORCODE(ENOSR),
+> +       ERRORCODE(ENONET),
+> +       ERRORCODE(ENOPKG),
+> +       ERRORCODE(EREMOTE),
+> +       ERRORCODE(ENOLINK),
+> +       ERRORCODE(EADV),
+> +       ERRORCODE(ESRMNT),
+> +       ERRORCODE(ECOMM),
+> +       ERRORCODE(EPROTO),
+> +       ERRORCODE(EMULTIHOP),
+> +       ERRORCODE(EDOTDOT),
+> +       ERRORCODE(EBADMSG),
+> +       ERRORCODE(EOVERFLOW),
+> +       ERRORCODE(ENOTUNIQ),
+> +       ERRORCODE(EBADFD),
+> +       ERRORCODE(EREMCHG),
+> +       ERRORCODE(ELIBACC),
+> +       ERRORCODE(ELIBBAD),
+> +       ERRORCODE(ELIBSCN),
+> +       ERRORCODE(ELIBMAX),
+> +       ERRORCODE(ELIBEXEC),
+> +       ERRORCODE(EILSEQ),
+> +       ERRORCODE(ERESTART),
+> +       ERRORCODE(ESTRPIPE),
+> +       ERRORCODE(EUSERS),
+> +       ERRORCODE(ENOTSOCK),
+> +       ERRORCODE(EDESTADDRREQ),
+> +       ERRORCODE(EMSGSIZE),
+> +       ERRORCODE(EPROTOTYPE),
+> +       ERRORCODE(ENOPROTOOPT),
+> +       ERRORCODE(EPROTONOSUPPORT),
+> +       ERRORCODE(ESOCKTNOSUPPORT),
+> +       ERRORCODE(EOPNOTSUPP),
+> +       ERRORCODE(EPFNOSUPPORT),
+> +       ERRORCODE(EAFNOSUPPORT),
+> +       ERRORCODE(EADDRINUSE),
+> +       ERRORCODE(EADDRNOTAVAIL),
+> +       ERRORCODE(ENETDOWN),
+> +       ERRORCODE(ENETUNREACH),
+> +       ERRORCODE(ENETRESET),
+> +       ERRORCODE(ECONNABORTED),
+> +       ERRORCODE(ECONNRESET),
+> +       ERRORCODE(ENOBUFS),
+> +       ERRORCODE(EISCONN),
+> +       ERRORCODE(ENOTCONN),
+> +       ERRORCODE(ESHUTDOWN),
+> +       ERRORCODE(ETOOMANYREFS),
+> +       ERRORCODE(ETIMEDOUT),
+> +       ERRORCODE(ECONNREFUSED),
+> +       ERRORCODE(EHOSTDOWN),
+> +       ERRORCODE(EHOSTUNREACH),
+> +       ERRORCODE(EALREADY),
+> +       ERRORCODE(EINPROGRESS),
+> +       ERRORCODE(ESTALE),
+> +       ERRORCODE(EUCLEAN),
+> +       ERRORCODE(ENOTNAM),
+> +       ERRORCODE(ENAVAIL),
+> +       ERRORCODE(EISNAM),
+> +       ERRORCODE(EREMOTEIO),
+> +       ERRORCODE(EDQUOT),
+> +       ERRORCODE(ENOMEDIUM),
+> +       ERRORCODE(EMEDIUMTYPE),
+> +       ERRORCODE(ECANCELED),
+> +       ERRORCODE(ENOKEY),
+> +       ERRORCODE(EKEYEXPIRED),
+> +       ERRORCODE(EKEYREVOKED),
+> +       ERRORCODE(EKEYREJECTED),
+> +       ERRORCODE(EOWNERDEAD),
+> +       ERRORCODE(ENOTRECOVERABLE),
+> +       ERRORCODE(ERFKILL),
+> +       ERRORCODE(EHWPOISON),
+> +       ERRORCODE(ERESTARTSYS),
+> +       ERRORCODE(ERESTARTNOINTR),
+> +       ERRORCODE(ERESTARTNOHAND),
+> +       ERRORCODE(ENOIOCTLCMD),
+> +       ERRORCODE(ERESTART_RESTARTBLOCK),
+> +       ERRORCODE(EPROBE_DEFER),
+> +       ERRORCODE(EOPENSTALE),
+> +       ERRORCODE(ENOPARAM),
+> +       ERRORCODE(EBADHANDLE),
+> +       ERRORCODE(ENOTSYNC),
+> +       ERRORCODE(EBADCOOKIE),
+> +       ERRORCODE(ENOTSUPP),
+> +       ERRORCODE(ETOOSMALL),
+> +       ERRORCODE(ESERVERFAULT),
+> +       ERRORCODE(EBADTYPE),
+> +       ERRORCODE(EJUKEBOX),
+> +       ERRORCODE(EIOCBQUEUED),
+> +       ERRORCODE(ERECALLCONFLICT),
+> +};
+> +
+> +static noinline_for_stack
+> +char *errstr(char *buf, char *end, unsigned long long num,
+> +            struct printf_spec spec)
+> +{
+> +       char *errname =3D NULL;
+> +       size_t errnamelen, copy;
+> +       int i;
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(errorcodes); ++i) {
+> +               if (num =3D=3D errorcodes[i].err || num =3D=3D -errorcode=
+s[i].err) {
+> +                       errname =3D errorcodes[i].str;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       if (!errname) {
+> +               /* fall back to ordinary number */
+> +               return number(buf, end, num, spec);
+> +       }
+> +
+> +       copy =3D errnamelen =3D strlen(errname);
+> +       if (copy > end - buf)
+> +               copy =3D end - buf;
+> +       buf =3D memcpy(buf, errname, copy);
+> +
+> +       return buf + errnamelen;
+> +}
+> +
+>  static noinline_for_stack
+>  char *special_hex_number(char *buf, char *end, unsigned long long num, i=
+nt size)
+>  {
+> @@ -2566,7 +2752,12 @@ int vsnprintf(char *buf, size_t size, const char *=
+fmt, va_list args)
+>                                 num =3D va_arg(args, unsigned int);
+>                         }
+>
+> -                       str =3D number(str, end, num, spec);
+> +                       if (spec.type =3D=3D FORMAT_TYPE_INT && *fmt =3D=
+=3D 'E') {
+> +                               fmt++;
+> +                               str =3D errstr(str, end, num, spec);
+> +                       } else {
+> +                               str =3D number(str, end, num, spec);
+> +                       }
+>                 }
+>         }
+>
+> --
+> 2.20.1
+>
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
