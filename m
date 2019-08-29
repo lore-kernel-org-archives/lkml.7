@@ -2,130 +2,124 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDD3C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C813C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F4C2339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103374;
-	bh=bsmHAF33qlowc3EwOHE77PRfi/xEdY+utyNrN74QX1U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Va90SYwXWOrxyF2Ef1Pp7BrMiDggaNdaN11fDsZzfDs2DWkxbcwl4nvnZR/ubc1E9
-	 TpgdfcfUluFw9N4z13oi16qlbHVAWQzsdFuCTjnLaRZUqevYbnjpfZjOjrekmlvNT+
-	 nC/zySMGBqlAbT1/ari83NcRZxdEq0XygbzfVVcs=
+	by mail.kernel.org (Postfix) with ESMTP id D642F2339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJZkBjHZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbfH2SOz (ORCPT
+        id S1729337AbfH2S3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:14:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729022AbfH2SOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:14:51 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63E0D233FF;
-        Thu, 29 Aug 2019 18:14:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102490;
-        bh=bsmHAF33qlowc3EwOHE77PRfi/xEdY+utyNrN74QX1U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XzCjjG2eZMYK1QwdiPK3TNRCHNs4daQaofwBZFgZSxHouye+b/xpF4b9k6H3M/PIB
-         ub2/tCZ6RnDlRXcDEb0DUqXBYB+y91X1qbCXCj52KiFh1tRIFl/rWA6+EpWA1qhXhQ
-         M5ETY2i6xgp9VCnh9aqZ6D3Nu9jQ5Jqs7JrQVm4U=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tho Vu <tho.vu.wh@rvc.renesas.com>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 46/76] ravb: Fix use-after-free ravb_tstamp_skb
-Date:   Thu, 29 Aug 2019 14:12:41 -0400
-Message-Id: <20190829181311.7562-46-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
-References: <20190829181311.7562-1-sashal@kernel.org>
+        Thu, 29 Aug 2019 14:29:40 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37276 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727897AbfH2S3i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:29:38 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y9so2636003pfl.4;
+        Thu, 29 Aug 2019 11:29:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XGj2EADqNYSEMEQUe9U3U+ApBTGiXnfrDASNfm/rl0k=;
+        b=EJZkBjHZyK2TkNIpmYxq6WoqIVAXRwdGu23NXoIDPaOSjX8tJu6tQljH6LzAnCo4np
+         BXzAwGi59drvalztNdhid4wEMRBoAc7SxMu3H7CX8C4HDyL/LfuWeagFAO2paebIITMs
+         hKsM6mPr2ic+PUm5135YP8iIcU9ErJUMe5pWyhb5WCKYUGmL6O98M4lVJX+bYN1hGRh0
+         GvKW3JvJZcDyOt4nqDkWL4SUPtVhEwMDZ76K147Kuwo6Fo5mwOeiohtgr9WBYkAuX83c
+         KonMCj90wI/gZYTxFuP7dovTs5t95xWpTcKDk1rZOmrregV7jX5Nfof49UJRvk+q3kU9
+         dUxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XGj2EADqNYSEMEQUe9U3U+ApBTGiXnfrDASNfm/rl0k=;
+        b=EzXDLLcHtvkUsWX0Xdt2w6m5qBA1GDeRVNYDCqANzZgC8MUruAri5AskAB9FhjxYZy
+         8EfgJBqPpPZYfY7CrZyqAjD4b9AhtKVebeTLsxVjp8hhX57H90XMKxsgq2mJbhrDccES
+         dxeov41p2Srd5P7wnDDsFzT3Q0Gkit5X/C+Fm6L65Gchsr5cryU4TNtrY0q+F3VywtVK
+         mvb8JLsrAPl6B53KvYzO4B3OcreDPwdYy+u+J3UlvTTwzyLLvDXPXe0e88C0FKIcryZh
+         ddUQVbjND9ilIsXcnLYiEwm9QCuYmUmXd8gxDr9xhpIKduGMPLzxBYIr1ikNgIFtlSbw
+         P8kw==
+X-Gm-Message-State: APjAAAUkdFqJ4G0NAMYvv3YD7AJdZlLsoi9PLr/W+Q7RrKg79GKykUEH
+        rphR1/eAedGSmouTb98tK+T/f0Gi
+X-Google-Smtp-Source: APXvYqwINcLZPbJV3Fgfb2KivcX+LlmVZBUYduoAEb5JXlXT82AkINQeGDPHs8dxPibj9tDTPryA2Q==
+X-Received: by 2002:a17:90a:5d98:: with SMTP id t24mr11366507pji.94.1567103377134;
+        Thu, 29 Aug 2019 11:29:37 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id o3sm16680318pje.1.2019.08.29.11.29.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 11:29:36 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 11:29:33 -0700
+From:   'Dmitry Torokhov' <dmitry.torokhov@gmail.com>
+To:     "Johnny.Chuang" <johnny.chuang@emc.com.tw>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        =?utf-8?B?U1RSRDIt6JSh5oOg5ayL?= <jennifer.tsai@emc.com.tw>,
+        =?utf-8?B?U1RSRDIt6Zmz5bSH5piO57aT55CG?= <james.chen@emc.com.tw>,
+        =?utf-8?B?J+aigeWNmue/lCc=?= <paul.liang@emc.com.tw>,
+        'jeff' <jeff.chuang@emc.com.tw>
+Subject: Re: [PATCH] Input: elants_i2c - return real value of
+ elants_i2c_initialize()
+Message-ID: <20190829182933.GD187474@dtor-ws>
+References: <1566958886-25756-1-git-send-email-johnny.chuang@emc.com.tw>
+ <000601d55d49$05878160$10968420$@emc.com.tw>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000601d55d49$05878160$10968420$@emc.com.tw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tho Vu <tho.vu.wh@rvc.renesas.com>
+Hi Johnny,
 
-[ Upstream commit cfef46d692efd852a0da6803f920cc756eea2855 ]
+On Wed, Aug 28, 2019 at 10:33:46AM +0800, Johnny.Chuang wrote:
+> The return value of elants_i2c_initialize() was always 0.
+> It maybe register input device when initialize fail.
 
-When a Tx timestamp is requested, a pointer to the skb is stored in the
-ravb_tstamp_skb struct. This was done without an skb_get. There exists
-the possibility that the skb could be freed by ravb_tx_free (when
-ravb_tx_free is called from ravb_start_xmit) before the timestamp was
-processed, leading to a use-after-free bug.
+We do not want to return error here, because it will abort probe, and
+then we will not be able to initiate firmware flash flow so we can
+attempt to recover the device.
 
-Use skb_get when filling a ravb_tstamp_skb struct, and add appropriate
-frees/consumes when a ravb_tstamp_skb struct is freed.
+If you want to try you can change the ts->iap_mode before trying to
+register input device, but then you need to be very careful about
+registering and unregistering it later, after flashing or re-flashing
+firmware.
 
-Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
-Signed-off-by: Tho Vu <tho.vu.wh@rvc.renesas.com>
-Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/renesas/ravb_main.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
+> ---
+>  drivers/input/touchscreen/elants_i2c.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/touchscreen/elants_i2c.c
+> b/drivers/input/touchscreen/elants_i2c.c
+> index d4ad24e..9c9816f 100644
+> --- a/drivers/input/touchscreen/elants_i2c.c
+> +++ b/drivers/input/touchscreen/elants_i2c.c
+> @@ -571,7 +571,7 @@ static int elants_i2c_initialize(struct elants_data *ts)
+>  	if (error)
+>  		ts->iap_mode = ELAN_IAP_RECOVERY;
+>  
+> -	return 0;
+> +	return error;
+>  }
+>  
+>  /*
+> -- 
+> 2.7.4
+> 
 
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index ef8f08931fe8b..6cacd5e893aca 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Renesas Ethernet AVB device driver
-  *
-- * Copyright (C) 2014-2015 Renesas Electronics Corporation
-+ * Copyright (C) 2014-2019 Renesas Electronics Corporation
-  * Copyright (C) 2015 Renesas Solutions Corp.
-  * Copyright (C) 2015-2016 Cogent Embedded, Inc. <source@cogentembedded.com>
-  *
-@@ -513,7 +513,10 @@ static void ravb_get_tx_tstamp(struct net_device *ndev)
- 			kfree(ts_skb);
- 			if (tag == tfa_tag) {
- 				skb_tstamp_tx(skb, &shhwtstamps);
-+				dev_consume_skb_any(skb);
- 				break;
-+			} else {
-+				dev_kfree_skb_any(skb);
- 			}
- 		}
- 		ravb_modify(ndev, TCCR, TCCR_TFR, TCCR_TFR);
-@@ -1564,7 +1567,7 @@ static netdev_tx_t ravb_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 			}
- 			goto unmap;
- 		}
--		ts_skb->skb = skb;
-+		ts_skb->skb = skb_get(skb);
- 		ts_skb->tag = priv->ts_skb_tag++;
- 		priv->ts_skb_tag &= 0x3ff;
- 		list_add_tail(&ts_skb->list, &priv->ts_skb_list);
-@@ -1693,6 +1696,7 @@ static int ravb_close(struct net_device *ndev)
- 	/* Clear the timestamp list */
- 	list_for_each_entry_safe(ts_skb, ts_skb2, &priv->ts_skb_list, list) {
- 		list_del(&ts_skb->list);
-+		kfree_skb(ts_skb->skb);
- 		kfree(ts_skb);
- 	}
- 
+Thanks.
+
 -- 
-2.20.1
-
+Dmitry
