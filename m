@@ -4,44 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C574C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEB2C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE3C2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E36FD23405
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728685AbfH2TCB (ORCPT
+        id S1728734AbfH2TCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:02:01 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51358 "EHLO
+        Thu, 29 Aug 2019 15:02:04 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51375 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727437AbfH2TB6 (ORCPT
+        with ESMTP id S1728640AbfH2TCB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 15:01:58 -0400
+        Thu, 29 Aug 2019 15:02:01 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i3Pg7-00055c-Bk; Thu, 29 Aug 2019 21:01:51 +0200
+        id 1i3Pg5-00051p-BB; Thu, 29 Aug 2019 21:01:49 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CDD7C1C07C3;
-        Thu, 29 Aug 2019 21:01:50 +0200 (CEST)
-Date:   Thu, 29 Aug 2019 19:01:50 -0000
-From:   "tip-bot2 for Namhyung Kim" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D70DE1C07C3;
+        Thu, 29 Aug 2019 21:01:48 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 19:01:48 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf top: Fix event group with more than two events
-Cc:     Namhyung Kim <namhyung@kernel.org>,
+Subject: [tip: perf/core] perf tools: Remove needless util.h include from builtin.h
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20190827231555.121411-2-namhyung@kernel.org>
-References: <20190827231555.121411-2-namhyung@kernel.org>
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <tip-a01ig3c4t76ye5wkqmtgk9qn@git.kernel.org>
+References: <tip-a01ig3c4t76ye5wkqmtgk9qn@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <156710531069.10538.8108779182336952593.tip-bot2@tip-bot2>
+Message-ID: <156710530875.10526.15982096409974008602.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,135 +59,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     be5863b7d9281bbb932542d16b7d758357fde267
-Gitweb:        https://git.kernel.org/tip/be5863b7d9281bbb932542d16b7d758357fde267
-Author:        Namhyung Kim <namhyung@kernel.org>
-AuthorDate:    Wed, 28 Aug 2019 08:15:55 +09:00
+Commit-ID:     efa73d37c11af5082a5605665186c368f1196381
+Gitweb:        https://git.kernel.org/tip/efa73d37c11af5082a5605665186c368f1196381
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Tue, 27 Aug 2019 11:32:09 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Wed, 28 Aug 2019 18:15:03 -03:00
+CommitterDate: Wed, 28 Aug 2019 17:19:34 -03:00
 
-perf top: Fix event group with more than two events
+perf tools: Remove needless util.h include from builtin.h
 
-The event group feature links relevant hist entries among events so that
-they can be displayed together.  During the link process, each hist
-entry in non-leader events is connected to a hist entry in the leader
-event.  This is done in order of events specified in the command line so
-it assumes that events are linked in the order.
+And fix up places where util.h is needed but was obtained indirectly via
+builtin.h.
 
-But 'perf top' can break the assumption since it does the link process
-multiple times.  For example, a hist entry can be in the third event
-only at first so it's linked after the leader.  Some time later, second
-event has a hist entry for it and it'll be linked after the entry of the
-third event.
-
-This makes the code compilicated to deal with such unordered entries.
-This patch simply unlink all the entries after it's printed so that they
-can assume the correct order after the repeated link process.  Also it'd
-be easy to deal with decaying old entries IMHO.
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190827231555.121411-2-namhyung@kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-a01ig3c4t76ye5wkqmtgk9qn@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-top.c |  6 ++++++-
- tools/perf/util/hist.c   | 39 +++++++++++++++++++++------------------
- tools/perf/util/hist.h   |  1 +-
- 3 files changed, 28 insertions(+), 18 deletions(-)
+ tools/perf/builtin-buildid-cache.c | 1 +
+ tools/perf/builtin.h               | 2 --
+ tools/perf/perf.c                  | 1 +
+ 3 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 104dbb1..c3f9544 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -273,6 +273,12 @@ static void perf_top__resort_hists(struct perf_top *t)
- 	evlist__for_each_entry(evlist, pos) {
- 		struct hists *hists = evsel__hists(pos);
+diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+index 10457b1..7dde3ef 100644
+--- a/tools/perf/builtin-buildid-cache.c
++++ b/tools/perf/builtin-buildid-cache.c
+@@ -25,6 +25,7 @@
+ #include "util/session.h"
+ #include "util/symbol.h"
+ #include "util/time-utils.h"
++#include "util/util.h"
+ #include "util/probe-file.h"
  
-+		/*
-+		 * unlink existing entries so that they can be linked
-+		 * in a correct order in hists__match() below.
-+		 */
-+		hists__unlink(hists);
-+
- 		if (evlist->enabled) {
- 			if (t->zero) {
- 				hists__delete_entries(hists);
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 3370267..e0b1496 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -2439,7 +2439,7 @@ void hists__match(struct hists *leader, struct hists *other)
- {
- 	struct rb_root_cached *root;
- 	struct rb_node *nd;
--	struct hist_entry *pos, *pair, *pos_pair, *tmp_pair;
-+	struct hist_entry *pos, *pair;
+ static int build_id_cache__kcore_buildid(const char *proc_dir, char *sbuildid)
+diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+index 999fe91..14a2db6 100644
+--- a/tools/perf/builtin.h
++++ b/tools/perf/builtin.h
+@@ -2,8 +2,6 @@
+ #ifndef BUILTIN_H
+ #define BUILTIN_H
  
- 	if (symbol_conf.report_hierarchy) {
- 		/* hierarchy report always collapses entries */
-@@ -2456,24 +2456,8 @@ void hists__match(struct hists *leader, struct hists *other)
- 		pos  = rb_entry(nd, struct hist_entry, rb_node_in);
- 		pair = hists__find_entry(other, pos);
- 
--		if (pair && list_empty(&pair->pairs.node)) {
--			list_for_each_entry_safe(pos_pair, tmp_pair, &pos->pairs.head, pairs.node) {
--				if (pos_pair->hists == other) {
--					/*
--					 * XXX maybe decayed entries can appear
--					 * here?  but then we would have use
--					 * after free, as decayed entries are
--					 * freed see hists__delete_entry
--					 */
--					BUG_ON(!pos_pair->dummy);
--					list_del_init(&pos_pair->pairs.node);
--					hist_entry__delete(pos_pair);
--					break;
--				}
--			}
+-#include "util/util.h"
 -
-+		if (pair)
- 			hist_entry__add_pair(pair, pos);
--		}
- 	}
- }
+ extern const char perf_usage_string[];
+ extern const char perf_more_info_string[];
  
-@@ -2558,6 +2542,25 @@ int hists__link(struct hists *leader, struct hists *other)
- 	return 0;
- }
- 
-+int hists__unlink(struct hists *hists)
-+{
-+	struct rb_root_cached *root;
-+	struct rb_node *nd;
-+	struct hist_entry *pos;
-+
-+	if (hists__has(hists, need_collapse))
-+		root = &hists->entries_collapsed;
-+	else
-+		root = hists->entries_in;
-+
-+	for (nd = rb_first_cached(root); nd; nd = rb_next(nd)) {
-+		pos = rb_entry(nd, struct hist_entry, rb_node_in);
-+		list_del_init(&pos->pairs.node);
-+	}
-+
-+	return 0;
-+}
-+
- void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
- 			  struct perf_sample *sample, bool nonany_branch_mode)
- {
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 83d5fc1..7b9267e 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -217,6 +217,7 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *he);
- 
- void hists__match(struct hists *leader, struct hists *other);
- int hists__link(struct hists *leader, struct hists *other);
-+int hists__unlink(struct hists *hists);
- 
- struct hists_evsel {
- 	struct evsel evsel;
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index d4e4d53..34763a9 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -18,6 +18,7 @@
+ #include "util/bpf-loader.h"
+ #include "util/debug.h"
+ #include "util/event.h"
++#include "util/util.h"
+ #include <api/fs/fs.h>
+ #include <api/fs/tracing_path.h>
+ #include <errno.h>
