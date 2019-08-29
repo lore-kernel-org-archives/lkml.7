@@ -2,217 +2,109 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44777C41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026B6C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26C902173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF7792341B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:24:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfH2CVt (ORCPT
+        id S1727069AbfH2CYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 22:21:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44554 "EHLO mx1.redhat.com"
+        Wed, 28 Aug 2019 22:24:25 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:40700 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727251AbfH2CVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 22:21:47 -0400
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 235373DE0F
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 02:21:47 +0000 (UTC)
-Received: by mail-pf1-f199.google.com with SMTP id s18so1247240pfh.23
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 19:21:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FiSGPlzYCoM0ai3pX9aVq//cJW1SbVNJ9li6nBfkEJc=;
-        b=Xf1tTRrzAzr0WbFNkLP4FUgBSxICeWTOHS58mPg9JG00q/ju3iWNIWR4wXRlfTp4SF
-         toO/WKtTMoUMgBfOZ2ntn6ZYIhE4cmMZJvxxl5bMFMbyVTVChsHEj7CkKaNv47l03GC6
-         CsrcJg8kyjZ/+Qg28Z9tPTk0Wu/M8ku5kCfiDctZCH/X0SAhmXaZkBkIitDBVeT865DN
-         w0zFxHUVFViZSNpcBCk/vlSNYkPVNq8E5Lrf/8vkTJHKb78yfEfTPasfnlnGo/sfogCj
-         aIrOp0Fm6fAtKfIJAJTZ0HHozaahttF2PJkUnVzpH0FLs+mCJnwokopUD8L1AARRTxog
-         uTsA==
-X-Gm-Message-State: APjAAAVN2nfaufl/6gZHyeW1VR0rWuPh2RQHJtjzDdwLJgkgh/YxvCSl
-        LkSksCm28uuNAnM/ApU3UP13f/qId6t43bD9ShkeKa+8SlmerCOfwX/G4WfnoVS1sWSibDo9MvY
-        Akfb9HVcUHGXHZss0fFGHdW0U
-X-Received: by 2002:a17:902:7483:: with SMTP id h3mr4764535pll.163.1567045306146;
-        Wed, 28 Aug 2019 19:21:46 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwk8JJu9MRWzzxTE/wy4Jr8XBPCqg0NClgRvq9B7P5MgDMt61DEmMapUZzTtNS6E2uIi+yqjA==
-X-Received: by 2002:a17:902:7483:: with SMTP id h3mr4764520pll.163.1567045305953;
-        Wed, 28 Aug 2019 19:21:45 -0700 (PDT)
-Received: from xz-x1.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id j187sm750140pfg.178.2019.08.28.19.21.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 19:21:45 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Huth <thuth@redhat.com>,
-        Andrew Jones <drjones@redhat.com>, peterx@redhat.com
-Subject: [PATCH v2 4/4] KVM: selftests: Remove duplicate guest mode handling
-Date:   Thu, 29 Aug 2019 10:21:17 +0800
-Message-Id: <20190829022117.10191-5-peterx@redhat.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190829022117.10191-1-peterx@redhat.com>
-References: <20190829022117.10191-1-peterx@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726245AbfH2CYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 22:24:25 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1FB56200267;
+        Thu, 29 Aug 2019 04:24:23 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E373E200264;
+        Thu, 29 Aug 2019 04:24:18 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 790BA402B1;
+        Thu, 29 Aug 2019 10:24:13 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        leoyang.li@nxp.com, broonie@kernel.org, nandor.han@vaisala.com
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Biwen Li <biwen.li@nxp.com>
+Subject: [v5] rtc: pcf85363/pcf85263: fix error that failed to run hwclock -w
+Date:   Thu, 29 Aug 2019 10:14:18 +0800
+Message-Id: <20190829021418.4607-1-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the duplication code in run_test() of dirty_log_test because
-after some reordering of functions now we can directly use the outcome
-of vm_create().
+Issue:
+    - # hwclock -w
+      hwclock: RTC_SET_TIME: Invalid argument
 
-Meanwhile, with the new VM_MODE_PXXV48_4K, we can safely revert
-b442324b58 too where we stick the x86_64 PA width to 39 bits for
-dirty_log_test.
+Why:
+    - Relative commit: 8b9f9d4dc511309918c4f6793bae7387c0c638af, this patch
+      will always check for unwritable registers, it will compare reg
+      with max_register in regmap_writeable.
 
-Reviewed-by: Andrew Jones <drjones@redhat.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
+    - The pcf85363/pcf85263 has the capability of address wrapping
+      which means if you access an address outside the allowed range
+      (0x00-0x2f) hardware actually wraps the access to a lower address.
+      The rtc-pcf85363 driver will use this feature to configure the time
+      and execute 2 actions in the same i2c write operation (stopping the
+      clock and configure the time). However the driver has also
+      configured the `regmap maxregister` protection mechanism that will
+      block accessing addresses outside valid range (0x00-0x2f).
+
+How:
+    - Split of writing regs to two parts, first part writes control
+      registers about stop_enable and resets, second part writes
+      RTC time and date registers.
+
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
- tools/testing/selftests/kvm/dirty_log_test.c  | 52 ++-----------------
- .../testing/selftests/kvm/include/kvm_util.h  |  4 ++
- tools/testing/selftests/kvm/lib/kvm_util.c    | 17 ++++++
- 3 files changed, 26 insertions(+), 47 deletions(-)
+Change in v5:
+	- drop robust explanation
 
-diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-index c86f83cb33e5..89fac11733a5 100644
---- a/tools/testing/selftests/kvm/dirty_log_test.c
-+++ b/tools/testing/selftests/kvm/dirty_log_test.c
-@@ -234,10 +234,8 @@ static struct kvm_vm *create_vm(enum vm_guest_mode mode, uint32_t vcpuid,
- static void run_test(enum vm_guest_mode mode, unsigned long iterations,
- 		     unsigned long interval, uint64_t phys_offset)
- {
--	unsigned int guest_pa_bits, guest_page_shift;
- 	pthread_t vcpu_thread;
- 	struct kvm_vm *vm;
--	uint64_t max_gfn;
- 	unsigned long *bmap;
+Change in v4:
+	- use old scheme
+	- replace link to lkml.org with commit
+	- add proper explanation
+
+Change in v3:
+	- replace old scheme with new scheme:
+	  increase max_register.
+
+Change in v2:
+	- add Why and How into commit message.
+
+ drivers/rtc/rtc-pcf85363.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/rtc/rtc-pcf85363.c b/drivers/rtc/rtc-pcf85363.c
+index a075e77617dc..3450d615974d 100644
+--- a/drivers/rtc/rtc-pcf85363.c
++++ b/drivers/rtc/rtc-pcf85363.c
+@@ -166,7 +166,12 @@ static int pcf85363_rtc_set_time(struct device *dev, struct rtc_time *tm)
+ 	buf[DT_YEARS] = bin2bcd(tm->tm_year % 100);
  
- 	/*
-@@ -252,60 +250,20 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
- 		       2ul << (DIRTY_MEM_BITS - PAGE_SHIFT_4K),
- 		       guest_code);
- 
--	switch (mode) {
--	case VM_MODE_P52V48_4K:
--	case VM_MODE_PXXV48_4K:
--		guest_pa_bits = 52;
--		guest_page_shift = 12;
--		break;
--	case VM_MODE_P52V48_64K:
--		guest_pa_bits = 52;
--		guest_page_shift = 16;
--		break;
--	case VM_MODE_P48V48_4K:
--		guest_pa_bits = 48;
--		guest_page_shift = 12;
--		break;
--	case VM_MODE_P48V48_64K:
--		guest_pa_bits = 48;
--		guest_page_shift = 16;
--		break;
--	case VM_MODE_P40V48_4K:
--		guest_pa_bits = 40;
--		guest_page_shift = 12;
--		break;
--	case VM_MODE_P40V48_64K:
--		guest_pa_bits = 40;
--		guest_page_shift = 16;
--		break;
--	default:
--		TEST_ASSERT(false, "Unknown guest mode, mode: 0x%x", mode);
--	}
--
--	DEBUG("Testing guest mode: %s\n", vm_guest_mode_string(mode));
--
--#ifdef __x86_64__
--	/*
--	 * FIXME
--	 * The x86_64 kvm selftests framework currently only supports a
--	 * single PML4 which restricts the number of physical address
--	 * bits we can change to 39.
--	 */
--	guest_pa_bits = 39;
--#endif
--	max_gfn = (1ul << (guest_pa_bits - guest_page_shift)) - 1;
--	guest_page_size = (1ul << guest_page_shift);
-+	guest_page_size = vm_get_page_size(vm);
- 	/*
- 	 * A little more than 1G of guest page sized pages.  Cover the
- 	 * case where the size is not aligned to 64 pages.
- 	 */
--	guest_num_pages = (1ul << (DIRTY_MEM_BITS - guest_page_shift)) + 16;
-+	guest_num_pages = (1ul << (DIRTY_MEM_BITS -
-+				   vm_get_page_shift(vm))) + 16;
- 	host_page_size = getpagesize();
- 	host_num_pages = (guest_num_pages * guest_page_size) / host_page_size +
- 			 !!((guest_num_pages * guest_page_size) % host_page_size);
- 
- 	if (!phys_offset) {
--		guest_test_phys_mem = (max_gfn - guest_num_pages) * guest_page_size;
-+		guest_test_phys_mem = (vm_get_max_gfn(vm) -
-+				       guest_num_pages) * guest_page_size;
- 		guest_test_phys_mem &= ~(host_page_size - 1);
- 	} else {
- 		guest_test_phys_mem = phys_offset;
-diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index 430edbacb9b2..070e3ba193a6 100644
---- a/tools/testing/selftests/kvm/include/kvm_util.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -152,6 +152,10 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code);
- 
- bool vm_is_unrestricted_guest(struct kvm_vm *vm);
- 
-+unsigned int vm_get_page_size(struct kvm_vm *vm);
-+unsigned int vm_get_page_shift(struct kvm_vm *vm);
-+unsigned int vm_get_max_gfn(struct kvm_vm *vm);
+ 	ret = regmap_bulk_write(pcf85363->regmap, CTRL_STOP_EN,
+-				tmp, sizeof(tmp));
++				tmp, 2);
++	if (ret)
++		return ret;
 +
- struct kvm_userspace_memory_region *
- kvm_userspace_memory_region_find(struct kvm_vm *vm, uint64_t start,
- 				 uint64_t end);
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index bb8f993b25fb..80a338b5403c 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -136,6 +136,8 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
- {
- 	struct kvm_vm *vm;
++	ret = regmap_bulk_write(pcf85363->regmap, DT_100THS,
++				buf, sizeof(tmp) - 2);
+ 	if (ret)
+ 		return ret;
  
-+	DEBUG("Testing guest mode: %s\n", vm_guest_mode_string(mode));
-+
- 	vm = calloc(1, sizeof(*vm));
- 	TEST_ASSERT(vm != NULL, "Insufficient Memory");
- 
-@@ -1650,3 +1652,18 @@ bool vm_is_unrestricted_guest(struct kvm_vm *vm)
- 
- 	return val == 'Y';
- }
-+
-+unsigned int vm_get_page_size(struct kvm_vm *vm)
-+{
-+	return vm->page_size;
-+}
-+
-+unsigned int vm_get_page_shift(struct kvm_vm *vm)
-+{
-+	return vm->page_shift;
-+}
-+
-+unsigned int vm_get_max_gfn(struct kvm_vm *vm)
-+{
-+	return vm->max_gfn;
-+}
 -- 
-2.21.0
+2.17.1
 
