@@ -2,156 +2,77 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8E9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35682C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA855233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1301233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:51:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="cXcxxBTV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IbneeKsW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfH2JvF (ORCPT
+        id S1727099AbfH2JvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:51:05 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36414 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbfH2JvE (ORCPT
+        Thu, 29 Aug 2019 05:51:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46524 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfH2JvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:51:04 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y19so2760650wrd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 02:51:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QpWY7e5HA7D/+8ZJsDVBlHpT/6GIeAsAxtRUNzDzcSE=;
-        b=cXcxxBTVIk7eLydhgcft8pgMip4aYKEcyi8SiJzuzGlPVYp0QMJBC6ieBdQRSN8IFo
-         yGD5Q+D02QFGpsaK4iMK7dMs6MbSYG4gjb4pQZ08BIfTTaLMvzoEDBPl8ckOQDe+lG0x
-         vtBYc7H/M9CcgfT5ldxd3a82X16+H0Or+iSRPscWoZ/LuHBgOandGh0QiKul5X1jfUwC
-         46Xrrosf9jiMNaPKUan72OOc3X4JtULkwIZLTQHsI8Dis7SDE5nkLNlu6gt5VNFwkJG3
-         yKSxXvhgfalOI8R4ocMDQ6NBLn47k+HWafTG5tN5aTcEHUhDWcqDW68ozc7wiYzARF6e
-         51oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QpWY7e5HA7D/+8ZJsDVBlHpT/6GIeAsAxtRUNzDzcSE=;
-        b=bac/TdW5mSjs/phBgLRePFjZ53nONDDbLi1T+MjcE1ih7DqE4kAL8za5xpqHKGu1LW
-         P0zYmkRTOvu8U9knO+U0EUWPGXrrvuYDZ07mOxEfMuLA8XjQtod5ZDVAWaDVmvJxya/d
-         b2N1DHXs/+4kFYaAl6VqSM2NQTJ7sFHtA/1YsbGpMfaAqpAbJqm/BZ31tsw5/wdg7xwH
-         R5QXpK7E6YSW/CgUnIRN8gugjRt4ebVCySkt31fN4LdWjaNDOJwCKK3aMNkOSNLqK9pb
-         3l3i/4i5NCt7ujVXJ8iflGhNkkWXGcI1Py/h9kvKBmS8Yfiv7ox4zSdFqE3JsfVPZQfc
-         s83g==
-X-Gm-Message-State: APjAAAU4S5zE81zrw/zScyJbjWabWITgoYzYu8hFPISQLw5SvNyolRNU
-        VrThR1r3TjST3bryJZYSClooxg==
-X-Google-Smtp-Source: APXvYqxL6jG6QBSSyhTL7CBwnilVDkqWY5B33svIqaWC8sMhj1IrifAWVl9tzmM/DENruIJtNT1Pjg==
-X-Received: by 2002:adf:f812:: with SMTP id s18mr10970097wrp.32.1567072261456;
-        Thu, 29 Aug 2019 02:51:01 -0700 (PDT)
-Received: from localhost (ip-78-45-163-186.net.upcbroadband.cz. [78.45.163.186])
-        by smtp.gmail.com with ESMTPSA id w8sm13161464wmc.1.2019.08.29.02.51.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 02:51:01 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 11:51:00 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        davem@davemloft.net, andrew@lunn.ch, allan.nielsen@microchip.com,
-        ivecera@redhat.com, f.fainelli@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
-Message-ID: <20190829095100.GH2312@nanopsycho>
-References: <1567070549-29255-1-git-send-email-horatiu.vultur@microchip.com>
- <1567070549-29255-2-git-send-email-horatiu.vultur@microchip.com>
+        Thu, 29 Aug 2019 05:51:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pM3wcAf7FIhzSl23I8rKYxtK3wexClX83D/gf9S1f5A=; b=IbneeKsWWuv4rxcM7lu8P5kA3
+        doWzWkPrytBw/fszPm6xltgjTmTxL4JXhdnei6neL6afPwn9u60oKqq+j0LjxxyddOwzpI28yfX7z
+        YqIOQk84pk3uiqKVHzitq1akCD1IhMzCmu/1Wlk0RbbBXe4jzjkDMDZ6K2domNXpvnEd/9SzBrhEy
+        t4wPrN7JIs9cchyRrF8OQhxCd7qpHZcytVM+R4hsegY+/Ffs4w9XIzXznAsrcjlu8qZaKJOhaQfiX
+        ZqnrA75QFzXsVcmfAYWUA/wxSpx7mPFqUZZLI6S7P5Yz5v6zJOSHgM4P2kghVVte5ohsYB48nqa5d
+        1aXJs9T6g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3H5I-0005Pa-Tv; Thu, 29 Aug 2019 09:51:16 +0000
+Date:   Thu, 29 Aug 2019 02:51:16 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linux-kernel@vger.kernel.org, yuchao0@huawei.com,
+        miaoxie@huawei.com, "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Zefan Li <lizefan@huawei.com>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20190829095116.GA20598@infradead.org>
+References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+ <20190828170022.GA7873@kroah.com>
+ <20190829062340.GB3047@infradead.org>
+ <20190829070149.GA155353@architecture4>
+ <20190829082409.GA83154@architecture4>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1567070549-29255-2-git-send-email-horatiu.vultur@microchip.com>
+In-Reply-To: <20190829082409.GA83154@architecture4>
 User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thu, Aug 29, 2019 at 11:22:28AM CEST, horatiu.vultur@microchip.com wrote:
->Add the SWITCHDEV_ATTR_ID_PORT_PROMISCUITY switchdev notification type,
->used to indicate whenever the dev promiscuity counter is changed.
->
->The notification doesn't use any switchdev_attr attribute because in the
->notifier callbacks is it possible to get the dev and read directly
->the promiscuity value.
->
->Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
->---
-> include/net/switchdev.h | 1 +
-> net/core/dev.c          | 9 +++++++++
-> 2 files changed, 10 insertions(+)
->
->diff --git a/include/net/switchdev.h b/include/net/switchdev.h
->index aee86a1..14b1617 100644
->--- a/include/net/switchdev.h
->+++ b/include/net/switchdev.h
->@@ -40,6 +40,7 @@ enum switchdev_attr_id {
-> 	SWITCHDEV_ATTR_ID_BRIDGE_VLAN_FILTERING,
-> 	SWITCHDEV_ATTR_ID_BRIDGE_MC_DISABLED,
-> 	SWITCHDEV_ATTR_ID_BRIDGE_MROUTER,
->+	SWITCHDEV_ATTR_ID_PORT_PROMISCUITY,
-> };
-> 
-> struct switchdev_attr {
->diff --git a/net/core/dev.c b/net/core/dev.c
->index 49589ed..40c74f2 100644
->--- a/net/core/dev.c
->+++ b/net/core/dev.c
->@@ -142,6 +142,7 @@
-> #include <linux/net_namespace.h>
-> #include <linux/indirect_call_wrapper.h>
-> #include <net/devlink.h>
->+#include <net/switchdev.h>
-> 
-> #include "net-sysfs.h"
-> 
->@@ -7377,6 +7378,11 @@ static void dev_change_rx_flags(struct net_device *dev, int flags)
-> static int __dev_set_promiscuity(struct net_device *dev, int inc, bool notify)
-> {
-> 	unsigned int old_flags = dev->flags;
->+	struct switchdev_attr attr = {
->+		.orig_dev = dev,
->+		.id = SWITCHDEV_ATTR_ID_PORT_PROMISCUITY,
->+		.flags = SWITCHDEV_F_DEFER,
+On Thu, Aug 29, 2019 at 04:24:09PM +0800, Gao Xiang wrote:
+> It seems I misunderstood your idea, sorry about that... EROFS
+> properly uses vfs interfaces (e.g. we also considered RCU symlink
+> lookup path at the very beginning of our design as Al said [1],
+> except for mount interface as Al mentioned [2] (thanks him for
+> taking some time on it), it was used for our debugging use),
+> and it didn't cause any extra burden to vfs or other subsystems.
 
-NACK
-
-This is invalid usecase for switchdev infra. Switchdev is there for
-bridge offload purposes only.
-
-For promiscuity changes, the infrastructure is already present in the
-code. See __dev_notify_flags(). it calls:
-call_netdevice_notifiers_info(NETDEV_CHANGE, &change_info.info)
-and you can actually see the changed flag in ".flags_changed".
-
-You just have to register netdev notifier block in your driver. Grep
-for: register_netdevice_notifier
-
-
->+	};
-> 	kuid_t uid;
-> 	kgid_t gid;
-> 
->@@ -7419,6 +7425,9 @@ static int __dev_set_promiscuity(struct net_device *dev, int inc, bool notify)
-> 	}
-> 	if (notify)
-> 		__dev_notify_flags(dev, old_flags, IFF_PROMISC);
->+
->+	switchdev_port_attr_set(dev, &attr);
->+
-> 	return 0;
-> }
-> 
->-- 
->2.7.4
->
+It would still have been a lot less effort for everyone without
+the idiotic staging detour.
