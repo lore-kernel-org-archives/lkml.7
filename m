@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 662B2C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA937C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C4022CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7CC22CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567076055;
-	bh=8kno17t5G0+IQF9Amfj1SsO5zRRh4PZmqZoEBgEN3Kk=;
+	s=default; t=1567076066;
+	bh=l4bD2X66wQYH9bFuxf5F1FvSh18IMJFDWESpsXZ5qBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rWrhdsGU4sx4pKfmDjJgDRA9vGEcQZYDhuqFZuwPaWblZrp5ZaZ3odZG+w9aMefwF
-	 2MUcDvs2CxvVAA9GfQUi2MQzDX3mWTuOuux3nVvwvftGw4UvT7mQ1ztpkwGudZZSRu
-	 TzBTzI0bOqCMzl9tOGL32JDO8O4mU1yRxt+ymiw8=
+	b=nhEgAMhU0Lqve80Eqhn4KDyIuK+tY27+5kaBMFfAWeXbHJjuJQlwdXfOj2o29+UdF
+	 s5HelZOdJjfXkJlRxj4vX25vhZdURTZu5HYzqiFkr+FGht7kW2XvxfTkQlcgYiLxz9
+	 JgetjM9bkH03vFn6S4304Ppl9arLsCr06iLMia+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbfH2KyO (ORCPT
+        id S1728065AbfH2Kuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:54:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57938 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 06:50:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728122AbfH2Kug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:50:36 -0400
+        id S1727830AbfH2KuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:50:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC8B923426;
-        Thu, 29 Aug 2019 10:50:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98F2D2189D;
+        Thu, 29 Aug 2019 10:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075835;
-        bh=8kno17t5G0+IQF9Amfj1SsO5zRRh4PZmqZoEBgEN3Kk=;
+        s=default; t=1567075822;
+        bh=l4bD2X66wQYH9bFuxf5F1FvSh18IMJFDWESpsXZ5qBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wA9IY1BT1HHoYYGelF785HIQ0hMnu1SgT169GKQsPrO3xEgG/mjihlKKpMbZ9hMa8
-         0UWPGNXk/Hw9dW3M104PfJBIMa8oIzaVwPMGjzuGO6xn6fPaznnb1gj0mCKOdtwuZY
-         pNCyb6pyCBwKc2Plpz0isJMk3YA0fL122TUKj1go=
+        b=Q3PEA99czadxvoNpw2ANW5bfMHOPi8iDoIgTxOJvq//Tm1DTWzCzSTVPCp5f09Gbd
+         +Pmg8z2jP2X3XFko3z+H2GhD1UjSu0lnF6kBDvEzFsDO2+eZ4DfmOp+RIWzzqpLjBR
+         sj/ziuyWctXt9U4oxZzE6NUd8cOxS6cgL0wSRZl8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefano Brivio <sbrivio@redhat.com>, Chen Yi <yiche@redhat.com>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 22/29] netfilter: ipset: Copy the right MAC address in bitmap:ip,mac and hash:ip,mac sets
-Date:   Thu, 29 Aug 2019 06:50:02 -0400
-Message-Id: <20190829105009.2265-22-sashal@kernel.org>
+Cc:     Tyler Hicks <tyhicks@canonical.com>, Todd Kjos <tkjos@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.19 11/29] binder: take read mode of mmap_sem in binder_alloc_free_page()
+Date:   Thu, 29 Aug 2019 06:49:51 -0400
+Message-Id: <20190829105009.2265-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829105009.2265-1-sashal@kernel.org>
 References: <20190829105009.2265-1-sashal@kernel.org>
@@ -61,86 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Brivio <sbrivio@redhat.com>
+From: Tyler Hicks <tyhicks@canonical.com>
 
-[ Upstream commit 1b4a75108d5bc153daf965d334e77e8e94534f96 ]
+[ Upstream commit 60d4885710836595192c42d3e04b27551d30ec91 ]
 
-In commit 8cc4ccf58379 ("ipset: Allow matching on destination MAC address
-for mac and ipmac sets"), ipset.git commit 1543514c46a7, I added to the
-KADT functions for sets matching on MAC addreses the copy of source or
-destination MAC address depending on the configured match.
+Restore the behavior of locking mmap_sem for reading in
+binder_alloc_free_page(), as was first done in commit 3013bf62b67a
+("binder: reduce mmap_sem write-side lock"). That change was
+inadvertently reverted by commit 5cec2d2e5839 ("binder: fix race between
+munmap() and direct reclaim").
 
-This was done correctly for hash:mac, but for hash:ip,mac and
-bitmap:ip,mac, copying and pasting the same code block presents an
-obvious problem: in these two set types, the MAC address is the second
-dimension, not the first one, and we are actually selecting the MAC
-address depending on whether the first dimension (IP address) specifies
-source or destination.
+In addition, change the name of the label for the error path to
+accurately reflect that we're taking the lock for reading.
 
-Fix this by checking for the IPSET_DIM_TWO_SRC flag in option flags.
+Backporting note: This fix is only needed when *both* of the commits
+mentioned above are applied. That's an unlikely situation since they
+both landed during the development of v5.1 but only one of them is
+targeted for stable.
 
-This way, mixing source and destination matches for the two dimensions
-of ip,mac set types works as expected. With this setup:
-
-  ip netns add A
-  ip link add veth1 type veth peer name veth2 netns A
-  ip addr add 192.0.2.1/24 dev veth1
-  ip -net A addr add 192.0.2.2/24 dev veth2
-  ip link set veth1 up
-  ip -net A link set veth2 up
-
-  dst=$(ip netns exec A cat /sys/class/net/veth2/address)
-
-  ip netns exec A ipset create test_bitmap bitmap:ip,mac range 192.0.0.0/16
-  ip netns exec A ipset add test_bitmap 192.0.2.1,${dst}
-  ip netns exec A iptables -A INPUT -m set ! --match-set test_bitmap src,dst -j DROP
-
-  ip netns exec A ipset create test_hash hash:ip,mac
-  ip netns exec A ipset add test_hash 192.0.2.1,${dst}
-  ip netns exec A iptables -A INPUT -m set ! --match-set test_hash src,dst -j DROP
-
-ipset correctly matches a test packet:
-
-  # ping -c1 192.0.2.2 >/dev/null
-  # echo $?
-  0
-
-Reported-by: Chen Yi <yiche@redhat.com>
-Fixes: 8cc4ccf58379 ("ipset: Allow matching on destination MAC address for mac and ipmac sets")
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+Fixes: 5cec2d2e5839 ("binder: fix race between munmap() and direct reclaim")
+Signed-off-by: Tyler Hicks <tyhicks@canonical.com>
+Acked-by: Todd Kjos <tkjos@android.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipset/ip_set_bitmap_ipmac.c | 2 +-
- net/netfilter/ipset/ip_set_hash_ipmac.c   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/android/binder_alloc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/netfilter/ipset/ip_set_bitmap_ipmac.c b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
-index 13ade5782847b..4f01321e793ce 100644
---- a/net/netfilter/ipset/ip_set_bitmap_ipmac.c
-+++ b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
-@@ -230,7 +230,7 @@ bitmap_ipmac_kadt(struct ip_set *set, const struct sk_buff *skb,
+diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_alloc.c
+index a654ccfd1a222..21dc20c52cd4d 100644
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -962,8 +962,8 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
+ 	mm = alloc->vma_vm_mm;
+ 	if (!mmget_not_zero(mm))
+ 		goto err_mmget;
+-	if (!down_write_trylock(&mm->mmap_sem))
+-		goto err_down_write_mmap_sem_failed;
++	if (!down_read_trylock(&mm->mmap_sem))
++		goto err_down_read_mmap_sem_failed;
+ 	vma = binder_alloc_get_vma(alloc);
  
- 	e.id = ip_to_id(map, ip);
+ 	list_lru_isolate(lru, item);
+@@ -978,7 +978,7 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
  
--	if (opt->flags & IPSET_DIM_ONE_SRC)
-+	if (opt->flags & IPSET_DIM_TWO_SRC)
- 		ether_addr_copy(e.ether, eth_hdr(skb)->h_source);
- 	else
- 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
-diff --git a/net/netfilter/ipset/ip_set_hash_ipmac.c b/net/netfilter/ipset/ip_set_hash_ipmac.c
-index 75c21c8b76514..16ec822e40447 100644
---- a/net/netfilter/ipset/ip_set_hash_ipmac.c
-+++ b/net/netfilter/ipset/ip_set_hash_ipmac.c
-@@ -99,7 +99,7 @@ hash_ipmac4_kadt(struct ip_set *set, const struct sk_buff *skb,
- 	    (skb_mac_header(skb) + ETH_HLEN) > skb->data)
- 		return -EINVAL;
+ 		trace_binder_unmap_user_end(alloc, index);
+ 	}
+-	up_write(&mm->mmap_sem);
++	up_read(&mm->mmap_sem);
+ 	mmput(mm);
  
--	if (opt->flags & IPSET_DIM_ONE_SRC)
-+	if (opt->flags & IPSET_DIM_TWO_SRC)
- 		ether_addr_copy(e.ether, eth_hdr(skb)->h_source);
- 	else
- 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
+ 	trace_binder_unmap_kernel_start(alloc, index);
+@@ -993,7 +993,7 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
+ 	mutex_unlock(&alloc->mutex);
+ 	return LRU_REMOVED_RETRY;
+ 
+-err_down_write_mmap_sem_failed:
++err_down_read_mmap_sem_failed:
+ 	mmput_async(mm);
+ err_mmget:
+ err_page_already_freed:
 -- 
 2.20.1
 
