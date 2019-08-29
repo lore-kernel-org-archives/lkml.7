@@ -2,147 +2,100 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4730BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5766AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2579D22CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32FB0233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:23:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfH2KWE (ORCPT
+        id S1727122AbfH2KXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:22:04 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:20299 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726723AbfH2KWD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:22:03 -0400
-X-IronPort-AV: E=Sophos;i="5.64,442,1559487600"; 
-   d="scan'208";a="25025781"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 29 Aug 2019 19:22:00 +0900
-Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 30BFC40B3513;
-        Thu, 29 Aug 2019 19:21:55 +0900 (JST)
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        xu_shunji@hoperun.com, ebiharaml@si-linux.co.jp
-Subject: [PATCH 1/2] dt-bindings: display: Add idk-1110wr binding
-Date:   Thu, 29 Aug 2019 11:21:46 +0100
-Message-Id: <1567074107-4899-2-git-send-email-fabrizio.castro@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567074107-4899-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1567074107-4899-1-git-send-email-fabrizio.castro@bp.renesas.com>
+        Thu, 29 Aug 2019 06:23:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59506 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726723AbfH2KXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:23:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5148EB0B3;
+        Thu, 29 Aug 2019 10:23:48 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Breno Leitao <leitao@debian.org>,
+        Russell Currey <ruscur@russell.cc>,
+        Nicolai Stange <nstange@suse.de>,
+        Michael Neuling <mikey@neuling.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Brauner <christian@brauner.io>,
+        David Howells <dhowells@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] Disable compat cruft on ppc64le v4
+Date:   Thu, 29 Aug 2019 12:23:39 +0200
+Message-Id: <cover.1567072270.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding for the idk-1110wr LVDS panel from Advantech.
+Less code means less bugs so add a knob to skip the compat stuff.
 
-Some panel-specific documentation can be found here:
-https://buy.advantech.eu/Displays/Embedded-LCD-Kits-LCD-Kit-Modules/model-IDK-1110WR-55WSA1E.htm
+This is tested on ppc64le top of
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- .../display/panel/advantech,idk-1110wr.yaml        | 69 ++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
+https://patchwork.ozlabs.org/cover/1153556/
 
-diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml b/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
-new file mode 100644
-index 0000000..e5fdaa0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/advantech,idk-1110wr.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Advantech IDK-1110WR 10.1" WSVGA LVDS Display Panel
-+
-+maintainers:
-+  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-+  - Thierry Reding <thierry.reding@gmail.com>
-+
-+allOf:
-+  - $ref: lvds.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: advantech,idk-1110wr
-+      - {} # panel-lvds, but not listed here to avoid false select
-+
-+  data-mapping:
-+    const: jeida-24
-+
-+  width-mm:
-+    const: 223
-+
-+  height-mm:
-+    const: 125
-+
-+  panel-timing: true
-+  port: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |+
-+    panel {
-+      compatible = "advantech,idk-1110wr", "panel-lvds";
-+
-+      width-mm = <223>;
-+      height-mm = <125>;
-+
-+      data-mapping = "jeida-24";
-+
-+      panel-timing {
-+        /* 1024x600 @60Hz */
-+        clock-frequency = <51200000>;
-+        hactive = <1024>;
-+        vactive = <600>;
-+        hsync-len = <240>;
-+        hfront-porch = <40>;
-+        hback-porch = <40>;
-+        vsync-len = <10>;
-+        vfront-porch = <15>;
-+        vback-porch = <10>;
-+      };
-+
-+      port {
-+        panel_in: endpoint {
-+          remote-endpoint = <&lvds_encoder>;
-+        };
-+      };
-+    };
-+
-+...
+Changes in v2: saner CONFIG_COMPAT ifdefs
+Changes in v3:
+ - change llseek to 32bit instead of builing it unconditionally in fs
+ - clanup the makefile conditionals
+ - remove some ifdefs or convert to IS_DEFINED where possible
+Changes in v4:
+ - cleanup is_32bit_task and current_is_64bit
+ - more makefile cleanup
+
+Michal Suchanek (4):
+  powerpc: make llseek 32bit-only.
+  powerpc: move common register copy functions from signal_32.c to
+    signal.c
+  powerpc/64: make buildable without CONFIG_COMPAT
+  powerpc/64: Make COMPAT user-selectable disabled on littleendian by
+    default.
+
+ arch/powerpc/Kconfig                     |   5 +-
+ arch/powerpc/include/asm/thread_info.h   |   4 +-
+ arch/powerpc/kernel/Makefile             |   7 +-
+ arch/powerpc/kernel/entry_64.S           |   2 +
+ arch/powerpc/kernel/signal.c             | 144 ++++++++++++++++++++++-
+ arch/powerpc/kernel/signal_32.c          | 140 ----------------------
+ arch/powerpc/kernel/syscall_64.c         |   6 +-
+ arch/powerpc/kernel/syscalls/syscall.tbl |   2 +-
+ arch/powerpc/kernel/vdso.c               |   5 +-
+ arch/powerpc/perf/callchain.c            |  14 ++-
+ 10 files changed, 167 insertions(+), 162 deletions(-)
+
 -- 
-2.7.4
+2.22.0
 
