@@ -2,157 +2,86 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A113C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711A1C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE152189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567087406;
-	bh=R+LyN7YD9OZpXktE/UY/Qz8u2pZtDP3m3LN1pHcseyI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DyUPZVHBcQAeNtSHPp5hfcJxrzvUR4HO3h9tZZVVZ6UvmysTD/13AYfeDrYJUlhzb
-	 /pyQEMrHPirp0mog1tgkwHq0RhlRZMBRFV/8INMhYKQZUssraSh5Gn3EBONAsT4Xk5
-	 c6TBRXonrgTKDADnRW2XsFMknH5iZJ87olW8XSd4=
+	by mail.kernel.org (Postfix) with ESMTP id 46CCB2189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:04:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATLRDHWe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbfH2ODZ (ORCPT
+        id S1727590AbfH2OEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:03:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbfH2ODY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:03:24 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5206123428;
-        Thu, 29 Aug 2019 14:03:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567087403;
-        bh=R+LyN7YD9OZpXktE/UY/Qz8u2pZtDP3m3LN1pHcseyI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m6ug5skv5gxH6F4G4GkDURiWoP18bgo1JHj7WztwX/K2MQgE2CF5mnlhAst2NkOrb
-         TiCFHwQm7TGWYa97q6MUWMxuypUkfPCvavKaFKr4mwPIkztU/Znb1n/pC4TLIUjOPw
-         xauQiGLn1GsOaEpJBfyGCuzap8oRfeIp6kb/vitQ=
-Received: by mail-qk1-f170.google.com with SMTP id u190so3025115qkh.5;
-        Thu, 29 Aug 2019 07:03:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAVxkWpO2qst8iOooo/mVYv/bICAql9VvQvbgW2wMHqKveMF+GWF
-        9uDdA+m2T2SP6GkcqP4d4BRKoODZwC5jvbROyg==
-X-Google-Smtp-Source: APXvYqx5xw+mAnj9zcHLgq+uwCGaxqVFuAJs1Ey8vhaU2lN8XSiANKs27dzKuXkSmJeBs3wRFxU1yYSUwbwPSVITU9E=
-X-Received: by 2002:ae9:e212:: with SMTP id c18mr3499796qkc.254.1567087402375;
- Thu, 29 Aug 2019 07:03:22 -0700 (PDT)
+        Thu, 29 Aug 2019 10:04:53 -0400
+Received: from mail-ed1-f49.google.com ([209.85.208.49]:43972 "EHLO
+        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727063AbfH2OEw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 10:04:52 -0400
+Received: by mail-ed1-f49.google.com with SMTP id h13so4185198edq.10;
+        Thu, 29 Aug 2019 07:04:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5XrYpbZokJ0uFDtRrg4QMHh8QMmoNf0yygZI19dOceA=;
+        b=ATLRDHWe3jUWrX5jam+pWx349PMbQEJL2dVu+BdsFcYVO4VEdlv6wayE3oNcHZ8/7K
+         CxoKPuyCxWUtmlQwTC7XAsQz+4zrH/sDqeiR3xJ9coRomyOJP5ng9m1CtZgbdVm6RkWk
+         xMexcFibvPGyONCsKwAFfhEr2GgBkKLTl5ylI8IFWOtoCclIiDBWV/gS4qPRDIFE3k0Q
+         veYEi32Zf4DDlPWuw5wTDRjxwFY2wRVKYkuLUDIS8XEQIFbf+Z7qsIw3p5wYUOechUvl
+         tttaMO89K8Vrb8HEWfIRSzAnz1S9yjLarTGKOMqZpJHH8GVgzZnYO/q3ts052VUqBrM+
+         U/ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5XrYpbZokJ0uFDtRrg4QMHh8QMmoNf0yygZI19dOceA=;
+        b=IIjCH7Lt1ui+5KeimvJhVxBgkD2ME5UNNbDuGsj6PNlzpd+2dCRGdrkJP+L5kCcEBH
+         CBYIHyhbEgUKQ4gojIA1JiKwxAEsBQz1pfCbNsGQQrpd7ayps+8mXYOFBJJ6Zo0Gdx6Q
+         dDjwRypQ9RTO9Goy/K11PffhpkGkpOJnGAt1sht4Coyv6sLOPao4VUWDH+beIFlp3ZgR
+         yJ/3bFplFohExyCKC8vJN89j4nR2GCQnDWlI0551+re3uUdPLBecj2ebkDRXwBwj/UwC
+         gtORAZ2WhKnZncbZ5Ilp1c44JH2G50qmT99zGc4iV6KfXV7jv2woTdPMP9lw5P+NYDay
+         RE2g==
+X-Gm-Message-State: APjAAAVQY06O/9gYK1w7IvgubbqFrVQiqvxRQpPEHWqnTByqGhaCFoO7
+        uGMgior8WVPclN7W3l2MfwLqKOuXaFwb4z0pkuI=
+X-Google-Smtp-Source: APXvYqzh64P93+HzWnZXGWHngmQqqqEecdRf/S2FlEbcebA+hFxcs869D+rDpSAc9shQvzVrqhLajNWsRk2+3jjVqmY=
+X-Received: by 2002:a17:906:e294:: with SMTP id gg20mr8059700ejb.76.1567087490938;
+ Thu, 29 Aug 2019 07:04:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com> <1567017402-5895-2-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1567017402-5895-2-git-send-email-fabrizio.castro@bp.renesas.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 29 Aug 2019 09:03:10 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKWWCpEeBd4UFaqBVffS-OxUNAHfvtJKcGsLDR+f=Uytg@mail.gmail.com>
-Message-ID: <CAL_JsqKWWCpEeBd4UFaqBVffS-OxUNAHfvtJKcGsLDR+f=Uytg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/8] dt-bindings: display: Add bindings for LVDS bus-timings
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Sam Ravnborg <sam@ravnborg.org>
+References: <20190823124553.19364-1-yuehaibing@huawei.com> <20190823140513.GB9844@piout.net>
+ <36720fae-ef20-61d4-1d9d-421e7199a0eb@infradead.org>
+In-Reply-To: <36720fae-ef20-61d4-1d9d-421e7199a0eb@infradead.org>
+From:   Bruno Thomsen <bruno.thomsen@gmail.com>
+Date:   Thu, 29 Aug 2019 16:04:34 +0200
+Message-ID: <CAH+2xPAGe0H=WRtebd52yE6_Tpjoc+vgTnuJrGHt=K4NutYCNQ@mail.gmail.com>
+Subject: Re: [PATCH -next] rtc: pcf2127: Fix build error without CONFIG_WATCHDOG_CORE
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        YueHaibing <yuehaibing@huawei.com>, a.zummo@towertech.it,
+        Guenter Roeck <linux@roeck-us.net>, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 1:36 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
+Den ons. 28. aug. 2019 kl. 19.19 skrev Randy Dunlap <rdunlap@infradead.org>:
+> > Definitively not, I fixed it that way:
+> > +       select WATCHDOG_CORE if WATCHDOG
+> >
 >
-> Dual-LVDS connections need markers in the DT, this patch adds
-> some common documentation to be referenced by both panels and
-> bridges.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
->
-> ---
-> v2->v3:
-> * new patch
-> ---
->  .../bindings/display/bus-timings/lvds.yaml         | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml b/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
-> new file mode 100644
-> index 0000000..f35b55a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
-> @@ -0,0 +1,38 @@
-> +# SPDX-License-Identifier: GPL-2.0
+> No, that's not a fix.  The build error still happens with that patch applied.
 
-(GPL-2.0-only OR BSD-2-Clause) is preferred for new bindings.
+Hi Randy,
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bus-timings/lvds.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Common Properties for bus timings of LVDS interfaces
-> +
-> +maintainers:
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> +
-> +description: |
-> +  This document defines device tree properties common to LVDS and dual-LVDS
-> +  interfaces, where a dual-LVDS interface is a dual-link connection with even
-> +  pixels traveling on one connection, and with odd pixels traveling on the other
-> +  connection.
-> +  This document doesn't constitue a device tree binding specification by itself
+A bugfix has been created[1] and applied to the rtc tree.
 
-typo: constitute
+Bruno
 
-> +  but is meant to be referenced by device tree bindings.
-> +  When referenced from panel or bridge device tree bindings, the properties
-> +  defined in this document are defined as follows. The panel and bridge device
-> +  tree bindings are responsible for defining whether each property is required
-> +  or optional.
-> +
-> +properties:
-> +  dual-lvds-even-pixels:
-> +    type: boolean
-> +    description:
-> +      This property is specific to an input port of a sink device. When
-
-The schema should define what nodes these go in. The description seems
-to indicate in 'port' nodes (or endpoint?), but your use in the panel
-binding puts them in the parent.
-
-> +      specified, it marks the port as recipient of even-pixels.
-> +
-> +  dual-lvds-odd-pixels:
-> +    type: boolean
-> +    description:
-> +      This property is specific to an input port of a sink device. When
-> +      specified, it marks the port as recipient of odd-pixels.
-
-However, I don't think you even need these. A panel's port numbers are
-fixed can imply even or odd. For example port@0 can be even and port@1
-can be odd. The port numbering is typically panel specific, but we may
-be able to define the numbering generically if we don't already have
-panels with multiple ports.
-
-Also, aren't there dual link DSI panels?
-
-Rob
+[1] https://lkml.org/lkml/2019/8/27/1018
