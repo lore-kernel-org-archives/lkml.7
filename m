@@ -4,25 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D71C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9872DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE3D2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A09205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:52:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbfH2PwD (ORCPT
+        id S1728800AbfH2PwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:52:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32846 "EHLO mx1.suse.de"
+        Thu, 29 Aug 2019 11:52:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32826 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728250AbfH2Pug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728249AbfH2Pug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 29 Aug 2019 11:50:36 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C4CC4B69F;
-        Thu, 29 Aug 2019 15:50:34 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 0BBDEB6A0;
+        Thu, 29 Aug 2019 15:50:35 +0000 (UTC)
 From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
 To:     Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paul.burton@mips.com>,
@@ -30,9 +31,9 @@ To:     Ralf Baechle <ralf@linux-mips.org>,
         "David S. Miller" <davem@davemloft.net>,
         linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH v2 net-next 06/15] net: sgi: ioc3-eth: get rid of ioc3_clean_rx_ring()
-Date:   Thu, 29 Aug 2019 17:50:04 +0200
-Message-Id: <20190829155014.9229-7-tbogendoerfer@suse.de>
+Subject: [PATCH v2 net-next 07/15] net: sgi: ioc3-eth: separate tx and rx ring handling
+Date:   Thu, 29 Aug 2019 17:50:05 +0200
+Message-Id: <20190829155014.9229-8-tbogendoerfer@suse.de>
 X-Mailer: git-send-email 2.13.7
 In-Reply-To: <20190829155014.9229-1-tbogendoerfer@suse.de>
 References: <20190829155014.9229-1-tbogendoerfer@suse.de>
@@ -41,61 +42,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move clearing of the descriptor valid bit into ioc3_alloc_rings. This
-makes ioc3_clean_rx_ring obsolete.
+After allocation of descriptor memory is now done once in probe
+handling of tx ring is completely done by ioc3_clean_tx_ring. So
+we remove the remaining tx ring actions out of ioc3_alloc_rings
+and ioc3_free_rings and rename it to ioc3_[alloc|free]_rx_bufs
+to better describe what they are doing.
 
 Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 ---
- drivers/net/ethernet/sgi/ioc3-eth.c | 22 +---------------------
- 1 file changed, 1 insertion(+), 21 deletions(-)
+ drivers/net/ethernet/sgi/ioc3-eth.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
-index d9d94a55ac34..e3867ea9abb7 100644
+index e3867ea9abb7..de20f644e07d 100644
 --- a/drivers/net/ethernet/sgi/ioc3-eth.c
 +++ b/drivers/net/ethernet/sgi/ioc3-eth.c
-@@ -761,26 +761,6 @@ static void ioc3_mii_start(struct ioc3_private *ip)
- 	add_timer(&ip->ioc3_timer);
+@@ -778,13 +778,11 @@ static inline void ioc3_clean_tx_ring(struct ioc3_private *ip)
+ 	ip->tx_ci = 0;
  }
  
--static inline void ioc3_clean_rx_ring(struct ioc3_private *ip)
--{
--	struct ioc3_erxbuf *rxb;
--	struct sk_buff *skb;
--	int i;
--
--	for (i = ip->rx_ci; i & 15; i++) {
--		ip->rx_skbs[ip->rx_pi] = ip->rx_skbs[ip->rx_ci];
--		ip->rxr[ip->rx_pi++] = ip->rxr[ip->rx_ci++];
--	}
--	ip->rx_pi &= RX_RING_MASK;
--	ip->rx_ci &= RX_RING_MASK;
--
--	for (i = ip->rx_ci; i != ip->rx_pi; i = (i + 1) & RX_RING_MASK) {
--		skb = ip->rx_skbs[i];
--		rxb = (struct ioc3_erxbuf *)(skb->data - RX_OFFSET);
--		rxb->w0 = 0;
--	}
--}
--
- static inline void ioc3_clean_tx_ring(struct ioc3_private *ip)
+-static void ioc3_free_rings(struct ioc3_private *ip)
++static void ioc3_free_rx_bufs(struct ioc3_private *ip)
  {
  	struct sk_buff *skb;
-@@ -841,6 +821,7 @@ static void ioc3_alloc_rings(struct net_device *dev)
- 		/* Because we reserve afterwards. */
- 		skb_put(skb, (1664 + RX_OFFSET));
- 		rxb = (struct ioc3_erxbuf *)skb->data;
-+		rxb->w0 = 0;	/* Clear valid flag */
- 		ip->rxr[i] = cpu_to_be64(ioc3_map(rxb, 1));
- 		skb_reserve(skb, RX_OFFSET);
- 	}
-@@ -860,7 +841,6 @@ static void ioc3_init_rings(struct net_device *dev)
- 	ioc3_free_rings(ip);
- 	ioc3_alloc_rings(dev);
+ 	int rx_entry, n_entry;
  
--	ioc3_clean_rx_ring(ip);
+-	ioc3_clean_tx_ring(ip);
+-
+ 	n_entry = ip->rx_ci;
+ 	rx_entry = ip->rx_pi;
+ 
+@@ -797,7 +795,7 @@ static void ioc3_free_rings(struct ioc3_private *ip)
+ 	}
+ }
+ 
+-static void ioc3_alloc_rings(struct net_device *dev)
++static void ioc3_alloc_rx_bufs(struct net_device *dev)
+ {
+ 	struct ioc3_private *ip = netdev_priv(dev);
+ 	struct ioc3_erxbuf *rxb;
+@@ -827,9 +825,6 @@ static void ioc3_alloc_rings(struct net_device *dev)
+ 	}
+ 	ip->rx_ci = 0;
+ 	ip->rx_pi = RX_BUFFS;
+-
+-	ip->tx_pi = 0;
+-	ip->tx_ci = 0;
+ }
+ 
+ static void ioc3_init_rings(struct net_device *dev)
+@@ -838,8 +833,8 @@ static void ioc3_init_rings(struct net_device *dev)
+ 	struct ioc3_ethregs *regs = ip->regs;
+ 	unsigned long ring;
+ 
+-	ioc3_free_rings(ip);
+-	ioc3_alloc_rings(dev);
++	ioc3_free_rx_bufs(ip);
++	ioc3_alloc_rx_bufs(dev);
+ 
  	ioc3_clean_tx_ring(ip);
  
- 	/* Now the rx ring base, consume & produce registers.  */
+@@ -965,7 +960,9 @@ static int ioc3_close(struct net_device *dev)
+ 	ioc3_stop(ip);
+ 	free_irq(dev->irq, dev);
+ 
+-	ioc3_free_rings(ip);
++	ioc3_free_rx_bufs(ip);
++	ioc3_clean_tx_ring(ip);
++
+ 	return 0;
+ }
+ 
+@@ -1266,7 +1263,7 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ out_stop:
+ 	ioc3_stop(ip);
+ 	del_timer_sync(&ip->ioc3_timer);
+-	ioc3_free_rings(ip);
++	ioc3_free_rx_bufs(ip);
+ 	kfree(ip->rxr);
+ 	kfree(ip->txr);
+ out_res:
 -- 
 2.13.7
 
