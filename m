@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3EDC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F28C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCFDA233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E60233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102684;
-	bh=TRr3eqjeN9vKj8xC4jj12Yb6FOLAm7jqEyir9I4h9EI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IPeOYoKRC5P1iPbZPdCspzybaiPNvjORlyry7WpH9YO36t2WB+3EM7KKjkqK6AyQi
-	 dqjFDd4hACo0zP52ucwoB/nGbVFOy9P2AbX491b2vxkl8VWe1t2LuKmmb0zd+lKyVz
-	 saZOoxc2CvKCbP4C/GvnM8CoEiCCiVkX38rV5Sew=
+	s=default; t=1567102691;
+	bh=sKnoCGGt1XTfkRXDEq1x82VZHY35bvNAQGbT+HE/BOw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=GuiNCaVpNQFlH1SMjGfXOuYpFR3cXY4UWzOZu9LC1ANptV39SmXy2BwqbS19aPQwA
+	 vSL1FRILEoAdXWiKz48Lklx3ZoJscVupze5ENugmM2xC80wrEGO+NIBbQblIYfNA9+
+	 SMMPIbpQqxLASel89b8HHk6tHMY0OnC3j/LkVLWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730301AbfH2SSD (ORCPT
+        id S1730338AbfH2SSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:18:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60236 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:18:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730291AbfH2SSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:18:01 -0400
+        id S1730291AbfH2SSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:18:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A1ED2189D;
-        Thu, 29 Aug 2019 18:18:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68E4323427;
+        Thu, 29 Aug 2019 18:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102681;
-        bh=TRr3eqjeN9vKj8xC4jj12Yb6FOLAm7jqEyir9I4h9EI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vQdvdYVhbEQ1G6TCn+lISry9MJ6Xe1QtuftWk7a9MKHkUrgyQFTLTbnBc6qJUQKfj
-         9cusz36Ef+xP2pL7Wni4MPgzUa31W2NDgL+V4Dx9Wd9nO6iK9xNvUBmIDn8UYdAUgA
-         7H+W5HLfucGH+C7b2nDUr7Vpft9cf/XSRnXvLjBk=
+        s=default; t=1567102684;
+        bh=sKnoCGGt1XTfkRXDEq1x82VZHY35bvNAQGbT+HE/BOw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LixaZDMyebVyvBJ2sBhYP86Ms0J3KulVw5oY6EixLVb85IXBfI+fa/h9aVkaAMhPD
+         miUl7iMTlDrlz3y7bSRSj+elGvqPzlhgqfT0/B8Y+SnibuInqcHgfZVUr8pXc5jy7v
+         EnFg2QmQoxxK/4vDaUc6LSU3F8l5VLNQHZogX1HU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrew Jones <drjones@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 4.9 16/16] KVM: arm/arm64: Only skip MMIO insn once
-Date:   Thu, 29 Aug 2019 14:17:34 -0400
-Message-Id: <20190829181736.9040-16-sashal@kernel.org>
+Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 01/15] net: tundra: tsi108: use spin_lock_irqsave instead of spin_lock_irq in IRQ context
+Date:   Thu, 29 Aug 2019 14:17:48 -0400
+Message-Id: <20190829181802.9619-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829181736.9040-1-sashal@kernel.org>
-References: <20190829181736.9040-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,56 +57,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jones <drjones@redhat.com>
+From: Fuqian Huang <huangfq.daxian@gmail.com>
 
-[ Upstream commit 2113c5f62b7423e4a72b890bd479704aa85c81ba ]
+[ Upstream commit 8c25d0887a8bd0e1ca2074ac0c6dff173787a83b ]
 
-If after an MMIO exit to userspace a VCPU is immediately run with an
-immediate_exit request, such as when a signal is delivered or an MMIO
-emulation completion is needed, then the VCPU completes the MMIO
-emulation and immediately returns to userspace. As the exit_reason
-does not get changed from KVM_EXIT_MMIO in these cases we have to
-be careful not to complete the MMIO emulation again, when the VCPU is
-eventually run again, because the emulation does an instruction skip
-(and doing too many skips would be a waste of guest code :-) We need
-to use additional VCPU state to track if the emulation is complete.
-As luck would have it, we already have 'mmio_needed', which even
-appears to be used in this way by other architectures already.
+As spin_unlock_irq will enable interrupts.
+Function tsi108_stat_carry is called from interrupt handler tsi108_irq.
+Interrupts are enabled in interrupt handler.
+Use spin_lock_irqsave/spin_unlock_irqrestore instead of spin_(un)lock_irq
+in IRQ context to avoid this.
 
-Fixes: 0d640732dbeb ("arm64: KVM: Skip MMIO insn after emulation")
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Andrew Jones <drjones@redhat.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kvm/mmio.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/ethernet/tundra/tsi108_eth.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/kvm/mmio.c b/arch/arm/kvm/mmio.c
-index 08443a15e6be8..3caee91bca089 100644
---- a/arch/arm/kvm/mmio.c
-+++ b/arch/arm/kvm/mmio.c
-@@ -98,6 +98,12 @@ int kvm_handle_mmio_return(struct kvm_vcpu *vcpu, struct kvm_run *run)
- 	unsigned int len;
- 	int mask;
+diff --git a/drivers/net/ethernet/tundra/tsi108_eth.c b/drivers/net/ethernet/tundra/tsi108_eth.c
+index 520cf50a3d5a1..93fe0da0f15ea 100644
+--- a/drivers/net/ethernet/tundra/tsi108_eth.c
++++ b/drivers/net/ethernet/tundra/tsi108_eth.c
+@@ -379,9 +379,10 @@ tsi108_stat_carry_one(int carry, int carry_bit, int carry_shift,
+ static void tsi108_stat_carry(struct net_device *dev)
+ {
+ 	struct tsi108_prv_data *data = netdev_priv(dev);
++	unsigned long flags;
+ 	u32 carry1, carry2;
  
-+	/* Detect an already handled MMIO return */
-+	if (unlikely(!vcpu->mmio_needed))
-+		return 0;
-+
-+	vcpu->mmio_needed = 0;
-+
- 	if (!run->mmio.is_write) {
- 		len = run->mmio.len;
- 		if (len > sizeof(unsigned long))
-@@ -200,6 +206,7 @@ int io_mem_abort(struct kvm_vcpu *vcpu, struct kvm_run *run,
- 	run->mmio.is_write	= is_write;
- 	run->mmio.phys_addr	= fault_ipa;
- 	run->mmio.len		= len;
-+	vcpu->mmio_needed	= 1;
+-	spin_lock_irq(&data->misclock);
++	spin_lock_irqsave(&data->misclock, flags);
  
- 	if (!ret) {
- 		/* We handled the access successfully in the kernel. */
+ 	carry1 = TSI_READ(TSI108_STAT_CARRY1);
+ 	carry2 = TSI_READ(TSI108_STAT_CARRY2);
+@@ -449,7 +450,7 @@ static void tsi108_stat_carry(struct net_device *dev)
+ 			      TSI108_STAT_TXPAUSEDROP_CARRY,
+ 			      &data->tx_pause_drop);
+ 
+-	spin_unlock_irq(&data->misclock);
++	spin_unlock_irqrestore(&data->misclock, flags);
+ }
+ 
+ /* Read a stat counter atomically with respect to carries.
 -- 
 2.20.1
 
