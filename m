@@ -2,74 +2,91 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CBDC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C18C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FED233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4BFB2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567119369;
-	bh=0kUMYx7gzVlJowquO77IfOfcqdoB3q98qT54dRfDbCg=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2RwiRO1rW5yYp1kZbbKsa5RxJxt5l8KkNIzLgbk3qLpAQbFTP9WjrcpTbhdNQtByG
-	 4ERdwLRPutVPIQ5xQrmuJ1mo5Hpfi1mcmEF0B40SmOzIsd6Nryp6YtUk2Jk9RaEDNa
-	 H4fFhChLPgb/Dftm2In8yc3N6jXBED2GwuPViW44=
+	s=default; t=1567119442;
+	bh=9BWAFJVsb4ZftQv8sobpEtSaQjaXCBSGfqFPPkrbxLo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=POtHSRbzuQ/RxwCIdD6EemMN6203udnhT1wfXMUkmxo7XocZoA+cIF2GMs5Q9UdJt
+	 D9YKdTQGiSJbE9iC/sRVLDguhgK6T7fZzdCobHRLgLeWYhi0sK8zp9B2dfvQbIKonQ
+	 Q2UmkUZ8LDBaFV62ahQ0gopZ6L5irOHxuSFGcsPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbfH2W4I (ORCPT
+        id S1728309AbfH2W5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 18:56:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727912AbfH2W4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 18:56:07 -0400
-Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11A082189D;
-        Thu, 29 Aug 2019 22:56:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567119366;
-        bh=0kUMYx7gzVlJowquO77IfOfcqdoB3q98qT54dRfDbCg=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=EqimipHf7BH6EosF+GwoK6BM8E2syjcI0kMZftzMiYm6rAZSnLaWOt686dkvfGR/T
-         9IkxHwg9ivTMCQi2vw/hoW7Ups6jtlB+W006m6+Xm+1RpSUCK4StjNRtFJvRRfnwIg
-         in2Z0zXILN00ru92/mCbUQrfTw7f3x/nZElUXS60=
-Date:   Thu, 29 Aug 2019 15:55:59 -0700 (PDT)
-From:   Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: swiotlb-xen cleanups v2
-In-Reply-To: <20190826121944.515-1-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.1908291554270.4927@sstabellini-ThinkPad-T480s>
-References: <20190826121944.515-1-hch@lst.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 29 Aug 2019 18:57:21 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41850 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727907AbfH2W5V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 18:57:21 -0400
+Received: by mail-oi1-f194.google.com with SMTP id h4so490363oih.8;
+        Thu, 29 Aug 2019 15:57:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Tt59Vai4nKcFOlf3kuJu+36rcTwUnw+ESfP2cPA8a9w=;
+        b=oKu7R06QbsBdaT25B01CUIevRx3l72ZwMHS/TKYjkZJT3WSpPbOMimRBypIvIE/47B
+         pBWJk+Q5/+QEW5Wu89HzM9+AqLTwULx149VXKevVqlH4PsZygKEzWeicbAVChuTIc6K3
+         9R2IPuowovw26jmT6dTDph9MJeg9lGyiIC9SIVou0m3xoAHmlEln7pI8orOFcerKpdPi
+         SlxtwySB2ZZ8CxAxPGWoi5TmEFtE/GQ6tiks6/0CQKTtKJ0kO4NzBSvG5pz9qnzvHYPB
+         2FX0Y68noAKEpoGLOPxYmcMNuuizhcfXcwTWjBzQ2Ys17686ACJVUUeKarC4H/1sBMy5
+         zjiQ==
+X-Gm-Message-State: APjAAAVc8AFevI3Uo9Ri0hZ8Upd1cxHJjoS+JNV0kY7mSYJoCGYWTIwP
+        /H7hKGrT8gGbtcPL6RKVgQ==
+X-Google-Smtp-Source: APXvYqzNLJ5SnSm+nMCobpcQcc3WHBIxdaTxiYCSwEw6M9n03lmG7rmmrOA9SRGSrxwhdyGE3uk1qQ==
+X-Received: by 2002:aca:3909:: with SMTP id g9mr192281oia.158.1567119440204;
+        Thu, 29 Aug 2019 15:57:20 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t21sm1026334oic.6.2019.08.29.15.57.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 15:57:19 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 17:57:19 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Fabien Dessenne <fabien.dessenne@st.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: stm32: add wakeup-source
+Message-ID: <20190829225719.GA21954@bogus>
+References: <1566833923-16718-1-git-send-email-fabien.dessenne@st.com>
+ <1566833923-16718-2-git-send-email-fabien.dessenne@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566833923-16718-2-git-send-email-fabien.dessenne@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 26 Aug 2019, Christoph Hellwig wrote:
-> Hi Xen maintainers and friends,
+On Mon, 26 Aug 2019 17:38:42 +0200, Fabien Dessenne wrote:
+> Add the "wakeup-source" property: if the optional wdg interrupt is
+> defined, then this property may be defined too.
 > 
-> please take a look at this series that cleans up the parts of swiotlb-xen
-> that deal with non-coherent caches.
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> ---
+>  Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> Changes since v1:
->  - rewrite dma_cache_maint to be much simpler
->  - improve various comments and commit logs
->  - remove page-coherent.h entirely
 
-Thanks for your work on this, it really makes the code better. I tested
-it on ARM64 with a non-coherent network device and verified it works as
-intended (Cadence GEM on ZynqMP).
+Acked-by: Rob Herring <robh@kernel.org>
