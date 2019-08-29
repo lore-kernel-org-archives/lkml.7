@@ -2,168 +2,89 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0073CC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F6DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2592233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 276AE233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfH2K5e (ORCPT
+        id S1727346AbfH2K7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:57:34 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:53497 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726379AbfH2K5e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:57:34 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id 3I7MiR37RDqPe3I7PiNc09; Thu, 29 Aug 2019 12:57:32 +0200
-Subject: Re: [PATCH v3 5/7] media: v4l2-core: Add new helper for area controls
-To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jacopo Mondi <jacopo@jmondi.org>
-References: <20190823123737.7774-1-ribalda@kernel.org>
- <20190823123737.7774-5-ribalda@kernel.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <83a58290-efa2-a4c4-17dc-0380c6b91ce9@xs4all.nl>
-Date:   Thu, 29 Aug 2019 12:57:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 06:59:02 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3539 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726379AbfH2K7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:59:01 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 48CB43D1288EB0A4B6E9;
+        Thu, 29 Aug 2019 18:58:59 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 29 Aug 2019 18:58:58 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Thu, 29 Aug 2019 18:58:57 +0800
+Date:   Thu, 29 Aug 2019 18:58:11 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        "Dave Chinner" <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v6 01/24] erofs: add on-disk layout
+Message-ID: <20190829105811.GC64893@architecture4>
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
+ <20190802125347.166018-2-gaoxiang25@huawei.com>
+ <20190829095954.GB20598@infradead.org>
+ <20190829103252.GA64893@architecture4>
+ <20190829103604.GA13309@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190823123737.7774-5-ribalda@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfN8Qe9smLVrh7So1TIE2OftNPD0kSTIHJaTGKdn9RiKFxwIu672Y4iuUfXam3c7F+WA6GzDewtQw/Dm5a4x4aQ0IE01NBGBpY+IVCHLYFi25HT666jJa
- zC7QjRz2tT3LAQT/wzR7mwCrP07Xy1VN//V0K1lE2hHgM+SLexjzzJTU1yDiO9MIlSEI8lUJ+NPhbjpfzl0gczN401p0LqVkVqvT1J9ADylsPf9fCkKgs3jA
- YZEA34Ue5W5sI6n6wWsvWVeArYh/KI9BFd2cwOY2EAyvhcVx6nGXMeEbK8X3Ejs0J8+zRdlTRrf/4Y/SjeR+0+bDoSPexla6VO++HAL6vWisLD5bVWpJNnI6
- S6SSEy7gRv14KmDBIy738uKSLyX0dOzTfofhLYVS7J+X8ewG09M=
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190829103604.GA13309@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme719-chm.china.huawei.com (10.1.199.115) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/23/19 2:37 PM, Ricardo Ribalda Delgado wrote:
-> Adding a V4L2_CID_UNIT_CELL_SIZE control requires a lot of boilerplate,
-> try to minimize it by adding a new helper.
+Hi Christoph,
+
+On Thu, Aug 29, 2019 at 03:36:04AM -0700, Christoph Hellwig wrote:
+> On Thu, Aug 29, 2019 at 06:32:53PM +0800, Gao Xiang wrote:
+> > I can fix it up as you like but I still cannot get
+> > what is critical issues here.
 > 
-> Suggested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> ---
->  drivers/media/v4l2-core/v4l2-ctrls.c | 25 ++++++++++++++++++++++++-
->  include/media/v4l2-ctrls.h           | 16 ++++++++++++++++
->  2 files changed, 40 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index b3bf458df7f7..33e48f0aec1a 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -2660,7 +2660,6 @@ struct v4l2_ctrl *v4l2_ctrl_new_std_menu_items(struct v4l2_ctrl_handler *hdl,
->  }
->  EXPORT_SYMBOL(v4l2_ctrl_new_std_menu_items);
->  
-> -/* Helper function for standard integer menu controls */
+> The problem is that the whole codebase is way substandard quality,
+> looking a lot like Linux code from 20 years ago.  Yes, we already have
+> plenty of code of that standard in the tree, but we should not add more.
 
-Huh?
+I still cannot get your point what does your substandard quality mean,
+please refer to some thing critical in EROFS (and I noticed that your
+new code still has bug) rather than naming.
 
->  struct v4l2_ctrl *v4l2_ctrl_new_int_menu(struct v4l2_ctrl_handler *hdl,
->  			const struct v4l2_ctrl_ops *ops,
->  			u32 id, u8 _max, u8 _def, const s64 *qmenu_int)
-> @@ -2684,6 +2683,30 @@ struct v4l2_ctrl *v4l2_ctrl_new_int_menu(struct v4l2_ctrl_handler *hdl,
->  }
->  EXPORT_SYMBOL(v4l2_ctrl_new_int_menu);
->  
-> +static void area_init(const struct v4l2_ctrl *ctrl, u32 idx,
-> +		union v4l2_ctrl_ptr ptr)
-> +{
-> +	memcpy(ptr.p_area, ctrl->priv, sizeof(*ptr.p_area));
+Thanks,
+Gao Xiang
 
-This can be used in an array, so you have to honor the idx field.
-
-> +}
-> +
-> +static const struct v4l2_ctrl_type_ops area_ops = {
-> +	.init = area_init,
-> +};
-
-This is a standard control type, so just add support for it the std_type_ops
-functions.
-
-> +
-> +struct v4l2_ctrl *v4l2_ctrl_new_area(struct v4l2_ctrl_handler *hdl,
-> +				     const struct v4l2_ctrl_ops *ops,
-> +				     u32 id, const struct v4l2_area *area)
-> +{
-> +	static struct v4l2_ctrl_config ctrl = {
-> +		.id = V4L2_CID_UNIT_CELL_SIZE,
-
-This should be set to the passed id, not hardcoded.
-
-> +		.type_ops = &area_ops,
-
-And just drop this line.
-
-> +	};
-> +
-> +	return v4l2_ctrl_new_custom(hdl, &ctrl, (void *)area);
-
-Don't pass area as a priv pointer. Instead the core will just initialize the
-area to some default value (1x1), and then you can call set_ctrl()
-after creating the control to set it to the proper value.
-
-The READ_ONLY flag applies to the public API, but the kernel API still has
-to be able to change it.
-
-> +}
-> +EXPORT_SYMBOL(v4l2_ctrl_new_area);
-> +
-> +/* Helper function for standard integer menu controls */
-
-This comment doesn't belong here.
-
->  /* Add the controls from another handler to our own. */
->  int v4l2_ctrl_add_handler(struct v4l2_ctrl_handler *hdl,
->  			  struct v4l2_ctrl_handler *add,
-> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-> index 9a3d11350e67..36f0712ea6dd 100644
-> --- a/include/media/v4l2-ctrls.h
-> +++ b/include/media/v4l2-ctrls.h
-> @@ -669,6 +669,22 @@ struct v4l2_ctrl *v4l2_ctrl_new_int_menu(struct v4l2_ctrl_handler *hdl,
->  					 u32 id, u8 max, u8 def,
->  					 const s64 *qmenu_int);
->  
-> +/**
-> + * v4l2_ctrl_new_area() - Allocate and initialize a V4L2_CTRL_TYPE_AREA control.
-> + *
-> + * @hdl:	The control handler.
-> + * @ops:	The control ops.
-> + * @id:	The control ID.
-> + * @area:	The width and height of the area in a struct v4l2_area.
-
-Specifically, this is the initial width and height.
-
-> + *
-> + * If the &v4l2_ctrl struct could not be allocated then NULL is returned
-> + * and @hdl->error is set to the error code (if it wasn't set already).
-> + */
-> +
-> +struct v4l2_ctrl *v4l2_ctrl_new_area(struct v4l2_ctrl_handler *hdl,
-> +				     const struct v4l2_ctrl_ops *ops,
-> +				     u32 id, const struct v4l2_area *area);
-> +
->  /**
->   * typedef v4l2_ctrl_filter - Typedef to define the filter function to be
->   *	used when adding a control handler.
-> 
-
-Regards,
-
-	Hans
