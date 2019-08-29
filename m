@@ -2,147 +2,145 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8FBC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 04:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA379C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 04:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFE12173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 04:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED8123403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 04:56:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="E8Il4awv"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Crh6iKQg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfH2Ewt (ORCPT
+        id S1726888AbfH2E4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 00:52:49 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38087 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726888AbfH2Ewr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 00:52:47 -0400
-Received: by mail-pf1-f196.google.com with SMTP id o70so1214488pfg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 21:52:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GANqF4H1c9ctJZ93xy/AUHApZEM00s/jYLQw6n/4UXM=;
-        b=E8Il4awvKrc4JNdKEdEKQ5KR7arPWnH6d5OGIRjXAoOZw2t1vKXjcuR64RT/n9LSis
-         k7NHI1RR6uliGdlKYdourRu3GpPK1LOQhRTyYO8KvHPjx3CekCpevwFNyeEYFmq++6Hy
-         pSy9iOm1V3Ui7LzZp5XwML27WdpcEL4nphvBY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=GANqF4H1c9ctJZ93xy/AUHApZEM00s/jYLQw6n/4UXM=;
-        b=pyDhOYRcScIlZj3snHQGunYyt/cHhRSGeHCe1pvpUYk1ouKhzh775gl13L6tGy3yRP
-         LTZyGA6VmPCO8W6tA2eTvg7X2xUarmZXLAq5beanSZfJeJK6LqMg3aaj7odd1FIP7d4d
-         dnEfzB3/mP1y3gdqXfaxVBb+ve0oM82kk3gBuup8FAvB9QRSXWxtW0xaMo0WRi3D5hiI
-         aD/7jLbEEcEelgruA10eQ58a3uVU7Vv6pxkBJwrtsnS6mnNUIP2ig02uf9a/xm5rAQI6
-         6ft5NdFBdQZ9b5iOYmJbhLJlXGV8pMMzt+W0GUb6+TKgmLdyqXWSgl7SWABlzcgqetOJ
-         bfvQ==
-X-Gm-Message-State: APjAAAWCW+/RWUitkOrvXAfyXiS3bp5xjBGnPQiaV1GV4E6YTX8VAB5C
-        P4DX3nU7Ux4dCnR/lGzX59+lMg==
-X-Google-Smtp-Source: APXvYqyW8b/Ox0XdoME0liJ9cCnqa8HAZOZwlGMSTWggx7M6r7b503/4XWOBBnCwx8KFAvKsNhm5LQ==
-X-Received: by 2002:aa7:8a04:: with SMTP id m4mr8851035pfa.65.1567054366484;
-        Wed, 28 Aug 2019 21:52:46 -0700 (PDT)
-Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id j1sm1131440pfh.174.2019.08.28.21.52.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 28 Aug 2019 21:52:45 -0700 (PDT)
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: [PATCH 2/2] gpio: iproc-gpio: Handle interrupts for multiple instances
-Date:   Thu, 29 Aug 2019 10:22:28 +0530
-Message-Id: <1567054348-19685-3-git-send-email-srinath.mannam@broadcom.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567054348-19685-1-git-send-email-srinath.mannam@broadcom.com>
-References: <1567054348-19685-1-git-send-email-srinath.mannam@broadcom.com>
+        Thu, 29 Aug 2019 00:56:02 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:11823 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbfH2E4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 00:56:02 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46Jr0b5DHPz9v045;
+        Thu, 29 Aug 2019 06:55:59 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Crh6iKQg; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 9z55-teS7QNT; Thu, 29 Aug 2019 06:55:59 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46Jr0b47h8z9v044;
+        Thu, 29 Aug 2019 06:55:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1567054559; bh=C7KnBPSsTOCMKq6tZmmUIqyxDQCGRpUvQfY8hSe07iY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Crh6iKQgHzv0eO4Zt5E/aY5c04/+zsg8gPvFX0T3nRKRRU84j5EOOfjB6tpEcJeOK
+         H6Xo/zcD5it730VdmybY59Uju+tQjAMjpN54UwPR9lXBav8DZ6aEZCYkd3lxHfTwyj
+         rR7aR7Z6R1QPFOIsqIKXtCNlm/GF62ovxRTIBQEY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6339C8B79B;
+        Thu, 29 Aug 2019 06:56:00 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id XOufC6BwEjVn; Thu, 29 Aug 2019 06:56:00 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BF89B8B761;
+        Thu, 29 Aug 2019 06:55:59 +0200 (CEST)
+Subject: Re: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception
+ handler
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Feng Tang <feng.tang@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <201908200943.601DD59DCE@keescook>
+ <20190822155611.a1a6e26db99ba0876ba9c8bd@linux-foundation.org>
+ <86003539-18ec-f2ff-a46f-764edb820dcd@c-s.fr> <201908241206.D223659@keescook>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <4c1ed94a-4dd0-e5cb-0b87-397b512d465e@c-s.fr>
+Date:   Thu, 29 Aug 2019 06:55:59 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <201908241206.D223659@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-When multiple instance of iproc-gpio chips are present, a fix up
-message[1] is printed during the probe of second and later instances.
+Le 24/08/2019 à 21:08, Kees Cook a écrit :
 
-This issue is because driver sharing same irq_chip data structure
-among multiple instances of driver.
+Euh ... only received this mail yesterday. Same for the other answer.
 
-Fix this by allocating irq_chip data structure per instance of
-iproc-gpio.
 
-[1] fix up message addressed by this patch
-[  7.862208] gpio gpiochip2: (689d0000.gpio): detected irqchip that
-   is shared with multiple gpiochips: please fix the driver.
+> On Fri, Aug 23, 2019 at 04:26:59PM +0200, Christophe Leroy wrote:
+>>
+>>
+>> Le 23/08/2019 à 00:56, Andrew Morton a écrit :
+>>> On Tue, 20 Aug 2019 09:47:55 -0700 Kees Cook <keescook@chromium.org> wrote:
+>>>
+>>>> Reply-To: 20190819234111.9019-8-keescook@chromium.org
+>>>
+>>> Really?
+>>
+>> That seems correct, that's the "[PATCH 7/7] bug: Move WARN_ON() "cut here"
+>> into exception handler" from the series at
+>> https://lkml.org/lkml/2019/8/19/1155
+>>
+>>
+>>>
+>>>> Subject: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception handler
+>>>
+>>> It's strange to receive a standalone [7/7] patch.
+>>
+>> Iaw the Reply_To, I understand it as an update of the 7th patch of the
+>> series.
+> 
+> Was trying to avoid the churn of resending the identical 1-6 patches
+> (which are all just refactoring to make 7/7 not a mess).
 
-Fixes: 616043d58a89 ("pinctrl: Rename gpio driver from cygnus to iproc")
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
----
- drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+Yes but Reply-To: means the address we have to use to answer to this email.
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-index 20b9864..8729f47 100644
---- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-+++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-@@ -114,6 +114,7 @@ struct iproc_gpio {
- 
- 	raw_spinlock_t lock;
- 
-+	struct irq_chip irqchip;
- 	struct gpio_chip gc;
- 	unsigned num_banks;
- 
-@@ -302,14 +303,6 @@ static int iproc_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	return 0;
- }
- 
--static struct irq_chip iproc_gpio_irq_chip = {
--	.name = "bcm-iproc-gpio",
--	.irq_ack = iproc_gpio_irq_ack,
--	.irq_mask = iproc_gpio_irq_mask,
--	.irq_unmask = iproc_gpio_irq_unmask,
--	.irq_set_type = iproc_gpio_irq_set_type,
--};
--
- /*
-  * Request the Iproc IOMUX pinmux controller to mux individual pins to GPIO
-  */
-@@ -875,14 +868,22 @@ static int iproc_gpio_probe(struct platform_device *pdev)
- 	/* optional GPIO interrupt support */
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq) {
--		ret = gpiochip_irqchip_add(gc, &iproc_gpio_irq_chip, 0,
-+		chip->irqchip.name = "bcm-iproc-gpio";
-+		chip->irqchip.irq_ack = iproc_gpio_irq_ack;
-+		chip->irqchip.irq_mask = iproc_gpio_irq_mask;
-+		chip->irqchip.irq_unmask = iproc_gpio_irq_unmask;
-+		chip->irqchip.irq_set_type = iproc_gpio_irq_set_type;
-+		chip->irqchip.irq_enable = iproc_gpio_irq_unmask;
-+		chip->irqchip.irq_disable = iproc_gpio_irq_mask;
-+
-+		ret = gpiochip_irqchip_add(gc, &chip->irqchip, 0,
- 					   handle_simple_irq, IRQ_TYPE_NONE);
- 		if (ret) {
- 			dev_err(dev, "no GPIO irqchip\n");
- 			goto err_rm_gpiochip;
- 		}
- 
--		gpiochip_set_chained_irqchip(gc, &iproc_gpio_irq_chip, irq,
-+		gpiochip_set_chained_irqchip(gc, &chip->irqchip, irq,
- 					     iproc_gpio_irq_handler);
- 	}
- 
--- 
-2.7.4
+I think you wanted to use In-reply-to:
 
+> 
+> I can resend the whole series, if that's preferred.
+
+I guess not.
+
+> 
+>>>> Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>>> Fixes: Fixes: 6b15f678fb7d ("include/asm-generic/bug.h: fix "cut here" for WARN_ON for __WARN_TAINT architectures")
+>>>
+>>> I'm seeing double.
+> 
+> Tracking down all these combinations has been tricky, which is why I did
+> the patch 1-6 refactoring: it makes the call hierarchy much easier to
+> examine (IMO).
+
+But still, Andrew is seing double ... And me as well :)
+
+Fixes: Fixes:
+
+Christophe
+
+> 
+> -Kees
+> 
