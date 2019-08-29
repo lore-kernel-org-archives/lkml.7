@@ -2,167 +2,321 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE7CC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56563C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D16C233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:39:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QEF3Ee7w"
+	by mail.kernel.org (Postfix) with ESMTP id 1A45923403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567050256;
+	bh=7AGYtm+O42VgV+9xRV1kUowxPCNSUZ33Z+SEUxDWJI0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=2dTm5bzO3brbVM+49cYz2L5cSDH9gpRwRIJdeuuauveF8dA68BjKj7C8lPoEx2rdC
+	 zfLZhRJLB8kEVSt7ddMDuF8WEonaZNm1+e5fyjt41FZK8n6jxhpFmY+xXPtcNc9QxC
+	 Tshni/Hp/7dEjrYN8rl7wXHK0jjoB8Rg+iHsXh4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfH2Djp (ORCPT
+        id S1727176AbfH2DoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 23:39:45 -0400
-Received: from mail-eopbgr70047.outbound.protection.outlook.com ([40.107.7.47]:32992
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726128AbfH2Djo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 23:39:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EWm30uEIySy0RnDNT4bQWlsV+ZceSEK/rEij/jCX7/rYS8xZt6rhaWSYE4JzsMT6JYS6BnX555tV3ljNptxT0V5gqajXHuklizDTGIGUzh3Cclj5Sfwaze2WUaJrto7+iEcu41Ll0f2FcHTyr89sJTk11/j52yuJiN2z5BZHsp84VFQd1pfkE1KuhUDAyKk3M6U3rtaCI1beQpjW/QCHFOaOZiOXZJ+W9pBJrSvllg2pk0gF82mQQUfshvA8r18Ws6dexL75vDNOsR1n3c84HJWWgRiLSIDv80cpgkXorMwfIckddqhxKOlb6amB+vQSShHi6cCXQzXgUjv7vhGUKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FTC498B4ERTCYtAeuJqf03nypQrIhQqNbfqhgESUlrk=;
- b=M9g9J19DapUoX7DwCinpoSaVIqklQjCD4AhBFyEq9Z1qcwdsuorZA9eYj8ZEDQRBAm5XdOZbEPPItJzAy5VPze88Kl1fBhqzNRwytMxLxOAGJ8fip3M/TbPm2dUGmPcsgf2E+TuSC/23a7nipK/4mzbCRK6NWvoMDFhlXqzG1TRtJs/SEwC5T6UBcci0xtxVP4YHEWobPrdvK49PUxWJrCnLBz8273QdRdgxs+XGHJrkQBO31prbVu9wiQt2pXcnotOJmiCLJ2RJwqUUSVcZd5aFMw646aXBkZuw1udnWZqIvMblKcyUbdIBb3gxAVB7IuOZoJZ6DgE+uHGp0GfDFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FTC498B4ERTCYtAeuJqf03nypQrIhQqNbfqhgESUlrk=;
- b=QEF3Ee7wUKKOG8L+3U4oJ21x9tkd0+jba++tGp9WLU2aHT4zvjuCF/5LpLEntlqaoPFqZuC/XFq+CqzfTDo/Zu5kFoOHArWxmorEFEvN7uziIZUVF9k488WLI/8ipJXwyQzJjV3dGQJU9QsUrsZyzphagc+7iFUmSA4OMy3wWoM=
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.52.16) by
- VI1PR04MB5309.eurprd04.prod.outlook.com (20.177.52.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.18; Thu, 29 Aug 2019 03:39:40 +0000
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::e039:172d:fe77:320a]) by VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::e039:172d:fe77:320a%4]) with mapi id 15.20.2199.021; Thu, 29 Aug 2019
- 03:39:40 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: chipidea: msm: Use device-managed registration API
-Thread-Topic: [PATCH] usb: chipidea: msm: Use device-managed registration API
-Thread-Index: AQHVQQMqCyiV6SBdkkOiu7Ig/zYETKcQHUkAgACMCwCAAQttgA==
-Date:   Thu, 29 Aug 2019 03:39:40 +0000
-Message-ID: <20190829033941.GA14460@b29397-desktop>
-References: <20190723030206.2919-1-hslester96@gmail.com>
- <20190828032118.GA2966@b29397-desktop>
- <CANhBUQ0PEOoVoVscO66spy0Jv4jf5wwtGKRUwa4vd=7b70kBwA@mail.gmail.com>
-In-Reply-To: <CANhBUQ0PEOoVoVscO66spy0Jv4jf5wwtGKRUwa4vd=7b70kBwA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f12e4617-cec0-445b-c25b-08d72c328624
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5309;
-x-ms-traffictypediagnostic: VI1PR04MB5309:
-x-microsoft-antispam-prvs: <VI1PR04MB53093B5FEBD3AB630B348DCD8BA20@VI1PR04MB5309.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0144B30E41
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(346002)(136003)(376002)(366004)(396003)(39860400002)(189003)(199004)(5660300002)(6246003)(305945005)(6436002)(81156014)(2906002)(8676002)(8936002)(3846002)(7736002)(6116002)(66066001)(76116006)(14454004)(66946007)(81166006)(91956017)(66446008)(66476007)(66556008)(64756008)(1411001)(478600001)(33656002)(33716001)(316002)(486006)(6916009)(54906003)(44832011)(11346002)(446003)(1076003)(229853002)(76176011)(99286004)(186003)(53546011)(102836004)(26005)(71190400001)(256004)(53936002)(6486002)(4326008)(71200400001)(6512007)(25786009)(6506007)(9686003)(476003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5309;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /+tPN4V07JgQRN7VgXv9dJ7BCPHKK3TvTpUqIcRFrZflqhfnSCMHB7cyVVD1l8lXFvUQ11s0Jpxgpw0/uX7vXy5gvCjWTzXj6hojP1DWAuP3BKCCmEGNT7BcacJtN4Gzq7ETCK/KIrCG5tUDZPRnTbdibO6BsmEujdbis5j6rz92MOfnGYgXj/K77EjeysObozQWQcG6TK6Gskeyz4MQqFvo+AvGJjPEO4tOqmV3WOjb/AZHzzXg5gHjBgY69scTWFAIaETCi5asgtvX4H7oUfALQaPBeQIVN7BUN67qCixrjBQqIUIsgXV4CXqKgp9hv+Pl4cHaFXJ4dNG+M7ufQUR4hEhSmF7/oy4UDgk2wlzVh3iYrzkXE7hiInM9JHHAtHJvs9AINMjTOjfR2HhS+1XgOk2CuQrupK/9EuDLnsI=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <48AB56A5E5670F41B0BE6A17F1BFAEDE@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 28 Aug 2019 23:44:15 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63658 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726079AbfH2DoO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 23:44:14 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7T3h0Nt127938;
+        Wed, 28 Aug 2019 23:43:39 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2up31jdtpd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 23:43:39 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7T3hctq129903;
+        Wed, 28 Aug 2019 23:43:38 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2up31jdtp3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Aug 2019 23:43:38 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7T3ewBu008633;
+        Thu, 29 Aug 2019 03:43:37 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma03wdc.us.ibm.com with ESMTP id 2ujvv6t3dm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Aug 2019 03:43:37 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7T3hb0T53346654
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 03:43:37 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 01EC4B2064;
+        Thu, 29 Aug 2019 03:43:37 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BCC3AB205F;
+        Thu, 29 Aug 2019 03:43:36 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.151.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 29 Aug 2019 03:43:36 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 9547D16C0727; Wed, 28 Aug 2019 20:43:36 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 20:43:36 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC v1 2/2] rcu/tree: Remove dynticks_nmi_nesting counter
+Message-ID: <20190829034336.GD4125@linux.ibm.com>
+Reply-To: paulmck@kernel.org
+References: <5d648897.1c69fb81.5e60a.fc70@mx.google.com>
+ <20190828202330.GS26530@linux.ibm.com>
+ <20190828210525.GB75931@google.com>
+ <20190828211904.GX26530@linux.ibm.com>
+ <20190828214241.GD75931@google.com>
+ <20190828220108.GC26530@linux.ibm.com>
+ <20190828221444.GA100789@google.com>
+ <20190828231247.GE26530@linux.ibm.com>
+ <20190829015155.GB100789@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f12e4617-cec0-445b-c25b-08d72c328624
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 03:39:40.5858
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mJC0dj47BHhrBSSDWtn+MMH/D6etiDmeebXEiA3iqWm1m2MD6syqtbPofTISd2fhMv9WfcnKguVTXtUSqi6Iww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5309
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829015155.GB100789@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908290038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-08-28 19:42:32, Chuhong Yuan wrote:
-> On Wed, Aug 28, 2019 at 11:24 AM Peter Chen <peter.chen@nxp.com> wrote:
-> >
-> > On 19-07-23 11:02:07, Chuhong Yuan wrote:
-> > > Use devm_reset_controller_register to get rid
-> > > of manual unregistration.
-> > >
-> > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > > ---
-> > >  drivers/usb/chipidea/ci_hdrc_msm.c | 4 +---
-> > >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/usb/chipidea/ci_hdrc_msm.c b/drivers/usb/chipide=
-a/ci_hdrc_msm.c
-> > > index bb4645a8ca46..067542e84aea 100644
-> > > --- a/drivers/usb/chipidea/ci_hdrc_msm.c
-> > > +++ b/drivers/usb/chipidea/ci_hdrc_msm.c
-> > > @@ -216,7 +216,7 @@ static int ci_hdrc_msm_probe(struct platform_devi=
-ce *pdev)
-> > >       ci->rcdev.ops =3D &ci_hdrc_msm_reset_ops;
-> > >       ci->rcdev.of_node =3D pdev->dev.of_node;
-> > >       ci->rcdev.nr_resets =3D 2;
-> > > -     ret =3D reset_controller_register(&ci->rcdev);
-> > > +     ret =3D devm_reset_controller_register(&pdev->dev, &ci->rcdev);
-> > >       if (ret)
-> > >               return ret;
-> > >
-> > > @@ -272,7 +272,6 @@ static int ci_hdrc_msm_probe(struct platform_devi=
-ce *pdev)
-> > >  err_iface:
-> > >       clk_disable_unprepare(ci->core_clk);
-> > >  err_fs:
-> > > -     reset_controller_unregister(&ci->rcdev);
-> >
-> > It is devm API, why the unregister needs to be called at
-> > fail path?
-> >
->=20
-> I am not very clear about your problem...
-> After using devm_reset_controller_register(), I have removed
-> reset_controller_unregister() calls
-> in this patch.
->=20
+On Wed, Aug 28, 2019 at 09:51:55PM -0400, Joel Fernandes wrote:
+> On Wed, Aug 28, 2019 at 04:12:47PM -0700, Paul E. McKenney wrote:
+> > On Wed, Aug 28, 2019 at 06:14:44PM -0400, Joel Fernandes wrote:
+> > > On Wed, Aug 28, 2019 at 03:01:08PM -0700, Paul E. McKenney wrote:
+> > > > On Wed, Aug 28, 2019 at 05:42:41PM -0400, Joel Fernandes wrote:
+> > > > > On Wed, Aug 28, 2019 at 02:19:04PM -0700, Paul E. McKenney wrote:
+> > > > > > On Wed, Aug 28, 2019 at 05:05:25PM -0400, Joel Fernandes wrote:
+> > > > > > > On Wed, Aug 28, 2019 at 01:23:30PM -0700, Paul E. McKenney wrote:
+> > > > > > > > On Mon, Aug 26, 2019 at 09:33:54PM -0400, Joel Fernandes (Google) wrote:
+> > > > > > > > > The dynticks_nmi_nesting counter serves 4 purposes:
+> > > > > > > > > 
+> > > > > > > > >       (a) rcu_is_cpu_rrupt_from_idle() needs to be able to detect first
+> > > > > > > > >           interrupt nesting level.
+> > > > > > > > > 
+> > > > > > > > >       (b) We need to detect half-interrupts till we are sure they're not an
+> > > > > > > > >           issue. However, change the comparison to DYNTICK_IRQ_NONIDLE with 0.
+> > > > > > > > > 
+> > > > > > > > >       (c) When a quiescent state report is needed from a nohz_full CPU.
+> > > > > > > > >           The nesting counter detects we are a first level interrupt.
+> > > > > > > > > 
+> > > > > > > > > For (a) we can just use dyntick_nesting == 1 to determine this. Only the
+> > > > > > > > > outermost interrupt that interrupted an RCU-idle state can set it to 1.
+> > > > > > > > > 
+> > > > > > > > > For (b), this warning condition has not occurred for several kernel
+> > > > > > > > > releases.  But we still keep the warning but change it to use
+> > > > > > > > > in_interrupt() instead of the nesting counter. In a later year, we can
+> > > > > > > > > remove the warning.
+> > > > > > > > > 
+> > > > > > > > > For (c), the nest check is not really necessary since forced_tick would
+> > > > > > > > > have been set to true in the outermost interrupt, so the nested/NMI
+> > > > > > > > > interrupts will check forced_tick anyway, and bail.
+> > > > > > > > 
+> > > > > > > > Skipping the commit log and documentation for this pass.
+> > > > > > > [snip] 
+> > > > > > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > > > > > > index 255cd6835526..1465a3e406f8 100644
+> > > > > > > > > --- a/kernel/rcu/tree.c
+> > > > > > > > > +++ b/kernel/rcu/tree.c
+> > > > > > > > > @@ -81,7 +81,6 @@
+> > > > > > > > >  
+> > > > > > > > >  static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
+> > > > > > > > >  	.dynticks_nesting = 1,
+> > > > > > > > > -	.dynticks_nmi_nesting = 0,
+> > > > > > > > 
+> > > > > > > > This should be in the previous patch, give or take naming.
+> > > > > > > 
+> > > > > > > Done.
+> > > > > > > 
+> > > > > > > > >  	.dynticks = ATOMIC_INIT(RCU_DYNTICK_CTRL_CTR),
+> > > > > > > > >  };
+> > > > > > > > >  struct rcu_state rcu_state = {
+> > > > > > > > > @@ -392,15 +391,9 @@ static int rcu_is_cpu_rrupt_from_idle(void)
+> > > > > > > > >  	/* Check for counter underflows */
+> > > > > > > > >  	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) < 0,
+> > > > > > > > >  			 "RCU dynticks_nesting counter underflow!");
+> > > > > > > > > -	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 0,
+> > > > > > > > > -			 "RCU dynticks_nmi_nesting counter underflow/zero!");
+> > > > > > > > >  
+> > > > > > > > > -	/* Are we at first interrupt nesting level? */
+> > > > > > > > > -	if (__this_cpu_read(rcu_data.dynticks_nmi_nesting) != 1)
+> > > > > > > > > -		return false;
+> > > > > > > > > -
+> > > > > > > > > -	/* Does CPU appear to be idle from an RCU standpoint? */
+> > > > > > > > > -	return __this_cpu_read(rcu_data.dynticks_nesting) == 0;
+> > > > > > > > > +	/* Are we the outermost interrupt that arrived when RCU was idle? */
+> > > > > > > > > +	return __this_cpu_read(rcu_data.dynticks_nesting) == 1;
+> > > > > > > > >  }
+> > > > > > > > >  
+> > > > > > > > >  #define DEFAULT_RCU_BLIMIT 10     /* Maximum callbacks per rcu_do_batch ... */
+> > > > > > > > > @@ -564,11 +557,10 @@ static void rcu_eqs_enter(bool user)
+> > > > > > > > >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> > > > > > > > >  
+> > > > > > > > >  	/* Entering usermode/idle from interrupt is not handled. These would
+> > > > > > > > > -	 * mean usermode upcalls or idle entry happened from interrupts. But,
+> > > > > > > > > -	 * reset the counter if we warn.
+> > > > > > > > > +	 * mean usermode upcalls or idle exit happened from interrupts. Remove
+> > > > > > > > > +	 * the warning by 2020.
+> > > > > > > > >  	 */
+> > > > > > > > > -	if (WARN_ON_ONCE(rdp->dynticks_nmi_nesting != 0))
+> > > > > > > > > -		WRITE_ONCE(rdp->dynticks_nmi_nesting, 0);
+> > > > > > > > > +	WARN_ON_ONCE(in_interrupt());
+> > > > > > > > 
+> > > > > > > > And this is a red flag.  Bad things happen should some common code
+> > > > > > > > that disables BH be invoked from the idle loop.  This might not be
+> > > > > > > > happening now, but we need to avoid this sort of constraint.
+> > > > > > > > How about instead merging ->dyntick_nesting into the low-order bits
+> > > > > > > > of ->dyntick_nmi_nesting?
+> > > > > > > > 
+> > > > > > > > Yes, this assumes that we don't enter process level twice, but it should
+> > > > > > > > be easy to add a WARN_ON() to test for that.  Except that we don't have
+> > > > > > > > to because there is already this near the end of rcu_eqs_exit():
+> > > > > > > > 
+> > > > > > > > 	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
+> > > > > > > > 
+> > > > > > > > So the low-order bit of the combined counter could indicate process-level
+> > > > > > > > non-idle, the next three bits could be unused to make interpretation
+> > > > > > > > of hex printouts easier, and then the rest of the bits could be used in
+> > > > > > > > the same way as currently.
+> > > > > > > > 
+> > > > > > > > This would allow a single read to see the full state, so that 0x1 means
+> > > > > > > > at process level in the kernel, 0x11 is interrupt (or NMI) from process
+> > > > > > > > level, 0x10 is interrupt/NMI from idle/user, and so on.
+> > > > > > > > 
+> > > > > > > > What am I missing here?  Why wouldn't this work, and without adding yet
+> > > > > > > > another RCU-imposed constraint on some other subsystem?
+> > > > > > > 
+> > > > > > > What about replacing the warning with a WARN_ON_ONCE(in_irq()), would that
+> > > > > > > address your concern?
+> > > > > > > 
+> > > > > > > Also, considering this warning condition is most likely never occurring as we
+> > > > > > > know it, and we are considering deleting it soon enough, is it really worth
+> > > > > > > reimplementing the whole mechanism with a complex bit-sharing scheme just
+> > > > > > > because of the BH-disable condition you mentioned, which likely doesn't
+> > > > > > > happen today? In my implementation, this is just a simple counter. I feel
+> > > > > > > combining bits in the same counter will just introduce more complexity that
+> > > > > > > this patch tries to address/avoid.
+> > > > > > > 
+> > > > > > > OTOH, I also don't mind with just deleting the warning altogether if you are
+> > > > > > > Ok with that.
+> > > > > > 
+> > > > > > The big advantage of combining the counters is that all of the state is
+> > > > > > explicit and visible in one place.  Plus it can be accessed atomically.
+> > > > > > And it avoids setting a time bomb for some poor guys just trying to get
+> > > > > > their idle-loop jobs done some time in the dim distant future.
+> > > > > 
+> > > > > I could try the approach you're suggesting but I didn't actually see an issue
+> > > > > with the patch in its current state other than the WARN_ON_ONCE which I could
+> > > > > change to WARN_ON_ONCE(in_irq()) to remove the concern. AFAICS, we don't
+> > > > > detect "half soft-interrupts" in this code in anyway.
+> > > > > 
+> > > > > I do feel the approach you're suggesting can be a follow up, these 2 patches
+> > > > > just focus on deleting dynticks_nmi_nesting counter and we can test this
+> > > > > approach thoroughly for a release or so.
+> > > > > 
+> > > > > > Besides, this pair of patches already makes a large change from a
+> > > > > > conceptual viewpoint.  If we are going to make a large change, let's
+> > > > > > get our money's worth out of that change!
+> > > > > 
+> > > > > IMHO, most of the changes are to code comments, the actual code change is
+> > > > > very little and is just removal of dynticks_nmi_nesting and simplification;
+> > > > > its not really an introduction of a new mechanism.
+> > > > 
+> > > > This change is not fixing a bug, so there is no need for an emergency fix,
+> > > > and thus no point in additional churn.  I understand that it is a bit
+> > > > annoying to code and test something and have your friendly maintainer say
+> > > > "sorry, wrong rocks", and the reason that I understand this is that I do
+> > > > that to myself rather often.
+> > > 
+> > > The motivation for me for this change is to avoid future bugs such as with
+> > > the following patch where "== 2" did not take the force write of
+> > > DYNTICK_IRQ_NONIDLE into account:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?h=dev&id=13c4b07593977d9288e5d0c21c89d9ba27e2ea1f
+> > 
+> > Yes, the current code does need some simplification.
+> > 
+> > > I still don't see it as pointless churn, it is also a maintenance cost in its
+> > > current form and the simplification is worth it IMHO both from a readability,
+> > > and maintenance stand point.
+> > > 
+> > > I still don't see what's technically wrong with the patch. I could perhaps
+> > > add the above "== 2" point in the patch?
+> > 
+> > I don't know of a crash or splat your patch would cause, if that is
+> > your question.  But that is also true of the current code, so the point
+> > is simplification, not bug fixing.  And from what I can see, there is an
+> > opportunity to simplify quite a bit further.  And with something like
+> > RCU, further simplification is worth -serious- consideration.
+> > 
+> > > We could also discuss f2f at LPC to see if we can agree about it?
+> > 
+> > That might make a lot of sense.
+> 
+> Sure. I am up for a further redesign / simplification. I will think more
+> about your suggestions and can also further discuss at LPC.
 
-Sorry, my fault.
+One question that might (or might not) help:  Given the compound counter,
+where the low-order hex digit indicates whether the corresponding CPU
+is running in a non-idle kernel task and the rest of the hex digits
+indicate the NMI-style nesting counter shifted up by four bits, what
+could rcu_is_cpu_rrupt_from_idle() be reduced to?
 
-Your patch is ok, but try to clean up the label "err_fs" since
-it is not needed.
+> And this patch is on LKML archives and is not going anywhere so there's no
+> rush I guess ;-)
 
-Peter
+True enough!  ;-)
 
-> > Peter
-> >
-> > >       return ret;
-> > >  }
-> > >
-> > > @@ -284,7 +283,6 @@ static int ci_hdrc_msm_remove(struct platform_dev=
-ice *pdev)
-> > >       ci_hdrc_remove_device(ci->ci);
-> > >       clk_disable_unprepare(ci->iface_clk);
-> > >       clk_disable_unprepare(ci->core_clk);
-> > > -     reset_controller_unregister(&ci->rcdev);
-> > >
-> > >       return 0;
-> > >  }
-> > > --
-> > > 2.20.1
-> > >=
+> > In the meantime, could you please create an independent series (or
+> > more than one series, as the case may be) of the other patches?
+> 
+> The only other patch in this series is to repurpose the dyntick_nesting
+> counter to do the job of the dynticks_nmi_nesting counter. Did you mean that
+> one? Or did you mean the dntick tracing patch? I think I should indeed submit
+> the tracing patch separately.
+
+Heh!
+
+You have sent me a number of patches over the past day or two.  Respin
+them as needed and resend.  My feeling was that one of the groups could
+be split, but then again there might have been dependencies among the
+patches that I didn't see.  You decide.
+
+On the tracing patch...  That patch might be a good idea regardless,
+but I bet that the reason that you felt the sudden need for it was due
+to the loss of information in your eventual ->dynticks_nesting field.
+After all, the value 0x1 might be an interrupt from idle, or it might
+just as easily be a task running in the kernel at process level.
+
+The reason the patch might nevertheless be a good idea is that redundant
+information can be helpful when debugging.  Especially when debugging
+new architecture-specific code, which is when RCU's dyntick-idle warnings
+tend to find bugs.
+
+							Thanx, Paul
