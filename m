@@ -2,158 +2,132 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A283C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D385C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3DC82189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069CE2189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:36:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="om9rfD3r"
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="r8SRpyJC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbfH2Teh (ORCPT
+        id S1727935AbfH2TgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:34:37 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41158 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbfH2Teh (ORCPT
+        Thu, 29 Aug 2019 15:36:20 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:38323 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726245AbfH2TgT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 15:34:37 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j16so4592120wrr.8
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 12:34:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wITCcu1aUHRsjm7ofKS0hPTgotk+bgOxAXtcBSapAng=;
-        b=om9rfD3r3tWjux8nXOwoZHcvldgVv/88BLWEtjKKzNKRH0tOOMfrrvA1v/uSesZqAu
-         F7xX0euXGljeMqlw8nAb87SdY/wz+KlGjAGstx1Cuqawl7/7sq7xH+/aKl4IulH2TYZl
-         SZRq839nEKBvwW+Hy2x+q93UiBGv3oCw7wAYKPtqIFzrQkz3jOtwmtk+7CTPsHl+c3pD
-         e7LBTdEZn/u5wHLMtVvJ+rGnjH3T0s5DFj2WTmk3UK2yKgaR0r9tMr1GeJzJ/kXzMbhF
-         vqCqisP/AY91nhTO7uYN2DG8DSJ5v+qlaYmIDocQZtGuG+lYs+VNS5phXDxwA1Ug/OyA
-         sACA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wITCcu1aUHRsjm7ofKS0hPTgotk+bgOxAXtcBSapAng=;
-        b=mfvddlpnI8ze2BP8Uudap2Mjj2iUCGVp1Pa6ZRhJyVKLf7VnBTUvIMqbrdVt2sB5Aj
-         Y2XlgZUg+gibBuEpSN4Hq6acSeT6RLEpPX/Rs5i+YruIFYi26ru0DBDeHrrINUKzPll2
-         ru1P5AbvAb0p2XgEVI2N+kC5zjoOPUW43r5OuM8B2naPKRwds+0vNMrCzirbKUPxWfTU
-         4N2rf0AoubywEio2TYGrgTOIivzkaIzesCs4S/i526IKr9qAH7Oyv24kzvzHM1NTK5iq
-         RJdvyzZ1AoVBr+1EbC6T6y9D9WannFwWQQU6ZqbMpUOrXM/Ai/QMAKPu2fg9h+UWAFEi
-         60qA==
-X-Gm-Message-State: APjAAAXfREKHnvjBY+xJ7YgEgqt2hzX922O2EozhV8zWnoC77xKpSNZF
-        uWdWNUy2cs92sSRypH0eQtw=
-X-Google-Smtp-Source: APXvYqwfC0hwHaNvtKcJP+AMQFx3UwJll3qWxANro4klHhx9Oo9LuQbO5ZMREVBc1sxJESACW/y4cg==
-X-Received: by 2002:adf:e7c4:: with SMTP id e4mr10775791wrn.62.1567107274840;
-        Thu, 29 Aug 2019 12:34:34 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id c201sm7320983wmd.33.2019.08.29.12.34.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 12:34:34 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 12:34:32 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Stefan Agner <stefan@agner.ch>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] ARM: Emit __gnu_mcount_nc when using Clang 10.0.0 or
- newer
-Message-ID: <20190829193432.GA10138@archlinux-threadripper>
-References: <20190829062635.45609-1-natechancellor@gmail.com>
- <CAKwvOdkXSWE+_JCZsuQdkCSrK5pJSp9n_Cd27asFP0mHBfHg6w@mail.gmail.com>
+        Thu, 29 Aug 2019 15:36:19 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 47974464A;
+        Thu, 29 Aug 2019 15:36:18 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 29 Aug 2019 15:36:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=xmU6E4
+        8DKOwP2FQfgqIDSv+MxdVCcx/DD2LgIHy+uZU=; b=r8SRpyJC3NulyXSOTZDWru
+        fFsO1biSg/6Bqz4M7in33mualV/qJRSu4d0b0IA/1cHIGMEPWzTlwjIN+XB3XTvY
+        766RAzn3/GE7aF2GPpJJM6jKmmYmCbUFt8dMiWh/Z38Mr5+bE1OoRPtzVS9AULvf
+        h4NO+pm4pZIpEQM6HAXekoNpIEIqhCuG22YUgwb1Ed8Zk+LoQ6ctPD5wslFyaS1j
+        6kx23Onke4S8I5WMO8qk65XcuJxkNH4+vVedX9hjtnIBXrrXsWdjxDTFrudkYxmG
+        MCQJj0P5Mdi7iNRrHJnTlgKUaq8S7RjDWYTIgEHoL7DkR5qRJ/UtM9OkB9Wfa/cg
+        ==
+X-ME-Sender: <xms:MSloXYqh8vp4Ocu_SmOG0R9fVmecAtIo2TU24Y_KuWFCW448CNojiw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeivddgudefiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefkugho
+    ucfutghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucfkphepud
+    dtledrieejrdeiuddrvddvgeenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghh
+    sehiughoshgthhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:MSloXQQjuLFW5cPit1MzG-brtynqptFNUXF5PItq8eHbpBvkZJjKaQ>
+    <xmx:MSloXb4qfn6cQOddI1Qz9QhIWpxPy7qxUUyQXExIgeHPCtylc5Ly-Q>
+    <xmx:MSloXYY-Phlg6N7p5oGBUI_EBwNI1jvnucDJ21KGxKnk-cA9z-9rIw>
+    <xmx:MiloXRwYa6ib7vtOiNskj43meL8X3voepza9RyrAOTcpTMmWLbui4Q>
+Received: from localhost (bzq-109-67-61-224.red.bezeqint.net [109.67.61.224])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 71B328005B;
+        Thu, 29 Aug 2019 15:36:16 -0400 (EDT)
+Date:   Thu, 29 Aug 2019 22:36:13 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Jiri Pirko <jiri@resnulli.us>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        davem@davemloft.net, allan.nielsen@microchip.com,
+        ivecera@redhat.com, f.fainelli@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
+Message-ID: <20190829193613.GA23259@splinter>
+References: <1567070549-29255-1-git-send-email-horatiu.vultur@microchip.com>
+ <1567070549-29255-2-git-send-email-horatiu.vultur@microchip.com>
+ <20190829095100.GH2312@nanopsycho>
+ <20190829132611.GC6998@lunn.ch>
+ <20190829134901.GJ2312@nanopsycho>
+ <20190829143732.GB17864@lunn.ch>
+ <20190829175759.GA19471@splinter>
+ <20190829182957.GA17530@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdkXSWE+_JCZsuQdkCSrK5pJSp9n_Cd27asFP0mHBfHg6w@mail.gmail.com>
+In-Reply-To: <20190829182957.GA17530@lunn.ch>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 10:55:28AM -0700, Nick Desaulniers wrote:
-> On Wed, Aug 28, 2019 at 11:27 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > Currently, multi_v7_defconfig + CONFIG_FUNCTION_TRACER fails to build
-> > with clang:
-> >
-> > arm-linux-gnueabi-ld: kernel/softirq.o: in function `_local_bh_enable':
-> > softirq.c:(.text+0x504): undefined reference to `mcount'
-> > arm-linux-gnueabi-ld: kernel/softirq.o: in function `__local_bh_enable_ip':
-> > softirq.c:(.text+0x58c): undefined reference to `mcount'
-> > arm-linux-gnueabi-ld: kernel/softirq.o: in function `do_softirq':
-> > softirq.c:(.text+0x6c8): undefined reference to `mcount'
-> > arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_enter':
-> > softirq.c:(.text+0x75c): undefined reference to `mcount'
-> > arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_exit':
-> > softirq.c:(.text+0x840): undefined reference to `mcount'
-> > arm-linux-gnueabi-ld: kernel/softirq.o:softirq.c:(.text+0xa50): more undefined references to `mcount' follow
-> >
-> > clang can emit a working mcount symbol, __gnu_mcount_nc, when
-> > '-meabi gnu' is passed to it. Until r369147 in LLVM, this was
-> > broken and caused the kernel not to boot because the calling
-> > convention was not correct. Now that it is fixed, add this to
-> > the command line when clang is 10.0.0 or newer so everything
-> > works properly.
-> >
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/35
-> > Link: https://bugs.llvm.org/show_bug.cgi?id=33845
-> > Link: https://github.com/llvm/llvm-project/commit/16fa8b09702378bacfa3d07081afe6b353b99e60
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
-> >  arch/arm/Makefile | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> > index c3624ca6c0bc..7b5a26a866fc 100644
-> > --- a/arch/arm/Makefile
-> > +++ b/arch/arm/Makefile
-> > @@ -112,6 +112,12 @@ ifeq ($(CONFIG_ARM_UNWIND),y)
-> >  CFLAGS_ABI     +=-funwind-tables
-> >  endif
-> >
-> > +ifeq ($(CONFIG_CC_IS_CLANG),y)
-> > +ifeq ($(shell test $(CONFIG_CLANG_VERSION) -ge 100000; echo $$?),0)
-> > +CFLAGS_ABI     +=-meabi gnu
-> > +endif
-> > +endif
-> > +
+On Thu, Aug 29, 2019 at 08:29:57PM +0200, Andrew Lunn wrote:
+> > Hi Andrew,
+> > 
+> > What happens when you run tcpdump on a routed interface without putting
+> > it in promiscuous mode ('-p')? If it is a pure software switch, then you
+> > see all unicast packets addressed to your interface's MAC address. What
+> > happens when the same is done on a hardware switch? With the proposed
+> > solution you will not get the same result.
+> > 
+> > On a software switch, when you run tcpdump without '-p', do you incur
+> > major packet loss? No. Will this happen when you punt several Tbps to
+> > your CPU on the hardware switch? Yes.
 > 
-> Thanks for the patch!  I think this is one of the final issues w/ 32b
-> ARM configs when building w/ Clang.
+> Hi Ido
 > 
-> I'm not super enthused about the version check.  The flag is indeed
-> not recognized by GCC, but I think it would actually be more concise
-> with $(cc-option) and no compiler or version check.
+> Please think about the general case, not your hardware. A DSA switch
+> generally has 1G ports. And the connection to the host is generally
+> 1G, maybe 2.5G. So if i put one interface into promisc mode, i will
+> probably receive the majority of the traffic on that port, so long as
+> there is not too much traffic from other ports towards the CPU.
 > 
-> Further, I think that the working __gnu_mcount_nc in Clang would
-> better be represented as marking the arch/arm/KConfig option for
-> CONFIG_FUNCTION_TRACER for dependent on a version of Clang greater
-> than or equal to Clang 10, not conditionally adding this flag. (We
-> should always add the flag when supported, IMO.  __gnu_mcount_nc's
-> calling convention being broken is orthogonal to the choice of
-> __gnu_mcount_nc vs mcount, and it's the former's that should be
-> checked, not the latter as in this patch.
+> I also don't expect any major packet loss in the switch. It is still
+> hardware switching, but also sending a copy to the CPU. That copy will
+> have the offload_fwd_mark bit set, so the bridge will discard the
+> frame. The switch egress queue towards the CPU might overflow, but
+> that means tcpdump does not get to see all the frames, and some
+> traffic which is actually heading to the CPU is lost. But that can
+> happen anyway.
 
-I will test with or without CONFIG_AEABI like Matthias asked and I will
-implement your Kconfig suggestion if it passes all of my tests. The
-reason that I did it this way is because I didn't want a user to end up
-with a non-booting kernel since -meabi gnu works with older versions of
-clang at build time, the issue happens at boot time but the Kconfig
-suggestion + cc-option should fix that.
+The potential packet loss was only one example why using promiscuous
+mode as an indication to punt all traffic to the CPU is wrong. I also
+mentioned that you will not capture any traffic (besides
+control/exception) when '-p' is specified.
 
-I should have a v2 out this evening.
+> We should also think about the different classes of users. Somebody
+> using a TOR switch with a NOS is very different to a user of a SOHO
+> switch in their WiFi access point. The first probably knows tc very
+> well, the second has probably never heard of it, and just wants
+> tcpdump to work like on their desktop.
 
-Cheers,
-Nathan
+I fully agree that we should make it easy for users to capture offloaded
+traffic, which is why I suggested patching libpcap. Add a flag to
+capable netdevs that tells libpcap that in order to capture all the
+traffic from this interface it needs to add a tc filter with a trap
+action. That way zero familiarity with tc is required from users.
+
+I really believe that instead of interpreting IFF_PROMISC in exotic ways
+and pushing all this logic into the kernel, we should instead teach user
+space utilities to capture offloaded traffic.
