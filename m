@@ -2,157 +2,104 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166DEC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BCCC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE8C233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C72BC2339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:55:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARIXIGoF"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="MS5MBdUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfH2Jyx (ORCPT
+        id S1727069AbfH2Jzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:54:53 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35986 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfH2Jyx (ORCPT
+        Thu, 29 Aug 2019 05:55:37 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44812 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbfH2Jzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:54:53 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p13so3163527wmh.1;
-        Thu, 29 Aug 2019 02:54:52 -0700 (PDT)
+        Thu, 29 Aug 2019 05:55:37 -0400
+Received: by mail-lf1-f66.google.com with SMTP id v16so1984761lfg.11
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 02:55:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=8Hq67Aeafty4Z84Qns88hGedO6pSKZUiFFj2yN+1MEo=;
-        b=ARIXIGoFOkwhP7Jlg+hwifP5HMuVmnHMYgUXvAne9Ov8MEZ+wXTb6YRho7eUWE8Pto
-         q01p70Yyo7OSKnPwQ2yKam0Db2pCTNEjEHmeab33HUhQau+P9WA3BeS9m5EhMJiquiwN
-         eFB/izu27UNvTGV+TlHU4es0sY9GW8J5Jd3xOUyFiGNUyQMNxGZSfdpoUF5THt4iFnbT
-         1nWsP/U+XCdjSNJo/bVv9k93QixeWjCpKkgfI/jVXtPRPdyp7l81ybHJ8IX620ga/tll
-         orhVwQ3eDBuk3bA+gtsHeuvQAnJLQz7Bujsad3JB881t3eDgyZ03nj0coWU9CTHgIkS2
-         AcHQ==
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=evvUwMaL41hf6dQA5cbASb1N+VW/0lgS0C0cgu/S/XY=;
+        b=MS5MBdUIFrK8j7JVNOIBDd0FVG15855op7IYcP7tlLIytYN6qxJRW0N8GjbTb23lbK
+         rzQwQUy5RXgjl9OKpd0TEJGbSIAXrlppU/TkbF3aoQu4IIS1KSgFJsFfpHonZL4AuQ0r
+         rQknOTfDjLfaJS/JJ3hYzVhSPudYP6OpPr5jdBlAp8Ln/oLFKkTDLxTrK6FtpSAPuTaB
+         bC7yPU4oCUVaxI442RhA2CWrNDSNVDbN7hMRiym/QPz45b4MEA3XIKe518XH1JAE6+mB
+         nM/yvP6HU7Wv4hr76APo59aA6DDuCNx6Accapkzd1cJ/BZjMnoNSjvf9stgHxe2BXlWc
+         PARg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=8Hq67Aeafty4Z84Qns88hGedO6pSKZUiFFj2yN+1MEo=;
-        b=EDzA1ImTdDHvHdfm08VR66/NnvDhWbiSNeLgqls9FVs6Oh5rH69YlT3/1ens69WjXd
-         iYu5PP5PJptYy8nmoOjlWKW0MzUpj3VBlrrKSKqzsUgGagVOhduUQSflmzcjwAdLQv9o
-         DShwKJeE0AQm4OFJE5pwyT0PqzjyP83QXqmVNySXsqDwYIrH1nDNFaQeO//594DlxYOg
-         DizwXPkch7LtxF+3sH0GIX7EUFI1APpKGKQGqm1JNXMBNjtzj0Eo/Xj9IPMSgGijZ1bx
-         qvnNyIDORLZBv31MtTCRWlCa5JFFEpxfZZdGFYX+f/g6/dJlH4+3N+U+MILzwMATjDAM
-         /+Dw==
-X-Gm-Message-State: APjAAAXw0TQfwJENqIfdTUizIUQsyrWycO475zNzjUP/8V0g3v+eX9Ui
-        DVgeLErpX8ICWbTPlwnh8v2TC63iUczBupRXIPY=
-X-Google-Smtp-Source: APXvYqzNtfVGGIYvlY2b2GE19niJgHzeB7TUSEuGe7XOaAh02rOoQg2EPJAcwN+axExr+x/JrusOqZN+eVhv5zmqZpk=
-X-Received: by 2002:a05:600c:225a:: with SMTP id a26mr10955239wmm.81.1567072491748;
- Thu, 29 Aug 2019 02:54:51 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=evvUwMaL41hf6dQA5cbASb1N+VW/0lgS0C0cgu/S/XY=;
+        b=qV1y6KAigIznMA2iNuDmO+io/HkPI6L5fQoQ2zcMzS+xHMeW/xQQN4u0JNlPf6NLXV
+         a7fLUp1iLVz3XmeOjr/jW4y2O2YE/4+19iNi4sDbVSKk3c126FQzs7hLSjzMi81MnXVF
+         ff5pZVTNFy0faQCT+j/B+2pbAUgK0wWj2iOin0AgQpoPAl90Tr+7ZYNC1DIISY9+OT5N
+         VZmL6kLK34XksyMglraci4+q7HewtIFcrGWdMsIsBzFnFPzvvAeV5ETJGdncNygSH3w9
+         3ioWMOc09BFvqHpAEusWXa4fJUz99usb7Lgz7in8/O2jQTaCOruQ5bgCIjyvV/AOezqV
+         rD+Q==
+X-Gm-Message-State: APjAAAVRXYxWtMMuS4vHVptc/Dm5DmP3PtXj0/WMUQlqEuwjAdSecPdn
+        48zVB3YUGOv/oSLEojxMOUi7f8qh3z073F1Vw9jbVA==
+X-Google-Smtp-Source: APXvYqwgzlt4Ba0fIdipzn2QNcarMqY0UEZGFrkuppA5LS/NNCU8eU6W17GnvKVQldIpJENYm0vxsdEZmOv6K7MVIh0=
+X-Received: by 2002:ac2:46ef:: with SMTP id q15mr5544001lfo.25.1567072535444;
+ Thu, 29 Aug 2019 02:55:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190828055425.24765-1-yamada.masahiro@socionext.com>
- <CAKwvOdmFjOMPW3_V+2ZnYFUyjWWuW2919cCk=ePn30f2szsi2g@mail.gmail.com> <CA+icZUWv0vAOSq_4BfbqrTdUSnN_D4ETVfpSHiATokCsY2R9pg@mail.gmail.com>
-In-Reply-To: <CA+icZUWv0vAOSq_4BfbqrTdUSnN_D4ETVfpSHiATokCsY2R9pg@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Thu, 29 Aug 2019 11:54:40 +0200
-Message-ID: <CA+icZUXQYcX4+00JbOkZHaBDB=JEsabpU7HpZ_bTaV_gahr0ww@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kbuild: refactor scripts/Makefile.extrawarn
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <1566882364-23891-1-git-send-email-yash.shah@sifive.com> <20190828.140644.534529249197568915.davem@davemloft.net>
+In-Reply-To: <20190828.140644.534529249197568915.davem@davemloft.net>
+From:   Yash Shah <yash.shah@sifive.com>
+Date:   Thu, 29 Aug 2019 15:24:58 +0530
+Message-ID: <CAJ2_jOGiTgGZ0TEZt6hBVB3oFxWkrrKVGQ6n__G4Zf_-ijY10Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Update ethernet compatible string for SiFive FU540
+To:     David Miller <davem@davemloft.net>
+Cc:     netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> So, if it is desired to pass the CLANG extrawarn compiler-options to
-> all W=... then I ask myself why the CLANG block is in the W=1 block
-> only?
-> So if CLANG extrawarn options are independent of any W=... make-option
-> then I prefer to put it in a seperate block with an appropriate
-> comment.
+On Thu, Aug 29, 2019 at 2:36 AM David Miller <davem@davemloft.net> wrote:
 >
+> From: Yash Shah <yash.shah@sifive.com>
+> Date: Tue, 27 Aug 2019 10:36:02 +0530
+>
+> > This patch series renames the compatible property to a more appropriate
+> > string. The patchset is based on Linux-5.3-rc6 and tested on SiFive
+> > Unleashed board
+>
+> You should always base changes off of "net" or "net-next" and be explicitly
+> in your Subject lines which of those two trees your changes are for f.e.:
+>
+>         Subject: [PATCH v2 net-next N/M] ...
 
-Maybe something like that (on top of the two patches I had sent).
+I will keep this in mind for future patches.
 
-From: Sedat Dilek <sedat.dilek@credativ.de>
-Date: Thu, 29 Aug 2019 11:35:21 +0200
-Subject: [PATCH 3/3] kbuild: Move extra warnings for Clang
+>
+> >
+> > Change history:
+> > Since v1:
+> > - Dropped PATCH3 because it's already merged
+> > - Change the reference url in the patch descriptions to point to a
+> >   'lore.kernel.org' link instead of 'lkml.org'
+>
+> Series applied to 'net'.
 
----
- Documentation/kbuild/kbuild.rst |  5 +++--
- scripts/Makefile.extrawarn      | 21 ++++++++++-----------
- 2 files changed, 13 insertions(+), 13 deletions(-)
+Thanks!
 
-diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
-index 3e65d32af875..fa9772ae2367 100644
---- a/Documentation/kbuild/kbuild.rst
-+++ b/Documentation/kbuild/kbuild.rst
-@@ -245,10 +245,11 @@ KBUILD_EXTRA_CC_CHECKS
- ------------------------------
- If enabled over the make command line with "W=...", it turns on additional
- compiler warning options like -Wmissing-declarations for more extensive
--build-time checking. For more details see <scripts/Makefile.extrawarn>.
-+build-time checking.
-+Some extra warning options are set for all W=... settings when using Clang.
-+For more details see <scripts/Makefile.extrawarn>.
-
- W=1 - warnings that may be relevant and does not occur too often
--W=1 - also stops suppressing some warnings
- W=2 - warnings that occur quite often but may still be relevant
- W=3 - the more obscure warnings, can most likely be ignored
-
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index 72677ee9f202..86c0f8ae7e35 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -5,6 +5,16 @@
-
- KBUILD_CFLAGS += $(call cc-disable-warning, packed-not-aligned)
-
-+#
-+# W=... - stops suppressing some warnings when using Clang
-+#
-+ifdef CONFIG_CC_IS_CLANG
-+KBUILD_CFLAGS += -Wno-initializer-overrides
-+KBUILD_CFLAGS += -Wno-format
-+KBUILD_CFLAGS += -Wno-sign-compare
-+KBUILD_CFLAGS += -Wno-format-zero-length
-+endif
-+
- ifeq ("$(origin W)", "command line")
-   export KBUILD_EXTRA_CC_CHECKS := $(W)
- endif
-@@ -30,17 +40,6 @@ KBUILD_CFLAGS += -Wno-sign-compare
-
- KBUILD_CPPFLAGS += -DKBUILD_EXTRA_WARN1
-
--else
--
--# W=1 - also stops suppressing some warnings
--
--ifdef CONFIG_CC_IS_CLANG
--KBUILD_CFLAGS += -Wno-initializer-overrides
--KBUILD_CFLAGS += -Wno-format
--KBUILD_CFLAGS += -Wno-sign-compare
--KBUILD_CFLAGS += -Wno-format-zero-length
--endif
--
- endif
-
- #
--- 
-2.20.1
-
-- Sedat -
+- Yash
