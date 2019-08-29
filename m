@@ -2,130 +2,98 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB28C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 762C1C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15FA82166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FBF12166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:45:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbfH2TnX convert rfc822-to-8bit (ORCPT
+        id S1728182AbfH2TpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:43:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43366 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727958AbfH2TnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 15:43:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1CF54ABE7;
-        Thu, 29 Aug 2019 19:43:21 +0000 (UTC)
-Date:   Thu, 29 Aug 2019 21:43:19 +0200
-From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Michael Neuling <mikey@neuling.org>,
-        Allison Randal <allison@lohutok.net>,
-        Nicolai Stange <nstange@suse.de>,
-        David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        David Howells <dhowells@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Breno Leitao <leitao@debian.org>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: Re: [PATCH v4 1/4] powerpc: make llseek 32bit-only.
-Message-ID: <20190829214319.498c7de2@naga>
-In-Reply-To: <CAK8P3a3DHqhbVToqRYqTmfCcSdT5sXb=1SO5jY9jDONDa6ORkA@mail.gmail.com>
-References: <cover.1567072270.git.msuchanek@suse.de>
-        <061a0de2042156669303f95526ec13476bf490c7.1567072270.git.msuchanek@suse.de>
-        <CAK8P3a1wR-jzFSzdPqgfCG4vyAi_xBPVGhc6Nn4KaXpk3cUiJw@mail.gmail.com>
-        <20190829143716.6e41b10e@naga>
-        <CAK8P3a2DHP+8Vbc4yjq5-wT9GpSxvndCa8gnvx0WcD8YAUAsMw@mail.gmail.com>
-        <20190829161923.101ff3eb@kitsune.suse.cz>
-        <CAK8P3a3DHqhbVToqRYqTmfCcSdT5sXb=1SO5jY9jDONDa6ORkA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Thu, 29 Aug 2019 15:45:10 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51658 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbfH2TpK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 15:45:10 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i3QLt-00062x-9g; Thu, 29 Aug 2019 21:45:01 +0200
+Date:   Thu, 29 Aug 2019 21:45:00 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, harry.pan@intel.com,
+        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH] x86/hpet: Disable HPET on Intel Coffe Lake
+In-Reply-To: <793CCD4F-35E0-46B9-B5D4-3D3233BA5D35@canonical.com>
+Message-ID: <alpine.DEB.2.21.1908292143300.1938@nanos.tec.linutronix.de>
+References: <20190829091232.15065-1-kai.heng.feng@canonical.com> <alpine.DEB.2.21.1908291351510.1938@nanos.tec.linutronix.de> <793CCD4F-35E0-46B9-B5D4-3D3233BA5D35@canonical.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/mixed; boundary="8323329-342921159-1567107901=:1938"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 16:32:50 +0200
-Arnd Bergmann <arnd@arndb.de> wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> On Thu, Aug 29, 2019 at 4:19 PM Michal Suchánek <msuchanek@suse.de> wrote:
-> > On Thu, 29 Aug 2019 14:57:39 +0200 Arnd Bergmann <arnd@arndb.de> wrote:  
-> > > On Thu, Aug 29, 2019 at 2:37 PM Michal Suchánek <msuchanek@suse.de> wrote:  
-> > > > On Thu, 29 Aug 2019 14:19:46 +0200 Arnd Bergmann <arnd@arndb.de> wrote:  
-> > > > > On Thu, Aug 29, 2019 at 12:23 PM Michal Suchanek <msuchanek@suse.de> wrote:
-> > > > > In particular, I don't see why you single out llseek here, but leave other
-> > > > > syscalls that are not needed on 64-bit machines such as pread64().  
-> > > >
-> > > > Because llseek is not built in fs/ when building 64bit only causing a
-> > > > link error.
-> > > >
-> > > > I initially posted patch to build it always but it was pointed out it
-> > > > is not needed, and  the interface does not make sense on 64bit, and
-> > > > that platforms that don't have it on 64bit now don't want that useless
-> > > > code.  
-> > >
-> > > Ok, please put that into the changeset description then.
-> > >
-> > > I looked at uses of __NR__llseek in debian code search and
-> > > found this one:
-> > >
-> > > https://codesearch.debian.net/show?file=umview_0.8.2-1.2%2Fxmview%2Fum_mmap.c&line=328
-> > >
-> > > It looks like this application will try to use llseek instead of lseek
-> > > when built against kernel headers that define __NR_llseek.
-> > >  
-> >
-> > The available documentation says this syscall is for 32bit only so
-> > using it on 64bit is undefined. The interface is not well-defined in
-> > that case either.  
+--8323329-342921159-1567107901=:1938
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+
+On Thu, 29 Aug 2019, Kai-Heng Feng wrote:
+> at 20:13, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > On Thu, 29 Aug 2019, Kai-Heng Feng wrote:
+> > 
+> > > Some Coffee Lake platforms have skewed HPET timer once the SoCs entered
+> > > PC10, and marked TSC as unstable clocksource as result.
+> > 
+> > So here you talk about Coffee Lake and in the patch you use KABYLAKE.
 > 
-> That's generally not how it works. If there is an existing application
-> that relies on the behavior of the system call interface, we should not
-> change it in a way that breaks the application, regardless of what the
-> documentation says. Presumably nobody cares about umview on
-> powerpc64, but there might be other applications doing the same
-> thing.
+> Coffeelake has the same model number as Kabylake.
 
-Actually the umview headers go out of their way to define the llseek
-syscall as invalid on x86_64 so that the non-llseek path is taken. 
-mview-os/xmview/defs_x86_64_um.h:#define __NR__llseek __NR_doesnotexist
-It is probably an oversight that this is not done on non-x86. I am not
-even sure this builds on non-x86 out of the box.
-
-> It looks like sparc64 and parisc64 do the same thing as powerpc64,
-> and provide llseek() calls that may or may not be used by
-> applications.
-
-And if they are supposed to build with !compat it should be removed
-there as well.
-
+Yeah, just a bit more text explaining that would be helpful.
+ 
+> > > +static const struct x86_cpu_id hpet_blacklist[] __initconst = {
+> > > +	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_KABYLAKE_MOBILE },
+> > > +	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_KABYLAKE_DESKTOP },
+> > 
+> > So this disables HPET on all Kaby Lake variants not just on the affected
+> > Coffee Lakes. I know that I rejected the initial patch with the random
+> > stepping cutoff...
+> > 
+> >  https://lore.kernel.org/lkml/alpine.DEB.2.21.1904081403220.1748@nanos.tec.linutronix.de
+> > 
+> > In the other attempt to 'fix' this I asked for clarification, but silence
+> > from Intel after this:
+> > 
+> >  https://lore.kernel.org/lkml/alpine.DEB.2.21.1905182015320.3019@nanos.tec.linutronix.de
+> > 
+> > Can Intel please provide some useful information about this finally?
 > 
-> I think your original approach of always building sys_llseek on
-> powerpc64 is the safe choice here.
+> Hopefully Intel can provide more info.
+> 
+> I know we should find the root cause rather than stopping at "it’s a firmware
+> bug”, but users are already affected by this issue [1].
+> Is there any better short-term workaround?
 
-That's safe but adds junk to the kernel as pointed out in the reply to
-that patch.
+Not really. And if Intel stays silent, I'm just going to apply it as is
+along with a stable tag.
 
-Thanks
+Thanks,
 
-Michal
+	tglx
+--8323329-342921159-1567107901=:1938--
