@@ -2,245 +2,337 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE11C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E25C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC24A21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66ADD21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:41:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="AqoXS8ih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbfH2Rkj (ORCPT
+        id S1728079AbfH2Rk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:40:39 -0400
-Received: from antares.kleine-koenig.org ([94.130.110.236]:36906 "EHLO
-        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727483AbfH2Rki (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:40:38 -0400
+        Thu, 29 Aug 2019 13:40:59 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:34073 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727481AbfH2Rk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 13:40:59 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46K8zC2qTyz9vBLv;
+        Thu, 29 Aug 2019 19:40:55 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=AqoXS8ih; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id lr4j0t6S-BAw; Thu, 29 Aug 2019 19:40:55 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46K8zC1NlSz9vBLt;
+        Thu, 29 Aug 2019 19:40:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1567100455; bh=G1cKrIpvDdOaMbhgFSVnyPJvPtIPAoaDARluVHVPBec=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AqoXS8ihJEzrDP/XO3yOowQXrRYw6NYD+CGpMVQ33NoTsEZqyWBTv2krrS+pKKWO1
+         3ItqSWg+4FRlZmF4wp6NHv5HyEvZSpxOJZon0nSm5zz38Yf+jYviq6o4ngboeBnkg0
+         eCjOOUGQY6LDPmGyQttsMnsha6Eaa9M8IbYwqCTU=
 Received: from localhost (localhost [127.0.0.1])
-        by antares.kleine-koenig.org (Postfix) with ESMTP id 6862278A3A0;
-        Thu, 29 Aug 2019 19:40:35 +0200 (CEST)
-Received: from antares.kleine-koenig.org ([127.0.0.1])
-        by localhost (antares.kleine-koenig.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id CEpp3c0w2-Ij; Thu, 29 Aug 2019 19:40:33 +0200 (CEST)
-Received: from [172.18.85.69] (unknown [46.183.103.8])
-        by antares.kleine-koenig.org (Postfix) with ESMTPSA;
-        Thu, 29 Aug 2019 19:40:32 +0200 (CEST)
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Juergen Gross <jgross@suse.com>, Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        metux IT consult Enrico Weigelt <lkml@metux.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190827211244.7210-1-uwe@kleine-koenig.org>
- <20190828113216.p2yiha4xyupkbcbs@pathway.suse.cz>
- <74303921-aa95-9962-2254-27e556af54f4@kleine-koenig.org>
- <20190829081249.3zvvsa4ggb5pfozl@pathway.suse.cz>
- <45cd5b50-9854-fce7-5f08-f7660abb8691@suse.com>
- <a83449cf-3a4a-f3e0-210a-dc7c39505355@rasmusvillemoes.dk>
-From:   =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=uwe@kleine-koenig.org; prefer-encrypt=mutual; keydata=
- mQINBEwXmCYBEACoJSJcKIlkQcTYia0ymmMOBk2veFoy/a0LlqGUEjQ4WECBL19F2BYX1dSp
- 5/ZdfKuV605usI6oq4x6k/LKmqZDl6YnqW/YmN/iZVCRunBRfvpTlL4lcNUu5Va/4GBRzBRr
- rrIhCIVL5zMV6hKywhHKTdOHVSZRftf+eRSBwENKXahmfOMDmekyf585etDPdzkFrLHNVFOC
- sFOU0gCK0uVPyY0LH13eo4qEEMi88RCOfwYCFQqKXDdo41DWoDPB5OGCMaphIx9wC/nvtdcv
- MowsGde5iGgmHWK6sdC/O/xaV7fnz1sJzoJB1eT91LkGbdGxsLAT6nqlaNJiJtiBoRhscguV
- xVbn/I9mnUu7bLmTFBEAlaQGU/J7uQ4w94FXfosNGROt/otqltetMZlPbNvNhKnXv8U6eRyA
- P3ZMKTJa4hGr3UdYdt4+MIiHcsANWp8T7oLYVxRbHPXPG49IURnhXUoGbscZmpptWcl29ebo
- qCxL9n3KIyUT3ZB1xHbW3Sk/Dqzf52tQOxZubzrpUJ8zaGIwYVUjfcPFwf3R3zrQvJq7mI4S
- ddNIE8w3WJOPXDOYx7GjOa+IubhSpCrr74NbN8q9oS3hnsqWw16i3HSUuPuYeZo1t6D5p/mX
- EVyZ2QrS1kGgGi7bmlQMSFkb6g1T8aWSYuX3PBYq2VntnWAXPwARAQABtClVd2UgS2xlaW5l
- LUvDtm5pZyA8dXdlQGtsZWluZS1rb2VuaWcub3JnPokCVwQTAQoAQQIbAwULCQgHAwUVCgkI
- CwUWAgMBAAIeAQIXgAIZARYhBA0lEfMiv6scFYAma+Lc3ZEyZpvWBQJdD2/6BQkaXdlUAAoJ
- EOLc3ZEyZpvWXJIQAItguVGhM5bXhr+T5Dq8tUPUzfEE2agVUhtwNUG1HEqF9Ex5PRRauCN5
- YW318C3MRWgQepr8q2xgQ+Ih1Irl8GCVLh0vIIZRd8DbDSKBiPC0orKkHU4WgX48xl0WVnLS
- hUOt2bk1Vv5twB1a19f6W5ww1x0roxrNtAbDpPB/z0siynnqdQSeiJe+TbPwGT5eginTRiC6
- hf+QGOz2jl0HQBmzabI+IWUuyZqb1kG78U1Si33N8GXCGrHzAKOtGI/7vzqlLGulMcWIRxkP
- U0Yg9FeH033ko16d8g2R2VPaP3ntm0KYaJngrbiTKGj7OXxUSASC7lBY7zf1UzJQYSU9TRrz
- 3XZ/4GEDkfQL0M9rPjWBj3HbwtQzURhL4QjC77Zi1OKT8TXrDGOoO8q6Th1y8ipaKOhAakUb
- ywZMCZi1RqOf53RnAquRApHfpu1I+W/iDtI51wZsuolqRlYd/nAbvzKt7SFG6V+ZeV9df6/x
- V3kS2NkNawy/dDqwJWA3gTHX1SEu2y04/qOyH/CR6sLEozQnqxVS343TJxyfJYW7TCwrDz0i
- jEFcy+xyyqvPn0Yc5zp2CnLKiB5JyV3mnz8qJVP0QfWUKKI6740m/1U9nDQYttGlklxgayLJ
- KoEG/FYxEe1m93U8anvxb4IULSHTgfCHpSJjLeVJVXUffH2g3CYAuQINBEwXmCYBEACy0K1x
- eE1wybOmpgwyw4c/W4KY25CjfXucBt00neNb24pVKNGUWScnsUsqDfA+7iOJ+CAahRhDGmba
- O0hZ/NZbEKbhXYCVsc2OOVrmT2+FgnYiWLntMGKGOLqGO8QprLpaXSy5tJP2/UWQix+tgKHa
- DENz7nJVff5WF0zdlKeMOIJYmraWLelsrEFlw/OUfKWjm30pnivNUacVIC/dIXiwz9mykYdk
- spEQhU2aSBr99oE87UUyf4BIgvB4Vy316i0o+WdEWCY361Yu02AWvHlUhjj/kDyiY8WxYGKQ
- JWAw6K+CVDtefLMVQ+l+A4V/3YgC+aHCw8ab2ZhXXSobcHv0K9plOrGR/3J6fIybf5RYgiZ6
- 6qh7WErPhVuXx3+btYehuPnf2eNHIBb6wrLJo/yWP3lWaUFag7cshMvw5CkoN948+dJWQed8
- HM0fDb2hNMtBn52Sb3Q8ZZTrNYJXfyFq5W1+W2W5Z9aJT+4A5Fyecpzmc7dy97yA7Q4FB8z5
- WOu+g03vGtrA29dvFdxM9pJJzKz4FOS/I8rkjfmXxBxUdDAbg8NHN56Cw1aBJktup3W1Pa0u
- 2FgbgpFUZVDZ+RqtjwlFLyMmDaO7K1zhxEu9kg02SBImtrVSJZKQMOWwZJPUNBEcidU8yQeT
- +J+7AnI/Y1X7RzcwTRP6JRc4vw4Z4QARAQABiQI9BCgBCgAnBQJUsvI/IB0Dc3VwZXJzZWVk
- ZWQgYnkgc3Via2V5IDU3QzkxQkM3AAoJEOLc3ZEyZpvWD8sQAJ3kMYdHHqIXYvL6ogIv3HzC
- E3nba4tPv+z/zj8s31G0VlEXdqc54nCQbvsWO1jYkDV+eqGhT3zr8V/55GyDkMEqw8Q6D00w
- q4BLVj4W64ciUUb+uQT19JCoL6uvewdBP7W86UMH2OhnSX4J1Asm1xjOTIszsUlYD0+ztt9O
- gXyUxQ26mOnpTSuc7LSdLqK94QB34IS8keVNxZGdPnh9LxpZFFdZTK1jbvCA0gESsAsQ90sJ
- zbnF0E0m3HFYFiY+E66ntz0Nbo68IKw9jY0zvR56Qi5s/uBFfcZeBAWesG8xKMy4zZanLMwy
- euZWor+X3pbH5FtpobGr0oyiH4XBGlMNWnXAo69rdig+ah4SOl9WFKn33PJTTlWXyaE+FxOg
- whT7bJpPns8i2u8jmbxlC5jpP8+8cSfDkdBhBxsecpsMLF5bIAqhoxfRxETL+xtuPdOEgH6K
- j/Ia3geiBfUPrLka93TE3EECn89WcD6XvcyRW95otrjK+Svnro4Xzi0zd0mP1Wwq4dA4Zfb4
- j3YDAOjhGzDeSUqbhVttgsHc99fPvuMrjQUk3x9Lc0/ZbbCZfCa5Xk8lopi/oT6mJoj9Hj05
- 78Aktvt+0Ayqo7DmXUNZZq1Jpt3CCUCzj1E8ICHdHh3NG6HGbhbTQ96WfpBwXOOPZiWLWZzT
- 4FzrwLLox8wTiQIfBBgBAgAJBQJMF5gmAhsMAAoJEOLc3ZEyZpvW0oAP/inNe6AHKjSobhqB
- kvUmue4p/XtuIvt2yxmcKBgPSASNsL3TD2OFGJaJVtfnGem2YnKkVQseP90S1FqABG5LarDQ
- eOdYSLdFYsGGLJ9PwXlvze3reEDoPLVu4c+W2dRPKWXa3aaX6Szjech3MD2bdAoTHb3vo+zR
- LykVSqUuNI450ddsR6/ffTuHBJRM4SicC9fQZN6po/yZT937FH0igZKcNrqgJWfUp6+EQUov
- RhZoloGLuancqg1ALGem0VRfmlhAQaNBGunyihHOFHXfEbchJseP6x9GY1rxHH85p49crTNx
- MOWaDFL33iN8kDkcAuuyz87uWU0fiM3LpezU8x9Oby+M3dYYpDkcKzkNA2y5OCHsCMU9w7f8
- kF2tFCjEpd+YV9rNaab8Kp9WRCAnEWJrtPkGuKU1HvWFc0qdsQZndZwiup3a9L2EAIbkPPwX
- QN2PlYsFF1qYs88WxuB9/bs8UtxYTnYKUBNlpm9q1olWn9J8GReUpAnULaZQKbhaxbYq5s2N
- 5vYKsOh0zWegOiTuOTdL2N8XsGlCFXhxG45+8JvpLyNiphyxvqoz/z9FKu3pxZKWeiumGvdJ
- 17GTDy7w0q0oPdh7WzKwqKQIBeP+YNLcrZoIUdhxBArYPRRhlRMTCAC+Yt4ZVf9TAC3NLNWM
- Dod7CGaNlDcIRwM0Rk0EuQENBFSy4J0BCAChpWdVkN0BTfe/zV6WhbbAasnFPvnOwT6j8y5B
- leuz+6XACLG63ogBu/4bfQdZgdHIC1ebI9XazMSovCfBTSn7qlu2R/yYrJ2UxwvDkiS2LuLA
- GEWfTwyimFr8/4QeTfy/Y0dWLCSqNlGg9r+GFxS8Ybnrur4Vrfw+4QoQs51MoKGTkR4BMdeJ
- SlL04cByBAEA6Hra88kr13ApWOSHcRkKRvj7ZCmBH2+GnnbdNm3AlrEtLvepHSODvngfePMX
- NHjtp4iw0Vkbv+s9XEhtC6bryD8AJahoaV94w2cQz48fSjPD8JfZjgrN+J7PyUDPTugmQC0m
- oPi7HtHxloHtbX5BABEBAAGJA0QEGAEKAA8FAlSy4J0CGwIFCQlmAYABKQkQ4tzdkTJmm9bA
- XSAEGQEKAAYFAlSy4J0ACgkQwfwUeK3K7AlrIgf+JLyPvo17xE6Jn6OOOTh9+t/QAJq3VV0/
- xIyctFqK6v/gnFG/7f5zQKex5ThCesfZ3+zBk98wyVVmG5ToIYn67Egkv/rGDxnOdT5ABWcW
- QcjSCanfD6qFELDwsiLVKmoBLGCu+WcQkL5+LeUwU4oxor7aQlgrIIogJRBA4YdFlSV+JMYn
- Czww4GpFA11RktykHCW3QuX+iOrJuvFtG1AKHiFzv4asivhFCWfrxiujkLpX/3e4iFN5lyD1
- 2C7JsFDI5GM6uDOFaQKiYyqGZ6mnHQuqX7EioYuEJVR7jmkezLqlI26Hb/5quZADFhbnyGe2
- 0FLQR3oSPVy24wRFq8U+sdqUD/9dN10/SNSFyAnJp6CJo55G4zeAallIwfvh+5i1yVd/8Kh6
- Rvuq/KO2uUB+bxNXgsmdmQt3nWBcJAs3r78kf8UFsnvLxTP673EEcakVAx1S1nieTrh8bzAz
- XkBYDKEPRXKzXjgidVPWLBQVbGZ66lCfpW2t/T8fxlZG4dq5zTU2j8cvA2RS4K8j/xiedA4P
- 6lnpV1DjTqnDfATAmJXX4oWleO2cvvao9BhqstktBjz79PMQqRD+L56q6t0X08y8WIDLdtRk
- mmVWGq2I6gR7y3CjTFmuO3sFcqVh+TwWEaqrrJ/MN/yyrNgJsFWozxdqAf55z8IJg5boi1ZY
- cdeKPFRKj5t5B1DwbobQIgZSAoUiQzy9g6MrKYpv/2tDMONK5mdPS43JZ0+Z7keID6r8Hj86
- Byrrn/UaxEAg0Hn2NmG6sRs2fIJ3ehpThw1+ed9YwoasoPk5fLAgxsDXgRgJY07+J4QdwAtj
- Dh8N26hPPYyx+9O2qAzUVtfoiWsib7AXCbKd+34pn67DDYWGCJgtjsTrNh2da5loEd+8TuD0
- y1xvczPXkaJmQ8mIo2ENO5btEpLXSZGZJHLRFI5tGj4ZWThjyVZb777VH5EFfUJQiZfJ/Aav
- 64qcY4NspxGZpdYuZOWmWU780nKx6kpqPx+10HZgqWcJZRlgfMk+pnwhhhd2r7kBDQRUsuKV
- AQgAwDnqedPDXwF03G61x3u5yJfPITSe4LRjxroxk7XZ3k2SO37DPaJA7J0BZG/Kyoc82Ymi
- wcYAGqHm7HeqqAhLzVfl++XK8/fCpwfHdnnQqlRxLrG+y3gDkEWYyZd/+YSbmGFxh1rou8Em
- e4tsHhqmINRA0wDuHr4Yx3rduYpW2VYjnCvdPJL3osLPjjs+NZN9oVn6Q4fhLoP2h60cAQ4r
- Q+3/a/gAC3It3SF4UKCl3TWydTdEzNh43rxIMIyjrD+Wm/F0NA9TLwS4sOhZTBUCJT2fKNBh
- KCWhO720RZF6HSmwQqfJza+Z4zN7NGtnDTX9su0ufQkwr34dsy76CDEqNQARAQABiQIlBBgB
- CgAPBQJUsuKVAhsMBQkJZgGAAAoJEOLc3ZEyZpvWuOQQAJSvLehOMf21aC2RPVhWmCFibOnR
- qRM4iGypKEERWxagNwjqx8YrL+dsu7o/aWwjG1CvfaHDFQ78CBj/xBGw8XheODpvS3Z/ERGv
- NivQ8HK0MWIIQZ85U5gj1h0Ls0LBeRkTOPRe6jUmjyzeWnMa/5wXaXsxZKE2n49ai5m+gL9/
- 3sBXsBCsWxhVqn+lq7c5GEhxGJHvCDX5TcXdOC63Mcek4hKRbSYGkj1QYJV/WF9cLwvU3XI8
- nrGDGX8IWaJr6GxTWCeYs5uWU70cg2TRKHM4SCveZyeizz4YRXYjvZTIent6TUKmxdMLBAC2
- gI3H+75QRrflG5po1F+Uhbmd5BHLcAgvMUc58YaXYCwI6fY1/Q9zIpM1CHUPe4lZN5XUIA4S
- VBYi6Yvx82qA97KZfHsyvLwR56NMl/1b5dbQwl6eoM/JH4GgXDEh0NmPdE/MnQM7svxsB7xp
- 8kNRLpvtXNxp6SZUcf7u6vIwvlcrYMeDIaxf4dZSAuFwurOQtVP0gERKFSh1oMI+I0wXeMbO
- pN3/t3AK3zD7ZykqMstza/jYFEK1gNj7UhnvazBhMaMhCEt8rNqr5/dbgvAD/biSZO6wZrn7
- hCaye/ulWpSqZSdx+G9GkTn05lsuHu9zfTwY6B0A6nlrqQSR/yWPvSq1Ud6IOZY1alq7ZSag
- kC8vBDJg
-Subject: Re: [PATCH v2] vsprintf: introduce %dE for error constants
-Message-ID: <002dc2a7-40a3-f52a-c8fa-5dbb42e6dd7b@kleine-koenig.org>
-Date:   Thu, 29 Aug 2019 19:39:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E70AA8B8CF;
+        Thu, 29 Aug 2019 19:40:56 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id oTlHII4GT2F5; Thu, 29 Aug 2019 19:40:56 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 98BF88B8C1;
+        Thu, 29 Aug 2019 19:40:55 +0200 (CEST)
+Subject: Re: [PATCH v4 3/4] powerpc/64: make buildable without CONFIG_COMPAT
+To:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Breno Leitao <leitao@debian.org>,
+        Russell Currey <ruscur@russell.cc>,
+        Nicolai Stange <nstange@suse.de>,
+        Michael Neuling <mikey@neuling.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Brauner <christian@brauner.io>,
+        David Howells <dhowells@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org
+References: <cover.1567072270.git.msuchanek@suse.de>
+ <a829dfabed8285161fcdff166d58c7e8f0f6d402.1567072270.git.msuchanek@suse.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <45bdadce-5b44-c941-14f7-240b0be41a7b@c-s.fr>
+Date:   Thu, 29 Aug 2019 19:40:55 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <a83449cf-3a4a-f3e0-210a-dc7c39505355@rasmusvillemoes.dk>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="LLvAbrEWZxeDGli9lQ0MDXItvivTANWNX"
+In-Reply-To: <a829dfabed8285161fcdff166d58c7e8f0f6d402.1567072270.git.msuchanek@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---LLvAbrEWZxeDGli9lQ0MDXItvivTANWNX
-Content-Type: multipart/mixed; boundary="MJLe7gzwVY30ZGetLwRlxf7hE96HGZ1Ol";
- protected-headers="v1"
-From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Juergen Gross <jgross@suse.com>, Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jani Nikula <jani.nikula@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>,
- metux IT consult Enrico Weigelt <lkml@metux.net>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <002dc2a7-40a3-f52a-c8fa-5dbb42e6dd7b@kleine-koenig.org>
-Subject: Re: [PATCH v2] vsprintf: introduce %dE for error constants
-References: <20190827211244.7210-1-uwe@kleine-koenig.org>
- <20190828113216.p2yiha4xyupkbcbs@pathway.suse.cz>
- <74303921-aa95-9962-2254-27e556af54f4@kleine-koenig.org>
- <20190829081249.3zvvsa4ggb5pfozl@pathway.suse.cz>
- <45cd5b50-9854-fce7-5f08-f7660abb8691@suse.com>
- <a83449cf-3a4a-f3e0-210a-dc7c39505355@rasmusvillemoes.dk>
-In-Reply-To: <a83449cf-3a4a-f3e0-210a-dc7c39505355@rasmusvillemoes.dk>
-
---MJLe7gzwVY30ZGetLwRlxf7hE96HGZ1Ol
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-On 8/29/19 11:09 AM, Rasmus Villemoes wrote:
-> On 29/08/2019 10.27, Juergen Gross wrote:
->> On 29.08.19 10:12, Petr Mladek wrote:
->>> On Wed 2019-08-28 21:18:37, Uwe Kleine-K=C3=B6nig=C2=A0 wrote:
->>>>
->>>> I'd like to postpone the discussion about "how" until we agreed abou=
-t
->>>> the "if at all".
->>>
->>> It seems that all people like this feature.
->>
->> Hmm, what about already existing format strings conatining "%dE"?
->>
->> Yes, I could find only one (drivers/staging/speakup/speakup_bns.c), bu=
-t
->> nevertheless...
->=20
-> Indeed, Uwe still needs to respond to how he wants to handle that. I
-
-This is indeed bad and I didn't expect that. I just took a quick look
-and this string is indeed used as sprintf format string.
-
-> still prefer making it %pE, both because it's easier to convert integer=
-s
-> to ERR_PTRs than having to worry about the type of PTR_ERR() being long=
-
-> and not int, and because alphanumerics after %p have been ignored for a=
-
-> long time (10 years?) whether or not those characters have been
-> recognized as a %p extension, so nobody relies on %pE putting an E afte=
-r
-> the %p output. It also keeps the non-standard extensions in the same
-> "namespace", so to speak.
->=20
-> Oh, 'E' is taken, well, make it 'e' then.
-
-I like having %pe to print error valued pointers. Then maybe we could
-have both %de for ints and %pe for pointers. :-)
-
-Best regards
-Uwe
 
 
+Le 29/08/2019 à 12:23, Michal Suchanek a écrit :
+> There are numerous references to 32bit functions in generic and 64bit
+> code so ifdef them out.
+> 
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+> v2:
+> - fix 32bit ifdef condition in signal.c
+> - simplify the compat ifdef condition in vdso.c - 64bit is redundant
+> - simplify the compat ifdef condition in callchain.c - 64bit is redundant
+> v3:
+> - use IS_ENABLED and maybe_unused where possible
+> - do not ifdef declarations
+> - clean up Makefile
+> v4:
+> - further makefile cleanup
+> - simplify is_32bit_task conditions
+> - avoid ifdef in condition by using return
+> ---
+>   arch/powerpc/include/asm/thread_info.h |  4 ++--
+>   arch/powerpc/kernel/Makefile           |  7 +++----
+>   arch/powerpc/kernel/entry_64.S         |  2 ++
+>   arch/powerpc/kernel/signal.c           |  3 +--
+>   arch/powerpc/kernel/syscall_64.c       |  6 ++----
+>   arch/powerpc/kernel/vdso.c             |  5 ++---
+>   arch/powerpc/perf/callchain.c          | 14 ++++++++++----
+>   7 files changed, 22 insertions(+), 19 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/thread_info.h b/arch/powerpc/include/asm/thread_info.h
+> index 8e1d0195ac36..c128d8a48ea3 100644
+> --- a/arch/powerpc/include/asm/thread_info.h
+> +++ b/arch/powerpc/include/asm/thread_info.h
+> @@ -144,10 +144,10 @@ static inline bool test_thread_local_flags(unsigned int flags)
+>   	return (ti->local_flags & flags) != 0;
+>   }
+>   
+> -#ifdef CONFIG_PPC64
+> +#ifdef CONFIG_COMPAT
+>   #define is_32bit_task()	(test_thread_flag(TIF_32BIT))
+>   #else
+> -#define is_32bit_task()	(1)
+> +#define is_32bit_task()	(IS_ENABLED(CONFIG_PPC32))
+>   #endif
+>   
+>   #if defined(CONFIG_PPC64)
+> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> index 1d646a94d96c..9d8772e863b9 100644
+> --- a/arch/powerpc/kernel/Makefile
+> +++ b/arch/powerpc/kernel/Makefile
+> @@ -44,16 +44,15 @@ CFLAGS_btext.o += -DDISABLE_BRANCH_PROFILING
+>   endif
+>   
+>   obj-y				:= cputable.o ptrace.o syscalls.o \
+> -				   irq.o align.o signal_32.o pmc.o vdso.o \
+> +				   irq.o align.o signal_$(BITS).o pmc.o vdso.o \
+>   				   process.o systbl.o idle.o \
+>   				   signal.o sysfs.o cacheinfo.o time.o \
+>   				   prom.o traps.o setup-common.o \
+>   				   udbg.o misc.o io.o misc_$(BITS).o \
+>   				   of_platform.o prom_parse.o
+> -obj-$(CONFIG_PPC64)		+= setup_64.o sys_ppc32.o \
+> -				   signal_64.o ptrace32.o \
+> -				   paca.o nvram_64.o firmware.o \
+> +obj-$(CONFIG_PPC64)		+= setup_64.o paca.o nvram_64.o firmware.o \
+>   				   syscall_64.o
+> +obj-$(CONFIG_COMPAT)		+= sys_ppc32.o ptrace32.o signal_32.o
+>   obj-$(CONFIG_VDSO32)		+= vdso32/
+>   obj-$(CONFIG_PPC_WATCHDOG)	+= watchdog.o
+>   obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
+> diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+> index 2ec825a85f5b..a2dbf216f607 100644
+> --- a/arch/powerpc/kernel/entry_64.S
+> +++ b/arch/powerpc/kernel/entry_64.S
+> @@ -51,8 +51,10 @@
+>   SYS_CALL_TABLE:
+>   	.tc sys_call_table[TC],sys_call_table
+>   
+> +#ifdef CONFIG_COMPAT
+>   COMPAT_SYS_CALL_TABLE:
+>   	.tc compat_sys_call_table[TC],compat_sys_call_table
+> +#endif
+>   
+>   /* This value is used to mark exception frames on the stack. */
+>   exception_marker:
+> diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
+> index 60436432399f..61678cb0e6a1 100644
+> --- a/arch/powerpc/kernel/signal.c
+> +++ b/arch/powerpc/kernel/signal.c
+> @@ -247,7 +247,6 @@ static void do_signal(struct task_struct *tsk)
+>   	sigset_t *oldset = sigmask_to_save();
+>   	struct ksignal ksig = { .sig = 0 };
+>   	int ret;
+> -	int is32 = is_32bit_task();
+>   
+>   	BUG_ON(tsk != current);
+>   
+> @@ -277,7 +276,7 @@ static void do_signal(struct task_struct *tsk)
+>   
+>   	rseq_signal_deliver(&ksig, tsk->thread.regs);
+>   
+> -	if (is32) {
+> +	if (is_32bit_task()) {
+>           	if (ksig.ka.sa.sa_flags & SA_SIGINFO)
+>   			ret = handle_rt_signal32(&ksig, oldset, tsk);
+>   		else
+> diff --git a/arch/powerpc/kernel/syscall_64.c b/arch/powerpc/kernel/syscall_64.c
+> index 98ed970796d5..0d5cbbe54cf1 100644
+> --- a/arch/powerpc/kernel/syscall_64.c
+> +++ b/arch/powerpc/kernel/syscall_64.c
+> @@ -38,7 +38,6 @@ typedef long (*syscall_fn)(long, long, long, long, long, long);
+>   
+>   long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8, unsigned long r0, struct pt_regs *regs)
+>   {
+> -	unsigned long ti_flags;
+>   	syscall_fn f;
+>   
+>   	BUG_ON(!(regs->msr & MSR_PR));
+> @@ -83,8 +82,7 @@ long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8,
+>   	 */
+>   	regs->softe = IRQS_ENABLED;
+>   
+> -	ti_flags = current_thread_info()->flags;
+> -	if (unlikely(ti_flags & _TIF_SYSCALL_DOTRACE)) {
+> +	if (unlikely(current_thread_info()->flags & _TIF_SYSCALL_DOTRACE)) {
+>   		/*
+>   		 * We use the return value of do_syscall_trace_enter() as the
+>   		 * syscall number. If the syscall was rejected for any reason
+> @@ -100,7 +98,7 @@ long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8,
+>   	/* May be faster to do array_index_nospec? */
+>   	barrier_nospec();
+>   
+> -	if (unlikely(ti_flags & _TIF_32BIT)) {
+> +	if (unlikely(is_32bit_task())) {
+>   		f = (void *)compat_sys_call_table[r0];
+>   
+>   		r3 &= 0x00000000ffffffffULL;
+> diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
+> index d60598113a9f..6d4a077f74d6 100644
+> --- a/arch/powerpc/kernel/vdso.c
+> +++ b/arch/powerpc/kernel/vdso.c
+> @@ -667,9 +667,7 @@ static void __init vdso_setup_syscall_map(void)
+>   {
+>   	unsigned int i;
+>   	extern unsigned long *sys_call_table;
+> -#ifdef CONFIG_PPC64
+>   	extern unsigned long *compat_sys_call_table;
+> -#endif
+>   	extern unsigned long sys_ni_syscall;
+>   
+>   
+> @@ -678,7 +676,8 @@ static void __init vdso_setup_syscall_map(void)
+>   		if (sys_call_table[i] != sys_ni_syscall)
+>   			vdso_data->syscall_map_64[i >> 5] |=
+>   				0x80000000UL >> (i & 0x1f);
+> -		if (compat_sys_call_table[i] != sys_ni_syscall)
+> +		if (IS_ENABLED(CONFIG_COMPAT) &&
+> +		    compat_sys_call_table[i] != sys_ni_syscall)
+>   			vdso_data->syscall_map_32[i >> 5] |=
+>   				0x80000000UL >> (i & 0x1f);
+>   #else /* CONFIG_PPC64 */
+> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+> index c84bbd4298a0..aef8c750d242 100644
+> --- a/arch/powerpc/perf/callchain.c
+> +++ b/arch/powerpc/perf/callchain.c
+> @@ -15,7 +15,7 @@
+>   #include <asm/sigcontext.h>
+>   #include <asm/ucontext.h>
+>   #include <asm/vdso.h>
+> -#ifdef CONFIG_PPC64
+> +#ifdef CONFIG_COMPAT
+
+Is this ifdef needed at all ? Is it a problem to include it all the time ?
+
+>   #include "../kernel/ppc32.h"
+>   #endif
+>   #include <asm/pte-walk.h>
+> @@ -165,6 +165,7 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
+>   	return read_user_stack_slow(ptr, ret, 8);
+>   }
+>   
+> +__maybe_unused
+
+I don't like that too much. I see this function is almost identical 
+between PPC64 and PPC32. It should be possible to have only one, using 
+IS_ENABLED(CONFIG_PPC64) inside it to call read_user_stack_slow().
+An define a dummy read_user_stack_slow() for PPC32 as already done for 
+perf_callchain_user_64().
+
+>   static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+>   {
+>   	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+> @@ -341,6 +342,7 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
+>   
+>   #endif /* CONFIG_PPC64 */
+>   
+> +#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
+>   /*
+>    * Layout for non-RT signal frames
+>    */
+> @@ -482,12 +484,16 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+>   		sp = next_sp;
+>   	}
+>   }
+> +#endif /* 32bit */
+>   
+>   void
+>   perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
+>   {
+> -	if (current_is_64bit())
+> -		perf_callchain_user_64(entry, regs);
+> -	else
+> +#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
+> +	if (!current_is_64bit()) {
+>   		perf_callchain_user_32(entry, regs);
+> +		return;
+> +	}
+> +#endif
+> +	perf_callchain_user_64(entry, regs);
+>   }
+> 
+
+Instead of that it could just be:
+
+	if (current_is_64bit())
+		perf_callchain_user_64(entry, regs);
+	else
+		perf_callchain_user_32(entry, regs);
 
 
---MJLe7gzwVY30ZGetLwRlxf7hE96HGZ1Ol--
+By adding a dummy perf_callchain_user_32() when needed as already done 
+for perf_callchain_user_64()
+And by making sure current_is_64bit() returns IS_ENABLED(CONFIG_PPC64) 
+when CONFIG_COMPAT is not set, on the same principle as you did for 
+is_32bit_task()
 
---LLvAbrEWZxeDGli9lQ0MDXItvivTANWNX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+And maybe you could think about spliting callchain.c out in a 
+callchain_32.c and a callchain_64.c that gets selected by the Makefiles 
+based on the same principle as you did for ptrace_32.c etc...
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl1oDeEACgkQwfwUeK3K
-7AlEMwf6AjcdEfSwdAfJdMQQfp3S38QdzIj7grR8T3HDbjMuZ9VzdG3eSotiUqIK
-TrO7LVwTktt424dPGdeyAjyLQh2aycJbOVvRIH31ZUmvx+GMVSRHaVuWGRfPjgIX
-KXeNZKWkrsNECWEgvnGzYHlQQRd2OFED9j0qCo6WjXWXwHT1Wflw8dzf+PxAuCiL
-afGXSEJhvX2Cg4IAQyPTCIoyR0/jl3zJ5JtYm0qNmBd4ZAY2EyDAqB91VRGcbIU4
-BJdmXh8tIjmPyG7ZxRPylYVYyoFg90m1e2QKBrbVESz5y8bhsxzlT3tay4pTlTNw
-x1zuQm/xcqTomfLo4+GcDMKbyNmFcQ==
-=ArVX
------END PGP SIGNATURE-----
-
---LLvAbrEWZxeDGli9lQ0MDXItvivTANWNX--
+Christophe
