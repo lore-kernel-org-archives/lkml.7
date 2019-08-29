@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9169C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C371CC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF1A520644
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C49F2189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Ea683PP1"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Jl/KOc3c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbfH2OiK (ORCPT
+        id S1727967AbfH2OiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:38:10 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53700 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbfH2OiH (ORCPT
+        Thu, 29 Aug 2019 10:38:12 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37627 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbfH2OiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:38:07 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 10so3983636wmp.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:38:06 -0700 (PDT)
+        Thu, 29 Aug 2019 10:38:08 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d16so4135420wme.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:38:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CcXwQ54TS9oqYUYDALsJlErvtZdechYOTQTghcQzmo4=;
-        b=Ea683PP1vKNCsMhfQpDj7TP/NTJiAbsJP5WCR2r/bBmHa+0/miks4QlSv9/8j9I0No
-         pMxPhOtg+L0WmMg5EGat/zN3LVWu5yd9kttsCiCcW1K9dK2u3Qe5OXTAdz7qZQNXkI7e
-         F5uCRbISfaYNJvCUYWun7zbLSQ237krjiZWMVrraGkQ49iP6F4gs61xEA6pBSGZMI5Vs
-         BofhQCGSjIPFKU3XVLId8pDlTbFbP3sxi2Qn6HZ2XlI1ixApzZ93rcwXLijb1sFZCZvh
-         RMr8eup9OG7OV9TfAxM5RsPlQDFlpLhxA6mj48RnedH58ww+geEsP1jyIuX1iXxcDNEW
-         +SIQ==
+        bh=ixvkB7V43hKnmpubcJyfS56WaYg/zqMW9mNeR7sGzjo=;
+        b=Jl/KOc3c/tWm63gxFSTjAo6PpfQzPmcUricXPWQVOnWUWtbA5tgLe8IG2LXNlz4c8W
+         Ost5l50DOWqngoyPIPKalqof732a4QL679hkjpvIXoS7Qa4UwihRay+lui8HJGFE9jHg
+         Z9CZ+mNBGNyc6KrrhnMjK6xHSx/25+A5LMc3//YEUindtzCENKZM5bedwY4GQRbSOka1
+         s3rB2PkLMxP0jxvmN6OGq8rkVXGch4UD8nhXWKp1P1tt3s+CIxITJdI+wnu01pOR88RR
+         Ks3m4R1XMFUTJt2Z+5Fg2lRELsLyNiOdhUdAlkFF4NwncUGRRk7YQJOs+GmUEI1/P1rh
+         M8Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CcXwQ54TS9oqYUYDALsJlErvtZdechYOTQTghcQzmo4=;
-        b=Ux3kGxloudkwm6cUGJSScbcTpo3Kn5AnLcKemspOVVDfoa/uwf4naYWUPrsyg4tIjB
-         ilW0MVUYzwQ7IMg5kXu7vM/Y99112QLTB9hFMfl98JKiXZ/huxONQnLIHDseYUnHVc6D
-         1RqufZZH60ZcQAxc6oLhh34gMmz/UHXFbZsQpDJzxFVQWJuCYOvv2SHR3BXPBmsIOCzn
-         8KMuhpLp4psbW9EozWxu/6FEzKO0A+50K/WitmGG1nFWNUBKOcoHicC834gzz+54hsgf
-         kqzZi69PdYPvgMA+wSs5V1LD+N1hlqdJRDRJto2N+1HeS2rbGreCSrCA0645QO624gOg
-         VkcQ==
-X-Gm-Message-State: APjAAAVUoTheYDOClGLfGRhF87AxtnnvRb08S+WekHNPZImXGb1Aa/+I
-        bJMndu41aN+cZ0V3CtiDkmp+EIri92k=
-X-Google-Smtp-Source: APXvYqxd9Rq6sxgB/1L+kdjuZeO1sZ1/0JXVmhQDvYi9fvlk488g/HgijrcUVUzGXWIRMxr1QmDMZg==
-X-Received: by 2002:a7b:cbce:: with SMTP id n14mr11150105wmi.47.1567089485900;
-        Thu, 29 Aug 2019 07:38:05 -0700 (PDT)
+        bh=ixvkB7V43hKnmpubcJyfS56WaYg/zqMW9mNeR7sGzjo=;
+        b=r1WgtCbWNm10ZP3MemFV7jNVh2c1vYyd3xJ0Cd+Do0lU8hgHwFm/wb6gn8vpOr45VH
+         ZPauZ8xqzqnmn/PtwYzRsdW09z0RHblWLAZWTblQyHH2fetTGqYRZm7luVQp66j6XDvF
+         GRY63xlu97CFkoYDY9sB3HpQl6gVyk95XJnF7e5nTJQ9kIqaO+My1Qs2zqXkIb/3f/RS
+         PMYSzG4hTykjMT9Kxr7GESMcAVMjS294OBhKaxjYaCLuyDgLc+dWyUIwoxN80SvsHqOW
+         qgUOGeGIazUEPxsyRbLV7Z3cXp3YJDCUkSFgaJArFZjw927hS2eCzNiIv2bLjcjnMccA
+         62aQ==
+X-Gm-Message-State: APjAAAV2g0jbTWtlN3D/Z3hYTaBt5UpIvqqbWWDtOYUwQWJP6ghALphO
+        qt4Mdx71SfMIt7nf+P7DOU6HiQ==
+X-Google-Smtp-Source: APXvYqzDBd56BXi2us4MHfKcSnqb+9nXEN8jrVhAop9QN4hsEPKbDM6lYwB97IRyI27AVhXumdDmkQ==
+X-Received: by 2002:a1c:f20a:: with SMTP id s10mr12396085wmc.145.1567089486874;
+        Thu, 29 Aug 2019 07:38:06 -0700 (PDT)
 Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id g15sm3241925wrp.29.2019.08.29.07.38.04
+        by smtp.gmail.com with ESMTPSA id g15sm3241925wrp.29.2019.08.29.07.38.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 07:38:05 -0700 (PDT)
+        Thu, 29 Aug 2019 07:38:06 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -67,9 +67,9 @@ To:     Jonathan Corbet <corbet@lwn.net>,
 Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 2/9] lib: devres: prepare devm_ioremap_resource() for more variants
-Date:   Thu, 29 Aug 2019 16:37:35 +0200
-Message-Id: <20190829143742.24726-3-brgl@bgdev.pl>
+Subject: [PATCH 3/9] lib: devres: provide new variants for devm_ioremap_resource()
+Date:   Thu, 29 Aug 2019 16:37:36 +0200
+Message-Id: <20190829143742.24726-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190829143742.24726-1-brgl@bgdev.pl>
 References: <20190829143742.24726-1-brgl@bgdev.pl>
@@ -82,89 +82,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-We want to add the nocache and write-combined variants of
-devm_ioremap_resource(). Let's first implement __devm_ioremap_resource()
-which takes an additional argument type. The types are the same as
-for __devm_ioremap(). The existing devm_ioremap_resource() now simply
-calls __devm_ioremap_resource() with regular DEVM_IOREMAP type.
+Provide two new variants of devm_ioremap_resource() - one for nocache
+and one for write-combined ioremap.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- lib/devres.c | 47 +++++++++++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 20 deletions(-)
+ .../driver-api/driver-model/devres.rst        |  2 ++
+ include/linux/device.h                        |  4 +++
+ lib/devres.c                                  | 29 +++++++++++++++++++
+ 3 files changed, 35 insertions(+)
 
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index 8e3087662daf..20c4be0389ab 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -316,6 +316,8 @@ IOMAP
+   devm_ioremap_nocache()
+   devm_ioremap_wc()
+   devm_ioremap_resource() : checks resource, requests memory region, ioremaps
++  devm_ioremap_resource_nocache()
++  devm_ioremap_resource_wc()
+   devm_platform_ioremap_resource() : calls devm_ioremap_resource() for platform device
+   devm_iounmap()
+   pcim_iomap()
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 6717adee33f0..e8aa916e8eb2 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -710,6 +710,10 @@ extern void devm_free_pages(struct device *dev, unsigned long addr);
+ 
+ void __iomem *devm_ioremap_resource(struct device *dev,
+ 				    const struct resource *res);
++void __iomem *devm_ioremap_resource_nocache(struct device *dev,
++					    const struct resource *res);
++void __iomem *devm_ioremap_resource_wc(struct device *dev,
++				       const struct resource *res);
+ 
+ void __iomem *devm_of_iomap(struct device *dev,
+ 			    struct device_node *node, int index,
 diff --git a/lib/devres.c b/lib/devres.c
-index 6a0e9bd6524a..a14c727128c1 100644
+index a14c727128c1..f1297bcc8891 100644
 --- a/lib/devres.c
 +++ b/lib/devres.c
-@@ -114,25 +114,9 @@ void devm_iounmap(struct device *dev, void __iomem *addr)
+@@ -169,6 +169,35 @@ void __iomem *devm_ioremap_resource(struct device *dev,
  }
- EXPORT_SYMBOL(devm_iounmap);
+ EXPORT_SYMBOL(devm_ioremap_resource);
  
--/**
-- * devm_ioremap_resource() - check, request region, and ioremap resource
-- * @dev: generic device to handle the resource for
-- * @res: resource to be handled
-- *
-- * Checks that a resource is a valid memory region, requests the memory
-- * region and ioremaps it. All operations are managed and will be undone
-- * on driver detach.
-- *
-- * Returns a pointer to the remapped memory or an ERR_PTR() encoded error code
-- * on failure. Usage example:
-- *
-- *	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-- *	base = devm_ioremap_resource(&pdev->dev, res);
-- *	if (IS_ERR(base))
-- *		return PTR_ERR(base);
-- */
--void __iomem *devm_ioremap_resource(struct device *dev,
--				    const struct resource *res)
-+static void __iomem *
-+__devm_ioremap_resource(struct device *dev, const struct resource *res,
-+			enum devm_ioremap_type type)
- {
- 	resource_size_t size;
- 	void __iomem *dest_ptr;
-@@ -151,7 +135,7 @@ void __iomem *devm_ioremap_resource(struct device *dev,
- 		return IOMEM_ERR_PTR(-EBUSY);
- 	}
- 
--	dest_ptr = devm_ioremap(dev, res->start, size);
-+	dest_ptr = __devm_ioremap(dev, res->start, size, type);
- 	if (!dest_ptr) {
- 		dev_err(dev, "ioremap failed for resource %pR\n", res);
- 		devm_release_mem_region(dev, res->start, size);
-@@ -160,6 +144,29 @@ void __iomem *devm_ioremap_resource(struct device *dev,
- 
- 	return dest_ptr;
- }
-+
 +/**
-+ * devm_ioremap_resource() - check, request region, and ioremap resource
++ * devm_ioremap_resource_nocache() - nocache variant of devm_ioremap_resource()
 + * @dev: generic device to handle the resource for
 + * @res: resource to be handled
 + *
-+ * Checks that a resource is a valid memory region, requests the memory
-+ * region and ioremaps it. All operations are managed and will be undone
-+ * on driver detach.
++ * Returns a pointer to the remapped memory or an ERR_PTR() encoded error code
++ * on failure. Usage example:
++ */
++void __iomem *devm_ioremap_resource_nocache(struct device *dev,
++					    const struct resource *res)
++{
++	return __devm_ioremap_resource(dev, res, DEVM_IOREMAP_NC);
++}
++
++/**
++ * devm_ioremap_resource_wc() - write-combined variant of
++ *				devm_ioremap_resource()
++ * @dev: generic device to handle the resource for
++ * @res: resource to be handled
 + *
 + * Returns a pointer to the remapped memory or an ERR_PTR() encoded error code
 + * on failure. Usage example:
-+ *
-+ *	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+ *	base = devm_ioremap_resource(&pdev->dev, res);
-+ *	if (IS_ERR(base))
-+ *		return PTR_ERR(base);
 + */
-+void __iomem *devm_ioremap_resource(struct device *dev,
-+				    const struct resource *res)
++void __iomem *devm_ioremap_resource_wc(struct device *dev,
++				       const struct resource *res)
 +{
-+	return __devm_ioremap_resource(dev, res, DEVM_IOREMAP);
++	return __devm_ioremap_resource(dev, res, DEVM_IOREMAP_WC);
 +}
- EXPORT_SYMBOL(devm_ioremap_resource);
- 
++
  /*
+  * devm_of_iomap - Requests a resource and maps the memory mapped IO
+  *		   for a given device_node managed by a given device
 -- 
 2.21.0
 
