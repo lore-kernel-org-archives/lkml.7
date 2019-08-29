@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E4DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 602B1C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541A923405
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10330215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="bLamvUpM";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="GecjJdD/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="lrCSBvgC";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="CieR/1uH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbfH2N4m (ORCPT
+        id S1728234AbfH2N4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:56:42 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:58571 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728124AbfH2N4d (ORCPT
+        Thu, 29 Aug 2019 09:56:45 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:60111 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbfH2N4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:56:33 -0400
+        Thu, 29 Aug 2019 09:56:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1567086992; x=1598622992;
+  t=1567087061; x=1598623061;
   h=from:to:cc:subject:date:message-id:references:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=RHhuwBxLyg++AZ+sjqcbKdHCKGSdqsIYcp274U7Cjh4=;
-  b=bLamvUpMhYPBTmW/x59TWm61ntpYms8Ad1C/8HWvzYxYskvCqTJA2Q8b
-   Zo/xCQeTz2jVv1+XIYAigzhwVV0gv2iUObJNBvcw0KoB+JJ7e7l2U1510
-   CXgS19wzBlamy4RKqInYjwQL7JFzT9UOnP2d3BuGL/x2BYMOsIriqyPg9
-   mFeX3KwEgrDONThiqAN2Xm52l7yWY2SHq2y35/CtpaIHEXxTeTlKk7C3n
-   HZVQ10XsxhmfpSx6tb8q4EeDwLdbVZXA7ev/c/L9JdDr0w8M+xiRXk111
-   Gm4N2fQRm299V7+8ispR7WS6/Ex5gNox0ZnKmdxO5iFKBXz5xj1ZkOf9l
-   Q==;
-IronPort-SDR: ppYuiGiCmWB7DhW7R5zUFho0tAHbH1nIGC1V+hCn4F8OL8paGJvf8+Wb2FuqZRmqzQxZogK97W
- UArS001/3fCX0uUbO4nbZZB8XaMG1GVwzCuFdTR81ITAR+hO5+sbn9BQk9u0q3dy2h3Lt9lSXJ
- Qoz91dQ+P8eWbJ+mbasm9B+INUQ7+xY1Rrn6TL5zJzDDdEbNCEytiy/SWtyld3EhUFV6VvFmTS
- eIU/jL4rYnywk42TmO8jIvoPig3fDcbQh4VL53/QDEjsjtRVTwWDCmY09nCGaDL968nnPTzMRI
- j+Q=
+  bh=8eXbciA3hazplQqm/WFrgR+qcZtfC3vREQFucMka2Gg=;
+  b=lrCSBvgCb6ZzvZFjCGiasmoU1ESTqxvWN3TMIWW9GfZL5dvELKChEY7F
+   Bumb52wW9n/pGoi31kwpZTIjQhc7xLaIZLMdktpnH33eV9zhds8gFi1sn
+   dDCBi9QBzYs3T4nX0R86Doi5VjyH8QaPHMpJjIUCoj8m5Bbp7iTwxCMwX
+   M2lXfTCU4mvdy3D8rEo/XRzJXnqiiJbVhtCOskgQ9DMH9SfBMwTbBB3y1
+   cXA2EnUN3QAz0Qn5IWYUkihgd/7cjVdB+h9ndE6suVyuGyNXA1QiJ8+zt
+   YZGrfQe516/jzYHwmgaLKkce2vWxehPr2ctXrwxetbKWdg4ziOFsHoIsO
+   g==;
+IronPort-SDR: rm1h1fVK/mY0oA1lJ2TqoASL6cX9D+tgNlwOipycqCDBEsGFHYFa4ZYR9VP2+pljcqLlCPp3UP
+ xn2nZbsMe//45ZsUVE/PPD4AAA1UrqOhgu6ggt4lr1hobQ/EJ+7P0cUyIWz0CWuBeebGfcZyka
+ HXcdAeSYie9GvD+/hRY/drDQ5PsmAEOmvEvVx5TSpoda4f8erdNU4VKoWMvsvAPaS+tegaAEbS
+ 92yvH6vrz5W/zR2aR2ATr+eMhkL9zbTUZiEUNVeFIbsZG8pR70neueZaY4fN4s8tf/WVp1TpRU
+ BYQ=
 X-IronPort-AV: E=Sophos;i="5.64,443,1559491200"; 
-   d="scan'208";a="223615955"
-Received: from mail-co1nam04lp2052.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.52])
-  by ob1.hgst.iphmx.com with ESMTP; 29 Aug 2019 21:56:14 +0800
+   d="scan'208";a="217472172"
+Received: from mail-by2nam05lp2056.outbound.protection.outlook.com (HELO NAM05-BY2-obe.outbound.protection.outlook.com) ([104.47.50.56])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Aug 2019 21:57:39 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nO22p1q1b1JTkbPgGnw89s2HnOysXMG7aRSlOFQvyTOtNx5goELwDqOcGVGriYBmLJKsrJshxc2Gp890BtfwqOCOxTO+pXQIqXXrFBoRV4QZipxS+Mr1wKQw6kKINzd3CBFexoFVx/+8TVUVPc8K56/g4nUuOlXEd11EpGbnTeIXF6HcDx8Pb9JXgxs3NKKYTqvxJI4ufpvGs947hay5lBLPikPzs15vLnYsiGBT3NpNGjEArCx4vWALQhjFoNYpzzAyn6LulJ0Y2xmn8fbVGf5xBbKGu4A2gEXM3CeuSHK6/9qDYLiYjyWOXnvu/vd/o2dUNf7qr7XcPt71JPf44w==
+ b=EvU7VYZktfPF8QNGWomvYJhyLfo3VIofzrOUhAjZcL0tOFDPq1qedgpYfHfsvU2c46U+EN7OSL3mTmU8TofaQP/LI3cPrhLxN11nOn9raHHu4g8RdaAVfoFaSwqUckEn8WB8jJ6vAlPsQX1mxpkvSpar7ZOPELXpHH4SiARPQiCelaViWs1XGneuydElAO2hzJ6G5mbeeHlc1zLnbnzmDEu0YQ+kjMGoNV6+dQys3IAStBqKiNrRJI4bk5+eR3L9SHNcP5t0XCjLNP+hw2kyzHrIx7hna1anAD0j/bd1qb+5HmGy1OaSySqJN2gU187Kl6Y9HyqjKGOJPOwpPrFaJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OOBOMsGFn/cxbSG0Y8wrQYnK2m9UiOstdXBrZTPUsyI=;
- b=E92fp47it7TBx410O/Xbs/GAjQLuDu8+zL/1JcgnL6fOLPU40Khq7QVWxzMx8jan1r+VE3pEGANvgd1zf7ug6yaqFQLnWZXsgKvCQM1zinS6HdXPBN4ZkEkxop9Yb0jy7bA4kAy83oGPS4r9SOtKhFE2YK2eOVEy2DAtL1hBEXbxK0MrLe01nJKYR9NU6E8G0ZabXC2zxzBLw0Cht0lLOYZfkuv54is5ww3VwUnby5fEafU0YWb8yFBjFeUhUhg4YJgeB45AnZRXqkBSDNuJuenuSGiRtQXJdTHdUkAsygq18bzFFzh0pdjV6m/qVIM2Jl+LlZxgKCDR/Fugo5UPBg==
+ bh=bZUK8/wcePeefBNIyNff5FrA2+KAEcKaYAIa404bHA0=;
+ b=GmlA8sz+kL+q4ojxcsZgP/Y/I1wf3BGbTVwIesb6UijbXWhbCa2OmTqebaRSTmhcGi/ckWIx2nH2mDkrrb/ylddcjMi8ZPLbOGaAlqDmzt3e523tkp91uR6P7PhCKCMxjHhkpuABtT3Tha2UrR49mepDKau+06jTlGHsgj1HhNyEwtfnfyZ4JlItKq14AvSab27eur22+5VTsXIsyji65DYtwnW+LW+zcA/ptZsqxOwnaZMHB0pB1EOkwajqWp6//+MxpP/6rxEx2GNp/iZ/ATUJ94lNCpLF3WG5i57y3M/86L17YxNxo4GhQWIWVQfF4RB9E+y3UeF3msYEf2cE8g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
  header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OOBOMsGFn/cxbSG0Y8wrQYnK2m9UiOstdXBrZTPUsyI=;
- b=GecjJdD/YeSbxsdJkd9cozrZtXMwR3Zna+EWpA0f6iznWTAzMmPMHKFQ1on5Bx4qxAOYw3hrWBvxNZB4JdwYfhNBOKgy0/5F8g28BqAoAA4uIu1vkv2FBJgK5LhBZdwH9lLlDLfHDoogBjhpveX9ATspuEWvCoMc4nH/gHA0m0E=
+ bh=bZUK8/wcePeefBNIyNff5FrA2+KAEcKaYAIa404bHA0=;
+ b=CieR/1uHk4nBvE6846jWk5UaHrLvMbJqaQPVBtt7VwM1n2K6nuaFDVfhi7Kgq/iNYaA7shkHG9aPxxVnxDEYf2/a4N6TMnbisFVgVzld0PcezFAhhs2sVDasZW1MwL938tBUxpdHOOiprzzbLmCTqL/sI+wqN2f/wcckVakTTik=
 Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB6255.namprd04.prod.outlook.com (20.178.245.75) with Microsoft SMTP
+ MN2PR04MB5616.namprd04.prod.outlook.com (20.179.22.29) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Thu, 29 Aug 2019 13:56:12 +0000
+ 15.20.2199.21; Thu, 29 Aug 2019 13:56:37 +0000
 Received: from MN2PR04MB6061.namprd04.prod.outlook.com
  ([fe80::e1a5:8de2:c3b1:3fb0]) by MN2PR04MB6061.namprd04.prod.outlook.com
  ([fe80::e1a5:8de2:c3b1:3fb0%7]) with mapi id 15.20.2220.013; Thu, 29 Aug 2019
- 13:56:12 +0000
+ 13:56:37 +0000
 From:   Anup Patel <Anup.Patel@wdc.com>
 To:     Palmer Dabbelt <palmer@sifive.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
@@ -85,11 +85,12 @@ CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v6 09/21] RISC-V: KVM: Implement VCPU world-switch
-Thread-Topic: [PATCH v6 09/21] RISC-V: KVM: Implement VCPU world-switch
-Thread-Index: AQHVXnGEugN+NrJyx0WFAkVQRdO8IA==
-Date:   Thu, 29 Aug 2019 13:56:12 +0000
-Message-ID: <20190829135427.47808-10-anup.patel@wdc.com>
+Subject: [PATCH v6 13/21] RISC-V: KVM: Implement stage2 page table programming
+Thread-Topic: [PATCH v6 13/21] RISC-V: KVM: Implement stage2 page table
+ programming
+Thread-Index: AQHVXnGThz0F+/7xqEWE6jyFhBI/0Q==
+Date:   Thu, 29 Aug 2019 13:56:37 +0000
+Message-ID: <20190829135427.47808-14-anup.patel@wdc.com>
 References: <20190829135427.47808-1-anup.patel@wdc.com>
 In-Reply-To: <20190829135427.47808-1-anup.patel@wdc.com>
 Accept-Language: en-US
@@ -105,445 +106,792 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.17.1
 x-originating-ip: [49.207.51.114]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dfadc7b6-33ae-4507-179c-08d72c88a701
+x-ms-office365-filtering-correlation-id: 155d2d2e-a24c-47c6-4fb4-08d72c88b5ee
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB6255;
-x-ms-traffictypediagnostic: MN2PR04MB6255:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB5616;
+x-ms-traffictypediagnostic: MN2PR04MB5616:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR04MB62554494D295AE3C093FBA658DA20@MN2PR04MB6255.namprd04.prod.outlook.com>
+x-microsoft-antispam-prvs: <MN2PR04MB5616546F5477F2E26A6EB4378DA20@MN2PR04MB5616.namprd04.prod.outlook.com>
 wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-oob-tlc-oobclassifiers: OLM:3044;
 x-forefront-prvs: 0144B30E41
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(396003)(346002)(376002)(136003)(199004)(189003)(446003)(55236004)(11346002)(30864003)(76176011)(386003)(2616005)(53936002)(36756003)(25786009)(5660300002)(4326008)(6436002)(316002)(6486002)(99286004)(6506007)(71190400001)(256004)(14444005)(6512007)(53946003)(486006)(52116002)(2906002)(476003)(1076003)(102836004)(478600001)(81166006)(81156014)(110136005)(8676002)(54906003)(26005)(66446008)(64756008)(66556008)(66476007)(86362001)(7416002)(6116002)(50226002)(7736002)(14454004)(3846002)(66066001)(8936002)(44832011)(71200400001)(66946007)(186003)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6255;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(366004)(376002)(346002)(396003)(189003)(199004)(7416002)(52116002)(81166006)(316002)(6506007)(386003)(30864003)(25786009)(7736002)(81156014)(305945005)(2906002)(36756003)(71190400001)(14454004)(99286004)(1076003)(256004)(14444005)(4326008)(66946007)(76176011)(66446008)(64756008)(66556008)(66476007)(102836004)(6116002)(50226002)(55236004)(476003)(6512007)(3846002)(71200400001)(5660300002)(26005)(186003)(44832011)(86362001)(66066001)(6436002)(446003)(8936002)(6486002)(110136005)(54906003)(2616005)(486006)(53936002)(53946003)(11346002)(478600001)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5616;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gu22LbT/VICpKROjCefkHeh0qlkIgUbul/OW2a70Tifg8lJeu9s9LoFpyBE/FW5so0M55BKc8moqNG4W5Y7HohjKK1s0efVdbm0CSt4H6e5YQiKLnEFI+O4NxGUjfvXxr+SAKRqEVKiUgJAc4eqJf94lR9H/KTHEhzKVLNQihcmAv1GkWsRp6R9HViQQQKMjmt0oXyBS90YMbqiLn4/CwHyrefyL2gl2LYXmyrNtwSKYE2Xy7Ke8/w3bgP8hffszMk4VDiDo/mNyzsCftcGY5n309gFkRD/v7NL+VSz5uxMImgggqcXC0IYj05ASV+NnGFyPgssx4e344PSCfQcbFN130S0LXVTxpGv57jG3KYL7OlR87St6w4elIRGEJQ4VYzr29a9dFKLKNlWU2EpQDuRjewxzQsc27j136rt/5RM=
+x-microsoft-antispam-message-info: PIN2+Gwiiur7UBC70FG88zuRLFJqAnr+RpDqc5mWh7H2YFwbOUC+rUqIq2v8yOAO96B9K08J0sb+McK0e/RqFB6JQJTgIMTtIjaSLwIlV5QENIMKtt61wC28aL667DJR00yEtksCFiOnBzF5b1aJ9BArDfQ/FDi7/MWNhtN3lF+tn1qbye1TX+uzJLWYHCJ2psl49K88qGNCWz6EsyYxYFdpkgIYdFpkXdWBHBDbGII+s1fz5Hur5OBRzYTxRC2wg9wpC7/fFa3ADqPG6pgjI1jkWzElKG5E8daAO5R7jMGXdmoTZ7zxsILAkRDO9dAbrb8e8MLZf5Y2w5PaoW2iuvJ28ANg9LPl3OKOCn0VLDlm4knKqSyKRTpfT33B3GbweAfFIgm7+PZ99qhVdTft9Izcsj2YDcQZhPUcUWMiTtg=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dfadc7b6-33ae-4507-179c-08d72c88a701
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 13:56:12.6944
+X-MS-Exchange-CrossTenant-Network-Message-Id: 155d2d2e-a24c-47c6-4fb4-08d72c88b5ee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 13:56:37.7342
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AdNBviIxxwz7iYKXgvD9+5encJI8GjR9yIYB3/+yV5ufkfILf0/w0M31kQz/ZYXnOmKeefPzzTQt6mLjwkh4qw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6255
+X-MS-Exchange-CrossTenant-userprincipalname: t7lHzeCrHrQglqQ/vZvMXhbucx/AFY+8tN7ba78ELVtpF04IYo8duBNujI7EwcvrBhIxrO5DudLz3EoEuRNTvA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5616
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements the VCPU world-switch for KVM RISC-V.
+This patch implements all required functions for programming
+the stage2 page table for each Guest/VM.
 
-The KVM RISC-V world-switch (i.e. __kvm_riscv_switch_to()) mostly
-switches general purpose registers, SSTATUS, STVEC, SSCRATCH and
-HSTATUS CSRs. Other CSRs are switched via vcpu_load() and vcpu_put()
-interface in kvm_arch_vcpu_load() and kvm_arch_vcpu_put() functions
-respectively.
+At high-level, the flow of stage2 related functions is similar
+from KVM ARM/ARM64 implementation but the stage2 page table
+format is quite different for KVM RISC-V.
 
 Signed-off-by: Anup Patel <anup.patel@wdc.com>
 Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Alexander Graf <graf@amazon.com>
 ---
- arch/riscv/include/asm/kvm_host.h |   9 +-
- arch/riscv/kernel/asm-offsets.c   |  76 ++++++++++++
- arch/riscv/kvm/Makefile           |   2 +-
- arch/riscv/kvm/vcpu.c             |  32 ++++-
- arch/riscv/kvm/vcpu_switch.S      | 194 ++++++++++++++++++++++++++++++
- 5 files changed, 309 insertions(+), 4 deletions(-)
- create mode 100644 arch/riscv/kvm/vcpu_switch.S
+ arch/riscv/include/asm/kvm_host.h     |  10 +
+ arch/riscv/include/asm/pgtable-bits.h |   1 +
+ arch/riscv/kvm/mmu.c                  | 643 +++++++++++++++++++++++++-
+ 3 files changed, 644 insertions(+), 10 deletions(-)
 
 diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm=
 _host.h
-index d801216da6d0..18f1097f1d8d 100644
+index 5f1dd289fd8f..cc4aa5b8286d 100644
 --- a/arch/riscv/include/asm/kvm_host.h
 +++ b/arch/riscv/include/asm/kvm_host.h
-@@ -110,6 +110,13 @@ struct kvm_vcpu_arch {
- 	/* ISA feature bits (similar to MISA) */
- 	unsigned long isa;
+@@ -72,6 +72,13 @@ struct kvm_mmio_decode {
+ 	int shift;
+ };
 =20
-+	/* SSCRATCH and STVEC of Host */
-+	unsigned long host_sscratch;
-+	unsigned long host_stvec;
++#define KVM_MMU_PAGE_CACHE_NR_OBJS	32
 +
-+	/* CPU context of Host */
-+	struct kvm_cpu_context host_context;
++struct kvm_mmu_page_cache {
++	int nobjs;
++	void *objects[KVM_MMU_PAGE_CACHE_NR_OBJS];
++};
 +
- 	/* CPU context of Guest VCPU */
- 	struct kvm_cpu_context guest_context;
+ struct kvm_cpu_context {
+ 	unsigned long zero;
+ 	unsigned long ra;
+@@ -163,6 +170,9 @@ struct kvm_vcpu_arch {
+ 	/* MMIO instruction details */
+ 	struct kvm_mmio_decode mmio_decode;
 =20
-@@ -162,7 +169,7 @@ int kvm_riscv_vcpu_mmio_return(struct kvm_vcpu *vcpu, s=
-truct kvm_run *run);
- int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
- 			unsigned long scause, unsigned long stval);
-=20
--static inline void __kvm_riscv_switch_to(struct kvm_vcpu_arch *vcpu_arch) =
-{}
-+void __kvm_riscv_switch_to(struct kvm_vcpu_arch *vcpu_arch);
-=20
- int kvm_riscv_vcpu_set_interrupt(struct kvm_vcpu *vcpu, unsigned int irq);
- int kvm_riscv_vcpu_unset_interrupt(struct kvm_vcpu *vcpu, unsigned int irq=
-);
-diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offset=
-s.c
-index 9f5628c38ac9..711656710190 100644
---- a/arch/riscv/kernel/asm-offsets.c
-+++ b/arch/riscv/kernel/asm-offsets.c
-@@ -7,7 +7,9 @@
- #define GENERATING_ASM_OFFSETS
-=20
- #include <linux/kbuild.h>
-+#include <linux/mm.h>
- #include <linux/sched.h>
-+#include <asm/kvm_host.h>
- #include <asm/thread_info.h>
- #include <asm/ptrace.h>
-=20
-@@ -109,6 +111,80 @@ void asm_offsets(void)
- 	OFFSET(PT_SBADADDR, pt_regs, sbadaddr);
- 	OFFSET(PT_SCAUSE, pt_regs, scause);
-=20
-+	OFFSET(KVM_ARCH_GUEST_ZERO, kvm_vcpu_arch, guest_context.zero);
-+	OFFSET(KVM_ARCH_GUEST_RA, kvm_vcpu_arch, guest_context.ra);
-+	OFFSET(KVM_ARCH_GUEST_SP, kvm_vcpu_arch, guest_context.sp);
-+	OFFSET(KVM_ARCH_GUEST_GP, kvm_vcpu_arch, guest_context.gp);
-+	OFFSET(KVM_ARCH_GUEST_TP, kvm_vcpu_arch, guest_context.tp);
-+	OFFSET(KVM_ARCH_GUEST_T0, kvm_vcpu_arch, guest_context.t0);
-+	OFFSET(KVM_ARCH_GUEST_T1, kvm_vcpu_arch, guest_context.t1);
-+	OFFSET(KVM_ARCH_GUEST_T2, kvm_vcpu_arch, guest_context.t2);
-+	OFFSET(KVM_ARCH_GUEST_S0, kvm_vcpu_arch, guest_context.s0);
-+	OFFSET(KVM_ARCH_GUEST_S1, kvm_vcpu_arch, guest_context.s1);
-+	OFFSET(KVM_ARCH_GUEST_A0, kvm_vcpu_arch, guest_context.a0);
-+	OFFSET(KVM_ARCH_GUEST_A1, kvm_vcpu_arch, guest_context.a1);
-+	OFFSET(KVM_ARCH_GUEST_A2, kvm_vcpu_arch, guest_context.a2);
-+	OFFSET(KVM_ARCH_GUEST_A3, kvm_vcpu_arch, guest_context.a3);
-+	OFFSET(KVM_ARCH_GUEST_A4, kvm_vcpu_arch, guest_context.a4);
-+	OFFSET(KVM_ARCH_GUEST_A5, kvm_vcpu_arch, guest_context.a5);
-+	OFFSET(KVM_ARCH_GUEST_A6, kvm_vcpu_arch, guest_context.a6);
-+	OFFSET(KVM_ARCH_GUEST_A7, kvm_vcpu_arch, guest_context.a7);
-+	OFFSET(KVM_ARCH_GUEST_S2, kvm_vcpu_arch, guest_context.s2);
-+	OFFSET(KVM_ARCH_GUEST_S3, kvm_vcpu_arch, guest_context.s3);
-+	OFFSET(KVM_ARCH_GUEST_S4, kvm_vcpu_arch, guest_context.s4);
-+	OFFSET(KVM_ARCH_GUEST_S5, kvm_vcpu_arch, guest_context.s5);
-+	OFFSET(KVM_ARCH_GUEST_S6, kvm_vcpu_arch, guest_context.s6);
-+	OFFSET(KVM_ARCH_GUEST_S7, kvm_vcpu_arch, guest_context.s7);
-+	OFFSET(KVM_ARCH_GUEST_S8, kvm_vcpu_arch, guest_context.s8);
-+	OFFSET(KVM_ARCH_GUEST_S9, kvm_vcpu_arch, guest_context.s9);
-+	OFFSET(KVM_ARCH_GUEST_S10, kvm_vcpu_arch, guest_context.s10);
-+	OFFSET(KVM_ARCH_GUEST_S11, kvm_vcpu_arch, guest_context.s11);
-+	OFFSET(KVM_ARCH_GUEST_T3, kvm_vcpu_arch, guest_context.t3);
-+	OFFSET(KVM_ARCH_GUEST_T4, kvm_vcpu_arch, guest_context.t4);
-+	OFFSET(KVM_ARCH_GUEST_T5, kvm_vcpu_arch, guest_context.t5);
-+	OFFSET(KVM_ARCH_GUEST_T6, kvm_vcpu_arch, guest_context.t6);
-+	OFFSET(KVM_ARCH_GUEST_SEPC, kvm_vcpu_arch, guest_context.sepc);
-+	OFFSET(KVM_ARCH_GUEST_SSTATUS, kvm_vcpu_arch, guest_context.sstatus);
-+	OFFSET(KVM_ARCH_GUEST_HSTATUS, kvm_vcpu_arch, guest_context.hstatus);
++	/* Cache pages needed to program page tables with spinlock held */
++	struct kvm_mmu_page_cache mmu_page_cache;
 +
-+	OFFSET(KVM_ARCH_HOST_ZERO, kvm_vcpu_arch, host_context.zero);
-+	OFFSET(KVM_ARCH_HOST_RA, kvm_vcpu_arch, host_context.ra);
-+	OFFSET(KVM_ARCH_HOST_SP, kvm_vcpu_arch, host_context.sp);
-+	OFFSET(KVM_ARCH_HOST_GP, kvm_vcpu_arch, host_context.gp);
-+	OFFSET(KVM_ARCH_HOST_TP, kvm_vcpu_arch, host_context.tp);
-+	OFFSET(KVM_ARCH_HOST_T0, kvm_vcpu_arch, host_context.t0);
-+	OFFSET(KVM_ARCH_HOST_T1, kvm_vcpu_arch, host_context.t1);
-+	OFFSET(KVM_ARCH_HOST_T2, kvm_vcpu_arch, host_context.t2);
-+	OFFSET(KVM_ARCH_HOST_S0, kvm_vcpu_arch, host_context.s0);
-+	OFFSET(KVM_ARCH_HOST_S1, kvm_vcpu_arch, host_context.s1);
-+	OFFSET(KVM_ARCH_HOST_A0, kvm_vcpu_arch, host_context.a0);
-+	OFFSET(KVM_ARCH_HOST_A1, kvm_vcpu_arch, host_context.a1);
-+	OFFSET(KVM_ARCH_HOST_A2, kvm_vcpu_arch, host_context.a2);
-+	OFFSET(KVM_ARCH_HOST_A3, kvm_vcpu_arch, host_context.a3);
-+	OFFSET(KVM_ARCH_HOST_A4, kvm_vcpu_arch, host_context.a4);
-+	OFFSET(KVM_ARCH_HOST_A5, kvm_vcpu_arch, host_context.a5);
-+	OFFSET(KVM_ARCH_HOST_A6, kvm_vcpu_arch, host_context.a6);
-+	OFFSET(KVM_ARCH_HOST_A7, kvm_vcpu_arch, host_context.a7);
-+	OFFSET(KVM_ARCH_HOST_S2, kvm_vcpu_arch, host_context.s2);
-+	OFFSET(KVM_ARCH_HOST_S3, kvm_vcpu_arch, host_context.s3);
-+	OFFSET(KVM_ARCH_HOST_S4, kvm_vcpu_arch, host_context.s4);
-+	OFFSET(KVM_ARCH_HOST_S5, kvm_vcpu_arch, host_context.s5);
-+	OFFSET(KVM_ARCH_HOST_S6, kvm_vcpu_arch, host_context.s6);
-+	OFFSET(KVM_ARCH_HOST_S7, kvm_vcpu_arch, host_context.s7);
-+	OFFSET(KVM_ARCH_HOST_S8, kvm_vcpu_arch, host_context.s8);
-+	OFFSET(KVM_ARCH_HOST_S9, kvm_vcpu_arch, host_context.s9);
-+	OFFSET(KVM_ARCH_HOST_S10, kvm_vcpu_arch, host_context.s10);
-+	OFFSET(KVM_ARCH_HOST_S11, kvm_vcpu_arch, host_context.s11);
-+	OFFSET(KVM_ARCH_HOST_T3, kvm_vcpu_arch, host_context.t3);
-+	OFFSET(KVM_ARCH_HOST_T4, kvm_vcpu_arch, host_context.t4);
-+	OFFSET(KVM_ARCH_HOST_T5, kvm_vcpu_arch, host_context.t5);
-+	OFFSET(KVM_ARCH_HOST_T6, kvm_vcpu_arch, host_context.t6);
-+	OFFSET(KVM_ARCH_HOST_SEPC, kvm_vcpu_arch, host_context.sepc);
-+	OFFSET(KVM_ARCH_HOST_SSTATUS, kvm_vcpu_arch, host_context.sstatus);
-+	OFFSET(KVM_ARCH_HOST_HSTATUS, kvm_vcpu_arch, host_context.hstatus);
-+	OFFSET(KVM_ARCH_HOST_SSCRATCH, kvm_vcpu_arch, host_sscratch);
-+	OFFSET(KVM_ARCH_HOST_STVEC, kvm_vcpu_arch, host_stvec);
+ 	/* VCPU power-off state */
+ 	bool power_off;
+=20
+diff --git a/arch/riscv/include/asm/pgtable-bits.h b/arch/riscv/include/asm=
+/pgtable-bits.h
+index bbaeb5d35842..be49d62fcc2b 100644
+--- a/arch/riscv/include/asm/pgtable-bits.h
++++ b/arch/riscv/include/asm/pgtable-bits.h
+@@ -26,6 +26,7 @@
+=20
+ #define _PAGE_SPECIAL   _PAGE_SOFT
+ #define _PAGE_TABLE     _PAGE_PRESENT
++#define _PAGE_LEAF      (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC)
+=20
+ /*
+  * _PAGE_PROT_NONE is set on not-present pages (and ignored by the hardwar=
+e) to
+diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
+index 2b965f9aac07..590669290139 100644
+--- a/arch/riscv/kvm/mmu.c
++++ b/arch/riscv/kvm/mmu.c
+@@ -18,6 +18,438 @@
+ #include <asm/page.h>
+ #include <asm/pgtable.h>
+=20
++#ifdef CONFIG_64BIT
++#define stage2_have_pmd		true
++#define stage2_gpa_size		((phys_addr_t)(1ULL << 39))
++#define stage2_cache_min_pages	2
++#else
++#define pmd_index(x)		0
++#define pfn_pmd(x, y)		({ pmd_t __x =3D { 0 }; __x; })
++#define stage2_have_pmd		false
++#define stage2_gpa_size		((phys_addr_t)(1ULL << 32))
++#define stage2_cache_min_pages	1
++#endif
 +
- 	/*
- 	 * THREAD_{F,X}* might be larger than a S-type offset can handle, but
- 	 * these are used in performance-sensitive assembly so we can't resort
-diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-index 37b5a59d4f4f..845579273727 100644
---- a/arch/riscv/kvm/Makefile
-+++ b/arch/riscv/kvm/Makefile
-@@ -8,6 +8,6 @@ ccflags-y :=3D -Ivirt/kvm -Iarch/riscv/kvm
++static int stage2_cache_topup(struct kvm_mmu_page_cache *pcache,
++			      int min, int max)
++{
++	void *page;
++
++	BUG_ON(max > KVM_MMU_PAGE_CACHE_NR_OBJS);
++	if (pcache->nobjs >=3D min)
++		return 0;
++	while (pcache->nobjs < max) {
++		page =3D (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
++		if (!page)
++			return -ENOMEM;
++		pcache->objects[pcache->nobjs++] =3D page;
++	}
++
++	return 0;
++}
++
++static void stage2_cache_flush(struct kvm_mmu_page_cache *pcache)
++{
++	while (pcache && pcache->nobjs)
++		free_page((unsigned long)pcache->objects[--pcache->nobjs]);
++}
++
++static void *stage2_cache_alloc(struct kvm_mmu_page_cache *pcache)
++{
++	void *p;
++
++	if (!pcache)
++		return NULL;
++
++	BUG_ON(!pcache->nobjs);
++	p =3D pcache->objects[--pcache->nobjs];
++
++	return p;
++}
++
++struct local_guest_tlb_info {
++	struct kvm_vmid *vmid;
++	gpa_t addr;
++};
++
++static void local_guest_tlb_flush_vmid_gpa(void *info)
++{
++	struct local_guest_tlb_info *infop =3D info;
++
++	__kvm_riscv_hfence_gvma_vmid_gpa(READ_ONCE(infop->vmid->vmid_version),
++					 infop->addr);
++}
++
++static void stage2_remote_tlb_flush(struct kvm *kvm, gpa_t addr)
++{
++	struct local_guest_tlb_info info;
++	struct kvm_vmid *vmid =3D &kvm->arch.vmid;
++
++	/*
++	 * Ideally, we should have a SBI call OR some remote TLB instruction
++	 * but we don't have it so we explicitly flush TLBs using IPIs.
++	 *
++	 * TODO: Instead of cpu_online_mask, we should only target CPUs
++	 * where the Guest/VM is running.
++	 */
++	info.vmid =3D vmid;
++	info.addr =3D addr;
++	preempt_disable();
++	smp_call_function_many(cpu_online_mask,
++			       local_guest_tlb_flush_vmid_gpa, &info, true);
++	preempt_enable();
++}
++
++static int stage2_set_pgd(struct kvm *kvm, gpa_t addr, const pgd_t *new_pg=
+d)
++{
++	pgd_t *pgdp =3D &kvm->arch.pgd[pgd_index(addr)];
++
++	*pgdp =3D *new_pgd;
++	if (pgd_val(*pgdp) & _PAGE_LEAF)
++		stage2_remote_tlb_flush(kvm, addr);
++
++	return 0;
++}
++
++static int stage2_set_pmd(struct kvm *kvm, struct kvm_mmu_page_cache *pcac=
+he,
++			  gpa_t addr, const pmd_t *new_pmd)
++{
++	int rc;
++	pmd_t *pmdp;
++	pgd_t new_pgd;
++	pgd_t *pgdp =3D &kvm->arch.pgd[pgd_index(addr)];
++
++	if (!pgd_val(*pgdp)) {
++		pmdp =3D stage2_cache_alloc(pcache);
++		if (!pmdp)
++			return -ENOMEM;
++		new_pgd =3D pfn_pgd(PFN_DOWN(__pa(pmdp)), __pgprot(_PAGE_TABLE));
++		rc =3D stage2_set_pgd(kvm, addr, &new_pgd);
++		if (rc)
++			return rc;
++	}
++
++	if (pgd_val(*pgdp) & _PAGE_LEAF)
++		return -EEXIST;
++
++	pmdp =3D (void *)pgd_page_vaddr(*pgdp);
++	pmdp =3D &pmdp[pmd_index(addr)];
++
++	*pmdp =3D *new_pmd;
++	if (pmd_val(*pmdp) & _PAGE_LEAF)
++		stage2_remote_tlb_flush(kvm, addr);
++
++	return 0;
++}
++
++static int stage2_set_pte(struct kvm *kvm,
++			  struct kvm_mmu_page_cache *pcache,
++			  gpa_t addr, const pte_t *new_pte)
++{
++	int rc;
++	pte_t *ptep;
++	pmd_t new_pmd;
++	pmd_t *pmdp;
++	pgd_t new_pgd;
++	pgd_t *pgdp =3D &kvm->arch.pgd[pgd_index(addr)];
++
++	if (!pgd_val(*pgdp)) {
++		pmdp =3D stage2_cache_alloc(pcache);
++		if (!pmdp)
++			return -ENOMEM;
++		new_pgd =3D pfn_pgd(PFN_DOWN(__pa(pmdp)), __pgprot(_PAGE_TABLE));
++		rc =3D stage2_set_pgd(kvm, addr, &new_pgd);
++		if (rc)
++			return rc;
++	}
++
++	if (pgd_val(*pgdp) & _PAGE_LEAF)
++		return -EEXIST;
++
++	if (stage2_have_pmd) {
++		pmdp =3D (void *)pgd_page_vaddr(*pgdp);
++		pmdp =3D &pmdp[pmd_index(addr)];
++		if (!pmd_present(*pmdp)) {
++			ptep =3D stage2_cache_alloc(pcache);
++			if (!ptep)
++				return -ENOMEM;
++			new_pmd =3D pfn_pmd(PFN_DOWN(__pa(ptep)),
++					  __pgprot(_PAGE_TABLE));
++			rc =3D stage2_set_pmd(kvm, pcache, addr, &new_pmd);
++			if (rc)
++				return rc;
++		}
++
++		if (pmd_val(*pmdp) & _PAGE_LEAF)
++			return -EEXIST;
++
++		ptep =3D (void *)pmd_page_vaddr(*pmdp);
++	} else {
++		ptep =3D (void *)pgd_page_vaddr(*pgdp);
++	}
++
++	ptep =3D &ptep[pte_index(addr)];
++
++	*ptep =3D *new_pte;
++	if (pte_val(*ptep) & _PAGE_LEAF)
++		stage2_remote_tlb_flush(kvm, addr);
++
++	return 0;
++}
++
++static int stage2_map_page(struct kvm *kvm,
++			   struct kvm_mmu_page_cache *pcache,
++			   gpa_t gpa, phys_addr_t hpa,
++			   unsigned long page_size, pgprot_t prot)
++{
++	pte_t new_pte;
++	pmd_t new_pmd;
++	pgd_t new_pgd;
++
++	if (page_size =3D=3D PAGE_SIZE) {
++		new_pte =3D pfn_pte(PFN_DOWN(hpa), prot);
++		return stage2_set_pte(kvm, pcache, gpa, &new_pte);
++	}
++
++	if (stage2_have_pmd && page_size =3D=3D PMD_SIZE) {
++		new_pmd =3D pfn_pmd(PFN_DOWN(hpa), prot);
++		return stage2_set_pmd(kvm, pcache, gpa, &new_pmd);
++	}
++
++	if (page_size =3D=3D PGDIR_SIZE) {
++		new_pgd =3D pfn_pgd(PFN_DOWN(hpa), prot);
++		return stage2_set_pgd(kvm, gpa, &new_pgd);
++	}
++
++	return -EINVAL;
++}
++
++enum stage2_op {
++	STAGE2_OP_NOP =3D 0,	/* Nothing */
++	STAGE2_OP_CLEAR,	/* Clear/Unmap */
++	STAGE2_OP_WP,		/* Write-protect */
++};
++
++static void stage2_op_pte(struct kvm *kvm, gpa_t addr, pte_t *ptep,
++			  enum stage2_op op)
++{
++	BUG_ON(addr & (PAGE_SIZE - 1));
++
++	if (!pte_present(*ptep))
++		return;
++
++	if (op =3D=3D STAGE2_OP_CLEAR)
++		set_pte(ptep, __pte(0));
++	else if (op =3D=3D STAGE2_OP_WP)
++		set_pte(ptep, __pte(pte_val(*ptep) & ~_PAGE_WRITE));
++	stage2_remote_tlb_flush(kvm, addr);
++}
++
++static void stage2_op_pmd(struct kvm *kvm, gpa_t addr, pmd_t *pmdp,
++			  enum stage2_op op)
++{
++	int i;
++	pte_t *ptep;
++
++	BUG_ON(addr & (PMD_SIZE - 1));
++
++	if (!pmd_present(*pmdp))
++		return;
++
++	if (pmd_val(*pmdp) & _PAGE_LEAF)
++		ptep =3D NULL;
++	else
++		ptep =3D (pte_t *)pmd_page_vaddr(*pmdp);
++
++	if (op =3D=3D STAGE2_OP_CLEAR)
++		set_pmd(pmdp, __pmd(0));
++
++	if (ptep) {
++		for (i =3D 0; i < PTRS_PER_PTE; i++)
++			stage2_op_pte(kvm, addr + i * PAGE_SIZE, &ptep[i], op);
++		if (op =3D=3D STAGE2_OP_CLEAR)
++			put_page(virt_to_page(ptep));
++	} else {
++		if (op =3D=3D STAGE2_OP_WP)
++			set_pmd(pmdp, __pmd(pmd_val(*pmdp) & ~_PAGE_WRITE));
++		stage2_remote_tlb_flush(kvm, addr);
++	}
++}
++
++static void stage2_op_pgd(struct kvm *kvm, gpa_t addr, pgd_t *pgdp,
++			  enum stage2_op op)
++{
++	int i;
++	pte_t *ptep;
++	pmd_t *pmdp;
++
++	BUG_ON(addr & (PGDIR_SIZE - 1));
++
++	if (!pgd_val(*pgdp))
++		return;
++
++	ptep =3D NULL;
++	pmdp =3D NULL;
++	if (!(pgd_val(*pgdp) & _PAGE_LEAF)) {
++		if (stage2_have_pmd)
++			pmdp =3D (pmd_t *)pgd_page_vaddr(*pgdp);
++		else
++			ptep =3D (pte_t *)pgd_page_vaddr(*pgdp);
++	}
++
++	if (op =3D=3D STAGE2_OP_CLEAR)
++		set_pgd(pgdp, __pgd(0));
++
++	if (pmdp) {
++		for (i =3D 0; i < PTRS_PER_PMD; i++)
++			stage2_op_pmd(kvm, addr + i * PMD_SIZE, &pmdp[i], op);
++		if (op =3D=3D STAGE2_OP_CLEAR)
++			put_page(virt_to_page(pmdp));
++	} else if (ptep) {
++		for (i =3D 0; i < PTRS_PER_PTE; i++)
++			stage2_op_pte(kvm, addr + i * PAGE_SIZE, &ptep[i], op);
++		if (op =3D=3D STAGE2_OP_CLEAR)
++			put_page(virt_to_page(ptep));
++	} else {
++		if (op =3D=3D STAGE2_OP_WP)
++			set_pgd(pgdp, __pgd(pgd_val(*pgdp) & ~_PAGE_WRITE));
++		stage2_remote_tlb_flush(kvm, addr);
++	}
++}
++
++static void stage2_unmap_range(struct kvm *kvm, gpa_t start, gpa_t size)
++{
++	pmd_t *pmdp;
++	pte_t *ptep;
++	pgd_t *pgdp;
++	gpa_t addr =3D start, end =3D start + size;
++
++	while (addr < end) {
++		pgdp =3D &kvm->arch.pgd[pgd_index(addr)];
++		if (!pgd_val(*pgdp)) {
++			addr +=3D PGDIR_SIZE;
++			continue;
++		} else if (!(addr & (PGDIR_SIZE - 1)) &&
++			  ((end - addr) >=3D PGDIR_SIZE)) {
++			stage2_op_pgd(kvm, addr, pgdp, STAGE2_OP_CLEAR);
++			addr +=3D PGDIR_SIZE;
++			continue;
++		}
++
++		if (stage2_have_pmd) {
++			pmdp =3D (pmd_t *)pgd_page_vaddr(*pgdp);
++			if (!pmd_present(*pmdp)) {
++				addr +=3D PMD_SIZE;
++				continue;
++			} else if (!(addr & (PMD_SIZE - 1)) &&
++				   ((end - addr) >=3D PMD_SIZE)) {
++				stage2_op_pmd(kvm, addr, pmdp,
++					      STAGE2_OP_CLEAR);
++				addr +=3D PMD_SIZE;
++				continue;
++			}
++			ptep =3D (pte_t *)pmd_page_vaddr(*pmdp);
++		} else {
++			ptep =3D (pte_t *)pgd_page_vaddr(*pgdp);
++		}
++
++		stage2_op_pte(kvm, addr, ptep, STAGE2_OP_CLEAR);
++		addr +=3D PAGE_SIZE;
++	}
++}
++
++static void stage2_wp_range(struct kvm *kvm, gpa_t start, gpa_t end)
++{
++	pmd_t *pmdp;
++	pte_t *ptep;
++	pgd_t *pgdp;
++	gpa_t addr =3D start;
++
++	while (addr < end) {
++		pgdp =3D &kvm->arch.pgd[pgd_index(addr)];
++		if (!pgd_val(*pgdp)) {
++			addr +=3D PGDIR_SIZE;
++			continue;
++		} else if (!(addr & (PGDIR_SIZE - 1)) &&
++			   ((end - addr) >=3D PGDIR_SIZE)) {
++			stage2_op_pgd(kvm, addr, pgdp, STAGE2_OP_WP);
++			addr +=3D PGDIR_SIZE;
++			continue;
++		}
++
++		if (stage2_have_pmd) {
++			pmdp =3D (pmd_t *)pgd_page_vaddr(*pgdp);
++			if (!pmd_present(*pmdp)) {
++				addr +=3D PMD_SIZE;
++				continue;
++			} else if (!(addr & (PMD_SIZE - 1)) &&
++				   ((end - addr) >=3D PMD_SIZE)) {
++				stage2_op_pmd(kvm, addr, pmdp, STAGE2_OP_WP);
++				addr +=3D PMD_SIZE;
++				continue;
++			}
++			ptep =3D (pte_t *)pmd_page_vaddr(*pmdp);
++		} else {
++			ptep =3D (pte_t *)pgd_page_vaddr(*pgdp);
++		}
++
++		stage2_op_pte(kvm, addr, ptep, STAGE2_OP_WP);
++		addr +=3D PAGE_SIZE;
++	}
++}
++
++void stage2_wp_memory_region(struct kvm *kvm, int slot)
++{
++	struct kvm_memslots *slots =3D kvm_memslots(kvm);
++	struct kvm_memory_slot *memslot =3D id_to_memslot(slots, slot);
++	phys_addr_t start =3D memslot->base_gfn << PAGE_SHIFT;
++	phys_addr_t end =3D (memslot->base_gfn + memslot->npages) << PAGE_SHIFT;
++
++	spin_lock(&kvm->mmu_lock);
++	stage2_wp_range(kvm, start, end);
++	spin_unlock(&kvm->mmu_lock);
++	kvm_flush_remote_tlbs(kvm);
++}
++
++int stage2_ioremap(struct kvm *kvm, gpa_t gpa, phys_addr_t hpa,
++		   unsigned long size, bool writable)
++{
++	pte_t pte;
++	int ret =3D 0;
++	unsigned long pfn;
++	phys_addr_t addr, end;
++	struct kvm_mmu_page_cache pcache =3D { 0, };
++
++	end =3D (gpa + size + PAGE_SIZE - 1) & PAGE_MASK;
++	pfn =3D __phys_to_pfn(hpa);
++
++	for (addr =3D gpa; addr < end; addr +=3D PAGE_SIZE) {
++		pte =3D pfn_pte(pfn, PAGE_KERNEL);
++
++		if (!writable)
++			pte =3D pte_wrprotect(pte);
++
++		ret =3D stage2_cache_topup(&pcache,
++					 stage2_cache_min_pages,
++					 KVM_MMU_PAGE_CACHE_NR_OBJS);
++		if (ret)
++			goto out;
++
++		spin_lock(&kvm->mmu_lock);
++		ret =3D stage2_set_pte(kvm, &pcache, addr, &pte);
++		spin_unlock(&kvm->mmu_lock);
++		if (ret)
++			goto out;
++
++		pfn++;
++	}
++
++out:
++	stage2_cache_flush(&pcache);
++	return ret;
++
++}
++
+ void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free,
+ 			   struct kvm_memory_slot *dont)
+ {
+@@ -35,7 +467,7 @@ void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen)
 =20
- kvm-objs :=3D $(common-objs-y)
-=20
--kvm-objs +=3D main.o vm.o mmu.o vcpu.o vcpu_exit.o
-+kvm-objs +=3D main.o vm.o mmu.o vcpu.o vcpu_exit.o vcpu_switch.o
-=20
- obj-$(CONFIG_KVM)	+=3D kvm.o
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index b95dfc959009..7f1f07badaad 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -578,14 +578,42 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vc=
-pu *vcpu,
-=20
- void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ void kvm_arch_flush_shadow_all(struct kvm *kvm)
  {
 -	/* TODO: */
-+	struct kvm_vcpu_csr *csr =3D &vcpu->arch.guest_csr;
-+	unsigned long *vsip =3D raw_cpu_ptr(vsip_shadow);
-+
-+	csr_write(CSR_VSSTATUS, csr->vsstatus);
-+	csr_write(CSR_VSIE, csr->vsie);
-+	csr_write(CSR_VSTVEC, csr->vstvec);
-+	csr_write(CSR_VSSCRATCH, csr->vsscratch);
-+	csr_write(CSR_VSEPC, csr->vsepc);
-+	csr_write(CSR_VSCAUSE, csr->vscause);
-+	csr_write(CSR_VSTVAL, csr->vstval);
-+	csr_write(CSR_VSIP, csr->vsip);
-+	*vsip =3D csr->vsip;
-+	csr_write(CSR_VSATP, csr->vsatp);
-=20
- 	kvm_riscv_stage2_update_hgatp(vcpu);
-+
-+	vcpu->cpu =3D cpu;
++	kvm_riscv_stage2_free_pgd(kvm);
  }
 =20
- void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+ void kvm_arch_flush_shadow_memslot(struct kvm *kvm,
+@@ -49,7 +481,13 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 				const struct kvm_memory_slot *new,
+ 				enum kvm_mr_change change)
  {
 -	/* TODO: */
-+	struct kvm_vcpu_csr *csr =3D &vcpu->arch.guest_csr;
-+
-+	vcpu->cpu =3D -1;
-+
-+	csr_write(CSR_HGATP, 0);
-+
-+	csr->vsstatus =3D csr_read(CSR_VSSTATUS);
-+	csr->vsie =3D csr_read(CSR_VSIE);
-+	csr->vstvec =3D csr_read(CSR_VSTVEC);
-+	csr->vsscratch =3D csr_read(CSR_VSSCRATCH);
-+	csr->vsepc =3D csr_read(CSR_VSEPC);
-+	csr->vscause =3D csr_read(CSR_VSCAUSE);
-+	csr->vstval =3D csr_read(CSR_VSTVAL);
-+	csr->vsip =3D csr_read(CSR_VSIP);
-+	csr->vsatp =3D csr_read(CSR_VSATP);
++	/*
++	 * At this point memslot has been committed and there is an
++	 * allocated dirty_bitmap[], dirty pages will be be tracked while the
++	 * memory slot is write protected.
++	 */
++	if (change !=3D KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES)
++		stage2_wp_memory_region(kvm, mem->slot);
  }
 =20
- static void kvm_riscv_check_vcpu_requests(struct kvm_vcpu *vcpu)
-diff --git a/arch/riscv/kvm/vcpu_switch.S b/arch/riscv/kvm/vcpu_switch.S
-new file mode 100644
-index 000000000000..e1a17df1b379
---- /dev/null
-+++ b/arch/riscv/kvm/vcpu_switch.S
-@@ -0,0 +1,194 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2019 Western Digital Corporation or its affiliates.
-+ *
-+ * Authors:
-+ *     Anup Patel <anup.patel@wdc.com>
-+ */
+ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+@@ -57,34 +495,219 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+ 				const struct kvm_userspace_memory_region *mem,
+ 				enum kvm_mr_change change)
+ {
+-	/* TODO: */
+-	return 0;
++	hva_t hva =3D mem->userspace_addr;
++	hva_t reg_end =3D hva + mem->memory_size;
++	bool writable =3D !(mem->flags & KVM_MEM_READONLY);
++	int ret =3D 0;
 +
-+#include <linux/linkage.h>
-+#include <asm/asm.h>
-+#include <asm/asm-offsets.h>
-+#include <asm/csr.h>
++	if (change !=3D KVM_MR_CREATE && change !=3D KVM_MR_MOVE &&
++			change !=3D KVM_MR_FLAGS_ONLY)
++		return 0;
 +
-+	.text
-+	.altmacro
-+	.option norelax
++	/*
++	 * Prevent userspace from creating a memory region outside of the GPA
++	 * space addressable by the KVM guest GPA space.
++	 */
++	if ((memslot->base_gfn + memslot->npages) >=3D
++	    (stage2_gpa_size >> PAGE_SHIFT))
++		return -EFAULT;
 +
-+ENTRY(__kvm_riscv_switch_to)
-+	/* Save Host GPRs (except A0 and T0-T6) */
-+	REG_S	ra, (KVM_ARCH_HOST_RA)(a0)
-+	REG_S	sp, (KVM_ARCH_HOST_SP)(a0)
-+	REG_S	gp, (KVM_ARCH_HOST_GP)(a0)
-+	REG_S	tp, (KVM_ARCH_HOST_TP)(a0)
-+	REG_S	s0, (KVM_ARCH_HOST_S0)(a0)
-+	REG_S	s1, (KVM_ARCH_HOST_S1)(a0)
-+	REG_S	a1, (KVM_ARCH_HOST_A1)(a0)
-+	REG_S	a2, (KVM_ARCH_HOST_A2)(a0)
-+	REG_S	a3, (KVM_ARCH_HOST_A3)(a0)
-+	REG_S	a4, (KVM_ARCH_HOST_A4)(a0)
-+	REG_S	a5, (KVM_ARCH_HOST_A5)(a0)
-+	REG_S	a6, (KVM_ARCH_HOST_A6)(a0)
-+	REG_S	a7, (KVM_ARCH_HOST_A7)(a0)
-+	REG_S	s2, (KVM_ARCH_HOST_S2)(a0)
-+	REG_S	s3, (KVM_ARCH_HOST_S3)(a0)
-+	REG_S	s4, (KVM_ARCH_HOST_S4)(a0)
-+	REG_S	s5, (KVM_ARCH_HOST_S5)(a0)
-+	REG_S	s6, (KVM_ARCH_HOST_S6)(a0)
-+	REG_S	s7, (KVM_ARCH_HOST_S7)(a0)
-+	REG_S	s8, (KVM_ARCH_HOST_S8)(a0)
-+	REG_S	s9, (KVM_ARCH_HOST_S9)(a0)
-+	REG_S	s10, (KVM_ARCH_HOST_S10)(a0)
-+	REG_S	s11, (KVM_ARCH_HOST_S11)(a0)
++	down_read(&current->mm->mmap_sem);
 +
-+	/* Save Host SSTATUS, HSTATUS, SCRATCH and STVEC */
-+	csrr	t0, CSR_SSTATUS
-+	REG_S	t0, (KVM_ARCH_HOST_SSTATUS)(a0)
-+	csrr	t1, CSR_HSTATUS
-+	REG_S	t1, (KVM_ARCH_HOST_HSTATUS)(a0)
-+	csrr	t2, CSR_SSCRATCH
-+	REG_S	t2, (KVM_ARCH_HOST_SSCRATCH)(a0)
-+	csrr	t3, CSR_STVEC
-+	REG_S	t3, (KVM_ARCH_HOST_STVEC)(a0)
++	/*
++	 * A memory region could potentially cover multiple VMAs, and
++	 * any holes between them, so iterate over all of them to find
++	 * out if we can map any of them right now.
++	 *
++	 *     +--------------------------------------------+
++	 * +---------------+----------------+   +----------------+
++	 * |   : VMA 1     |      VMA 2     |   |    VMA 3  :    |
++	 * +---------------+----------------+   +----------------+
++	 *     |               memory region                |
++	 *     +--------------------------------------------+
++	 */
++	do {
++		struct vm_area_struct *vma =3D find_vma(current->mm, hva);
++		hva_t vm_start, vm_end;
 +
-+	/* Change Host exception vector to return path */
-+	la	t4, __kvm_switch_return
-+	csrw	CSR_STVEC, t4
++		if (!vma || vma->vm_start >=3D reg_end)
++			break;
 +
-+	/* Restore Guest HSTATUS, SSTATUS and SEPC */
-+	REG_L	t4, (KVM_ARCH_GUEST_SEPC)(a0)
-+	csrw	CSR_SEPC, t4
-+	REG_L	t5, (KVM_ARCH_GUEST_SSTATUS)(a0)
-+	csrw	CSR_SSTATUS, t5
-+	REG_L	t6, (KVM_ARCH_GUEST_HSTATUS)(a0)
-+	csrw	CSR_HSTATUS, t6
++		/*
++		 * Mapping a read-only VMA is only allowed if the
++		 * memory region is configured as read-only.
++		 */
++		if (writable && !(vma->vm_flags & VM_WRITE)) {
++			ret =3D -EPERM;
++			break;
++		}
 +
-+	/* Restore Guest GPRs (except A0) */
-+	REG_L	ra, (KVM_ARCH_GUEST_RA)(a0)
-+	REG_L	sp, (KVM_ARCH_GUEST_SP)(a0)
-+	REG_L	gp, (KVM_ARCH_GUEST_GP)(a0)
-+	REG_L	tp, (KVM_ARCH_GUEST_TP)(a0)
-+	REG_L	t0, (KVM_ARCH_GUEST_T0)(a0)
-+	REG_L	t1, (KVM_ARCH_GUEST_T1)(a0)
-+	REG_L	t2, (KVM_ARCH_GUEST_T2)(a0)
-+	REG_L	s0, (KVM_ARCH_GUEST_S0)(a0)
-+	REG_L	s1, (KVM_ARCH_GUEST_S1)(a0)
-+	REG_L	a1, (KVM_ARCH_GUEST_A1)(a0)
-+	REG_L	a2, (KVM_ARCH_GUEST_A2)(a0)
-+	REG_L	a3, (KVM_ARCH_GUEST_A3)(a0)
-+	REG_L	a4, (KVM_ARCH_GUEST_A4)(a0)
-+	REG_L	a5, (KVM_ARCH_GUEST_A5)(a0)
-+	REG_L	a6, (KVM_ARCH_GUEST_A6)(a0)
-+	REG_L	a7, (KVM_ARCH_GUEST_A7)(a0)
-+	REG_L	s2, (KVM_ARCH_GUEST_S2)(a0)
-+	REG_L	s3, (KVM_ARCH_GUEST_S3)(a0)
-+	REG_L	s4, (KVM_ARCH_GUEST_S4)(a0)
-+	REG_L	s5, (KVM_ARCH_GUEST_S5)(a0)
-+	REG_L	s6, (KVM_ARCH_GUEST_S6)(a0)
-+	REG_L	s7, (KVM_ARCH_GUEST_S7)(a0)
-+	REG_L	s8, (KVM_ARCH_GUEST_S8)(a0)
-+	REG_L	s9, (KVM_ARCH_GUEST_S9)(a0)
-+	REG_L	s10, (KVM_ARCH_GUEST_S10)(a0)
-+	REG_L	s11, (KVM_ARCH_GUEST_S11)(a0)
-+	REG_L	t3, (KVM_ARCH_GUEST_T3)(a0)
-+	REG_L	t4, (KVM_ARCH_GUEST_T4)(a0)
-+	REG_L	t5, (KVM_ARCH_GUEST_T5)(a0)
-+	REG_L	t6, (KVM_ARCH_GUEST_T6)(a0)
++		/* Take the intersection of this VMA with the memory region */
++		vm_start =3D max(hva, vma->vm_start);
++		vm_end =3D min(reg_end, vma->vm_end);
 +
-+	/* Save Host A0 in SSCRATCH */
-+	csrw	CSR_SSCRATCH, a0
++		if (vma->vm_flags & VM_PFNMAP) {
++			gpa_t gpa =3D mem->guest_phys_addr +
++				    (vm_start - mem->userspace_addr);
++			phys_addr_t pa;
 +
-+	/* Restore Guest A0 */
-+	REG_L	a0, (KVM_ARCH_GUEST_A0)(a0)
++			pa =3D (phys_addr_t)vma->vm_pgoff << PAGE_SHIFT;
++			pa +=3D vm_start - vma->vm_start;
 +
-+	/* Resume Guest */
-+	sret
++			/* IO region dirty page logging not allowed */
++			if (memslot->flags & KVM_MEM_LOG_DIRTY_PAGES) {
++				ret =3D -EINVAL;
++				goto out;
++			}
 +
-+	/* Back to Host */
-+	.align 2
-+__kvm_switch_return:
-+	/* Swap Guest A0 with SSCRATCH */
-+	csrrw	a0, CSR_SSCRATCH, a0
++			ret =3D stage2_ioremap(kvm, gpa, pa,
++					     vm_end - vm_start, writable);
++			if (ret)
++				break;
++		}
++		hva =3D vm_end;
++	} while (hva < reg_end);
 +
-+	/* Save Guest GPRs (except A0) */
-+	REG_S	ra, (KVM_ARCH_GUEST_RA)(a0)
-+	REG_S	sp, (KVM_ARCH_GUEST_SP)(a0)
-+	REG_S	gp, (KVM_ARCH_GUEST_GP)(a0)
-+	REG_S	tp, (KVM_ARCH_GUEST_TP)(a0)
-+	REG_S	t0, (KVM_ARCH_GUEST_T0)(a0)
-+	REG_S	t1, (KVM_ARCH_GUEST_T1)(a0)
-+	REG_S	t2, (KVM_ARCH_GUEST_T2)(a0)
-+	REG_S	s0, (KVM_ARCH_GUEST_S0)(a0)
-+	REG_S	s1, (KVM_ARCH_GUEST_S1)(a0)
-+	REG_S	a1, (KVM_ARCH_GUEST_A1)(a0)
-+	REG_S	a2, (KVM_ARCH_GUEST_A2)(a0)
-+	REG_S	a3, (KVM_ARCH_GUEST_A3)(a0)
-+	REG_S	a4, (KVM_ARCH_GUEST_A4)(a0)
-+	REG_S	a5, (KVM_ARCH_GUEST_A5)(a0)
-+	REG_S	a6, (KVM_ARCH_GUEST_A6)(a0)
-+	REG_S	a7, (KVM_ARCH_GUEST_A7)(a0)
-+	REG_S	s2, (KVM_ARCH_GUEST_S2)(a0)
-+	REG_S	s3, (KVM_ARCH_GUEST_S3)(a0)
-+	REG_S	s4, (KVM_ARCH_GUEST_S4)(a0)
-+	REG_S	s5, (KVM_ARCH_GUEST_S5)(a0)
-+	REG_S	s6, (KVM_ARCH_GUEST_S6)(a0)
-+	REG_S	s7, (KVM_ARCH_GUEST_S7)(a0)
-+	REG_S	s8, (KVM_ARCH_GUEST_S8)(a0)
-+	REG_S	s9, (KVM_ARCH_GUEST_S9)(a0)
-+	REG_S	s10, (KVM_ARCH_GUEST_S10)(a0)
-+	REG_S	s11, (KVM_ARCH_GUEST_S11)(a0)
-+	REG_S	t3, (KVM_ARCH_GUEST_T3)(a0)
-+	REG_S	t4, (KVM_ARCH_GUEST_T4)(a0)
-+	REG_S	t5, (KVM_ARCH_GUEST_T5)(a0)
-+	REG_S	t6, (KVM_ARCH_GUEST_T6)(a0)
++	if (change =3D=3D KVM_MR_FLAGS_ONLY)
++		goto out;
 +
-+	/* Save Guest A0 */
-+	csrr	t0, CSR_SSCRATCH
-+	REG_S	t0, (KVM_ARCH_GUEST_A0)(a0)
++	spin_lock(&kvm->mmu_lock);
++	if (ret)
++		stage2_unmap_range(kvm, mem->guest_phys_addr,
++				   mem->memory_size);
++	spin_unlock(&kvm->mmu_lock);
 +
-+	/* Save Guest HSTATUS, SSTATUS, and SEPC */
-+	csrr	t0, CSR_SEPC
-+	REG_S	t0, (KVM_ARCH_GUEST_SEPC)(a0)
-+	csrr	t1, CSR_SSTATUS
-+	REG_S	t1, (KVM_ARCH_GUEST_SSTATUS)(a0)
-+	csrr	t2, CSR_HSTATUS
-+	REG_S	t2, (KVM_ARCH_GUEST_HSTATUS)(a0)
++out:
++	up_read(&current->mm->mmap_sem);
++	return ret;
+ }
+=20
+ int kvm_riscv_stage2_map(struct kvm_vcpu *vcpu, gpa_t gpa, unsigned long h=
+va,
+ 			 bool is_write)
+ {
+-	/* TODO: */
+-	return 0;
++	int ret;
++	short lsb;
++	kvm_pfn_t hfn;
++	bool writeable;
++	gfn_t gfn =3D gpa >> PAGE_SHIFT;
++	struct vm_area_struct *vma;
++	struct kvm *kvm =3D vcpu->kvm;
++	struct kvm_mmu_page_cache *pcache =3D &vcpu->arch.mmu_page_cache;
++	unsigned long vma_pagesize;
 +
-+	/* Restore Host SSTATUS, HSTATUS, SCRATCH and STVEC */
-+	REG_L	t3, (KVM_ARCH_HOST_SSTATUS)(a0)
-+	csrw	CSR_SSTATUS, t3
-+	REG_L	t4, (KVM_ARCH_HOST_HSTATUS)(a0)
-+	csrw	CSR_HSTATUS, t4
-+	REG_L	t5, (KVM_ARCH_HOST_SSCRATCH)(a0)
-+	csrw	CSR_SSCRATCH, t5
-+	REG_L	t6, (KVM_ARCH_HOST_STVEC)(a0)
-+	csrw	CSR_STVEC, t6
++	down_read(&current->mm->mmap_sem);
 +
-+	/* Restore Host GPRs (except A0 and T0-T6) */
-+	REG_L	ra, (KVM_ARCH_HOST_RA)(a0)
-+	REG_L	sp, (KVM_ARCH_HOST_SP)(a0)
-+	REG_L	gp, (KVM_ARCH_HOST_GP)(a0)
-+	REG_L	tp, (KVM_ARCH_HOST_TP)(a0)
-+	REG_L	s0, (KVM_ARCH_HOST_S0)(a0)
-+	REG_L	s1, (KVM_ARCH_HOST_S1)(a0)
-+	REG_L	a1, (KVM_ARCH_HOST_A1)(a0)
-+	REG_L	a2, (KVM_ARCH_HOST_A2)(a0)
-+	REG_L	a3, (KVM_ARCH_HOST_A3)(a0)
-+	REG_L	a4, (KVM_ARCH_HOST_A4)(a0)
-+	REG_L	a5, (KVM_ARCH_HOST_A5)(a0)
-+	REG_L	a6, (KVM_ARCH_HOST_A6)(a0)
-+	REG_L	a7, (KVM_ARCH_HOST_A7)(a0)
-+	REG_L	s2, (KVM_ARCH_HOST_S2)(a0)
-+	REG_L	s3, (KVM_ARCH_HOST_S3)(a0)
-+	REG_L	s4, (KVM_ARCH_HOST_S4)(a0)
-+	REG_L	s5, (KVM_ARCH_HOST_S5)(a0)
-+	REG_L	s6, (KVM_ARCH_HOST_S6)(a0)
-+	REG_L	s7, (KVM_ARCH_HOST_S7)(a0)
-+	REG_L	s8, (KVM_ARCH_HOST_S8)(a0)
-+	REG_L	s9, (KVM_ARCH_HOST_S9)(a0)
-+	REG_L	s10, (KVM_ARCH_HOST_S10)(a0)
-+	REG_L	s11, (KVM_ARCH_HOST_S11)(a0)
++	vma =3D find_vma_intersection(current->mm, hva, hva + 1);
++	if (unlikely(!vma)) {
++		kvm_err("Failed to find VMA for hva 0x%lx\n", hva);
++		up_read(&current->mm->mmap_sem);
++		return -EFAULT;
++	}
 +
-+	/* Return to C code */
-+	ret
-+ENDPROC(__kvm_riscv_switch_to)
++	vma_pagesize =3D vma_kernel_pagesize(vma);
++
++	up_read(&current->mm->mmap_sem);
++
++	if (vma_pagesize !=3D PGDIR_SIZE &&
++	    vma_pagesize !=3D PMD_SIZE &&
++	    vma_pagesize !=3D PAGE_SIZE) {
++		kvm_err("Invalid VMA page size 0x%lx\n", vma_pagesize);
++		return -EFAULT;
++	}
++
++	/* We need minimum second+third level pages */
++	ret =3D stage2_cache_topup(pcache, stage2_cache_min_pages,
++				 KVM_MMU_PAGE_CACHE_NR_OBJS);
++	if (ret) {
++		kvm_err("Failed to topup stage2 cache\n");
++		return ret;
++	}
++
++	hfn =3D gfn_to_pfn_prot(kvm, gfn, is_write, &writeable);
++	if (hfn =3D=3D KVM_PFN_ERR_HWPOISON) {
++		if (is_vm_hugetlb_page(vma))
++			lsb =3D huge_page_shift(hstate_vma(vma));
++		else
++			lsb =3D PAGE_SHIFT;
++
++		send_sig_mceerr(BUS_MCEERR_AR, (void __user *)hva,
++				lsb, current);
++		return 0;
++	}
++	if (is_error_noslot_pfn(hfn))
++		return -EFAULT;
++	if (!writeable && is_write)
++		return -EPERM;
++
++	spin_lock(&kvm->mmu_lock);
++
++	if (writeable) {
++		kvm_set_pfn_dirty(hfn);
++		ret =3D stage2_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
++				      vma_pagesize, PAGE_WRITE_EXEC);
++	} else {
++		ret =3D stage2_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
++				      vma_pagesize, PAGE_READ_EXEC);
++	}
++
++	if (ret)
++		kvm_err("Failed to map in stage2\n");
++
++	spin_unlock(&kvm->mmu_lock);
++	kvm_set_pfn_accessed(hfn);
++	kvm_release_pfn_clean(hfn);
++	return ret;
+ }
+=20
+ void kvm_riscv_stage2_flush_cache(struct kvm_vcpu *vcpu)
+ {
+-	/* TODO: */
++	stage2_cache_flush(&vcpu->arch.mmu_page_cache);
+ }
+=20
+ int kvm_riscv_stage2_alloc_pgd(struct kvm *kvm)
+ {
+-	/* TODO: */
++	if (kvm->arch.pgd !=3D NULL) {
++		kvm_err("kvm_arch already initialized?\n");
++		return -EINVAL;
++	}
++
++	kvm->arch.pgd =3D alloc_pages_exact(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
++	if (!kvm->arch.pgd)
++		return -ENOMEM;
++	kvm->arch.pgd_phys =3D virt_to_phys(kvm->arch.pgd);
++
+ 	return 0;
+ }
+=20
+ void kvm_riscv_stage2_free_pgd(struct kvm *kvm)
+ {
+-	/* TODO: */
++	void *pgd =3D NULL;
++
++	spin_lock(&kvm->mmu_lock);
++	if (kvm->arch.pgd) {
++		stage2_unmap_range(kvm, 0UL, stage2_gpa_size);
++		pgd =3D READ_ONCE(kvm->arch.pgd);
++		kvm->arch.pgd =3D NULL;
++		kvm->arch.pgd_phys =3D 0;
++	}
++	spin_unlock(&kvm->mmu_lock);
++
++	/* Free the HW pgd, one page at a time */
++	if (pgd)
++		free_pages_exact(pgd, PAGE_SIZE);
+ }
+=20
+ void kvm_riscv_stage2_update_hgatp(struct kvm_vcpu *vcpu)
+ {
+-	/* TODO: */
++	unsigned long hgatp =3D HGATP_MODE;
++	struct kvm_arch *k =3D &vcpu->kvm->arch;
++
++	hgatp |=3D (READ_ONCE(k->vmid.vmid) << HGATP_VMID_SHIFT) &
++		 HGATP_VMID_MASK;
++	hgatp |=3D (k->pgd_phys >> PAGE_SHIFT) & HGATP_PPN;
++
++	csr_write(CSR_HGATP, hgatp);
++
++	if (!kvm_riscv_stage2_vmid_bits())
++		__kvm_riscv_hfence_gvma_all();
+ }
 --=20
 2.17.1
 
