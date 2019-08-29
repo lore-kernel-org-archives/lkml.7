@@ -2,140 +2,105 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CEFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E93C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACB720674
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:18:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="djC2H5JF"
+	by mail.kernel.org (Postfix) with ESMTP id 96F3023403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567077496;
+	bh=QV/q/2L6au2GnPDKNQgpWono0mUk3TBCJNzG+cy5n2o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WNgG7Q6+olVZz3FFlg6lo63aYoi5sxtz8raj+nJcFNKvIyn1txh7RL1qjN6+j1WtR
+	 tG35NNtMkDrjE6CfmqtPM/o0F9F0bIIxnIBKFbqd2QTmZ9cJUVqfmJfGulc5+xvDsh
+	 Gke04VFGFACvA+ibLBhEuKHoHftPA8QZD0dI6e5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfH2LSI (ORCPT
+        id S1727892AbfH2LSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:18:08 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45744 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727624AbfH2LSF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:18:05 -0400
-Received: by mail-ed1-f68.google.com with SMTP id x19so3590064eda.12
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 04:18:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cjixq+s7ZD6fFiV9g8QRBxU/OWNAVY/P4LPyIACEzEM=;
-        b=djC2H5JFeHWERoQFSNo6K1Buv/HAY/zdTZ/Vy9BLHhv70G1BP5aEHIemdlQWFvLK0t
-         3RSHU3+QDvVjBRH6rmndTQFisShBSy2rXVQU/0CyVBy93HiUWngryqj8oTbKIdj6Vnpz
-         sNXUippKE5z0M2ZtM+fW6KuMBLAdoZNiZD6qsjd/JWY1vRPgY0j28/rH0E6Idert9w7d
-         sS2fZojsKu+F+CaN8iGeU4WiMl20abUTFNRMZ2XUCm9qApaELu6NPAdSB6YiqFtgC0ZA
-         1lVSgZoDWeqEdOzemcXFc9s7dX1wZPrqyNfi+GQQTYnagocsIo/CfeeTtfPlcX3yRrKD
-         +5dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cjixq+s7ZD6fFiV9g8QRBxU/OWNAVY/P4LPyIACEzEM=;
-        b=Vuq75kP2DSamKpTm97zkOPcNTopnwoOU5AVkxHKvDQMGPd9iTOKaQnUWtSh+sBmjXp
-         1NnQG/PGvrTguibPF44OLb1YJrpFmNx2wVtcA0py73CM11RxyzKKLCAcNSXvt/Y5dBJC
-         AqlF0hU8vi7sy+u0Nm5K8AI1Yz3x2YO08yrAA/p52NVtKDsKFUhW14JJ6GNT7eZXFfuF
-         AP7A6LrklhgrQ5gl9V1j+8ewPLpXwLpj/HReVzcNfor0TPQLjZwsASuX4QxnBrRHfW2C
-         3EgAmtEVa5ZeCH/uFkq7LUDjeLKbaKhcfXkDKyZxgqVmlJiwCuVxgzy26xOq1xr66vzN
-         PuJw==
-X-Gm-Message-State: APjAAAVOxMPC5zDGCDUBHiw5VIyWIC3OYJ2mLcaS5adEh+mX/u+vz0Fn
-        mKfBF5ItJlaW3rM4f9y3bKM=
-X-Google-Smtp-Source: APXvYqwZIsELufro/apZKANBvYbuav5XunBjAgaDShMq6vd+vYkJ2aickX4Wp+WCq2PXzJ9kM5tq1A==
-X-Received: by 2002:a50:9401:: with SMTP id p1mr8952979eda.189.1567077483603;
-        Thu, 29 Aug 2019 04:18:03 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id y9sm388439eds.49.2019.08.29.04.18.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 04:18:02 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] iommu: virt: Use iommu_put_resv_regions_simple()
-Date:   Thu, 29 Aug 2019 13:17:52 +0200
-Message-Id: <20190829111752.17513-6-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190829111752.17513-1-thierry.reding@gmail.com>
-References: <20190829111752.17513-1-thierry.reding@gmail.com>
+        Thu, 29 Aug 2019 07:18:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50240 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfH2LSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 07:18:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDB0E2166E;
+        Thu, 29 Aug 2019 11:18:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567077493;
+        bh=QV/q/2L6au2GnPDKNQgpWono0mUk3TBCJNzG+cy5n2o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J9A26W5yINMhnUI6Bz5MFO+KPnvSBWWOOQwb/nviBZxiZk8dElJsnRbRcMlsNi1hW
+         qZXpGblNCEmVC/b2PUCh7N0gAp2QNKrcvcdjz2CTUePFAlA5rgmjVtAN1MxNHu/NUb
+         80CQIWkMKlcDetwaYwoFnhZ48094bZSz2MavMSVk=
+Date:   Thu, 29 Aug 2019 13:18:10 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     devel@driverdev.osuosl.org,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20190829111810.GA23393@kroah.com>
+References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+ <20190828170022.GA7873@kroah.com>
+ <20190829062340.GB3047@infradead.org>
+ <20190829063955.GA30193@kroah.com>
+ <20190829094136.GA28643@infradead.org>
+ <20190829095019.GA13557@kroah.com>
+ <20190829103749.GA13661@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829103749.GA13661@infradead.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+On Thu, Aug 29, 2019 at 03:37:49AM -0700, Christoph Hellwig wrote:
+> On Thu, Aug 29, 2019 at 11:50:19AM +0200, Greg Kroah-Hartman wrote:
+> > I did try just that, a few years ago, and gave up on it.  I don't think
+> > it can be added to the existing vfat code base but I am willing to be
+> > proven wrong.
+> 
+> And what exactly was the problem?
 
-Use the new standard function instead of open-coding it.
+At the time, I just couldn't figure out how to do it as I had no spec,
+and only a bad code-base to go off of.  I'm sure someone else might be
+able to do to it :)
 
-Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc: virtualization@lists.linux-foundation.org
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- drivers/iommu/virtio-iommu.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+> > Now that we have the specs, it might be easier, and the vfat spec is a
+> > subset of the exfat spec, but to get stuff working today, for users,
+> > it's good to have it in staging.  We can do the normal, "keep it in
+> > stable, get a clean-room implementation merged like usual, and then
+> > delete the staging version" three step process like we have done a
+> > number of times already as well.
+> > 
+> > I know the code is horrible, but I will gladly take horrible code into
+> > staging.  If it bothers you, just please ignore it.  That's what staging
+> > is there for :)
+> 
+> And then after a while you decide it's been long enough and force move
+> it out of staging like the POS erofs code?
 
-diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-index 3ea9d7682999..bc3c7ab7f996 100644
---- a/drivers/iommu/virtio-iommu.c
-+++ b/drivers/iommu/virtio-iommu.c
-@@ -838,14 +838,6 @@ static void viommu_get_resv_regions(struct device *dev, struct list_head *head)
- 	iommu_dma_get_resv_regions(dev, head);
- }
- 
--static void viommu_put_resv_regions(struct device *dev, struct list_head *head)
--{
--	struct iommu_resv_region *entry, *next;
--
--	list_for_each_entry_safe(entry, next, head, list)
--		kfree(entry);
--}
--
- static struct iommu_ops viommu_ops;
- static struct virtio_driver virtio_iommu_drv;
- 
-@@ -915,7 +907,7 @@ static int viommu_add_device(struct device *dev)
- err_unlink_dev:
- 	iommu_device_unlink(&viommu->iommu, dev);
- err_free_dev:
--	viommu_put_resv_regions(dev, &vdev->resv_regions);
-+	iommu_put_resv_regions_simple(dev, &vdev->resv_regions);
- 	kfree(vdev);
- 
- 	return ret;
-@@ -933,7 +925,7 @@ static void viommu_remove_device(struct device *dev)
- 
- 	iommu_group_remove_device(dev);
- 	iommu_device_unlink(&vdev->viommu->iommu, dev);
--	viommu_put_resv_regions(dev, &vdev->resv_regions);
-+	iommu_put_resv_regions_simple(dev, &vdev->resv_regions);
- 	kfree(vdev);
- }
- 
-@@ -962,7 +954,7 @@ static struct iommu_ops viommu_ops = {
- 	.remove_device		= viommu_remove_device,
- 	.device_group		= viommu_device_group,
- 	.get_resv_regions	= viommu_get_resv_regions,
--	.put_resv_regions	= viommu_put_resv_regions,
-+	.put_resv_regions	= iommu_put_resv_regions_simple,
- 	.of_xlate		= viommu_of_xlate,
- };
- 
--- 
-2.22.0
+Hey, that's not nice, erofs isn't a POS.  It could always use more
+review, which the developers asked for numerous times.
 
+There's nothing different from a filesystem compared to a driver.  If
+its stand-alone, and touches nothing else, all issues with it are
+self-contained and do not bother anyone else in the kernel.  We merge
+drivers all the time that need more work because our review cycles are
+low.  And review cycles for vfs developers are even more scarce than
+driver reviewers.
+
+thanks,
+
+greg k-h
