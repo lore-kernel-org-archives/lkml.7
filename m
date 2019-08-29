@@ -2,134 +2,165 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 525DFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EADC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A322073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:31:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F7wo8ckz"
+	by mail.kernel.org (Postfix) with ESMTP id D002C2073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:32:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbfH2Pb3 (ORCPT
+        id S1728114AbfH2PcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:31:29 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42887 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfH2Pb3 (ORCPT
+        Thu, 29 Aug 2019 11:32:09 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:52686 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727359AbfH2PcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:31:29 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b16so3870531wrq.9
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 08:31:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Rbjz2X90VdQD30qgQblGHMm6dzBKGBcwAw5+it2jDPE=;
-        b=F7wo8ckzJW/r0rXHOF3NTyPHRiYiDzLV9Nqq/9Nyz02llWBNe+F5anuuR5Abbba8gi
-         OVnsbmCWqVVBRxIxDJ0Mypm+4vrkNWzONOUhTIa0wmQrfTc5cRZlKxjRe+5jK3cwsINk
-         pFslYEimc05U4vnGMwY/4VMVIAddM1P7Cu/6S8fMepS31mgvnRtQFa88ZVVrZDTECtfc
-         FOUvI42QBnST+Fr11rhAGKcmVP7wIc3FgfFuCskryHdcq6rD7z/BSUJ4ysBHMk0UeCLs
-         Bz2ndDmO1r7lPDWBaJYtS0q6RGJ9Wos28VckcnAI55CQnhqNLIWhvgPpLzIm1lyJ8nAe
-         xMqQ==
+        Thu, 29 Aug 2019 11:32:08 -0400
+Received: by mail-io1-f71.google.com with SMTP id q5so4380338iof.19
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 08:32:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Rbjz2X90VdQD30qgQblGHMm6dzBKGBcwAw5+it2jDPE=;
-        b=GgWlYwJ9BfoJlgs9eAjL4fzNUi4qObevl8FNJ55r1fEF70LfRw1USFThjw2QPrholP
-         0f2QbhnNxK4fuRTOwGQTF9EAKDQuxlOnkwgqAFplJiJjeyn9xwzwxW5+aVbaOXQB7Wir
-         GimaGo1xzo6w8cdgz/gH1Zmq4mmXFEvWHkK/0WpFiZvzPThB6HTau4yJpRdoqA6RunYc
-         LAw/vapIkNxzAIf2hbd0kP5+0VK8oT2fQeUTf4MqrTQd9QEk+aFqoFo8d0sw0aSWQcdU
-         VaJnThy7tF4TS2AIdzl0Bgtww54qrDkGIkFNnEqJcuFCwgDjX2JDpdHVZwKs2X08CDpy
-         /CXg==
-X-Gm-Message-State: APjAAAWhrgivIxO2tKUdT2AqDqVx/2S3xp1jH3yNvopNPNnXdRcmD4v3
-        aUyrincn0AAbRJkIa95MiqHTHA==
-X-Google-Smtp-Source: APXvYqyYIi1//241THO2CGpk66eVvt65m84i7+YAM7ffzO0dF4GbgcT7MJXE17LKs/J7tFg6UKF2OA==
-X-Received: by 2002:adf:db06:: with SMTP id s6mr1855272wri.348.1567092686839;
-        Thu, 29 Aug 2019 08:31:26 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id r1sm2524685wro.13.2019.08.29.08.31.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 08:31:26 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 16:31:24 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Jiada Wang <jiada_wang@mentor.com>
-Cc:     nick@shmanahar.org, dmitry.torokhov@gmail.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        george_davis@mentor.com
-Subject: Re: [PATCH v2 29/49] Input: atmel_mxt_ts - implement debug output
- for messages
-Message-ID: <20190829153124.cozqsegnmvxveecd@holly.lan>
-References: <20190827062943.20698-1-jiada_wang@mentor.com>
- <20190827062943.20698-5-jiada_wang@mentor.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=9jMd6mNwFLX+PQpzzKyalqJyB2DZCmy9IGLW1UJr3iU=;
+        b=bwGjDIkklN9gD5BLSGOQdEWfi54cAn21V8DxfZI56xnHYZL0a5FZk1S68PecgvVggN
+         r+Y93B2C2UBXX/YxMlN8WBTgciFH+kzGI9AgMXEwDKaKwzGVREviFr2TfO4dINE3EDHy
+         C9bZY+VG8GgPy0naAhIAdHo2YvnHm4j/BkL+PzEGgvmVnmjbdCjazoVZ0Cg69A2NUzQR
+         EA/k4yBWHbBbKF1RfKaRcs6qdtWUFVPO3Sg+2ydU3L0ypkjeXiBHSruBtCB1u9KfC+NP
+         QGoOHXaQY5FQb+U3uQztn90obxRiX/r+XdpQVKVN+1lqWcmWetaZYWjPqLVBmC5euVeW
+         kLOA==
+X-Gm-Message-State: APjAAAUPh+aJGP5c3bfu/KI4Z5T2VmudchISDRXSkjDsFIUwwozZi0Fd
+        yyEsDVvBBVVkVhV80S8XTfgeIoZ9/V6fWiEd8uDj7BstkCS3
+X-Google-Smtp-Source: APXvYqwRkvhHX4DsRrb2aW6LnXU//89K++W00MWSrkTYJbPK6vsIHenfAXL3fk+j1Bgmi2Tdw9zqdjK1NZeoTAKKbiFLfzuodlEM
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827062943.20698-5-jiada_wang@mentor.com>
-User-Agent: NeoMutt/20180716
+X-Received: by 2002:a5d:97cf:: with SMTP id k15mr856067ios.151.1567092727431;
+ Thu, 29 Aug 2019 08:32:07 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 08:32:07 -0700
+In-Reply-To: <000000000000edc1d5058f5dfa5f@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000594c700591433550@google.com>
+Subject: Re: memory leak in ppp_write
+From:   syzbot <syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, kafai@fb.com, linux-kernel@vger.kernel.org,
+        linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
+        paulus@samba.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 03:29:23PM +0900, Jiada Wang wrote:
-> From: Nick Dyer <nick.dyer@itdev.co.uk>
-> 
-> Add a debug switch which causes all messages from the touch controller to
-> be dumped to the dmesg log with a set prefix "MXT MSG:". This is used by
-> Atmel user-space utilities to debug touch operation. Enabling this output
-> does impact touch performance.
-> 
-> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-> (cherry picked from ndyer/linux/for-upstream commit 3c3fcfdd4889dfeb1c80ae8cd94a622c6342b06a)
-> [gdavis: Forward port and fix conflicts.]
-> Signed-off-by: George G. Davis <george_davis@mentor.com>
-> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-> ---
->  drivers/input/touchscreen/atmel_mxt_ts.c | 44 ++++++++++++++++++++++--
->  1 file changed, 41 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-> index 2d2e8ea30547..941c6970cb70 100644
-> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
-> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-> @@ -335,6 +335,7 @@ struct mxt_data {
->  	u8 t100_aux_ampl;
->  	u8 t100_aux_area;
->  	u8 t100_aux_vect;
-> +	bool debug_enabled;
->  	u8 max_reportid;
->  	u32 config_crc;
->  	u32 info_crc;
-> @@ -460,8 +461,8 @@ static bool mxt_object_readable(unsigned int type)
->  
->  static void mxt_dump_message(struct mxt_data *data, u8 *message)
->  {
-> -	dev_dbg(&data->client->dev, "message: %*ph\n",
-> -		data->T5_msg_size, message);
-> +	dev_dbg(&data->client->dev, "MXT MSG: %*ph\n",
-> +		       data->T5_msg_size, message);
+syzbot has found a reproducer for the following crash on:
 
-I'm not 100% convinced that the kernel should change here (arguably the
-userspace utility should be modified instead) but if the messages are
-conforming to some sort of vendor specific protocol then some commenting
-is needed.
+HEAD commit:    6525771f Merge tag 'arc-5.3-rc7' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16dc12a2600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e6131eafb9408877
+dashboard link: https://syzkaller.appspot.com/bug?extid=d9c8bf24e56416d7ce2c
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=116942de600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1179c582600000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com
+
+executing program
+executing program
+executing program
+executing program
+BUG: memory leak
+unreferenced object 0xffff88812a17bc00 (size 224):
+   comm "syz-executor673", pid 6952, jiffies 4294942888 (age 13.040s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+   backtrace:
+     [<00000000d110fff9>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000d110fff9>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000d110fff9>] slab_alloc_node mm/slab.c:3262 [inline]
+     [<00000000d110fff9>] kmem_cache_alloc_node+0x163/0x2f0 mm/slab.c:3574
+     [<000000002d616113>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:197
+     [<000000000167fc45>] alloc_skb include/linux/skbuff.h:1055 [inline]
+     [<000000000167fc45>] ppp_write+0x48/0x120  
+drivers/net/ppp/ppp_generic.c:502
+     [<000000009ab42c0b>] __vfs_write+0x43/0xa0 fs/read_write.c:494
+     [<00000000086b2e22>] vfs_write fs/read_write.c:558 [inline]
+     [<00000000086b2e22>] vfs_write+0xee/0x210 fs/read_write.c:542
+     [<00000000a2b70ef9>] ksys_write+0x7c/0x130 fs/read_write.c:611
+     [<00000000ce5e0fdd>] __do_sys_write fs/read_write.c:623 [inline]
+     [<00000000ce5e0fdd>] __se_sys_write fs/read_write.c:620 [inline]
+     [<00000000ce5e0fdd>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
+     [<00000000d9d7b370>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:296
+     [<0000000006e6d506>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff888121203900 (size 224):
+   comm "syz-executor673", pid 6965, jiffies 4294943430 (age 7.620s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+   backtrace:
+     [<00000000d110fff9>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000d110fff9>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000d110fff9>] slab_alloc_node mm/slab.c:3262 [inline]
+     [<00000000d110fff9>] kmem_cache_alloc_node+0x163/0x2f0 mm/slab.c:3574
+     [<000000002d616113>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:197
+     [<000000000167fc45>] alloc_skb include/linux/skbuff.h:1055 [inline]
+     [<000000000167fc45>] ppp_write+0x48/0x120  
+drivers/net/ppp/ppp_generic.c:502
+     [<000000009ab42c0b>] __vfs_write+0x43/0xa0 fs/read_write.c:494
+     [<00000000086b2e22>] vfs_write fs/read_write.c:558 [inline]
+     [<00000000086b2e22>] vfs_write+0xee/0x210 fs/read_write.c:542
+     [<00000000a2b70ef9>] ksys_write+0x7c/0x130 fs/read_write.c:611
+     [<00000000ce5e0fdd>] __do_sys_write fs/read_write.c:623 [inline]
+     [<00000000ce5e0fdd>] __se_sys_write fs/read_write.c:620 [inline]
+     [<00000000ce5e0fdd>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
+     [<00000000d9d7b370>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:296
+     [<0000000006e6d506>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88811d0cf800 (size 512):
+   comm "syz-executor673", pid 6965, jiffies 4294943430 (age 7.620s)
+   hex dump (first 32 bytes):
+     06 00 00 00 05 00 00 00 40 00 00 00 00 00 00 00  ........@.......
+     40 00 40 00 00 00 00 00 40 00 40 00 00 00 00 00  @.@.....@.@.....
+   backtrace:
+     [<00000000b9629d4c>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b9629d4c>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b9629d4c>] slab_alloc_node mm/slab.c:3262 [inline]
+     [<00000000b9629d4c>] kmem_cache_alloc_node_trace+0x161/0x2f0  
+mm/slab.c:3592
+     [<00000000a9b92035>] __do_kmalloc_node mm/slab.c:3614 [inline]
+     [<00000000a9b92035>] __kmalloc_node_track_caller+0x38/0x50  
+mm/slab.c:3629
+     [<00000000fad050db>] __kmalloc_reserve.isra.0+0x40/0xb0  
+net/core/skbuff.c:141
+     [<00000000a1025904>] __alloc_skb+0xa0/0x210 net/core/skbuff.c:209
+     [<000000000167fc45>] alloc_skb include/linux/skbuff.h:1055 [inline]
+     [<000000000167fc45>] ppp_write+0x48/0x120  
+drivers/net/ppp/ppp_generic.c:502
+     [<000000009ab42c0b>] __vfs_write+0x43/0xa0 fs/read_write.c:494
+     [<00000000086b2e22>] vfs_write fs/read_write.c:558 [inline]
+     [<00000000086b2e22>] vfs_write+0xee/0x210 fs/read_write.c:542
+     [<00000000a2b70ef9>] ksys_write+0x7c/0x130 fs/read_write.c:611
+     [<00000000ce5e0fdd>] __do_sys_write fs/read_write.c:623 [inline]
+     [<00000000ce5e0fdd>] __se_sys_write fs/read_write.c:620 [inline]
+     [<00000000ce5e0fdd>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
+     [<00000000d9d7b370>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:296
+     [<0000000006e6d506>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
 
-> @@ -3538,6 +3573,8 @@ static DEVICE_ATTR(hw_version, S_IRUGO, mxt_hw_version_show, NULL);
->  static DEVICE_ATTR(object, S_IRUGO, mxt_object_show, NULL);
->  static DEVICE_ATTR(update_cfg, S_IWUSR, NULL, mxt_update_cfg_store);
->  static DEVICE_ATTR(config_crc, S_IRUGO, mxt_config_crc_show, NULL);
-> +static DEVICE_ATTR(debug_enable, S_IWUSR | S_IRUSR, mxt_debug_enable_show,
-> +		   mxt_debug_enable_store);
-
-Why isn't CONFIG_DYNAMIC_DEBUG sufficient to enable/disable the
-messages?
-
-
-Daniel.
