@@ -2,147 +2,119 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE15C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C1BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B028520644
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74AF8233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:45:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="pws3InZS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pQ+8uT/t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbfH2On7 (ORCPT
+        id S1727415AbfH2OpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:43:59 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45926 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfH2On6 (ORCPT
+        Thu, 29 Aug 2019 10:45:01 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38589 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfH2OpB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:43:58 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y8so1670466plr.12
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:43:57 -0700 (PDT)
+        Thu, 29 Aug 2019 10:45:01 -0400
+Received: by mail-wr1-f68.google.com with SMTP id e16so3727800wro.5
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:45:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1jbNDnatKqrZZbvhaAxgomk5lFvDz0GUQU4rtuS0hzg=;
-        b=pws3InZSGoRYhnY0msy/KI8nH8nUy9PWXFaj3FcNG/GZCigAofnwgs5fjrQ8Da9fqU
-         LNpQeOlxbcmYSt6Uaj1LSagZSEqFQ2qS4K/en9qTys+ZgKZrM0ZGqrZ4NHMOsNDFBuXF
-         4uZe3hiSoi6hgUH6GDDOvCVr2tIEgef6i48qQ=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TwXrxO/TQ61wqw3wZNmwm6oyzfj05N2I5ILhprlnG2o=;
+        b=pQ+8uT/trwOhHQVSHAJ+FOY4gXJrcYM60NNyUiKDJHKoG70UXFf7a5Y6LTCua6P963
+         7hmqd9Eyitxds6vACpmRI8+JyJ3RwQAv/8V+7cPge/6ElIWaTwpfacr6hbNqn/F3/j5x
+         ORr7UwGKwgwhj7I8S4CxWMsREWVFC1s70O6977oF9uZ3dU2Iby8DBpoknAyUhjRB2EBG
+         RONyD94Wo88k8sYc2eH5VIW+i501J97tD2VLc5aYewB2KB21RhfHDPcAr/bQg8XFU5s7
+         Op1JYXW5Q9hctMlXLa11rH3kQL/4NW0rdVc9Oxo5CkjVIqcDgqCNyvdAL2OcrkbaxCpq
+         QXGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1jbNDnatKqrZZbvhaAxgomk5lFvDz0GUQU4rtuS0hzg=;
-        b=TO38Hnd55KMW6h+AU3njrovPhSrVzVGM23mqI2VPQDwcFVrxL4AXFkzCSbLYSRQP+S
-         lhVJ2fGr8WBxkwG5QWcG/n7CA4upIUTmSIgxNCoGSNpEOAEBGWBgjUPoKDEgY0DMMefG
-         CRJKejEJbr29oV8GS3lXQGV4AUH0EdgDLg5N0sXKNmJky/eKIUZF/k5xdVfZq5cg+nR4
-         AXen1qgEFyTkfZb8pgsnrTUdmxJBUCLL8hN2OPLZ+Xa9c2ZNDGO7FACHnS+Zt214QhJX
-         1qgRt0WVr05sbhnSZFwJpq5Yc65cftpDmS4rLcufloALetjKZRlS3cZYGSOm+lfc/E4B
-         SCnA==
-X-Gm-Message-State: APjAAAVRRNvBuUZlRBCaPdAnOrCJXZLa4nGrymIyo7iqUWZWxpe6zKpU
-        avAW3SAWDjbmGl4NKhqVMgEMyQ==
-X-Google-Smtp-Source: APXvYqxMzTPU8bK6VjApFdjKL0gEBlWweOLhLYTEdCnvF7eVDYTr1s/5dEscVTxlZWsL0uFq/aCAzw==
-X-Received: by 2002:a17:902:126:: with SMTP id 35mr2476290plb.76.1567089837473;
-        Thu, 29 Aug 2019 07:43:57 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id ev3sm16452782pjb.3.2019.08.29.07.43.56
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TwXrxO/TQ61wqw3wZNmwm6oyzfj05N2I5ILhprlnG2o=;
+        b=Zi4zOzJBtIMLFvzCvZkxeujFkoYukqVg+EFfQAhljPWMgdlRIiuyImzG4tQG9cM3Ue
+         udAsyGeRhZ40quMEjbNPUGPDDtjF+m8atVMQZdnP0ChA+hA6L9P5CqcZMEPfrUKh3VAr
+         uDTtAm6LMLm5UTfTXGKzTYmmtdivan1gOY7BIDQUugU6V2sFk+gRcRZHZEiLos2KXHWj
+         i84dA13AhztESOAjxwBkw+NLXVBJfqikfz2GqkT4P0Iv6lJCshHg91F3dbdRNTBAloio
+         jujxMR6AOk/wXZiagRgpN95xcTZtgcnYeeD3Ifw/o4heTyu31CBxqwvO/99PoVoRKXgP
+         sy7w==
+X-Gm-Message-State: APjAAAXo2gMrl9AjDXE/+cLfPl21V4qEcMFEr5p72e4uqcjgzkEChLAt
+        qleemYWCEejiKnRQsmgHXd1L4w==
+X-Google-Smtp-Source: APXvYqz+5HAeKpiR9RKwsFji3DKygPY+X6WMUZszfH18n9skP2CEoN5QEEcl6qGstCGbFw1iu2iwWg==
+X-Received: by 2002:a05:6000:188:: with SMTP id p8mr2051005wrx.220.1567089899507;
+        Thu, 29 Aug 2019 07:44:59 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id p7sm3923492wmh.38.2019.08.29.07.44.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 07:43:56 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 10:43:55 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC v1 2/2] rcu/tree: Remove dynticks_nmi_nesting counter
-Message-ID: <20190829144355.GE63638@google.com>
-References: <5d648897.1c69fb81.5e60a.fc70@mx.google.com>
- <20190828202330.GS26530@linux.ibm.com>
- <20190828210525.GB75931@google.com>
- <20190828211904.GX26530@linux.ibm.com>
- <20190828214241.GD75931@google.com>
- <20190828220108.GC26530@linux.ibm.com>
- <20190828221444.GA100789@google.com>
- <20190828231247.GE26530@linux.ibm.com>
- <20190829015155.GB100789@google.com>
- <20190829034336.GD4125@linux.ibm.com>
+        Thu, 29 Aug 2019 07:44:58 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
+Cc:     spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, devicetree@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v5 0/4] ASoC: codecs: Add WSA881x Smart Speaker amplifier support
+Date:   Thu, 29 Aug 2019 15:44:38 +0100
+Message-Id: <20190829144442.6210-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829034336.GD4125@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 08:43:36PM -0700, Paul E. McKenney wrote:
-[snip]
-> > > > > This change is not fixing a bug, so there is no need for an emergency fix,
-> > > > > and thus no point in additional churn.  I understand that it is a bit
-> > > > > annoying to code and test something and have your friendly maintainer say
-> > > > > "sorry, wrong rocks", and the reason that I understand this is that I do
-> > > > > that to myself rather often.
-> > > > 
-> > > > The motivation for me for this change is to avoid future bugs such as with
-> > > > the following patch where "== 2" did not take the force write of
-> > > > DYNTICK_IRQ_NONIDLE into account:
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?h=dev&id=13c4b07593977d9288e5d0c21c89d9ba27e2ea1f
-> > > 
-> > > Yes, the current code does need some simplification.
-> > > 
-> > > > I still don't see it as pointless churn, it is also a maintenance cost in its
-> > > > current form and the simplification is worth it IMHO both from a readability,
-> > > > and maintenance stand point.
-> > > > 
-> > > > I still don't see what's technically wrong with the patch. I could perhaps
-> > > > add the above "== 2" point in the patch?
-> > > 
-> > > I don't know of a crash or splat your patch would cause, if that is
-> > > your question.  But that is also true of the current code, so the point
-> > > is simplification, not bug fixing.  And from what I can see, there is an
-> > > opportunity to simplify quite a bit further.  And with something like
-> > > RCU, further simplification is worth -serious- consideration.
-> > > 
-> > > > We could also discuss f2f at LPC to see if we can agree about it?
-> > > 
-> > > That might make a lot of sense.
-> > 
-> > Sure. I am up for a further redesign / simplification. I will think more
-> > about your suggestions and can also further discuss at LPC.
-> 
-> One question that might (or might not) help:  Given the compound counter,
-> where the low-order hex digit indicates whether the corresponding CPU
-> is running in a non-idle kernel task and the rest of the hex digits
-> indicate the NMI-style nesting counter shifted up by four bits, what
-> could rcu_is_cpu_rrupt_from_idle() be reduced to?
-> 
-> > And this patch is on LKML archives and is not going anywhere so there's no
-> > rush I guess ;-)
-> 
-> True enough!  ;-)
+Thanks for reviewing v4 patchset, here is v5 with addressing the comments in v4
 
-Paul, do we also nuke rcu_eqs_special_set()?  Currently I don't see anyone
-using it. And also remove the bottom most bit of dynticks?
+This patchset adds support to WSA8810/WSA8815 Class-D Smart Speaker
+Amplifier which is SoundWire interfaced.
+This also adds support to some missing bits in SoundWire bus layer like
+Device Tree support.
 
-Also what happens if a TLB flush broadcast is needed? Do we IPI nohz or idle
-CPUs are the moment?
+This patchset along with DB845c machine driver and WCD934x codec driver
+has been tested on SDM845 SoC based DragonBoard DB845c with two
+WSA8810 speakers.
 
-All of this was introduced in:
-b8c17e6664c4 ("rcu: Maintain special bits at bottom of ->dynticks counter")
+Most of the code in this driver is rework of Qualcomm downstream drivers
+used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
 
-thanks,
+TODO:
+        Add thermal sensor support in WSA881x.
 
- - Joel
+Thanks,
+srini
+
+Changes since v4:
+ - updated slave bindings according to Rob's and Pierre Suggestion.
+ - fixup warnings from make dt_binding_check
+
+Srinivas Kandagatla (4):
+  dt-bindings: soundwire: add slave bindings
+  soundwire: core: add device tree support for slave devices
+  dt-bindings: ASoC: Add WSA881x bindings
+  ASoC: codecs: add wsa881x amplifier support
+
+ .../bindings/sound/qcom,wsa881x.yaml          |   41 +
+ .../soundwire/soundwire-controller.yaml       |   72 ++
+ drivers/soundwire/bus.c                       |    2 +
+ drivers/soundwire/bus.h                       |    1 +
+ drivers/soundwire/slave.c                     |   52 +
+ sound/soc/codecs/Kconfig                      |   10 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/wsa881x.c                    | 1134 +++++++++++++++++
+ 8 files changed, 1314 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+ create mode 100644 Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+ create mode 100644 sound/soc/codecs/wsa881x.c
+
+-- 
+2.21.0
 
