@@ -2,136 +2,89 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB7BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 04:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4724AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 04:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B867622CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 04:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F002173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 04:52:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Uh5zy1yM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfH2Eqo (ORCPT
+        id S1726839AbfH2Ewm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 00:46:44 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:9024 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbfH2Eqo (ORCPT
+        Thu, 29 Aug 2019 00:52:42 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35578 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfH2Ewl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 00:46:44 -0400
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Thu, 29 Aug 2019 00:46:43 EDT
-IronPort-SDR: 4b+pR+b8aqDVXxG0TQLWCqdE+PswQUB5Z5vV6p0f1OGkMKX/1ykaEWTRmBC2vLVdYE0ImILweG
- hVU/VJkkV13VpnjbAXI19IVNSlOLynvPOriDqn47JlsdwpBnt1QXvuD1fqmWeSSluYoU8teKPt
- j6RcsbP2Ye716QPWW3ngjhq0IJfnGGZnPzLMKrpLfZyQXj+jK5xzCkOKq6rwY17AfpcojbU71O
- z1DRDt4Synq3lVe1gXtpanaoWyJ/rfuqh/thipCClosKgUX+L39VbqsMaSSAfEibKYyld5ZRAQ
- D1s=
-X-IronPort-AV: E=Sophos;i="5.64,442,1559548800"; 
-   d="scan'208";a="40867782"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa4.mentor.iphmx.com with ESMTP; 28 Aug 2019 20:39:37 -0800
-IronPort-SDR: OUgLd41S3pCS25b7dGPxjQLhQJUHImdHM9Qu76yK0BruNKKmvzIxAdU5WKIHEoEZ72hGvKc4Md
- F9D5nwbRIR1LK1qI4LVN/0xLMzjHAjM19Cf2tr/Pgm3/tXGcvAiD2EzuJNz0bInKcPGwwMJiQW
- VP3DN0DbOlzaBfHShlQTS030XKuiAHCPni3MN9X5AJtehnmOSHJBwW/f+u7wBHCn4NRp+kLHnd
- iHVzE4mc4XE+aN6nQzYBHOyjCRHXgG/ob2pqcRSI6GY2G4Gga8vviwbeKQ+fRsT69pY0oSsLN1
- z1M=
-From:   "George G. Davis" <george_davis@mentor.com>
-To:     Shuah Khan <shuah@kernel.org>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "George G. Davis" <george_davis@mentor.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] selftests: watchdog: Add optional file argument
-Date:   Thu, 29 Aug 2019 00:39:25 -0400
-Message-ID: <1567053566-18971-1-git-send-email-george_davis@mentor.com>
+        Thu, 29 Aug 2019 00:52:41 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n4so923474pgv.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 21:52:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=9BP8IKO9876WFktChuLK9za6HwiWbIKNndRGikQ4ROo=;
+        b=Uh5zy1yMA01siESv2fEqBla8M/nR0OowkWsBwqqE82PoMyHAPnWOnDb3djdGkZkH7r
+         VqAi0Kn4O3nnSsLBRQ3nyJw34XDQXVqU1OfCVdFcVsJEdvISc2fcK3MswoeEdiZrxEWa
+         HNuHqQARuq142x31v+ris4wa93EeQ/7bbif3s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9BP8IKO9876WFktChuLK9za6HwiWbIKNndRGikQ4ROo=;
+        b=lafaLqtTQdASyw0KUoXF+5c3sS/0yS9bYkO6EPrqPhAQX15GaTkr33gF5fMeoC7nKI
+         tgA1WKfPTW6TBqnOwv2ViGiRsqNq/HMFpcc+XFPVMYUA4z9pvQdjX89ATuK+EjbnDAq3
+         vNuaAf5SA3YLOHPymVEmeS3Olis9jJOk8XlakuEvaoB35u4QME8etJjgR8iVGhu5tZkL
+         MlCdUytGLNPByPE7udbDoN/QAJ20Ub93zFBjQYOSiszBE1bpQB55DJ/V4FPX7WbXYNHw
+         mGYOu2Zvc/baS3noLAQeIDa0mvGvrlve6piwHIzCOLWqRlljCurIkHduGvLxnUVc1EFB
+         yBVQ==
+X-Gm-Message-State: APjAAAXIT/ccoHWWfbxbFRVv4jrcmEXvgJwi4R+O6rLvE1PTzubm9fhb
+        4H/aBnEGm6Cd0yPvee6PYVNkXA==
+X-Google-Smtp-Source: APXvYqzMjw2uesiactM9pV9vgKy+02kV2TdNBike0XLPF3rAF5krhaPNeJZWfvdb3HUuUDwJHxI5ww==
+X-Received: by 2002:aa7:9a81:: with SMTP id w1mr9019225pfi.24.1567054360720;
+        Wed, 28 Aug 2019 21:52:40 -0700 (PDT)
+Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id j1sm1131440pfh.174.2019.08.28.21.52.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 28 Aug 2019 21:52:39 -0700 (PDT)
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH 0/2] Add fixes to iProc GPIO driver
+Date:   Thu, 29 Aug 2019 10:22:26 +0530
+Message-Id: <1567054348-19685-1-git-send-email-srinath.mannam@broadcom.com>
 X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some systems have multiple watchdog devices where the first device
-registered is assigned to the /dev/watchdog device file. In order
-to test other watchdog devices, add an optional file argument for
-selecting non-default watchdog devices for testing.
+This patch series adds the following fixes to the iProc GPIO driver
+ - Fix Warning message given for shared irqchip data structure
+ - Fix pinconfig of pull-up/down and drive strength for AON/CRMU GPIOs
 
-Signed-off-by: George G. Davis <george_davis@mentor.com>
----
- tools/testing/selftests/watchdog/watchdog-test.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+This patch set is based on Linux-5.2-rc4.
 
-diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
-index c2333c78cf04..ebeb684552b9 100644
---- a/tools/testing/selftests/watchdog/watchdog-test.c
-+++ b/tools/testing/selftests/watchdog/watchdog-test.c
-@@ -19,7 +19,7 @@
- 
- int fd;
- const char v = 'V';
--static const char sopts[] = "bdehp:t:Tn:NL";
-+static const char sopts[] = "bdehp:t:Tn:NLf:";
- static const struct option lopts[] = {
- 	{"bootstatus",          no_argument, NULL, 'b'},
- 	{"disable",             no_argument, NULL, 'd'},
-@@ -31,6 +31,7 @@ static const struct option lopts[] = {
- 	{"pretimeout",    required_argument, NULL, 'n'},
- 	{"getpretimeout",       no_argument, NULL, 'N'},
- 	{"gettimeleft",		no_argument, NULL, 'L'},
-+	{"file",          required_argument, NULL, 'f'},
- 	{NULL,                  no_argument, NULL, 0x0}
- };
- 
-@@ -69,6 +70,7 @@ static void term(int sig)
- static void usage(char *progname)
- {
- 	printf("Usage: %s [options]\n", progname);
-+	printf(" -f, --file          Open watchdog device file (default is /dev/watchdog)\n");
- 	printf(" -b, --bootstatus    Get last boot status (Watchdog/POR)\n");
- 	printf(" -d, --disable       Turn off the watchdog timer\n");
- 	printf(" -e, --enable        Turn on the watchdog timer\n");
-@@ -92,10 +94,16 @@ int main(int argc, char *argv[])
- 	int ret;
- 	int c;
- 	int oneshot = 0;
-+	char *file = "/dev/watchdog";
- 
- 	setbuf(stdout, NULL);
- 
--	fd = open("/dev/watchdog", O_WRONLY);
-+	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
-+		if (c == 'f')
-+			file = optarg;
-+	}
-+
-+	fd = open(file, O_WRONLY);
- 
- 	if (fd == -1) {
- 		if (errno == ENOENT)
-@@ -108,6 +116,8 @@ int main(int argc, char *argv[])
- 		exit(-1);
- 	}
- 
-+	optind = 0;
-+
- 	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
- 		switch (c) {
- 		case 'b':
-@@ -190,6 +200,9 @@ int main(int argc, char *argv[])
- 			else
- 				printf("WDIOC_GETTIMELEFT error '%s'\n", strerror(errno));
- 			break;
-+		case 'f':
-+			/* Handled above */
-+			break;
- 
- 		default:
- 			usage(argv[0]);
+Changes from v1:
+  - Add Fixes tags in both patches
+
+Li Jin (1):
+  gpio: iproc-gpio: Fix incorrect pinconf configurations
+
+Rayagonda Kokatanur (1):
+  gpio: iproc-gpio: Handle interrupts for multiple instances
+
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 117 +++++++++++++++++++++++--------
+ 1 file changed, 88 insertions(+), 29 deletions(-)
+
 -- 
 2.7.4
 
