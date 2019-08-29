@@ -2,182 +2,95 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF98C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E504C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A466121726
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2261D2080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Z8UYs6V0"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DMzidZKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbfH2WXY (ORCPT
+        id S1728317AbfH2WYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 18:23:24 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40610 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727912AbfH2WXX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 18:23:23 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w16so3066091pfn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 15:23:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iwgSPC5+ukBlrbIQeB/N8VAwP9kt6jHmPxRFKIIZNR4=;
-        b=Z8UYs6V0qLG6rtyI7XKUacTn6lq1O1s+qRW37pkFtf3HmBqyzG/3NUc8S6wlRAk6jk
-         6AknBj9ZgutPaRnCKnMUF982f2AdraJNFRCyoYzu+e8F3HIgF7QFHDpPAOPw8kp29t6s
-         wPpPXVB0IOvcZ7GgabjhVf91UPxq+3oyQZW54=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iwgSPC5+ukBlrbIQeB/N8VAwP9kt6jHmPxRFKIIZNR4=;
-        b=PDil6XuaTpNDffXBVlcbvqjrnDceOx34FCj55z9koilZGGlAwZC88JBu1USlhDjsoX
-         L4AoMm4HvAz7SzT+3M/vA+OT6aNaKcUVpuHiTsrJCRa9aslL8ricRDB1qFJqueNdxtyL
-         5Szlbtuqjc70JoQh8DW3iiW6Wa3FcgURYL1qbZDbyecfybiJhiHcv8ImcK0qjFfDePx7
-         pVAmpw5OX3gidFrKDiLIiVZ/enNB1uQcYsoVZB5ELE65iuXP1j/k9qoM5WaVB1TdsLfA
-         Q9XOR624EB3jGmcX2/90zjqFA75ahUmizstk69+WBUg1lRBK0ttcReedE9UUKXgCeozE
-         jCTQ==
-X-Gm-Message-State: APjAAAWwxgHkRHFL5iAMFdafCPQCN5noS/EN0ujb+1VAtxbg3L4LOXp/
-        iydEj5E9F8MwiL/3CdIZnx8ydw==
-X-Google-Smtp-Source: APXvYqwdEpxbHLpvww66IXQ+B+uwz1uKbVSfStxpcuTJ8OaCz61p1uvV8f7k6aUClGl3k9U+7M30iA==
-X-Received: by 2002:a65:638c:: with SMTP id h12mr10218799pgv.436.1567117402248;
-        Thu, 29 Aug 2019 15:23:22 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id e9sm3541022pja.17.2019.08.29.15.23.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 15:23:21 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 18:23:20 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, byungchul.park@lge.com,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        kernel-team@android.com
-Subject: Re: [PATCH 5/5] rcu: Remove kfree_call_rcu_nobatch()
-Message-ID: <20190829222320.GC183862@google.com>
-References: <5d657e3b.1c69fb81.54250.01e2@mx.google.com>
- <20190828215636.GA26530@linux.ibm.com>
+        Thu, 29 Aug 2019 18:24:02 -0400
+Received: from ozlabs.org ([203.11.71.1]:58455 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727826AbfH2WYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 18:24:01 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46KHFq2pkFz9sDB;
+        Fri, 30 Aug 2019 08:23:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567117439;
+        bh=MmtUcWBvvjpAy9cWLXb7FNWAhGcqNpptwC8LinDLwQE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DMzidZKFzroJvnK5mz4MMkSfNVWVlnM6MZRLhxOFTMfKojONLnX8a1oqyNpDY0ecV
+         Z3kdLcnrI/rHys7E+OZPE9fUJ6DOJehbXekcvy/JWlqJuqGPv0z8rvsdHlK2PcAlbA
+         kOVQvoSIz0JDnGN4t1fRzfRjAvQvyBMqs4p4g2/LiPyBIRLBHxg+9hlVGwFYrR1rHW
+         48MZhQ/9vaTuEVH7IUpcOLSy6lK24OpeXppNJDJcSrK80vYIkQraGPL8brp1nnaZJX
+         45j9LEaX1aqrYIHHiajL68lUd4tERjAj3wh93+TSo9aF+XkgUzgM0yUX1wDdVO+eYS
+         6tvhYOrYrjDPA==
+Date:   Fri, 30 Aug 2019 08:23:57 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning from Linus' tree
+Message-ID: <20190830082357.4650d243@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828215636.GA26530@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/NWXnxGRyGHjcMwv+FuAoQqj";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+--Sig_/NWXnxGRyGHjcMwv+FuAoQqj
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I think this is the only contentious patch preventing my resend of the
-series, let me know what you think, I replied below:
+Hi all,
 
-On Wed, Aug 28, 2019 at 02:56:36PM -0700, Paul E. McKenney wrote:
-> On Tue, Aug 27, 2019 at 03:01:59PM -0400, Joel Fernandes (Google) wrote:
-[snip]
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index 12c17e10f2b4..c767973d62ac 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -2777,8 +2777,10 @@ static void kfree_rcu_work(struct work_struct *work)
-> >  		rcu_lock_acquire(&rcu_callback_map);
-> >  		trace_rcu_invoke_kfree_callback(rcu_state.name, head, offset);
-> >  
-> > -		/* Could be possible to optimize with kfree_bulk in future */
-> > -		kfree((void *)head - offset);
-> > +		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset))) {
-> > +			/* Could be optimized with kfree_bulk() in future. */
-> > +			kfree((void *)head - offset);
-> > +		}
-> 
-> This really needs to be in the previous patch until such time as Tiny RCU
-> no longer needs the restriction.
+=46rom Linus tree, today's linux-next build (x86_64 allmodconfig)
+produced this warning:
 
-I was only going by whatever is already committed to the -rcu dev branch. The
-series is based on the -dev branch.
+arch/x86/boot/edd.c: In function 'query_edd':
+arch/x86/boot/edd.c:148:11: warning: taking address of packed member of 'st=
+ruct boot_params' may result in an unaligned pointer value [-Waddress-of-pa=
+cked-member]
+  148 |  mbrptr =3D boot_params.edd_mbr_sig_buffer;
+      |           ^~~~~~~~~~~
 
-The original patch adding the kfree_rcu() batching is already merged into the
--rcu dev branch (that version just had 1 list, this series adds multiple
-lists).
+I assume this is a result of upgrading my x86_64 cross compiler to v9.2.1
+(from v8.3.0).
 
-In the above diff, I just added the WARN_ON_ONCE() as extra checking for tree
-RCU kfree batching. It has nothing to do with tiny RCU per-se. Should I
-submit the WARN_ON_ONCE() as a separate patch then?
+--=20
+Cheers,
+Stephen Rothwell
 
-To prevent confusion, could you let me know if I am supposed to submitting
-patches against a branch other than the dev branch?
+--Sig_/NWXnxGRyGHjcMwv+FuAoQqj
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> >  		rcu_lock_release(&rcu_callback_map);
-> >  		cond_resched_tasks_rcu_qs();
-> > @@ -2856,16 +2858,6 @@ static void kfree_rcu_monitor(struct work_struct *work)
-> >  		spin_unlock_irqrestore(&krcp->lock, flags);
-> >  }
-> >  
-> > -/*
-> > - * This version of kfree_call_rcu does not do batching of kfree_rcu() requests.
-> > - * Used only by rcuperf torture test for comparison with kfree_rcu_batch().
-> > - */
-> > -void kfree_call_rcu_nobatch(struct rcu_head *head, rcu_callback_t func)
-> > -{
-> > -	__call_rcu(head, func);
-> > -}
-> > -EXPORT_SYMBOL_GPL(kfree_call_rcu_nobatch);
-> > -
-> >  /*
-> >   * Queue a request for lazy invocation of kfree() after a grace period.
-> >   *
-> > @@ -2885,12 +2877,6 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> >  	unsigned long flags;
-> >  	struct kfree_rcu_cpu *krcp;
-> >  
-> > -	/* kfree_call_rcu() batching requires timers to be up. If the scheduler
-> > -	 * is not yet up, just skip batching and do the non-batched version.
-> > -	 */
-> > -	if (rcu_scheduler_active != RCU_SCHEDULER_RUNNING)
-> > -		return kfree_call_rcu_nobatch(head, func);
-> > -
-> >  	if (debug_rcu_head_queue(head)) {
-> >  		/* Probable double kfree_rcu() */
-> >  		WARN_ONCE(1, "kfree_call_rcu(): Double-freed call. rcu_head %p\n",
-> > @@ -2909,8 +2895,15 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> >  	krcp->head = head;
-> >  
-> >  	/* Schedule monitor for timely drain after KFREE_DRAIN_JIFFIES. */
-> > -	if (!xchg(&krcp->monitor_todo, true))
-> > -		schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
-> > +	if (!xchg(&krcp->monitor_todo, true)) {
-> > +		/* Scheduling the monitor requires scheduler/timers to be up,
-> > +		 * if it is not, just skip it. An eventual kfree_rcu() will
-> > +		 * kick it again.
-> > +		 */
-> > +		if ((rcu_scheduler_active == RCU_SCHEDULER_RUNNING)) {
-> > +			schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
-> > +		}
-> > +	}
-> 
-> And this also needs to be in an earlier patch.  Bisectability and all that!
-> 
-> Are we really guaranteed that there will be an eventual kfree_rcu()?
-> More of a worry for Tiny RCU than for Tree RCU, but still could be
-> annoying for someone trying to debug a memory leak.
+-----BEGIN PGP SIGNATURE-----
 
-Same comment as above, the original patch adding the schedule_delayed_work()
-is already merged into the -dev branch. This series is based on top of that.
-The reason I had to rearrange &krcp->monitor_todo code above is because we no
-longer have kfree_rcu_no_batch() which this patch removes.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1oUH0ACgkQAVBC80lX
+0Gx+aQf/e8Bhn/pDsW0N4pecxKBKn8OATEhIUh8vYd8cjWPpAIjbaGxNmjhNDW7v
+z3ajczn2PqCbUBD9IpB31xuKHWvk/v7EUtq7NTCNE1L/l3L5ryt4jV04tCo9vcbB
+ichBC5XwMvvlIyE52Iqv6i/YSCXOcmaXYkxI+Jw9ZgP9IRjndWLcL6GorNOCWrCr
+88DbJrXWjJgOt2Wvr1sLrDJcvgFZkLO1JQj6qRBiZvtbjm7NyRgfvBLO8APuc6GD
+oxhIFJ9Gct0RPkNSKsIcljBGtJCHBKBJi5RFJxJ/j+f/vyAk5HkhJGXTi91TEQO7
+iD+r4X5leUPJEA1ng3xxdpxSnN+Niw==
+=+v5z
+-----END PGP SIGNATURE-----
 
-thanks,
-
- - Joel
-
-
+--Sig_/NWXnxGRyGHjcMwv+FuAoQqj--
