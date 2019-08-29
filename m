@@ -2,91 +2,162 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2065C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B98C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 674C2208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:15:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="JHGw61Xp"
+	by mail.kernel.org (Postfix) with ESMTP id DCAA62189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:16:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567113403;
+	bh=S8jZl5qXwtASsh5sqmmpoIddnxCBuXvV58tUABgzZKo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2X0DWI78v7j3jStpdyt3U+c96p8W0m1bLU6fsgHcPqcKYPBkOSqiAHJ5sSvcUHg+5
+	 Pi/RGanKBRNzGdFvZOkSHJLXn4zTQLLwo0AyIU8TpTKwyohAuH/eHf3FClVp1nC7V5
+	 ywt6j5Y0/qbvz6q+vz7QGq+lIRN20foPD6/k2BDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbfH2VPw (ORCPT
+        id S1728003AbfH2VQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 17:15:52 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43601 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbfH2VPw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 17:15:52 -0400
-Received: by mail-ed1-f67.google.com with SMTP id h13so5563054edq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 14:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=hS3H3Fejm2Ld774V0kLGhVDnZ7eJ/Yrt7rdUWYJLuoM=;
-        b=JHGw61XpDQ9qnqJjDlskimJniYIpe80UT31I54hzhlwkNrwJdOXVB7tFd/WP7WpaEI
-         n0tUYc3qXXL9vzjDC/ggBWHuTXd4Zw7o6AMgzRNZXgOYt3D70CLylInM/ujPlx2fjIM/
-         5jD1M0KKWYd+76MH/4apoF3xHOQgdtgJuwQW2VFjGsWQ80gR1mLQCGhP0m33LmOL6YpN
-         JGqJDDBCCH7aWJRnWF0Ngnxb0ZdiCV5z+LPr6A3eFpV1cSjrQp9NiM/SrO8ZQcsr8RB2
-         ucfFURwBmugSzfO9gwGkewrlfFUtfHSMh3Q+4j1aSAXjWJj1D5kvSkAV9lHf6KbUKDoO
-         Vw0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=hS3H3Fejm2Ld774V0kLGhVDnZ7eJ/Yrt7rdUWYJLuoM=;
-        b=DDltq3odcPKQI45pp5XfUf5VrWPNTX77znNLe7qISoSZWLtK3YvsQqMiEptuiwx0Ih
-         N/OYCT9s4jyFBWpVMUos/BC195zHgcI7F7rXkxOa7spwVW4fm4xgPH5svCxWWfUGfUui
-         oi8DqDDNRnff15TunA4NwO0tEsduWrZTWGOgIX68l+iEQZBkEtE/zYPhy15DGap/gaXi
-         kFENnVIPctiQlcWkOhX+uM+dZJjq1ei1BsdzTREGlUQFRHB7Yro/13wIQpjYOVUTV4LA
-         yEHOGK1VKV6c7Zr8A3fzC1mh7750NMA4N1eMbviHud9qdAv/0J915QLdlG7Yr9CbMIlX
-         yAlg==
-X-Gm-Message-State: APjAAAXuAzE/FvZuqq6ps+3HtDFHcjR3ZStTrJyzUNsMUJdRFJhYovyI
-        pIetH5t1uaTmwfwMyi93mccoJg==
-X-Google-Smtp-Source: APXvYqyGVMQtZA1SqbkLWfBw96/KNVS3JYfw9CNvXDg9o/pN/JnASnJoDjrfTrcZwqQd33q4FUbBtg==
-X-Received: by 2002:a05:6402:170f:: with SMTP id y15mr12624176edu.55.1567113350852;
-        Thu, 29 Aug 2019 14:15:50 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id jr2sm529163ejb.13.2019.08.29.14.15.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 14:15:50 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 14:15:25 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v2 net-next 00/15] ioc3-eth improvements
-Message-ID: <20190829141525.7b56791e@cakuba.netronome.com>
-In-Reply-To: <20190829155014.9229-1-tbogendoerfer@suse.de>
-References: <20190829155014.9229-1-tbogendoerfer@suse.de>
-Organization: Netronome Systems, Ltd.
+        Thu, 29 Aug 2019 17:16:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726526AbfH2VQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 17:16:42 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CECB208C2;
+        Thu, 29 Aug 2019 21:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567113401;
+        bh=S8jZl5qXwtASsh5sqmmpoIddnxCBuXvV58tUABgzZKo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pf4R/qE5U0ptoMvA6pBMA2mE1A59uGzHclP0IcO1McDCsMmRqgD/adkoEj+nu59xk
+         dR/inm3HdrOS6Hml8x/aWb6cykxATePFa/h5RbsRBepApDwGyxBIOKpa6ihPstjoLd
+         QEcnRqw1Vl2tvAuVCKYZI6mtQlXlE9yeSISENWnw=
+Date:   Thu, 29 Aug 2019 17:16:40 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ceph Development <ceph-devel@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 5.2 66/76] ceph: fix buffer free while holding
+ i_ceph_lock in __ceph_setxattr()
+Message-ID: <20190829211640.GN5281@sasha-vm>
+References: <20190829181311.7562-1-sashal@kernel.org>
+ <20190829181311.7562-66-sashal@kernel.org>
+ <CAOi1vP9-A-U6J15hT+XmtXzBw5WVRZECry8gPFzqp0CV36ecig@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAOi1vP9-A-U6J15hT+XmtXzBw5WVRZECry8gPFzqp0CV36ecig@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 17:49:58 +0200, Thomas Bogendoerfer wrote:
-> In my patch series for splitting out the serial code from ioc3-eth
-> by using a MFD device there was one big patch for ioc3-eth.c,
-> which wasn't really usefull for reviews. This series contains the
-> ioc3-eth changes splitted in smaller steps and few more cleanups.
-> Only the conversion to MFD will be done later in a different series.
-> 
-> Changes in v2:
-> - use net_err_ratelimited for printing various ioc3 errors
-> - added missing clearing of rx buf valid flags into ioc3_alloc_rings
-> - use __func__ for printing out of memory messages
+On Thu, Aug 29, 2019 at 10:51:04PM +0200, Ilya Dryomov wrote:
+>On Thu, Aug 29, 2019 at 8:15 PM Sasha Levin <sashal@kernel.org> wrote:
+>>
+>> From: Luis Henriques <lhenriques@suse.com>
+>>
+>> [ Upstream commit 86968ef21596515958d5f0a40233d02be78ecec0 ]
+>>
+>> Calling ceph_buffer_put() in __ceph_setxattr() may end up freeing the
+>> i_xattrs.prealloc_blob buffer while holding the i_ceph_lock.  This can be
+>> fixed by postponing the call until later, when the lock is released.
+>>
+>> The following backtrace was triggered by fstests generic/117.
+>>
+>>   BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
+>>   in_atomic(): 1, irqs_disabled(): 0, pid: 650, name: fsstress
+>>   3 locks held by fsstress/650:
+>>    #0: 00000000870a0fe8 (sb_writers#8){.+.+}, at: mnt_want_write+0x20/0x50
+>>    #1: 00000000ba0c4c74 (&type->i_mutex_dir_key#6){++++}, at: vfs_setxattr+0x55/0xa0
+>>    #2: 000000008dfbb3f2 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: __ceph_setxattr+0x297/0x810
+>>   CPU: 1 PID: 650 Comm: fsstress Not tainted 5.2.0+ #437
+>>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
+>>   Call Trace:
+>>    dump_stack+0x67/0x90
+>>    ___might_sleep.cold+0x9f/0xb1
+>>    vfree+0x4b/0x60
+>>    ceph_buffer_release+0x1b/0x60
+>>    __ceph_setxattr+0x2b4/0x810
+>>    __vfs_setxattr+0x66/0x80
+>>    __vfs_setxattr_noperm+0x59/0xf0
+>>    vfs_setxattr+0x81/0xa0
+>>    setxattr+0x115/0x230
+>>    ? filename_lookup+0xc9/0x140
+>>    ? rcu_read_lock_sched_held+0x74/0x80
+>>    ? rcu_sync_lockdep_assert+0x2e/0x60
+>>    ? __sb_start_write+0x142/0x1a0
+>>    ? mnt_want_write+0x20/0x50
+>>    path_setxattr+0xba/0xd0
+>>    __x64_sys_lsetxattr+0x24/0x30
+>>    do_syscall_64+0x50/0x1c0
+>>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>>   RIP: 0033:0x7ff23514359a
+>>
+>> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+>> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+>> Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  fs/ceph/xattr.c | 8 ++++++--
+>>  1 file changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+>> index 0619adbcbe14c..8382299fc2d84 100644
+>> --- a/fs/ceph/xattr.c
+>> +++ b/fs/ceph/xattr.c
+>> @@ -1028,6 +1028,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
+>>         struct ceph_inode_info *ci = ceph_inode(inode);
+>>         struct ceph_mds_client *mdsc = ceph_sb_to_client(inode->i_sb)->mdsc;
+>>         struct ceph_cap_flush *prealloc_cf = NULL;
+>> +       struct ceph_buffer *old_blob = NULL;
+>>         int issued;
+>>         int err;
+>>         int dirty = 0;
+>> @@ -1101,13 +1102,15 @@ int __ceph_setxattr(struct inode *inode, const char *name,
+>>                 struct ceph_buffer *blob;
+>>
+>>                 spin_unlock(&ci->i_ceph_lock);
+>> -               dout(" preaallocating new blob size=%d\n", required_blob_size);
+>> +               ceph_buffer_put(old_blob); /* Shouldn't be required */
+>> +               dout(" pre-allocating new blob size=%d\n", required_blob_size);
+>>                 blob = ceph_buffer_new(required_blob_size, GFP_NOFS);
+>>                 if (!blob)
+>>                         goto do_sync_unlocked;
+>>                 spin_lock(&ci->i_ceph_lock);
+>> +               /* prealloc_blob can't be released while holding i_ceph_lock */
+>>                 if (ci->i_xattrs.prealloc_blob)
+>> -                       ceph_buffer_put(ci->i_xattrs.prealloc_blob);
+>> +                       old_blob = ci->i_xattrs.prealloc_blob;
+>>                 ci->i_xattrs.prealloc_blob = blob;
+>>                 goto retry;
+>>         }
+>> @@ -1123,6 +1126,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
+>>         }
+>>
+>>         spin_unlock(&ci->i_ceph_lock);
+>> +       ceph_buffer_put(old_blob);
+>>         if (lock_snap_rwsem)
+>>                 up_read(&mdsc->snap_rwsem);
+>>         if (dirty)
+>
+>Hi Sasha,
+>
+>I didn't tag i_ceph_lock series for stable because this is a very old
+>bug which no one ever hit in real life, at least to my knowledge.
 
-Only a few more comments on patch 5, otherwise looks good!
+I can drop it if you prefer.
+
+--
+Thanks,
+Sasha
