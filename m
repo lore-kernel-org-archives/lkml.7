@@ -2,149 +2,115 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1990CC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554FBC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA724208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3606921726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbfH2Q62 (ORCPT
+        id S1727922AbfH2Q70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:58:28 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:38548 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727087AbfH2Q62 (ORCPT
+        Thu, 29 Aug 2019 12:59:26 -0400
+Received: from smtprelay0040.hostedemail.com ([216.40.44.40]:48847 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726893AbfH2Q70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:58:28 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R901e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TanJx0D_1567097902;
-Received: from bn0418deMacBook-Pro.local(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0TanJx0D_1567097902)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 30 Aug 2019 00:58:23 +0800
-Subject: Re: [PATCH v2] vfio/type1: avoid redundant PageReserved checking
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>
-References: <20190827124041.4f986005@x1.home>
- <3517844d6371794cff59b13bf9c2baf1dcbe571c.1566966365.git.luoben@linux.alibaba.com>
- <20190828095501.12e71bd3@x1.home>
-From:   Ben Luo <luoben@linux.alibaba.com>
-Message-ID: <6c234632-b7e9-45c7-3d70-51a4c83161f6@linux.alibaba.com>
-Date:   Fri, 30 Aug 2019 00:58:22 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Thu, 29 Aug 2019 12:59:26 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 6D17A182251B3;
+        Thu, 29 Aug 2019 16:59:24 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: pen83_8c14c4bdf600f
+X-Filterd-Recvd-Size: 3280
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 29 Aug 2019 16:59:22 +0000 (UTC)
+Message-ID: <74c4784319b40deabfbaea92468f7e3ef44f1c96.camel@perches.com>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+From:   Joe Perches <joe@perches.com>
+To:     Gao Xiang <gaoxiang25@huawei.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Valdis =?UTF-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Date:   Thu, 29 Aug 2019 09:59:21 -0700
+In-Reply-To: <20190829164442.GA203852@architecture4>
+References: <20190828170022.GA7873@kroah.com>
+         <20190829062340.GB3047@infradead.org> <20190829063955.GA30193@kroah.com>
+         <20190829094136.GA28643@infradead.org> <20190829095019.GA13557@kroah.com>
+         <20190829103749.GA13661@infradead.org> <20190829111810.GA23393@kroah.com>
+         <20190829151144.GJ23584@kadam> <20190829152757.GA125003@architecture4>
+         <20190829154346.GK23584@kadam> <20190829164442.GA203852@architecture4>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20190828095501.12e71bd3@x1.home>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2019-08-30 at 00:44 +0800, Gao Xiang wrote:
+> Hi Dan,
+> 
+> On Thu, Aug 29, 2019 at 11:43:46PM +0800, Dan Carpenter wrote:
+> > > p.s. There are 2947 (un)likely places in fs/ directory.
+> > 
+> > I was complaining about you adding new pointless ones, not existing
+> > ones.  The likely/unlikely annotations are supposed to be functional and
+> > not decorative.  I explained this very clearly.
+> > 
+> > Probably most of the annotations in fs/ are wrong but they are also
+> > harmless except for the slight messiness.  However there are definitely
+> > some which are important so removing them all isn't a good idea.
+> > 
+> > > If you like, I will delete them all.
+> > 
+> > But for erofs, I don't think that any of the likely/unlikely calls have
+> > been thought about so I'm fine with removing all of them in one go.
+> 
+> Anyway, I have removed them all in
+> https://lore.kernel.org/r/20190829163827.203274-1-gaoxiang25@huawei.com/
+> 
+> Does it look good to you?
 
-ÔÚ 2019/8/28 ÏÂÎç11:55, Alex Williamson Ð´µÀ:
-> On Wed, 28 Aug 2019 12:28:04 +0800
-> Ben Luo <luoben@linux.alibaba.com> wrote:
->
->> currently, if the page is not a tail of compound page, it will be
->> checked twice for the same thing.
->>
->> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
->> ---
->>   drivers/vfio/vfio_iommu_type1.c | 3 +--
->>   1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
->> index 054391f..d0f7346 100644
->> --- a/drivers/vfio/vfio_iommu_type1.c
->> +++ b/drivers/vfio/vfio_iommu_type1.c
->> @@ -291,11 +291,10 @@ static int vfio_lock_acct(struct vfio_dma *dma, long npage, bool async)
->>   static bool is_invalid_reserved_pfn(unsigned long pfn)
->>   {
->>   	if (pfn_valid(pfn)) {
->> -		bool reserved;
->>   		struct page *tail = pfn_to_page(pfn);
->>   		struct page *head = compound_head(tail);
->> -		reserved = !!(PageReserved(head));
->>   		if (head != tail) {
->> +			bool reserved = PageReserved(head);
->>   			/*
->>   			 * "head" is not a dangling pointer
->>   			 * (compound_head takes care of that)
-> Thinking more about this, the code here was originally just a copy of
-> kvm_is_mmio_pfn() which was simplified in v3.12 with the commit below.
-> Should we instead do the same thing here?  Thanks,
->
-> Alex
-ok, and kvm_is_mmio_pfn() has also been updated since then, I will take 
-a look at that and compose a new patch
->
-> commit 11feeb498086a3a5907b8148bdf1786a9b18fc55
-> Author: Andrea Arcangeli <aarcange@redhat.com>
-> Date:   Thu Jul 25 03:04:38 2013 +0200
->
->      kvm: optimize away THP checks in kvm_is_mmio_pfn()
->      
->      The checks on PG_reserved in the page structure on head and tail pages
->      aren't necessary because split_huge_page wouldn't transfer the
->      PG_reserved bit from head to tail anyway.
->      
->      This was a forward-thinking check done in the case PageReserved was
->      set by a driver-owned page mapped in userland with something like
->      remap_pfn_range in a VM_PFNMAP region, but using hugepmds (not
->      possible right now). It was meant to be very safe, but it's overkill
->      as it's unlikely split_huge_page could ever run without the driver
->      noticing and tearing down the hugepage itself.
->      
->      And if a driver in the future will really want to map a reserved
->      hugepage in userland using an huge pmd it should simply take care of
->      marking all subpages reserved too to keep KVM safe. This of course
->      would require such a hypothetical driver to tear down the huge pmd
->      itself and splitting the hugepage itself, instead of relaying on
->      split_huge_page, but that sounds very reasonable, especially
->      considering split_huge_page wouldn't currently transfer the reserved
->      bit anyway.
->      
->      Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
->      Signed-off-by: Gleb Natapov <gleb@redhat.com>
->
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index d2836788561e..0fc25aed79a8 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -102,28 +102,8 @@ static bool largepages_enabled = true;
->   
->   bool kvm_is_mmio_pfn(pfn_t pfn)
->   {
-> -       if (pfn_valid(pfn)) {
-> -               int reserved;
-> -               struct page *tail = pfn_to_page(pfn);
-> -               struct page *head = compound_trans_head(tail);
-> -               reserved = PageReserved(head);
-> -               if (head != tail) {
-> -                       /*
-> -                        * "head" is not a dangling pointer
-> -                        * (compound_trans_head takes care of that)
-> -                        * but the hugepage may have been splitted
-> -                        * from under us (and we may not hold a
-> -                        * reference count on the head page so it can
-> -                        * be reused before we run PageReferenced), so
-> -                        * we've to check PageTail before returning
-> -                        * what we just read.
-> -                        */
-> -                       smp_rmb();
-> -                       if (PageTail(tail))
-> -                               return reserved;
-> -               }
-> -               return PageReserved(tail);
-> -       }
-> +       if (pfn_valid(pfn))
-> +               return PageReserved(pfn_to_page(pfn));
->   
->          return true;
->   }
+Unrelated bikeshed from a trivial look:
+
+There's a block there that looks like:
+
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+[]
+@@ -70,7 +70,7 @@ struct page *__erofs_get_meta_page(struct super_block *sb,
+ 		}
+ 
+ 		err = bio_add_page(bio, page, PAGE_SIZE, 0);
+-		if (unlikely(err != PAGE_SIZE)) {
++		if (err != PAGE_SIZE) {
+ 			err = -EFAULT;
+ 			goto err_out;
+ 		}
+
+The initial assignment to err is odd as it's not
+actually an error value -E<FOO> but a int size
+from a unsigned int len.
+
+Here the return is either 0 or PAGE_SIZE.
+
+This would be more legible to me as:
+
+		if (bio_add_page(bio, page, PAGE_SIZE, 0) != PAGE_SIZE) {
+			err = -EFAULT;
+			goto err_out;
+		}
+
+
