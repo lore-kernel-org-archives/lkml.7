@@ -2,104 +2,137 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC079C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B67C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8708233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D31F32189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:59:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="d1DlSWL7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfH2M55 convert rfc822-to-8bit (ORCPT
+        id S1727417AbfH2M7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 08:57:57 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34438 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbfH2M54 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 08:57:56 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a13so3547879qtj.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 05:57:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eBPBkBKyWo1gxv5n6v6wKh2d1Kik1L8vXbkWwc2K3bs=;
-        b=UjE/x8ChOsxzteKI/pRBMu3LB7l20zkbHDbzysZAfaskhAQissgM5kKPEYDodLd8pf
-         ahaLIO3F7W8GeUjaRXg6JkdYKkn2EY4bidCAJJi+LM3TaoFG0Vyv/j8+0t273dEX3ecH
-         rrtjudrOnjjeJUGQ/oJQPByC/930c7KjlSudROiqnD+iABun7Cz1F6NFI87M+fw9oM28
-         m+FsdJN4Hap5LR0GlGviXh8YDLg0bK4JH9O/NzRHilabrsAr8Qn7zpnI7VQS03SLLLeg
-         uxiUNXeUd9ecROeYn1rC6ARxHTLhBn5j0Amx363TMcLmUPFRqxGidgPOKtmz/OmD8C+9
-         kxlQ==
-X-Gm-Message-State: APjAAAXxMgXoqfXd3gqCKaVcqtusYe0W0t6klYINYMUcA5YWwGxejpVa
-        AzDcG8RTH6HyH62txP+F74l1Q/LuLJI6V3d2968=
-X-Google-Smtp-Source: APXvYqwY3WgtxDzkiHef+9HQh/ay0Es1FEwtogifyQxitHWZN7yE+/+41B7zXg5JPfw7deyTXnwsCWcNTDVb6Yevmn4=
-X-Received: by 2002:ac8:239d:: with SMTP id q29mr9597999qtq.304.1567083475450;
- Thu, 29 Aug 2019 05:57:55 -0700 (PDT)
+        Thu, 29 Aug 2019 08:59:03 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:40071 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726950AbfH2M7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 08:59:02 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46K2jv1ydTz9txfW;
+        Thu, 29 Aug 2019 14:58:59 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=d1DlSWL7; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id roj0O764YFSI; Thu, 29 Aug 2019 14:58:59 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46K2jv0q5Qz9txfT;
+        Thu, 29 Aug 2019 14:58:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1567083539; bh=ETDADYf+IUCVWupaeGrp+tk6VOk0Ifz5sDsNRRsIxEM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=d1DlSWL78knKVNtpTsN23QPXzEkdN+PCnkoG6h0EOTzE09c66D0rhvYJVj2i2o3ys
+         rFyEYohQLwv8QajUjpql0JKluJHVglf94GO5rhHjTA5z/122jEJLTwHpdWQQrxcNz3
+         ByzsE+/YDX2xNTzuBRKI8XONNXkNtMz6aqwuTbUg=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8A3C58B8BF;
+        Thu, 29 Aug 2019 14:59:00 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id vUOO7oAfSdZy; Thu, 29 Aug 2019 14:59:00 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 323F68B8B4;
+        Thu, 29 Aug 2019 14:59:00 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/mm: tell if a bad page fault on data is read or
+ write.
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <4f88d7e6fda53b5f80a71040ab400242f6c8cb93.1566400889.git.christophe.leroy@c-s.fr>
+ <87o908tbgx.fsf@mpe.ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <5f539c22-532a-3319-afe8-cdfac4ab3ee6@c-s.fr>
+Date:   Thu, 29 Aug 2019 14:59:00 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <cover.1567072270.git.msuchanek@suse.de> <061a0de2042156669303f95526ec13476bf490c7.1567072270.git.msuchanek@suse.de>
- <CAK8P3a1wR-jzFSzdPqgfCG4vyAi_xBPVGhc6Nn4KaXpk3cUiJw@mail.gmail.com> <20190829143716.6e41b10e@naga>
-In-Reply-To: <20190829143716.6e41b10e@naga>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 29 Aug 2019 14:57:39 +0200
-Message-ID: <CAK8P3a2DHP+8Vbc4yjq5-wT9GpSxvndCa8gnvx0WcD8YAUAsMw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] powerpc: make llseek 32bit-only.
-To:     =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Breno Leitao <leitao@debian.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Allison Randal <allison@lohutok.net>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Nicolai Stange <nstange@suse.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christian Brauner <christian@brauner.io>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <87o908tbgx.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 2:37 PM Michal Suchánek <msuchanek@suse.de> wrote:
-> On Thu, 29 Aug 2019 14:19:46 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Thu, Aug 29, 2019 at 12:23 PM Michal Suchanek <msuchanek@suse.de> wrote:
-> > In particular, I don't see why you single out llseek here, but leave other
-> > syscalls that are not needed on 64-bit machines such as pread64().
->
-> Because llseek is not built in fs/ when building 64bit only causing a
-> link error.
->
-> I initially posted patch to build it always but it was pointed out it
-> is not needed, and  the interface does not make sense on 64bit, and
-> that platforms that don't have it on 64bit now don't want that useless
-> code.
 
-Ok, please put that into the changeset description then.
 
-I looked at uses of __NR__llseek in debian code search and
-found this one:
+Le 29/08/2019 à 14:14, Michael Ellerman a écrit :
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> DSISR has a bit to tell if the fault is due to a read or a write.
+> 
+> Except some CPUs don't have a DSISR?
+> 
+> Which is why we have page_fault_is_write() that's used in
+> __do_page_fault().
+> 
+> Or is that old cruft?
+> 
+> I see eg. in head_40x.S we pass r5=0 for error code, and we don't set
+> regs->dsisr anywhere AFAICS. So it might just contain some junk.
 
-https://codesearch.debian.net/show?file=umview_0.8.2-1.2%2Fxmview%2Fum_mmap.c&line=328
+But then we have a problem with show_regs() as well, havent't we ?
 
-It looks like this application will try to use llseek instead of lseek
-when built against kernel headers that define __NR_llseek.
+	if (trap == 0x200 || trap == 0x300 || trap == 0x600)
+#if defined(CONFIG_4xx) || defined(CONFIG_BOOKE)
+		pr_cont("DEAR: "REG" ESR: "REG" ", regs->dar, regs->dsisr);
+#else
+		pr_cont("DAR: "REG" DSISR: %08lx ", regs->dar, regs->dsisr);
+#endif
 
-Changing the powerpc kernel not to provide that to user
-space may break it unless the program gets recompiled against
-the latest headers.
+I need to look closer.
 
-      Arnd
+Christophe
+
+
+> 
+> cheers
+> 
+>> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+>> index 8432c281de92..b5047f9b5dec 100644
+>> --- a/arch/powerpc/mm/fault.c
+>> +++ b/arch/powerpc/mm/fault.c
+>> @@ -645,6 +645,7 @@ NOKPROBE_SYMBOL(do_page_fault);
+>>   void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
+>>   {
+>>   	const struct exception_table_entry *entry;
+>> +	int is_write = page_fault_is_write(regs->dsisr);
+>>   
+>>   	/* Are we prepared to handle this fault?  */
+>>   	if ((entry = search_exception_tables(regs->nip)) != NULL) {
+>> @@ -658,9 +659,10 @@ void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
+>>   	case 0x300:
+>>   	case 0x380:
+>>   	case 0xe00:
+>> -		pr_alert("BUG: %s at 0x%08lx\n",
+>> +		pr_alert("BUG: %s on %s at 0x%08lx\n",
+>>   			 regs->dar < PAGE_SIZE ? "Kernel NULL pointer dereference" :
+>> -			 "Unable to handle kernel data access", regs->dar);
+>> +			 "Unable to handle kernel data access",
+>> +			 is_write ? "write" : "read", regs->dar);
+> 
+>>   		break;
+>>   	case 0x400:
+>>   	case 0x480:
+>> -- 
+>> 2.13.3
