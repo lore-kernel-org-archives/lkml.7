@@ -2,95 +2,85 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5190CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6089C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150D62166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:40:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BcilHtQY"
+	by mail.kernel.org (Postfix) with ESMTP id 82C8A2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:42:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfH2XkZ (ORCPT
+        id S1727041AbfH2XmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 19:40:25 -0400
-Received: from ozlabs.org ([203.11.71.1]:43993 "EHLO ozlabs.org"
+        Thu, 29 Aug 2019 19:42:12 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:43546 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbfH2XkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 19:40:24 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46KJxy5d0Hz9sDB;
-        Fri, 30 Aug 2019 09:40:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567122022;
-        bh=Dh2M1fm48opO/ywcJjF+FA4glUp10FnozOiYYF6CvFU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BcilHtQYp8bsvOyv8t7BKknnb3KeW97IDs4OTjN++NDbDk7wYF2STD8hUfNFCTvBZ
-         lHmAs1SUFu4/EtpcQ7w9MDDtx8IVvTJtGFOyGv1LWNjh5PhlkyYGC7PDohe2Xpha3Y
-         oaaZZE5QPDUO4NTxnmxXhLT7caBr/aA5ESpd4rvwQYxPTnQ099aGrcjVXyl+pNgZ51
-         MkWfTQxVQ62Jjk1au6JfDI1os4qWXDr0/c9eHxWmNKtJAfMoN/70Mfk2C9P+Y8xkg9
-         tw6VGOEwMrPFcONAjcAryo1SS7sh2vpuddObxr+3AHAZIM7hpzei1Ag7ldv7dnXJS4
-         b6cwiMU6XXp3Q==
-Date:   Fri, 30 Aug 2019 09:40:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Pittman <jpittman@redhat.com>
-Subject: linux-next: Fixes tag needs some work in the scsi-mkp tree
-Message-ID: <20190830094021.5a9fa690@canb.auug.org.au>
+        id S1725826AbfH2XmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 19:42:12 -0400
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1i3U39-0003ai-9a; Thu, 29 Aug 2019 17:41:56 -0600
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Rob Herring <robh@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Waterman <andrew@sifive.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Zong Li <zong@andestech.com>,
+        Michael Clark <michaeljclark@mac.com>,
+        Olof Johansson <olof@lixom.net>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190828214054.3562-1-logang@deltatee.com>
+ <alpine.DEB.2.21.9999.1908291542160.12266@viisi.sifive.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <58b828bd-d691-f460-49aa-7e6f15180343@deltatee.com>
+Date:   Thu, 29 Aug 2019 17:41:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/in2w1OPp..Hb11udX_psrNk";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <alpine.DEB.2.21.9999.1908291542160.12266@viisi.sifive.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: hch@lst.de, sbates@raithlin.com, greentime.hu@sifive.com, olof@lixom.net, michaeljclark@mac.com, zong@andestech.com, rppt@linux.ibm.com, andrew@sifive.com, aou@eecs.berkeley.edu, robh@kernel.org, palmer@sifive.com, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, paul.walmsley@sifive.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v6] RISC-V: Implement sparsemem
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/in2w1OPp..Hb11udX_psrNk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-In commit
+On 2019-08-29 5:38 p.m., Paul Walmsley wrote:
+>> +#ifdef CONFIG_SPARSEMEM
+>> +#define MAX_PHYSMEM_BITS	CONFIG_PA_BITS
+>> +#define SECTION_SIZE_BITS	27
+> 
+> Do you have a specific rationale behind this selection, or is this simply 
+> a reasonable starting point?
 
-  f18b30a01e21 ("scsi: fnic: print port speed only at driver init or speed =
-change")
+It's inline with what other platforms are doing. So in some ways it's a
+reasonable starting point but I don't see any reason to change it in the
+near term.
 
-Fixes tag
+>> +#endif /* CONFIG_SPARSEMEM */
+>> +
+>> +#endif /* __ASM_SPARSEMEM_H */
+> 
+> The following is what I'm getting ready to queue.
 
-  Fixes: commit d948e6383ec3 ("scsi: fnic: Add port speed stat to fnic debu=
-g stats")
+Great, thanks!
 
-has these problem(s):
+Logan
 
-  - leading word 'commit' unexpected
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/in2w1OPp..Hb11udX_psrNk
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1oYmUACgkQAVBC80lX
-0GyGAQf+JS0igX7P7kcXd1bf9req2cz/bKwMWk5tHs0CYJ3F/kJxEVbO5d/mO7Sm
-aZ2h0MHlpaaOJRvFbeFc99zY0oY4uAsqsElK6TSTrLXyTSgQ3xcn8HG0w67SdO4K
-72moSlJqpU1S5upQzVrFxrRqTwccw1NvA3NnTzPnzvI+Q9S5Ww33gPd5lWG1+xkw
-by3jy8FhvjxJIH2XJ/Fn2N/wIKnbVTk3sD7jUrcfTd0qCeKEYao8B278Xk3rPAWj
-Mej+yJKDOnA9bdBSWsb9OJAaI8kfL1/J2L2E+H6LuS0lKRzSCDb0QX1ikjvZiHxr
-f3dAJ8sveXCUpNdL1/rZLHkfOEGfKQ==
-=Pxox
------END PGP SIGNATURE-----
-
---Sig_/in2w1OPp..Hb11udX_psrNk--
