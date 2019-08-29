@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B11BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBE6C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89A32189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E2D2189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:18:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oq2JuZDP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IW9w26bX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbfH2VSg (ORCPT
+        id S1728188AbfH2VSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 17:18:36 -0400
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:36321 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbfH2VSg (ORCPT
+        Thu, 29 Aug 2019 17:18:42 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:42077 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726935AbfH2VSm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 17:18:36 -0400
-Received: by mail-qt1-f201.google.com with SMTP id 38so4870879qtx.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 14:18:35 -0700 (PDT)
+        Thu, 29 Aug 2019 17:18:42 -0400
+Received: by mail-pf1-f201.google.com with SMTP id e13so3506558pff.9
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 14:18:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=x8dW1eobv46xxf8Qk5whq589HTl41TDtcRbBhNUlvgA=;
-        b=oq2JuZDPnrdiEZUE2201QMFcPToj3KIqIsam0bd9PtbV9C8qAhCC8foVP5ylX6dGKL
-         BBWR7VUAqiKgeeKCsgQ1BKpieXF7anfbAMDMBYWPlRwQGdN5k4ShEN9Mw0kmgncqn9KI
-         3t0EOOrM2ajTMkjOLBz+/g4HFjQUFoSi1FVXi10rPtdPJtcHOlVZgjAgAuLsV7qk7WJM
-         8qaSNXQK/8uTVObl+Bp5exKBPfBRKP6fQrB10oPqJdP6EnqpyfywdkEd3TeR6FlLE8xu
-         rfO+t2Nag8LvY+1+T1jX4NaFnZ94x/AJyebaxzxb5+d7nMGKAZLWs1a2exi4QzB9O7nu
-         PqNA==
+        bh=qsIc6ouvJm25vCwwIEUG+MZjJjlVm8TuIpZN+dimnLk=;
+        b=IW9w26bXUH8R8hRCOZ/wKUA1wpLGP6x8CSqZ7pMb+T0iZ4NFzODHJihIjF2YmhQVg8
+         fsiayonaJwtOv2rBBKT2UHrIg0Ywz3cuQQNEcEpUqk7cIGqv9IzHTq4nQwV/1CzTmysf
+         QzTrRqm/jXq8Obj0SlnJs8XGGotx81Esv/z8i44U3aG+ooK4ghK1SPd7ToEBSe10Dx3C
+         Ju+0ik08lPfD5UTkK0B60m1LG5wB7nh0iPJrBz0Tnjv98Yguwey17bc3BQV0eg/Zqe2D
+         yjv0BKqvwuuTmlYtf5gdO3+UtdArtPz1lmRVRqONZTPgnoXzUWilfPUMZ6wA5eaAml8X
+         qXKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=x8dW1eobv46xxf8Qk5whq589HTl41TDtcRbBhNUlvgA=;
-        b=fjTjfgNI1vSPLDzenFP8ZpYL9Ft957a304Fw5cSkRbtQl+YnfHjrvvhbQBoSvfe188
-         4UMxA4OmQmT9vuZe2qOoT6KLt5Gt+PQ9HFvaZdS4XTQrgVXE7XIMXUBvVAKJjJjtMX9n
-         9wJvLuhMH+iZT5nuUVnyWZjR1sSf5+mwdZTs+aWAAaIaPt+w0Gk8Pq+lGzB9QO4lPD8j
-         Sxxrn2SFBxkSxNjuV1YuE1VSoA4C9o91dsY84nQYq9UnxN42tAzQOv0sdYj4jVU7B6xG
-         trcssZAfq5gGghkXTzRRr31i6qT/Y8ARxh4bKcrNw9OSgDJyaCyxaQA1duIkpXM/Mc0H
-         xQHg==
-X-Gm-Message-State: APjAAAUegEeIEzFRiSbUtEc8s3f5ysbF4CS4Sgtt5wWBEkMoAX9dTcq1
-        C5JRxow1SHikG6uHa7HsbJDUVhIxops=
-X-Google-Smtp-Source: APXvYqwWd/cHbTCLORr8bpxWDL8cNzI/P4mBj8n+Rmyq6eSxJh4t92dm+nBe1eZ4szBDxYarMV/BwOpgnQ4=
-X-Received: by 2002:a0c:fa89:: with SMTP id o9mr8142896qvn.165.1567113514869;
- Thu, 29 Aug 2019 14:18:34 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 14:18:09 -0700
+        bh=qsIc6ouvJm25vCwwIEUG+MZjJjlVm8TuIpZN+dimnLk=;
+        b=A2hCN2u5JE43gqN6Qkiq2WlLVZC1TWJVuhkUeudzCYLiL6e5V0bihb02cYbj3kJYzQ
+         L0i6X5xe/4EnU51X1mlvmzvCRIFYPjR/EPaXU/9xKyabEC1qnDyG9ziU+0t10mH7760O
+         ENq+ry4p5o0HXpsXqHlPykGC7bNgCANma7X+mNvSW07CAYT1CJL2GZnyY/MeyDNoL0+U
+         DGb6H1E08l5fnO+f91uk/Kj8R6wljfKJHtZQLdaJUHt/GxMmihB0jfZRjY2zNeiVd6yY
+         TUJHndLr6m0nz8EUH+Nc1cx8jet+s2CCFIZ8ZuackWuHrHFiaP6t2Ji7gtge4IQfiuPJ
+         tjGg==
+X-Gm-Message-State: APjAAAU2WjWR9NKyxF8tYIbFkKIIV3gtIk1bwukItokKbJnXA34ro+b3
+        pT/RpcMJtXezKGY/Mc3+pWuaUIt5Ppk=
+X-Google-Smtp-Source: APXvYqz8VUFSZAIRWeP5TVZHuCqfiV3u2jYKX6CDZcPvKIcjnnQy4HrAf+hlV7HKY2deBxh9PFxy82mmsjs=
+X-Received: by 2002:a63:2685:: with SMTP id m127mr10100602pgm.6.1567113521021;
+ Thu, 29 Aug 2019 14:18:41 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 14:18:10 -0700
 In-Reply-To: <20190829211812.32520-1-hridya@google.com>
-Message-Id: <20190829211812.32520-2-hridya@google.com>
+Message-Id: <20190829211812.32520-3-hridya@google.com>
 Mime-Version: 1.0
 References: <20190829211812.32520-1-hridya@google.com>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v2 1/4] binder: add a mount option to show global stats
+Subject: [PATCH v2 2/4] binder: Add stats, state and transactions files
 From:   Hridya Valsaraju <hridya@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>,
@@ -74,128 +74,281 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, all binder state and statistics live in debugfs.
-We need this information even when debugfs is not mounted.
-This patch adds the mount option 'stats' to enable a binderfs
-instance to have binder debug information present in the same.
-'stats=global' will enable the global binder statistics. In
-the future, 'stats=local' will enable binder statistics local
-to the binderfs instance. The two modes 'global' and 'local'
-will be mutually exclusive. 'stats=global' option is only available
-for a binderfs instance mounted in the initial user namespace.
-An attempt to use the option to mount a binderfs instance in
-another user namespace will return an EPERM error.
+The following binder stat files currently live in debugfs.
+
+/sys/kernel/debug/binder/state
+/sys/kernel/debug/binder/stats
+/sys/kernel/debug/binder/transactions
+
+This patch makes these files available in a binderfs instance
+mounted with the mount option 'stats=global'. For example, if a binderfs
+instance is mounted at path /dev/binderfs, the above files will be
+available at the following locations:
+
+/dev/binderfs/binder_logs/state
+/dev/binderfs/binder_logs/stats
+/dev/binderfs/binder_logs/transactions
+
+This provides a way to access them even when debugfs is not mounted.
 
 Signed-off-by: Hridya Valsaraju <hridya@google.com>
 ---
 
  Changes in v2:
- - Improve error check in binderfs_parse_mount_opts() as per Greg
-   Kroah-Hartman.
- - Change pr_info() log before failure to pr_err() as per Greg
-   Kroah-Hartman.
+ - Consistently name variables across functions as per Christian
+   Brauner.
+ - Improve check for binderfs device in binderfs_evict_inode()
+   as per Christian Brauner.
 
- drivers/android/binderfs.c | 45 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 43 insertions(+), 2 deletions(-)
+ drivers/android/binder.c          |  15 ++--
+ drivers/android/binder_internal.h |   8 ++
+ drivers/android/binderfs.c        | 140 +++++++++++++++++++++++++++++-
+ 3 files changed, 153 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-index cc2e71576396..7045bfe5b52b 100644
---- a/drivers/android/binderfs.c
-+++ b/drivers/android/binderfs.c
-@@ -51,18 +51,27 @@ static DEFINE_IDA(binderfs_minors);
- /**
-  * binderfs_mount_opts - mount options for binderfs
-  * @max: maximum number of allocatable binderfs binder devices
-+ * @stats_mode: enable binder stats in binderfs.
-  */
- struct binderfs_mount_opts {
- 	int max;
-+	int stats_mode;
- };
- 
- enum {
- 	Opt_max,
-+	Opt_stats_mode,
- 	Opt_err
- };
- 
-+enum binderfs_stats_mode {
-+	STATS_NONE,
-+	STATS_GLOBAL,
-+};
-+
- static const match_table_t tokens = {
- 	{ Opt_max, "max=%d" },
-+	{ Opt_stats_mode, "stats=%s" },
- 	{ Opt_err, NULL     }
- };
- 
-@@ -290,8 +299,9 @@ static void binderfs_evict_inode(struct inode *inode)
- static int binderfs_parse_mount_opts(char *data,
- 				     struct binderfs_mount_opts *opts)
- {
--	char *p;
-+	char *p, *stats;
- 	opts->max = BINDERFS_MAX_MINOR;
-+	opts->stats_mode = STATS_NONE;
- 
- 	while ((p = strsep(&data, ",")) != NULL) {
- 		substring_t args[MAX_OPT_ARGS];
-@@ -311,6 +321,22 @@ static int binderfs_parse_mount_opts(char *data,
- 
- 			opts->max = max_devices;
- 			break;
-+		case Opt_stats_mode:
-+			if (!capable(CAP_SYS_ADMIN))
-+				return -EINVAL;
-+
-+			stats = match_strdup(&args[0]);
-+			if (!stats)
-+				return -ENOMEM;
-+
-+			if (strcmp(stats, "global") != 0) {
-+				kfree(stats);
-+				return -EINVAL;
-+			}
-+
-+			opts->stats_mode = STATS_GLOBAL;
-+			kfree(stats);
-+			break;
- 		default:
- 			pr_err("Invalid mount options\n");
- 			return -EINVAL;
-@@ -322,8 +348,21 @@ static int binderfs_parse_mount_opts(char *data,
- 
- static int binderfs_remount(struct super_block *sb, int *flags, char *data)
- {
-+	int prev_stats_mode, ret;
- 	struct binderfs_info *info = sb->s_fs_info;
--	return binderfs_parse_mount_opts(data, &info->mount_opts);
-+
-+	prev_stats_mode = info->mount_opts.stats_mode;
-+	ret = binderfs_parse_mount_opts(data, &info->mount_opts);
-+	if (ret)
-+		return ret;
-+
-+	if (prev_stats_mode != info->mount_opts.stats_mode) {
-+		pr_err("Binderfs stats mode cannot be changed during a remount\n");
-+		info->mount_opts.stats_mode = prev_stats_mode;
-+		return -EINVAL;
-+	}
-+
-+	return 0;
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index ca6b21a53321..de795bd229c4 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -6055,7 +6055,7 @@ static void print_binder_proc_stats(struct seq_file *m,
  }
  
- static int binderfs_show_mount_opts(struct seq_file *seq, struct dentry *root)
-@@ -333,6 +372,8 @@ static int binderfs_show_mount_opts(struct seq_file *seq, struct dentry *root)
- 	info = root->d_sb->s_fs_info;
- 	if (info->mount_opts.max <= BINDERFS_MAX_MINOR)
- 		seq_printf(seq, ",max=%d", info->mount_opts.max);
-+	if (info->mount_opts.stats_mode == STATS_GLOBAL)
-+		seq_printf(seq, ",stats=global");
  
+-static int state_show(struct seq_file *m, void *unused)
++int binder_state_show(struct seq_file *m, void *unused)
+ {
+ 	struct binder_proc *proc;
+ 	struct binder_node *node;
+@@ -6094,7 +6094,7 @@ static int state_show(struct seq_file *m, void *unused)
  	return 0;
  }
+ 
+-static int stats_show(struct seq_file *m, void *unused)
++int binder_stats_show(struct seq_file *m, void *unused)
+ {
+ 	struct binder_proc *proc;
+ 
+@@ -6110,7 +6110,7 @@ static int stats_show(struct seq_file *m, void *unused)
+ 	return 0;
+ }
+ 
+-static int transactions_show(struct seq_file *m, void *unused)
++int binder_transactions_show(struct seq_file *m, void *unused)
+ {
+ 	struct binder_proc *proc;
+ 
+@@ -6198,9 +6198,6 @@ const struct file_operations binder_fops = {
+ 	.release = binder_release,
+ };
+ 
+-DEFINE_SHOW_ATTRIBUTE(state);
+-DEFINE_SHOW_ATTRIBUTE(stats);
+-DEFINE_SHOW_ATTRIBUTE(transactions);
+ DEFINE_SHOW_ATTRIBUTE(transaction_log);
+ 
+ static int __init init_binder_device(const char *name)
+@@ -6256,17 +6253,17 @@ static int __init binder_init(void)
+ 				    0444,
+ 				    binder_debugfs_dir_entry_root,
+ 				    NULL,
+-				    &state_fops);
++				    &binder_state_fops);
+ 		debugfs_create_file("stats",
+ 				    0444,
+ 				    binder_debugfs_dir_entry_root,
+ 				    NULL,
+-				    &stats_fops);
++				    &binder_stats_fops);
+ 		debugfs_create_file("transactions",
+ 				    0444,
+ 				    binder_debugfs_dir_entry_root,
+ 				    NULL,
+-				    &transactions_fops);
++				    &binder_transactions_fops);
+ 		debugfs_create_file("transaction_log",
+ 				    0444,
+ 				    binder_debugfs_dir_entry_root,
+diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_internal.h
+index fe8c745dc8e0..12ef96f256c6 100644
+--- a/drivers/android/binder_internal.h
++++ b/drivers/android/binder_internal.h
+@@ -57,4 +57,12 @@ static inline int __init init_binderfs(void)
+ }
+ #endif
+ 
++int binder_stats_show(struct seq_file *m, void *unused);
++DEFINE_SHOW_ATTRIBUTE(binder_stats);
++
++int binder_state_show(struct seq_file *m, void *unused);
++DEFINE_SHOW_ATTRIBUTE(binder_state);
++
++int binder_transactions_show(struct seq_file *m, void *unused);
++DEFINE_SHOW_ATTRIBUTE(binder_transactions);
+ #endif /* _LINUX_BINDER_INTERNAL_H */
+diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+index 7045bfe5b52b..0e1e7c87cd33 100644
+--- a/drivers/android/binderfs.c
++++ b/drivers/android/binderfs.c
+@@ -280,7 +280,7 @@ static void binderfs_evict_inode(struct inode *inode)
+ 
+ 	clear_inode(inode);
+ 
+-	if (!device)
++	if (!S_ISCHR(inode->i_mode) || !device)
+ 		return;
+ 
+ 	mutex_lock(&binderfs_minors_mutex);
+@@ -502,6 +502,141 @@ static const struct inode_operations binderfs_dir_inode_operations = {
+ 	.unlink = binderfs_unlink,
+ };
+ 
++static struct inode *binderfs_make_inode(struct super_block *sb, int mode)
++{
++	struct inode *ret;
++
++	ret = new_inode(sb);
++	if (ret) {
++		ret->i_ino = iunique(sb, BINDERFS_MAX_MINOR + INODE_OFFSET);
++		ret->i_mode = mode;
++		ret->i_atime = ret->i_mtime = ret->i_ctime = current_time(ret);
++	}
++	return ret;
++}
++
++static struct dentry *binderfs_create_dentry(struct dentry *parent,
++					     const char *name)
++{
++	struct dentry *dentry;
++
++	dentry = lookup_one_len(name, parent, strlen(name));
++	if (IS_ERR(dentry))
++		return dentry;
++
++	/* Return error if the file/dir already exists. */
++	if (d_really_is_positive(dentry)) {
++		dput(dentry);
++		return ERR_PTR(-EEXIST);
++	}
++
++	return dentry;
++}
++
++static struct dentry *binderfs_create_file(struct dentry *parent,
++					   const char *name,
++					   const struct file_operations *fops,
++					   void *data)
++{
++	struct dentry *dentry;
++	struct inode *new_inode, *parent_inode;
++	struct super_block *sb;
++
++	parent_inode = parent->d_inode;
++	inode_lock(parent_inode);
++
++	dentry = binderfs_create_dentry(parent, name);
++	if (IS_ERR(dentry))
++		goto out;
++
++	sb = parent_inode->i_sb;
++	new_inode = binderfs_make_inode(sb, S_IFREG | 0444);
++	if (!new_inode) {
++		dput(dentry);
++		dentry = ERR_PTR(-ENOMEM);
++		goto out;
++	}
++
++	new_inode->i_fop = fops;
++	new_inode->i_private = data;
++	d_instantiate(dentry, new_inode);
++	fsnotify_create(parent_inode, dentry);
++
++out:
++	inode_unlock(parent_inode);
++	return dentry;
++}
++
++static struct dentry *binderfs_create_dir(struct dentry *parent,
++					  const char *name)
++{
++	struct dentry *dentry;
++	struct inode *new_inode, *parent_inode;
++	struct super_block *sb;
++
++	parent_inode = d_inode(parent);
++	inode_lock(parent_inode);
++
++	dentry = binderfs_create_dentry(parent, name);
++	if (IS_ERR(dentry))
++		goto out;
++
++	sb = parent_inode->i_sb;
++	new_inode = binderfs_make_inode(sb, S_IFDIR | 0755);
++	if (!new_inode) {
++		dput(dentry);
++		dentry = ERR_PTR(-ENOMEM);
++		goto out;
++	}
++
++	new_inode->i_fop = &simple_dir_operations;
++	new_inode->i_op = &simple_dir_inode_operations;
++
++	inc_nlink(new_inode);
++	d_instantiate(dentry, new_inode);
++	inc_nlink(parent_inode);
++	fsnotify_mkdir(parent_inode, dentry);
++
++out:
++	inode_unlock(parent_inode);
++	return dentry;
++}
++
++static int init_binder_logs(struct super_block *sb)
++{
++	struct dentry *binder_logs_root_dir, *dentry;
++	int ret = 0;
++
++	binder_logs_root_dir = binderfs_create_dir(sb->s_root,
++						   "binder_logs");
++	if (IS_ERR(binder_logs_root_dir)) {
++		ret = PTR_ERR(binder_logs_root_dir);
++		goto out;
++	}
++
++	dentry = binderfs_create_file(binder_logs_root_dir, "stats",
++				      &binder_stats_fops, NULL);
++	if (IS_ERR(dentry)) {
++		ret = PTR_ERR(dentry);
++		goto out;
++	}
++
++	dentry = binderfs_create_file(binder_logs_root_dir, "state",
++				      &binder_state_fops, NULL);
++	if (IS_ERR(dentry)) {
++		ret = PTR_ERR(dentry);
++		goto out;
++	}
++
++	dentry = binderfs_create_file(binder_logs_root_dir, "transactions",
++				      &binder_transactions_fops, NULL);
++	if (IS_ERR(dentry))
++		ret = PTR_ERR(dentry);
++
++out:
++	return ret;
++}
++
+ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
+ {
+ 	int ret;
+@@ -580,6 +715,9 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
+ 
+ 	}
+ 
++	if (info->mount_opts.stats_mode == STATS_GLOBAL)
++		return init_binder_logs(sb);
++
+ 	return 0;
+ }
+ 
 -- 
 2.23.0.187.g17f5b7556c-goog
 
