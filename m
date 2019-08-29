@@ -2,262 +2,147 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1726C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7777C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7502339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B2482339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:46:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cekFe4Uw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JV7b89eN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbfH2MqI (ORCPT
+        id S1727359AbfH2Mql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 08:46:08 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35695 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbfH2MqH (ORCPT
+        Thu, 29 Aug 2019 08:46:41 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50739 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfH2Mql (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 08:46:07 -0400
-Received: by mail-pl1-f196.google.com with SMTP id gn20so1536641plb.2;
-        Thu, 29 Aug 2019 05:46:07 -0700 (PDT)
+        Thu, 29 Aug 2019 08:46:41 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v15so3601696wml.0;
+        Thu, 29 Aug 2019 05:46:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ytw5oM6/0UNrrgMY7YKw3kXMYdeOKbrMd7NM/PN006U=;
-        b=cekFe4Uwo6VfhBdfjynyshToBln1E/pkApGZYB8S+NkWSCwarIT3fN1XLETPtheTaS
-         4hEaciid81F4yn0zCr8iVQh54YsIOeq1Lkz1BUgzwWoH4wZvcu6qxGgtL8vopc9bPcvO
-         ggIh+5/xuSffuAuFNxBb/hxR1ivkouM6Qn8tOz1fb3AoH3lJYE4/CnpgIskA2gVcrMcs
-         PvKSUiAa80KV5q0uVQasaUQZmfVhZSFRSL5oCqB9m0sX2kur+2tEwMBKpIhkwqswN0B7
-         DWqwdRiPVpj86Kd0Nm7vZiRHHkHFwidu2QzeagegQpM6oOsIgAvyPyA9jwNhijyYTvG8
-         H4kw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=QlVIC8TNhGJq1NB5dIfzGpZGGFQCIpdVZDF44V62VcQ=;
+        b=JV7b89eNFuS5WTpaC3U9r4/BkSvp1wlY4PXYTx3w4hEIfEm9P+CgbJu5H1VoJVWQKq
+         68PDD+FSCBps8rPl+joi/bUj2C42piXodE/gVgdqWh3svPwjrXJxRKxzw7Q4oKjmBkt+
+         zGiWqTGguB7RYgarPllP8n0o2MhkEOyxpN/aii3w/RS9DrO90+Qm+oB4VEdI1Gj0Qqz0
+         r+dKd/MMucszeGo4UlII4Qo/PhfiZve0FlS2G5VUlkSJYxgqTfZYnmFy7+4t+7u+o+tO
+         iAxEb4SrOcT+oKbKFDUD9lIGC7JhIUaJB18vI20gw1ZCsQeC/VeiekIrWA7ACbmdSV6K
+         5J7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ytw5oM6/0UNrrgMY7YKw3kXMYdeOKbrMd7NM/PN006U=;
-        b=S95WnoqoePKbUFhCZ47RGmJAn0k4HRIfEgpSkO4C5LDGQt9M/IIOhVEFbqxkLpfjow
-         /Xtaw7c/2BzI2+yo3OCVg5UGJ5xhBVjIy9H1cfBza1JQo6x0CZFN0GQVRPlm5VBEAYlc
-         ITrsd5sAQt1ZkRoV70kiT/vtQxgUvvt/0LqBc4I65HQMH9YeWMDKHMYqCKvNYCuwh8ok
-         NarPYRR9ZfLhf8qtSp/6GYDa5A2PydKlVqEby3C3N7S3IiEcGI2d0+AnUM2wjQhjhtmI
-         frzN1He11+7UGb7YaOnP0JTcIS8biOs5ZbCOCsmyBFV7gf7ScxfthrFKA96bHb9pKEUy
-         EWCg==
-X-Gm-Message-State: APjAAAX+zU8w7HRwD/+y8pxX8dNRVnC8l/KkOCIsmpK94ZOGyY0RBhr6
-        hLJ/6woLzrYeMVBSYKeg6caAR6UJ
-X-Google-Smtp-Source: APXvYqw+FLjGay1zj1Ujue1rPNfIC25ZNvGguPcwJYKDhLmAN9+xDaVMQ6mjq++xFm+eLYXAgVA15w==
-X-Received: by 2002:a17:902:1105:: with SMTP id d5mr9896229pla.197.1567082766859;
-        Thu, 29 Aug 2019 05:46:06 -0700 (PDT)
-Received: from server.roeck-us.net (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
-        by smtp.gmail.com with ESMTPSA id v184sm2497989pgd.34.2019.08.29.05.46.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 05:46:06 -0700 (PDT)
-Subject: Re: [PATCH v5] watchdog: orion_wdt: use timer1 as a pretimeout
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        wim@linux-watchdog.org
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190829085042.30886-1-chris.packham@alliedtelesis.co.nz>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <eb3c9f1b-5a60-cb36-8cc5-6a83bf9678ba@roeck-us.net>
-Date:   Thu, 29 Aug 2019 05:46:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=QlVIC8TNhGJq1NB5dIfzGpZGGFQCIpdVZDF44V62VcQ=;
+        b=I0/zp8Gi5zf35HTCc6gdLlnAnGBzy7pPyNKyN0xkFV+SzYvraojAuffklVKzlKCq/L
+         aKcEbWZsaDlAduPpP9XlOG+F20yCbhXGV/6lw6KwT9vNfWpHvpPbR4qAq3Z/LJ3AbKde
+         lQKTzVowyYp4dtPrAOheBxcQITKpQ9VXO6ebsuTKEPs+HA8e8UQMHzJZ/mdaam2mG8dn
+         OcoLVPnUl0pP8fIitIoftmIyvlUioEpLijyv1HuYpvXYmRoBo1ASVWnvDt6S+EdwLaqX
+         802lE3ptjZX9n2XJ7OT+v5vtVyQrt91yhriJquKsXRF+Ho7N+L2vzb1A8cDWxKyD8jKv
+         8jNA==
+X-Gm-Message-State: APjAAAX50mBkaAJqUs1wyuBdq4CMZhUV0PZyeYdM684HogFvfsPg3ZPg
+        f2DwKQ/Ne1lKlxGoCk3Fgeo=
+X-Google-Smtp-Source: APXvYqwrshnUNKamixaL2Mpydl0AFKu7KVc1CrEhTFhBwIf2wyr5clc4/DhX7uakfObPGE2AS4L4uw==
+X-Received: by 2002:a7b:c857:: with SMTP id c23mr12036367wml.51.1567082798038;
+        Thu, 29 Aug 2019 05:46:38 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id 25sm2552046wmi.40.2019.08.29.05.46.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 29 Aug 2019 05:46:37 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 14:46:36 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20190829124636.475c7znb4pxuq2hi@pali>
+References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+ <20190829121435.bsl5cnx7yqgakpgb@pali>
+ <81682.1567082044@turing-police>
 MIME-Version: 1.0
-In-Reply-To: <20190829085042.30886-1-chris.packham@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <81682.1567082044@turing-police>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/19 1:50 AM, Chris Packham wrote:
-> The orion watchdog can either reset the CPU or generate an interrupt.
-> The interrupt would be useful for debugging as it provides panic()
-> output about the watchdog expiry, however if the interrupt is used the
-> watchdog can't reset the CPU in the event of being stuck in a loop with
-> interrupts disabled or if the CPU is prevented from accessing memory
-> (e.g. an unterminated DMA).
+On Thursday 29 August 2019 08:34:04 Valdis Klētnieks wrote:
+> On Thu, 29 Aug 2019 14:14:35 +0200, Pali Roh?r said:
+> > On Wednesday 28 August 2019 18:08:17 Greg Kroah-Hartman wrote:
+> > > The full specification of the filesystem can be found at:
+> > >   https://docs.microsoft.com/en-us/windows/win32/fileio/exfat-specification
+> >
+> > This is not truth. This specification is not "full". There are missing
+> > important details, like how is TexFAT implemented. 
 > 
-> The Armada SoCs have spare timers that aren't currently used by the
-> Linux kernel. We can use timer1 to provide a pre-timeout ahead of the
-> watchdog timer and provide the possibility of gathering debug before the
-> reset triggers.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
-> Changes in v5:
-> - Group bit values with register addresses
-> - Address review comments from Gunter
-> Changes in v4:
-> - rebase against linux/master
-> Changes in v2:
-> - apply changes to armada-38x only
-> 
->   drivers/watchdog/orion_wdt.c | 65 ++++++++++++++++++++++++++++--------
->   1 file changed, 52 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-> index cdb0d174c5e2..5a23cb448ed5 100644
-> --- a/drivers/watchdog/orion_wdt.c
-> +++ b/drivers/watchdog/orion_wdt.c
-> @@ -35,7 +35,15 @@
->    * Watchdog timer block registers.
->    */
->   #define TIMER_CTRL		0x0000
-> -#define TIMER_A370_STATUS	0x04
-> +#define TIMER1_FIXED_ENABLE_BIT	BIT(12)
-> +#define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
-> +#define TIMER1_ENABLE_BIT	BIT(2)
-> +
-> +#define TIMER_A370_STATUS	0x0004
-> +#define WDT_A370_EXPIRED	BIT(31)
-> +#define TIMER1_STATUS_BIT	BIT(8)
-> +
-> +#define TIMER1_VAL_OFF		0x001c
->   
->   #define WDT_MAX_CYCLE_COUNT	0xffffffff
->   
-> @@ -43,9 +51,6 @@
->   #define WDT_A370_RATIO_SHIFT	5
->   #define WDT_A370_RATIO		(1 << WDT_A370_RATIO_SHIFT)
->   
-> -#define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
-> -#define WDT_A370_EXPIRED	BIT(31)
-> -
->   static bool nowayout = WATCHDOG_NOWAYOUT;
->   static int heartbeat = -1;		/* module parameter (seconds) */
->   
-> @@ -158,6 +163,7 @@ static int armadaxp_wdt_clock_init(struct platform_device *pdev,
->   				   struct orion_watchdog *dev)
->   {
->   	int ret;
-> +	u32 val;
->   
->   	dev->clk = of_clk_get_by_name(pdev->dev.of_node, "fixed");
->   	if (IS_ERR(dev->clk))
-> @@ -168,10 +174,9 @@ static int armadaxp_wdt_clock_init(struct platform_device *pdev,
->   		return ret;
->   	}
->   
-> -	/* Enable the fixed watchdog clock input */
-> -	atomic_io_modify(dev->reg + TIMER_CTRL,
-> -			 WDT_AXP_FIXED_ENABLE_BIT,
-> -			 WDT_AXP_FIXED_ENABLE_BIT);
-> +	/* Fix the wdt and timer1 clock freqency to 25MHz */
-> +	val = WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
-> +	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
->   
->   	dev->clk_rate = clk_get_rate(dev->clk);
->   	return 0;
-> @@ -183,6 +188,10 @@ static int orion_wdt_ping(struct watchdog_device *wdt_dev)
->   	/* Reload watchdog duration */
->   	writel(dev->clk_rate * wdt_dev->timeout,
->   	       dev->reg + dev->data->wdt_counter_offset);
-> +	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-> +		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
-> +		       dev->reg + TIMER1_VAL_OFF);
-> +
->   	return 0;
->   }
->   
-> @@ -194,13 +203,18 @@ static int armada375_start(struct watchdog_device *wdt_dev)
->   	/* Set watchdog duration */
->   	writel(dev->clk_rate * wdt_dev->timeout,
->   	       dev->reg + dev->data->wdt_counter_offset);
-> +	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-> +		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
-> +		       dev->reg + TIMER1_VAL_OFF);
->   
->   	/* Clear the watchdog expiration bit */
->   	atomic_io_modify(dev->reg + TIMER_A370_STATUS, WDT_A370_EXPIRED, 0);
->   
->   	/* Enable watchdog timer */
-> -	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
-> -						dev->data->wdt_enable_bit);
-> +	reg = dev->data->wdt_enable_bit;
-> +	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-> +		reg |= TIMER1_ENABLE_BIT;
-> +	atomic_io_modify(dev->reg + TIMER_CTRL, reg, reg);
->   
->   	/* Enable reset on watchdog */
->   	reg = readl(dev->rstout);
-> @@ -277,7 +291,7 @@ static int orion_stop(struct watchdog_device *wdt_dev)
->   static int armada375_stop(struct watchdog_device *wdt_dev)
->   {
->   	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
-> -	u32 reg;
-> +	u32 reg, mask;
->   
->   	/* Disable reset on watchdog */
->   	atomic_io_modify(dev->rstout_mask, dev->data->rstout_mask_bit,
-> @@ -287,7 +301,10 @@ static int armada375_stop(struct watchdog_device *wdt_dev)
->   	writel(reg, dev->rstout);
->   
->   	/* Disable watchdog timer */
-> -	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
-> +	mask = dev->data->wdt_enable_bit;
-> +	if (wdt_dev->info->options & WDIOF_PRETIMEOUT)
-> +		mask &= ~TIMER1_ENABLE_BIT;
+> Well..given that the spec says it's an extension used by Windows CE...
 
-Sorry, I am lost. Why &= and ~ ?
+It is extension which provides more error-prone write operations to
+minimize damage on filesystem.
 
-Guenter
-
-> +	atomic_io_modify(dev->reg + TIMER_CTRL, mask, 0);
->   
->   	return 0;
->   }
-> @@ -349,7 +366,7 @@ static unsigned int orion_wdt_get_timeleft(struct watchdog_device *wdt_dev)
->   	return readl(dev->reg + dev->data->wdt_counter_offset) / dev->clk_rate;
->   }
->   
-> -static const struct watchdog_info orion_wdt_info = {
-> +static struct watchdog_info orion_wdt_info = {
->   	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
->   	.identity = "Orion Watchdog",
->   };
-> @@ -368,6 +385,16 @@ static irqreturn_t orion_wdt_irq(int irq, void *devid)
->   	return IRQ_HANDLED;
->   }
->   
-> +static irqreturn_t orion_wdt_pre_irq(int irq, void *devid)
-> +{
-> +	struct orion_watchdog *dev = devid;
-> +
-> +	atomic_io_modify(dev->reg + TIMER_A370_STATUS,
-> +			 TIMER1_STATUS_BIT, 0);
-> +	watchdog_notify_pretimeout(&dev->wdt);
-> +	return IRQ_HANDLED;
-> +}
-> +
->   /*
->    * The original devicetree binding for this driver specified only
->    * one memory resource, so in order to keep DT backwards compatibility
-> @@ -589,6 +616,18 @@ static int orion_wdt_probe(struct platform_device *pdev)
->   		}
->   	}
->   
-> +	irq = platform_get_irq(pdev, 1);
-> +	if (irq > 0) {
-> +		orion_wdt_info.options |= WDIOF_PRETIMEOUT;
-> +		ret = devm_request_irq(&pdev->dev, irq, orion_wdt_pre_irq,
-> +				       0, pdev->name, dev);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "failed to request IRQ\n");
-> +			goto disable_clk;
-> +		}
-> +	}
-> +
-> +
->   	watchdog_set_nowayout(&dev->wdt, nowayout);
->   	ret = watchdog_register_device(&dev->wdt);
->   	if (ret)
+> > 1.5 Windows CE and TexFAT
 > 
+> > TexFAT is an extension to exFAT that adds transaction-safe operational
+> > semantics on top of the base file system. TexFAT is used by Windows CE. TexFAT
+> > requires the use of the two FATs and allocation bitmaps for use in
+> > transactions. It also defines several additional structures including padding
+> > descriptors and security descriptors.
+> 
+> And these two pieces of info:
+> 
+> > 3.1.13.1 ActiveFat Field
+> 
+> > The ActiveFat field shall describe which FAT and Allocation Bitmap are active
+> > (and implementations shall use), as follows:
+> 
+> > 0, which means the First FAT and First Allocation Bitmap are active
+> 
+> > 1, which means the Second FAT and Second Allocation Bitmap are active and is
+> > possible only when the NumberOfFats field contains the value 2
+> 
+> > Implementations shall consider the inactive FAT and Allocation Bitmap as stale.
+> > Only TexFAT-aware implementations shall switch the active FAT and Allocation
+> > Bitmaps (see Section 7.1).
+> 
+> > 3.1.16 NumberOfFats Field
+> > The NumberOfFats field shall describe the number of FATs and Allocation Bitmaps
+> > the volume contains.
+> 
+> > The valid range of values for this field shall be:
+> 
+> > 1, which indicates the volume only contains the First FAT and First Allocation Bitmap
+> 
+> > 2, which indicates the volume contains the First FAT, Second FAT, First
+> > Allocation Bitmap, and Second Allocation Bitmap; this value is only valid for
+> > TexFAT volumes
+> 
+> I think we're OK if we just set ActiveFat to 0 and NumberOfFats to 1.
 
+But this degrades whole FS. Even FAT32 uses two FAT tables due to big
+factor of brokenness and fsck takes care of it when repairing.
+
+There is not too much sense to use exFAT with just one FAT if we have
+already working FAT32 with redundancy of FAT table.
+
+> Unless somebody has actual evidence of a non-WindowsCE extfat that has
+> NumberOfFats == 2....
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
