@@ -2,135 +2,149 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA26FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245B1C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA65F23403
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC7B23403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:51:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="U1F8iaX+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727251AbfH2DqF (ORCPT
+        id S1727174AbfH2Dvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 23:46:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25256 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726526AbfH2DqF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 23:46:05 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7T3gZ02146071
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 23:46:03 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2up5ruhwp4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 23:46:03 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 29 Aug 2019 04:46:01 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 29 Aug 2019 04:45:57 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7T3juQf51839122
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 03:45:56 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BED444204C;
-        Thu, 29 Aug 2019 03:45:56 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A0A8342041;
-        Thu, 29 Aug 2019 03:45:55 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.163.216])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 29 Aug 2019 03:45:55 +0000 (GMT)
-Subject: Re: [PATCH] ima: use struct_size() in kzalloc()
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 28 Aug 2019 23:45:55 -0400
-In-Reply-To: <671185b9-5c91-5235-b5ea-96d3449bf716@embeddedor.com>
-References: <20190529165343.GA2584@embeddedor>
-         <671185b9-5c91-5235-b5ea-96d3449bf716@embeddedor.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19082903-4275-0000-0000-0000035E859E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082903-4276-0000-0000-00003870BB55
-Message-Id: <1567050355.11493.3.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=972 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908290038
+        Wed, 28 Aug 2019 23:51:55 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37017 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726128AbfH2Dvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 23:51:54 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46JpZb2VDyz9sBp;
+        Thu, 29 Aug 2019 13:51:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567050711;
+        bh=ItfZEpr8AudVc2Ied8pd8iQSW4sPgc6Ag8MqymgcLIw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=U1F8iaX+PHzeE8GBn+MKgB2cPh+jidQBNRI9b8kuyAWyIxJVFCUcdz2EVcf7SQwlL
+         o+7JH91EIlZnWcXht2QublQ9veKKmLsKXSz5xh6q9QiTVAg9eOs8rCpi85ZjBv364t
+         doehR03PoBpbHHyIF/crOc1VZemRiGzCYStTC79jJOlUo3GN1OHjFjHwsKLv17dAk2
+         gPd2a8orA4sk06FfaH4cO1o32T97GGj7oSnX4kTvmhLdWZwTAYfLmmJRE1zSQ+2Fe5
+         qsnVrflw3PFT7t3JgN9NMzKaKZXgGZ8wDm3nTChYoArVmAEZyNvqI4E4BZRnJmBKqn
+         z9WZIssuuu/tw==
+Date:   Thu, 29 Aug 2019 13:51:50 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>
+Subject: linux-next: build warning after merge of the block tree
+Message-ID: <20190829135150.4f0e533a@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/97As8R_jcmeI=dho6YOw6EC";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo,
+--Sig_/97As8R_jcmeI=dho6YOw6EC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-08-28 at 13:29 -0500, Gustavo A. R. Silva wrote:
-> On 5/29/19 11:53 AM, Gustavo A. R. Silva wrote:
-> > One of the more common cases of allocation size calculations is finding
-> > the size of a structure that has a zero-sized array at the end, along
-> > with memory for some number of elements for that array. For example:
-> > 
-> > struct foo {
-> >    int stuff;
-> >    struct boo entry[];
-> > };
-> > 
-> > instance = kzalloc(sizeof(struct foo) + count * sizeof(struct boo), GFP_KERNEL);
-> > 
-> > Instead of leaving these open-coded and prone to type mistakes, we can
-> > now use the new struct_size() helper:
-> > 
-> > instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL);
-> > 
-> > This code was detected with the help of Coccinelle.
-> > 
-> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> > ---
-> >  security/integrity/ima/ima_template.c | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-> > index b631b8bc7624..b945dff2ed14 100644
-> > --- a/security/integrity/ima/ima_template.c
-> > +++ b/security/integrity/ima/ima_template.c
-> > @@ -281,9 +281,8 @@ static int ima_restore_template_data(struct ima_template_desc *template_desc,
-> >  	int ret = 0;
-> >  	int i;
-> >  
-> > -	*entry = kzalloc(sizeof(**entry) +
-> > -		    template_desc->num_fields * sizeof(struct ima_field_data),
-> > -		    GFP_NOFS);
-> > +	*entry = kzalloc(struct_size(*entry, template_data,
-> > +				     template_desc->num_fields), GFP_NOFS);
-> >  	if (!*entry)
-> >  		return -ENOMEM;
-> >  
-> > 
+Hi all,
 
-The same usage exists in ima_api.c: ima_alloc_init_template().  Did
-you want to make the change there as well?
+After merging the block tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
-thanks,
+In file included from include/trace/events/iocost.h:8,
+                 from <command-line>:
+include/trace/events/iocost.h:12:57: warning: 'struct ioc_now' declared ins=
+ide parameter list will not be visible outside of this definition or declar=
+ation
+  TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
+                                                         ^~~~~~~
+include/linux/tracepoint.h:233:34: note: in definition of macro '__DECLARE_=
+TRACE'
+  static inline void trace_##name(proto)    \
+                                  ^~~~~
+include/linux/tracepoint.h:396:24: note: in expansion of macro 'PARAMS'
+  __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),  \
+                        ^~~~~~
+include/linux/tracepoint.h:532:2: note: in expansion of macro 'DECLARE_TRAC=
+E'
+  DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+  ^~~~~~~~~~~~~
+include/linux/tracepoint.h:532:22: note: in expansion of macro 'PARAMS'
+  DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+                      ^~~~~~
+include/trace/events/iocost.h:10:1: note: in expansion of macro 'TRACE_EVEN=
+T'
+ TRACE_EVENT(iocost_iocg_activate,
+ ^~~~~~~~~~~
+include/trace/events/iocost.h:12:2: note: in expansion of macro 'TP_PROTO'
+  TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
+  ^~~~~~~~
+include/trace/events/iocost.h:12:18: warning: 'struct ioc_gq' declared insi=
+de parameter list will not be visible outside of this definition or declara=
+tion
+  TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
+                  ^~~~~~
+include/linux/tracepoint.h:233:34: note: in definition of macro '__DECLARE_=
+TRACE'
+  static inline void trace_##name(proto)    \
+                                  ^~~~~
+include/linux/tracepoint.h:396:24: note: in expansion of macro 'PARAMS'
+  __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),  \
+                        ^~~~~~
+include/linux/tracepoint.h:532:2: note: in expansion of macro 'DECLARE_TRAC=
+E'
+  DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+  ^~~~~~~~~~~~~
+include/linux/tracepoint.h:532:22: note: in expansion of macro 'PARAMS'
+  DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+                      ^~~~~~
+include/trace/events/iocost.h:10:1: note: in expansion of macro 'TRACE_EVEN=
+T'
+ TRACE_EVENT(iocost_iocg_activate,
+ ^~~~~~~~~~~
+include/trace/events/iocost.h:12:2: note: in expansion of macro 'TP_PROTO'
+  TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
+  ^~~~~~~~
 
-Mimi
+(and many more)
 
+Introduced by commit
+
+  7caa47151ab2 ("blkcg: implement blk-iocost")
+
+To get these warnings you need to build with CONFIG_HEADER_TEST and
+CONFIG_KERNEL_HEADER_TEST (and maybe CONFIG_UAPI_HEADER_TEST).
+allmodconfig does that.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/97As8R_jcmeI=dho6YOw6EC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1nS9YACgkQAVBC80lX
+0GwK7gf/YM/7oFlFRJibwrxG2N7GlO2Qh7OkEHrb7moXSk8K/eNq68jtih5oNu8B
+a7X0DC2v60ayx3Pnw4GkCBuaMRypCmtE8Y2wWfNCe30ijyV/1NF+20FOt2RipSPA
+4Awyaqn/Hh9LdNQcKt8Xg3VEvpAnQqVdjGRhcxQ9NltGQWbjspFkjBy+bW5Okckc
+sy47QcnvxCAV2KfT6/X3kL7gXUkQa/GlgpDd0B+u4XEIZS/0RSgY/9GqxtXsRwKW
+pf7X1aAgz2sbwRp2SmfjRAjoUt0wIwxfwqSuASxIUbcNcQLEjA+uz+jaip9Lr44y
+ypYHYb8UKzgjMSC3Mz084zUT190SsQ==
+=xHPJ
+-----END PGP SIGNATURE-----
+
+--Sig_/97As8R_jcmeI=dho6YOw6EC--
