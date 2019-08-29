@@ -2,222 +2,157 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D32C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D547C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4299A22CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5798D22CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:06:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ApuYI+m8"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="hGwbx72J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbfH2HDz (ORCPT
+        id S1727788AbfH2HGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 03:03:55 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55720 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbfH2HDy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 03:03:54 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f72so2462746wmf.5
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 00:03:52 -0700 (PDT)
+        Thu, 29 Aug 2019 03:06:18 -0400
+Received: from mail-eopbgr760088.outbound.protection.outlook.com ([40.107.76.88]:40001
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726889AbfH2HGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 03:06:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F7rUgn8n9PLJ2RCxN+znGewLOFYelGJqKC4QQmGLhe3czE/8bLBA6YyuubeHFQ6w68wQGtT3/d8lg2o+fbowV6GnPYzwrlj+Q83f6giopUChI6BzCM+1grLrE3i+uzwcVLJ/VOK05Fau1cXbAvWyoWnSNlbzXlLojf2MEZ3BlnKfTB2Qyae1niHOV9MDExspe173tSHqgUMghKWyROuZOZ4K4MNgH5mC/sfEqdSVOzjnGUT7THHuT70HJ/d8tjPVVAiuDg6i0DtLDJa7Vp3tOZ1yMuDI+xJhNKfI1oS8VEcuOSkc6yvxliYeAjbhhVwB53nlj4ZSZo5tQDe8Pb0mLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BhjqkoP+cfgrle1wujUhgUnrxijhKHag89STP5ESqIQ=;
+ b=Vmd4x1JpRtmtRtNYZsKdG83dsrxIyLU1eHiMXdujmGJDle1Dsy/QgczfizZgS6TSWho/u9so8f2WGO/BYVKkqNNxhsmo5AbFysALV/YIKKr9gtrhaQ2wyf93YrWLr/IWMS7ol5bkLvGR+dwj7laNimgu0KKdZkildapq58l446pQq1bWFzXyodDYYN7iQke709tFbAnR+LJRDS6LjoS7bQ298lMJ/vczs3B03Q1/cenNUqofgr3xjuedRlu6g/939DtWcEgoghda2D3vT/SccroygMyp37tyhPNeodeG3KY3xWaRFAqGTOjGnNDDT73hf8zU8yej1NiOnCVUpFAjuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=syJN1AElda7xhPvOw/vcy1dd6HyoWfY83SuIugcFyfE=;
-        b=ApuYI+m8YDXZXFm3JiiYl7767qTRfvwsIUrqU1BtJ2d3ovZVEMt+HLDjKOOIG8qu1y
-         H1FIhI5XqpMsPJWwcN+FJL3SMafk+HnnOisnkhs5CTX06OlcP+lctgbMQMQQYPjf1kx/
-         m70NRulYPkKyxLP8brmSIv3W7/6N6Npa5ffSDDSuHslYCMPxVrwrHpAj+hoRisd4261N
-         sB/bzFTQm+B4HQkAOUQUfWZFcJkFLStqshAbLDIVaNiR32aBlPSG0x9Rl2K87crpsTpj
-         bexhAjHtp/q0EQLl/PHc8wg2+Zpw+bIXy3QmloUGO50Kzh0ZWLkQ6PsZw8NWcPyTf/yE
-         3L+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=syJN1AElda7xhPvOw/vcy1dd6HyoWfY83SuIugcFyfE=;
-        b=ZIFj3JASU+e8+qHpNiaGEX57to9kCQDHc6E/yyx9IDUde+xZW/KORgIhFxQEownS0K
-         mQmISqHn+SMpIDelE/C6MhmM8F1Ca8aBw059oxWZii2w2mISRXKpwNYU/WnFqvYFOdnA
-         61AmAMXbrKGH1g563CLawSilDhP6AgHDBj6yT2rm2Isn3yY4sLwql9xcBv6hS5ZanAFp
-         GzEyTATgz6jAK5G8/VBrK8MO80NFYDhjILECR39qoCxZ9Itkostgv08KQqOMeInHES6f
-         9+daF2C7wiCxV+hsO9LmI2IBa5HXvgh+fjLl+/WjXRLmzHl8ZiysPHCEiZqfg4XfTHBk
-         N++w==
-X-Gm-Message-State: APjAAAU9vJnjqL2dCUqt+xRRQz6+h0w6t72/W27DWphje2rwxEB6oS5r
-        I270/Pz6StIRnIcKzw3AYnaShw==
-X-Google-Smtp-Source: APXvYqya0CiL9G1moyvmqQVNqGgkib/s77qe7jypGG/sh++aoSP0FKfRPFNRmI03bw4m+Sn596Ij4g==
-X-Received: by 2002:a7b:ce8f:: with SMTP id q15mr2906912wmj.154.1567062231241;
-        Thu, 29 Aug 2019 00:03:51 -0700 (PDT)
-Received: from [192.168.1.6] (124.red-83-36-179.dynamicip.rima-tde.net. [83.36.179.124])
-        by smtp.gmail.com with ESMTPSA id n14sm4299285wra.75.2019.08.29.00.03.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 00:03:50 -0700 (PDT)
-Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY
- bindings
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     robh@kernel.org, swboyd@chromium.org, andy.gross@linaro.org,
-        shawn.guo@linaro.org, gregkh@linuxfoundation.org,
-        mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
-References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org>
- <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org>
- <20190223165218.GB572@tuxbook-pro>
-From:   Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Message-ID: <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
-Date:   Thu, 29 Aug 2019 09:03:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <20190223165218.GB572@tuxbook-pro>
-Content-Type: text/plain; charset=utf-8
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BhjqkoP+cfgrle1wujUhgUnrxijhKHag89STP5ESqIQ=;
+ b=hGwbx72J8WJIPTYa7h7tghXAWQGA9Juhaq+sC3Qa7XNxxGk08OHnOYwjDx44om5QMWBqcviTCYn4TJa71mYNf/LS7X1FmYNVJC9B3BlvmQRWB6P8XDnf7Gk6njlcpvCpp3eSpWeNwDXsn0usOWOGj4lBOgUlYqE7/gpqsG/CdH0=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB4615.namprd03.prod.outlook.com (20.179.90.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Thu, 29 Aug 2019 07:06:14 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::391b:4d0f:a377:41c]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::391b:4d0f:a377:41c%4]) with mapi id 15.20.2220.013; Thu, 29 Aug 2019
+ 07:06:14 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] ARM: ftrace: remove mcount(),ftrace_caller_old() and
+ ftrace_call_old()
+Thread-Topic: [PATCH v3] ARM: ftrace: remove mcount(),ftrace_caller_old() and
+ ftrace_call_old()
+Thread-Index: AQHVWZ46Zhc7nRpNpE6gOQZveSAqyqcRuhEA
+Date:   Thu, 29 Aug 2019 07:06:14 +0000
+Message-ID: <20190829145450.0c0f79ee@xhacker.debian>
+References: <20190823182239.20f9a656@xhacker.debian>
+In-Reply-To: <20190823182239.20f9a656@xhacker.debian>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TY2PR01CA0041.jpnprd01.prod.outlook.com
+ (2603:1096:404:ce::29) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 403d50d5-6e35-4b3b-79a2-08d72c4f615f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB4615;
+x-ms-traffictypediagnostic: BYAPR03MB4615:
+x-microsoft-antispam-prvs: <BYAPR03MB4615B1C499880BA23612201AEDA20@BYAPR03MB4615.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1002;
+x-forefront-prvs: 0144B30E41
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(136003)(376002)(346002)(39860400002)(199004)(189003)(446003)(99286004)(66946007)(11346002)(476003)(66446008)(64756008)(66556008)(66476007)(66066001)(8936002)(81166006)(8676002)(486006)(81156014)(478600001)(316002)(50226002)(14454004)(71190400001)(102836004)(1076003)(305945005)(386003)(110136005)(6506007)(7736002)(256004)(5660300002)(86362001)(54906003)(53936002)(6246003)(71200400001)(52116002)(186003)(9686003)(6512007)(229853002)(26005)(3846002)(6486002)(6116002)(6436002)(76176011)(25786009)(4326008)(2906002)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4615;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: uqddwuvsiIzFbYBHiRNz0mbrYMh6TeEdy3ln2qS1X1uaMuW+3uw12k/E3/RABf/K5G6ll6WW13ShHMgPeegWtw6L5bccyA1zwdeFra3tWgZ5xSxE0eSSvwf4Qh6xjM+dmYgOc5ja/p11L/z6UbHWi9m5XiAYdrFBziZY2HQqUXKdvZFxcWL+kVpA2QlDfDE8fr2QjdgAFn7DdsWF7nODnT4YFONXIJK1hL7XOcKc7ISIa4A4j3IZ48dz3evhLfiP8syjjNXx7KXhldldNkB9O9Yt798BYDyakLzZx9wllrkzvVJw74AhCyAoRHQltGg27xFB/wbemaBhSJkiPtIn3tDYBDEsamX9VJbkaYOYN8lDnV71TJzc8qwDkjvatzEqOIOA1nSUihApFZbSsz/2xp+ds9fwjaNI3A5CStnAPU4=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D637AF53FFE02A4399732A3695A09051@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 403d50d5-6e35-4b3b-79a2-08d72c4f615f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 07:06:14.5858
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: f75y4odESQK25U9EN+ypGTMoAn/n3R1Qg+hLePVxnBU9W/D2OTtunPyQ6H3SvQ1Flt68H/XSDDkqdlbqf7oxQg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4615
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/23/19 17:52, Bjorn Andersson wrote:
-> On Thu 07 Feb 03:17 PST 2019, Jorge Ramirez-Ortiz wrote:
-> 
->> Binding description for Qualcomm's Synopsys 1.0.0 SuperSpeed phy
->> controller embedded in QCS404.
->>
->> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
->> definitions.
->>
->> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
->> ---
->>  .../bindings/phy/qcom,snps-usb-ssphy.txt      | 79 +++++++++++++++++++
->>  1 file changed, 79 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,snps-usb-ssphy.txt
->>
->> diff --git a/Documentation/devicetree/bindings/phy/qcom,snps-usb-ssphy.txt b/Documentation/devicetree/bindings/phy/qcom,snps-usb-ssphy.txt
->> new file mode 100644
->> index 000000000000..354e6f9cef62
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/qcom,snps-usb-ssphy.txt
->> @@ -0,0 +1,79 @@
->> +Qualcomm Synopsys 1.0.0 SS phy controller
->> +===========================================
->> +
->> +Qualcomm 1.0.0 SS phy controller supports SuperSpeed USB connectivity on
->> +some Qualcomm platforms.
->> +
->> +Required properties:
->> +
->> +- compatible:
->> +    Value type: <string>
->> +    Definition: Should contain "qcom,snps-usb-ssphy".
-> 
-> Per Rob's request make this:
-> 
-> Should contain "qcom,qcs404-snps-usb-ssphy" and "qcom,snps-usb-ssphy"
+Hi Russell,
 
-ok
+On Fri, 23 Aug 2019 18:22:39 +0800 Jisheng Zhang wrote:
 
-> 
-> You can then leave the driver matching on qcom,snps-usb-ssphy for now
-> and if we ever find this to be incompatible with other platforms we can
-> make the driver match on the platform-specific compatible.
+> Commit d3c61619568c ("ARM: 8788/1: ftrace: remove old mcount support")
+> removed the old mcount support, but forget to remove these three
+> declarations. This patch removes them.
 
-ok
+May I put this patch into your patch system?
 
-> 
->> +
->> +- reg:
->> +    Value type: <prop-encoded-array>
->> +    Definition: USB PHY base address and length of the register map.
->> +
->> +- #phy-cells:
->> +    Value type: <u32>
->> +    Definition: Should be 0. See phy/phy-bindings.txt for details.
->> +
->> +- clocks:
->> +    Value type: <prop-encoded-array>
->> +    Definition: See clock-bindings.txt section "consumers". List of
->> +		 three clock specifiers for reference, phy core and
->> +		 pipe clocks.
->> +
->> +- clock-names:
->> +    Value type: <string>
->> +    Definition: Names of the clocks in 1-1 correspondence with the "clocks"
->> +		 property. Must contain "ref", "phy" and "pipe".
->> +
->> +- vdd-supply:
->> +    Value type: <phandle>
->> +    Definition: phandle to the regulator VDD supply node.
->> +
->> +- vdda1p8-supply:
->> +    Value type: <phandle>
->> +    Definition: phandle to the regulator 1.8V supply node.
->> +
->> +Optional properties:
->> +
->> +- resets:
->> +    Value type: <prop-encoded-array>
->> +    Definition: See reset.txt section "consumers". Specifiers for COM and
->> +		 PHY resets.
->> +
->> +- reset-names:
->> +    Value type: <string>
->> +    Definition: Names of the resets in 1-1 correspondence with the "resets"
->> +		 property. Must contain "com" and "phy" if the property is
->> +		 specified.
->> +
->> +Required child nodes:
->> +
->> +- usb connector node as defined in bindings/connector/usb-connector.txt
->> +  containing the property vbus-supply.
->> +
->> +Example:
->> +
->> +usb3_phy: usb3-phy@78000 {
->> +	compatible = "qcom,snps-usb-ssphy";
->> +	reg = <0x78000 0x400>;
->> +	#phy-cells = <0>;
->> +	clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
->> +		 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
->> +		 <&gcc GCC_USB3_PHY_PIPE_CLK>;
->> +	clock-names = "ref", "phy", "pipe";
->> +	resets = <&gcc GCC_USB3_PHY_BCR>,
->> +		 <&gcc GCC_USB3PHY_PHY_BCR>;
->> +	reset-names = "com", "phy";
->> +	vdd-supply = <&vreg_l3_1p05>;
->> +	vdda1p8-supply = <&vreg_l5_1p8>;
->> +	usb3_c_connector: usb3-c-connector {
-> 
-> The USB-C connector is attached both to the HS and SS PHYs, so I think
-> you should represent this external to this node and use of_graph to
-> query it.
+thanks
 
-but AFAICS we wont be able to retrieve the vbux-supply from an external
-node (that interface does not exist).
-
-rob, do you have a suggestion?
-
-> 
-> So the connector should look similar to example 2 in
-> connector/usb-connector.txt.
-> 
-> Regards,
-> Bjorn
-> 
->> +		compatible = "usb-c-connector";
->> +		label = "USB-C";
->> +		type = "micro";
->> +		vbus-supply = <&usb3_vbus_reg>;
->> +	};
->> +};
->> -- 
->> 2.20.1
->>
-> 
+>=20
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+>=20
+> Changes since v2:
+>   - really remove mcount() declaration too. I made a mistake when sending=
+ out v2
+>=20
+> Changes since v1:
+>   - remove mcount() declaration too
+>=20
+>  arch/arm/include/asm/ftrace.h | 4 ----
+>  1 file changed, 4 deletions(-)
+>=20
+> diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.=
+h
+> index 18b0197f2384..48ec1d0337da 100644
+> --- a/arch/arm/include/asm/ftrace.h
+> +++ b/arch/arm/include/asm/ftrace.h
+> @@ -11,7 +11,6 @@
+>  #define MCOUNT_INSN_SIZE	4 /* sizeof mcount call */
+> =20
+>  #ifndef __ASSEMBLY__
+> -extern void mcount(void);
+>  extern void __gnu_mcount_nc(void);
+> =20
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+> @@ -23,9 +22,6 @@ static inline unsigned long ftrace_call_adjust(unsigned=
+ long addr)
+>  	/* With Thumb-2, the recorded addresses have the lsb set */
+>  	return addr & ~1;
+>  }
+> -
+> -extern void ftrace_caller_old(void);
+> -extern void ftrace_call_old(void);
+>  #endif
+> =20
+>  #endif
 
