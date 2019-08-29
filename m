@@ -2,143 +2,167 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF90FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE7CC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8435C22CED
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D16C233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:39:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Ybp1a8Vu"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QEF3Ee7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfH2Db7 (ORCPT
+        id S1727189AbfH2Djp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 23:31:59 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44175 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfH2Db7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 23:31:59 -0400
-Received: by mail-io1-f66.google.com with SMTP id j4so3915823iog.11
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 20:31:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B23iPa66D7URMvvUFe3gpmMeFfyLo1kqn9vSUt4f+f8=;
-        b=Ybp1a8VunoVjZCvuid2Eup5bQav1rc25fFWRK06QHz3i33O2S2fVy8uMX6FMwBPJkb
-         yER0061k6laFWEIe1qX5nZCl78zI/ljtjFEjmJ3i5j8cst3pbsxMYimc1VwpcmkhDOrm
-         bX+afp1jR7gO6ZDEsDBafi6ycuZfQyBxQR/MOOQv/mtIRiUH6YNzEiCqC0j2LG8zOOKN
-         CklERWIMTG0pYraGDlZ/2jS9Jqda+G51I/Bv3ftHgrr8ztEJUEENSjc4pWZiQSKcwVf/
-         1qTi/7SryB1UVcuQHLi5j8deEHiDKDV03cAZro4zVyEWkV77Lnvj0rPu5PJnDObWw9Ng
-         6nmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B23iPa66D7URMvvUFe3gpmMeFfyLo1kqn9vSUt4f+f8=;
-        b=SNJ++ZzfN/ZO2DJqpJbbOSUFNX3MlxtxUzIxW1A1LntiiQ8f2p4Dai2EwN5e+cJb/T
-         KIntKYoI/NPqPNROYsTork+95JhGZsadACcRxz/B2fbHN9Fhe+QnctoHWNO2mnvHEqG2
-         7iwuj20cbzRm+ERQ8chlfpfXJoka/RBgUriCv9hP6NThTx/KK38at/g4JvBs0E5qd+Og
-         7LpKekGYcdeapGwE5z+LJj3Ep1v8U03AcmgedwYed9DTHYPZvqnlEjICyL7Yt4S0H0i/
-         zUVH2QLlD6Rxyb7LQwKD/9bjIhwBY2X051Bme/gxGnZg03B+odTGTX6/0wN0r0aAGiFp
-         iO0A==
-X-Gm-Message-State: APjAAAXjknnZrFNqeSr88ha99fLzYjvztrnoEj1HtTRMNsz2t1Qw8nsn
-        EmvRZoBuZbUvVT2/pc+xHNxYA4AWQXjnEE+vmSFABg==
-X-Google-Smtp-Source: APXvYqwD3PhqzXGXFUlsVIX+XC4mOAcPePjIWM4fSB6vsF34yxpU5nB277d0sXQfPTy9gmoBZOFnw6fSlsuWtEw/kmQ=
-X-Received: by 2002:a6b:f803:: with SMTP id o3mr8481612ioh.187.1567049518377;
- Wed, 28 Aug 2019 20:31:58 -0700 (PDT)
+        Wed, 28 Aug 2019 23:39:45 -0400
+Received: from mail-eopbgr70047.outbound.protection.outlook.com ([40.107.7.47]:32992
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726128AbfH2Djo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 23:39:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EWm30uEIySy0RnDNT4bQWlsV+ZceSEK/rEij/jCX7/rYS8xZt6rhaWSYE4JzsMT6JYS6BnX555tV3ljNptxT0V5gqajXHuklizDTGIGUzh3Cclj5Sfwaze2WUaJrto7+iEcu41Ll0f2FcHTyr89sJTk11/j52yuJiN2z5BZHsp84VFQd1pfkE1KuhUDAyKk3M6U3rtaCI1beQpjW/QCHFOaOZiOXZJ+W9pBJrSvllg2pk0gF82mQQUfshvA8r18Ws6dexL75vDNOsR1n3c84HJWWgRiLSIDv80cpgkXorMwfIckddqhxKOlb6amB+vQSShHi6cCXQzXgUjv7vhGUKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FTC498B4ERTCYtAeuJqf03nypQrIhQqNbfqhgESUlrk=;
+ b=M9g9J19DapUoX7DwCinpoSaVIqklQjCD4AhBFyEq9Z1qcwdsuorZA9eYj8ZEDQRBAm5XdOZbEPPItJzAy5VPze88Kl1fBhqzNRwytMxLxOAGJ8fip3M/TbPm2dUGmPcsgf2E+TuSC/23a7nipK/4mzbCRK6NWvoMDFhlXqzG1TRtJs/SEwC5T6UBcci0xtxVP4YHEWobPrdvK49PUxWJrCnLBz8273QdRdgxs+XGHJrkQBO31prbVu9wiQt2pXcnotOJmiCLJ2RJwqUUSVcZd5aFMw646aXBkZuw1udnWZqIvMblKcyUbdIBb3gxAVB7IuOZoJZ6DgE+uHGp0GfDFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FTC498B4ERTCYtAeuJqf03nypQrIhQqNbfqhgESUlrk=;
+ b=QEF3Ee7wUKKOG8L+3U4oJ21x9tkd0+jba++tGp9WLU2aHT4zvjuCF/5LpLEntlqaoPFqZuC/XFq+CqzfTDo/Zu5kFoOHArWxmorEFEvN7uziIZUVF9k488WLI/8ipJXwyQzJjV3dGQJU9QsUrsZyzphagc+7iFUmSA4OMy3wWoM=
+Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.52.16) by
+ VI1PR04MB5309.eurprd04.prod.outlook.com (20.177.52.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.18; Thu, 29 Aug 2019 03:39:40 +0000
+Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
+ ([fe80::e039:172d:fe77:320a]) by VI1PR04MB5327.eurprd04.prod.outlook.com
+ ([fe80::e039:172d:fe77:320a%4]) with mapi id 15.20.2199.021; Thu, 29 Aug 2019
+ 03:39:40 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb: chipidea: msm: Use device-managed registration API
+Thread-Topic: [PATCH] usb: chipidea: msm: Use device-managed registration API
+Thread-Index: AQHVQQMqCyiV6SBdkkOiu7Ig/zYETKcQHUkAgACMCwCAAQttgA==
+Date:   Thu, 29 Aug 2019 03:39:40 +0000
+Message-ID: <20190829033941.GA14460@b29397-desktop>
+References: <20190723030206.2919-1-hslester96@gmail.com>
+ <20190828032118.GA2966@b29397-desktop>
+ <CANhBUQ0PEOoVoVscO66spy0Jv4jf5wwtGKRUwa4vd=7b70kBwA@mail.gmail.com>
+In-Reply-To: <CANhBUQ0PEOoVoVscO66spy0Jv4jf5wwtGKRUwa4vd=7b70kBwA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peter.chen@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f12e4617-cec0-445b-c25b-08d72c328624
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5309;
+x-ms-traffictypediagnostic: VI1PR04MB5309:
+x-microsoft-antispam-prvs: <VI1PR04MB53093B5FEBD3AB630B348DCD8BA20@VI1PR04MB5309.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0144B30E41
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(346002)(136003)(376002)(366004)(396003)(39860400002)(189003)(199004)(5660300002)(6246003)(305945005)(6436002)(81156014)(2906002)(8676002)(8936002)(3846002)(7736002)(6116002)(66066001)(76116006)(14454004)(66946007)(81166006)(91956017)(66446008)(66476007)(66556008)(64756008)(1411001)(478600001)(33656002)(33716001)(316002)(486006)(6916009)(54906003)(44832011)(11346002)(446003)(1076003)(229853002)(76176011)(99286004)(186003)(53546011)(102836004)(26005)(71190400001)(256004)(53936002)(6486002)(4326008)(71200400001)(6512007)(25786009)(6506007)(9686003)(476003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5309;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /+tPN4V07JgQRN7VgXv9dJ7BCPHKK3TvTpUqIcRFrZflqhfnSCMHB7cyVVD1l8lXFvUQ11s0Jpxgpw0/uX7vXy5gvCjWTzXj6hojP1DWAuP3BKCCmEGNT7BcacJtN4Gzq7ETCK/KIrCG5tUDZPRnTbdibO6BsmEujdbis5j6rz92MOfnGYgXj/K77EjeysObozQWQcG6TK6Gskeyz4MQqFvo+AvGJjPEO4tOqmV3WOjb/AZHzzXg5gHjBgY69scTWFAIaETCi5asgtvX4H7oUfALQaPBeQIVN7BUN67qCixrjBQqIUIsgXV4CXqKgp9hv+Pl4cHaFXJ4dNG+M7ufQUR4hEhSmF7/oy4UDgk2wlzVh3iYrzkXE7hiInM9JHHAtHJvs9AINMjTOjfR2HhS+1XgOk2CuQrupK/9EuDLnsI=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <48AB56A5E5670F41B0BE6A17F1BFAEDE@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190826193638.6638-1-echron@arista.com> <1566909632.5576.14.camel@lca.pw>
- <CAM3twVQEMGWMQEC0dduri0JWt3gH6F2YsSqOmk55VQz+CZDVKg@mail.gmail.com>
- <79FC3DA1-47F0-4FFC-A92B-9A7EBCE3F15F@lca.pw> <CAM3twVSdxJaEpmWXu2m_F1MxFMB58C6=LWWCDYNn5yT3Ns+0sQ@mail.gmail.com>
- <2A1D8FFC-9E9E-4D86-9A0E-28F8263CC508@lca.pw> <CAM3twVR5TVuuZSLM2qRJYnkCEKVZmA3XDNREaB+wdKH2Ne9vVA@mail.gmail.com>
- <20190828070845.GC7386@dhcp22.suse.cz> <2e816b05-7b5b-4bc0-8d38-8415daea920d@i-love.sakura.ne.jp>
- <CAM3twVRbhGL8pj0oa9NOu4pO2FWx3tTu928pW0g5CiE-K-meYw@mail.gmail.com>
-In-Reply-To: <CAM3twVRbhGL8pj0oa9NOu4pO2FWx3tTu928pW0g5CiE-K-meYw@mail.gmail.com>
-From:   Edward Chron <echron@arista.com>
-Date:   Wed, 28 Aug 2019 20:31:46 -0700
-Message-ID: <CAM3twVTueyGFv9YAH29xj1NAXfQUK56NBr9iucbkWUQ-bB7z6g@mail.gmail.com>
-Subject: Re: [PATCH 00/10] OOM Debug print selection and additional information
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f12e4617-cec0-445b-c25b-08d72c328624
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 03:39:40.5858
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mJC0dj47BHhrBSSDWtn+MMH/D6etiDmeebXEiA3iqWm1m2MD6syqtbPofTISd2fhMv9WfcnKguVTXtUSqi6Iww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5309
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 1:04 PM Edward Chron <echron@arista.com> wrote:
->
-> On Wed, Aug 28, 2019 at 3:12 AM Tetsuo Handa
-> <penguin-kernel@i-love.sakura.ne.jp> wrote:
+On 19-08-28 19:42:32, Chuhong Yuan wrote:
+> On Wed, Aug 28, 2019 at 11:24 AM Peter Chen <peter.chen@nxp.com> wrote:
 > >
-> > On 2019/08/28 16:08, Michal Hocko wrote:
-> > > On Tue 27-08-19 19:47:22, Edward Chron wrote:
-> > >> For production systems installing and updating EBPF scripts may someday
-> > >> be very common, but I wonder how data center managers feel about it now?
-> > >> Developers are very excited about it and it is a very powerful tool but can I
-> > >> get permission to add or replace an existing EBPF on production systems?
+> > On 19-07-23 11:02:07, Chuhong Yuan wrote:
+> > > Use devm_reset_controller_register to get rid
+> > > of manual unregistration.
 > > >
-> > > I am not sure I understand. There must be somebody trusted to take care
-> > > of systems, right?
+> > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > > ---
+> > >  drivers/usb/chipidea/ci_hdrc_msm.c | 4 +---
+> > >  1 file changed, 1 insertion(+), 3 deletions(-)
 > > >
+> > > diff --git a/drivers/usb/chipidea/ci_hdrc_msm.c b/drivers/usb/chipide=
+a/ci_hdrc_msm.c
+> > > index bb4645a8ca46..067542e84aea 100644
+> > > --- a/drivers/usb/chipidea/ci_hdrc_msm.c
+> > > +++ b/drivers/usb/chipidea/ci_hdrc_msm.c
+> > > @@ -216,7 +216,7 @@ static int ci_hdrc_msm_probe(struct platform_devi=
+ce *pdev)
+> > >       ci->rcdev.ops =3D &ci_hdrc_msm_reset_ops;
+> > >       ci->rcdev.of_node =3D pdev->dev.of_node;
+> > >       ci->rcdev.nr_resets =3D 2;
+> > > -     ret =3D reset_controller_register(&ci->rcdev);
+> > > +     ret =3D devm_reset_controller_register(&pdev->dev, &ci->rcdev);
+> > >       if (ret)
+> > >               return ret;
+> > >
+> > > @@ -272,7 +272,6 @@ static int ci_hdrc_msm_probe(struct platform_devi=
+ce *pdev)
+> > >  err_iface:
+> > >       clk_disable_unprepare(ci->core_clk);
+> > >  err_fs:
+> > > -     reset_controller_unregister(&ci->rcdev);
 > >
-> > Speak of my cases, those who take care of their systems are not developers.
-> > And they afraid changing code that runs in kernel mode. They unlikely give
-> > permission to install SystemTap/eBPF scripts. As a result, in many cases,
-> > the root cause cannot be identified.
->
-> +1. Exactly. The only thing we could think of Tetsuo is if Linux OOM Reporting
-> uses a an eBPF script then systems have to load them to get any kind of
-> meaningful report. Frankly, if using eBPF is the route to go than essentially
-> the whole OOM reporting should go there. We can adjust as we need and
-> have precedent for wanting to load the script. That's the best we could come
-> up with.
->
+> > It is devm API, why the unregister needs to be called at
+> > fail path?
 > >
-> > Moreover, we are talking about OOM situations, where we can't expect userspace
-> > processes to work properly. We need to dump information we want, without
-> > counting on userspace processes, before sending SIGKILL.
->
-> +1. We've tried and as you point out and for best results the kernel
-> has to provide
->  the state.
->
-> Again a full system dump would be wonderful, but taking a full dump for
-> every OOM event on production systems? I am not nearly a good enough salesman
-> to sell that one. So we need an alternate mechanism.
->
-> If we can't agree on some sort of extensible, configurable approach then put
-> the standard OOM Report in eBPF and make it mandatory to load it so we can
-> justify having to do that. Linux should load it automatically.
-> We'll just make a few changes and additions as needed.
->
-> Sounds like a plan that we could live with.
-> Would be interested if this works for others as well.
+>=20
+> I am not very clear about your problem...
+> After using devm_reset_controller_register(), I have removed
+> reset_controller_unregister() calls
+> in this patch.
+>=20
 
-One further comment. In talking with my colleagues here who know eBPF
-much better
-than I do, it may not be possible to implement something this
-complicated with eBPF.
+Sorry, my fault.
 
-If that is in the fact the case, then we'd have to try and hook the
-OOM Reporting code
-with tracepoints similar to kprobes only we want to do more than add counters
-we want to change the flow to skip small output entries that aren't
-worth printing.
-If this isn't feasible with eBPF, then some derivative or our approach
-or enhancing
-the OOM output code directly seem like the best options. Will have to
-investigate
-this further.
+Your patch is ok, but try to clean up the label "err_fs" since
+it is not needed.
+
+Peter
+
+> > Peter
+> >
+> > >       return ret;
+> > >  }
+> > >
+> > > @@ -284,7 +283,6 @@ static int ci_hdrc_msm_remove(struct platform_dev=
+ice *pdev)
+> > >       ci_hdrc_remove_device(ci->ci);
+> > >       clk_disable_unprepare(ci->iface_clk);
+> > >       clk_disable_unprepare(ci->core_clk);
+> > > -     reset_controller_unregister(&ci->rcdev);
+> > >
+> > >       return 0;
+> > >  }
+> > > --
+> > > 2.20.1
+> > >=
