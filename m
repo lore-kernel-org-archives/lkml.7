@@ -2,129 +2,152 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F31EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A11C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10EF22064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469FE205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:35:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPQ59wqq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfH2BdF (ORCPT
+        id S1727002AbfH2BfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 21:33:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37156 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbfH2BdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 21:33:04 -0400
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 68FF520ABB
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:33:04 +0000 (UTC)
-Received: by mail-pf1-f198.google.com with SMTP id q67so1164368pfc.10
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 18:33:04 -0700 (PDT)
+        Wed, 28 Aug 2019 21:35:08 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36603 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfH2BfI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 21:35:08 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y19so1684102wrd.3;
+        Wed, 28 Aug 2019 18:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4NPHzGMHYMzghz4vKjLIpWBlZHhRzQQTSD/2+ZhOAgo=;
+        b=kPQ59wqqXRr0CkbdnV6M+GImGU0tRXa3NIERwuxH/oG/TjykEADyx9NArTdkfBMJnY
+         VreCFgHWkH03xi2DcMcInAkEBn6aNILJ3vPPEKp5+h+T35lJSLSFlmk9ZLdzrllvjbdf
+         WN6bQyEF87/Tus2z3cPZ+Z/YdN3L/zJdPcl3XPO5isQCTiBbkzL99Y5/pTLAnAhc5Vyw
+         /oHgaTZ7MCox8HIwWq02jDJKOPu6tiej0gCSKwKU4sDG7g5ITU3IVNjeW6odzzXOB28E
+         FYbzv3zKu7aS8ljaFwH/Iji7SNhkO9xT+77OCtAUhZnVBProcedSmN9mdlGGDEEQX3vl
+         NIXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aUCBBKPneUXXEuiCVmgIIBKl8aLO0JeDP2Yet2NAVck=;
-        b=XAbvGUCNsNX29XPShaz66mjLU8K8jvXd1QFnQYUMOFAx+W7Q/2Ml5qx6puTZ/vVi3A
-         jcJx8KPJr1COxtlDLdLIFnfodMeKMOcjYO3FaNsL9Ju6qDuC20F8k3QRtQwxe/Y5TqAB
-         faUTpiqa6n7lmYY1qaVN49Bss7zIN5ZOWIkNso6vFR4xEJs6JOTOCPp7/DQxr8Fvsf6V
-         7nWrOGctx/UhI7+shxPFnL+WzBsAbbJnm30LPad5yNSK1Zyl8vX71PQBeT20WUytnGVm
-         YbsaxcRPpCXa8MDNT7z2v6RsZ8mLAFgJjbvVUL8WlQh7ejejzuWVCt8S+rVXY1QSi5z4
-         bwbA==
-X-Gm-Message-State: APjAAAWydesobFcKeCM3rnXk9jWaD+JX6iPHcNBt5Z1A/zAO8n5Dx0qd
-        NzjR31qjQRW1BpWqXThfolmoAUitCj2/PhLpFJ/0wMBqPao0DFV4jGznqNzVV9aI5bt6TQZrA1V
-        BBF4unBRaEkfmaidOySsTxcwo
-X-Received: by 2002:a17:902:d888:: with SMTP id b8mr7120264plz.115.1567042383972;
-        Wed, 28 Aug 2019 18:33:03 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzXgHT3ZZzOrcgMNnrLHO3EmcsXzSWvv4Jv9HO8bcFJ2YpIj2kFGw8hf4IW9XwifUfnLSU+5Q==
-X-Received: by 2002:a17:902:d888:: with SMTP id b8mr7120255plz.115.1567042383816;
-        Wed, 28 Aug 2019 18:33:03 -0700 (PDT)
-Received: from xz-x1 ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id k14sm394261pgi.20.2019.08.28.18.33.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 18:33:03 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 09:32:53 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH 0/4] KVM: selftests: Introduce VM_MODE_PXXV48_4K
-Message-ID: <20190829013253.GD8729@xz-x1>
-References: <20190827131015.21691-1-peterx@redhat.com>
- <20190828115106.2j6n7qust7uceds5@kamzik.brq.redhat.com>
- <20190828115230.7rctfb2w3whkonp7@kamzik.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4NPHzGMHYMzghz4vKjLIpWBlZHhRzQQTSD/2+ZhOAgo=;
+        b=Y2jlxlGl7L8nb8RInSWbdKgzAAgSZ9XQFQPfz5TDS/MOLr/uZL3euseW1zsQoNRCfo
+         ycBTznzToXPrqPzQGn54YAuCugeTX9x5pHBFItOoa1MdhTzzwa16QELlVOzwlCmz+SxM
+         IcaMLFxVkmeLmZNp8BF7ZucnDSAeGa1wY9nk70CRIwFUx+lwpRWdsJbOwBAXkKg8blrS
+         BfOCbN6yfb+dBQywKLqGeEDIXdSVDnbEmN2XH8AT9U85e13+5U4dV4vfENaFCsGnUqkb
+         10Yn7HtltwmJB0DfFJwmjxUb7+0DStHFSlX3wEhPbuIbU7bOaJlX2dutskJ4ThnpSJo6
+         yVTQ==
+X-Gm-Message-State: APjAAAUmbke619NaOpq0uxL7H05aOpBgFU94TbjFbgVunAS4OD1+wdfn
+        FHXs0Ve0fzhlyE9IuKGA/zd6mcqoJxy5jmbJljs=
+X-Google-Smtp-Source: APXvYqy1x5d0HaAGunnwgLR34YPhchUNwyWv5vgSZJs18Lzq9eEMkHulEXF12ksY9MfJcJYlNgY+HMEMxKNQliKecdc=
+X-Received: by 2002:a5d:6742:: with SMTP id l2mr7714375wrw.70.1567042505463;
+ Wed, 28 Aug 2019 18:35:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190828115230.7rctfb2w3whkonp7@kamzik.brq.redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190829075530.6fb7341c@canb.auug.org.au>
+In-Reply-To: <20190829075530.6fb7341c@canb.auug.org.au>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Thu, 29 Aug 2019 09:34:29 +0800
+Message-ID: <CAAfSe-v3uxWn8P1iJypFD2BCX-75SAMpo=dVtO7jMdt6E41tsg@mail.gmail.com>
+Subject: Re: linux-next: Fixes tags need some work in the mmc-fixes tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 01:52:30PM +0200, Andrew Jones wrote:
-> On Wed, Aug 28, 2019 at 01:51:06PM +0200, Andrew Jones wrote:
-> > On Tue, Aug 27, 2019 at 09:10:11PM +0800, Peter Xu wrote:
-> > > The work is based on Thomas's s390 port for dirty_log_test.
+On Thu, 29 Aug 2019 at 05:55, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> In commit
+>
+>   f93be8a7a366 ("mmc: sdhci-sprd: clear the UHS-I modes read from registers")
+>
+> Fixes tag
+>
+>   Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
+>
+> has these problem(s):
+>
+>   - Subject has leading but no trailing parentheses
+>   - Subject has leading but no trailing quotes
+>
+> In commit
+>
+>   218258427ce0 ("mms: sdhci-sprd: add SDHCI_QUIRK_BROKEN_CARD_DETECTION")
+>
+> Fixes tag
+>
+>   Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
+>
+> has these problem(s):
+>
+>   - Subject has leading but no trailing parentheses
+>   - Subject has leading but no trailing quotes
+>
+> In commit
+>
+>   1236e62ef8de ("mmc: sdhci-sprd: add SDHCI_QUIRK2_PRESET_VALUE_BROKEN")
+>
+> Fixes tag
+>
+>   Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
+>
+> has these problem(s):
+>
+>   - Subject has leading but no trailing parentheses
+>   - Subject has leading but no trailing quotes
+>
+> In commit
+>
+>   8180519b1be0 ("mmc: sdhci-sprd: add get_ro hook function")
+>
+> Fixes tag
+>
+>   Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
+>
+> has these problem(s):
+>
+>   - Subject has leading but no trailing parentheses
+>   - Subject has leading but no trailing quotes
+>
+> In commit
+>
+>   b4e4296cc206 ("mmc: sdhci-sprd: fixed incorrect clock divider")
+>
+> Fixes tag
+>
+>   Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host
+>
+> has these problem(s):
+>
+>   - Subject has leading but no trailing parentheses
+>   - Subject has leading but no trailing quotes
+>
+> Please do not split Fixes tags over more tha one line - even if the line
+> is more than 80 characters.
 
-[1]
+I will send another patch-set.
 
-> > > 
-> > > This series originates from "[PATCH] KVM: selftests: Detect max PA
-> > > width from cpuid" [1] and one of Drew's comments - instead of keeping
-> > > the hackish line to overwrite guest_pa_bits all the time, this series
-> > > introduced the new mode VM_MODE_PXXV48_4K for x86_64 platform.
-> > > 
-> > > The major issue is that even all the x86_64 kvm selftests are
-> > > currently using the guest mode VM_MODE_P52V48_4K, many x86_64 hosts
-> > > are not using 52 bits PA (and in most cases, far less).  If with luck
-> > > we could be having 48 bits hosts, but it's more adhoc (I've observed 3
-> > > x86_64 systems, they are having different PA width of 36, 39, 48).  I
-> > > am not sure whether this is happening to the other archs as well, but
-> > > it probably makes sense to bring the x86_64 tests to the real world on
-> > > always using the correct PA bits.
-> > > 
-> > > A side effect of this series is that it will also fix the crash we've
-> > > encountered on Xeon E3-1220 as mentioned [1] due to the
-> > > differenciation of PA width.
-> > > 
-> > > With [1], we've observed AMD host issues when with NPT=off.  However a
-> > > funny fact is that after I reworked into this series, the tests can
-> > > instead pass on both NPT=on/off.  It could be that the series changes
-> > > vm->pa_bits or other fields so something was affected.  I didn't dig
-> > > more on that though, considering we should not lose anything.
-> > > 
-> > > Any kind of smoke test would be greatly welcomed (especially on s390
-> > > or ARM).  Same to comments.  Thanks,
-> > > 
-> > 
-> > The patches didn't apply cleanly for me on 9e8312f5e160, but once I got
-> > them applied I was able to run the aarch64 tests.
+Thanks,
+Chunyan
 
-Right, because I applied Thomas's s390x port as base [1], considering
-that that one should reach kvm/queue earlier (should be in the
-submaintainer's tree and waiting for a pull).  Maybe I should post
-against the current kvm/queue next time?  After all this series does
-not modify anything of the s390x work so the conflict should be
-trivial.
-
-> 
-> Oh, and after fixing 2/4 (vm->pa_bits) to fix compilation on aarch64 as
-> pointed out on that patch.
-
-Thanks for verifying and reviews!  Yes I'll fix that up.
-
-Regards,
-
--- 
-Peter Xu
+>
+> --
+> Cheers,
+> Stephen Rothwell
