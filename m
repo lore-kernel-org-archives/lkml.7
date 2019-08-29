@@ -2,128 +2,91 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17105C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCDCC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E39CE233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:35:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AuX5TguM"
+	by mail.kernel.org (Postfix) with ESMTP id 4E6F822CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567064365;
+	bh=xZtw9k9/PshDiNUS3oHy6mH6yreqj1u3O90gY5RjPlA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kCCA4jyZi1WakSC9tlraPpSgjtvv/iu649g+aU0pi7ujXY5Qvh5vXSkALweU1n6Ug
+	 FXOtY6YZIseIdCiBKeLztDgIog77UlWdwMDwBrE4M1xilpM2h2WRceDPMwQYxKVf+4
+	 ibPscrkBSY/6i41JPrE5vnHFD3ZJhcLSU2eqIV6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfH2HfT (ORCPT
+        id S1727751AbfH2HjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 03:35:19 -0400
-Received: from ozlabs.org ([203.11.71.1]:43447 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfH2HfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 03:35:19 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46JvXN2pz0z9s5b;
-        Thu, 29 Aug 2019 17:35:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567064117;
-        bh=KdsotWkFg4n2gS9G9PGlPGtclq9pcMPxLN0SZXkQiSs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=AuX5TguMTk4iBS2O9LqjdviE5vqZHtKIGbC92fKkEVL7ceCkWAhQBZzxLXp+o1rVi
-         iM+v9zJE6uAzSu2x6NV6Vq1d3HrilbWtLpbqLvWC3fVK+FeeStcZ/5u4h6zbjmHJLl
-         CX6gytefIF6qmUTIuS8GIld68WgG0Oq5W1A/uXi0JNMHrP2M5lsrsaaPGtTyV6KgDf
-         Tz48veyPA+ehpBaUstk/CM7YvY4o75GLwvHumr6HOIwFbT26kr+9rL50jj7PC+Z+8o
-         GbmLdfgfGrABfqhqxixb2OP9R7zzMfpBUJL/h2vQlJzS0Ka7DeyUyW2qWwoWcqlf3g
-         eZKHCjTJgfFbA==
-Date:   Thu, 29 Aug 2019 17:35:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: linux-next: build failure after merge of the driver-core tree
-Message-ID: <20190829173515.764a12c5@canb.auug.org.au>
+        Thu, 29 Aug 2019 03:39:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44172 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726330AbfH2HjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 03:39:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 78FB3B03B;
+        Thu, 29 Aug 2019 07:39:22 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 09:39:21 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christopher Lameter <cl@linux.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+Message-ID: <20190829073921.GA21880@dhcp22.suse.cz>
+References: <20190826111627.7505-1-vbabka@suse.cz>
+ <20190826111627.7505-3-vbabka@suse.cz>
+ <0100016cd98bb2c1-a2af7539-706f-47ba-a68e-5f6a91f2f495-000000@email.amazonses.com>
+ <20190828194607.GB6590@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/9HgvQ_dAjZrM0qt/DJ+5yAz";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828194607.GB6590@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9HgvQ_dAjZrM0qt/DJ+5yAz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed 28-08-19 12:46:08, Matthew Wilcox wrote:
+> On Wed, Aug 28, 2019 at 06:45:07PM +0000, Christopher Lameter wrote:
+[...]
+> > be suprising and it limits the optimizations that slab allocators may use
+> > for optimizing data use. The SLOB allocator was designed in such a way
+> > that data wastage is limited. The changes here sabotage that goal and show
+> > that future slab allocators may be similarly constrained with the
+> > exceptional alignents implemented. Additional debugging features etc etc
+> > must all support the exceptional alignment requirements.
+> 
+> While I sympathise with the poor programmer who has to write the
+> fourth implementation of the sl*b interface, it's more for the pain of
+> picking a new letter than the pain of needing to honour the alignment
+> of allocations.
+> 
+> There are many places in the kernel which assume alignment.  They break
+> when it's not supplied.  I believe we have a better overall system if
+> the MM developers provide stronger guarantees than the MM consumers have
+> to work around only weak guarantees.
 
-Hi all,
-
-After merging the driver-core tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
-
-ERROR: "platform_get_irq_optional" [drivers/hwmon/pwm-fan.ko] undefined!
-
-Caused by commit
-
-  6e7e5c7fbc1c ("hwmon: pwm-fan: Use platform_get_irq_optional()")
-
-[ or maybe commit
-
-  8973ea47901c ("driver core: platform: Introduce platform_get_irq_optional=
-()")
-]
-
-I have added the following patch for today.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 29 Aug 2019 17:26:34 +1000
-Subject: [PATCH] driver core: platform: export platform_get_irq_optional
-
-Fixes: 6e7e5c7fbc1c ("hwmon: pwm-fan: Use platform_get_irq_optional()")
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/base/platform.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 0dda6ade50fd..11c6e56ccc22 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -213,6 +213,7 @@ int platform_get_irq_optional(struct platform_device *d=
-ev, unsigned int num)
- {
- 	return __platform_get_irq(dev, num);
- }
-+EXPORT_SYMBOL_GPL(platform_get_irq_optional);
-=20
- /**
-  * platform_irq_count - Count the number of IRQs a platform device uses
---=20
-2.20.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/9HgvQ_dAjZrM0qt/DJ+5yAz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1ngDMACgkQAVBC80lX
-0Gzkggf+IWGemgymyci+mGq4DEJ115o20nTX3YuDwVWmYfeebJOcTOpsDXm7C/gz
-putAL+2NDNI7TVkMnHi5vjZVI1i0epFAfbcpdSZ7NzZJ2wzO520GHXPPesWA+qmc
-m0XYIs9cC3K8EPZvoUSEL3sYZuklwSPLionZfHd3cktJHRle+1QHVAFDIboAyyAB
-F2qUgDzO6pdkpvcgitTna+RrxAF0WBjzg3xnrPkcx7Gwb3qqR/J+FxU8LRNYyZEm
-zJLif50O1UYqTnnNJLkbL9MkCdzgWftEBmsgsKsU4fuwQhY/qoNLLUGTzIE7taaO
-sfYAyTWsp1krgcGVbw0+5fo0lIcldA==
-=Msa2
------END PGP SIGNATURE-----
-
---Sig_/9HgvQ_dAjZrM0qt/DJ+5yAz--
+I absolutely agree. A hypothetical benefit of a new implementation
+doesn't outweigh the complexity the existing code has to jump over or
+worse is not aware of and it is broken silently. My general experience
+is that the later is more likely with a large variety of drivers we have
+in the tree and odd things they do in general.
+-- 
+Michal Hocko
+SUSE Labs
