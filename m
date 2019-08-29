@@ -2,101 +2,108 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEE7C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DB3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7216C233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3002189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:29:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Hc9GLAgO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WX2rpIUP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfH2J2j (ORCPT
+        id S1727007AbfH2J3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:28:39 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43699 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfH2J2j (ORCPT
+        Thu, 29 Aug 2019 05:29:37 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52695 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfH2J3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:28:39 -0400
-Received: by mail-io1-f68.google.com with SMTP id u185so1757889iod.10
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 02:28:38 -0700 (PDT)
+        Thu, 29 Aug 2019 05:29:36 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t17so2945152wmi.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 02:29:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v06lta4MYVBJBZLQ73bBpIez3Zzb0/6n6ZDJgeZvvFA=;
-        b=Hc9GLAgOOnaaXsF3NrbM7AecX7f3q0LEmVqWdNl+cCygzK/RxeejM05rD+PoBYvpNy
-         iCfIvK00i3nYnz/7hEF1IyoD0raYoTA0Fi7pIXSNsQiydr+b2RWwANqNTLEGdoi4TVze
-         EI0HrSen2CJeJvMGU2pb8OzX9tm5amIQIkLoI=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qWSruavJBjctqtbTw7cZ481dDATOlMFYVx3PLqKt1xM=;
+        b=WX2rpIUPb76YhLAsOh6Kt3XYL/PWARYUEhArNTNRjb53eIPadhFEr1MwpKWwJ4mMIv
+         ej7YAxPccq60NUii+YcUtFQUL0q45Kjxou2ZO0Ezj15ePj2dcTEDE25E9cvoUOmbqf73
+         pBGYD5E2sKnNUALnt6Umtf3dfNIwz1+uptbrwAMBr5uP7flQgd1Wvlfjvfo5muWx0lPq
+         kpvOVH03EARECgwsFEHCwO0gF+n88utpGrLyB62CtRS8vJ4QUfFYKjuFM+kRHvRok1D8
+         LsAAP3VYMqGDZm8A+yDl04VKbPprXkqpInGtXSGfsg//EPF68WA7fx+qFKlM5Nw99F2d
+         rUQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v06lta4MYVBJBZLQ73bBpIez3Zzb0/6n6ZDJgeZvvFA=;
-        b=mYyjPNRO1xUAQ8WQ0r3klctv6pAHwhWsoioddFNpDpQByiZxDhLXFJlzpVI058xIYB
-         D37MbbpQcGmhlnoi4SsU6OfEFi4zxPtbQZ/ed5p0HMW8dZHZjg8Q58wVvriULmqpJjq8
-         xdExr4Ei/VQgoM//K9ipdzPjTYsHdvXA8sIGdy8qPfB2ASrQ1Dw9hmVYZTSNpWHZ95AG
-         nHP1oQMPOzE0JgPx9MGFRkSzzDan7IZaaiuVg2HmtWuAxG4XR/rS9E9sNqR69tFFd4MH
-         UzDHtk6H5odggRw/MwL8aig8Su3JyJeBIcGbFcJkAlPECfy82nVuhiac2Lekoj6bQMA7
-         0p9g==
-X-Gm-Message-State: APjAAAW39/s3O8bQp0F5gdEsxeTd0Q0D+TzvE8VVrTfOqE7LmoY7JKRe
-        7inMzgAyNCk/o8wFlnoYoofmARzbw8/IcHOStfEK4Q==
-X-Google-Smtp-Source: APXvYqyUavfINYtqJHGpZUBR9A9V8dAVHmilYmO0JxPFl0AJag7dkVSKSrPI4+FtMTzlVFjVPwtJnqsyT6kSq+5gC8c=
-X-Received: by 2002:a5e:da48:: with SMTP id o8mr593380iop.252.1567070918305;
- Thu, 29 Aug 2019 02:28:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qWSruavJBjctqtbTw7cZ481dDATOlMFYVx3PLqKt1xM=;
+        b=NnkR+hpHJVtDFvRc2XC7uuX+dtmqNrbyjFX4BA7h+RbsWA7RsysPeL3APrRgJ4/2bo
+         oNtlaH/onFRn/AYgBDve8TYpKpWYG+PzAJ+zyjLdED4vAA5ydxEKR8JgDMDRuLI+UjnM
+         0BflIKbS+sIEe2qSD73pLEyNK8/IO3Qye8UeN6RBDL/PcdqfniW1FxDtRdSlETG/i9z3
+         FcqGrLxE0gCwwH9XTpTBbpr1QhI/YkJ5bSXtAz2UV+4shEn+NTBTefvSjWcQDmMB3Jtc
+         eY6Qh/+IOpy/zf+Y7wKNt2aK1J1KR+kp8iWl6IuijVDs3dWu+3zzQ+GB9WUJJ6B+vgad
+         WgAg==
+X-Gm-Message-State: APjAAAVYQ3oAoqBmg5VBaZAh2/Qqrb6xJNBj1ZaSdifDUlf3LWJU2tj0
+        UiZ6zKfnkJLmYB7VsUEidx6SYeLb1MY=
+X-Google-Smtp-Source: APXvYqzbuDdv93j0VoasfKOm4yenxKf2GCYq781Qe7sARneINrHtWSK8QRj3bqYgMvKJNlk82yWeiw==
+X-Received: by 2002:a7b:c952:: with SMTP id i18mr10832609wml.44.1567070974469;
+        Thu, 29 Aug 2019 02:29:34 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id f197sm3609512wme.22.2019.08.29.02.29.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 02:29:33 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     arnd@arndb.de, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 0/5] misc: fastrpc: few fixes
+Date:   Thu, 29 Aug 2019 10:29:21 +0100
+Message-Id: <20190829092926.12037-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190821173742.24574-1-vgoyal@redhat.com>
-In-Reply-To: <20190821173742.24574-1-vgoyal@redhat.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 29 Aug 2019 11:28:27 +0200
-Message-ID: <CAJfpegv_XS=kLxw_FzWNM2Xao5wsn7oGbk3ow78gU8tpXwo-sg@mail.gmail.com>
-Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual machines
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 7:38 PM Vivek Goyal <vgoyal@redhat.com> wrote:
->
-> Hi,
->
-> Here are the V3 patches for virtio-fs filesystem. This time I have
-> broken the patch series in two parts. This is first part which does
-> not contain DAX support. Second patch series will contain the patches
-> for DAX support.
->
-> I have also dropped RFC tag from first patch series as we believe its
-> in good enough shape that it should get a consideration for inclusion
-> upstream.
+Hi Greg,
 
-Pushed out to
+More testing on fastprc revealed few memory leaks in driver
+and few corner cases.
+These patches are the fixes for those cases.
+One patch from Jorge is to remove unsed definition.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git#for-next
-
-Major changes compared to patchset:
-
- - renamed to "virtiofs".  Filesystem names don't usually have
-underscore before "fs" postfix.
-
- - removed option parsing completely.  Virtiofs config is fixed to "-o
-rootmode=040000,user_id=0,group_id=0,allow_other,default_permissions".
-Does this sound reasonable?
-
-There are miscellaneous changes, so needs to be thoroughly tested.
-
-I think we also need something in
-"Documentation/filesystems/virtiofs.rst" which describes the design
-(how  request gets to userspace and back) and how to set up the
-server, etc...  Stefan, Vivek can you do something like that?
+co-authorship issue on
+"misc: fastrpc: fix double refcounting on dmabuf"
+patch has been resolved offline and decided to not
+change anything.
 
 Thanks,
-Miklos
+srini
+
+Changes since v1:
+ - Updated change log to remove TEST tag.
+ - no code changes.
+
+Bjorn Andersson (2):
+  misc: fastrpc: Reference count channel context
+  misc: fastrpc: Don't reference rpmsg_device after remove
+
+Jorge Ramirez-Ortiz (1):
+  misc: fastrpc: remove unused definition
+
+Srinivas Kandagatla (2):
+  misc: fastrpc: fix double refcounting on dmabuf
+  misc: fastrpc: free dma buf scatter list
+
+ drivers/misc/fastrpc.c | 74 ++++++++++++++++++++++++------------------
+ 1 file changed, 43 insertions(+), 31 deletions(-)
+
+-- 
+2.21.0
+
