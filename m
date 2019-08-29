@@ -2,164 +2,165 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C2BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFCBC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD0022CED
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 265C7205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:20:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qD3OIyS/"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="ajKfR8Wm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbfH2PTZ (ORCPT
+        id S1727867AbfH2PUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:19:25 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:13794 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfH2PTZ (ORCPT
+        Thu, 29 Aug 2019 11:20:19 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41377 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbfH2PUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:19:25 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d67ecfb0003>; Thu, 29 Aug 2019 08:19:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 29 Aug 2019 08:19:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 29 Aug 2019 08:19:22 -0700
-Received: from [10.25.75.254] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 29 Aug
- 2019 15:18:42 +0000
-Subject: Re: [PATCH V3 2/6] dt-bindings: PCI: tegra: Add PCIe slot supplies
- regulator entries
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <jonathanh@nvidia.com>,
-        <andrew.murray@arm.com>, <kishon@ti.com>,
-        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190828172850.19871-1-vidyas@nvidia.com>
- <20190828172850.19871-3-vidyas@nvidia.com> <20190829120329.GC13187@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <cd106d64-e06c-e7a2-d807-f5f080625363@nvidia.com>
-Date:   Thu, 29 Aug 2019 20:48:39 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 11:20:18 -0400
+Received: by mail-io1-f68.google.com with SMTP id j5so7619943ioj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 08:20:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9iGYmCEiptvqIZxLPzxTrn9/HqDtZTsAATxoz/a+FeY=;
+        b=ajKfR8WmQH2jAsoipDnkYbdg4QxYVjBRrwVKbgdkZvDqfmUZT4lxfBjj4IxSQInSAl
+         rE0+ffA6yeCWxHunh0J/zSmLRmTiUqNIvh2e87x4KkaYwlI9W9qV5GTe4VfiPJ7YUWcW
+         H0/D7ljhYVJLZP3bINjjneQAkjk6+sIhzcvHKbyCVbm2NBgCWpkCK3ELtOA5eE+60Egu
+         xde0s9Ex71CBC/Rpw6ko8A4G8bxWxCKwtShOudlqRuVcVj6BQhulFc3uCeA97GXI5ppx
+         snAZDYMGj6OJhvrxaYT9K7B7c3VpTp3FiPlYbXfDBsO36RfiHf8waO4/Zz2IlNdXU+db
+         44ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9iGYmCEiptvqIZxLPzxTrn9/HqDtZTsAATxoz/a+FeY=;
+        b=NVsvZ5dv1JEBq3qESI2EUUWdBK1L5YETqo4GVuq9gX43ayVuSgpoMAUpniSfy++/iN
+         rS5UxK40nvzU2IoY+ZhB0jAQeP61DM0XqCL2bk4EzrGKMpeIb/uC3x7FOreOLJY5dbUT
+         8qHX/m7mJ00frhuk+ya4ZDTGnX7RSfaWH3iEjNs06mCHrZEhWZ+8FYMgnKjg9RmpmzOI
+         DwdSve1bU+WJicGFf4V1xigOWPzXGp0giRXymaSD3WIMOdv6PbaRmgpX8xg8qWL6B7Vh
+         4Tow84vHgopfsSSg5NbDIxDChsJykG7H3QVvG6pOZYM62nW2yp2IR6LULTBnZBok9Al4
+         PPVg==
+X-Gm-Message-State: APjAAAV9wcpys/72pGwPxgNDjPvrTwaoTuZg2by8dMPglMLljeNXjmvB
+        e51EQMYo1ESC5GL/3ILZ6cXfTtKpKzeNKsQPKZkmKg==
+X-Google-Smtp-Source: APXvYqy6YoShfCpFvhhWS2elsguTFduZWQbNVJA3a3MV47qQbaX5VoOHg78NDfCtnnFi1Skwu+2Z+9eFH2zKt0EaDLY=
+X-Received: by 2002:a5d:8591:: with SMTP id f17mr1320810ioj.5.1567092017615;
+ Thu, 29 Aug 2019 08:20:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190829120329.GC13187@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567091963; bh=26NeoQlEq36/bfgv16BwS5qeIh/4BBTWDJHJLCUv198=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=qD3OIyS/DUj7JJzCiNQrZXALOWvZUrW3IkW+LfcC2aBJi0hVvJ3ybkjO1QZletTa5
-         xcoKk0bpSfnPkFNO6IKr/dXJlIV3ps1koC/7QqHqRnrEHH9+BMysNvxl0Ih2whZZF6
-         bBsSdXcsH8DBcqgFjTJa8vgzjk5j2BVI9QHD1BVwGNWrcFT0XYIBhw4sWqnFmWsYAt
-         ef+UmZetjTLW4UtCeAlGagfbpPDGf/Jsr8p7oEYFxhvvR56mE7wmWDDhOzjbKCJJcQ
-         FY75nqBB+CZyocyU8VDhJQRb3gO7kZiBVmNPqmUZ9jC8ubUYGZEe9imw4xU5bj0OyQ
-         RRwrhWYzA9KPQ==
+References: <20190826193638.6638-1-echron@arista.com> <20190827071523.GR7538@dhcp22.suse.cz>
+ <CAM3twVRZfarAP6k=LLWH0jEJXu8C8WZKgMXCFKBZdRsTVVFrUQ@mail.gmail.com>
+ <20190828065955.GB7386@dhcp22.suse.cz> <CAM3twVR_OLffQ1U-SgQOdHxuByLNL5sicfnObimpGpPQ1tJ0FQ@mail.gmail.com>
+ <20190829071105.GQ28313@dhcp22.suse.cz>
+In-Reply-To: <20190829071105.GQ28313@dhcp22.suse.cz>
+From:   Edward Chron <echron@arista.com>
+Date:   Thu, 29 Aug 2019 08:20:05 -0700
+Message-ID: <CAM3twVQrgJUR7n2=Q5FY4zv-0fc8C9Mj3Cn0pxYFY7s3sMXUJw@mail.gmail.com>
+Subject: Re: [PATCH 00/10] OOM Debug print selection and additional information
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/2019 5:33 PM, Thierry Reding wrote:
-> On Wed, Aug 28, 2019 at 10:58:46PM +0530, Vidya Sagar wrote:
->> Add optional bindings "vpcie3v3-supply" and "vpcie12v-supply" to describe
->> regulators of a PCIe slot's supplies 3.3V and 12V provided the platform
->> is designed to have regulator controlled slot supplies.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> V3:
->> * None
->>
->> V2:
->> * None
->>
->>   .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt      | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
->> index 0ac1b867ac24..b739f92da58e 100644
->> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
->> @@ -104,6 +104,12 @@ Optional properties:
->>      specified in microseconds
->>   - nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to be
->>      specified in microseconds
->> +- vpcie3v3-supply: A phandle to the regulator node that supplies 3.3V to the slot
->> +  if the platform has one such slot. (Ex:- x16 slot owned by C5 controller
->> +  in p2972-0000 platform).
->> +- vpcie12v-supply: A phandle to the regulator node that supplies 12V to the slot
->> +  if the platform has one such slot. (Ex:- x16 slot owned by C5 controller
->> +  in p2972-0000 platform).
-> 
-> There's an ongoing discussion regarding the use of optional power
-> supplies and I'm wondering if we're not abusing this here. Why exactly
-> are these regulators optional?
-I made them optional because, the number and type of supplies typically depend on the
-kind of slot the controller is owning. If it is a CEM slot, then, it needs 3.3V & 12V
-supplies and if it is an M.2 Key-E/M slot, it needs only 3.3V supply. Also, if there are
-on-board PCIe endpoint devices, supplies may vary again from vendor to vendor.
-Considering all these, I made them optional instead of mandatory.
-Also, I agree that regulator framework supplies a dummy regulator if we make them mandatory
-but doesn't supply one, but it does so with a warning print in the log which I feel is
-an unwanted alert and to avoid that one has to supply dummy/fixed regulators which again
-seems an overkill when all of this can be addressed by making slot regulators optional.
+On Thu, Aug 29, 2019 at 12:11 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Wed 28-08-19 12:46:20, Edward Chron wrote:
+> [...]
+> > Our belief is if you really think eBPF is the preferred mechanism
+> > then move OOM reporting to an eBPF.
+>
+> I've said that all this additional information has to be dynamically
+> extensible rather than a part of the core kernel. Whether eBPF is the
+> suitable tool, I do not know. I haven't explored that. There are other
+> ways to inject code to the kernel. systemtap/kprobes, kernel modules and
+> probably others.
 
-> 
-> The distinction is somewhat subtle, but the other way to look at
-> modelling this in DT is that the supplies are in fact required, but may
-> be connected to an always-on regulator with a fixed voltage. Or in some
-> cases they may also be shorted to ground. In both cases the PCI
-> controller, or rather the slot that the controller connects to, actually
-> "requires" the supplies, it's just that we can get away without
-> describing them because they can't be controlled anyway.
-> 
-> Looking at the PCI connector pinout for PCI Express, I do see a bunch of
-> +3.3 V and +12 V pins. To me that indicates that the 3.3 V and 12 V
-> supplies are indeed required for PCI slots. I'm not sure about devices
-> that are directly connected to the PCI controller, though. I'll need to
-> go look at some schematics to get a better understanding of these.
-> 
-> Bottom line: I'm wondering if we shouldn't really make these supplies
-> mandatory and in case where we don't care either just leave them away
-> (the regulator framework will supply a dummy regulator in that case) or
-> hook them up to a fixed regulator if that matches the hardware design.
-> 
-> Any thoughts?
-> 
-> Thierry
-> 
->>   
->>   Examples:
->>   =========
->> @@ -156,6 +162,8 @@ Tegra194:
->>   			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /* prefetchable memory (16GB) */
->>   
->>   		vddio-pex-ctl-supply = <&vdd_1v8ao>;
->> +		vpcie3v3-supply = <&vdd_3v3_pcie>;
->> +		vpcie12v-supply = <&vdd_12v_pcie>;
->>   
->>   		phys = <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
->>   		       <&p2u_hsio_5>;
->> -- 
->> 2.17.1
->>
+For simple code injections eBPF or kprobe works and a tracepoint would
+help with that. For example we could add our one line of task information
+that we find very useful this way.
 
+For adding controls to limit output for processes, slabs and vmalloc entries
+it would be harder to inject code for that. Our solution was to use debugfs.
+An alternate could to be add simple sysctl if using debugfs is not appropriate.
+As our code illustrated this can be added without changing the existing report
+in any substantive way. I think there is value in this and this is core to what
+the OOM report should provide. Additional items may be add ons that are
+environment specific but these are OOM reporting essentials IMHO.
+
+>
+> > I mentioned this before but I will reiterate this here.
+> >
+> > So how do we get there? Let's look at the existing report which we know
+> > has issues.
+> >
+> > Other than a few essential OOM messages the OOM code should produce,
+> > such as the Killed process message message sequence being included,
+> > you could have the entire OOM report moved to an eBPF script and
+> > therefore make it customizable, configurable or if you prefer programmable.
+>
+> I believe we should keep the current reporting in place and allow
+> additional information via dynamic mechanism. Be it a registration
+> mechanism that modules can hook into or other more dynamic way.
+> The current reporting has proven to be useful in many typical oom
+> situations in my past years of experience. It gives the rough state of
+> the failing allocation, MM subsystem, tasks that are eligible and task
+> that is killed so that you can understand why the event happened.
+>
+> I would argue that the eligible tasks should be printed on the opt-in
+> bases because this is more of relict from the past when the victim
+> selection was less deterministic. But that is another story.
+>
+> All the rest of dump_header should stay IMHO as a reasonable default and
+> bare minimum.
+>
+> > Why? Because as we all agree, you'll never have a perfect OOM Report.
+> > So if you believe this, than if you will, put your money where your mouth
+> > is (so to speak) and make the entire OOM Report and eBPF script.
+> > We'd be willing to help with this.
+> >
+> > I'll give specific reasons why you want to do this.
+> >
+> >    - Don't want to maintain a lot of code in the kernel (eBPF code doesn't
+> >    count).
+> >    - Can't produce an ideal OOM report.
+> >    - Don't like configuring things but favor programmatic solutions.
+> >    - Agree the existing OOM report doesn't work for all environments.
+> >    - Want to allow flexibility but can't support everything people might
+> >    want.
+> >    - Then installing an eBPF for OOM Reporting isn't an option, it's
+> >    required.
+>
+> This is going into an extreme. We cannot serve all cases but that is
+> true for any other heuristics/reporting in the kernel. We do care about
+> most.
+
+Unfortunately my argument for this is moot, this can't be done with
+eBPF, at least not now.
+
+>
+> > The last reason is huge for people who live in a world with large data
+> > centers. Data center managers are very conservative. They don't want to
+> > deviate from standard operating procedure unless absolutely necessary.
+> > If loading an OOM Report eBPF is standard to get OOM Reporting output,
+> > then they'll accept that.
+>
+> I have already responded to this kind of argumentation elsewhere. This
+> is not a relevant argument for any kernel implementation. This is a data
+> process management process.
+>
+> --
+> Michal Hocko
+> SUSE Labs
