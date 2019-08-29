@@ -2,132 +2,150 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20376C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4469C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D858E23404
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71BB622CEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:01:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="gHKBKFR5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJK6irA1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfH2VBf (ORCPT
+        id S1728003AbfH2VBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 17:01:35 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44269 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfH2VBe (ORCPT
+        Thu, 29 Aug 2019 17:01:55 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38510 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbfH2VBy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 17:01:34 -0400
-Received: by mail-ot1-f68.google.com with SMTP id w4so4796615ote.11;
-        Thu, 29 Aug 2019 14:01:33 -0700 (PDT)
+        Thu, 29 Aug 2019 17:01:54 -0400
+Received: by mail-wm1-f68.google.com with SMTP id o184so5203970wme.3;
+        Thu, 29 Aug 2019 14:01:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Q0LKYROnO/5Jtf/PK6jgGgvS0DoPlSzVpeE94fKs7PU=;
-        b=gHKBKFR5V0IntTFWx7iQpxi4nWYtIBUxyKiP2x/RNqfTWFWS6IYEpr9dclMb/OeNHL
-         D8CnNxsT5f9C8SOnEbxnBdtMYIw+hC40ik7m1UD12L6rht0Mu3+R7AMFRiiIp/aII6i8
-         qaWajxJXjBatkg4JLiDs1b0ZSYEs1VLmmdT9EuS5T37PCeakc8H2uJMzyiZ9Zl2diWnX
-         7gSkXzZulxsOad5DkxQZTo1/BPb3TI4Z8gx8hoDQx7bORNr8cfaLNOxnrOV2W8BBpW1k
-         VeaLzsSAuHV6eGEfD4b/M6Fup10ig9XVUc0hdXFTJRSzeHFOmklLe1HDCO6Zr9YwCRhr
-         tEBw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=ZgMiCDsvAhR2S/cT0qUBSbvUO2xWHZnNLYMNHL1KOXk=;
+        b=AJK6irA1DxOewMSTnbKuAtMbukG7rx19gj+03tFdraBsRCP6ZR3dYnscXmH9xWrGdo
+         DBxudPb0vPEr8jKk4esm+jxwaLF+Wr4LDgnzhrbQbk3Y8AX706gPfackUAk6nJBW7vuA
+         Ax3ig3ZWThvtTDeez3QmAvqh31ADc1EXdCIGMFfyV7QRFiY+d1lISeYXleBzn0NCgLla
+         p8Ic3eMdvBBrpRpUF8ren1VCsb3L0hr+1eXYxXSlCMpZPAB5jOYVhOKvXq6zlQgl2xRN
+         bocr5UfgcPxyMVR8w3I5IkIzwS8I35t5OHrEJ7ad0I3Qtg941oQkciajSVR5rzvg5taV
+         ZL+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Q0LKYROnO/5Jtf/PK6jgGgvS0DoPlSzVpeE94fKs7PU=;
-        b=ByDIh5d0zH9GwZWT7M6IBWKZxyIbUXJZ5iuSCBiMrFiktRrMCr4aPs3BiiVl4h29eR
-         +QKA32Gp1tozEVWkbrYLc5niv8Im58GYhH0COYH5a8xiqGwT3e/TKy6d/TbbMN/WhCAL
-         ius+9b4WnxlB32GKxuSVdyqsju2gDHbUtuWXj+uL6OgR9hNm5zZ21MP9gtwOvSlhWXps
-         XziPoP2vf6aDOVZU+/VKDYEqR1aN0pCy5+pakP5JwCyWOcDBST3+AFKjILR/xos1YMG0
-         U6sdvaAAUjVrh4VXIX5d5BxV6VA4Xuw1vqexczXkjLMPw+dN1vV4WylNWxI5AQP29AFD
-         CBaA==
-X-Gm-Message-State: APjAAAVVBmb9/ObAKckCEbEwpyY+Wgj6+pcz5Jr/N5/E4oLsoMIHz2V4
-        PNR1xaIuDachiP/+EJIECzzPE281y3BthCQMeJM=
-X-Google-Smtp-Source: APXvYqz8XKcVj5y8chDt54jfqFa4faagnw4jNnBX6f6wAr2Yielcw7NoAUyPgcN8oOW/C+AZOlvjUwN6Tir0AJaafiA=
-X-Received: by 2002:a9d:5c0f:: with SMTP id o15mr9936377otk.81.1567112493063;
- Thu, 29 Aug 2019 14:01:33 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=ZgMiCDsvAhR2S/cT0qUBSbvUO2xWHZnNLYMNHL1KOXk=;
+        b=C54uCwrOImX4PnspYp0JwepdrX7DfMpB0s5iL6SHW60GfCGsNVbVuZRQfq35G0PYgd
+         elAbnTuKN4JGtlvosMicceaEWc5v6MiaA3GxCoVKq8hvPY4RThNBS+7j0xCuzZ9i2zCT
+         EUWlVc2ec7T8SiEGqi5S5X4U4NtYaYvEuFFjH9kO8Dzqe9CvgSn+6Be7SH6p4TI+Dcw6
+         NLetdSe1gd4yfMxCTlCgt4aB3mFEl59cG/LINpHXglYwrCV61cf95ONWIp4mvrEQfQ/v
+         Eh1kOnbngceDZUlSMo5A0duXTsFqTWEgp1pyCvvCiFWSasm2OFtSqP9vKxPXiI4w0rgK
+         YC6A==
+X-Gm-Message-State: APjAAAXOO2R+qmglo54iMtsqRI8apNo2GqtqUUG24bwRk/dJqo7U0ESb
+        x1q6n9znlfskGl3kd0DFwYq//Fcdp2OAoyoS8YnvWfC4
+X-Google-Smtp-Source: APXvYqzKZdM5AEn2uLd407Bhnr3IsadVQVOu5I+UXxtON9ZXZy0KM50mJBMvOHH6uJ7J+gbgTB8b+B+7fxtDiMh5JQc=
+X-Received: by 2002:a7b:cf21:: with SMTP id m1mr2380971wmg.150.1567112512410;
+ Thu, 29 Aug 2019 14:01:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
- <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
- <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com> <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
- <9ba19f08-e25a-4d15-8854-8dc4f9b6faca@linux.intel.com> <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
- <023c9b59-70bb-ed8d-a4c0-76eae726b574@ti.com>
-In-Reply-To: <023c9b59-70bb-ed8d-a4c0-76eae726b574@ti.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 29 Aug 2019 23:01:22 +0200
-Message-ID: <CAFBinCCdje3Q3=adk+gUkcxHfwvAuoB8sQERbDsyt6Q58fgcOg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
-        eswara.kota@linux.intel.com, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
-        gustavo.pimentel@synopsys.com, hch@infradead.org,
-        jingoohan1@gmail.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, qi-ming.wu@intel.com
+References: <20190829181231.5920-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190829181231.5920-1-yamada.masahiro@socionext.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Thu, 29 Aug 2019 23:01:39 +0200
+Message-ID: <CA+icZUX0WvZ9Kfvvkq2Xhgv=kEkmHi7bF8VSONKcXnJx28bKGg@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: refactor scripts/Makefile.extrawarn
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgS2lzaG9uLA0KDQpPbiBUaHUsIEF1ZyAyOSwgMjAxOSBhdCA3OjEwIEFNIEtpc2hvbiBWaWph
-eSBBYnJhaGFtIEkgPGtpc2hvbkB0aS5jb20+IHdyb3RlOg0KWy4uLl0NCj4gVGhlIFBDSSBFWFBS
-RVNTIENBUkQgRUxFQ1RST01FQ0hBTklDQUwgU1BFQ0lGSUNBVElPTiBkZWZpbmVzIHRoZSBQb3dl
-cg0KPiBTZXF1ZW5jaW5nIGFuZCBSZXNldCBTaWduYWwgVGltaW5ncyBpbiBUYWJsZSAyLTQuIFBs
-ZWFzZSBhbHNvIHJlZmVyIEZpZ3VyZQ0KPiAyLTEwOiBQb3dlciBVcCBvZiB0aGUgQ0VNLg0KPg0K
-PiDilZTilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilaTilZDilZDilZDi
-lZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDi
-lZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilaTilZDilZDi
-lZDilZDilZDilaTilZDilZDilZDilZDilZDilaTilZDilZDilZDilZDilZDilZDilZDilZcNCj4g
-4pWRIFN5bWJvbCAgICAgIOKUgiBQYXJhbWV0ZXIgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-4pSCIE1pbiDilIIgTWF4IOKUgiBVbml0cyDilZENCj4g4pWg4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
-4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWq4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
-4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
-4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWq4pWQ4pWQ4pWQ4pWQ4pWQ4pWq4pWQ4pWQ4pWQ4pWQ4pWQ
-4pWq4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWjDQo+IOKVkSBUIFBWUEVSTCAgICDilIIgUG93ZXIg
-c3RhYmxlIHRvIFBFUlNUIyBpbmFjdGl2ZSAgICAgIOKUgiAxMDAg4pSCICAgICDilIIgbXMgICAg
-4pWRDQo+IOKVn+KUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUvOKUgOKU
-gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
-gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUvOKU
-gOKUgOKUgOKUgOKUgOKUvOKUgOKUgOKUgOKUgOKUgOKUvOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKV
-og0KPiDilZEgVCBQRVJTVC1DTEsg4pSCIFJFRkNMSyBzdGFibGUgYmVmb3JlIFBFUlNUIyBpbmFj
-dGl2ZSDilIIgMTAwIOKUgiAgICAg4pSCIM68cyAgICDilZENCj4g4pWf4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA
-4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pSA4pSA4pWiDQo+IOKVkSBUIFBFUlNUICAgICDilIIg
-UEVSU1QjIGFjdGl2ZSB0aW1lICAgICAgICAgICAgICAgICAgIOKUgiAxMDAg4pSCICAgICDilIIg
-zrxzICAgIOKVkQ0KPiDilZ/ilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lLzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilLzilIDilIDilIDilIDilIDilLzilIDilIDilIDilIDilIDilLzilIDilIDilIDilIDilIDi
-lIDilIDilaINCj4g4pWRIFQgRkFJTCAgICAgIOKUgiBQb3dlciBsZXZlbCBpbnZhbGlkIHRvIFBF
-UlNUIyBhY3RpdmUg4pSCICAgICDilIIgNTAwIOKUgiBucyAgICDilZENCj4g4pWf4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pS84pSA
-4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pSA4pSA4pWiDQo+IOKVkSBUIFdLUkYgICAg
-ICDilIIgV0FLRSMgcmlzZSDigJMgZmFsbCB0aW1lICAgICAgICAgICAgICAg4pSCICAgICDilIIg
-MTAwIOKUgiBucyAgICDilZENCj4g4pWa4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
-4pWQ4pWQ4pWn4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
-4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
-4pWQ4pWQ4pWQ4pWn4pWQ4pWQ4pWQ4pWQ4pWQ4pWn4pWQ4pWQ4pWQ4pWQ4pWQ4pWn4pWQ4pWQ4pWQ
-4pWQ4pWQ4pWQ4pWQ4pWdDQo+DQo+IEluIG15IGNvZGUgSSB1c2VkIFQgUEVSU1QtQ0xLIChpLmUg
-UkVGQ0xLIHN0YWJsZSBiZWZvcmUgUEVSU1QjIGluYWN0aXZlKS4NCj4gUkVGQ0xLIHRvIHRoZSBj
-YXJkIGlzIGVuYWJsZWQgYXMgcGFydCBvZiBQSFkgZW5hYmxlIGFuZCB0aGVuIHdhaXQgZm9yIDEw
-MM68cw0KPiBiZWZvcmUgbWFraW5nIFBFUlNUIyBpbmFjdGl2ZS4NCj4NCj4gUG93ZXIgdG8gdGhl
-IGRldmljZSBpcyBnaXZlbiBkdXJpbmcgYm9hcmQgcG93ZXIgdXAgYW5kIHRoZSBhc3N1bXB0aW9u
-IGhlcmUgaXMNCj4gaXQgd2lsbCB0YWtlIG1vcmUgdGhlIDEwMG1zIGZvciB0aGUgcHJvYmUgdG8g
-YmUgaW52b2tlZCBhZnRlciBib2FyZCBwb3dlciB1cA0KPiAoaS5lIGFmdGVyIFJPTSwgYm9vdGxv
-YWRlcnMgYW5kIGxpbnV4IGtlcm5lbCkuIEJ1dCBpZiB5b3UgaGF2ZSBhIHJlZ3VsYXRvciB0aGF0
-DQo+IGlzIGVuYWJsZWQgaW4gUENJIHByb2JlLCB0aGVuIFQgUFZQRVJMICgxMDBtcykgc2hvdWxk
-IGFsc28gdXNlZCBpbiBwcm9iZS4NCnRoYW5rIHlvdSBmb3IgdGhpcyBkZXRhaWxlZCBvdmVydmll
-dyBhbmQgZm9yIHRoZSBleHBsYW5hdGlvbiBhYm91dCB0aGUNCmFzc3VtcHRpb25zIHlvdSBtYWRl
-IChhbmQgd2h5KQ0KDQoNCk1hcnRpbg0K
+On Thu, Aug 29, 2019 at 8:13 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Instead of the warning-[123] magic, let's accumulate compiler options
+> to KBUILD_CFLAGS directly as the top Makefile does. I think this makes
+> easier to understand what is going on in this file.
+>
+> This commit slightly changes the behavior, I think all of which are OK.
+>
+> [1] Currently, cc-option calls are needlessly evaluated. For example,
+>       warning-3 += $(call cc-option, -Wpacked-bitfield-compat)
+>     needs evaluating only when W=3, but it is actually evaluated for
+>     W=1, W=2 as well. With this commit, only relevant cc-option calls
+>     will be evaluated. This is a slight optimization.
+>
+> [2] Currently, unsupported level like W=4 is checked by:
+>       $(error W=$(KBUILD_ENABLE_EXTRA_GCC_CHECKS) is unknown)
+>     This will no longer be checked, but I do not think it is a big
+>     deal.
+>
+> [3] Currently, 4 Clang warnings (Winitializer-overrides, Wformat,
+>     Wsign-compare, Wformat-zero-length) are shown by any of W=1, W=2,
+>     and W=3. With this commit, they will be warned only by W=1. I
+>     think this is a more correct behavior since each warning belongs
+>     to only one group.
+>
+> For understanding this commit correctly:
+>
+> We have 3 warning groups, W=1, W=2, and W=3. You may think W=3 has a
+> higher level than W=1, but they are actually independent. If you like,
+> you can combine them like W=13. To enable all the warnings, you can
+> pass W=123. This is shown by 'make help', but it is often missed
+> unfortunately. Since we support W= combination, there should not exist
+> intersection among the three groups. If we enable Winitializer-overrides
+> for W=1, we do not need to for W=2 or W=3. This is why I believe the
+> change [3] makes sense.
+>
+> The documentation says -Winitializer-overrides is enabled by default.
+> (https://clang.llvm.org/docs/DiagnosticsReference.html#winitializer-overrides)
+> We negate it by passing -Wno-initializer-overrides for the normal
+> build, but we do not do that for W=1. This means, W=1 effectively
+> enables -Winitializer-overrides by the clang's default. The same for
+> the other three. I wonder if this logic needs detailed commenting,
+> but I do not want to be bothered any more. I added comments.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>
+> Changes in v2:
+>   - Added comments and more commit log
+>
+>  scripts/Makefile.extrawarn | 105 +++++++++++++++++++------------------
+>  1 file changed, 54 insertions(+), 51 deletions(-)
+>
+
+Thanks for the v2.
+
+I am impressed by the very informative commit-log.
+
+But... I still miss relevant infos in the "kbuild-docs" aka in
+<Documentation/kbuild/kbuild.rst file>
+
+I also was not aware I can combine W=... settings like W=123 (W=132
+and W=321 does the same I guess).
+In my little world W=3 should include W=1 and W=2.
+Such informations I would like to have in kbuild-docs.
+
+BTW, I mixed up kbuild-system with kconfig-system as I normally get in
+touch with the 2nd.
+
+Renaming the kbuild-variable is up to you.
+I am OK when you want to wait for Arnd's rework of extrawarn compiler options.
+I did change it in one of my patches treewide.
+
+- Sedat -
