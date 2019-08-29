@@ -2,176 +2,122 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC8BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F244C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 257A121874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43DD621874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:25:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q8rlmGgb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bR8rtfcJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbfH2RZI (ORCPT
+        id S1728051AbfH2RZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:25:08 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43138 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727344AbfH2RZH (ORCPT
+        Thu, 29 Aug 2019 13:25:13 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33954 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727344AbfH2RZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:25:07 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k3so1925867pgb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 10:25:07 -0700 (PDT)
+        Thu, 29 Aug 2019 13:25:12 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b24so2540125pfp.1;
+        Thu, 29 Aug 2019 10:25:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=MYOtIJN0A+QqzFgfHKDsi1G/mOouSQFNY4BysbbUBh4=;
-        b=Q8rlmGgbYhEYPmwKd64lK41pXCL6qVedNM7V2k0OvrIQ/vG95bXXGoVjiCwADkxGXl
-         ZZUjy8ZgCGPG/uA82Dsl5g9ls3Vj2gv1PyKU0vQzIbFIusYJiNYClB8g2XWsuoSmLPdI
-         S1nRWe6SAAsUTwcOlBb4nMRgTPrpbQRQQDhWg=
+        bh=9GuN3MgFC46kDB7x4VlkI6LkxeFzQtYyvkTJ6qGJU5s=;
+        b=bR8rtfcJAzcs66myVxnXNqz5PvXLdznyccocG6kepCtUDV74pdYC/KC1XA96ZKMuvo
+         pImi2IyTf3vMfXLmCqPgZb0L1foivbxkXTaMyIL9E76A3imZx/D8Oo2ckxbEGv/fHamd
+         g4zobDzE37wiB0poiMCRV+fe4pcfYCRIBBL7Li0i/Ix9P1aYVCMMcEm1cTMwNipEDDE7
+         qPLs8NgSL09es5LFR7gq+fRL2MFf9+eYlSsf++E8b+tlW3gajV5kfvS14Swbns6K4WAX
+         9FWwq1RlAfnycYdHMPyrbfm+SyISkjVN1btdrKXy41eT++l18pasheoZ3sXhT0Dg+alT
+         Rf9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MYOtIJN0A+QqzFgfHKDsi1G/mOouSQFNY4BysbbUBh4=;
-        b=j2BzI+aj+JCkD+agftiBsCvQDpsl0S9yJBq4aWUT2de7esKer5KMyLUAMfep4DlyBn
-         HYCddhyi1CrbJth7ufP41sloRAyGUMNWaRwbYIrPHkagEEpH50W43MtCdwLMIX+UQ0+U
-         G4xyvBY/rP6y+yWwH8rWe/2ovkorfrxMGfgPWZWexlA4rewFizZnD6ybsG+JJJRPM+xx
-         Yzcvz5Fkz86jFIaKiqI1eBR0Tfi2JhYLgm/5zA7JKqxoiRLnXay53HLqu4v1R3GLNLmR
-         5eg9EG3HCouDsYGenwdfsaaNbjOtSMwCsMWrjs7w76aPqwfG2ndVPsc6wKFCf54lV5WS
-         M3jg==
-X-Gm-Message-State: APjAAAXnXkenIZvjBMeOb+WoprE7XhPqX4JOv6izhge8qmkkn/+ZcBrA
-        SeMYxn7eOsFBF5dvimDWjYFPdsDGW3k=
-X-Google-Smtp-Source: APXvYqw14ctMt63lZs4ODAYlDAcOtkGBGADvvzRNY+tQLVAzvYveoWwo4dKHac6gNDuCNrkzsaDb0Q==
-X-Received: by 2002:a62:6c1:: with SMTP id 184mr12568083pfg.230.1567099506950;
-        Thu, 29 Aug 2019 10:25:06 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id z189sm5851680pfb.137.2019.08.29.10.25.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Aug 2019 10:25:06 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 10:25:04 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 1/2] mmc: sdio: Move code to get pending SDIO IRQs to a
- function
-Message-ID: <20190829172504.GE70797@google.com>
-References: <20190828214620.66003-1-mka@chromium.org>
- <CAPDyKFrJOXC5DaYzPrEr-ttv5Mz6NLAvVW+L4xUUaiZpqyj+Dw@mail.gmail.com>
+        bh=9GuN3MgFC46kDB7x4VlkI6LkxeFzQtYyvkTJ6qGJU5s=;
+        b=M4zbykPCjnyAflFj70LpHCyIUZh+4LtADXQfxMiudz8EAOLqidfdxtex/cQPGVyQmP
+         01AfaEcOWP685bo46tFfo1/Zb8iqC2kRk93xiiiTLEKcQzMCp26yt8kyjdjMg4KiQpxq
+         YaQ73G02ni2D/ytOYWhB0xkymNiGdxWyUX/Kj0rbdv3X668iroNWXsuJ2TpMbhUpKLX/
+         fUm2K8Z1Y9Bbtbce7G5fSBNuUkL7J5vhFfdnGMyrYROwCX09l04lPPLe+r22ZCYkdTM6
+         wAIbujUcB9B8/GAv8rijQpyjnPSvkKJGzGo49nSFfWUbpETPVFwtijiIrG4VXwQqiljV
+         8wNA==
+X-Gm-Message-State: APjAAAWvcmQWow1tb34MbiM4eqZ5VK28za6t2Db0SfLz9tmmKxVSYUfY
+        AQHbdjLYwWBLhCwpFCmEG7I/eyeL
+X-Google-Smtp-Source: APXvYqytIuaJjAcpCV6XJWyP+tjsFwGztMkxKOTfF52FRtPJufK7QAOEpeimbPLe1ZKDcL65liq+YQ==
+X-Received: by 2002:a62:764f:: with SMTP id r76mr12610577pfc.149.1567099511944;
+        Thu, 29 Aug 2019 10:25:11 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id a17sm3770384pfc.26.2019.08.29.10.25.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 10:25:11 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 10:25:09 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PTP: add support for one-shot output
+Message-ID: <20190829172509.GB2166@localhost>
+References: <20190829095825.2108-1-felipe.balbi@linux.intel.com>
+ <20190829095825.2108-2-felipe.balbi@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFrJOXC5DaYzPrEr-ttv5Mz6NLAvVW+L4xUUaiZpqyj+Dw@mail.gmail.com>
+In-Reply-To: <20190829095825.2108-2-felipe.balbi@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 10:29:26AM +0200, Ulf Hansson wrote:
-> On Wed, 28 Aug 2019 at 23:46, Matthias Kaehlcke <mka@chromium.org> wrote:
-> >
-> > Move the code to get pending SDIO interrupts from
-> > process_sdio_pending_irqs() to a dedicated function.
-> >
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> >  drivers/mmc/core/sdio_irq.c | 47 ++++++++++++++++++++++++-------------
-> >  include/linux/mmc/host.h    |  1 +
-> >  2 files changed, 32 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/mmc/core/sdio_irq.c b/drivers/mmc/core/sdio_irq.c
-> > index 0bcc5e83bd1a..fedc49901efd 100644
-> > --- a/drivers/mmc/core/sdio_irq.c
-> > +++ b/drivers/mmc/core/sdio_irq.c
-> > @@ -27,6 +27,35 @@
-> >  #include "core.h"
-> >  #include "card.h"
-> >
-> > +int sdio_get_pending_irqs(struct mmc_host *host, u8 *pending)
-> > +{
-> > +       struct mmc_card *card = host->card;
-> > +       int ret;
-> > +
-> > +       WARN_ON(!host->claimed);
-> > +
-> > +       ret = mmc_io_rw_direct(card, 0, 0, SDIO_CCCR_INTx, 0, pending);
-> > +       if (ret) {
-> > +               pr_debug("%s: error %d reading SDIO_CCCR_INTx\n",
-> > +                      mmc_card_id(card), ret);
-> > +               return ret;
-> > +       }
-> > +
-> > +       if (*pending && mmc_card_broken_irq_polling(card) &&
-> > +           !(host->caps & MMC_CAP_SDIO_IRQ)) {
-> > +               unsigned char dummy;
-> > +
-> > +               /* A fake interrupt could be created when we poll SDIO_CCCR_INTx
-> > +                * register with a Marvell SD8797 card. A dummy CMD52 read to
-> > +                * function 0 register 0xff can avoid this.
-> > +                */
-> > +               mmc_io_rw_direct(card, 0, 0, 0xff, 0, &dummy);
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(sdio_get_pending_irqs);
-> 
-> I don't think you need export the sympol as this should be an internal
-> function for the core module.
+On Thu, Aug 29, 2019 at 12:58:25PM +0300, Felipe Balbi wrote:
+> diff --git a/drivers/ptp/ptp_chardev.c b/drivers/ptp/ptp_chardev.c
+> index 98ec1395544e..a407e5f76e2d 100644
+> --- a/drivers/ptp/ptp_chardev.c
+> +++ b/drivers/ptp/ptp_chardev.c
+> @@ -177,9 +177,8 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+>  			err = -EFAULT;
+>  			break;
+>  		}
+> -		if ((req.perout.flags || req.perout.rsv[0] || req.perout.rsv[1]
+> -				|| req.perout.rsv[2] || req.perout.rsv[3])
+> -			&& cmd == PTP_PEROUT_REQUEST2) {
+> +		if ((req.perout.rsv[0] || req.perout.rsv[1] || req.perout.rsv[2]
+> +			|| req.perout.rsv[3]) && cmd == PTP_PEROUT_REQUEST2) {
 
-ok, thanks
+Please check that the reserved bits of req.perout.flags, namely
+~PTP_PEROUT_ONE_SHOT, are clear.
 
-> > +
-> >  static int process_sdio_pending_irqs(struct mmc_host *host)
-> >  {
-> >         struct mmc_card *card = host->card;
-> > @@ -49,23 +78,9 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
-> >                 return 1;
-> >         }
-> >
-> > -       ret = mmc_io_rw_direct(card, 0, 0, SDIO_CCCR_INTx, 0, &pending);
-> > -       if (ret) {
-> > -               pr_debug("%s: error %d reading SDIO_CCCR_INTx\n",
-> > -                      mmc_card_id(card), ret);
-> > +       ret = sdio_get_pending_irqs(host, &pending);
-> > +       if (ret)
-> >                 return ret;
-> > -       }
-> > -
-> > -       if (pending && mmc_card_broken_irq_polling(card) &&
-> > -           !(host->caps & MMC_CAP_SDIO_IRQ)) {
-> > -               unsigned char dummy;
-> > -
-> > -               /* A fake interrupt could be created when we poll SDIO_CCCR_INTx
-> > -                * register with a Marvell SD8797 card. A dummy CMD52 read to
-> > -                * function 0 register 0xff can avoid this.
-> > -                */
-> > -               mmc_io_rw_direct(card, 0, 0, 0xff, 0, &dummy);
-> > -       }
-> >
-> >         count = 0;
-> >         for (i = 1; i <= 7; i++) {
-> > diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-> > index 4a351cb7f20f..7ce0e98e3dbd 100644
-> > --- a/include/linux/mmc/host.h
-> > +++ b/include/linux/mmc/host.h
-> > @@ -502,6 +502,7 @@ static inline void mmc_signal_sdio_irq(struct mmc_host *host)
-> >  }
-> >
-> >  void sdio_signal_irq(struct mmc_host *host);
-> > +int sdio_get_pending_irqs(struct mmc_host *host, u8 *pending);
-> 
-> I want to avoid to sprinkle the public mmc headers, avoiding
-> interfaces to be abused outside mmc core.
-> 
-> That said, I think this should be internal to the mmc core, thus
-> please move this to drivers/mmc/core/sdio_ops.h.
+>  			err = -EINVAL;
+>  			break;
+>  		} else if (cmd == PTP_PEROUT_REQUEST) {
+> diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
+> index 039cd62ec706..95840e5f5c53 100644
+> --- a/include/uapi/linux/ptp_clock.h
+> +++ b/include/uapi/linux/ptp_clock.h
+> @@ -67,7 +67,9 @@ struct ptp_perout_request {
+>  	struct ptp_clock_time start;  /* Absolute start time. */
+>  	struct ptp_clock_time period; /* Desired period, zero means disable. */
+>  	unsigned int index;           /* Which channel to configure. */
+> -	unsigned int flags;           /* Reserved for future use. */
+> +
+> +#define PTP_PEROUT_ONE_SHOT BIT(0)
+> +	unsigned int flags;
 
-Sounds good
+@davem  Any CodingStyle policy on #define within a struct?  (Some
+maintainers won't allow it.)
+
+>  	unsigned int rsv[4];          /* Reserved for future use. */
+>  };
+>  
+> -- 
+> 2.23.0
+> 
+
+Thanks,
+Richard
