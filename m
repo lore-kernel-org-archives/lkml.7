@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20969C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED30AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13172053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBFFB2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567075992;
-	bh=itrWbVp+qN9Vqqyd+kbsmhxYfVC5+mSK+neoJ3ELT+M=;
+	s=default; t=1567075999;
+	bh=SpQSLdYBvyq82meyXXWCtVnYVpt4u878OvYEkOU5qS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aArESlP75eg6sxH+8R6yyXJYinBkUqc5E+s3ulQK6AqZZGcUWKbybY2tRchvspd7a
-	 QkOCSt0PuaxxavgKXxG2ryVSV4bOh2jo82Jbe10NPrcrO4R/BiJ70X2cQqOyOw+aPd
-	 AevLkMpF0JEomOB8SD4foBOJNpoZBKejbV3S2MQw=
+	b=kzwsHIm8fbwNKxPh8bt53ur9OpBjqSJpj9pCkezajVVP12hS9WTPxmyuwFUy/T+GU
+	 HH8tE6Czk6wDGoCeejZk/gYxgAaLuz3uxpgGDmZ4qkmP9P4HXDIktz0Ge5qPHFMuDs
+	 506G+8bNiuDLTAPnD2+wzX/xuOzwy6xeocqdnT9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbfH2KxJ (ORCPT
+        id S1728320AbfH2Kux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:53:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58434 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 06:50:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728332AbfH2Ku4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:50:56 -0400
+        id S1728148AbfH2Kui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:50:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30A2B23427;
-        Thu, 29 Aug 2019 10:50:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D49CA2342B;
+        Thu, 29 Aug 2019 10:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075855;
-        bh=itrWbVp+qN9Vqqyd+kbsmhxYfVC5+mSK+neoJ3ELT+M=;
+        s=default; t=1567075837;
+        bh=SpQSLdYBvyq82meyXXWCtVnYVpt4u878OvYEkOU5qS0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1x0hHYhx34FdG7JK3ej0/SlbSpyVOTCCHLsY1JNDN+Io9fGuhT9/JjhYAFPItJVZi
-         jrNNjEh6VxAxhGDva+HsR/4XE2vrUc2zBmxHKdkmjUnqKIacnfQVK2Tk/fY2yblYJB
-         G1hWj+piW5hoy7fpvw5bm0khF3Ugn9aM8oRcJv3g=
+        b=qTA6bGvxlhbxgT2HeFR8Q6yjPBdza8DjKL32zeBy4ZIqLFc9uv12SaFxGKxcI5Rng
+         +6orEfvlKGwv8kVWCwMjnCBlXg2V9Hx0lduKeOWnEmMiM1RaClfnOSZ9On2HEKa9mR
+         pj58K6SJjDcomfD1H6N4hf5oaZcbBXRJ1UUoU4XM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/14] mac80211: fix possible sta leak
-Date:   Thu, 29 Aug 2019 06:50:39 -0400
-Message-Id: <20190829105043.2508-10-sashal@kernel.org>
+Cc:     David Abdurachmanov <david.abdurachmanov@gmail.com>,
+        Olof Johansson <olof@lixom.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 24/29] riscv: remove unused variable in ftrace
+Date:   Thu, 29 Aug 2019 06:50:04 -0400
+Message-Id: <20190829105009.2265-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829105043.2508-1-sashal@kernel.org>
-References: <20190829105043.2508-1-sashal@kernel.org>
+In-Reply-To: <20190829105009.2265-1-sashal@kernel.org>
+References: <20190829105009.2265-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,49 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: David Abdurachmanov <david.abdurachmanov@gmail.com>
 
-[ Upstream commit 5fd2f91ad483baffdbe798f8a08f1b41442d1e24 ]
+[ Upstream commit 397182e0db56b8894a43631ce72de14d90a29834 ]
 
-If TDLS station addition is rejected, the sta memory is leaked.
-Avoid this by moving the check before the allocation.
+Noticed while building kernel-4.20.0-0.rc5.git2.1.fc30 for
+Fedora 30/RISCV.
 
-Cc: stable@vger.kernel.org
-Fixes: 7ed5285396c2 ("mac80211: don't initiate TDLS connection if station is not associated to AP")
-Link: https://lore.kernel.org/r/20190801073033.7892-1-johannes@sipsolutions.net
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+[..]
+BUILDSTDERR: arch/riscv/kernel/ftrace.c: In function 'prepare_ftrace_return':
+BUILDSTDERR: arch/riscv/kernel/ftrace.c:135:6: warning: unused variable 'err' [-Wunused-variable]
+BUILDSTDERR:   int err;
+BUILDSTDERR:       ^~~
+[..]
+
+Signed-off-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
+Fixes: e949b6db51dc1 ("riscv/function_graph: Simplify with function_graph_enter()")
+Reviewed-by: Olof Johansson <olof@lixom.net>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/cfg.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/riscv/kernel/ftrace.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
-index 150dd2160cefb..8168c667d91d9 100644
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -1459,6 +1459,11 @@ static int ieee80211_add_station(struct wiphy *wiphy, struct net_device *dev,
- 	if (is_multicast_ether_addr(mac))
- 		return -EINVAL;
+diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+index c433f6d3dd64f..a840b7d074f7d 100644
+--- a/arch/riscv/kernel/ftrace.c
++++ b/arch/riscv/kernel/ftrace.c
+@@ -132,7 +132,6 @@ void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr,
+ {
+ 	unsigned long return_hooker = (unsigned long)&return_to_handler;
+ 	unsigned long old;
+-	int err;
  
-+	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER) &&
-+	    sdata->vif.type == NL80211_IFTYPE_STATION &&
-+	    !sdata->u.mgd.associated)
-+		return -EINVAL;
-+
- 	sta = sta_info_alloc(sdata, mac, GFP_KERNEL);
- 	if (!sta)
- 		return -ENOMEM;
-@@ -1466,10 +1471,6 @@ static int ieee80211_add_station(struct wiphy *wiphy, struct net_device *dev,
- 	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER))
- 		sta->sta.tdls = true;
- 
--	if (sta->sta.tdls && sdata->vif.type == NL80211_IFTYPE_STATION &&
--	    !sdata->u.mgd.associated)
--		return -EINVAL;
--
- 	err = sta_apply_parameters(local, sta, params);
- 	if (err) {
- 		sta_info_free(local, sta);
+ 	if (unlikely(atomic_read(&current->tracing_graph_pause)))
+ 		return;
 -- 
 2.20.1
 
