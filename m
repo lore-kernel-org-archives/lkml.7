@@ -2,369 +2,147 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96092C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB77C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 649B02189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE602053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:58:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=volatile.bz header.i=@volatile.bz header.b="LpsjOlfY"
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hdc6S/a+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbfH2R46 (ORCPT
+        id S1728075AbfH2R6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:56:58 -0400
-Received: from mx1.volatile.bz ([185.163.46.97]:50700 "EHLO mx1.volatile.bz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbfH2R45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:56:57 -0400
-Received: from TheDarkness.local (unknown [IPv6:2600:6c5d:4200:1e2a:a077:9bc9:2f0:8eb9])
-        by mx1.volatile.bz (Postfix) with ESMTPSA id A30B42F34;
-        Thu, 29 Aug 2019 17:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=volatile.bz;
-        s=default; t=1567101414;
-        bh=TEWcbAlm2UjnFQK+aaxw5sPR7+UKUas7W4quSa0bVyg=;
-        h=Date:From:To:Cc:Subject;
-        b=LpsjOlfYSUTnPPk7tejawmt2XKvmYn0CHGylfXGX6aEW/7t7rPwRQ5HgYm4fyd6f8
-         ZQzudUx0ziBJaDiUU2I1fnrUgbwHPeB9HGLdDeOibF+RxA8DFHRCKDm0uz0Y1ThVRe
-         3irfdD68nxKdk+RwhF29HU8EK5R4yLsS8p2G0eHI=
-Date:   Thu, 29 Aug 2019 13:56:48 -0400
-From:   Alexander Neville <dark@volatile.bz>
-To:     LKML <linux-kernel@vger.kernel.org>, linux-um@lists.infradead.org
-Cc:     Richard Weinberger <richard.weinberger@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>
-Subject: [PATCH v2] um: Rewrite host RNG driver.
-Message-ID: <20190829135001.6a5ff940@TheDarkness.local>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 29 Aug 2019 13:58:10 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:35993 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727525AbfH2R6J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 13:58:09 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 1B81C2BAE;
+        Thu, 29 Aug 2019 13:58:08 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 29 Aug 2019 13:58:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=kDDkxG
+        owHlH6KIqyJNRgu3bEQq+Z/NDS52i1KXVzXBI=; b=hdc6S/a+ShbnTuDAB/k1ra
+        np1rNCfDPdje0nUXlJhUfue82KH/j54Aeu5/cE/aX6PyEwJ75V+2X8bAEiK9N3/p
+        YYTq1LQ3d9be3zS6JKebudyVWLw51GJ11G8MOaWGyFddkQwsPpRpVfNoFxFHbg5v
+        cEIA+Nfj0A729Ul4qxKSOGKMkDg4bvkpyySZhL3Txx36MG1x3rl8KrbDn6G2UB2m
+        KP0CHX98Ly1P+Acsx7WVsAyC3ZDuW4xiWDVCRqk0fkbbc7vrUyUzJ3zqoUuv8TPl
+        ihNLcMqDEbt/BiTZ0Rwz0BexFW0zE1nrdHi+PX+56gLGCp3Apk5eGvrpcD1Pchrg
+        ==
+X-ME-Sender: <xms:LxJoXYnQYsoVMd1_7s6t-tsIrJyyYbGFzgb0nV8OVOImMiORp4KiqQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeivddgudduhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefkugho
+    ucfutghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucfkphepud
+    dtledrieejrdeiuddrvddvgeenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghh
+    sehiughoshgthhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:LxJoXSF-9bmPJoSa21HBtmR3y4smJX5g0Em74rIZ_3h5zob97UG08w>
+    <xmx:LxJoXYYoRo4phBgt0TLhBENIrCjyBkgiwgB06SawDBtrA_5_P6cfpA>
+    <xmx:LxJoXZLq9RZnU4hfqqjjCsQ3cZlcryzdi-iV0aClkeGG-B7n_cLvUA>
+    <xmx:MBJoXf2DaHVDULsj32i03t-x9JsBvc6Li9vjHq6HQXRW-5A-BkWA-w>
+Received: from localhost (bzq-109-67-61-224.red.bezeqint.net [109.67.61.224])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8A83E80065;
+        Thu, 29 Aug 2019 13:58:06 -0400 (EDT)
+Date:   Thu, 29 Aug 2019 20:57:59 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Jiri Pirko <jiri@resnulli.us>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        davem@davemloft.net, allan.nielsen@microchip.com,
+        ivecera@redhat.com, f.fainelli@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
+Message-ID: <20190829175759.GA19471@splinter>
+References: <1567070549-29255-1-git-send-email-horatiu.vultur@microchip.com>
+ <1567070549-29255-2-git-send-email-horatiu.vultur@microchip.com>
+ <20190829095100.GH2312@nanopsycho>
+ <20190829132611.GC6998@lunn.ch>
+ <20190829134901.GJ2312@nanopsycho>
+ <20190829143732.GB17864@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829143732.GB17864@lunn.ch>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The old driver had a bug that would cause it to outright stop working if
-the host's /dev/random were to block. Instead of trying to track down
-the cause of said bug, rewriting it from scratch turned out to be a much
-better option as it came with a few benefits:
+On Thu, Aug 29, 2019 at 04:37:32PM +0200, Andrew Lunn wrote:
+> > Wait, I believe there has been some misundestanding. Promisc mode is NOT
+> > about getting packets to the cpu. It's about setting hw filters in a way
+> > that no rx packet is dropped.
+> > 
+> > If you want to get packets from the hw forwarding dataplane to cpu, you
+> > should not use promisc mode for that. That would be incorrect.
+> 
+> Hi Jiri
+> 
+> I'm not sure a wireshark/tcpdump/pcap user would agree with you. They
+> want to see packets on an interface, so they use these tools. The fact
+> that the interface is a switch interface should not matter. The
+> switchdev model is that we try to hide away the interface happens to
+> be on a switch, you can just use it as normal. So why should promisc
+> mode not work as normal?
 
- - The new driver uses the hw_random framework.
+Hi Andrew,
 
- - The code is simpler and therefore easier to maintain.
+What happens when you run tcpdump on a routed interface without putting
+it in promiscuous mode ('-p')? If it is a pure software switch, then you
+see all unicast packets addressed to your interface's MAC address. What
+happens when the same is done on a hardware switch? With the proposed
+solution you will not get the same result.
 
- - It serves as a minimal example of writing a hardware RNG driver.
+On a software switch, when you run tcpdump without '-p', do you incur
+major packet loss? No. Will this happen when you punt several Tbps to
+your CPU on the hardware switch? Yes.
 
-I also edited the Kconfig symbol to bring it up to more modern
-standards.
+Extending the definition of promiscuous mode to mean punt all traffic to
+the CPU is wrong, IMO. You will not be able to capture all the packets
+anyway. If you have both elephant and mice flows, then it is very likely
+you will not be able to see any packets from the mice flows. The way
+this kind of monitoring is usually done is by either sampling packets
+(see tc-sample) or mirroring it to capable server. Both options are
+available in Linux today.
 
-Signed-off-by: Alexander Neville <dark@volatile.bz>
----
-v2:
-* fix -EAGAIN handling
+> > If you want to get packets from the hw forwarding dataplane to cpu, you
+> > should use tc trap action. It is there exactly for this purpose.
+> 
+> Do you really think a wireshark/tcpdump/pcap user should need to use
+> tc trap for the special case the interface is a switch port? Doesn't that
+> break the switchdev model?
 
----
- arch/um/drivers/Makefile       |   3 +-
- arch/um/drivers/random.c       | 199 +++++++++------------------------
- drivers/char/hw_random/Kconfig |  21 ++--
- 3 files changed, 66 insertions(+), 157 deletions(-)
+I do not object to the overall goal, but I believe to implementation is
+wrong. Instead, it would be much better to extend tshark/tcpdump and
+with another flag that will instruct libpcap to install a rule that will
+trap all traffic to the CPU. You can do that on either ingress or egress
+using matchall and trap action.
 
-diff --git a/arch/um/drivers/Makefile b/arch/um/drivers/Makefile
-index 693319839f69..29b0364f267d 100644
---- a/arch/um/drivers/Makefile
-+++ b/arch/um/drivers/Makefile
-@@ -17,6 +17,7 @@ hostaudio-objs := hostaudio_kern.o
- ubd-objs := ubd_kern.o ubd_user.o
- port-objs := port_kern.o port_user.o
- harddog-objs := harddog_kern.o harddog_user.o
-+uml-rng-objs := random.o
- 
- LDFLAGS_pcap.o := -r $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libpcap.a)
- 
-@@ -60,7 +61,7 @@ obj-$(CONFIG_TTY_CHAN) += tty.o
- obj-$(CONFIG_XTERM_CHAN) += xterm.o xterm_kern.o
- obj-$(CONFIG_UML_WATCHDOG) += harddog.o
- obj-$(CONFIG_BLK_DEV_COW_COMMON) += cow_user.o
--obj-$(CONFIG_UML_RANDOM) += random.o
-+obj-$(CONFIG_UML_RANDOM) += uml-rng.o
- 
- # pcap_user.o must be added explicitly.
- USER_OBJS := fd.o null.o pty.o tty.o xterm.o slip_common.o pcap_user.o vde_user.o vector_user.o
-diff --git a/arch/um/drivers/random.c b/arch/um/drivers/random.c
-index 1d5d3057e6f1..cb8eb026df9c 100644
---- a/arch/um/drivers/random.c
-+++ b/arch/um/drivers/random.c
-@@ -1,175 +1,82 @@
--/* Copyright (C) 2005 - 2008 Jeff Dike <jdike@{linux.intel,addtoit}.com> */
--
--/* Much of this ripped from drivers/char/hw_random.c, see there for other
-- * copyright.
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * UML Host RNG Driver
-+ *
-+ * (c) Copright 2019 Alexander Neville <dark@volatile.bz>
-  *
-- * This software may be used and distributed according to the terms
-- * of the GNU General Public License, incorporated herein by reference.
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-  */
--#include <linux/sched/signal.h>
-+
-+#include <linux/errno.h>
-+#include <linux/fcntl.h>
-+#include <linux/hw_random.h>
-+#include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/fs.h>
--#include <linux/interrupt.h>
--#include <linux/miscdevice.h>
--#include <linux/delay.h>
--#include <linux/uaccess.h>
--#include <init.h>
--#include <irq_kern.h>
-+#include <linux/types.h>
- #include <os.h>
- 
--/*
-- * core module and version information
-- */
--#define RNG_VERSION "1.0.0"
--#define RNG_MODULE_NAME "hw_random"
--
--#define RNG_MISCDEV_MINOR		183 /* official */
--
--/* Changed at init time, in the non-modular case, and at module load
-- * time, in the module case.  Presumably, the module subsystem
-- * protects against a module being loaded twice at the same time.
-- */
--static int random_fd = -1;
--static DECLARE_WAIT_QUEUE_HEAD(host_read_wait);
--
--static int rng_dev_open (struct inode *inode, struct file *filp)
-+static int uml_rng_read(struct hwrng *rng, void *data, size_t bufsize,
-+			bool wait)
- {
--	/* enforce read-only access to this chrdev */
--	if ((filp->f_mode & FMODE_READ) == 0)
--		return -EINVAL;
--	if ((filp->f_mode & FMODE_WRITE) != 0)
--		return -EINVAL;
-+	int err = os_read_file(rng->priv, data, bufsize);
- 
--	return 0;
--}
-+	// Returning -EAGAIN to userspace is not nice.
-+	if (err == -EAGAIN)
-+		return 0;
- 
--static atomic_t host_sleep_count = ATOMIC_INIT(0);
-+	return err;
-+}
- 
--static ssize_t rng_dev_read (struct file *filp, char __user *buf, size_t size,
--			     loff_t *offp)
-+static int uml_rng_init(struct hwrng *rng)
- {
--	u32 data;
--	int n, ret = 0, have_data;
--
--	while (size) {
--		n = os_read_file(random_fd, &data, sizeof(data));
--		if (n > 0) {
--			have_data = n;
--			while (have_data && size) {
--				if (put_user((u8) data, buf++)) {
--					ret = ret ? : -EFAULT;
--					break;
--				}
--				size--;
--				ret++;
--				have_data--;
--				data >>= 8;
--			}
--		}
--		else if (n == -EAGAIN) {
--			DECLARE_WAITQUEUE(wait, current);
--
--			if (filp->f_flags & O_NONBLOCK)
--				return ret ? : -EAGAIN;
--
--			atomic_inc(&host_sleep_count);
--			add_sigio_fd(random_fd);
--
--			add_wait_queue(&host_read_wait, &wait);
--			set_current_state(TASK_INTERRUPTIBLE);
--
--			schedule();
--			remove_wait_queue(&host_read_wait, &wait);
--
--			if (atomic_dec_and_test(&host_sleep_count)) {
--				ignore_sigio_fd(random_fd);
--				deactivate_fd(random_fd, RANDOM_IRQ);
--			}
--		}
--		else
--			return n;
--
--		if (signal_pending (current))
--			return ret ? : -ERESTARTSYS;
-+	int fd = os_open_file("/dev/random", of_read(OPENFLAGS()), O_NONBLOCK);
-+
-+	if (fd < 0) {
-+		pr_debug("uml-rng: failed to open /dev/random");
-+		return fd;
- 	}
--	return ret;
--}
- 
--static const struct file_operations rng_chrdev_ops = {
--	.owner		= THIS_MODULE,
--	.open		= rng_dev_open,
--	.read		= rng_dev_read,
--	.llseek		= noop_llseek,
--};
-+	int err = os_set_fd_async(fd);
- 
--/* rng_init shouldn't be called more than once at boot time */
--static struct miscdevice rng_miscdev = {
--	RNG_MISCDEV_MINOR,
--	RNG_MODULE_NAME,
--	&rng_chrdev_ops,
--};
-+	if (err < 0) {
-+		os_close_file(fd);
-+		return err;
-+	}
- 
--static irqreturn_t random_interrupt(int irq, void *data)
--{
--	wake_up(&host_read_wait);
-+	rng->priv = fd;
- 
--	return IRQ_HANDLED;
-+	return 0;
- }
- 
--/*
-- * rng_init - initialize RNG module
-- */
--static int __init rng_init (void)
-+static void uml_rng_cleanup(struct hwrng *rng)
- {
--	int err;
--
--	err = os_open_file("/dev/random", of_read(OPENFLAGS()), 0);
--	if (err < 0)
--		goto out;
--
--	random_fd = err;
--
--	err = um_request_irq(RANDOM_IRQ, random_fd, IRQ_READ, random_interrupt,
--			     0, "random", NULL);
--	if (err)
--		goto err_out_cleanup_hw;
--
--	sigio_broken(random_fd, 1);
--
--	err = misc_register (&rng_miscdev);
--	if (err) {
--		printk (KERN_ERR RNG_MODULE_NAME ": misc device register "
--			"failed\n");
--		goto err_out_cleanup_hw;
--	}
--out:
--	return err;
--
--err_out_cleanup_hw:
--	os_close_file(random_fd);
--	random_fd = -1;
--	goto out;
-+	os_close_file(rng->priv);
- }
- 
--/*
-- * rng_cleanup - shutdown RNG module
-- */
- 
--static void cleanup(void)
-+static struct hwrng uml_rng_ops = {
-+	.name		= "uml-rng",
-+	.init		= uml_rng_init,
-+	.cleanup	= uml_rng_cleanup,
-+	.read		= uml_rng_read,
-+	.quality	= 1024
-+};
-+
-+static int __init uml_rng_mod_init(void)
- {
--	free_irq_by_fd(random_fd);
--	os_close_file(random_fd);
-+	return hwrng_register(&uml_rng_ops);
- }
- 
--static void __exit rng_cleanup(void)
-+static void __exit uml_rng_mod_exit(void)
- {
--	os_close_file(random_fd);
--	misc_deregister (&rng_miscdev);
-+	hwrng_unregister(&uml_rng_ops);
- }
- 
--module_init (rng_init);
--module_exit (rng_cleanup);
--__uml_exitcall(cleanup);
-+module_init(uml_rng_mod_init);
-+module_exit(uml_rng_mod_exit);
- 
--MODULE_DESCRIPTION("UML Host Random Number Generator (RNG) driver");
-+MODULE_AUTHOR("Alexander Neville <dark@volatile.bz>");
-+MODULE_DESCRIPTION("UML Host RNG Driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 59f25286befe..a0781f74d4e4 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -440,22 +440,23 @@ config HW_RANDOM_OPTEE
- 
- 	  If unsure, say Y.
- 
--endif # HW_RANDOM
--
- config UML_RANDOM
-+	tristate "UML Host Random Number Generator Support"
- 	depends on UML
--	tristate "Hardware random number generator"
-+	default HW_RANDOM
- 	help
- 	  This option enables UML's "hardware" random number generator.  It
- 	  attaches itself to the host's /dev/random, supplying as much entropy
- 	  as the host has, rather than the small amount the UML gets from its
--	  own drivers.  It registers itself as a standard hardware random number
--	  generator, major 10, minor 183, and the canonical device name is
--	  /dev/hwrng.
--	  The way to make use of this is to install the rng-tools package
--	  (check your distro, or download from
--	  http://sourceforge.net/projects/gkernel/).  rngd periodically reads
--	  /dev/hwrng and injects the entropy into /dev/random.
-+	  own drivers.
-+
-+	  To compile this driver as a moudle, choose M here: the module
-+	  will be called uml-rng.
-+
-+	  If unsure, say Y.
-+
-+endif # HW_RANDOM
-+
- 
- config HW_RANDOM_KEYSTONE
- 	depends on ARCH_KEYSTONE
--- 
-2.23.0
+If you want to do it without specifying a special flag (I think it's
+very dangerous due to the potential packet loss), you can add a flag to
+the interface that will indicate to libpcap that installing a tc filter
+with trap action is required.
 
+> tc trap is more about fine grained selection of packets.
+
+Depends on the filter you associate with the action. If it's matchall,
+then it's not fine grained at all :)
+
+> Also, it seems like trapped packets are not forwarded, which is not
+> what you would expect from wireshark/tcpdump/pcap.
+
+How do you mean? Not forwarded by the HW? Right. But the trapped packets
+are forwarded by the kernel. We can also add another action that means
+both trap and forward. In mlxsw terminology it's called mirror.
