@@ -2,147 +2,96 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA122C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B71C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E332339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D1BD2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:31:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBoWW2mh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfH2Q3l (ORCPT
+        id S1727626AbfH2Qbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:29:41 -0400
-Received: from smtprelay0220.hostedemail.com ([216.40.44.220]:46344 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727046AbfH2Q3l (ORCPT
+        Thu, 29 Aug 2019 12:31:46 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43471 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbfH2Qbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:29:41 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 085D2AC08;
-        Thu, 29 Aug 2019 16:29:40 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bun06_1836a53334c20
-X-Filterd-Recvd-Size: 4954
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 29 Aug 2019 16:29:25 +0000 (UTC)
-Message-ID: <4232843e9fe0444c1c975ac6be4cb81a67f9f6ef.camel@perches.com>
-Subject: Re: [RFC PATCH 1/5] treewide: replace __inline__ by inline
-From:   Joe Perches <joe@perches.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        ndesaulniers@google.com
-Date:   Thu, 29 Aug 2019 09:29:23 -0700
-In-Reply-To: <20190829083233.24162-2-linux@rasmusvillemoes.dk>
-References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
-         <20190829083233.24162-2-linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Thu, 29 Aug 2019 12:31:46 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y8so4072487wrn.10;
+        Thu, 29 Aug 2019 09:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jqnYRSvKeOuSAixyDcusNx1M9DoZEp8erc5mVI5qWgE=;
+        b=NBoWW2mhp51kNEP89n9VLK6HuCjPukG9v6gCPWmFDa0JLB2s6ZZV+D2N0S0vh9Xtx1
+         LgX3CuZ1VrmNNo1977am3s5BpdP6KO8S3mtDjOZtxLo+PZFs8pAT0FaGle7YXikiZSIM
+         YFzJECKKDh+V/pAzemsR/cgft2Qijab8ECQ7pxHKPSEfV2WaSn0fwrjkw2KzB1KJ06d+
+         ycY+BmG2T6tmJ/psfSuFK3u72FPAp7ri+UzVU6YdPJiddtAPlkKS/p063uN7Qn4Qk77C
+         wPGStOcWZ3G0gqtnpoqMW5nUMhhoUJVChAAUX8N2wY07QEcORkWnZZdczNNX12RsovJZ
+         jGvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jqnYRSvKeOuSAixyDcusNx1M9DoZEp8erc5mVI5qWgE=;
+        b=EdREqwGJ3JmrTMGdAch9lTfbJDBwaNeyDrKsXE05TO14b17ARMr0q1TqHSMSRB2PeV
+         K4C2weDzjF6Xiu0YFplk0QNOJQ5+NTG4mHxO0+294HUDCDDVKp8rk0fHNHAoNJXnJp5Y
+         grnN6BM5tyPzAriFUyeQ6jwJ0hclubybk02aSEyR5WMgXvTcd33vInyn39w4w52zldpR
+         GCe7d3Tx4sHKVqBQfHDlxnWFAe9LoFIU3U+XmtpMHn+tu0cQTLZbE25f0iA1Fvo/v/MO
+         FEW9IHUdXwGY4KWrDuf3O0GXVV3WbkEQTDvrQqN+mCz56iwAcI0pHVCH5Jedb7+CnG9d
+         RxqQ==
+X-Gm-Message-State: APjAAAWDg+dkmITdCM9cWNaXAphePbBVbDyGQC34xB6HQkpVlMQC+mBI
+        GT5xu6Ghvj9efHmqqVPG5WrTdZRE
+X-Google-Smtp-Source: APXvYqy0OlmPcJKtuOcWVyz0aHf1x9iWwllcFS6mSV06J1X33SGzK8vEubBEhl/Bt6ruxSbLeqHwUw==
+X-Received: by 2002:a5d:4bc1:: with SMTP id l1mr13182866wrt.259.1567096303963;
+        Thu, 29 Aug 2019 09:31:43 -0700 (PDT)
+Received: from [192.168.8.147] (33.169.185.81.rev.sfr.net. [81.185.169.33])
+        by smtp.gmail.com with ESMTPSA id l62sm4911638wml.13.2019.08.29.09.31.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Aug 2019 09:31:43 -0700 (PDT)
+Subject: Re: [PATCH net-next] r8152: fix accessing skb after napi_gro_receive
+To:     Hayes Wang <hayeswang@realtek.com>, netdev@vger.kernel.org
+Cc:     nic_swsd@realtek.com, linux-kernel@vger.kernel.org
+References: <1394712342-15778-299-albertk@realtek.com>
+ <1394712342-15778-302-Taiwan-albertk@realtek.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <b39bc8a1-54c7-42d4-00ed-d48aa1bac734@gmail.com>
+Date:   Thu, 29 Aug 2019 18:31:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <1394712342-15778-302-Taiwan-albertk@realtek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-29 at 10:32 +0200, Rasmus Villemoes wrote:
-> Currently, compiler_types.h #defines __inline__ as inline. However,
-> that defeats the purpose of gcc providing __inline__ as an alternate
-> spelling of that keyword - namely, that it is always accessible under
-> that name, even if one chooses to #define inline, which we also do in
-> order to attach attribute(gnu_inline), and sometimes imply
-> attribute(always_inline), etc.
+
+
+On 8/19/19 5:15 AM, Hayes Wang wrote:
+> Fix accessing skb after napi_gro_receive which is caused by
+> commit 47922fcde536 ("r8152: support skb_add_rx_frag").
 > 
-> Note that it is quite possible that some header file defines a static
-> inline function before the include chain has reached compiler_types.h,
-> but in that case both the existing __inline__ as well as the new
-> inline spelling refer to gcc's keyword, and the redefinitions in
-> compiler_types.h have no effect anyway.
-> 
-> For those static inline definitions that appear after compiler_types.h
-> has been processed, this is obviously a no-op due to the #define
-> __inline__ inline.
-> 
-> We will need to be able to use the __inline__ keyword to make use of
-> the "asm inline()" feature from gcc 9. This is preparation for
-> removing the #define.
-> 
-> Generated by
-> 
->   git grep --files-with-matches -w __inline__ | \
->     grep -vE '^(usr|Documentation|scripts)/' | \
->     grep -v /uapi/ | \
->     xargs sed -i -e 's/static *__inline__/static inline/'
+> Fixes: 47922fcde536 ("r8152: support skb_add_rx_frag")
+> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+> ---
 
-bikeshed: Perhaps better to use
+It is customary to add a tag to credit the reporter...
 
-	xargs sed -i -e 's/\b__inline__\b/inline/g'
+Something like :
 
-As static and __inline__ do not have to be on the same line.
+Reported-by: ....
 
-for instance: (and I didn't look thoroughly)
-
-This misses one of the uses of __static__ in
-drivers/scsi/qla2xx/qla_os.c
-
-The patch has:
-
-> diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-[]
-> @@ -342,7 +342,7 @@ qla2x00_restart_timer(scsi_qla_host_t *vha, unsigned long interval)
->  	mod_timer(&vha->timer, jiffies + interval * HZ);
->  }
->  
-> -static __inline__ void
-> +static inline void
->  qla2x00_stop_timer(scsi_qla_host_t *vha)
->  {
->  	del_timer_sync(&vha->timer);
-
-But the code is:
-
-drivers/scsi/qla2xxx/qla_os.c-318-/* TODO Convert to inlines
-drivers/scsi/qla2xxx/qla_os.c-319- *
-drivers/scsi/qla2xxx/qla_os.c-320- * Timer routines
-drivers/scsi/qla2xxx/qla_os.c-321- */
-drivers/scsi/qla2xxx/qla_os.c-322-
-drivers/scsi/qla2xxx/qla_os.c:323:__inline__ void
-drivers/scsi/qla2xxx/qla_os.c-324-qla2x00_start_timer(scsi_qla_host_t *vha, unsigned long interval)
-drivers/scsi/qla2xxx/qla_os.c-325-{
-drivers/scsi/qla2xxx/qla_os.c-326-      timer_setup(&vha->timer, qla2x00_timer, 0);
-drivers/scsi/qla2xxx/qla_os.c-327-      vha->timer.expires = jiffies + interval * HZ;
-drivers/scsi/qla2xxx/qla_os.c-328-      add_timer(&vha->timer);
---
-drivers/scsi/qla2xxx/qla_os.c-340-      }
-drivers/scsi/qla2xxx/qla_os.c-341-
-drivers/scsi/qla2xxx/qla_os.c-342-      mod_timer(&vha->timer, jiffies + interval * HZ);
-drivers/scsi/qla2xxx/qla_os.c-343-}
-drivers/scsi/qla2xxx/qla_os.c-344-
-drivers/scsi/qla2xxx/qla_os.c:345:static __inline__ void
-drivers/scsi/qla2xxx/qla_os.c-346-qla2x00_stop_timer(scsi_qla_host_t *vha)
-drivers/scsi/qla2xxx/qla_os.c-347-{
-drivers/scsi/qla2xxx/qla_os.c-348-      del_timer_sync(&vha->timer);
-drivers/scsi/qla2xxx/qla_os.c-349-      vha->timer_active = 0;
-drivers/scsi/qla2xxx/qla_os.c-350-}
-
-The possible impacted files using 's/\b__inline__\b/inline/'
-
-$ git grep -w '__inline__' -- '*.[ch]' | grep -vP 'static\s+__inline__'
-(only hand selected matches)
-arch/alpha/include/asm/compiler.h:#undef __inline__
-arch/alpha/include/asm/floppy.h:__inline__ void virtual_dma_init(void)
-arch/ia64/hp/common/sba_iommu.c:#define SBA_INLINE	__inline__
-drivers/parisc/sba_iommu.c:#define SBA_INLINE	__inline__
-drivers/scsi/qla2xxx/qla_os.c:__inline__ void
-drivers/video/fbdev/intelfb/intelfbdrv.c:__inline__ int intelfb_var_to_depth(const struct fb_var_screeninfo *var)
-
-
+Thanks.
