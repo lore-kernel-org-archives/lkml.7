@@ -2,87 +2,97 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A99C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCEEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA0F2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585C32173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:21:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567102917;
+	bh=q787aqOs+wn5fPo24qMf/gdnY+NBvXrn0G+MKIb/fok=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sFNNma2VQXDPpaZX3AR09p+RfxtZ6nYb+A2XrTUboItdhNIAq01pfKcMhDYroIEaC
+	 9b2iTk6HK+lzURvPxUPLp2XKi+N5b2ZQH3OFmT5ZJkGBesdZ53kpPvI2eHnvXh4aGC
+	 RHwfFeKR7I4CmvPOkOZiJCVPbxne3jlA82zUVyrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbfH2SVs (ORCPT
+        id S1730100AbfH2SV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:21:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51220 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729743AbfH2SVo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:21:44 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i3P38-0003sP-Me; Thu, 29 Aug 2019 20:21:34 +0200
-Date:   Thu, 29 Aug 2019 20:21:33 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Borislav Petkov <bp@suse.de>
-cc:     "Singh, Brijesh" <brijesh.singh@amd.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?ISO-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 10/11] mm: x86: Invoke hypercall when page encryption
- status is changed
-In-Reply-To: <20190829180717.GF2132@zn.tnic>
-Message-ID: <alpine.DEB.2.21.1908292018500.1938@nanos.tec.linutronix.de>
-References: <20190710201244.25195-1-brijesh.singh@amd.com> <20190710201244.25195-11-brijesh.singh@amd.com> <20190829180717.GF2132@zn.tnic>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 29 Aug 2019 14:21:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728667AbfH2SR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:28 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98F8A23428;
+        Thu, 29 Aug 2019 18:17:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567102648;
+        bh=q787aqOs+wn5fPo24qMf/gdnY+NBvXrn0G+MKIb/fok=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OtEH2xcbjjf8QxD/ste1naQLf1Oyfp/nGmEHBcFWFPrjhjegb4BVf9Eu1Dvdft/oI
+         oo/rKaDbUgEtyPYsUU3QEUXlowjAxrWvJT4syEBvsz4YaCru1rDkCG4Z7FgibUbSuQ
+         VsQnuQ5VmYv7k7JlmQ7BpLdDJmswZLE3NAUh/cDI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 22/27] Tools: hv: kvp: eliminate 'may be used uninitialized' warning
+Date:   Thu, 29 Aug 2019 14:16:48 -0400
+Message-Id: <20190829181655.8741-22-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190829181655.8741-1-sashal@kernel.org>
+References: <20190829181655.8741-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019, Borislav Petkov wrote:
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-> On Wed, Jul 10, 2019 at 08:13:11PM +0000, Singh, Brijesh wrote:
-> > @@ -2060,6 +2067,14 @@ static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
-> >  	 */
-> >  	cpa_flush(&cpa, 0);
-> >  
-> > +	/*
-> > +	 * When SEV is active, notify hypervisor that a given memory range is mapped
-> > +	 * encrypted or decrypted. Hypervisor will use this information during
-> > +	 * the VM migration.
-> > +	 */
-> > +	if (sev_active())
-> > +		set_memory_enc_dec_hypercall(addr, numpages << PAGE_SHIFT, enc);
-> 
-> Btw, tglx has a another valid design concern here: why isn't this a
-> pv_ops thing? So that it is active only when the hypervisor is actually
-> present?
-> 
-> I know, I know, this will run on SEV guests only because it is all
-> (hopefully) behind "if (sev_active())" checks but the clean and accepted
-> design is a paravirt call, I'd say.
+[ Upstream commit 89eb4d8d25722a0a0194cf7fa47ba602e32a6da7 ]
 
-No. sev_active() has nothing to do with guest mode. It tells whether SEV is
-active or not. So yes, this calls into this function on both guest and
-host. The latter is beyond pointless.
+When building hv_kvp_daemon GCC-8.3 complains:
 
-Thanks,
+hv_kvp_daemon.c: In function ‘kvp_get_ip_info.constprop’:
+hv_kvp_daemon.c:812:30: warning: ‘ip_buffer’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  struct hv_kvp_ipaddr_value *ip_buffer;
 
-	tglx
+this seems to be a false positive: we only use ip_buffer when
+op == KVP_OP_GET_IP_INFO and it is only unset when op == KVP_OP_ENUMERATE.
 
+Silence the warning by initializing ip_buffer to NULL.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/hv/hv_kvp_daemon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index 62c9a503ae052..bb245d4afc0cf 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -867,7 +867,7 @@ kvp_get_ip_info(int family, char *if_name, int op,
+ 	int sn_offset = 0;
+ 	int error = 0;
+ 	char *buffer;
+-	struct hv_kvp_ipaddr_value *ip_buffer;
++	struct hv_kvp_ipaddr_value *ip_buffer = NULL;
+ 	char cidr_mask[5]; /* /xyz */
+ 	int weight;
+ 	int i;
+-- 
+2.20.1
 
