@@ -2,132 +2,124 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FROM_EXCESS_BASE64,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7BBC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF188C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBBD52341B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C15D622CEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:06:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ln7FlWdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbfH2TEh (ORCPT
+        id S1728358AbfH2TGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:04:37 -0400
-Received: from mailoutvs50.siol.net ([185.57.226.241]:48668 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728227AbfH2TEh (ORCPT
+        Thu, 29 Aug 2019 15:06:09 -0400
+Received: from gateway23.websitewelcome.com ([192.185.48.251]:36738 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727437AbfH2TGI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 15:04:37 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 79FA3521E5A;
-        Thu, 29 Aug 2019 21:04:32 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id w7XRHfaMZ7tm; Thu, 29 Aug 2019 21:04:32 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id DC64152437F;
-        Thu, 29 Aug 2019 21:04:31 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id D0323521E5A;
-        Thu, 29 Aug 2019 21:04:28 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        paul.kocialkowski@bootlin.com, mripard@kernel.org,
-        pawel@osciak.com, m.szyprowski@samsung.com,
-        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
-        acourbot@chromium.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        ezequiel@collabora.com, jonas@kwiboo.se
-Subject: Re: [PATCH 5/8] media: cedrus: Detect first slice of a frame
-Date:   Thu, 29 Aug 2019 21:04:28 +0200
-Message-ID: <3132748.mYbjOY1tKM@jernej-laptop>
-In-Reply-To: <20190826202831.311c7c20@collabora.com>
-References: <20190822194500.2071-1-jernej.skrabec@siol.net> <20190822194500.2071-6-jernej.skrabec@siol.net> <20190826202831.311c7c20@collabora.com>
+        Thu, 29 Aug 2019 15:06:08 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 13F30A4EF
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 14:06:08 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 3PkFiB0xb4FKp3PkGiF4du; Thu, 29 Aug 2019 14:06:08 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=3+46xOrI9yy3LuOhJZ5rmqfr4aF7buwsYetlbyfyvSU=; b=ln7FlWdWq1Un9s4oy/dP68rvSQ
+        TJnWL2hfqTjoz+3qyEAHw1M9p5TVCgHJRS6FIjDUkVoB5Fp1Xg53bPK6GKtekC+PflgtgtZ776Tdy
+        N8sXXKpmhMhZTMKYKA1Vm0WRGA/VnWDby8hTFEhZHMK2Eegh8898DUK5y06xj/frawbEm+v6KrZNd
+        8a9tJLkqK9os6hZf24ajT6J0HAP6o5V9WF8LEX39ksicjtpwh6M7MaOSRv98v9qJQC6CE2Mkngo7G
+        OZzfg+M8OqxIhqsa6eraB1bLfGSd8UwnPQ3fDm1j03dHFO1C3wKWII3ibEx3uYpgAoPHkqdhrkBxA
+        aH2p7BdQ==;
+Received: from [189.152.216.116] (port=45156 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i3PkE-001rxt-Vo; Thu, 29 Aug 2019 14:06:07 -0500
+Date:   Thu, 29 Aug 2019 14:06:05 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] percpu: Use struct_size() helper
+Message-ID: <20190829190605.GA17425@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i3PkE-001rxt-Vo
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.152.216.116]:45156
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne ponedeljek, 26. avgust 2019 ob 20:28:31 CEST je Boris Brezillon 
-napisal(a):
-> Hi Jernej,
-> 
-> On Thu, 22 Aug 2019 21:44:57 +0200
-> 
-> Jernej Skrabec <jernej.skrabec@siol.net> wrote:
-> > When codec supports multiple slices in one frame, VPU has to know when
-> > first slice of each frame is being processed, presumably to correctly
-> > clear/set data in auxiliary buffers.
-> > 
-> > Add first_slice field to cedrus_run structure and set it according to
-> > timestamps of capture and output buffers. If timestamps are different,
-> > it's first slice and viceversa.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> > 
-> >  drivers/staging/media/sunxi/cedrus/cedrus.h     | 1 +
-> >  drivers/staging/media/sunxi/cedrus/cedrus_dec.c | 2 ++
-> >  2 files changed, 3 insertions(+)
-> > 
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h
-> > b/drivers/staging/media/sunxi/cedrus/cedrus.h index
-> > 2f017a651848..32cb38e541c6 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-> > @@ -70,6 +70,7 @@ struct cedrus_mpeg2_run {
-> > 
-> >  struct cedrus_run {
-> >  
-> >  	struct vb2_v4l2_buffer	*src;
-> >  	struct vb2_v4l2_buffer	*dst;
-> > 
-> > +	bool first_slice;
-> > 
-> >  	union {
-> >  	
-> >  		struct cedrus_h264_run	h264;
-> > 
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c index
-> > 56ca4c9ad01c..d7b54accfe83 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > @@ -31,6 +31,8 @@ void cedrus_device_run(void *priv)
-> > 
-> >  	run.src = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-> >  	run.dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-> > 
-> > +	run.first_slice =
-> > +		run.src->vb2_buf.timestamp != run.dst-
->vb2_buf.timestamp;
-> 
-> Can't we use slice->first_mb_in_slice to determine if a slice is the
-> first? I'd expect ->first_mb_in_slice to be 0 (unless we decide to
-> support ASO).
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-I looked in all VPU documentation available to me (which isn't much) and there 
-is no indication if ASO is supported or not. Do you have any sample video with 
-out-of-order slices? It's my understanding that this is uncommon. If it's 
-supported, I would leave code as-is.
+struct pcpu_alloc_info {
+	...
+        struct pcpu_group_info  groups[];
+};
 
-Best regards,
-Jernej
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
 
-> 
-> >  	/* Apply request(s) controls if needed. */
-> >  	src_req = run.src->vb2_buf.req_obj.req;
+So, replace the following form:
 
+sizeof(*ai) + nr_groups * sizeof(ai->groups[0])
 
+with:
 
+struct_size(ai, groups, nr_groups)
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ mm/percpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/percpu.c b/mm/percpu.c
+index 7e2aa0305c27..7e06a1e58720 100644
+--- a/mm/percpu.c
++++ b/mm/percpu.c
+@@ -2125,7 +2125,7 @@ struct pcpu_alloc_info * __init pcpu_alloc_alloc_info(int nr_groups,
+ 	void *ptr;
+ 	int unit;
+ 
+-	base_size = ALIGN(sizeof(*ai) + nr_groups * sizeof(ai->groups[0]),
++	base_size = ALIGN(struct_size(ai, groups, nr_groups),
+ 			  __alignof__(ai->groups[0].cpu_map[0]));
+ 	ai_size = base_size + nr_units * sizeof(ai->groups[0].cpu_map[0]);
+ 
+-- 
+2.23.0
 
