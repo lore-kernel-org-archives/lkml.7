@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31661C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AC5C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09ED12166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D9F2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbfH2Pul (ORCPT
+        id S1728463AbfH2Pup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:50:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32870 "EHLO mx1.suse.de"
+        Thu, 29 Aug 2019 11:50:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32962 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728251AbfH2Puh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:50:37 -0400
+        id S1728306AbfH2Pui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 11:50:38 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8A798AEBF;
-        Thu, 29 Aug 2019 15:50:35 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 14997AF79;
+        Thu, 29 Aug 2019 15:50:37 +0000 (UTC)
 From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
 To:     Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paul.burton@mips.com>,
@@ -30,9 +30,9 @@ To:     Ralf Baechle <ralf@linux-mips.org>,
         "David S. Miller" <davem@davemloft.net>,
         linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH v2 net-next 09/15] net: sgi: ioc3-eth: split ring cleaning/freeing and allocation
-Date:   Thu, 29 Aug 2019 17:50:07 +0200
-Message-Id: <20190829155014.9229-10-tbogendoerfer@suse.de>
+Subject: [PATCH v2 net-next 15/15] net: sgi: ioc3-eth: no need to stop queue set_multicast_list
+Date:   Thu, 29 Aug 2019 17:50:13 +0200
+Message-Id: <20190829155014.9229-16-tbogendoerfer@suse.de>
 X-Mailer: git-send-email 2.13.7
 In-Reply-To: <20190829155014.9229-1-tbogendoerfer@suse.de>
 References: <20190829155014.9229-1-tbogendoerfer@suse.de>
@@ -41,106 +41,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do tx ring cleaning and freeing of rx buffers, when chip is shutdown and
-allocate buffers before bringing chip up.
+netif_stop_queue()/netif_wake_qeue() aren't needed for changing
+multicast filters.
 
 Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 ---
- drivers/net/ethernet/sgi/ioc3-eth.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/sgi/ioc3-eth.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
-index 05db0d1aeb04..7d2372ef7872 100644
+index d2b6659adba6..3f6dffd0351e 100644
 --- a/drivers/net/ethernet/sgi/ioc3-eth.c
 +++ b/drivers/net/ethernet/sgi/ioc3-eth.c
-@@ -108,6 +108,9 @@ static inline unsigned int ioc3_hash(const unsigned char *addr);
- static void ioc3_start(struct ioc3_private *ip);
- static inline void ioc3_stop(struct ioc3_private *ip);
- static void ioc3_init(struct net_device *dev);
-+static void ioc3_alloc_rx_bufs(struct net_device *dev);
-+static void ioc3_free_rx_bufs(struct ioc3_private *ip);
-+static inline void ioc3_clean_tx_ring(struct ioc3_private *ip);
+@@ -1630,8 +1630,6 @@ static void ioc3_set_multicast_list(struct net_device *dev)
+ 	struct netdev_hw_addr *ha;
+ 	u64 ehar = 0;
  
- static const char ioc3_str[] = "IOC3 Ethernet";
- static const struct ethtool_ops ioc3_ethtool_ops;
-@@ -660,7 +663,11 @@ static void ioc3_error(struct net_device *dev, u32 eisr)
- 		net_err_ratelimited("%s: TX PCI error.\n", dev->name);
- 
- 	ioc3_stop(ip);
-+	ioc3_free_rx_bufs(ip);
-+	ioc3_clean_tx_ring(ip);
-+
- 	ioc3_init(dev);
-+	ioc3_alloc_rx_bufs(dev);
- 	ioc3_start(ip);
- 	ioc3_mii_init(ip);
- 
-@@ -829,16 +836,6 @@ static void ioc3_alloc_rx_bufs(struct net_device *dev)
- 	ip->rx_pi = RX_BUFFS;
- }
- 
--static void ioc3_init_rings(struct net_device *dev)
--{
--	struct ioc3_private *ip = netdev_priv(dev);
+-	netif_stop_queue(dev);				/* Lock out others. */
 -
--	ioc3_free_rx_bufs(ip);
--	ioc3_alloc_rx_bufs(dev);
--
--	ioc3_clean_tx_ring(ip);
--}
--
- static inline void ioc3_ssram_disc(struct ioc3_private *ip)
- {
- 	struct ioc3_ethregs *regs = ip->regs;
-@@ -891,8 +888,6 @@ static void ioc3_init(struct net_device *dev)
- 	writel(ip->ehar_h, &regs->ehar_h);
- 	writel(ip->ehar_l, &regs->ehar_l);
- 	writel(42, &regs->ersr);		/* XXX should be random */
--
--	ioc3_init_rings(dev);
- }
- 
- static void ioc3_start(struct ioc3_private *ip)
-@@ -948,7 +943,9 @@ static int ioc3_open(struct net_device *dev)
- 
- 	ip->ehar_h = 0;
- 	ip->ehar_l = 0;
-+
- 	ioc3_init(dev);
-+	ioc3_alloc_rx_bufs(dev);
- 	ioc3_start(ip);
- 	ioc3_mii_start(ip);
- 
-@@ -1218,7 +1215,6 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	}
- 
- 	ioc3_init(dev);
--	ioc3_start(ip);
- 
- 	ip->pdev = pdev;
- 
-@@ -1269,9 +1265,7 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	return 0;
- 
- out_stop:
--	ioc3_stop(ip);
- 	del_timer_sync(&ip->ioc3_timer);
--	ioc3_free_rx_bufs(ip);
- 	kfree(ip->rxr);
- 	kfree(ip->txr);
- out_res:
-@@ -1438,7 +1432,11 @@ static void ioc3_timeout(struct net_device *dev)
  	spin_lock_irq(&ip->ioc3_lock);
  
- 	ioc3_stop(ip);
-+	ioc3_free_rx_bufs(ip);
-+	ioc3_clean_tx_ring(ip);
-+
- 	ioc3_init(dev);
-+	ioc3_alloc_rx_bufs(dev);
- 	ioc3_start(ip);
- 	ioc3_mii_init(ip);
- 	ioc3_mii_start(ip);
+ 	if (dev->flags & IFF_PROMISC) {			/* Set promiscuous.  */
+@@ -1663,8 +1661,6 @@ static void ioc3_set_multicast_list(struct net_device *dev)
+ 	}
+ 
+ 	spin_unlock_irq(&ip->ioc3_lock);
+-
+-	netif_wake_queue(dev);			/* Let us get going again. */
+ }
+ 
+ module_pci_driver(ioc3_driver);
 -- 
 2.13.7
 
