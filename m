@@ -2,126 +2,88 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD40C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EBCC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3298A20673
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 123A522CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:48:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="L2GNazUZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nvXZU0kl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfH2RsL (ORCPT
+        id S1727894AbfH2RsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:48:11 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.130]:28316 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727234AbfH2RsK (ORCPT
+        Thu, 29 Aug 2019 13:48:15 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43915 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727234AbfH2RsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:48:10 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 2CF7657D57
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 12:29:19 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 3OEZiOJGn3Qi03OEZi3QAG; Thu, 29 Aug 2019 12:29:19 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=aJiyb7UI2K/+R2F5a3fw1EU55SbvNGjQFMYnPqg0Gq4=; b=L2GNazUZvM+5uFV9vAPkne/b+V
-        VCYDR6dk/keOSuL7t2Ng6N1LuKCPYSDSgz3Q29kbR5AbTVVHhqfnlixvTZ+l59IE2T416t9h/2Ehk
-        dPWLzEDR/sdRSe9+UUwp0iqG3rq7WkiU4O+jzUngKmVQBTcJJRyzPtGdmEh1gxVcjkRKtibbxpHau
-        Yq7XwKT+IRk9FTtAs0NtZfp1/0KuvasEG9iEbH5p8OxCYHbRZmiP+3OYkVrz104HNV+n16cLndP9Z
-        aaG3M/FVu/869oXP0fQ22APe6+XNNVUntMVC+DCeeU0zhbSW/WBIXLvwCkVT49oyH6kRqq3A0xjFk
-        ec85EGXA==;
-Received: from [189.152.216.116] (port=41274 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1i3OEX-000tZz-V9; Thu, 29 Aug 2019 12:29:18 -0500
-Date:   Thu, 29 Aug 2019 12:29:16 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] ima: ima_api: Use struct_size() in kzalloc()
-Message-ID: <20190829172916.GA10261@embeddedor>
+        Thu, 29 Aug 2019 13:48:13 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k3so1958368pgb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 10:48:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=90rdzfA3pQFTTD+WktPm5hw+SqSXSPzoFO0ejPyiLeQ=;
+        b=nvXZU0kldmmMZp3VL246Oh/QBj4YT779VxETaJPpFYHPXJ9BYrRq3foTUldaV/pqyv
+         DFfTp0bomcCAL58rraETjnr8sPv8dnSgqaRCxsUqBYSqpTjFfY29AOrVMPhfE0RON9H0
+         w8Y+wJHk2y3MwxYfVQXQmG0CseTKPQBn1MvKU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=90rdzfA3pQFTTD+WktPm5hw+SqSXSPzoFO0ejPyiLeQ=;
+        b=VW/RMAtI+tiGj8i15WIgVl2vMBebKVmKqWX/WPMp4Dhl+aU7pJilfKP6nwRNg43J2S
+         LzuS5rXdEaSOQwE78WpIbxouNGJNT/fE9Zyl28zddDCUAHN6HbEqa18YcL7DjN5+wGNS
+         8ch5xbvuz/xLCEROExMjnIRXbrmlX8dd4vvemhUx/1qn/57z65wyl7WSTdqSH+ZlPR2d
+         xGWP5W/vrzOeku4A4IL6nrswg6w7xLFRe9BTMnxJ4puKq/8PH8mLoInfFK6+uEUpf/F2
+         CcGNW56x9FRHfnguuKYKEl26Z6q51/9H88j9p8Nx4gOUqqoiLe8W29vDuXheUhe2Gtr6
+         qzDA==
+X-Gm-Message-State: APjAAAUuOyQk55w6Balk4MzBrgJNhELk/UzV1F3NMI4RymSbNqpNlWB9
+        R7xxJEn0VBH5mKsV1IoMQTXykg==
+X-Google-Smtp-Source: APXvYqy65Ly3KOvta1q3yjixyorRLWYiltKYfxGEdKZHPogdneVuSW8XJmeoBqWPDMGusYqMegigeQ==
+X-Received: by 2002:aa7:8498:: with SMTP id u24mr13196622pfn.61.1567100892560;
+        Thu, 29 Aug 2019 10:48:12 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id ck8sm2585527pjb.25.2019.08.29.10.48.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 10:48:11 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 10:48:10 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Alex Dewar <alex.dewar@gmx.co.uk>
+Cc:     re.emese@gmail.com, kernel-hardening@lists.openwall.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v3] scripts/gcc-plugins: Add SPDX header for files
+ without
+Message-ID: <201908291047.CDE576721@keescook>
+References: <20190824153036.21394-1-alex.dewar@gmx.co.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.216.116
-X-Source-L: No
-X-Exim-ID: 1i3OEX-000tZz-V9
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.152.216.116]:41274
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 14
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190824153036.21394-1-alex.dewar@gmx.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+On Sat, Aug 24, 2019 at 04:30:37PM +0100, Alex Dewar wrote:
+> Replace boilerplate with approproate SPDX header. Vim also auto-trimmed
+> whitespace from one line.
+> [...]
+> --- a/scripts/gcc-plugins/cyc_complexity_plugin.c
+> +++ b/scripts/gcc-plugins/cyc_complexity_plugin.c
+> @@ -1,6 +1,6 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+>  /*
+>   * Copyright 2011-2016 by Emese Revfy <re.emese@gmail.com>
+> - * Licensed under the GPL v2, or (at your option) v3
 
-struct ima_template_entry {
-	...
-        struct ima_field_data template_data[0]; /* template related data */
-};
+This isn't equivalent, I don't think. SPDX says "v2 and later" and
+removed text says "v2 or v3".
 
-instance = kzalloc(sizeof(struct ima_template_entry) + count * sizeof(struct ima_field_data), GFP_NOFS);
-
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
-
-instance = kzalloc(struct_size(instance, entry, count), GFP_NOFS);
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- security/integrity/ima/ima_api.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-index 65224474675b..610759fe63b8 100644
---- a/security/integrity/ima/ima_api.c
-+++ b/security/integrity/ima/ima_api.c
-@@ -45,8 +45,8 @@ int ima_alloc_init_template(struct ima_event_data *event_data,
- 	else
- 		template_desc = ima_template_desc_current();
- 
--	*entry = kzalloc(sizeof(**entry) + template_desc->num_fields *
--			 sizeof(struct ima_field_data), GFP_NOFS);
-+	*entry = kzalloc(struct_size(*entry, template_data,
-+				     template_desc->num_fields), GFP_NOFS);
- 	if (!*entry)
- 		return -ENOMEM;
- 
 -- 
-2.23.0
-
+Kees Cook
