@@ -2,77 +2,72 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2072C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B7CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFDDB2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58AE233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:12:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LJfbr0D7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iAecnhLo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbfH2RL7 (ORCPT
+        id S1728010AbfH2RMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:11:59 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36477 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfH2RL6 (ORCPT
+        Thu, 29 Aug 2019 13:12:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39615 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfH2RMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:11:58 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w2so2497618pfi.3;
-        Thu, 29 Aug 2019 10:11:58 -0700 (PDT)
+        Thu, 29 Aug 2019 13:12:06 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n2so3222746wmk.4;
+        Thu, 29 Aug 2019 10:12:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jS5pHxiuZzzwI5bJqpF22mVfJqpldppDHKL3mSY0vqE=;
-        b=LJfbr0D7f5YzZ+QrRF8C7f85g0y2RO+vjR1VqWi1G2IUsGO9jOePtV/N6uFXZGK0eo
-         U6SuAjpZf2bIzPE4XJu6dRSVJexjNMVn8/GCVCy/ukXvonfECBIyYNEUf+wjW6PRV+pn
-         N8WR04My2B5xA1W7fTjo37rJI8ZI0YbZXg8Abv7eqVONv2wI7jlwm/3XNXkZsapZL/WL
-         ys2bssJv+fWriIJssEiCBjb4ICXHWowye5LXcRhXRX1Bah++0qHdW1lyVvARBSgUxqJu
-         bQ3A7ZzNQBqLYTGEPOtfHvP6EQZuN+AoHU2A+mLzmTevPZ73rnponFdrw4DJ47AHWVbN
-         5MSw==
+        bh=sV+dOekBkFxZr+hFc3/RA8RiShlL0pkkBR29uK5vHNI=;
+        b=iAecnhLoY3EqD9cUGIB6sa4i8HpoaYF7STxxOxBt6zdJfROfOBTpCg1NW0ah0xAoAB
+         xAfuRqPIJmVJEIm+KT113W2GqdTFC8/m2PeP3r5PCtNRUH+2pAbFn3PRKex9AuANdO8x
+         QGzGhpnGDGGMThFqwBOc7115MiTXqkHF8SBFSesYhwnm512QkLuEQYCsTZC4qH0HUe6v
+         Kt+UzxLNEDSutNHp9vfjyt4s3TLDctMEQlQX9wpWyAVL7omjUnxEeoGdxQCa84GwV5YO
+         FJjraT5y8nm4icN/fAOXPHelTFtoObgaIbZzyhbnsnwtYh6fOF8LGLziOxonhbDj59pM
+         y6KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jS5pHxiuZzzwI5bJqpF22mVfJqpldppDHKL3mSY0vqE=;
-        b=JfHZIWOhEkLh65fJGBPA/KRMH6xt9ayzcYAp5uKiO0g0QsSbvyMswNpLzovHXNFznK
-         lVRZItj3UqeYLYro+TmcpdrcSWVhaD4rHH4qlloJzYFnKo4+toxJ558t5/rKs2r4NcZs
-         awi/wy46SRAZBEPPL0apcS/Hw2UCoTpW263euthnGp7JuJRYvZG1Whaj17/HnS0OryiN
-         oyDr3JwIdUqLxf0WMy44rMrwyTNhReMHKfFFCNQzzTd9rZSqnWojo7MWum7GVfwQFULP
-         qE/eqylvTfdx6cUbCCWAfrw9H6kQcY2GD7xbec2oP/ibLaYdl99920mmgbK6zrEXVoAK
-         BLQg==
-X-Gm-Message-State: APjAAAWS3NfQ+to8Hdcii9CoZnutSEExPObrJj4fOVsaIPpjX9GBJ4x1
-        kBxCmCz7W3X8E9oWKhPlwpQ=
-X-Google-Smtp-Source: APXvYqyQAmS21+aUqk33WgOu4hVs/D8gcy1swXDIgGuyutKZghpZX1heSOHf9YSrvxJjYjQeVl4oXA==
-X-Received: by 2002:a65:6415:: with SMTP id a21mr8817507pgv.98.1567098717772;
-        Thu, 29 Aug 2019 10:11:57 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id x10sm2381540pjo.4.2019.08.29.10.11.56
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=sV+dOekBkFxZr+hFc3/RA8RiShlL0pkkBR29uK5vHNI=;
+        b=GvU/fKuqatjGkIIN+lPUohstk8zqOWTNyIMP9wHYyJ3/cghMPI/E4gByvLpjA8myh2
+         dL8OedvYCmp92Wzrn7M1oR14tub2ZcYyUKluMMPjvBDO5t7lqw05W1B+aM6rTReohHyq
+         uUnQsFjRsPvcQHaTuOV/rVgeOLqV+Lwo06OKDtkO1XNScARzoKwEvNjqabutq85gDzTJ
+         IAc5zOTsqIvLGm7Prr6Pt1cGuOC0uZdIgS8kmIEZxvxS+AetgGpF6M09aZEmAQh0A7Fi
+         +6x7u95I9vdOjejZ7771En4jj2bVmVQxyZyqwMagEoedKfMr0mAiHpsAyKuL2lmbQDZd
+         0ivw==
+X-Gm-Message-State: APjAAAWLuuOp/17OQz9a9TduzzE5Z75tL2LEG4B16KH65hMagEoXNL3x
+        WLuucvc37qZh81srfmS/Hw0=
+X-Google-Smtp-Source: APXvYqwuPU1pcnomP9EBGIGmtCYdVMRzfBptAbh1+lsyl3+XSyCMa4IsK9zqtHAGer6igJYhWGeJoQ==
+X-Received: by 2002:a05:600c:228e:: with SMTP id 14mr13514039wmf.101.1567098722950;
+        Thu, 29 Aug 2019 10:12:02 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id 16sm4413308wmx.45.2019.08.29.10.12.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 10:11:57 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel@vger.kernel.org (open list),
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU)
-Subject: [PATCH 10/10] drm/msm: add atomic traces
-Date:   Thu, 29 Aug 2019 09:45:18 -0700
-Message-Id: <20190829164601.11615-11-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190829164601.11615-1-robdclark@gmail.com>
-References: <20190829164601.11615-1-robdclark@gmail.com>
+        Thu, 29 Aug 2019 10:12:01 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] x86/PCI: Add missing log facility and move to use pr_ macros
+Date:   Thu, 29 Aug 2019 19:11:59 +0200
+Message-Id: <20190829171159.18707-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20190828175120.22164-1-kw@linux.com>
+References: <20190828175120.22164-1-kw@linux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,277 +75,234 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+Add missing log facility where two instances of printk() that did not
+use any (so it would be using MESSAGE_LOGLEVEL_DEFAULT set in Kconfig)
+to make all the warnings in the arch/x86/pci/pcbios.c to be printed
+consistently at the same log facility.  This resolves the following
+checkpatch.pl script warning:
 
-This was useful for debugging fps drops.  I suspect it will be useful
-again.
+WARNING: printk() should include KERN_<LEVEL> facility level
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+While adding the missing log facility move over to using pr_ macros
+over using printk(KERN_<level> ...) and DBG().
+
+Also resolve the additional errors and warnings reported by the
+checkpatch.pl script:
+
+ERROR: trailing whitespace
+ERROR: "foo * bar" should be "foo *bar"
+ERROR: switch and case should be at the same indent
+
+WARNING: please, no space before tabs
+WARNING: line over 80 characters
+WARNING: quoted string split across lines
+WARNING: __packed is preferred over __attribute__((packed))
+WARNING: Prefer using '"%s...", __func__' to using 'bios32_service',
+  this function's name, in a string
+
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
 ---
- drivers/gpu/drm/msm/Makefile                 |   1 +
- drivers/gpu/drm/msm/msm_atomic.c             |  24 +++-
- drivers/gpu/drm/msm/msm_atomic_trace.h       | 110 +++++++++++++++++++
- drivers/gpu/drm/msm/msm_atomic_tracepoints.c |   3 +
- drivers/gpu/drm/msm/msm_gpu_trace.h          |   2 +-
- 5 files changed, 136 insertions(+), 4 deletions(-)
- create mode 100644 drivers/gpu/drm/msm/msm_atomic_trace.h
- create mode 100644 drivers/gpu/drm/msm/msm_atomic_tracepoints.c
+Changes in v3:
+  Remove name of the file from the subject.
+  Address review feedback of v2, and resolve more checkpatch.pl
+  script errors and warnings.
 
-diff --git a/drivers/gpu/drm/msm/Makefile b/drivers/gpu/drm/msm/Makefile
-index 7a05cbf2f820..1579cf0d828f 100644
---- a/drivers/gpu/drm/msm/Makefile
-+++ b/drivers/gpu/drm/msm/Makefile
-@@ -75,6 +75,7 @@ msm-y := \
- 	disp/dpu1/dpu_rm.o \
- 	disp/dpu1/dpu_vbif.o \
- 	msm_atomic.o \
-+	msm_atomic_tracepoints.o \
- 	msm_debugfs.o \
- 	msm_drv.o \
- 	msm_fb.o \
-diff --git a/drivers/gpu/drm/msm/msm_atomic.c b/drivers/gpu/drm/msm/msm_atomic.c
-index 80536538967b..fb247aa1081e 100644
---- a/drivers/gpu/drm/msm/msm_atomic.c
-+++ b/drivers/gpu/drm/msm/msm_atomic.c
-@@ -6,6 +6,7 @@
+Changes in v2:
+  Change wording and include checkpatch.pl script warning.
+  Leverage pr_fmt and remove "PCI: " prefix used throught.
+  Move to pr_debug() over using DBG() from arch/x86/include/asm/pci_x86.h.
+
+ arch/x86/pci/pcbios.c | 77 +++++++++++++++++++++++--------------------
+ 1 file changed, 41 insertions(+), 36 deletions(-)
+
+diff --git a/arch/x86/pci/pcbios.c b/arch/x86/pci/pcbios.c
+index 9c97d814125e..dd8ca5636953 100644
+--- a/arch/x86/pci/pcbios.c
++++ b/arch/x86/pci/pcbios.c
+@@ -3,6 +3,8 @@
+  * BIOS32 and PCI BIOS handling.
+  */
  
- #include <drm/drm_atomic_uapi.h>
++#define pr_fmt(fmt) "PCI: " fmt
++
+ #include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
+@@ -47,15 +49,15 @@ static inline void set_bios_x(void)
+ 	pcibios_enabled = 1;
+ 	set_memory_x(PAGE_OFFSET + BIOS_BEGIN, (BIOS_END - BIOS_BEGIN) >> PAGE_SHIFT);
+ 	if (__supported_pte_mask & _PAGE_NX)
+-		printk(KERN_INFO "PCI: PCI BIOS area is rw and x. Use pci=nobios if you want it NX.\n");
++		pr_info("PCI BIOS area is rw and x. Use pci=nobios if you want it NX.\n");
+ }
  
-+#include "msm_atomic_trace.h"
- #include "msm_drv.h"
- #include "msm_gem.h"
- #include "msm_kms.h"
-@@ -33,11 +34,13 @@ static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
+ /*
+  * This is the standard structure used to identify the entry point
+  * to the BIOS32 Service Directory, as documented in
+- * 	Standard BIOS 32-bit Service Directory Proposal
+- * 	Revision 0.4 May 24, 1993
+- * 	Phoenix Technologies Ltd.
++ *	Standard BIOS 32-bit Service Directory Proposal
++ *	Revision 0.4 May 24, 1993
++ *	Phoenix Technologies Ltd.
+  *	Norwood, MA
+  * and the PCI BIOS specification.
+  */
+@@ -67,7 +69,7 @@ union bios32 {
+ 		unsigned char revision;		/* Revision level, 0 */
+ 		unsigned char length;		/* Length in paragraphs should be 01 */
+ 		unsigned char checksum;		/* All bytes must add up to zero */
+-		unsigned char reserved[5]; 	/* Must be zero */
++		unsigned char reserved[5];	/* Must be zero */
+ 	} fields;
+ 	char chars[16];
+ };
+@@ -108,15 +110,16 @@ static unsigned long __init bios32_service(unsigned long service)
+ 	local_irq_restore(flags);
+ 
+ 	switch (return_code) {
+-		case 0:
+-			return address + entry;
+-		case 0x80:	/* Not present */
+-			printk(KERN_WARNING "bios32_service(0x%lx): not present\n", service);
+-			return 0;
+-		default: /* Shouldn't happen */
+-			printk(KERN_WARNING "bios32_service(0x%lx): returned 0x%x -- BIOS bug!\n",
+-				service, return_code);
+-			return 0;
++	case 0:
++		return address + entry;
++	case 0x80:	/* Not present */
++		pr_warn("%s(0x%lx): not present\n",
++			__func__, service);
++		return 0;
++	default: /* Shouldn't happen */
++		pr_warn("%s(0x%lx): returned 0x%x -- BIOS bug!\n",
++			__func__, service, return_code);
++		return 0;
+ 	}
+ }
+ 
+@@ -140,8 +143,7 @@ static int __init check_pcibios(void)
+ 		pci_indirect.address = pcibios_entry + PAGE_OFFSET;
+ 
+ 		local_irq_save(flags);
+-		__asm__(
+-			"lcall *(%%edi); cld\n\t"
++		__asm__("lcall *(%%edi); cld\n\t"
+ 			"jc 1f\n\t"
+ 			"xor %%ah, %%ah\n"
+ 			"1:"
+@@ -160,14 +162,15 @@ static int __init check_pcibios(void)
+ 		minor_ver = ebx & 0xff;
+ 		if (pcibios_last_bus < 0)
+ 			pcibios_last_bus = ecx & 0xff;
+-		DBG("PCI: BIOS probe returned s=%02x hw=%02x ver=%02x.%02x l=%02x\n",
+-			status, hw_mech, major_ver, minor_ver, pcibios_last_bus);
++		pr_debug("BIOS probe returned s=%02x hw=%02x ver=%02x.%02x l=%02x\n",
++			 status, hw_mech, major_ver, minor_ver,
++			 pcibios_last_bus);
+ 		if (status || signature != PCI_SIGNATURE) {
+-			printk (KERN_ERR "PCI: BIOS BUG #%x[%08x] found\n",
+-				status, signature);
++			pr_err("BIOS BUG #%x[%08x] found\n",
++			       status, signature);
+ 			return 0;
+ 		}
+-		printk(KERN_INFO "PCI: PCI BIOS revision %x.%02x entry at 0x%lx, last bus=%d\n",
++		pr_info("PCI BIOS revision %x.%02x entry at 0x%lx, last bus=%d\n",
+ 			major_ver, minor_ver, pcibios_entry, pcibios_last_bus);
+ #ifdef CONFIG_PCI_DIRECT
+ 		if (!(hw_mech & PCIBIOS_HW_TYPE1))
+@@ -239,7 +242,7 @@ static int pci_bios_write(unsigned int seg, unsigned int bus,
+ 	u16 number = 0;
+ 
+ 	WARN_ON(seg);
+-	if ((bus > 255) || (devfn > 255) || (reg > 255)) 
++	if ((bus > 255) || (devfn > 255) || (reg > 255))
+ 		return -EINVAL;
+ 
+ 	raw_spin_lock_irqsave(&pci_config_lock, flags);
+@@ -316,19 +319,19 @@ static const struct pci_raw_ops *__init pci_find_bios(void)
+ 		if (sum != 0)
+ 			continue;
+ 		if (check->fields.revision != 0) {
+-			printk("PCI: unsupported BIOS32 revision %d at 0x%p\n",
++			pr_warn("unsupported BIOS32 revision %d at 0x%p\n",
+ 				check->fields.revision, check);
+ 			continue;
+ 		}
+-		DBG("PCI: BIOS32 Service Directory structure at 0x%p\n", check);
++		pr_debug("BIOS32 Service Directory structure at 0x%p\n", check);
+ 		if (check->fields.entry >= 0x100000) {
+-			printk("PCI: BIOS32 entry (0x%p) in high memory, "
+-					"cannot use.\n", check);
++			pr_warn("BIOS32 entry (0x%p) in high memory, cannot use.\n",
++				check);
+ 			return NULL;
+ 		} else {
+ 			unsigned long bios32_entry = check->fields.entry;
+-			DBG("PCI: BIOS32 Service Directory entry at 0x%lx\n",
+-					bios32_entry);
++			pr_debug("BIOS32 Service Directory entry at 0x%lx\n",
++				 bios32_entry);
+ 			bios32_indirect.address = bios32_entry + PAGE_OFFSET;
+ 			set_bios_x();
+ 			if (check_pcibios())
+@@ -348,9 +351,9 @@ struct irq_routing_options {
+ 	u16 size;
+ 	struct irq_info *table;
+ 	u16 segment;
+-} __attribute__((packed));
++} __packed;
+ 
+-struct irq_routing_table * pcibios_get_irq_routing_table(void)
++struct irq_routing_table *pcibios_get_irq_routing_table(void)
  {
- 	unsigned crtc_mask = BIT(crtc_idx);
+ 	struct irq_routing_options opt;
+ 	struct irq_routing_table *rt = NULL;
+@@ -366,7 +369,7 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
+ 	opt.size = PAGE_SIZE;
+ 	opt.segment = __KERNEL_DS;
  
-+	trace_msm_atomic_async_commit_start(crtc_mask);
-+
- 	mutex_lock(&kms->commit_lock);
- 
- 	if (!(kms->pending_crtc_mask & crtc_mask)) {
- 		mutex_unlock(&kms->commit_lock);
--		return;
-+		goto out;
+-	DBG("PCI: Fetching IRQ routing table... ");
++	pr_debug("Fetching IRQ routing table... ");
+ 	__asm__("push %%es\n\t"
+ 		"push %%ds\n\t"
+ 		"pop  %%es\n\t"
+@@ -384,17 +387,19 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
+ 		  "S" (&pci_indirect),
+ 		  "m" (opt)
+ 		: "memory");
+-	DBG("OK  ret=%d, size=%d, map=%x\n", ret, opt.size, map);
++	pr_debug("OK  ret=%d, size=%d, map=%x\n", ret, opt.size, map);
+ 	if (ret & 0xff00)
+-		printk(KERN_ERR "PCI: Error %02x when fetching IRQ routing table.\n", (ret >> 8) & 0xff);
++		pr_err("Error %02x when fetching IRQ routing table.\n",
++		       (ret >> 8) & 0xff);
+ 	else if (opt.size) {
+-		rt = kmalloc(sizeof(struct irq_routing_table) + opt.size, GFP_KERNEL);
++		rt = kmalloc(sizeof(struct irq_routing_table) + opt.size,
++			     GFP_KERNEL);
+ 		if (rt) {
+ 			memset(rt, 0, sizeof(struct irq_routing_table));
+ 			rt->size = opt.size + sizeof(struct irq_routing_table);
+ 			rt->exclusive_irqs = map;
+ 			memcpy(rt->slots, (void *) page, opt.size);
+-			printk(KERN_INFO "PCI: Using BIOS Interrupt Routing Table\n");
++			pr_info("Using BIOS Interrupt Routing Table\n");
+ 		}
  	}
+ 	free_page(page);
+@@ -421,7 +426,7 @@ EXPORT_SYMBOL(pcibios_set_irq_routing);
  
- 	kms->pending_crtc_mask &= ~crtc_mask;
-@@ -47,19 +50,24 @@ static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
- 	/*
- 	 * Flush hardware updates:
- 	 */
--	DRM_DEBUG_ATOMIC("triggering async commit\n");
-+	trace_msm_atomic_flush_commit(crtc_mask);
- 	kms->funcs->flush_commit(kms, crtc_mask);
- 	mutex_unlock(&kms->commit_lock);
- 
- 	/*
- 	 * Wait for flush to complete:
- 	 */
-+	trace_msm_atomic_wait_flush_start(crtc_mask);
- 	kms->funcs->wait_flush(kms, crtc_mask);
-+	trace_msm_atomic_wait_flush_finish(crtc_mask);
- 
- 	mutex_lock(&kms->commit_lock);
- 	kms->funcs->complete_commit(kms, crtc_mask);
- 	mutex_unlock(&kms->commit_lock);
- 	kms->funcs->disable_commit(kms);
-+
-+out:
-+	trace_msm_atomic_async_commit_finish(crtc_mask);
- }
- 
- static enum hrtimer_restart msm_atomic_pending_timer(struct hrtimer *t)
-@@ -144,13 +152,17 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
- 	bool async = kms->funcs->vsync_time &&
- 			can_do_async(state, &async_crtc);
- 
-+	trace_msm_atomic_commit_tail_start(async, crtc_mask);
-+
- 	kms->funcs->enable_commit(kms);
- 
- 	/*
- 	 * Ensure any previous (potentially async) commit has
- 	 * completed:
- 	 */
-+	trace_msm_atomic_wait_flush_start(crtc_mask);
- 	kms->funcs->wait_flush(kms, crtc_mask);
-+	trace_msm_atomic_wait_flush_finish(crtc_mask);
- 
- 	mutex_lock(&kms->commit_lock);
- 
-@@ -201,6 +213,8 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
- 		drm_atomic_helper_commit_hw_done(state);
- 		drm_atomic_helper_cleanup_planes(dev, state);
- 
-+		trace_msm_atomic_commit_tail_finish(async, crtc_mask);
-+
- 		return;
+ void __init pci_pcbios_init(void)
+ {
+-	if ((pci_probe & PCI_PROBE_BIOS) 
++	if ((pci_probe & PCI_PROBE_BIOS)
+ 		&& ((raw_pci_ops = pci_find_bios()))) {
+ 		pci_bios_present = 1;
  	}
- 
-@@ -213,14 +227,16 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
- 	/*
- 	 * Flush hardware updates:
- 	 */
--	DRM_DEBUG_ATOMIC("triggering commit\n");
-+	trace_msm_atomic_flush_commit(crtc_mask);
- 	kms->funcs->flush_commit(kms, crtc_mask);
- 	mutex_unlock(&kms->commit_lock);
- 
- 	/*
- 	 * Wait for flush to complete:
- 	 */
-+	trace_msm_atomic_wait_flush_start(crtc_mask);
- 	kms->funcs->wait_flush(kms, crtc_mask);
-+	trace_msm_atomic_wait_flush_finish(crtc_mask);
- 
- 	mutex_lock(&kms->commit_lock);
- 	kms->funcs->complete_commit(kms, crtc_mask);
-@@ -229,4 +245,6 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
- 
- 	drm_atomic_helper_commit_hw_done(state);
- 	drm_atomic_helper_cleanup_planes(dev, state);
-+
-+	trace_msm_atomic_commit_tail_finish(async, crtc_mask);
- }
-diff --git a/drivers/gpu/drm/msm/msm_atomic_trace.h b/drivers/gpu/drm/msm/msm_atomic_trace.h
-new file mode 100644
-index 000000000000..b4ca0ed3b4a3
---- /dev/null
-+++ b/drivers/gpu/drm/msm/msm_atomic_trace.h
-@@ -0,0 +1,110 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#if !defined(_MSM_GPU_TRACE_H_) || defined(TRACE_HEADER_MULTI_READ)
-+#define _MSM_GPU_TRACE_H_
-+
-+#include <linux/tracepoint.h>
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM drm_msm_atomic
-+#define TRACE_INCLUDE_FILE msm_atomic_trace
-+
-+TRACE_EVENT(msm_atomic_commit_tail_start,
-+	    TP_PROTO(bool async, unsigned crtc_mask),
-+	    TP_ARGS(async, crtc_mask),
-+	    TP_STRUCT__entry(
-+		    __field(bool, async)
-+		    __field(u32, crtc_mask)
-+		    ),
-+	    TP_fast_assign(
-+		    __entry->async = async;
-+		    __entry->crtc_mask = crtc_mask;
-+		    ),
-+	    TP_printk("async=%d crtc_mask=%x",
-+		    __entry->async, __entry->crtc_mask)
-+);
-+
-+TRACE_EVENT(msm_atomic_commit_tail_finish,
-+	    TP_PROTO(bool async, unsigned crtc_mask),
-+	    TP_ARGS(async, crtc_mask),
-+	    TP_STRUCT__entry(
-+		    __field(bool, async)
-+		    __field(u32, crtc_mask)
-+		    ),
-+	    TP_fast_assign(
-+		    __entry->async = async;
-+		    __entry->crtc_mask = crtc_mask;
-+		    ),
-+	    TP_printk("async=%d crtc_mask=%x",
-+		    __entry->async, __entry->crtc_mask)
-+);
-+
-+TRACE_EVENT(msm_atomic_async_commit_start,
-+	    TP_PROTO(unsigned crtc_mask),
-+	    TP_ARGS(crtc_mask),
-+	    TP_STRUCT__entry(
-+		    __field(u32, crtc_mask)
-+		    ),
-+	    TP_fast_assign(
-+		    __entry->crtc_mask = crtc_mask;
-+		    ),
-+	    TP_printk("crtc_mask=%x",
-+		    __entry->crtc_mask)
-+);
-+
-+TRACE_EVENT(msm_atomic_async_commit_finish,
-+	    TP_PROTO(unsigned crtc_mask),
-+	    TP_ARGS(crtc_mask),
-+	    TP_STRUCT__entry(
-+		    __field(u32, crtc_mask)
-+		    ),
-+	    TP_fast_assign(
-+		    __entry->crtc_mask = crtc_mask;
-+		    ),
-+	    TP_printk("crtc_mask=%x",
-+		    __entry->crtc_mask)
-+);
-+
-+TRACE_EVENT(msm_atomic_wait_flush_start,
-+	    TP_PROTO(unsigned crtc_mask),
-+	    TP_ARGS(crtc_mask),
-+	    TP_STRUCT__entry(
-+		    __field(u32, crtc_mask)
-+		    ),
-+	    TP_fast_assign(
-+		    __entry->crtc_mask = crtc_mask;
-+		    ),
-+	    TP_printk("crtc_mask=%x",
-+		    __entry->crtc_mask)
-+);
-+
-+TRACE_EVENT(msm_atomic_wait_flush_finish,
-+	    TP_PROTO(unsigned crtc_mask),
-+	    TP_ARGS(crtc_mask),
-+	    TP_STRUCT__entry(
-+		    __field(u32, crtc_mask)
-+		    ),
-+	    TP_fast_assign(
-+		    __entry->crtc_mask = crtc_mask;
-+		    ),
-+	    TP_printk("crtc_mask=%x",
-+		    __entry->crtc_mask)
-+);
-+
-+TRACE_EVENT(msm_atomic_flush_commit,
-+	    TP_PROTO(unsigned crtc_mask),
-+	    TP_ARGS(crtc_mask),
-+	    TP_STRUCT__entry(
-+		    __field(u32, crtc_mask)
-+		    ),
-+	    TP_fast_assign(
-+		    __entry->crtc_mask = crtc_mask;
-+		    ),
-+	    TP_printk("crtc_mask=%x",
-+		    __entry->crtc_mask)
-+);
-+
-+#endif
-+
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH ../../drivers/gpu/drm/msm
-+#include <trace/define_trace.h>
-diff --git a/drivers/gpu/drm/msm/msm_atomic_tracepoints.c b/drivers/gpu/drm/msm/msm_atomic_tracepoints.c
-new file mode 100644
-index 000000000000..011dc881f391
---- /dev/null
-+++ b/drivers/gpu/drm/msm/msm_atomic_tracepoints.c
-@@ -0,0 +1,3 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define CREATE_TRACE_POINTS
-+#include "msm_atomic_trace.h"
-diff --git a/drivers/gpu/drm/msm/msm_gpu_trace.h b/drivers/gpu/drm/msm/msm_gpu_trace.h
-index 1155118a27a1..122b84789238 100644
---- a/drivers/gpu/drm/msm/msm_gpu_trace.h
-+++ b/drivers/gpu/drm/msm/msm_gpu_trace.h
-@@ -5,7 +5,7 @@
- #include <linux/tracepoint.h>
- 
- #undef TRACE_SYSTEM
--#define TRACE_SYSTEM drm_msm
-+#define TRACE_SYSTEM drm_msm_gpu
- #define TRACE_INCLUDE_FILE msm_gpu_trace
- 
- TRACE_EVENT(msm_gpu_submit,
 -- 
-2.21.0
+2.22.1
 
