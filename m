@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 725BEC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E78DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F96F205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76BE5205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103668;
-	bh=hkBnbXIj4Ow5ukHzAWFpSqN0IRB8d7dNXP7A+zZpRBQ=;
+	s=default; t=1567103673;
+	bh=/pHX4fSyz12zQkqBVAShv8MoRwtzNWYX+/zNi5Zr8bQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i0n5MXskySxfr/YjEarkILi40W+Kzc8iGb9YKJVljAAtQtdv1ijh7K8Z3KwLonr4j
-	 2NB5tFp5p4F75Jo5GiTzM7f6cmB7IRcPUcRGwnkSBTamApAISUbWFr1tJIO+RIRY1T
-	 f6WSr+JpeZg3Hv0053vaTwh1hqKdf7+SWHnXOzPI=
+	b=s/neV+RfZ7aASGVYdHvaHyIr42QSX4mgjQKGCMdhBl7KIqVeWbl/B6Uo3g0l5etxy
+	 qXSXL76RB+sxHyD6jzPZhrr7gjjWFKlxS0XjcM2QCywJktvit+SQ/7Xg2u0vOnr3C5
+	 v+cWNATkpTxFEVjaOEIJrTHd8Q79XTXKl/QpdmGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbfH2SNV (ORCPT
+        id S1728116AbfH2SNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 29 Aug 2019 14:13:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55070 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:55074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727087AbfH2SNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:13:17 -0400
+        id S1728043AbfH2SNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:13:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67AC12189D;
-        Thu, 29 Aug 2019 18:13:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A75C2339E;
+        Thu, 29 Aug 2019 18:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102396;
-        bh=hkBnbXIj4Ow5ukHzAWFpSqN0IRB8d7dNXP7A+zZpRBQ=;
+        s=default; t=1567102397;
+        bh=/pHX4fSyz12zQkqBVAShv8MoRwtzNWYX+/zNi5Zr8bQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qtxi24umdUcuSRIwdfk7cQXF9cWXQuDwXySud/jP4Yb1VydCYv1vxcTVEmOFlYLix
-         DnOO0zrNtbjc7N5iw5smu2WgFVdqBeRRrn/pCf0RADLso02pyRUR40r5wgBvH7oqLr
-         NhoRCbGxY4kMc8AcjRPeclf+lUt1g1TI+QBbHrY8=
+        b=jOyKfuGvtq1lrCITQjiQf9wkO5YR5cuu5PxFW1IrCt5nWovn5edJbwu3s23z9XrDs
+         OaX9ZX5WUhnmGFTlsi//mQ8SxRHp+sDnfR06q1gsn330pUOK+bAjKVECPDa8qMpHzA
+         zOjkpECQ9EHlvfWeIcF+4r9fBrFhDwz5WXkR50+Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>, Andrey Ignatov <rdna@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 03/76] libbpf: set BTF FD for prog only when there is supported .BTF.ext data
-Date:   Thu, 29 Aug 2019 14:11:58 -0400
-Message-Id: <20190829181311.7562-3-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 04/76] netfilter: nf_flow_table: fix offload for flows that are subject to xfrm
+Date:   Thu, 29 Aug 2019 14:11:59 -0400
+Message-Id: <20190829181311.7562-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -60,47 +61,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 3415ec643e7bd644b03026efbe2f2b36cbe9b34b ]
+[ Upstream commit 589b474a4b7ce409d6821ef17234a995841bd131 ]
 
-5d01ab7bac46 ("libbpf: fix erroneous multi-closing of BTF FD")
-introduced backwards-compatibility issue, manifesting itself as -E2BIG
-error returned on program load due to unknown non-zero btf_fd attribute
-value for BPF_PROG_LOAD sys_bpf() sub-command.
+This makes the previously added 'encap test' pass.
+Because its possible that the xfrm dst entry becomes stale while such
+a flow is offloaded, we need to call dst_check() -- the notifier that
+handles this for non-tunneled traffic isn't sufficient, because SA or
+or policies might have changed.
 
-This patch fixes bug by ensuring that we only ever associate BTF FD with
-program if there is a BTF.ext data that was successfully loaded into
-kernel, which automatically means kernel supports func_info/line_info
-and associated BTF FD for progs (checked and ensured also by BTF
-sanitization code).
+If dst becomes stale the flow offload entry will be tagged for teardown
+and packets will be passed to 'classic' forwarding path.
 
-Fixes: 5d01ab7bac46 ("libbpf: fix erroneous multi-closing of BTF FD")
-Reported-by: Andrey Ignatov <rdna@fb.com>
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Removing the entry right away is problematic, as this would
+introduce a race condition with the gc worker.
+
+In case flow is long-lived, it could eventually be offloaded again
+once the gc worker removes the entry from the flow table.
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/libbpf.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/netfilter/nf_flow_table_ip.c | 43 ++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index e308fcf16cdd0..ce579e3654d60 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -2066,7 +2066,11 @@ load_program(struct bpf_program *prog, struct bpf_insn *insns, int insns_cnt,
- 	load_attr.license = license;
- 	load_attr.kern_version = kern_version;
- 	load_attr.prog_ifindex = prog->prog_ifindex;
--	btf_fd = bpf_object__btf_fd(prog->obj);
-+	/* if .BTF.ext was loaded, kernel supports associated BTF for prog */
-+	if (prog->obj->btf_ext)
-+		btf_fd = bpf_object__btf_fd(prog->obj);
-+	else
-+		btf_fd = -1;
- 	load_attr.prog_btf_fd = btf_fd >= 0 ? btf_fd : 0;
- 	load_attr.func_info = prog->func_info;
- 	load_attr.func_info_rec_size = prog->func_info_rec_size;
+diff --git a/net/netfilter/nf_flow_table_ip.c b/net/netfilter/nf_flow_table_ip.c
+index cdfc33517e85b..d68c801dd614b 100644
+--- a/net/netfilter/nf_flow_table_ip.c
++++ b/net/netfilter/nf_flow_table_ip.c
+@@ -214,6 +214,25 @@ static bool nf_flow_exceeds_mtu(const struct sk_buff *skb, unsigned int mtu)
+ 	return true;
+ }
+ 
++static int nf_flow_offload_dst_check(struct dst_entry *dst)
++{
++	if (unlikely(dst_xfrm(dst)))
++		return dst_check(dst, 0) ? 0 : -1;
++
++	return 0;
++}
++
++static unsigned int nf_flow_xmit_xfrm(struct sk_buff *skb,
++				      const struct nf_hook_state *state,
++				      struct dst_entry *dst)
++{
++	skb_orphan(skb);
++	skb_dst_set_noref(skb, dst);
++	skb->tstamp = 0;
++	dst_output(state->net, state->sk, skb);
++	return NF_STOLEN;
++}
++
+ unsigned int
+ nf_flow_offload_ip_hook(void *priv, struct sk_buff *skb,
+ 			const struct nf_hook_state *state)
+@@ -254,6 +273,11 @@ nf_flow_offload_ip_hook(void *priv, struct sk_buff *skb,
+ 	if (nf_flow_state_check(flow, ip_hdr(skb)->protocol, skb, thoff))
+ 		return NF_ACCEPT;
+ 
++	if (nf_flow_offload_dst_check(&rt->dst)) {
++		flow_offload_teardown(flow);
++		return NF_ACCEPT;
++	}
++
+ 	if (nf_flow_nat_ip(flow, skb, thoff, dir) < 0)
+ 		return NF_DROP;
+ 
+@@ -261,6 +285,13 @@ nf_flow_offload_ip_hook(void *priv, struct sk_buff *skb,
+ 	iph = ip_hdr(skb);
+ 	ip_decrease_ttl(iph);
+ 
++	if (unlikely(dst_xfrm(&rt->dst))) {
++		memset(skb->cb, 0, sizeof(struct inet_skb_parm));
++		IPCB(skb)->iif = skb->dev->ifindex;
++		IPCB(skb)->flags = IPSKB_FORWARDED;
++		return nf_flow_xmit_xfrm(skb, state, &rt->dst);
++	}
++
+ 	skb->dev = outdev;
+ 	nexthop = rt_nexthop(rt, flow->tuplehash[!dir].tuple.src_v4.s_addr);
+ 	skb_dst_set_noref(skb, &rt->dst);
+@@ -467,6 +498,11 @@ nf_flow_offload_ipv6_hook(void *priv, struct sk_buff *skb,
+ 				sizeof(*ip6h)))
+ 		return NF_ACCEPT;
+ 
++	if (nf_flow_offload_dst_check(&rt->dst)) {
++		flow_offload_teardown(flow);
++		return NF_ACCEPT;
++	}
++
+ 	if (skb_try_make_writable(skb, sizeof(*ip6h)))
+ 		return NF_DROP;
+ 
+@@ -477,6 +513,13 @@ nf_flow_offload_ipv6_hook(void *priv, struct sk_buff *skb,
+ 	ip6h = ipv6_hdr(skb);
+ 	ip6h->hop_limit--;
+ 
++	if (unlikely(dst_xfrm(&rt->dst))) {
++		memset(skb->cb, 0, sizeof(struct inet6_skb_parm));
++		IP6CB(skb)->iif = skb->dev->ifindex;
++		IP6CB(skb)->flags = IP6SKB_FORWARDED;
++		return nf_flow_xmit_xfrm(skb, state, &rt->dst);
++	}
++
+ 	skb->dev = outdev;
+ 	nexthop = rt6_nexthop(rt, &flow->tuplehash[!dir].tuple.src_v6);
+ 	skb_dst_set_noref(skb, &rt->dst);
 -- 
 2.20.1
 
