@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA64C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C89DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781DD22CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57062339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102415;
-	bh=bCGZzDx5LUXzU8phWTW20IhX0zBK1LJRnCUKc57hfpI=;
+	s=default; t=1567102424;
+	bh=9ACL6Y5floZ1bdzEYnHFCfiFYuRsK9W3Q0GQxmWY1WQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tjcqjt3Tuuqt+QDv1VuLwqN1K0WMdzlZRy/9KFJmFjPXpKOpIcATsYOcYZMwzNyJU
-	 o9P7MYMGa2k65HF0Bw9kCkf/7zIq/xn9QqcLotY+9ugP3ZX5mkkHzRBun35MtNP7pN
-	 lB+kCCFwYZmsQ/B7ESEnxyRDZc0zGxTm03ljayxo=
+	b=WenVlH8nsdCuoHWF9tZ48l7xsa+dCbrBINgYC7kJ+1GEfn5ONB+u9F9ewR65uELCY
+	 mGlp9HqET5Hzi757Az184ZdC63UypAQqC4XtJgx2coMTzqpvBc1zDE592vXRo2J+ag
+	 gPXleVC+tB/5cMm09IAMxxrE31VH6bz5RKwapfxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbfH2SNe (ORCPT
+        id S1728474AbfH2SNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:13:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55188 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:13:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbfH2SNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:13:30 -0400
+        id S1728372AbfH2SNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:13:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 665C82189D;
-        Thu, 29 Aug 2019 18:13:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1130E23407;
+        Thu, 29 Aug 2019 18:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102409;
-        bh=bCGZzDx5LUXzU8phWTW20IhX0zBK1LJRnCUKc57hfpI=;
+        s=default; t=1567102417;
+        bh=9ACL6Y5floZ1bdzEYnHFCfiFYuRsK9W3Q0GQxmWY1WQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QcR5BFRSH2L8xumDKMH0/dj65eiXb8YPNCHweTqRezzMwpRAfv4BaRAa1W+h8bCSy
-         yJMuz084YaZE43+sYcv+PQmsWBtmAZ+pT5ausIOXoX904QpXZTmdSXZSShq0FR4sh5
-         LZKqdoKZwnPfLpur+D9HGUuxV5pyQQ9pDWZ6uTaY=
+        b=XRjfKx70RYH/j3ErNKAw9BXGjexkewx+Lvn+DWSv2mDeIWcXL1c6Ln+4q84lAW3js
+         AwcK6QaghZLldVNiBl9Wqs3xQms2dKtelNlHpf4anuM7bWjZatNhvq8WYOlYHdzla1
+         fMJnYFKxfUoDD7Z4EDuoHQqdnK+UCe8Rcof73150=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Jaafar Ali <jaafarkhalaf@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 06/76] clk: samsung: Change signature of exynos5_subcmus_init() function
-Date:   Thu, 29 Aug 2019 14:12:01 -0400
-Message-Id: <20190829181311.7562-6-sashal@kernel.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 12/76] netfilter: nf_flow_table: teardown flow timeout race
+Date:   Thu, 29 Aug 2019 14:12:07 -0400
+Message-Id: <20190829181311.7562-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -61,184 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit bf32e7dbfce87d518c0ca77af890eae9ab8d6ab9 ]
+[ Upstream commit 1e5b2471bcc4838df298080ae1ec042c2cbc9ce9 ]
 
-In order to make it easier in subsequent patch to create different subcmu
-lists for exynos5420 and exynos5800 SoCs the code is rewritten so we pass
-an array of pointers to the subcmus initialization function.
+Flows that are in teardown state (due to RST / FIN TCP packet) still
+have their offload flag set on. Hence, the conntrack garbage collector
+may race to undo the timeout adjustment that the fixup routine performs,
+leaving the conntrack entry in place with the internal offload timeout
+(one day).
 
-Fixes: b06a532bf1fa ("clk: samsung: Add Exynos5 sub-CMU clock driver")
-Tested-by: Jaafar Ali <jaafarkhalaf@gmail.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Link: https://lkml.kernel.org/r/20190808144929.18685-1-s.nawrocki@samsung.com
-Reviewed-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Update teardown flow state to ESTABLISHED and set tracking to liberal,
+then once the offload bit is cleared, adjust timeout if it is more than
+the default fixup timeout (conntrack might already have set a lower
+timeout from the packet path).
+
+Fixes: da5984e51063 ("netfilter: nf_flow_table: add support for sending flows back to the slow path")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos5-subcmu.c | 16 +++----
- drivers/clk/samsung/clk-exynos5-subcmu.h |  2 +-
- drivers/clk/samsung/clk-exynos5250.c     |  7 ++-
- drivers/clk/samsung/clk-exynos5420.c     | 60 ++++++++++++++----------
- 4 files changed, 49 insertions(+), 36 deletions(-)
+ net/netfilter/nf_flow_table_core.c | 34 ++++++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5-subcmu.c b/drivers/clk/samsung/clk-exynos5-subcmu.c
-index 91db7894125df..65c82d922b05c 100644
---- a/drivers/clk/samsung/clk-exynos5-subcmu.c
-+++ b/drivers/clk/samsung/clk-exynos5-subcmu.c
-@@ -14,7 +14,7 @@
- #include "clk-exynos5-subcmu.h"
+diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
+index 4254e42605135..49248fe5847a1 100644
+--- a/net/netfilter/nf_flow_table_core.c
++++ b/net/netfilter/nf_flow_table_core.c
+@@ -112,15 +112,16 @@ static void flow_offload_fixup_tcp(struct ip_ct_tcp *tcp)
+ #define NF_FLOWTABLE_TCP_PICKUP_TIMEOUT	(120 * HZ)
+ #define NF_FLOWTABLE_UDP_PICKUP_TIMEOUT	(30 * HZ)
  
- static struct samsung_clk_provider *ctx;
--static const struct exynos5_subcmu_info *cmu;
-+static const struct exynos5_subcmu_info **cmu;
- static int nr_cmus;
- 
- static void exynos5_subcmu_clk_save(void __iomem *base,
-@@ -56,17 +56,17 @@ static void exynos5_subcmu_defer_gate(struct samsung_clk_provider *ctx,
-  * when OF-core populates all device-tree nodes.
-  */
- void exynos5_subcmus_init(struct samsung_clk_provider *_ctx, int _nr_cmus,
--			  const struct exynos5_subcmu_info *_cmu)
-+			  const struct exynos5_subcmu_info **_cmu)
+-static void flow_offload_fixup_ct(struct nf_conn *ct)
++static inline __s32 nf_flow_timeout_delta(unsigned int timeout)
++{
++	return (__s32)(timeout - (u32)jiffies);
++}
++
++static void flow_offload_fixup_ct_timeout(struct nf_conn *ct)
  {
- 	ctx = _ctx;
- 	cmu = _cmu;
- 	nr_cmus = _nr_cmus;
+ 	const struct nf_conntrack_l4proto *l4proto;
++	int l4num = nf_ct_protonum(ct);
+ 	unsigned int timeout;
+-	int l4num;
+-
+-	l4num = nf_ct_protonum(ct);
+-	if (l4num == IPPROTO_TCP)
+-		flow_offload_fixup_tcp(&ct->proto.tcp);
  
- 	for (; _nr_cmus--; _cmu++) {
--		exynos5_subcmu_defer_gate(ctx, _cmu->gate_clks,
--					  _cmu->nr_gate_clks);
--		exynos5_subcmu_clk_save(ctx->reg_base, _cmu->suspend_regs,
--					_cmu->nr_suspend_regs);
-+		exynos5_subcmu_defer_gate(ctx, (*_cmu)->gate_clks,
-+					  (*_cmu)->nr_gate_clks);
-+		exynos5_subcmu_clk_save(ctx->reg_base, (*_cmu)->suspend_regs,
-+					(*_cmu)->nr_suspend_regs);
- 	}
+ 	l4proto = nf_ct_l4proto_find(l4num);
+ 	if (!l4proto)
+@@ -133,7 +134,20 @@ static void flow_offload_fixup_ct(struct nf_conn *ct)
+ 	else
+ 		return;
+ 
+-	ct->timeout = nfct_time_stamp + timeout;
++	if (nf_flow_timeout_delta(ct->timeout) > (__s32)timeout)
++		ct->timeout = nfct_time_stamp + timeout;
++}
++
++static void flow_offload_fixup_ct_state(struct nf_conn *ct)
++{
++	if (nf_ct_protonum(ct) == IPPROTO_TCP)
++		flow_offload_fixup_tcp(&ct->proto.tcp);
++}
++
++static void flow_offload_fixup_ct(struct nf_conn *ct)
++{
++	flow_offload_fixup_ct_state(ct);
++	flow_offload_fixup_ct_timeout(ct);
  }
  
-@@ -163,9 +163,9 @@ static int __init exynos5_clk_probe(struct platform_device *pdev)
- 		if (of_property_read_string(np, "label", &name) < 0)
- 			continue;
- 		for (i = 0; i < nr_cmus; i++)
--			if (strcmp(cmu[i].pd_name, name) == 0)
-+			if (strcmp(cmu[i]->pd_name, name) == 0)
- 				exynos5_clk_register_subcmu(&pdev->dev,
--							    &cmu[i], np);
-+							    cmu[i], np);
- 	}
- 	return 0;
+ void flow_offload_free(struct flow_offload *flow)
+@@ -211,7 +225,7 @@ EXPORT_SYMBOL_GPL(flow_offload_add);
+ 
+ static inline bool nf_flow_has_expired(const struct flow_offload *flow)
+ {
+-	return (__s32)(flow->timeout - (u32)jiffies) <= 0;
++	return nf_flow_timeout_delta(flow->timeout) <= 0;
  }
-diff --git a/drivers/clk/samsung/clk-exynos5-subcmu.h b/drivers/clk/samsung/clk-exynos5-subcmu.h
-index 755ee8aaa3de5..9ae5356f25aa4 100644
---- a/drivers/clk/samsung/clk-exynos5-subcmu.h
-+++ b/drivers/clk/samsung/clk-exynos5-subcmu.h
-@@ -21,6 +21,6 @@ struct exynos5_subcmu_info {
- };
  
- void exynos5_subcmus_init(struct samsung_clk_provider *ctx, int nr_cmus,
--			  const struct exynos5_subcmu_info *cmu);
-+			  const struct exynos5_subcmu_info **cmu);
+ static void flow_offload_del(struct nf_flowtable *flow_table,
+@@ -231,6 +245,8 @@ static void flow_offload_del(struct nf_flowtable *flow_table,
  
- #endif
-diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
-index f2b8968817682..931c70a4da196 100644
---- a/drivers/clk/samsung/clk-exynos5250.c
-+++ b/drivers/clk/samsung/clk-exynos5250.c
-@@ -681,6 +681,10 @@ static const struct exynos5_subcmu_info exynos5250_disp_subcmu = {
- 	.pd_name	= "DISP1",
- };
+ 	if (nf_flow_has_expired(flow))
+ 		flow_offload_fixup_ct(e->ct);
++	else if (flow->flags & FLOW_OFFLOAD_TEARDOWN)
++		flow_offload_fixup_ct_timeout(e->ct);
  
-+static const struct exynos5_subcmu_info *exynos5250_subcmus[] = {
-+	&exynos5250_disp_subcmu,
-+};
-+
- static const struct samsung_pll_rate_table vpll_24mhz_tbl[] __initconst = {
- 	/* sorted in descending order */
- 	/* PLL_36XX_RATE(rate, m, p, s, k) */
-@@ -843,7 +847,8 @@ static void __init exynos5250_clk_init(struct device_node *np)
+ 	flow_offload_free(flow);
+ }
+@@ -242,7 +258,7 @@ void flow_offload_teardown(struct flow_offload *flow)
+ 	flow->flags |= FLOW_OFFLOAD_TEARDOWN;
  
- 	samsung_clk_sleep_init(reg_base, exynos5250_clk_regs,
- 			       ARRAY_SIZE(exynos5250_clk_regs));
--	exynos5_subcmus_init(ctx, 1, &exynos5250_disp_subcmu);
-+	exynos5_subcmus_init(ctx, ARRAY_SIZE(exynos5250_subcmus),
-+			     exynos5250_subcmus);
+ 	e = container_of(flow, struct flow_offload_entry, flow);
+-	flow_offload_fixup_ct(e->ct);
++	flow_offload_fixup_ct_state(e->ct);
+ }
+ EXPORT_SYMBOL_GPL(flow_offload_teardown);
  
- 	samsung_clk_of_add_provider(np, ctx);
- 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 12d800fd95286..a6ea5d7e63d02 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -1232,32 +1232,40 @@ static struct exynos5_subcmu_reg_dump exynos5x_mfc_suspend_regs[] = {
- 	{ DIV4_RATIO, 0, 0x3 },			/* DIV dout_mfc_blk */
- };
- 
--static const struct exynos5_subcmu_info exynos5x_subcmus[] = {
--	{
--		.div_clks	= exynos5x_disp_div_clks,
--		.nr_div_clks	= ARRAY_SIZE(exynos5x_disp_div_clks),
--		.gate_clks	= exynos5x_disp_gate_clks,
--		.nr_gate_clks	= ARRAY_SIZE(exynos5x_disp_gate_clks),
--		.suspend_regs	= exynos5x_disp_suspend_regs,
--		.nr_suspend_regs = ARRAY_SIZE(exynos5x_disp_suspend_regs),
--		.pd_name	= "DISP",
--	}, {
--		.div_clks	= exynos5x_gsc_div_clks,
--		.nr_div_clks	= ARRAY_SIZE(exynos5x_gsc_div_clks),
--		.gate_clks	= exynos5x_gsc_gate_clks,
--		.nr_gate_clks	= ARRAY_SIZE(exynos5x_gsc_gate_clks),
--		.suspend_regs	= exynos5x_gsc_suspend_regs,
--		.nr_suspend_regs = ARRAY_SIZE(exynos5x_gsc_suspend_regs),
--		.pd_name	= "GSC",
--	}, {
--		.div_clks	= exynos5x_mfc_div_clks,
--		.nr_div_clks	= ARRAY_SIZE(exynos5x_mfc_div_clks),
--		.gate_clks	= exynos5x_mfc_gate_clks,
--		.nr_gate_clks	= ARRAY_SIZE(exynos5x_mfc_gate_clks),
--		.suspend_regs	= exynos5x_mfc_suspend_regs,
--		.nr_suspend_regs = ARRAY_SIZE(exynos5x_mfc_suspend_regs),
--		.pd_name	= "MFC",
--	},
-+static const struct exynos5_subcmu_info exynos5x_disp_subcmu = {
-+	.div_clks	= exynos5x_disp_div_clks,
-+	.nr_div_clks	= ARRAY_SIZE(exynos5x_disp_div_clks),
-+	.gate_clks	= exynos5x_disp_gate_clks,
-+	.nr_gate_clks	= ARRAY_SIZE(exynos5x_disp_gate_clks),
-+	.suspend_regs	= exynos5x_disp_suspend_regs,
-+	.nr_suspend_regs = ARRAY_SIZE(exynos5x_disp_suspend_regs),
-+	.pd_name	= "DISP",
-+};
-+
-+static const struct exynos5_subcmu_info exynos5x_gsc_subcmu = {
-+	.div_clks	= exynos5x_gsc_div_clks,
-+	.nr_div_clks	= ARRAY_SIZE(exynos5x_gsc_div_clks),
-+	.gate_clks	= exynos5x_gsc_gate_clks,
-+	.nr_gate_clks	= ARRAY_SIZE(exynos5x_gsc_gate_clks),
-+	.suspend_regs	= exynos5x_gsc_suspend_regs,
-+	.nr_suspend_regs = ARRAY_SIZE(exynos5x_gsc_suspend_regs),
-+	.pd_name	= "GSC",
-+};
-+
-+static const struct exynos5_subcmu_info exynos5x_mfc_subcmu = {
-+	.div_clks	= exynos5x_mfc_div_clks,
-+	.nr_div_clks	= ARRAY_SIZE(exynos5x_mfc_div_clks),
-+	.gate_clks	= exynos5x_mfc_gate_clks,
-+	.nr_gate_clks	= ARRAY_SIZE(exynos5x_mfc_gate_clks),
-+	.suspend_regs	= exynos5x_mfc_suspend_regs,
-+	.nr_suspend_regs = ARRAY_SIZE(exynos5x_mfc_suspend_regs),
-+	.pd_name	= "MFC",
-+};
-+
-+static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
-+	&exynos5x_disp_subcmu,
-+	&exynos5x_gsc_subcmu,
-+	&exynos5x_mfc_subcmu,
- };
- 
- static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __initconst = {
 -- 
 2.20.1
 
