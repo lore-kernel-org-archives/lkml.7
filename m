@@ -2,116 +2,129 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54418C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F31EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2845E215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:30:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="N0Tiu7A4"
+	by mail.kernel.org (Postfix) with ESMTP id 10EF22064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbfH2BaR (ORCPT
+        id S1727085AbfH2BdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 21:30:17 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44431 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfH2BaQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 21:30:16 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i18so654842pgl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 18:30:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=oNuMQ0k3tolgyGaRQrF7TXZFayppiTIHnhst6LSZzgM=;
-        b=N0Tiu7A4E04tZ0bGKbShdzjcMamCLdZF8w9OOQK6PqJNfA15z95T1h2MEkAr1QGrkv
-         MTmnaoNxMhluJ+2QIg5wgRlKZG4ebI1krbhI2gFwPGhzgjl3Mo9eYwmeXkS342XWdvW2
-         6o8joBVW/w2HTRLZcmWXJgsyKzxaDVdpZopFc+IAFxfJItzbjS6MQxV8iMzvMh+wCbxD
-         Jlu+YvTpNL5xNRiykc69s779w7U0EiJlNB8fL9OGeoCN3UhQ1qRDkxoOPgj2e9fdO+nP
-         rUwqW2dh56+pi8vTJEXJED0sq/nTmn2tjeRp9FDE/GII0XdAAqqoM5RIQmupCWDxlq+V
-         rHBA==
+        Wed, 28 Aug 2019 21:33:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37156 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726128AbfH2BdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 21:33:04 -0400
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 68FF520ABB
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:33:04 +0000 (UTC)
+Received: by mail-pf1-f198.google.com with SMTP id q67so1164368pfc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 18:33:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=oNuMQ0k3tolgyGaRQrF7TXZFayppiTIHnhst6LSZzgM=;
-        b=eE/jox2gdwYPuFNMSaMr41WfTM7iUHCbG1WhGMqD8FFU26q+m/XSt4vK7qeNgL3txk
-         UymjKRfojiDMSaf6ap1qUCJQEMiYxWCqYTPynM5b0jJUaLziXaOaqwb8u0NQkiM9MjYk
-         ZxFL0yELG8I9AJyfXvGv7zfU/XZJ+RzDgwfkjM2pyzhePiOperilf098ChA9XSTBsUQG
-         HdtuWk7UYMVqfCCbV/642oZd6jlkUb53xoB4nL9GmX29J55KmhACquv2jJhy+Usrogi2
-         ffjrVit3obcuS0Kv083vBsTQCOBwWgxCoCGHcgChbCDzlv1DZw2cpV7nWBhToeTDuQEX
-         ZM0g==
-X-Gm-Message-State: APjAAAXbkOBuWlRttU6baM7JIJjNEB50AEFUUZiHcDdzQQDXwxjzSbII
-        RpxXo5cOf5DYewE0l7SvFVaknQ==
-X-Google-Smtp-Source: APXvYqzneWTer11an0OtynaQ0NdmFFtoQFTgNrY29fSA6ajAUSOjqiO56Ptl9fWn/+Jpt6o1LcWHIg==
-X-Received: by 2002:aa7:8602:: with SMTP id p2mr8123966pfn.138.1567042216270;
-        Wed, 28 Aug 2019 18:30:16 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id y13sm669451pfm.164.2019.08.28.18.30.15
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aUCBBKPneUXXEuiCVmgIIBKl8aLO0JeDP2Yet2NAVck=;
+        b=XAbvGUCNsNX29XPShaz66mjLU8K8jvXd1QFnQYUMOFAx+W7Q/2Ml5qx6puTZ/vVi3A
+         jcJx8KPJr1COxtlDLdLIFnfodMeKMOcjYO3FaNsL9Ju6qDuC20F8k3QRtQwxe/Y5TqAB
+         faUTpiqa6n7lmYY1qaVN49Bss7zIN5ZOWIkNso6vFR4xEJs6JOTOCPp7/DQxr8Fvsf6V
+         7nWrOGctx/UhI7+shxPFnL+WzBsAbbJnm30LPad5yNSK1Zyl8vX71PQBeT20WUytnGVm
+         YbsaxcRPpCXa8MDNT7z2v6RsZ8mLAFgJjbvVUL8WlQh7ejejzuWVCt8S+rVXY1QSi5z4
+         bwbA==
+X-Gm-Message-State: APjAAAWydesobFcKeCM3rnXk9jWaD+JX6iPHcNBt5Z1A/zAO8n5Dx0qd
+        NzjR31qjQRW1BpWqXThfolmoAUitCj2/PhLpFJ/0wMBqPao0DFV4jGznqNzVV9aI5bt6TQZrA1V
+        BBF4unBRaEkfmaidOySsTxcwo
+X-Received: by 2002:a17:902:d888:: with SMTP id b8mr7120264plz.115.1567042383972;
+        Wed, 28 Aug 2019 18:33:03 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzXgHT3ZZzOrcgMNnrLHO3EmcsXzSWvv4Jv9HO8bcFJ2YpIj2kFGw8hf4IW9XwifUfnLSU+5Q==
+X-Received: by 2002:a17:902:d888:: with SMTP id b8mr7120255plz.115.1567042383816;
+        Wed, 28 Aug 2019 18:33:03 -0700 (PDT)
+Received: from xz-x1 ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id k14sm394261pgi.20.2019.08.28.18.33.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 18:30:15 -0700 (PDT)
-Date:   Wed, 28 Aug 2019 18:30:14 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Kees Cook <keescook@chromium.org>, Tycho Andersen <tycho@tycho.ws>
-cc:     David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Vincent Chen <vincentc@andestech.com>,
-        Alan Kao <alankao@andestech.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, me@carlosedp.com
-Subject: Re: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
-In-Reply-To: <201908261043.08510F5E66@keescook>
-Message-ID: <alpine.DEB.2.21.9999.1908281825240.13811@viisi.sifive.com>
-References: <20190822205533.4877-1-david.abdurachmanov@sifive.com> <alpine.DEB.2.21.9999.1908231717550.25649@viisi.sifive.com> <20190826145756.GB4664@cisco> <CAEn-LTrtn01=fp6taBBG_QkfBtgiJyt6oUjZJOi6VN8OeXp6=g@mail.gmail.com>
- <201908261043.08510F5E66@keescook>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Wed, 28 Aug 2019 18:33:03 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 09:32:53 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     Andrew Jones <drjones@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Huth <thuth@redhat.com>
+Subject: Re: [PATCH 0/4] KVM: selftests: Introduce VM_MODE_PXXV48_4K
+Message-ID: <20190829013253.GD8729@xz-x1>
+References: <20190827131015.21691-1-peterx@redhat.com>
+ <20190828115106.2j6n7qust7uceds5@kamzik.brq.redhat.com>
+ <20190828115230.7rctfb2w3whkonp7@kamzik.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190828115230.7rctfb2w3whkonp7@kamzik.brq.redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kees,
+On Wed, Aug 28, 2019 at 01:52:30PM +0200, Andrew Jones wrote:
+> On Wed, Aug 28, 2019 at 01:51:06PM +0200, Andrew Jones wrote:
+> > On Tue, Aug 27, 2019 at 09:10:11PM +0800, Peter Xu wrote:
+> > > The work is based on Thomas's s390 port for dirty_log_test.
 
-On Mon, 26 Aug 2019, Kees Cook wrote:
+[1]
 
-> On Mon, Aug 26, 2019 at 09:39:50AM -0700, David Abdurachmanov wrote:
-> > I don't have the a build with SECCOMP for the board right now, so it
-> > will have to wait. I just finished a new kernel (almost rc6) for Fedora,
+> > > 
+> > > This series originates from "[PATCH] KVM: selftests: Detect max PA
+> > > width from cpuid" [1] and one of Drew's comments - instead of keeping
+> > > the hackish line to overwrite guest_pa_bits all the time, this series
+> > > introduced the new mode VM_MODE_PXXV48_4K for x86_64 platform.
+> > > 
+> > > The major issue is that even all the x86_64 kvm selftests are
+> > > currently using the guest mode VM_MODE_P52V48_4K, many x86_64 hosts
+> > > are not using 52 bits PA (and in most cases, far less).  If with luck
+> > > we could be having 48 bits hosts, but it's more adhoc (I've observed 3
+> > > x86_64 systems, they are having different PA width of 36, 39, 48).  I
+> > > am not sure whether this is happening to the other archs as well, but
+> > > it probably makes sense to bring the x86_64 tests to the real world on
+> > > always using the correct PA bits.
+> > > 
+> > > A side effect of this series is that it will also fix the crash we've
+> > > encountered on Xeon E3-1220 as mentioned [1] due to the
+> > > differenciation of PA width.
+> > > 
+> > > With [1], we've observed AMD host issues when with NPT=off.  However a
+> > > funny fact is that after I reworked into this series, the tests can
+> > > instead pass on both NPT=on/off.  It could be that the series changes
+> > > vm->pa_bits or other fields so something was affected.  I didn't dig
+> > > more on that though, considering we should not lose anything.
+> > > 
+> > > Any kind of smoke test would be greatly welcomed (especially on s390
+> > > or ARM).  Same to comments.  Thanks,
+> > > 
+> > 
+> > The patches didn't apply cleanly for me on 9e8312f5e160, but once I got
+> > them applied I was able to run the aarch64 tests.
+
+Right, because I applied Thomas's s390x port as base [1], considering
+that that one should reach kvm/queue earlier (should be in the
+submaintainer's tree and waiting for a pull).  Maybe I should post
+against the current kvm/queue next time?  After all this series does
+not modify anything of the s390x work so the conflict should be
+trivial.
+
 > 
-> FWIW, I don't think this should block landing the code: all the tests
-> fail without seccomp support. ;) So this patch is an improvement!
+> Oh, and after fixing 2/4 (vm->pa_bits) to fix compilation on aarch64 as
+> pointed out on that patch.
 
-Am sympathetic to this -- we did it with the hugetlb patches for RISC-V -- 
-but it would be good to understand a little bit more about why the test 
-fails before we merge it.
+Thanks for verifying and reviews!  Yes I'll fix that up.
 
-Once we merge the patch, it will probably reduce the motivation for others 
-to either understand and fix the underlying problem with the RISC-V code 
--- or, if it truly is a flaky test, to drop (or fix) the test in the 
-seccomp_bpf kselftests.
+Regards,
 
-Thanks for helping to take a closer look at this,
-
-- Paul
+-- 
+Peter Xu
