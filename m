@@ -2,104 +2,117 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA112C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E794C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92BDD205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:32:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Dg20y7Rl"
+	by mail.kernel.org (Postfix) with ESMTP id 3A07421726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:33:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567103580;
+	bh=0iVUGstZBn+OwfLZQ5q8c/fwqNEgVLv+IjmNObfZN5k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gUxL5P1+eqZ5xE6wTaj24MmXh0NXW8iBy599i814wMWpEi3R9NZfkI7hvJYT7+6Iy
+	 iVeefwNtx9KAP447mfXkm2io8zMtMKM+XgA1cO+JzAZNp9i0sGyfnGgCz7xhypl1/a
+	 DOwWrByJJAdxlzfEYsbZD7MTw6oi+ztPzzDuLw08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729770AbfH2Scw (ORCPT
+        id S1728652AbfH2SN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:32:52 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42558 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728684AbfH2Scu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:32:50 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p3so2021609pgb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 11:32:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=PP12ZN4mSTKnf0MT7hUsqNIn9m+j13VzNu25K1FEDNA=;
-        b=Dg20y7RlR5lw3IrWb9kFXOXh3UDVfvJqh0MeNCYdV/1eNskEXHbrs3axnbFQeu4GZ8
-         vFmjGng4fJdYr0EVfjnDJQMJeVh8Wo4mARH6Aeb9PtJVMKWA11VVmX93rx/9dXPGgsvY
-         FxthrT/KIwHAPCTHk5xe9/pt6PCokLIvEdi/hS08sdAQp1r3q7AZLSLFBSyNbM+ZMbvl
-         jdT+SIaECfhHRfr2vcg+NsuZxc177fxwtSV8aaLMTXD3pfG1Y6o+78RCTUZZhI39TjtW
-         d33SNM+MR8spGoN+2NKJdC/pYKU02Tem9FYPj8xh2wOdI8Doud4CFRDFEUMtW9hqdPBS
-         szeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=PP12ZN4mSTKnf0MT7hUsqNIn9m+j13VzNu25K1FEDNA=;
-        b=Dpt+cvt9FEmYr0/4z7gfA0xbruxavmHUxX6oHIS4UPqiAAHTeApTH6B+iStYtVK45h
-         ePD09bp7PSM+wkwVXDzzWOJtCWO3iT1Lb+KaihoKJBhyFHC0bSHhurm8WeBgFHhtM1nA
-         hTf4XVKcRTddYoOq4HZblWG/xnO3pN7nqFagetUEoffD4RhgDKU7H8aOtf0kAgN/gZ1W
-         MSe56OEn1d61alThWybFjoRlradVIh3pqNiHFzwoPy+Xo7HqqbePx/9tgddT5z5NTz+H
-         EgPzd5gabQdr7aQ5iqDQvauqrC4hY+7dCBWz0ttESCbGwO2jVS7M1mcRNwHrVc6MKDAL
-         EVoA==
-X-Gm-Message-State: APjAAAXhxVuX17eS1sZDOx2c2s4wR2km8aeF9DF5uwvyyYcbxjjIJFXZ
-        /e8Z5529ek3kg+Er9QI5RJRanw==
-X-Google-Smtp-Source: APXvYqybp8pL5qLXcsTDjwIcUXweNsYeikbXrqtzD5ZaFVHnl0f8HgRwGQ8oNuvWwwNDMokHpRBMaw==
-X-Received: by 2002:a63:6206:: with SMTP id w6mr9551512pgb.428.1567103569556;
-        Thu, 29 Aug 2019 11:32:49 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id g11sm3162127pgu.11.2019.08.29.11.32.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 29 Aug 2019 11:32:49 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/3] arm64: dts: meson-g12: specify suspend OPP
-In-Reply-To: <7hy2zeuv9z.fsf@baylibre.com>
-References: <20190827100307.21661-1-narmstrong@baylibre.com> <7hy2zeuv9z.fsf@baylibre.com>
-Date:   Thu, 29 Aug 2019 11:32:48 -0700
-Message-ID: <7ha7brrfe7.fsf@baylibre.com>
+        Thu, 29 Aug 2019 14:13:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728571AbfH2SNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:13:51 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EB1F2189D;
+        Thu, 29 Aug 2019 18:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567102431;
+        bh=0iVUGstZBn+OwfLZQ5q8c/fwqNEgVLv+IjmNObfZN5k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Kg5/ZzHOxpO9h3MSv/PqkI8mUIZrSWKR2SE1QOYthG1eHlEiZMSqoY6oXLVfPpgC9
+         h8cvLCIANZg0W9qAMtTLAmXJFzBzlaUdjU/dTk7CYQYvf01pY8eMOn1zbr2fLoTChH
+         GRKrODpVlFm2JhlnyLolqq6Q7Ozw+uxgrICtVoQU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Fabian Henneke <fabian.henneke@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 20/76] Bluetooth: hidp: Let hidp_send_message return number of queued bytes
+Date:   Thu, 29 Aug 2019 14:12:15 -0400
+Message-Id: <20190829181311.7562-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
+References: <20190829181311.7562-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kevin Hilman <khilman@baylibre.com> writes:
+From: Fabian Henneke <fabian.henneke@gmail.com>
 
-> Neil Armstrong <narmstrong@baylibre.com> writes:
->
->> Tag the 1,2GHz OPP as suspend OPP to be set before going in suspend mode,
->> for the G12A, G12B and SM1 SoCs.
->>
->> It has been reported that using various OPPs can lead to error or
->> resume with a different OPP from the ROM, thus use this safe OPP as
->> it is the default OPP used by the BL2 boot firmware.
->>
->> Neil Armstrong (3):
->>   arm64: dts: meson-g12a: specify suspend OPP
->>   arm64: dts: meson-sm1: specify suspend OPP
->>   arm64: dts: meson-g12b: specify suspend OPP
->
-> Queued patches 1, 3 for v5.4.
->
-> The SM1 patch has a dependency on the SM1 DVFS series, which in turn has
-> a dependency on clock changes.  Once I get a stable tag for the SM1
-> clock changes, I'll queue up the rest.
+[ Upstream commit 48d9cc9d85dde37c87abb7ac9bbec6598ba44b56 ]
 
-FYI... I decided not to queue these for v5.4.
+Let hidp_send_message return the number of successfully queued bytes
+instead of an unconditional 0.
 
-I'm pretty sure we'll need these, but I I think we need to do a bit more
-suspend/resume testing to be sure we have the right OPPs. here.
+With the return value fixed to 0, other drivers relying on hidp, such as
+hidraw, can not return meaningful values from their respective
+implementations of write(). In particular, with the current behavior, a
+hidraw device's write() will have different return values depending on
+whether the device is connected via USB or Bluetooth, which makes it
+harder to abstract away the transport layer.
 
-For now, this series is in my `v5.4/testing` branch, which is included
-in `integ` so it can get a bit broader testing.
+Signed-off-by: Fabian Henneke <fabian.henneke@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/bluetooth/hidp/core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Kevin
+diff --git a/net/bluetooth/hidp/core.c b/net/bluetooth/hidp/core.c
+index 5abd423b55fa9..8d889969ae7ed 100644
+--- a/net/bluetooth/hidp/core.c
++++ b/net/bluetooth/hidp/core.c
+@@ -101,6 +101,7 @@ static int hidp_send_message(struct hidp_session *session, struct socket *sock,
+ {
+ 	struct sk_buff *skb;
+ 	struct sock *sk = sock->sk;
++	int ret;
+ 
+ 	BT_DBG("session %p data %p size %d", session, data, size);
+ 
+@@ -114,13 +115,17 @@ static int hidp_send_message(struct hidp_session *session, struct socket *sock,
+ 	}
+ 
+ 	skb_put_u8(skb, hdr);
+-	if (data && size > 0)
++	if (data && size > 0) {
+ 		skb_put_data(skb, data, size);
++		ret = size;
++	} else {
++		ret = 0;
++	}
+ 
+ 	skb_queue_tail(transmit, skb);
+ 	wake_up_interruptible(sk_sleep(sk));
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int hidp_send_ctrl_message(struct hidp_session *session,
+-- 
+2.20.1
+
