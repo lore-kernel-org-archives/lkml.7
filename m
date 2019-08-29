@@ -2,146 +2,149 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AA1C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB85BC41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9672173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:48:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="uC0aZeMp"
+	by mail.kernel.org (Postfix) with ESMTP id C43F92342A
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfH2KsT (ORCPT
+        id S1727233AbfH2Ksb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:48:19 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:48345 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbfH2KsS (ORCPT
+        Thu, 29 Aug 2019 06:48:31 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34728 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbfH2Ksa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:48:18 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: wf0UB7nm40tZ8+X64VkC2a3riOpPTJ9gAsKjESLIGwoatsQIxHUNTKMpBPH8SEA2QyY7NDb3v6
- jtHHNV+LM4WGkAG2tm1ehUxWEhHndgSALtXbDffGXHSFkzQSQKJ9gHDJtMThC3FfaVyAaI6t4B
- e7VnAKEpeykiN5uc9Z6D5bW6c0x2QDEry5d4bLmWMT2FrIfgg2fiA8XBj3+E3HvNiAHmskuaZz
- Km4q9inV4wt7I7ArsUjcTdXbcN83nSFzfsX54y0pQUPpxfMcNqHTDpP2P0Ifu/7OcPILlV3FbL
- q18=
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="44148429"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Aug 2019 03:48:17 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 29 Aug 2019 03:48:15 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Thu, 29 Aug 2019 03:48:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OFS7uKGBLRVS0rWuhB3kXe/xXS3wLBvyaCBDYrlb48mlAuc0beGblnndvMXJ4SGWDkdfR1CmMijUchHzScnaXxNOHejHZ3mM9M/KHEyDNM/iOjjyOZClBOW+6UHlx5sbfs5VP+Q5llQW1b3zjSBb525uc5StdN5p/DZ6d15kd6J2Nf7itRfF+hKpwxhA6gnfnxTV8u92a2mHz0NO39TohXEPALiP9RCGqxsafQ9paf4qfLA7YVoTbZDMfS2nLoU6XkajrPxTkcFE8LsNHhi8ykOau1NCp9gAsIFhWCdPedoROvtADhUaUNIFbG+EG+l7GRG1VSqDdu5LGIVf6bHp/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zTt81lf4ltCYlnDkQwm716uNRAJibC1OpQRzSf+G+70=;
- b=Q8/vpZVQMIl8d5qR2vTevBP/15W55MT9io28zX7+uxGL9/wYME17UYqE4isC3GsCYTuPmPAjZZxK7irj7CvJW9Bf/Cz4ivijDTCjleS97TeAKeijEZpng0CEaOTJ5LgKFpyEl7xdfjyRIbU5jSu8hs4okHF5tR0DqA4yW1QFR+Sp/+uM6DYn3aTEg7gRDSA8wOcEISiQrNV/8KSLBjBH/5xEJqHnK0ZBiF6mTtzt6R8cfFrHDeobixGjqSiJ2qguYbcaN1JXFv+E+P7qUc017wQ7XSM0nWt+g2iyUpGvChnj0xvqcTCFkmkcbqlK3r//kbL+W2O9wbMV5LPHxj7rDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zTt81lf4ltCYlnDkQwm716uNRAJibC1OpQRzSf+G+70=;
- b=uC0aZeMp70JBgGebCW12IzBuPvLhwntT5gfBO6raJNdeQOrwkUMyDSHs4AGWFDrMR0mkRfwEXktqA93jSdVKp9YKqsJ9QA7IjSBbM/6VJhUcd0Vpq3qebtYdvFDrvznqV4x39EAtlZU1K8rIzu0eQcuG0M3+JOs/vGUs93xAu08=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB4223.namprd11.prod.outlook.com (52.135.37.76) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Thu, 29 Aug 2019 10:48:14 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::70c3:e929:4da2:60a5]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::70c3:e929:4da2:60a5%7]) with mapi id 15.20.2199.021; Thu, 29 Aug 2019
- 10:48:14 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <marek.vasut@gmail.com>, <vigneshr@ti.com>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mtd: spi-nor: remove superfluous pass of
- nor->info->sector_size
-Thread-Topic: [PATCH] mtd: spi-nor: remove superfluous pass of
- nor->info->sector_size
-Thread-Index: AQHVXYxI0TEFgblBx06pcxDB5XcXnqcR82OA
-Date:   Thu, 29 Aug 2019 10:48:14 +0000
-Message-ID: <65f562ba-485a-4f88-ff6c-5d5643943b38@microchip.com>
-References: <20190828103423.8232-1-tudor.ambarus@microchip.com>
-In-Reply-To: <20190828103423.8232-1-tudor.ambarus@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR07CA0197.eurprd07.prod.outlook.com
- (2603:10a6:802:3f::21) To MN2PR11MB4448.namprd11.prod.outlook.com
- (2603:10b6:208:193::29)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 87b69a0c-41a3-4882-de9e-08d72c6e6489
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR11MB4223;
-x-ms-traffictypediagnostic: MN2PR11MB4223:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MN2PR11MB42234030FD3CBF316E78A830F0A20@MN2PR11MB4223.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
-x-forefront-prvs: 0144B30E41
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(39860400002)(376002)(366004)(396003)(199004)(189003)(6306002)(52116002)(81156014)(14454004)(6512007)(81166006)(8676002)(305945005)(478600001)(7736002)(36756003)(86362001)(31696002)(2201001)(316002)(2906002)(3846002)(6116002)(110136005)(6486002)(966005)(6436002)(66066001)(99286004)(26005)(11346002)(386003)(476003)(6506007)(2501003)(2616005)(25786009)(446003)(76176011)(6246003)(256004)(71190400001)(102836004)(71200400001)(486006)(53546011)(31686004)(66446008)(66946007)(229853002)(5660300002)(66476007)(66556008)(8936002)(53936002)(186003)(64756008)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4223;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LdoWjUAMU3AJIqPpF7zDR1BPc/kqNwjelFAJW9el2wCYtlp+d6gHpf8xQbFX0zVtIPhJU9yIDdIWls2PEeb2ZumCnoSeWGKXyEudfZjM1Sc29G+coA3s/Ua7LHsSCUI/Mx9FiXHsuohyGkw+8mT6ccL5grBoOUBov/xVgDsY8oRtyr9X7PyZDjBU0/Im/FbVvrsrzDDFnNvJzSgT5QTnjaOWm1UcOsvGJlaPjEgtQNjzwcXvCYLJw61fy0S2C6PCBdJTf4b9wc7lbZOHICCxy7CFBQHWrBLBed1dqeAlSpqHmrZRyTINS5i4Bn4ZasWzyP6gt6RRUENx/VG2gYc89l1bOtQEWJ9UT7dwQXXsRf5AIHpirnwjHKYW9ADb0/vT6ThzDU5q26EjdRPE2xmYhN58aIyLY15SYB/4g5/YX30=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <51F25DC1604AF04D81BFD87C4A1D5118@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 29 Aug 2019 06:48:30 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s18so2952747wrn.1;
+        Thu, 29 Aug 2019 03:48:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=PsJQhq+Lb1i2V9/rJZmF77p+KpHip5cMLUFV9G3NyZI=;
+        b=joKpSF2U00dZDSDU2vPQdoUcaItKikz/KBQvVn/ERxo6Fle4D7KQqTzMQiwxwQxMPi
+         +Fzkfljag0qtAQSK/iHzI3vxVGBTAFntrU9hn7io9JHGes9BGMUGuJf66cNwfxYoCL0Z
+         tNa+dYcD3datXPvIKfAVdUemIa5+WWjuTrANEc8jk35qaRE+OQj5aJtletZG4NTNnM98
+         9uKPvY4aIPPfW/LFR/dL37gieZT+9bcyxuRyvSXu9vnNL2pQA1aePoexorqDMsdLOHkO
+         xnwQHHabj01yxi8uq6/YFZVRX0GlijDn3Z2yo0hvdaq8jGolZE68kZengzCjNjTBUXIn
+         rfMQ==
+X-Gm-Message-State: APjAAAUJm7igjVFEOQuUnArUtU/ooeZ7NDEHxbFWH6FO5/fnO8RlHoAt
+        FwAnNmn810O/2pve7jjiAiQ=
+X-Google-Smtp-Source: APXvYqz+mwNaosQtXx5CNE3MaHs77+QiSjijuafkqP8enEgtLarYorxtVZZrKCffia9rcNSYWy0hbA==
+X-Received: by 2002:a5d:4649:: with SMTP id j9mr6404113wrs.193.1567075708216;
+        Thu, 29 Aug 2019 03:48:28 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id a18sm2603027wrt.18.2019.08.29.03.48.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Aug 2019 03:48:26 -0700 (PDT)
+Subject: Re: [PATCH v8 01/28] linkage: new macros for assembler symbols
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Ingo Molnar <mingo@kernel.org>, jpoimboe@redhat.com,
+        Juergen Gross <jgross@suse.com>,
+        Len Brown <len.brown@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pm@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        xen-devel@lists.xenproject.org
+References: <20190808103854.6192-1-jslaby@suse.cz>
+ <20190808103854.6192-2-jslaby@suse.cz> <20190812170652.GJ23772@zn.tnic>
+From:   Jiri Slaby <jslaby@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f077becf-8ea7-cb4b-d704-5e59a8d69c56@suse.cz>
+Date:   Thu, 29 Aug 2019 12:48:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87b69a0c-41a3-4882-de9e-08d72c6e6489
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 10:48:14.3145
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JiVnPonVPUCHKo759uEurrb6awtG9AWOLfWPvTNRRmE5cJi0S/xwDzSN9h3kB4Ez1Nzf3riqhY6rQqOKFnZox82dK3RrnY2nDRfH2R3sJiE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4223
+In-Reply-To: <20190812170652.GJ23772@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDA4LzI4LzIwMTkgMDE6MzUgUE0sIFR1ZG9yIEFtYmFydXMgLSBNMTgwNjQgd3JvdGU6
-DQo+IEZyb206IFR1ZG9yIEFtYmFydXMgPHR1ZG9yLmFtYmFydXNAbWljcm9jaGlwLmNvbT4NCj4g
-DQo+IFdlIGFscmVhZHkgcGFzcyBhIHBvaW50ZXIgdG8gbm9yLCB3ZSBjYW4gb2J0YWluIHRoZSBz
-ZWN0b3Jfc2l6ZQ0KPiBieSBkZXJlZmVyZW5jaW5nIGl0Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
-VHVkb3IgQW1iYXJ1cyA8dHVkb3IuYW1iYXJ1c0BtaWNyb2NoaXAuY29tPg0KPiAtLS0NCj4gIGRy
-aXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jIHwgNSArKystLQ0KPiAgMSBmaWxlIGNoYW5nZWQs
-IDMgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQoNCkFwcGxpZWQgdG8gaHR0cHM6
-Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvbXRkL2xpbnV4LmdpdCwN
-CnNwaS1ub3IvbmV4dCBicmFuY2guDQoNClRoYW5rcywNCnRhDQo=
+On 12. 08. 19, 19:06, Borislav Petkov wrote:
+>> +  Again, every ``SYM_CODE_START*`` **shall** be coupled by ``SYM_CODE_END``.
+> 
+> Btw, this coupling: I haven't gone through the whole patchset but do we
+> have automatic checking which makes sure a starting macro is coupled
+> with the correct ending macro?
+
+I do, but it's not part of this series. It's a pinch of link-time magic,
+but it works reliably (see e.g. 1cbec37b3f9c). I will post it if/after
+this gets merged. There were other approaches proposed in the past too
+-- using objtool for that (not implemented).
+
+>> +Overriding Macros
+>> +~~~~~~~~~~~~~~~~~
+>> +Architecture can also override any of the macros in their own
+> 
+> "Other architectures... "
+
+Not only "other", x86 can override the types if need be too.
+
+>> +``asm/linkage.h``, including macros specifying the type of a symbol
+>> +(``SYM_T_FUNC``, ``SYM_T_OBJECT``, and ``SYM_T_NONE``).  As every macro
+>> +described in this file is surrounded by ``#ifdef`` + ``#endif``, it is enough
+>> +to define the macros differently in the aforementioned architecture-dependent
+>> +header.
+
+thanks,
+-- 
+js
+suse labs
