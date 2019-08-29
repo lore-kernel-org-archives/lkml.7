@@ -2,114 +2,125 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E67C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BF0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF62F22CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7827D23405
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfH2UR1 (ORCPT
+        id S1728017AbfH2UTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 16:17:27 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:59076 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727673AbfH2UR0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 16:17:26 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 8052A634C87;
-        Thu, 29 Aug 2019 23:17:01 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1i3Qqr-0000yE-Ce; Thu, 29 Aug 2019 23:17:01 +0300
-Date:   Thu, 29 Aug 2019 23:17:01 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com
-Subject: Re: [PATCH v2 2/3] media: i2c: Add IMX290 CMOS image sensor driver
-Message-ID: <20190829201701.GA3568@valkosipuli.retiisi.org.uk>
-References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
- <20190806130938.19916-3-manivannan.sadhasivam@linaro.org>
- <20190813105920.GH835@valkosipuli.retiisi.org.uk>
- <20190829170415.GA4427@mani>
+        Thu, 29 Aug 2019 16:19:44 -0400
+Received: from sauhun.de ([88.99.104.3]:43196 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726935AbfH2UTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 16:19:44 -0400
+Received: from localhost (p54B33070.dip0.t-ipconnect.de [84.179.48.112])
+        by pokefinder.org (Postfix) with ESMTPSA id C2A0D2C001C;
+        Thu, 29 Aug 2019 22:19:41 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 22:19:41 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Andrew Cooks <acooks@rationali.st>,
+        linux-acpi@vger.kernel.org, platypus-sw@opengear.com,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Will Wagner <willw@carallon.com>
+Subject: Re: [PATCH v5 1/3] i2c: piix4: Fix port selection for AMD Family 16h
+ Model 30h
+Message-ID: <20190829201941.GQ3740@ninjato>
+References: <20190802145109.38dd4045@endymion>
+ <20190802145246.76c90f20@endymion>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="NEaRsfQExFH3jWtg"
 Content-Disposition: inline
-In-Reply-To: <20190829170415.GA4427@mani>
+In-Reply-To: <20190802145246.76c90f20@endymion>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manivannan,
 
-On Thu, Aug 29, 2019 at 10:34:15PM +0530, Manivannan Sadhasivam wrote:
+--NEaRsfQExFH3jWtg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-...
+On Fri, Aug 02, 2019 at 02:52:46PM +0200, Jean Delvare wrote:
+> From: Andrew Cooks <andrew.cooks@opengear.com>
+>=20
+> Family 16h Model 30h SMBus controller needs the same port selection fix
+> as described and fixed in commit 0fe16195f891 ("i2c: piix4: Fix SMBus port
+> selection for AMD Family 17h chips")
+>=20
+> commit 6befa3fde65f ("i2c: piix4: Support alternative port selection
+> register") also fixed the port selection for Hudson2, but unfortunately
+> this is not the exact same device and the AMD naming and PCI Device IDs
+> aren't particularly helpful here.
+>=20
+> The SMBus port selection register is common to the following Families
+> and models, as documented in AMD's publicly available BIOS and Kernel
+> Developer Guides:
+>=20
+>  50742 - Family 15h Model 60h-6Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
+>  55072 - Family 15h Model 70h-7Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
+>  52740 - Family 16h Model 30h-3Fh (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS)
+>=20
+> The Hudson2 PCI Device ID (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) is shared
+> between Bolton FCH and Family 16h Model 30h, but the location of the
+> SmBus0Sel port selection bits are different:
+>=20
+>  51192 - Bolton Register Reference Guide
+>=20
+> We distinguish between Bolton and Family 16h Model 30h using the PCI
+> Revision ID:
+>=20
+>   Bolton is device 0x780b, revision 0x15
+>   Family 16h Model 30h is device 0x780b, revision 0x1F
+>   Family 15h Model 60h and 70h are both device 0x790b, revision 0x4A.
+>=20
+> The following additional public AMD BKDG documents were checked and do
+> not share the same port selection register:
+>=20
+>  42301 - Family 15h Model 00h-0Fh doesn't mention any
+>  42300 - Family 15h Model 10h-1Fh doesn't mention any
+>  49125 - Family 15h Model 30h-3Fh doesn't mention any
+>=20
+>  48751 - Family 16h Model 00h-0Fh uses the previously supported
+>          index register SB800_PIIX4_PORT_IDX_ALT at 0x2e
+>=20
+> Signed-off-by: Andrew Cooks <andrew.cooks@opengear.com>
+> Signed-off-by: Jean Delvare <jdelvare@suse.de>
+> Cc: stable@vger.kernel.org [v4.6+]
 
-> > > +static int imx290_set_fmt(struct v4l2_subdev *sd,
-> > > +			  struct v4l2_subdev_pad_config *cfg,
-> > > +		      struct v4l2_subdev_format *fmt)
-> > > +{
-> > > +	struct imx290 *imx290 = to_imx290(sd);
-> > > +	const struct imx290_mode *mode;
-> > > +	struct v4l2_mbus_framefmt *format;
-> > > +	int i, ret = 0;
-> > 
-> > Note that sub-device drivers need to serialise access through the uAPI to
-> > their own data.
-> > 
-> 
-> You mean guarding with mutex?
+Applied to for-current, thanks!
 
-Yes, please.
 
-...
+--NEaRsfQExFH3jWtg
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > > +static int imx290_get_regulators(struct device *dev, struct imx290 *imx290)
-> > > +{
-> > > +	unsigned int i;
-> > > +
-> > > +	for (i = 0; i < IMX290_NUM_SUPPLIES; i++)
-> > > +		imx290->supplies[i].supply = imx290_supply_name[i];
-> > > +
-> > > +	return devm_regulator_bulk_get(dev, IMX290_NUM_SUPPLIES,
-> > > +				       imx290->supplies);
-> > > +}
-> > > +
+-----BEGIN PGP SIGNATURE-----
 
-...
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1oM10ACgkQFA3kzBSg
+KbaAWQ//cejX5wNmq/86VgH0HBL8vaGsiIXXyk31ubybf2Cy+49BTQSoqEZzLksD
+Wt4lMuy5g82KrzHfv0EBhfFky3f+CepSj/+SVaMdA6qukenIV1KkwfXOX8r1eeaj
+gU4VXujIFpsul77gH0IhujLLFE6uJJbAaZxv1T0MGy1jv1rV32vFB/9iKrCBGrYo
+z2Oc3JWt1HKSU6gFVcU802W77tSxiJXi1YQawR5iR+elQuf6G0bZEeQxMOlrAX7G
+2yIcnaJjg7ggHzjmcxddSLoXhEP91KctbNkMDTCJON4uxFE0uPcW/7kHl/3839bc
+WxTElRHBrJ82xjvNIuVqgvC0qjo2E4QWzY+dSpWWnac0pKCVeFbSRu4BPY5eY/zk
+vEjNRuuHXKTWlWCXtayprTQeC7NLyT3dW2jKzGw+ZoBkmgZYlwGm1MWR6vwHT+41
+3AduNlYf0C9B8jbQUl28MbRr+YUaF1Mp0JiL3R1Fv9ab9m79iRzPUAqWgya7Bgqs
+2nwOM28Fbh1fRGysNqOJcSLrVw5hPp/SG/m+mTyR05a5aZaTtEdPyKw7DGTJtjru
+V/usRVQMsmh9jEuUM35KDQT3wU50fogSlnYRShDpCvXA+qdqEHoTZ/xUr4ZYqitF
+peda7N2EH/j9BsHoVgbi9I14rbN9jkEa8T0kLB67zOHJCue2v2w=
+=nshq
+-----END PGP SIGNATURE-----
 
-> > > +	ret = imx290_get_regulators(dev, imx290);
-> > > +	if (ret < 0) {
-> > > +		dev_err(dev, "Cannot get regulators\n");
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	imx290->rst_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_ASIS);
-> > > +	if (IS_ERR(imx290->rst_gpio)) {
-> > > +		dev_err(dev, "Cannot get reset gpio\n");
-> > 
-> > Remember to put the regulators from now on. Or grab them later.
-> > 
-> 
-> Shouldn't that happen by default with devm_regulator* APIs?
-
-Ah, I missed you were using the devm variant. Please ignore the comment
-then.
-
--- 
-Regards,
-
-Sakari Ailus
+--NEaRsfQExFH3jWtg--
