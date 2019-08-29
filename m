@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDB5C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1984BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A6E2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB03B2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102721;
-	bh=LUbZq5RNgQvDztv0DBqWpD+rrSm6QAldMQFxXL2DynQ=;
+	s=default; t=1567102728;
+	bh=lawf9wsTvc8tfh2XXtfm0IRIv9n1yNwUWU/efGdOtZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XZAbODt+AvSxWW+W5klg8jppI5ueZBHOVlyPYvcZ6lx0uQaw83+ujLOVNZcFVZVqR
-	 9Vcr6GTsDXIP/VnRn/H2l8a6AJ8g/WoG5geA8aAE+6UjdkNMdTO3YnLqOYu6SKyecf
-	 e6vWweN71VtazslncOIKoJzk123mmZai5RPRV0Vg=
+	b=z62j9r4yMMHqKUYgetlq5UaYff9cOkdLNFALgfKAc96uP9w9sAIffuT9xKqUBVnXH
+	 zQKCN5KTMHNzqkg6I6L/C+wzG1xg6z+Y7Mk8vopYO0SzleAoAl3SWz0DH7b8xBNfbe
+	 /v7djUr1ewRPFBABYjgPXHsmXvmJAcscwt9ftDjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbfH2SSk (ORCPT
+        id S1729834AbfH2SSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:18:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:18:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729679AbfH2SSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:18:21 -0400
+        id S1728409AbfH2SST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:18:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 781A62339E;
-        Thu, 29 Aug 2019 18:18:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5497820828;
+        Thu, 29 Aug 2019 18:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102700;
-        bh=LUbZq5RNgQvDztv0DBqWpD+rrSm6QAldMQFxXL2DynQ=;
+        s=default; t=1567102698;
+        bh=lawf9wsTvc8tfh2XXtfm0IRIv9n1yNwUWU/efGdOtZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UHnlYSmTTAPOsDWMjFV4CoWajhA2LZRocJPp1ZU1Q+8731NMy5z8+9THQxHCoVioD
-         eZqtN46iWA+JeiGFq9JTHStnMynMHNc9n3UltiWbHxxSvlxG1spg635LMbRUgNI4Kg
-         9TKV+9gjcm5NPFEyjqjtfsbuGR/TfiXdj1LTUwPs=
+        b=XwIISBgJtDGYSGxFkGIYcS+k3mp+XKf04XxD4daaNj/Ff1MmDuZhyHymFrYhCg0s7
+         DaHFXt+w3NIFxRfzMC+F/fuyDaAOrWHD8YLUyitWNZ47ZVwyuM4oZonjqWMcZMfg+g
+         i8xgqHu08uHyOm/ITSzJ9+9f1pxJwzVjKhyIaRgM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrew Jones <drjones@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 15/15] KVM: arm/arm64: Only skip MMIO insn once
-Date:   Thu, 29 Aug 2019 14:18:02 -0400
-Message-Id: <20190829181802.9619-15-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 13/15] IB/mlx4: Fix memory leaks
+Date:   Thu, 29 Aug 2019 14:18:00 -0400
+Message-Id: <20190829181802.9619-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181802.9619-1-sashal@kernel.org>
 References: <20190829181802.9619-1-sashal@kernel.org>
@@ -60,56 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jones <drjones@redhat.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 2113c5f62b7423e4a72b890bd479704aa85c81ba ]
+[ Upstream commit 5c1baaa82cea2c815a5180ded402a7cd455d1810 ]
 
-If after an MMIO exit to userspace a VCPU is immediately run with an
-immediate_exit request, such as when a signal is delivered or an MMIO
-emulation completion is needed, then the VCPU completes the MMIO
-emulation and immediately returns to userspace. As the exit_reason
-does not get changed from KVM_EXIT_MMIO in these cases we have to
-be careful not to complete the MMIO emulation again, when the VCPU is
-eventually run again, because the emulation does an instruction skip
-(and doing too many skips would be a waste of guest code :-) We need
-to use additional VCPU state to track if the emulation is complete.
-As luck would have it, we already have 'mmio_needed', which even
-appears to be used in this way by other architectures already.
+In mlx4_ib_alloc_pv_bufs(), 'tun_qp->tx_ring' is allocated through
+kcalloc(). However, it is not always deallocated in the following execution
+if an error occurs, leading to memory leaks. To fix this issue, free
+'tun_qp->tx_ring' whenever an error occurs.
 
-Fixes: 0d640732dbeb ("arm64: KVM: Skip MMIO insn after emulation")
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Andrew Jones <drjones@redhat.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/1566159781-4642-1-git-send-email-wenwen@cs.uga.edu
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kvm/mmio.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/infiniband/hw/mlx4/mad.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/kvm/mmio.c b/arch/arm/kvm/mmio.c
-index ae61e2ea7255b..d2efc033ef8b4 100644
---- a/arch/arm/kvm/mmio.c
-+++ b/arch/arm/kvm/mmio.c
-@@ -98,6 +98,12 @@ int kvm_handle_mmio_return(struct kvm_vcpu *vcpu, struct kvm_run *run)
- 	unsigned int len;
- 	int mask;
- 
-+	/* Detect an already handled MMIO return */
-+	if (unlikely(!vcpu->mmio_needed))
-+		return 0;
-+
-+	vcpu->mmio_needed = 0;
-+
- 	if (!run->mmio.is_write) {
- 		len = run->mmio.len;
- 		if (len > sizeof(unsigned long))
-@@ -206,6 +212,7 @@ int io_mem_abort(struct kvm_vcpu *vcpu, struct kvm_run *run,
- 	run->mmio.is_write	= is_write;
- 	run->mmio.phys_addr	= fault_ipa;
- 	run->mmio.len		= len;
-+	vcpu->mmio_needed	= 1;
- 
- 	if (!ret) {
- 		/* We handled the access successfully in the kernel. */
+diff --git a/drivers/infiniband/hw/mlx4/mad.c b/drivers/infiniband/hw/mlx4/mad.c
+index 199a9cdd0d12a..531c985f6fd71 100644
+--- a/drivers/infiniband/hw/mlx4/mad.c
++++ b/drivers/infiniband/hw/mlx4/mad.c
+@@ -1526,8 +1526,6 @@ static int mlx4_ib_alloc_pv_bufs(struct mlx4_ib_demux_pv_ctx *ctx,
+ 				    tx_buf_size, DMA_TO_DEVICE);
+ 		kfree(tun_qp->tx_ring[i].buf.addr);
+ 	}
+-	kfree(tun_qp->tx_ring);
+-	tun_qp->tx_ring = NULL;
+ 	i = MLX4_NUM_TUNNEL_BUFS;
+ err:
+ 	while (i > 0) {
+@@ -1536,6 +1534,8 @@ static int mlx4_ib_alloc_pv_bufs(struct mlx4_ib_demux_pv_ctx *ctx,
+ 				    rx_buf_size, DMA_FROM_DEVICE);
+ 		kfree(tun_qp->ring[i].addr);
+ 	}
++	kfree(tun_qp->tx_ring);
++	tun_qp->tx_ring = NULL;
+ 	kfree(tun_qp->ring);
+ 	tun_qp->ring = NULL;
+ 	return -ENOMEM;
 -- 
 2.20.1
 
