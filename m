@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 179E7C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E7AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E11942166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACF82166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102709;
-	bh=b4C4Ntzc86COefHknOh3FnsI8HVK+79pWqiOHxCzUv8=;
+	s=default; t=1567102714;
+	bh=D22k3r46Zb5QFczzA77YHEXHotFNIJZqhiXYajFYR64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U2F5b29J1cRtWcHHBAyehWYYypj5NWvPT2LTA9Hazx/2wsK47IEhav86aE4Vj+xQ+
-	 W6lIZ4kR0TP5k30zqcsoYWA4NtX+2qgpxDtW8eNpX3CRkChjRCAUfuFxAuZucZbp20
-	 NTldE+YGvzy9vW50vng71gQr0/Njcg2rVVyt0Hrs=
+	b=WZPSLy2LMUfxqpLdVWmyRAKjMRZ27loBq14P+ErNYfVGN3ofVvHp7JWmnT6hH3Cd4
+	 1I7ZrJ+leGT49f2zUDpSZ65wytH3Hn7fhECyQ7N0LYvc9v0Yo8ZKoQKI0mqkyCUCLF
+	 JFOxn198xwTNB+p7RUojObly8ZpvEzNNoYKCF1FU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730446AbfH2SS0 (ORCPT
+        id S1729782AbfH2SSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60560 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:18:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730409AbfH2SSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:18:20 -0400
+        id S1730389AbfH2SSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:18:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6785A2173E;
-        Thu, 29 Aug 2019 18:18:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13FCD2339E;
+        Thu, 29 Aug 2019 18:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102699;
-        bh=b4C4Ntzc86COefHknOh3FnsI8HVK+79pWqiOHxCzUv8=;
+        s=default; t=1567102696;
+        bh=D22k3r46Zb5QFczzA77YHEXHotFNIJZqhiXYajFYR64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E/emfUDuy573vLCIk9cgr3ltdJ+n11FfMJUgKUC0ckUbaQNyWs2/0WaGsCgYsEh0A
-         CWawwLJVkWUsMnvGh3cHjzotu9OxzMX9aB0aXyE/3CZ2YtaiB1EkBwcI0NThwMVHbw
-         ZceXt7K5FDCR3h55y7UQEeG5CXQ9X2VdKoiXVlXY=
+        b=QkfoT6ZYcCgLJ7GTbcs+EVasaEUYLhQlToffyJA9Pi3OEY6kiu5MkrvHbZuFQW68K
+         V7GgSf3ncX+hgq94wQ/BDwOUj/xL4od5PFcPDZ8OcdAdTaAjnzS2p/4oWNLgpnIxuo
+         Xxy2vQVkxGJJUdUJ/uuyHfm0DFviKmryocDjZEes=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 14/15] ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
-Date:   Thu, 29 Aug 2019 14:18:01 -0400
-Message-Id: <20190829181802.9619-14-sashal@kernel.org>
+Cc:     Tho Vu <tho.vu.wh@rvc.renesas.com>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-sh@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 11/15] ravb: Fix use-after-free ravb_tstamp_skb
+Date:   Thu, 29 Aug 2019 14:17:58 -0400
+Message-Id: <20190829181802.9619-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181802.9619-1-sashal@kernel.org>
 References: <20190829181802.9619-1-sashal@kernel.org>
@@ -60,91 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <lhenriques@suse.com>
+From: Tho Vu <tho.vu.wh@rvc.renesas.com>
 
-[ Upstream commit 86968ef21596515958d5f0a40233d02be78ecec0 ]
+[ Upstream commit cfef46d692efd852a0da6803f920cc756eea2855 ]
 
-Calling ceph_buffer_put() in __ceph_setxattr() may end up freeing the
-i_xattrs.prealloc_blob buffer while holding the i_ceph_lock.  This can be
-fixed by postponing the call until later, when the lock is released.
+When a Tx timestamp is requested, a pointer to the skb is stored in the
+ravb_tstamp_skb struct. This was done without an skb_get. There exists
+the possibility that the skb could be freed by ravb_tx_free (when
+ravb_tx_free is called from ravb_start_xmit) before the timestamp was
+processed, leading to a use-after-free bug.
 
-The following backtrace was triggered by fstests generic/117.
+Use skb_get when filling a ravb_tstamp_skb struct, and add appropriate
+frees/consumes when a ravb_tstamp_skb struct is freed.
 
-  BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
-  in_atomic(): 1, irqs_disabled(): 0, pid: 650, name: fsstress
-  3 locks held by fsstress/650:
-   #0: 00000000870a0fe8 (sb_writers#8){.+.+}, at: mnt_want_write+0x20/0x50
-   #1: 00000000ba0c4c74 (&type->i_mutex_dir_key#6){++++}, at: vfs_setxattr+0x55/0xa0
-   #2: 000000008dfbb3f2 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: __ceph_setxattr+0x297/0x810
-  CPU: 1 PID: 650 Comm: fsstress Not tainted 5.2.0+ #437
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
-  Call Trace:
-   dump_stack+0x67/0x90
-   ___might_sleep.cold+0x9f/0xb1
-   vfree+0x4b/0x60
-   ceph_buffer_release+0x1b/0x60
-   __ceph_setxattr+0x2b4/0x810
-   __vfs_setxattr+0x66/0x80
-   __vfs_setxattr_noperm+0x59/0xf0
-   vfs_setxattr+0x81/0xa0
-   setxattr+0x115/0x230
-   ? filename_lookup+0xc9/0x140
-   ? rcu_read_lock_sched_held+0x74/0x80
-   ? rcu_sync_lockdep_assert+0x2e/0x60
-   ? __sb_start_write+0x142/0x1a0
-   ? mnt_want_write+0x20/0x50
-   path_setxattr+0xba/0xd0
-   __x64_sys_lsetxattr+0x24/0x30
-   do_syscall_64+0x50/0x1c0
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7ff23514359a
-
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
+Signed-off-by: Tho Vu <tho.vu.wh@rvc.renesas.com>
+Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/xattr.c | 8 ++++++--
+ drivers/net/ethernet/renesas/ravb_main.c | 8 ++++++--
  1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index b24275ef97f74..22e5f3432abbf 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -916,6 +916,7 @@ int __ceph_setxattr(struct dentry *dentry, const char *name,
- 	struct ceph_inode_info *ci = ceph_inode(inode);
- 	struct ceph_mds_client *mdsc = ceph_sb_to_client(dentry->d_sb)->mdsc;
- 	struct ceph_cap_flush *prealloc_cf = NULL;
-+	struct ceph_buffer *old_blob = NULL;
- 	int issued;
- 	int err;
- 	int dirty = 0;
-@@ -984,13 +985,15 @@ int __ceph_setxattr(struct dentry *dentry, const char *name,
- 		struct ceph_buffer *blob;
- 
- 		spin_unlock(&ci->i_ceph_lock);
--		dout(" preaallocating new blob size=%d\n", required_blob_size);
-+		ceph_buffer_put(old_blob); /* Shouldn't be required */
-+		dout(" pre-allocating new blob size=%d\n", required_blob_size);
- 		blob = ceph_buffer_new(required_blob_size, GFP_NOFS);
- 		if (!blob)
- 			goto do_sync_unlocked;
- 		spin_lock(&ci->i_ceph_lock);
-+		/* prealloc_blob can't be released while holding i_ceph_lock */
- 		if (ci->i_xattrs.prealloc_blob)
--			ceph_buffer_put(ci->i_xattrs.prealloc_blob);
-+			old_blob = ci->i_xattrs.prealloc_blob;
- 		ci->i_xattrs.prealloc_blob = blob;
- 		goto retry;
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index 29d31eb995d7f..fedfd94699cb8 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1,6 +1,6 @@
+ /* Renesas Ethernet AVB device driver
+  *
+- * Copyright (C) 2014-2015 Renesas Electronics Corporation
++ * Copyright (C) 2014-2019 Renesas Electronics Corporation
+  * Copyright (C) 2015 Renesas Solutions Corp.
+  * Copyright (C) 2015 Cogent Embedded, Inc. <source@cogentembedded.com>
+  *
+@@ -501,7 +501,10 @@ static void ravb_get_tx_tstamp(struct net_device *ndev)
+ 			kfree(ts_skb);
+ 			if (tag == tfa_tag) {
+ 				skb_tstamp_tx(skb, &shhwtstamps);
++				dev_consume_skb_any(skb);
+ 				break;
++			} else {
++				dev_kfree_skb_any(skb);
+ 			}
+ 		}
+ 		ravb_write(ndev, ravb_read(ndev, TCCR) | TCCR_TFR, TCCR);
+@@ -1382,7 +1385,7 @@ static netdev_tx_t ravb_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 					 DMA_TO_DEVICE);
+ 			goto unmap;
+ 		}
+-		ts_skb->skb = skb;
++		ts_skb->skb = skb_get(skb);
+ 		ts_skb->tag = priv->ts_skb_tag++;
+ 		priv->ts_skb_tag &= 0x3ff;
+ 		list_add_tail(&ts_skb->list, &priv->ts_skb_list);
+@@ -1514,6 +1517,7 @@ static int ravb_close(struct net_device *ndev)
+ 	/* Clear the timestamp list */
+ 	list_for_each_entry_safe(ts_skb, ts_skb2, &priv->ts_skb_list, list) {
+ 		list_del(&ts_skb->list);
++		kfree_skb(ts_skb->skb);
+ 		kfree(ts_skb);
  	}
-@@ -1006,6 +1009,7 @@ int __ceph_setxattr(struct dentry *dentry, const char *name,
- 	}
  
- 	spin_unlock(&ci->i_ceph_lock);
-+	ceph_buffer_put(old_blob);
- 	if (lock_snap_rwsem)
- 		up_read(&mdsc->snap_rwsem);
- 	if (dirty)
 -- 
 2.20.1
 
