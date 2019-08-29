@@ -2,195 +2,102 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2BCC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF72C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0D7208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155F9208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R9+/03W+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DScvmQU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfH2VRk (ORCPT
+        id S1728109AbfH2VSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 17:17:40 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49898 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfH2VRj (ORCPT
+        Thu, 29 Aug 2019 17:18:30 -0400
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:57012 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726935AbfH2VS3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 17:17:39 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7TLCDtM144352;
-        Thu, 29 Aug 2019 21:16:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=pqCcHwN/Tb4s9RIwNt4YW/FcXMrEyrNCjmPgo/BiU24=;
- b=R9+/03W+3oo8T7JUd0gYHfl1LdrSfdASV/+FuAu71qd9suSsx/s18GF9uU1VfUSxNWPs
- ryJTpvlbLkvFhJ0AzVNUyS/o2TUQk6tnNXzqD+pfmXYky/LXCMQEJeI+USExe5fJvg4N
- yBjKeKduJiqfJDltuwJX85NeVfkKVSHoir56bgYSrDvzhQ0UOkJDAW/iSPOpkF8X+VzZ
- nfI++g4LG6mQw/BRFYZqkRjcy2H/EeJiStCUA0TxWumkF0m7YS6NkN0pCSa4Covv90zL
- FyXkLU1JyoV17twzNcukCdQyrsfsc/FJCVJND3D1llKVAmCJsNTgqpFvoUZ+CJVHVGT+ /Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2upp96r2qv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 21:16:12 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7TLE3WP187030;
-        Thu, 29 Aug 2019 21:14:12 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2upkrffc92-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 21:14:12 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7TLD1b8012354;
-        Thu, 29 Aug 2019 21:13:01 GMT
-Received: from [10.175.206.85] (/10.175.206.85)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 29 Aug 2019 14:13:01 -0700
-Subject: Re: Default governor regardless of cpuidle driver
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Marcelo Tosatti <mtosatti@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-pm@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-References: <20190829151027.9930-1-joao.m.martins@oracle.com>
- <c8cf8dcc-76a3-3e15-f514-2cb9df1bbbdc@oracle.com>
- <d1d4ade5-04a5-4288-d994-3963bb80fb6b@linaro.org>
- <6c8816af-934a-5bf7-6fb9-f67c05e2c8aa@oracle.com>
- <901ab688-5548-cf96-1dcb-ce50e617e917@linaro.org>
- <722bd6f6-6eee-b24b-9704-c9aecc06302f@oracle.com>
- <2e2a35c8-7f03-d7c8-4701-3bc9d91c1255@linaro.org>
-From:   Joao Martins <joao.m.martins@oracle.com>
-Message-ID: <f8c63af5-2509-310d-7ba0-7687b20e3b44@oracle.com>
-Date:   Thu, 29 Aug 2019 22:12:56 +0100
-MIME-Version: 1.0
-In-Reply-To: <2e2a35c8-7f03-d7c8-4701-3bc9d91c1255@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908290214
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908290214
+        Thu, 29 Aug 2019 17:18:29 -0400
+Received: by mail-vk1-f202.google.com with SMTP id r17so1850553vkd.23
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 14:18:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=BW1c7IRnWjJoxQBtVPXO6COaVAzbUDcupsRP3+lK6WY=;
+        b=DScvmQU+89L+hniqEK44TU04uVyqUiGLL9u5xg2ckht5a7CYd7E2LbeJo2RTqqmNN2
+         ZRhaWXhwPL7tKn1cEgAFie5GiGnaKpFKFg7SmCIkGdQekr4q98LOlV4fMxG02PK9uHZC
+         WoctCmJJGa70MK8ZZ8Yfnt/l05IgEzhqPuPhAoYrkOSF9AUUOhaxFwWJvtSGuxBCCHtP
+         U1fE+DuLVt/48T4ldIdVCUv0RsvyvH8dPdH4mf9fwsVUAKa/eTGbKq5SspOi6yA43ngA
+         QZ6+Jkrm7kE1CKneugmB5cVCaLDdPf5wlBnxZhkDwjN+uiCs23wBI3bg+qsQeY9EVGKG
+         zqEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=BW1c7IRnWjJoxQBtVPXO6COaVAzbUDcupsRP3+lK6WY=;
+        b=Za/ck7xguDhipcx0COq1sVsCYJkfRFZLlTsxE7Q+q4o9vzTOC9C+48ek6YfShYFaFJ
+         pY5JDgyzIwTcyQTHOGjgVHiFkHHu4eiUVW0rxN4cZrulyMceH80XMVP7i+u5lTzh1f5V
+         bP7q+Z4CR/q2YaO0vftq6L0634h1soT6c5O85lgl7mFKradkJD39KEX5C/a2dzP3YFbW
+         YSj+Q4TvxJWf1nEvNhjOm4NBjcYGTqW2kaXhgjf062Ns3NIOKuuAKe3zXrWD70fPVWdg
+         moOkny3BFuKLjrJFv/r0VbLEahJGVt4ZD8r4vxdtnyxBH4AcIlgz/KDhKJ7J9tDwiuIx
+         DyiQ==
+X-Gm-Message-State: APjAAAXjA7PHv8XOs5jF/xMmzt5dY4oVVIHWuISTXPFqKYpP13ic8CMG
+        NEgBvbk7MfIL25RzE4qfLtF4PTJihVY=
+X-Google-Smtp-Source: APXvYqyu46l4onHXaIOlHYncz+2ngOsHkdmb/+FxKLyBUQd7IXHI/mZdOzHaJoQ1YcZ8j38WtB/nO45BCts=
+X-Received: by 2002:ab0:6648:: with SMTP id b8mr5538718uaq.99.1567113508553;
+ Thu, 29 Aug 2019 14:18:28 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 14:18:08 -0700
+Message-Id: <20190829211812.32520-1-hridya@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+Subject: [PATCH v2 0/4] Add binder state and statistics to binderfs
+From:   Hridya Valsaraju <hridya@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, Hridya Valsaraju <hridya@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/19 9:22 PM, Daniel Lezcano wrote:
-> On 29/08/2019 21:11, Joao Martins wrote:
->> On 8/29/19 7:28 PM, Daniel Lezcano wrote:
->>> On 29/08/2019 20:07, Joao Martins wrote:
->>>> On 8/29/19 6:42 PM, Daniel Lezcano wrote:
->>>>> On 29/08/2019 19:16, Joao Martins wrote:
->>>>>> On 8/29/19 4:10 PM, Joao Martins wrote:
->>>>>>> When cpus != maxcpus cpuidle-haltpoll will fail to register all vcpus
->>>>>>> past the online ones and thus fail to register the idle driver.
->>>>>>> This is because cpuidle_add_sysfs() will return with -ENODEV as a
->>>>>>> consequence from get_cpu_device() return no device for a non-existing
->>>>>>> CPU.
->>>>>>>
->>>>>>> Instead switch to cpuidle_register_driver() and manually register each
->>>>>>> of the present cpus through cpuhp_setup_state() callback and future
->>>>>>> ones that get onlined. This mimmics similar logic that intel_idle does.
->>>>>>>
->>>>>>> Fixes: fa86ee90eb11 ("add cpuidle-haltpoll driver")
->>>>>>> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
->>>>>>> Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
->>>>>>> ---
->>>>>>
->>>>>> While testing the above, I found out another issue on the haltpoll series.
->>>>>> But I am not sure what is best suited to cpuidle framework, hence requesting
->>>>>> some advise if below is a reasonable solution or something else is preferred.
->>>>>>
->>>>>> Essentially after haltpoll governor got introduced and regardless of the cpuidle
->>>>>> driver the default governor is gonna be haltpoll for a guest (given haltpoll
->>>>>> governor doesn't get registered for baremetal). Right now, for a KVM guest, the
->>>>>> idle governors have these ratings:
->>>>>>
->>>>>>  * ladder            -> 10
->>>>>>  * teo               -> 19
->>>>>>  * menu              -> 20
->>>>>>  * haltpoll          -> 21
->>>>>>  * ladder + nohz=off -> 25
->>>>>>
->>>>>> When a guest is booted with MWAIT and intel_idle is probed and sucessfully
->>>>>> registered, we will end up with a haltpoll governor being used as opposed to
->>>>>> 'menu' (which used to be the default case). This would prevent IIUC that other
->>>>>> C-states get used other than poll_state (state 0) and state 1.
->>>>>>
->>>>>> Given that haltpoll governor is largely only useful with a cpuidle-haltpoll
->>>>>> it doesn't look reasonable to be the default? What about using haltpoll governor
->>>>>> as default when haltpoll idle driver registers or modload.
->>>>>
->>>>> Are the guest and host kernel the same? IOW compiled with the same
->>>>> kernel config?
->>>>>
->>>> You just need to toggle this (regardless off CONFIG_HALTPOLL_CPUIDLE):
->>>>
->>>> 	CONFIG_CPU_IDLE_GOV_HALTPOLL=y
->>>>
->>>> And *if you are a KVM guest* it will be the default (unless using nohz=off in
->>>> which case ladder gets the highest rating -- see the listing right above).
->>>>
->>>> Host will just behave differently because the haltpoll governor is checking if
->>>> it is running as kvm guest, and only registering in that case.
->>>
->>> I understood the problem. Actually my question was about if the kernels
->>> are compiled for host and guest, and can be run indifferently. 
->>
->> /nods Correct.
->>
->>> In this
->>> case a runtime detection must be done as you propose, otherwise that can
->>> be done at config time. I pretty sure it is the former but before
->>> thinking about the runtime side, I wanted to double check.
->>>
->> Hmm, but even with separate kernels/configs for guest and host I think we would
->> still have the same issue.
->>
->> What I was trying to convey is that even when running with a config solely for
->> KVM guests (that is different than baremetal) you can have today various ways of
->> idling. An Intel x86 kvm guest can have no idle driver (but arch-specific),
->> intel_idle (like baremetal config) and haltpoll. There are usecases for these
->> three, and makes sense to consolidate all.
->>
->> Say you wanted to have a kvm specific config, you would still see the same
->> problem if you happen to compile intel_idle together with haltpoll
->> driver+governor. 
-> 
-> Can a guest work with an intel_idle driver?
-> 
-Yes.
+Currently, the only way to access binder state and
+statistics is through debugfs. We need a way to
+access the same even when debugfs is not mounted.
+These patches add a mount option to make this
+information available in binderfs without affecting
+its presence in debugfs. The following debugfs nodes
+will be made available in a binderfs instance when
+mounted with the mount option 'stats=global' or 'stats=local'.
 
-If you use Qemu you would add '-overcommit cpu-pm=on' to try it out. ofc,
-assuming you're on a relatively recent Qemu (v3.0+) and a fairly recent kernel
-version as host (v4.17+).
+ /sys/kernel/debug/binder/failed_transaction_log
+ /sys/kernel/debug/binder/proc
+ /sys/kernel/debug/binder/state
+ /sys/kernel/debug/binder/stats
+ /sys/kernel/debug/binder/transaction_log
+ /sys/kernel/debug/binder/transactions
 
->> Creating two separate configs here, with and without haltpoll
->> for VMs doesn't sound effective for distros.
-> 
-> Agree
-> 
->> Perhaps decreasing the rating of
->> haltpoll governor, but while a short term fix it wouldn't give much sensible
->> defaults without the one-off runtime switch.
-> 
+
+Hridya Valsaraju (4):
+  binder: add a mount option to show global stats
+  binder: Add stats, state and transactions files
+  binder: Make transaction_log available in binderfs
+  binder: Add binder_proc logging to binderfs
+
+ drivers/android/binder.c          |  95 ++++++-----
+ drivers/android/binder_internal.h |  84 ++++++++++
+ drivers/android/binderfs.c        | 255 ++++++++++++++++++++++++++----
+ 3 files changed, 362 insertions(+), 72 deletions(-)
+
+-- 
+2.23.0.187.g17f5b7556c-goog
+
