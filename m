@@ -2,141 +2,131 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC8DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F25C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F8C2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F132070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:31:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="clb8vgnf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbfH2Uai (ORCPT
+        id S1727995AbfH2Ub6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 16:30:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62912 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726661AbfH2Uah (ORCPT
+        Thu, 29 Aug 2019 16:31:58 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:47512 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfH2Ub5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 16:30:37 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7TKShen146787;
-        Thu, 29 Aug 2019 16:29:58 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2upjrupa29-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Aug 2019 16:29:58 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7TKPKjn025392;
-        Thu, 29 Aug 2019 20:29:56 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01wdc.us.ibm.com with ESMTP id 2ujvv6pjca-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Aug 2019 20:29:56 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7TKTvWX52166930
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 20:29:57 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0194BAE062;
-        Thu, 29 Aug 2019 20:29:57 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 77A37AE05C;
-        Thu, 29 Aug 2019 20:29:55 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.111])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 29 Aug 2019 20:29:55 +0000 (GMT)
-Message-ID: <b6585989069fd832a65b73d1c4f4319a10714165.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 1/1] netfilter: nf_tables: fib: Drop IPV6 packages if
- IPv6 is disabled on boot
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Date:   Thu, 29 Aug 2019 17:29:51 -0300
-In-Reply-To: <db0f02c5b1a995fde174f036540a3d11008cf116.camel@linux.ibm.com>
-References: <20190821141505.2394-1-leonardo@linux.ibm.com>
-         <db0f02c5b1a995fde174f036540a3d11008cf116.camel@linux.ibm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-MdIb0HamTTXKEH8vz6zh"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=947 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908290205
+        Thu, 29 Aug 2019 16:31:57 -0400
+Received: by mail-pl1-f201.google.com with SMTP id j12so2649164pll.14
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 13:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=geHtoFXurL0uoZHjOhgaOZVjBMzfZ9r5aS+mHaqaGKA=;
+        b=clb8vgnfdAWejSqdYesxGEEQnx4giF3KnWD9AiidlIHSstMsGWsGy5pi0M0JJt14PR
+         oYpbacQ7W+rsBrVExXVXJ4anZmp0jL84zhjJvFId3vj95RMAe8GdttHBbsWBaHuHcP42
+         Q2LXVjKc27IwhIz/Qnb0Kbv8NlEskVG5j9GhD7dM/r0Gtg5Way7BtwKntEsyPOk5O8/Z
+         cTWU+RZgNMJMHywTXWh3H8drfMAfUmysLJzfn4+Lj7kai3KiAhc7L5GtkVP61Eu1UKaY
+         77K380nwQWhYnUgNtnUwbV1BJ4QvxkXmgSz6ZAvI8KB7LaKpCuzuuRb2HQxu1a0b649F
+         shcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=geHtoFXurL0uoZHjOhgaOZVjBMzfZ9r5aS+mHaqaGKA=;
+        b=nnlrYd9eKLy888KBLoUPxy8re8IlgtD4C7lL9ItBz5kbYGrekuHmQUfFcL0WhaiWkV
+         u8/zdAle8/973yb/MUY3GDes1trhvWjZAT6tnG0jV90yeYhpz/fJkkBItQLuivrqeZmT
+         jSNySIHX9HNjfUVmNvdNEnheY6Gcplsp22rE1ZOqOdy26pQ+IWVTN3QzaBLxNwbgsdpJ
+         kFj1MaNL0iOSbmfPYkuLUAeXDaZo0sEepZ/hepKIv95swkag11bftknq2E3wMA8Hy5Qt
+         RG1R4JnOvGE02Xoi52UktbnhSsgRib18vccGz8is9/bTEfTZLywWD7O4MXzDqit3M8wx
+         zYxA==
+X-Gm-Message-State: APjAAAWwLYoF0pZPTjSIqFSnxYIpaPNXBuGMtEE2CqVGrBPdyf32wgp5
+        z+n9trs6BmzhV+XeRyqvndOrNhrgx6zg1Q==
+X-Google-Smtp-Source: APXvYqw6jTDiw5RFZN+vIR41RyOP9xsg4tXKrl+EiImbjrdsMxY4mqDerTnQl3fwg7DsBEt0qE524hAjLzYavg==
+X-Received: by 2002:a63:30c6:: with SMTP id w189mr9624802pgw.398.1567110716648;
+ Thu, 29 Aug 2019 13:31:56 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 13:31:10 -0700
+Message-Id: <20190829203110.129263-1-shakeelb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+Subject: [PATCH] mm: memcontrol: fix percpu vmstats and vmevents flush
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Instead of using raw_cpu_read() use per_cpu() to read the actual data of
+the corresponding cpu otherwise we will be reading the data of the
+current cpu for the number of online CPUs.
 
---=-MdIb0HamTTXKEH8vz6zh
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Fixes: bb65f89b7d3d ("mm: memcontrol: flush percpu vmevents before releasing memcg")
+Fixes: c350a99ea2b1 ("mm: memcontrol: flush percpu vmstats before releasing memcg")
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: <stable@vger.kernel.org>
+---
 
-On Thu, 2019-08-29 at 17:04 -0300, Leonardo Bras wrote:
-> > Thats a good point -- Leonardo, is the
-> > "net.bridge.bridge-nf-call-ip6tables" sysctl on?
->=20
-> Running
-> # sudo sysctl -a
-> I can see:
-> net.bridge.bridge-nf-call-ip6tables =3D 1
+Note: The buggy patches were marked for stable therefore adding Cc to
+stable.
 
-Also, doing
-# echo 0 >  /proc/sys/net/bridge/bridge-nf-call-ip6tables=20
-And then trying to boot the guest will not crash the host.
+ mm/memcontrol.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Which would make sense, since host iptables is not dealing with guest
-IPv6 packets.
-
-So, the real cause of this bug is the bridge making host ip6tables deal
-with guest IPv6 packets ?=20
-If so, would it be ok if write a patch testing ipv6_mod_enabled()
-before passing guest ipv6 packets to host ip6tables?=20
-
-
-Best regards,
-
-> =20
-> So this packets are sent to host iptables for processing?
->=20
->=20
-> (Sorry for the delay, I did not received the previous e-mails.
-> Please include me in to/cc.)
-
---=-MdIb0HamTTXKEH8vz6zh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1oNb8ACgkQlQYWtz9S
-ttTJExAApXmGPloLN1N0hwKRPP49xzh1v8ik/VVU7a6G/PprKe45kT3bdkjoMLpJ
-7T7yXMOH5yyUFOeXPnUpAYcKqjmS0y4gF/dtBMAM+2SRVwlTK5vDrKo+HtBOff0X
-DZ6TF7Q8lRzPMWrQBuAbAIoDqwpt1eaGf+UjFXGU2CXDNbRv1sxTZzsbc1EkScwO
-WFs/XbcZ2gLkz20i0btstEP7d8luGgEcvNG48i3BlgoczRWVacnkiWunAHsS39AQ
-+Fq2Trw7N3gg1NVlZ8kOrGW+193ZdRswSbDnq7C3JUX/gcgzIo/flUV0AFwEXOqx
-/7fM8I5gqVWbJBqpRMHKtsO/4HMpaqiLWZMtUwt/MZQQWsCZX8eDO5VjcaXR8EMy
-MouFJMVi2R4rrJTOaq0d4klCk6YKYdlheBDq6ZzSF26BSd07gAywLODl9QyxnHiq
-SCLzQ23KI4N98xZiL2SpajR4ZEn8yGpv6Mgxexk/BC3Dc4jZ0YVDznd83sKZHhFh
-hP083MF6os74GEcRSpyYyOfqbZnvt7SwUEWxfCo1hyWp+Z/Ar+Z7GW0pmHJLXU6Z
-PsWneKVq85kb8Zl1Uzg55/rKhopWU6RUV1YJn+RaZOn9Z41FJkcX2kUmY1We+x/N
-y9xIJ4IRMrNfb06qZxkEbub5w8wvpid9CFyHjbdAzDIHapP2o1M=
-=ueqQ
------END PGP SIGNATURE-----
-
---=-MdIb0HamTTXKEH8vz6zh--
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 26e2999af608..f4e60ee8b845 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -3271,7 +3271,7 @@ static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg)
+ 
+ 	for_each_online_cpu(cpu)
+ 		for (i = 0; i < MEMCG_NR_STAT; i++)
+-			stat[i] += raw_cpu_read(memcg->vmstats_percpu->stat[i]);
++			stat[i] += per_cpu(memcg->vmstats_percpu->stat[i], cpu);
+ 
+ 	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
+ 		for (i = 0; i < MEMCG_NR_STAT; i++)
+@@ -3286,8 +3286,8 @@ static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg)
+ 
+ 		for_each_online_cpu(cpu)
+ 			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
+-				stat[i] += raw_cpu_read(
+-					pn->lruvec_stat_cpu->count[i]);
++				stat[i] += per_cpu(
++					pn->lruvec_stat_cpu->count[i], cpu);
+ 
+ 		for (pi = pn; pi; pi = parent_nodeinfo(pi, node))
+ 			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
+@@ -3306,8 +3306,8 @@ static void memcg_flush_percpu_vmevents(struct mem_cgroup *memcg)
+ 
+ 	for_each_online_cpu(cpu)
+ 		for (i = 0; i < NR_VM_EVENT_ITEMS; i++)
+-			events[i] += raw_cpu_read(
+-				memcg->vmstats_percpu->events[i]);
++			events[i] += per_cpu(memcg->vmstats_percpu->events[i],
++					     cpu);
+ 
+ 	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
+ 		for (i = 0; i < NR_VM_EVENT_ITEMS; i++)
+-- 
+2.23.0.187.g17f5b7556c-goog
 
