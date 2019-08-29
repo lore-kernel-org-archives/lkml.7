@@ -2,86 +2,96 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896DDC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB90C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1F820644
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:47:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="CQYTV7T/"
+	by mail.kernel.org (Postfix) with ESMTP id E6DBE20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:48:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfH2Or3 (ORCPT
+        id S1727860AbfH2Oss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:47:29 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34897 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727087AbfH2Or3 (ORCPT
+        Thu, 29 Aug 2019 10:48:48 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44102 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfH2Oss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:47:29 -0400
-Received: by mail-io1-f68.google.com with SMTP id b10so7494354ioj.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:47:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7kmZfKphmPDJyPhB1aEwSutJQo/nVZHIpGqlV62NkC0=;
-        b=CQYTV7T/6dptI2gBfu2uXwU4RqC1UIrULXwa1LcNs212HPvwiKRj5wzH9w17HNj1/S
-         xgABLrdaMQrQKih8MZ3en05XSPZ6cYtpvN8zEPBJT0wL6K+HI44uIDZofAFjGDHjjwcZ
-         LWo+0RcMIe0icmrDfhi9RpZ6cZJmo1ANKTqLA=
+        Thu, 29 Aug 2019 10:48:48 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k22so2709520oiw.11;
+        Thu, 29 Aug 2019 07:48:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7kmZfKphmPDJyPhB1aEwSutJQo/nVZHIpGqlV62NkC0=;
-        b=fO8x9r6O5ABMnSPS2VAlI6l5UdbXcpNnyiR+8ZHtwK0ha8GYNoKMa3acGCsPvHbNbJ
-         6gMi487Fo3SOaFpkXwW7UDvyWvQpT+7QK4XM17A2o++8X6n6gken+wXcp3n22FWq71iL
-         /ApXbjxkhG5PYgfXJbj8DnyO4dAHgLmXwQT8ChuE1Ng8a58q5yR89MgpiZVDofhqUALw
-         s5Mqoizu9lI5DKyGI9eu5qm4LyUXiUHQx1x9SUVIHAh+R6HaQrt2tiE57XREBGSW7xD8
-         FBMX/gEfgSYT97UV7ojyfNKQ6NbfKKtlaT1n5tB7lI1RCQg19VtwcKzNnrikPgHA5JH9
-         /k+w==
-X-Gm-Message-State: APjAAAXqEAutth9fD2qB27mI/ar/aQIEe/EzXy7Rk8pao7mtSLj7ZaU/
-        8uyclQTwEFzIrXvOVktZ/v7Cxq3JLRIE0HzLrkYIyQ==
-X-Google-Smtp-Source: APXvYqzC9sQXggpAZSpx4nKtBi8MjQ5jIGvf78c61EYJdJ7tngwSYacvoloREplBdZk2eAZlmMR9aiBXIUXMXSL2oBM=
-X-Received: by 2002:a05:6638:627:: with SMTP id h7mr11129076jar.33.1567090048417;
- Thu, 29 Aug 2019 07:47:28 -0700 (PDT)
+        bh=hiAHa/voyVoH1QYery5m4rcBu4D5Fm5KhAfRtZkvLYc=;
+        b=e598WGKRCD9ObOeLTHGjPSqb7Z0dYfuKPVPfkHsE6Z3x6UpbN3SN/PxYU2IqUU080d
+         wQhVfISwFKXUoW9Zjv1WQeNDS8/znjgedYTjCF8ncsPAe7UAwh/HTZCwOygqVurZMUIk
+         /sjf2xOCQgu00Sgp4GfLcppFhwUhMYdVDKXVy5YgIo8ZlOWLr8h1Pi9upRSyLCuoAjhK
+         GBPTLJDpnPFGDnqTL1UiwI0kbqU2oJKH1BQf7P7WFcr/xVc68bYHZ7vH4xvFuz4tQ2vJ
+         GHwNvxHTRhDO8p8844mH5qrRP12MysNGkj/XOuSREw/rtWoEVFmOJYABLcOxQotsdUhI
+         72EQ==
+X-Gm-Message-State: APjAAAVf5WooS6VAXuyFh9wsTFQRThOnJuM9oBFMpRRwnqs27YOxh9KY
+        qmcEs3yTOz0Cy0/npy+6c9L3acinTkMWnsdziRU=
+X-Google-Smtp-Source: APXvYqzVzozGOwks5QWXJdwAqpHzNYHb0M9r4XWLvaaHNaQd3/t/cwLqEmG48jVTfERS0tta0PFe8HvjWD3HWdEXY1A=
+X-Received: by 2002:aca:3382:: with SMTP id z124mr6945510oiz.102.1567090127215;
+ Thu, 29 Aug 2019 07:48:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190821173742.24574-1-vgoyal@redhat.com> <CAJfpegv_XS=kLxw_FzWNM2Xao5wsn7oGbk3ow78gU8tpXwo-sg@mail.gmail.com>
- <20190829132949.GA6744@redhat.com> <CAJfpegtd-MQNbUW9YuL4xdXDkGR8K6LMHCqDG2Ppu9F_Hyk2RQ@mail.gmail.com>
- <20190829143107.GB6744@redhat.com>
-In-Reply-To: <20190829143107.GB6744@redhat.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 29 Aug 2019 16:47:17 +0200
-Message-ID: <CAJfpegtOC8dHofLmpYpryKv9+93KHwn9Xb-NCyvgg0rG8XspTw@mail.gmail.com>
-Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual machines
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+References: <20190829143742.24726-1-brgl@bgdev.pl>
+In-Reply-To: <20190829143742.24726-1-brgl@bgdev.pl>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 29 Aug 2019 16:48:36 +0200
+Message-ID: <CAMuHMdW8d1h-81jy-dgDiLfGB3MGPx+f-Zqz+4D5S+gtmk3-BQ@mail.gmail.com>
+Subject: Re: [PATCH 0/9] drivers: add new variants of devm_platform_ioremap_resource()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Alban Bedel <albeu@free.fr>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Christoph Hellwig <hch@lst.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 4:31 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+Hi Bartosz,
 
-> Cool. That works. Faced another compilation error with "make allmodconfig"
-> config file.
+On Thu, Aug 29, 2019 at 4:38 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
->   HDRINST usr/include/linux/virtio_fs.h
-> error: include/uapi/linux/virtio_fs.h: missing "WITH Linux-syscall-note" for SPDX-License-Identifier
-> make[1]: *** [scripts/Makefile.headersinst:66: usr/include/linux/virtio_fs.h] Error 1
->
-> Looks like include/uapi/linux/virtio_fs.h needs following.
->
-> -/* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
-> +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
+> The new devm_platform_ioremap_resource() helper has now been widely
+> adopted and used in many drivers. Users of nocache and write-combined
+> ioremap() variants could profit from the same code shrinkage. This
+> series provides two new versions of devm_platform_ioremap_resource()
+> and uses it in a few example drivers with the assumption that - just
+> like was the case previously - a coccinelle script will be developed
+> to ease the transition for others.
 
-Fixed and pushed.
+Please be aware that the number of ioremap() variants is being
+reduced, as some of them are redundant (e.g. ioremap() already creates
+an uncached mapping, so ioremap_nocache() is not needed).
+So less is better than more ;-)
 
-Thanks,
-Miklos
+https://lore.kernel.org/lkml/20190817073253.27819-1-hch@lst.de/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
