@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D2BC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B55C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C17C823405
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C681E23427
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102493;
-	bh=em3tqHdWgAqd9Ik7eTSlUEpP6WoxfX3uzGf4z8ov/qo=;
+	s=default; t=1567102503;
+	bh=cIBmie2SDl6fWDIBpvZGPqToFNOLY9z40Csdp2T6Pt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fLmwpmV/dH0eAQfkgk675yyf3fQXUUfhj67HCuiWiUIFPdzYawcECxNpGBPVFm3Xl
-	 ckdodH4c745d6PW9HtpLKjxeGCpaIL1RwEI96POkTz9bruow/eIfTC1DdvoQaPda00
-	 QuTqniNMcg/Kv+DrLlTF2a95k7P9jTVZYCr4l2QQ=
+	b=b9TFrlpiOr6O62zwdNkRPIHA/sH7fl6votaZ9T60QqHrt9519pAax8NS7V/e70sdw
+	 J7Nq/IT7KnLhtV9zzflAi0tZToXU9HCDxcEEnbFhK92VCnQXyPdq9s1MSpa0dn0aPE
+	 QFzd6l/Q6S2DgBGVL0dhc826r3EDHF0PQzUwt8hU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbfH2SOw (ORCPT
+        id S1729130AbfH2SPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:14:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56416 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:15:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728999AbfH2SOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:14:48 -0400
+        id S1729082AbfH2SO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:14:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FD7F23407;
-        Thu, 29 Aug 2019 18:14:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E534823405;
+        Thu, 29 Aug 2019 18:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102487;
-        bh=em3tqHdWgAqd9Ik7eTSlUEpP6WoxfX3uzGf4z8ov/qo=;
+        s=default; t=1567102497;
+        bh=cIBmie2SDl6fWDIBpvZGPqToFNOLY9z40Csdp2T6Pt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x37bskDfrQUlXqnElP7b37RspkqtbXwTRYhUjlfD3pcTweVydPTu3SUW9x1NRaUrr
-         XMvTZQfX7YoyA5U15zzvJ6Am52hdok5lSI6V8k4RWooBqjvwkEX27m9a574DluhumJ
-         BR0pMTU+8pWkA35RXDScN/Y02YA9CA59QxfJ5RSI=
+        b=ySz//tuwyBcxQVLhVK74jU6TYVKKyjYKBBAAYi7OxLYyA0r8eM/sDnEqoH5jhZgpG
+         0Y1DPR/b8UbQKH6dp7s5DYeeX+stdjH/+C6S5AJuPW9zpybqM2xYhCu/BksKBw/jsc
+         Rnp3GR7pa0aWL0klT1w0k65ykK+wg9819r6KRDeY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 45/76] wimax/i2400m: fix a memory leak bug
-Date:   Thu, 29 Aug 2019 14:12:40 -0400
-Message-Id: <20190829181311.7562-45-sashal@kernel.org>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 50/76] HID: cp2112: prevent sleeping function called from invalid context
+Date:   Thu, 29 Aug 2019 14:12:45 -0400
+Message-Id: <20190829181311.7562-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -59,44 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
-[ Upstream commit 44ef3a03252844a8753479b0cea7f29e4a804bdc ]
+[ Upstream commit 2d05dba2b25ecb0f8fc3a0b4eb2232da6454a47b ]
 
-In i2400m_barker_db_init(), 'options_orig' is allocated through kstrdup()
-to hold the original command line options. Then, the options are parsed.
-However, if an error occurs during the parsing process, 'options_orig' is
-not deallocated, leading to a memory leak bug. To fix this issue, free
-'options_orig' before returning the error.
+When calling request_threaded_irq() with a CP2112, the function
+cp2112_gpio_irq_startup() is called in a IRQ context.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Therefore we can not sleep, and we can not call
+cp2112_gpio_direction_input() there.
+
+Move the call to cp2112_gpio_direction_input() earlier to have a working
+driver.
+
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wimax/i2400m/fw.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/hid/hid-cp2112.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wimax/i2400m/fw.c b/drivers/net/wimax/i2400m/fw.c
-index e9fc168bb7345..489cba9b284d1 100644
---- a/drivers/net/wimax/i2400m/fw.c
-+++ b/drivers/net/wimax/i2400m/fw.c
-@@ -351,13 +351,15 @@ int i2400m_barker_db_init(const char *_options)
- 			}
- 			result = i2400m_barker_db_add(barker);
- 			if (result < 0)
--				goto error_add;
-+				goto error_parse_add;
- 		}
- 		kfree(options_orig);
- 	}
- 	return 0;
+diff --git a/drivers/hid/hid-cp2112.c b/drivers/hid/hid-cp2112.c
+index 8bbe3d0cbe5d9..8fd44407a0df7 100644
+--- a/drivers/hid/hid-cp2112.c
++++ b/drivers/hid/hid-cp2112.c
+@@ -1152,8 +1152,6 @@ static unsigned int cp2112_gpio_irq_startup(struct irq_data *d)
  
-+error_parse_add:
- error_parse:
-+	kfree(options_orig);
- error_add:
- 	kfree(i2400m_barker_db);
- 	return result;
+ 	INIT_DELAYED_WORK(&dev->gpio_poll_worker, cp2112_gpio_poll_callback);
+ 
+-	cp2112_gpio_direction_input(gc, d->hwirq);
+-
+ 	if (!dev->gpio_poll) {
+ 		dev->gpio_poll = true;
+ 		schedule_delayed_work(&dev->gpio_poll_worker, 0);
+@@ -1201,6 +1199,12 @@ static int __maybe_unused cp2112_allocate_irq(struct cp2112_device *dev,
+ 		return PTR_ERR(dev->desc[pin]);
+ 	}
+ 
++	ret = cp2112_gpio_direction_input(&dev->gc, pin);
++	if (ret < 0) {
++		dev_err(dev->gc.parent, "Failed to set GPIO to input dir\n");
++		goto err_desc;
++	}
++
+ 	ret = gpiochip_lock_as_irq(&dev->gc, pin);
+ 	if (ret) {
+ 		dev_err(dev->gc.parent, "Failed to lock GPIO as interrupt\n");
 -- 
 2.20.1
 
