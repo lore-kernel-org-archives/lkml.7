@@ -2,125 +2,185 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B334C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868AFC41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1452166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:53:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="m3NGDl7h"
+	by mail.kernel.org (Postfix) with ESMTP id 65CC62166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:55:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbfH2Sxn (ORCPT
+        id S1728272AbfH2Szi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:53:43 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35006 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbfH2Sxm (ORCPT
+        Thu, 29 Aug 2019 14:55:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51274 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727146AbfH2Szi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:53:42 -0400
-Received: by mail-ed1-f67.google.com with SMTP id t50so5196910edd.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 11:53:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=8DrLJYkJSDE8yNy0hRWD87xXnqGiLOj6Q5kMDIVILTo=;
-        b=m3NGDl7hjD+pzGgurTlgTCSL/BEaKxEELRGKgiRlKZ/FPBlvDKeFYDy8pUB5aMUjop
-         R1imImwALYyWHL+UzB2n1ZoevwjUcrNiarQjRCaR9mAVrZg5kPskOWCqxJJ5XvEEJER+
-         5YYooJ1a4H0TCpLtIceMxZP+jLsGSZhQzGg7w73h1dIkYdnQTuEVVk4J3IMmUrIke3E9
-         55Fn5mGoyrv6vB7KyAZRbUjhs7Iu/oQEfflYsxmjmCG/xutlzUMglCQi4oGyBisLuWEj
-         mAzlM0ZDkHP6gwkHxv5TARcTE1TrIkbJiWshIBdpA7PyOtHjrB7uIrkgKallm9m3k6HW
-         3uHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=8DrLJYkJSDE8yNy0hRWD87xXnqGiLOj6Q5kMDIVILTo=;
-        b=q8V7N6yjR5hKd3znqq1Vh2FJ/JWzbQ9TW9cN5gwLwmcctk0BkhFygzQ9tD4BxLwwLy
-         iWgU9RJTCMKUj/cv4stTnCcC2hd59InTyHRbKL/oNMHKJ2JKN3pFeKGRAJkGBhKTykVz
-         3loEuOFr6PBA6QO6XqU0sQxHpGzO0chSlgzjszVCwcjHzHN73vlw8mu7mFFLhdVBXWDj
-         0bEzs7LWxsWyuLjVGRiMrJuAwflCV3zL+XvFgmh05jKgZP112mZysYQRc0j7yD1RB28x
-         +on5u5GhWZaZpvscFUQYelGMihMKsSVPL61nAKWHGk91IO0pN1JvgCdg3UQp8Gbaun3x
-         DlKg==
-X-Gm-Message-State: APjAAAV5JUNiMaSbQFSVfGtMI6XJLx/shGMf163X4/b+TjlEwLjhB9P/
-        arWrBfCOa6ToD+epPik2OdI5kQ==
-X-Google-Smtp-Source: APXvYqxEU5dPHwogKs7meFTghoVkRShv2YncuB/Wrey1TYBX0MK6m3BZ6WFZ1VoroG6wLOe39AwyuA==
-X-Received: by 2002:a50:8ec9:: with SMTP id x9mr11413207edx.89.1567104821374;
-        Thu, 29 Aug 2019 11:53:41 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id s22sm590615eds.67.2019.08.29.11.53.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 11:53:41 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 11:53:15 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     John Fastabend <john.fastabend@gmail.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+7a6ee4d0078eac6bf782@syzkaller.appspotmail.com>,
-        aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
-        davejwatson@fb.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: general protection fault in tls_sk_proto_close (2)
-Message-ID: <20190829115315.5686c18f@cakuba.netronome.com>
-In-Reply-To: <5d681e0011c7b_6b462ad11252c5c084@john-XPS-13-9370.notmuch>
-References: <000000000000c3c461059127a1c4@google.com>
-        <20190829035200.3340-1-hdanton@sina.com>
-        <20190829094343.0248c61c@cakuba.netronome.com>
-        <5d681e0011c7b_6b462ad11252c5c084@john-XPS-13-9370.notmuch>
-Organization: Netronome Systems, Ltd.
+        Thu, 29 Aug 2019 14:55:38 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i3PZt-0004wC-NS; Thu, 29 Aug 2019 20:55:25 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B6CFA1C07C3;
+        Thu, 29 Aug 2019 20:55:24 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 18:55:24 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/mm/cpa: Prevent large page split when ftrace
+ flips RW on kernel text
+Cc:     Song Liu <songliubraving@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <alpine.DEB.2.21.1908282355340.1938@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1908282355340.1938@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <156710492460.9654.8831877201682543400.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 11:48:32 -0700, John Fastabend wrote:
-> Jakub Kicinski wrote:
-> > On Thu, 29 Aug 2019 11:52:00 +0800, Hillf Danton wrote:  
-> > > Alternatively work is done if sock is closed again. Anyway ctx is reset
-> > > under sock's callback lock in write mode.
-> > > 
-> > > --- a/net/tls/tls_main.c
-> > > +++ b/net/tls/tls_main.c
-> > > @@ -295,6 +295,8 @@ static void tls_sk_proto_close(struct so
-> > >  	long timeo = sock_sndtimeo(sk, 0);
-> > >  	bool free_ctx;
-> > >  
-> > > +	if (!ctx)
-> > > +		return;
-> > >  	if (ctx->tx_conf == TLS_SW)
-> > >  		tls_sw_cancel_work_tx(ctx);  
-> > 
-> > That's no bueno, the real socket's close will never get called.  
-> 
-> Seems when we refactored BPF side we dropped the check for ULP on one
-> path so I'll add that back now. It would be nice and seems we are
-> getting closer now that tls side is a bit more dynamic if the ordering
-> didn't matter.
+The following commit has been merged into the x86/urgent branch of tip:
 
-We'd probably need some more generic way of communicating the changes
-in sk_proto stack, e.g. by moving the update into one of sk_proto
-callbacks? but yes.
+Commit-ID:     7af0145067bc429a09ac4047b167c0971c9f0dc7
+Gitweb:        https://git.kernel.org/tip/7af0145067bc429a09ac4047b167c0971c9f0dc7
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 29 Aug 2019 00:31:34 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 29 Aug 2019 20:48:44 +02:00
 
-> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-> index 1330a7442e5b..30d11558740e 100644
-> --- a/net/core/sock_map.c
-> +++ b/net/core/sock_map.c
-> @@ -666,6 +666,8 @@ static int sock_hash_update_common(struct bpf_map *map, void *key,
->         WARN_ON_ONCE(!rcu_read_lock_held());
->         if (unlikely(flags > BPF_EXIST))
->                 return -EINVAL;
-> +       if (unlikely(icsk->icsk_ulp_data))
-> +               return -EINVAL;
-> 
->         link = sk_psock_init_link();
->         if (!link)
+x86/mm/cpa: Prevent large page split when ftrace flips RW on kernel text
 
-Thanks! That looks good, if you feel like submitting officially feel
-free to add my Reviewed-by!
+ftrace does not use text_poke() for enabling trace functionality. It uses
+its own mechanism and flips the whole kernel text to RW and back to RO.
+
+The CPA rework removed a loop based check of 4k pages which tried to
+preserve a large page by checking each 4k page whether the change would
+actually cover all pages in the large page.
+
+This resulted in endless loops for nothing as in testing it turned out that
+it actually never preserved anything. Of course testing missed to include
+ftrace, which is the one and only case which benefitted from the 4k loop.
+
+As a consequence enabling function tracing or ftrace based kprobes results
+in a full 4k split of the kernel text, which affects iTLB performance.
+
+The kernel RO protection is the only valid case where this can actually
+preserve large pages.
+
+All other static protections (RO data, data NX, PCI, BIOS) are truly
+static.  So a conflict with those protections which results in a split
+should only ever happen when a change of memory next to a protected region
+is attempted. But these conflicts are rightfully splitting the large page
+to preserve the protected regions. In fact a change to the protected
+regions itself is a bug and is warned about.
+
+Add an exception for the static protection check for kernel text RO when
+the to be changed region spawns a full large page which allows to preserve
+the large mappings. This also prevents the syslog to be spammed about CPA
+violations when ftrace is used.
+
+The exception needs to be removed once ftrace switched over to text_poke()
+which avoids the whole issue.
+
+Fixes: 585948f4f695 ("x86/mm/cpa: Avoid the 4k pages check completely")
+Reported-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Song Liu <songliubraving@fb.com>
+Reviewed-by: Song Liu <songliubraving@fb.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1908282355340.1938@nanos.tec.linutronix.de
+---
+ arch/x86/mm/pageattr.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
+index 6a9a77a..e14e95e 100644
+--- a/arch/x86/mm/pageattr.c
++++ b/arch/x86/mm/pageattr.c
+@@ -516,7 +516,7 @@ static inline void check_conflict(int warnlvl, pgprot_t prot, pgprotval_t val,
+  */
+ static inline pgprot_t static_protections(pgprot_t prot, unsigned long start,
+ 					  unsigned long pfn, unsigned long npg,
+-					  int warnlvl)
++					  unsigned long lpsize, int warnlvl)
+ {
+ 	pgprotval_t forbidden, res;
+ 	unsigned long end;
+@@ -535,9 +535,17 @@ static inline pgprot_t static_protections(pgprot_t prot, unsigned long start,
+ 	check_conflict(warnlvl, prot, res, start, end, pfn, "Text NX");
+ 	forbidden = res;
+ 
+-	res = protect_kernel_text_ro(start, end);
+-	check_conflict(warnlvl, prot, res, start, end, pfn, "Text RO");
+-	forbidden |= res;
++	/*
++	 * Special case to preserve a large page. If the change spawns the
++	 * full large page mapping then there is no point to split it
++	 * up. Happens with ftrace and is going to be removed once ftrace
++	 * switched to text_poke().
++	 */
++	if (lpsize != (npg * PAGE_SIZE) || (start & (lpsize - 1))) {
++		res = protect_kernel_text_ro(start, end);
++		check_conflict(warnlvl, prot, res, start, end, pfn, "Text RO");
++		forbidden |= res;
++	}
+ 
+ 	/* Check the PFN directly */
+ 	res = protect_pci_bios(pfn, pfn + npg - 1);
+@@ -819,7 +827,7 @@ static int __should_split_large_page(pte_t *kpte, unsigned long address,
+ 	 * extra conditional required here.
+ 	 */
+ 	chk_prot = static_protections(old_prot, lpaddr, old_pfn, numpages,
+-				      CPA_CONFLICT);
++				      psize, CPA_CONFLICT);
+ 
+ 	if (WARN_ON_ONCE(pgprot_val(chk_prot) != pgprot_val(old_prot))) {
+ 		/*
+@@ -855,7 +863,7 @@ static int __should_split_large_page(pte_t *kpte, unsigned long address,
+ 	 * protection requirement in the large page.
+ 	 */
+ 	new_prot = static_protections(req_prot, lpaddr, old_pfn, numpages,
+-				      CPA_DETECT);
++				      psize, CPA_DETECT);
+ 
+ 	/*
+ 	 * If there is a conflict, split the large page.
+@@ -906,7 +914,8 @@ static void split_set_pte(struct cpa_data *cpa, pte_t *pte, unsigned long pfn,
+ 	if (!cpa->force_static_prot)
+ 		goto set;
+ 
+-	prot = static_protections(ref_prot, address, pfn, npg, CPA_PROTECT);
++	/* Hand in lpsize = 0 to enforce the protection mechanism */
++	prot = static_protections(ref_prot, address, pfn, npg, 0, CPA_PROTECT);
+ 
+ 	if (pgprot_val(prot) == pgprot_val(ref_prot))
+ 		goto set;
+@@ -1503,7 +1512,8 @@ static int __change_page_attr(struct cpa_data *cpa, int primary)
+ 		pgprot_val(new_prot) |= pgprot_val(cpa->mask_set);
+ 
+ 		cpa_inc_4k_install();
+-		new_prot = static_protections(new_prot, address, pfn, 1,
++		/* Hand in lpsize = 0 to enforce the protection mechanism */
++		new_prot = static_protections(new_prot, address, pfn, 1, 0,
+ 					      CPA_PROTECT);
+ 
+ 		new_prot = pgprot_clear_protnone_bits(new_prot);
