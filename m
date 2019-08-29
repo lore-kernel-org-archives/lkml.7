@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E202BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EEFC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBC1421874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6C42339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103133;
-	bh=CJPgBc2u5kNJyRvqyDs3bnG5Bx6fqAsJ8/fwTwRDc4Y=;
+	s=default; t=1567103151;
+	bh=WaUZjMFC2+eTSyFl2GhEwcXqwZMd7tMSqzdr46zJLo8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lHRGLqL1MpbWCb8sdELf5q47jkpBC/Xo+gEwO8/j+gGeMFJWooUHav81WzvPpUq3R
-	 h5XnOufRIw/y0cTsKU16zfGmPosyq5qFSd2Hqv2APGjXf+zfBfX4/m9Oiz0YJFrQCB
-	 w5RdUv+9EPCNfuknQQ+6OtnA0/riBBXGrBtbhURQ=
+	b=MfB0R86cxaw+4VUdQm8ceB8nqDQCPpnDYoBq6WGtCtGfLX479Tc5MQQ0HrE71NAyc
+	 IzuIAw9gKbyl5GzYKXpsXqqxGJFAq2kuS8o2cHPsTz0XraLXusNOF7IRIVN8+Fm8rE
+	 dRJOXh8QguPIxLln32/KRtrv+YR3XYfYX0iXgAhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbfH2SQM (ORCPT
+        id S1729472AbfH2SZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:16:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58100 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:25:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729568AbfH2SQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:10 -0400
+        id S1729545AbfH2SQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:16:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F10923403;
-        Thu, 29 Aug 2019 18:16:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F7CF23404;
+        Thu, 29 Aug 2019 18:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102569;
-        bh=CJPgBc2u5kNJyRvqyDs3bnG5Bx6fqAsJ8/fwTwRDc4Y=;
+        s=default; t=1567102562;
+        bh=WaUZjMFC2+eTSyFl2GhEwcXqwZMd7tMSqzdr46zJLo8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FLRGR72JfY61fEGSz6Xz1fl+ZjwEzaJM3qg9XNgC3NTs/I+91wbMwVmJifEGKMMQU
-         ghir79SFAK2JJXCbOg3J9AtGdNrmpFz7oNnZ2v8kHXG+mp0lj9e2IasamhY9dHdRre
-         sNATwggpI3BWyvQhX4md8w56ezQmzARgV28/YyrM=
+        b=g4JzKjXFuzRyF+ZjaMYThGbkzR+AcZZQy03L3hO+XvxtQ/xNMo3N1VDxcvVI3a9zY
+         91a2oRvwgy8I85CjmoNa9wMk9VdO4bz+6enDqcvaUgnZD1vpJ5Gv5TKU7OYvhIV9St
+         w7sd+MPKJJmJE5yrg4LNmkFPjyusM7YmEmv3hYmE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Courbot <acourbot@chromium.org>,
-        Tomasz Figa <tfiga@chromium.org>, CK Hu <ck.hu@mediatek.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 15/45] drm/mediatek: set DMA max segment size
-Date:   Thu, 29 Aug 2019 14:15:15 -0400
-Message-Id: <20190829181547.8280-15-sashal@kernel.org>
+Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 09/45] ibmveth: Convert multicast list size for little-endian system
+Date:   Thu, 29 Aug 2019 14:15:09 -0400
+Message-Id: <20190829181547.8280-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
 References: <20190829181547.8280-1-sashal@kernel.org>
@@ -60,112 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Courbot <acourbot@chromium.org>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit 070955558e820b9a89c570b91b1f21762f62b288 ]
+[ Upstream commit 66cf4710b23ab2adda11155684a2c8826f4fe732 ]
 
-This driver requires imported PRIME buffers to appear contiguously in
-its IO address space. Make sure this is the case by setting the maximum
-DMA segment size to a more suitable value than the default 64KB.
+The ibm,mac-address-filters property defines the maximum number of
+addresses the hypervisor's multicast filter list can support. It is
+encoded as a big-endian integer in the OF device tree, but the virtual
+ethernet driver does not convert it for use by little-endian systems.
+As a result, the driver is not behaving as it should on affected systems
+when a large number of multicast addresses are assigned to the device.
 
-Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Reported-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 35 ++++++++++++++++++++++++--
- drivers/gpu/drm/mediatek/mtk_drm_drv.h |  2 ++
- 2 files changed, 35 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ibm/ibmveth.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index ffb997440851d..f6389479fccb5 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -220,6 +220,7 @@ static int mtk_drm_kms_init(struct drm_device *drm)
- 	struct mtk_drm_private *private = drm->dev_private;
- 	struct platform_device *pdev;
- 	struct device_node *np;
-+	struct device *dma_dev;
- 	int ret;
+diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
+index f70cb4d3c6846..40ad1e5032553 100644
+--- a/drivers/net/ethernet/ibm/ibmveth.c
++++ b/drivers/net/ethernet/ibm/ibmveth.c
+@@ -1618,7 +1618,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 	struct net_device *netdev;
+ 	struct ibmveth_adapter *adapter;
+ 	unsigned char *mac_addr_p;
+-	unsigned int *mcastFilterSize_p;
++	__be32 *mcastFilterSize_p;
+ 	long ret;
+ 	unsigned long ret_attr;
  
- 	if (!iommu_present(&platform_bus_type))
-@@ -282,7 +283,29 @@ static int mtk_drm_kms_init(struct drm_device *drm)
- 		goto err_component_unbind;
+@@ -1640,8 +1640,9 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 		return -EINVAL;
  	}
  
--	private->dma_dev = &pdev->dev;
-+	dma_dev = &pdev->dev;
-+	private->dma_dev = dma_dev;
-+
-+	/*
-+	 * Configure the DMA segment size to make sure we get contiguous IOVA
-+	 * when importing PRIME buffers.
-+	 */
-+	if (!dma_dev->dma_parms) {
-+		private->dma_parms_allocated = true;
-+		dma_dev->dma_parms =
-+			devm_kzalloc(drm->dev, sizeof(*dma_dev->dma_parms),
-+				     GFP_KERNEL);
-+	}
-+	if (!dma_dev->dma_parms) {
-+		ret = -ENOMEM;
-+		goto err_component_unbind;
-+	}
-+
-+	ret = dma_set_max_seg_size(dma_dev, (unsigned int)DMA_BIT_MASK(32));
-+	if (ret) {
-+		dev_err(dma_dev, "Failed to set DMA segment size\n");
-+		goto err_unset_dma_parms;
-+	}
+-	mcastFilterSize_p = (unsigned int *)vio_get_attribute(dev,
+-						VETH_MCAST_FILTER_SIZE, NULL);
++	mcastFilterSize_p = (__be32 *)vio_get_attribute(dev,
++							VETH_MCAST_FILTER_SIZE,
++							NULL);
+ 	if (!mcastFilterSize_p) {
+ 		dev_err(&dev->dev, "Can't find VETH_MCAST_FILTER_SIZE "
+ 			"attribute\n");
+@@ -1658,7 +1659,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
  
- 	/*
- 	 * We don't use the drm_irq_install() helpers provided by the DRM
-@@ -292,13 +315,16 @@ static int mtk_drm_kms_init(struct drm_device *drm)
- 	drm->irq_enabled = true;
- 	ret = drm_vblank_init(drm, MAX_CRTC);
- 	if (ret < 0)
--		goto err_component_unbind;
-+		goto err_unset_dma_parms;
+ 	adapter->vdev = dev;
+ 	adapter->netdev = netdev;
+-	adapter->mcastFilterSize = *mcastFilterSize_p;
++	adapter->mcastFilterSize = be32_to_cpu(*mcastFilterSize_p);
+ 	adapter->pool_config = 0;
  
- 	drm_kms_helper_poll_init(drm);
- 	drm_mode_config_reset(drm);
- 
- 	return 0;
- 
-+err_unset_dma_parms:
-+	if (private->dma_parms_allocated)
-+		dma_dev->dma_parms = NULL;
- err_component_unbind:
- 	component_unbind_all(drm->dev, drm);
- err_config_cleanup:
-@@ -309,9 +335,14 @@ static int mtk_drm_kms_init(struct drm_device *drm)
- 
- static void mtk_drm_kms_deinit(struct drm_device *drm)
- {
-+	struct mtk_drm_private *private = drm->dev_private;
-+
- 	drm_kms_helper_poll_fini(drm);
- 	drm_atomic_helper_shutdown(drm);
- 
-+	if (private->dma_parms_allocated)
-+		private->dma_dev->dma_parms = NULL;
-+
- 	component_unbind_all(drm->dev, drm);
- 	drm_mode_config_cleanup(drm);
- }
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-index ecc00ca3221da..8fa60d46f8605 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-@@ -59,6 +59,8 @@ struct mtk_drm_private {
- 	} commit;
- 
- 	struct drm_atomic_state *suspend_state;
-+
-+	bool dma_parms_allocated;
- };
- 
- extern struct platform_driver mtk_ddp_driver;
+ 	netif_napi_add(netdev, &adapter->napi, ibmveth_poll, 16);
 -- 
 2.20.1
 
