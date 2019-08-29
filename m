@@ -2,142 +2,173 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AECC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 05:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD26C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 05:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED40233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 05:13:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xAvXEf/1"
+	by mail.kernel.org (Postfix) with ESMTP id DF8ED233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 05:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfH2FN6 (ORCPT
+        id S1726526AbfH2FQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 01:13:58 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:39562 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfH2FN6 (ORCPT
+        Thu, 29 Aug 2019 01:16:02 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:55519 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725847AbfH2FQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 01:13:58 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7T5DVQ1080368;
-        Thu, 29 Aug 2019 00:13:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1567055611;
-        bh=LYyFnkusAO06maJIyAoLh4uHHcHnpkVbJ8SCEW6OJlg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=xAvXEf/1vTB129pEHtXkhBGqX8JXqhzbbly6gS1T+vqU0Wn+9Yi+jY+g4E3aPNqVZ
-         bs2/RdD9XzUDZalkIWDSNadfyS+dVvioyPCUIQOo99sbAAb86ZifKDpYqA2RMaxQk3
-         0uTYPMDWLATmZWbjfLTy8NyNqesUw632YUQfGKm0=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7T5DVgk118886
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 29 Aug 2019 00:13:31 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 29
- Aug 2019 00:13:31 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 29 Aug 2019 00:13:31 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7T5DOv7066185;
-        Thu, 29 Aug 2019 00:13:25 -0500
-Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the doorbell
- way
-To:     Andrew Murray <andrew.murray@arm.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-7-xiaowei.bao@nxp.com>
- <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
- <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
-Date:   Thu, 29 Aug 2019 10:43:18 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 01:16:02 -0400
+X-UUID: 140b0d5946774738b0505b2d56118871-20190829
+X-UUID: 140b0d5946774738b0505b2d56118871-20190829
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 546569482; Thu, 29 Aug 2019 13:15:57 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 29 Aug 2019 13:16:01 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 29 Aug 2019 13:16:01 +0800
+Message-ID: <1567055755.27361.3.camel@mtksdaap41>
+Subject: Re: [PATCH v7 13/13] arm64: dts: Add power controller device node
+ of MT8183
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Weiyi Lu <weiyi.lu@mediatek.com>
+CC:     Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        <srv_heupstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        Fan Chen <fan.chen@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Yong Wu <yong.wu@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 29 Aug 2019 13:15:55 +0800
+In-Reply-To: <1566983506-26598-14-git-send-email-weiyi.lu@mediatek.com>
+References: <1566983506-26598-1-git-send-email-weiyi.lu@mediatek.com>
+         <1566983506-26598-14-git-send-email-weiyi.lu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: B69F33BAB9488FF3E2E1D3931DE7BABACED7F6D46C9DA57B32E857A256A086172000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gustavo,
+Hi, Weiyi:
 
-On 27/08/19 6:55 PM, Andrew Murray wrote:
-> On Sat, Aug 24, 2019 at 12:08:40AM +0000, Xiaowei Bao wrote:
->>
->>
->>> -----Original Message-----
->>> From: Andrew Murray <andrew.murray@arm.com>
->>> Sent: 2019年8月23日 21:58
->>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
->>> Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
->>> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
->>> lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
->>> Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
->>> Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
->>> gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
->>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
->>> linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
->>> Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
->>> doorbell way
->>>
->>> On Thu, Aug 22, 2019 at 07:22:39PM +0800, Xiaowei Bao wrote:
->>>> The layerscape platform use the doorbell way to trigger MSIX interrupt
->>>> in EP mode.
->>>>
->>>
->>> I have no problems with this patch, however...
->>>
->>> Are you able to add to this message a reason for why you are making this
->>> change? Did dw_pcie_ep_raise_msix_irq not work when func_no != 0? Or did
->>> it work yet dw_pcie_ep_raise_msix_irq_doorbell is more efficient?
->>
->> The fact is that, this driver is verified in ls1046a platform of NXP before, and ls1046a don't
->> support MSIX feature, so I set the msix_capable of pci_epc_features struct is false,
->> but in other platform, e.g. ls1088a, it support the MSIX feature, I verified the MSIX
->> feature in ls1088a, it is not OK, so I changed to another way. Thanks.
+On Wed, 2019-08-28 at 17:11 +0800, Weiyi Lu wrote:
+> Add power controller node and smi-common node for MT8183
+> In scpsys node, it contains clocks and regmapping of
+> infracfg and smi-common for bus protection.
 > 
-> Right, so the existing pci-layerscape-ep.c driver never supported MSIX yet it
-> erroneously had a switch case statement to call dw_pcie_ep_raise_msix_irq which
-> would never get used.
+> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 62 ++++++++++++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
 > 
-> Now that we're adding a platform with MSIX support the existing
-> dw_pcie_ep_raise_msix_irq doesn't work (for this platform) so we are adding a
-> different method.
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index c2749c4..66aaa07 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -8,6 +8,7 @@
+>  #include <dt-bindings/clock/mt8183-clk.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/power/mt8183-power.h>
+>  #include "mt8183-pinfunc.h"
+>  
+>  / {
+> @@ -238,6 +239,62 @@
+>  			#interrupt-cells = <2>;
+>  		};
+>  
+> +		scpsys: syscon@10006000 {
+> +			compatible = "mediatek,mt8183-scpsys", "syscon";
+> +			#power-domain-cells = <1>;
+> +			reg = <0 0x10006000 0 0x1000>;
+> +			clocks = <&topckgen CLK_TOP_MUX_AUD_INTBUS>,
+> +				 <&infracfg CLK_INFRA_AUDIO>,
+> +				 <&infracfg CLK_INFRA_AUDIO_26M_BCLK>,
+> +				 <&topckgen CLK_TOP_MUX_MFG>,
+> +				 <&topckgen CLK_TOP_MUX_MM>,
+> +				 <&topckgen CLK_TOP_MUX_CAM>,
+> +				 <&topckgen CLK_TOP_MUX_IMG>,
+> +				 <&topckgen CLK_TOP_MUX_IPU_IF>,
+> +				 <&topckgen CLK_TOP_MUX_DSP>,
+> +				 <&topckgen CLK_TOP_MUX_DSP1>,
+> +				 <&topckgen CLK_TOP_MUX_DSP2>,
+> +				 <&mmsys CLK_MM_SMI_COMMON>,
+> +				 <&mmsys CLK_MM_SMI_LARB0>,
+> +				 <&mmsys CLK_MM_SMI_LARB1>,
+> +				 <&mmsys CLK_MM_GALS_COMM0>,
+> +				 <&mmsys CLK_MM_GALS_COMM1>,
+> +				 <&mmsys CLK_MM_GALS_CCU2MM>,
+> +				 <&mmsys CLK_MM_GALS_IPU12MM>,
+> +				 <&mmsys CLK_MM_GALS_IMG2MM>,
+> +				 <&mmsys CLK_MM_GALS_CAM2MM>,
+> +				 <&mmsys CLK_MM_GALS_IPU2MM>,
 
-Gustavo, can you confirm dw_pcie_ep_raise_msix_irq() works for designware as it
-didn't work for both me and Xiaowei?
+Just mention the discussion in [1], we need to confirm this is hardware
+limitation or not.
 
-Thanks
-Kishon
+[1] https://patchwork.kernel.org/patch/11005731/
+
+Regards,
+CK
+
+> +				 <&imgsys CLK_IMG_LARB5>,
+> +				 <&imgsys CLK_IMG_LARB2>,
+> +				 <&camsys CLK_CAM_LARB6>,
+> +				 <&camsys CLK_CAM_LARB3>,
+> +				 <&camsys CLK_CAM_SENINF>,
+> +				 <&camsys CLK_CAM_CAMSV0>,
+> +				 <&camsys CLK_CAM_CAMSV1>,
+> +				 <&camsys CLK_CAM_CAMSV2>,
+> +				 <&camsys CLK_CAM_CCU>,
+> +				 <&ipu_conn CLK_IPU_CONN_IPU>,
+> +				 <&ipu_conn CLK_IPU_CONN_AHB>,
+> +				 <&ipu_conn CLK_IPU_CONN_AXI>,
+> +				 <&ipu_conn CLK_IPU_CONN_ISP>,
+> +				 <&ipu_conn CLK_IPU_CONN_CAM_ADL>,
+> +				 <&ipu_conn CLK_IPU_CONN_IMG_ADL>;
+> +			clock-names = "audio", "audio1", "audio2",
+> +				      "mfg", "mm", "cam",
+> +				      "isp", "vpu", "vpu1",
+> +				      "vpu2", "vpu3", "mm-0",
+> +				      "mm-1", "mm-2", "mm-3",
+> +				      "mm-4", "mm-5", "mm-6",
+> +				      "mm-7", "mm-8", "mm-9",
+> +				      "isp-0", "isp-1", "cam-0",
+> +				      "cam-1", "cam-2", "cam-3",
+> +				      "cam-4", "cam-5", "cam-6",
+> +				      "vpu-0", "vpu-1", "vpu-2",
+> +				      "vpu-3", "vpu-4", "vpu-5";
+> +			infracfg = <&infracfg>;
+> +			smi_comm = <&smi_common>;
+> +		};
+> +
+>  		apmixedsys: syscon@1000c000 {
+>  			compatible = "mediatek,mt8183-apmixedsys", "syscon";
+>  			reg = <0 0x1000c000 0 0x1000>;
+> @@ -396,6 +453,11 @@
+>  			#clock-cells = <1>;
+>  		};
+>  
+> +		smi_common: smi@14019000 {
+> +			compatible = "mediatek,mt8183-smi-common", "syscon";
+> +			reg = <0 0x14019000 0 0x1000>;
+> +		};
+> +
+>  		imgsys: syscon@15020000 {
+>  			compatible = "mediatek,mt8183-imgsys", "syscon";
+>  			reg = <0 0x15020000 0 0x1000>;
+
+
