@@ -2,106 +2,83 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BF8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9169DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3FC21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E4B215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:42:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="W+9l33i7";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I/Lv8e+5"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="I8IES4vN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfH2Slw (ORCPT
+        id S1728486AbfH2Sm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:41:52 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49204 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727867AbfH2Slw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:41:52 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 8C77766593; Thu, 29 Aug 2019 18:12:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567104110;
-        bh=idSCDDdET3/7wJntdfWeAGtzPidjabyISQCbpIXoF3g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W+9l33i7Xf4dlyQPL+tosLBLO8T00kWWKz3lZQO6W15ivzQ7WrEZRL8+QbrMYPO3V
-         HaZsO0LnC8OFY/Xht8sjDsqUpV065667mXkNHRXsWgwaCdyBTrKBDr8SgKKNb1FluV
-         Kh2BlQaerGXhpVN4HPWBJ+HBEH/9G/QGW9n6VULU=
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 29 Aug 2019 14:42:29 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:36808 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728061AbfH2Sm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:42:29 -0400
+Received: from zn.tnic (p200300EC2F0D0C00900D2DBE0F932EDD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:c00:900d:2dbe:f93:2edd])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CD8EB688BF;
-        Thu, 29 Aug 2019 18:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567102338;
-        bh=idSCDDdET3/7wJntdfWeAGtzPidjabyISQCbpIXoF3g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I/Lv8e+5c+rWTsSEDw0Bdjk7jvYOk7c1fmLdoN0csf5ltHQlOWjNmK7Yt8cTRquSA
-         TLdQdG1hZ67HLjAgM/ZFnhxlmx6mHMZoLUuyba8vTcGb5+dMw3WV17HXHnTo8Lyv7C
-         gxvv0wyRY3WYmnZrCAmpDTj8m/huaiFtSLLX/Bhk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CD8EB688BF
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com,
-        linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
-        Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
-Subject: [PATCH RFC 04/14] of: irq: document properties for wakeup interrupt parent
-Date:   Thu, 29 Aug 2019 12:11:53 -0600
-Message-Id: <20190829181203.2660-5-ilina@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190829181203.2660-1-ilina@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 006101EC0A9C;
+        Thu, 29 Aug 2019 20:42:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1567104147;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=JILc7dKyp7SkywcuYgBtqa757bPtRNzeLCwcvrp1BWE=;
+        b=I8IES4vN/ocyX8rwm8qs8F/7m/gGvf8VavvgXe2WHNmvNCOejPGqJYb/MtWnsp63s0F/Zz
+        fWCuD+9F8U7MV8QEU+yw6t7Qic2h16ROti+Rt28oSUc3kGMtmkaQ6P1kDwcZZMlYQCQWdQ
+        AOSDfroT2zrr6CKgLk6UUvTX4ABvINg=
+Date:   Thu, 29 Aug 2019 20:42:22 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [RFC PATCH 0/5] make use of gcc 9's "asm inline()"
+Message-ID: <20190829184222.GE1312@zn.tnic>
+References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
+ <CAKwvOdnUXiX_cAUTSpqgYJTUERoRF-=3LfaydvwBWC6HtzfEdg@mail.gmail.com>
+ <CAHk-=wgZ7Ge8QUkkSZLCfJBsHRsre65DkfTyZ2Kt5VPwa=dkuA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgZ7Ge8QUkkSZLCfJBsHRsre65DkfTyZ2Kt5VPwa=dkuA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some interrupt controllers in a SoC, are always powered on and have a
-select interrupts routed to them, so that they can wakeup the SoC from
-suspend. Add wakeup-parent DT property to refer to these interrupt
-controllers.
+On Thu, Aug 29, 2019 at 11:15:04AM -0700, Linus Torvalds wrote:
+> Un-inlining a function because it contains a single inline asm
+> instruction is not productive. Yes, it might result in a smaller
+> binary over-all (because all those other non-code sections do take up
+> some space), but it actually results in a bigger code footprint.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- .../bindings/interrupt-controller/interrupts.txt    | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+... and also, like one of the gcc guys said at the time, we should be
+careful when using this asm inlining, because, well, if we inline it
+everywhere just like always_inline functions and the code footprint
+grows considerably, then we get what we deserve.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-index 8a3c40829899..c10e31050dd2 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-@@ -108,3 +108,16 @@ commonly used:
- 			sensitivity = <7>;
- 		};
- 	};
-+
-+3) Interrupt wakeup parent
-+--------------------------
-+
-+Some interrupt controllers in a SoC, are always powered on and have a select
-+interrupts routed to them, so that they can wakeup the SoC from suspend. These
-+interrupt controllers do not fall into the category of a parent interrupt
-+controller and can be specified by the "wakeup-parent" property and contain a
-+single phandle referring to the wakeup capable interrupt controller.
-+
-+   Example:
-+	wakeup-parent = <&pdc_intc>;
-+
+So the onus is on us to keep such sequences small.
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
