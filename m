@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2E7C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF41C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 190362189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D502189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbfH2TD1 (ORCPT
+        id S1728762AbfH2TCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:03:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51464 "EHLO
+        Thu, 29 Aug 2019 15:02:06 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51422 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfH2TCH (ORCPT
+        with ESMTP id S1727437AbfH2TCD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 15:02:07 -0400
+        Thu, 29 Aug 2019 15:02:03 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i3PgD-00059p-Cy; Thu, 29 Aug 2019 21:01:57 +0200
+        id 1i3Pg4-00051m-RY; Thu, 29 Aug 2019 21:01:49 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5B24A1C0DEA;
-        Thu, 29 Aug 2019 21:01:55 +0200 (CEST)
-Date:   Thu, 29 Aug 2019 19:01:55 -0000
-From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 64A3F1C0DE6;
+        Thu, 29 Aug 2019 21:01:48 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 19:01:48 -0000
+From:   "tip-bot2 for Igor Lubashev" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] libperf: Add PERF_RECORD_AUXTRACE 'struct
- auxtrace_event' to perf/event.h
-Cc:     Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/core] perf tools: Warn that perf_event_paranoid can
+ restrict kernel symbols
+Cc:     Igor Lubashev <ilubashe@akamai.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190828135717.7245-10-jolsa@kernel.org>
-References: <20190828135717.7245-10-jolsa@kernel.org>
+In-Reply-To: <1566869956-7154-6-git-send-email-ilubashe@akamai.com>
+References: <1566869956-7154-6-git-send-email-ilubashe@akamai.com>
 MIME-Version: 1.0
-Message-ID: <156710531528.10568.3815035679236242059.tip-bot2@tip-bot2>
+Message-ID: <156710530833.10523.4547415862334821213.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,85 +66,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     306c9d24c09d84d80ae54b36f7f907c8b8fa537a
-Gitweb:        https://git.kernel.org/tip/306c9d24c09d84d80ae54b36f7f907c8b8fa537a
-Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Wed, 28 Aug 2019 15:57:03 +02:00
+Commit-ID:     d06e5fad8c4692c6e5f1bd626056f23716bfe4a6
+Gitweb:        https://git.kernel.org/tip/d06e5fad8c4692c6e5f1bd626056f23716bfe4a6
+Author:        Igor Lubashev <ilubashe@akamai.com>
+AuthorDate:    Mon, 26 Aug 2019 21:39:16 -04:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 29 Aug 2019 08:36:11 -03:00
+CommitterDate: Wed, 28 Aug 2019 17:19:28 -03:00
 
-libperf: Add PERF_RECORD_AUXTRACE 'struct auxtrace_event' to perf/event.h
+perf tools: Warn that perf_event_paranoid can restrict kernel symbols
 
-Move the PERF_RECORD_AUXTRACE event definition to libperf's event.h.
+Warn that /proc/sys/kernel/perf_event_paranoid can also restrict kernel
+symbols.
 
-Ipn order to keep libperf simple, we switch 'u64/u32/u16/u8'
-types used events to their generic '__u*' versions.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
+Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190828135717.7245-10-jolsa@kernel.org
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/1566869956-7154-6-git-send-email-ilubashe@akamai.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/perf/event.h | 11 +++++++++++
- tools/perf/util/auxtrace.c          |  2 +-
- tools/perf/util/event.h             | 11 -----------
- 3 files changed, 12 insertions(+), 12 deletions(-)
+ tools/perf/builtin-record.c | 2 +-
+ tools/perf/builtin-top.c    | 2 +-
+ tools/perf/builtin-trace.c  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
-index 02da734..78001c2 100644
---- a/tools/perf/lib/include/perf/event.h
-+++ b/tools/perf/lib/include/perf/event.h
-@@ -208,4 +208,15 @@ struct auxtrace_info_event {
- 	__u64			 priv[];
- };
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 359bb8f..afe5584 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2372,7 +2372,7 @@ int cmd_record(int argc, const char **argv)
+ 	if (symbol_conf.kptr_restrict && !perf_evlist__exclude_kernel(rec->evlist))
+ 		pr_warning(
+ "WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,\n"
+-"check /proc/sys/kernel/kptr_restrict.\n\n"
++"check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.\n\n"
+ "Samples in kernel functions may not be resolved if a suitable vmlinux\n"
+ "file is not found in the buildid cache or in the vmlinux path.\n\n"
+ "Samples in kernel modules won't be resolved at all.\n\n"
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 5970723..29e910f 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -770,7 +770,7 @@ static void perf_event__process_sample(struct perf_tool *tool,
+ 		if (!perf_evlist__exclude_kernel(top->session->evlist)) {
+ 			ui__warning(
+ "Kernel address maps (/proc/{kallsyms,modules}) are restricted.\n\n"
+-"Check /proc/sys/kernel/kptr_restrict.\n\n"
++"Check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.\n\n"
+ "Kernel%s samples will not be resolved.\n",
+ 			  al.map && map__has_symbols(al.map) ?
+ 			  " modules" : "");
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 8ea62fd..58a75dd 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1382,7 +1382,7 @@ static char *trace__machine__resolve_kernel_addr(void *vmachine, unsigned long l
  
-+struct auxtrace_event {
-+	struct perf_event_header header;
-+	__u64			 size;
-+	__u64			 offset;
-+	__u64			 reference;
-+	__u32			 idx;
-+	__u32			 tid;
-+	__u32			 cpu;
-+	__u32			 reserved__; /* For alignment */
-+};
-+
- #endif /* __LIBPERF_EVENT_H */
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 112c24a..5edec71 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -943,7 +943,7 @@ s64 perf_event__process_auxtrace(struct perf_session *session,
- 	s64 err;
- 
- 	if (dump_trace)
--		fprintf(stdout, " size: %#"PRIx64"  offset: %#"PRIx64"  ref: %#"PRIx64"  idx: %u  tid: %d  cpu: %d\n",
-+		fprintf(stdout, " size: %#"PRI_lx64"  offset: %#"PRI_lx64"  ref: %#"PRI_lx64"  idx: %u  tid: %d  cpu: %d\n",
- 			event->auxtrace.size, event->auxtrace.offset,
- 			event->auxtrace.reference, event->auxtrace.idx,
- 			event->auxtrace.tid, event->auxtrace.cpu);
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index ca2cae3..60895a3 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -332,17 +332,6 @@ struct events_stats {
- 	u32 nr_proc_map_timeout;
- };
- 
--struct auxtrace_event {
--	struct perf_event_header header;
--	u64 size;
--	u64 offset;
--	u64 reference;
--	u32 idx;
--	u32 tid;
--	u32 cpu;
--	u32 reserved__; /* For alignment */
--};
--
- #define MAX_AUXTRACE_ERROR_MSG 64
- 
- struct auxtrace_error_event {
+ 	if (symbol_conf.kptr_restrict) {
+ 		pr_warning("Kernel address maps (/proc/{kallsyms,modules}) are restricted.\n\n"
+-			   "Check /proc/sys/kernel/kptr_restrict.\n\n"
++			   "Check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.\n\n"
+ 			   "Kernel samples will not be resolved.\n");
+ 		machine->kptr_restrict_warned = true;
+ 		return NULL;
