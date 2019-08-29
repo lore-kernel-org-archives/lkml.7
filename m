@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0944AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7912AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D39122189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F8F72189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102460;
-	bh=S/uUICgvSilsGtYuYVeoMlz2yDoqpI2JswWuw36fMiE=;
+	s=default; t=1567102469;
+	bh=XthpPwotghu3IJEJAgMSp7dudSEot0I9LrgFHMcKiUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=enlm0NuVuPyx8omjMv6axLChEC9Z7l77hyoQkojhGta6yrehH065W4A/vit5OmJxm
-	 Q2nO0vIujcrRLwB5UGWvKkxqQMzq78otHBc8Hv7twNCCYl2bEpuHBdZVOJIvEg+e44
-	 3xbgkOHWYMV7ldBsXl7NkV5TTc1Oi2PumPIwyz68=
+	b=kE0UQw7gdWehfuKkLmxg/vxjvBpp3uubRtRTmR3JcEtaIpRxY87E+7U8f7Va/YlQj
+	 fo4x3hVCwo3uK1gmYyxTrNlRDMbxGbes+vpMtmDlmiFJ+4H0WxVYfcA9HZ8v0I1Lbi
+	 Bw4xtkd4vBFfOHbsz7hgmRRr+uHqwx+rzYHzQ2yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbfH2SOH (ORCPT
+        id S1728835AbfH2SO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:14:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55662 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:14:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728646AbfH2SN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:13:57 -0400
+        id S1727867AbfH2SO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:14:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD78223426;
-        Thu, 29 Aug 2019 18:13:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C77632189D;
+        Thu, 29 Aug 2019 18:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102436;
-        bh=S/uUICgvSilsGtYuYVeoMlz2yDoqpI2JswWuw36fMiE=;
+        s=default; t=1567102465;
+        bh=XthpPwotghu3IJEJAgMSp7dudSEot0I9LrgFHMcKiUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QNIEK5jCHnPc2kiXXSaoETxgnmNt9gMqhUtQNgi+Go1EBKZkOnUyYeByiiytqtFOM
-         p2PfbMwEtx5tFF98LD4iFy69U9qMmHzOXj4sq2JYGSEPBHDVJ2zQVPlE20cvf31Fs0
-         fxAdq6vhezm1eVIXzWuhtS+SK7BpM37/MVyiZvE8=
+        b=y7zw0o7M1U8dBLvtxu4Jl+Iw+RcydgfiuuQgFDjNi76HhCcYdFVr/wEkYLHnvHwuY
+         U7R6uuGaCc37TIkKy5Z0ERYmnXQRS5Gj6MFSZQ2qAjkJKcCGQgr8/uYT4IQ8f74+7g
+         QYh19MmV//OYUh7ZST+HZ+ljebbvVCi+t7cs4h9s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        syzbot+193e29e9387ea5837f1d@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 25/76] rxrpc: Fix local endpoint replacement
-Date:   Thu, 29 Aug 2019 14:12:20 -0400
-Message-Id: <20190829181311.7562-25-sashal@kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 33/76] selftests: kvm: provide common function to enable eVMCS
+Date:   Thu, 29 Aug 2019 14:12:28 -0400
+Message-Id: <20190829181311.7562-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -60,50 +59,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit b00df840fb4004b7087940ac5f68801562d0d2de ]
+[ Upstream commit 65efa61dc0d536d5f0602c33ee805a57cc07e9dc ]
 
-When a local endpoint (struct rxrpc_local) ceases to be in use by any
-AF_RXRPC sockets, it starts the process of being destroyed, but this
-doesn't cause it to be removed from the namespace endpoint list immediately
-as tearing it down isn't trivial and can't be done in softirq context, so
-it gets deferred.
+There are two tests already enabling eVMCS and a third is coming.
+Add a function that enables the capability and tests the result.
 
-If a new socket comes along that wants to bind to the same endpoint, a new
-rxrpc_local object will be allocated and rxrpc_lookup_local() will use
-list_replace() to substitute the new one for the old.
-
-Then, when the dying object gets to rxrpc_local_destroyer(), it is removed
-unconditionally from whatever list it is on by calling list_del_init().
-
-However, list_replace() doesn't reset the pointers in the replaced
-list_head and so the list_del_init() will likely corrupt the local
-endpoints list.
-
-Fix this by using list_replace_init() instead.
-
-Fixes: 730c5fd42c1e ("rxrpc: Fix local endpoint refcounting")
-Reported-by: syzbot+193e29e9387ea5837f1d@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/local_object.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/kvm/include/evmcs.h   |  2 ++
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c  | 20 +++++++++++++++++++
+ .../testing/selftests/kvm/x86_64/evmcs_test.c | 15 ++------------
+ .../selftests/kvm/x86_64/hyperv_cpuid.c       | 12 ++++-------
+ 4 files changed, 28 insertions(+), 21 deletions(-)
 
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index 9798159ee65fa..918bffca3ddb6 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -283,7 +283,7 @@ struct rxrpc_local *rxrpc_lookup_local(struct net *net,
- 		goto sock_error;
+diff --git a/tools/testing/selftests/kvm/include/evmcs.h b/tools/testing/selftests/kvm/include/evmcs.h
+index 4059014d93ea1..4912d23844bc6 100644
+--- a/tools/testing/selftests/kvm/include/evmcs.h
++++ b/tools/testing/selftests/kvm/include/evmcs.h
+@@ -220,6 +220,8 @@ struct hv_enlightened_vmcs {
+ struct hv_enlightened_vmcs *current_evmcs;
+ struct hv_vp_assist_page *current_vp_assist;
  
- 	if (cursor != &rxnet->local_endpoints)
--		list_replace(cursor, &local->link);
-+		list_replace_init(cursor, &local->link);
- 	else
- 		list_add_tail(&local->link, cursor);
- 	age = "new";
++int vcpu_enable_evmcs(struct kvm_vm *vm, int vcpu_id);
++
+ static inline int enable_vp_assist(uint64_t vp_assist_pa, void *vp_assist)
+ {
+ 	u64 val = (vp_assist_pa & HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_MASK) |
+diff --git a/tools/testing/selftests/kvm/lib/x86_64/vmx.c b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
+index fe56d159d65fd..52b6491ed7061 100644
+--- a/tools/testing/selftests/kvm/lib/x86_64/vmx.c
++++ b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
+@@ -14,6 +14,26 @@
+ 
+ bool enable_evmcs;
+ 
++int vcpu_enable_evmcs(struct kvm_vm *vm, int vcpu_id)
++{
++	uint16_t evmcs_ver;
++
++	struct kvm_enable_cap enable_evmcs_cap = {
++		.cap = KVM_CAP_HYPERV_ENLIGHTENED_VMCS,
++		 .args[0] = (unsigned long)&evmcs_ver
++	};
++
++	vcpu_ioctl(vm, vcpu_id, KVM_ENABLE_CAP, &enable_evmcs_cap);
++
++	/* KVM should return supported EVMCS version range */
++	TEST_ASSERT(((evmcs_ver >> 8) >= (evmcs_ver & 0xff)) &&
++		    (evmcs_ver & 0xff) > 0,
++		    "Incorrect EVMCS version range: %x:%x\n",
++		    evmcs_ver & 0xff, evmcs_ver >> 8);
++
++	return evmcs_ver;
++}
++
+ /* Allocate memory regions for nested VMX tests.
+  *
+  * Input Args:
+diff --git a/tools/testing/selftests/kvm/x86_64/evmcs_test.c b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
+index 241919ef1eaca..9f250c39c9bb8 100644
+--- a/tools/testing/selftests/kvm/x86_64/evmcs_test.c
++++ b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
+@@ -79,11 +79,6 @@ int main(int argc, char *argv[])
+ 	struct kvm_x86_state *state;
+ 	struct ucall uc;
+ 	int stage;
+-	uint16_t evmcs_ver;
+-	struct kvm_enable_cap enable_evmcs_cap = {
+-		.cap = KVM_CAP_HYPERV_ENLIGHTENED_VMCS,
+-		 .args[0] = (unsigned long)&evmcs_ver
+-	};
+ 
+ 	/* Create VM */
+ 	vm = vm_create_default(VCPU_ID, 0, guest_code);
+@@ -96,13 +91,7 @@ int main(int argc, char *argv[])
+ 		exit(KSFT_SKIP);
+ 	}
+ 
+-	vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
+-
+-	/* KVM should return supported EVMCS version range */
+-	TEST_ASSERT(((evmcs_ver >> 8) >= (evmcs_ver & 0xff)) &&
+-		    (evmcs_ver & 0xff) > 0,
+-		    "Incorrect EVMCS version range: %x:%x\n",
+-		    evmcs_ver & 0xff, evmcs_ver >> 8);
++	vcpu_enable_evmcs(vm, VCPU_ID);
+ 
+ 	run = vcpu_state(vm, VCPU_ID);
+ 
+@@ -146,7 +135,7 @@ int main(int argc, char *argv[])
+ 		kvm_vm_restart(vm, O_RDWR);
+ 		vm_vcpu_add(vm, VCPU_ID, 0, 0);
+ 		vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+-		vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
++		vcpu_enable_evmcs(vm, VCPU_ID);
+ 		vcpu_load_state(vm, VCPU_ID, state);
+ 		run = vcpu_state(vm, VCPU_ID);
+ 		free(state);
+diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+index f72b3043db0eb..ee59831fbc984 100644
+--- a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
++++ b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+@@ -18,6 +18,7 @@
+ #include "test_util.h"
+ #include "kvm_util.h"
+ #include "processor.h"
++#include "vmx.h"
+ 
+ #define VCPU_ID 0
+ 
+@@ -106,12 +107,7 @@ int main(int argc, char *argv[])
+ {
+ 	struct kvm_vm *vm;
+ 	int rv;
+-	uint16_t evmcs_ver;
+ 	struct kvm_cpuid2 *hv_cpuid_entries;
+-	struct kvm_enable_cap enable_evmcs_cap = {
+-		.cap = KVM_CAP_HYPERV_ENLIGHTENED_VMCS,
+-		 .args[0] = (unsigned long)&evmcs_ver
+-	};
+ 
+ 	/* Tell stdout not to buffer its content */
+ 	setbuf(stdout, NULL);
+@@ -136,14 +132,14 @@ int main(int argc, char *argv[])
+ 
+ 	free(hv_cpuid_entries);
+ 
+-	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
+-
+-	if (rv) {
++	if (!kvm_check_cap(KVM_CAP_HYPERV_ENLIGHTENED_VMCS)) {
+ 		fprintf(stderr,
+ 			"Enlightened VMCS is unsupported, skip related test\n");
+ 		goto vm_free;
+ 	}
+ 
++	vcpu_enable_evmcs(vm, VCPU_ID);
++
+ 	hv_cpuid_entries = kvm_get_supported_hv_cpuid(vm);
+ 	if (!hv_cpuid_entries)
+ 		return 1;
 -- 
 2.20.1
 
