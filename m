@@ -2,128 +2,96 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50895C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 102F7C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2566A2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA2F023403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:50:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SzqqW5aR"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DVoeJBCf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbfH2Ktr (ORCPT
+        id S1727372AbfH2KuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:49:47 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35221 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbfH2Ktq (ORCPT
+        Thu, 29 Aug 2019 06:50:11 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:17272 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfH2KuJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:49:46 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g7so2951398wrx.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 03:49:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jHeD3Kv+tcMAmS4H+Al9j1578BcUWQlA5QOhrftK1uI=;
-        b=SzqqW5aRW4Dk4d6Y6jVRNDP+Rh3WbyRh3k50TxR1LeEohULvTL9Bj5hdTjKoTWslIs
-         z/W5UBReyHzNQg80Xsmi4rwuXxQBvmYDHFqHTi/hZWkoL9/04zoHnejKiClOG8BrGxH+
-         /5UVeX4auI4tiLjKX8ERhmRthajmadmWorm2eKbV/cHck6rq2UQrRZl0pcLIpHq3LaoS
-         2V9BqJYyd8+EEbTP9JWGTrdPmHG+OjYTFM7Fq5bkaz8kXWPR1BIzfJgfAxYlnPpNOKW+
-         lQ6wdhg4GXen+v34r92oR+rVXG8sZog/5EOUXX7JmCrFw7EBFbzuU2vffUQdZcygASRr
-         y4dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jHeD3Kv+tcMAmS4H+Al9j1578BcUWQlA5QOhrftK1uI=;
-        b=OWbMKSnh7ujfZTT1dZJe3awJaLZo6H3nsdyExXUvXjrMTNXXXw6kSO2xkqq1fr8MsW
-         secBoxEOLEFysDZ+CJgzdZ0WZZIo5l4WWZa7bf79cYEIwPGPasWpvGIRAtf/u+yDhBNI
-         e1SZ9kOdF2p8FYIkAsICf/TBIGywCFK3vJT6hC02+zX+f25fkO8ogyDafMorH7YxzJDK
-         RnQjKqiUOD5yTxUsjpSS3ZzU0wsLOm8lcXeldWY+MryarvyfmNE64T2lDULkv/9nsJCW
-         +W5foBvkphEUj5xbPvwg+TkSFtg0gttSOZEBELwGVx3KoztK//0F+AyC2yWRqFOl3JEY
-         JMJw==
-X-Gm-Message-State: APjAAAV/po3PalRHOVDcDr4NK9APE8L8oza9RoLxNSZWWppiSgeydPxB
-        Q9NtIFv9H6DZS/gkXQfcQooT9A==
-X-Google-Smtp-Source: APXvYqz2qMe+fh3q/bTnYSOCuAtlMqCAz/KWKJ3lcS/jq5IqYKlKwb73QOH+7q7x/7umHXur6XZItg==
-X-Received: by 2002:adf:fc03:: with SMTP id i3mr5602097wrr.48.1567075784823;
-        Thu, 29 Aug 2019 03:49:44 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id s1sm4927621wrg.80.2019.08.29.03.49.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 03:49:44 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 11:49:42 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, avifishman70@gmail.com,
-        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
-        benjaminfair@google.com, sumit.garg@linaro.org,
-        jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de,
-        joel@jms.id.au, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        openbmc@lists.ozlabs.org
-Subject: Re: [PATCH v1 1/2] dt-binding: hwrng: add NPCM RNG documentation
-Message-ID: <20190829104942.uyz5ms4m65hcqvmk@holly.lan>
-References: <20190828162617.237398-1-tmaimon77@gmail.com>
- <20190828162617.237398-2-tmaimon77@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828162617.237398-2-tmaimon77@gmail.com>
-User-Agent: NeoMutt/20180716
+        Thu, 29 Aug 2019 06:50:09 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x7TAnToh013730;
+        Thu, 29 Aug 2019 19:49:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7TAnToh013730
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567075773;
+        bh=lYozHE89Wu43zYr2OY/wYXUHm6PW8Z5Hu122oF77ydQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DVoeJBCfK1a2SJY98pTQua2p/4ENI6cD/18ReVMUkbiY1fGmE1j20A7KskiM7e887
+         ZIOs6yhheiTLUdIt2Sm4idniog4XTjm2fGapOO5WtIkFLTxA1npSBXnyEpo2aFIXQK
+         fyYTHLxSIqBjNTAgHoPsrjTCU6YVBeEUbQER5+2nnEhXULrokb8uk8LSE/kPKUBlZK
+         rdBE4rcE35S1QyM9sISGO0SHpngpMeX0mkeOnduXERg5QKKiCr0M5UyOYxZjR9kUFY
+         nwXjo/vlL/myi40n+XsikxPA8E5HRc/O2F3Upuy4/DiMja3fJUiJkr1HBLZFdthiQi
+         GwCM0HYlmUvBg==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Piotr Sroka <piotrs@cadence.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] mmc: sdhci-cadence: override spec version
+Date:   Thu, 29 Aug 2019 19:49:28 +0900
+Message-Id: <20190829104928.27404-3-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190829104928.27404-1-yamada.masahiro@socionext.com>
+References: <20190829104928.27404-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 07:26:16PM +0300, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton BMC
-> NPCM Random Number Generator (RNG).
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  .../bindings/rng/nuvoton,npcm-rng.txt           | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
-> new file mode 100644
-> index 000000000000..a697b4425fb3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
-> @@ -0,0 +1,17 @@
-> +NPCM SoC Random Number Generator
-> +
-> +Required properties:
-> +- compatible  : "nuvoton,npcm750-rng" for the NPCM7XX BMC.
-> +- reg         : Specifies physical base address and size of the registers.
-> +
-> +Optional property:
-> +- quality : estimated number of bits of true entropy per 1024 bits
-> +			read from the rng.
-> +			If this property is not defined, it defaults to 1000.
+The datasheet of the IP (sd4hc) says it is compiatible with SDHCI v4,
+but the spec version field in the version register is read as 2
+(i.e. SDHCI_SPEC_300) based on the RTL provided by Cadence.
 
-Having a controllable quality implies that the numeric quality of the
-peripheral changes when it is stamped out on different SoCs (otherwise
-the driver can confidently set the quality without needing any hint
-from the DT). Is that really true here?
+Socionext did not fix it up when it integrated the IP into the SoCs.
+So, it is working as SDHCI v3.
 
+It is not a real problem because there is no difference in the program
+flow in sdhci.c between SDHCI_SPEC_300/400, but set the real version
+just in case.
 
-Daniel.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-> +
-> +Example:
-> +
-> +rng: rng@f000b000 {
-> +	compatible = "nuvoton,npcm750-rng";
-> +	reg = <0xf000b000 0x8>;
-> +};
-> -- 
-> 2.18.0
-> 
+ drivers/mmc/host/sdhci-cadence.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
+index 44139fceac24..9837214685b6 100644
+--- a/drivers/mmc/host/sdhci-cadence.c
++++ b/drivers/mmc/host/sdhci-cadence.c
+@@ -341,6 +341,7 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
+ 	unsigned int nr_phy_params;
+ 	int ret;
+ 	struct device *dev = &pdev->dev;
++	static const u16 version = SDHCI_SPEC_400 << SDHCI_SPEC_VER_SHIFT;
+ 
+ 	clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(clk))
+@@ -370,6 +371,7 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
+ 	host->mmc_host_ops.hs400_enhanced_strobe =
+ 				sdhci_cdns_hs400_enhanced_strobe;
+ 	sdhci_enable_v4_mode(host);
++	__sdhci_read_caps(host, &version, NULL, NULL);
+ 
+ 	sdhci_get_of_property(pdev);
+ 
+-- 
+2.17.1
+
