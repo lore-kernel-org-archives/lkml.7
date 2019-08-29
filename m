@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF4FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0A8C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB882341C
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBFB32341E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:32:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="la2+M+eu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gqzK8+xE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfH2Icb (ORCPT
+        id S1727420AbfH2Icf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 04:32:31 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38973 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727087AbfH2Ic2 (ORCPT
+        Thu, 29 Aug 2019 04:32:35 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42885 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727087AbfH2Icc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 04:32:28 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y200so1571078pfb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:32:28 -0700 (PDT)
+        Thu, 29 Aug 2019 04:32:32 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p3so1199243pgb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:32:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=k3M8uiAuXetNpwkP9uV7FXy08rtc6zGtFBjvOrw/zz4=;
-        b=la2+M+eun68Ai5V5l+dVPftM47EwLer5oHtEAKclYQjMQNF10DVS+dOoYWhQy1OsIj
-         +QSWj1o+V+Mhb9Q0VR2lHC7T81gk8ivVxWMKHD2d8RiMmMUPc01ceQQkWTEoPY6GWcmu
-         6RUIb7y0XKExGImC/zdAxr4758JSWyDocwAZqNLa8l76d2lfho438ryi4rxR4wdFg/d1
-         AhjwqLEjhlGpnGOfHHfy4d5tpGmgzvwoItdtlZYs5MoGc8zCsSqmnjAmr6VBrFOP0Hu5
-         Oz4kSDqSxib/RwKKbneU5PPpjQfs+BKHhbOFcTvWwzoijlxg3aTerFOgGhNTn3/rpil5
-         xBxQ==
+        bh=FxiVEPtu6ZDNIk6WhpXgSn0K0xNIq2CZdadCX82YRPQ=;
+        b=gqzK8+xEt0LoWy3IRD1qfTggiF5uMxIZO1h1m9QYQ8uRqNWI3Vl7lw7u9D0QDD0bKh
+         HEI65lGSPPP9lFdLK47GUWooJZVSALjZMFkgHCrJOrVA8VfPNEQYTT5nrBL3N7pjzpWu
+         zov2MQdmt07AMmF8kPArL3NFsiWxYqF7L9wpM0djcA/K4WGaQHSbd/3qk0A8nYYXcrCM
+         j2YQcaIYWubvLgF7ckHBBmAjT5uBTlUulqrZ+Bj4+poBhD1pz7jrSF0cqGY+NpVBVrnn
+         NwSWmp+b7rAegIgGag5Cv4k6l+6v0gNsOOzd3zOYvt9leRu+O7B4BE3UAWqZ9GlY/s+i
+         VnnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=k3M8uiAuXetNpwkP9uV7FXy08rtc6zGtFBjvOrw/zz4=;
-        b=d1zj4f55bnue5LSvXGFzau2p3rlkPt9FfID47YmWSdvuCyCk/S3Rt8yzk2cKMGRrUW
-         uTzAHzaW2vYVE/eQnZQcIeMBT7NFF4rXL6176BV21kdRLqJcjwcoShJNzx8zZS0vk0yh
-         d7qpHocG4LM2kTVX8Bfv1k3l5ggVtPGxjm5Nt8s6slAklowzqRq3WMJxOyIvg9iimf2q
-         n/t0iO0xf8R++2RcGVLyWSop/1yGbXyfPIleHRcxPHphhkLQeNypC4GTPIYQFaZ2Sqbw
-         w3U9Cm4FFkfr/fxP0ZR8he6aqb+rb6AolZkx2c4xz2uLKN5f6TJdyAdfcscBBF1BLM+B
-         T+Dw==
-X-Gm-Message-State: APjAAAUCq6RCuFtRQhSg8dN2nwYk1TN9tgKE/ClcfL6k47PCcGo6rocS
-        Eqs2x3ConBE5lL6/qXN6VcY=
-X-Google-Smtp-Source: APXvYqwOW2TBF97D5oKrX/ivHtQx0UM+j+WhcIJ2/fylzH124O93U13aZMmr/416+9a23i2/+leHoA==
-X-Received: by 2002:aa7:8a0a:: with SMTP id m10mr10131373pfa.100.1567067548109;
-        Thu, 29 Aug 2019 01:32:28 -0700 (PDT)
+        bh=FxiVEPtu6ZDNIk6WhpXgSn0K0xNIq2CZdadCX82YRPQ=;
+        b=qolX1Vn5p10sF5z0451n1SO2wRxS4aUuivg2Ie85tRz9eDww5KYy7X2vqCqlkeiCWV
+         D+5TnsHfa6aXcYQoTPKmzC4Vm6nARFX0eL7Fzh/k/B3ejRM09OzBe7/umdhnItsXnhKi
+         KPEue1sNTXNf7SBqgfKHrwGO4bPqsGu//gxKHj+xIp1n4p8/LDcBFY51qD1uoQE5sBzk
+         yD4K6G7/+eywovVHS3pOsNdlHDwHjSyuplCpiqqbTy+UKtuo1EUABKGV6gMGzFi9KOKp
+         RDcf1IIk7kUjSSa8DZ9UI6PGMsroO/pXiIRKKDTFm3hyQ0tomsWlEAbnMYTnGyP5FUba
+         eRWQ==
+X-Gm-Message-State: APjAAAVbp5lFUBMJwkg8NshRFTMXTIL9aQGUbzMiJgTCVIRjWStmBbSM
+        V8LwnWQSzhxpThtQU8wj2fA=
+X-Google-Smtp-Source: APXvYqwgLc+OLWk5Dn2Lv4vcu3bA+yp2i3Fgv2XTuaBu/ntxGXxqXTxi79KDY0viVojC3tXrVwNWjw==
+X-Received: by 2002:a17:90a:f0c9:: with SMTP id fa9mr8556651pjb.137.1567067551707;
+        Thu, 29 Aug 2019 01:32:31 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id v22sm1260155pgk.69.2019.08.29.01.32.24
+        by smtp.gmail.com with ESMTPSA id v22sm1260155pgk.69.2019.08.29.01.32.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 01:32:27 -0700 (PDT)
+        Thu, 29 Aug 2019 01:32:31 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, linux-kernel@vger.kernel.org,
         longman@redhat.com, paulmck@linux.vnet.ibm.com,
         boqun.feng@gmail.com, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v4 11/30] locking/lockdep: Remove irq-safe to irq-unsafe read check
-Date:   Thu, 29 Aug 2019 16:31:13 +0800
-Message-Id: <20190829083132.22394-12-duyuyang@gmail.com>
+Subject: [PATCH v4 12/30] locking/lockdep: Specify the depth of current lock stack in lookup_chain_cache_add()
+Date:   Thu, 29 Aug 2019 16:31:14 +0800
+Message-Id: <20190829083132.22394-13-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190829083132.22394-1-duyuyang@gmail.com>
 References: <20190829083132.22394-1-duyuyang@gmail.com>
@@ -76,106 +76,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have a lockdep warning:
+When looking up and adding a chain (i.e., in lookup_chain_cache_add() and
+only in it), explicitly specify the depth of the held lock stack as the
+chain. The depth now only equals curr->lockdep_depth.
 
-  ========================================================
-  WARNING: possible irq lock inversion dependency detected
-  5.1.0-rc7+ #141 Not tainted
-  --------------------------------------------------------
-  kworker/8:2/328 just changed the state of lock:
-  0000000007f1a95b (&(&host->lock)->rlock){-...}, at: ata_bmdma_interrupt+0x27/0x1c0 [libata]
-  but this lock took another, HARDIRQ-READ-unsafe lock in the past:
-   (&trig->leddev_list_lock){.+.?}
-
-and interrupts could create inverse lock ordering between them.
-
-other info that might help us debug this:
-   Possible interrupt unsafe locking scenario:
-
-         CPU0                    CPU1
-         ----                    ----
-    lock(&trig->leddev_list_lock);
-                                 local_irq_disable();
-                                 lock(&(&host->lock)->rlock);
-                                 lock(&trig->leddev_list_lock);
-    <Interrupt>
-      lock(&(&host->lock)->rlock);
-
- *** DEADLOCK ***
-
-This splat is a false positive, which is enabled by the addition of
-recursive read locks in the graph. Specifically, trig->leddev_list_lock is a
-rwlock_t type, which was not in the graph before recursive read lock support
-was added in lockdep.
-
-This false positve is caused by a "false-positive" check in IRQ usage check.
-
-In mark_lock_irq(), the following checks are currently performed:
-
-   ----------------------------------
-  |   ->      | unsafe | read unsafe |
-  |----------------------------------|
-  | safe      |  F  B  |    F* B*    |
-  |----------------------------------|
-  | read safe |  F* B* |      -      |
-   ----------------------------------
-
-Where:
-F: check_usage_forwards
-B: check_usage_backwards
-*: check enabled by STRICT_READ_CHECKS
-
-But actually the safe -> unsafe read dependency does not create a deadlock
-scenario.
-
-Fix this by simply removing those two checks, and since safe read -> unsafe
-is indeed a problem, these checks are not actually strict per se, so remove
-the macro STRICT_READ_CHECKS, and we have the following checks:
-
-   ----------------------------------
-  |   ->      | unsafe | read unsafe |
-  |----------------------------------|
-  | safe      |  F  B  |      -      |
-  |----------------------------------|
-  | read safe |  F  B  |      -      |
-   ----------------------------------
+No functional change.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ kernel/locking/lockdep.c | 48 ++++++++++++++++++++++++++----------------------
+ 1 file changed, 26 insertions(+), 22 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index acbd538..1dda9de 100644
+index 1dda9de..569d3c1 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -3221,8 +3221,6 @@ static int SOFTIRQ_verbose(struct lock_class *class)
- 	return 0;
+@@ -2600,12 +2600,12 @@ struct lock_class *lock_chain_get_class(struct lock_chain *chain, int i)
+  * Returns the index of the first held_lock of the current chain
+  */
+ static inline int get_first_held_lock(struct task_struct *curr,
+-					struct held_lock *hlock)
++				      struct held_lock *hlock, int depth)
+ {
+ 	int i;
+ 	struct held_lock *hlock_curr;
+ 
+-	for (i = curr->lockdep_depth - 1; i >= 0; i--) {
++	for (i = depth - 1; i >= 0; i--) {
+ 		hlock_curr = curr->held_locks + i;
+ 		if (hlock_curr->irq_context != hlock->irq_context)
+ 			break;
+@@ -2630,12 +2630,12 @@ static u64 print_chain_key_iteration(int class_idx, u64 chain_key)
  }
  
--#define STRICT_READ_CHECKS	1
--
- static int (*state_verbose_f[])(struct lock_class *class) = {
- #define LOCKDEP_STATE(__STATE) \
- 	__STATE##_verbose,
-@@ -3268,7 +3266,7 @@ typedef int (*check_usage_f)(struct task_struct *, struct held_lock *,
- 	 * Validate that the lock dependencies don't have conflicting usage
- 	 * states.
- 	 */
--	if ((!read || STRICT_READ_CHECKS) &&
-+	if ((!read || !dir) &&
- 			!usage(curr, this, excl_bit, state_name(new_bit & ~LOCK_USAGE_READ_MASK)))
+ static void
+-print_chain_keys_held_locks(struct task_struct *curr, struct held_lock *hlock_next)
++print_chain_keys_held_locks(struct task_struct *curr,
++			    struct held_lock *hlock_next, int depth)
+ {
+ 	struct held_lock *hlock;
+ 	u64 chain_key = INITIAL_CHAIN_KEY;
+-	int depth = curr->lockdep_depth;
+-	int i = get_first_held_lock(curr, hlock_next);
++	int i = get_first_held_lock(curr, hlock_next, depth);
+ 
+ 	printk("depth: %u (irq_context %u)\n", depth - i + 1,
+ 		hlock_next->irq_context);
+@@ -2667,8 +2667,8 @@ static void print_chain_keys_chain(struct lock_chain *chain)
+ }
+ 
+ static void print_collision(struct task_struct *curr,
+-			struct held_lock *hlock_next,
+-			struct lock_chain *chain)
++			    struct held_lock *hlock_next,
++			    struct lock_chain *chain, int depth)
+ {
+ 	pr_warn("\n");
+ 	pr_warn("============================\n");
+@@ -2679,7 +2679,7 @@ static void print_collision(struct task_struct *curr,
+ 	pr_warn("Hash chain already cached but the contents don't match!\n");
+ 
+ 	pr_warn("Held locks:");
+-	print_chain_keys_held_locks(curr, hlock_next);
++	print_chain_keys_held_locks(curr, hlock_next, depth);
+ 
+ 	pr_warn("Locks in cached chain:");
+ 	print_chain_keys_chain(chain);
+@@ -2695,17 +2695,16 @@ static void print_collision(struct task_struct *curr,
+  * that there was a collision during the calculation of the chain_key.
+  * Returns: 0 not passed, 1 passed
+  */
+-static int check_no_collision(struct task_struct *curr,
+-			struct held_lock *hlock,
+-			struct lock_chain *chain)
++static int check_no_collision(struct task_struct *curr, struct held_lock *hlock,
++			      struct lock_chain *chain, int depth)
+ {
+ #ifdef CONFIG_DEBUG_LOCKDEP
+ 	int i, j, id;
+ 
+-	i = get_first_held_lock(curr, hlock);
++	i = get_first_held_lock(curr, hlock, depth);
+ 
+-	if (DEBUG_LOCKS_WARN_ON(chain->depth != curr->lockdep_depth - (i - 1))) {
+-		print_collision(curr, hlock, chain);
++	if (DEBUG_LOCKS_WARN_ON(chain->depth != depth - (i - 1))) {
++		print_collision(curr, hlock, chain, depth);
  		return 0;
+ 	}
  
-@@ -3279,7 +3277,7 @@ typedef int (*check_usage_f)(struct task_struct *, struct held_lock *,
- 		if (!valid_state(curr, this, new_bit, excl_bit + LOCK_USAGE_READ_MASK))
- 			return 0;
+@@ -2713,7 +2712,7 @@ static int check_no_collision(struct task_struct *curr,
+ 		id = curr->held_locks[i].class_idx;
  
--		if (STRICT_READ_CHECKS &&
-+		if (dir &&
- 			!usage(curr, this, excl_bit + LOCK_USAGE_READ_MASK,
- 				state_name(new_bit + LOCK_USAGE_READ_MASK)))
+ 		if (DEBUG_LOCKS_WARN_ON(chain_hlocks[chain->base + j] != id)) {
+-			print_collision(curr, hlock, chain);
++			print_collision(curr, hlock, chain, depth);
  			return 0;
+ 		}
+ 	}
+@@ -2757,7 +2756,7 @@ static struct lock_chain *alloc_lock_chain(void)
+  */
+ static inline struct lock_chain *add_chain_cache(struct task_struct *curr,
+ 						 struct held_lock *hlock,
+-						 u64 chain_key)
++						 u64 chain_key, int depth)
+ {
+ 	struct lock_class *class = hlock_class(hlock);
+ 	struct hlist_head *hash_head = chainhashentry(chain_key);
+@@ -2783,8 +2782,8 @@ static inline struct lock_chain *add_chain_cache(struct task_struct *curr,
+ 	}
+ 	chain->chain_key = chain_key;
+ 	chain->irq_context = hlock->irq_context;
+-	i = get_first_held_lock(curr, hlock);
+-	chain->depth = curr->lockdep_depth + 1 - i;
++	i = get_first_held_lock(curr, hlock, depth);
++	chain->depth = depth + 1 - i;
+ 
+ 	BUILD_BUG_ON((1UL << 24) <= ARRAY_SIZE(chain_hlocks));
+ 	BUILD_BUG_ON((1UL << 6)  <= ARRAY_SIZE(curr->held_locks));
+@@ -2837,17 +2836,21 @@ static inline struct lock_chain *lookup_chain_cache(u64 chain_key)
+  * add it and return the chain - in this case the new dependency
+  * chain will be validated. If the key is already hashed, return
+  * NULL. (On return with the new chain graph_lock is held.)
++ *
++ * If the key is not hashed, the new chain is composed of @hlock
++ * and @depth worth of the current held lock stack, of which the
++ * held locks are in the same context as @hlock.
+  */
+ static inline struct lock_chain *
+ lookup_chain_cache_add(struct task_struct *curr, struct held_lock *hlock,
+-		       u64 chain_key)
++		       u64 chain_key, int depth)
+ {
+ 	struct lock_class *class = hlock_class(hlock);
+ 	struct lock_chain *chain = lookup_chain_cache(chain_key);
+ 
+ 	if (chain) {
+ cache_hit:
+-		if (!check_no_collision(curr, hlock, chain))
++		if (!check_no_collision(curr, hlock, chain, depth))
+ 			return NULL;
+ 
+ 		if (very_verbose(class)) {
+@@ -2877,7 +2880,7 @@ static inline struct lock_chain *lookup_chain_cache(u64 chain_key)
+ 		goto cache_hit;
+ 	}
+ 
+-	return add_chain_cache(curr, hlock, chain_key);
++	return add_chain_cache(curr, hlock, chain_key, depth);
+ }
+ 
+ static int validate_chain(struct task_struct *curr, struct held_lock *hlock,
+@@ -2895,7 +2898,8 @@ static int validate_chain(struct task_struct *curr, struct held_lock *hlock,
+ 	 * graph_lock for us)
+ 	 */
+ 	if (!hlock->trylock && hlock->check &&
+-	    (chain = lookup_chain_cache_add(curr, hlock, chain_key))) {
++	    (chain = lookup_chain_cache_add(curr, hlock, chain_key,
++					    curr->lockdep_depth))) {
+ 		/*
+ 		 * Check whether last held lock:
+ 		 *
 -- 
 1.8.3.1
 
