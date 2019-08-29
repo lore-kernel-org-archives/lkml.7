@@ -2,128 +2,132 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFA3C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CC0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3EEE21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449B521874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbfH2QP3 (ORCPT
+        id S1728182AbfH2QQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:15:29 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34704 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbfH2QP3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:15:29 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 8754D28D6D2;
-        Thu, 29 Aug 2019 17:15:25 +0100 (BST)
-Date:   Thu, 29 Aug 2019 18:15:20 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH 2/4] i3c: master: Check if devices have
- i3c_dev_boardinfo on i3c_master_add_i3c_dev_locked()
-Message-ID: <20190829181520.0b33b642@collabora.com>
-In-Reply-To: <SN6PR12MB26553867412178B3F7190F0CAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-References: <cover.1567071213.git.vitor.soares@synopsys.com>
-        <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
-        <20190829124457.3a750932@collabora.com>
-        <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-        <20190829163918.571fd0d8@collabora.com>
-        <20190829163941.45380b19@collabora.com>
-        <SN6PR12MB2655B08176E14BE9DF2BACA2AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-        <20190829172441.3a76385e@collabora.com>
-        <SN6PR12MB26553867412178B3F7190F0CAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 29 Aug 2019 12:16:31 -0400
+Received: from mga05.intel.com ([192.55.52.43]:19642 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727066AbfH2QQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:16:31 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 09:16:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,444,1559545200"; 
+   d="scan'208";a="183523268"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga003.jf.intel.com with ESMTP; 29 Aug 2019 09:16:28 -0700
+Date:   Thu, 29 Aug 2019 09:16:28 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Dave Chinner <david@fromorbit.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
+        linux-xfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+Message-ID: <20190829161627.GB18249@iweiny-DESK2.sc.intel.com>
+References: <20190821185703.GB5965@iweiny-DESK2.sc.intel.com>
+ <20190821194810.GI8653@ziepe.ca>
+ <20190821204421.GE5965@iweiny-DESK2.sc.intel.com>
+ <20190823032345.GG1119@dread.disaster.area>
+ <20190823120428.GA12968@ziepe.ca>
+ <20190824001124.GI1119@dread.disaster.area>
+ <20190824050836.GC1092@iweiny-DESK2.sc.intel.com>
+ <20190826055510.GL1119@dread.disaster.area>
+ <20190829020230.GA18249@iweiny-DESK2.sc.intel.com>
+ <3e5c5053-a74a-509c-660c-a6075ed87f11@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3e5c5053-a74a-509c-660c-a6075ed87f11@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 15:57:32 +0000
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-
-> -----Original Message-----
-> From: Boris Brezillon 
-> <boris.brezillon@collabora.com> 
-> Sent: Thursday, August 29, 2019 4:25 
-> PM
-> To: Vitor Soares <Vitor.Soares@synopsys.com>
-> Cc: 
-> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; 
-> linux-i3c@lists.infradead.org; bbrezillon@kernel.org; robh+dt@kernel.org; 
-> mark.rutland@arm.com; Joao.Pinto@synopsys.com
-> Subject: Re: [PATCH 2/4] 
-> i3c: master: Check if devices have i3c_dev_boardinfo on 
-> i3c_master_add_i3c_dev_locked()
-> 
-> On Thu, 29 Aug 2019 15:07:08 +0000
-> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> 
-> > From: Boris Brezillon   
-> <boris.brezillon@collabora.com>
-> > Date: Thu, Aug 29, 2019 at 15:39:41
-> >   
-> 
-> > > On Thu, 29 Aug 2019 16:39:18 +0200
-> > > Boris Brezillon <boris.brezillon@collabora.com> wrote:
-> > >     
-> > > > On Thu, 29 Aug 2019 14:00:44 +0000
-> > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > > >     
-> > > > > Hi Boris,
-> > > > > 
-> > > > > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > > > > Date: Thu, Aug 29, 2019 at 11:44:57
-> > > > >       
-> > > > > > On Thu, 29 Aug 2019 12:19:33 +0200
-> > > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > > > > >         
-> > > > > > > The I3C devices described in DT might not be attached to the master which
-> > > > > > > doesn't allow to assign a specific dynamic address.        
-> > > > > > 
-> > > > > > I remember testing this when developing the framework, so, unless
-> > > > > > another patch regressed it, it should already work. I suspect patch 1
-> > > > > > is actually the regressing this use case.        
-> > > > > 
-> > > > > For today it doesn't address the case where the device is described with 
-> > > > > static address = 0, which isn't attached to the controller.      
-> > > > 
-> > > > Hm, I'm pretty sure I had designed the code to support that case (see
-> > > > [1]). It might be buggy, but nothing we can't fix I guess.
-> > > >     
+On Wed, Aug 28, 2019 at 08:27:23PM -0700, John Hubbard wrote:
+> On 8/28/19 7:02 PM, Ira Weiny wrote:
+> > On Mon, Aug 26, 2019 at 03:55:10PM +1000, Dave Chinner wrote:
+> > > On Fri, Aug 23, 2019 at 10:08:36PM -0700, Ira Weiny wrote:
+> > > > On Sat, Aug 24, 2019 at 10:11:24AM +1000, Dave Chinner wrote:
+> > > > > On Fri, Aug 23, 2019 at 09:04:29AM -0300, Jason Gunthorpe wrote:
+> ...
 > > > 
-> > > [1]https://urldefense.proofpoint.com/v2/url?u=https-3A__elixir.bootlin.com_linux_v5.3-2Drc6_source_drivers_i3c_master.c-23L1898&d=DwICAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=qVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=IXS1ygIgEo5vwajk0iwd5aBDVBzRnVTjO3cg4iBmGNc&s=HC-AcYm-AZPrUBoALioej_BDnqOtJHltr39Z2yPkuU4&e=     
+> > > Sure, that part works because the struct file is passed. It doesn't
+> > > end up with the same fd number in the other process, though.
+> > > 
+> > > The issue is that layout leases need to notify userspace when they
+> > > are broken by the kernel, so a lease stores the owner pid/tid in the
+> > > file->f_owner field via __f_setown(). It also keeps a struct fasync
+> > > attached to the file_lock that records the fd that the lease was
+> > > created on.  When a signal needs to be sent to userspace for that
+> > > lease, we call kill_fasync() and that walks the list of fasync
+> > > structures on the lease and calls:
+> > > 
+> > > 	send_sigio(fown, fa->fa_fd, band);
+> > > 
+> > > And it does for every fasync struct attached to a lease. Yes, a
+> > > lease can track multiple fds, but it can only track them in a single
+> > > process context. The moment the struct file is shared with another
+> > > process, the lease is no longer capable of sending notifications to
+> > > all the lease holders.
+> > > 
+> > > Yes, you can change the owning process via F_SETOWNER, but that's
+> > > still only a single process context, and you can't change the fd in
+> > > the fasync list. You can add new fd to an existing lease by calling
+> > > F_SETLEASE on the new fd, but you still only have a single process
+> > > owner context for signal delivery.
+> > > 
+> > > As such, leases that require callbacks to userspace are currently
+> > > only valid within the process context the lease was taken in.
 > > 
-> > That is only valid if you have olddev which will only exist if static 
-> > address != 0.  
+> > But for long term pins we are not requiring callbacks.
+> > 
 > 
-> Hm, if you revert patch 1 (and assuming the device is properly defined
-> in the DT), you should have olddev != NULL when reaching that point. If
-> that's not the case there's a bug somewhere that should be fixed.
+> Hi Ira,
 > 
-> No, because the device is not attached.
+> If "require callbacks to userspace" means sending SIGIO, then actually
+> FOLL_LONGTERM *does* require those callbacks. Because we've been, so
+> far, equating FOLL_LONGTERM with the vaddr_pin struct and with a lease.
+> 
+> What am I missing here?
 
-Oh, my bad, I see what you mean now. This is definitely a bug and should
-have the Fixes tags. I mean, even if we don't care about dynamic
-address assignment, I3C drivers might care about the ->of_node that's
-attached to the device.
+We agreed back in June that the layout lease would have 2 "levels".  The
+"normal" layout lease would cause SIGIO and could be broken and another
+"exclusive" level which could _not_ be broken.
+
+Because we _can't_ _trust_ user space to react to the SIGIO properly the
+"exclusive" lease is required to take the longterm pins.  Also this is the
+lease which causes the truncate to fail (return ETXTBSY) because the kernel
+can't break the lease.
+
+The vaddr_pin struct in the current RFC is there for a couple of reasons.
+
+1) To ensure that we have a way to correlate the long term pin user with the
+   file if the data file FD's are closed.  (ie the application has zombie'd the
+   lease).
+
+2) And more importantly as a token the vaddr_pin*() callers use to be able to
+   properly ref count the file itself while in use.
+
+Ira
+
