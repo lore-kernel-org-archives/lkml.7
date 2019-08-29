@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E3DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20969C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA5223403
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13172053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567075981;
-	bh=8E1ZaQQdv9Tgy5lwu31euuxv9rkT1in47LdivFwcPEE=;
+	s=default; t=1567075992;
+	bh=itrWbVp+qN9Vqqyd+kbsmhxYfVC5+mSK+neoJ3ELT+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hMxoffUfRoQ1NJGDfFOps9DPXAWTmyvlX1mzYGNwVaOMV/ipKcMD8vXuSvA4Mbjyq
-	 85h1wfw84tHzjRPWatYCJgKlq9GPcaNU4JjJ9GkoxZVm370mnRWZv3fvUfvvbtMOru
-	 JBRUaOUm6IGX+PVlJtEFWU7S/9GicYgrBO2avovU=
+	b=aArESlP75eg6sxH+8R6yyXJYinBkUqc5E+s3ulQK6AqZZGcUWKbybY2tRchvspd7a
+	 QkOCSt0PuaxxavgKXxG2ryVSV4bOh2jo82Jbe10NPrcrO4R/BiJ70X2cQqOyOw+aPd
+	 AevLkMpF0JEomOB8SD4foBOJNpoZBKejbV3S2MQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbfH2KxA (ORCPT
+        id S1728797AbfH2KxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:53:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58606 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 06:53:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728378AbfH2KvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:51:01 -0400
+        id S1728332AbfH2Ku4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:50:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E0082173E;
-        Thu, 29 Aug 2019 10:50:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30A2B23427;
+        Thu, 29 Aug 2019 10:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075860;
-        bh=8E1ZaQQdv9Tgy5lwu31euuxv9rkT1in47LdivFwcPEE=;
+        s=default; t=1567075855;
+        bh=itrWbVp+qN9Vqqyd+kbsmhxYfVC5+mSK+neoJ3ELT+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0lMpSRt9i7K1xZV/BgEfl20mEXABhz8/7G2nKdTfZteVs3OJ0+b73QLmEJsYAZbkZ
-         eJiDiQXcAOgYkvZ5Rgdll1zh4HDRFzk8LihbzAHpM7ob1Q0U302BQYtejpTIqSXqx9
-         x5glDl0LTfBlF/Xnu88qZ0aJNxSMsofDElqa3sN4=
+        b=1x0hHYhx34FdG7JK3ej0/SlbSpyVOTCCHLsY1JNDN+Io9fGuhT9/JjhYAFPItJVZi
+         jrNNjEh6VxAxhGDva+HsR/4XE2vrUc2zBmxHKdkmjUnqKIacnfQVK2Tk/fY2yblYJB
+         G1hWj+piW5hoy7fpvw5bm0khF3Ugn9aM8oRcJv3g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Miroslav Benes <mbenes@suse.cz>, Jessica Yu <jeyu@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 14/14] kernel/module: Fix mem leak in module_add_modinfo_attrs
-Date:   Thu, 29 Aug 2019 06:50:43 -0400
-Message-Id: <20190829105043.2508-14-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 10/14] mac80211: fix possible sta leak
+Date:   Thu, 29 Aug 2019 06:50:39 -0400
+Message-Id: <20190829105043.2508-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829105043.2508-1-sashal@kernel.org>
 References: <20190829105043.2508-1-sashal@kernel.org>
@@ -59,100 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit bc6f2a757d525e001268c3658bd88822e768f8db ]
+[ Upstream commit 5fd2f91ad483baffdbe798f8a08f1b41442d1e24 ]
 
-In module_add_modinfo_attrs if sysfs_create_file
-fails, we forget to free allocated modinfo_attrs
-and roll back the sysfs files.
+If TDLS station addition is rejected, the sta memory is leaked.
+Avoid this by moving the check before the allocation.
 
-Fixes: 03e88ae1b13d ("[PATCH] fix module sysfs files reference counting")
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 7ed5285396c2 ("mac80211: don't initiate TDLS connection if station is not associated to AP")
+Link: https://lore.kernel.org/r/20190801073033.7892-1-johannes@sipsolutions.net
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/module.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ net/mac80211/cfg.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 4b372c14d9a1f..4685675912414 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1695,6 +1695,8 @@ static int add_usage_links(struct module *mod)
- 	return ret;
- }
+diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
+index 150dd2160cefb..8168c667d91d9 100644
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -1459,6 +1459,11 @@ static int ieee80211_add_station(struct wiphy *wiphy, struct net_device *dev,
+ 	if (is_multicast_ether_addr(mac))
+ 		return -EINVAL;
  
-+static void module_remove_modinfo_attrs(struct module *mod, int end);
++	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER) &&
++	    sdata->vif.type == NL80211_IFTYPE_STATION &&
++	    !sdata->u.mgd.associated)
++		return -EINVAL;
 +
- static int module_add_modinfo_attrs(struct module *mod)
- {
- 	struct module_attribute *attr;
-@@ -1709,24 +1711,34 @@ static int module_add_modinfo_attrs(struct module *mod)
+ 	sta = sta_info_alloc(sdata, mac, GFP_KERNEL);
+ 	if (!sta)
  		return -ENOMEM;
+@@ -1466,10 +1471,6 @@ static int ieee80211_add_station(struct wiphy *wiphy, struct net_device *dev,
+ 	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER))
+ 		sta->sta.tdls = true;
  
- 	temp_attr = mod->modinfo_attrs;
--	for (i = 0; (attr = modinfo_attrs[i]) && !error; i++) {
-+	for (i = 0; (attr = modinfo_attrs[i]); i++) {
- 		if (!attr->test || attr->test(mod)) {
- 			memcpy(temp_attr, attr, sizeof(*temp_attr));
- 			sysfs_attr_init(&temp_attr->attr);
- 			error = sysfs_create_file(&mod->mkobj.kobj,
- 					&temp_attr->attr);
-+			if (error)
-+				goto error_out;
- 			++temp_attr;
- 		}
- 	}
-+
-+	return 0;
-+
-+error_out:
-+	if (i > 0)
-+		module_remove_modinfo_attrs(mod, --i);
- 	return error;
- }
- 
--static void module_remove_modinfo_attrs(struct module *mod)
-+static void module_remove_modinfo_attrs(struct module *mod, int end)
- {
- 	struct module_attribute *attr;
- 	int i;
- 
- 	for (i = 0; (attr = &mod->modinfo_attrs[i]); i++) {
-+		if (end >= 0 && i > end)
-+			break;
- 		/* pick a field to test for end of list */
- 		if (!attr->attr.name)
- 			break;
-@@ -1814,7 +1826,7 @@ static int mod_sysfs_setup(struct module *mod,
- 	return 0;
- 
- out_unreg_modinfo_attrs:
--	module_remove_modinfo_attrs(mod);
-+	module_remove_modinfo_attrs(mod, -1);
- out_unreg_param:
- 	module_param_sysfs_remove(mod);
- out_unreg_holders:
-@@ -1850,7 +1862,7 @@ static void mod_sysfs_fini(struct module *mod)
- {
- }
- 
--static void module_remove_modinfo_attrs(struct module *mod)
-+static void module_remove_modinfo_attrs(struct module *mod, int end)
- {
- }
- 
-@@ -1866,7 +1878,7 @@ static void init_param_lock(struct module *mod)
- static void mod_sysfs_teardown(struct module *mod)
- {
- 	del_usage_links(mod);
--	module_remove_modinfo_attrs(mod);
-+	module_remove_modinfo_attrs(mod, -1);
- 	module_param_sysfs_remove(mod);
- 	kobject_put(mod->mkobj.drivers_dir);
- 	kobject_put(mod->holders_dir);
+-	if (sta->sta.tdls && sdata->vif.type == NL80211_IFTYPE_STATION &&
+-	    !sdata->u.mgd.associated)
+-		return -EINVAL;
+-
+ 	err = sta_apply_parameters(local, sta, params);
+ 	if (err) {
+ 		sta_info_free(local, sta);
 -- 
 2.20.1
 
