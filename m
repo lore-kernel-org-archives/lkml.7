@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C405C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BAAC41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDBC2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681872189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:30:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfH2Laf (ORCPT
+        id S1728259AbfH2Lai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:30:35 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49750 "EHLO inva020.nxp.com"
+        Thu, 29 Aug 2019 07:30:38 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:49330 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727997AbfH2La0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728010AbfH2La0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 29 Aug 2019 07:30:26 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C8C411A033E;
-        Thu, 29 Aug 2019 13:30:23 +0200 (CEST)
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 912F420033A;
+        Thu, 29 Aug 2019 13:30:24 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C658D1A033D;
-        Thu, 29 Aug 2019 13:30:23 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 842CB200335;
+        Thu, 29 Aug 2019 13:30:24 +0200 (CEST)
 Received: from fsr-ub1664-120.ea.freescale.net (fsr-ub1664-120.ea.freescale.net [10.171.82.81])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 239A020613;
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D5BD320613;
         Thu, 29 Aug 2019 13:30:23 +0200 (CEST)
 From:   Robert Chiras <robert.chiras@nxp.com>
 To:     =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
@@ -42,9 +42,9 @@ Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 07/14] drm/mxsfb: Signal mode changed when bpp changed
-Date:   Thu, 29 Aug 2019 14:30:08 +0300
-Message-Id: <1567078215-31601-8-git-send-email-robert.chiras@nxp.com>
+Subject: [PATCH v4 08/14] drm/mxsfb: Add max-memory-bandwidth property for MXSFB
+Date:   Thu, 29 Aug 2019 14:30:09 +0300
+Message-Id: <1567078215-31601-9-git-send-email-robert.chiras@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
 References: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
@@ -57,84 +57,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mirela Rabulea <mirela.rabulea@nxp.com>
+Because of stability issues, we may want to limit the maximum bandwidth
+required by the MXSFB (eLCDIF) driver.
 
-Add mxsfb_atomic_helper_check to signal mode changed when bpp changed.
-This will trigger the execution of disable/enable on
-a modeset with different bpp than the current one.
-
-Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
 Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 Tested-by: Guido Günther <agx@sigxcpu.org>
 ---
- drivers/gpu/drm/mxsfb/mxsfb_drv.c | 45 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 44 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/mxsfb/mxsfb_drv.c | 48 +++++++++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/mxsfb/mxsfb_drv.h |  2 ++
+ 2 files changed, 50 insertions(+)
 
 diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 23027a9..f95ba63 100644
+index f95ba63..d8686c7 100644
 --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
 +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -26,6 +26,7 @@
- #include <drm/drm_drv.h>
- #include <drm/drm_fb_cma_helper.h>
- #include <drm/drm_fb_helper.h>
-+#include <drm/drm_fourcc.h>
- #include <drm/drm_gem_cma_helper.h>
- #include <drm/drm_gem_framebuffer_helper.h>
- #include <drm/drm_irq.h>
-@@ -105,9 +106,51 @@ void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb)
- 		clk_disable_unprepare(mxsfb->clk_axi);
- }
- 
-+/**
-+ * mxsfb_atomic_helper_check - validate state object
-+ * @dev: DRM device
-+ * @state: the driver state object
-+ *
-+ * On top of the drm imlementation drm_atomic_helper_check,
-+ * check if the bpp is changed, if so, signal mode_changed,
-+ * this will trigger disable/enable
-+ *
-+ * RETURNS:
-+ * Zero for success or -errno
-+ */
-+static int mxsfb_atomic_helper_check(struct drm_device *dev,
-+				     struct drm_atomic_state *state)
-+{
-+	struct drm_crtc *crtc;
-+	struct drm_crtc_state *new_state;
-+	int i, ret;
-+
-+	ret = drm_atomic_helper_check(dev, state);
-+	if (ret)
-+		return ret;
-+
-+	for_each_new_crtc_in_state(state, crtc, new_state, i) {
-+		struct drm_plane_state *primary_state;
-+		int old_bpp = 0;
-+		int new_bpp = 0;
-+
-+		if (!crtc->primary || !crtc->primary->old_fb)
-+			continue;
-+		primary_state =
-+			drm_atomic_get_plane_state(state, crtc->primary);
-+		if (!primary_state || !primary_state->fb)
-+			continue;
-+		old_bpp = crtc->primary->old_fb->format->depth;
-+		new_bpp = primary_state->fb->format->depth;
-+		if (old_bpp != new_bpp)
-+			new_state->mode_changed = true;
-+	}
-+	return ret;
-+}
-+
- static const struct drm_mode_config_funcs mxsfb_mode_config_funcs = {
- 	.fb_create		= drm_gem_fb_create,
--	.atomic_check		= drm_atomic_helper_check,
-+	.atomic_check		= mxsfb_atomic_helper_check,
- 	.atomic_commit		= drm_atomic_helper_commit,
+@@ -158,6 +158,49 @@ static const struct drm_mode_config_helper_funcs mxsfb_mode_config_helpers = {
+ 	.atomic_commit_tail = drm_atomic_helper_commit_tail_rpm,
  };
  
++enum drm_mode_status mxsfb_pipe_mode_valid(struct drm_crtc *crtc,
++					   const struct drm_display_mode *mode)
++{
++	struct drm_simple_display_pipe *pipe =
++		container_of(crtc, struct drm_simple_display_pipe, crtc);
++	struct mxsfb_drm_private *mxsfb = drm_pipe_to_mxsfb_drm_private(pipe);
++	u32 bpp;
++	u64 bw;
++
++	if (!pipe->plane.state->fb)
++		bpp = 32;
++	else
++		bpp = pipe->plane.state->fb->format->depth;
++
++	bw = mode->crtc_clock * 1000;
++	bw = bw * mode->hdisplay * mode->vdisplay * (bpp / 8);
++	bw = div_u64(bw, mode->htotal * mode->vtotal);
++
++	if (mxsfb->max_bw && (bw > mxsfb->max_bw))
++		return MODE_BAD;
++
++	return MODE_OK;
++}
++
++static int mxsfb_pipe_check(struct drm_simple_display_pipe *pipe,
++			    struct drm_plane_state *plane_state,
++			    struct drm_crtc_state *crtc_state)
++{
++	struct drm_framebuffer *fb = plane_state->fb;
++	struct drm_framebuffer *old_fb = pipe->plane.state->fb;
++
++	/* force 'mode_changed' when fb pitches changed, since
++	 * the pitch related registers configuration of LCDIF
++	 * can not be done when LCDIF is running.
++	 */
++	if (old_fb && likely(!crtc_state->mode_changed)) {
++		if (old_fb->pitches[0] != fb->pitches[0])
++			crtc_state->mode_changed = true;
++	}
++
++	return 0;
++}
++
+ static void mxsfb_pipe_enable(struct drm_simple_display_pipe *pipe,
+ 			      struct drm_crtc_state *crtc_state,
+ 			      struct drm_plane_state *plane_state)
+@@ -244,6 +287,8 @@ static void mxsfb_pipe_disable_vblank(struct drm_simple_display_pipe *pipe)
+ }
+ 
+ static struct drm_simple_display_pipe_funcs mxsfb_funcs = {
++	.mode_valid	= mxsfb_pipe_mode_valid,
++	.check          = mxsfb_pipe_check,
+ 	.enable		= mxsfb_pipe_enable,
+ 	.disable	= mxsfb_pipe_disable,
+ 	.update		= mxsfb_pipe_update,
+@@ -283,6 +328,9 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
+ 	if (IS_ERR(mxsfb->clk_disp_axi))
+ 		mxsfb->clk_disp_axi = NULL;
+ 
++	of_property_read_u32(drm->dev->of_node, "max-memory-bandwidth",
++			     &mxsfb->max_bw);
++
+ 	ret = dma_set_mask_and_coherent(drm->dev, DMA_BIT_MASK(32));
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+index 8fb65d3..a178173 100644
+--- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
++++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+@@ -32,6 +32,8 @@ struct mxsfb_drm_private {
+ 	struct drm_connector		*connector;
+ 	struct drm_panel		*panel;
+ 	struct drm_bridge		*bridge;
++
++	u32				max_bw;
+ };
+ 
+ int mxsfb_setup_crtc(struct drm_device *dev);
 -- 
 2.7.4
 
