@@ -2,224 +2,252 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527CFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2042DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 165102080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26C42077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:08:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="LbYAGKZp"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HfPoq6hI";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Rh9Kfaso"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbfH2PFp (ORCPT
+        id S1727600AbfH2PIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:05:45 -0400
-Received: from gateway34.websitewelcome.com ([192.185.148.204]:18307 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727171AbfH2PFo (ORCPT
+        Thu, 29 Aug 2019 11:08:02 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:45628 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726950AbfH2PIC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:05:44 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id 5049AF2F8C2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 10:05:43 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 3LzbiPpsO2qH73LzbiMT0x; Thu, 29 Aug 2019 10:05:43 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gDTUo2D0Mo8wgkKSB/31pi8yOfJeGqDuIhAYtLa6IVc=; b=LbYAGKZp8x+ZJeThpZpiYoM0l+
-        YlX9fRIOcHQttl9K8rb4XwXi6/8AxWfl3ZaaqcExcIJWLDkOG9jwP73c4yh/kZliwS5VodsLX1G1x
-        iOBuLw6GeUJQJ/W+Wbm8eSltERIYhBQxZ0eT4BgZHxM5+jmGorw7VQ+rl34/yZyjZmqGC/ZV1E6ho
-        9RxzD7+WJcHrTCL1QLGAQYMoDGhoIU3Mb2bGiVyH2PLxG/kGBY6eKidisA7XlRGuKwFr/76SBcz+M
-        ftCH/Twd2nHGsB02RKZjf2sb6jt7O/HXrtuwM78kThIOunpWkJKHvESgxhM/WlKRri66WGof8+gM8
-        be7vecwg==;
-Received: from [189.152.216.116] (port=40698 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1i3Lza-003rCx-LI; Thu, 29 Aug 2019 10:05:43 -0500
-Subject: Re: [PATCH] ARC: unwind: Mark expected switch fall-through
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc:     "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-References: <20190821012907.GA29165@embeddedor>
- <2c3ef09b-bd07-6caf-05a9-908700a60afd@embeddedor.com>
- <BY5PR12MB403422F37413E42066FCA9BEDEA20@BY5PR12MB4034.namprd12.prod.outlook.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <1496d4b7-f07b-01e1-c33d-b2d4c501d9dc@embeddedor.com>
-Date:   Thu, 29 Aug 2019 10:05:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <BY5PR12MB403422F37413E42066FCA9BEDEA20@BY5PR12MB4034.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252
+        Thu, 29 Aug 2019 11:08:02 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id AE0FDC0159;
+        Thu, 29 Aug 2019 15:08:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1567091281; bh=lVKxLBK22OS5q7XtxnGLlD9KZTzgWtGXi2O5B839MCg=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=HfPoq6hIPvFe5weECPLU+DYpx784d8KmoobzR5Qp7ov7jw6JpXoDPs0xOp7JC1zUR
+         rModEXvhexz26x2qfSW+uu4U9DSljJsbMVKioNQw5uBZF1JPyz41803JmEjh1KBKqM
+         Iy+lp3OBeNiKv/aINVRvLWe82CCBWwuHfxGp18yyeAEI2+vPrrL4Q9jFHRRAVJilpb
+         3WGpxqOUpZa6CTLuTO3W1FYudIiaPrA8ymCS5uypNae9mJdZrsNEt+4MJUjKGyIIF6
+         BLu0CzUt0YNM18N4lMAPqcShjUltNR1navY4n7rtjddlq582qaAf8y0vSCq8m8duhq
+         i8D+IxhdLjgog==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 44C97A0083;
+        Thu, 29 Aug 2019 15:08:00 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 29 Aug 2019 08:07:11 -0700
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Thu, 29 Aug 2019 08:07:11 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PI9gZwzymSWWE6Mc7wW+UPLCKHtq9kbpoVeAlRPScdxIzqqymo/Yh35rFTWec6v7xyvM2MqYiLoI+/fYD1eYDCbgGSeYNFHCYmPe9MIH8fN6rL27JljaOpZks4sSQpVFwRGBzTuNWK+xDJ2Xbu2QxkU2nq12FH/6saAgbW/lRSNVwLaMkGoZQb1sINVliDGsLZFlWNLrFVeaj4/Y10p0O8NHnv8bEDmH5RJqGWKFx4WV77D/AO7BdjCluHZc1S0OooSGwfBx+TKFP1PZn/o0vjNRvu1YoIsvjG6F82CdW6el4/sFlxL73OZ25J3djljQs6Ce5LhfGSByw4mz1kGasQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cdv5iGp6cVvOosx7YhTRwmoYbQSdowbbugqoWaj0Snc=;
+ b=bDlcW31ZIlcqUf7QtLQXPyDHkyHBACFkA2cU3Y3ejMdlVKBcXVuwckyp3g9n0hVmAMezQu2Kdx22kTkjcjEBuoXDOF+icCPnFnqLZi8iS18X8WleQh/JAwXlDaRZc0nDAl2QDlwx7bWfvI0uh2RuddYOc8wdelMtiEpuC5o7j9B+xN5PFduFPs6QNfz8dxlf9DhA1ifR1dSUHDs9vgEKGE4KManQpmX42yrw+vIBaXsyzKydQecIYSwAD7NfsovkhQ3drVbAeLqnjZNvAmvcRsrHEOR921J/k4pe3sFOGIdxhJIGCZqWphXpnGt6oXVfhAkIPVXUzXXefk7Z3DYuDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cdv5iGp6cVvOosx7YhTRwmoYbQSdowbbugqoWaj0Snc=;
+ b=Rh9KfasoIZwu1eKoqcz74ucw/7IydmQrl5SFinNE8a/juQQq4bHi0xWVYgZYwsQb0FezpUfoTq0DWtInmpKgOp79reDl90x+pqv2v8UAURTAAmsrHgCirRUu2KkVIN3+w3UBCq7GSDRCr3wGNbxKFGCcg9zgl3e9J/dyUaZ0HlY=
+Received: from SN6PR12MB2655.namprd12.prod.outlook.com (52.135.103.20) by
+ SN6PR12MB2782.namprd12.prod.outlook.com (52.135.107.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.18; Thu, 29 Aug 2019 15:07:09 +0000
+Received: from SN6PR12MB2655.namprd12.prod.outlook.com
+ ([fe80::89a7:a50:147b:52c6]) by SN6PR12MB2655.namprd12.prod.outlook.com
+ ([fe80::89a7:a50:147b:52c6%4]) with mapi id 15.20.2199.021; Thu, 29 Aug 2019
+ 15:07:08 +0000
+From:   Vitor Soares <Vitor.Soares@synopsys.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Vitor Soares <Vitor.Soares@synopsys.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+Subject: RE: [PATCH 2/4] i3c: master: Check if devices have i3c_dev_boardinfo
+ on i3c_master_add_i3c_dev_locked()
+Thread-Topic: [PATCH 2/4] i3c: master: Check if devices have i3c_dev_boardinfo
+ on i3c_master_add_i3c_dev_locked()
+Thread-Index: AQHVXlJtbJoJFO7ydka+l2zwcEQXe6cR8PSAgAA0rSCAAAzNAIAAABuAgAAGkYA=
+Date:   Thu, 29 Aug 2019 15:07:08 +0000
+Message-ID: <SN6PR12MB2655B08176E14BE9DF2BACA2AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+References: <cover.1567071213.git.vitor.soares@synopsys.com>
+        <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
+        <20190829124457.3a750932@collabora.com>
+        <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+        <20190829163918.571fd0d8@collabora.com>
+ <20190829163941.45380b19@collabora.com>
+In-Reply-To: <20190829163941.45380b19@collabora.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.216.116
-X-Source-L: No
-X-Exim-ID: 1i3Lza-003rCx-LI
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [189.152.216.116]:40698
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc29hcmVzXGFw?=
+ =?us-ascii?Q?cGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEy?=
+ =?us-ascii?Q?OWUzNWJcbXNnc1xtc2ctYWExNmU5NTMtY2E2ZS0xMWU5LTgyNTQtYjU5ZDc5?=
+ =?us-ascii?Q?N2QzNzhiXGFtZS10ZXN0XGFhMTZlOTU0LWNhNmUtMTFlOS04MjU0LWI1OWQ3?=
+ =?us-ascii?Q?OTdkMzc4YmJvZHkudHh0IiBzej0iMTc2MCIgdD0iMTMyMTE1NjQ4Mjc0NDk2?=
+ =?us-ascii?Q?MTQ1IiBoPSJhS3lHemMrVCtLaVBvaExIaDdrT2V3K2JWUEk9IiBpZD0iIiBi?=
+ =?us-ascii?Q?bD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFCUUpBQUNS?=
+ =?us-ascii?Q?K3F0c2UxN1ZBVGlFd3F5QWdLVGtPSVRDcklDQXBPUU9BQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBSEFBQUFDa0NBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBUUFCQUFBQVZ6ZGhHZ0FBQUFBQUFBQUFBQUFBQUo0QUFBQm1BR2tBYmdC?=
+ =?us-ascii?Q?aEFHNEFZd0JsQUY4QWNBQnNBR0VBYmdCdUFHa0FiZ0JuQUY4QWR3QmhBSFFB?=
+ =?us-ascii?Q?WlFCeUFHMEFZUUJ5QUdzQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFF?=
+ =?us-ascii?Q?QUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FYd0J3?=
+ =?us-ascii?Q?QUdFQWNnQjBBRzRBWlFCeUFITUFYd0JuQUdZQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNBQUFB?=
+ =?us-ascii?Q?QUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJnQmxB?=
+ =?us-ascii?Q?SElBY3dCZkFITUFZUUJ0QUhNQWRRQnVBR2NBWHdCakFHOEFiZ0JtQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFHOEFk?=
+ =?us-ascii?Q?UUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBY3dCaEFH?=
+ =?us-ascii?Q?MEFjd0IxQUc0QVp3QmZBSElBWlFCekFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhrQVh3?=
+ =?us-ascii?Q?QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QnpBRzBBYVFCakFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
+ =?us-ascii?Q?QUFBQUNlQUFBQVpnQnZBSFVBYmdCa0FISUFlUUJmQUhBQVlRQnlBSFFBYmdC?=
+ =?us-ascii?Q?bEFISUFjd0JmQUhNQWRBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJtQUc4?=
+ =?us-ascii?Q?QWRRQnVBR1FBY2dCNUFGOEFjQUJoQUhJQWRBQnVBR1VBY2dCekFGOEFkQUJ6?=
+ =?us-ascii?Q?QUcwQVl3QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtB?=
+ =?us-ascii?Q?WHdCd0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCMUFHMEFZd0FBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFD?=
+ =?us-ascii?Q?QUFBQUFBQ2VBQUFBWndCMEFITUFYd0J3QUhJQWJ3QmtBSFVBWXdCMEFGOEFk?=
+ =?us-ascii?Q?QUJ5QUdFQWFRQnVBR2tBYmdCbkFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQnpB?=
+ =?us-ascii?Q?R0VBYkFCbEFITUFYd0JoQUdNQVl3QnZBSFVBYmdCMEFGOEFjQUJzQUdFQWJn?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhNQVlRQnNBR1VBY3dCZkFI?=
+ =?us-ascii?Q?RUFkUUJ2QUhRQVpRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFB?=
+ =?us-ascii?Q?QUNBQUFBQUFDZUFBQUFjd0J1QUhBQWN3QmZBR3dBYVFCakFHVUFiZ0J6QUdV?=
+ =?us-ascii?Q?QVh3QjBBR1VBY2dCdEFGOEFNUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFC?=
+ =?us-ascii?Q?ekFHNEFjQUJ6QUY4QWJBQnBBR01BWlFCdUFITUFaUUJmQUhRQVpRQnlBRzBB?=
+ =?us-ascii?Q?WHdCekFIUUFkUUJrQUdVQWJnQjBBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBSFlBWndCZkFHc0FaUUI1?=
+ =?us-ascii?Q?QUhjQWJ3QnlBR1FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFB?=
+ =?us-ascii?Q?QUFBQ0FBQUFBQUE9Ii8+PC9tZXRhPg=3D=3D?=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=soares@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ed8ea862-958b-49c1-cbaa-08d72c929009
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN6PR12MB2782;
+x-ms-traffictypediagnostic: SN6PR12MB2782:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR12MB278225DD9A24CFB399C3467AAEA20@SN6PR12MB2782.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0144B30E41
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(346002)(39860400002)(136003)(366004)(189003)(199004)(81166006)(71190400001)(6636002)(71200400001)(76116006)(7736002)(74316002)(76176011)(7696005)(86362001)(486006)(66066001)(446003)(11346002)(26005)(99286004)(102836004)(3846002)(186003)(305945005)(6306002)(66476007)(64756008)(55016002)(6506007)(66446008)(5024004)(9686003)(66946007)(66556008)(256004)(81156014)(2906002)(25786009)(54906003)(316002)(6246003)(53936002)(6436002)(8936002)(33656002)(14454004)(52536014)(6116002)(476003)(478600001)(229853002)(5660300002)(4326008)(110136005)(107886003)(8676002)(70780200001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR12MB2782;H:SN6PR12MB2655.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: O1YG/WEJUP1rom+IKKZD5RjyhX7FuuX/cL6J/b5rvzVvaP7E9twiFpnRe2XJ58BCou3RZ6j8NmRzyopYNMc4vufiTgl/DUjWP1lYufOarjQX6h24DGasHBgkEjkkbg8svC8gZrL//m6wyDclg5b7h8/QjCOQfxbqHVngn2r3BKrFCNCFQ9IPbQa0OdOIfxBHHq94D7f1cA6Jd+340A+3cQVFS0AMMM3rdOnvAZthI64HDKSjg7ApCGW44shwct8IBZgtXvM0shQzCsWtXz6v2g3pkJGpxH8tHiddkW4Mbi+VaFUbqWBJ2GiSvRn3DOzy58wjPFBTui7KiMyV7V0Zlxh0LbpElK9RdxUrrd+oNLTAU5uTad/gGms6tr4+UHzNIxfZbu610QcdV6YMd/reoh5B6+nrqsViv6tDmeQ57VQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed8ea862-958b-49c1-cbaa-08d72c929009
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 15:07:08.8503
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uroqubY11C/9XgxvMz8J7JXm19NWNppWUJVIDQIh8sO6dJqt3hB1sUWQY380If9JZwUXsYceRYaobpZVxrhUQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2782
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eugeniy,
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Date: Thu, Aug 29, 2019 at 15:39:41
 
+> On Thu, 29 Aug 2019 16:39:18 +0200
+> Boris Brezillon <boris.brezillon@collabora.com> wrote:
+>=20
+> > On Thu, 29 Aug 2019 14:00:44 +0000
+> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> >=20
+> > > Hi Boris,
+> > >=20
+> > > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > > Date: Thu, Aug 29, 2019 at 11:44:57
+> > >  =20
+> > > > On Thu, 29 Aug 2019 12:19:33 +0200
+> > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > > >    =20
+> > > > > The I3C devices described in DT might not be attached to the mast=
+er which
+> > > > > doesn't allow to assign a specific dynamic address.   =20
+> > > >=20
+> > > > I remember testing this when developing the framework, so, unless
+> > > > another patch regressed it, it should already work. I suspect patch=
+ 1
+> > > > is actually the regressing this use case.   =20
+> > >=20
+> > > For today it doesn't address the case where the device is described w=
+ith=20
+> > > static address =3D 0, which isn't attached to the controller. =20
+> >=20
+> > Hm, I'm pretty sure I had designed the code to support that case (see
+> > [1]). It might be buggy, but nothing we can't fix I guess.
+> >=20
+>=20
+> [1]https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__elixir.bootlin.=
+com_linux_v5.3-2Drc6_source_drivers_i3c_master.c-23L1898&d=3DDwICAg&c=3DDPL=
+6_X_6JkXFx7AXWqB0tg&r=3DqVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=3DIXS=
+1ygIgEo5vwajk0iwd5aBDVBzRnVTjO3cg4iBmGNc&s=3DHC-AcYm-AZPrUBoALioej_BDnqOtJH=
+ltr39Z2yPkuU4&e=3D=20
 
-On 8/29/19 6:25 AM, Eugeniy Paltsev wrote:
-> Hi Gustavo,
-> 
-> I guess this patch is already sent as a pull request to 'v5.3-rc7' by Vineet:
-> https://www.mail-archive.com/linux-snps-arc@lists.infradead.org/msg05854.html
-> 
-
-No. This is a different one. Notice that the subject lines differ by one
-letter.
-
-Thanks
---
-Gustavo
-
-
-> ---
->  Eugeniy Paltsev
-> 
-> 
-> ________________________________________
-> From: linux-snps-arc <linux-snps-arc-bounces@lists.infradead.org> on behalf of Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Sent: Thursday, August 29, 2019 04:47
-> To: Vineet Gupta
-> Cc: linux-snps-arc@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] ARC: unwind: Mark expected switch fall-through
-> 
-> Hi,
-> 
-> Friendly ping:
-> 
-> Who can take this, please?
-> 
-> Thanks
-> --
-> Gustavo
-> 
-> On 8/20/19 8:29 PM, Gustavo A. R. Silva wrote:
->> Mark switch cases where we are expecting to fall through.
->>
->> This patch fixes the following warnings (Building: haps_hs_defconfig arc):
->>
->> arch/arc/kernel/unwind.c: In function ‘read_pointer’:
->> ./include/linux/compiler.h:328:5: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>   do {        \
->>      ^
->> ./include/linux/compiler.h:338:2: note: in expansion of macro ‘__compiletime_assert’
->>   __compiletime_assert(condition, msg, prefix, suffix)
->>   ^~~~~~~~~~~~~~~~~~~~
->> ./include/linux/compiler.h:350:2: note: in expansion of macro ‘_compiletime_assert’
->>   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
->>   ^~~~~~~~~~~~~~~~~~~
->> ./include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
->>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->>                                      ^~~~~~~~~~~~~~~~~~
->> ./include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
->>   BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
->>   ^~~~~~~~~~~~~~~~
->> arch/arc/kernel/unwind.c:573:3: note: in expansion of macro ‘BUILD_BUG_ON’
->>    BUILD_BUG_ON(sizeof(u32) != sizeof(value));
->>    ^~~~~~~~~~~~
->> arch/arc/kernel/unwind.c:575:2: note: here
->>   case DW_EH_PE_native:
->>   ^~~~
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  arch/arc/kernel/unwind.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arc/kernel/unwind.c b/arch/arc/kernel/unwind.c
->> index 445e4d702f43..dc05a63516f5 100644
->> --- a/arch/arc/kernel/unwind.c
->> +++ b/arch/arc/kernel/unwind.c
->> @@ -572,6 +572,7 @@ static unsigned long read_pointer(const u8 **pLoc, const void *end,
->>  #else
->>               BUILD_BUG_ON(sizeof(u32) != sizeof(value));
->>  #endif
->> +             /* Fall through */
->>       case DW_EH_PE_native:
->>               if (end < (const void *)(ptr.pul + 1))
->>                       return 0;
->>
-> 
-> _______________________________________________
-> linux-snps-arc mailing list
-> linux-snps-arc@lists.infradead.org
-> https://urldefense.proofpoint.com/v2/url?u=http-3A__lists.infradead.org_mailman_listinfo_linux-2Dsnps-2Darc&d=DwIGaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=ZlJN1MriPUTkBKCrPSx67GmaplEUGcAEk9yPtCLdUXI&m=GJ6OJTL5qRgb-RdlLBhiFzZH5ZmLXf2lxjuQgwbw7n8&s=1TapZixYsKQRFCCPkofjhki-eZ34KmyqojUdAxceNNA&e=
-> 
+That is only valid if you have olddev which will only exist if static=20
+address !=3D 0.
