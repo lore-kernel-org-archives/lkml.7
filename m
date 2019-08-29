@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19C8C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12ECC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C8E2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7E702053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:32:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjAtRwjg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pP7ODj+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfH2IcU (ORCPT
+        id S1727326AbfH2IcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 04:32:20 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37576 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfH2IcR (ORCPT
+        Thu, 29 Aug 2019 04:32:24 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37581 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfH2IcV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 04:32:17 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y9so1576347pfl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:32:17 -0700 (PDT)
+        Thu, 29 Aug 2019 04:32:21 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y9so1576437pfl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:32:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ndYsBqWw3lm9AlRGDvPEbBOKTM9ZoSmwZ9e8SQkG/N0=;
-        b=DjAtRwjg+1iDuOVCiRMy5sYP3FKE2X9YDI0ctZ5u9bmSm/LBFWLNvWwbnu1qZW+ovP
-         l4O2p3VwZvMUq1KxE05BG0B69Oz3ZFKFiHvETpdV/MiWTQccyh43YyjW3cVIR1nzGx9L
-         pU8xtx+Sf5iUBZ8mo1Q82pkFRkqyYoTgUEBe9DmXlDg1HT0xb0Kd7yRJrnxEss1a/nFs
-         a+/a1uDhr6X2n9QE2jJEHkrfmekP+UqiGeOV3eTO3sVymZXzrjPcIcXt4L6mQibmfNEP
-         1G6b65i0z/p+X631RaB5dgCgqpUZ6yJDEvW+dBs1Jm5AAES6rBolUnmkNbGRW+ehIRF4
-         QWkg==
+        bh=mhA4zWE9OY43Oghtx1Iqd8SWyXu1Zvn3og4YkBwF73A=;
+        b=pP7ODj+LPEo40S2MVYorJuDGWMCKnoqPUhNZ46OjzJnJ4DOVR5LfMAxTBFbpK1CZgl
+         DkiFPlbOwyRlRlL1KzURSmn/WZpzJqow9DqZibKAn+Treg02EoNbnR7QACw6g6TZ1nla
+         jsHOgc5nUdTbTXY/PMOVbvN74+KVV4u7uRjFGINr+4g3uYYLLBHyKJ+oRJIbA9g8rvul
+         JdHRriB3baczhg9YymwFfJ9cDC5EpPGwXVW8yhIL9tPjRhLBPD8wFvw7UlqEht+7euk4
+         LZZ24qsX8lIQeBao5HoaiL5UVK4/LvEL43U12lsrO2Cay31uwQMz6N+QB58bkt+X3mGK
+         G5Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ndYsBqWw3lm9AlRGDvPEbBOKTM9ZoSmwZ9e8SQkG/N0=;
-        b=pOWmkE8FSfGrbjEdRupL7SvSfPU7x3oIble5pT4Gf4ZrVKWZ76na3XBTb7nZmhlRxt
-         INl6jQptDpQQLLzMJqV70JG9VFCKXhi9Ku4G4Yyw5z+D0YC2g+Fghii7OTVhLUbWRZzN
-         YtBI+U0BVkBGxexJYHMwnLV9irBEUZo+2R54lIR0KUrfgaFUf7zSUZmPBLbk2fhleavE
-         nk+MAYguVdHEmB3nTEHSycB6aLeJkrEnvtNTkcLnNvJBRshRYJkpviRgZZ/ydByU/cLB
-         9c/1eQU2NU73UXqQD9xkG8lUwc5qzP6+8Xz/iHdngv50w1VcLc4ICNXJWEsTPCwrX1DZ
-         1/Iw==
-X-Gm-Message-State: APjAAAVzmPpfh34qvMkhC/cJxMKrK8mPWMFtXFHom1hTzR0fks8aP/vn
-        8MN+/ihkQKrIvcu+ePilr7I=
-X-Google-Smtp-Source: APXvYqzvEYz0C2wV6APZyjHXbH6uVZ9XSIU2jnKCsvWzEWIhv09NSsr43OiNxev/TOyQUI3FFN8SVQ==
-X-Received: by 2002:a65:6454:: with SMTP id s20mr7164732pgv.15.1567067536958;
-        Thu, 29 Aug 2019 01:32:16 -0700 (PDT)
+        bh=mhA4zWE9OY43Oghtx1Iqd8SWyXu1Zvn3og4YkBwF73A=;
+        b=Uu1VFeB4ecLX+dGqZbp7vqrn0JywJF5kznKbOvyVu1CqQKqCPOSkmlcmK6B5PfdEHQ
+         O5YUW18IJEEKHbPRIcZoCxb/6iefmafAr7OTgmvnO/PDbmnL/uSvIe3FNKR72Og1Rdsd
+         ZEjT1YMd5naLsLFzaERVhjg4O2LbGV/Wf69754Un5zofyFAr/D93m5xFVszsOIxT4lWQ
+         OmWpbL2/t2JaIVVWt8wMUUIjryZRHmqKTjSy2FlcG7+Iun3gZhztsYCVwYAeeKtGAj/U
+         eA2aTGoTzYPnVtevXU7rgdFYgM0A5av4jHLgidbrvNhqls8SeD5qPRtfKAL+QhWi5xwP
+         yWug==
+X-Gm-Message-State: APjAAAUffA8WU4wK2GtvnTNJhrsoJgUP4pMPAMf1w/315A18EkUzpNHx
+        DRF7pzUmYnjpncJ9wn+rv0w=
+X-Google-Smtp-Source: APXvYqwvwt14bwxkhc18OGfPyb/jbwAmSjYcrNtDOo5DkDWGrmw5qOUdA99o1n5mmP7kg5zo7iHCqg==
+X-Received: by 2002:aa7:9a04:: with SMTP id w4mr9962790pfj.126.1567067540687;
+        Thu, 29 Aug 2019 01:32:20 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id v22sm1260155pgk.69.2019.08.29.01.32.13
+        by smtp.gmail.com with ESMTPSA id v22sm1260155pgk.69.2019.08.29.01.32.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 01:32:16 -0700 (PDT)
+        Thu, 29 Aug 2019 01:32:20 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, linux-kernel@vger.kernel.org,
         longman@redhat.com, paulmck@linux.vnet.ibm.com,
         boqun.feng@gmail.com, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v4 08/30] locking/lockdep: Skip checks if direct dependency is already present
-Date:   Thu, 29 Aug 2019 16:31:10 +0800
-Message-Id: <20190829083132.22394-9-duyuyang@gmail.com>
+Subject: [PATCH v4 09/30] locking/lockdep: Remove chain_head argument in validate_chain()
+Date:   Thu, 29 Aug 2019 16:31:11 +0800
+Message-Id: <20190829083132.22394-10-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190829083132.22394-1-duyuyang@gmail.com>
 References: <20190829083132.22394-1-duyuyang@gmail.com>
@@ -76,85 +76,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Given a dependency <prev> -> <next>, two checks are performed:
+This argument says whether the chain is a head, meaning having just one
+lock, which can actually be tested by lock_chain->depth. So there is no
+need to explicitly make this argument, so remove it.
 
-1. Lock inversion deadlock:
-
-We search whether there is a path from <next> to <prev> in the dependency
-graph and if so we have a potential deadlock scenario in check_deadlock_graph().
-But if the direct dependency <prev> -> <next> is already in the graph, there
-can't be such a path (i.e., <next> to <prev>) because otherwise this path
-would have been found when adding the last critical dependency that
-completes the circle.
-
-2. IRQ usage violation:
-
-The IRQ usage check searches whether there is a path through <prev> to
-<next> that connects an irq-safe lock to an irq-unsafe lock in the
-dependency graph in check_irq_usage(). Similarly, if <prev> -> <next> is
-already in the graph, there can't be such a path either.
-
-This check skipping should be able to greatly improve performance by
-reducing the number of deadlock and IRQ usage checks. This number precisely
-equals nr_redundant, which actually is not a small number.
+No functional change.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 34 +++++++++++++++++++---------------
- 1 file changed, 19 insertions(+), 15 deletions(-)
+ kernel/locking/lockdep.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4838c99..de088da 100644
+index de088da..e8ebb64 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -2433,6 +2433,25 @@ static inline void inc_chains(void)
+@@ -2880,9 +2880,8 @@ static inline struct lock_chain *lookup_chain_cache(u64 chain_key)
+ 	return add_chain_cache(curr, hlock, chain_key);
+ }
+ 
+-static int validate_chain(struct task_struct *curr,
+-			  struct held_lock *hlock,
+-			  int chain_head, u64 chain_key)
++static int validate_chain(struct task_struct *curr, struct held_lock *hlock,
++			  u64 chain_key)
+ {
+ 	struct lock_chain *chain;
+ 	/*
+@@ -2930,7 +2929,7 @@ static int validate_chain(struct task_struct *curr,
+ 		 * Add dependency only if this lock is not the head
+ 		 * of the chain, and if it's not a secondary read-lock:
+ 		 */
+-		if (!chain_head && ret != 2) {
++		if (chain->depth > 1 && ret != 2) {
+ 			if (!check_prevs_add(curr, hlock, chain))
+ 				return 0;
+ 		}
+@@ -2947,7 +2946,7 @@ static int validate_chain(struct task_struct *curr,
+ #else
+ static inline int validate_chain(struct task_struct *curr,
+ 				 struct held_lock *hlock,
+-				 int chain_head, u64 chain_key)
++				 u64 chain_key)
+ {
+ 	return 1;
+ }
+@@ -3781,7 +3780,6 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 	struct lock_class *class = NULL;
+ 	struct held_lock *hlock;
+ 	unsigned int depth;
+-	int chain_head = 0;
+ 	int class_idx;
+ 	u64 chain_key;
+ 
+@@ -3895,14 +3893,12 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 		 */
+ 		if (DEBUG_LOCKS_WARN_ON(chain_key != INITIAL_CHAIN_KEY))
+ 			return 0;
+-		chain_head = 1;
  	}
  
- 	/*
-+	 * Is the <prev> -> <next> dependency already present?
-+	 *
-+	 * (this may occur even though this is a new chain: consider
-+	 *  e.g. the L1 -> L2 -> L3 -> L4 and the L5 -> L1 -> L2 -> L3
-+	 *  chains - the second one will be new, but L1 already has
-+	 *  L2 added to its dependency list, due to the first chain.)
-+	 */
-+	list_for_each_entry(entry, &hlock_class(prev)->locks_after, entry) {
-+		if (entry->class == hlock_class(next)) {
-+			debug_atomic_inc(nr_redundant);
-+
-+			if (distance == 1)
-+				entry->distance = 1;
-+
-+			return 1;
-+		}
-+	}
-+
-+	/*
- 	 * Prove that the new <prev> -> <next> dependency would not
- 	 * create a deadlock scenario in the graph. (We do this by
- 	 * a breadth-first search into the graph starting at <next>,
-@@ -2459,21 +2478,6 @@ static inline void inc_chains(void)
- 	 */
- 	if (next->read == 2 || prev->read == 2)
- 		return 1;
--	/*
--	 * Is the <prev> -> <next> dependency already present?
--	 *
--	 * (this may occur even though this is a new chain: consider
--	 *  e.g. the L1 -> L2 -> L3 -> L4 and the L5 -> L1 -> L2 -> L3
--	 *  chains - the second one will be new, but L1 already has
--	 *  L2 added to its dependency list, due to the first chain.)
--	 */
--	list_for_each_entry(entry, &hlock_class(prev)->locks_after, entry) {
--		if (entry->class == hlock_class(next)) {
--			if (distance == 1)
--				entry->distance = 1;
--			return 1;
--		}
+ 	hlock->prev_chain_key = chain_key;
+-	if (separate_irq_context(curr, hlock)) {
++	if (separate_irq_context(curr, hlock))
+ 		chain_key = INITIAL_CHAIN_KEY;
+-		chain_head = 1;
 -	}
++
+ 	chain_key = iterate_chain_key(chain_key, class_idx);
  
- 	if (!*trace) {
- 		*trace = save_trace();
+ 	if (nest_lock && !__lock_is_held(nest_lock, -1)) {
+@@ -3915,7 +3911,7 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 		WARN_ON_ONCE(!hlock_class(hlock)->key);
+ 	}
+ 
+-	if (!validate_chain(curr, hlock, chain_head, chain_key))
++	if (!validate_chain(curr, hlock, chain_key))
+ 		return 0;
+ 
+ 	curr->curr_chain_key = chain_key;
 -- 
 1.8.3.1
 
