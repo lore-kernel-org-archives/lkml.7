@@ -2,128 +2,87 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6877C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30C4C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6F42341C
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:10:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567095023;
-	bh=8sO6pkSBPuZkz9VDiQcz3mQ20/7q1Z3PfLdtUWJQToM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=lzxsvVEcw+c2pw1vXcsdXb6pwDHssyp1Bmc+l6y0AAmsXWMAcwV7kMIi+6JmeM2TP
-	 S6lbAG4qqAjzY7aFxiJ/NJc97OYISBkm5EDYqkpZR7+/zs8ZG0nTJA+MKN2uRhaiKk
-	 JOZTOig6ykhZ67HD4NfEIoaMBqfY3AZrbh2q/vOY=
+	by mail.kernel.org (Postfix) with ESMTP id 997FB2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727651AbfH2QKW (ORCPT
+        id S1727802AbfH2QLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:10:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45238 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726739AbfH2QKW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:10:22 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7TG7fRc142856;
-        Thu, 29 Aug 2019 12:09:48 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uphet99ej-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Aug 2019 12:09:48 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7TG7nIn143444;
-        Thu, 29 Aug 2019 12:09:47 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uphet99e6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Aug 2019 12:09:47 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7TG5nq2028247;
-        Thu, 29 Aug 2019 16:09:47 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma04dal.us.ibm.com with ESMTP id 2ujvv75103-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Aug 2019 16:09:46 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7TG9kZH51904930
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 16:09:46 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2170FB2066;
-        Thu, 29 Aug 2019 16:09:46 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F2DA4B205F;
-        Thu, 29 Aug 2019 16:09:45 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.151.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 29 Aug 2019 16:09:45 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 9198F16C0963; Thu, 29 Aug 2019 09:09:46 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 09:09:46 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        luto@kernel.org
-Subject: Re: [RFC v1 2/2] rcu/tree: Remove dynticks_nmi_nesting counter
-Message-ID: <20190829160946.GP4125@linux.ibm.com>
-Reply-To: paulmck@kernel.org
-References: <20190828202330.GS26530@linux.ibm.com>
- <20190828210525.GB75931@google.com>
- <20190828211904.GX26530@linux.ibm.com>
- <20190828214241.GD75931@google.com>
- <20190828220108.GC26530@linux.ibm.com>
- <20190828221444.GA100789@google.com>
- <20190828231247.GE26530@linux.ibm.com>
- <20190829015155.GB100789@google.com>
- <20190829034336.GD4125@linux.ibm.com>
- <20190829144355.GE63638@google.com>
+        Thu, 29 Aug 2019 12:11:08 -0400
+Received: from mga02.intel.com ([134.134.136.20]:55966 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727257AbfH2QLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:11:07 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 09:11:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,444,1559545200"; 
+   d="scan'208";a="380819693"
+Received: from friedlmi-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.54.26])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Aug 2019 09:11:03 -0700
+Date:   Thu, 29 Aug 2019 19:10:57 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.ibm.com>
+Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tpm_tis: Fix interrupt probing
+Message-ID: <20190829161057.22l72j55jy3dyib7@linux.intel.com>
+References: <20190820122517.2086223-1-stefanb@linux.vnet.ibm.com>
+ <20190827131400.qchcwa2act24c47b@linux.intel.com>
+ <20190827151915.hb4xwr2vik2i5ryb@linux.intel.com>
+ <797ff54e-dceb-21d2-dd74-e5244f9c6dfd@linux.ibm.com>
+ <20190829132021.6vfc535ecb62jokf@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829144355.GE63638@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=818 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908290170
+In-Reply-To: <20190829132021.6vfc535ecb62jokf@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 10:43:55AM -0400, Joel Fernandes wrote:
-
-[ . . . ]
-
-> Paul, do we also nuke rcu_eqs_special_set()?  Currently I don't see anyone
-> using it. And also remove the bottom most bit of dynticks?
+On Thu, Aug 29, 2019 at 04:20:21PM +0300, Jarkko Sakkinen wrote:
+> On Tue, Aug 27, 2019 at 03:34:36PM -0400, Stefan Berger wrote:
+> > On 8/27/19 11:19 AM, Jarkko Sakkinen wrote:
+> > > On Tue, Aug 27, 2019 at 04:14:00PM +0300, Jarkko Sakkinen wrote:
+> > > > On Tue, Aug 20, 2019 at 08:25:17AM -0400, Stefan Berger wrote:
+> > > > > From: Stefan Berger <stefanb@linux.ibm.com>
+> > > > > 
+> > > > > The interrupt probing of the TPM TIS was broken since we are trying to
+> > > > > run it without an active locality and without the TPM_CHIP_FLAG_IRQ set.
+> > > > > 
+> > > > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> > > > Need these:
+> > > > 
+> > > > Cc: linux-stable@vger.kernel.org
+> > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
+> > > > 
+> > > > Thank you. I'll apply this to my tree.
+> > > > 
+> > > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > The commit went in the following form:
+> > > 
+> > > http://git.infradead.org/users/jjs/linux-tpmdd.git/commit/9b558deab2c5d7dc23d5f7a4064892ede482ad32
+> > 
+> > I saw you dropped the stetting of the IRQ flag - I needed it, otherwise it
+> > wouldn't execute certain code paths.
 > 
-> Also what happens if a TLB flush broadcast is needed? Do we IPI nohz or idle
-> CPUs are the moment?
-> 
-> All of this was introduced in:
-> b8c17e6664c4 ("rcu: Maintain special bits at bottom of ->dynticks counter")
+> I explained why I removed that part. There was no any reasoning for
+> it. Also, it cannot be in the same commit if it fixes a diffent
+> issue.
 
-Adding Andy Lutomirski on CC.
+AFAIK they go with different fixes-tags.
 
-Andy, is this going to be used in the near term, or should we just get
-rid of it?
-
-							Thanx, Paul
+/Jarkko
