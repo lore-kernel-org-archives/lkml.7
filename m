@@ -2,356 +2,101 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD415C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D9DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15062189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA67E23430
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="AMg6HMnZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IY0+mtQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfH2NEu (ORCPT
+        id S1727403AbfH2NFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:04:50 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:44759 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfH2NEu (ORCPT
+        Thu, 29 Aug 2019 09:05:00 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58280 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfH2NE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:04:50 -0400
-Received: by mail-yb1-f196.google.com with SMTP id y21so1136966ybi.11
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 06:04:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tvJNWYMvJA/G6Rdd1ai/v3++cBaw7Tof/WctnqR3Glo=;
-        b=AMg6HMnZOOzLQ05y/zHnlpWZX/h5j2mH87Rus3lJ24OeblYgsGwuBFQV6oNnCAXe3E
-         UC42t/GPknHbrRiVRuHcVxFKJhGCb+igMOyIqafnxCZ2bIySj4WxrPRsk8CorDsX8uP0
-         Yn6rUF1LJvqE7kW0ohJkBqi50HoBMyW+DWr05lkjJ1XrFZ+xhOzgXu0Xe67SxxznydxN
-         MsCnNBJo7mediPT/wncqlatjYhAR32Jk7HIyz4vECcOlG3sRkt9oEEQHEmOGdROFaN7Q
-         fLQwHT1OQBwvIgCDjEifJJhBeeGEGRULoCrs0FThQjx3OeRI4BwZBd+J8djxuDNGtsEc
-         qc7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tvJNWYMvJA/G6Rdd1ai/v3++cBaw7Tof/WctnqR3Glo=;
-        b=YWuCWAROz4bCdgEalMo28RzChuB1jcweVw/XWR9Og71iXMvQuwo2VD+H5hkxW54kze
-         pT3dSGyxfAi/bU+4PMHNuGQOhAB/k/CDqbmmPeB/UCF9/YAWZs3nLV5YaoFbRiRPqJdv
-         8sTO6fA6ubqieWVBW87LyKORt3W8/IRkVvP72IBJ+4RzBjRg+BPmDPq790zZhO3zmHbs
-         xWcMSvHShaxnc93s0ZJTNBkROhbb1+91qxby4xnzxLC0KLE9mOjv2ABG7nDp1Z+qizAw
-         JLoT7UY1VZkGo5AcDDqORqqZ9f+OIyRFaxxszUzVfZdwU33AiBHOTtIgi/uO2NU7EacA
-         74JA==
-X-Gm-Message-State: APjAAAUG53bfvZjArqy3XjSZkFbClEd8MEK6NzycIV7aqrNPsA6uRfKF
-        1/07kWZdTvqJjveYmPfQ1RurOg==
-X-Google-Smtp-Source: APXvYqzBJh1z/VJTjZgdcXKiel+Kpba9/6xd0lkwSBRa5Kz6xahceVpVlaO/ZF0Tw5Y4Y0//jPhI5A==
-X-Received: by 2002:a25:9803:: with SMTP id a3mr6723537ybo.27.1567083889248;
-        Thu, 29 Aug 2019 06:04:49 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id e12sm466936ywe.85.2019.08.29.06.04.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 06:04:48 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 09:04:48 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Bruce Wang <bzwang@chromium.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Fritz Koenig <frkoenig@google.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/9] drm/msm/dpu: unwind async commit handling
-Message-ID: <20190829130448.GF218215@art_vandelay>
-References: <20190827213421.21917-1-robdclark@gmail.com>
- <20190827213421.21917-2-robdclark@gmail.com>
+        Thu, 29 Aug 2019 09:04:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AErEWstWk9AqOWm/GPKA3AadpNtUjz4m9BVSetCYmeU=; b=IY0+mtQkGxyw/kjhqsb4hVAjI
+        JflNvdzMQBcyyvehFneIEhId0CPFnnqLuQOaBP1BsWnEHR1hH190fTN7T7otVOjtjLTiCy0iWaBa8
+        Xzwt1m5fX11ndKtEqI+tH6nhuGaBHHetbvVi3gvPlwkLf+bwiLLmbO2ylU00ddMhcE74yYHjwbmPY
+        CrMOnNusfu0V3Do0XLgogo6NblYyZ7DzdeRj4DcR5+/NoKZgZ4vgK06vBg1MxAQnjULrjYY7JbuKB
+        W+20GqOZ93ysPtKj2mZdl5Va1gu/v31Q8grDG0ATwxjmvmVCEhXTnShkU8kQai+1GiwxONcVURGdI
+        5MmDbmgDA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3K6Z-0002iw-IF; Thu, 29 Aug 2019 13:04:47 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F33B6301176;
+        Thu, 29 Aug 2019 15:04:11 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B586A20CB9FE3; Thu, 29 Aug 2019 15:04:45 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 15:04:45 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mac Chiang <mac.chiang@intel.com>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <20190829130445.GT2369@hirez.programming.kicks-ass.net>
+References: <20190829162012.36ac9d7c@canb.auug.org.au>
+ <20190829074644.GL2369@hirez.programming.kicks-ass.net>
+ <alpine.DEB.2.21.1908291422520.1938@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190827213421.21917-2-robdclark@gmail.com>
+In-Reply-To: <alpine.DEB.2.21.1908291422520.1938@nanos.tec.linutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 02:33:31PM -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
+On Thu, Aug 29, 2019 at 02:24:24PM +0200, Thomas Gleixner wrote:
+> On Thu, 29 Aug 2019, Peter Zijlstra wrote:
+> > On Thu, Aug 29, 2019 at 04:20:12PM +1000, Stephen Rothwell wrote:
+> > > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > Date: Thu, 29 Aug 2019 16:08:49 +1000
+> > > Subject: [PATCH] ASoC: Intel: boards: merge fix for INTEL_FAM6_KABYLAKE_MOBILE -> INTEL_FAM6_KABYLAKE_L change
+> > > 
+> > > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > ---
+> > >  sound/soc/intel/common/soc-intel-quirks.h | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/sound/soc/intel/common/soc-intel-quirks.h b/sound/soc/intel/common/soc-intel-quirks.h
+> > > index e6357d306cb8..863a477d3405 100644
+> > > --- a/sound/soc/intel/common/soc-intel-quirks.h
+> > > +++ b/sound/soc/intel/common/soc-intel-quirks.h
+> > > @@ -36,7 +36,7 @@ SOC_INTEL_IS_CPU(byt, INTEL_FAM6_ATOM_SILVERMONT);
+> > >  SOC_INTEL_IS_CPU(cht, INTEL_FAM6_ATOM_AIRMONT);
+> > >  SOC_INTEL_IS_CPU(apl, INTEL_FAM6_ATOM_GOLDMONT);
+> > >  SOC_INTEL_IS_CPU(glk, INTEL_FAM6_ATOM_GOLDMONT_PLUS);
+> > > -SOC_INTEL_IS_CPU(cml, INTEL_FAM6_KABYLAKE_MOBILE);
+> > > +SOC_INTEL_IS_CPU(cml, INTEL_FAM6_KABYLAKE_L);
+> > 
+> > ARGHH... rebase again?
 > 
-> It attempted to avoid fps drops in the presence of cursor updates.  But
-> it is racing, and can result in hw updates after flush before vblank,
-> which leads to underruns.
-> 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> No. This is a conflict with the sound tree which added the MOBILE
+> thingy. So what you could do for now is
 
-Reviewed-by: Sean Paul <sean@poorly.run>
-
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c    | 41 ++++++++++-----------
->  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h    |  3 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 39 +++++++-------------
->  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h |  3 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     |  5 +--
->  drivers/gpu/drm/msm/msm_atomic.c            |  3 +-
->  6 files changed, 37 insertions(+), 57 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> index a52439e029c9..c3f7154017c4 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> @@ -610,7 +610,7 @@ static int _dpu_crtc_wait_for_frame_done(struct drm_crtc *crtc)
->  	return rc;
->  }
->  
-> -void dpu_crtc_commit_kickoff(struct drm_crtc *crtc, bool async)
-> +void dpu_crtc_commit_kickoff(struct drm_crtc *crtc)
->  {
->  	struct drm_encoder *encoder;
->  	struct dpu_crtc *dpu_crtc = to_dpu_crtc(crtc);
-> @@ -636,35 +636,32 @@ void dpu_crtc_commit_kickoff(struct drm_crtc *crtc, bool async)
->  				  crtc->state->encoder_mask)
->  		dpu_encoder_prepare_for_kickoff(encoder);
->  
-> -	if (!async) {
-> -		/* wait for previous frame_event_done completion */
-> -		DPU_ATRACE_BEGIN("wait_for_frame_done_event");
-> -		ret = _dpu_crtc_wait_for_frame_done(crtc);
-> -		DPU_ATRACE_END("wait_for_frame_done_event");
-> -		if (ret) {
-> -			DPU_ERROR("crtc%d wait for frame done failed;frame_pending%d\n",
-> -					crtc->base.id,
-> -					atomic_read(&dpu_crtc->frame_pending));
-> -			goto end;
-> -		}
-> +	/* wait for previous frame_event_done completion */
-> +	DPU_ATRACE_BEGIN("wait_for_frame_done_event");
-> +	ret = _dpu_crtc_wait_for_frame_done(crtc);
-> +	DPU_ATRACE_END("wait_for_frame_done_event");
-> +	if (ret) {
-> +		DPU_ERROR("crtc%d wait for frame done failed;frame_pending%d\n",
-> +				crtc->base.id,
-> +				atomic_read(&dpu_crtc->frame_pending));
-> +		goto end;
-> +	}
->  
-> -		if (atomic_inc_return(&dpu_crtc->frame_pending) == 1) {
-> -			/* acquire bandwidth and other resources */
-> -			DPU_DEBUG("crtc%d first commit\n", crtc->base.id);
-> -		} else
-> -			DPU_DEBUG("crtc%d commit\n", crtc->base.id);
-> +	if (atomic_inc_return(&dpu_crtc->frame_pending) == 1) {
-> +		/* acquire bandwidth and other resources */
-> +		DPU_DEBUG("crtc%d first commit\n", crtc->base.id);
-> +	} else
-> +		DPU_DEBUG("crtc%d commit\n", crtc->base.id);
->  
-> -		dpu_crtc->play_count++;
-> -	}
-> +	dpu_crtc->play_count++;
->  
->  	dpu_vbif_clear_errors(dpu_kms);
->  
->  	drm_for_each_encoder_mask(encoder, crtc->dev, crtc->state->encoder_mask)
-> -		dpu_encoder_kickoff(encoder, async);
-> +		dpu_encoder_kickoff(encoder);
->  
->  end:
-> -	if (!async)
-> -		reinit_completion(&dpu_crtc->frame_done_comp);
-> +	reinit_completion(&dpu_crtc->frame_done_comp);
->  	DPU_ATRACE_END("crtc_commit");
->  }
->  
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-> index 5181f079a6a1..10f78459f6c2 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-> @@ -238,9 +238,8 @@ void dpu_crtc_vblank_callback(struct drm_crtc *crtc);
->  /**
->   * dpu_crtc_commit_kickoff - trigger kickoff of the commit for this crtc
->   * @crtc: Pointer to drm crtc object
-> - * @async: true if the commit is asynchronous, false otherwise
->   */
-> -void dpu_crtc_commit_kickoff(struct drm_crtc *crtc, bool async);
-> +void dpu_crtc_commit_kickoff(struct drm_crtc *crtc);
->  
->  /**
->   * dpu_crtc_complete_commit - callback signalling completion of current commit
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> index 627c57594221..ac2d534bf59e 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> @@ -1421,8 +1421,7 @@ static void dpu_encoder_off_work(struct work_struct *work)
->   * extra_flush_bits: Additional bit mask to include in flush trigger
->   */
->  static void _dpu_encoder_trigger_flush(struct drm_encoder *drm_enc,
-> -		struct dpu_encoder_phys *phys, uint32_t extra_flush_bits,
-> -		bool async)
-> +		struct dpu_encoder_phys *phys, uint32_t extra_flush_bits)
->  {
->  	struct dpu_hw_ctl *ctl;
->  	int pending_kickoff_cnt;
-> @@ -1439,10 +1438,7 @@ static void _dpu_encoder_trigger_flush(struct drm_encoder *drm_enc,
->  		return;
->  	}
->  
-> -	if (!async)
-> -		pending_kickoff_cnt = dpu_encoder_phys_inc_pending(phys);
-> -	else
-> -		pending_kickoff_cnt = atomic_read(&phys->pending_kickoff_cnt);
-> +	pending_kickoff_cnt = dpu_encoder_phys_inc_pending(phys);
->  
->  	if (extra_flush_bits && ctl->ops.update_pending_flush)
->  		ctl->ops.update_pending_flush(ctl, extra_flush_bits);
-> @@ -1553,8 +1549,7 @@ static void dpu_encoder_helper_hw_reset(struct dpu_encoder_phys *phys_enc)
->   *	a time.
->   * dpu_enc: Pointer to virtual encoder structure
->   */
-> -static void _dpu_encoder_kickoff_phys(struct dpu_encoder_virt *dpu_enc,
-> -				      bool async)
-> +static void _dpu_encoder_kickoff_phys(struct dpu_encoder_virt *dpu_enc)
->  {
->  	struct dpu_hw_ctl *ctl;
->  	uint32_t i, pending_flush;
-> @@ -1581,13 +1576,12 @@ static void _dpu_encoder_kickoff_phys(struct dpu_encoder_virt *dpu_enc,
->  		 * for async commits. So don't set this for async, since it'll
->  		 * roll over to the next commit.
->  		 */
-> -		if (!async && phys->split_role != ENC_ROLE_SLAVE)
-> +		if (phys->split_role != ENC_ROLE_SLAVE)
->  			set_bit(i, dpu_enc->frame_busy_mask);
->  
->  		if (!phys->ops.needs_single_flush ||
->  				!phys->ops.needs_single_flush(phys))
-> -			_dpu_encoder_trigger_flush(&dpu_enc->base, phys, 0x0,
-> -						   async);
-> +			_dpu_encoder_trigger_flush(&dpu_enc->base, phys, 0x0);
->  		else if (ctl->ops.get_pending_flush)
->  			pending_flush |= ctl->ops.get_pending_flush(ctl);
->  	}
-> @@ -1597,7 +1591,7 @@ static void _dpu_encoder_kickoff_phys(struct dpu_encoder_virt *dpu_enc,
->  		_dpu_encoder_trigger_flush(
->  				&dpu_enc->base,
->  				dpu_enc->cur_master,
-> -				pending_flush, async);
-> +				pending_flush);
->  	}
->  
->  	_dpu_encoder_trigger_start(dpu_enc->cur_master);
-> @@ -1815,11 +1809,12 @@ void dpu_encoder_prepare_for_kickoff(struct drm_encoder *drm_enc)
->  	}
->  }
->  
-> -void dpu_encoder_kickoff(struct drm_encoder *drm_enc, bool async)
-> +void dpu_encoder_kickoff(struct drm_encoder *drm_enc)
->  {
->  	struct dpu_encoder_virt *dpu_enc;
->  	struct dpu_encoder_phys *phys;
->  	ktime_t wakeup_time;
-> +	unsigned long timeout_ms;
->  	unsigned int i;
->  
->  	DPU_ATRACE_BEGIN("encoder_kickoff");
-> @@ -1827,23 +1822,15 @@ void dpu_encoder_kickoff(struct drm_encoder *drm_enc, bool async)
->  
->  	trace_dpu_enc_kickoff(DRMID(drm_enc));
->  
-> -	/*
-> -	 * Asynchronous frames don't handle FRAME_DONE events. As such, they
-> -	 * shouldn't enable the frame_done watchdog since it will always time
-> -	 * out.
-> -	 */
-> -	if (!async) {
-> -		unsigned long timeout_ms;
-> -		timeout_ms = DPU_ENCODER_FRAME_DONE_TIMEOUT_FRAMES * 1000 /
-> +	timeout_ms = DPU_ENCODER_FRAME_DONE_TIMEOUT_FRAMES * 1000 /
->  			drm_mode_vrefresh(&drm_enc->crtc->state->adjusted_mode);
->  
-> -		atomic_set(&dpu_enc->frame_done_timeout_ms, timeout_ms);
-> -		mod_timer(&dpu_enc->frame_done_timer,
-> -			  jiffies + msecs_to_jiffies(timeout_ms));
-> -	}
-> +	atomic_set(&dpu_enc->frame_done_timeout_ms, timeout_ms);
-> +	mod_timer(&dpu_enc->frame_done_timer,
-> +			jiffies + msecs_to_jiffies(timeout_ms));
->  
->  	/* All phys encs are ready to go, trigger the kickoff */
-> -	_dpu_encoder_kickoff_phys(dpu_enc, async);
-> +	_dpu_encoder_kickoff_phys(dpu_enc);
->  
->  	/* allow phys encs to handle any post-kickoff business */
->  	for (i = 0; i < dpu_enc->num_phys_encs; i++) {
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
-> index 997d131c2440..8465b37adf3b 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
-> @@ -82,9 +82,8 @@ void dpu_encoder_trigger_kickoff_pending(struct drm_encoder *encoder);
->   * dpu_encoder_kickoff - trigger a double buffer flip of the ctl path
->   *	(i.e. ctl flush and start) immediately.
->   * @encoder:	encoder pointer
-> - * @async:	true if this is an asynchronous commit
->   */
-> -void dpu_encoder_kickoff(struct drm_encoder *encoder, bool async);
-> +void dpu_encoder_kickoff(struct drm_encoder *encoder);
->  
->  /**
->   * dpu_encoder_wait_for_event - Waits for encoder events
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> index b8d264bd15df..31454cc5d8c5 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> @@ -298,7 +298,7 @@ void dpu_kms_encoder_enable(struct drm_encoder *encoder)
->  			continue;
->  
->  		trace_dpu_kms_enc_enable(DRMID(crtc));
-> -		dpu_crtc_commit_kickoff(crtc, false);
-> +		dpu_crtc_commit_kickoff(crtc);
->  	}
->  }
->  
-> @@ -315,8 +315,7 @@ static void dpu_kms_commit(struct msm_kms *kms, struct drm_atomic_state *state)
->  
->  		if (crtc->state->active) {
->  			trace_dpu_kms_commit(DRMID(crtc));
-> -			dpu_crtc_commit_kickoff(crtc,
-> -						state->legacy_cursor_update);
-> +			dpu_crtc_commit_kickoff(crtc);
->  		}
->  	}
->  }
-> diff --git a/drivers/gpu/drm/msm/msm_atomic.c b/drivers/gpu/drm/msm/msm_atomic.c
-> index dd16babdd8c0..e5aae1645933 100644
-> --- a/drivers/gpu/drm/msm/msm_atomic.c
-> +++ b/drivers/gpu/drm/msm/msm_atomic.c
-> @@ -70,8 +70,7 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
->  		kms->funcs->commit(kms, state);
->  	}
->  
-> -	if (!state->legacy_cursor_update)
-> -		msm_atomic_wait_for_commit_done(dev, state);
-> +	msm_atomic_wait_for_commit_done(dev, state);
->  
->  	kms->funcs->complete_commit(kms, state);
->  
-> -- 
-> 2.21.0
-> 
-
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+Yes, SFR clarified that. This is a case of me doing email before waking
+up.
