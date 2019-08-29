@@ -2,297 +2,188 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4174C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F6FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A31120828
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B34920828
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:55:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EAWk5vWb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfH2Qzv (ORCPT
+        id S1727857AbfH2Qz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:55:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42848 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbfH2Qzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:55:51 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CA98D31752B1;
-        Thu, 29 Aug 2019 16:55:49 +0000 (UTC)
-Received: from [10.36.117.243] (ovpn-117-243.ams2.redhat.com [10.36.117.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C88219C4F;
-        Thu, 29 Aug 2019 16:55:43 +0000 (UTC)
-Subject: Re: [PATCH v3 01/11] mm/memremap: Get rid of
- memmap_init_zone_device()
-To:     Alexander Duyck <alexander.duyck@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Dave Airlie <airlied@redhat.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Arun KS <arunks@codeaurora.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Alexander Potapenko <glider@google.com>
-References: <20190829070019.12714-1-david@redhat.com>
- <20190829070019.12714-2-david@redhat.com>
- <CAKgT0UdKwYhF++=b=vN_Kw_SORtgJ3ehCAn8a9kp8tb79HknyQ@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwX4EEwECACgFAljj9eoCGwMFCQlmAYAGCwkI
- BwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEE3eEPcA/4Na5IIP/3T/FIQMxIfNzZshIq687qgG
- 8UbspuE/YSUDdv7r5szYTK6KPTlqN8NAcSfheywbuYD9A4ZeSBWD3/NAVUdrCaRP2IvFyELj
- xoMvfJccbq45BxzgEspg/bVahNbyuBpLBVjVWwRtFCUEXkyazksSv8pdTMAs9IucChvFmmq3
- jJ2vlaz9lYt/lxN246fIVceckPMiUveimngvXZw21VOAhfQ+/sofXF8JCFv2mFcBDoa7eYob
- s0FLpmqFaeNRHAlzMWgSsP80qx5nWWEvRLdKWi533N2vC/EyunN3HcBwVrXH4hxRBMco3jvM
- m8VKLKao9wKj82qSivUnkPIwsAGNPdFoPbgghCQiBjBe6A75Z2xHFrzo7t1jg7nQfIyNC7ez
- MZBJ59sqA9EDMEJPlLNIeJmqslXPjmMFnE7Mby/+335WJYDulsRybN+W5rLT5aMvhC6x6POK
- z55fMNKrMASCzBJum2Fwjf/VnuGRYkhKCqqZ8gJ3OvmR50tInDV2jZ1DQgc3i550T5JDpToh
- dPBxZocIhzg+MBSRDXcJmHOx/7nQm3iQ6iLuwmXsRC6f5FbFefk9EjuTKcLMvBsEx+2DEx0E
- UnmJ4hVg7u1PQ+2Oy+Lh/opK/BDiqlQ8Pz2jiXv5xkECvr/3Sv59hlOCZMOaiLTTjtOIU7Tq
- 7ut6OL64oAq+zsFNBFXLn5EBEADn1959INH2cwYJv0tsxf5MUCghCj/CA/lc/LMthqQ773ga
- uB9mN+F1rE9cyyXb6jyOGn+GUjMbnq1o121Vm0+neKHUCBtHyseBfDXHA6m4B3mUTWo13nid
- 0e4AM71r0DS8+KYh6zvweLX/LL5kQS9GQeT+QNroXcC1NzWbitts6TZ+IrPOwT1hfB4WNC+X
- 2n4AzDqp3+ILiVST2DT4VBc11Gz6jijpC/KI5Al8ZDhRwG47LUiuQmt3yqrmN63V9wzaPhC+
- xbwIsNZlLUvuRnmBPkTJwwrFRZvwu5GPHNndBjVpAfaSTOfppyKBTccu2AXJXWAE1Xjh6GOC
- 8mlFjZwLxWFqdPHR1n2aPVgoiTLk34LR/bXO+e0GpzFXT7enwyvFFFyAS0Nk1q/7EChPcbRb
- hJqEBpRNZemxmg55zC3GLvgLKd5A09MOM2BrMea+l0FUR+PuTenh2YmnmLRTro6eZ/qYwWkC
- u8FFIw4pT0OUDMyLgi+GI1aMpVogTZJ70FgV0pUAlpmrzk/bLbRkF3TwgucpyPtcpmQtTkWS
- gDS50QG9DR/1As3LLLcNkwJBZzBG6PWbvcOyrwMQUF1nl4SSPV0LLH63+BrrHasfJzxKXzqg
- rW28CTAE2x8qi7e/6M/+XXhrsMYG+uaViM7n2je3qKe7ofum3s4vq7oFCPsOgwARAQABwsFl
- BBgBAgAPBQJVy5+RAhsMBQkJZgGAAAoJEE3eEPcA/4NagOsP/jPoIBb/iXVbM+fmSHOjEshl
- KMwEl/m5iLj3iHnHPVLBUWrXPdS7iQijJA/VLxjnFknhaS60hkUNWexDMxVVP/6lbOrs4bDZ
- NEWDMktAeqJaFtxackPszlcpRVkAs6Msn9tu8hlvB517pyUgvuD7ZS9gGOMmYwFQDyytpepo
- YApVV00P0u3AaE0Cj/o71STqGJKZxcVhPaZ+LR+UCBZOyKfEyq+ZN311VpOJZ1IvTExf+S/5
- lqnciDtbO3I4Wq0ArLX1gs1q1XlXLaVaA3yVqeC8E7kOchDNinD3hJS4OX0e1gdsx/e6COvy
- qNg5aL5n0Kl4fcVqM0LdIhsubVs4eiNCa5XMSYpXmVi3HAuFyg9dN+x8thSwI836FoMASwOl
- C7tHsTjnSGufB+D7F7ZBT61BffNBBIm1KdMxcxqLUVXpBQHHlGkbwI+3Ye+nE6HmZH7IwLwV
- W+Ajl7oYF+jeKaH4DZFtgLYGLtZ1LDwKPjX7VAsa4Yx7S5+EBAaZGxK510MjIx6SGrZWBrrV
- TEvdV00F2MnQoeXKzD7O4WFbL55hhyGgfWTHwZ457iN9SgYi1JLPqWkZB0JRXIEtjd4JEQcx
- +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <46b8e215-97d4-9097-9941-58e050c5efcc@redhat.com>
-Date:   Thu, 29 Aug 2019 18:55:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 12:55:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45462 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbfH2Qz4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:55:56 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w26so2443576pfq.12;
+        Thu, 29 Aug 2019 09:55:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=q6Cjkast+lBr9o2h0UHBUjks7fxSvQpeWE7yoX/EM5I=;
+        b=EAWk5vWbDIcCy9Dh51/RnZJvWOb6KQ9hDNfJxBsN6bxUSz5iLGuzlD3RL1RDF+DNut
+         OvLxd3MEHj5sXrnJVH4n5XuIuDGaX9ckbvX45Vdr16/Ig5uz0YhPdSdvYLZU6GDdVSk+
+         P65KmeDZkCfclBQ3W2Wt3Fg79M9h9/EcJSdScwWcSCBRRy0kHqGy54wei3ODpkX3j5jm
+         j1LTi9J4EPt8pEVVBwQEl/kznii+oIWjFt3rziyTdyr9XS6UFrL0kx2bzIiiDw4TMI0D
+         cG892Gur87uHyglF+M2SRj/ns10rPZf6dEZwHFb2P+EsuIDFg275I8Op0IoUQXYzA/X6
+         AEpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=q6Cjkast+lBr9o2h0UHBUjks7fxSvQpeWE7yoX/EM5I=;
+        b=A6VG4L7tNxWeKKsxJqm/CaGToF3MxsUMjkG6fZ2zIqaK6F66FDVmy0O29L6Lagrcwf
+         icmZy+dRhkqR8quOSQpnbfybaIaTeStve9cWb/IznAkzuejA0Kw/IAsRTgY030ZO3TqZ
+         lHCym+4b911uHgHpNAM+gpeBk5nysjFjpN4f2UAKqFtQ7fj5dn0tIR8nvh5TBSMUc/Zc
+         UPhby3r/UI/BwVNOyf3MztmHLQrRs5P29KCgBM5lKSnBWGDMeoutxGL2Mx80c7qeVfv+
+         MhnAkgebQ8etO2Vu/XkWeK2S1ivwqMyS2z8de0EybicBSngaNoh3KlLZ+BixmGUJY0yc
+         Ge6g==
+X-Gm-Message-State: APjAAAVBS7zTAPAhNQBFoZKFp6+Dvp7PyYLZjEGoYwTLNXws8jOFJooa
+        FsbqQqs8CCPvigTOwJavnVE=
+X-Google-Smtp-Source: APXvYqwk04ddvz7woByhdXiTit+cjj7gy6bccXcDBs0+OJ7ANBNi8ZRnULxIqfykkTBNvtJU4w9kww==
+X-Received: by 2002:a63:db47:: with SMTP id x7mr9201448pgi.375.1567097755313;
+        Thu, 29 Aug 2019 09:55:55 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id h17sm3789249pfo.24.2019.08.29.09.55.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 09:55:54 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>, Sean Paul <sean@poorly.run>,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Bruce Wang <bzwang@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 03/10] drm/msm/dpu: handle_frame_done() from vblank irq
+Date:   Thu, 29 Aug 2019 09:45:11 -0700
+Message-Id: <20190829164601.11615-4-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190829164601.11615-1-robdclark@gmail.com>
+References: <20190829164601.11615-1-robdclark@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UdKwYhF++=b=vN_Kw_SORtgJ3ehCAn8a9kp8tb79HknyQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 29 Aug 2019 16:55:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.08.19 18:39, Alexander Duyck wrote:
-> On Thu, Aug 29, 2019 at 12:00 AM David Hildenbrand <david@redhat.com> wrote:
->>
->> As far as I can see, the original split wanted to speed up a duplicate
->> initialization. We now only initialize once - and we really should
->> initialize under the lock, when resizing the zones.
-> 
-> What do you mean by duplicate initialization? Basically the issue was
-> that we can have systems with massive memory footprints and I was just
-> trying to get the initialization time under a minute. The compromise I
-> made was to split the initialization so that we only initialized the
-> pages in the altmap and defer the rest so that they can be initialized
-> in parallel.
-> 
-> What this patch does is serialize the initialization so it will likely
-> take 2 to 4 minutes or more to initialize memory on a system where I
-> had brought the init time under about 30 seconds.
-> 
->> As soon as we drop the lock we might have memory unplug running, trying
->> to shrink the zone again. In case the memmap was not properly initialized,
->> the zone/node shrinking code might get false negatives when search for
->> the new zone/node boundaries - bad. We suddenly could no longer span the
->> memory we just added.
-> 
-> The issue as I see it is that we can have systems with multiple nodes
-> and each node can populate a fairly significant amount of data. By
-> pushing this all back under the hotplug lock you are serializing the
-> initialization for each node resulting in a 4x or 8x increase in
-> initialization time on some of these bigger systems.
-> 
->> Also, once we want to fix set_zone_contiguous(zone) inside
->> move_pfn_range_to_zone() to actually work with ZONE_DEVICE (instead of
->> always immediately stopping and never setting zone->contiguous) we have
->> to have the whole memmap initialized at that point. (not sure if we
->> want that in the future, just a note)
->>
->> Let's just keep things simple and initialize the memmap when resizing
->> the zones under the lock.
->>
->> If this is a real performance issue, we have to watch out for
->> alternatives.
-> 
-> My concern is that this is going to become a performance issue, but I
-> don't have access to the hardware at the moment to test how much of
-> one. I'll have to check to see if I can get access to a system to test
-> this patch set.
-> 
+From: Rob Clark <robdclark@chromium.org>
 
-Thanks for having a look - I already dropped this patch again. We will
-rather stop shrinking the ZONE_DEVICE. So assume this patch is gone.
+Previously the callback was called from whoever called wait_for_vblank(),
+but that isn't a great plan when wait_for_vblank() stops getting called,
+and results in frame_done_timer expiring.
 
-[...]
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Sean Paul <sean@poorly.run>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c      |  7 +-----
+ .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  | 25 ++++++-------------
+ 2 files changed, 9 insertions(+), 23 deletions(-)
 
-> So if you are moving this all under the lock then this is going to
-> serialize initialization and it is going to be quite expensive on bit
-> systems. I was only ever able to get the init time down to something
-> like ~20s with the optimized function. Since that has been torn apart
-> and you are back to doing things with memmap_init_zone we are probably
-> looking at more like 25-30s for each node, and on a 4 node system we
-> are looking at 2 minutes or so which may lead to issues if people are
-> mounting this.
-> 
-> Instead of forcing this all to be done under the hotplug lock is there
-> some way we could do this under the zone span_seqlock instead to
-> achieve the same result?
-
-I guess the right approach really is as Michal suggest to not shrink at
-all (at least ZONE_DEVICE) :)
-
-> 
->> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> index c5d62f1c2851..44038665fe8e 100644
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -5845,7 +5845,7 @@ overlap_memmap_init(unsigned long zone, unsigned long *pfn)
->>   */
->>  void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
->>                 unsigned long start_pfn, enum memmap_context context,
->> -               struct vmem_altmap *altmap)
->> +               struct dev_pagemap *pgmap)
->>  {
->>         unsigned long pfn, end_pfn = start_pfn + size;
->>         struct page *page;
->> @@ -5853,24 +5853,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
->>         if (highest_memmap_pfn < end_pfn - 1)
->>                 highest_memmap_pfn = end_pfn - 1;
->>
->> -#ifdef CONFIG_ZONE_DEVICE
->> -       /*
->> -        * Honor reservation requested by the driver for this ZONE_DEVICE
->> -        * memory. We limit the total number of pages to initialize to just
->> -        * those that might contain the memory mapping. We will defer the
->> -        * ZONE_DEVICE page initialization until after we have released
->> -        * the hotplug lock.
->> -        */
->> -       if (zone == ZONE_DEVICE) {
->> -               if (!altmap)
->> -                       return;
->> -
->> -               if (start_pfn == altmap->base_pfn)
->> -                       start_pfn += altmap->reserve;
->> -               end_pfn = altmap->base_pfn + vmem_altmap_offset(altmap);
->> -       }
->> -#endif
->> -
->>         for (pfn = start_pfn; pfn < end_pfn; pfn++) {
->>                 /*
->>                  * There can be holes in boot-time mem_map[]s handed to this
->> @@ -5892,6 +5874,20 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
->>                 if (context == MEMMAP_HOTPLUG)
->>                         __SetPageReserved(page);
->>
->> +#ifdef CONFIG_ZONE_DEVICE
->> +               if (zone == ZONE_DEVICE) {
->> +                       WARN_ON_ONCE(!pgmap);
->> +                       /*
->> +                        * ZONE_DEVICE pages union ->lru with a ->pgmap back
->> +                        * pointer and zone_device_data. It is a bug if a
->> +                        * ZONE_DEVICE page is ever freed or placed on a driver
->> +                        * private list.
->> +                        */
->> +                       page->pgmap = pgmap;
->> +                       page->zone_device_data = NULL;
->> +               }
->> +#endif
->> +
-> 
-> So I am not sure this is right. Part of the reason for the split is
-> that the pages that were a part of the altmap had an LRU setup, not
-> the pgmap/zone_device_data setup. This is changing that.
-
-Yeah, you might be right, we would have to handle the altmap part
-separately.
-
-> 
-> Also, I am more a fan of just testing pgmap and if it is present then
-> assign page->pgmap and reset zone_device_data. Then you can avoid the
-> test for zone on every iteration and the WARN_ON_ONCE check, or at
-> least you could move it outside the loop so we don't incur the cost
-> with each page. Are there situations where you would have pgmap but
-> not a ZONE_DEVICE page?
-
-Don't think so. But I am definitely not a ZONE_DEVICE expert.
-
-> 
->>                 /*
->>                  * Mark the block movable so that blocks are reserved for
->>                  * movable at startup. This will force kernel allocations
->> @@ -5951,14 +5947,6 @@ void __ref memmap_init_zone_device(struct zone *zone,
->>                  */
->>                 __SetPageReserved(page);
->>
->> -               /*
->> -                * ZONE_DEVICE pages union ->lru with a ->pgmap back pointer
->> -                * and zone_device_data.  It is a bug if a ZONE_DEVICE page is
->> -                * ever freed or placed on a driver-private list.
->> -                */
->> -               page->pgmap = pgmap;
->> -               page->zone_device_data = NULL;
->> -
->>                 /*
->>                  * Mark the block movable so that blocks are reserved for
->>                  * movable at startup. This will force kernel allocations
-> 
-> Shouldn't you be removing this function instead of just gutting it?
-> I'm kind of surprised you aren't getting warnings about unused code
-> since you also pulled the declaration for it from the header.
-> 
-
-Don't ask me what went wrong here, I guess I messed this up while rebasing.
-
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index c3f7154017c4..e7354aef9805 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -311,12 +311,7 @@ static void dpu_crtc_frame_event_work(struct kthread_work *work)
+ 				| DPU_ENCODER_FRAME_EVENT_PANEL_DEAD)) {
+ 
+ 		if (atomic_read(&dpu_crtc->frame_pending) < 1) {
+-			/* this should not happen */
+-			DRM_ERROR("crtc%d ev:%u ts:%lld frame_pending:%d\n",
+-					crtc->base.id,
+-					fevent->event,
+-					ktime_to_ns(fevent->ts),
+-					atomic_read(&dpu_crtc->frame_pending));
++			/* ignore vblank when not pending */
+ 		} else if (atomic_dec_return(&dpu_crtc->frame_pending) == 0) {
+ 			/* release bandwidth and other resources */
+ 			trace_dpu_crtc_frame_event_done(DRMID(crtc),
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+index 7c73b09894f0..b9c84fb4d4a1 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+@@ -324,6 +324,10 @@ static void dpu_encoder_phys_vid_vblank_irq(void *arg, int irq_idx)
+ 
+ 	/* Signal any waiting atomic commit thread */
+ 	wake_up_all(&phys_enc->pending_kickoff_wq);
++
++	phys_enc->parent_ops->handle_frame_done(phys_enc->parent, phys_enc,
++			DPU_ENCODER_FRAME_EVENT_DONE);
++
+ 	DPU_ATRACE_END("vblank_irq");
+ }
+ 
+@@ -483,8 +487,8 @@ static void dpu_encoder_phys_vid_get_hw_resources(
+ 	hw_res->intfs[phys_enc->intf_idx - INTF_0] = INTF_MODE_VIDEO;
+ }
+ 
+-static int _dpu_encoder_phys_vid_wait_for_vblank(
+-		struct dpu_encoder_phys *phys_enc, bool notify)
++static int dpu_encoder_phys_vid_wait_for_vblank(
++		struct dpu_encoder_phys *phys_enc)
+ {
+ 	struct dpu_encoder_wait_info wait_info;
+ 	int ret;
+@@ -499,10 +503,6 @@ static int _dpu_encoder_phys_vid_wait_for_vblank(
+ 	wait_info.timeout_ms = KICKOFF_TIMEOUT_MS;
+ 
+ 	if (!dpu_encoder_phys_vid_is_master(phys_enc)) {
+-		if (notify && phys_enc->parent_ops->handle_frame_done)
+-			phys_enc->parent_ops->handle_frame_done(
+-					phys_enc->parent, phys_enc,
+-					DPU_ENCODER_FRAME_EVENT_DONE);
+ 		return 0;
+ 	}
+ 
+@@ -512,20 +512,11 @@ static int _dpu_encoder_phys_vid_wait_for_vblank(
+ 
+ 	if (ret == -ETIMEDOUT) {
+ 		dpu_encoder_helper_report_irq_timeout(phys_enc, INTR_IDX_VSYNC);
+-	} else if (!ret && notify && phys_enc->parent_ops->handle_frame_done)
+-		phys_enc->parent_ops->handle_frame_done(
+-				phys_enc->parent, phys_enc,
+-				DPU_ENCODER_FRAME_EVENT_DONE);
++	}
+ 
+ 	return ret;
+ }
+ 
+-static int dpu_encoder_phys_vid_wait_for_vblank(
+-		struct dpu_encoder_phys *phys_enc)
+-{
+-	return _dpu_encoder_phys_vid_wait_for_vblank(phys_enc, true);
+-}
+-
+ static int dpu_encoder_phys_vid_wait_for_commit_done(
+ 		struct dpu_encoder_phys *phys_enc)
+ {
+@@ -615,7 +606,7 @@ static void dpu_encoder_phys_vid_disable(struct dpu_encoder_phys *phys_enc)
+ 	 * scanout buffer) don't latch properly..
+ 	 */
+ 	if (dpu_encoder_phys_vid_is_master(phys_enc)) {
+-		ret = _dpu_encoder_phys_vid_wait_for_vblank(phys_enc, false);
++		ret = dpu_encoder_phys_vid_wait_for_vblank(phys_enc);
+ 		if (ret) {
+ 			atomic_set(&phys_enc->pending_kickoff_cnt, 0);
+ 			DRM_ERROR("wait disable failed: id:%u intf:%d ret:%d\n",
 -- 
+2.21.0
 
-Thanks,
-
-David / dhildenb
