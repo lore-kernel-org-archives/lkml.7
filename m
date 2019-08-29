@@ -2,153 +2,80 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC8DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422EEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F122053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567076046;
-	bh=4HwPwdkwP5ccqwcPRUDXB3DKKiH9S0DRxugyWR3hUU8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zi5AAhPuYNGgl8uxQpkzBdZ9oyTjLLR/xOtPfuLE5Oeh5XW+nNkEPyirUUmJhVYUI
-	 EVU79ETNL7vA86xeGLQYO5RnyoaJIdVVXqOEYSj7Fz0qb2dO0y7s3v3xkXulSjIR+y
-	 sFx+uDKLRQb7NY+ySRlOnHeu1kcKpQra69MkAKrI=
+	by mail.kernel.org (Postfix) with ESMTP id 1485123405
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfH2KyF (ORCPT
+        id S1728802AbfH2KyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:54:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57986 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 06:54:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:3732 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728132AbfH2Kuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:50:37 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727075AbfH2KyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:54:06 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E5962173E;
-        Thu, 29 Aug 2019 10:50:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075836;
-        bh=4HwPwdkwP5ccqwcPRUDXB3DKKiH9S0DRxugyWR3hUU8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U5PhsPfMisHJwGF27l5Lm11j2Edb+IZ1gWDg4IFLHlssENywD42ksAcvA0OxLy7Xa
-         yQyaPhxeFcL833A5iho+OkBkLkbLS9n3tChGn8sd6uLUmKJ4cyGyRx9snNWpxMQNjt
-         83yKNbHvcyaHkYSEh8b0B4xYp+xPf5hfRhPviJy4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 23/29] ALSA: usb-audio: Check mixer unit bitmap yet more strictly
-Date:   Thu, 29 Aug 2019 06:50:03 -0400
-Message-Id: <20190829105009.2265-23-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829105009.2265-1-sashal@kernel.org>
-References: <20190829105009.2265-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        by mx1.redhat.com (Postfix) with ESMTPS id BE03C3C93E;
+        Thu, 29 Aug 2019 10:54:05 +0000 (UTC)
+Received: from thuth.com (ovpn-116-53.ams2.redhat.com [10.36.116.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 676CD5C1D6;
+        Thu, 29 Aug 2019 10:54:00 +0000 (UTC)
+From:   Thomas Huth <thuth@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: s390: Test for bad access register at the start of S390_MEM_OP
+Date:   Thu, 29 Aug 2019 12:53:56 +0200
+Message-Id: <20190829105356.27805-1-thuth@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 29 Aug 2019 10:54:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+If the KVM_S390_MEM_OP ioctl is called with an access register >= 16,
+then there is certainly a bug in the calling userspace application.
+We check for wrong access registers, but only if the vCPU was already
+in the access register mode before (i.e. the SIE block has recorded
+it). The check is also buried somewhere deep in the calling chain (in
+the function ar_translation()), so this is somewhat hard to find.
 
-[ Upstream commit f9f0e9ed350e15d51ad07364b4cf910de50c472a ]
+It's better to always report an error to the userspace in case this
+field is set wrong, and it's safer in the KVM code if we block wrong
+values here early instead of relying on a check somewhere deep down
+the calling chain, so let's add another check to kvm_s390_guest_mem_op()
+directly.
 
-The bmControls (for UAC1) or bmMixerControls (for UAC2/3) bitmap has a
-variable size depending on both input and output pins.  Its size is to
-fit with input * output bits.  The problem is that the input size
-can't be determined simply from the unit descriptor itself but it
-needs to parse the whole connected sources.  Although the
-uac_mixer_unit_get_channels() tries to check some possible overflow of
-this bitmap, it's incomplete due to the lack of the  evaluation of
-input pins.
-
-For covering possible overflows, this patch adds the bitmap overflow
-check in the loop of input pins in parse_audio_mixer_unit().
-
-Fixes: 0bfe5e434e66 ("ALSA: usb-audio: Check mixer unit descriptors more strictly")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Thomas Huth <thuth@redhat.com>
 ---
- sound/usb/mixer.c | 36 ++++++++++++++++++++++++++++--------
- 1 file changed, 28 insertions(+), 8 deletions(-)
+ arch/s390/kvm/kvm-s390.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index 4b3e1c48ca2f3..b0c5d4ef61374 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -754,7 +754,6 @@ static int uac_mixer_unit_get_channels(struct mixer_build *state,
- 				       struct uac_mixer_unit_descriptor *desc)
- {
- 	int mu_channels;
--	void *c;
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index f329dcb3f44c..725690853cbd 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -4255,7 +4255,7 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu *vcpu,
+ 	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
+ 				    | KVM_S390_MEMOP_F_CHECK_ONLY;
  
- 	if (desc->bLength < sizeof(*desc))
+-	if (mop->flags & ~supported_flags)
++	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS)
  		return -EINVAL;
-@@ -777,13 +776,6 @@ static int uac_mixer_unit_get_channels(struct mixer_build *state,
- 		break;
- 	}
  
--	if (!mu_channels)
--		return 0;
--
--	c = uac_mixer_unit_bmControls(desc, state->mixer->protocol);
--	if (c - (void *)desc + (mu_channels - 1) / 8 >= desc->bLength)
--		return 0; /* no bmControls -> skip */
--
- 	return mu_channels;
- }
- 
-@@ -2028,6 +2020,31 @@ static int parse_audio_feature_unit(struct mixer_build *state, int unitid,
-  * Mixer Unit
-  */
- 
-+/* check whether the given in/out overflows bmMixerControls matrix */
-+static bool mixer_bitmap_overflow(struct uac_mixer_unit_descriptor *desc,
-+				  int protocol, int num_ins, int num_outs)
-+{
-+	u8 *hdr = (u8 *)desc;
-+	u8 *c = uac_mixer_unit_bmControls(desc, protocol);
-+	size_t rest; /* remaining bytes after bmMixerControls */
-+
-+	switch (protocol) {
-+	case UAC_VERSION_1:
-+	default:
-+		rest = 1; /* iMixer */
-+		break;
-+	case UAC_VERSION_2:
-+		rest = 2; /* bmControls + iMixer */
-+		break;
-+	case UAC_VERSION_3:
-+		rest = 6; /* bmControls + wMixerDescrStr */
-+		break;
-+	}
-+
-+	/* overflow? */
-+	return c + (num_ins * num_outs + 7) / 8 + rest > hdr + hdr[0];
-+}
-+
- /*
-  * build a mixer unit control
-  *
-@@ -2156,6 +2173,9 @@ static int parse_audio_mixer_unit(struct mixer_build *state, int unitid,
- 		if (err < 0)
- 			return err;
- 		num_ins += iterm.channels;
-+		if (mixer_bitmap_overflow(desc, state->mixer->protocol,
-+					  num_ins, num_outs))
-+			break;
- 		for (; ich < num_ins; ich++) {
- 			int och, ich_has_controls = 0;
- 
+ 	if (mop->size > MEM_OP_MAX_SIZE)
 -- 
-2.20.1
+2.18.1
 
