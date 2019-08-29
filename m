@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749FFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8499C41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487FB2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62EC2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567076019;
-	bh=792YrIutp1VH0G5GT41lD60mWP3POfR0m6XxGIUG/CQ=;
+	s=default; t=1567076025;
+	bh=ArHiVFqSrRYIIOQuOR5tVWl00xvZYHqTB2s/aommuZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nLZD96AvAx3uPXIqx+NDTjfhPKNOl+PCAVzGFZaIIsjM87dJ8a4SmSQxqaqzgeAti
-	 xO8LFGllXuhj1WWYBi7kqaBU4NlYSm8D6Pc2lpJmkWmLWI2r5tWyAILybzRrKWbUID
-	 dolK0wv//f0cJszCHC9g4MziMoEkOiiMKOaROP4E=
+	b=jC8oYatJaD0zo1mIO+bIUEx6gwHJPcDxsDCnvf4ydewAnVGDVJyUAwViH8RFUV9s7
+	 33hEPBWgR85emwGUZascbcJ6oFcbSK4uhH3li3zKJUVMXb55UARwGhwOS34i0/xQYw
+	 fQjpCU7ZiMJmBJFsPVo+UPBNY7QmC5b6Zfa4bxv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbfH2Kxi (ORCPT
+        id S1728234AbfH2Kuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58294 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 06:50:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728231AbfH2Kur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:50:47 -0400
+        id S1728046AbfH2Kuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:50:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD3812173E;
-        Thu, 29 Aug 2019 10:50:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 126812341C;
+        Thu, 29 Aug 2019 10:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075846;
-        bh=792YrIutp1VH0G5GT41lD60mWP3POfR0m6XxGIUG/CQ=;
+        s=default; t=1567075831;
+        bh=ArHiVFqSrRYIIOQuOR5tVWl00xvZYHqTB2s/aommuZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZNz8FRcczQycoNtOYL34iXYtl8rw8W2oeLmOz4/wtGXXo572Z85IJZAl3JjY/oBWq
-         D5AQoFY3/xjrLBJpV1I1zUGIDGQwf5l1Gai5AS5tmIVTplC1XPkOzGDATj8Ldep1dc
-         4QuSfLOKPxgLGti9GWCFypbbK/Fbf1Bws0dgyjx0=
+        b=IiqTUxaTtzkjnJoVgjfBB7Trqitr9aL3dirWy/MCRSVVW3RI+T6MQj5lpVmWlymPA
+         fJne+ArzX5o93Bg+CeJ6cy/XHlEh7FQ09wQ2+VZE2i5sOQ5mf3mab6C8fWpdDk9Y3c
+         85EhutoTa3TqWHIy0DGxGmXPyLMTPtCH/K49XV48=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/14] Revert "dm bufio: fix deadlock with loop device"
-Date:   Thu, 29 Aug 2019 06:50:31 -0400
-Message-Id: <20190829105043.2508-2-sashal@kernel.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 19/29] scripts/decode_stacktrace: match basepath using shell prefix operator, not regex
+Date:   Thu, 29 Aug 2019 06:49:59 -0400
+Message-Id: <20190829105009.2265-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829105043.2508-1-sashal@kernel.org>
-References: <20190829105043.2508-1-sashal@kernel.org>
+In-Reply-To: <20190829105009.2265-1-sashal@kernel.org>
+References: <20190829105009.2265-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,63 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-[ Upstream commit cf3591ef832915892f2499b7e54b51d4c578b28c ]
+[ Upstream commit 31013836a71e07751a6827f9d2ad41ef502ddaff ]
 
-Revert the commit bd293d071ffe65e645b4d8104f9d8fe15ea13862. The proper
-fix has been made available with commit d0a255e795ab ("loop: set
-PF_MEMALLOC_NOIO for the worker thread").
+The basepath may contain special characters, which would confuse the regex
+matcher.  ${var#prefix} does the right thing.
 
-Note that the fix offered by commit bd293d071ffe doesn't really prevent
-the deadlock from occuring - if we look at the stacktrace reported by
-Junxiao Bi, we see that it hangs in bit_wait_io and not on the mutex -
-i.e. it has already successfully taken the mutex. Changing the mutex
-from mutex_lock to mutex_trylock won't help with deadlocks that happen
-afterwards.
-
-PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
-   #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
-   #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
-   #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
-   #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
-   #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
-   #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
-   #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
-   #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
-   #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
-   #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
-  #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
-  #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
-  #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
-  #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
-  #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: bd293d071ffe ("dm bufio: fix deadlock with loop device")
-Depends-on: d0a255e795ab ("loop: set PF_MEMALLOC_NOIO for the worker thread")
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Link: http://lkml.kernel.org/r/20190518055946.181563-1-drinkcat@chromium.org
+Fixes: 67a28de47faa8358 ("scripts/decode_stacktrace: only strip base path when a prefix of the path")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-bufio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ scripts/decode_stacktrace.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/dm-bufio.c b/drivers/md/dm-bufio.c
-index b7d3b62dae7f9..1e17e6421da32 100644
---- a/drivers/md/dm-bufio.c
-+++ b/drivers/md/dm-bufio.c
-@@ -1630,7 +1630,9 @@ dm_bufio_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
- 	unsigned long freed;
+diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+index c4a9ddb174bc5..5aa75a0a1cede 100755
+--- a/scripts/decode_stacktrace.sh
++++ b/scripts/decode_stacktrace.sh
+@@ -78,7 +78,7 @@ parse_symbol() {
+ 	fi
  
- 	c = container_of(shrink, struct dm_bufio_client, shrinker);
--	if (!dm_bufio_trylock(c))
-+	if (sc->gfp_mask & __GFP_FS)
-+		dm_bufio_lock(c);
-+	else if (!dm_bufio_trylock(c))
- 		return SHRINK_STOP;
+ 	# Strip out the base of the path
+-	code=${code//^$basepath/""}
++	code=${code#$basepath/}
  
- 	freed  = __scan(c, sc->nr_to_scan, sc->gfp_mask);
+ 	# In the case of inlines, move everything to same line
+ 	code=${code//$'\n'/' '}
 -- 
 2.20.1
 
