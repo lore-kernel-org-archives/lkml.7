@@ -2,41 +2,42 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C16C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D06C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 709182189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8522189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:19:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfH2LTX (ORCPT
+        id S1728279AbfH2LT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:19:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:42842 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728156AbfH2LTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:19:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A3F8360;
-        Thu, 29 Aug 2019 04:19:18 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBB5B3F59C;
-        Thu, 29 Aug 2019 04:19:16 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, paul.burton@mips.com,
-        tglx@linutronix.de, salyzyn@android.com, 0x7f454c46@gmail.com,
-        luto@kernel.org
-Subject: [PATCH 6/7] mips: vdso: Remove unused VDSO_HAS_32BIT_FALLBACK
-Date:   Thu, 29 Aug 2019 12:18:42 +0100
-Message-Id: <20190829111843.41003-7-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190829111843.41003-1-vincenzo.frascino@arm.com>
-References: <20190829111843.41003-1-vincenzo.frascino@arm.com>
+        Thu, 29 Aug 2019 07:19:27 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:43791 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728231AbfH2LTZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 07:19:25 -0400
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from parav@mellanox.com)
+        with ESMTPS (AES256-SHA encrypted); 29 Aug 2019 14:19:19 +0300
+Received: from sw-mtx-036.mtx.labs.mlnx (sw-mtx-036.mtx.labs.mlnx [10.12.150.149])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x7TBJ8v5020002;
+        Thu, 29 Aug 2019 14:19:18 +0300
+From:   Parav Pandit <parav@mellanox.com>
+To:     alex.williamson@redhat.com, jiri@mellanox.com,
+        kwankhede@nvidia.com, cohuck@redhat.com, davem@davemloft.net
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Parav Pandit <parav@mellanox.com>
+Subject: [PATCH v2 4/6] mdev: Introduce an API mdev_alias
+Date:   Thu, 29 Aug 2019 06:19:02 -0500
+Message-Id: <20190829111904.16042-5-parav@mellanox.com>
+X-Mailer: git-send-email 2.19.2
+In-Reply-To: <20190829111904.16042-1-parav@mellanox.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+ <20190829111904.16042-1-parav@mellanox.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,31 +45,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As a consequence of Commit 623fa33f7bd6 ("lib:vdso: Remove
-VDSO_HAS_32BIT_FALLBACK") VDSO_HAS_32BIT_FALLBACK define is not
-required anymore hence can be removed.
+Introduce an API mdev_alias() to provide access to optionally generated
+alias.
 
-Remove unused VDSO_HAS_32BIT_FALLBACK from mips vdso.
-
-Cc: Paul Burton <paul.burton@mips.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Parav Pandit <parav@mellanox.com>
 ---
- arch/mips/include/asm/vdso/gettimeofday.h | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/vfio/mdev/mdev_core.c | 12 ++++++++++++
+ include/linux/mdev.h          |  1 +
+ 2 files changed, 13 insertions(+)
 
-diff --git a/arch/mips/include/asm/vdso/gettimeofday.h b/arch/mips/include/asm/vdso/gettimeofday.h
-index e78462e8ca2e..5ad2b086626d 100644
---- a/arch/mips/include/asm/vdso/gettimeofday.h
-+++ b/arch/mips/include/asm/vdso/gettimeofday.h
-@@ -107,8 +107,6 @@ static __always_inline int clock_getres_fallback(
+diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+index c9bf2ac362b9..5399ed6f1612 100644
+--- a/drivers/vfio/mdev/mdev_core.c
++++ b/drivers/vfio/mdev/mdev_core.c
+@@ -517,6 +517,18 @@ struct device *mdev_get_iommu_device(struct device *dev)
+ }
+ EXPORT_SYMBOL(mdev_get_iommu_device);
  
- #if _MIPS_SIM != _MIPS_SIM_ABI64
++/**
++ * mdev_alias: Return alias string of a mdev device
++ * @mdev:	Pointer to the mdev device
++ * mdev_alias() returns alias string of a mdev device if alias is present,
++ * returns NULL otherwise.
++ */
++const char *mdev_alias(struct mdev_device *mdev)
++{
++	return mdev->alias;
++}
++EXPORT_SYMBOL(mdev_alias);
++
+ static int __init mdev_init(void)
+ {
+ 	int ret;
+diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+index f036fe9854ee..6da82213bc4e 100644
+--- a/include/linux/mdev.h
++++ b/include/linux/mdev.h
+@@ -148,5 +148,6 @@ void mdev_unregister_driver(struct mdev_driver *drv);
+ struct device *mdev_parent_dev(struct mdev_device *mdev);
+ struct device *mdev_dev(struct mdev_device *mdev);
+ struct mdev_device *mdev_from_dev(struct device *dev);
++const char *mdev_alias(struct mdev_device *mdev);
  
--#define VDSO_HAS_32BIT_FALLBACK	1
--
- static __always_inline long clock_gettime32_fallback(
- 					clockid_t _clkid,
- 					struct old_timespec32 *_ts)
+ #endif /* MDEV_H */
 -- 
-2.23.0
+2.19.2
 
