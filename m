@@ -2,138 +2,155 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD1DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20852C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 013E82073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:07:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="obmy/NzR"
+	by mail.kernel.org (Postfix) with ESMTP id EDCDE2339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfH2JHQ (ORCPT
+        id S1727131AbfH2JIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:07:16 -0400
-Received: from mail-eopbgr10056.outbound.protection.outlook.com ([40.107.1.56]:46983
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726038AbfH2JHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:07:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gPyAYcdK1S0pYHlkGd1yTKYd1lSyOeqr2xB9QsPxFEhSfTDcByl+Hmd0AuWikRp5xh5HQOWD9W00mArJO8b4HrTWZt3ROhZtOg+UcuHQWvjPdT1BbEDUFEmEwa3H7tLhurHfpFLwmLEhYNAlhIT5SqmJ8gYhyVjZk9UJG04Ra7PKkKyGOwJRLGOnAU4TX9g5lbrVJrpSrRyudTLlBTVR92hHhbon3R7iL5mqoryOn3xvZCBRA5pjM96g/jCzPsc7Nv7/pBNppcTmcDq/WCtl8+etVhGYb8K8WZlvnrqxerp0vcm5qo6yGUnBRhYtlhMPk6r1MhnGQAzQGxPhglM5gQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zfc5gMaRMQgpUvSt8M/zbgx6bd2J6ZllItjttuEJVFw=;
- b=B+8DABJA6tQb4OTmz01ss/plQW8hHJD2wHIckptCOzRcBAZbW1g992j5t1oIJheMaWbgA8SzTeuhgHxJmMAnt+K323FRWo1mAy5zCJ8aImRg13zmW5TjeLJiagdMt4bWjv5ZmtJJmSDRrfjQ7uC0BWbZUMZ76Juler9crCMYQI0xJqa26jsft1ry3TKn698E7uJKqt4M8hMJnVZyDQWn0asHfV0OmalYlWbtlETKkrfz3PIYA9br/OyTBrxOwsOKvax+wWxlhpJKm1rhemAfwJLYsLk0ZjjD9flaOtp74Mx5l/h4fraFBcsfTVNoXnktCpytfh+HHTO38Zj9I6FSLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zfc5gMaRMQgpUvSt8M/zbgx6bd2J6ZllItjttuEJVFw=;
- b=obmy/NzRqvl2KAHhBCWy8NM0vC5wWeyBeZpeeh9ZXoOPNbP9l0Q3JCdH82WNSlbzgzoi9q5mq7BaQaVSKko4CYnWZoG5H3XWQj2wMnBEysdulISdlj0bE9J+q9YM7hFIMhJBMmDaQFLTBAoY9dcFHN1s+e/SBXwdCMS8ItOEtuw=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB5937.eurprd05.prod.outlook.com (20.178.119.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.20; Thu, 29 Aug 2019 09:07:11 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2199.021; Thu, 29 Aug 2019
- 09:07:11 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v1 1/5] mdev: Introduce sha1 based mdev alias
-Thread-Topic: [PATCH v1 1/5] mdev: Introduce sha1 based mdev alias
-Thread-Index: AQHVXQwKr3hzuM9h9k6/weilGIZr2acRFDQAgAACdICAAMF/wA==
-Date:   Thu, 29 Aug 2019 09:07:11 +0000
-Message-ID: <AM0PR05MB48661932BA288F609E2A5E49D1A20@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190827191654.41161-1-parav@mellanox.com>
-        <20190827191654.41161-2-parav@mellanox.com>     <20190828152544.16ba2617@x1.home>
- <20190828153431.36c37232@x1.home>
-In-Reply-To: <20190828153431.36c37232@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [106.51.18.188]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bac0e5cb-1def-4392-caa0-08d72c6046dd
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB5937;
-x-ms-traffictypediagnostic: AM0PR05MB5937:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB59371F1D9544D8A556DC8526D1A20@AM0PR05MB5937.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2803;
-x-forefront-prvs: 0144B30E41
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(396003)(346002)(136003)(376002)(13464003)(189003)(199004)(186003)(4744005)(4326008)(81166006)(66476007)(66446008)(66556008)(316002)(64756008)(7736002)(5660300002)(256004)(11346002)(66946007)(33656002)(86362001)(446003)(9686003)(478600001)(3846002)(54906003)(14454004)(6916009)(476003)(52536014)(6246003)(66066001)(81156014)(6506007)(53546011)(6116002)(486006)(53936002)(229853002)(55016002)(2906002)(55236004)(9456002)(71190400001)(74316002)(25786009)(6436002)(76176011)(8676002)(99286004)(7696005)(71200400001)(305945005)(76116006)(8936002)(102836004)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5937;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VIrthO0jrH8ZioEiVFcZbU4Ec6ja51IpayQKzdPy0kY+riLEco1qsfXoelo6QDFSG4sGHcsYD0bjFzdhGD5Ak2yUeEsoruKL4dsfP+1Bgb1gjkiFNC0oCEGZTUogd/iZdlb/s830LW9g+VDUSUSche+yzx+hAlqK6MaLZHRvT/Zdzy79GwqsJo26fWyhaH+NLeE3LRwib3A7P1WwFk1HsvKnWncv/AZxEReFvqjrmYhzPwYyjBsfFOzCcQQvpBb2nNdP6rBDNGqY1vvgfMewyW6SAG1/FUQ3aCeAFip/Lkj85C9c0Ttdm2gVaWQNgZYyz3V3WAzJSm3d+8cpTrK5F5zkQKgsefij5DZ6kIuyBARYwouSYJG84ITM5ZKzrYasgrSOxH5DahslF3J5foR4gFhl36/BB1gWzV4catyro0k=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 29 Aug 2019 05:08:00 -0400
+Received: from twhmllg3.macronix.com ([122.147.135.201]:40507 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbfH2JH7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 05:07:59 -0400
+Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id x7T97oGv092690;
+        Thu, 29 Aug 2019 17:07:50 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id 30071D83829036DCCD67;
+        Thu, 29 Aug 2019 17:07:51 +0800 (CST)
+In-Reply-To: <20190824130329.68f310aa@xps13>
+References: <1566280428-4159-1-git-send-email-masonccyang@mxic.com.tw> <20190824130329.68f310aa@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, frieder.schrempf@kontron.de,
+        juliensu@mxic.com.tw, kstewart@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, richard@nod.at, tglx@linutronix.de,
+        vigneshr@ti.com
+Subject: Re: [PATCH] Add support for Macronix NAND randomizer
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bac0e5cb-1def-4392-caa0-08d72c6046dd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 09:07:11.2678
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VDelrZ/v48aQ8miKEJkZT/5cpNn9gjOgQ2clfFL9rcw9Y4CxVq5K9xLKnZ3WhgM4T57KM1I+b6DcrNJOE4Mz+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5937
+X-KeepSent: 22C5A579:E2E7676F-48258465:002F7F69;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF22C5A579.E2E7676F-ON48258465.002F7F69-48258465.00322849@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Thu, 29 Aug 2019 17:07:51 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/08/29 PM 05:07:51,
+        Serialize complete at 2019/08/29 PM 05:07:51
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com x7T97oGv092690
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Hi Miquel, 
 
-> -----Original Message-----
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Thursday, August 29, 2019 3:05 AM
-> To: Parav Pandit <parav@mellanox.com>
-> Cc: Jiri Pirko <jiri@mellanox.com>; kwankhede@nvidia.com;
-> cohuck@redhat.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
-> kernel@vger.kernel.org; netdev@vger.kernel.org
-> Subject: Re: [PATCH v1 1/5] mdev: Introduce sha1 based mdev alias
->=20
-> On Wed, 28 Aug 2019 15:25:44 -0600
-> Alex Williamson <alex.williamson@redhat.com> wrote:
->=20
-> > On Tue, 27 Aug 2019 14:16:50 -0500
-> > Parav Pandit <parav@mellanox.com> wrote:
-> > >  module_init(mdev_init)
-> > > diff --git a/drivers/vfio/mdev/mdev_private.h
-> b/drivers/vfio/mdev/mdev_private.h
-> > > index 7d922950caaf..cf1c0d9842c6 100644
-> > > --- a/drivers/vfio/mdev/mdev_private.h
-> > > +++ b/drivers/vfio/mdev/mdev_private.h
-> > > @@ -33,6 +33,7 @@ struct mdev_device {
-> > >  	struct kobject *type_kobj;
-> > >  	struct device *iommu_device;
-> > >  	bool active;
-> > > +	const char *alias;
->=20
-> Nit, put this above active to avoid creating a hole in the structure.
-> Thanks,
->=20
-Ack.
 
-> Alex
+> > 
+> > If subpage write not available with hardware ECC, for example,
+> > NAND chip options NAND_NO_SUBPAGE_WRITE be set in driver and
+> > randomizer function is recommended for high-reliability.
+> > Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
+> > to see if this high-reliability function is supported.
+> > 
+> 
+> You did not flagged this patch as a v2 and forgot about the changelog.
+> You did not listen to our comments in the last version neither. I was
+> open to a solution with a specific DT property for warned users but I
+> don't see it coming.
+> 
+
+Based on your comments by specific DT property for randomizer support.
+to add a new property in children nodes:
+
+i.e,.
+
+nand: nand-controller@43c30000 {
+
+                nand@0 {
+                        reg = <0>;
+                        nand-reliability = "randomizer";
+                };
+};
+
+
+file of nand_macronix.c will patch to:
+
+static void macronix_nand_onfi_init(struct nand_chip *chip)
+{
+        struct nand_parameters *p = &chip->parameters;
+        struct device_node *dn = nand_get_flash_node(chip);
+        const char *pm;
+        int rand_enable = 0;
+
+        ret = of_property_read_string(dn, "nand-reliability", &pm);
+        if (!ret) {
+                if (!strcasecmp(pm, "randomizer"));
+                        rand_enable = 1;
+        }
+ 
+        mxic = (struct nand_onfi_vendor_macronix *)p->onfi->vendor;
+        if (rand_enable &&
+            mxic->reliability_func & MACRONIX_RANDOMIZER_BIT) {
+                if (p->supports_set_get_features) {
+                        bitmap_set(p->set_feature_list,
+                                   ONFI_FEATURE_ADDR_MXIC_RANDOMIZER, 1);
+                        bitmap_set(p->get_feature_list,
+                                   ONFI_FEATURE_ADDR_MXIC_RANDOMIZER, 1);
+                        /* set-up chip options with NAND_NO_SUBPAGE_WRITE 
+*/
+                        chip->options |= NAND_NO_SUBPAGE_WRITE;
+                        macronix_nand_randomizer_check_enable(chip);
+                }
+        }
+ 
+} 
+
+something like this,
+
+is it OK ?
+
+thanks & best regards,
+Mason
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
