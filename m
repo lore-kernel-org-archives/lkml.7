@@ -2,118 +2,249 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9353C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4931DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2582173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:51:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567075902;
-	bh=0lCEHDxLOQ6yt9rOsavR/pLvEJ18xUFl2UqvqIea3jk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HuEiYnEInfaR31yIOHSHNBVolk0VhkTZfozEbjSYibHF+2SRm0cV5JriQsHCBLB7w
-	 xUoZGCEp0cG7+0r72Xckr8l7T1JwjFN8199OzqVvy8Er6LMqGxDIPIj2u6TIZpvNWe
-	 YTSoH/GZxg4J3xCaz6c56SXQNlPjBp1ggdON9Xy8=
+	by mail.kernel.org (Postfix) with ESMTP id 1E11B2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:51:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbfH2Kvl (ORCPT
+        id S1728736AbfH2Kvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:51:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbfH2KvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:51:13 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB16D2341B;
-        Thu, 29 Aug 2019 10:51:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075872;
-        bh=0lCEHDxLOQ6yt9rOsavR/pLvEJ18xUFl2UqvqIea3jk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=IiASg/y94fjeGLtAettQ6DUoUDBK5us1ylRqDceB8nSWu3AIvf4MMoTPA2F1kaiIn
-         wmJTIW8O/dthpABqSlGBFcEfx5Z16wSK9iB47ZEdX+agDgGHidulcHpnSwrhx27Kfc
-         48xP94K475K9eQ/zaR8ssiuNVaSjyplXFFXWm4Sw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 1/6] Revert "dm bufio: fix deadlock with loop device"
-Date:   Thu, 29 Aug 2019 06:51:05 -0400
-Message-Id: <20190829105110.2748-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 29 Aug 2019 06:51:45 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3538 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728702AbfH2Kvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:51:42 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 6E4CC118B1F401EEA4AF;
+        Thu, 29 Aug 2019 18:51:37 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 29 Aug 2019 18:51:37 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Thu, 29 Aug 2019 18:51:35 +0800
+Date:   Thu, 29 Aug 2019 18:50:48 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        "Dave Chinner" <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v6 03/24] erofs: add super block operations
+Message-ID: <20190829105048.GB64893@architecture4>
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
+ <20190802125347.166018-4-gaoxiang25@huawei.com>
+ <20190829101545.GC20598@infradead.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190829101545.GC20598@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme715-chm.china.huawei.com (10.1.199.111) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+Hi Christoph,
 
-[ Upstream commit cf3591ef832915892f2499b7e54b51d4c578b28c ]
+On Thu, Aug 29, 2019 at 03:15:45AM -0700, Christoph Hellwig wrote:
+> On Fri, Aug 02, 2019 at 08:53:26PM +0800, Gao Xiang wrote:
+> > +static int __init erofs_init_inode_cache(void)
+> > +{
+> > +	erofs_inode_cachep = kmem_cache_create("erofs_inode",
+> > +					       sizeof(struct erofs_vnode), 0,
+> > +					       SLAB_RECLAIM_ACCOUNT,
+> > +					       init_once);
+> > +
+> > +	return erofs_inode_cachep ? 0 : -ENOMEM;
+> 
+> Please just use normal if/else.  Also having this function seems
+> entirely pointless.
+> 
+> > +static void erofs_exit_inode_cache(void)
+> > +{
+> > +	kmem_cache_destroy(erofs_inode_cachep);
+> > +}
+> 
+> Same for this one.
+> 
+> > +static void free_inode(struct inode *inode)
+> 
+> Please use an erofs_ prefix for all your functions.
 
-Revert the commit bd293d071ffe65e645b4d8104f9d8fe15ea13862. The proper
-fix has been made available with commit d0a255e795ab ("loop: set
-PF_MEMALLOC_NOIO for the worker thread").
+It is already a static function, I have no idea what is wrong here.
 
-Note that the fix offered by commit bd293d071ffe doesn't really prevent
-the deadlock from occuring - if we look at the stacktrace reported by
-Junxiao Bi, we see that it hangs in bit_wait_io and not on the mutex -
-i.e. it has already successfully taken the mutex. Changing the mutex
-from mutex_lock to mutex_trylock won't help with deadlocks that happen
-afterwards.
+> 
+> > +{
+> > +	struct erofs_vnode *vi = EROFS_V(inode);
+> 
+> Why is this called vnode instead of inode?  That seems like a rather
+> odd naming for a Linux file system.
 
-PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
-   #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
-   #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
-   #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
-   #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
-   #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
-   #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
-   #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
-   #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
-   #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
-   #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
-  #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
-  #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
-  #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
-  #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
-  #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
+I don't know anything difference of that, it is just a naming.
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: bd293d071ffe ("dm bufio: fix deadlock with loop device")
-Depends-on: d0a255e795ab ("loop: set PF_MEMALLOC_NOIO for the worker thread")
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/md/dm-bufio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> > +
+> > +	/* be careful RCU symlink path (see ext4_inode_info->i_data)! */
+> > +	if (is_inode_fast_symlink(inode))
+> > +		kfree(inode->i_link);
+> 
+> is_inode_fast_symlink only shows up in a later patch.  And really
+> obsfucates the check here in the only caller as you can just do an
+> unconditional kfree here - i_link will be NULL except for the case
+> where you explicitly set it.
 
-diff --git a/drivers/md/dm-bufio.c b/drivers/md/dm-bufio.c
-index 8a6e7646e1c98..b1d5fa0bc8f7b 100644
---- a/drivers/md/dm-bufio.c
-+++ b/drivers/md/dm-bufio.c
-@@ -1561,7 +1561,9 @@ dm_bufio_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
- 	unsigned long freed;
- 
- 	c = container_of(shrink, struct dm_bufio_client, shrinker);
--	if (!dm_bufio_trylock(c))
-+	if (sc->gfp_mask & __GFP_FS)
-+		dm_bufio_lock(c);
-+	else if (!dm_bufio_trylock(c))
- 		return SHRINK_STOP;
- 
- 	freed  = __scan(c, sc->nr_to_scan, sc->gfp_mask);
--- 
-2.20.1
+I cannot fully understand your point (sorry about my English),
+I will reply you about this later.
+
+> 
+> Also this code is nothing like ext4, so the code seems a little confusing.
+> 
+> > +static bool check_layout_compatibility(struct super_block *sb,
+> > +				       struct erofs_super_block *layout)
+> > +{
+> > +	const unsigned int requirements = le32_to_cpu(layout->requirements);
+> 
+> Why is the variable name for the on-disk subperblock layout?  We usually
+> still calls this something with sb in the name, e.g. dsb. for disk
+> super block.
+
+I can change it later, sbi and dsb (It has not good meaning in Chinese, although).
+
+> 
+> > +	EROFS_SB(sb)->requirements = requirements;
+> > +
+> > +	/* check if current kernel meets all mandatory requirements */
+> > +	if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
+> > +		errln("unidentified requirements %x, please upgrade kernel version",
+> > +		      requirements & ~EROFS_ALL_REQUIREMENTS);
+> > +		return false;
+> > +	}
+> > +	return true;
+> 
+> Note that normally we call this features, but that doesn't really
+> matter too much.
+> 
+> > +static int superblock_read(struct super_block *sb)
+> > +{
+> > +	struct erofs_sb_info *sbi;
+> > +	struct buffer_head *bh;
+> > +	struct erofs_super_block *layout;
+> > +	unsigned int blkszbits;
+> > +	int ret;
+> > +
+> > +	bh = sb_bread(sb, 0);
+> 
+> Is there any good reasons to use buffer heads like this in new code
+> vs directly using bios?
+
+This page can save in bdev page cache, it contains not only the erofs
+superblock so it can be fetched in page cache later.
+
+> 
+> > +
+> > +	sbi->blocks = le32_to_cpu(layout->blocks);
+> > +	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
+> > +	sbi->islotbits = ffs(sizeof(struct erofs_inode_v1)) - 1;
+> > +	sbi->root_nid = le16_to_cpu(layout->root_nid);
+> > +	sbi->inos = le64_to_cpu(layout->inos);
+> > +
+> > +	sbi->build_time = le64_to_cpu(layout->build_time);
+> > +	sbi->build_time_nsec = le32_to_cpu(layout->build_time_nsec);
+> > +
+> > +	memcpy(&sb->s_uuid, layout->uuid, sizeof(layout->uuid));
+> > +	memcpy(sbi->volume_name, layout->volume_name,
+> > +	       sizeof(layout->volume_name));
+> 
+> s_uuid should preferably be a uuid_t (assuming it is a real BE uuid,
+> if it is le it should be a guid_t).
+
+I just copied it from f2fs, I have no idea which one is best and
+which fs I could refer to.
+
+> 
+> > +/* set up default EROFS parameters */
+> > +static void default_options(struct erofs_sb_info *sbi)
+> > +{
+> > +}
+> 
+> No need to add an empty function.
+
+Later patch will fill this function.
+
+> 
+> > +static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+> > +{
+> > +	struct inode *inode;
+> > +	struct erofs_sb_info *sbi;
+> > +	int err;
+> > +
+> > +	infoln("fill_super, device -> %s", sb->s_id);
+> > +	infoln("options -> %s", (char *)data);
+> 
+> That is some very verbose debug info.  We usually don't add that and
+> let people trace the function instead.  Also you should probably
+> implement the new mount API.
+> new mount API.
+
+Al think it is not urgent as well,
+https://lore.kernel.org/driverdev-devel/20190721040547.GF17978@ZenIV.linux.org.uk/
+
+ Al said,
+ >> I agree with you, it seems better to just use s_id in community and
+ >> delete erofs_mount_private stuffs...
+ >> Yet I don't look into how to use new fs_context, could I keep using
+ >> legacy mount interface and fix them all?
+ >
+ > Sure.
+
+> 
+> > +static void erofs_kill_sb(struct super_block *sb)
+> > +{
+> > +	struct erofs_sb_info *sbi;
+> > +
+> > +	WARN_ON(sb->s_magic != EROFS_SUPER_MAGIC);
+> > +	infoln("unmounting for %s", sb->s_id);
+> > +
+> > +	kill_block_super(sb);
+> > +
+> > +	sbi = EROFS_SB(sb);
+> > +	if (!sbi)
+> > +		return;
+> > +	kfree(sbi);
+> > +	sb->s_fs_info = NULL;
+> > +}
+> 
+> Why is this needed?  You can just free your sb privatte information in
+> ->put_super and wire up kill_block_super as the ->kill_sb method
+> directly.
+
+See Al's comments,
+https://lore.kernel.org/r/20190720224955.GD17978@ZenIV.linux.org.uk/
+
+Thanks,
+Gao Xiang
 
