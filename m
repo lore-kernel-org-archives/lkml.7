@@ -2,191 +2,148 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5857AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F54FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2111D2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:03:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZ5isuAn"
+	by mail.kernel.org (Postfix) with ESMTP id 6EA472166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfH2MDf (ORCPT
+        id S1727257AbfH2MEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 08:03:35 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41856 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfH2MDe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 08:03:34 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w5so3770579edl.8;
-        Thu, 29 Aug 2019 05:03:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HC/6ZRZxQ7B5ep/47mrpg+acl95CprVZcHVqWh2iGp4=;
-        b=CZ5isuAnl2qiOdBcJGTg+2OxOzs4UgciMTbbX9B3oye1Xl6cDATQyhYTTK5MILsNAt
-         gjXHRCmObHw5rBRRgiZOI+/5SyCu5qVS+1G2EMnYMajc5/jRv3WTGkVqVEcfeo0JK91W
-         C+UpQlAtMWF51DpDFo5QELlcFuR/cw6Ml4g7a3hjuigOmnPvWgLP4vh91OiWBsUBMK/B
-         eqHywPSVeYt+rNPVF6K6QbZMrdwPObfoS7BwZA/5YpBiINlCdxJLzFURQ2h7NCHdYmch
-         Ulsc5Azg5406hVlTzAdAQJ0lQ2aSORDJ8x/tbrwcNdVJAC2h12p9Wi8uVrpegydkwvV5
-         iqWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HC/6ZRZxQ7B5ep/47mrpg+acl95CprVZcHVqWh2iGp4=;
-        b=K+NPtEx3a7WY6hkKnmvL97oCdYj/KpS+TfXuxZb6gMmVkr0lekG3GLG7IuTjQdoq6W
-         ZCbHecnibrYxJACwrltRXVJhbw357wtekGkPAZGMjWcVb6ZtqDFDfx3v1gUAGycW9nvL
-         qhyD50C951ppfuYqc+mwF00EQ/qfAXV+WC/txCHQpxFbt23Q3YjUHM1ms1xE0FyUQPVw
-         lj3u0vf2rop/BYJIppDYZ+i8usKOhILyxCOB4mK7NdCL+CL6XL7XkTWfbU7Hsujs2ZFZ
-         ig3bDlEFaiLsoSGDiyFMlWGL16Ccnn2D9uUgba1DgKRs2AdPwjMU8/S4QlF0l63i4kZX
-         0yBw==
-X-Gm-Message-State: APjAAAUm9OUGRXjLhYbLBlfbkioG7EvQi6rp2a05OH3mDrtm7SuQLSJF
-        KXDS02MrYMREu3SlmwxGDeU=
-X-Google-Smtp-Source: APXvYqySs/VqsSqJJBCJaCpwyKBYzvRJ3QSOgddlozsP6MDDfKle9c8EoWsfW0CM/wT3Nf3CMel9+g==
-X-Received: by 2002:a50:fc12:: with SMTP id i18mr9544917edr.23.1567080212005;
-        Thu, 29 Aug 2019 05:03:32 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id j2sm355111ejj.34.2019.08.29.05.03.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 05:03:30 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 14:03:29 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 2/6] dt-bindings: PCI: tegra: Add PCIe slot supplies
- regulator entries
-Message-ID: <20190829120329.GC13187@ulmo>
-References: <20190828172850.19871-1-vidyas@nvidia.com>
- <20190828172850.19871-3-vidyas@nvidia.com>
+        Thu, 29 Aug 2019 08:04:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41844 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725990AbfH2MEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 08:04:46 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5099649;
+        Thu, 29 Aug 2019 12:04:45 +0000 (UTC)
+Received: from amt.cnet (ovpn-112-4.gru2.redhat.com [10.97.112.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 85FC619D7A;
+        Thu, 29 Aug 2019 12:04:41 +0000 (UTC)
+Received: from amt.cnet (localhost [127.0.0.1])
+        by amt.cnet (Postfix) with ESMTP id 8408F105140;
+        Thu, 29 Aug 2019 09:04:24 -0300 (BRT)
+Received: (from marcelo@localhost)
+        by amt.cnet (8.14.7/8.14.7/Submit) id x7TC4Mmr010498;
+        Thu, 29 Aug 2019 09:04:22 -0300
+Date:   Thu, 29 Aug 2019 09:04:22 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Wanpeng Li <kernellwp@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when
+ dedicated physical CPUs are available
+Message-ID: <20190829120422.GC4949@amt.cnet>
+References: <7b1e3025-f513-7068-32ac-4830d67b65ac@intel.com>
+ <c3fe182f-627f-88ad-cb4d-a4189202b438@redhat.com>
+ <20190803202058.GA9316@amt.cnet>
+ <CANRm+CwtHBOVWFcn+6Z3Ds7dEcNL2JP+b6hLRS=oeUW98A24MQ@mail.gmail.com>
+ <20190826204045.GA24697@amt.cnet>
+ <CANRm+Cx0+V67Ek7FhSs61ZqZL3MgV88Wdy17Q6UA369RH7=dgQ@mail.gmail.com>
+ <CANRm+CxqYMzgvxYyhZLmEzYd6SLTyHdRzKVaSiHO-4SV+OwZUQ@mail.gmail.com>
+ <CAJZ5v0iQc0-WzqeyAh-6m5O-BLraRMj+Z7sqvRgGwh2u2Hp7cg@mail.gmail.com>
+ <20190828143916.GA13725@amt.cnet>
+ <CAJZ5v0jiBprGrwLAhmLbZKpKUvmKwG9w4_R7+dQVqswptis5Qg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4ZLFUWh1odzi/v6L"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190828172850.19871-3-vidyas@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0jiBprGrwLAhmLbZKpKUvmKwG9w4_R7+dQVqswptis5Qg@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Thu, 29 Aug 2019 12:04:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 29, 2019 at 01:37:35AM +0200, Rafael J. Wysocki wrote:
+> On Wed, Aug 28, 2019 at 4:39 PM Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> >
+> > On Wed, Aug 28, 2019 at 10:45:44AM +0200, Rafael J. Wysocki wrote:
+> > > On Wed, Aug 28, 2019 at 10:34 AM Wanpeng Li <kernellwp@gmail.com> wrote:
+> > > >
+> > > > On Tue, 27 Aug 2019 at 08:43, Wanpeng Li <kernellwp@gmail.com> wrote:
+> > > > >
+> > > > > Cc Michael S. Tsirkin,
+> > > > > On Tue, 27 Aug 2019 at 04:42, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> > > > > >
+> > > > > > On Tue, Aug 13, 2019 at 08:55:29AM +0800, Wanpeng Li wrote:
+> > > > > > > On Sun, 4 Aug 2019 at 04:21, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> > > > > > > >
+> > > > > > > > On Thu, Aug 01, 2019 at 06:54:49PM +0200, Paolo Bonzini wrote:
+> > > > > > > > > On 01/08/19 18:51, Rafael J. Wysocki wrote:
+> > > > > > > > > > On 8/1/2019 9:06 AM, Wanpeng Li wrote:
+> > > > > > > > > >> From: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > > > > >>
+> > > > > > > > > >> The downside of guest side polling is that polling is performed even
+> > > > > > > > > >> with other runnable tasks in the host. However, even if poll in kvm
+> > > > > > > > > >> can aware whether or not other runnable tasks in the same pCPU, it
+> > > > > > > > > >> can still incur extra overhead in over-subscribe scenario. Now we can
+> > > > > > > > > >> just enable guest polling when dedicated pCPUs are available.
+> > > > > > > > > >>
+> > > > > > > > > >> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > > > > > >> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > > > > > > > > >> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> > > > > > > > > >> Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> > > > > > > > > >> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > > > > >
+> > > > > > > > > > Paolo, Marcelo, any comments?
+> > > > > > > > >
+> > > > > > > > > Yes, it's a good idea.
+> > > > > > > > >
+> > > > > > > > > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> > > >
+> > > > Hi Marcelo,
+> > > >
+> > > > If you don't have more concern, I guess Rafael can apply this patch
+> > > > now since the merge window is not too far.
+> > >
+> > > I will likely queue it up later today and it will go to linux-next
+> > > early next week.
+> > >
+> > > Thanks!
+> >
+> > NACK patch.
+> 
+> I got an ACK from Paolo on it, though.  Convince Paolo to withdraw his
+> ACK if you want it to not be applied.
+> 
+> > Just don't load the haltpoll driver.
+> 
+> And why would that be better?
 
---4ZLFUWh1odzi/v6L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Split the group of all kvm users in two: overcommit group and non-overcommit
+group.
 
-On Wed, Aug 28, 2019 at 10:58:46PM +0530, Vidya Sagar wrote:
-> Add optional bindings "vpcie3v3-supply" and "vpcie12v-supply" to describe
-> regulators of a PCIe slot's supplies 3.3V and 12V provided the platform
-> is designed to have regulator controlled slot supplies.
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> V3:
-> * None
->=20
-> V2:
-> * None
->=20
->  .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt      | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.t=
-xt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> index 0ac1b867ac24..b739f92da58e 100644
-> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> @@ -104,6 +104,12 @@ Optional properties:
->     specified in microseconds
->  - nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to be
->     specified in microseconds
-> +- vpcie3v3-supply: A phandle to the regulator node that supplies 3.3V to=
- the slot
-> +  if the platform has one such slot. (Ex:- x16 slot owned by C5 controll=
-er
-> +  in p2972-0000 platform).
-> +- vpcie12v-supply: A phandle to the regulator node that supplies 12V to =
-the slot
-> +  if the platform has one such slot. (Ex:- x16 slot owned by C5 controll=
-er
-> +  in p2972-0000 platform).
+Current situation regarding haltpoll driver is:
 
-There's an ongoing discussion regarding the use of optional power
-supplies and I'm wondering if we're not abusing this here. Why exactly
-are these regulators optional?
+overcommit group: haltpoll driver is not loaded by default, they are
+happy.
 
-The distinction is somewhat subtle, but the other way to look at
-modelling this in DT is that the supplies are in fact required, but may
-be connected to an always-on regulator with a fixed voltage. Or in some
-cases they may also be shorted to ground. In both cases the PCI
-controller, or rather the slot that the controller connects to, actually
-"requires" the supplies, it's just that we can get away without
-describing them because they can't be controlled anyway.
+non overcommit group: boots without "realtime hints" flag, loads haltpoll driver, 
+happy.
 
-Looking at the PCI connector pinout for PCI Express, I do see a bunch of
-+3.3 V and +12 V pins. To me that indicates that the 3.3 V and 12 V
-supplies are indeed required for PCI slots. I'm not sure about devices
-that are directly connected to the PCI controller, though. I'll need to
-go look at some schematics to get a better understanding of these.
+Situation with patch above:
 
-Bottom line: I'm wondering if we shouldn't really make these supplies
-mandatory and in case where we don't care either just leave them away
-(the regulator framework will supply a dummy regulator in that case) or
-hook them up to a fixed regulator if that matches the hardware design.
+overcommit group: haltpoll driver is not loaded by default, they are
+happy.
 
-Any thoughts?
+non overcommit group: boots without "realtime hints" flag, haltpoll driver
+cannot be loaded.
 
-Thierry
 
-> =20
->  Examples:
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D
-> @@ -156,6 +162,8 @@ Tegra194:
->  			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /* pre=
-fetchable memory (16GB) */
-> =20
->  		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> +		vpcie3v3-supply =3D <&vdd_3v3_pcie>;
-> +		vpcie12v-supply =3D <&vdd_12v_pcie>;
-> =20
->  		phys =3D <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
->  		       <&p2u_hsio_5>;
-> --=20
-> 2.17.1
->=20
 
---4ZLFUWh1odzi/v6L
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1nvw4ACgkQ3SOs138+
-s6GI6w/+IG7mTCrwYZe0LN6qzkC7/2R7QVuV631kPcoyzIRoQZLYGkdNvI5EAfzF
-8NgV3IpZAIxJDeZl7slSZdXcrCF92OFxy77koBFKQncXlSc/YHKymyXx2trZLzmf
-b7+aO8xnOxaSfHCfdKPVQTndq2piK9APoyTtuVnE9mmgqEGQoEv7N4QiSMx8NabA
-q0MVvrA9l5ibiQ13lfw6QX8iT4txZ17yWQ4wcMSXOOSSnmGkxZq8kOr3OVzahIYY
-ibogwwQPEcV1Auz2TRyVdG4ZftKx21iflj+m/2sbiduh9l3p+aEuB8WIV6T2MbBk
-vXfiC+bWlOUsWpZlb+zb3zOHjte3/53YbVkrgXvdlE+66VYKK/Ok2uAnq9t9RDvT
-swdhH98bWTviSxfdvT3TXKcxX9DT1sI+4rQPqvEO5E2taflYw0VlVGklSMmZqy57
-BApIVrZoh1r0OKgVrTSr/VBkT0yVki8SyKBvH9UzKG42NDf9FNhLeg9ey5UOACZO
-A/ujEXHDjpqyTZmVlo0orYOvKB6qsaM3LS5PQD1FrIjSwFVqVWMPkGeVqZ0OE9za
-tT/v4MGRz9v7GSDTEqAYmTsVhjEzd8h2fuTsdykqxKmMlbTHohS1QVUj4MBkSwcB
-O6cGc3uLm1i5x+0980a+k7CXqmm5ooEcsRspCdi4egaGQdN1jRs=
-=CA6J
------END PGP SIGNATURE-----
-
---4ZLFUWh1odzi/v6L--
