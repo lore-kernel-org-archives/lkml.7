@@ -2,121 +2,147 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683C7C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE15C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7B720644
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:42:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567089759;
-	bh=uDqbdBuhP1ybWO26e7nw/Zs1qPgjlmnImdxzHTf5pjU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kWS7vTbLjrleuB73YuNLyUkDUaLOy/wkMWMKqO4+i9Yvy1Dza1Ud0b/OnkbTll0VM
-	 EsSenhAqicWkUON1KejmVeCktGf6qhrhaFBzfUu5rBLVNStBJ822pZfK2pfqZEnbzV
-	 4OEAqipwDtrTdcEOxYg9zfQ7+2AvyY0QNNzhbcs8=
+	by mail.kernel.org (Postfix) with ESMTP id B028520644
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:44:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="pws3InZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbfH2Oju (ORCPT
+        id S1727978AbfH2On7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:39:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727932AbfH2Ojs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:39:48 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEA7823407;
-        Thu, 29 Aug 2019 14:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567089587;
-        bh=uDqbdBuhP1ybWO26e7nw/Zs1qPgjlmnImdxzHTf5pjU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sr1uDFL0ReGbbsBRLZMfTE4qbYgiuDtFWrZtR3RYGgZOaKp+GxcBq+bfFb/o0QSyZ
-         dLFXUbxi6lC6FztMeA1sPmNWzPTEmXweCwZsEmvQHSTJvltxIDb3xS+tEOCBMTPj+6
-         dACQaAqr84dX+CLgOrHVxpJVVM3NbkC0mKftGG7s=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 02/37] perf event: Check ref_reloc_sym before using it
-Date:   Thu, 29 Aug 2019 11:38:42 -0300
-Message-Id: <20190829143917.29745-3-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190829143917.29745-1-acme@kernel.org>
-References: <20190829143917.29745-1-acme@kernel.org>
+        Thu, 29 Aug 2019 10:43:59 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45926 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfH2On6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 10:43:58 -0400
+Received: by mail-pl1-f194.google.com with SMTP id y8so1670466plr.12
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:43:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1jbNDnatKqrZZbvhaAxgomk5lFvDz0GUQU4rtuS0hzg=;
+        b=pws3InZSGoRYhnY0msy/KI8nH8nUy9PWXFaj3FcNG/GZCigAofnwgs5fjrQ8Da9fqU
+         LNpQeOlxbcmYSt6Uaj1LSagZSEqFQ2qS4K/en9qTys+ZgKZrM0ZGqrZ4NHMOsNDFBuXF
+         4uZe3hiSoi6hgUH6GDDOvCVr2tIEgef6i48qQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1jbNDnatKqrZZbvhaAxgomk5lFvDz0GUQU4rtuS0hzg=;
+        b=TO38Hnd55KMW6h+AU3njrovPhSrVzVGM23mqI2VPQDwcFVrxL4AXFkzCSbLYSRQP+S
+         lhVJ2fGr8WBxkwG5QWcG/n7CA4upIUTmSIgxNCoGSNpEOAEBGWBgjUPoKDEgY0DMMefG
+         CRJKejEJbr29oV8GS3lXQGV4AUH0EdgDLg5N0sXKNmJky/eKIUZF/k5xdVfZq5cg+nR4
+         AXen1qgEFyTkfZb8pgsnrTUdmxJBUCLL8hN2OPLZ+Xa9c2ZNDGO7FACHnS+Zt214QhJX
+         1qgRt0WVr05sbhnSZFwJpq5Yc65cftpDmS4rLcufloALetjKZRlS3cZYGSOm+lfc/E4B
+         SCnA==
+X-Gm-Message-State: APjAAAVRRNvBuUZlRBCaPdAnOrCJXZLa4nGrymIyo7iqUWZWxpe6zKpU
+        avAW3SAWDjbmGl4NKhqVMgEMyQ==
+X-Google-Smtp-Source: APXvYqxMzTPU8bK6VjApFdjKL0gEBlWweOLhLYTEdCnvF7eVDYTr1s/5dEscVTxlZWsL0uFq/aCAzw==
+X-Received: by 2002:a17:902:126:: with SMTP id 35mr2476290plb.76.1567089837473;
+        Thu, 29 Aug 2019 07:43:57 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id ev3sm16452782pjb.3.2019.08.29.07.43.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 07:43:56 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 10:43:55 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC v1 2/2] rcu/tree: Remove dynticks_nmi_nesting counter
+Message-ID: <20190829144355.GE63638@google.com>
+References: <5d648897.1c69fb81.5e60a.fc70@mx.google.com>
+ <20190828202330.GS26530@linux.ibm.com>
+ <20190828210525.GB75931@google.com>
+ <20190828211904.GX26530@linux.ibm.com>
+ <20190828214241.GD75931@google.com>
+ <20190828220108.GC26530@linux.ibm.com>
+ <20190828221444.GA100789@google.com>
+ <20190828231247.GE26530@linux.ibm.com>
+ <20190829015155.GB100789@google.com>
+ <20190829034336.GD4125@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829034336.GD4125@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Lubashev <ilubashe@akamai.com>
+On Wed, Aug 28, 2019 at 08:43:36PM -0700, Paul E. McKenney wrote:
+[snip]
+> > > > > This change is not fixing a bug, so there is no need for an emergency fix,
+> > > > > and thus no point in additional churn.  I understand that it is a bit
+> > > > > annoying to code and test something and have your friendly maintainer say
+> > > > > "sorry, wrong rocks", and the reason that I understand this is that I do
+> > > > > that to myself rather often.
+> > > > 
+> > > > The motivation for me for this change is to avoid future bugs such as with
+> > > > the following patch where "== 2" did not take the force write of
+> > > > DYNTICK_IRQ_NONIDLE into account:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?h=dev&id=13c4b07593977d9288e5d0c21c89d9ba27e2ea1f
+> > > 
+> > > Yes, the current code does need some simplification.
+> > > 
+> > > > I still don't see it as pointless churn, it is also a maintenance cost in its
+> > > > current form and the simplification is worth it IMHO both from a readability,
+> > > > and maintenance stand point.
+> > > > 
+> > > > I still don't see what's technically wrong with the patch. I could perhaps
+> > > > add the above "== 2" point in the patch?
+> > > 
+> > > I don't know of a crash or splat your patch would cause, if that is
+> > > your question.  But that is also true of the current code, so the point
+> > > is simplification, not bug fixing.  And from what I can see, there is an
+> > > opportunity to simplify quite a bit further.  And with something like
+> > > RCU, further simplification is worth -serious- consideration.
+> > > 
+> > > > We could also discuss f2f at LPC to see if we can agree about it?
+> > > 
+> > > That might make a lot of sense.
+> > 
+> > Sure. I am up for a further redesign / simplification. I will think more
+> > about your suggestions and can also further discuss at LPC.
+> 
+> One question that might (or might not) help:  Given the compound counter,
+> where the low-order hex digit indicates whether the corresponding CPU
+> is running in a non-idle kernel task and the rest of the hex digits
+> indicate the NMI-style nesting counter shifted up by four bits, what
+> could rcu_is_cpu_rrupt_from_idle() be reduced to?
+> 
+> > And this patch is on LKML archives and is not going anywhere so there's no
+> > rush I guess ;-)
+> 
+> True enough!  ;-)
 
-Check for ref_reloc_sym before using it instead of checking
-symbol_conf.kptr_restrict and relying solely on that check.
+Paul, do we also nuke rcu_eqs_special_set()?  Currently I don't see anyone
+using it. And also remove the bottom most bit of dynticks?
 
-Reported-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
-Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/1566869956-7154-2-git-send-email-ilubashe@akamai.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/event.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Also what happens if a TLB flush broadcast is needed? Do we IPI nohz or idle
+CPUs are the moment?
 
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 33616ea62a47..e33dd1a040cc 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -913,11 +913,13 @@ static int __perf_event__synthesize_kernel_mmap(struct perf_tool *tool,
- 	int err;
- 	union perf_event *event;
- 
--	if (symbol_conf.kptr_restrict)
--		return -1;
- 	if (map == NULL)
- 		return -1;
- 
-+	kmap = map__kmap(map);
-+	if (!kmap->ref_reloc_sym)
-+		return -1;
-+
- 	/*
- 	 * We should get this from /sys/kernel/sections/.text, but till that is
- 	 * available use this, and after it is use this as a fallback for older
-@@ -940,7 +942,6 @@ static int __perf_event__synthesize_kernel_mmap(struct perf_tool *tool,
- 		event->header.misc = PERF_RECORD_MISC_GUEST_KERNEL;
- 	}
- 
--	kmap = map__kmap(map);
- 	size = snprintf(event->mmap.filename, sizeof(event->mmap.filename),
- 			"%s%s", machine->mmap_name, kmap->ref_reloc_sym->name) + 1;
- 	size = PERF_ALIGN(size, sizeof(u64));
--- 
-2.21.0
+All of this was introduced in:
+b8c17e6664c4 ("rcu: Maintain special bits at bottom of ->dynticks counter")
+
+thanks,
+
+ - Joel
 
