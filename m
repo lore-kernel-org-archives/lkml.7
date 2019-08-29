@@ -2,294 +2,162 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6A7C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FD9C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4832123405
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FDEE23405
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:37:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfH2Kgm (ORCPT
+        id S1727505AbfH2KhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:36:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39604 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726852AbfH2Kgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:36:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9BDFDAEFF;
-        Thu, 29 Aug 2019 10:36:39 +0000 (UTC)
-Date:   Thu, 29 Aug 2019 12:36:38 +0200
-From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Breno Leitao <leitao@debian.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Nicolai Stange <nstange@suse.de>,
-        Michael Neuling <mikey@neuling.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Brauner <christian@brauner.io>,
-        David Howells <dhowells@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/4] powerpc/64: make buildable without CONFIG_COMPAT
-Message-ID: <20190829123638.589e5c77@naga>
-In-Reply-To: <a829dfabed8285161fcdff166d58c7e8f0f6d402.1567072270.git.msuchanek@suse.de>
-References: <cover.1567072270.git.msuchanek@suse.de>
-        <a829dfabed8285161fcdff166d58c7e8f0f6d402.1567072270.git.msuchanek@suse.de>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Thu, 29 Aug 2019 06:37:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41662 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726839AbfH2KhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:37:18 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 169CBC0546F2;
+        Thu, 29 Aug 2019 10:37:18 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9B3E960C44;
+        Thu, 29 Aug 2019 10:37:13 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 12:37:11 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Huth <thuth@redhat.com>
+Subject: Re: [PATCH v2 3/4] KVM: selftests: Introduce VM_MODE_PXXV48_4K
+Message-ID: <20190829103711.uqj6rrcktnz2y3wi@kamzik.brq.redhat.com>
+References: <20190829022117.10191-1-peterx@redhat.com>
+ <20190829022117.10191-4-peterx@redhat.com>
+ <20190829094516.fyfhgz7ma2nfazoq@kamzik.brq.redhat.com>
+ <20190829100309.GJ8729@xz-x1>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829100309.GJ8729@xz-x1>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 29 Aug 2019 10:37:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 12:23:42 +0200
-Michal Suchanek <msuchanek@suse.de> wrote:
-
-> There are numerous references to 32bit functions in generic and 64bit
-> code so ifdef them out.
+On Thu, Aug 29, 2019 at 06:03:09PM +0800, Peter Xu wrote:
+> On Thu, Aug 29, 2019 at 11:45:16AM +0200, Andrew Jones wrote:
+> > On Thu, Aug 29, 2019 at 10:21:16AM +0800, Peter Xu wrote:
+> > > The naming VM_MODE_P52V48_4K is explicit but unclear when used on
+> > > x86_64 machines, because x86_64 machines are having various physical
+> > > address width rather than some static values.  Here's some examples:
+> > > 
+> > >   - Intel Xeon E3-1220:  36 bits
+> > >   - Intel Core i7-8650:  39 bits
+> > >   - AMD   EPYC 7251:     48 bits
+> > > 
+> > > All of them are using 48 bits linear address width but with totally
+> > > different physical address width (and most of the old machines should
+> > > be less than 52 bits).
+> > > 
+> > > Let's create a new guest mode called VM_MODE_PXXV48_4K for current
+> > > x86_64 tests and make it as the default to replace the old naming of
+> > > VM_MODE_P52V48_4K because it shows more clearly that the PA width is
+> > > not really a constant.  Meanwhile we also stop assuming all the x86
+> > > machines are having 52 bits PA width but instead we fetch the real
+> > > vm->pa_bits from CPUID 0x80000008 during runtime.
+> > > 
+> > > We currently make this exclusively used by x86_64 but no other arch.
+> > > 
+> > > As a slight touch up, moving DEBUG macro from dirty_log_test.c to
+> > > kvm_util.h so lib can use it too.
+> > > 
+> > > Signed-off-by: Peter Xu <peterx@redhat.com>
+> > > ---
+> > >  tools/testing/selftests/kvm/dirty_log_test.c  |  5 ++--
+> > >  .../testing/selftests/kvm/include/kvm_util.h  |  9 +++++-
+> > >  .../selftests/kvm/include/x86_64/processor.h  |  3 ++
+> > >  .../selftests/kvm/lib/aarch64/processor.c     |  3 ++
+> > >  tools/testing/selftests/kvm/lib/kvm_util.c    | 29 ++++++++++++++----
+> > >  .../selftests/kvm/lib/x86_64/processor.c      | 30 ++++++++++++++++---
+> > >  6 files changed, 65 insertions(+), 14 deletions(-)
+> > > 
+> > > diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+> > > index efb7746a7e99..c86f83cb33e5 100644
+> > > --- a/tools/testing/selftests/kvm/dirty_log_test.c
+> > > +++ b/tools/testing/selftests/kvm/dirty_log_test.c
+> > > @@ -19,8 +19,6 @@
+> > >  #include "kvm_util.h"
+> > >  #include "processor.h"
+> > >  
+> > > -#define DEBUG printf
+> > > -
+> > >  #define VCPU_ID				1
+> > >  
+> > >  /* The memory slot index to track dirty pages */
+> > > @@ -256,6 +254,7 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
+> > >  
+> > >  	switch (mode) {
+> > >  	case VM_MODE_P52V48_4K:
+> > > +	case VM_MODE_PXXV48_4K:
+> > >  		guest_pa_bits = 52;
+> > >  		guest_page_shift = 12;
+> > >  		break;
+> > > @@ -446,7 +445,7 @@ int main(int argc, char *argv[])
+> > >  #endif
+> > >  
+> > >  #ifdef __x86_64__
+> > > -	vm_guest_mode_params_init(VM_MODE_P52V48_4K, true, true);
+> > > +	vm_guest_mode_params_init(VM_MODE_PXXV48_4K, true, true);
+> > >  #endif
+> > >  #ifdef __aarch64__
+> > >  	vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
+> > > diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+> > > index c78faa2ff7f3..430edbacb9b2 100644
+> > > --- a/tools/testing/selftests/kvm/include/kvm_util.h
+> > > +++ b/tools/testing/selftests/kvm/include/kvm_util.h
+> > > @@ -24,6 +24,10 @@ struct kvm_vm;
+> > >  typedef uint64_t vm_paddr_t; /* Virtual Machine (Guest) physical address */
+> > >  typedef uint64_t vm_vaddr_t; /* Virtual Machine (Guest) virtual address */
+> > >  
+> > > +#ifndef DEBUG
+> > > +#define DEBUG printf
+> > > +#endif
+> > 
+> > There's no way to turn this off without modifying code. I suggested
+> > 
+> > #ifndef NDEBUG
+> > #define dprintf printf
+> > #endif
+> > 
+> > which allows the dprintf(...) statements to be removed by compiling with
+> > -DNDEBUG added to CFLAGS. And that would also disable all the asserts().
+> > That's probably not all that useful, but then again, defining printf() as
+> > DEBUG() isn't useful either if the intention is to always print.
 > 
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
-> v2:
-> - fix 32bit ifdef condition in signal.c
-> - simplify the compat ifdef condition in vdso.c - 64bit is redundant
-> - simplify the compat ifdef condition in callchain.c - 64bit is redundant
-> v3:
-> - use IS_ENABLED and maybe_unused where possible
-> - do not ifdef declarations
-> - clean up Makefile
-> v4:
-> - further makefile cleanup
-> - simplify is_32bit_task conditions
-> - avoid ifdef in condition by using return
-> ---
->  arch/powerpc/include/asm/thread_info.h |  4 ++--
->  arch/powerpc/kernel/Makefile           |  7 +++----
->  arch/powerpc/kernel/entry_64.S         |  2 ++
->  arch/powerpc/kernel/signal.c           |  3 +--
->  arch/powerpc/kernel/syscall_64.c       |  6 ++----
->  arch/powerpc/kernel/vdso.c             |  5 ++---
->  arch/powerpc/perf/callchain.c          | 14 ++++++++++----
->  7 files changed, 22 insertions(+), 19 deletions(-)
+> Sorry I misread that...
 > 
-> diff --git a/arch/powerpc/include/asm/thread_info.h b/arch/powerpc/include/asm/thread_info.h
-> index 8e1d0195ac36..c128d8a48ea3 100644
-> --- a/arch/powerpc/include/asm/thread_info.h
-> +++ b/arch/powerpc/include/asm/thread_info.h
-> @@ -144,10 +144,10 @@ static inline bool test_thread_local_flags(unsigned int flags)
->  	return (ti->local_flags & flags) != 0;
->  }
->  
-> -#ifdef CONFIG_PPC64
-> +#ifdef CONFIG_COMPAT
->  #define is_32bit_task()	(test_thread_flag(TIF_32BIT))
->  #else
-> -#define is_32bit_task()	(1)
-> +#define is_32bit_task()	(IS_ENABLED(CONFIG_PPC32))
->  #endif
->  
->  #if defined(CONFIG_PPC64)
-> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-> index 1d646a94d96c..9d8772e863b9 100644
-> --- a/arch/powerpc/kernel/Makefile
-> +++ b/arch/powerpc/kernel/Makefile
-> @@ -44,16 +44,15 @@ CFLAGS_btext.o += -DDISABLE_BRANCH_PROFILING
->  endif
->  
->  obj-y				:= cputable.o ptrace.o syscalls.o \
-> -				   irq.o align.o signal_32.o pmc.o vdso.o \
-> +				   irq.o align.o signal_$(BITS).o pmc.o vdso.o \
->  				   process.o systbl.o idle.o \
->  				   signal.o sysfs.o cacheinfo.o time.o \
->  				   prom.o traps.o setup-common.o \
->  				   udbg.o misc.o io.o misc_$(BITS).o \
->  				   of_platform.o prom_parse.o
-> -obj-$(CONFIG_PPC64)		+= setup_64.o sys_ppc32.o \
-> -				   signal_64.o ptrace32.o \
-> -				   paca.o nvram_64.o firmware.o \
-> +obj-$(CONFIG_PPC64)		+= setup_64.o paca.o nvram_64.o firmware.o \
->  				   syscall_64.o
-> +obj-$(CONFIG_COMPAT)		+= sys_ppc32.o ptrace32.o signal_32.o
->  obj-$(CONFIG_VDSO32)		+= vdso32/
->  obj-$(CONFIG_PPC_WATCHDOG)	+= watchdog.o
->  obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
-> diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
-> index 2ec825a85f5b..a2dbf216f607 100644
-> --- a/arch/powerpc/kernel/entry_64.S
-> +++ b/arch/powerpc/kernel/entry_64.S
-> @@ -51,8 +51,10 @@
->  SYS_CALL_TABLE:
->  	.tc sys_call_table[TC],sys_call_table
->  
-> +#ifdef CONFIG_COMPAT
->  COMPAT_SYS_CALL_TABLE:
->  	.tc compat_sys_call_table[TC],compat_sys_call_table
-> +#endif
->  
->  /* This value is used to mark exception frames on the stack. */
->  exception_marker:
-> diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
-> index 60436432399f..61678cb0e6a1 100644
-> --- a/arch/powerpc/kernel/signal.c
-> +++ b/arch/powerpc/kernel/signal.c
-> @@ -247,7 +247,6 @@ static void do_signal(struct task_struct *tsk)
->  	sigset_t *oldset = sigmask_to_save();
->  	struct ksignal ksig = { .sig = 0 };
->  	int ret;
-> -	int is32 = is_32bit_task();
->  
->  	BUG_ON(tsk != current);
->  
-> @@ -277,7 +276,7 @@ static void do_signal(struct task_struct *tsk)
->  
->  	rseq_signal_deliver(&ksig, tsk->thread.regs);
->  
-> -	if (is32) {
-> +	if (is_32bit_task()) {
->          	if (ksig.ka.sa.sa_flags & SA_SIGINFO)
->  			ret = handle_rt_signal32(&ksig, oldset, tsk);
->  		else
-> diff --git a/arch/powerpc/kernel/syscall_64.c b/arch/powerpc/kernel/syscall_64.c
-> index 98ed970796d5..0d5cbbe54cf1 100644
-> --- a/arch/powerpc/kernel/syscall_64.c
-> +++ b/arch/powerpc/kernel/syscall_64.c
-> @@ -38,7 +38,6 @@ typedef long (*syscall_fn)(long, long, long, long, long, long);
->  
->  long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8, unsigned long r0, struct pt_regs *regs)
->  {
-> -	unsigned long ti_flags;
->  	syscall_fn f;
->  
->  	BUG_ON(!(regs->msr & MSR_PR));
-> @@ -83,8 +82,7 @@ long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8,
->  	 */
->  	regs->softe = IRQS_ENABLED;
->  
-> -	ti_flags = current_thread_info()->flags;
-> -	if (unlikely(ti_flags & _TIF_SYSCALL_DOTRACE)) {
-> +	if (unlikely(current_thread_info()->flags & _TIF_SYSCALL_DOTRACE)) {
->  		/*
->  		 * We use the return value of do_syscall_trace_enter() as the
->  		 * syscall number. If the syscall was rejected for any reason
-> @@ -100,7 +98,7 @@ long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8,
->  	/* May be faster to do array_index_nospec? */
->  	barrier_nospec();
->  
-> -	if (unlikely(ti_flags & _TIF_32BIT)) {
-> +	if (unlikely(is_32bit_task())) {
->  		f = (void *)compat_sys_call_table[r0];
->  
->  		r3 &= 0x00000000ffffffffULL;
-> diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
-> index d60598113a9f..6d4a077f74d6 100644
-> --- a/arch/powerpc/kernel/vdso.c
-> +++ b/arch/powerpc/kernel/vdso.c
-> @@ -667,9 +667,7 @@ static void __init vdso_setup_syscall_map(void)
->  {
->  	unsigned int i;
->  	extern unsigned long *sys_call_table;
-> -#ifdef CONFIG_PPC64
->  	extern unsigned long *compat_sys_call_table;
-> -#endif
->  	extern unsigned long sys_ni_syscall;
->  
->  
-> @@ -678,7 +676,8 @@ static void __init vdso_setup_syscall_map(void)
->  		if (sys_call_table[i] != sys_ni_syscall)
->  			vdso_data->syscall_map_64[i >> 5] |=
->  				0x80000000UL >> (i & 0x1f);
-> -		if (compat_sys_call_table[i] != sys_ni_syscall)
-> +		if (IS_ENABLED(CONFIG_COMPAT) &&
-> +		    compat_sys_call_table[i] != sys_ni_syscall)
->  			vdso_data->syscall_map_32[i >> 5] |=
->  				0x80000000UL >> (i & 0x1f);
->  #else /* CONFIG_PPC64 */
-> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-> index c84bbd4298a0..aef8c750d242 100644
-> --- a/arch/powerpc/perf/callchain.c
-> +++ b/arch/powerpc/perf/callchain.c
-> @@ -15,7 +15,7 @@
->  #include <asm/sigcontext.h>
->  #include <asm/ucontext.h>
->  #include <asm/vdso.h>
-> -#ifdef CONFIG_PPC64
-> +#ifdef CONFIG_COMPAT
->  #include "../kernel/ppc32.h"
->  #endif
->  #include <asm/pte-walk.h>
-> @@ -165,6 +165,7 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
->  	return read_user_stack_slow(ptr, ret, 8);
->  }
->  
-> +__maybe_unused
->  static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
->  {
->  	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> @@ -341,6 +342,7 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
->  
->  #endif /* CONFIG_PPC64 */
->  
-> +#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
->  /*
->   * Layout for non-RT signal frames
->   */
-> @@ -482,12 +484,16 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
->  		sp = next_sp;
->  	}
->  }
-> +#endif /* 32bit */
->  
->  void
->  perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
->  {
-> -	if (current_is_64bit())
-> -		perf_callchain_user_64(entry, regs);
-> -	else
-> +#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
-> +	if (!current_is_64bit()) {
->  		perf_callchain_user_32(entry, regs);
-> +		return;
-> +	}
-> +#endif
-> +	perf_callchain_user_64(entry, regs);
->  }
+> Though, I'm afraid even if with above it won't compile with -DNDEBUG
+> because the compiler could start to complain about undefined
+> "dprintf", or even recognize the dprintf as the libc call, dprintf(3).
+> 
+> So instead, does below looks ok?
+> 
+> #ifdef NDEBUG
+> #define DEBUG(...)
+> #else
+> #define DEBUG(...) printf(__VA_ARGS__);
+> #endif
 
-This will likely cause unreachable code on 32bit. Since there is need
-for an ifdef and it cannot be inside condition the best is probably to
-just split it to two separate conditions:
+yeah, that's what I was looking for, but I wasn't thinking clearly when
+I suggested just the name redefinition.
 
- void
- perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
- {
-        if (current_is_64bit())
-                perf_callchain_user_64(entry, regs);
--       else
-+#if defined(CONFIG_PPC32) || defined(CONFIG_COMPAT)
-+       if (!current_is_64bit())
-                perf_callchain_user_32(entry, regs);
-+#endif
- }
-
+drew
