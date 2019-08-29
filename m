@@ -2,126 +2,73 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17604C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88AAC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE1712173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:28:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k120kgxK"
+	by mail.kernel.org (Postfix) with ESMTP id 96C922173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:29:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbfH2X2R (ORCPT
+        id S1728256AbfH2X3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 19:28:17 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:32981 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbfH2X2Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 19:28:16 -0400
-Received: by mail-pl1-f193.google.com with SMTP id go14so2352900plb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 16:28:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UELrewFF8NN0iH92okVL2LENf/NFX05X05hyTPWg0IU=;
-        b=k120kgxKbzdzvv8c0Tgeo+3CuDk8ZtJzhLlATwlcEqhC/5C5t+wUkeQnzhND/1Nmd1
-         6M78GmbDAJsrtaQhm6jNUjG7jee+RtBK7aetuQvupAYvXWRgoUlo+d7h6BzzrBTKefC2
-         1eXKS2n4azk4TMQm7MaIHIZVAVeQ21qmyL5DRY8DeuR8mRwKI4BGf8YT91scLV/mbCY0
-         /ZJUIuwC0lBbgdG1UZZI1l9/3QCMYOCLAhfCC3nZh/db85OEpcnhUEmoU/SK2N/LNq9U
-         e6kLGvZwbGxQZRHIf6uFAmkxLtXO5BpDKlq7OyeRIdkn7p8hEn4iYohyh7yXDD/CPAWh
-         ytZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UELrewFF8NN0iH92okVL2LENf/NFX05X05hyTPWg0IU=;
-        b=WEno6cZ0LTJzNFFFfvZrVrTjTksfiHL4Por02vXejqs8ucs3a6yjMHgLaKu+VBiV44
-         mZZfzQllLcm0X3BFbVutuEQtTjbGmkKFheJ8UOS5ifb57q8+EkyPr+KvZfTEqP9NUQVM
-         xJ794a6JQCKbuPPNI4zmdB18Kgvx5BpEfg8IAXvsPvlV27hajkBWrhSaxD/KAa7ft+L/
-         yeqxGDzWL5Bn/B5wR/PCNq77MEZv400pw1g4j/m6AIo0ZKldCIx+NwQXC1DYW3wYDNP1
-         W6caU6IrI9qL5+qUd6zgjwH5jpNYzoDgkJRRACRoaQ9r7OER4hAQSTz9zn4BczfObb7e
-         qhQQ==
-X-Gm-Message-State: APjAAAWPim2ZpO67Zlla685QYpWryzVz691grsPUd7U1E1DGy2u5iSAa
-        Mp49Cxsr9S1lUiyLLBlprPOUKioRysrhoqCFiOQdrw==
-X-Google-Smtp-Source: APXvYqxF8GTTIW5esjRxN2qu78uhNM5IBHoP85JOWcDzALTrrZV1TDADOXjuJ1weL4cTxfZFBAARSF+74BWd4bhJA9w=
-X-Received: by 2002:a17:902:96a:: with SMTP id 97mr12618288plm.264.1567121295532;
- Thu, 29 Aug 2019 16:28:15 -0700 (PDT)
+        Thu, 29 Aug 2019 19:29:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34344 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726526AbfH2X3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 19:29:06 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1872E3C93;
+        Thu, 29 Aug 2019 23:29:06 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5476C60635;
+        Thu, 29 Aug 2019 23:29:05 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Subject: [PATCH] objtool: Clobber user CFLAGS variable
+Date:   Thu, 29 Aug 2019 18:28:49 -0500
+Message-Id: <83a276df209962e6058fcb6c615eef9d401c21bc.1567121311.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-References: <20190827062309.GA30987@kroah.com> <20190827222145.32642-1-rajatja@google.com>
-In-Reply-To: <20190827222145.32642-1-rajatja@google.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Thu, 29 Aug 2019 16:27:39 -0700
-Message-ID: <CACK8Z6EAqVb20rXHut8mqTaeO1R6uH_zLxi=3wVPgYycDuuPSQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] PCI/AER: Add PoisonTLPBlocked to Uncorrectable errors
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 29 Aug 2019 23:29:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 3:21 PM Rajat Jain <rajatja@google.com> wrote:
->
-> The elements in the aer_uncorrectable_error_string[] refer to
-> the bit names in Uncorrectable Error status Register in the PCIe spec
-> (Sec 7.8.4.2 in PCIe 4.0)
->
-> Add the last error bit in the strings array that was missing.
->
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
-> v3: same as v2
-> v2: same as v1
+If the build user has the CFLAGS variable set in their environment,
+objtool blindly appends to it, which can cause unexpected behavior.
 
-Hi Bjorn,
+Clobber CFLAGS to ensure consistent objtool compilation behavior.
 
-This patch seems like independent of the other patch to split the AER
-stats. Can you review and apply this one so that I don't have to keep
-sending v4, v5 (where each version is basically same as v1) ... of
-this patch with every iteration of the other patch?
+Reported-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Tested-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ tools/objtool/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'll be working on Greg's and your comments on the other patch.
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index 88158239622b..20f67fcf378d 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -35,7 +35,7 @@ INCLUDES := -I$(srctree)/tools/include \
+ 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
+ 	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include
+ WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
+-CFLAGS   += -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
++CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
+ LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+ 
+ # Allow old libelf to be used:
+-- 
+2.20.1
 
-Thanks,
-
-Rajat
-
-
->
->  drivers/pci/pcie/aer.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index b45bc47d04fe..68060a290291 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -36,7 +36,7 @@
->  #define AER_ERROR_SOURCES_MAX          128
->
->  #define AER_MAX_TYPEOF_COR_ERRS                16      /* as per PCI_ERR_COR_STATUS */
-> -#define AER_MAX_TYPEOF_UNCOR_ERRS      26      /* as per PCI_ERR_UNCOR_STATUS*/
-> +#define AER_MAX_TYPEOF_UNCOR_ERRS      27      /* as per PCI_ERR_UNCOR_STATUS*/
->
->  struct aer_err_source {
->         unsigned int status;
-> @@ -560,6 +560,7 @@ static const char *aer_uncorrectable_error_string[AER_MAX_TYPEOF_UNCOR_ERRS] = {
->         "BlockedTLP",                   /* Bit Position 23      */
->         "AtomicOpBlocked",              /* Bit Position 24      */
->         "TLPBlockedErr",                /* Bit Position 25      */
-> +       "PoisonTLPBlocked",             /* Bit Position 26      */
->  };
->
->  static const char *aer_agent_string[] = {
-> --
-> 2.23.0.187.g17f5b7556c-goog
->
