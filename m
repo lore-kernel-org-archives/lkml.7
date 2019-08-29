@@ -2,107 +2,163 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F890C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBADC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3102073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 857E52339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:17:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k19WPym2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfH2JQ4 (ORCPT
+        id S1727087AbfH2JRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:16:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:41070 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbfH2JQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:16:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68BD828;
-        Thu, 29 Aug 2019 02:16:55 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 094843F246;
-        Thu, 29 Aug 2019 02:16:53 -0700 (PDT)
-Subject: Re: [PATCH 1/3] mm: split out a new pagewalk.h header from mm.h
-To:     Mike Rapoport <rppt@linux.ibm.com>, Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?Q?Thomas_Hellstr=c3=b6m?= <thomas@shipmail.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Hellstrom <thellstrom@vmware.com>
-References: <20190828141955.22210-1-hch@lst.de>
- <20190828141955.22210-2-hch@lst.de> <20190829090551.GB16471@rapoport-lnx>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <ec851f20-b959-eff6-e91f-1a62619803c3@arm.com>
-Date:   Thu, 29 Aug 2019 10:16:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 05:17:18 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42818 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfH2JRS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 05:17:18 -0400
+Received: by mail-ed1-f67.google.com with SMTP id m44so3229882edd.9;
+        Thu, 29 Aug 2019 02:17:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Pj7f+sDqW2TJkX8VbNnafBgnm3E9qPWWRCV6G6c4Ssk=;
+        b=k19WPym2o2hprt/FjqTEoD+WYq5/IEJe/Spr+nkG5i2lRprzlHI9uhkIDyV+dja7GZ
+         P1qXN6rHGLT+/x5UZsC/MGB9WuoV4SQ+lZyUpMVZD1r0ISvOXrUay0hUwX5Okor0TwVa
+         vVO9WrnZ4ebvj2+uAl7tC3ts8NoOVzZVJ3W8WpAsuHAFkUhtkwGZVkXYb4EAmNHCmoVI
+         G/gGacO0too7Ax8OzJfdppUlXaAjdqNXDSWW70YPycQeyvzUMqIIPVcUPoqI9cNr2hv6
+         a1VtiJAOUTNTAug9UyfKQXPNmLj5ImX8F3nyn/fiMCzelQ99e6bqZtNCY6mGqQRojlSf
+         07SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=Pj7f+sDqW2TJkX8VbNnafBgnm3E9qPWWRCV6G6c4Ssk=;
+        b=KzN1xMFlYF+sf5gOue5iTDGePkYaso9WYB0UXcxD8A5fjdXYeLgkGAR9JUMoxg2fUE
+         gfQz4IywO4OEazJ4HhAuRRDrd2WXP3NROJM0A+OzbQLv+jsBEZjPSJL/z5b+ri+Jn6p6
+         YlXh42Ot+qTA4jhW/M/ivMJc+vd5fp3aumqyQNI+96tGUBTVLowO0iaEpJ7KsNd7SjZb
+         Pa55K3JgKsF3Ipd2BYfogin9D+nVGGLSsYD5MgxmkvOzQwVJdu+fhQEBpQbJ0XFUEeIQ
+         QfdfrXSa2HHE9uMqFEm3Xzb+jHC9lpIdAf0FG0Z3Y4YFXK03Fx/MxRoAWlj/JOvDCXJs
+         +jgQ==
+X-Gm-Message-State: APjAAAVZ4fIO+/aObIA9uWUaxZXd8lQY7wEWfclUy5zxPytGFFm0pKFT
+        KixZX2TTlszQFv0BP2TjWJI=
+X-Google-Smtp-Source: APXvYqyZGI6MDjRDplO415Nr0UzGhWhWlXrOAglxeH0HyAkVvixfKKnKPi3OjQdVoxU4rgxKIk+UPQ==
+X-Received: by 2002:a50:bf4f:: with SMTP id g15mr8455764edk.92.1567070236167;
+        Thu, 29 Aug 2019 02:17:16 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id h6sm334213eds.48.2019.08.29.02.17.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 02:17:15 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH v3] PCI: hv: Make functions static
+Date:   Thu, 29 Aug 2019 11:17:13 +0200
+Message-Id: <20190829091713.27130-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20190828221846.6672-1-kw@linux.com>
+References: <20190828221846.6672-1-kw@linux.com>
 MIME-Version: 1.0
-In-Reply-To: <20190829090551.GB16471@rapoport-lnx>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/08/2019 10:05, Mike Rapoport wrote:
-> On Wed, Aug 28, 2019 at 04:19:53PM +0200, Christoph Hellwig wrote:
-[...]
->> diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
->> new file mode 100644
->> index 000000000000..df278a94086d
->> --- /dev/null
->> +++ b/include/linux/pagewalk.h
->> @@ -0,0 +1,54 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +#ifndef _LINUX_PAGEWALK_H
->> +#define _LINUX_PAGEWALK_H
->> +
->> +#include <linux/mm.h>
->> +
->> +/**
->> + * mm_walk - callbacks for walk_page_range
->> + * @pud_entry: if set, called for each non-empty PUD (2nd-level) entry
-> 
-> Sorry for jumping late, can we remove the level numbers here and below?
-> PUD can be non-existent, 2nd or 3rd (from top) and PTE can be from 2nd to
-> 5th...
-> 
-> I'd completely drop the numbers and mark PTE as "lowest level".
+Functions hv_read_config_block(), hv_write_config_block()
+and hv_register_block_invalidate() are not used anywhere
+else and are local to drivers/pci/controller/pci-hyperv.c,
+and do not need to be in global scope, so make these static.
 
-This patch is just moving the code between, so it seems right to leave
-it alone for the moment. My series[1] (which I'm going to rebase on
-this, hopefully soon) will rename this:
+Resolve following compiler warning that can be seen when
+building with warnings enabled (W=1):
 
->  /**
->   * mm_walk - callbacks for walk_page_range
-> - * @pud_entry: if set, called for each non-empty PUD (2nd-level) entry
-> - *	       this handler should only handle pud_trans_huge() puds.
-> - *	       the pmd_entry or pte_entry callbacks will be used for
-> - *	       regular PUDs.
-> - * @pmd_entry: if set, called for each non-empty PMD (3rd-level) entry
-> + * @pgd_entry: if set, called for each non-empty PGD (top-level) entry
-> + * @p4d_entry: if set, called for each non-empty P4D entry
-> + * @pud_entry: if set, called for each non-empty PUD entry
-> + * @pmd_entry: if set, called for each non-empty PMD entry
->   *	       this handler is required to be able to handle
->   *	       pmd_trans_huge() pmds.  They may simply choose to
->   *	       split_huge_page() instead of handling it explicitly.
-> - * @pte_entry: if set, called for each non-empty PTE (4th-level) entry
-> + * @pte_entry: if set, called for each non-empty PTE (lowest-level) entry
->   * @pte_hole: if set, called for each hole at all levels
->   * @hugetlb_entry: if set, called for each hugetlb entry
->   * @test_walk: caller specific callback function to determine whether
+drivers/pci/controller/pci-hyperv.c:933:5: warning:
+ no previous prototype for ‘hv_read_config_block’
+  [-Wmissing-prototypes]
 
-Which matches your suggestion of just "top-level"/"lowest-level".
+drivers/pci/controller/pci-hyperv.c:1013:5: warning:
+ no previous prototype for ‘hv_write_config_block’
+  [-Wmissing-prototypes]
 
-Steve
+drivers/pci/controller/pci-hyperv.c:1082:5: warning:
+ no previous prototype for ‘hv_register_block_invalidate’
+  [-Wmissing-prototypes]
 
-[1]
-https://lore.kernel.org/lkml/20190731154603.41797-12-steven.price@arm.com/
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+Changes in v3:
+  Commit message has been wrapped to fit 75 columns.
+  Addressed formatting based on feedback from v2.
+
+Changes in v2:
+  Update commit message to include compiler warning.
+
+ drivers/pci/controller/pci-hyperv.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index f1f300218fab..ba988fe033b5 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -930,8 +930,9 @@ static void hv_pci_read_config_compl(void *context, struct pci_response *resp,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+-			 unsigned int block_id, unsigned int *bytes_returned)
++static int hv_read_config_block(struct pci_dev *pdev, void *buf,
++				unsigned int len, unsigned int block_id,
++				unsigned int *bytes_returned)
+ {
+ 	struct hv_pcibus_device *hbus =
+ 		container_of(pdev->bus->sysdata, struct hv_pcibus_device,
+@@ -1010,8 +1011,8 @@ static void hv_pci_write_config_compl(void *context, struct pci_response *resp,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+-			  unsigned int block_id)
++static int hv_write_config_block(struct pci_dev *pdev, void *buf,
++				 unsigned int len, unsigned int block_id)
+ {
+ 	struct hv_pcibus_device *hbus =
+ 		container_of(pdev->bus->sysdata, struct hv_pcibus_device,
+@@ -1079,9 +1080,9 @@ int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
+-				 void (*block_invalidate)(void *context,
+-							  u64 block_mask))
++static int hv_register_block_invalidate(
++	struct pci_dev *pdev, void *context,
++	void (*block_invalidate)(void *context, u64 block_mask))
+ {
+ 	struct hv_pcibus_device *hbus =
+ 		container_of(pdev->bus->sysdata, struct hv_pcibus_device,
+@@ -1097,7 +1098,6 @@ int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
+ 
+ 	put_pcichild(hpdev);
+ 	return 0;
+-
+ }
+ 
+ /* Interrupt management hooks */
+-- 
+2.22.1
+
