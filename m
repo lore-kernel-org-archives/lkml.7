@@ -2,51 +2,101 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A74C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ADAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D22A2080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9854A2080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbfH2Pi2 (ORCPT
+        id S1727546AbfH2PjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:38:28 -0400
-Received: from verein.lst.de ([213.95.11.211]:47339 "EHLO verein.lst.de"
+        Thu, 29 Aug 2019 11:39:22 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59954 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727073AbfH2Pi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:38:27 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 904E468B20; Thu, 29 Aug 2019 17:38:23 +0200 (CEST)
-Date:   Thu, 29 Aug 2019 17:38:23 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-xtensa@linux-xtensa.org, Michal Simek <monstr@monstr.eu>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.de>, linuxppc-dev@lists.ozlabs.org,
-        Helge Deller <deller@gmx.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: remove default fallbacks in dma_map_ops v3
-Message-ID: <20190829153823.GA20459@lst.de>
-References: <20190808160005.10325-1-hch@lst.de>
+        id S1726852AbfH2PjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 11:39:22 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 08:39:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,443,1559545200"; 
+   d="scan'208";a="192999836"
+Received: from friedlmi-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.54.26])
+  by orsmga002.jf.intel.com with ESMTP; 29 Aug 2019 08:39:18 -0700
+Date:   Thu, 29 Aug 2019 18:39:17 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Seunghun Han <kkamagui@gmail.com>
+Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86: tpm: Remove a busy bit of the NVS area for
+ supporting AMD's fTPM
+Message-ID: <20190829153917.glq6eoka2eufy42w@linux.intel.com>
+References: <20190826081752.57258-1-kkamagui@gmail.com>
+ <CACdnJutomLNthYDzEc0wFBcBHK5iqnk0p-hkAkp57zQZ38oGPA@mail.gmail.com>
+ <CAHjaAcSFhQsDYL2iRwwhyvxh9mH4DhxZ__DNzhtk=iiZZ5JdbA@mail.gmail.com>
+ <CACdnJutfR2X-5ksXw4PNUdyH2MJs_mExNCcYPp8NLcPW2EDrYQ@mail.gmail.com>
+ <CAHjaAcSpU0eW5PLsEpxTkycwi+wNS67xeizb6_BMM_-qUZYAmg@mail.gmail.com>
+ <20190827171106.owkvt6slwwg5ypyl@srcf.ucam.org>
+ <CAHjaAcSu04J3WqT_vnSnaQuYpFQ+xiXXWxhcCeLQccEq6eQGcQ@mail.gmail.com>
+ <20190829153437.gjcqfolsc26vyt4x@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190808160005.10325-1-hch@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190829153437.gjcqfolsc26vyt4x@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've applied this to the dma-mapping for-next tree now.
+On Thu, Aug 29, 2019 at 06:34:37PM +0300, Jarkko Sakkinen wrote:
+> On Wed, Aug 28, 2019 at 06:36:04PM +0900, Seunghun Han wrote:
+> > >
+> > > On Wed, Aug 28, 2019 at 01:36:30AM +0900, Seunghun Han wrote:
+> > >
+> > > > I got your point. Is there any problem if some regions which don't
+> > > > need to be handled in NVS area are saved and restored? If there is a
+> > > > problem, how about adding code for ignoring the regions in NVS area to
+> > > > the nvs.c file like Jarkko said? If we add the code, we can save and
+> > > > restore NVS area without driver's interaction.
+> > >
+> > > The only thing that knows which regions should be skipped by the NVS
+> > > driver is the hardware specific driver, so the TPM driver needs to ask
+> > > the NVS driver to ignore that region and grant control to the TPM
+> > > driver.
+> > >
+> > > --
+> > > Matthew Garrett | mjg59@srcf.ucam.org
+> > 
+> > Thank you, Matthew and Jarkko.
+> > It seems that the TPM driver needs to handle the specific case that
+> > TPM regions are in the NVS. I would make a patch that removes TPM
+> > regions from the ACPI NVS by requesting to the NVS driver soon.
+> > 
+> > Jarkko,
+> > I would like to get some advice on it. What do you think about
+> > removing TPM regions from the ACPI NVS in TPM CRB driver? If you don't
+> > mind, I would make the patch about it.
+> 
+> I'm not sure if ignoring is right call. Then the hibernation behaviour
+> for TPM regions would break.
+> 
+> Thus, should be "ask access" rather than "grant control".
 
-If there are any issues with the parisc patch I'll happily take
-incremental patches.
+Or "reserve access" as NVS driver does not have intelligence to do any
+policy based decision here.
+
+A function that gets region and then checks if NVS driver has matching
+one and returns true/false based on that should be good enough. Then
+you raw ioremap() in the TPM driver.
+
+/Jarkko
