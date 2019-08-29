@@ -6,53 +6,53 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43977C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB37C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 145A72189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B66A23403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567107120;
-	bh=c0TKOHtsdLnSEh9la+4SDm3KlsaHmyTiTtfSkyUPfIs=;
+	s=default; t=1567107190;
+	bh=QoL4AhSk6PvmPyMU8+/hG69E+MpudT9gZ5Nmid7lJuo=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BsQ8nA/9gQfO4tsWPlr43eMesEE+SlHsqH+fDn1nPRdrHh9s42z0QZT/Sio0bPSAX
-	 1obTH2DQBCKzqIbARwN7RmDpKk4G8hGvcmnwRNG8sT0oMwVNfYmtjObTWcXSd1fEx7
-	 m4vculvYeHsCVWQaBGKm+6Se7yhijfn12L40rYf0=
+	b=2ifHkJhEpdWeuyvlo7cyl2IazPO7xmkEkJb7Fjabp7ACyNYoS4euJ7OImVkmaeSqm
+	 SZfBHxjysUjaX6iHhza5JowwfUjPIWraiqVkGhnmCQ6xE/vqAtR3nDFVozsj1UZsY6
+	 ZCBDgj0FWoX5RcyWR9qNGfXRUu3jJat+im2QDeJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbfH2Tb7 (ORCPT
+        id S1728145AbfH2TdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:31:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59136 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 15:33:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726512AbfH2Tb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 15:31:58 -0400
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        id S1726512AbfH2TdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 15:33:08 -0400
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1EDD233FF;
-        Thu, 29 Aug 2019 19:31:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C092C22CF5;
+        Thu, 29 Aug 2019 19:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567107117;
-        bh=c0TKOHtsdLnSEh9la+4SDm3KlsaHmyTiTtfSkyUPfIs=;
+        s=default; t=1567107187;
+        bh=QoL4AhSk6PvmPyMU8+/hG69E+MpudT9gZ5Nmid7lJuo=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hCNN9v+EA/zeZInhJp8Dnihzgo6vQfghmvl59uaEdSrQR+PeimsL49pUMV7ECV8up
-         cLfnsqkbRa2jOWmFXQ9QEpS4yS9bwwDUjHsglgxdBKLl0PAOD1O+r7t9A7EMwiya7s
-         jps1UkaLmwZ9GI2OFc37hjD8SVts/sE76ybWHVlo=
-Received: by mail-qk1-f171.google.com with SMTP id g17so4030361qkk.8;
-        Thu, 29 Aug 2019 12:31:57 -0700 (PDT)
-X-Gm-Message-State: APjAAAUM0a+MwiGCxkU2HY0sS99mhQcrD4e/UOURCxHZrX5eOJwBlgNi
-        HAu4AuStaPSvhdwpk2kWuOj4gBrxN5VlcsVsVg==
-X-Google-Smtp-Source: APXvYqyOpevKjOl2JqIzIoObDTg6SqZCtU6dOEEUknkpmml061ROH76tm9++13JepO+XnE7NvUxRUEpL3ozPoY5XaPA=
-X-Received: by 2002:a37:8905:: with SMTP id l5mr11619212qkd.152.1567107116986;
- Thu, 29 Aug 2019 12:31:56 -0700 (PDT)
+        b=Z2o0/F/sGZLbGd/0eLkgaTXJvJzSm3VSynu7kNCNIS7Bpm63dx4+vCt/1bIClhu0E
+         i2jDMS7FmGzOAGh1hPUnbixOnTFicCuJRQVVhtBW9Mbqjm52GkC6IYCB0lq2fJ1q8h
+         dgQffumchUDT2W/d+oWVP8Mw800fEfvJufEZr/ZI=
+Received: by mail-qt1-f177.google.com with SMTP id a13so5049777qtj.1;
+        Thu, 29 Aug 2019 12:33:07 -0700 (PDT)
+X-Gm-Message-State: APjAAAWHG/Zgj79TXssaIAtAr44zCY22AIXYeKia9lj425ycZF648HLG
+        lJ+ZiS2eNriIVEqa9QVehcIpKfn71q+lVWh43g==
+X-Google-Smtp-Source: APXvYqwzMUwpK5mXNX8UIzE6GHqaVbELhdNykc41DBBvmTiFH2EnhhR64lsBglAOMBBEMcHhpwTjDb/5Y/mwd0COHQw=
+X-Received: by 2002:ac8:44c4:: with SMTP id b4mr11577199qto.224.1567107187025;
+ Thu, 29 Aug 2019 12:33:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190829163514.11221-1-srinivas.kandagatla@linaro.org> <20190829163514.11221-2-srinivas.kandagatla@linaro.org>
-In-Reply-To: <20190829163514.11221-2-srinivas.kandagatla@linaro.org>
+References: <20190829163514.11221-1-srinivas.kandagatla@linaro.org> <20190829163514.11221-4-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20190829163514.11221-4-srinivas.kandagatla@linaro.org>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 29 Aug 2019 14:31:45 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+mgx903vcawSxo8DhVgXyOet1DvA4hc8DpPO02sWMOig@mail.gmail.com>
-Message-ID: <CAL_Jsq+mgx903vcawSxo8DhVgXyOet1DvA4hc8DpPO02sWMOig@mail.gmail.com>
-Subject: Re: [PATCH v6 1/4] dt-bindings: soundwire: add slave bindings
+Date:   Thu, 29 Aug 2019 14:32:55 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKq228oWZzSWykBtGSy8qwwn48q-nYfExhiKMTAzj+-+g@mail.gmail.com>
+Message-ID: <CAL_JsqKq228oWZzSWykBtGSy8qwwn48q-nYfExhiKMTAzj+-+g@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] dt-bindings: ASoC: Add WSA881x bindings
 To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Cc:     Mark Brown <broonie@kernel.org>, Vinod <vkoul@kernel.org>,
         spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
@@ -68,14 +68,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Thu, Aug 29, 2019 at 11:36 AM Srinivas Kandagatla
 <srinivas.kandagatla@linaro.org> wrote:
 >
-> This patch adds bindings for Soundwire Slave devices that includes how
-> SoundWire enumeration address and Link ID are used to represented in
-> SoundWire slave device tree nodes.
+> This patch adds bindings for WSA8810/WSA8815 Class-D Smart Speaker
+> Amplifier. This Amplifier also has a simple thermal sensor for
+> over temperature and speaker protection.
 >
 > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
->  .../soundwire/soundwire-controller.yaml       | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+>  .../bindings/sound/qcom,wsa881x.yaml          | 62 +++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
 
 Reviewed-by: Rob Herring <robh@kernel.org>
