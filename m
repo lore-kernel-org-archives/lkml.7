@@ -2,130 +2,221 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EC4C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C017C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7CB82189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3158A2189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:24:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="It7Fc0uH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h0jTQN3T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfH2VXg (ORCPT
+        id S1728042AbfH2VY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 17:23:36 -0400
-Received: from mail-eopbgr40070.outbound.protection.outlook.com ([40.107.4.70]:21058
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726526AbfH2VXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 17:23:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KqhIpr9GxVL8XBB7r6VdLlPy7wIWfM9KmlAS5NCKiEJLXI7Y/YbU7H8y2LVDc9V+sd8cp4DIaS2IjZZV6D6K9g9LwhWL63ohLr5WnxKTEdO1hRSXj0HZtfqrB0ITTvfQ6jhMDWkzR/NPUXQHwSqfrelJ5ENltFCjCODqFcHCptB8jyWoqedhOa/HgXsf4COXfG0BVyXkrbPWVznCZWEKLpmiei5Iu07+J+ZyvBd7EZkD0V3L74gdEgqHBxK3ieRwaG4dkiStuNCa0pa7FLorn6L7A35G7/xSK29NlGNbc9Cfr/e7mrKDRORcGWPcO90DtE2iTeWxvw1ILbyPiXrx9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QCGlsMJEGq2AwT4aEC8jSPk3TBsLYnuVLIyKhBK/iIs=;
- b=frLgc5HZRMzRpPwIpr0glWLMoSgfMys8brlwdVmQaREL4LdHeR5WeGQ8ykg7c0QdbZYKj918tI14Znu/1/V3X0dzF0lROjlUQ5KZ53r+sQ+hxFuDdgrkTn0XgVo+FVwhdxIx6f4uxNYPThLQBYx7Hoq1zIPOJizTIah4g8isbl6Q3cBYI0zv5iTdfUySPmyy4wYSG5gmCctm4pUafZj40WLGxz10zw/prGmRnN5FB+QRHR5YbFxROGtkKiYNst4G0PA8xDBUrttkBLh6ep1l+vNs4FTx5yQZ74fA2Q43SAIqE8UEgL+oMVyTTYHIUqaikRPLj8/frOTCb9TEY35IIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QCGlsMJEGq2AwT4aEC8jSPk3TBsLYnuVLIyKhBK/iIs=;
- b=It7Fc0uHIwUFOJTFV9Nhur5huWj8SOW7T7B0GKNdZEsq6BDJ3vgAEUQV/R3KRGsiQPyXrhroLlt9wi+99UHk3dtakHKMUkh8hgOpokUEbFtD0cLlD27Ja2IwmEyn/VBm6NVovPCzFxQ5869ZuOm2t5DWQi2ZmbXaD1l8dXO9DP0=
-Received: from VI1PR0501MB2765.eurprd05.prod.outlook.com (10.172.11.140) by
- VI1PR0501MB2205.eurprd05.prod.outlook.com (10.169.134.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.18; Thu, 29 Aug 2019 21:23:31 +0000
-Received: from VI1PR0501MB2765.eurprd05.prod.outlook.com
- ([fe80::5cab:4f5c:d7ed:5e27]) by VI1PR0501MB2765.eurprd05.prod.outlook.com
- ([fe80::5cab:4f5c:d7ed:5e27%6]) with mapi id 15.20.2199.021; Thu, 29 Aug 2019
- 21:23:31 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "efremov@linux.com" <efremov@linux.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "joe@perches.com" <joe@perches.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 03/11] net/mlx5e: Remove unlikely() from WARN*()
- condition
-Thread-Topic: [PATCH v3 03/11] net/mlx5e: Remove unlikely() from WARN*()
- condition
-Thread-Index: AQHVXon5nXwlu8SJiEupxp7KIs6jPKcSousA
-Date:   Thu, 29 Aug 2019 21:23:30 +0000
-Message-ID: <ad2ef15ddaec0033ce17d8ba252037ef70c7ac93.camel@mellanox.com>
-References: <20190829165025.15750-1-efremov@linux.com>
-         <20190829165025.15750-3-efremov@linux.com>
-In-Reply-To: <20190829165025.15750-3-efremov@linux.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [209.116.155.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9707d8a8-59d4-4203-f60c-08d72cc7244e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0501MB2205;
-x-ms-traffictypediagnostic: VI1PR0501MB2205:|VI1PR0501MB2205:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0501MB22056280A972548C1925CB7ABEA20@VI1PR0501MB2205.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:457;
-x-forefront-prvs: 0144B30E41
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(136003)(376002)(39860400002)(199004)(189003)(8936002)(86362001)(316002)(81166006)(5660300002)(110136005)(186003)(36756003)(102836004)(11346002)(81156014)(14454004)(476003)(53936002)(6512007)(305945005)(7736002)(8676002)(118296001)(2616005)(99286004)(26005)(256004)(14444005)(229853002)(58126008)(6436002)(25786009)(6116002)(71190400001)(71200400001)(3846002)(66066001)(6246003)(54906003)(478600001)(66476007)(66556008)(64756008)(66446008)(6486002)(6506007)(66946007)(4326008)(91956017)(76116006)(2501003)(2906002)(486006)(2201001)(446003)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2205;H:VI1PR0501MB2765.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3v/EBf558gizx28utlzUrdgeyZ1Jj5Ile+8VVUJ4GgOR+rL2hl3joL0r8DHwt3mCEsXe76age7j23svnFCtMmaZRJ79lHA2/KiAtk6J5WAQlNSlykaVdH251c6gREiI5zAkGfD2JWMae4Lw2cOpPtcqv4141H13nnknT0thuC+nGxzgSBqvq7yafHVKzJ/WNLtLtYo8WuUCL+IWDPzz5l0TsCGXn6SZk2RJYGZHgDRyyi41b5GelhONtsbxYB2RZ9PoVPh85Q2Npnac/LOEIziAFxXu2gR69iU9Jniz0/ynqsjKgn+BSmqtnVB3KNuyKE7w8ef3t2Mqt/AJdSEFeB3Hr68T7M2mXxpwRxrCQ4euxelC/RE/ygU4AubDVh4m0f2nXNGLCjixzFaWvwrQnDPCeWFfgrKw8/MXgP5UqMjo=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EE79B12C2BE3EB4EA0A7F4D49F618EBD@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 29 Aug 2019 17:24:27 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33951 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfH2VY1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 17:24:27 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b24so2978448pfp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 14:24:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=E2P9cOC9rhcxBzt6NHNxzx1T9WKYvIwrZWNTN0rkY+s=;
+        b=h0jTQN3TrKHnWNcg4cy77XJ0Co8Zx9n1Djd8fwUQW0bwNR3x0a6yxAkmXQyKGJ0vuP
+         2HpX11DY6L3hw3NBb+hAtyV/Ga22TIDS/NvuS5CEUbOTIw9b4QOdmT1FdD8gNz1QHFby
+         OVTmlgN4RoKEVolCdsq3rEd/zNSOYd16GWfJ4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=E2P9cOC9rhcxBzt6NHNxzx1T9WKYvIwrZWNTN0rkY+s=;
+        b=TGPPbeAWcTVbz226Iu5vfFCOmNmq1r6fQbs6cfCO1gq4yQ9luu0mK4ue0U+oPlVPrX
+         Tw3P84APigC0QXJ0CplnIZ8ZJg832MGbXIy/rQyWmt21k9MJCoi0W978jttMjUDdRh2X
+         pwsX4+lSVl5tUh6Slf8QDMhE+/TgUmNTnNQ5rO9E/8Dezu+PtCM+XdtVXFw39+h9ZSgy
+         qlLusjx3DRRj2N4IIz9jwJbNlQdo1b5snJ3QX1aWml9hbAtpTzr6GQFs/zbvGTm9M1Dx
+         vlWIjpk8BKH1Xee78XRiUoeifR93ckKuQTuDNh075cVX8XQ6h31mCtT9YmXvCqbBbtrw
+         KSdg==
+X-Gm-Message-State: APjAAAWJz26pixTcBU3K9MZXYHrXm+mp89765g1NbMYYCl+Wa6SH08cy
+        uJo3+JsCk6uO6g+RNouqkslcPA==
+X-Google-Smtp-Source: APXvYqwrArfkjixaiROj/5i5BAEgcr0XtH1eJ8V9j+D6f55gAYz46DjrMy53tXXCLTJpgC2htTwUPA==
+X-Received: by 2002:a63:f357:: with SMTP id t23mr10380346pgj.421.1567113866106;
+        Thu, 29 Aug 2019 14:24:26 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:e9ae:bd45:1bd9:e60d])
+        by smtp.gmail.com with ESMTPSA id o9sm2972126pgv.19.2019.08.29.14.24.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Aug 2019 14:24:25 -0700 (PDT)
+From:   David Riley <davidriley@chromium.org>
+To:     dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org
+Cc:     David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Gurchetan Singh <gurchetansingh@chromium.org>,
+        =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>,
+        linux-kernel@vger.kernel.org, David Riley <davidriley@chromium.org>
+Subject: [PATCH] drm/virtio: Use vmalloc for command buffer allocations.
+Date:   Thu, 29 Aug 2019 14:24:17 -0700
+Message-Id: <20190829212417.257397-1-davidriley@chromium.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9707d8a8-59d4-4203-f60c-08d72cc7244e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 21:23:31.3963
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tvBkntELI4rt6SGzu1Jjza8SLhdL10c4Ou3LegZhOOeL27i2k27LCRa0kV1nvsMGs3pEGLNdG1LAFHT7DOumMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2205
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA4LTI5IGF0IDE5OjUwICswMzAwLCBEZW5pcyBFZnJlbW92IHdyb3RlOg0K
-PiAidW5saWtlbHkoV0FSTl9PTl9PTkNFKHgpKSIgaXMgZXhjZXNzaXZlLiBXQVJOX09OX09OQ0Uo
-KSBhbHJlYWR5IHVzZXMNCj4gdW5saWtlbHkoKSBpbnRlcm5hbGx5Lg0KPiANCj4gU2lnbmVkLW9m
-Zi1ieTogRGVuaXMgRWZyZW1vdiA8ZWZyZW1vdkBsaW51eC5jb20+DQo+IENjOiBCb3JpcyBQaXNt
-ZW5ueSA8Ym9yaXNwQG1lbGxhbm94LmNvbT4NCj4gQ2M6IFNhZWVkIE1haGFtZWVkIDxzYWVlZG1A
-bWVsbGFub3guY29tPg0KPiBDYzogTGVvbiBSb21hbm92c2t5IDxsZW9uQGtlcm5lbC5vcmc+DQo+
-IENjOiBKb2UgUGVyY2hlcyA8am9lQHBlcmNoZXMuY29tPg0KPiBDYzogQW5kcmV3IE1vcnRvbiA8
-YWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZz4NCj4gQ2M6IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmcN
-Cj4gLS0tDQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZW5fYWNj
-ZWwva3Rsc190eC5jIHwgMiArLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAx
-IGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0DQo+IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQv
-bWVsbGFub3gvbWx4NS9jb3JlL2VuX2FjY2VsL2t0bHNfdHguYw0KPiBiL2RyaXZlcnMvbmV0L2V0
-aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lbl9hY2NlbC9rdGxzX3R4LmMNCj4gaW5kZXggNzgz
-M2RkZWYwNDI3Li5lNTIyMmQxN2RmMzUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVy
-bmV0L21lbGxhbm94L21seDUvY29yZS9lbl9hY2NlbC9rdGxzX3R4LmMNCj4gKysrIGIvZHJpdmVy
-cy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2VuX2FjY2VsL2t0bHNfdHguYw0KPiBA
-QCAtNDA4LDcgKzQwOCw3IEBAIHN0cnVjdCBza19idWZmICptbHg1ZV9rdGxzX2hhbmRsZV90eF9z
-a2Ioc3RydWN0DQo+IG5ldF9kZXZpY2UgKm5ldGRldiwNCj4gIAkJZ290byBvdXQ7DQo+ICANCj4g
-IAl0bHNfY3R4ID0gdGxzX2dldF9jdHgoc2tiLT5zayk7DQo+IC0JaWYgKHVubGlrZWx5KFdBUk5f
-T05fT05DRSh0bHNfY3R4LT5uZXRkZXYgIT0gbmV0ZGV2KSkpDQo+ICsJaWYgKFdBUk5fT05fT05D
-RSh0bHNfY3R4LT5uZXRkZXYgIT0gbmV0ZGV2KSkNCj4gIAkJZ290byBlcnJfb3V0Ow0KPiAgDQo+
-ICAJcHJpdl90eCA9IG1seDVlX2dldF9rdGxzX3R4X3ByaXZfY3R4KHRsc19jdHgpOw0KDQpBY2tl
-ZC1ieTogU2FlZWQgTWFoYW1lZWQgPHNhZWVkbUBtZWxsYW5veC5jb20+DQoNCkRhdmUsIHlvdSBj
-YW4gdGFrZSB0aGlzIG9uZS4NCg==
+Userspace requested command buffer allocations could be too large
+to make as a contiguous allocation.  Use vmalloc if necessary to
+satisfy those allocations.
+
+Signed-off-by: David Riley <davidriley@chromium.org>
+---
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c |  4 +-
+ drivers/gpu/drm/virtio/virtgpu_vq.c    | 74 ++++++++++++++++++++++++--
+ 2 files changed, 73 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+index ac60be9b5c19..a8732a8af766 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
++++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+@@ -195,7 +195,7 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
+ 	if (ret)
+ 		goto out_free;
+ 
+-	buf = memdup_user(u64_to_user_ptr(exbuf->command), exbuf->size);
++	buf = vmemdup_user(u64_to_user_ptr(exbuf->command), exbuf->size);
+ 	if (IS_ERR(buf)) {
+ 		ret = PTR_ERR(buf);
+ 		goto out_unresv;
+@@ -230,7 +230,7 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
+ 	return 0;
+ 
+ out_memdup:
+-	kfree(buf);
++	kvfree(buf);
+ out_unresv:
+ 	ttm_eu_backoff_reservation(&ticket, &validate_list);
+ out_free:
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index 981ee16e3ee9..bcbc48b7284f 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -154,7 +154,7 @@ static void free_vbuf(struct virtio_gpu_device *vgdev,
+ {
+ 	if (vbuf->resp_size > MAX_INLINE_RESP_SIZE)
+ 		kfree(vbuf->resp_buf);
+-	kfree(vbuf->data_buf);
++	kvfree(vbuf->data_buf);
+ 	kmem_cache_free(vgdev->vbufs, vbuf);
+ }
+ 
+@@ -251,6 +251,59 @@ void virtio_gpu_dequeue_cursor_func(struct work_struct *work)
+ 	wake_up(&vgdev->cursorq.ack_queue);
+ }
+ 
++/* How many bytes left in this page. */
++static unsigned int rest_of_page(void *data)
++{
++	return PAGE_SIZE - offset_in_page(data);
++}
++
++/* Create sg_table from a vmalloc'd buffer. */
++static struct sg_table *vmalloc_to_sgt(char *data, uint32_t size)
++{
++	int nents, ret, s, i;
++	struct sg_table *sgt;
++	struct scatterlist *sg;
++	struct page *pg;
++
++	sgt = kmalloc(sizeof(*sgt), GFP_KERNEL);
++	if (!sgt)
++		return NULL;
++
++	nents = DIV_ROUND_UP(size, PAGE_SIZE) + 1;
++	ret = sg_alloc_table(sgt, nents, GFP_KERNEL);
++	if (ret) {
++		kfree(sgt);
++		return NULL;
++	}
++
++	for_each_sg(sgt->sgl, sg, nents, i) {
++		pg = vmalloc_to_page(data);
++		if (!pg) {
++			sg_free_table(sgt);
++			kfree(sgt);
++			return NULL;
++		}
++
++		s = rest_of_page(data);
++		if (s > size)
++			s = size;
++
++		sg_set_page(sg, pg, s, offset_in_page(data));
++
++		size -= s;
++		data += s;
++
++		if (size) {
++			sg_unmark_end(sg);
++		} else {
++			sg_mark_end(sg);
++			break;
++		}
++	}
++
++	return sgt;
++}
++
+ static int virtio_gpu_queue_ctrl_buffer_locked(struct virtio_gpu_device *vgdev,
+ 					       struct virtio_gpu_vbuffer *vbuf)
+ 		__releases(&vgdev->ctrlq.qlock)
+@@ -260,6 +313,7 @@ static int virtio_gpu_queue_ctrl_buffer_locked(struct virtio_gpu_device *vgdev,
+ 	struct scatterlist *sgs[3], vcmd, vout, vresp;
+ 	int outcnt = 0, incnt = 0;
+ 	int ret;
++	struct sg_table *sgt = NULL;
+ 
+ 	if (!vgdev->vqs_ready)
+ 		return -ENODEV;
+@@ -269,8 +323,17 @@ static int virtio_gpu_queue_ctrl_buffer_locked(struct virtio_gpu_device *vgdev,
+ 	outcnt++;
+ 
+ 	if (vbuf->data_size) {
+-		sg_init_one(&vout, vbuf->data_buf, vbuf->data_size);
+-		sgs[outcnt + incnt] = &vout;
++		if (is_vmalloc_addr(vbuf->data_buf)) {
++			spin_unlock(&vgdev->ctrlq.qlock);
++			sgt = vmalloc_to_sgt(vbuf->data_buf, vbuf->data_size);
++			spin_lock(&vgdev->ctrlq.qlock);
++			if (!sgt)
++				return -ENOMEM;
++			sgs[outcnt + incnt] = sgt->sgl;
++		} else {
++			sg_init_one(&vout, vbuf->data_buf, vbuf->data_size);
++			sgs[outcnt + incnt] = &vout;
++		}
+ 		outcnt++;
+ 	}
+ 
+@@ -294,6 +357,11 @@ static int virtio_gpu_queue_ctrl_buffer_locked(struct virtio_gpu_device *vgdev,
+ 		virtqueue_kick(vq);
+ 	}
+ 
++	if (sgt) {
++		sg_free_table(sgt);
++		kfree(sgt);
++	}
++
+ 	if (!ret)
+ 		ret = vq->num_free;
+ 	return ret;
+-- 
+2.23.0.187.g17f5b7556c-goog
+
