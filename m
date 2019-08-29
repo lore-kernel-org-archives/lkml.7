@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EDFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1556C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A2423428
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5FEF22CED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567089679;
-	bh=mNg3ZVNRFs/cRdkBA7eEvw3ckJ6vB0AqJNYhHUeML5E=;
+	s=default; t=1567089683;
+	bh=V25aRiu7nKaGAeSpegxAIOkLYb0ZnxpMOUsP1d+MEas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KKtgGIKnYqY5VSLFFgP29GJyndqwVgwQR2m6edkHofBTqELnenfMrKGPZ4i8MUqHr
-	 L8C+JNQ/b/ZCl2BKJdG0SfEx7CHmsiVLDwW8fvEJOuOjs93WE+r7/aP8V7SQEhxZcG
-	 yaXyvYAnUIUj+twSQ2u7T7/jw2jaIvQ1htemaA3c=
+	b=1e4EGDvh7VlBODT6SgWU1ycehfT9HKMYBC9uRepQVHNsY4UHdQr0OzD5niHLDLoAt
+	 vvnyh1N01/IQX/nyWARzZGkwZm/UPUTFQ2wKloRcV6mNl33AS2VTRot1lIeS+cIRHC
+	 HhrLZskLnWK+JCwsHysAbig/1eOCQ4FdP9GTogsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbfH2OlS (ORCPT
+        id S1728880AbfH2OlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:41:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45176 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 10:41:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728844AbfH2OlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:41:16 -0400
+        id S1728792AbfH2OlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 10:41:18 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FC6022CED;
-        Thu, 29 Aug 2019 14:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 714B020644;
+        Thu, 29 Aug 2019 14:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567089675;
-        bh=mNg3ZVNRFs/cRdkBA7eEvw3ckJ6vB0AqJNYhHUeML5E=;
+        s=default; t=1567089677;
+        bh=V25aRiu7nKaGAeSpegxAIOkLYb0ZnxpMOUsP1d+MEas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lCMpu9iMBnxCFjFyn0TjyKLKhviXhHOvI0UqtUO+X6XQ+RtPufnRQbH8acyPZBtze
-         W58Hh62yntT7E/F8xEUfUj2EDk4TeBar3l4y/Q/xc6bJu1KbQL3G0AjEI/eB5T0FdU
-         feHGcBz9d+rToHq9gNcz/99+16HkZVPZHajVpv8I=
+        b=XAzyCsJ5SjD+1lRHuF3M4AWvt/gTO5cYEXpcE3vcngrmbG4C2zt/bKxHrkWyQk2Lh
+         KKheixitZWwDS9Qph8lYFufVetWLGO3ph6NQcXEnBIPVeMex5H7Bj0XpkXaNhn6e1x
+         6xLbYC9I2dmMcVha6C/aV7EnFEqABbNY67RVsDJI=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Michael Petlan <mpetlan@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 31/37] libperf: Add PERF_RECORD_COMPRESSED 'struct compressed_event' to perf/event.h
-Date:   Thu, 29 Aug 2019 11:39:11 -0300
-Message-Id: <20190829143917.29745-32-acme@kernel.org>
+Subject: [PATCH 32/37] libperf: Add 'union perf_event' to perf/event.h
+Date:   Thu, 29 Aug 2019 11:39:12 -0300
+Message-Id: <20190829143917.29745-33-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190829143917.29745-1-acme@kernel.org>
 References: <20190829143917.29745-1-acme@kernel.org>
@@ -64,53 +64,112 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Move the PERF_RECORD_COMPRESSED event definition to libperf's event.h.
-
-In order to keep libperf simple, we switch 'u64/u32/u16/u8' types used
-events to their generic '__u*' versions.
+So it's available for libperf's users.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190828135717.7245-21-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190828135717.7245-22-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/perf/event.h | 5 +++++
- tools/perf/util/event.h             | 5 -----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/lib/include/perf/event.h | 36 +++++++++++++++++++++++++++++
+ tools/perf/util/event.h             | 36 -----------------------------
+ 2 files changed, 36 insertions(+), 36 deletions(-)
 
 diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
-index ed1c22e650e2..ef7a46e82a6d 100644
+index ef7a46e82a6d..a5b08ef118a7 100644
 --- a/tools/perf/lib/include/perf/event.h
 +++ b/tools/perf/lib/include/perf/event.h
-@@ -318,4 +318,9 @@ struct feature_event {
+@@ -323,4 +323,40 @@ struct compressed_event {
  	char			 data[];
  };
  
-+struct compressed_event {
-+	struct perf_event_header header;
-+	char			 data[];
++union perf_event {
++	struct perf_event_header	header;
++	struct perf_record_mmap		mmap;
++	struct perf_record_mmap2	mmap2;
++	struct perf_record_comm		comm;
++	struct perf_record_namespaces	namespaces;
++	struct perf_record_fork		fork;
++	struct perf_record_lost		lost;
++	struct perf_record_lost_samples	lost_samples;
++	struct perf_record_read		read;
++	struct perf_record_throttle	throttle;
++	struct perf_record_sample	sample;
++	struct perf_record_bpf_event	bpf;
++	struct perf_record_ksymbol	ksymbol;
++	struct attr_event		attr;
++	struct event_update_event	event_update;
++	struct event_type_event		event_type;
++	struct tracing_data_event	tracing_data;
++	struct build_id_event		build_id;
++	struct id_index_event		id_index;
++	struct auxtrace_info_event	auxtrace_info;
++	struct auxtrace_event		auxtrace;
++	struct auxtrace_error_event	auxtrace_error;
++	struct aux_event		aux;
++	struct itrace_start_event	itrace_start;
++	struct context_switch_event	context_switch;
++	struct thread_map_event		thread_map;
++	struct cpu_map_event		cpu_map;
++	struct stat_config_event	stat_config;
++	struct stat_event		stat;
++	struct stat_round_event		stat_round;
++	struct time_conv_event		time_conv;
++	struct feature_event		feat;
++	struct compressed_event		pack;
 +};
 +
  #endif /* __LIBPERF_EVENT_H */
 diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 94777ee435c2..ee2ee23e4c46 100644
+index ee2ee23e4c46..e15eed53ce90 100644
 --- a/tools/perf/util/event.h
 +++ b/tools/perf/util/event.h
-@@ -337,11 +337,6 @@ enum {
+@@ -337,42 +337,6 @@ enum {
  	PERF_STAT_ROUND_TYPE__FINAL	= 1,
  };
  
--struct compressed_event {
+-union perf_event {
 -	struct perf_event_header	header;
--	char				data[];
+-	struct perf_record_mmap		mmap;
+-	struct perf_record_mmap2	mmap2;
+-	struct perf_record_comm		comm;
+-	struct perf_record_namespaces	namespaces;
+-	struct perf_record_fork		fork;
+-	struct perf_record_lost		lost;
+-	struct perf_record_lost_samples	lost_samples;
+-	struct perf_record_read		read;
+-	struct perf_record_throttle	throttle;
+-	struct perf_record_sample	sample;
+-	struct perf_record_bpf_event	bpf;
+-	struct perf_record_ksymbol	ksymbol;
+-	struct attr_event		attr;
+-	struct event_update_event	event_update;
+-	struct event_type_event		event_type;
+-	struct tracing_data_event	tracing_data;
+-	struct build_id_event		build_id;
+-	struct id_index_event		id_index;
+-	struct auxtrace_info_event	auxtrace_info;
+-	struct auxtrace_event		auxtrace;
+-	struct auxtrace_error_event	auxtrace_error;
+-	struct aux_event		aux;
+-	struct itrace_start_event	itrace_start;
+-	struct context_switch_event	context_switch;
+-	struct thread_map_event		thread_map;
+-	struct cpu_map_event		cpu_map;
+-	struct stat_config_event	stat_config;
+-	struct stat_event		stat;
+-	struct stat_round_event		stat_round;
+-	struct time_conv_event		time_conv;
+-	struct feature_event		feat;
+-	struct compressed_event		pack;
 -};
 -
- union perf_event {
- 	struct perf_event_header	header;
- 	struct perf_record_mmap		mmap;
+ void perf_event__print_totals(void);
+ 
+ struct perf_tool;
 -- 
 2.21.0
 
