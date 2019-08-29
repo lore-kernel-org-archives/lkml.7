@@ -2,141 +2,145 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FF0C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B4AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A92E23404
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38304233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:25:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oOi8m8/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfH2IZE (ORCPT
+        id S1727126AbfH2IZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 29 Aug 2019 04:25:07 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55640 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbfH2IZE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 29 Aug 2019 04:25:04 -0400
-Received: from mga04.intel.com ([192.55.52.120]:17081 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbfH2IZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 04:25:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 01:25:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="197752669"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Aug 2019 01:24:57 -0700
-Subject: Tracing text poke / kernel self-modifying code (Was: Re: [RFC v2 0/6]
- x86: dynamic indirect branch promotion)
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Nadav Amit <nadav.amit@gmail.com>, Andi Kleen <ak@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Edward Cree <ecree@solarflare.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        songliubraving@fb.com
-References: <87zhshe66w.fsf@linux.intel.com>
- <20190107163227.GH14122@hirez.programming.kicks-ass.net>
- <c4e836e8-1949-27f5-f6a0-ed860f590ec5@intel.com>
- <20190108092559.GA6808@hirez.programming.kicks-ass.net>
- <306d38fb-7ce6-a3ec-a351-6c117559ebaa@intel.com>
- <20190108101058.GB6808@hirez.programming.kicks-ass.net>
- <20190108172721.GN6118@tassilo.jf.intel.com>
- <D1A153D5-D23B-45E6-9E7A-EB9CBAE84B7E@gmail.com>
- <20190108190104.GC1900@hirez.programming.kicks-ass.net>
- <7EB5F9ED-8743-4225-BE97-8D5C8D8E0F84@gmail.com>
- <20190109103544.GH1900@hirez.programming.kicks-ass.net>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <7b4952c2-d3e3-488f-3697-2e8b71c58063@intel.com>
-Date:   Thu, 29 Aug 2019 11:23:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=120ASc5CfxclYJhY7EFAVAvAR3LTc4Yy6ktyuTmJDRA=; b=oOi8m8/nu7e3QiAQrmP0/hdhg
+        qbKyB38a2s30Iu7GWe0UIxIGH4U7r0uHXnKYW0Eax0SxJ/bmGrCnMkKrFb5JBERCAwh/jISr6mTM1
+        qVOt8NWWldXI62o8JDG2AJdqB5idOPbXzBehaZ3CNd33SGb50ATS644/j7XOHBQEoSg9r0c5vaeuW
+        p6Pi8NWiAnvErk+A4q2+XkDuAYFAV0UHw9gsg+8LOl9vdssXHY3wt6VNUKMCH/3whymlYwZVEEKwF
+        K7XYKtk+EO9x1RRk5iD6oMEhgaaw7R9OawBEBomXh4PeJd0RkMlrWGIcAEhy8E6m++zciB2hasuz8
+        4rRxJvEFw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3Fjb-000087-TT; Thu, 29 Aug 2019 08:24:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BFD093070F4;
+        Thu, 29 Aug 2019 10:24:11 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3DB5F20C74402; Thu, 29 Aug 2019 10:24:45 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 10:24:45 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, akpm@linux-foundation.org,
+        broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+Subject: Re: mmotm 2019-08-27-20-39 uploaded (objtool: xen)
+Message-ID: <20190829082445.GM2369@hirez.programming.kicks-ass.net>
+References: <20190828034012.sBvm81sYK%akpm@linux-foundation.org>
+ <8b09d93a-bc42-bd8e-29ee-cd37765f4899@infradead.org>
+ <20190828171923.4sir3sxwsnc2pvjy@treble>
+ <57d6ab2e-1bae-dca3-2544-4f6e6a936c3a@infradead.org>
+ <20190828200134.d3lwgyunlpxc6cbn@treble>
 MIME-Version: 1.0
-In-Reply-To: <20190109103544.GH1900@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828200134.d3lwgyunlpxc6cbn@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/01/19 12:35 PM, Peter Zijlstra wrote:
-> On Tue, Jan 08, 2019 at 12:47:42PM -0800, Nadav Amit wrote:
+On Wed, Aug 28, 2019 at 03:01:34PM -0500, Josh Poimboeuf wrote:
+> On Wed, Aug 28, 2019 at 10:56:25AM -0700, Randy Dunlap wrote:
+> > >> drivers/xen/gntdev.o: warning: objtool: gntdev_copy()+0x229: call to __ubsan_handle_out_of_bounds() with UACCESS enabled
+> > > 
+> > > Easy one :-)
+> > > 
+> > > diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> > > index 0c8e17f946cd..6a935ab93149 100644
+> > > --- a/tools/objtool/check.c
+> > > +++ b/tools/objtool/check.c
+> > > @@ -483,6 +483,7 @@ static const char *uaccess_safe_builtin[] = {
+> > >  	"ubsan_type_mismatch_common",
+> > >  	"__ubsan_handle_type_mismatch",
+> > >  	"__ubsan_handle_type_mismatch_v1",
+> > > +	"__ubsan_handle_out_of_bounds",
+> > >  	/* misc */
+> > >  	"csum_partial_copy_generic",
+> > >  	"__memcpy_mcsafe",
+> > > 
+> > 
+> > 
+> > then I get this one:
+> > 
+> > lib/ubsan.o: warning: objtool: __ubsan_handle_out_of_bounds()+0x5d: call to ubsan_prologue() with UACCESS enabled
 > 
->> A general solution is more complicated, however, due to the racy nature of
->> cross-modifying code. There would need to be TSC recording of the time
->> before the modifications start and after they are done.
->>
->> BTW: I am not sure that static-keys are much better. Their change also
->> affects the control flow, and they do affect the control flow.
+> And of course I jinxed it by calling it easy.
 > 
-> Any text_poke() user is a problem; which is why I suggested a
-> PERF_RECORD_TEXT_POKE that emits the new instruction. Such records are
-> timestamped and can be correlated to the trace.
+> Peter, how do you want to handle this?
 > 
-> As to the racy nature of text_poke, yes, this is a wee bit tricky and
-> might need some care. I _think_ we can make it work, but I'm not 100%
-> sure on exactly how PT works, but something like:
-> 
->  - write INT3 byte
->  - IPI-SYNC
-> 
-> and ensure the poke_handler preserves the existing control flow (which
-> it currently does not, but should be possible).
-> 
->  - emit RECORD_TEXT_POKE with the new instruction
-> 
-> at this point the actual control flow will be through the INT3 and
-> handler and not hit the actual instruction, so the actual state is
-> irrelevant.
-> 
->  - write instruction tail
->  - IPI-SYNC
->  - write first byte
->  - IPI-SYNC
-> 
-> And at this point we start using the new instruction, but this is after
-> the timestamp from the RECORD_TEXT_POKE event and decoding should work
-> just fine.
-> 
+> Should we just disable UACCESS checking in lib/ubsan.c?
 
-Presumably the IPI-SYNC does not guarantee that other CPUs will not already
-have seen the change.  In that case, it is not possible to provide a
-timestamp before which all CPUs executed the old code, and after which all
-CPUs execute the new code.
+No, that is actually unsafe and could break things (as would you patch
+above).
 
-So we need 2 events: one before and one after the text poke.  Then it will
-be up to the tools to figure out which code path was taken in that time
-interval. e.g.
+I'm thinking the below patch ought to cure things:
 
-	1. emit RECORD_TEXT_POKE
-		flags:	BEFORE (timestamp is before change)
-		method:	INT3 (INT3 method used to change code)
-		ip
-		code size
-		code bytes before
-		code bytes after
+---
+Subject: x86/uaccess: Don't leak the AC flags into __get_user() argument evalidation
 
-	2. text poke
+Identical to __put_user(); the __get_user() argument evalution will too
+leak UBSAN crud into the __uaccess_begin() / __uaccess_end() region.
+While uncommon this was observed to happen for:
 
-	3. emit RECORD_TEXT_POKE
-		flags:	AFTER (timestamp is after change)
-		method:	INT3 (INT3 method used to change code)
-		ip
-		code size
-		code bytes before
-		code bytes after
+  drivers/xen/gntdev.c: if (__get_user(old_status, batch->status[i]))
 
-Thoughts?
+where UBSAN added array bound checking.
+
+This complements commit:
+
+  6ae865615fc4 ("x86/uaccess: Dont leak the AC flag into __put_user() argument evaluation")
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: luto@kernel.org
+---
+ arch/x86/include/asm/uaccess.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index 9c4435307ff8..35c225ede0e4 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -444,8 +444,10 @@ __pu_label:							\
+ ({									\
+ 	int __gu_err;							\
+ 	__inttype(*(ptr)) __gu_val;					\
++	__typeof__(ptr) __gu_ptr = (ptr);				\
++	__typeof__(size) __gu_size = (size);				\
+ 	__uaccess_begin_nospec();					\
+-	__get_user_size(__gu_val, (ptr), (size), __gu_err, -EFAULT);	\
++	__get_user_size(__gu_val, __gu_ptr, __gu_size, __gu_err, -EFAULT);	\
+ 	__uaccess_end();						\
+ 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
+ 	__builtin_expect(__gu_err, 0);					\
