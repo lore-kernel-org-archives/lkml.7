@@ -2,94 +2,99 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CD4C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D39EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 735312339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F377C233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfH2N3z (ORCPT
+        id S1727176AbfH2Nbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:29:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52450 "EHLO mx1.redhat.com"
+        Thu, 29 Aug 2019 09:31:41 -0400
+Received: from mga02.intel.com ([134.134.136.20]:41930 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727069AbfH2N3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:29:55 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726518AbfH2Nbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 09:31:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 06:31:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,443,1559545200"; 
+   d="scan'208";a="192957950"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 29 Aug 2019 06:31:39 -0700
+Received: from [10.251.1.23] (kliang2-mobl.ccr.corp.intel.com [10.251.1.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1F8F2309175F;
-        Thu, 29 Aug 2019 13:29:55 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 812C7600C1;
-        Thu, 29 Aug 2019 13:29:50 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 13DE22206F5; Thu, 29 Aug 2019 09:29:50 -0400 (EDT)
-Date:   Thu, 29 Aug 2019 09:29:49 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual
- machines
-Message-ID: <20190829132949.GA6744@redhat.com>
-References: <20190821173742.24574-1-vgoyal@redhat.com>
- <CAJfpegv_XS=kLxw_FzWNM2Xao5wsn7oGbk3ow78gU8tpXwo-sg@mail.gmail.com>
+        by linux.intel.com (Postfix) with ESMTPS id 93B4458046E;
+        Thu, 29 Aug 2019 06:31:38 -0700 (PDT)
+Subject: Re: [RESEND PATCH V3 3/8] perf/x86/intel: Support hardware TopDown
+ metrics
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+References: <20190826144740.10163-1-kan.liang@linux.intel.com>
+ <20190826144740.10163-4-kan.liang@linux.intel.com>
+ <20190828151921.GD17205@worktop.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <fd95a255-4499-2907-8af9-d340f157da68@linux.intel.com>
+Date:   Thu, 29 Aug 2019 09:31:37 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJfpegv_XS=kLxw_FzWNM2Xao5wsn7oGbk3ow78gU8tpXwo-sg@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 29 Aug 2019 13:29:55 +0000 (UTC)
+In-Reply-To: <20190828151921.GD17205@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 11:28:27AM +0200, Miklos Szeredi wrote:
-> On Wed, Aug 21, 2019 at 7:38 PM Vivek Goyal <vgoyal@redhat.com> wrote:
-> >
-> > Hi,
-> >
-> > Here are the V3 patches for virtio-fs filesystem. This time I have
-> > broken the patch series in two parts. This is first part which does
-> > not contain DAX support. Second patch series will contain the patches
-> > for DAX support.
-> >
-> > I have also dropped RFC tag from first patch series as we believe its
-> > in good enough shape that it should get a consideration for inclusion
-> > upstream.
+
+
+On 8/28/2019 11:19 AM, Peter Zijlstra wrote:
+>> +static int icl_set_topdown_event_period(struct perf_event *event)
+>> +{
+>> +	struct hw_perf_event *hwc = &event->hw;
+>> +	s64 left = local64_read(&hwc->period_left);
+>> +
+>> +	/*
+>> +	 * Clear PERF_METRICS and Fixed counter 3 in initialization.
+>> +	 * After that, both MSRs will be cleared for each read.
+>> +	 * Don't need to clear them again.
+>> +	 */
+>> +	if (left == x86_pmu.max_period) {
+>> +		wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
+>> +		wrmsrl(MSR_PERF_METRICS, 0);
+>> +		local64_set(&hwc->period_left, 0);
+>> +	}
+> This really doesn't make sense to me; if you set FIXED_CTR3 := 0, you'll
+> never trigger the overflow there; this then seems to suggest the actual
+> counter value is irrelevant. Therefore you don't actually need this.
 > 
-> Pushed out to
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git#for-next
-> 
 
-Hi Miklos,
+Could you please elaborate on why initialization to 0 never triggers an 
+overflow?
+As of my understanding, initialization to 0 only means that it will take 
+more time than initialization to -max_period (0x8000 0000 0001) to 
+trigger an overflow.
 
-Compilation of virtio-fs as module fails. While it works if compiled as
-non-module.
+Maybe 0 is too tricky. We can set the initial value to 1.
+I think the bottom line is that we need a small initial value for 
+FIXED_CTR3 here.
+PERF_METRICS reports an 8bit integer fraction which is something like 
+0xff * internal counters / FIXCTR3.
+The internal counters only start counting from 0. (SW cannot set an 
+arbitrary initial value for internal counters.)
+If the initial value of FIXED_CTR3 is too big, PERF_METRICS could always 
+remain constant, e.g. 0.
 
-fs/fuse/virtio_fs.c: In function ‘copy_args_to_argbuf’:
-fs/fuse/virtio_fs.c:255:5: error: ‘struct fuse_req’ has no member named ‘argbuf’
-  req->argbuf = kmalloc(len, GFP_ATOMIC);
-
-It can't find req->argbuf. 
-
-I noticed that you have put ifdef around argbuf.
-
-#ifdef CONFIG_VIRTIO_FS
-        /** virtio-fs's physically contiguous buffer for in and out args */
-        void *argbuf;
-#endif
-
-It should have worked. Not sure why it is not working.
-
-Vivek
+Thanks,
+Kan
