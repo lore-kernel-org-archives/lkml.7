@@ -2,88 +2,124 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EBCC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDF3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 123A522CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B5AD21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:50:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nvXZU0kl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXqjVb4y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbfH2RsP (ORCPT
+        id S1727928AbfH2Ruo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:48:15 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43915 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbfH2RsN (ORCPT
+        Thu, 29 Aug 2019 13:50:44 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38492 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfH2Ruo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:48:13 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k3so1958368pgb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 10:48:12 -0700 (PDT)
+        Thu, 29 Aug 2019 13:50:44 -0400
+Received: by mail-pf1-f195.google.com with SMTP id o70so2569047pfg.5;
+        Thu, 29 Aug 2019 10:50:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=90rdzfA3pQFTTD+WktPm5hw+SqSXSPzoFO0ejPyiLeQ=;
-        b=nvXZU0kldmmMZp3VL246Oh/QBj4YT779VxETaJPpFYHPXJ9BYrRq3foTUldaV/pqyv
-         DFfTp0bomcCAL58rraETjnr8sPv8dnSgqaRCxsUqBYSqpTjFfY29AOrVMPhfE0RON9H0
-         w8Y+wJHk2y3MwxYfVQXQmG0CseTKPQBn1MvKU=
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=C0c3Z1paEgDZynzXFK49rQPn2NcgrpyMRJRXJjSfdS0=;
+        b=EXqjVb4y/WwUgZeTgYtqQrj2s+pCQQ3Wd5fATC2hSxen/zrMsXPZ/8WjzNYuJYUotp
+         DxUq01LQs7mDdr3uRa7nxQ88FJYxvayxO+Op3t91FrFw47BggasnQWWmVP1WjZ36UPUB
+         gWcP84+R19b0xsQIaMhbY329hqAhc2rVpmEGFd8LXH9S9f/8S3KqrXJF7k2Ahsi6OO/Z
+         D31LZX7+vskardnB0PUtFvCPxfCt+RLH3uzDMFEmJceVCT4AAlbdWajSKHuVUTvnOLcu
+         dmPMH+H/HY4KpmRJKQSL5vqMpTlc8F4ac04iH3mW5oOkoHEQixwJOtei+ipQjOXJC3l9
+         toog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=90rdzfA3pQFTTD+WktPm5hw+SqSXSPzoFO0ejPyiLeQ=;
-        b=VW/RMAtI+tiGj8i15WIgVl2vMBebKVmKqWX/WPMp4Dhl+aU7pJilfKP6nwRNg43J2S
-         LzuS5rXdEaSOQwE78WpIbxouNGJNT/fE9Zyl28zddDCUAHN6HbEqa18YcL7DjN5+wGNS
-         8ch5xbvuz/xLCEROExMjnIRXbrmlX8dd4vvemhUx/1qn/57z65wyl7WSTdqSH+ZlPR2d
-         xGWP5W/vrzOeku4A4IL6nrswg6w7xLFRe9BTMnxJ4puKq/8PH8mLoInfFK6+uEUpf/F2
-         CcGNW56x9FRHfnguuKYKEl26Z6q51/9H88j9p8Nx4gOUqqoiLe8W29vDuXheUhe2Gtr6
-         qzDA==
-X-Gm-Message-State: APjAAAUuOyQk55w6Balk4MzBrgJNhELk/UzV1F3NMI4RymSbNqpNlWB9
-        R7xxJEn0VBH5mKsV1IoMQTXykg==
-X-Google-Smtp-Source: APXvYqy65Ly3KOvta1q3yjixyorRLWYiltKYfxGEdKZHPogdneVuSW8XJmeoBqWPDMGusYqMegigeQ==
-X-Received: by 2002:aa7:8498:: with SMTP id u24mr13196622pfn.61.1567100892560;
-        Thu, 29 Aug 2019 10:48:12 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id ck8sm2585527pjb.25.2019.08.29.10.48.11
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=C0c3Z1paEgDZynzXFK49rQPn2NcgrpyMRJRXJjSfdS0=;
+        b=ZvrZIao3UBlFgPt0+V+lwGxzp4wC9Xll24D5pESGC7VWij7LYi6tOQUSqQCPN/bC82
+         5+vd/2rm5tp3UxbFToOvETOlUEzWm5lwg9MrcXYk+YuEK0p3BP1esL5zGLs/kTPPmpf0
+         /hfwFIGRdk8zvqUSqSlLWkhAvWx+DVinG1GeiTY1l2E9Uq8Jg9+wyX8GCwu3hWyIdVAI
+         fFl0UjZ4EreCn3n8uv4TZOhdJiZLVP7yaLLuBWI7niuzRR1uUrXAJ2nEoPgJFJ22xFrh
+         9HkZSKHOuCfh4HUB1ah1f0YWGcVI0Sugo0FyrRwbroOeuvi8LySCjX6uboVoeMEe02bh
+         CbYA==
+X-Gm-Message-State: APjAAAWf0DCQ47ZeHGXVW1/62EyOtB+tNsV1VwqaT+8hC6aCm15g8Q4m
+        1fZy7LNEiLzx32Hl3mrZVsI=
+X-Google-Smtp-Source: APXvYqzz6aYtL303net0Q2XoobY3+IfZ+KjkTCCRv9mGfinoCAHvvn/eFJl3hSKth/9/3+Rithx5Ng==
+X-Received: by 2002:aa7:9112:: with SMTP id 18mr13054322pfh.127.1567101043175;
+        Thu, 29 Aug 2019 10:50:43 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id p10sm3618213pff.132.2019.08.29.10.50.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 10:48:11 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 10:48:10 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Alex Dewar <alex.dewar@gmx.co.uk>
-Cc:     re.emese@gmail.com, kernel-hardening@lists.openwall.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v3] scripts/gcc-plugins: Add SPDX header for files
- without
-Message-ID: <201908291047.CDE576721@keescook>
-References: <20190824153036.21394-1-alex.dewar@gmx.co.uk>
+        Thu, 29 Aug 2019 10:50:42 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 10:50:39 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
+        Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v3 09/11] Input: alps - remove unlikely() from IS_ERR*()
+ condition
+Message-ID: <20190829175039.GA187474@dtor-ws>
+References: <20190829165025.15750-1-efremov@linux.com>
+ <20190829165025.15750-9-efremov@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190824153036.21394-1-alex.dewar@gmx.co.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190829165025.15750-9-efremov@linux.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 24, 2019 at 04:30:37PM +0100, Alex Dewar wrote:
-> Replace boilerplate with approproate SPDX header. Vim also auto-trimmed
-> whitespace from one line.
-> [...]
-> --- a/scripts/gcc-plugins/cyc_complexity_plugin.c
-> +++ b/scripts/gcc-plugins/cyc_complexity_plugin.c
-> @@ -1,6 +1,6 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
->  /*
->   * Copyright 2011-2016 by Emese Revfy <re.emese@gmail.com>
-> - * Licensed under the GPL v2, or (at your option) v3
+On Thu, Aug 29, 2019 at 07:50:23PM +0300, Denis Efremov wrote:
+> "unlikely(IS_ERR_OR_NULL(x))" is excessive. IS_ERR_OR_NULL() already uses
+> unlikely() internally.
 
-This isn't equivalent, I don't think. SPDX says "v2 and later" and
-removed text says "v2 or v3".
+The keyword here is _internally_.
+
+https://lore.kernel.org/lkml/20190821174857.GD76194@dtor-ws/
+
+So please no.
+
+> 
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> Cc: "Pali Rohár" <pali.rohar@gmail.com>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Joe Perches <joe@perches.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-input@vger.kernel.org
+> ---
+>  drivers/input/mouse/alps.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
+> index 34700eda0429..ed1661434899 100644
+> --- a/drivers/input/mouse/alps.c
+> +++ b/drivers/input/mouse/alps.c
+> @@ -1476,7 +1476,7 @@ static void alps_report_bare_ps2_packet(struct psmouse *psmouse,
+>  		/* On V2 devices the DualPoint Stick reports bare packets */
+>  		dev = priv->dev2;
+>  		dev2 = psmouse->dev;
+> -	} else if (unlikely(IS_ERR_OR_NULL(priv->dev3))) {
+> +	} else if (IS_ERR_OR_NULL(priv->dev3)) {
+>  		/* Register dev3 mouse if we received PS/2 packet first time */
+>  		if (!IS_ERR(priv->dev3))
+>  			psmouse_queue_work(psmouse, &priv->dev3_register_work,
+> -- 
+> 2.21.0
+> 
 
 -- 
-Kees Cook
+Dmitry
