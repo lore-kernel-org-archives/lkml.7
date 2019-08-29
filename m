@@ -4,50 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0929DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC8DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C062053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F122053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567076039;
-	bh=YqMqhnwmFGwqeoBJvsqjLVHMarwz2//zk8On24MIYAQ=;
+	s=default; t=1567076046;
+	bh=4HwPwdkwP5ccqwcPRUDXB3DKKiH9S0DRxugyWR3hUU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EakEsz8QP6n26IYHLCKA70XyPGqRwvbxUHIsldZNeZpK2Y5VR7IcmFAzK2H3RrbTT
-	 bI5k+DJuNkYPuCITIlzzK1tSe0PjVfaWRV1vRFUKY+aQNqyA/1UZrRx4oyVbL47wLx
-	 6QkRwI2ENb6JDbILSKwbdQJDeB8LWQe5gUtRu26Y=
+	b=Zi5AAhPuYNGgl8uxQpkzBdZ9oyTjLLR/xOtPfuLE5Oeh5XW+nNkEPyirUUmJhVYUI
+	 EVU79ETNL7vA86xeGLQYO5RnyoaJIdVVXqOEYSj7Fz0qb2dO0y7s3v3xkXulSjIR+y
+	 sFx+uDKLRQb7NY+ySRlOnHeu1kcKpQra69MkAKrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbfH2Kxz (ORCPT
+        id S1728631AbfH2KyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:53:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58036 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 06:54:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728158AbfH2Kuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:50:40 -0400
+        id S1728132AbfH2Kuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:50:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3BB8233FF;
-        Thu, 29 Aug 2019 10:50:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E5962173E;
+        Thu, 29 Aug 2019 10:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075838;
-        bh=YqMqhnwmFGwqeoBJvsqjLVHMarwz2//zk8On24MIYAQ=;
+        s=default; t=1567075836;
+        bh=4HwPwdkwP5ccqwcPRUDXB3DKKiH9S0DRxugyWR3hUU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KZCwK/vU4C5cBxFRB7AJY6KbDAT2jP+f+gS5N1kcmtRpGmB2l/WW133JyXTTOvnGy
-         BRdd6jBVVFvft5zzzNUu3SQsMLZ+O8qRlKQmBdqY+MMPGPBz72+HG8+hKq7XQEUxB5
-         6xKWggXd12UJAI79VIFW0C6db5aqBdkgL/vMQ5DE=
+        b=U5PhsPfMisHJwGF27l5Lm11j2Edb+IZ1gWDg4IFLHlssENywD42ksAcvA0OxLy7Xa
+         yQyaPhxeFcL833A5iho+OkBkLkbLS9n3tChGn8sd6uLUmKJ4cyGyRx9snNWpxMQNjt
+         83yKNbHvcyaHkYSEh8b0B4xYp+xPf5hfRhPviJy4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hannes Reinecke <hare@suse.de>, Hannes Reinecke <hare@suse.com>,
-        James Smart <james.smart@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 25/29] nvme-fc: use separate work queue to avoid warning
-Date:   Thu, 29 Aug 2019 06:50:05 -0400
-Message-Id: <20190829105009.2265-25-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 23/29] ALSA: usb-audio: Check mixer unit bitmap yet more strictly
+Date:   Thu, 29 Aug 2019 06:50:03 -0400
+Message-Id: <20190829105009.2265-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829105009.2265-1-sashal@kernel.org>
 References: <20190829105009.2265-1-sashal@kernel.org>
@@ -60,89 +57,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 8730c1ddb69bdeeb10c1f613a4e15e95862b1981 ]
+[ Upstream commit f9f0e9ed350e15d51ad07364b4cf910de50c472a ]
 
-When tearing down a controller the following warning is issued:
+The bmControls (for UAC1) or bmMixerControls (for UAC2/3) bitmap has a
+variable size depending on both input and output pins.  Its size is to
+fit with input * output bits.  The problem is that the input size
+can't be determined simply from the unit descriptor itself but it
+needs to parse the whole connected sources.  Although the
+uac_mixer_unit_get_channels() tries to check some possible overflow of
+this bitmap, it's incomplete due to the lack of the  evaluation of
+input pins.
 
-WARNING: CPU: 0 PID: 30681 at ../kernel/workqueue.c:2418 check_flush_dependency
+For covering possible overflows, this patch adds the bitmap overflow
+check in the loop of input pins in parse_audio_mixer_unit().
 
-This happens as the err_work workqueue item is scheduled on the
-system workqueue (which has WQ_MEM_RECLAIM not set), but is flushed
-from a workqueue which has WQ_MEM_RECLAIM set.
-
-Fix this by providing an FC-NVMe specific workqueue.
-
-Fixes: 4cff280a5fcc ("nvme-fc: resolve io failures during connect")
-Signed-off-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: 0bfe5e434e66 ("ALSA: usb-audio: Check mixer unit descriptors more strictly")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/fc.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ sound/usb/mixer.c | 36 ++++++++++++++++++++++++++++--------
+ 1 file changed, 28 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index 67dec8860bf3c..1f5aa8d4712b3 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -206,7 +206,7 @@ static LIST_HEAD(nvme_fc_lport_list);
- static DEFINE_IDA(nvme_fc_local_port_cnt);
- static DEFINE_IDA(nvme_fc_ctrl_cnt);
- 
--
-+static struct workqueue_struct *nvme_fc_wq;
- 
- /*
-  * These items are short-term. They will eventually be moved into
-@@ -2053,7 +2053,7 @@ nvme_fc_error_recovery(struct nvme_fc_ctrl *ctrl, char *errmsg)
- 	 */
- 	if (ctrl->ctrl.state == NVME_CTRL_CONNECTING) {
- 		active = atomic_xchg(&ctrl->err_work_active, 1);
--		if (!active && !schedule_work(&ctrl->err_work)) {
-+		if (!active && !queue_work(nvme_fc_wq, &ctrl->err_work)) {
- 			atomic_set(&ctrl->err_work_active, 0);
- 			WARN_ON(1);
- 		}
-@@ -3321,6 +3321,10 @@ static int __init nvme_fc_init_module(void)
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index 4b3e1c48ca2f3..b0c5d4ef61374 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -754,7 +754,6 @@ static int uac_mixer_unit_get_channels(struct mixer_build *state,
+ 				       struct uac_mixer_unit_descriptor *desc)
  {
- 	int ret;
+ 	int mu_channels;
+-	void *c;
  
-+	nvme_fc_wq = alloc_workqueue("nvme_fc_wq", WQ_MEM_RECLAIM, 0);
-+	if (!nvme_fc_wq)
-+		return -ENOMEM;
-+
- 	/*
- 	 * NOTE:
- 	 * It is expected that in the future the kernel will combine
-@@ -3338,7 +3342,7 @@ static int __init nvme_fc_init_module(void)
- 	fc_class = class_create(THIS_MODULE, "fc");
- 	if (IS_ERR(fc_class)) {
- 		pr_err("couldn't register class fc\n");
--		return PTR_ERR(fc_class);
-+		goto out_destroy_wq;
+ 	if (desc->bLength < sizeof(*desc))
+ 		return -EINVAL;
+@@ -777,13 +776,6 @@ static int uac_mixer_unit_get_channels(struct mixer_build *state,
+ 		break;
  	}
  
- 	/*
-@@ -3362,6 +3366,9 @@ out_destroy_device:
- 	device_destroy(fc_class, MKDEV(0, 0));
- out_destroy_class:
- 	class_destroy(fc_class);
-+out_destroy_wq:
-+	destroy_workqueue(nvme_fc_wq);
+-	if (!mu_channels)
+-		return 0;
+-
+-	c = uac_mixer_unit_bmControls(desc, state->mixer->protocol);
+-	if (c - (void *)desc + (mu_channels - 1) / 8 >= desc->bLength)
+-		return 0; /* no bmControls -> skip */
+-
+ 	return mu_channels;
+ }
+ 
+@@ -2028,6 +2020,31 @@ static int parse_audio_feature_unit(struct mixer_build *state, int unitid,
+  * Mixer Unit
+  */
+ 
++/* check whether the given in/out overflows bmMixerControls matrix */
++static bool mixer_bitmap_overflow(struct uac_mixer_unit_descriptor *desc,
++				  int protocol, int num_ins, int num_outs)
++{
++	u8 *hdr = (u8 *)desc;
++	u8 *c = uac_mixer_unit_bmControls(desc, protocol);
++	size_t rest; /* remaining bytes after bmMixerControls */
 +
- 	return ret;
- }
++	switch (protocol) {
++	case UAC_VERSION_1:
++	default:
++		rest = 1; /* iMixer */
++		break;
++	case UAC_VERSION_2:
++		rest = 2; /* bmControls + iMixer */
++		break;
++	case UAC_VERSION_3:
++		rest = 6; /* bmControls + wMixerDescrStr */
++		break;
++	}
++
++	/* overflow? */
++	return c + (num_ins * num_outs + 7) / 8 + rest > hdr + hdr[0];
++}
++
+ /*
+  * build a mixer unit control
+  *
+@@ -2156,6 +2173,9 @@ static int parse_audio_mixer_unit(struct mixer_build *state, int unitid,
+ 		if (err < 0)
+ 			return err;
+ 		num_ins += iterm.channels;
++		if (mixer_bitmap_overflow(desc, state->mixer->protocol,
++					  num_ins, num_outs))
++			break;
+ 		for (; ich < num_ins; ich++) {
+ 			int och, ich_has_controls = 0;
  
-@@ -3378,6 +3385,7 @@ static void __exit nvme_fc_exit_module(void)
- 
- 	device_destroy(fc_class, MKDEV(0, 0));
- 	class_destroy(fc_class);
-+	destroy_workqueue(nvme_fc_wq);
- }
- 
- module_init(nvme_fc_init_module);
 -- 
 2.20.1
 
