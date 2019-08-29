@@ -2,150 +2,93 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037AEC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5131BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA09B233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Gn5aTJaW"
+	by mail.kernel.org (Postfix) with ESMTP id 31091233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfH2OiX (ORCPT
+        id S1728075AbfH2Oi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:38:23 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51706 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727985AbfH2OiP (ORCPT
+        Thu, 29 Aug 2019 10:38:26 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34308 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727985AbfH2OiZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:38:15 -0400
-Received: by mail-wm1-f65.google.com with SMTP id k1so3997887wmi.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:38:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wvm5jhfZdBAjiVI0fMQa3wyfT8pVsOoRMdM2UQ5EVAc=;
-        b=Gn5aTJaW0lhbDQWyYFqDBkrdNnFy2pGrPIg9uFcSU0QDrKLANwjVThGZPuAKLE95y6
-         PXgyzsxKFqZzbh35PUrCyLRVoJ6/TM5gO3zvjyXoIGe2F+a44h45x4ntyUH2R9K/8cer
-         BeLiukfqMO5AwUsbhhH+vawbOADQgyod20IzadiyA9ufUf4775gkItruHuFcBiZ+BFVO
-         OfDktx/jfQqMWmlIB0pvioN4mmJ2KnMbs3Z4fCMXu7cQr+0MgZ6j1tz2YEHxpUare8iy
-         RpQ8bZzMq7EY7hZuuUVYJ0ULMsjbZIwfeG16WX1G2RrY2rGVkY5CnetDJwPeb1Lms6T5
-         VNvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wvm5jhfZdBAjiVI0fMQa3wyfT8pVsOoRMdM2UQ5EVAc=;
-        b=G2CCeGnX5FCvj1wivHzS7tAsfbOOlcr8+ujzXOSQoDTwJPEDsU7MeACiGLypzRPaaH
-         s1mjE8Xh34PI/lYBOkG5YHXXujeNEC8urqR+yzo4mJZ4BFB5wRw5YOl00OwhNE62N2Dd
-         Vg9byfQ45ys0kTOKYc3XmsbcbWIkmUbxfDyUwNtkLXh0eqFqjaIXdi+9tsOsFl+Yu3fF
-         SfzpS0JPFBrhraUkh14nT4HG35j1Sq7M64Z+Y/yWGsY+GNTcCZbqps6pzMRZrUXQXlOw
-         oEDbrpk0QO/NqP3ra0ELgq1/3XgXi8tq6UEPTgsjWx8876RLhcHVQh2X+1n9idZNrPcD
-         c7pQ==
-X-Gm-Message-State: APjAAAVMq4BnjrRQO3WeiT7mye15tLIptiTUAoGJ228VR8xxzAzcQ0+l
-        6b/jlFVB6HlHUu4H8GXaU19gCA==
-X-Google-Smtp-Source: APXvYqyIGe38MXQx8iatCV54dE9UCR5qWcasMJ6961l0x1sY1UGN6+ZmbFEIsoWLeRqF7iEbp26wzA==
-X-Received: by 2002:a7b:cbce:: with SMTP id n14mr11150614wmi.47.1567089493399;
-        Thu, 29 Aug 2019 07:38:13 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id g15sm3241925wrp.29.2019.08.29.07.38.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 07:38:12 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Alban Bedel <albeu@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 9/9] misc: sram: use devm_platform_ioremap_resource_wc()
-Date:   Thu, 29 Aug 2019 16:37:42 +0200
-Message-Id: <20190829143742.24726-10-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190829143742.24726-1-brgl@bgdev.pl>
-References: <20190829143742.24726-1-brgl@bgdev.pl>
+        Thu, 29 Aug 2019 10:38:25 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 19BEC3C057C;
+        Thu, 29 Aug 2019 16:38:23 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id e8BMcyfaoqr8; Thu, 29 Aug 2019 16:38:17 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id A18393C0579;
+        Thu, 29 Aug 2019 16:38:17 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Thu, 29 Aug
+ 2019 16:38:17 +0200
+Date:   Thu, 29 Aug 2019 16:38:14 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     "George G. Davis" <george_davis@mentor.com>
+CC:     Shuah Khan <shuah@kernel.org>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH] selftests: watchdog: Add optional file argument
+Message-ID: <20190829143814.GA3424@vmlxhi-102.adit-jv.com>
+References: <1567053566-18971-1-git-send-email-george_davis@mentor.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1567053566-18971-1-git-send-email-george_davis@mentor.com>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi George,
 
-Use the new devm_platform_ioremap_resource_wc() helper instead of
-devm_ioremap_wc() combinded with a call to platform_get_resource().
-Also use devm_platform_ioremap_resource() where applicable.
+On Thu, Aug 29, 2019 at 12:39:25AM -0400, George G. Davis wrote:
+> Some systems have multiple watchdog devices where the first device
+> registered is assigned to the /dev/watchdog device file.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/misc/sram.c | 28 ++++++++--------------------
- 1 file changed, 8 insertions(+), 20 deletions(-)
+Confirmed on R-Car H3-Salvator-X:
 
-diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
-index f30448bf3a63..6c1a23cb3e8c 100644
---- a/drivers/misc/sram.c
-+++ b/drivers/misc/sram.c
-@@ -340,8 +340,6 @@ static const struct of_device_id sram_dt_ids[] = {
- static int sram_probe(struct platform_device *pdev)
- {
- 	struct sram_dev *sram;
--	struct resource *res;
--	size_t size;
- 	int ret;
- 	int (*init_func)(void);
- 
-@@ -351,25 +349,14 @@ static int sram_probe(struct platform_device *pdev)
- 
- 	sram->dev = &pdev->dev;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		dev_err(sram->dev, "found no memory resource\n");
--		return -EINVAL;
--	}
--
--	size = resource_size(res);
--
--	if (!devm_request_mem_region(sram->dev, res->start, size, pdev->name)) {
--		dev_err(sram->dev, "could not request region for resource\n");
--		return -EBUSY;
--	}
--
- 	if (of_property_read_bool(pdev->dev.of_node, "no-memory-wc"))
--		sram->virt_base = devm_ioremap(sram->dev, res->start, size);
-+		sram->virt_base = devm_platform_ioremap_resource(pdev, 0);
- 	else
--		sram->virt_base = devm_ioremap_wc(sram->dev, res->start, size);
--	if (!sram->virt_base)
--		return -ENOMEM;
-+		sram->virt_base = devm_platform_ioremap_resource_wc(pdev, 0);
-+	if (IS_ERR(sram->virt_base)) {
-+		dev_err(&pdev->dev, "could not map SRAM registers\n");
-+		return PTR_ERR(sram->virt_base);
-+	}
- 
- 	sram->pool = devm_gen_pool_create(sram->dev, ilog2(SRAM_GRANULARITY),
- 					  NUMA_NO_NODE, NULL);
-@@ -382,7 +369,8 @@ static int sram_probe(struct platform_device *pdev)
- 	else
- 		clk_prepare_enable(sram->clk);
- 
--	ret = sram_reserve_regions(sram, res);
-+	ret = sram_reserve_regions(sram,
-+			platform_get_resource(pdev, IORESOURCE_MEM, 0));
- 	if (ret)
- 		goto err_disable_clk;
- 
+root@rcar-gen3:~# ls -al /dev/watchdog*
+crw-------    1 root     root       10, 130 Aug 21 09:38 /dev/watchdog
+crw-------    1 root     root      247,   0 Aug 21 09:38 /dev/watchdog0
+
+[..]
+
+> -	fd = open("/dev/watchdog", O_WRONLY);
+> +	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
+> +		if (c == 'f')
+> +			file = optarg;
+> +	}
+> +
+> +	fd = open(file, O_WRONLY);
+
+Would it be possible to improve below not so helpful and slightly
+misleading printout:
+
+$ ./watchdog-test -d -t 10 -p 5 -e -f /dev/watch
+Watchdog device not enabled.
+
+Thanks!
+
 -- 
-2.21.0
-
+Best Regards,
+Eugeniu.
