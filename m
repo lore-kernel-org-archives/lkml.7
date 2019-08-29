@@ -2,109 +2,112 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 026B6C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A76DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7792341B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2893622CED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 02:26:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dvr793nm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfH2CYZ (ORCPT
+        id S1727171AbfH2C0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 22:24:25 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:40700 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726245AbfH2CYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 22:24:25 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1FB56200267;
-        Thu, 29 Aug 2019 04:24:23 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E373E200264;
-        Thu, 29 Aug 2019 04:24:18 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 790BA402B1;
-        Thu, 29 Aug 2019 10:24:13 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        leoyang.li@nxp.com, broonie@kernel.org, nandor.han@vaisala.com
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biwen Li <biwen.li@nxp.com>
-Subject: [v5] rtc: pcf85363/pcf85263: fix error that failed to run hwclock -w
-Date:   Thu, 29 Aug 2019 10:14:18 +0800
-Message-Id: <20190829021418.4607-1-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 28 Aug 2019 22:26:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53314 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbfH2C0j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 22:26:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cvhAYDXepFr1W9XWCommsvR9amxyOLa9CIfTaM40gzI=; b=dvr793nmEyuIwAJsP5Fl+MGYY
+        uvnb9faUYyG1neWulPIY9ZqRNcx7SjwX+FKIEfKqNBaq9RcsVdx+oknvaG6iuC9vm37zGhMyvQvSp
+        nJheZPzgfL7MJSOERDyF7B+MXxsLHKpsR2LFo2OMFICcizUrJHk3BSzURLc/JXfRSqhYSVDAbp0Dz
+        cz3cR7/pdDt9G7D/xrl5aDhIH/TOr7g14632wYtcz03Z7SVo120mKlQT+ZPrHNq6nrfB5BSpna5tq
+        iBgolawBjj8HZ+Oof7dNaGFrhrtQ92LUnI5Fms8FoSvTkrIZX17aaBVDTCZayHDWuIoXvsEx2ijEb
+        64O83mpTA==;
+Received: from [2601:1c0:6200:6e8::4f71]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3A8u-0005Xu-47; Thu, 29 Aug 2019 02:26:32 +0000
+Subject: Re: mmotm 2019-08-27-20-39 uploaded (sound/hda/intel-nhlt.c)
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>
+References: <20190828034012.sBvm81sYK%akpm@linux-foundation.org>
+ <274054ef-8611-2661-9e67-4aabae5a7728@infradead.org>
+ <5ac8a7a7-a9b4-89a5-e0a6-7c97ec1fabc6@linux.intel.com>
+ <98ada795-4700-7fcc-6d14-fcc1ab25d509@infradead.org>
+ <f0a62b08-cba9-d944-5792-8eac0ea39df1@linux.intel.com>
+ <19edfb9a-f7b3-7a89-db5a-33289559aeef@linux.intel.com>
+ <4725bbed-81e1-9724-b51c-47eba8e414d0@infradead.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d26c671b-fa17-e065-85f3-d6d187c4fc15@infradead.org>
+Date:   Wed, 28 Aug 2019 19:26:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <4725bbed-81e1-9724-b51c-47eba8e414d0@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Issue:
-    - # hwclock -w
-      hwclock: RTC_SET_TIME: Invalid argument
+On 8/28/19 3:59 PM, Randy Dunlap wrote:
+> On 8/28/19 3:45 PM, Pierre-Louis Bossart wrote:
+>>
+>>>>> I just checked with Mark Brown's for-next tree 8aceffa09b4b9867153bfe0ff6f40517240cee12
+>>>>> and things are fine in i386 mode, see below.
+>>>>>
+>>>>> next-20190828 also works fine for me in i386 mode.
+>>>>>
+>>>>> if you can point me to a tree and configuration that don't work I'll look into this, I'd need more info to progress.
+>>>>
+>>>> Please try the attached randconfig file.
+>>>>
+>>>> Thanks for looking.
+>>>
+>>> Ack, I see some errors as well with this config. Likely a missing dependency somewhere, working on this now.
+>>
+>> My bad, I added a fallback with static inline functions in the .h file when ACPI is not defined, but the .c file was still compiled.
+>>
+>> The diff below makes next-20190828 compile with Randy's config.
+>>
+>> It looks like the alsa-devel server is down btw?
+>>
+>> diff --git a/sound/hda/Makefile b/sound/hda/Makefile
+>> index 8560f6ef1b19..b3af071ce06b 100644
+>> --- a/sound/hda/Makefile
+>> +++ b/sound/hda/Makefile
+>> @@ -14,5 +14,7 @@ obj-$(CONFIG_SND_HDA_CORE) += snd-hda-core.o
+>>  #extended hda
+>>  obj-$(CONFIG_SND_HDA_EXT_CORE) += ext/
+>>
+>> +ifdef CONFIG_ACPI
+>>  snd-intel-nhlt-objs := intel-nhlt.o
+>>  obj-$(CONFIG_SND_INTEL_NHLT) += snd-intel-nhlt.o
+>> +endif
+>>
+> 
+> works for me.  Thanks.
+> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+> 
 
-Why:
-    - Relative commit: 8b9f9d4dc511309918c4f6793bae7387c0c638af, this patch
-      will always check for unwritable registers, it will compare reg
-      with max_register in regmap_writeable.
+although this Makefile change should not be needed
+and the dependencies should be handled correctly in Kconfig files.
 
-    - The pcf85363/pcf85263 has the capability of address wrapping
-      which means if you access an address outside the allowed range
-      (0x00-0x2f) hardware actually wraps the access to a lower address.
-      The rtc-pcf85363 driver will use this feature to configure the time
-      and execute 2 actions in the same i2c write operation (stopping the
-      clock and configure the time). However the driver has also
-      configured the `regmap maxregister` protection mechanism that will
-      block accessing addresses outside valid range (0x00-0x2f).
-
-How:
-    - Split of writing regs to two parts, first part writes control
-      registers about stop_enable and resets, second part writes
-      RTC time and date registers.
-
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v5:
-	- drop robust explanation
-
-Change in v4:
-	- use old scheme
-	- replace link to lkml.org with commit
-	- add proper explanation
-
-Change in v3:
-	- replace old scheme with new scheme:
-	  increase max_register.
-
-Change in v2:
-	- add Why and How into commit message.
-
- drivers/rtc/rtc-pcf85363.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/rtc/rtc-pcf85363.c b/drivers/rtc/rtc-pcf85363.c
-index a075e77617dc..3450d615974d 100644
---- a/drivers/rtc/rtc-pcf85363.c
-+++ b/drivers/rtc/rtc-pcf85363.c
-@@ -166,7 +166,12 @@ static int pcf85363_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 	buf[DT_YEARS] = bin2bcd(tm->tm_year % 100);
- 
- 	ret = regmap_bulk_write(pcf85363->regmap, CTRL_STOP_EN,
--				tmp, sizeof(tmp));
-+				tmp, 2);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_bulk_write(pcf85363->regmap, DT_100THS,
-+				buf, sizeof(tmp) - 2);
- 	if (ret)
- 		return ret;
- 
 -- 
-2.17.1
-
+~Randy
