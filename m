@@ -2,52 +2,57 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EA3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62A9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6576E23405
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8607A2339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103366;
-	bh=9XwVY0/RWITjmF5+saF61bNfNg4hwnNLiBiyFMWHHcI=;
+	s=default; t=1567103370;
+	bh=+7Li6F856J3HYrnDJuprfV6NdhxgV56NM1wlA8WREUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2gP3JC9yfxqObSCplCCgXw4ByuEERfi+ZfKiqaPIxI2PVhvYPa2j2bTo0Mom2fl2R
-	 vY15OL665PlXJj4VR3IbiMai3N849DOFJi9ucELKCLDfGpglaSk0K33EsMdYzAeKtF
-	 KC2lbxHGAO9vKtcSoE+LmvmPuGxATr7Civ+vhlBk=
+	b=eOatSiRvwyZsIZurASsrTsfeCuLvxcMibiZ8SqDGH3PWpNqzAeyXVwgdFLAGmIJAa
+	 jw0Zzyrkw5aCQ0k6+gCGF64/B1W8rszgmUoPLOUFVkkSYqlUma+/5UU1/bPi2oJ96p
+	 I7tjnIOFIotGPNoZl1kiLbEJmscL/iVr5vjBK5z8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbfH2SPB (ORCPT
+        id S1729097AbfH2SPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:15:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56598 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:15:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729073AbfH2SO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:14:57 -0400
+        id S1729055AbfH2SOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:14:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6926233FF;
-        Thu, 29 Aug 2019 18:14:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D59FE2339E;
+        Thu, 29 Aug 2019 18:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102496;
-        bh=9XwVY0/RWITjmF5+saF61bNfNg4hwnNLiBiyFMWHHcI=;
+        s=default; t=1567102493;
+        bh=+7Li6F856J3HYrnDJuprfV6NdhxgV56NM1wlA8WREUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LyUn0fyF/M0jUPmnksCh1re+AlT96Mos9q80aKWiyNNiWPhI4DpB0MckXwQ9GdaYL
-         b9ChIC6VzoC3TjOjfxILVPPnJn0WCW8CS86AV6JIqj57ZefShFuZ4HsFtymPA7G/ni
-         JfxAbPtqRkIXwKEmH5ty7k2XckAI/gAT3u7Znwzw=
+        b=DJZdx2no2lJzLzh+mibqCmIQzgb0ZevWzn/3CuRFnBFJPH3vNByyhvDKpMohUsmFO
+         SPFYCkFMbEdHbkFHXCf3gk7PxaPcpBvYZGYzDNSZDy0BIAAGPwoeXJgKbWAlf8zRBW
+         Whk9vwvfsX4SZ/WQcqdeDKnuNdxipM/0MXVp0fEk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Even Xu <even.xu@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 49/76] HID: intel-ish-hid: ipc: add EHL device id
-Date:   Thu, 29 Aug 2019 14:12:44 -0400
-Message-Id: <20190829181311.7562-49-sashal@kernel.org>
+Cc:     Andrea Righi <andrea.righi@canonical.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 48/76] kprobes: Fix potential deadlock in kprobe_optimizer()
+Date:   Thu, 29 Aug 2019 14:12:43 -0400
+Message-Id: <20190829181311.7562-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -60,46 +65,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Even Xu <even.xu@intel.com>
+From: Andrea Righi <andrea.righi@canonical.com>
 
-[ Upstream commit b640be5bc8e4673dc8049cf74176ddedecea5597 ]
+[ Upstream commit f1c6ece23729257fb46562ff9224cf5f61b818da ]
 
-EHL is a new platform using ishtp solution, add its device id
-to support list.
+lockdep reports the following deadlock scenario:
 
-Signed-off-by: Even Xu <even.xu@intel.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+ WARNING: possible circular locking dependency detected
+
+ kworker/1:1/48 is trying to acquire lock:
+ 000000008d7a62b2 (text_mutex){+.+.}, at: kprobe_optimizer+0x163/0x290
+
+ but task is already holding lock:
+ 00000000850b5e2d (module_mutex){+.+.}, at: kprobe_optimizer+0x31/0x290
+
+ which lock already depends on the new lock.
+
+ the existing dependency chain (in reverse order) is:
+
+ -> #1 (module_mutex){+.+.}:
+        __mutex_lock+0xac/0x9f0
+        mutex_lock_nested+0x1b/0x20
+        set_all_modules_text_rw+0x22/0x90
+        ftrace_arch_code_modify_prepare+0x1c/0x20
+        ftrace_run_update_code+0xe/0x30
+        ftrace_startup_enable+0x2e/0x50
+        ftrace_startup+0xa7/0x100
+        register_ftrace_function+0x27/0x70
+        arm_kprobe+0xb3/0x130
+        enable_kprobe+0x83/0xa0
+        enable_trace_kprobe.part.0+0x2e/0x80
+        kprobe_register+0x6f/0xc0
+        perf_trace_event_init+0x16b/0x270
+        perf_kprobe_init+0xa7/0xe0
+        perf_kprobe_event_init+0x3e/0x70
+        perf_try_init_event+0x4a/0x140
+        perf_event_alloc+0x93a/0xde0
+        __do_sys_perf_event_open+0x19f/0xf30
+        __x64_sys_perf_event_open+0x20/0x30
+        do_syscall_64+0x65/0x1d0
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+ -> #0 (text_mutex){+.+.}:
+        __lock_acquire+0xfcb/0x1b60
+        lock_acquire+0xca/0x1d0
+        __mutex_lock+0xac/0x9f0
+        mutex_lock_nested+0x1b/0x20
+        kprobe_optimizer+0x163/0x290
+        process_one_work+0x22b/0x560
+        worker_thread+0x50/0x3c0
+        kthread+0x112/0x150
+        ret_from_fork+0x3a/0x50
+
+ other info that might help us debug this:
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(module_mutex);
+                                lock(text_mutex);
+                                lock(module_mutex);
+   lock(text_mutex);
+
+  *** DEADLOCK ***
+
+As a reproducer I've been using bcc's funccount.py
+(https://github.com/iovisor/bcc/blob/master/tools/funccount.py),
+for example:
+
+ # ./funccount.py '*interrupt*'
+
+That immediately triggers the lockdep splat.
+
+Fix by acquiring text_mutex before module_mutex in kprobe_optimizer().
+
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: d5b844a2cf50 ("ftrace/x86: Remove possible deadlock between register_kprobe() and ftrace_run_update_code()")
+Link: http://lkml.kernel.org/r/20190812184302.GA7010@xps-13
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/intel-ish-hid/ipc/hw-ish.h  | 1 +
- drivers/hid/intel-ish-hid/ipc/pci-ish.c | 1 +
- 2 files changed, 2 insertions(+)
+ kernel/kprobes.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hid/intel-ish-hid/ipc/hw-ish.h b/drivers/hid/intel-ish-hid/ipc/hw-ish.h
-index 1065692f90e20..5792a104000a9 100644
---- a/drivers/hid/intel-ish-hid/ipc/hw-ish.h
-+++ b/drivers/hid/intel-ish-hid/ipc/hw-ish.h
-@@ -24,6 +24,7 @@
- #define ICL_MOBILE_DEVICE_ID	0x34FC
- #define SPT_H_DEVICE_ID		0xA135
- #define CML_LP_DEVICE_ID	0x02FC
-+#define EHL_Ax_DEVICE_ID	0x4BB3
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 445337c107e0f..2504c269e6583 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -470,6 +470,7 @@ static DECLARE_DELAYED_WORK(optimizing_work, kprobe_optimizer);
+  */
+ static void do_optimize_kprobes(void)
+ {
++	lockdep_assert_held(&text_mutex);
+ 	/*
+ 	 * The optimization/unoptimization refers online_cpus via
+ 	 * stop_machine() and cpu-hotplug modifies online_cpus.
+@@ -487,9 +488,7 @@ static void do_optimize_kprobes(void)
+ 	    list_empty(&optimizing_list))
+ 		return;
  
- #define	REVISION_ID_CHT_A0	0x6
- #define	REVISION_ID_CHT_Ax_SI	0x0
-diff --git a/drivers/hid/intel-ish-hid/ipc/pci-ish.c b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-index 17ae49fba920f..8cce3cfe28e08 100644
---- a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-+++ b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-@@ -33,6 +33,7 @@ static const struct pci_device_id ish_pci_tbl[] = {
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, ICL_MOBILE_DEVICE_ID)},
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, SPT_H_DEVICE_ID)},
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, CML_LP_DEVICE_ID)},
-+	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, EHL_Ax_DEVICE_ID)},
- 	{0, }
- };
- MODULE_DEVICE_TABLE(pci, ish_pci_tbl);
+-	mutex_lock(&text_mutex);
+ 	arch_optimize_kprobes(&optimizing_list);
+-	mutex_unlock(&text_mutex);
+ }
+ 
+ /*
+@@ -500,6 +499,7 @@ static void do_unoptimize_kprobes(void)
+ {
+ 	struct optimized_kprobe *op, *tmp;
+ 
++	lockdep_assert_held(&text_mutex);
+ 	/* See comment in do_optimize_kprobes() */
+ 	lockdep_assert_cpus_held();
+ 
+@@ -507,7 +507,6 @@ static void do_unoptimize_kprobes(void)
+ 	if (list_empty(&unoptimizing_list))
+ 		return;
+ 
+-	mutex_lock(&text_mutex);
+ 	arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
+ 	/* Loop free_list for disarming */
+ 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
+@@ -524,7 +523,6 @@ static void do_unoptimize_kprobes(void)
+ 		} else
+ 			list_del_init(&op->list);
+ 	}
+-	mutex_unlock(&text_mutex);
+ }
+ 
+ /* Reclaim all kprobes on the free_list */
+@@ -556,6 +554,7 @@ static void kprobe_optimizer(struct work_struct *work)
+ {
+ 	mutex_lock(&kprobe_mutex);
+ 	cpus_read_lock();
++	mutex_lock(&text_mutex);
+ 	/* Lock modules while optimizing kprobes */
+ 	mutex_lock(&module_mutex);
+ 
+@@ -583,6 +582,7 @@ static void kprobe_optimizer(struct work_struct *work)
+ 	do_free_cleaned_kprobes();
+ 
+ 	mutex_unlock(&module_mutex);
++	mutex_unlock(&text_mutex);
+ 	cpus_read_unlock();
+ 	mutex_unlock(&kprobe_mutex);
+ 
 -- 
 2.20.1
 
