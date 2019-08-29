@@ -2,72 +2,128 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F281C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFA3C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2AD72189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:15:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567095309;
-	bh=WTpIdLvaLoglhAbyijHyx/3yZK7koc4yT9tfo593Q34=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=VmAKU3/z0Ls+6P8vA1RqCX+wU3nX/3Vj0KNi+Xp7HnbAR5Y/gp0HV4LaNqyudivQA
-	 6WmdfYlHXjwnxbBFR/HWyTipgK1Ke6iN6LRBTZxTy5Risa5yeRbNC7l33I/ZNytjKI
-	 zCw7jcv4s+IiSHeKgYEsNogbxsR6yquCWczOoXXU=
+	by mail.kernel.org (Postfix) with ESMTP id E3EEE21874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:15:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfH2QPI (ORCPT
+        id S1728232AbfH2QP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:15:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727255AbfH2QPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:15:07 -0400
-Subject: Re: [GIT PULL] mtd: Fixes for -rc7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567095307;
-        bh=WTpIdLvaLoglhAbyijHyx/3yZK7koc4yT9tfo593Q34=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=bGn8KcdcLHdGEsPai3B34D/fYykSI13X9qOOxFmskGYOBmWX54VKJlgd3RNruHHeq
-         o8Grjvv79Fw70FHSbQpwL/Eug5c+AIHoHpgDNb5NUTJzQ/1vZUnFal6j0N6WJRptsC
-         d5mN8glHj3CC/JBv4qyGQGq/lDplnP60dbDlvuB8=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190829144428.3cb4d481@xps13>
-References: <20190829144428.3cb4d481@xps13>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190829144428.3cb4d481@xps13>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
- tags/mtd/fixes-for-5.3-rc7
-X-PR-Tracked-Commit-Id: dc9cfd2692225a2164f4f20b7deaf38ca8645de3
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4e73079d39f62a5a46fbc30260acb0bd890c28df
-Message-Id: <156709530703.2214.13976882612421454190.pr-tracker-bot@kernel.org>
-Date:   Thu, 29 Aug 2019 16:15:07 +0000
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        linux-kernel@vger.kernel.org
+        Thu, 29 Aug 2019 12:15:29 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34704 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727255AbfH2QP3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:15:29 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 8754D28D6D2;
+        Thu, 29 Aug 2019 17:15:25 +0100 (BST)
+Date:   Thu, 29 Aug 2019 18:15:20 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH 2/4] i3c: master: Check if devices have
+ i3c_dev_boardinfo on i3c_master_add_i3c_dev_locked()
+Message-ID: <20190829181520.0b33b642@collabora.com>
+In-Reply-To: <SN6PR12MB26553867412178B3F7190F0CAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+References: <cover.1567071213.git.vitor.soares@synopsys.com>
+        <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
+        <20190829124457.3a750932@collabora.com>
+        <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+        <20190829163918.571fd0d8@collabora.com>
+        <20190829163941.45380b19@collabora.com>
+        <SN6PR12MB2655B08176E14BE9DF2BACA2AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+        <20190829172441.3a76385e@collabora.com>
+        <SN6PR12MB26553867412178B3F7190F0CAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 29 Aug 2019 14:44:28 +0200:
+On Thu, 29 Aug 2019 15:57:32 +0000
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/fixes-for-5.3-rc7
+> -----Original Message-----
+> From: Boris Brezillon 
+> <boris.brezillon@collabora.com> 
+> Sent: Thursday, August 29, 2019 4:25 
+> PM
+> To: Vitor Soares <Vitor.Soares@synopsys.com>
+> Cc: 
+> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; 
+> linux-i3c@lists.infradead.org; bbrezillon@kernel.org; robh+dt@kernel.org; 
+> mark.rutland@arm.com; Joao.Pinto@synopsys.com
+> Subject: Re: [PATCH 2/4] 
+> i3c: master: Check if devices have i3c_dev_boardinfo on 
+> i3c_master_add_i3c_dev_locked()
+> 
+> On Thu, 29 Aug 2019 15:07:08 +0000
+> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> 
+> > From: Boris Brezillon   
+> <boris.brezillon@collabora.com>
+> > Date: Thu, Aug 29, 2019 at 15:39:41
+> >   
+> 
+> > > On Thu, 29 Aug 2019 16:39:18 +0200
+> > > Boris Brezillon <boris.brezillon@collabora.com> wrote:
+> > >     
+> > > > On Thu, 29 Aug 2019 14:00:44 +0000
+> > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > > >     
+> > > > > Hi Boris,
+> > > > > 
+> > > > > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > > > > Date: Thu, Aug 29, 2019 at 11:44:57
+> > > > >       
+> > > > > > On Thu, 29 Aug 2019 12:19:33 +0200
+> > > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > > > > >         
+> > > > > > > The I3C devices described in DT might not be attached to the master which
+> > > > > > > doesn't allow to assign a specific dynamic address.        
+> > > > > > 
+> > > > > > I remember testing this when developing the framework, so, unless
+> > > > > > another patch regressed it, it should already work. I suspect patch 1
+> > > > > > is actually the regressing this use case.        
+> > > > > 
+> > > > > For today it doesn't address the case where the device is described with 
+> > > > > static address = 0, which isn't attached to the controller.      
+> > > > 
+> > > > Hm, I'm pretty sure I had designed the code to support that case (see
+> > > > [1]). It might be buggy, but nothing we can't fix I guess.
+> > > >     
+> > > 
+> > > [1]https://urldefense.proofpoint.com/v2/url?u=https-3A__elixir.bootlin.com_linux_v5.3-2Drc6_source_drivers_i3c_master.c-23L1898&d=DwICAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=qVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=IXS1ygIgEo5vwajk0iwd5aBDVBzRnVTjO3cg4iBmGNc&s=HC-AcYm-AZPrUBoALioej_BDnqOtJHltr39Z2yPkuU4&e=     
+> > 
+> > That is only valid if you have olddev which will only exist if static 
+> > address != 0.  
+> 
+> Hm, if you revert patch 1 (and assuming the device is properly defined
+> in the DT), you should have olddev != NULL when reaching that point. If
+> that's not the case there's a bug somewhere that should be fixed.
+> 
+> No, because the device is not attached.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4e73079d39f62a5a46fbc30260acb0bd890c28df
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Oh, my bad, I see what you mean now. This is definitely a bug and should
+have the Fixes tags. I mean, even if we don't care about dynamic
+address assignment, I3C drivers might care about the ->of_node that's
+attached to the device.
