@@ -2,208 +2,113 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC38AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1970EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E33D2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40122189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:48:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="dmJ58rZy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SHZ9Ygey"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfH2IpQ (ORCPT
+        id S1726888AbfH2Isk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 04:45:16 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:12205 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbfH2IpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 04:45:16 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46Jx550VJxz9tyrQ;
-        Thu, 29 Aug 2019 10:45:13 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=dmJ58rZy; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id uLQ2da6dch8H; Thu, 29 Aug 2019 10:45:13 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46Jx546RwKz9tyrN;
-        Thu, 29 Aug 2019 10:45:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1567068312; bh=PNFuI+n1ZPaNxn5/Zi9ps1C4AGZwoaIqpFEYMkABCKo=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=dmJ58rZyvWKspJm7PztRHXgdKzS8Co5zDrMxPXfqAmIEB0tmb2TMlhnnaYCeMqhVn
-         4sK2qzx9KXlZgo8z7XLEKh5HB7DjeYDghnKNZm/H0+37Jeri0PtalqX5eC8SCJOFrT
-         EEUGLyS/Ia/kjnd6/udFUOxQbMjWwGlCllckpjO0=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F0CF58B8AC;
-        Thu, 29 Aug 2019 10:45:13 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id aJ2MWNxz1Yux; Thu, 29 Aug 2019 10:45:13 +0200 (CEST)
-Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.204.43])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 97DAB8B7B2;
-        Thu, 29 Aug 2019 10:45:13 +0200 (CEST)
-Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 58D77696C1; Thu, 29 Aug 2019 08:45:13 +0000 (UTC)
-Message-Id: <a28a20514d5f6df9629c1a117b667e48c4272736.1567068137.git.christophe.leroy@c-s.fr>
-In-Reply-To: <dd82934ad91aab607d0eb7e626c14e6ac0d654eb.1567068137.git.christophe.leroy@c-s.fr>
-References: <dd82934ad91aab607d0eb7e626c14e6ac0d654eb.1567068137.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 2/2] powerpc: cleanup hw_irq.h
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        segher@kernel.crashing.org, npiggin@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 29 Aug 2019 08:45:13 +0000 (UTC)
+        Thu, 29 Aug 2019 04:48:40 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38843 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfH2Isj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 04:48:39 -0400
+Received: by mail-qt1-f196.google.com with SMTP id q64so2794936qtd.5
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:48:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9zMYasvwvJSOlUawu9XgM9g2TZzoppz6gZllm9KotKE=;
+        b=SHZ9YgeyfCMnhqlOYfjPzfUSq1BNrP1DU/i9TUQBQF5OxqXyYXFbD3KXCwEOnPeA9c
+         71IF+x2HqEnqDJjtx3sQ8JNZRIoc4n0DkM6tPqcjTXAclxoj2axWpdPIm/GILFF5sqvV
+         I1Rtjsp1Aau4Ox+y/Z3P8ANJk7ugFKmHEbk+DWR25g0QLrrX7MhO99/okNsqLhcX7sZe
+         Zv3aMcHI9NL6UYsDsPPhRH637K0OTyfvpMkDLPysG4poicXhoDUeLGQgZYLpuiBCFhQ0
+         JSQefxcGPF33JB1eO3tomQetKOKEC4cwOdg7Xx6IrIidmf4qk5MZqWfG2ws4KkNrECVC
+         dqdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9zMYasvwvJSOlUawu9XgM9g2TZzoppz6gZllm9KotKE=;
+        b=g6tyCYmujVv7UZ/VzDM2OIDOBIzHi2WVfoAxGgu4b7bDajpNjjb7wZgvtm9cNzbs3q
+         soKEGWHkTUCmZgk54H3RpooWB6m3UwS1J4MzktyZ4KRsISaECculIQerFxtP/tDCnZEw
+         TJj4CFi7CH7T+VO7sDqkq5bNL+PSQKw2FEa7Wz4f52loyOG3tmbGAEHd6bpfpWORFq1Y
+         pUSFSq5UGO7x21OsTHHa4XJW7b5tX1cxaOwEok9KQtEVRiouspPOB3yaZOZhb+FoVQfy
+         0y9QIr8OP4PNE1KuUmhUnpr7UAT5NGCU1rVbgrbHtcN+hJeF4Sml9gy92RzsnmtpNj/m
+         uGVQ==
+X-Gm-Message-State: APjAAAXfWy9IINiNku7uqAlw+7/KRVvRlfMQxR0nIInieKe3A+SsHMq3
+        fk+5Q0b9AxPrmhjnjRGSHlrUDxrDlt2Gs9VSiwOO7g==
+X-Google-Smtp-Source: APXvYqzjzN2EG+az7+HCU8fERqdhPqrzGKY2WH86fhF6ux/sDMROPXd1/G1j4VoryLHc4mDvNkJkhfATh7/XtrFc9S0=
+X-Received: by 2002:aed:3287:: with SMTP id z7mr3594931qtd.264.1567068518675;
+ Thu, 29 Aug 2019 01:48:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1566907161.git.amit.kucheria@linaro.org>
+ <66ac3d3707d6296ef85bf1fa321f7f1ee0c02131.1566907161.git.amit.kucheria@linaro.org>
+ <5d65cbe9.1c69fb81.1ceb.2374@mx.google.com>
+In-Reply-To: <5d65cbe9.1c69fb81.1ceb.2374@mx.google.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 29 Aug 2019 14:18:27 +0530
+Message-ID: <CAP245DWWKsZBHnvSqC40XOH48kGd-hykd+fr-UZfWTmvuG2KaA@mail.gmail.com>
+Subject: Re: [PATCH v2 07/15] dt: thermal: tsens: Document interrupt support
+ in tsens driver
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Brian Masney <masneyb@onstation.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SET_MSR_EE() is just use in this file and doesn't provide
-any added value compared to mtmsr(). Drop it.
+On Wed, Aug 28, 2019 at 6:03 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Amit Kucheria (2019-08-27 05:14:03)
+> > Define two new required properties to define interrupts and
+> > interrupt-names for tsens.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > index 673cc1831ee9d..686bede72f846 100644
+> > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > @@ -22,6 +22,8 @@ Required properties:
+> >
+> >  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
+> >  - #qcom,sensors: Number of sensors in tsens block
+> > +- interrupts: Interrupts generated from Always-On subsystem (AOSS)
+>
+> Is it always one? interrupt-names makes it sound like it.
+>
+> > +- interrupt-names: Must be one of the following: "uplow", "critical"
 
-Add a wrtee() inline function to use wrtee/wrteei insn.
+Will fix to "one or more of the following"
 
-Replace #ifdefs by IS_ENABLED()
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
----
-v2: Changed wrtee()/wrteei() to a single wrtee() inline which uses wrtee
-    or wrteei depending on the constness of the argument (Nick's idea).
-
-v3: no change
----
- arch/powerpc/include/asm/hw_irq.h | 57 ++++++++++++++++++---------------------
- arch/powerpc/include/asm/reg.h    |  8 ++++++
- 2 files changed, 34 insertions(+), 31 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
-index 32a18f2f49bc..e3a905e3d573 100644
---- a/arch/powerpc/include/asm/hw_irq.h
-+++ b/arch/powerpc/include/asm/hw_irq.h
-@@ -226,8 +226,8 @@ static inline bool arch_irqs_disabled(void)
- #endif /* CONFIG_PPC_BOOK3S */
- 
- #ifdef CONFIG_PPC_BOOK3E
--#define __hard_irq_enable()	asm volatile("wrteei 1" : : : "memory")
--#define __hard_irq_disable()	asm volatile("wrteei 0" : : : "memory")
-+#define __hard_irq_enable()	wrtee(MSR_EE)
-+#define __hard_irq_disable()	wrtee(0)
- #else
- #define __hard_irq_enable()	__mtmsrd(MSR_EE|MSR_RI, 1)
- #define __hard_irq_disable()	__mtmsrd(MSR_RI, 1)
-@@ -280,8 +280,6 @@ extern void force_external_irq_replay(void);
- 
- #else /* CONFIG_PPC64 */
- 
--#define SET_MSR_EE(x)	mtmsr(x)
--
- static inline unsigned long arch_local_save_flags(void)
- {
- 	return mfmsr();
-@@ -289,47 +287,44 @@ static inline unsigned long arch_local_save_flags(void)
- 
- static inline void arch_local_irq_restore(unsigned long flags)
- {
--#if defined(CONFIG_BOOKE)
--	asm volatile("wrtee %0" : : "r" (flags) : "memory");
--#else
--	mtmsr(flags);
--#endif
-+	if (IS_ENABLED(CONFIG_BOOKE))
-+		wrtee(flags);
-+	else
-+		mtmsr(flags);
- }
- 
- static inline unsigned long arch_local_irq_save(void)
- {
- 	unsigned long flags = arch_local_save_flags();
--#ifdef CONFIG_BOOKE
--	asm volatile("wrteei 0" : : : "memory");
--#elif defined(CONFIG_PPC_8xx)
--	wrtspr(SPRN_EID);
--#else
--	SET_MSR_EE(flags & ~MSR_EE);
--#endif
-+
-+	if (IS_ENABLED(CONFIG_BOOKE))
-+		wrtee(0);
-+	else if (IS_ENABLED(CONFIG_PPC_8xx))
-+		wrtspr(SPRN_EID);
-+	else
-+		mtmsr(flags & ~MSR_EE);
-+
- 	return flags;
- }
- 
- static inline void arch_local_irq_disable(void)
- {
--#ifdef CONFIG_BOOKE
--	asm volatile("wrteei 0" : : : "memory");
--#elif defined(CONFIG_PPC_8xx)
--	wrtspr(SPRN_EID);
--#else
--	arch_local_irq_save();
--#endif
-+	if (IS_ENABLED(CONFIG_BOOKE))
-+		wrtee(0);
-+	else if (IS_ENABLED(CONFIG_PPC_8xx))
-+		wrtspr(SPRN_EID);
-+	else
-+		mtmsr(mfmsr() & ~MSR_EE);
- }
- 
- static inline void arch_local_irq_enable(void)
- {
--#ifdef CONFIG_BOOKE
--	asm volatile("wrteei 1" : : : "memory");
--#elif defined(CONFIG_PPC_8xx)
--	wrtspr(SPRN_EIE);
--#else
--	unsigned long msr = mfmsr();
--	SET_MSR_EE(msr | MSR_EE);
--#endif
-+	if (IS_ENABLED(CONFIG_BOOKE))
-+		wrtee(MSR_EE);
-+	else if (IS_ENABLED(CONFIG_PPC_8xx))
-+		wrtspr(SPRN_EIE);
-+	else
-+		mtmsr(mfmsr() | MSR_EE);
- }
- 
- static inline bool arch_irqs_disabled_flags(unsigned long flags)
-diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
-index b17ee25df226..a18e629d9951 100644
---- a/arch/powerpc/include/asm/reg.h
-+++ b/arch/powerpc/include/asm/reg.h
-@@ -1362,6 +1362,14 @@ static inline void mtmsr_isync(unsigned long val)
- #define wrtspr(rn)	asm volatile("mtspr " __stringify(rn) ",0" : \
- 				     : : "memory")
- 
-+static inline void wrtee(unsigned long val)
-+{
-+	if (__builtin_constant_p(val))
-+		asm volatile("wrteei %0" : : "i" ((val & MSR_EE) ? 1 : 0) : "memory");
-+	else
-+		asm volatile("wrtee %0" : : "r" (val) : "memory");
-+}
-+
- extern unsigned long msr_check_and_set(unsigned long bits);
- extern bool strict_msr_control;
- extern void __msr_check_and_clear(unsigned long bits);
--- 
-2.13.3
-
+> >  - Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
+> >  nvmem cells
+> >
