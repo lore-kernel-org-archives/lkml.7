@@ -2,192 +2,206 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABE9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C560FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 829F72173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:14:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ES+v6LcC"
+	by mail.kernel.org (Postfix) with ESMTP id 989842173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727739AbfH2RO5 (ORCPT
+        id S1727594AbfH2RPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:14:57 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42649 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727344AbfH2RO5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:14:57 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p3so1911603pgb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 10:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mPDM53/6fx4rnRkVTsQ5BY1RiGRNlZ4KUune0Ro7yNA=;
-        b=ES+v6LcCwtNJsRIRE18/qNv6QT20nJphH77qku4h5nuifb2Wj1/18f5TeoE4dY3IPA
-         rhhxr+Wqb3oUpX46hfOnzYY3HDNWdMUd+HJV5GYySJ/TEv4Yg5h3x3lj4DcKeSKvoCWS
-         TN7fwkfTE6IjogQx7daWws5OBakVs4pcljWHU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mPDM53/6fx4rnRkVTsQ5BY1RiGRNlZ4KUune0Ro7yNA=;
-        b=bqgtyYlO2rkPWukWCRf6NbGu9nZ6u4yLE+wQA1wMLXY74riHGozHuQqs2fVrdDUD18
-         6+q9kOGznjaYk6TTxUEjoifiJugveDKdsURzlgkuTZ29bnxeWRqfMFmMpIDV5gIRIWzZ
-         4fS85SOXXrLvl6lI5OZsZtF7QqfDe5uOt2Q911pjSSnu4MmNUJR3b8VBjE/Viier+uFJ
-         c3dZzPNOx4C6TD0P478eA0fOxhKXpMAIQscz/W1aA4wLoxijPYHp5NceSfTIj37U+7RD
-         8XmikXFwu4IbILdeFZ77IY3+E0cU4F7cdGkBrq76at9zE0D4aZsSq0M5//n1ybhadqk3
-         k71w==
-X-Gm-Message-State: APjAAAXNx21cyMiyJhxawsZySqTQbf7f+RelraLG70n9GnsyiJzOGW7U
-        dIhWxy3xA/NHtsVqtd0cTkA3Jg==
-X-Google-Smtp-Source: APXvYqzLu5wk3DxAGdv97u2fDeuvOrok07/5HmEdMMy5kzt5jkkZmQC2p7EkfjQqRXSQajATsBsnrg==
-X-Received: by 2002:a17:90a:e286:: with SMTP id d6mr11225418pjz.61.1567098896195;
-        Thu, 29 Aug 2019 10:14:56 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id x17sm3516199pff.62.2019.08.29.10.14.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 10:14:55 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 13:14:54 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC v1 2/2] rcu/tree: Remove dynticks_nmi_nesting counter
-Message-ID: <20190829171454.GA115245@google.com>
-References: <20190828211904.GX26530@linux.ibm.com>
- <20190828214241.GD75931@google.com>
- <20190828220108.GC26530@linux.ibm.com>
- <20190828221444.GA100789@google.com>
- <20190828231247.GE26530@linux.ibm.com>
- <20190829015155.GB100789@google.com>
- <20190829034336.GD4125@linux.ibm.com>
- <20190829144355.GE63638@google.com>
- <20190829151325.GF63638@google.com>
- <20190829161301.GQ4125@linux.ibm.com>
+        Thu, 29 Aug 2019 13:15:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52886 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726973AbfH2RPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 13:15:54 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 606C43086218;
+        Thu, 29 Aug 2019 17:15:53 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DC7895D9E2;
+        Thu, 29 Aug 2019 17:15:50 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 19:15:48 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v3 01/10] KVM: arm64: Document PV-time interface
+Message-ID: <20190829171548.xfk7i2bwnwl4w2po@kamzik.brq.redhat.com>
+References: <20190821153656.33429-1-steven.price@arm.com>
+ <20190821153656.33429-2-steven.price@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829161301.GQ4125@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190821153656.33429-2-steven.price@arm.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 29 Aug 2019 17:15:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 09:13:01AM -0700, Paul E. McKenney wrote:
-> On Thu, Aug 29, 2019 at 11:13:25AM -0400, Joel Fernandes wrote:
-> > On Thu, Aug 29, 2019 at 10:43:55AM -0400, Joel Fernandes wrote:
-> > > On Wed, Aug 28, 2019 at 08:43:36PM -0700, Paul E. McKenney wrote:
-> > > [snip]
-> > > > > > > > This change is not fixing a bug, so there is no need for an emergency fix,
-> > > > > > > > and thus no point in additional churn.  I understand that it is a bit
-> > > > > > > > annoying to code and test something and have your friendly maintainer say
-> > > > > > > > "sorry, wrong rocks", and the reason that I understand this is that I do
-> > > > > > > > that to myself rather often.
-> > > > > > > 
-> > > > > > > The motivation for me for this change is to avoid future bugs such as with
-> > > > > > > the following patch where "== 2" did not take the force write of
-> > > > > > > DYNTICK_IRQ_NONIDLE into account:
-> > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?h=dev&id=13c4b07593977d9288e5d0c21c89d9ba27e2ea1f
-> > > > > > 
-> > > > > > Yes, the current code does need some simplification.
-> > > > > > 
-> > > > > > > I still don't see it as pointless churn, it is also a maintenance cost in its
-> > > > > > > current form and the simplification is worth it IMHO both from a readability,
-> > > > > > > and maintenance stand point.
-> > > > > > > 
-> > > > > > > I still don't see what's technically wrong with the patch. I could perhaps
-> > > > > > > add the above "== 2" point in the patch?
-> > > > > > 
-> > > > > > I don't know of a crash or splat your patch would cause, if that is
-> > > > > > your question.  But that is also true of the current code, so the point
-> > > > > > is simplification, not bug fixing.  And from what I can see, there is an
-> > > > > > opportunity to simplify quite a bit further.  And with something like
-> > > > > > RCU, further simplification is worth -serious- consideration.
-> > > > > > 
-> > > > > > > We could also discuss f2f at LPC to see if we can agree about it?
-> > > > > > 
-> > > > > > That might make a lot of sense.
-> > > > > 
-> > > > > Sure. I am up for a further redesign / simplification. I will think more
-> > > > > about your suggestions and can also further discuss at LPC.
-> > > > 
-> > > > One question that might (or might not) help:  Given the compound counter,
-> > > > where the low-order hex digit indicates whether the corresponding CPU
-> > > > is running in a non-idle kernel task and the rest of the hex digits
-> > > > indicate the NMI-style nesting counter shifted up by four bits, what
-> > > > could rcu_is_cpu_rrupt_from_idle() be reduced to?
-> > > > 
-> > > > > And this patch is on LKML archives and is not going anywhere so there's no
-> > > > > rush I guess ;-)
-> > > > 
-> > > > True enough!  ;-)
-> > > 
-> > > Paul, do we also nuke rcu_eqs_special_set()?  Currently I don't see anyone
-> > > using it. And also remove the bottom most bit of dynticks?
-> > > 
-> > > Also what happens if a TLB flush broadcast is needed? Do we IPI nohz or idle
-> > > CPUs are the moment?
-> > > 
-> > > All of this was introduced in:
-> > > b8c17e6664c4 ("rcu: Maintain special bits at bottom of ->dynticks counter")
-> > 
-> > 
-> > Paul, also what what happens in the following scenario:
-> > 
-> > CPU0                                                 CPU1
-> > 
-> > A syscall causes rcu_eqs_exit()
-> > rcu_read_lock();
-> >                                                      ---> FQS loop waiting on
-> > 						           dyntick_snap
-> > usermode-upcall  entry -->causes rcu_eqs_enter();
-> > 
-> > usermode-upcall  exit  -->causes rcu_eqs_exit();
-> > 
-> >                                                      ---> FQS loop sees
-> > 						          dyntick snap
-> > 							  increment and
-> > 							  declares CPU0 is
-> > 							  in a QS state
-> > 							  before the
-> > 							  rcu_read_unlock!
-> > 
-> > rcu_read_unlock();
-> > ---
-> > 
-> > Does the context tracking not call rcu_user_enter() in this case, or did I
-> > really miss something?
+On Wed, Aug 21, 2019 at 04:36:47PM +0100, Steven Price wrote:
+> Introduce a paravirtualization interface for KVM/arm64 based on the
+> "Arm Paravirtualized Time for Arm-Base Systems" specification DEN 0057A.
 > 
-> Holding rcu_read_lock() across usermode execution (in this case,
-> the usermode upcall) is a bad idea.  Why is CPU 0 doing that?
+> This only adds the details about "Stolen Time" as the details of "Live
+> Physical Time" have not been fully agreed.
+> 
+> User space can specify a reserved area of memory for the guest and
+> inform KVM to populate the memory with information on time that the host
+> kernel has stolen from the guest.
+> 
+> A hypercall interface is provided for the guest to interrogate the
+> hypervisor's support for this interface and the location of the shared
+> memory structures.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>  Documentation/virt/kvm/arm/pvtime.txt | 100 ++++++++++++++++++++++++++
+>  1 file changed, 100 insertions(+)
+>  create mode 100644 Documentation/virt/kvm/arm/pvtime.txt
+> 
+> diff --git a/Documentation/virt/kvm/arm/pvtime.txt b/Documentation/virt/kvm/arm/pvtime.txt
+> new file mode 100644
+> index 000000000000..1ceb118694e7
+> --- /dev/null
+> +++ b/Documentation/virt/kvm/arm/pvtime.txt
+> @@ -0,0 +1,100 @@
+> +Paravirtualized time support for arm64
+> +======================================
+> +
+> +Arm specification DEN0057/A defined a standard for paravirtualised time
+> +support for AArch64 guests:
+> +
+> +https://developer.arm.com/docs/den0057/a
+> +
+> +KVM/arm64 implements the stolen time part of this specification by providing
+> +some hypervisor service calls to support a paravirtualized guest obtaining a
+> +view of the amount of time stolen from its execution.
+> +
+> +Two new SMCCC compatible hypercalls are defined:
+> +
+> +PV_FEATURES 0xC5000020
+> +PV_TIME_ST  0xC5000022
+> +
+> +These are only available in the SMC64/HVC64 calling convention as
+> +paravirtualized time is not available to 32 bit Arm guests. The existence of
+> +the PV_FEATURES hypercall should be probed using the SMCCC 1.1 ARCH_FEATURES
+> +mechanism before calling it.
+> +
+> +PV_FEATURES
+> +    Function ID:  (uint32)  : 0xC5000020
+> +    PV_func_id:   (uint32)  : Either PV_TIME_LPT or PV_TIME_ST
+> +    Return value: (int32)   : NOT_SUPPORTED (-1) or SUCCESS (0) if the relevant
+> +                              PV-time feature is supported by the hypervisor.
+> +
+> +PV_TIME_ST
+> +    Function ID:  (uint32)  : 0xC5000022
+> +    Return value: (int64)   : IPA of the stolen time data structure for this
+> +                              (V)CPU. On failure:
 
-Oh, ok. I was just hypothesizing that since usermode upcalls from
-something as heavy as interrupts, it could also mean we had the same from
-some path that held an rcu_read_lock() as well. It was just a theoretical
-concern, if it is not an issue, no problem.
+Why the () around the V in VCPU?
 
-The other question I had was, in which cases would dyntick_nesting in current
-RCU code be > 1 (after removing the lower bit and any crowbarring) ? In the
-scenarios I worked out on paper, I can only see this as 1 or 0. But the
-wording of it is 'dynticks_nesting'. May be I am missing a nesting scenario?
-We can exit RCU-idleness into process context only once (either exiting idle
-mode or user mode). Both cases would imply a value of 1.
+> +                              NOT_SUPPORTED (-1)
+> +
+> +The IPA returned by PV_TIME_ST should be mapped by the guest as normal memory
+> +with inner and outer write back caching attributes, in the inner shareable
+> +domain. A total of 16 bytes from the IPA returned are guaranteed to be
+> +meaningfully filled by the hypervisor (see structure below).
+> +
+> +PV_TIME_ST returns the structure for the calling VCPU.
 
-thanks!
+The above sentence seems redundant here.
 
- - Joel
+> +
+> +Stolen Time
+> +-----------
+> +
+> +The structure pointed to by the PV_TIME_ST hypercall is as follows:
+> +
+> +  Field       | Byte Length | Byte Offset | Description
+> +  ----------- | ----------- | ----------- | --------------------------
+> +  Revision    |      4      |      0      | Must be 0 for version 0.1
+> +  Attributes  |      4      |      4      | Must be 0
+> +  Stolen time |      8      |      8      | Stolen time in unsigned
+> +              |             |             | nanoseconds indicating how
+> +              |             |             | much time this VCPU thread
+> +              |             |             | was involuntarily not
+> +              |             |             | running on a physical CPU.
+> +
+> +The structure will be updated by the hypervisor prior to scheduling a VCPU. It
+> +will be present within a reserved region of the normal memory given to the
+> +guest. The guest should not attempt to write into this memory. There is a
+> +structure per VCPU of the guest.
+> +
+> +User space interface
+> +====================
+> +
+> +User space can request that KVM provide the paravirtualized time interface to
+> +a guest by creating a KVM_DEV_TYPE_ARM_PV_TIME device, for example:
+> +
+> +    struct kvm_create_device pvtime_device = {
+> +            .type = KVM_DEV_TYPE_ARM_PV_TIME,
+> +            .attr = 0,
+> +            .flags = 0,
+> +    };
+> +
+> +    pvtime_fd = ioctl(vm_fd, KVM_CREATE_DEVICE, &pvtime_device);
 
+The ioctl doesn't return the fd. If the ioctl returns zero the fd will be
+in pvtime_device.fd.
+
+> +
+> +Creation of the device should be done after creating the vCPUs of the virtual
+> +machine.
+
+Or else what? Will an error be reported in that case?
+
+> +
+> +The IPA of the structures must be given to KVM. This is the base address
+> +of an array of stolen time structures (one for each VCPU). The base address
+> +must be page aligned. The size must be at least 64 * number of VCPUs and be a
+> +multiple of PAGE_SIZE.
+> +
+> +The memory for these structures should be added to the guest in the usual
+> +manner (e.g. using KVM_SET_USER_MEMORY_REGION).
+
+Above it says the guest shouldn't attempt to write the memory. Should
+KVM_MEM_READONLY be used with KVM_SET_USER_MEMORY_REGION for it?
+
+> +
+> +For example:
+> +
+> +    struct kvm_dev_arm_st_region region = {
+> +            .gpa = <IPA of guest base address>,
+> +            .size = <size in bytes>
+> +    };
+> +
+> +    struct kvm_device_attr st_base = {
+> +            .group = KVM_DEV_ARM_PV_TIME_PADDR,
+
+This is KVM_DEV_ARM_PV_TIME_REGION in the code.
+
+> +            .attr = KVM_DEV_ARM_PV_TIME_ST,
+> +            .addr = (u64)&region
+> +    };
+> +
+> +    ioctl(pvtime_fd, KVM_SET_DEVICE_ATTR, &st_base);
+> -- 
+> 2.20.1
+>
+
+Thanks,
+drew 
