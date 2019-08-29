@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD53CC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9DDC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2ED823429
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF53921874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102983;
-	bh=qoqEgI0RDaEh5bLLgfguTtjro2ymvYiXCz+63heuajc=;
+	s=default; t=1567102992;
+	bh=nEu9r5lbzeulnKsEgKOYbBvLHJcwBjg28QDmTSDWWFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zBZruLq7GTTrdod/oKYADV1P23L8ejUCuOimIgPSQHeDdaCl9b3Hhu8zKMvZcg9O3
-	 oM+3R+ajBK0Jrk3qlbF+03dun4stj3/bxTpAcvtrsQ75oVloabpqoaJLcAvqyzrPvF
-	 2knpe9//9dkVC4B2FUtSn/zsPjWFJFdEBrYByDaA=
+	b=Pej6QGC2o1y7EiBmecHK1uKH0gqOcj8FfM/hes1obJJl0ocsXC3pXIDZ0PF29vQDr
+	 coR2t4PqXSKVPPM1GK5V5k7XakIVKLNGZnG466rDpnW3/spbHe9sJ8/Idj3qiTQDWG
+	 WV7NFEwCojSakt7b1EgfCPQN6N9D8mPe6k0Npsjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbfH2SW6 (ORCPT
+        id S1728946AbfH2SXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:22:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59242 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:23:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729963AbfH2SRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:17:07 -0400
+        id S1729940AbfH2SRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC3F3233FF;
-        Thu, 29 Aug 2019 18:17:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F2CF2189D;
+        Thu, 29 Aug 2019 18:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102626;
-        bh=qoqEgI0RDaEh5bLLgfguTtjro2ymvYiXCz+63heuajc=;
+        s=default; t=1567102622;
+        bh=nEu9r5lbzeulnKsEgKOYbBvLHJcwBjg28QDmTSDWWFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHnYc/DP7mIyeF+DC+luCtpTdQNr8pq1dTqpXFOyY4c7c8MYBdqEr2As4kTPi7Wlv
-         lG9YwStsHC3lxuVD+ZW1AkOjysxNBLulWN0QZ6Ai50ZscwIxsZas3w1/eNeiMQT5tH
-         +RYTwuFRd3rp9oKBWbZLzOC7NkJ9vEvvILXL1cso=
+        b=gSozmAA53nf8nWMyCUyj46O0geLmFW4DoQrL0XSGoEcKwaq2Jo91Hc85KrX/K3Pd3
+         NeRguU82ARZddIBaid+8qUSoADmdxqV0dlwZXb5buK2nCHrAFlHofjbbQkg7UhtJqy
+         GbAq2bmcsXj1kJoWHSkV3DUeTv8gzA7LHdBwuX48=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/27] gpio: Fix build error of function redefinition
-Date:   Thu, 29 Aug 2019 14:16:33 -0400
-Message-Id: <20190829181655.8741-7-sashal@kernel.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 04/27] Bluetooth: btqca: Add a short delay before downloading the NVM
+Date:   Thu, 29 Aug 2019 14:16:30 -0400
+Message-Id: <20190829181655.8741-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181655.8741-1-sashal@kernel.org>
 References: <20190829181655.8741-1-sashal@kernel.org>
@@ -59,66 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Matthias Kaehlcke <mka@chromium.org>
 
-[ Upstream commit 68e03b85474a51ec1921b4d13204782594ef7223 ]
+[ Upstream commit 8059ba0bd0e4694e51c2ee6438a77b325f06c0d5 ]
 
-when do randbuilding, I got this error:
+On WCN3990 downloading the NVM sometimes fails with a "TLV response
+size mismatch" error:
 
-In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
-./include/linux/gpio/driver.h:576:1: error: redefinition of gpiochip_add_pin_range
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- ^~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
-./include/linux/gpio.h:245:1: note: previous definition of gpiochip_add_pin_range was here
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- ^~~~~~~~~~~~~~~~~~~~~~
+[  174.949955] Bluetooth: btqca.c:qca_download_firmware() hci0: QCA Downloading qca/crnv21.bin
+[  174.958718] Bluetooth: btqca.c:qca_tlv_send_segment() hci0: QCA TLV response size mismatch
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 964cb341882f ("gpio: move pincontrol calls to <linux/gpio/driver.h>")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190731123814.46624-1-yuehaibing@huawei.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+It seems the controller needs a short time after downloading the
+firmware before it is ready for the NVM. A delay as short as 1 ms
+seems sufficient, make it 10 ms just in case. No event is received
+during the delay, hence we don't just silently drop an extra event.
+
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/gpio.h | 24 ------------------------
- 1 file changed, 24 deletions(-)
+ drivers/bluetooth/btqca.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index 8ef7fc0ce0f0c..b2f103b170a97 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -230,30 +230,6 @@ static inline int irq_to_gpio(unsigned irq)
- 	return -EINVAL;
- }
+diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+index 0bbdfcef2aa84..a48a61f22f823 100644
+--- a/drivers/bluetooth/btqca.c
++++ b/drivers/bluetooth/btqca.c
+@@ -363,6 +363,9 @@ int qca_uart_setup_rome(struct hci_dev *hdev, uint8_t baudrate)
+ 		return err;
+ 	}
  
--static inline int
--gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
--		       unsigned int gpio_offset, unsigned int pin_offset,
--		       unsigned int npins)
--{
--	WARN_ON(1);
--	return -EINVAL;
--}
--
--static inline int
--gpiochip_add_pingroup_range(struct gpio_chip *chip,
--			struct pinctrl_dev *pctldev,
--			unsigned int gpio_offset, const char *pin_group)
--{
--	WARN_ON(1);
--	return -EINVAL;
--}
--
--static inline void
--gpiochip_remove_pin_ranges(struct gpio_chip *chip)
--{
--	WARN_ON(1);
--}
--
- static inline int devm_gpio_request(struct device *dev, unsigned gpio,
- 				    const char *label)
- {
++	/* Give the controller some time to get ready to receive the NVM */
++	msleep(10);
++
+ 	/* Download NVM configuration */
+ 	config.type = TLV_TYPE_NVM;
+ 	snprintf(config.fwname, sizeof(config.fwname), "qca/nvm_%08x.bin",
 -- 
 2.20.1
 
