@@ -2,111 +2,104 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB396C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA112C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91AF82166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:32:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103565;
-	bh=E2I92oP8BJAkr+Nu768x0W5VL/Hqr9oH52PC4aG07Xg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0UBwUWT2akTX4P5C4JKJo5lQMTGDYGFI/EtAi7TVi4KKBTlxeDzBgWNlueLik5NW8
-	 EToVXRpfPU22912TaYQ8hnW111ZZZW2ekFUj0cz3nRw+dgXXf6hnGj4M1qhLDWBd80
-	 6PyH1bAsJ8mVw9PZ1mMhjMjigJyweT6G9XO16q7g=
+	by mail.kernel.org (Postfix) with ESMTP id 92BDD205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:32:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Dg20y7Rl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbfH2Scn (ORCPT
+        id S1729770AbfH2Scw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:32:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728684AbfH2SN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:13:59 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AA2C233FF;
-        Thu, 29 Aug 2019 18:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102438;
-        bh=E2I92oP8BJAkr+Nu768x0W5VL/Hqr9oH52PC4aG07Xg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DZHpuzumNpDIc6TRB9qj+dzCAmbjKQTQsC32nE6kxP9TUa6if+T79B+rkjR2ET7Wm
-         yDseUt60jWk5YDcF3pRCavuptDqedHyJfsnLvCw1deJhoHsZy9D+LV9DHl488e0zqc
-         HNmsfktU9n/haVHuCUHSrEjqauEQ1itheJX9KXzU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Courbot <acourbot@chromium.org>,
-        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 27/76] drm/mediatek: use correct device to import PRIME buffers
-Date:   Thu, 29 Aug 2019 14:12:22 -0400
-Message-Id: <20190829181311.7562-27-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
-References: <20190829181311.7562-1-sashal@kernel.org>
+        Thu, 29 Aug 2019 14:32:52 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42558 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728684AbfH2Scu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:32:50 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p3so2021609pgb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 11:32:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=PP12ZN4mSTKnf0MT7hUsqNIn9m+j13VzNu25K1FEDNA=;
+        b=Dg20y7RlR5lw3IrWb9kFXOXh3UDVfvJqh0MeNCYdV/1eNskEXHbrs3axnbFQeu4GZ8
+         vFmjGng4fJdYr0EVfjnDJQMJeVh8Wo4mARH6Aeb9PtJVMKWA11VVmX93rx/9dXPGgsvY
+         FxthrT/KIwHAPCTHk5xe9/pt6PCokLIvEdi/hS08sdAQp1r3q7AZLSLFBSyNbM+ZMbvl
+         jdT+SIaECfhHRfr2vcg+NsuZxc177fxwtSV8aaLMTXD3pfG1Y6o+78RCTUZZhI39TjtW
+         d33SNM+MR8spGoN+2NKJdC/pYKU02Tem9FYPj8xh2wOdI8Doud4CFRDFEUMtW9hqdPBS
+         szeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=PP12ZN4mSTKnf0MT7hUsqNIn9m+j13VzNu25K1FEDNA=;
+        b=Dpt+cvt9FEmYr0/4z7gfA0xbruxavmHUxX6oHIS4UPqiAAHTeApTH6B+iStYtVK45h
+         ePD09bp7PSM+wkwVXDzzWOJtCWO3iT1Lb+KaihoKJBhyFHC0bSHhurm8WeBgFHhtM1nA
+         hTf4XVKcRTddYoOq4HZblWG/xnO3pN7nqFagetUEoffD4RhgDKU7H8aOtf0kAgN/gZ1W
+         MSe56OEn1d61alThWybFjoRlradVIh3pqNiHFzwoPy+Xo7HqqbePx/9tgddT5z5NTz+H
+         EgPzd5gabQdr7aQ5iqDQvauqrC4hY+7dCBWz0ttESCbGwO2jVS7M1mcRNwHrVc6MKDAL
+         EVoA==
+X-Gm-Message-State: APjAAAXhxVuX17eS1sZDOx2c2s4wR2km8aeF9DF5uwvyyYcbxjjIJFXZ
+        /e8Z5529ek3kg+Er9QI5RJRanw==
+X-Google-Smtp-Source: APXvYqybp8pL5qLXcsTDjwIcUXweNsYeikbXrqtzD5ZaFVHnl0f8HgRwGQ8oNuvWwwNDMokHpRBMaw==
+X-Received: by 2002:a63:6206:: with SMTP id w6mr9551512pgb.428.1567103569556;
+        Thu, 29 Aug 2019 11:32:49 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id g11sm3162127pgu.11.2019.08.29.11.32.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 29 Aug 2019 11:32:49 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 0/3] arm64: dts: meson-g12: specify suspend OPP
+In-Reply-To: <7hy2zeuv9z.fsf@baylibre.com>
+References: <20190827100307.21661-1-narmstrong@baylibre.com> <7hy2zeuv9z.fsf@baylibre.com>
+Date:   Thu, 29 Aug 2019 11:32:48 -0700
+Message-ID: <7ha7brrfe7.fsf@baylibre.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Courbot <acourbot@chromium.org>
+Kevin Hilman <khilman@baylibre.com> writes:
 
-[ Upstream commit 4c6f3196e6ea111c456c6086dc3f57d4706b0b2d ]
+> Neil Armstrong <narmstrong@baylibre.com> writes:
+>
+>> Tag the 1,2GHz OPP as suspend OPP to be set before going in suspend mode,
+>> for the G12A, G12B and SM1 SoCs.
+>>
+>> It has been reported that using various OPPs can lead to error or
+>> resume with a different OPP from the ROM, thus use this safe OPP as
+>> it is the default OPP used by the BL2 boot firmware.
+>>
+>> Neil Armstrong (3):
+>>   arm64: dts: meson-g12a: specify suspend OPP
+>>   arm64: dts: meson-sm1: specify suspend OPP
+>>   arm64: dts: meson-g12b: specify suspend OPP
+>
+> Queued patches 1, 3 for v5.4.
+>
+> The SM1 patch has a dependency on the SM1 DVFS series, which in turn has
+> a dependency on clock changes.  Once I get a stable tag for the SM1
+> clock changes, I'll queue up the rest.
 
-PRIME buffers should be imported using the DMA device. To this end, use
-a custom import function that mimics drm_gem_prime_import_dev(), but
-passes the correct device.
+FYI... I decided not to queue these for v5.4.
 
-Fixes: 119f5173628aa ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
-Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+I'm pretty sure we'll need these, but I I think we need to do a bit more
+suspend/resume testing to be sure we have the right OPPs. here.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 95fdbd0fbcace..8b18a00a58c7e 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -320,6 +320,18 @@ static const struct file_operations mtk_drm_fops = {
- 	.compat_ioctl = drm_compat_ioctl,
- };
- 
-+/*
-+ * We need to override this because the device used to import the memory is
-+ * not dev->dev, as drm_gem_prime_import() expects.
-+ */
-+struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
-+						struct dma_buf *dma_buf)
-+{
-+	struct mtk_drm_private *private = dev->dev_private;
-+
-+	return drm_gem_prime_import_dev(dev, dma_buf, private->dma_dev);
-+}
-+
- static struct drm_driver mtk_drm_driver = {
- 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME |
- 			   DRIVER_ATOMIC,
-@@ -331,7 +343,7 @@ static struct drm_driver mtk_drm_driver = {
- 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
- 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
- 	.gem_prime_export = drm_gem_prime_export,
--	.gem_prime_import = drm_gem_prime_import,
-+	.gem_prime_import = mtk_drm_gem_prime_import,
- 	.gem_prime_get_sg_table = mtk_gem_prime_get_sg_table,
- 	.gem_prime_import_sg_table = mtk_gem_prime_import_sg_table,
- 	.gem_prime_mmap = mtk_drm_gem_mmap_buf,
--- 
-2.20.1
+For now, this series is in my `v5.4/testing` branch, which is included
+in `integ` so it can get a bit broader testing.
 
+Kevin
