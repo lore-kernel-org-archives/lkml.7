@@ -2,93 +2,136 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B27C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D788DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A77E922CED
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADED622CED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="YcVaHG7J"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="br5k4UQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfH2D3E (ORCPT
+        id S1727257AbfH2D3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 23:29:04 -0400
-Received: from mail-pl1-f181.google.com ([209.85.214.181]:46635 "EHLO
-        mail-pl1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfH2D3E (ORCPT
+        Wed, 28 Aug 2019 23:29:24 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:13912 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbfH2D3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 23:29:04 -0400
-Received: by mail-pl1-f181.google.com with SMTP id o3so889388plb.13
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 20:29:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JGxbE50uXwCgfhAfE1eTU8tNsVQiLS6htVfulohzZj4=;
-        b=YcVaHG7J8kEUDEEpnsah1aC33aFF/zVr9WtxqWBS/dVq90U/A5AgzuMSwi522I98nE
-         JO8rA9dtet4C9wMyT2ZBAADep7t6cOkCV8+4UOo6nfksXdT4Rd6v/g4xKys4wjTQvkAG
-         hhvxC14TXxXJauZWxqVQU8IzKF66W5niRk7fIdp8Ix9De6qGWEOhuAMoe6kKLhTxxf6t
-         TtHfwstOlHFEUJr66LCpaRJWxc52yQZRenzaX/zb/M98dxweJf6eqPo1jJ1hhg+UCw3G
-         Saes9+wAsSIoIkuN0nuZqPYVFo3jt6AceCpIOvGpk/p1tGh3dX2TQzyPA8xsqopw8kJA
-         0RqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JGxbE50uXwCgfhAfE1eTU8tNsVQiLS6htVfulohzZj4=;
-        b=lc1zavzMTRWcG4EX/tfKgwfa/jYNDbJLJf3Z9EJX00WXFU30TmzP5Ka7/oZ0NDn8NU
-         oQ6/Uec0FUomnqSy47sNm37D2yG9djvSbJwXHc+cQgYpiKqeDQDMlUa3krSVQzDGbmbk
-         MFx6Xyb31xsJUVWXWL/BWiW/PTs4jSYAY/Ypr/8utZNe8f2pXo0WsxSpo1njtOGzMywo
-         rviCzY48ZzPM7KtJnFC3WR72bfbBTMsKQ+tHvfhAaI0Q1FyeSmW7+XTET4cA8ncc+SSq
-         rszQ0OhcsVmYg3GGB0p/vc6PUES/E5tA6qSZzVgIGuza81w2pEPwd4x9nGKVY511gRRU
-         aabA==
-X-Gm-Message-State: APjAAAVlLsJFCNICYU35MCbIxIfRURDRYd5vM2RblD28NsBC4BeO6AGd
-        MvIRV1JVVnT5bnaAuny65A/nFQ==
-X-Google-Smtp-Source: APXvYqz+BYvMbypoZoZy80tENbu+/0EycC793rpafApGirMRqvp3VXLwhMl4+uoaKwWdC97/mFhG0w==
-X-Received: by 2002:a17:902:8543:: with SMTP id d3mr7863103plo.80.1567049343394;
-        Wed, 28 Aug 2019 20:29:03 -0700 (PDT)
-Received: from [192.168.1.188] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id 136sm859015pfz.123.2019.08.28.20.29.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 Aug 2019 20:29:02 -0700 (PDT)
-Subject: Re: [PATCHSET v3 block/for-linus] IO cost model based work-conserving
- porportional controller
-To:     Tejun Heo <tj@kernel.org>, newella@fb.com, clm@fb.com,
-        josef@toxicpanda.com, dennisz@fb.com, lizefan@huawei.com,
-        hannes@cmpxchg.org
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        kernel-team@fb.com, cgroups@vger.kernel.org
-References: <20190828220600.2527417-1-tj@kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f48b98fa-b33e-b3d3-2657-04f599e710fd@kernel.dk>
-Date:   Wed, 28 Aug 2019 21:29:00 -0600
+        Wed, 28 Aug 2019 23:29:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d6746950001>; Wed, 28 Aug 2019 20:29:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 28 Aug 2019 20:29:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 28 Aug 2019 20:29:23 -0700
+Received: from [10.2.174.243] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 29 Aug
+ 2019 03:29:22 +0000
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+To:     Ira Weiny <ira.weiny@intel.com>, Dave Chinner <david@fromorbit.com>
+CC:     Jason Gunthorpe <jgg@ziepe.ca>, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
+        <linux-xfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>, <linux-ext4@vger.kernel.org>,
+        <linux-mm@kvack.org>
+References: <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
+ <20190821181343.GH8653@ziepe.ca>
+ <20190821185703.GB5965@iweiny-DESK2.sc.intel.com>
+ <20190821194810.GI8653@ziepe.ca>
+ <20190821204421.GE5965@iweiny-DESK2.sc.intel.com>
+ <20190823032345.GG1119@dread.disaster.area> <20190823120428.GA12968@ziepe.ca>
+ <20190824001124.GI1119@dread.disaster.area>
+ <20190824050836.GC1092@iweiny-DESK2.sc.intel.com>
+ <20190826055510.GL1119@dread.disaster.area>
+ <20190829020230.GA18249@iweiny-DESK2.sc.intel.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <3e5c5053-a74a-509c-660c-a6075ed87f11@nvidia.com>
+Date:   Wed, 28 Aug 2019 20:27:23 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190828220600.2527417-1-tj@kernel.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190829020230.GA18249@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1567049365; bh=U2zxSkDmfFQFUW8ITCuFuqzogPoHzY3eUcatrjlA5a8=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=br5k4UQ1c3ttyAEINc727xSgtnH39dAWjWSCaXGTLwro1CU1YneuoppDXhLMmA4uD
+         aDQ3MTA6HOZLsrWjeRsmclmc+9VuPFDc3mjUYq5LVFTaiCoeFJ5fy4G3b324J/gsUa
+         1/2Te/7AfanbM290SQcF7x/TWeee+3u45vwvCyED11F/dogTN4V6SByz3yIloOJ3jT
+         cLvs8UFo3vWu0RzGtWuxTuxbTth7a/DwXWriVQxLCn7BVTFeq34iQK1UkdryZj/+oB
+         pVGut1zha9UABjnIclmX/RBYsT1gxtKg14OYbEVTjMUr+uzTVtNuUOwSxrEb1ZPXtX
+         CMDU/9O7s997Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/28/19 4:05 PM, Tejun Heo wrote:
-> Changes from v2[2]:
+On 8/28/19 7:02 PM, Ira Weiny wrote:
+> On Mon, Aug 26, 2019 at 03:55:10PM +1000, Dave Chinner wrote:
+>> On Fri, Aug 23, 2019 at 10:08:36PM -0700, Ira Weiny wrote:
+>>> On Sat, Aug 24, 2019 at 10:11:24AM +1000, Dave Chinner wrote:
+>>>> On Fri, Aug 23, 2019 at 09:04:29AM -0300, Jason Gunthorpe wrote:
+...
+>>
+>> Sure, that part works because the struct file is passed. It doesn't
+>> end up with the same fd number in the other process, though.
+>>
+>> The issue is that layout leases need to notify userspace when they
+>> are broken by the kernel, so a lease stores the owner pid/tid in the
+>> file->f_owner field via __f_setown(). It also keeps a struct fasync
+>> attached to the file_lock that records the fd that the lease was
+>> created on.  When a signal needs to be sent to userspace for that
+>> lease, we call kill_fasync() and that walks the list of fasync
+>> structures on the lease and calls:
+>>
+>> 	send_sigio(fown, fa->fa_fd, band);
+>>
+>> And it does for every fasync struct attached to a lease. Yes, a
+>> lease can track multiple fds, but it can only track them in a single
+>> process context. The moment the struct file is shared with another
+>> process, the lease is no longer capable of sending notifications to
+>> all the lease holders.
+>>
+>> Yes, you can change the owning process via F_SETOWNER, but that's
+>> still only a single process context, and you can't change the fd in
+>> the fasync list. You can add new fd to an existing lease by calling
+>> F_SETLEASE on the new fd, but you still only have a single process
+>> owner context for signal delivery.
+>>
+>> As such, leases that require callbacks to userspace are currently
+>> only valid within the process context the lease was taken in.
 > 
-> * Fixed a divide-by-zero bug in current_hweight().
+> But for long term pins we are not requiring callbacks.
 > 
-> * pre_start_time and friends renamed to alloc_time and now has its own
->    CONFIG option which is selected by IOCOST.
 
-This looks fine to me now, I've queued it up for 5.4.
+Hi Ira,
 
+If "require callbacks to userspace" means sending SIGIO, then actually
+FOLL_LONGTERM *does* require those callbacks. Because we've been, so
+far, equating FOLL_LONGTERM with the vaddr_pin struct and with a lease.
+
+What am I missing here?
+
+thanks,
 -- 
-Jens Axboe
-
+John Hubbard
+NVIDIA
