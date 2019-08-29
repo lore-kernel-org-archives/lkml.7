@@ -2,149 +2,134 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945A3C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B6AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F1C20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AB7E20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103251;
-	bh=T2htdwQXOeQ4/hkAuJA8LIvdZihWsSm1K99O882HxmE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nmRGMsfwTphYG6FijAa3cy63ZGS/DZymsAeygcrqtZN2hdBNOFy3DrWQkIQpwCRZZ
-	 xkc6PtCXAv61sDiXoerzq6on5peWyc6b4Q8qa7Mg/CGh8jbHFBNHpD4Lmo2VPM1BmF
-	 UMfMyIdXvu68l6/Xwrr/ISqoqy9jKLgyNmquEpLc=
+	s=default; t=1567103260;
+	bh=we7KckTm+j4Cc51iviJxojOHx/u9G4fufbIVvDGHqcM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DhdX/JOdgBWXjSlGHtukyCeJE/F043SsWuQtBQcRsteJica7EWXUlYDl8bkbWRFuA
+	 0+lwOzDK/POicTlD+8lnc+62zgARZkZEoQiOrGs1opLo+jstmR7RqsFMcpvusQr7Jx
+	 180bOP/IFQkr9Yf4q6YrRhHEFRXlPxPCeteZOSYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729533AbfH2S1a (ORCPT
+        id S1728492AbfH2SP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:27:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728460AbfH2SPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:15:32 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 473922341C;
-        Thu, 29 Aug 2019 18:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102531;
-        bh=T2htdwQXOeQ4/hkAuJA8LIvdZihWsSm1K99O882HxmE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a2jiXR8jlHeqzkEgGN6knTnLQUyQDC69IKxZ/6uhjlI2/10CiM4LpEZK/1s9tommn
-         esOmX9pMRhxeY+fT4b+A05ziLFPNYiryqp02usLC3w561eK9NwACwRkx9KfxXYNOQT
-         86MCP39uHQmHjDF53SJCSJinGvECRf00p/7YqRus=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 66/76] ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
-Date:   Thu, 29 Aug 2019 14:13:01 -0400
-Message-Id: <20190829181311.7562-66-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
-References: <20190829181311.7562-1-sashal@kernel.org>
+        Thu, 29 Aug 2019 14:15:26 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35161 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729267AbfH2SPX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:15:23 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l14so3981612lje.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 11:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sR4WCPDuQLUM49jwD7zWV6jQzPdEIbVdaFJBv2+v+F0=;
+        b=Q27etNQqJrho/WpWtWPyEAO7C4sggphAGNNoPYTYaIC0X/UeOTUTQWxOsNwlS4xe50
+         2b21/BhdLQUe9h96f0Z0sa4Y1711aLD93dPnpdbpcUVoXOasM4Utub1mmX1zt4poyHjI
+         VwSryBYXrojk5fEf95B7u+sWDd/hndAfWy1RA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sR4WCPDuQLUM49jwD7zWV6jQzPdEIbVdaFJBv2+v+F0=;
+        b=TTRulBbYzYBE3f6jS0lK6tGwwTc+w229p5/fiN8T/ixz1ndcQ1RA96M9DRPznWRPIe
+         BgBlXpyuyN7tyh5iP2Y/yLt0R6KskPFcjwqhEJf2XpVd7//TK3P1lN5B3o4ua3lrjk6H
+         0e1TdhwGvK5Ls7PFlcWzhUym4BKRMKrZyEayQHTtSSKuLzHkGC/NHYm3dgxJxqkv3YAZ
+         SImBXCEKJbNF2JV2+nZWf0XEYMEiC+8GRqVfh4UsmKCq5qf0IUDYHB7xcxhdh5cyIqj5
+         OoVSvTEuPz++MmrFpNvh53qOLwGIY6ffdh5ZEzcVpzsg89gXRllVrCxOPbWzHVthNvup
+         yPug==
+X-Gm-Message-State: APjAAAWWwr7LTAUw7iCGHPmhpMSaCDU5Gvrq+Uo+F1WsOIEnh8Otp0lS
+        q2Sn3m4bJNOdFTTKu45Ds15LYgC195Q=
+X-Google-Smtp-Source: APXvYqy26zhl3O9gTOC3PBQDYxzlWPRXO0OeV/DnmK8pYOYNwQzAwftRPappkTlThufIWdLRrnpAGg==
+X-Received: by 2002:a2e:988c:: with SMTP id b12mr889383ljj.212.1567102521341;
+        Thu, 29 Aug 2019 11:15:21 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id f23sm453525lja.25.2019.08.29.11.15.20
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Aug 2019 11:15:20 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id e27so3946692ljb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 11:15:20 -0700 (PDT)
+X-Received: by 2002:a2e:8ed5:: with SMTP id e21mr6415604ljl.156.1567102520069;
+ Thu, 29 Aug 2019 11:15:20 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190829083233.24162-1-linux@rasmusvillemoes.dk> <CAKwvOdnUXiX_cAUTSpqgYJTUERoRF-=3LfaydvwBWC6HtzfEdg@mail.gmail.com>
+In-Reply-To: <CAKwvOdnUXiX_cAUTSpqgYJTUERoRF-=3LfaydvwBWC6HtzfEdg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 29 Aug 2019 11:15:04 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgZ7Ge8QUkkSZLCfJBsHRsre65DkfTyZ2Kt5VPwa=dkuA@mail.gmail.com>
+Message-ID: <CAHk-=wgZ7Ge8QUkkSZLCfJBsHRsre65DkfTyZ2Kt5VPwa=dkuA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/5] make use of gcc 9's "asm inline()"
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <lhenriques@suse.com>
+On Thu, Aug 29, 2019 at 10:36 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> I'm curious what "the size of the asm" means, and how it differs
+> precisely from "how many instructions GCC thinks it is."  I would
+> think those are one and the same?  Or maybe "the size of the asm"
+> means the size in bytes when assembled to machine code, as opposed to
+> the count of assembly instructions?
 
-[ Upstream commit 86968ef21596515958d5f0a40233d02be78ecec0 ]
+The problem is that we do different sections in the inline asm, and
+the instruction counts are completely bogus as a result.
 
-Calling ceph_buffer_put() in __ceph_setxattr() may end up freeing the
-i_xattrs.prealloc_blob buffer while holding the i_ceph_lock.  This can be
-fixed by postponing the call until later, when the lock is released.
+The actual instruction in the code stream may be just a single
+instruction. But the out-of-line sections can be multiple instructions
+and/or a data section that contains exception information.
 
-The following backtrace was triggered by fstests generic/117.
+So we want the asm inlined, because the _inline_ part (and the hot
+instruction) is small, even though the asm technically maybe generates
+many more bytes of additional data.
 
-  BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
-  in_atomic(): 1, irqs_disabled(): 0, pid: 650, name: fsstress
-  3 locks held by fsstress/650:
-   #0: 00000000870a0fe8 (sb_writers#8){.+.+}, at: mnt_want_write+0x20/0x50
-   #1: 00000000ba0c4c74 (&type->i_mutex_dir_key#6){++++}, at: vfs_setxattr+0x55/0xa0
-   #2: 000000008dfbb3f2 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: __ceph_setxattr+0x297/0x810
-  CPU: 1 PID: 650 Comm: fsstress Not tainted 5.2.0+ #437
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
-  Call Trace:
-   dump_stack+0x67/0x90
-   ___might_sleep.cold+0x9f/0xb1
-   vfree+0x4b/0x60
-   ceph_buffer_release+0x1b/0x60
-   __ceph_setxattr+0x2b4/0x810
-   __vfs_setxattr+0x66/0x80
-   __vfs_setxattr_noperm+0x59/0xf0
-   vfs_setxattr+0x81/0xa0
-   setxattr+0x115/0x230
-   ? filename_lookup+0xc9/0x140
-   ? rcu_read_lock_sched_held+0x74/0x80
-   ? rcu_sync_lockdep_assert+0x2e/0x60
-   ? __sb_start_write+0x142/0x1a0
-   ? mnt_want_write+0x20/0x50
-   path_setxattr+0xba/0xd0
-   __x64_sys_lsetxattr+0x24/0x30
-   do_syscall_64+0x50/0x1c0
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7ff23514359a
+The worst offenders for this tend to be
 
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/ceph/xattr.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ - various exception tables for user accesses etc
 
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index 0619adbcbe14c..8382299fc2d84 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -1028,6 +1028,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
- 	struct ceph_inode_info *ci = ceph_inode(inode);
- 	struct ceph_mds_client *mdsc = ceph_sb_to_client(inode->i_sb)->mdsc;
- 	struct ceph_cap_flush *prealloc_cf = NULL;
-+	struct ceph_buffer *old_blob = NULL;
- 	int issued;
- 	int err;
- 	int dirty = 0;
-@@ -1101,13 +1102,15 @@ int __ceph_setxattr(struct inode *inode, const char *name,
- 		struct ceph_buffer *blob;
- 
- 		spin_unlock(&ci->i_ceph_lock);
--		dout(" preaallocating new blob size=%d\n", required_blob_size);
-+		ceph_buffer_put(old_blob); /* Shouldn't be required */
-+		dout(" pre-allocating new blob size=%d\n", required_blob_size);
- 		blob = ceph_buffer_new(required_blob_size, GFP_NOFS);
- 		if (!blob)
- 			goto do_sync_unlocked;
- 		spin_lock(&ci->i_ceph_lock);
-+		/* prealloc_blob can't be released while holding i_ceph_lock */
- 		if (ci->i_xattrs.prealloc_blob)
--			ceph_buffer_put(ci->i_xattrs.prealloc_blob);
-+			old_blob = ci->i_xattrs.prealloc_blob;
- 		ci->i_xattrs.prealloc_blob = blob;
- 		goto retry;
- 	}
-@@ -1123,6 +1126,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
- 	}
- 
- 	spin_unlock(&ci->i_ceph_lock);
-+	ceph_buffer_put(old_blob);
- 	if (lock_snap_rwsem)
- 		up_read(&mdsc->snap_rwsem);
- 	if (dirty)
--- 
-2.20.1
+ - "alternatives" where we list two or more different asm alternatives
+and then pick the right one at boot time depending on CPU ID flags
 
+ - "BUG_ON()" instructions where there's a "ud2" instruction and
+various data annotations going with it
+
+so gcc may be "technically correct" that the inline asm statement
+contains ten instructions or more, but the actual instruction _code_
+footprint in the asm is likely just a single instruction or two.
+
+The statement counting is also completely off by the fact that some of
+the "statements" are assembler directives (ie the
+".pushsection"/".popsection" lines etc). So some of it is that the
+instruction counting is off, but the largest part is that it's just
+not relevant to the code footprint in that function.
+
+Un-inlining a function because it contains a single inline asm
+instruction is not productive. Yes, it might result in a smaller
+binary over-all (because all those other non-code sections do take up
+some space), but it actually results in a bigger code footprint.
+
+              Linus
