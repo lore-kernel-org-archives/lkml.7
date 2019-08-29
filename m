@@ -2,97 +2,98 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E55C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF73BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97B002339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A342339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567072751;
+	bh=oSVbsylDIhdFINB15FIm6M2sHKYLbhCD6MDm1rMq77I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ohDqz+5nfve2irWe0jyrwZKaNIhPTCyEtv0bAEYtivKdhCCD1c15/IprmsApsLGhT
+	 czqaVTdeNywi08cKyMMdZDF5+s9FdLlDAPt4UyztoQHfpc6y8OJALEJzyNIMrWWBzN
+	 BfLODoefE+0X3EDEuBRr2ErSRohFVopBEQ/v6HMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfH2J6e (ORCPT
+        id S1727173AbfH2J7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:58:34 -0400
-Received: from mga17.intel.com ([192.55.52.151]:61740 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfH2J6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:58:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 02:58:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="380719665"
-Received: from pipin.fi.intel.com ([10.237.72.175])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Aug 2019 02:58:29 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH v2 2/2] PTP: add support for one-shot output
-Date:   Thu, 29 Aug 2019 12:58:25 +0300
-Message-Id: <20190829095825.2108-2-felipe.balbi@linux.intel.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190829095825.2108-1-felipe.balbi@linux.intel.com>
-References: <20190829095825.2108-1-felipe.balbi@linux.intel.com>
+        Thu, 29 Aug 2019 05:59:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41514 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfH2J7K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 05:59:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=sKNGJgskVU2h6NM23G4S9/q2Ekegj9NAfOsLWDG6p8s=; b=oc/fu4RL0Nhis4gwaVFIPmpmG
+        QTjTPN8ky2jvTnmVTGtD9IMz3TXadL+6t5U1veh+55rc2sRRYTYq2woZG+mw6zWDcIWDvbY3taiyV
+        KGBRlzeRENeatP0Y4RRI6gp8qtwzclt/5Ap4e1zsZaqjplijtLKwW9BRL8vMkVstX5HSE=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i3HCt-0000qE-SC; Thu, 29 Aug 2019 09:59:07 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 167EB2742CDC; Thu, 29 Aug 2019 10:59:07 +0100 (BST)
+Date:   Thu, 29 Aug 2019 10:59:07 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Kamal Dasu <kdasu.kdev@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 1/1] spi: bcm-qspi: Make BSPI default mode
+Message-ID: <20190829095907.GB4118@sirena.co.uk>
+References: <1567052173-10256-1-git-send-email-rayagonda.kokatanur@broadcom.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xgyAXRrhYN0wYx8y"
+Content-Disposition: inline
+In-Reply-To: <1567052173-10256-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+X-Cookie: Lensmen eat Jedi for breakfast.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some controllers allow for a one-shot output pulse, in contrast to
-periodic output. Now that we have extensible versions of our IOCTLs, we
-can finally make use of the 'flags' field to pass a bit telling driver
-that if we want one-shot pulse output.
 
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
----
+--xgyAXRrhYN0wYx8y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes since v1:
-	- remove comment from .flags field
+On Thu, Aug 29, 2019 at 09:46:13AM +0530, Rayagonda Kokatanur wrote:
+> The spi-nor controller defaults to BSPI mode, hence switch back
+> to its default mode after MSPI operations (write or erase)
+> are completed.
+>=20
+> Changes from V1:
+>  - Address code review comment from Mark Brown.
 
- drivers/ptp/ptp_chardev.c      | 5 ++---
- include/uapi/linux/ptp_clock.h | 4 +++-
- 2 files changed, 5 insertions(+), 4 deletions(-)
+As covered in submitting-patches.rst inter-version changelogs should go
+after the --- so they don't end up in git.
 
-diff --git a/drivers/ptp/ptp_chardev.c b/drivers/ptp/ptp_chardev.c
-index 98ec1395544e..a407e5f76e2d 100644
---- a/drivers/ptp/ptp_chardev.c
-+++ b/drivers/ptp/ptp_chardev.c
-@@ -177,9 +177,8 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
- 			err = -EFAULT;
- 			break;
- 		}
--		if ((req.perout.flags || req.perout.rsv[0] || req.perout.rsv[1]
--				|| req.perout.rsv[2] || req.perout.rsv[3])
--			&& cmd == PTP_PEROUT_REQUEST2) {
-+		if ((req.perout.rsv[0] || req.perout.rsv[1] || req.perout.rsv[2]
-+			|| req.perout.rsv[3]) && cmd == PTP_PEROUT_REQUEST2) {
- 			err = -EINVAL;
- 			break;
- 		} else if (cmd == PTP_PEROUT_REQUEST) {
-diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
-index 039cd62ec706..95840e5f5c53 100644
---- a/include/uapi/linux/ptp_clock.h
-+++ b/include/uapi/linux/ptp_clock.h
-@@ -67,7 +67,9 @@ struct ptp_perout_request {
- 	struct ptp_clock_time start;  /* Absolute start time. */
- 	struct ptp_clock_time period; /* Desired period, zero means disable. */
- 	unsigned int index;           /* Which channel to configure. */
--	unsigned int flags;           /* Reserved for future use. */
-+
-+#define PTP_PEROUT_ONE_SHOT BIT(0)
-+	unsigned int flags;
- 	unsigned int rsv[4];          /* Reserved for future use. */
- };
- 
--- 
-2.23.0
+--xgyAXRrhYN0wYx8y
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1noeoACgkQJNaLcl1U
+h9CUYAf+M++ibN/14SNtvLXhF5fpC2dh40Q9FTVy7OsuIlbVuVpy7PFeKvnciNwp
+eCMACa5b1BJPR/fsQO/XOuJYaOl6zxI3eQqN8jT44zGq61NX42nncJappFDr75we
+Z45dLAMqxHcmZQ3U5SqlZVLn+m8jhgasIggPzPvpgUllrObaKmjf2ODqyf1McaHZ
+GiloqwCmG+i1H2sWR9qlbbqUSuoNbLaRpeS8E3Qi0ebHf/e/N7eVaUhwLLfJQLCd
+WHjr6gh/xRujyDPf//XPvTSXwQMAx25LhuQKI13Ml2Tpk62WnJjrcmS3hjJ594mb
+MjDGMh4SN7qA9OEQnajSjb9pfx+P9Q==
+=iSMZ
+-----END PGP SIGNATURE-----
+
+--xgyAXRrhYN0wYx8y--
