@@ -2,175 +2,175 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EF6C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAE2C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFD4C233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:15:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uCcz6yYx"
+	by mail.kernel.org (Postfix) with ESMTP id 59AD5233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567102548;
+	bh=Vw944yrMgVSeIH8DQiVR4dOFQUZk+j5F2HI7fbQSz2U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RuFAxJ7qQYu91ykaW/0d5jUUEXgRUkxRbJt3qs0reh6zQHPBFO3+t+dhZcoxVzdlF
+	 HpKOpqaqodAoG9KxfOcA1XQCxlmFr/G7UGydpIvOkGGiKoRkuVxwK4wvEk54XUs/d+
+	 4UQXkNHv3z7KUjMI1yHKrZImGYWFNQSOb/GQzLjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbfH2SPq (ORCPT
+        id S1729458AbfH2SPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:15:46 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38625 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729408AbfH2SPn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:15:43 -0400
-Received: by mail-oi1-f195.google.com with SMTP id q8so3305160oij.5
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 11:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EU1ws418Vc4Zys0H3+cXP7S7nl66dSX59rq7bwwsB9E=;
-        b=uCcz6yYxLJGBv9xsUU025u9c/HplwdEBy5W1hfzlyXJvM7CobJHv/bePeJHJg5tpDI
-         4XXsMVqENr+uALDs29HLEtazP3lmRr8p+CHIPcyg5qVhomGS7eiJZGZrPhA4Ehysoa9L
-         llqD5RrrJhubFSpf4RxldkVUhM1izBTZPpRTM3nGZDUmHWut/oFDNwX/iq5AXvLLrWux
-         lIgZq47OqAQhqDihMmR03Dm92IoriZNzk2GG8bnqz1yMOhnd2ljgPIuea/GO4f6dYQCG
-         qOxqbi9v4b4B2gRI7T2T2lXV+fWBVUz7hCpQi0PSj8tgTefw2MIE+LAOJMuQ/Hnt4DGp
-         HWQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=EU1ws418Vc4Zys0H3+cXP7S7nl66dSX59rq7bwwsB9E=;
-        b=RwCpScrwdypml7tzFel9XgbGEtkskptmfQsYg3aaHTY++DIzR1xks3CzLd/g0gj4RN
-         MHA3AFmE0A29mFfD/5ecuVI0n1n5WFEz43y0rZ+S8oO8E6pnWOF0bzh9gzn1rod0no0a
-         b/Tu0mlUSw+zTQe+rtrIEOlFqtNIGqnebzVfBuJx392CdpNjNShKZUyjaD86uZHXF5zi
-         5SWSMG+NhLUfton2H2F7JWMS8M9b7KBJJAfbtz/BMXO41cGtHF+613L0oixNXDdB8FmW
-         1Ug79pNYgv3t6mvALYmoEl7orFhov5jb2ZihvjOQbaikQ1cwrUBp+ySP3OeHaNT7wRn/
-         BDVQ==
-X-Gm-Message-State: APjAAAWrRq/gMmwsfps7aaewc831F8jFDkQU7eJ99EV5F/wCp7Ms83IT
-        UkTRn+uLT2tWEYLpMhBH+w==
-X-Google-Smtp-Source: APXvYqx/dFackw5CizdKplQqChsLhoBrm8Y7UFCg7Cn8vkFBIAWv9ktdMr/OCEOPrJ61xX4IzzHIJQ==
-X-Received: by 2002:aca:6044:: with SMTP id u65mr7792941oib.16.1567102541630;
-        Thu, 29 Aug 2019 11:15:41 -0700 (PDT)
-Received: from serve.minyard.net ([47.184.136.59])
-        by smtp.gmail.com with ESMTPSA id m6sm167909ote.74.2019.08.29.11.15.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 11:15:40 -0700 (PDT)
-Received: from t560 (unknown [156.39.10.47])
-        by serve.minyard.net (Postfix) with ESMTPSA id 9475E1800D0;
-        Thu, 29 Aug 2019 18:15:39 +0000 (UTC)
-Date:   Thu, 29 Aug 2019 13:15:36 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Jes Sorensen <jes.sorensen@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net, kernel-team@fb.com
-Subject: Re: [PATCH 0/1] Fix race in ipmi timer cleanup
-Message-ID: <20190829181536.GC3294@t560>
-Reply-To: minyard@acm.org
-References: <20190828203625.32093-1-Jes.Sorensen@gmail.com>
- <20190828223238.GB3294@t560>
- <15517bfc-3022-509d-15ea-c2b8e7a91e0a@gmail.com>
+        Thu, 29 Aug 2019 14:15:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729415AbfH2SPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:15:44 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABFF823428;
+        Thu, 29 Aug 2019 18:15:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567102543;
+        bh=Vw944yrMgVSeIH8DQiVR4dOFQUZk+j5F2HI7fbQSz2U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y5ToN+LGDwB8llkfTnyyAordmuiWTCW8NExEiA6OtuXHdR+60XdoNFMgpYUWardfa
+         CJG/OdjUgcjE8VtagFo4fwIuegDOQHP7F0+C9iOvY8K6tDPl+eu+U652Kx+85UsoVf
+         jgQWy4vWahmjgHKdz6qh6X2HwHYfo3OwDoSC1MWE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Dave Martin <dave.martin@arm.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 5.2 76/76] KVM: arm/arm64: VGIC: Properly initialise private IRQ affinity
+Date:   Thu, 29 Aug 2019 14:13:11 -0400
+Message-Id: <20190829181311.7562-76-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
+References: <20190829181311.7562-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <15517bfc-3022-509d-15ea-c2b8e7a91e0a@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 08:53:47PM -0400, Jes Sorensen wrote:
-> On 8/28/19 6:32 PM, Corey Minyard wrote:
-> > On Wed, Aug 28, 2019 at 04:36:24PM -0400, Jes Sorensen wrote:
-> >> From: Jes Sorensen <jsorensen@fb.com>
-> >>
-> >> I came across this in 4.16, but I believe the bug is still present
-> >> in current 5.x, even if it is less likely to trigger.
-> >>
-> >> Basially stop_timer_and_thread() only calls del_timer_sync() if
-> >> timer_running == true. However smi_mod_timer enables the timer before
-> >> setting timer_running = true.
-> > 
-> > All the modifications/checks for timer_running should be done under
-> > the si_lock.  It looks like a lock is missing in shutdown_smi(),
-> > probably starting before setting interrupt_disabled to true and
-> > after stop_timer_and_thread.  I think that is the right fix for
-> > this problem.
-> 
-> Hi Corey,
-> 
-> I agree a spin lock could deal with this specific issue too, but calling
-> del_timer_sync() is safe to call on an already disabled timer. The whole
-> flagging of timer_running really doesn't make much sense in the first
-> place either.
-> 
-> As for interrupt_disabled that is even worse. There's multiple places in
-> the code where interrupt_disabled is checked, some of them are not
-> protected by a spin lock, including shutdown_smi() where you have this
-> sequence:
-> 
->         while (smi_info->curr_msg || (smi_info->si_state != SI_NORMAL)){
->                 poll(smi_info);
->                 schedule_timeout_uninterruptible(1);
->         }
->         if (smi_info->handlers)
->                 disable_si_irq(smi_info);
->         while (smi_info->curr_msg || (smi_info->si_state != SI_NORMAL)){
->                 poll(smi_info);
->                 schedule_timeout_uninterruptible(1);
->         }
+From: Andre Przywara <andre.przywara@arm.com>
 
-This one doesn't matter.  At this point the driver is single-threaded,
-no interrupts, timeouts, or calls from the upper layer can happen.
+[ Upstream commit 2e16f3e926ed48373c98edea85c6ad0ef69425d1 ]
 
-> 
-> In this case you'll have to drop and retake the long several times.
-> 
-> You also have this call sequence which leads to disable_si_irq() which
-> checks interrupt_disabled:
-> 
->   flush_messages()
->     smi_event_handler()
->       handle_transaction_done()
->         handle_flags()
->           alloc_msg_handle_irq()
->             disable_si_irq()
+At the moment we initialise the target *mask* of a virtual IRQ to the
+VCPU it belongs to, even though this mask is only defined for GICv2 and
+quickly runs out of bits for many GICv3 guests.
+This behaviour triggers an UBSAN complaint for more than 32 VCPUs:
+------
+[ 5659.462377] UBSAN: Undefined behaviour in virt/kvm/arm/vgic/vgic-init.c:223:21
+[ 5659.471689] shift exponent 32 is too large for 32-bit type 'unsigned int'
+------
+Also for GICv3 guests the reporting of TARGET in the "vgic-state" debugfs
+dump is wrong, due to this very same problem.
 
-This one only happens in run-to-completion mode.  Which is strange,
-but a number of people had issues with getting into a new kernel before
-the watchdog timeout went off, so the run-to-completion mode runs at
-panic time so the driver can run without scheduling so it can extend
-the watchdog and store panic information in the IPMI log.
+Because there is no requirement to create the VGIC device before the
+VCPUs (and QEMU actually does it the other way round), we can't safely
+initialise mpidr or targets in kvm_vgic_vcpu_init(). But since we touch
+every private IRQ for each VCPU anyway later (in vgic_init()), we can
+just move the initialisation of those fields into there, where we
+definitely know the VGIC type.
 
-So you actually *don't* want a lock here, since the panic may have
-occurred when the IPMI driver was holding the lock.
+On the way make sure we really have either a VGICv2 or a VGICv3 device,
+since the existing code is just checking for "VGICv3 or not", silently
+ignoring the uninitialised case.
 
-> 
-> {disable,enable}_si_irq() themselves are racy:
-> 
-> static inline bool disable_si_irq(struct smi_info *smi_info)
-> {
->         if ((smi_info->io.irq) && (!smi_info->interrupt_disabled)) {
->                 smi_info->interrupt_disabled = true;
-> 
-> Basically interrupt_disabled need to be atomic here to have any value,
-> unless you ensure to have a spin lock around every access to it.
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Reported-by: Dave Martin <dave.martin@arm.com>
+Tested-by: Julien Grall <julien.grall@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ virt/kvm/arm/vgic/vgic-init.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-It needs to be atomic, yes, but I think just adding the spinlock like
-I suggested will work.  You are right, the check for timer_running is
-not necessary here, and I'm fine with removing it, but there are other
-issues with interrupt_disabled (as you said) and with memory ordering
-in the timer case.  So even if you remove the timer running check, the
-lock is still required here.
+diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
+index bdbc297d06fb4..e621b5d45b278 100644
+--- a/virt/kvm/arm/vgic/vgic-init.c
++++ b/virt/kvm/arm/vgic/vgic-init.c
+@@ -8,6 +8,7 @@
+ #include <linux/cpu.h>
+ #include <linux/kvm_host.h>
+ #include <kvm/arm_vgic.h>
++#include <asm/kvm_emulate.h>
+ #include <asm/kvm_mmu.h>
+ #include "vgic.h"
+ 
+@@ -164,12 +165,18 @@ static int kvm_vgic_dist_init(struct kvm *kvm, unsigned int nr_spis)
+ 		irq->vcpu = NULL;
+ 		irq->target_vcpu = vcpu0;
+ 		kref_init(&irq->refcount);
+-		if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V2) {
++		switch (dist->vgic_model) {
++		case KVM_DEV_TYPE_ARM_VGIC_V2:
+ 			irq->targets = 0;
+ 			irq->group = 0;
+-		} else {
++			break;
++		case KVM_DEV_TYPE_ARM_VGIC_V3:
+ 			irq->mpidr = 0;
+ 			irq->group = 1;
++			break;
++		default:
++			kfree(dist->spis);
++			return -EINVAL;
+ 		}
+ 	}
+ 	return 0;
+@@ -209,7 +216,6 @@ int kvm_vgic_vcpu_init(struct kvm_vcpu *vcpu)
+ 		irq->intid = i;
+ 		irq->vcpu = NULL;
+ 		irq->target_vcpu = vcpu;
+-		irq->targets = 1U << vcpu->vcpu_id;
+ 		kref_init(&irq->refcount);
+ 		if (vgic_irq_is_sgi(i)) {
+ 			/* SGIs */
+@@ -219,11 +225,6 @@ int kvm_vgic_vcpu_init(struct kvm_vcpu *vcpu)
+ 			/* PPIs */
+ 			irq->config = VGIC_CONFIG_LEVEL;
+ 		}
+-
+-		if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3)
+-			irq->group = 1;
+-		else
+-			irq->group = 0;
+ 	}
+ 
+ 	if (!irqchip_in_kernel(vcpu->kvm))
+@@ -286,10 +287,19 @@ int vgic_init(struct kvm *kvm)
+ 
+ 		for (i = 0; i < VGIC_NR_PRIVATE_IRQS; i++) {
+ 			struct vgic_irq *irq = &vgic_cpu->private_irqs[i];
+-			if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3)
++			switch (dist->vgic_model) {
++			case KVM_DEV_TYPE_ARM_VGIC_V3:
+ 				irq->group = 1;
+-			else
++				irq->mpidr = kvm_vcpu_get_mpidr_aff(vcpu);
++				break;
++			case KVM_DEV_TYPE_ARM_VGIC_V2:
+ 				irq->group = 0;
++				irq->targets = 1U << idx;
++				break;
++			default:
++				ret = -EINVAL;
++				goto out;
++			}
+ 		}
+ 	}
+ 
+-- 
+2.20.1
 
-It also might be a good idea to add a WARN_ON() to smi_mod_timer() and
-alloc_msg_handle_irq() if the lock is not held, just to be sure.
-
-Thanks,
-
--corey
-
-> 
-> Cheers,
-> Jes
