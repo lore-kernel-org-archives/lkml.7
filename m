@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EA7C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F02C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2005020674
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A35262166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:18:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bR79jPl4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o9IDb9wx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbfH2LSE (ORCPT
+        id S1727810AbfH2LSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:18:04 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34452 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbfH2LSC (ORCPT
+        Thu, 29 Aug 2019 07:18:09 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40492 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfH2LSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:18:02 -0400
-Received: by mail-ed1-f68.google.com with SMTP id s49so3676000edb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 04:18:01 -0700 (PDT)
+        Thu, 29 Aug 2019 07:18:03 -0400
+Received: by mail-ed1-f67.google.com with SMTP id h8so3640636edv.7
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 04:18:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LdftSop4FAsgnu90xfPUb4VrwQYO3xWAqeCbQKmpXAw=;
-        b=bR79jPl4rvUQxfm/WZpDq1DyXQdI5dFimvOylxLHdkb6p1bhrXYKf9MmrYBl0/NDfV
-         3V0KXZcPjjyMW0Belo7iCxQHNnIV4kIOv09BCxcK2bbYCuy695AwiO5eh4dkivJzOPKc
-         AQX69shgH8Hhh9F4L157CtTqKJnmGJ20ptg1GLQUxcxxi9NIOE3VFHT/Z2pg0PENmrCs
-         L2RdKj9PwDhdL3ESrxoGYFkv6tO/e0YcUDV5wGhUCm74kKP2i+6S2/9RinrAlhMWlMYf
-         9324oZ4PMlQsWRAeyKt88/GdGQpGRSFGCLerBTv+jtU6zc6/5toHP64wwZubb1VwbtS6
-         0pyw==
+        bh=zCsgPCFvt5f0JhV5AAX71J7KrOE6T7Mwp2HnksazGlw=;
+        b=o9IDb9wxTMVYl4Pw8eOl4MN8lrxcZAgdJUKaGojaGYK4aXQr34VjDZVfYu/QzbxvqH
+         jcCWwyi0BumBzhg17grPUPMX9d7OIgI5av0bWjFUbC977dHLo8th+91iEI5NqBvmCODo
+         2I3V9bM1lkU74SfOvgyAH+sAwFQaQIwE71r0I8lfv/K+OUYHnZS9/sjDBKzPpsDxCoCn
+         WgY397r5bRinjlufn59iqnqRz6E+fEu4qAdIk6TUiefpKTyqVSbCUYkNOe3WtgxV1IBt
+         qYjcwXUI9MXenjs8NrD+DbvJhsyZkQBDBJupkrQjvHkmXTxgcdrcmmtuR0K+kKiHNVj1
+         gkmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LdftSop4FAsgnu90xfPUb4VrwQYO3xWAqeCbQKmpXAw=;
-        b=qfyilwAQYaa5RXl+XfIxLF1vuGUtKXsKP01O/TtpqoN2eomDuTkYXPYhwxkp7nmPYQ
-         +mzYg0+Y3xhv0DZHPONcLLYF0W1SmYhshYmH/vNWcbOZbE6RPxc1ODWUWwk5i46JbUvD
-         r5ktlsthS6WE3eokgrFEQw31CXd+LTPsgUtMUhDmga/VGwkEmGVjkvReSoKCOqM6TfVu
-         sXrJahZZnkfPRY0CJeAw8AYjjutMB8LPrmDir2RFUjEIDNdQNrYka/4b2JSfOyqLuBDP
-         LWeqPY8Ew7g+U6igJJiXbYIXzOnQ/fxJUDxEbnP09/Ymn6lQE6qu2X4VL+Op8iLFoHRv
-         Zczw==
-X-Gm-Message-State: APjAAAU2BdLHBeKik++LIXh4ti6pcJroXfM1m1WMyPyqfWpjW47RtKxX
-        3eS/sEcjRm5O2V9ATIgpb8Y=
-X-Google-Smtp-Source: APXvYqx6xumvHaa0FS6ceR4LYkovD8dan+j5kQuVNZo88mSfLqaVgTKRmRZEKXv0Df7oSZRTvjLY2Q==
-X-Received: by 2002:aa7:df03:: with SMTP id c3mr9130739edy.112.1567077479905;
-        Thu, 29 Aug 2019 04:17:59 -0700 (PDT)
+        bh=zCsgPCFvt5f0JhV5AAX71J7KrOE6T7Mwp2HnksazGlw=;
+        b=T+k9GB/6FlQ+IL7rM5kCcFgDRg0FGjQKrE1E2YXLUp3r0r8wKs18G6lO7iu0RViqYx
+         CojOaVFWkV1RTTbTOw/ka7bqhhWRGpx554pkpMhyV8ElQuV+hmeACXfJoAD866RQd8v1
+         HTW1gTk45YaftnSJp3uGvUPC6QG/dBwJjZtGvk+ASqWk3S3S3iM1ETZeN0mzCHwZmGnn
+         WWpOR04fxAc9DURTE5DPPIMvnE96M8GcpncKguSrmZ99OJlc9iwRwsetqRE27QEZ4llH
+         lwJKOncF/ppVe/hFAgXUp0AjKiDIJaH712jCFuTl0JiceaARkxO+xU+P2Vr5JrXA0/6E
+         wKEA==
+X-Gm-Message-State: APjAAAVZJfLe8krxj+cnTr37NTOnf6fw3oBOvxax+xo0zAOGVlHt12Ul
+        /0SySk9epiT0oAoff1CAGyY=
+X-Google-Smtp-Source: APXvYqwM8CVbq0FXN38b8oxKuaYKC/x8VDD3uqRU7eQrkpe6K2cwtpE+e448Jg8Ofr+6OyhLfBDXpw==
+X-Received: by 2002:a17:906:6bc4:: with SMTP id t4mr7875881ejs.256.1567077481688;
+        Thu, 29 Aug 2019 04:18:01 -0700 (PDT)
 Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id w3sm390212edq.12.2019.08.29.04.17.58
+        by smtp.gmail.com with ESMTPSA id n93sm215670edc.5.2019.08.29.04.18.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 04:17:59 -0700 (PDT)
+        Thu, 29 Aug 2019 04:18:00 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Joerg Roedel <joro@8bytes.org>
 Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
@@ -66,9 +66,9 @@ Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
         linux-arm-kernel@lists.infradead.org,
         virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] iommu: amd: Use iommu_put_resv_regions_simple()
-Date:   Thu, 29 Aug 2019 13:17:50 +0200
-Message-Id: <20190829111752.17513-4-thierry.reding@gmail.com>
+Subject: [PATCH 4/5] iommu: intel: Use iommu_put_resv_regions_simple()
+Date:   Thu, 29 Aug 2019 13:17:51 +0200
+Message-Id: <20190829111752.17513-5-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190829111752.17513-1-thierry.reding@gmail.com>
 References: <20190829111752.17513-1-thierry.reding@gmail.com>
@@ -83,21 +83,22 @@ From: Thierry Reding <treding@nvidia.com>
 
 Use the new standard function instead of open-coding it.
 
+Cc: David Woodhouse <dwmw2@infradead.org>
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/iommu/amd_iommu.c | 11 +----------
+ drivers/iommu/intel-iommu.c | 11 +----------
  1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 04a9f8443344..7d8896d5fab9 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -3160,15 +3160,6 @@ static void amd_iommu_get_resv_regions(struct device *dev,
- 	list_add_tail(&region->list, head);
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 4658cda6f3d2..2fe5da41c786 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5386,15 +5386,6 @@ static void intel_iommu_get_resv_regions(struct device *device,
+ 	list_add_tail(&reg->list, head);
  }
  
--static void amd_iommu_put_resv_regions(struct device *dev,
--				     struct list_head *head)
+-static void intel_iommu_put_resv_regions(struct device *dev,
+-					 struct list_head *head)
 -{
 -	struct iommu_resv_region *entry, *next;
 -
@@ -105,18 +106,18 @@ index 04a9f8443344..7d8896d5fab9 100644
 -		kfree(entry);
 -}
 -
- static void amd_iommu_apply_resv_region(struct device *dev,
- 				      struct iommu_domain *domain,
- 				      struct iommu_resv_region *region)
-@@ -3216,7 +3207,7 @@ const struct iommu_ops amd_iommu_ops = {
- 	.remove_device = amd_iommu_remove_device,
- 	.device_group = amd_iommu_device_group,
- 	.get_resv_regions = amd_iommu_get_resv_regions,
--	.put_resv_regions = amd_iommu_put_resv_regions,
-+	.put_resv_regions = iommu_put_resv_regions_simple,
- 	.apply_resv_region = amd_iommu_apply_resv_region,
- 	.is_attach_deferred = amd_iommu_is_attach_deferred,
- 	.pgsize_bitmap	= AMD_IOMMU_PGSIZES,
+ int intel_iommu_enable_pasid(struct intel_iommu *iommu, struct device *dev)
+ {
+ 	struct device_domain_info *info;
+@@ -5629,7 +5620,7 @@ const struct iommu_ops intel_iommu_ops = {
+ 	.add_device		= intel_iommu_add_device,
+ 	.remove_device		= intel_iommu_remove_device,
+ 	.get_resv_regions	= intel_iommu_get_resv_regions,
+-	.put_resv_regions	= intel_iommu_put_resv_regions,
++	.put_resv_regions	= iommu_put_resv_regions_simple,
+ 	.apply_resv_region	= intel_iommu_apply_resv_region,
+ 	.device_group		= pci_device_group,
+ 	.dev_has_feat		= intel_iommu_dev_has_feat,
 -- 
 2.22.0
 
