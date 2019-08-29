@@ -2,122 +2,189 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B48C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C12C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD47923407
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40B12339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:04:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="arDISNE0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m/hgidyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfH2KDi (ORCPT
+        id S1727107AbfH2KEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:03:38 -0400
-Received: from mail-eopbgr80044.outbound.protection.outlook.com ([40.107.8.44]:48145
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727026AbfH2KDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:03:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=acovKZzwEcEF6rfLziXMa3ae5XLmArcc0Ro3+EzxgLOlAgaWPrLPt8kuXS1FBrPsF6+ak2Txg3CPboDwyhNHi1V8yhNR2jvJY3MWiHzcJAosbWsSi9GfC/PoW2EcC16j4feX+cxts+jFHiL/Sb7RwCE0aFKpLJasI1lXAZbdUoRj2WT7v1fjmBfF9r7ncWvrJ3dUkYnqUzYcddtBVKoCtJ2xdsoH+f0T/6qCl2d+FmKeLmUaPK0sLedaedLeYeOKKBG0ZgpWMHsqI8tNpiNRInMBohWVQuMkalhLnmXJpr9l+8Ma2uk2lsKNsjKSOSWogagNyQ25j0gVJq9LNxXdXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=61kIDKLFWSPaecxA2gh/zWB5Hf3lSZwL8gRwzPXIUhY=;
- b=DeUjlYawCcYjH+osRnkjWzSWkvmESrFG/mtMpIqHBlKtZmxCA1suy0xRDl9umwblAqxSGH+ABn7gonSxni5stp2FCVyDAswRgY5aJbfSR6xF62uKGHCLedcFh2RlMhJTlQbbB1lwlKSN1XeUY6od2l1GH1lTFrLCHU37I6TJ0N97ymd/XEgJk0/DxkCOlg5cZ+IaeNpwW9b9NVp9RoteyP6f1fcJKCMOVJMCqG0Qb4ZJlKwjcMckOzjYnmOa2GpDzL6x9SkClmWwAOpkCBzy7N+aIguYDUQQZmDb5kd9YEm3PHdXUGAA1+UXcu1pjwu/Epv67ObyXSTT1r91nj0XDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=61kIDKLFWSPaecxA2gh/zWB5Hf3lSZwL8gRwzPXIUhY=;
- b=arDISNE07NFAL7vvbFpFA5/eYH7StF0XzEocHv0aifmvCsgaQNy9qTmvm64NGZmL1f74ZYfbpXTuEq5Pc404VeZjFIDdqNjZ6xJ8i250sbM/22JZM1zj/k4okk4+x8uGdq9R61GR9b+Br19niyjHMsvgFOpXkIufT0avBg1p/uY=
-Received: from VI1PR04MB4094.eurprd04.prod.outlook.com (52.133.13.160) by
- VI1PR04MB5613.eurprd04.prod.outlook.com (20.178.125.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Thu, 29 Aug 2019 10:03:34 +0000
-Received: from VI1PR04MB4094.eurprd04.prod.outlook.com
- ([fe80::c85e:7409:9270:3c3c]) by VI1PR04MB4094.eurprd04.prod.outlook.com
- ([fe80::c85e:7409:9270:3c3c%7]) with mapi id 15.20.2199.021; Thu, 29 Aug 2019
- 10:03:34 +0000
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Paul.Handrigan@cirrus.com" <Paul.Handrigan@cirrus.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "brian.austin@cirrus.com" <brian.austin@cirrus.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Subject: Re: [alsa-devel] [PATCH] ASoC: cs42xx8: Force suspend/resume during
- system suspend/resume
-Thread-Topic: [alsa-devel] [PATCH] ASoC: cs42xx8: Force suspend/resume during
- system suspend/resume
-Thread-Index: AQHVXlEEGU4b2ITnKkSzGQAmiDenzw==
-Date:   Thu, 29 Aug 2019 10:03:34 +0000
-Message-ID: <0b6116bb10c1d94246383b715b89abd9d458a661.camel@nxp.com>
-References: <1566944026-18113-1-git-send-email-shengjiu.wang@nxp.com>
-In-Reply-To: <1566944026-18113-1-git-send-email-shengjiu.wang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=daniel.baluta@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a02723ec-6f05-4793-c6e0-08d72c68272b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5613;
-x-ms-traffictypediagnostic: VI1PR04MB5613:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB5613EE39815D35F357233C16F9A20@VI1PR04MB5613.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:428;
-x-forefront-prvs: 0144B30E41
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(376002)(366004)(396003)(199004)(189003)(8676002)(81156014)(478600001)(486006)(110136005)(316002)(81166006)(8936002)(44832011)(71200400001)(71190400001)(14454004)(86362001)(66066001)(6116002)(3846002)(6246003)(99286004)(25786009)(50226002)(91956017)(76116006)(2201001)(6486002)(6436002)(6512007)(53936002)(476003)(66946007)(2616005)(11346002)(446003)(26005)(118296001)(186003)(66446008)(64756008)(66556008)(66476007)(76176011)(6506007)(102836004)(2501003)(4744005)(229853002)(2906002)(15650500001)(7736002)(305945005)(36756003)(256004)(5660300002)(14444005)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5613;H:VI1PR04MB4094.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KJO5O2Pn3M4h56u5ukeY6vs1IaT7zFeVH8fzvgQekYKeRz4XGuLpT+vyh0REZYH5kMQPhVz8bneYgQ7N1buyuBmZDko41Criv2C1G6TRgZg1zvGgxAeACRC344JZP680SUyrNpkgYV6MRQMm4zzCrBQwBAcNU4G4ruOgWXOrQv9bXByNE/NW59M079iwi0cLJW2oo3715tlkIKw7YOQl3wTaXhZdkLD13tBGEyQk6bBoSgG5M4xYoNC4qdxtcEz/3fOwBG3bjODTkxgoYJR2vTql7pB1e8Ks6WFAoZRp9xl5+cQWm4GtlwfPyjDTpCCpok1Ux+7Bgi/IdEbA4i8JDCLnS58CINLnP/VKIX6ixg8/koA9nVIvJe7P9TihfGLxWq06EwnXc1lSfoOVA7vGV2Sr2mkq8dPHlMf22E80kP0=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <41D1E37C5A1C8C4A8C580A13345026FA@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 29 Aug 2019 06:04:24 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45676 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbfH2KEY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:04:24 -0400
+Received: by mail-qt1-f194.google.com with SMTP id k13so2937712qtm.12
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 03:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vwod3g/h3wsMjoG1LnCiS/Wpf4N1PRkHzIkFBfQoSSw=;
+        b=m/hgidyicegyPyO4Uspo+VjOeANso0tBMTHbGMnzh+IJJIAekQigkeObfhGQ43XJxX
+         jkkuiNkzoUrtwU97MBaEka9FMd+Ws2GPbajDlQsP8f15aq9yPCjep3IbrRwYZIfI1ZfH
+         TIOhZ9lnZvoaDYfehhTDLme2nOgKHArjb2M4s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vwod3g/h3wsMjoG1LnCiS/Wpf4N1PRkHzIkFBfQoSSw=;
+        b=mHYjM1tZ9Ly/lfjDRN6g9wsywxGOExL9PLJrh/g3nRDIX0hzC2zCBF2KrugNjhymJX
+         b9H+qFbKfwcVpVpS5fL5Ovcr0Qj0bnjXLOq5unwr+zq0mDqdQSjKth62qFifCCDJh2MG
+         FKuQuErALCg36aMeM9+U0kJaHk5IYxH4GZ690C53snZF18i7QzCjDZqGddMQA5tuEHXG
+         VRpll23wTmP5RXKwdG0CHnO6Wkg03ImB9lOTGmgvzEQgqsPSch9KiOr1HfShDdfjuQ5T
+         lBtGiwX8P4KrV3HsrnBqLhVkU0Z3DhBS5QIdtTJn625OV4Yhjw3gcs3ATFISiKA3EGg1
+         WTAQ==
+X-Gm-Message-State: APjAAAULLYnzuvJs5QrKw7i/wiAQiqj5lgz+/WCqZUSvBzPK59uGFZ2P
+        NKBkX5q2L2v635eLCKdHwPbQmNuXUZjAxwXO5KiUcQ==
+X-Google-Smtp-Source: APXvYqzFV2QhMMIOvBFm8kDuXBJDTG4ory3BugWe2SSfjqg6bDKB2bXQ/IBBCXioYRpHnhFbpw3YoE1Qsaz3ihPmKoA=
+X-Received: by 2002:ad4:4050:: with SMTP id r16mr5793678qvp.200.1567073062956;
+ Thu, 29 Aug 2019 03:04:22 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a02723ec-6f05-4793-c6e0-08d72c68272b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 10:03:34.0546
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3t8fe0W2qxCPnzWM/DA4kTFha3h6zLizxFZoXjq6L9ejyojGWQUv+UkS21oCMNF1MbbsGVML54Si9CH31Xy30g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5613
+References: <20190822071522.143986-1-hsinyi@chromium.org> <20190822071522.143986-3-hsinyi@chromium.org>
+ <5d5ed368.1c69fb81.419fc.0803@mx.google.com> <201908241203.92CC0BE8@keescook>
+In-Reply-To: <201908241203.92CC0BE8@keescook>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Thu, 29 Aug 2019 18:03:57 +0800
+Message-ID: <CAJMQK-iDoPxbFUH3JUeJ7SehCptZOnjKZiUoFd1PqLjDdGHujA@mail.gmail.com>
+Subject: Re: [PATCH v9 2/3] fdt: add support for rng-seed
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wei Li <liwei391@huawei.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Rik van Riel <riel@surriel.com>,
+        Waiman Long <longman@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Grzegorz Halat <ghalat@redhat.com>,
+        Len Brown <len.brown@intel.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Yury Norov <ynorov@marvell.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA4LTI3IGF0IDE4OjEzIC0wNDAwLCBTaGVuZ2ppdSBXYW5nIHdyb3RlOg0K
-PiBVc2UgZm9yY2Vfc3VzcGVuZC9yZXN1bWUgdG8gbWFrZSBzdXJlIGNsb2NrcyBhcmUgZGlzYWJs
-ZWQvZW5hYmxlZA0KPiBhY2NvcmRpbmdseSBkdXJpbmcgc3lzdGVtIHN1c3BlbmQvcmVzdW1lLg0K
-PiANCj4gU2lnbmVkLW9mZi1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4N
-Cj4gU2lnbmVkLW9mZi1ieTogU2hlbmdqaXUgV2FuZyA8c2hlbmdqaXUud2FuZ0BueHAuY29tPg0K
-DQpSZXZpZXdlZC1ieTogRGFuaWVsIEJhbHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAuY29tPg0KDQo+
-IC0tLQ0KPiAgc291bmQvc29jL2NvZGVjcy9jczQyeHg4LmMgfCAyICsrDQo+ICAxIGZpbGUgY2hh
-bmdlZCwgMiBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvc291bmQvc29jL2NvZGVj
-cy9jczQyeHg4LmMgYi9zb3VuZC9zb2MvY29kZWNzL2NzNDJ4eDguYw0KPiBpbmRleCA1YjA0OWZj
-ZGJhMjAuLjk0YjFhZGIwODhmZCAxMDA2NDQNCj4gLS0tIGEvc291bmQvc29jL2NvZGVjcy9jczQy
-eHg4LmMNCj4gKysrIGIvc291bmQvc29jL2NvZGVjcy9jczQyeHg4LmMNCj4gQEAgLTY4NCw2ICs2
-ODQsOCBAQCBzdGF0aWMgaW50IGNzNDJ4eDhfcnVudGltZV9zdXNwZW5kKHN0cnVjdCBkZXZpY2UN
-Cj4gKmRldikNCj4gICNlbmRpZg0KPiAgDQo+ICBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBjczQy
-eHg4X3BtID0gew0KPiArCVNFVF9TWVNURU1fU0xFRVBfUE1fT1BTKHBtX3J1bnRpbWVfZm9yY2Vf
-c3VzcGVuZCwNCj4gKwkJCQlwbV9ydW50aW1lX2ZvcmNlX3Jlc3VtZSkNCj4gIAlTRVRfUlVOVElN
-RV9QTV9PUFMoY3M0Mnh4OF9ydW50aW1lX3N1c3BlbmQsDQo+IGNzNDJ4eDhfcnVudGltZV9yZXN1
-bWUsIE5VTEwpDQo+ICB9Ow0KPiAgRVhQT1JUX1NZTUJPTF9HUEwoY3M0Mnh4OF9wbSk7DQo=
+On Thu, Aug 29, 2019 at 1:36 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> Can this please be a boot param (with the default controlled by the
+> CONFIG)? See how CONFIG_RANDOM_TRUST_CPU is wired up...
+>
+> -Kees
+>
+
+Currently rng-seed read and added in setup_arch() -->
+setup_machine_fdt().. -> early_init_dt_scan_chosen(), which is earlier
+than parse_early_param() that initializes early_param.
+
+If we want to set it as a boot param, add_bootloader_randomness() can
+only be called after parse_early_param(). The seed can't be directly
+added to pool after it's read in. We need to store into global
+variable and load it later.
+If this seems okay then I'll add a patch for this. Thanks
+
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1096,13 +1096,15 @@ static const char *config_cmdline = CONFIG_CMDLINE;
+
++const void* rng_seed;
++int rng_seed_len;
++
+ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+                                                            int depth,
+void *data)
+ {
+        int l = 0;
+        const char *p = NULL;
+        char *cmdline = data;
+-       const void *rng_seed;
+
+  pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
+
+@@ -1137,10 +1139,8 @@ int __init early_init_dt_scan_chosen(unsigned
+long node, const char *uname,
+
+         pr_debug("Command line is: %s\n", (char*)data);
+
+-        rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
+-        if (rng_seed && l > 0) {
+-                add_bootloader_randomness(rng_seed, l);  //
+Originally it's added to entropy pool here
+-
++       rng_seed = of_get_flat_dt_prop(node, "rng-seed", &rng_seed_len);
++       if (rng_seed && rng_seed_len > 0) {
+                /* try to clear seed so it won't be found. */
+
+diff --git a/include/linux/random.h b/include/linux/random.h
+index 831a002a1882..946840bba7c1 100644
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -31,6 +31,15 @@ static inline void add_latent_entropy(void)
+ static inline void add_latent_entropy(void) {}
+ #endif
+
++extern const void* rng_seed;
++extern int rng_seed_len;
++
++static inline void add_bootloader_entropy(void)
++{
++        if (rng_seed && rng_seed_len > 0)
++                add_bootloader_randomness(rng_seed, rng_seed_len);
++}
++
+ extern void add_input_randomness(unsigned int type, unsigned int code,
+  unsigned int value) __latent_entropy;
+ extern void add_interrupt_randomness(int irq, int irq_flags) __latent_entropy;
+diff --git a/init/main.c b/init/main.c
+index 71847af32e4e..f74a8c7b34af 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -645,6 +645,7 @@ asmlinkage __visible void __init start_kernel(void)
+  * - adding command line entropy
+  */
+  rand_initialize();
++ add_bootloader_entropy();
+  add_latent_entropy();
+  add_device_randomness(command_line, strlen(command_line));
+  boot_init_stack_canary();
