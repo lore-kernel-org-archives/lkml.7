@@ -2,124 +2,147 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB85FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA122C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA8B820673
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567096111;
-	bh=/3XYAj9CTeqNvEs/5WFosqWbeVIGIJC89BWHtEUKy6o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Yccf6YM+kXcvdfkejXpwG7aLvq6+31e4f9xsIBLgm24wO92xohF+Yw24RJTzugmdO
-	 wt6FrT221pnrSeZjynNkF0zRaNudMHCiGcSsxXBLYfQ1xOPzFswqyrKiP0uIPzOiw2
-	 alZ+LQi8yaZ0zzXDDtGPK+MI9tGqO/Fav0NEj9PI=
+	by mail.kernel.org (Postfix) with ESMTP id 88E332339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbfH2Q2b (ORCPT
+        id S1727590AbfH2Q3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:28:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727118AbfH2Q2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:28:30 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10ABC21874;
-        Thu, 29 Aug 2019 16:28:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567096109;
-        bh=/3XYAj9CTeqNvEs/5WFosqWbeVIGIJC89BWHtEUKy6o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Vh8jxTE9WDNlVqN9nDyLo2hP/zQwl5fieofWR+NvbRQ0Fv1BtBJnVyV4sS6QDZAcw
-         iTy7+1VajtoKlu7vrbo2eAcnUFDTFHaQTrTDVNWkroiQULkDdlO6Vdf1JAe11jWUuq
-         WqyZS2jf+CwCos5xrIbDtP6XzmJ+Fz50WKcdDTKk=
-Received: by mail-qt1-f173.google.com with SMTP id y26so4350279qto.4;
-        Thu, 29 Aug 2019 09:28:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAVq4y2DvizS27hlIsKkOTOCXVC3nTyaS/Tp0jDXioUHgzMPCX2I
-        hAMHNOw6Zltq9RY1xU2/JcpDh3GhJZBQbUkagA==
-X-Google-Smtp-Source: APXvYqxQAVi5sTuGVrQcOOhxsD8C1pY1fapusvr14aZUc3qMow3tTYBTgbOKbg0VIyz4suaIb9yRp12OMoEaCpRNAhE=
-X-Received: by 2002:aed:24f4:: with SMTP id u49mr10849544qtc.110.1567096108264;
- Thu, 29 Aug 2019 09:28:28 -0700 (PDT)
+        Thu, 29 Aug 2019 12:29:41 -0400
+Received: from smtprelay0220.hostedemail.com ([216.40.44.220]:46344 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727046AbfH2Q3l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:29:41 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 085D2AC08;
+        Thu, 29 Aug 2019 16:29:40 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: bun06_1836a53334c20
+X-Filterd-Recvd-Size: 4954
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 29 Aug 2019 16:29:25 +0000 (UTC)
+Message-ID: <4232843e9fe0444c1c975ac6be4cb81a67f9f6ef.camel@perches.com>
+Subject: Re: [RFC PATCH 1/5] treewide: replace __inline__ by inline
+From:   Joe Perches <joe@perches.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        ndesaulniers@google.com
+Date:   Thu, 29 Aug 2019 09:29:23 -0700
+In-Reply-To: <20190829083233.24162-2-linux@rasmusvillemoes.dk>
+References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
+         <20190829083233.24162-2-linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-References: <CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com>
-In-Reply-To: <CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 29 Aug 2019 11:28:16 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKWcGSzCF_ZyEo6bbuayoYks51A-JAMp_oLR1RyTUzNUA@mail.gmail.com>
-Message-ID: <CAL_JsqKWcGSzCF_ZyEo6bbuayoYks51A-JAMp_oLR1RyTUzNUA@mail.gmail.com>
-Subject: Re: Adding depends-on DT binding to break cyclic dependencies
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 1:55 AM Saravana Kannan <saravanak@google.com> wrote:
->
-> Hi Rob,
->
-> Frank, Greg and I got together during ELC and had an extensive and
-> very productive discussion about my "postboot supplier state cleanup"
-> patch series [1]. The three of us are on the same page now -- the
-> series as it stands is the direction we want to go in, with some minor
-> refactoring, documentation and naming changes.
->
-> However, one of the things Frank is concerned about (and Greg and I
-> agree) in the current patch series is that the "cyclic dependency
-> breaking" logic has been pushed off to individual drivers using the
-> edit_links() callback.
+On Thu, 2019-08-29 at 10:32 +0200, Rasmus Villemoes wrote:
+> Currently, compiler_types.h #defines __inline__ as inline. However,
+> that defeats the purpose of gcc providing __inline__ as an alternate
+> spelling of that keyword - namely, that it is always accessible under
+> that name, even if one chooses to #define inline, which we also do in
+> order to attach attribute(gnu_inline), and sometimes imply
+> attribute(always_inline), etc.
+> 
+> Note that it is quite possible that some header file defines a static
+> inline function before the include chain has reached compiler_types.h,
+> but in that case both the existing __inline__ as well as the new
+> inline spelling refer to gcc's keyword, and the redefinitions in
+> compiler_types.h have no effect anyway.
+> 
+> For those static inline definitions that appear after compiler_types.h
+> has been processed, this is obviously a no-op due to the #define
+> __inline__ inline.
+> 
+> We will need to be able to use the __inline__ keyword to make use of
+> the "asm inline()" feature from gcc 9. This is preparation for
+> removing the #define.
+> 
+> Generated by
+> 
+>   git grep --files-with-matches -w __inline__ | \
+>     grep -vE '^(usr|Documentation|scripts)/' | \
+>     grep -v /uapi/ | \
+>     xargs sed -i -e 's/static *__inline__/static inline/'
 
-I would think the core can detect this condition. There's nothing
-device specific once you have the dependency tree. You still need to
-know what device needs to probe first and the drivers are going to
-have that knowledge anyways. So wouldn't it be enough to allow probe
-to proceed for devices in the loop. Once 1 driver succeeds, then you
-can enforce the dependencies on the rest.
+bikeshed: Perhaps better to use
 
-> The concern being, there are going to be multiple device specific ad
-> hoc implementations to break a cyclic dependency. Also, if a device
-> can be part of a cyclic dependency, the driver for that device has to
-> check for specific system/products in which the device is part of a
-> cyclic dependency (because it might not always be part of a cycle),
-> and then potentially have cycle/product specific code to break the
-> cycle (since the cycle can be different on each system/product).
->
-> One way to avoid all of the device/driver specific code and simplify
-> my patch series by a non-trivial amount would be by adding a
-> "depends-on" DT binding that can ONLY be used to break cycles. We can
-> document it as such and reject any attempts to use it for other
-> purposes. When a depends-on property is present in a device node, that
-> specific device's supplier list will be parsed ONLY from the
-> depends-on property and the other properties won't be parsed for
-> deriving dependency information for that device.
+	xargs sed -i -e 's/\b__inline__\b/inline/g'
 
-Seems like only ignoring the dependencies with a cycle would be
-sufficient. For example, consider a clock controller which has 2 clock
-inputs from other clock controllers where one has a cycle and one
-doesn't. Also consider it has a regulator dependency. We only need to
-ignore the dependency for 1 of the clock inputs. The rest of the
-dependencies should be honored.
+As static and __inline__ do not have to be on the same line.
 
-> Frank, Greg and I like this usage model for a new depends-on DT
-> binding. Is this something you'd be willing to accept?
+for instance: (and I didn't look thoroughly)
 
-To do the above, it needs to be inverted.
+This misses one of the uses of __static__ in
+drivers/scsi/qla2xx/qla_os.c
 
-Convince me that cycles are really a problem anywhere besides clocks.
-I'd be more comfortable with a clock specific property if we only need
-it for clocks and I'm having a hard time imagining cycles for other
-dependencies.
+The patch has:
 
-Rob
+> diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+[]
+> @@ -342,7 +342,7 @@ qla2x00_restart_timer(scsi_qla_host_t *vha, unsigned long interval)
+>  	mod_timer(&vha->timer, jiffies + interval * HZ);
+>  }
+>  
+> -static __inline__ void
+> +static inline void
+>  qla2x00_stop_timer(scsi_qla_host_t *vha)
+>  {
+>  	del_timer_sync(&vha->timer);
+
+But the code is:
+
+drivers/scsi/qla2xxx/qla_os.c-318-/* TODO Convert to inlines
+drivers/scsi/qla2xxx/qla_os.c-319- *
+drivers/scsi/qla2xxx/qla_os.c-320- * Timer routines
+drivers/scsi/qla2xxx/qla_os.c-321- */
+drivers/scsi/qla2xxx/qla_os.c-322-
+drivers/scsi/qla2xxx/qla_os.c:323:__inline__ void
+drivers/scsi/qla2xxx/qla_os.c-324-qla2x00_start_timer(scsi_qla_host_t *vha, unsigned long interval)
+drivers/scsi/qla2xxx/qla_os.c-325-{
+drivers/scsi/qla2xxx/qla_os.c-326-      timer_setup(&vha->timer, qla2x00_timer, 0);
+drivers/scsi/qla2xxx/qla_os.c-327-      vha->timer.expires = jiffies + interval * HZ;
+drivers/scsi/qla2xxx/qla_os.c-328-      add_timer(&vha->timer);
+--
+drivers/scsi/qla2xxx/qla_os.c-340-      }
+drivers/scsi/qla2xxx/qla_os.c-341-
+drivers/scsi/qla2xxx/qla_os.c-342-      mod_timer(&vha->timer, jiffies + interval * HZ);
+drivers/scsi/qla2xxx/qla_os.c-343-}
+drivers/scsi/qla2xxx/qla_os.c-344-
+drivers/scsi/qla2xxx/qla_os.c:345:static __inline__ void
+drivers/scsi/qla2xxx/qla_os.c-346-qla2x00_stop_timer(scsi_qla_host_t *vha)
+drivers/scsi/qla2xxx/qla_os.c-347-{
+drivers/scsi/qla2xxx/qla_os.c-348-      del_timer_sync(&vha->timer);
+drivers/scsi/qla2xxx/qla_os.c-349-      vha->timer_active = 0;
+drivers/scsi/qla2xxx/qla_os.c-350-}
+
+The possible impacted files using 's/\b__inline__\b/inline/'
+
+$ git grep -w '__inline__' -- '*.[ch]' | grep -vP 'static\s+__inline__'
+(only hand selected matches)
+arch/alpha/include/asm/compiler.h:#undef __inline__
+arch/alpha/include/asm/floppy.h:__inline__ void virtual_dma_init(void)
+arch/ia64/hp/common/sba_iommu.c:#define SBA_INLINE	__inline__
+drivers/parisc/sba_iommu.c:#define SBA_INLINE	__inline__
+drivers/scsi/qla2xxx/qla_os.c:__inline__ void
+drivers/video/fbdev/intelfb/intelfbdrv.c:__inline__ int intelfb_var_to_depth(const struct fb_var_screeninfo *var)
+
+
