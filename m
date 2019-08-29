@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD67BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826FDC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A66C72166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529282166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103115;
-	bh=Dm9/IdN9xs7NLKfecqL5L55es773OzMHpCSBSHrVXCY=;
+	s=default; t=1567103120;
+	bh=Ct1sU1VzkOEMwybAyVa2gYQ20snZZuK+WH4tamcBOmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Slc4rL3MfSHwk1z9DKzmZJG4zM5P6jyM7DMi/V9dHJTSBYwcsEsxzZgiHSvHZcdF+
-	 ZroBN32lSN1N9G4CUPqYHqmB15iU7AuBAWkWI1hgLNEmNV+wCOE/ApDLOsY+5RV54i
-	 Aj24AAWAdfS1iPspDj9VzV1TEbN+bL2WwERMoo1M=
+	b=JU2KlgRuni5xJAK+M2VLXCDr7P19YQrlV63cjAYm6bN1RW8nsIkxdgfXCHUyyPURN
+	 GjE68zpdTfa9qSUToRqaGtXifA+uJ+8C570Y2f3lL5jzxtc5sAMIprxFBqQexPztrb
+	 /SwCxPIPiyhtYzK6TsJK/C+79nQvfodPNJKQjjZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbfH2SQO (ORCPT
+        id S1729946AbfH2SZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:16:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58070 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:25:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729617AbfH2SQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:08 -0400
+        id S1729664AbfH2SQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:16:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B7852339E;
-        Thu, 29 Aug 2019 18:16:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDCCF23427;
+        Thu, 29 Aug 2019 18:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102567;
-        bh=Dm9/IdN9xs7NLKfecqL5L55es773OzMHpCSBSHrVXCY=;
+        s=default; t=1567102573;
+        bh=Ct1sU1VzkOEMwybAyVa2gYQ20snZZuK+WH4tamcBOmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gzBS/khCDzLM0uDhMb/HkEmfuV0TDFDWq8h9ZUC8aPNSMALAYaIwLfSQzukJUIHs1
-         7zAyq3Fd/Ikh8fkMbNhFu91lSkFR4afg4UPUVi/FhUF8S4LwD1e6TWLVD6iAaNznbd
-         ApCbVeML0wtqilQHdhYbdD3IUuWzWV9cNEFJ+Okw=
+        b=t7Sgcls7PkBVOhqmlWN8maOsTt6bt3hV5EACp7sjK+4LB0cijhryu5OIBNF8NhN2Q
+         eTEJjPR+QKHjCPtnsE9+/kR4q1hW/FDuhVXG7udsIbQr1HCmkXGGTnXncxLYbO0n8B
+         GR3i9EV1hDfL3KG82jhjHXuegioHr1fQglGiqRek=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Courbot <acourbot@chromium.org>,
-        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 14/45] drm/mediatek: use correct device to import PRIME buffers
-Date:   Thu, 29 Aug 2019 14:15:14 -0400
-Message-Id: <20190829181547.8280-14-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 19/45] liquidio: add cleanup in octeon_setup_iq()
+Date:   Thu, 29 Aug 2019 14:15:19 -0400
+Message-Id: <20190829181547.8280-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
 References: <20190829181547.8280-1-sashal@kernel.org>
@@ -59,54 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Courbot <acourbot@chromium.org>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 4c6f3196e6ea111c456c6086dc3f57d4706b0b2d ]
+[ Upstream commit 6f967f8b1be7001b31c46429f2ee7d275af2190f ]
 
-PRIME buffers should be imported using the DMA device. To this end, use
-a custom import function that mimics drm_gem_prime_import_dev(), but
-passes the correct device.
+If oct->fn_list.enable_io_queues() fails, no cleanup is executed, leading
+to memory/resource leaks. To fix this issue, invoke
+octeon_delete_instr_queue() before returning from the function.
 
-Fixes: 119f5173628aa ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
-Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/cavium/liquidio/request_manager.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index fd83046d8376b..ffb997440851d 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -327,6 +327,18 @@ static const struct file_operations mtk_drm_fops = {
- 	.compat_ioctl = drm_compat_ioctl,
- };
+diff --git a/drivers/net/ethernet/cavium/liquidio/request_manager.c b/drivers/net/ethernet/cavium/liquidio/request_manager.c
+index 8f746e1348d4c..3deb3c07681fd 100644
+--- a/drivers/net/ethernet/cavium/liquidio/request_manager.c
++++ b/drivers/net/ethernet/cavium/liquidio/request_manager.c
+@@ -238,8 +238,10 @@ int octeon_setup_iq(struct octeon_device *oct,
+ 	}
  
-+/*
-+ * We need to override this because the device used to import the memory is
-+ * not dev->dev, as drm_gem_prime_import() expects.
-+ */
-+struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
-+						struct dma_buf *dma_buf)
-+{
-+	struct mtk_drm_private *private = dev->dev_private;
-+
-+	return drm_gem_prime_import_dev(dev, dma_buf, private->dma_dev);
-+}
-+
- static struct drm_driver mtk_drm_driver = {
- 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME |
- 			   DRIVER_ATOMIC,
-@@ -338,7 +350,7 @@ static struct drm_driver mtk_drm_driver = {
- 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
- 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
- 	.gem_prime_export = drm_gem_prime_export,
--	.gem_prime_import = drm_gem_prime_import,
-+	.gem_prime_import = mtk_drm_gem_prime_import,
- 	.gem_prime_get_sg_table = mtk_gem_prime_get_sg_table,
- 	.gem_prime_import_sg_table = mtk_gem_prime_import_sg_table,
- 	.gem_prime_mmap = mtk_drm_gem_mmap_buf,
+ 	oct->num_iqs++;
+-	if (oct->fn_list.enable_io_queues(oct))
++	if (oct->fn_list.enable_io_queues(oct)) {
++		octeon_delete_instr_queue(oct, iq_no);
+ 		return 1;
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
