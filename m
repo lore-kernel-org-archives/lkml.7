@@ -2,84 +2,126 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED03C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539BEC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF432166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2351123403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:34:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wrKlAklp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfH2Qd4 (ORCPT
+        id S1727967AbfH2QeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:33:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54174 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726973AbfH2Qdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:33:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 391E8AEE9;
-        Thu, 29 Aug 2019 16:33:54 +0000 (UTC)
-Date:   Thu, 29 Aug 2019 18:33:53 +0200
-From:   Borislav Petkov <bp@suse.de>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     tip-bot2 for Thomas Hellstrom <tip-bot2@linutronix.de>,
-        kbuild-all@01.org, linux-tip-commits@vger.kernel.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Doug Covelli <dcovelli@vmware.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-input@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        pv-drivers@vmware.com, x86-ml <x86@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [tip: x86/vmware] input/vmmouse: Update the backdoor call with
- support for new instructions
-Message-ID: <20190829163353.GC2132@zn.tnic>
-References: <156699905611.5321.15444519862547054670.tip-bot2@tip-bot2>
- <201908292325.aLXyyzEx%lkp@intel.com>
+        Thu, 29 Aug 2019 12:34:15 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42575 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727602AbfH2QeO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:34:14 -0400
+Received: by mail-qt1-f195.google.com with SMTP id t12so4340231qtp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:34:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n9l5S2KbsRERhGgBhP1Pu1DL1JLpghBBG1KctWMbhPY=;
+        b=wrKlAklpDzCaK9bitOGvsiE1iRls1xkKTHr1uVj6ML6++yzsbIy4Ss6lHKR/4t+kWB
+         kBWFsevMQv+AgM/3QUQZMUuLjWg5OTvBgfxqQiHHHX66tW4HQ0cbyJdw6Z7A+bvdNRbr
+         zzSU6odPMrenQU/WFUgNqhIZzotjT1I5eoV05DepZXWhc6zk/N4nzQiCscWRFAsp83f5
+         2mCCoPEUzklIvPUTCncScdjggNIqgZ5lAVE0A/GQ2YfQD/jm7+CBxdARj37Wj589cCgt
+         8JKM1lQw79QAQpsOnSqj0AI/1GmG00Z5SoJni7fKTOlQKVKf47/4TAlFHKd1YRmsV2lR
+         fxDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n9l5S2KbsRERhGgBhP1Pu1DL1JLpghBBG1KctWMbhPY=;
+        b=Xwi+vJgmi+tOC/z/iuiqscYnnJOlMeYkEhiOMZuFXxmPC7BcJ2CVDEJtmzWnoO1dPV
+         oMM2ap068vSP7+rMvkbU11jS3BiThR836mnT5kukAmozG2+rgDVg8R2jTYphruy54vFS
+         G4mIEOYogM60Iye1202SPDtmSAoTIy+CsXH1R6PB1he/cSpJVMTR4S8UQsOc8JberH6M
+         Rb+KJICUr4BCgG+nQDnvnRH1AvkIcQEw9E/ATFzW9OUuh9ycIKhu1vm2iA5diKpghmAn
+         2CotjNZpseQ3YqUeCiO9fRmTcZ/nrOvnuvdhQk3YINZL5xifuLah8xESzGtpc3IPNg/5
+         FkHA==
+X-Gm-Message-State: APjAAAUps2bX9JrM4gvhyNupy69DtdJO3BcPKLhMBdAIWY4Ts5qGctnW
+        QS82WvioVFKbqzZRKMB3bVsPmO6y00IOmOnI55Sjag==
+X-Google-Smtp-Source: APXvYqybIZXqTwDDQ5W+o0WnOsb/6yXiPOlEJ24WuiGolNzJDgN+eYlJS9toAhvqvDTFL41byEJ0HGyvQWDJPto49aU=
+X-Received: by 2002:aed:3f47:: with SMTP id q7mr10718052qtf.209.1567096453696;
+ Thu, 29 Aug 2019 09:34:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <201908292325.aLXyyzEx%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1566907161.git.amit.kucheria@linaro.org>
+ <66ac3d3707d6296ef85bf1fa321f7f1ee0c02131.1566907161.git.amit.kucheria@linaro.org>
+ <5d65cbe9.1c69fb81.1ceb.2374@mx.google.com> <CAP245DWWKsZBHnvSqC40XOH48kGd-hykd+fr-UZfWTmvuG2KaA@mail.gmail.com>
+ <5d67e6cf.1c69fb81.5aec9.3b71@mx.google.com>
+In-Reply-To: <5d67e6cf.1c69fb81.5aec9.3b71@mx.google.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 29 Aug 2019 22:04:02 +0530
+Message-ID: <CAP245DVjgnwGn5rUgbYrkBOi3vtyShz0Qbx_opx80xiOV7uXeA@mail.gmail.com>
+Subject: Re: [PATCH v2 07/15] dt: thermal: tsens: Document interrupt support
+ in tsens driver
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Brian Masney <masneyb@onstation.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 12:01:48AM +0800, kbuild test robot wrote:
-> Hi tip-bot2,
-> 
-> Thank you for the patch! Yet something to improve:
-> 
-> [auto build test ERROR on linus/master]
-> [cannot apply to v5.3-rc6 next-20190829]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+On Thu, Aug 29, 2019 at 8:23 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Amit Kucheria (2019-08-29 01:48:27)
+> > On Wed, Aug 28, 2019 at 6:03 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >
+> > > Quoting Amit Kucheria (2019-08-27 05:14:03)
+> > > > Define two new required properties to define interrupts and
+> > > > interrupt-names for tsens.
+> > > >
+> > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 8 ++++++++
+> > > >  1 file changed, 8 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > > index 673cc1831ee9d..686bede72f846 100644
+> > > > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > > @@ -22,6 +22,8 @@ Required properties:
+> > > >
+> > > >  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
+> > > >  - #qcom,sensors: Number of sensors in tsens block
+> > > > +- interrupts: Interrupts generated from Always-On subsystem (AOSS)
+> > >
+> > > Is it always one? interrupt-names makes it sound like it.
+> > >
+> > > > +- interrupt-names: Must be one of the following: "uplow", "critical"
+> >
+> > Will fix to "one or more of the following"
+> >
+>
+> Can we get a known quantity of interrupts for a particular compatible
+> string instead? Let's be as specific as possible. The index matters too,
+> so please list them in the order that is desired.
 
-Yes, it looks like it.
+I *think* we can predict what platforms have uplow and critical
+interrupts based on IP version currently[1]. For newer interrupt
+types, we might need more fine-grained platform compatibles.
 
-> url:    https://github.com/0day-ci/linux/commits/tip-bot2-for-Thomas-Hellstrom/input-vmmouse-Update-the-backdoor-call-with-support-for-new-instructions/20190829-205315
-
-This patch is part of a series which are here:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=x86/vmware
-
-so you need the patches before it.
-
-I don't know what you guys are doing to track patches but if you really
-wanna test trees, I'd suggest simply testing TIP's tip/master branch
-which gets redone on a daily basis instead of testing patches in the
-tip-bot{,2} notification mails.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 247165, AG München
+[1] Caveat: this is based only on the list of platforms I've currently
+looked at, there might be something internally that breaks these
+rules.
