@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DA0C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEBBC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF8872173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D23D2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102852;
-	bh=ujvp1p1YhOa9w3WPCpb4c4nB5ta5oSCXhedSlRXePDQ=;
+	s=default; t=1567102856;
+	bh=+bs89cEYyUrafzKG8RpR8ZzVUyzW8xI26AKZj8csKOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CYz6VV/JSa6cei02VB+JpCrLwI08V9fYuJAMXLerzQS6ELVcgSKcUb2VmHoBp7MEg
-	 k/nBxRWpcCz0uoXJSODTnwRz61w1YPA9JZPhzmK+32gWyM+Nt9abpfwBWp/FSQu27z
-	 dY1WGJf+uWuXgNZ249RE3Z23c/7RI4LboTAV0pcE=
+	b=ibkKj3huC5jBdqtXSc1MPDbgXoJbwND4HSREJWyX3B56TTrQBUzZRpgfibKiQUOM4
+	 5m8b7fQZw1tzTX3QZUHDg2fMZJ9J1enL2gxXItBEQeI8E+r0syefsmnF+UPXvOSumY
+	 ExAg1pezJeooQ/yeax66Vo6xFSoaNjMs56cMr2no=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbfH2SUw (ORCPT
+        id S1730175AbfH2SRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:20:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59980 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:17:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729225AbfH2SRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:17:46 -0400
+        id S1729225AbfH2SRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37CD6233FF;
-        Thu, 29 Aug 2019 18:17:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AB132341B;
+        Thu, 29 Aug 2019 18:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102665;
-        bh=ujvp1p1YhOa9w3WPCpb4c4nB5ta5oSCXhedSlRXePDQ=;
+        s=default; t=1567102649;
+        bh=+bs89cEYyUrafzKG8RpR8ZzVUyzW8xI26AKZj8csKOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=STOSL+/rCcebhjcqcbK8l9zgPxtuTVxZa6OQjZg+CFStZwGdJtU2ytylwN1A5PPOf
-         R9FSerL47cXc/OelI6AecFZ8RX04CEnNskaDi3cUTZRCWsOFT1+AV2IiRUfXa7Fxg9
-         E+lz4+4mq1q8Y/A/wVG/JuSS97nqSm3cPAmvWuAk=
+        b=e7GryBBGPVmjlSSj4WU7k4MtDfTsIQdBehfggSsYHXdp5cWFQjHDYUdhYPMX04KAX
+         LhN4VlbE9rUykrZxHOH2YraeuUCajG2rreakTnIN5jdDJI+X1D1qkVLM8Qst0o8Q8G
+         gNHLZs1muJl7N9N7yfRzx/OspP9MglJedSkcmNU4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 05/16] gpio: Fix build error of function redefinition
-Date:   Thu, 29 Aug 2019 14:17:23 -0400
-Message-Id: <20190829181736.9040-5-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 23/27] IB/mlx4: Fix memory leaks
+Date:   Thu, 29 Aug 2019 14:16:49 -0400
+Message-Id: <20190829181655.8741-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829181736.9040-1-sashal@kernel.org>
-References: <20190829181736.9040-1-sashal@kernel.org>
+In-Reply-To: <20190829181655.8741-1-sashal@kernel.org>
+References: <20190829181655.8741-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,66 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 68e03b85474a51ec1921b4d13204782594ef7223 ]
+[ Upstream commit 5c1baaa82cea2c815a5180ded402a7cd455d1810 ]
 
-when do randbuilding, I got this error:
+In mlx4_ib_alloc_pv_bufs(), 'tun_qp->tx_ring' is allocated through
+kcalloc(). However, it is not always deallocated in the following execution
+if an error occurs, leading to memory leaks. To fix this issue, free
+'tun_qp->tx_ring' whenever an error occurs.
 
-In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
-./include/linux/gpio/driver.h:576:1: error: redefinition of gpiochip_add_pin_range
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- ^~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
-./include/linux/gpio.h:245:1: note: previous definition of gpiochip_add_pin_range was here
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- ^~~~~~~~~~~~~~~~~~~~~~
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 964cb341882f ("gpio: move pincontrol calls to <linux/gpio/driver.h>")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190731123814.46624-1-yuehaibing@huawei.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/1566159781-4642-1-git-send-email-wenwen@cs.uga.edu
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/gpio.h | 24 ------------------------
- 1 file changed, 24 deletions(-)
+ drivers/infiniband/hw/mlx4/mad.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index d12b5d566e4b1..11555bd821b73 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -229,30 +229,6 @@ static inline int irq_to_gpio(unsigned irq)
- 	return -EINVAL;
- }
- 
--static inline int
--gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
--		       unsigned int gpio_offset, unsigned int pin_offset,
--		       unsigned int npins)
--{
--	WARN_ON(1);
--	return -EINVAL;
--}
--
--static inline int
--gpiochip_add_pingroup_range(struct gpio_chip *chip,
--			struct pinctrl_dev *pctldev,
--			unsigned int gpio_offset, const char *pin_group)
--{
--	WARN_ON(1);
--	return -EINVAL;
--}
--
--static inline void
--gpiochip_remove_pin_ranges(struct gpio_chip *chip)
--{
--	WARN_ON(1);
--}
--
- static inline int devm_gpio_request(struct device *dev, unsigned gpio,
- 				    const char *label)
- {
+diff --git a/drivers/infiniband/hw/mlx4/mad.c b/drivers/infiniband/hw/mlx4/mad.c
+index d604b3d5aa3e4..c69158ccab822 100644
+--- a/drivers/infiniband/hw/mlx4/mad.c
++++ b/drivers/infiniband/hw/mlx4/mad.c
+@@ -1680,8 +1680,6 @@ static int mlx4_ib_alloc_pv_bufs(struct mlx4_ib_demux_pv_ctx *ctx,
+ 				    tx_buf_size, DMA_TO_DEVICE);
+ 		kfree(tun_qp->tx_ring[i].buf.addr);
+ 	}
+-	kfree(tun_qp->tx_ring);
+-	tun_qp->tx_ring = NULL;
+ 	i = MLX4_NUM_TUNNEL_BUFS;
+ err:
+ 	while (i > 0) {
+@@ -1690,6 +1688,8 @@ static int mlx4_ib_alloc_pv_bufs(struct mlx4_ib_demux_pv_ctx *ctx,
+ 				    rx_buf_size, DMA_FROM_DEVICE);
+ 		kfree(tun_qp->ring[i].addr);
+ 	}
++	kfree(tun_qp->tx_ring);
++	tun_qp->tx_ring = NULL;
+ 	kfree(tun_qp->ring);
+ 	tun_qp->ring = NULL;
+ 	return -ENOMEM;
 -- 
 2.20.1
 
