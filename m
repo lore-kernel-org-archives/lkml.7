@@ -2,129 +2,250 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 265A0C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36E1C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62F52339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E4212339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:50:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="it190hsU"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="QIAYzJuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfH2IuH (ORCPT
+        id S1727176AbfH2Iux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 04:50:07 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38495 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfH2IuF (ORCPT
+        Thu, 29 Aug 2019 04:50:53 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:35917 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbfH2Iuw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 04:50:05 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e11so1232783pga.5;
-        Thu, 29 Aug 2019 01:50:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=llEqJbQquZmg44EVVsIz+rUKn+1paMeV1ggm5tExqbs=;
-        b=it190hsUfuvXSmKudgY2NAWTdypFmbgxNqPExPyVrNNFS0MisuUL9cTukpxI8olh9l
-         UFmT2BD3K1Vkf/Kdj/pZrsvkHOsCS1Z2nkobny+wyXTG43LbF7JNCuhmdlePewYzBUHG
-         XBZCI4fQgeIkafqYzQcG9U0KXkJquef7+a61Nf/IG0mTExZ02Lvr9IDAhYmYJVRNllyL
-         zEH+8LKep0lVzXoRyflI3hpv625uucMeNUFOOOnt5TLtJQ1kNKYyvUVW6VF6LgP8c9IE
-         klPnqnO/3RK4pTexPkiNRdGRpOawGvmiSn+IXtXBexs3gwAgIzsVv1ByY3uCAa4wdMfe
-         6esQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=llEqJbQquZmg44EVVsIz+rUKn+1paMeV1ggm5tExqbs=;
-        b=fpLID5M+NDVyt6TFNrnevbKgBSiG2jLfmT6y6BQX0Iu51/YzuEnovSe+8kGc44EpXp
-         5cFLZnYqiShmSRqU9lIATmWjnrOZXkplD6eHSj2BJ99x6H3W9nV3d1w7tWTeSGKjeHiN
-         C3ulWv2RLhIITCuqZd3JSQ8o/LqUnUsIvkJfdS/gmeWVJH0QOSUFf5C9ZCshtiLfgPon
-         ZUeJwxKx5Qyb7fxkpDglxKRs8aXsniGHk6sS5682ihllAIINZ8pYaS5hcHfOrfCuO4/g
-         ycABbw0rJdgCGsx3fUR+6hh3uIdnD7Pn7Jf01Oy9rihTKOIy1XcZV4HAobev7pr8+tu9
-         JiLg==
-X-Gm-Message-State: APjAAAVga2cKjz32PTrKwE8w6PMKOKnRSx2kfk3Hrtn7DNfeRfIzV4Ai
-        pxVbg0dq9pljPrmlrT80/55B2GjN
-X-Google-Smtp-Source: APXvYqybYVCW4WKSbwOvYFr3ALtr+sJj+BYwgH4cZhlDpcD/yLnjfIWTxgcxAOjUwbQteavkBdSJ3w==
-X-Received: by 2002:a17:90a:e392:: with SMTP id b18mr8352385pjz.140.1567068605013;
-        Thu, 29 Aug 2019 01:50:05 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id t6sm1591693pjy.18.2019.08.29.01.50.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 29 Aug 2019 01:50:04 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v2] cpuidle-haltpoll: Enable kvm guest polling when dedicated physical CPUs are available
-Date:   Thu, 29 Aug 2019 16:49:57 +0800
-Message-Id: <1567068597-22419-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 29 Aug 2019 04:50:52 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id BDAC380719;
+        Thu, 29 Aug 2019 20:50:47 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1567068647;
+        bh=dZkJRwlgxjfTFhLsL2/dHbG5QomSoc8bDAoyd48XHpk=;
+        h=From:To:Cc:Subject:Date;
+        b=QIAYzJuLuylFfsdubAJucG9Adgj+eZlTbpzOFIGJsks1a8093r7wqynDhWTE99/ry
+         jPnKhs47ROehHdy2iEVHLfUHhVJG8AgctUb/9vMyuhO6jz8ZGG5Id1dqN2kzNubtv2
+         1RZ7pAVUw6vFkFFdVJO/jKL7aVadFauld+qKZajDpyrR/KfB5Cbfy9xbYQuOTgxE26
+         gS9bVmCNuPRkKlZJJEeSfadHfW+ATvzbtlf7by4MYCg3o+LXCql0RaZvAjoutWBcit
+         a87Ghv4YAWJWQZb2XkLKYcdb0KziK7eWvRTcv7/3ENOxPMjKrbhuxwXF6wTxmJsoTa
+         bvW/LBj9VZlZw==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d6791e50000>; Thu, 29 Aug 2019 20:50:45 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id C287D13EED5;
+        Thu, 29 Aug 2019 20:50:48 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id BCDC92819B1; Thu, 29 Aug 2019 20:50:45 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     wim@linux-watchdog.org, linux@roeck-us.net
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v5] watchdog: orion_wdt: use timer1 as a pretimeout
+Date:   Thu, 29 Aug 2019 20:50:42 +1200
+Message-Id: <20190829085042.30886-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+The orion watchdog can either reset the CPU or generate an interrupt.
+The interrupt would be useful for debugging as it provides panic()
+output about the watchdog expiry, however if the interrupt is used the
+watchdog can't reset the CPU in the event of being stuck in a loop with
+interrupts disabled or if the CPU is prevented from accessing memory
+(e.g. an unterminated DMA).
 
-The downside of guest side polling is that polling is performed even 
-with other runnable tasks in the host. However, even if poll in kvm 
-can aware whether or not other runnable tasks in the same pCPU, it 
-can still incur extra overhead in over-subscribe scenario. Now we can 
-just enable guest polling when dedicated pCPUs are available.
+The Armada SoCs have spare timers that aren't currently used by the
+Linux kernel. We can use timer1 to provide a pre-timeout ahead of the
+watchdog timer and provide the possibility of gathering debug before the
+reset triggers.
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
---
-v1 -> v2:
- * export kvm_arch_para_hints to fix haltpoll driver build as module error
- * just disable haltpoll driver instead of both driver and governor 
-   since KVM_HINTS_REALTIME is not defined in other arches, and governor 
-   doesn't depend on x86, to fix the warning on powerpc
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+Changes in v5:
+- Group bit values with register addresses
+- Address review comments from Gunter
+Changes in v4:
+- rebase against linux/master
+Changes in v2:
+- apply changes to armada-38x only
 
- arch/x86/kernel/kvm.c              | 1 +
- drivers/cpuidle/cpuidle-haltpoll.c | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/watchdog/orion_wdt.c | 65 ++++++++++++++++++++++++++++--------
+ 1 file changed, 52 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index f48401b..68463c1 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -711,6 +711,7 @@ unsigned int kvm_arch_para_hints(void)
+diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+index cdb0d174c5e2..5a23cb448ed5 100644
+--- a/drivers/watchdog/orion_wdt.c
++++ b/drivers/watchdog/orion_wdt.c
+@@ -35,7 +35,15 @@
+  * Watchdog timer block registers.
+  */
+ #define TIMER_CTRL		0x0000
+-#define TIMER_A370_STATUS	0x04
++#define TIMER1_FIXED_ENABLE_BIT	BIT(12)
++#define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
++#define TIMER1_ENABLE_BIT	BIT(2)
++
++#define TIMER_A370_STATUS	0x0004
++#define WDT_A370_EXPIRED	BIT(31)
++#define TIMER1_STATUS_BIT	BIT(8)
++
++#define TIMER1_VAL_OFF		0x001c
+=20
+ #define WDT_MAX_CYCLE_COUNT	0xffffffff
+=20
+@@ -43,9 +51,6 @@
+ #define WDT_A370_RATIO_SHIFT	5
+ #define WDT_A370_RATIO		(1 << WDT_A370_RATIO_SHIFT)
+=20
+-#define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
+-#define WDT_A370_EXPIRED	BIT(31)
+-
+ static bool nowayout =3D WATCHDOG_NOWAYOUT;
+ static int heartbeat =3D -1;		/* module parameter (seconds) */
+=20
+@@ -158,6 +163,7 @@ static int armadaxp_wdt_clock_init(struct platform_de=
+vice *pdev,
+ 				   struct orion_watchdog *dev)
  {
- 	return cpuid_edx(kvm_cpuid_base() | KVM_CPUID_FEATURES);
+ 	int ret;
++	u32 val;
+=20
+ 	dev->clk =3D of_clk_get_by_name(pdev->dev.of_node, "fixed");
+ 	if (IS_ERR(dev->clk))
+@@ -168,10 +174,9 @@ static int armadaxp_wdt_clock_init(struct platform_d=
+evice *pdev,
+ 		return ret;
+ 	}
+=20
+-	/* Enable the fixed watchdog clock input */
+-	atomic_io_modify(dev->reg + TIMER_CTRL,
+-			 WDT_AXP_FIXED_ENABLE_BIT,
+-			 WDT_AXP_FIXED_ENABLE_BIT);
++	/* Fix the wdt and timer1 clock freqency to 25MHz */
++	val =3D WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
++	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
+=20
+ 	dev->clk_rate =3D clk_get_rate(dev->clk);
+ 	return 0;
+@@ -183,6 +188,10 @@ static int orion_wdt_ping(struct watchdog_device *wd=
+t_dev)
+ 	/* Reload watchdog duration */
+ 	writel(dev->clk_rate * wdt_dev->timeout,
+ 	       dev->reg + dev->data->wdt_counter_offset);
++	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
++		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
++		       dev->reg + TIMER1_VAL_OFF);
++
+ 	return 0;
  }
-+EXPORT_SYMBOL_GPL(kvm_arch_para_hints);
- 
- static uint32_t __init kvm_detect(void)
+=20
+@@ -194,13 +203,18 @@ static int armada375_start(struct watchdog_device *=
+wdt_dev)
+ 	/* Set watchdog duration */
+ 	writel(dev->clk_rate * wdt_dev->timeout,
+ 	       dev->reg + dev->data->wdt_counter_offset);
++	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
++		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
++		       dev->reg + TIMER1_VAL_OFF);
+=20
+ 	/* Clear the watchdog expiration bit */
+ 	atomic_io_modify(dev->reg + TIMER_A370_STATUS, WDT_A370_EXPIRED, 0);
+=20
+ 	/* Enable watchdog timer */
+-	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
+-						dev->data->wdt_enable_bit);
++	reg =3D dev->data->wdt_enable_bit;
++	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
++		reg |=3D TIMER1_ENABLE_BIT;
++	atomic_io_modify(dev->reg + TIMER_CTRL, reg, reg);
+=20
+ 	/* Enable reset on watchdog */
+ 	reg =3D readl(dev->rstout);
+@@ -277,7 +291,7 @@ static int orion_stop(struct watchdog_device *wdt_dev=
+)
+ static int armada375_stop(struct watchdog_device *wdt_dev)
  {
-diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-index 9ac093d..7aee38a 100644
---- a/drivers/cpuidle/cpuidle-haltpoll.c
-+++ b/drivers/cpuidle/cpuidle-haltpoll.c
-@@ -53,7 +53,8 @@ static int __init haltpoll_init(void)
- 
- 	cpuidle_poll_state_init(drv);
- 
--	if (!kvm_para_available())
-+	if (!kvm_para_available() ||
-+		!kvm_para_has_hint(KVM_HINTS_REALTIME))
- 		return 0;
- 
- 	ret = cpuidle_register(&haltpoll_driver, NULL);
--- 
-2.7.4
+ 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
+-	u32 reg;
++	u32 reg, mask;
+=20
+ 	/* Disable reset on watchdog */
+ 	atomic_io_modify(dev->rstout_mask, dev->data->rstout_mask_bit,
+@@ -287,7 +301,10 @@ static int armada375_stop(struct watchdog_device *wd=
+t_dev)
+ 	writel(reg, dev->rstout);
+=20
+ 	/* Disable watchdog timer */
+-	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
++	mask =3D dev->data->wdt_enable_bit;
++	if (wdt_dev->info->options & WDIOF_PRETIMEOUT)
++		mask &=3D ~TIMER1_ENABLE_BIT;
++	atomic_io_modify(dev->reg + TIMER_CTRL, mask, 0);
+=20
+ 	return 0;
+ }
+@@ -349,7 +366,7 @@ static unsigned int orion_wdt_get_timeleft(struct wat=
+chdog_device *wdt_dev)
+ 	return readl(dev->reg + dev->data->wdt_counter_offset) / dev->clk_rate;
+ }
+=20
+-static const struct watchdog_info orion_wdt_info =3D {
++static struct watchdog_info orion_wdt_info =3D {
+ 	.options =3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
+ 	.identity =3D "Orion Watchdog",
+ };
+@@ -368,6 +385,16 @@ static irqreturn_t orion_wdt_irq(int irq, void *devi=
+d)
+ 	return IRQ_HANDLED;
+ }
+=20
++static irqreturn_t orion_wdt_pre_irq(int irq, void *devid)
++{
++	struct orion_watchdog *dev =3D devid;
++
++	atomic_io_modify(dev->reg + TIMER_A370_STATUS,
++			 TIMER1_STATUS_BIT, 0);
++	watchdog_notify_pretimeout(&dev->wdt);
++	return IRQ_HANDLED;
++}
++
+ /*
+  * The original devicetree binding for this driver specified only
+  * one memory resource, so in order to keep DT backwards compatibility
+@@ -589,6 +616,18 @@ static int orion_wdt_probe(struct platform_device *p=
+dev)
+ 		}
+ 	}
+=20
++	irq =3D platform_get_irq(pdev, 1);
++	if (irq > 0) {
++		orion_wdt_info.options |=3D WDIOF_PRETIMEOUT;
++		ret =3D devm_request_irq(&pdev->dev, irq, orion_wdt_pre_irq,
++				       0, pdev->name, dev);
++		if (ret < 0) {
++			dev_err(&pdev->dev, "failed to request IRQ\n");
++			goto disable_clk;
++		}
++	}
++
++
+ 	watchdog_set_nowayout(&dev->wdt, nowayout);
+ 	ret =3D watchdog_register_device(&dev->wdt);
+ 	if (ret)
+--=20
+2.23.0
 
