@@ -2,55 +2,55 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B127C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4233C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 434392342A
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A47F2339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102667;
-	bh=DN0AQ5ZP7UkNa371gPSud2SGopdr6FMEecB5qk17XgY=;
+	s=default; t=1567102670;
+	bh=nP5kv1JKYorryJCXJOQKQYxTAfSHNsL1M5YLvCVaqgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AECZxux+Ul0FpWBu0qhFs+9rXQNHQ9ObMZBDe1OAJkC/xmwVv6zBs9thxbmk2uFKq
-	 naJ0bfYHd4mM1NHX5Y3ewHDClwzZ/m5qLd6xTmS2bMeBUEIQr8Ri31bcXa5yHNOLm9
-	 OwfL/2GQuEhIwWy3tWxEYZSYMFxdBcjedhRY4yOc=
+	b=SvbUjYBfXxxtD5iggY38lx8KKnzAoWZtOKTd7C7NqkxwhFz3Z3iR30o4o3zXoLois
+	 yTvGAgGgVfRausYhui5oop7nChKR3vm4WbWHPSYCKl7ZChdq0Iu3V4ecpoP3irhtUc
+	 VTBKUEnnSzFbVAMLyCm672nUOVBtpS2g+eJ4/MG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730196AbfH2SRq (ORCPT
+        id S1730225AbfH2SRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:17:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59742 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:17:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728744AbfH2SRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:17:31 -0400
+        id S1730123AbfH2SRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA0B02339E;
-        Thu, 29 Aug 2019 18:17:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99EF5233FF;
+        Thu, 29 Aug 2019 18:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102650;
-        bh=DN0AQ5ZP7UkNa371gPSud2SGopdr6FMEecB5qk17XgY=;
+        s=default; t=1567102661;
+        bh=nP5kv1JKYorryJCXJOQKQYxTAfSHNsL1M5YLvCVaqgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1o3gdIEhl9NTeQFtbllQg/X+fPF7Bulswz2Y+tEIdOIqR74EZfKenhBSIOBEF74jf
-         2kGBv09oSVAiiqhM3Js+STuuvmKjOvcjkNc9RYOOiDdvCeBlR5ZMQ1CqR9nnH3G9CQ
-         D2/m76OmyByy8rVXMWtbF0Fp4hJy0b/HvXfz9uls=
+        b=oB+UiqZZK2CONe+eS0EjYkep7bZkLt+SZSvTCt/E6F8h0E8LqicTOYMPQqwU9/PQq
+         B/PLrghbGaZSOFzc1mDzIh+UCE4OfiLIbI28OYWaVEcy9FuQgMAeX3E1l4I2QjWBV/
+         l74Slq3q7PFUnxU/om834pyItsSManylgYvxEzk8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 24/27] ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
-Date:   Thu, 29 Aug 2019 14:16:50 -0400
-Message-Id: <20190829181655.8741-24-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 02/16] net: tc35815: Explicitly check NET_IP_ALIGN is not zero in tc35815_rx
+Date:   Thu, 29 Aug 2019 14:17:20 -0400
+Message-Id: <20190829181736.9040-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829181655.8741-1-sashal@kernel.org>
-References: <20190829181655.8741-1-sashal@kernel.org>
+In-Reply-To: <20190829181736.9040-1-sashal@kernel.org>
+References: <20190829181736.9040-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,91 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <lhenriques@suse.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 86968ef21596515958d5f0a40233d02be78ecec0 ]
+[ Upstream commit 125b7e0949d4e72b15c2b1a1590f8cece985a918 ]
 
-Calling ceph_buffer_put() in __ceph_setxattr() may end up freeing the
-i_xattrs.prealloc_blob buffer while holding the i_ceph_lock.  This can be
-fixed by postponing the call until later, when the lock is released.
+clang warns:
 
-The following backtrace was triggered by fstests generic/117.
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: warning: use of logical
+'&&' with constant operand [-Wconstant-logical-operand]
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                  ^  ~~~~~~~~~~~~
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: note: use '&' for a
+bitwise operation
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                  ^~
+                                                  &
+drivers/net/ethernet/toshiba/tc35815.c:1507:30: note: remove constant to
+silence this warning
+                        if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+                                                 ~^~~~~~~~~~~~~~~
+1 warning generated.
 
-  BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
-  in_atomic(): 1, irqs_disabled(): 0, pid: 650, name: fsstress
-  3 locks held by fsstress/650:
-   #0: 00000000870a0fe8 (sb_writers#8){.+.+}, at: mnt_want_write+0x20/0x50
-   #1: 00000000ba0c4c74 (&type->i_mutex_dir_key#6){++++}, at: vfs_setxattr+0x55/0xa0
-   #2: 000000008dfbb3f2 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: __ceph_setxattr+0x297/0x810
-  CPU: 1 PID: 650 Comm: fsstress Not tainted 5.2.0+ #437
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
-  Call Trace:
-   dump_stack+0x67/0x90
-   ___might_sleep.cold+0x9f/0xb1
-   vfree+0x4b/0x60
-   ceph_buffer_release+0x1b/0x60
-   __ceph_setxattr+0x2b4/0x810
-   __vfs_setxattr+0x66/0x80
-   __vfs_setxattr_noperm+0x59/0xf0
-   vfs_setxattr+0x81/0xa0
-   setxattr+0x115/0x230
-   ? filename_lookup+0xc9/0x140
-   ? rcu_read_lock_sched_held+0x74/0x80
-   ? rcu_sync_lockdep_assert+0x2e/0x60
-   ? __sb_start_write+0x142/0x1a0
-   ? mnt_want_write+0x20/0x50
-   path_setxattr+0xba/0xd0
-   __x64_sys_lsetxattr+0x24/0x30
-   do_syscall_64+0x50/0x1c0
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7ff23514359a
+Explicitly check that NET_IP_ALIGN is not zero, which matches how this
+is checked in other parts of the tree. Because NET_IP_ALIGN is a build
+time constant, this check will be constant folded away during
+optimization.
 
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: 82a9928db560 ("tc35815: Enable StripCRC feature")
+Link: https://github.com/ClangBuiltLinux/linux/issues/608
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/xattr.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/toshiba/tc35815.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index 0376db8a74f85..932c6cdc22d66 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -955,6 +955,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
- 	struct ceph_inode_info *ci = ceph_inode(inode);
- 	struct ceph_mds_client *mdsc = ceph_sb_to_client(inode->i_sb)->mdsc;
- 	struct ceph_cap_flush *prealloc_cf = NULL;
-+	struct ceph_buffer *old_blob = NULL;
- 	int issued;
- 	int err;
- 	int dirty = 0;
-@@ -1023,13 +1024,15 @@ int __ceph_setxattr(struct inode *inode, const char *name,
- 		struct ceph_buffer *blob;
- 
- 		spin_unlock(&ci->i_ceph_lock);
--		dout(" preaallocating new blob size=%d\n", required_blob_size);
-+		ceph_buffer_put(old_blob); /* Shouldn't be required */
-+		dout(" pre-allocating new blob size=%d\n", required_blob_size);
- 		blob = ceph_buffer_new(required_blob_size, GFP_NOFS);
- 		if (!blob)
- 			goto do_sync_unlocked;
- 		spin_lock(&ci->i_ceph_lock);
-+		/* prealloc_blob can't be released while holding i_ceph_lock */
- 		if (ci->i_xattrs.prealloc_blob)
--			ceph_buffer_put(ci->i_xattrs.prealloc_blob);
-+			old_blob = ci->i_xattrs.prealloc_blob;
- 		ci->i_xattrs.prealloc_blob = blob;
- 		goto retry;
- 	}
-@@ -1045,6 +1048,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
- 	}
- 
- 	spin_unlock(&ci->i_ceph_lock);
-+	ceph_buffer_put(old_blob);
- 	if (lock_snap_rwsem)
- 		up_read(&mdsc->snap_rwsem);
- 	if (dirty)
+diff --git a/drivers/net/ethernet/toshiba/tc35815.c b/drivers/net/ethernet/toshiba/tc35815.c
+index 5b01b3fa9fec9..47ebac456ae57 100644
+--- a/drivers/net/ethernet/toshiba/tc35815.c
++++ b/drivers/net/ethernet/toshiba/tc35815.c
+@@ -1498,7 +1498,7 @@ tc35815_rx(struct net_device *dev, int limit)
+ 			pci_unmap_single(lp->pci_dev,
+ 					 lp->rx_skbs[cur_bd].skb_dma,
+ 					 RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
+-			if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
++			if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN != 0)
+ 				memmove(skb->data, skb->data - NET_IP_ALIGN,
+ 					pkt_len);
+ 			data = skb_put(skb, pkt_len);
 -- 
 2.20.1
 
