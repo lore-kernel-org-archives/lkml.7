@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF87C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945A3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 649AD20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F1C20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103246;
-	bh=daF/PX4Ijm80cFU8SbPUPm1tciP79fQ1UuLIBgd+6cQ=;
+	s=default; t=1567103251;
+	bh=T2htdwQXOeQ4/hkAuJA8LIvdZihWsSm1K99O882HxmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dIrVRQ4tOxep02cuxp2QqAKMdTMd5dCeJqQjo698wjPLI3u5AgShK7rZCmZwNui8Z
-	 TsmssRgYYdvkoscI5MuO2l3qppd/1IUR5ZDy6mbQQKFmmhc1K8y9CQxfpoC/RcS3Dv
-	 V5huRB/6cYIlle25RR4mZQgudetpWPMDZ7C6ZHRw=
+	b=nmRGMsfwTphYG6FijAa3cy63ZGS/DZymsAeygcrqtZN2hdBNOFy3DrWQkIQpwCRZZ
+	 xkc6PtCXAv61sDiXoerzq6on5peWyc6b4Q8qa7Mg/CGh8jbHFBNHpD4Lmo2VPM1BmF
+	 UMfMyIdXvu68l6/Xwrr/ISqoqy9jKLgyNmquEpLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbfH2SPe (ORCPT
+        id S1729533AbfH2S1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:15:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57230 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:27:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729307AbfH2SPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:15:30 -0400
+        id S1728460AbfH2SPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:15:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09DAC23403;
-        Thu, 29 Aug 2019 18:15:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 473922341C;
+        Thu, 29 Aug 2019 18:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102529;
-        bh=daF/PX4Ijm80cFU8SbPUPm1tciP79fQ1UuLIBgd+6cQ=;
+        s=default; t=1567102531;
+        bh=T2htdwQXOeQ4/hkAuJA8LIvdZihWsSm1K99O882HxmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ekIR7PTNPIiLkcRN2lZpzqWOCTeHU+qlFkpxr2MdvtnRkJ6pn+/Nv/GQec1BcJWip
-         7yz0/Nn48qGiWXJxEscfPPH2sFkaJqQhSsXZHjNvL6i6qB1490zz0jq/mwEFD37Pgc
-         bJvC2HxvjJ3ARCH+/5yVhP9j76q5GRqLU9Z6YU+o=
+        b=a2jiXR8jlHeqzkEgGN6knTnLQUyQDC69IKxZ/6uhjlI2/10CiM4LpEZK/1s9tommn
+         esOmX9pMRhxeY+fT4b+A05ziLFPNYiryqp02usLC3w561eK9NwACwRkx9KfxXYNOQT
+         86MCP39uHQmHjDF53SJCSJinGvECRf00p/7YqRus=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Nicolai=20H=C3=A4hnle?= <nicolai.haehnle@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 65/76] drm/amdgpu: prevent memory leaks in AMDGPU_CS ioctl
-Date:   Thu, 29 Aug 2019 14:13:00 -0400
-Message-Id: <20190829181311.7562-65-sashal@kernel.org>
+Cc:     Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 66/76] ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
+Date:   Thu, 29 Aug 2019 14:13:01 -0400
+Message-Id: <20190829181311.7562-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,56 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolai Hähnle <nicolai.haehnle@amd.com>
+From: Luis Henriques <lhenriques@suse.com>
 
-[ Upstream commit 1a701ea924815b0518733aa8d5d05c1f6fa87062 ]
+[ Upstream commit 86968ef21596515958d5f0a40233d02be78ecec0 ]
 
-Error out if the AMDGPU_CS ioctl is called with multiple SYNCOBJ_OUT and/or
-TIMELINE_SIGNAL chunks, since otherwise the last chunk wins while the
-allocated array as well as the reference counts of sync objects are leaked.
+Calling ceph_buffer_put() in __ceph_setxattr() may end up freeing the
+i_xattrs.prealloc_blob buffer while holding the i_ceph_lock.  This can be
+fixed by postponing the call until later, when the lock is released.
 
-Signed-off-by: Nicolai Hähnle <nicolai.haehnle@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+The following backtrace was triggered by fstests generic/117.
+
+  BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
+  in_atomic(): 1, irqs_disabled(): 0, pid: 650, name: fsstress
+  3 locks held by fsstress/650:
+   #0: 00000000870a0fe8 (sb_writers#8){.+.+}, at: mnt_want_write+0x20/0x50
+   #1: 00000000ba0c4c74 (&type->i_mutex_dir_key#6){++++}, at: vfs_setxattr+0x55/0xa0
+   #2: 000000008dfbb3f2 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: __ceph_setxattr+0x297/0x810
+  CPU: 1 PID: 650 Comm: fsstress Not tainted 5.2.0+ #437
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
+  Call Trace:
+   dump_stack+0x67/0x90
+   ___might_sleep.cold+0x9f/0xb1
+   vfree+0x4b/0x60
+   ceph_buffer_release+0x1b/0x60
+   __ceph_setxattr+0x2b4/0x810
+   __vfs_setxattr+0x66/0x80
+   __vfs_setxattr_noperm+0x59/0xf0
+   vfs_setxattr+0x81/0xa0
+   setxattr+0x115/0x230
+   ? filename_lookup+0xc9/0x140
+   ? rcu_read_lock_sched_held+0x74/0x80
+   ? rcu_sync_lockdep_assert+0x2e/0x60
+   ? __sb_start_write+0x142/0x1a0
+   ? mnt_want_write+0x20/0x50
+   path_setxattr+0xba/0xd0
+   __x64_sys_lsetxattr+0x24/0x30
+   do_syscall_64+0x50/0x1c0
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x7ff23514359a
+
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ fs/ceph/xattr.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-index fe028561dc0e6..bc40d6eabce7d 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-@@ -1192,6 +1192,9 @@ static int amdgpu_cs_process_syncobj_out_dep(struct amdgpu_cs_parser *p,
- 	num_deps = chunk->length_dw * 4 /
- 		sizeof(struct drm_amdgpu_cs_chunk_sem);
+diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+index 0619adbcbe14c..8382299fc2d84 100644
+--- a/fs/ceph/xattr.c
++++ b/fs/ceph/xattr.c
+@@ -1028,6 +1028,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
+ 	struct ceph_inode_info *ci = ceph_inode(inode);
+ 	struct ceph_mds_client *mdsc = ceph_sb_to_client(inode->i_sb)->mdsc;
+ 	struct ceph_cap_flush *prealloc_cf = NULL;
++	struct ceph_buffer *old_blob = NULL;
+ 	int issued;
+ 	int err;
+ 	int dirty = 0;
+@@ -1101,13 +1102,15 @@ int __ceph_setxattr(struct inode *inode, const char *name,
+ 		struct ceph_buffer *blob;
  
-+	if (p->post_deps)
-+		return -EINVAL;
-+
- 	p->post_deps = kmalloc_array(num_deps, sizeof(*p->post_deps),
- 				     GFP_KERNEL);
- 	p->num_post_deps = 0;
-@@ -1215,8 +1218,7 @@ static int amdgpu_cs_process_syncobj_out_dep(struct amdgpu_cs_parser *p,
+ 		spin_unlock(&ci->i_ceph_lock);
+-		dout(" preaallocating new blob size=%d\n", required_blob_size);
++		ceph_buffer_put(old_blob); /* Shouldn't be required */
++		dout(" pre-allocating new blob size=%d\n", required_blob_size);
+ 		blob = ceph_buffer_new(required_blob_size, GFP_NOFS);
+ 		if (!blob)
+ 			goto do_sync_unlocked;
+ 		spin_lock(&ci->i_ceph_lock);
++		/* prealloc_blob can't be released while holding i_ceph_lock */
+ 		if (ci->i_xattrs.prealloc_blob)
+-			ceph_buffer_put(ci->i_xattrs.prealloc_blob);
++			old_blob = ci->i_xattrs.prealloc_blob;
+ 		ci->i_xattrs.prealloc_blob = blob;
+ 		goto retry;
+ 	}
+@@ -1123,6 +1126,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
+ 	}
  
- 
- static int amdgpu_cs_process_syncobj_timeline_out_dep(struct amdgpu_cs_parser *p,
--						      struct amdgpu_cs_chunk
--						      *chunk)
-+						      struct amdgpu_cs_chunk *chunk)
- {
- 	struct drm_amdgpu_cs_chunk_syncobj *syncobj_deps;
- 	unsigned num_deps;
-@@ -1226,6 +1228,9 @@ static int amdgpu_cs_process_syncobj_timeline_out_dep(struct amdgpu_cs_parser *p
- 	num_deps = chunk->length_dw * 4 /
- 		sizeof(struct drm_amdgpu_cs_chunk_syncobj);
- 
-+	if (p->post_deps)
-+		return -EINVAL;
-+
- 	p->post_deps = kmalloc_array(num_deps, sizeof(*p->post_deps),
- 				     GFP_KERNEL);
- 	p->num_post_deps = 0;
+ 	spin_unlock(&ci->i_ceph_lock);
++	ceph_buffer_put(old_blob);
+ 	if (lock_snap_rwsem)
+ 		up_read(&mdsc->snap_rwsem);
+ 	if (dirty)
 -- 
 2.20.1
 
