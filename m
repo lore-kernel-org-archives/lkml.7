@@ -2,81 +2,87 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AFEC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F239C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65ED72077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2EE122CED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=volatile.bz header.i=@volatile.bz header.b="fs9EH6dX"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Br2XVbDp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfH2Ogg (ORCPT
+        id S1727626AbfH2Ohp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:36:36 -0400
-Received: from mx1.volatile.bz ([185.163.46.97]:53822 "EHLO mx1.volatile.bz"
+        Thu, 29 Aug 2019 10:37:45 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40880 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726852AbfH2Ogg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:36:36 -0400
-Received: from thedarkness.local (unknown [IPv6:2600:6c5d:4200:1e2a:a077:9bc9:2f0:8eb9])
-        by mx1.volatile.bz (Postfix) with ESMTPSA id 2E8E32F44;
-        Thu, 29 Aug 2019 14:36:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=volatile.bz;
-        s=default; t=1567089393;
-        bh=dIygAd+GskXlJd02wsFKTXP3LiBbYusrlSD4b5VFWc4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=fs9EH6dXvM3d12xH4cTty5GccnQcwDxZti5Ktd3Qshd982Aw7CBfXQ2KUH6JHp4Zg
-         QBmxZFX2t/D34+0MZAZwyyqVpDOseNtgLodKzrtzOd2mSSPDitw/sylEUqMa3sDi1k
-         9J4PJuFYlxq8Q5glBMt32VbXPeaeUX61ILdJKk5w=
-Date:   Thu, 29 Aug 2019 10:36:28 -0400
-From:   Dark <dark@volatile.bz>
-To:     Richard Weinberger <richard.weinberger@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-um@lists.infradead.org
-Subject: Re: [PATCH] um: Rewrite host RNG driver.
-Message-ID: <20190829103628.61953f50@thedarkness.local>
-In-Reply-To: <CAFLxGvyiviQxr_Bj57ibTU4DQ1H5wQC4DE5DNFBtAFoohcgbsg@mail.gmail.com>
-References: <20190828204609.02a7ff70@TheDarkness>
- <CAFLxGvyiviQxr_Bj57ibTU4DQ1H5wQC4DE5DNFBtAFoohcgbsg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726739AbfH2Ohp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 10:37:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=gCK1HkDqdyDaXZixXGrAX2dLIZ8vXSbAgDoN62z26bA=; b=Br2XVbDpw6aEsSRl4bc/3081w6
+        wIPQVvk/pBq26Uvea11W62nFlT6Viszpg+Joh8hoRRFUhk0+RSzg2w7noy72xtHf6Vmd2cphZvzG7
+        /miripZdS0WbMqpg8y3PQrxYmj1OpXur/acxT28n4vhp5nwuyxVfqTmiMdmi7uFJ6ygc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1i3LYK-0002lb-AU; Thu, 29 Aug 2019 16:37:32 +0200
+Date:   Thu, 29 Aug 2019 16:37:32 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        davem@davemloft.net, allan.nielsen@microchip.com,
+        ivecera@redhat.com, f.fainelli@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
+Message-ID: <20190829143732.GB17864@lunn.ch>
+References: <1567070549-29255-1-git-send-email-horatiu.vultur@microchip.com>
+ <1567070549-29255-2-git-send-email-horatiu.vultur@microchip.com>
+ <20190829095100.GH2312@nanopsycho>
+ <20190829132611.GC6998@lunn.ch>
+ <20190829134901.GJ2312@nanopsycho>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829134901.GJ2312@nanopsycho>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 29 Aug 2019 15:26:24 +0200, Richard Weinberger <richard.weinberger@gmail.com> wrote: 
-> So, you removed -EAGAIN handling, made everything synchronous,
-> and changed the interface.t
-> I'm not sure if this really a much better option.
+> Wait, I believe there has been some misundestanding. Promisc mode is NOT
+> about getting packets to the cpu. It's about setting hw filters in a way
+> that no rx packet is dropped.
+> 
+> If you want to get packets from the hw forwarding dataplane to cpu, you
+> should not use promisc mode for that. That would be incorrect.
 
-I should have been more clear here that I'm using the interfaces 
-provided by `drivers/char/hw_random/core.c` for consistency with the
-other hardware RNG drivers and to avoid reimplementing stuff that's 
-already there. 
+Hi Jiri
 
-It might be a bit hard to see in the diff, but I pass the file 
-descriptor to `os_set_fd_async()` to prevent it from blocking.
+I'm not sure a wireshark/tcpdump/pcap user would agree with you. They
+want to see packets on an interface, so they use these tools. The fact
+that the interface is a switch interface should not matter. The
+switchdev model is that we try to hide away the interface happens to
+be on a switch, you can just use it as normal. So why should promisc
+mode not work as normal?
+ 
+> If you want to get packets from the hw forwarding dataplane to cpu, you
+> should use tc trap action. It is there exactly for this purpose.
 
-For the -EAGAIN handling, I'm passing it onto the caller. Since you 
-mentioned it, It would be better to handle it in the driver itself 
-so I'll update the patch to address that.
+Do you really think a wireshark/tcpdump/pcap user should need to use
+tc trap for the special case the interface is a switch port? Doesn't that
+break the switchdev model?
 
-> Rewriting the driver in a modern manner is a good thing, but throwing the
-> old one way with a little hand weaving just because of a unspecified issue
-> is a little harsh.
-> Can you at lest provide more infos what problem you're facing with the
-> old driver?
+tc trap is more about fine grained selection of packets. Also, it
+seems like trapped packets are not forwarded, which is not what you
+would expect from wireshark/tcpdump/pcap.
 
-Most of it boiled down to it silently breaking if /dev/random on the 
-host were to block for any reason, and there was the userspace tool
-requirement to properly make use of it. With that said, the interface 
-was also inconsistent with the other hardware RNG drivers which would 
-require a rewrite to address anyway.
+      Andrew
