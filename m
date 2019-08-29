@@ -2,258 +2,86 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A23C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FCEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8196521874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7256D205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:53:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a250Zfx3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfH2Xtr (ORCPT
+        id S1727066AbfH2Xw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 19:49:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35588 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbfH2Xtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 19:49:47 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 73242308218D;
-        Thu, 29 Aug 2019 23:49:46 +0000 (UTC)
-Received: from [10.10.121.225] (ovpn-121-225.rdu2.redhat.com [10.10.121.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6BFEE5D9CA;
-        Thu, 29 Aug 2019 23:49:45 +0000 (UTC)
-Subject: Re: [PATCH 2/2 v3] nbd: fix possible page fault for nbd disk
-To:     xiubli@redhat.com, josef@toxicpanda.com, axboe@kernel.dk
-References: <20190822075923.11996-1-xiubli@redhat.com>
- <20190822075923.11996-3-xiubli@redhat.com>
-Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
-        linux-kernel@vger.kernel.org
-From:   Mike Christie <mchristi@redhat.com>
-Message-ID: <5D686498.5090602@redhat.com>
-Date:   Thu, 29 Aug 2019 18:49:44 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.6.0
+        Thu, 29 Aug 2019 19:52:59 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43784 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbfH2Xw7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 19:52:59 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k3so2453173pgb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 16:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6oTB1dU146xuL9pK4Gwg180KU60SGC31jIorRGs7ptk=;
+        b=a250Zfx3hOfWzOHrL5E2dEv/6jxRZA+JbksFHHqddgm0GXvE1i4OV0Ui/sUUwWq9Qz
+         4sKMyiAb+MJUEMoErBcXFPrcnPtDT2GaH8lfEelAqVK5nG8PlK407kkkx6hvjFc6VoV9
+         U33PcQmOIjjinVTDjaCccNNDE79eJ2UxQkEfA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6oTB1dU146xuL9pK4Gwg180KU60SGC31jIorRGs7ptk=;
+        b=NHSxRhCg0C5J4mGbagLiKZYrWR4/s2fLsVO0O1HAYNL8SJQH/K0Ve9tRSeF0SWp01K
+         w7ILi6ERKc9ONDamoCv0tFhe4IdFp4OQQkBW5X9QpMJVLtBPgfxNEBhN4nvlovQtasAf
+         e972j+IDAIhOuDwkU0Ndh5qeLsth8kUJ/XFLyed3DZXvhvwkNkUsDagBs/gVxFbK5dIe
+         iHJEV+aLx2Tgqebmz1hVmQ0NOQj/Xwrz3wyx/vEQYFwXGutOnWyyjB2fVVLbR9Knq+SC
+         h2PoxBcutNuMtvPOsOI+sVDroC+CMjQwkHDg7uW3yv9bwV1p3TxyO8aLJ7ED8xQ0pwyf
+         ugWg==
+X-Gm-Message-State: APjAAAXS3YAqu4iwqawWwbXeaEAkLo4lpSKYMsbpldvojMfLO5D+Ozx4
+        Tx0qEQq8emcqgHjkxJnIxbRf8Q==
+X-Google-Smtp-Source: APXvYqwiOx/qe9a/xRLREIyTn3MhbFX5uD0lqjU79yaf26iwaXo0Rf6U2kBqJTeyMxYK5IrjN8j1aw==
+X-Received: by 2002:a62:1a45:: with SMTP id a66mr15134237pfa.142.1567122778338;
+        Thu, 29 Aug 2019 16:52:58 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v189sm4473046pfv.176.2019.08.29.16.52.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 16:52:57 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 16:52:56 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 01/12] rdmacg: Replace strncmp with str_has_prefix
+Message-ID: <201908291652.46E2D65@keescook>
+References: <20190729151346.9280-1-hslester96@gmail.com>
+ <201907292117.DA40CA7D@keescook>
+ <CANhBUQ3V2A-TBVizVh+eMLSi5Gzw5sMBY7C-0a8=-z15qyQ75w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190822075923.11996-3-xiubli@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 29 Aug 2019 23:49:46 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANhBUQ3V2A-TBVizVh+eMLSi5Gzw5sMBY7C-0a8=-z15qyQ75w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/22/2019 02:59 AM, xiubli@redhat.com wrote:
-> From: Xiubo Li <xiubli@redhat.com>
-> 
-> When the NBD_CFLAG_DESTROY_ON_DISCONNECT flag is set and at the same
-> time when the socket is closed due to the server daemon is restarted,
-> just before the last DISCONNET is totally done if we start a new connection
-> by using the old nbd_index, there will be crashing randomly, like:
-> 
-> <3>[  110.151949] block nbd1: Receive control failed (result -32)
-> <1>[  110.152024] BUG: unable to handle page fault for address: 0000058000000840
-> <1>[  110.152063] #PF: supervisor read access in kernel mode
-> <1>[  110.152083] #PF: error_code(0x0000) - not-present page
-> <6>[  110.152094] PGD 0 P4D 0
-> <4>[  110.152106] Oops: 0000 [#1] SMP PTI
-> <4>[  110.152120] CPU: 0 PID: 6698 Comm: kworker/u5:1 Kdump: loaded Not tainted 5.3.0-rc4+ #2
-> <4>[  110.152136] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-> <4>[  110.152166] Workqueue: knbd-recv recv_work [nbd]
-> <4>[  110.152187] RIP: 0010:__dev_printk+0xd/0x67
-> <4>[  110.152206] Code: 10 e8 c5 fd ff ff 48 8b 4c 24 18 65 48 33 0c 25 28 00 [...]
-> <4>[  110.152244] RSP: 0018:ffffa41581f13d18 EFLAGS: 00010206
-> <4>[  110.152256] RAX: ffffa41581f13d30 RBX: ffff96dd7374e900 RCX: 0000000000000000
-> <4>[  110.152271] RDX: ffffa41581f13d20 RSI: 00000580000007f0 RDI: ffffffff970ec24f
-> <4>[  110.152285] RBP: ffffa41581f13d80 R08: ffff96dd7fc17908 R09: 0000000000002e56
-> <4>[  110.152299] R10: ffffffff970ec24f R11: 0000000000000003 R12: ffff96dd7374e900
-> <4>[  110.152313] R13: 0000000000000000 R14: ffff96dd7374e9d8 R15: ffff96dd6e3b02c8
-> <4>[  110.152329] FS:  0000000000000000(0000) GS:ffff96dd7fc00000(0000) knlGS:0000000000000000
-> <4>[  110.152362] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> <4>[  110.152383] CR2: 0000058000000840 CR3: 0000000067cc6002 CR4: 00000000001606f0
-> <4>[  110.152401] Call Trace:
-> <4>[  110.152422]  _dev_err+0x6c/0x83
-> <4>[  110.152435]  nbd_read_stat.cold+0xda/0x578 [nbd]
-> <4>[  110.152448]  ? __switch_to_asm+0x34/0x70
-> <4>[  110.152468]  ? __switch_to_asm+0x40/0x70
-> <4>[  110.152478]  ? __switch_to_asm+0x34/0x70
-> <4>[  110.152491]  ? __switch_to_asm+0x40/0x70
-> <4>[  110.152501]  ? __switch_to_asm+0x34/0x70
-> <4>[  110.152511]  ? __switch_to_asm+0x40/0x70
-> <4>[  110.152522]  ? __switch_to_asm+0x34/0x70
-> <4>[  110.152533]  recv_work+0x35/0x9e [nbd]
-> <4>[  110.152547]  process_one_work+0x19d/0x340
-> <4>[  110.152558]  worker_thread+0x50/0x3b0
-> <4>[  110.152568]  kthread+0xfb/0x130
-> <4>[  110.152577]  ? process_one_work+0x340/0x340
-> <4>[  110.152609]  ? kthread_park+0x80/0x80
-> <4>[  110.152637]  ret_from_fork+0x35/0x40
-> 
-> This is very easy to reproduce by running the nbd-runner.
-> 
-> Signed-off-by: Xiubo Li <xiubli@redhat.com>
-> ---
->  drivers/block/nbd.c | 36 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 35 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-> index 8c2f17b99224..a25b59725c6e 100644
-> --- a/drivers/block/nbd.c
-> +++ b/drivers/block/nbd.c
-> @@ -26,6 +26,7 @@
->  #include <linux/ioctl.h>
->  #include <linux/mutex.h>
->  #include <linux/compiler.h>
-> +#include <linux/completion.h>
->  #include <linux/err.h>
->  #include <linux/kernel.h>
->  #include <linux/slab.h>
-> @@ -80,6 +81,9 @@ struct link_dead_args {
->  #define NBD_RT_DESTROY_ON_DISCONNECT	6
->  #define NBD_RT_DISCONNECT_ON_CLOSE	7
->  
-> +#define NBD_DESTROY_ON_DISCONNECT	0
-> +#define NBD_DISCONNECT_REQUESTED	1
-> +
->  struct nbd_config {
->  	u32 flags;
->  	unsigned long runtime_flags;
-> @@ -112,6 +116,9 @@ struct nbd_device {
->  	struct list_head list;
->  	struct task_struct *task_recv;
->  	struct task_struct *task_setup;
-> +
-> +	struct completion destroy_complete;
-> +	unsigned long flags;
->  };
->  
->  #define NBD_CMD_REQUEUED	1
-> @@ -222,6 +229,16 @@ static void nbd_dev_remove(struct nbd_device *nbd)
->  		disk->private_data = NULL;
->  		put_disk(disk);
->  	}
-> +
-> +	/*
-> +	 * Place this in the last just before the nbd is freed to
-> +	 * make sure that the disk and the related kobject are also
-> +	 * totally removed to avoid duplicate creation of the same
-> +	 * one.
-> +	 */
-> +	if (test_bit(NBD_DESTROY_ON_DISCONNECT, &nbd->flags))
-> +		complete(&nbd->destroy_complete);
-> +
->  	kfree(nbd);
->  }
->  
-> @@ -230,8 +247,8 @@ static void nbd_put(struct nbd_device *nbd)
->  	if (refcount_dec_and_mutex_lock(&nbd->refs,
->  					&nbd_index_mutex)) {
->  		idr_remove(&nbd_index_idr, nbd->index);
-> -		mutex_unlock(&nbd_index_mutex);
->  		nbd_dev_remove(nbd);
-> +		mutex_unlock(&nbd_index_mutex);
->  	}
->  }
->  
-> @@ -1103,6 +1120,7 @@ static int nbd_disconnect(struct nbd_device *nbd)
->  
->  	dev_info(disk_to_dev(nbd->disk), "NBD_DISCONNECT\n");
->  	set_bit(NBD_RT_DISCONNECT_REQUESTED, &config->runtime_flags);
-> +	set_bit(NBD_DISCONNECT_REQUESTED, &nbd->flags);
->  	send_disconnects(nbd);
->  	return 0;
->  }
-> @@ -1596,6 +1614,7 @@ static int nbd_dev_add(int index)
->  	nbd->tag_set.flags = BLK_MQ_F_SHOULD_MERGE |
->  		BLK_MQ_F_BLOCKING;
->  	nbd->tag_set.driver_data = nbd;
-> +	init_completion(&nbd->destroy_complete);
->  
->  	err = blk_mq_alloc_tag_set(&nbd->tag_set);
->  	if (err)
-> @@ -1761,6 +1780,16 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
->  		mutex_unlock(&nbd_index_mutex);
->  		return -EINVAL;
->  	}
-> +
-> +	if (test_bit(NBD_DESTROY_ON_DISCONNECT, &nbd->flags) &&
+On Tue, Jul 30, 2019 at 02:39:40PM +0800, Chuhong Yuan wrote:
+> I think with the help of Coccinelle script, all strncmp(str, const, len)
+> can be replaced and these problems will be eliminated. :)
 
-Why does this have to be set? If this is not set would you end up
-hitting the config_refs check:
+Hi! Just pinging this thread again. Any progress on this conversion?
 
-if (refcount_read(&nbd->config_refs)) {
+Thanks!
 
-and possibly returning failure?
-
-If you moved the complete() to nbd_config_put would it work if this bit
-was set or not?
-
-
-> +	    test_bit(NBD_DISCONNECT_REQUESTED, &nbd->flags)) {
-> +		mutex_unlock(&nbd_index_mutex);
-> +
-> +		/* Wait untill the recv_work exit */
-
-If that is all you need we could do a flush_workqueue(nbd->recv_workq)
-(you would need Jens's for next branch which has some work queue changes
-in nbd).
-
-I think that might be too messy with how we do the puts for the
-nbd_device and config and the locking though.
-
-
-> +		wait_for_completion(&nbd->destroy_complete);
-
-The completion is allocated as part of the nbd device struct. Right
-after the other thread does a complete() we will free the nbd device
-struct, and we could still access the destroy_complete completion in
-this thread in wait_for_completion.
-
-You would want to do DECLARE_COMPLETION_ONSTACK in this function, make
-destroy_complete a pointer and set the destroy_complete pointer to the
-completion declared in this function.
-
-In nbd_dev_remove you would then just check if destroy_complete is set
-to a non-NULL pointer.
-
-
-
-
-> +		goto again;
-> +	}
-> +
->  	if (!refcount_inc_not_zero(&nbd->refs)) {
->  		mutex_unlock(&nbd_index_mutex);
->  		if (index == -1)
-> @@ -1817,7 +1846,10 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
->  		if (flags & NBD_CFLAG_DESTROY_ON_DISCONNECT) {
->  			set_bit(NBD_RT_DESTROY_ON_DISCONNECT,
->  				&config->runtime_flags);
-> +			set_bit(NBD_DESTROY_ON_DISCONNECT, &nbd->flags);
->  			put_dev = true;
-> +		} else {
-> +			clear_bit(NBD_DESTROY_ON_DISCONNECT, &nbd->flags);
->  		}
->  		if (flags & NBD_CFLAG_DISCONNECT_ON_CLOSE) {
->  			set_bit(NBD_RT_DISCONNECT_ON_CLOSE,
-> @@ -1987,10 +2019,12 @@ static int nbd_genl_reconfigure(struct sk_buff *skb, struct genl_info *info)
->  			if (!test_and_set_bit(NBD_RT_DESTROY_ON_DISCONNECT,
->  					      &config->runtime_flags))
->  				put_dev = true;
-> +			set_bit(NBD_DESTROY_ON_DISCONNECT, &nbd->flags);
->  		} else {
->  			if (test_and_clear_bit(NBD_RT_DESTROY_ON_DISCONNECT,
->  					       &config->runtime_flags))
->  				refcount_inc(&nbd->refs);
-> +			clear_bit(NBD_DESTROY_ON_DISCONNECT, &nbd->flags);
->  		}
->  
->  		if (flags & NBD_CFLAG_DISCONNECT_ON_CLOSE) {
-> 
-
+-- 
+Kees Cook
