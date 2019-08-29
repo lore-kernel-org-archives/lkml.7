@@ -2,106 +2,164 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9D0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA4BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3C5205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B3E21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:37:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NuoCifD9";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ONmK8JYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfH2Sg7 (ORCPT
+        id S1728425AbfH2Shn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:36:59 -0400
-Received: from hera.iit.uni-miskolc.hu ([193.6.5.4]:38412 "EHLO
-        hera.iit.uni-miskolc.hu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfH2Sg6 (ORCPT
+        Thu, 29 Aug 2019 14:37:43 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:38144 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727899AbfH2Shn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:36:58 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by hera.iit.uni-miskolc.hu (Postfix) with ESMTP id 5505A12E;
-        Thu, 29 Aug 2019 20:36:55 +0200 (CEST)
-X-Virus-Scanned: Kamavis at iit.uni-miskolc.hu
-Received: from hera.iit.uni-miskolc.hu ([127.0.0.1])
-        by localhost (hera.iit.uni-miskolc.hu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id RI4GZN5MKayl; Thu, 29 Aug 2019 20:36:48 +0200 (CEST)
-Received: from titan.hitronhub.home (unknown [IPv6:2a02:8109:a180:54c:226:9eff:fe30:2af8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 29 Aug 2019 14:37:43 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C49C16919A; Thu, 29 Aug 2019 18:12:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567103861;
+        bh=MUMclASLiTgy4Lbihfd3RsX39V5B/DtoaCtXU9g4+3E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NuoCifD9h0BRcu25r6h4B4ttH3U/aBPEIGWMmHlBatc/4wwSXCnrlvoMSRt+jkbSd
+         cPtucwHlcdz6nR+EoWaHBake5vl9rBx0Ipf8L/HXGGpZRgcPyKw8yT0HMICWpJt0/w
+         tGIWZYQ4tnhUswfuBIQHqSdUT7w6GSlx84AtBUGs=
+Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: szucst@iit.uni-miskolc.hu)
-        by hera.iit.uni-miskolc.hu (Postfix) with ESMTPSA id E4599132;
-        Thu, 29 Aug 2019 20:36:43 +0200 (CEST)
-From:   =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org,
-        =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
-Subject: [PATCH v2] mmc: sdhi: fill in actual_clock
-Date:   Thu, 29 Aug 2019 20:36:34 +0200
-Message-Id: <20190829183634.3376-1-tszucs@protonmail.ch>
-X-Mailer: git-send-email 2.11.0
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C399D68974;
+        Thu, 29 Aug 2019 18:12:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567102344;
+        bh=MUMclASLiTgy4Lbihfd3RsX39V5B/DtoaCtXU9g4+3E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ONmK8JYiPgFpRzLr6v1t48svp5CLbD6iVIJE7nbQEMVc6GsQA0Jn76GnNnP9CX2Fv
+         77Tt4a+QS5qKLwGXGRNcv6LKke5h93nBQkvR5XvtygBn+Zl9fOF4v6j6UGlmeJ9LF/
+         EKcHw4i1QX5J9ESTQ4NsCq4k/QqhhwwogxeuljEU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C399D68974
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com,
+        linus.walleij@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
+        linux-gpio@vger.kernel.org, rnayak@codeaurora.org
+Subject: [PATCH RFC 07/14] genirq: Introduce irq_chip_get/set_parent_state calls
+Date:   Thu, 29 Aug 2019 12:11:56 -0600
+Message-Id: <20190829181203.2660-8-ilina@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190829181203.2660-1-ilina@codeaurora.org>
+References: <20190829181203.2660-1-ilina@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Save set clock in mmc_host actual_clock enabling exporting it via debugfs.
-This will indicate the precise SD clock in I/O settings rather than only the
-sometimes misleading requested clock.
+From: Maulik Shah <mkshah@codeaurora.org>
 
-Signed-off-by: Tamás Szűcs <tszucs@protonmail.ch>
+On certain QTI chipsets some GPIOs are direct-connect interrupts
+to the GIC.
+
+Even when GPIOs are not used for interrupt generation and interrupt
+line is disabled, it does not prevent interrupt to get pending at
+GIC_ISPEND. When drivers call enable_irq unwanted interrupt occures.
+
+Introduce irq_chip_get/set_parent_state calls to clear pending irq
+which can get called within irq_enable of child irq chip to clear
+any pending irq before enabling.
+
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 ---
- drivers/mmc/host/renesas_sdhi_core.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ include/linux/irq.h |  6 ++++++
+ kernel/irq/chip.c   | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
 
-diff --git a/drivers/mmc/host/renesas_sdhi_core.c b/drivers/mmc/host/renesas_sdhi_core.c
-index 64d3b5fb7fe5..4c9774dbcfc1 100644
---- a/drivers/mmc/host/renesas_sdhi_core.c
-+++ b/drivers/mmc/host/renesas_sdhi_core.c
-@@ -124,7 +124,7 @@ static unsigned int renesas_sdhi_clk_update(struct tmio_mmc_host *host,
- {
- 	struct renesas_sdhi *priv = host_to_priv(host);
- 	unsigned int freq, diff, best_freq = 0, diff_min = ~0;
--	int i, ret;
-+	int i;
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index fb301cf29148..7853eb9301f2 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -610,6 +610,12 @@ extern int irq_chip_pm_put(struct irq_data *data);
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+ extern void handle_fasteoi_ack_irq(struct irq_desc *desc);
+ extern void handle_fasteoi_mask_irq(struct irq_desc *desc);
++extern int irq_chip_set_parent_state(struct irq_data *data,
++				     enum irqchip_irq_state which,
++				     bool val);
++extern int irq_chip_get_parent_state(struct irq_data *data,
++				     enum irqchip_irq_state which,
++				     bool *state);
+ extern void irq_chip_enable_parent(struct irq_data *data);
+ extern void irq_chip_disable_parent(struct irq_data *data);
+ extern void irq_chip_ack_parent(struct irq_data *data);
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index b76703b2c0af..6bb5b22bb0a7 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -1297,6 +1297,50 @@ EXPORT_SYMBOL_GPL(handle_fasteoi_mask_irq);
  
- 	/* tested only on R-Car Gen2+ currently; may work for others */
- 	if (!(host->pdata->flags & TMIO_MMC_MIN_RCAR2))
-@@ -153,9 +153,9 @@ static unsigned int renesas_sdhi_clk_update(struct tmio_mmc_host *host,
- 		}
- 	}
+ #endif /* CONFIG_IRQ_FASTEOI_HIERARCHY_HANDLERS */
  
--	ret = clk_set_rate(priv->clk, best_freq);
-+	clk_set_rate(priv->clk, best_freq);
- 
--	return ret == 0 ? best_freq : clk_get_rate(priv->clk);
-+	return clk_get_rate(priv->clk);
- }
- 
- static void renesas_sdhi_set_clock(struct tmio_mmc_host *host,
-@@ -166,10 +166,13 @@ static void renesas_sdhi_set_clock(struct tmio_mmc_host *host,
- 	sd_ctrl_write16(host, CTL_SD_CARD_CLK_CTL, ~CLK_CTL_SCLKEN &
- 		sd_ctrl_read16(host, CTL_SD_CARD_CLK_CTL));
- 
--	if (new_clock == 0)
-+	if (new_clock == 0) {
-+		host->mmc->actual_clock = 0;
- 		goto out;
-+	}
- 
--	clock = renesas_sdhi_clk_update(host, new_clock) / 512;
-+	host->mmc->actual_clock = renesas_sdhi_clk_update(host, new_clock);
-+	clock = host->mmc->actual_clock / 512;
- 
- 	for (clk = 0x80000080; new_clock >= (clock << 1); clk >>= 1)
- 		clock <<= 1;
++/**
++ *	irq_chip_set_parent_state - set the state of a parent interrupt.
++ *	@data: Pointer to interrupt specific data
++ *	@which: State to be restored (one of IRQCHIP_STATE_*)
++ *	@val: Value corresponding to @which
++ *
++ */
++int irq_chip_set_parent_state(struct irq_data *data,
++			      enum irqchip_irq_state which,
++			      bool val)
++{
++	data = data->parent_data;
++	if (!data)
++		return 0;
++
++	if (data->chip->irq_set_irqchip_state)
++		return data->chip->irq_set_irqchip_state(data, which, val);
++
++	return 0;
++}
++EXPORT_SYMBOL(irq_chip_set_parent_state);
++
++/**
++ *	irq_chip_get_parent_state - get the state of a parent interrupt.
++ *	@data: Pointer to interrupt specific data
++ *	@which: one of IRQCHIP_STATE_* the caller wants to know
++ *	@state: a pointer to a boolean where the state is to be stored
++ *
++ */
++int irq_chip_get_parent_state(struct irq_data *data,
++			      enum irqchip_irq_state which,
++			      bool *state)
++{
++	data = data->parent_data;
++	if (!data)
++		return 0;
++
++	if (data->chip->irq_get_irqchip_state)
++		return data->chip->irq_get_irqchip_state(data, which, state);
++
++	return 0;
++}
++EXPORT_SYMBOL(irq_chip_get_parent_state);
++
+ /**
+  * irq_chip_enable_parent - Enable the parent interrupt (defaults to unmask if
+  * NULL)
 -- 
-2.11.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
