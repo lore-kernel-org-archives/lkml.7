@@ -4,44 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A144DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B447C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8275B23405
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C5D52339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfH2KKu (ORCPT
+        id S1727360AbfH2KKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:10:50 -0400
-Received: from mga01.intel.com ([192.55.52.88]:24387 "EHLO mga01.intel.com"
+        Thu, 29 Aug 2019 06:10:53 -0400
+Received: from mga01.intel.com ([192.55.52.88]:24391 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbfH2KKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:10:45 -0400
+        id S1727161AbfH2KKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:10:48 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 03:10:44 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 03:10:47 -0700
 X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="197773285"
+   d="scan'208";a="197773294"
 Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 03:10:42 -0700
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 03:10:46 -0700
 Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id 500A020ABC;
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 8FFBB20D81;
         Thu, 29 Aug 2019 13:10:40 +0300 (EEST)
 Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
         (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1i3HO7-0006Ve-Bd; Thu, 29 Aug 2019 13:10:43 +0300
+        id 1i3HO7-0006W0-KP; Thu, 29 Aug 2019 13:10:43 +0300
 From:   Sakari Ailus <sakari.ailus@linux.intel.com>
 To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
         rafael@kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
         Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 03/10] device property: Add functions for accessing node's parents
-Date:   Thu, 29 Aug 2019 13:10:36 +0300
-Message-Id: <20190829101043.24963-4-sakari.ailus@linux.intel.com>
+Subject: [PATCH v3 10/10] lib/test_printf: Add tests for %pfw printk modifier
+Date:   Thu, 29 Aug 2019 13:10:43 +0300
+Message-Id: <20190829101043.24963-11-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
 References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
@@ -52,117 +53,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add two convenience functions for accessing node's parents:
-
-fwnode_count_parents() returns the number of parent nodes a given node
-has. fwnode_get_nth_parent() returns node's parent at a given distance
-from the node itself.
-
-Also reorder fwnode_get_parent() in property.c according to the same order
-as in property.h.
+Add a test for the %pfw printk modifier using software nodes.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/base/property.c  | 60 +++++++++++++++++++++++++++++++++++-----
- include/linux/property.h |  3 ++
- 2 files changed, 56 insertions(+), 7 deletions(-)
+ lib/test_printf.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 81bd01ed40427..006d631e1824d 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -556,6 +556,19 @@ int device_add_properties(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(device_add_properties);
+diff --git a/lib/test_printf.c b/lib/test_printf.c
+index 944eb50f38625..9c6d716979fb1 100644
+--- a/lib/test_printf.c
++++ b/lib/test_printf.c
+@@ -22,6 +22,8 @@
+ #include <linux/gfp.h>
+ #include <linux/mm.h>
  
-+/**
-+ * fwnode_get_parent - Return parent firwmare node
-+ * @fwnode: Firmware whose parent is retrieved
-+ *
-+ * Return parent firmware node of the given node if possible or %NULL if no
-+ * parent was available.
-+ */
-+struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-+{
-+	return fwnode_call_ptr_op(fwnode, get_parent);
-+}
-+EXPORT_SYMBOL_GPL(fwnode_get_parent);
++#include <linux/property.h>
 +
- /**
-  * fwnode_get_next_parent - Iterate to the node's parent
-  * @fwnode: Firmware whose parent is retrieved
-@@ -578,17 +591,50 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
- EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
+ #include "../tools/testing/selftests/kselftest_module.h"
  
- /**
-- * fwnode_get_parent - Return parent firwmare node
-- * @fwnode: Firmware whose parent is retrieved
-+ * fwnode_count_parents - Return the number of parents a node has
-+ * @fwnode: The node the parents of which are to be counted
-  *
-- * Return parent firmware node of the given node if possible or %NULL if no
-- * parent was available.
-+ * Returns the number of parents a node has.
-  */
--struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-+unsigned int fwnode_count_parents(const struct fwnode_handle *__fwnode)
+ #define BUF_SIZE 256
+@@ -588,6 +590,40 @@ flags(void)
+ 	kfree(cmp_buffer);
+ }
+ 
++static void __init fwnode_pointer(void)
++{
++	const struct software_node softnodes[] = {
++		{ .name = "first", },
++		{ .name = "second", .parent = &softnodes[0], },
++		{ .name = "third", .parent = &softnodes[1], },
++		{ NULL /* Guardian */ },
++	};
++	const char * const full_name = "/second/third";
++	const char * const full_name_second = "/second";
++	const char * const second_name = "second";
++	const char * const third_name = "third";
++	int rval;
++
++	rval = software_node_register_nodes(softnodes);
++	if (rval) {
++		pr_warn("cannot register softnodes; rval %d\n", rval);
++		return;
++	}
++
++	test(full_name_second, "%pfw",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
++	test(full_name, "%pfw",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
++	test(full_name, "%pfwf",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
++	test(second_name, "%pfwP",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
++	test(third_name, "%pfwP",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
++
++	software_node_unregister_nodes(softnodes);
++}
++
+ static void __init
+ test_pointer(void)
  {
--	return fwnode_call_ptr_op(fwnode, get_parent);
-+	struct fwnode_handle *fwnode;
-+	unsigned int count;
-+
-+	fwnode = fwnode_get_parent(__fwnode);
-+
-+	for (count = 0; fwnode; count++)
-+		fwnode = fwnode_get_next_parent(fwnode);
-+
-+	return count;
+@@ -610,6 +646,7 @@ test_pointer(void)
+ 	bitmap();
+ 	netdev_features();
+ 	flags();
++	fwnode_pointer();
  }
--EXPORT_SYMBOL_GPL(fwnode_get_parent);
-+EXPORT_SYMBOL_GPL(fwnode_count_parents);
-+
-+/**
-+ * fwnode_get_nth_parent - Return an nth parent of a node
-+ * @fwnode: The node the parent of which is requested
-+ * @depth: Distance of the parent from the node
-+ *
-+ * Returns the nth parent of a node. If @depth is 0, the functionality is
-+ * equivalent to fwnode_handle_get(). For @depth == 1, it is fwnode_get_parent()
-+ * and so on.
-+ *
-+ * The caller is responsible for calling fwnode_handle_put() for the returned
-+ * node.
-+ */
-+struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwnode,
-+					    unsigned int depth)
-+{
-+	unsigned int i;
-+
-+	fwnode_handle_get(fwnode);
-+
-+	for (i = 0; i < depth && fwnode; i++)
-+		fwnode = fwnode_get_next_parent(fwnode);
-+
-+	return fwnode;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_get_nth_parent);
  
- /**
-  * fwnode_get_next_child_node - Return the next child node handle for a node
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 421c76e53708d..5450e7ec219ac 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -83,6 +83,9 @@ struct fwnode_handle *fwnode_find_reference(const struct fwnode_handle *fwnode,
- struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode);
- struct fwnode_handle *fwnode_get_next_parent(
- 	struct fwnode_handle *fwnode);
-+unsigned int fwnode_count_parents(const struct fwnode_handle *fwn);
-+struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwn,
-+					    unsigned int depth);
- struct fwnode_handle *fwnode_get_next_child_node(
- 	const struct fwnode_handle *fwnode, struct fwnode_handle *child);
- struct fwnode_handle *fwnode_get_next_available_child_node(
+ static void __init selftest(void)
 -- 
 2.20.1
 
