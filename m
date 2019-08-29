@@ -2,94 +2,126 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEB7C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D73A9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18D0020644
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B62FE20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:10:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfH2PJy (ORCPT
+        id S1727639AbfH2PK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:09:54 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37773 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726950AbfH2PJx (ORCPT
+        Thu, 29 Aug 2019 11:10:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52396 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfH2PK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:09:53 -0400
-Received: by mail-qk1-f194.google.com with SMTP id s14so3255780qkm.4;
-        Thu, 29 Aug 2019 08:09:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6u6dCwC2AXkIji3mWvHkjCdJECAtIHmA17odygtXfv4=;
-        b=EmLtseUKbwckhUwybNTPRma2kFhUf0KBHggEvVEXhuDAw1OL5tuDurb0pdEpKmN4hW
-         lm0cLveE80IYJLOuh6oXY4U8o8aCyYCIv9Jb2UPQgwytGNmaFMXxoY1O6wf1+TZtYwuf
-         QsJ8e8/DUv/XU9sHXg0iGSO/QEijOz1MizLITpIO6SUOJpr7y0fCvqwoNt3VV0zeS/Du
-         c3UFdl+aq092Sk/GQIzKs8rEZF8H7rJuNGG9x1nQIivWcrJC1i/OpJOUNeqjvorOPi9Y
-         C3smr69EMx3IA9bXsQ/Ls32rWD0qagzBbFgfkecPo4bFWWtT0g1R7VNdJ6MxpqQNsI9n
-         Cgeg==
-X-Gm-Message-State: APjAAAV++5N4smUutPjhsU4vWubJBHUEhi6b/g0zshU6pu3z8SoCloYx
-        pdHTyYamJs6nmARtxl21yXLJ3PKJV5uvIL8CVxU=
-X-Google-Smtp-Source: APXvYqz+OTLX5WalC0BHdlzlG68GfRdHuWYXB7TEvUIwtsbgeNRNSEwMSu7vDs8mtEOGVF2Qu2vjyjHby17ElUNZrYQ=
-X-Received: by 2002:a37:4051:: with SMTP id n78mr9705549qka.138.1567091392126;
- Thu, 29 Aug 2019 08:09:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190829143742.24726-1-brgl@bgdev.pl> <20190829143742.24726-4-brgl@bgdev.pl>
-In-Reply-To: <20190829143742.24726-4-brgl@bgdev.pl>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 29 Aug 2019 17:09:35 +0200
-Message-ID: <CAK8P3a1vKmYS-sRj=GrjtqudjbYrwmEOEiKWOVRfHm2rLqxgPg@mail.gmail.com>
-Subject: Re: [PATCH 3/9] lib: devres: provide new variants for devm_ioremap_resource()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Thu, 29 Aug 2019 11:10:57 -0400
+Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=elm)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <tyhicks@canonical.com>)
+        id 1i3M4d-0001RJ-7M; Thu, 29 Aug 2019 15:10:55 +0000
+Date:   Thu, 29 Aug 2019 10:10:52 -0500
+From:   Tyler Hicks <tyhicks@canonical.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Todd Kjos <tkjos@android.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Alban Bedel <albeu@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+        devel@driverdev.osuosl.org
+Subject: Re: [PATCH AUTOSEL 4.14 05/14] binder: take read mode of mmap_sem in
+ binder_alloc_free_page()
+Message-ID: <20190829151052.GB27650@elm>
+References: <20190829105043.2508-1-sashal@kernel.org>
+ <20190829105043.2508-5-sashal@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829105043.2508-5-sashal@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 4:38 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+Hello, Sasha!
 
-> @@ -710,6 +710,10 @@ extern void devm_free_pages(struct device *dev, unsigned long addr);
->
->  void __iomem *devm_ioremap_resource(struct device *dev,
->                                     const struct resource *res);
-> +void __iomem *devm_ioremap_resource_nocache(struct device *dev,
-> +                                           const struct resource *res);
-> +void __iomem *devm_ioremap_resource_wc(struct device *dev,
-> +                                      const struct resource *res);
->
->  void __iomem *devm_of_iomap(struct device *dev,
->                             struct device_node *node, int index,
-> diff --git a/lib/devres.c b/lib/devres.c
+On 2019-08-29 06:50:34, Sasha Levin wrote:
+> From: Tyler Hicks <tyhicks@canonical.com>
+> 
+> [ Upstream commit 60d4885710836595192c42d3e04b27551d30ec91 ]
+> 
+> Restore the behavior of locking mmap_sem for reading in
+> binder_alloc_free_page(), as was first done in commit 3013bf62b67a
+> ("binder: reduce mmap_sem write-side lock"). That change was
+> inadvertently reverted by commit 5cec2d2e5839 ("binder: fix race between
+> munmap() and direct reclaim").
+> 
+> In addition, change the name of the label for the error path to
+> accurately reflect that we're taking the lock for reading.
+> 
+> Backporting note: This fix is only needed when *both* of the commits
+> mentioned above are applied. That's an unlikely situation since they
+> both landed during the development of v5.1 but only one of them is
+> targeted for stable.
 
-I think adding devm_ioremap_resource_wc() and
-devm_platform_ioremap_resource_wc() makes sense, but I think we're
-better off without devm_ioremap_resource_nocache() and
-devm_ioremap_resource_cache().
+This patch isn't meant to be applied to 4.14 since commit 3013bf62b67a
+("binder: reduce mmap_sem write-side lock") was never brought back to
+4.14.
 
-The only architecture that actually has a difference between
-ioremap() and ioremap_nocache() seems to be ia64. I would
-generally assume that any driver using ioremap_nocache()
-that is not ia64 specific should just use ioremap().
+My backporting note above isn't helpful for AUTOSEL purposes. Do you
+have a suggestion for what I could have done in the patch tags to convey
+that guidance to AUTOSEL?
 
-The ia64 version of ioremap() tries to guess whether it needs
-a cached or uncached mapping, everyone else always
-gets uncached these days.
+Tyler
 
-       Arnd
+> 
+> Fixes: 5cec2d2e5839 ("binder: fix race between munmap() and direct reclaim")
+> Signed-off-by: Tyler Hicks <tyhicks@canonical.com>
+> Acked-by: Todd Kjos <tkjos@android.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/android/binder_alloc.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_alloc.c
+> index e0b0399ff7ec8..81c67459259ec 100644
+> --- a/drivers/android/binder_alloc.c
+> +++ b/drivers/android/binder_alloc.c
+> @@ -949,8 +949,8 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
+>  	mm = alloc->vma_vm_mm;
+>  	if (!mmget_not_zero(mm))
+>  		goto err_mmget;
+> -	if (!down_write_trylock(&mm->mmap_sem))
+> -		goto err_down_write_mmap_sem_failed;
+> +	if (!down_read_trylock(&mm->mmap_sem))
+> +		goto err_down_read_mmap_sem_failed;
+>  	vma = binder_alloc_get_vma(alloc);
+>  
+>  	list_lru_isolate(lru, item);
+> @@ -965,7 +965,7 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
+>  
+>  		trace_binder_unmap_user_end(alloc, index);
+>  	}
+> -	up_write(&mm->mmap_sem);
+> +	up_read(&mm->mmap_sem);
+>  	mmput(mm);
+>  
+>  	trace_binder_unmap_kernel_start(alloc, index);
+> @@ -980,7 +980,7 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
+>  	mutex_unlock(&alloc->mutex);
+>  	return LRU_REMOVED_RETRY;
+>  
+> -err_down_write_mmap_sem_failed:
+> +err_down_read_mmap_sem_failed:
+>  	mmput_async(mm);
+>  err_mmget:
+>  err_page_already_freed:
+> -- 
+> 2.20.1
+> 
