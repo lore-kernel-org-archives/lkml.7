@@ -2,113 +2,126 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1970EC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9061BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E40122189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 663852189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:49:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SHZ9Ygey"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="u0db09ug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfH2Isk (ORCPT
+        id S1727014AbfH2It1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 04:48:40 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38843 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfH2Isj (ORCPT
+        Thu, 29 Aug 2019 04:49:27 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:36661 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726070AbfH2It1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 04:48:39 -0400
-Received: by mail-qt1-f196.google.com with SMTP id q64so2794936qtd.5
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9zMYasvwvJSOlUawu9XgM9g2TZzoppz6gZllm9KotKE=;
-        b=SHZ9YgeyfCMnhqlOYfjPzfUSq1BNrP1DU/i9TUQBQF5OxqXyYXFbD3KXCwEOnPeA9c
-         71IF+x2HqEnqDJjtx3sQ8JNZRIoc4n0DkM6tPqcjTXAclxoj2axWpdPIm/GILFF5sqvV
-         I1Rtjsp1Aau4Ox+y/Z3P8ANJk7ugFKmHEbk+DWR25g0QLrrX7MhO99/okNsqLhcX7sZe
-         Zv3aMcHI9NL6UYsDsPPhRH637K0OTyfvpMkDLPysG4poicXhoDUeLGQgZYLpuiBCFhQ0
-         JSQefxcGPF33JB1eO3tomQetKOKEC4cwOdg7Xx6IrIidmf4qk5MZqWfG2ws4KkNrECVC
-         dqdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9zMYasvwvJSOlUawu9XgM9g2TZzoppz6gZllm9KotKE=;
-        b=g6tyCYmujVv7UZ/VzDM2OIDOBIzHi2WVfoAxGgu4b7bDajpNjjb7wZgvtm9cNzbs3q
-         soKEGWHkTUCmZgk54H3RpooWB6m3UwS1J4MzktyZ4KRsISaECculIQerFxtP/tDCnZEw
-         TJj4CFi7CH7T+VO7sDqkq5bNL+PSQKw2FEa7Wz4f52loyOG3tmbGAEHd6bpfpWORFq1Y
-         pUSFSq5UGO7x21OsTHHa4XJW7b5tX1cxaOwEok9KQtEVRiouspPOB3yaZOZhb+FoVQfy
-         0y9QIr8OP4PNE1KuUmhUnpr7UAT5NGCU1rVbgrbHtcN+hJeF4Sml9gy92RzsnmtpNj/m
-         uGVQ==
-X-Gm-Message-State: APjAAAXfWy9IINiNku7uqAlw+7/KRVvRlfMQxR0nIInieKe3A+SsHMq3
-        fk+5Q0b9AxPrmhjnjRGSHlrUDxrDlt2Gs9VSiwOO7g==
-X-Google-Smtp-Source: APXvYqzjzN2EG+az7+HCU8fERqdhPqrzGKY2WH86fhF6ux/sDMROPXd1/G1j4VoryLHc4mDvNkJkhfATh7/XtrFc9S0=
-X-Received: by 2002:aed:3287:: with SMTP id z7mr3594931qtd.264.1567068518675;
- Thu, 29 Aug 2019 01:48:38 -0700 (PDT)
+        Thu, 29 Aug 2019 04:49:27 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7T8kxr5031268;
+        Thu, 29 Aug 2019 10:48:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
+ : from : message-id : date : mime-version : in-reply-to : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=NlGM32ocdpPWCJcOtDVLjpgH+SvU7mlXgBdhDT7M+X8=;
+ b=u0db09ugjsVglBswXP+mVOWomLQtCDERzWqyS+4Tpnl9MaCsmoTNFiPCKzdfA50T6D7C
+ C+GbQFCz9y6h5qxvB99GS73qVvw+KBZ69vEVNNDHZmhmS15jbzNJVBCyDo2rYNVPA0M7
+ AyM0nNRswqEa8rgxhWc9dSev0UQYkJERN5IjBULZUiyCR/eN9O5v/jIbbg2kSa8HokzD
+ rtGaXJ45MtbkV2OIbOKlJc3uFrOvxL1SpY0kxAVa5WkVxmObe6Qqx27tr3PO4f2e0oac
+ pDQVtheQDemuJ/HUlrZ3smKV1zedt2eG+UZXZqQCz4eKkIaj21L5ZvS8MsZ+wsLUnvfD 2g== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2unujk470g-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 29 Aug 2019 10:48:55 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8F4B04D;
+        Thu, 29 Aug 2019 08:48:47 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E22742AD3F3;
+        Thu, 29 Aug 2019 10:48:46 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 29 Aug
+ 2019 10:48:46 +0200
+Subject: Re: [PATCH v3 5/5] ARM: dts: stm32: add ddrperfm on stm32mp157c
+To:     Gerald BAEZA <gerald.baeza@st.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+References: <1566918464-23927-1-git-send-email-gerald.baeza@st.com>
+ <1566918464-23927-6-git-send-email-gerald.baeza@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <8e3170a3-c814-d06e-f1f9-6d4e6a4bed71@st.com>
+Date:   Thu, 29 Aug 2019 10:48:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <cover.1566907161.git.amit.kucheria@linaro.org>
- <66ac3d3707d6296ef85bf1fa321f7f1ee0c02131.1566907161.git.amit.kucheria@linaro.org>
- <5d65cbe9.1c69fb81.1ceb.2374@mx.google.com>
-In-Reply-To: <5d65cbe9.1c69fb81.1ceb.2374@mx.google.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Thu, 29 Aug 2019 14:18:27 +0530
-Message-ID: <CAP245DWWKsZBHnvSqC40XOH48kGd-hykd+fr-UZfWTmvuG2KaA@mail.gmail.com>
-Subject: Re: [PATCH v2 07/15] dt: thermal: tsens: Document interrupt support
- in tsens driver
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Brian Masney <masneyb@onstation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1566918464-23927-6-git-send-email-gerald.baeza@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 6:03 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Amit Kucheria (2019-08-27 05:14:03)
-> > Define two new required properties to define interrupts and
-> > interrupt-names for tsens.
-> >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > index 673cc1831ee9d..686bede72f846 100644
-> > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > @@ -22,6 +22,8 @@ Required properties:
-> >
-> >  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
-> >  - #qcom,sensors: Number of sensors in tsens block
-> > +- interrupts: Interrupts generated from Always-On subsystem (AOSS)
->
-> Is it always one? interrupt-names makes it sound like it.
->
-> > +- interrupt-names: Must be one of the following: "uplow", "critical"
+Hi Gerald
 
-Will fix to "one or more of the following"
+On 8/27/19 5:08 PM, Gerald BAEZA wrote:
+> The DDRPERFM is the DDR Performance Monitor embedded
+> in STM32MP1 SOC.
+> 
+> Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
+> ---
+>   arch/arm/boot/dts/stm32mp157c.dtsi | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi 
+> b/arch/arm/boot/dts/stm32mp157c.dtsi
+> index 0c4e6eb..6ea6933 100644
+> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+> @@ -1378,6 +1378,14 @@
+>                           };
+>                   };
+> 
+> +               ddrperfm: perf@5a007000 {
+> +                       compatible = "st,stm32-ddr-pmu";
+> +                       reg = <0x5a007000 0x400>;
+> +                       clocks = <&rcc DDRPERFM>;
+> +                       resets = <&rcc DDRPERFM_R>;
+> +                       status = "okay";
 
-> >  - Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
-> >  nvmem cells
-> >
+No need to add "status = "okay"" here.
+
+regards
+Alex
+
+> +               };
+> +
+>                   usart1: serial@5c000000 {
+>                           compatible = "st,stm32h7-uart";
+>                           reg = <0x5c000000 0x400>;
+> -- 
+> 2.7.4
