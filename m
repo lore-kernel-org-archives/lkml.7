@@ -2,201 +2,254 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB05C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFCDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D320922CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5EE1208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:52:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uZ7gYvuF"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="saB6woct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfH2Vvv (ORCPT
+        id S1728158AbfH2Vwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 17:51:51 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35070 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727729AbfH2Vvv (ORCPT
+        Thu, 29 Aug 2019 17:52:33 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:36629 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728109AbfH2Vwd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 17:51:51 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g7so4942160wrx.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 14:51:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=a+pc2ZK6ip9f10w36wuE0uTgxJ0ORyBREEL0adN4st0=;
-        b=uZ7gYvuFxxXLJ0AI48bV1peOnU+47MgXGKBW8lzRy7hZ/tQTHGL7ShE2PgVaXPh3CG
-         e9PRMNVMvZpy8TaYfaPh4y5jpQ4F5/X36gDmxAy10x1XtA6190iBK7diX9v8/8b2kuLt
-         H0vfhgFxyyGro+sJ18h6TcpKtMdMnyNShmtRCZBV+IubRD68LgYTlAhbfLV8x2fEz1dE
-         +8z7kbezZAdvjRFMi55zgZKuHmK/BXJb/VdQsx5l5DnA1/8dhtsM7fvzXTqE4NlIwZCs
-         8veXQeTuqvQFIUjGZVqYs8L7Elcz3Sa/zsfjv2wE6e4P0oSGXDtgdic5642cbNkBc3t6
-         NiSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=a+pc2ZK6ip9f10w36wuE0uTgxJ0ORyBREEL0adN4st0=;
-        b=CDHRBFtqn9nZirLZYXcLEk25hir6jPB/GG8mnjpxqkD7hwFi6L37x2FbBBreomUJuV
-         S48EPQYn9FfWAhezfHZObprINLj7KJAFgosxEk2croufzvsf9VWawipFyWzVBH6gXcAm
-         YDEVEY2OrHlkeidFrbEMG/e75LQ2YQHtruzXOZk/F5/O4JQ+BjeL3toTUyUH4K94Mo51
-         Tu7NaoIZMJ8ZZAcvohCLcauBXbfip6O8U+O6LHYPM2sXSJaEuw6Y01mL6mAxDC1KZaYS
-         eE6AekPgs2dPJeHyFCAn1w7G7IN41xn5eGLNsBuPU3YyndE3nQYb8T2eGRF0AFQJ1ZZt
-         AKjQ==
-X-Gm-Message-State: APjAAAVX3kRM3ENYV91pjuaZ3pGwAYLFTARx+cb/cKaiel+Q/6toWqi9
-        LDhdVrWvElyVhLXGTrcjs5IFhw==
-X-Google-Smtp-Source: APXvYqwcJvLgWiR9xO8uYbzgaktiUNcuPwuuDFj7cLjIOj8rSTAY6krtwYIcFl8q4NmW3Z9/5uw8EQ==
-X-Received: by 2002:a5d:6a45:: with SMTP id t5mr12230298wrw.228.1567115508416;
-        Thu, 29 Aug 2019 14:51:48 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:d9ce:7caa:c9ba:7f4c? ([2a01:e34:ed2f:f020:d9ce:7caa:c9ba:7f4c])
-        by smtp.googlemail.com with ESMTPSA id o14sm10135990wrg.64.2019.08.29.14.51.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 14:51:47 -0700 (PDT)
-Subject: Re: Default governor regardless of cpuidle driver
-To:     Joao Martins <joao.m.martins@oracle.com>
-Cc:     Marcelo Tosatti <mtosatti@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-pm@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-References: <20190829151027.9930-1-joao.m.martins@oracle.com>
- <c8cf8dcc-76a3-3e15-f514-2cb9df1bbbdc@oracle.com>
- <d1d4ade5-04a5-4288-d994-3963bb80fb6b@linaro.org>
- <6c8816af-934a-5bf7-6fb9-f67c05e2c8aa@oracle.com>
- <901ab688-5548-cf96-1dcb-ce50e617e917@linaro.org>
- <722bd6f6-6eee-b24b-9704-c9aecc06302f@oracle.com>
- <2e2a35c8-7f03-d7c8-4701-3bc9d91c1255@linaro.org>
- <f8c63af5-2509-310d-7ba0-7687b20e3b44@oracle.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <b759d5a9-f418-817e-eefa-2302d17cb6ea@linaro.org>
-Date:   Thu, 29 Aug 2019 23:51:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 17:52:33 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D8D7780719;
+        Fri, 30 Aug 2019 09:52:28 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1567115548;
+        bh=igW2Ks2efuhxj+CLPFiKe1nMvLY5OJpsKarMZTuKmBo=;
+        h=From:To:Cc:Subject:Date;
+        b=saB6woctGoUhDsGmNwQLhuOGOBNOB7Ko40dEPgraJ06bq9Xw4KCAiZZaieLupumvx
+         OZ+y1FMKw1vkagcSN3xTn/TzDNxySKzKL9u45URKJhT7k+I85dph2xdTTXotO4sRaa
+         GQl+3d3T2cyiWPPLaZoHL1me80aj7omfF3qva4jTXzo0vXbR405WtwLUhbqaCB8lVh
+         M1izqPHeaxjGMU3X2ApFBJQYiDcVTAPgk4f8c/pzFgfqVlsxyVfH6QBozO+rTWun1Z
+         JIQrVB4hCwu1tMG8EK7/WmOnMNx9hCPPBS/CADzRJdJH452ZI/QoIU8fYgsKjd4NRI
+         1OT6Qv5RIbdJQ==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d68491c0000>; Fri, 30 Aug 2019 09:52:28 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id AAC7913EECA;
+        Fri, 30 Aug 2019 09:52:31 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 9BA412819B1; Fri, 30 Aug 2019 09:52:28 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     wim@linux-watchdog.org, linux@roeck-us.net
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v6] watchdog: orion_wdt: use timer1 as a pretimeout
+Date:   Fri, 30 Aug 2019 09:52:24 +1200
+Message-Id: <20190829215224.27956-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <f8c63af5-2509-310d-7ba0-7687b20e3b44@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/08/2019 23:12, Joao Martins wrote:
+The orion watchdog can either reset the CPU or generate an interrupt.
+The interrupt would be useful for debugging as it provides panic()
+output about the watchdog expiry, however if the interrupt is used the
+watchdog can't reset the CPU in the event of being stuck in a loop with
+interrupts disabled or if the CPU is prevented from accessing memory
+(e.g. an unterminated DMA).
 
-[ ... ]
+The Armada SoCs have spare timers that aren't currently used by the
+Linux kernel. We can use timer1 to provide a pre-timeout ahead of the
+watchdog timer and provide the possibility of gathering debug before the
+reset triggers.
 
->>> Say you wanted to have a kvm specific config, you would still see the same
->>> problem if you happen to compile intel_idle together with haltpoll
->>> driver+governor. 
->>
->> Can a guest work with an intel_idle driver?
->>
-> Yes.
-> 
-> If you use Qemu you would add '-overcommit cpu-pm=on' to try it out. ofc,
-> assuming you're on a relatively recent Qemu (v3.0+) and a fairly recent kernel
-> version as host (v4.17+).
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+Changes in v6:
+- Fix bitwise operation in armada375_stop()
+- Add comment about 2nd interrupt being optional
+Changes in v5:
+- Group bit values with register addresses
+- Address review comments from Gunter
+Changes in v3:
+- rebase against linux/master
+Changes in v2:
+- apply changes to armada-38x only
 
-Ok, thanks for the clarification.
+ drivers/watchdog/orion_wdt.c | 66 +++++++++++++++++++++++++++++-------
+ 1 file changed, 53 insertions(+), 13 deletions(-)
 
->>> Creating two separate configs here, with and without haltpoll
->>> for VMs doesn't sound effective for distros.
->>
->> Agree
->>
->>> Perhaps decreasing the rating of
->>> haltpoll governor, but while a short term fix it wouldn't give much sensible
->>> defaults without the one-off runtime switch.
-
-The rating has little meaning because each governor fits a specific
-situation (server, desktop, etc...) and it would probably make sense to
-remove it and add a default governor in the config file like the cpufreq.
-
-May be I missed the point from some previous discussion but IMHO the
-problem you are facing is coming from the design: there is no need to
-create a halt governor but move the code inside the cpuidle-halt driver
-instead and ignore the state asked by the governor and return the state
-the driver entered.
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+index cdb0d174c5e2..1cccf8eb1c5d 100644
+--- a/drivers/watchdog/orion_wdt.c
++++ b/drivers/watchdog/orion_wdt.c
+@@ -35,7 +35,15 @@
+  * Watchdog timer block registers.
+  */
+ #define TIMER_CTRL		0x0000
+-#define TIMER_A370_STATUS	0x04
++#define TIMER1_FIXED_ENABLE_BIT	BIT(12)
++#define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
++#define TIMER1_ENABLE_BIT	BIT(2)
++
++#define TIMER_A370_STATUS	0x0004
++#define WDT_A370_EXPIRED	BIT(31)
++#define TIMER1_STATUS_BIT	BIT(8)
++
++#define TIMER1_VAL_OFF		0x001c
+=20
+ #define WDT_MAX_CYCLE_COUNT	0xffffffff
+=20
+@@ -43,9 +51,6 @@
+ #define WDT_A370_RATIO_SHIFT	5
+ #define WDT_A370_RATIO		(1 << WDT_A370_RATIO_SHIFT)
+=20
+-#define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
+-#define WDT_A370_EXPIRED	BIT(31)
+-
+ static bool nowayout =3D WATCHDOG_NOWAYOUT;
+ static int heartbeat =3D -1;		/* module parameter (seconds) */
+=20
+@@ -158,6 +163,7 @@ static int armadaxp_wdt_clock_init(struct platform_de=
+vice *pdev,
+ 				   struct orion_watchdog *dev)
+ {
+ 	int ret;
++	u32 val;
+=20
+ 	dev->clk =3D of_clk_get_by_name(pdev->dev.of_node, "fixed");
+ 	if (IS_ERR(dev->clk))
+@@ -168,10 +174,9 @@ static int armadaxp_wdt_clock_init(struct platform_d=
+evice *pdev,
+ 		return ret;
+ 	}
+=20
+-	/* Enable the fixed watchdog clock input */
+-	atomic_io_modify(dev->reg + TIMER_CTRL,
+-			 WDT_AXP_FIXED_ENABLE_BIT,
+-			 WDT_AXP_FIXED_ENABLE_BIT);
++	/* Fix the wdt and timer1 clock freqency to 25MHz */
++	val =3D WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
++	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
+=20
+ 	dev->clk_rate =3D clk_get_rate(dev->clk);
+ 	return 0;
+@@ -183,6 +188,10 @@ static int orion_wdt_ping(struct watchdog_device *wd=
+t_dev)
+ 	/* Reload watchdog duration */
+ 	writel(dev->clk_rate * wdt_dev->timeout,
+ 	       dev->reg + dev->data->wdt_counter_offset);
++	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
++		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
++		       dev->reg + TIMER1_VAL_OFF);
++
+ 	return 0;
+ }
+=20
+@@ -194,13 +203,18 @@ static int armada375_start(struct watchdog_device *=
+wdt_dev)
+ 	/* Set watchdog duration */
+ 	writel(dev->clk_rate * wdt_dev->timeout,
+ 	       dev->reg + dev->data->wdt_counter_offset);
++	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
++		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
++		       dev->reg + TIMER1_VAL_OFF);
+=20
+ 	/* Clear the watchdog expiration bit */
+ 	atomic_io_modify(dev->reg + TIMER_A370_STATUS, WDT_A370_EXPIRED, 0);
+=20
+ 	/* Enable watchdog timer */
+-	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
+-						dev->data->wdt_enable_bit);
++	reg =3D dev->data->wdt_enable_bit;
++	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
++		reg |=3D TIMER1_ENABLE_BIT;
++	atomic_io_modify(dev->reg + TIMER_CTRL, reg, reg);
+=20
+ 	/* Enable reset on watchdog */
+ 	reg =3D readl(dev->rstout);
+@@ -277,7 +291,7 @@ static int orion_stop(struct watchdog_device *wdt_dev=
+)
+ static int armada375_stop(struct watchdog_device *wdt_dev)
+ {
+ 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
+-	u32 reg;
++	u32 reg, mask;
+=20
+ 	/* Disable reset on watchdog */
+ 	atomic_io_modify(dev->rstout_mask, dev->data->rstout_mask_bit,
+@@ -287,7 +301,10 @@ static int armada375_stop(struct watchdog_device *wd=
+t_dev)
+ 	writel(reg, dev->rstout);
+=20
+ 	/* Disable watchdog timer */
+-	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
++	mask =3D dev->data->wdt_enable_bit;
++	if (wdt_dev->info->options & WDIOF_PRETIMEOUT)
++		mask |=3D TIMER1_ENABLE_BIT;
++	atomic_io_modify(dev->reg + TIMER_CTRL, mask, 0);
+=20
+ 	return 0;
+ }
+@@ -349,7 +366,7 @@ static unsigned int orion_wdt_get_timeleft(struct wat=
+chdog_device *wdt_dev)
+ 	return readl(dev->reg + dev->data->wdt_counter_offset) / dev->clk_rate;
+ }
+=20
+-static const struct watchdog_info orion_wdt_info =3D {
++static struct watchdog_info orion_wdt_info =3D {
+ 	.options =3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
+ 	.identity =3D "Orion Watchdog",
+ };
+@@ -368,6 +385,16 @@ static irqreturn_t orion_wdt_irq(int irq, void *devi=
+d)
+ 	return IRQ_HANDLED;
+ }
+=20
++static irqreturn_t orion_wdt_pre_irq(int irq, void *devid)
++{
++	struct orion_watchdog *dev =3D devid;
++
++	atomic_io_modify(dev->reg + TIMER_A370_STATUS,
++			 TIMER1_STATUS_BIT, 0);
++	watchdog_notify_pretimeout(&dev->wdt);
++	return IRQ_HANDLED;
++}
++
+ /*
+  * The original devicetree binding for this driver specified only
+  * one memory resource, so in order to keep DT backwards compatibility
+@@ -589,6 +616,19 @@ static int orion_wdt_probe(struct platform_device *p=
+dev)
+ 		}
+ 	}
+=20
++	/* Optional 2nd interrupt for pretimeout */
++	irq =3D platform_get_irq(pdev, 1);
++	if (irq > 0) {
++		orion_wdt_info.options |=3D WDIOF_PRETIMEOUT;
++		ret =3D devm_request_irq(&pdev->dev, irq, orion_wdt_pre_irq,
++				       0, pdev->name, dev);
++		if (ret < 0) {
++			dev_err(&pdev->dev, "failed to request IRQ\n");
++			goto disable_clk;
++		}
++	}
++
++
+ 	watchdog_set_nowayout(&dev->wdt, nowayout);
+ 	ret =3D watchdog_register_device(&dev->wdt);
+ 	if (ret)
+--=20
+2.23.0
 
