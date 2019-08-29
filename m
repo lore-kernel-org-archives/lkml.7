@@ -2,108 +2,115 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CBEC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE5BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69A92173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C0B82173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:21:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s5O8yNb7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfH2RUw (ORCPT
+        id S1727899AbfH2RVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:20:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:48346 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbfH2RUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:20:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD061337;
-        Thu, 29 Aug 2019 10:20:50 -0700 (PDT)
-Received: from [192.168.0.9] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37F943F59C;
-        Thu, 29 Aug 2019 10:20:49 -0700 (PDT)
-Subject: Re: [PATCH 13/15] sched,fair: propagate sum_exec_runtime up the
- hierarchy
-To:     Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
-Cc:     kernel-team@fb.com, pjt@google.com, peterz@infradead.org,
-        mingo@redhat.com, morten.rasmussen@arm.com, tglx@linutronix.de,
-        mgorman@techsingularity.net, vincent.guittot@linaro.org
-References: <20190822021740.15554-1-riel@surriel.com>
- <20190822021740.15554-14-riel@surriel.com>
- <f940abf6-3020-014c-74d7-d9be334e201c@arm.com>
- <a35dd83b9ecadf4e136b588d7696a23e36ff2e9a.camel@surriel.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <1d631d5e-e606-4915-440f-fb00daa41fa5@arm.com>
-Date:   Thu, 29 Aug 2019 19:20:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 13:21:17 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39099 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfH2RVR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 13:21:17 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y200so2505446pfb.6;
+        Thu, 29 Aug 2019 10:21:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=k87dT0Iu+ulqGoBo1xzBIj9YrBih594+mmY3S69xuEs=;
+        b=s5O8yNb7NoH2vA0lRZZHfMvZygue8Mx7KxgiVh2KbH/XGvNLFAqStZqUqsTG0GYdUW
+         n3moMTU73a+PxMKCQ3l9cgb4lbXF5PaTskKCK5mNkWmBmO7854Aav5CD3CDN2f1s1vbk
+         IHtcDId7EVEyIgmDFZi1HJa9msW+dnX724ByA7m/PWGf8gM3uWa2UqItSDWp9NQyJVXw
+         TRSDJ2Rx1zS8R6PWYXVurRkpD3avcm+CfCykOmGTIcvyQmfgqFBvnBBMG73bl4kYVO50
+         /K6r0Pqpnp2ZKqERqxeuSzMLtMi6CMpfObk/TUT+gq/H1bq7gv1RFC6eBzzirBQL2B9L
+         g3IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k87dT0Iu+ulqGoBo1xzBIj9YrBih594+mmY3S69xuEs=;
+        b=J+8o7dVWovn9qKozRxGXoWY8yiPxVgzWLYPejCzhXBjzk7kKwJYG+pJ1p1JbmwDOmY
+         Yn8KAutGeVyH8z6PUT+ClxjFNYGN9I7GjhzIyTFB0EyIXKXCb9aIokwtjsOvG/1SEdOs
+         yyaE+x9pB88TdwENVrUS888i9ra50w6D65Q80/kYSM0ghzPfoB5MKBLnYgvoo0rEuzll
+         dxaPH017C5gD/hBass/J614eKQJKU7FKRIAJmFjkj7if5RO9N/gHEw4Dw60HbH1tTwZJ
+         /7R0rhUS4bBwwAfqjnhvGHBsIm/z+dfv/hXQwrM0bDKvW+ReyQroGHCCq02ef94ESwSC
+         flLA==
+X-Gm-Message-State: APjAAAX4iMQZSTeOPC5C7vifZ5aAUbxTsPpXGteEDEhAq9fkZl3XQ+J2
+        5LaPHz+oM2Etl/zfQsF+IMw=
+X-Google-Smtp-Source: APXvYqweNhxxRAW8xyJsKIbN9EJYNe87haGF35qasLCJEbQzmYsaM9Pyim2h7f2/WQjVTBdof1gNdA==
+X-Received: by 2002:a63:2043:: with SMTP id r3mr9382590pgm.311.1567099276200;
+        Thu, 29 Aug 2019 10:21:16 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id 71sm3909488pfw.157.2019.08.29.10.21.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 10:21:15 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 10:21:13 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] PTP: introduce new versions of IOCTLs
+Message-ID: <20190829172113.GA2166@localhost>
+References: <20190829095825.2108-1-felipe.balbi@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <a35dd83b9ecadf4e136b588d7696a23e36ff2e9a.camel@surriel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829095825.2108-1-felipe.balbi@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/08/2019 15:14, Rik van Riel wrote:
-> On Wed, 2019-08-28 at 09:51 +0200, Dietmar Eggemann wrote:
->> On 22/08/2019 04:17, Rik van Riel wrote:
->>> Now that enqueue_task_fair and dequeue_task_fair no longer iterate
->>> up
->>> the hierarchy all the time, a method to lazily propagate
->>> sum_exec_runtime
->>> up the hierarchy is necessary.
->>>
->>> Once a tick, propagate the newly accumulated exec_runtime up the
->>> hierarchy,
->>> and feed it into CFS bandwidth control.
->>>
->>> Remove the pointless call to account_cfs_rq_runtime from
->>> update_curr,
->>> which is always called with a root cfs_rq.
->>
->> But what about the call to account_cfs_rq_runtime() in
->> set_curr_task_fair()? Here you always call it with the root cfs_rq.
->> Shouldn't this be called also in a loop over all se's until !se-
->>> parent
->> (like in propagate_exec_runtime() further below).
-> 
-> I believe that call should be only on the cgroup
-> cfs_rq, with account_cfs_rq_runtime figuring out
-> whether more runtime needs to be obtained from
-> further up in the hierarchy.
+> @@ -139,11 +141,24 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+>  		break;
+>  
+>  	case PTP_EXTTS_REQUEST:
+> +	case PTP_EXTTS_REQUEST2:
+> +		memset(&req, 0, sizeof(req));
+> +
+>  		if (copy_from_user(&req.extts, (void __user *)arg,
+>  				   sizeof(req.extts))) {
+>  			err = -EFAULT;
+>  			break;
+>  		}
+> +		if ((req.extts.flags || req.extts.rsv[0] || req.extts.rsv[1])
+> +			&& cmd == PTP_EXTTS_REQUEST2) {
+> +			err = -EINVAL;
+> +			break;
+> +		} else if (cmd == PTP_EXTTS_REQUEST) {
+> +			req.extts.flags = 0;
 
-So like this?
+This still isn't quite right.  Sorry that was my fault.
 
-@@ -10248,7 +10248,8 @@ static void set_curr_task_fair(struct rq *rq)
+The req.extts.flags can be (PTP_ENABLE_FEATURE | PTP_RISING_EDGE |
+PTP_FALLING_EDGE), and ENABLE is used immediately below in this case.
 
-        set_next_entity(cfs_rq, se);
-        /* ensure bandwidth has been allocated on our new cfs_rq */
--       account_cfs_rq_runtime(cfs_rq, 0);
-+       if (task_se_in_cgroup(se))
-+               account_cfs_rq_runtime(group_cfs_rq_of_parent(se), 0);
- }
+Please #define those bits into a valid mask, and then:
 
-I fail to understand the second part of your sentence, and
-how is this related to the code in propagate_exec_runtime():
+- for PTP_EXTTS_REQUEST2 check that ~mask is zero, and
+- for PTP_EXTTS_REQUEST clear the ~mask bits for the drivers. 
 
-for_each_sched_entity(se) {
+Thanks again for cleaning this up!
 
-    propagate_exec_runtime() {
+Richard
 
-        if (parent)
-            account_cfs_rq_runtime(cfs_rq, diff);
-    }
-}
-
-> By default we should probably work under the assumption
-> that account_cfs_rq_runtime() will succeed at the current
-> level, and no gymnastics are required to obtain CPU time.
-
-Maybe this all will become clearer when the reworked CFS Bandwidth
-support is ready ;-) I see this patch as the first part of it.
+> +			req.extts.rsv[0] = 0;
+> +			req.extts.rsv[1] = 0;
+> +		}
+> +			
+>  		if (req.extts.index >= ops->n_ext_ts) {
+>  			err = -EINVAL;
+>  			break;
