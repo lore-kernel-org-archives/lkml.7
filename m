@@ -2,71 +2,97 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B913DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F5EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F22E2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567097108;
-	bh=qihyy7S1W4r7GXG2gcMAKEgrqcDz1i+xZRSpyUxJicw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=tp92c8Cl9YoxE3S5Y6CtO14eNRbOezscLl2X5sLpI5Z5Lroz5TY22ZaaEi2zNkaNU
-	 3B81ouS+j+Z+QiTb/UuSTTcdw+thuBE8wVoJ3o8kOrWCE/9G2IlxMun3K32KogYdNY
-	 klUHo4tFteIn+inyQbq+mdoRSvh1b+pYK7+Rweno=
+	by mail.kernel.org (Postfix) with ESMTP id 91BED2339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbfH2QpH (ORCPT
+        id S1728070AbfH2Qpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:45:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbfH2QpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:45:07 -0400
-Subject: Re: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567097106;
-        bh=qihyy7S1W4r7GXG2gcMAKEgrqcDz1i+xZRSpyUxJicw=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=O5n2/70wObdWeANZHvsrlOVWQL81xBPhw8e2XqRynKDCUwCPXzemdkccLsTzE/YRG
-         4HtzAijlyJUntjqhiGymig+ZxGgcPpHHg0ueozv3TY3WKkSUoiofk5Io4MfTeXQdN1
-         pWNNr45gLN6NUnxhT3mYRHaYL0Fax3ASE63GJNy4=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190829161639.GA18147@embeddedor>
-References: <20190829161639.GA18147@embeddedor>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190829161639.GA18147@embeddedor>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git
- tags/Wimplicit-fallthrough-5.3-rc7
-X-PR-Tracked-Commit-Id: 7c9eb2dbd770b7c9980d5839dd305a70fbc5df67
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4a64489cf8e21a17fd6dd88935818ba7307ba996
-Message-Id: <156709710665.30085.5726463718274551620.pr-tracker-bot@kernel.org>
-Date:   Thu, 29 Aug 2019 16:45:06 +0000
-To:     "Gustavo A. R. Silva" <gustavo@linux.embeddedor.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+        Thu, 29 Aug 2019 12:45:33 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3981 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727248AbfH2Qpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:45:33 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id BF8D0B6611532AB7397F;
+        Fri, 30 Aug 2019 00:45:30 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 30 Aug 2019 00:45:30 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 30 Aug 2019 00:45:29 +0800
+Date:   Fri, 30 Aug 2019 00:44:42 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Valdis =?gbk?Q?Kl=A8=A5tnieks?= <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20190829164442.GA203852@architecture4>
+References: <20190828170022.GA7873@kroah.com>
+ <20190829062340.GB3047@infradead.org>
+ <20190829063955.GA30193@kroah.com>
+ <20190829094136.GA28643@infradead.org>
+ <20190829095019.GA13557@kroah.com>
+ <20190829103749.GA13661@infradead.org>
+ <20190829111810.GA23393@kroah.com>
+ <20190829151144.GJ23584@kadam>
+ <20190829152757.GA125003@architecture4>
+ <20190829154346.GK23584@kadam>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190829154346.GK23584@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme707-chm.china.huawei.com (10.1.199.103) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 29 Aug 2019 11:16:39 -0500:
+Hi Dan,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wimplicit-fallthrough-5.3-rc7
+On Thu, Aug 29, 2019 at 11:43:46PM +0800, Dan Carpenter wrote:
+> > p.s. There are 2947 (un)likely places in fs/ directory.
+> 
+> I was complaining about you adding new pointless ones, not existing
+> ones.  The likely/unlikely annotations are supposed to be functional and
+> not decorative.  I explained this very clearly.
+> 
+> Probably most of the annotations in fs/ are wrong but they are also
+> harmless except for the slight messiness.  However there are definitely
+> some which are important so removing them all isn't a good idea.
+> 
+> > If you like, I will delete them all.
+> 
+> But for erofs, I don't think that any of the likely/unlikely calls have
+> been thought about so I'm fine with removing all of them in one go.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4a64489cf8e21a17fd6dd88935818ba7307ba996
+Anyway, I have removed them all in
+https://lore.kernel.org/r/20190829163827.203274-1-gaoxiang25@huawei.com/
 
-Thank you!
+Does it look good to you?
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Thanks,
+Gao Xiang
+
+> 
+> regards,
+> dan carpenter
+> 
