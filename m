@@ -2,72 +2,73 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A898EC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4E3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7D623404
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9CB2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:33:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="BU4KkARm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sefnPZfK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbfH2IdC (ORCPT
+        id S1727941AbfH2IdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 04:33:02 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38781 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727810AbfH2Ic5 (ORCPT
+        Thu, 29 Aug 2019 04:33:04 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36727 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727889AbfH2IdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 04:32:57 -0400
-Received: by mail-lj1-f194.google.com with SMTP id x3so2172792lji.5
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:32:55 -0700 (PDT)
+        Thu, 29 Aug 2019 04:33:00 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f19so1250479plr.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:32:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JgLR6Eqt8jfsgQZgs5aBVeUPiD11IsQFXRalFsn+2h4=;
-        b=BU4KkARm9AOg73ixkmQcodJmg2l9rT+7dX+UZ8Jw9ryRRFNzrHnsAuixQ+pL+oP051
-         XFKRDBQv4bD5G7uYzkiksRsBunaSAiB+YDMlwhKYgONropqpuRl0Qv9pAAX2dJv0U2a/
-         Mjnak4cemlkKbG3YV1McfAPLIXFEy29F/fLCQ=
+        bh=lNw8f3YA0DZukVEGbXPjsA/vyBkyObawvtOHlKkIee4=;
+        b=sefnPZfKls3P9ky+DVoLfW6A9lqoVwcGMHP4hhzS9Zg3gRmN7U+dqe/r2YrY+Uo/oy
+         GklTNg9vOjfWuglFaWiB6sBO5uncDBKJCZvUn9rjS/CeyaoFCmljJuL00NiYu2SpNRAb
+         KE8ay6CZ3qh0skNs+IYNLSYIkIfhvv7M1j1bKA3fXb+AEArniVQ3oI2hF6sHXF+h/w8j
+         etWCoAKJQo7c43elviTkvpfpjSYnFgiYCQXLxqX1hD5AeTxaLncgPh4JMKxzxO5FFl0h
+         uCHnjNNBRjxtvpozgEF3/VnwMWLgNs0SR5rx3UXtQd5x0ffwUwiyaBEq/CIi2GclDo69
+         ikHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JgLR6Eqt8jfsgQZgs5aBVeUPiD11IsQFXRalFsn+2h4=;
-        b=HLKk335xamvtTAKHwsO7d7Vi7E2u+TQrlbR5iVB+ts7HhapPXvQA9Bc8W79CTNGSgg
-         kNnreabr1sian+YX2z1i7bjmKUFmydbEbpPIXmviU5Ylk0Ghu7NAl8yKxUe0SuaE5fdX
-         /pqEAq3USvGj5VZHIwqP7koyvhEmJemObmJoKRYmX7B9IFgV6AFGTiVtG4GZeiONcx7p
-         4+t18W7s/yhU5LcpTKdPRPy7kIG0oeQQ5Q2OZWtC+3IRt219ZcVl+ByNbATP6DwMhlSE
-         gmu0ywpGX0ZQwF+W3iBCB7MXDS1nJDqQPGBLhq2zHo6qa+mRFuC27U4x2S4vetsHgYL7
-         fArQ==
-X-Gm-Message-State: APjAAAUhZMvx8XXASc1iNKursHub4gcic8wB+bJ2zeVyc6SrNoZdUh32
-        VBASEJyms1QK3Dg+kTArAxBhxQ==
-X-Google-Smtp-Source: APXvYqyiXnmDPZw3Wq01Z5lJf0JrUon18lAytn2k8k+m4ePo8H2XqV7q1jPIEaZVEQSOaAvVbqEQaA==
-X-Received: by 2002:a2e:9c91:: with SMTP id x17mr4517998lji.103.1567067575093;
-        Thu, 29 Aug 2019 01:32:55 -0700 (PDT)
-Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id o20sm248087ljg.31.2019.08.29.01.32.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 01:32:54 -0700 (PDT)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        ndesaulniers@google.com,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [RFC PATCH 5/5] x86: bug.h: use asm_inline in _BUG_FLAGS definitions
-Date:   Thu, 29 Aug 2019 10:32:33 +0200
-Message-Id: <20190829083233.24162-6-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
-References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
+        bh=lNw8f3YA0DZukVEGbXPjsA/vyBkyObawvtOHlKkIee4=;
+        b=Xd+N9pfrIRZeveyVCtM1WTdUwjlNIlLAKK6D/k2LukIG2Uf8MG9kbiYr3pcC9L/Yvq
+         qUqD45+/dJaZJsJUmrvlUKkGz8eFcjBQThfGCIP9/JFAxEjUb1u1jHLBm5yJljdREpjC
+         gvKDdHjRNiJZRgHD+uat99LmP2xtUhQzv0RFzodViX64t/CzVb2VaE7ZkLYVO3kFE8Uj
+         WePlR8KPNcWS82bbtyeQTFB+q0rbP7zIugyChkyWJZ5TxaEYWK+r0hbpH/9XLhdLGblN
+         45Ni8wZ2bXRjxC4zRtHZ7U3PsRABHiZMgNeAz5gt1lTwBGUhDFW4MZuGXWr/bKm7/Uhl
+         anmg==
+X-Gm-Message-State: APjAAAUki6WxmLDxwgmh/vwnAj7MVqSMv2/AyaXVKHUXGm05PVaQhECP
+        OuyTaI1i7H58FLgBL/zZyqM=
+X-Google-Smtp-Source: APXvYqxUIg3uZ/+/r1Bgjx0rPKDe0xLX2t3FWr19uDIX5PHEIem1Nds9yT8RFhZQZ/m/8Q1s3Zxr6A==
+X-Received: by 2002:a17:902:a404:: with SMTP id p4mr8320726plq.185.1567067579478;
+        Thu, 29 Aug 2019 01:32:59 -0700 (PDT)
+Received: from localhost.localdomain ([203.100.54.194])
+        by smtp.gmail.com with ESMTPSA id v22sm1260155pgk.69.2019.08.29.01.32.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 29 Aug 2019 01:32:58 -0700 (PDT)
+From:   Yuyang Du <duyuyang@gmail.com>
+To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
+Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        longman@redhat.com, paulmck@linux.vnet.ibm.com,
+        boqun.feng@gmail.com, Yuyang Du <duyuyang@gmail.com>
+Subject: [PATCH v4 19/30] locking/lockdep: Add helper functions to operate on the searched path
+Date:   Thu, 29 Aug 2019 16:31:21 +0800
+Message-Id: <20190829083132.22394-20-duyuyang@gmail.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+In-Reply-To: <20190829083132.22394-1-duyuyang@gmail.com>
+References: <20190829083132.22394-1-duyuyang@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,59 +76,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This helps preventing a BUG* or WARN* in some static inline from
-preventing that (or one of its callers) being inlined, so should allow
-gcc to make better informed inlining decisions.
+ - find_lock_in_path() tries to find whether a lock class is in the path.
 
-For example, with gcc 9.2, tcp_fastopen_no_cookie() vanishes from
-net/ipv4/tcp_fastopen.o. It does not itself have any BUG or WARN, but
-it calls dst_metric() which has a WARN_ON_ONCE - and despite that
-WARN_ON_ONCE vanishing since the condition is compile-time false,
-dst_metric() is apparently sufficiently "large" that when it gets
-inlined into tcp_fastopen_no_cookie(), the latter becomes too large
-for inlining.
+ - find_next_dep_in_path() returns the next dependency after a
+   given dependency in the path.
 
-Overall, if one asks size(1), .text decreases a little and .data
-increases by about the same amount (x86-64 defconfig)
-
-$ size vmlinux.{before,after}
-   text    data     bss     dec     hex filename
-19709726        5202600 1630280 26542606        195020e vmlinux.before
-19709330        5203068 1630280 26542678        1950256 vmlinux.after
-
-while bloat-o-meter says
-
-add/remove: 10/28 grow/shrink: 103/51 up/down: 3669/-2854 (815)
-...
-Total: Before=14783683, After=14784498, chg +0.01%
-
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- arch/x86/include/asm/bug.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/locking/lockdep.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
-index 6804d6642767..facba9bc30ca 100644
---- a/arch/x86/include/asm/bug.h
-+++ b/arch/x86/include/asm/bug.h
-@@ -32,7 +32,7 @@
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 18303ff..41cb735 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1535,6 +1535,37 @@ static inline int get_lock_depth(struct lock_list *child)
+ }
  
- #define _BUG_FLAGS(ins, flags)						\
- do {									\
--	asm volatile("1:\t" ins "\n"					\
-+	asm_inline volatile("1:\t" ins "\n"				\
- 		     ".pushsection __bug_table,\"aw\"\n"		\
- 		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
- 		     "\t"  __BUG_REL(%c0) "\t# bug_entry::file\n"	\
-@@ -49,7 +49,7 @@ do {									\
- 
- #define _BUG_FLAGS(ins, flags)						\
- do {									\
--	asm volatile("1:\t" ins "\n"					\
-+	asm_inline volatile("1:\t" ins "\n"				\
- 		     ".pushsection __bug_table,\"aw\"\n"		\
- 		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
- 		     "\t.word %c0"        "\t# bug_entry::flags\n"	\
+ /*
++ * Return the dependency if @lock is in the path, otherwise NULL.
++ */
++static inline struct lock_list *
++find_lock_in_path(struct lock_class *lock, struct lock_list *target)
++{
++	while ((target = get_lock_parent(target)))
++		if (fw_dep_class(target) == lock)
++			return target;
++
++	return NULL;
++}
++
++/*
++ * Walk back to the next dependency after @source from @target. Note
++ * that @source must be in the path, and @source can not be the same as
++ * @target, otherwise this is going to fail and reutrn NULL.
++ */
++static inline struct lock_list *
++find_next_dep_in_path(struct lock_list *source, struct lock_list *target)
++{
++	while (get_lock_parent(target) != source) {
++		target = get_lock_parent(target);
++
++		if (!target)
++			break;
++	}
++
++	return target;
++}
++
++/*
+  * Return the forward or backward dependency list.
+  *
+  * @lock:    the lock_list to get its class's dependency list
 -- 
-2.20.1
+1.8.3.1
 
