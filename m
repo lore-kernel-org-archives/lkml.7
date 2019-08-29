@@ -3,109 +3,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB9BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B874C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1993E205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D67233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 08:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfH2H6O (ORCPT
+        id S1726283AbfH2IBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 03:58:14 -0400
-Received: from mga11.intel.com ([192.55.52.93]:60991 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbfH2H6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 03:58:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 00:58:14 -0700
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="171821817"
-Received: from jkrzyszt-desk.igk.intel.com (HELO jkrzyszt-desk.ger.corp.intel.com) ([172.22.244.17])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 00:58:12 -0700
-From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        =?utf-8?B?TWljaGHFgg==?= Wajdeczko <michal.wajdeczko@intel.com>
-Subject: Re: [RFC PATCH] iommu/vt-d: Fix IOMMU field not populated on device hot re-plug
-Date:   Thu, 29 Aug 2019 09:58:05 +0200
-Message-ID: <3255251.C7nBVfOIaa@jkrzyszt-desk.ger.corp.intel.com>
-Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298 Gdansk - KRS 101882 - NIP 957-07-52-316
-In-Reply-To: <0cf4e930-1132-1e7f-815b-57a08a1fe5de@linux.intel.com>
-References: <20190822142922.31526-1-janusz.krzysztofik@linux.intel.com> <3275480.HMaYE7B3nd@jkrzyszt-desk.ger.corp.intel.com> <0cf4e930-1132-1e7f-815b-57a08a1fe5de@linux.intel.com>
+        Thu, 29 Aug 2019 04:01:34 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:32966 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbfH2IBd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 04:01:33 -0400
+Received: by mail-qt1-f195.google.com with SMTP id v38so2719048qtb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 01:01:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TrDRlo6tswkQiQ3OI2OWjkWb4KwruICZsEfI0GzK7Ww=;
+        b=BZ+TVMIWJyQNHNJs3arivMJfihq7Ax/RiteHqaSWQuHdBBw9R2NLi8m0uxjYhvvZVP
+         Kgc5VwTCEG2jP7dhG2ihv+4/psbFgbazY8QXA9z1JXVAWMUFj5GgXMccEqd/iLBcYF8R
+         OsHG3ah2HU95CeHtjhyd0id2plNIpeMH5kgg9tDDAHB3rdl0m9pTRdPWjMrMJFCJHvhl
+         PxvTZuOeTeK1ds9rP1ROcu6mzu/l4yNVkXKIrLAsCcNy77GH2GZqf7z+f2QBfj5KTwXx
+         GRxr2N18uQqpGuzsNj6F/uUI6UdVIU4sKxDh3UPr68uol/Q6dCGOobxhXs9aDkMFNABc
+         v7eg==
+X-Gm-Message-State: APjAAAX1lyUB6gLOrBAER7aCbQaxdkS/UM9NoJHyPduPVqC3KomBUe2g
+        X9GvwrMw3H6irIWGBmfJ4MHPvtLpoANI6a6IPTA=
+X-Google-Smtp-Source: APXvYqwtnho1S9aTMw3n9PpmlnfWxuTW5C6zA+a08plX+sQKqxSz2EK+Fy0FMAYbRaCLp86xbGf9AV3saoTYB0mrL94=
+X-Received: by 2002:ac8:35bb:: with SMTP id k56mr6444401qtb.142.1567065692859;
+ Thu, 29 Aug 2019 01:01:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <cover.1567007242.git.msuchanek@suse.de> <0ad51b41aebf65b3f3fcb9922f0f00b47932725d.1567007242.git.msuchanek@suse.de>
+ <20190829064624.GA28508@infradead.org>
+In-Reply-To: <20190829064624.GA28508@infradead.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 29 Aug 2019 10:01:16 +0200
+Message-ID: <CAK8P3a2qgLTbud+2Fw8Rr0RXV8-xwBMiBg3hFuqqBinN1zS90A@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] powerpc/64: make buildable without CONFIG_COMPAT
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        David Hildenbrand <david@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Breno Leitao <leitao@debian.org>,
+        Michael Neuling <mikey@neuling.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Allison Randal <allison@lohutok.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christian Brauner <christian@brauner.io>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Baolu,
+On Thu, Aug 29, 2019 at 8:46 AM Christoph Hellwig <hch@infradead.org> wrote:
 
-On Thursday, August 29, 2019 3:43:31 AM CEST Lu Baolu wrote:
-> Hi Janusz,
-> 
-> On 8/28/19 10:17 PM, Janusz Krzysztofik wrote:
-> >> We should avoid kernel panic when a intel_unmap() is called against
-> >> a non-existent domain.
-> > Does that mean you suggest to replace
-> > 	BUG_ON(!domain);
-> > with something like
-> > 	if (WARN_ON(!domain))
-> > 		return;
-> > and to not care of orphaned mappings left allocated?  Is there a way to 
-inform
-> > users that their active DMA mappings are no longer valid and they 
-shouldn't
-> > call dma_unmap_*()?
-> > 
-> >> But we shouldn't expect the IOMMU driver not
-> >> cleaning up the domain info when a device remove notification comes and
-> >> wait until all file descriptors being closed, right?
-> > Shouldn't then the IOMMU driver take care of cleaning up resources still
-> > allocated on device remove before it invalidates and forgets their 
-pointers?
-> > 
-> 
-> You are right. We need to wait until all allocated resources (iova and
-> mappings) to be released.
-> 
-> How about registering a callback for BUS_NOTIFY_UNBOUND_DRIVER, and
-> removing the domain info when the driver detachment completes?
+> > @@ -277,7 +277,7 @@ static void do_signal(struct task_struct *tsk)
+> >
+> >       rseq_signal_deliver(&ksig, tsk->thread.regs);
+> >
+> > -     if (is32) {
+> > +     if ((IS_ENABLED(CONFIG_PPC32) || IS_ENABLED(CONFIG_COMPAT)) && is32) {
+>
+> I think we should fix the is_32bit_task definitions instead so that
+> callers don't need this mess.  I'd suggest something like:
+>
+> #ifdef CONFIG_COMPAT
+> #define is_32bit_task()         test_thread_flag(TIF_32BIT)
+> #else
+> #define is_32bit_task()         IS_ENABLED(CONFIG_PPC32)
+> #endif
 
-Device core calls BUS_NOTIFY_UNBOUND_DRIVER on each driver unbind, regardless 
-of a device being removed or not.  As long as the device is not unplugged and 
-the BUS_NOTIFY_REMOVED_DEVICE notification not generated, an unbound driver is 
-not a problem here.
-Morever, BUS_NOTIFY_UNBOUND_DRIVER  is called even before 
-BUS_NOTIFY_REMOVED_DEVICE so that wouldn't help anyway.
-Last but not least, bus events are independent of the IOMMU driver use via 
-DMA-API it exposes.
+Are there actually any (correct) uses of is_32bit_task() outside of
+#ifdef CONFIG_PPC64?
 
-If keeping data for unplugged devices and reusing it on device re-plug is not 
-acceptable then maybe the IOMMU driver should perform reference counting of 
-its internal resources occupied by DMA-API users and perform cleanups on last 
-release?
+I suspect most if not all could be changed to the generic
+in_compat_syscall() that we use outside of architecture specific
+code.
 
-Thanks,
-Janusz
-
-
-> > Thanks,
-> > Janusz
-> 
-> Best regards,
-> Baolu
-> 
-
-
-
-
+       Arnd
