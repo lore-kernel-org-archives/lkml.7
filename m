@@ -4,71 +4,223 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C88AAC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF83C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96C922173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C08F2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbfH2X3G (ORCPT
+        id S1727413AbfH2XdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 19:29:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34344 "EHLO mx1.redhat.com"
+        Thu, 29 Aug 2019 19:33:20 -0400
+Received: from mga07.intel.com ([134.134.136.100]:19536 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfH2X3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 19:29:06 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1872E3C93;
-        Thu, 29 Aug 2019 23:29:06 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5476C60635;
-        Thu, 29 Aug 2019 23:29:05 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Subject: [PATCH] objtool: Clobber user CFLAGS variable
-Date:   Thu, 29 Aug 2019 18:28:49 -0500
-Message-Id: <83a276df209962e6058fcb6c615eef9d401c21bc.1567121311.git.jpoimboe@redhat.com>
+        id S1725847AbfH2XdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 19:33:20 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 16:33:19 -0700
+X-IronPort-AV: E=Sophos;i="5.64,445,1559545200"; 
+   d="scan'208";a="175427416"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 16:33:19 -0700
+Subject: [PATCH v2] libata/ahci: Drop PCS quirk for Denverton and beyond
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     axboe@kernel.dk
+Cc:     Stephen Douthit <stephend@silicom-usa.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 29 Aug 2019 16:19:02 -0700
+Message-ID: <156712072444.1601704.7392596435870876837.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 29 Aug 2019 23:29:06 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the build user has the CFLAGS variable set in their environment,
-objtool blindly appends to it, which can cause unexpected behavior.
+The Linux ahci driver has historically implemented a configuration fixup
+for platforms / platform-firmware that fails to enable the ports prior
+to OS hand-off at boot. The fixup was originally implemented way back
+before ahci moved from drivers/scsi/ to drivers/ata/, and was updated in
+2007 via commit 49f290903935 "ahci: update PCS programming". The quirk
+sets a port-enable bitmap in the PCS register at offset 0x92.
 
-Clobber CFLAGS to ensure consistent objtool compilation behavior.
+This quirk could be applied generically up until the arrival of the
+Denverton (DNV) platform. The DNV AHCI controller architecture supports
+more than 6 ports and along with that the PCS register location and
+format were updated to allow for more possible ports in the bitmap. DNV
+AHCI expands the register to 32-bits and moves it to offset 0x94.
 
-Reported-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Tested-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+As it stands there are no known problem reports with existing Linux
+trying to set bits at offset 0x92 which indicates that the quirk is not
+applicable. Likely it is not applicable on a wider range of platforms,
+but it is difficult to discern which platforms if any still depend on
+the quirk.
+
+Rather than try to fix the PCS quirk to consider the DNV register layout
+instead require explicit opt-in. The assumption is that the OS driver
+need not touch this register, and platforms can be added with a new
+boad_ahci_pcs7 board-id when / if problematic platforms are found in the
+future. The logic in ahci_intel_pcs_quirk() looks for all Intel AHCI
+instances with "legacy" board-ids and otherwise skips the quirk if the
+board was matched by class-code.
+
+Reported-by: Stephen Douthit <stephend@silicom-usa.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- tools/objtool/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes since v1 [1]:
+- Find a way to not duplicate a large portion of the ahci_pci_tbl[]
+  array (Stephen).
+- Add a definition for the PCS register offset rather than hard code
+  (Stephen)
 
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index 88158239622b..20f67fcf378d 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -35,7 +35,7 @@ INCLUDES := -I$(srctree)/tools/include \
- 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
- 	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include
- WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
--CFLAGS   += -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
-+CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
- LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+[1]: https://lore.kernel.org/r/a04c0ae7-ef4d-4275-de05-b74beaeef86c@silicom-usa.com/
+
+ drivers/ata/ahci.c |   70 ++++++++++++++++++++++++++++++++--------------------
+ drivers/ata/ahci.h |    2 +
+ 2 files changed, 45 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+index f7652baa6337..847e3796d505 100644
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -65,6 +65,12 @@ enum board_ids {
+ 	board_ahci_sb700,	/* for SB700 and SB800 */
+ 	board_ahci_vt8251,
  
- # Allow old libelf to be used:
--- 
-2.20.1
++	/*
++	 * board IDs for Intel chipsets that support more than 6 ports
++	 * *and* end up needing the PCS quirk.
++	 */
++	board_ahci_pcs7,
++
+ 	/* aliases */
+ 	board_ahci_mcp_linux	= board_ahci_mcp65,
+ 	board_ahci_mcp67	= board_ahci_mcp65,
+@@ -623,30 +629,6 @@ static void ahci_pci_save_initial_config(struct pci_dev *pdev,
+ 	ahci_save_initial_config(&pdev->dev, hpriv);
+ }
+ 
+-static int ahci_pci_reset_controller(struct ata_host *host)
+-{
+-	struct pci_dev *pdev = to_pci_dev(host->dev);
+-	int rc;
+-
+-	rc = ahci_reset_controller(host);
+-	if (rc)
+-		return rc;
+-
+-	if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
+-		struct ahci_host_priv *hpriv = host->private_data;
+-		u16 tmp16;
+-
+-		/* configure PCS */
+-		pci_read_config_word(pdev, 0x92, &tmp16);
+-		if ((tmp16 & hpriv->port_map) != hpriv->port_map) {
+-			tmp16 |= hpriv->port_map;
+-			pci_write_config_word(pdev, 0x92, tmp16);
+-		}
+-	}
+-
+-	return 0;
+-}
+-
+ static void ahci_pci_init_controller(struct ata_host *host)
+ {
+ 	struct ahci_host_priv *hpriv = host->private_data;
+@@ -849,7 +831,7 @@ static int ahci_pci_device_runtime_resume(struct device *dev)
+ 	struct ata_host *host = pci_get_drvdata(pdev);
+ 	int rc;
+ 
+-	rc = ahci_pci_reset_controller(host);
++	rc = ahci_reset_controller(host);
+ 	if (rc)
+ 		return rc;
+ 	ahci_pci_init_controller(host);
+@@ -884,7 +866,7 @@ static int ahci_pci_device_resume(struct device *dev)
+ 		ahci_mcp89_apple_enable(pdev);
+ 
+ 	if (pdev->dev.power.power_state.event == PM_EVENT_SUSPEND) {
+-		rc = ahci_pci_reset_controller(host);
++		rc = ahci_reset_controller(host);
+ 		if (rc)
+ 			return rc;
+ 
+@@ -1619,6 +1601,34 @@ static void ahci_update_initial_lpm_policy(struct ata_port *ap,
+ 		ap->target_lpm_policy = policy;
+ }
+ 
++static void ahci_intel_pcs_quirk(struct pci_dev *pdev, struct ahci_host_priv *hpriv)
++{
++	const struct pci_device_id *id = pci_match_id(ahci_pci_tbl, pdev);
++	u16 tmp16;
++
++	/*
++	 * Only apply the 6-port PCS quirk for known legacy platforms.
++	 */
++	if (!id || id->vendor != PCI_VENDOR_ID_INTEL)
++		return;
++	if (((enum board_ids) id->driver_data) < board_ahci_pcs7)
++		return;
++
++	/*
++	 * port_map is determined from PORTS_IMPL PCI register which is
++	 * implemented as write or write-once register.  If the register
++	 * isn't programmed, ahci automatically generates it from number
++	 * of ports, which is good enough for PCS programming. It is
++	 * otherwise expected that platform firmware enables the ports
++	 * before the OS boots.
++	 */
++	pci_read_config_word(pdev, PCS_6, &tmp16);
++	if ((tmp16 & hpriv->port_map) != hpriv->port_map) {
++		tmp16 |= hpriv->port_map;
++		pci_write_config_word(pdev, PCS_6, tmp16);
++	}
++}
++
+ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	unsigned int board_id = ent->driver_data;
+@@ -1731,6 +1741,12 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	/* save initial config */
+ 	ahci_pci_save_initial_config(pdev, hpriv);
+ 
++	/*
++	 * If platform firmware failed to enable ports, try to enable
++	 * them here.
++	 */
++	ahci_intel_pcs_quirk(pdev, hpriv);
++
+ 	/* prepare host */
+ 	if (hpriv->cap & HOST_CAP_NCQ) {
+ 		pi.flags |= ATA_FLAG_NCQ;
+@@ -1840,7 +1856,7 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = ahci_pci_reset_controller(host);
++	rc = ahci_reset_controller(host);
+ 	if (rc)
+ 		return rc;
+ 
+diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
+index 0570629d719d..3dbf398c92ea 100644
+--- a/drivers/ata/ahci.h
++++ b/drivers/ata/ahci.h
+@@ -247,6 +247,8 @@ enum {
+ 					  ATA_FLAG_ACPI_SATA | ATA_FLAG_AN,
+ 
+ 	ICH_MAP				= 0x90, /* ICH MAP register */
++	PCS_6				= 0x92, /* 6 port PCS */
++	PCS_7				= 0x94, /* 7+ port PCS (Denverton) */
+ 
+ 	/* em constants */
+ 	EM_MAX_SLOTS			= 8,
 
