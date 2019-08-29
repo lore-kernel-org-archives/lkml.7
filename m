@@ -2,247 +2,246 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AA0C41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8A9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0352D2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:53:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="lNJ9fe7l"
+	by mail.kernel.org (Postfix) with ESMTP id DEC4623404
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567043646;
+	bh=Zrl058AKt+X48Xm1RwlCil4+6XP123XzkWq9PYDitL8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=o5ld5fRSG2V8XZLb9BGhdQwMh1U4guiCJNbiHBJ46QXu/iqYhpS9n5Mwh+8gN15uz
+	 j55O0PiI6dGuDiFjB7kzf6riRMZtIhfC8T5KM3WXf91VlM85BHxlatcywwPgemtLOW
+	 2w1ifCkqCZ7MBt/WDhIgKDbTYLasU2Cnj4CATkDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfH2Bxt (ORCPT
+        id S1727233AbfH2ByF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 21:53:49 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:34793 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfH2Bxs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 21:53:48 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        Wed, 28 Aug 2019 21:54:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726384AbfH2ByE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 21:54:04 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 087EE80719;
-        Thu, 29 Aug 2019 13:53:45 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1567043625;
-        bh=pp3rxRT3APMbwgJSZ/RSorT23ERlsGkaBhCe5D/Ga7U=;
-        h=From:To:Cc:Subject:Date;
-        b=lNJ9fe7lKUmjMV8HJqNVVY3Z8Zd6azkU/svJGPUMQ/AoUMmPAypjczCQLqj3ljD/s
-         XGJgiQ7AMknk37h0dDyXocj1tiFIiXabzjwTvQIyYHHcy7MT+HmXOUmhvN3BPgAu5F
-         YJye/jiAQIukgwhvJMee65WwIizjY7mnqbzZFqLRHiO1qVckjGoHORmBkQvzbS9U4/
-         WCg1/yckw6WhU195O4pvz2jf2xuirg7dpo5u6iJEg18r3xljAXVAuVUuT6yNAi4tR9
-         72f6B6jOkhLjNLfZ7t0sB/vjsVDzSsShh9iWb+eIv+bopJRP6O2fFYJHk3kHif2LWd
-         AfgjRpZBrY7UQ==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d6730270000>; Thu, 29 Aug 2019 13:53:43 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 1910713EED5;
-        Thu, 29 Aug 2019 13:53:46 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 125102819B0; Thu, 29 Aug 2019 13:53:43 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     wim@linux-watchdog.org, linux@roeck-us.net
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v4] watchdog: orion_wdt: use timer1 as a pretimeout
-Date:   Thu, 29 Aug 2019 13:53:39 +1200
-Message-Id: <20190829015340.25323-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BEDB2070B;
+        Thu, 29 Aug 2019 01:53:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567043641;
+        bh=Zrl058AKt+X48Xm1RwlCil4+6XP123XzkWq9PYDitL8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Zj/WJH0ibmSgOWY5Do/DMgaa2KSeAnhFzMl7OodpvXqc2XMuCV+xlci/qSvB/bAYn
+         F8NHZNljGT4QT7huo3RwoFgcNla3pjO9SI779BRarvo+yw3IfupZ9aGChzdJBPVAPT
+         912L2V200qo8W5gSA/XgfM8PgYq63vBLkzxpdFig=
+Date:   Thu, 29 Aug 2019 10:53:56 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: linux-next: Tree for Aug 27 (objtool)
+Message-Id: <20190829105356.1fd4859f49c142945146855f@kernel.org>
+In-Reply-To: <20190828163433.4ltoxmtuujkqspar@treble>
+References: <20190827190526.6f27e763@canb.auug.org.au>
+        <6c42e32f-901d-be78-e69b-cb9ff8703932@infradead.org>
+        <20190827155911.ct2zzo2zhcrauf3z@treble>
+        <2e8b18a0-a09c-b67e-c99f-45066ab9d511@infradead.org>
+        <20190828155147.v6eowc7rr7upr7dr@treble>
+        <f354f4be-99c7-346f-c7c5-ac5ce8a72a16@infradead.org>
+        <20190828161331.kvikro257blxtzu5@treble>
+        <20190828163433.4ltoxmtuujkqspar@treble>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="Multipart=_Thu__29_Aug_2019_10_53_56_+0900_cV5qrkYoaDhqPZGY"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The orion watchdog can either reset the CPU or generate an interrupt.
-The interrupt would be useful for debugging as it provides panic()
-output about the watchdog expiry, however if the interrupt is used the
-watchdog can't reset the CPU in the event of being stuck in a loop with
-interrupts disabled or if the CPU is prevented from accessing memory
-(e.g. an unterminated DMA).
+This is a multi-part message in MIME format.
 
-The Armada SoCs have spare timers that aren't currently used by the
-Linux kernel. We can use timer1 to provide a pre-timeout ahead of the
-watchdog timer and provide the possibility of gathering debug before the
-reset triggers.
+--Multipart=_Thu__29_Aug_2019_10_53_56_+0900_cV5qrkYoaDhqPZGY
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Hi Josh,
+
+On Wed, 28 Aug 2019 11:34:33 -0500
+Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+
+> On Wed, Aug 28, 2019 at 11:13:31AM -0500, Josh Poimboeuf wrote:
+> > Turns out this patch does break something:
+> > 
+> >   arch/x86/xen/enlighten_pv.o: warning: objtool: xen_cpuid()+0x25: can't find jump dest instruction at .text+0x9c
+> > 
+> > I'll need to figure out a better way to whitelist that
+> > XEN_EMULATE_PREFIX fake instruction thing.  I'll probably just teach
+> > the objtool decoder about it.
+> 
+> Hi Masami,
+> 
+> Is it possible for the kernel x86 decoder to recognize the
+> XEN_EMULATE_PREFIX prefix?
+> 
+>         asm(XEN_EMULATE_PREFIX "cpuid"
+>                 : "=a" (*ax),
+>                   "=b" (*bx),
+>                   "=c" (*cx),
+>                   "=d" (*dx)
+>                 : "0" (*ax), "2" (*cx));
+> 
+> is disassembled to:
+> 
+>       33:       0f 0b                   ud2
+>       35:       78 65                   js     9c <xen_store_tr+0xc>
+>       37:       6e                      outsb  %ds:(%rsi),(%dx)
+>       38:       0f a2                   cpuid
+> 
+> which confuses objtool.  Presumably that would confuse other users of
+> the decoder as well.
+
+Good catch! It should be problematic, since x86 decoder sanity test is
+based on objtool. But I don't want to change the test code itself,
+because this problem is highly depending on Xen.
+
+> That's a highly unlikely sequence of instructions, maybe the kernel
+> decoder should recognize it as a single instruction.
+
+OK, it is better to be done in decoder (only for CONFIG_XEN_PVHVM)
+
+BTW, could you also share what test case would you using?
+
+And what about attached patch? (just compile checked with/without CONFIG_XEN_PVHVM)
+
+Thank you,
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
+
+--Multipart=_Thu__29_Aug_2019_10_53_56_+0900_cV5qrkYoaDhqPZGY
+Content-Type: text/x-diff;
+ name="0001-x86-xen-insn-Decode-XEN_EMULATE_PREFIX-correctly.patch"
+Content-Disposition: attachment;
+ filename="0001-x86-xen-insn-Decode-XEN_EMULATE_PREFIX-correctly.patch"
+Content-Transfer-Encoding: 7bit
+
+From 9a46833c54fd320afd3836c0e51ade82e4bc6f96 Mon Sep 17 00:00:00 2001
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Date: Thu, 29 Aug 2019 10:01:55 +0900
+Subject: [PATCH] x86: xen: insn: Decode XEN_EMULATE_PREFIX correctly
+
+Add XEN_EMULATE_PREFIX prefix support to x86 insn decoder.
+This treats a special sequence of instructions of XEN_EMULATE_PREFIX
+as a prefix bytes in x86 insn decoder only if CONFIG_XEN_PVHVM=y.
+Note that this prefix is treated as just a dummy code.
+
+Reported-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
+ arch/x86/include/asm/xen/interface.h |  8 +++++--
+ arch/x86/lib/insn.c                  | 35 ++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+), 2 deletions(-)
 
-This was submitted previously[1], the other patches two from the series h=
-ave
-been picked up but this one seems to have fallen through the gaps.
-
-Changes in v3:
-- rebase against linux/master
-Changes in v2:
-- apply changes to armada-38x only
-
-[1] - https://lore.kernel.org/linux-watchdog/20190305201924.14853-4-chris=
-.packham@alliedtelesis.co.nz/
-
- drivers/watchdog/orion_wdt.c | 59 ++++++++++++++++++++++++++++++------
- 1 file changed, 50 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index cdb0d174c5e2..f2e90bfd7186 100644
---- a/drivers/watchdog/orion_wdt.c
-+++ b/drivers/watchdog/orion_wdt.c
-@@ -46,6 +46,11 @@
- #define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
- #define WDT_A370_EXPIRED	BIT(31)
-=20
-+#define TIMER1_VAL_OFF		0x001c
-+#define TIMER1_ENABLE_BIT	BIT(2)
-+#define TIMER1_FIXED_ENABLE_BIT	BIT(12)
-+#define TIMER1_STATUS_BIT	BIT(8)
-+
- static bool nowayout =3D WATCHDOG_NOWAYOUT;
- static int heartbeat =3D -1;		/* module parameter (seconds) */
-=20
-@@ -158,6 +163,7 @@ static int armadaxp_wdt_clock_init(struct platform_de=
-vice *pdev,
- 				   struct orion_watchdog *dev)
- {
- 	int ret;
-+	u32 val;
-=20
- 	dev->clk =3D of_clk_get_by_name(pdev->dev.of_node, "fixed");
- 	if (IS_ERR(dev->clk))
-@@ -169,38 +175,48 @@ static int armadaxp_wdt_clock_init(struct platform_=
-device *pdev,
- 	}
-=20
- 	/* Enable the fixed watchdog clock input */
--	atomic_io_modify(dev->reg + TIMER_CTRL,
--			 WDT_AXP_FIXED_ENABLE_BIT,
--			 WDT_AXP_FIXED_ENABLE_BIT);
-+	val =3D WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
-=20
- 	dev->clk_rate =3D clk_get_rate(dev->clk);
-+
- 	return 0;
- }
-=20
- static int orion_wdt_ping(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
-+
- 	/* Reload watchdog duration */
- 	writel(dev->clk_rate * wdt_dev->timeout,
- 	       dev->reg + dev->data->wdt_counter_offset);
-+	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-+		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
-+		       dev->reg + TIMER1_VAL_OFF);
-+
- 	return 0;
- }
-=20
- static int armada375_start(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
--	u32 reg;
-+	u32 reg, val;
-=20
- 	/* Set watchdog duration */
- 	writel(dev->clk_rate * wdt_dev->timeout,
- 	       dev->reg + dev->data->wdt_counter_offset);
-+	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-+		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
-+		       dev->reg + TIMER1_VAL_OFF);
-=20
- 	/* Clear the watchdog expiration bit */
- 	atomic_io_modify(dev->reg + TIMER_A370_STATUS, WDT_A370_EXPIRED, 0);
-=20
- 	/* Enable watchdog timer */
--	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
--						dev->data->wdt_enable_bit);
-+	val =3D dev->data->wdt_enable_bit;
-+	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-+		val |=3D TIMER1_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
-=20
- 	/* Enable reset on watchdog */
- 	reg =3D readl(dev->rstout);
-@@ -277,7 +293,7 @@ static int orion_stop(struct watchdog_device *wdt_dev=
-)
- static int armada375_stop(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
--	u32 reg;
-+	u32 reg, mask;
-=20
- 	/* Disable reset on watchdog */
- 	atomic_io_modify(dev->rstout_mask, dev->data->rstout_mask_bit,
-@@ -287,7 +303,10 @@ static int armada375_stop(struct watchdog_device *wd=
-t_dev)
- 	writel(reg, dev->rstout);
-=20
- 	/* Disable watchdog timer */
--	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
-+	mask =3D dev->data->wdt_enable_bit;
-+	if (wdt_dev->info->options & WDIOF_PRETIMEOUT)
-+		mask +=3D TIMER1_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, mask, 0);
-=20
- 	return 0;
- }
-@@ -349,7 +368,7 @@ static unsigned int orion_wdt_get_timeleft(struct wat=
-chdog_device *wdt_dev)
- 	return readl(dev->reg + dev->data->wdt_counter_offset) / dev->clk_rate;
- }
-=20
--static const struct watchdog_info orion_wdt_info =3D {
-+static struct watchdog_info orion_wdt_info =3D {
- 	.options =3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
- 	.identity =3D "Orion Watchdog",
- };
-@@ -368,6 +387,16 @@ static irqreturn_t orion_wdt_irq(int irq, void *devi=
-d)
- 	return IRQ_HANDLED;
- }
-=20
-+static irqreturn_t orion_wdt_pre_irq(int irq, void *devid)
-+{
-+	struct orion_watchdog *dev =3D devid;
-+
-+	atomic_io_modify(dev->reg + TIMER_A370_STATUS,
-+			 TIMER1_STATUS_BIT, 0);
-+	watchdog_notify_pretimeout(&dev->wdt);
-+	return IRQ_HANDLED;
-+}
+diff --git a/arch/x86/include/asm/xen/interface.h b/arch/x86/include/asm/xen/interface.h
+index 62ca03ef5c65..fbee520b1f07 100644
+--- a/arch/x86/include/asm/xen/interface.h
++++ b/arch/x86/include/asm/xen/interface.h
+@@ -27,6 +27,8 @@
+ #ifndef _ASM_X86_XEN_INTERFACE_H
+ #define _ASM_X86_XEN_INTERFACE_H
+ 
++#include <linux/stringify.h>
 +
  /*
-  * The original devicetree binding for this driver specified only
-  * one memory resource, so in order to keep DT backwards compatibility
-@@ -589,6 +618,18 @@ static int orion_wdt_probe(struct platform_device *p=
-dev)
- 		}
- 	}
-=20
-+	irq =3D platform_get_irq(pdev, 1);
-+	if (irq > 0) {
-+		orion_wdt_info.options |=3D WDIOF_PRETIMEOUT;
-+		ret =3D devm_request_irq(&pdev->dev, irq, orion_wdt_pre_irq,
-+				       0, pdev->name, dev);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "failed to request IRQ\n");
-+			goto disable_clk;
-+		}
+  * XEN_GUEST_HANDLE represents a guest pointer, when passed as a field
+  * in a struct in memory.
+@@ -379,11 +381,13 @@ struct xen_pmu_arch {
+  * Prefix forces emulation of some non-trapping instructions.
+  * Currently only CPUID.
+  */
++#define __XEN_EMULATE_PREFIX  0x0f,0x0b,0x78,0x65,0x6e
++#define __XEN_EMULATE_PREFIX_STR  __stringify(__XEN_EMULATE_PREFIX)
+ #ifdef __ASSEMBLY__
+-#define XEN_EMULATE_PREFIX .byte 0x0f,0x0b,0x78,0x65,0x6e ;
++#define XEN_EMULATE_PREFIX .byte __XEN_EMULATE_PREFIX ;
+ #define XEN_CPUID          XEN_EMULATE_PREFIX cpuid
+ #else
+-#define XEN_EMULATE_PREFIX ".byte 0x0f,0x0b,0x78,0x65,0x6e ; "
++#define XEN_EMULATE_PREFIX ".byte " __XEN_EMULATE_PREFIX_STR " ; "
+ #define XEN_CPUID          XEN_EMULATE_PREFIX "cpuid"
+ #endif
+ 
+diff --git a/arch/x86/lib/insn.c b/arch/x86/lib/insn.c
+index 0b5862ba6a75..2401a6fc9509 100644
+--- a/arch/x86/lib/insn.c
++++ b/arch/x86/lib/insn.c
+@@ -7,6 +7,9 @@
+ 
+ #ifdef __KERNEL__
+ #include <linux/string.h>
++#include <linux/kernel.h>
++/* For special Xen prefix */
++#include <asm/xen/interface.h>
+ #else
+ #include <string.h>
+ #endif
+@@ -58,6 +61,34 @@ void insn_init(struct insn *insn, const void *kaddr, int buf_len, int x86_64)
+ 		insn->addr_bytes = 4;
+ }
+ 
++#ifdef CONFIG_XEN_PVHVM
++static const insn_byte_t xen_prefix[] = { XEN_EMULATE_PREFIX };
++
++static int insn_xen_prefix(struct insn *insn, insn_byte_t b)
++{
++	struct insn_field *prefixes = &insn->prefixes;
++	int i = 0;
++
++	while (i < ARRAY_SIZE(xen_prefix) && b == xen_prefix[i])
++		b = peek_nbyte_next(insn_byte_t, insn, ++i);
++
++	if (unlikely(i == ARRAY_SIZE(xen_prefix))) {
++		memcpy(prefixes->bytes, xen_prefix, 3);
++		prefixes->bytes[3] = xen_prefix[ARRAY_SIZE(xen_prefix) - 1];
++		prefixes->nbytes = ARRAY_SIZE(xen_prefix);
++		insn->next_byte += prefixes->nbytes;
++		prefixes->got = 1;
++
++		return 1;
 +	}
 +
++err_out:
++	return 0;
++}
++#else
++#define insn_xen_prefix(insn,b)	(0)
++#endif
 +
- 	watchdog_set_nowayout(&dev->wdt, nowayout);
- 	ret =3D watchdog_register_device(&dev->wdt);
- 	if (ret)
---=20
-2.23.0
+ /**
+  * insn_get_prefixes - scan x86 instruction prefix bytes
+  * @insn:	&struct insn containing instruction
+@@ -79,6 +110,10 @@ void insn_get_prefixes(struct insn *insn)
+ 	nb = 0;
+ 	lb = 0;
+ 	b = peek_next(insn_byte_t, insn);
++
++	if (insn_xen_prefix(insn, b))
++		return;
++
+ 	attr = inat_get_opcode_attribute(b);
+ 	while (inat_is_legacy_prefix(attr)) {
+ 		/* Skip if same prefix */
+-- 
+2.20.1
 
+
+--Multipart=_Thu__29_Aug_2019_10_53_56_+0900_cV5qrkYoaDhqPZGY--
