@@ -2,314 +2,223 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC20BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8117C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DD9233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A53C233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:47:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfH2JpX (ORCPT
+        id S1727003AbfH2Jrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:45:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51708 "EHLO mx1.redhat.com"
+        Thu, 29 Aug 2019 05:47:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:41504 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfH2JpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:45:23 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 973AA106E28E;
-        Thu, 29 Aug 2019 09:45:22 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EFA5A19C4F;
-        Thu, 29 Aug 2019 09:45:18 +0000 (UTC)
-Date:   Thu, 29 Aug 2019 11:45:16 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH v2 3/4] KVM: selftests: Introduce VM_MODE_PXXV48_4K
-Message-ID: <20190829094516.fyfhgz7ma2nfazoq@kamzik.brq.redhat.com>
-References: <20190829022117.10191-1-peterx@redhat.com>
- <20190829022117.10191-4-peterx@redhat.com>
+        id S1726038AbfH2Jrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 05:47:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D44A28;
+        Thu, 29 Aug 2019 02:47:31 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0F0D3F246;
+        Thu, 29 Aug 2019 02:47:29 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 10:47:21 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Matthew Leach <matthew.leach@arm.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: use x22 to save boot exception level
+Message-ID: <20190829094720.GA44575@lakrids.cambridge.arm.com>
+References: <20190828173318.12428-1-afd@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829022117.10191-4-peterx@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Thu, 29 Aug 2019 09:45:22 +0000 (UTC)
+In-Reply-To: <20190828173318.12428-1-afd@ti.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 10:21:16AM +0800, Peter Xu wrote:
-> The naming VM_MODE_P52V48_4K is explicit but unclear when used on
-> x86_64 machines, because x86_64 machines are having various physical
-> address width rather than some static values.  Here's some examples:
-> 
->   - Intel Xeon E3-1220:  36 bits
->   - Intel Core i7-8650:  39 bits
->   - AMD   EPYC 7251:     48 bits
-> 
-> All of them are using 48 bits linear address width but with totally
-> different physical address width (and most of the old machines should
-> be less than 52 bits).
-> 
-> Let's create a new guest mode called VM_MODE_PXXV48_4K for current
-> x86_64 tests and make it as the default to replace the old naming of
-> VM_MODE_P52V48_4K because it shows more clearly that the PA width is
-> not really a constant.  Meanwhile we also stop assuming all the x86
-> machines are having 52 bits PA width but instead we fetch the real
-> vm->pa_bits from CPUID 0x80000008 during runtime.
-> 
-> We currently make this exclusively used by x86_64 but no other arch.
-> 
-> As a slight touch up, moving DEBUG macro from dirty_log_test.c to
-> kvm_util.h so lib can use it too.
-> 
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  tools/testing/selftests/kvm/dirty_log_test.c  |  5 ++--
->  .../testing/selftests/kvm/include/kvm_util.h  |  9 +++++-
->  .../selftests/kvm/include/x86_64/processor.h  |  3 ++
->  .../selftests/kvm/lib/aarch64/processor.c     |  3 ++
->  tools/testing/selftests/kvm/lib/kvm_util.c    | 29 ++++++++++++++----
->  .../selftests/kvm/lib/x86_64/processor.c      | 30 ++++++++++++++++---
->  6 files changed, 65 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-> index efb7746a7e99..c86f83cb33e5 100644
-> --- a/tools/testing/selftests/kvm/dirty_log_test.c
-> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
-> @@ -19,8 +19,6 @@
->  #include "kvm_util.h"
->  #include "processor.h"
->  
-> -#define DEBUG printf
-> -
->  #define VCPU_ID				1
->  
->  /* The memory slot index to track dirty pages */
-> @@ -256,6 +254,7 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
->  
->  	switch (mode) {
->  	case VM_MODE_P52V48_4K:
-> +	case VM_MODE_PXXV48_4K:
->  		guest_pa_bits = 52;
->  		guest_page_shift = 12;
->  		break;
-> @@ -446,7 +445,7 @@ int main(int argc, char *argv[])
->  #endif
->  
->  #ifdef __x86_64__
-> -	vm_guest_mode_params_init(VM_MODE_P52V48_4K, true, true);
-> +	vm_guest_mode_params_init(VM_MODE_PXXV48_4K, true, true);
->  #endif
->  #ifdef __aarch64__
->  	vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
-> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> index c78faa2ff7f3..430edbacb9b2 100644
-> --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> @@ -24,6 +24,10 @@ struct kvm_vm;
->  typedef uint64_t vm_paddr_t; /* Virtual Machine (Guest) physical address */
->  typedef uint64_t vm_vaddr_t; /* Virtual Machine (Guest) virtual address */
->  
-> +#ifndef DEBUG
-> +#define DEBUG printf
-> +#endif
+Hi Andrew,
 
-There's no way to turn this off without modifying code. I suggested
+On Wed, Aug 28, 2019 at 01:33:18PM -0400, Andrew F. Davis wrote:
+> The exception level in which the kernel was entered needs to be saved for
+> later. We do this by writing the exception level to memory. As this data
+> is written with the MMU/cache off it will bypass any cache, after this we
+> invalidate the address so that later reads from cacheable mappings do not
+> read a stale cache line. The side effect of this invalidate is any
+> existing cache line for this address in the same coherency domain will be
+> cleaned and written into memory, possibly overwriting the data we just
+> wrote. As this memory is treated as cacheable by already running cores it
+> on not architecturally safe to perform any non-caching accesses to this
+> memory anyway.
 
-#ifndef NDEBUG
-#define dprintf printf
-#endif
+Are you seeing an issue in practice here, or is this something that
+you've found by inspection?
 
-which allows the dprintf(...) statements to be removed by compiling with
--DNDEBUG added to CFLAGS. And that would also disable all the asserts().
-That's probably not all that useful, but then again, defining printf() as
-DEBUG() isn't useful either if the intention is to always print.
+If this is an issue in practice, can you tell me more about the system,
+i.e.
 
-> +
->  /* Minimum allocated guest virtual and physical addresses */
->  #define KVM_UTIL_MIN_VADDR		0x2000
->  
-> @@ -38,11 +42,14 @@ enum vm_guest_mode {
->  	VM_MODE_P48V48_64K,
->  	VM_MODE_P40V48_4K,
->  	VM_MODE_P40V48_64K,
-> +	VM_MODE_PXXV48_4K,	/* For 48bits VA but ANY bits PA */
->  	NUM_VM_MODES,
->  };
->  
-> -#ifdef __aarch64__
-> +#if defined(__aarch64__)
->  #define VM_MODE_DEFAULT VM_MODE_P40V48_4K
-> +#elif defined(__x86_64__)
-> +#define VM_MODE_DEFAULT VM_MODE_PXXV48_4K
->  #else
->  #define VM_MODE_DEFAULT VM_MODE_P52V48_4K
->  #endif
-> diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
-> index 80d19740d2dc..0c17f2ee685e 100644
-> --- a/tools/testing/selftests/kvm/include/x86_64/processor.h
-> +++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
-> @@ -325,6 +325,9 @@ uint64_t vcpu_get_msr(struct kvm_vm *vm, uint32_t vcpuid, uint64_t msr_index);
->  void vcpu_set_msr(struct kvm_vm *vm, uint32_t vcpuid, uint64_t msr_index,
->  	  	  uint64_t msr_value);
->  
-> +uint32_t kvm_get_cpuid_max(void);
-> +void kvm_get_cpu_address_width(unsigned int *pa_bits, unsigned int *va_bits);
-> +
->  /*
->   * Basic CPU control in CR0
->   */
-> diff --git a/tools/testing/selftests/kvm/lib/aarch64/processor.c b/tools/testing/selftests/kvm/lib/aarch64/processor.c
-> index 486400a97374..86036a59a668 100644
-> --- a/tools/testing/selftests/kvm/lib/aarch64/processor.c
-> +++ b/tools/testing/selftests/kvm/lib/aarch64/processor.c
-> @@ -264,6 +264,9 @@ void aarch64_vcpu_setup(struct kvm_vm *vm, int vcpuid, struct kvm_vcpu_init *ini
->  	case VM_MODE_P52V48_4K:
->  		TEST_ASSERT(false, "AArch64 does not support 4K sized pages "
->  				   "with 52-bit physical address ranges");
-> +	case VM_MODE_PXXV48_4K:
-> +		TEST_ASSERT(false, "AArch64 does not support 4K sized pages "
-> +				   "with ANY-bit physical address ranges");
->  	case VM_MODE_P52V48_64K:
->  		tcr_el1 |= 1ul << 14; /* TG0 = 64KB */
->  		tcr_el1 |= 6ul << 32; /* IPS = 52 bits */
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index 34a8a6572c7c..bb8f993b25fb 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -8,6 +8,7 @@
->  #include "test_util.h"
->  #include "kvm_util.h"
->  #include "kvm_util_internal.h"
-> +#include "processor.h"
->  
->  #include <assert.h>
->  #include <sys/mman.h>
-> @@ -101,12 +102,13 @@ static void vm_open(struct kvm_vm *vm, int perm)
->  }
->  
->  const char * const vm_guest_mode_string[] = {
-> -	"PA-bits:52, VA-bits:48, 4K pages",
-> -	"PA-bits:52, VA-bits:48, 64K pages",
-> -	"PA-bits:48, VA-bits:48, 4K pages",
-> -	"PA-bits:48, VA-bits:48, 64K pages",
-> -	"PA-bits:40, VA-bits:48, 4K pages",
-> -	"PA-bits:40, VA-bits:48, 64K pages",
-> +	"PA-bits:52,  VA-bits:48,  4K pages",
-> +	"PA-bits:52,  VA-bits:48, 64K pages",
-> +	"PA-bits:48,  VA-bits:48,  4K pages",
-> +	"PA-bits:48,  VA-bits:48, 64K pages",
-> +	"PA-bits:40,  VA-bits:48,  4K pages",
-> +	"PA-bits:40,  VA-bits:48, 64K pages",
-> +	"PA-bits:ANY, VA-bits:48,  4K pages",
->  };
->  _Static_assert(sizeof(vm_guest_mode_string)/sizeof(char *) == NUM_VM_MODES,
->  	       "Missing new mode strings?");
-> @@ -184,6 +186,21 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
->  		vm->page_size = 0x10000;
->  		vm->page_shift = 16;
->  		break;
-> +	case VM_MODE_PXXV48_4K:
-> +#ifdef __x86_64__
-> +		kvm_get_cpu_address_width(&vm->pa_bits, &vm->va_bits);
-> +		TEST_ASSERT(vm->va_bits == 48, "Linear address width "
-> +			    "(%d bits) not supported", vm->va_bits);
-> +		vm->pgtable_levels = 4;
-> +		vm->page_size = 0x1000;
-> +		vm->page_shift = 12;
-> +		DEBUG("Guest physical address width detected: %d\n",
-> +		      vm->pa_bits);
-> +#else
-> +		TEST_ASSERT(false, "VM_MODE_PXXV48_4K not supported on "
-> +			    "non-x86 platforms");
-> +#endif
-> +		break;
->  	default:
->  		TEST_ASSERT(false, "Unknown guest mode, mode: 0x%x", mode);
->  	}
-> diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-> index 6cb34a0fa200..48467210ccfc 100644
-> --- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
-> +++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-> @@ -228,7 +228,7 @@ void sregs_dump(FILE *stream, struct kvm_sregs *sregs,
->  
->  void virt_pgd_alloc(struct kvm_vm *vm, uint32_t pgd_memslot)
->  {
-> -	TEST_ASSERT(vm->mode == VM_MODE_P52V48_4K, "Attempt to use "
-> +	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
->  		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
->  
->  	/* If needed, create page map l4 table. */
-> @@ -261,7 +261,7 @@ void virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
->  	uint16_t index[4];
->  	struct pageMapL4Entry *pml4e;
->  
-> -	TEST_ASSERT(vm->mode == VM_MODE_P52V48_4K, "Attempt to use "
-> +	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
->  		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
->  
->  	TEST_ASSERT((vaddr % vm->page_size) == 0,
-> @@ -547,7 +547,7 @@ vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
->  	struct pageDirectoryEntry *pde;
->  	struct pageTableEntry *pte;
->  
-> -	TEST_ASSERT(vm->mode == VM_MODE_P52V48_4K, "Attempt to use "
-> +	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
->  		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
->  
->  	index[0] = (gva >> 12) & 0x1ffu;
-> @@ -621,7 +621,7 @@ static void vcpu_setup(struct kvm_vm *vm, int vcpuid, int pgd_memslot, int gdt_m
->  	kvm_setup_gdt(vm, &sregs.gdt, gdt_memslot, pgd_memslot);
->  
->  	switch (vm->mode) {
-> -	case VM_MODE_P52V48_4K:
-> +	case VM_MODE_PXXV48_4K:
->  		sregs.cr0 = X86_CR0_PE | X86_CR0_NE | X86_CR0_PG;
->  		sregs.cr4 |= X86_CR4_PAE | X86_CR4_OSFXSR;
->  		sregs.efer |= (EFER_LME | EFER_LMA | EFER_NX);
-> @@ -1153,3 +1153,25 @@ bool is_intel_cpu(void)
->  	chunk = (const uint32_t *)("GenuineIntel");
->  	return (ebx == chunk[0] && edx == chunk[1] && ecx == chunk[2]);
->  }
-> +
-> +uint32_t kvm_get_cpuid_max(void)
-> +{
-> +	return kvm_get_supported_cpuid_entry(0x80000000)->eax;
-> +}
-> +
-> +void kvm_get_cpu_address_width(unsigned int *pa_bits, unsigned int *va_bits)
-> +{
-> +	struct kvm_cpuid_entry2 *entry;
-> +	bool pae;
-> +
-> +	/* SDM 4.1.4 */
-> +	if (kvm_get_cpuid_max() < 0x80000008) {
-> +		pae = kvm_get_supported_cpuid_entry(1)->edx & (1 << 6);
-> +		*pa_bits = pae ? 36 : 32;
-> +		*va_bits = 32;
-> +	} else {
-> +		entry = kvm_get_supported_cpuid_entry(0x80000008);
-> +		*pa_bits = entry->eax & 0xff;
-> +		*va_bits = (entry->eax >> 8) & 0xff;
-> +	}
-> +}
-> -- 
-> 2.21.0
->
+- Which CPU models do you see this with?
+- Do you see this with the boot CPU, secondaries, or both?
+- Do you have a system-level cache? If so, which model?
+- Do you see this on bare-metal?
+- Do you see this under a hypervisor? If so, which hypervisor?
+
+We place __boot_cpu_mode in the .mmuoff.data.write section, which is
+only written with the MMU off (i.e. with non-cacheable accesses), such
+that the cached copy should always be clean and shouldn't be written
+back. Your description sounds like you're seeing a write-back, which is
+surprising and may indicate a bug elsewhere.
+
+Depending on what exactly you're seeing, this could also be an issue for
+__early_cpu_boot_status and the early page table creation, so I'd like
+to understand that better.
 
 Thanks,
-drew 
+Mark.
+
+> Lets avoid these issues altogether by moving the writing of the boot
+> exception level to after MMU/caching has been enabled. Saving the boot
+> state in unused register x22 until we can safely and coherently write out
+> this data.
+> 
+> As the data is not written with the MMU off anymore we move the variable
+> definition out of this section and into a regular C code data section.
+> 
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> ---
+>  arch/arm64/kernel/head.S | 31 +++++++++++--------------------
+>  arch/arm64/kernel/smp.c  | 10 ++++++++++
+>  2 files changed, 21 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+> index 2cdacd1c141b..4c71493742c5 100644
+> --- a/arch/arm64/kernel/head.S
+> +++ b/arch/arm64/kernel/head.S
+> @@ -99,6 +99,7 @@ pe_header:
+>  	 *
+>  	 *  Register   Scope                      Purpose
+>  	 *  x21        stext() .. start_kernel()  FDT pointer passed at boot in x0
+> +	 *  x22        stext() .. start_kernel()  exception level core was booted
+>  	 *  x23        stext() .. start_kernel()  physical misalignment/KASLR offset
+>  	 *  x28        __create_page_tables()     callee preserved temp register
+>  	 *  x19/x20    __primary_switch()         callee preserved temp registers
+> @@ -108,7 +109,6 @@ ENTRY(stext)
+>  	bl	el2_setup			// Drop to EL1, w0=cpu_boot_mode
+>  	adrp	x23, __PHYS_OFFSET
+>  	and	x23, x23, MIN_KIMG_ALIGN - 1	// KASLR offset, defaults to 0
+> -	bl	set_cpu_boot_mode_flag
+>  	bl	__create_page_tables
+>  	/*
+>  	 * The following calls CPU setup code, see arch/arm64/mm/proc.S for
+> @@ -428,6 +428,8 @@ __primary_switched:
+>  	sub	x4, x4, x0			// the kernel virtual and
+>  	str_l	x4, kimage_voffset, x5		// physical mappings
+>  
+> +	bl	set_cpu_boot_mode_flag
+> +
+>  	// Clear BSS
+>  	adr_l	x0, __bss_start
+>  	mov	x1, xzr
+> @@ -470,7 +472,7 @@ EXPORT_SYMBOL(kimage_vaddr)
+>   * If we're fortunate enough to boot at EL2, ensure that the world is
+>   * sane before dropping to EL1.
+>   *
+> - * Returns either BOOT_CPU_MODE_EL1 or BOOT_CPU_MODE_EL2 in w0 if
+> + * Returns either BOOT_CPU_MODE_EL1 or BOOT_CPU_MODE_EL2 in w22 if
+>   * booted in EL1 or EL2 respectively.
+>   */
+>  ENTRY(el2_setup)
+> @@ -480,7 +482,7 @@ ENTRY(el2_setup)
+>  	b.eq	1f
+>  	mov_q	x0, (SCTLR_EL1_RES1 | ENDIAN_SET_EL1)
+>  	msr	sctlr_el1, x0
+> -	mov	w0, #BOOT_CPU_MODE_EL1		// This cpu booted in EL1
+> +	mov	w22, #BOOT_CPU_MODE_EL1		// This cpu booted in EL1
+>  	isb
+>  	ret
+>  
+> @@ -593,7 +595,7 @@ set_hcr:
+>  
+>  	cbz	x2, install_el2_stub
+>  
+> -	mov	w0, #BOOT_CPU_MODE_EL2		// This CPU booted in EL2
+> +	mov	w22, #BOOT_CPU_MODE_EL2		// This CPU booted in EL2
+>  	isb
+>  	ret
+>  
+> @@ -632,7 +634,7 @@ install_el2_stub:
+>  		      PSR_MODE_EL1h)
+>  	msr	spsr_el2, x0
+>  	msr	elr_el2, lr
+> -	mov	w0, #BOOT_CPU_MODE_EL2		// This CPU booted in EL2
+> +	mov	w22, #BOOT_CPU_MODE_EL2		// This CPU booted in EL2
+>  	eret
+>  ENDPROC(el2_setup)
+>  
+> @@ -642,12 +644,10 @@ ENDPROC(el2_setup)
+>   */
+>  set_cpu_boot_mode_flag:
+>  	adr_l	x1, __boot_cpu_mode
+> -	cmp	w0, #BOOT_CPU_MODE_EL2
+> +	cmp	w22, #BOOT_CPU_MODE_EL2
+>  	b.ne	1f
+> -	add	x1, x1, #4
+> -1:	str	w0, [x1]			// This CPU has booted in EL1
+> -	dmb	sy
+> -	dc	ivac, x1			// Invalidate potentially stale cache line
+> +	add	x1, x1, #4			// This CPU has booted in EL2
+> +1:	str	w22, [x1]
+>  	ret
+>  ENDPROC(set_cpu_boot_mode_flag)
+>  
+> @@ -658,16 +658,7 @@ ENDPROC(set_cpu_boot_mode_flag)
+>   * sufficient alignment that the CWG doesn't overlap another section.
+>   */
+>  	.pushsection ".mmuoff.data.write", "aw"
+> -/*
+> - * We need to find out the CPU boot mode long after boot, so we need to
+> - * store it in a writable variable.
+> - *
+> - * This is not in .bss, because we set it sufficiently early that the boot-time
+> - * zeroing of .bss would clobber it.
+> - */
+> -ENTRY(__boot_cpu_mode)
+> -	.long	BOOT_CPU_MODE_EL2
+> -	.long	BOOT_CPU_MODE_EL1
+> +
+>  /*
+>   * The booting CPU updates the failed status @__early_cpu_boot_status,
+>   * with MMU turned off.
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 018a33e01b0e..66bdcaf61a46 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -65,6 +65,16 @@ struct secondary_data secondary_data;
+>  /* Number of CPUs which aren't online, but looping in kernel text. */
+>  int cpus_stuck_in_kernel;
+>  
+> +/*
+> + * We need to find out the CPU boot mode long after boot, so we need to
+> + * store it in a writable variable in early boot. Any core started in
+> + * EL1 will write that to the first location, EL2 to the second. After
+> + * all cores are started this allows us to check that all cores started
+> + * in the same mode.
+> + */
+> +u32 __boot_cpu_mode[2] = { BOOT_CPU_MODE_EL2, BOOT_CPU_MODE_EL1 };
+> +EXPORT_SYMBOL(__boot_cpu_mode);
+> +
+>  enum ipi_msg_type {
+>  	IPI_RESCHEDULE,
+>  	IPI_CALL_FUNC,
+> -- 
+> 2.17.1
+> 
