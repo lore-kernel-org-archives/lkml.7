@@ -2,95 +2,64 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E504C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B139C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2261D2080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:24:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DMzidZKF"
+	by mail.kernel.org (Postfix) with ESMTP id 14F032080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbfH2WYC (ORCPT
+        id S1728337AbfH2WYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 18:24:02 -0400
-Received: from ozlabs.org ([203.11.71.1]:58455 "EHLO ozlabs.org"
+        Thu, 29 Aug 2019 18:24:16 -0400
+Received: from mga06.intel.com ([134.134.136.31]:16851 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727826AbfH2WYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 18:24:01 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46KHFq2pkFz9sDB;
-        Fri, 30 Aug 2019 08:23:59 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567117439;
-        bh=MmtUcWBvvjpAy9cWLXb7FNWAhGcqNpptwC8LinDLwQE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DMzidZKFzroJvnK5mz4MMkSfNVWVlnM6MZRLhxOFTMfKojONLnX8a1oqyNpDY0ecV
-         Z3kdLcnrI/rHys7E+OZPE9fUJ6DOJehbXekcvy/JWlqJuqGPv0z8rvsdHlK2PcAlbA
-         kOVQvoSIz0JDnGN4t1fRzfRjAvQvyBMqs4p4g2/LiPyBIRLBHxg+9hlVGwFYrR1rHW
-         48MZhQ/9vaTuEVH7IUpcOLSy6lK24OpeXppNJDJcSrK80vYIkQraGPL8brp1nnaZJX
-         45j9LEaX1aqrYIHHiajL68lUd4tERjAj3wh93+TSo9aF+XkgUzgM0yUX1wDdVO+eYS
-         6tvhYOrYrjDPA==
-Date:   Fri, 30 Aug 2019 08:23:57 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning from Linus' tree
-Message-ID: <20190830082357.4650d243@canb.auug.org.au>
+        id S1728029AbfH2WYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 18:24:15 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 15:24:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,445,1559545200"; 
+   d="scan'208";a="182478524"
+Received: from friedlmi-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.54.26])
+  by fmsmga007.fm.intel.com with ESMTP; 29 Aug 2019 15:24:13 -0700
+Date:   Fri, 30 Aug 2019 01:24:11 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jerry Snitselaar <jsnitsel@redhat.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexey Klimov <aklimov@redhat.com>,
+        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH 2/3 v3] tpm: provide a way to override the chip returned
+ durations
+Message-ID: <20190829222411.nnvicncwwghvahkk@linux.intel.com>
+References: <20190829204947.2591-1-jsnitsel@redhat.com>
+ <20190829204947.2591-3-jsnitsel@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/NWXnxGRyGHjcMwv+FuAoQqj";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829204947.2591-3-jsnitsel@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/NWXnxGRyGHjcMwv+FuAoQqj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Aug 29, 2019 at 01:49:46PM -0700, Jerry Snitselaar wrote:
+> Patch adds method ->update_durations to override returned
+> durations in case TPM chip misbehaves for TPM 1.2 drivers.
+> 
+> Cc: Peter Huewe <peterhuewe@gmx.de>
+> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Signed-off-by: Alexey Klimov <aklimov@redhat.com>
+> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
-Hi all,
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-=46rom Linus tree, today's linux-next build (x86_64 allmodconfig)
-produced this warning:
-
-arch/x86/boot/edd.c: In function 'query_edd':
-arch/x86/boot/edd.c:148:11: warning: taking address of packed member of 'st=
-ruct boot_params' may result in an unaligned pointer value [-Waddress-of-pa=
-cked-member]
-  148 |  mbrptr =3D boot_params.edd_mbr_sig_buffer;
-      |           ^~~~~~~~~~~
-
-I assume this is a result of upgrading my x86_64 cross compiler to v9.2.1
-(from v8.3.0).
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/NWXnxGRyGHjcMwv+FuAoQqj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1oUH0ACgkQAVBC80lX
-0Gx+aQf/e8Bhn/pDsW0N4pecxKBKn8OATEhIUh8vYd8cjWPpAIjbaGxNmjhNDW7v
-z3ajczn2PqCbUBD9IpB31xuKHWvk/v7EUtq7NTCNE1L/l3L5ryt4jV04tCo9vcbB
-ichBC5XwMvvlIyE52Iqv6i/YSCXOcmaXYkxI+Jw9ZgP9IRjndWLcL6GorNOCWrCr
-88DbJrXWjJgOt2Wvr1sLrDJcvgFZkLO1JQj6qRBiZvtbjm7NyRgfvBLO8APuc6GD
-oxhIFJ9Gct0RPkNSKsIcljBGtJCHBKBJi5RFJxJ/j+f/vyAk5HkhJGXTi91TEQO7
-iD+r4X5leUPJEA1ng3xxdpxSnN+Niw==
-=+v5z
------END PGP SIGNATURE-----
-
---Sig_/NWXnxGRyGHjcMwv+FuAoQqj--
+/Jarkko
