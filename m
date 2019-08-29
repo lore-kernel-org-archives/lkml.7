@@ -2,188 +2,86 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A3DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896DDC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A41C2341B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1F820644
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:47:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NkAfVlr4"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="CQYTV7T/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfH2OpP (ORCPT
+        id S1727069AbfH2Or3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:45:15 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50983 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727176AbfH2OpE (ORCPT
+        Thu, 29 Aug 2019 10:47:29 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34897 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727087AbfH2Or3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:45:04 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v15so4042481wml.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:45:02 -0700 (PDT)
+        Thu, 29 Aug 2019 10:47:29 -0400
+Received: by mail-io1-f68.google.com with SMTP id b10so7494354ioj.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:47:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0y/VQ+YRgpX5o2wxlaY+4cXYuAJOmCwTGDSCpRsawzo=;
-        b=NkAfVlr432msV3xiejrJCyjhA0VgLAduniaZbLpPM/u0czuJsdy92Lnf77knkplR0m
-         dZKuZD7vEcceC66QCJQVbwtUKce/BRcvv2VgLcwP8kGTrHf6PB4IS6lxgPHup/REV7BO
-         y3SdHAyWNGl4T8HXhXrAu3iy2nf/yslRwvGNqB/heA9Zeu3GkGCaUB53EbXjvadLXZlQ
-         rjOaSfCQKlMOqVNf/ahb0pWn/rEKyYsNmEzbfJ/E84xbjhe7cuhxW1qSvC14i+PaEDFp
-         X/UIOvzYNvSqtwX3I8hhWgTw4weJvEhoYblpGenKlJKfoJeeA3u3YuL7jVCFUSVYeaSD
-         CpMQ==
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7kmZfKphmPDJyPhB1aEwSutJQo/nVZHIpGqlV62NkC0=;
+        b=CQYTV7T/6dptI2gBfu2uXwU4RqC1UIrULXwa1LcNs212HPvwiKRj5wzH9w17HNj1/S
+         xgABLrdaMQrQKih8MZ3en05XSPZ6cYtpvN8zEPBJT0wL6K+HI44uIDZofAFjGDHjjwcZ
+         LWo+0RcMIe0icmrDfhi9RpZ6cZJmo1ANKTqLA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0y/VQ+YRgpX5o2wxlaY+4cXYuAJOmCwTGDSCpRsawzo=;
-        b=TDRrHN3esNal65eFcZAiaRCxgd6eM3sCd/nT5dOf+H3rJotwZK1SQ8YQ8VTcgrujS3
-         z6A0efbnE13kwkBwyDVMx7xXZPmc6ZAKGZtRZsmykVNPwhWlyPjYAdEmhwtfOEWt8ZXK
-         eBwqDBNOgEMJsy/qJbpGRAFB90TDAtKFvPGb4Dx20MqlzyrPWGBDCBmdeDRXfv6lMF8i
-         LimvDLz8AwsIHcxuLFg0xNVe/woMZnjFubp/pdBG2gKqCYcMNOBgIHCqNLirxFRWMza9
-         Zs17/+uHbuceiF1UPntUAjj/mWTKrDcfSHNUa7D+mgf3OGqT2LkDFmALuXCQd2EkdRzs
-         BOVw==
-X-Gm-Message-State: APjAAAUYFYrAprfUH2DfJgEhqqVwY6ojkH7VABtJIx3Dpbz5Kh3Cx5l9
-        Ob4Ls/RiOhalwuAMbMsAE19WtA==
-X-Google-Smtp-Source: APXvYqx/D6IG4hoWdIjJJtU9+t9EGGOobaU4WAT40fe4a30HBk3wxKjh4WRq9+JdHaet/zN1VPDmkg==
-X-Received: by 2002:a05:600c:22c6:: with SMTP id 6mr3555569wmg.5.1567089901850;
-        Thu, 29 Aug 2019 07:45:01 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id p7sm3923492wmh.38.2019.08.29.07.45.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 07:45:01 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
-Cc:     spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, devicetree@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v5 2/4] soundwire: core: add device tree support for slave devices
-Date:   Thu, 29 Aug 2019 15:44:40 +0100
-Message-Id: <20190829144442.6210-3-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190829144442.6210-1-srinivas.kandagatla@linaro.org>
-References: <20190829144442.6210-1-srinivas.kandagatla@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7kmZfKphmPDJyPhB1aEwSutJQo/nVZHIpGqlV62NkC0=;
+        b=fO8x9r6O5ABMnSPS2VAlI6l5UdbXcpNnyiR+8ZHtwK0ha8GYNoKMa3acGCsPvHbNbJ
+         6gMi487Fo3SOaFpkXwW7UDvyWvQpT+7QK4XM17A2o++8X6n6gken+wXcp3n22FWq71iL
+         /ApXbjxkhG5PYgfXJbj8DnyO4dAHgLmXwQT8ChuE1Ng8a58q5yR89MgpiZVDofhqUALw
+         s5Mqoizu9lI5DKyGI9eu5qm4LyUXiUHQx1x9SUVIHAh+R6HaQrt2tiE57XREBGSW7xD8
+         FBMX/gEfgSYT97UV7ojyfNKQ6NbfKKtlaT1n5tB7lI1RCQg19VtwcKzNnrikPgHA5JH9
+         /k+w==
+X-Gm-Message-State: APjAAAXqEAutth9fD2qB27mI/ar/aQIEe/EzXy7Rk8pao7mtSLj7ZaU/
+        8uyclQTwEFzIrXvOVktZ/v7Cxq3JLRIE0HzLrkYIyQ==
+X-Google-Smtp-Source: APXvYqzC9sQXggpAZSpx4nKtBi8MjQ5jIGvf78c61EYJdJ7tngwSYacvoloREplBdZk2eAZlmMR9aiBXIUXMXSL2oBM=
+X-Received: by 2002:a05:6638:627:: with SMTP id h7mr11129076jar.33.1567090048417;
+ Thu, 29 Aug 2019 07:47:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190821173742.24574-1-vgoyal@redhat.com> <CAJfpegv_XS=kLxw_FzWNM2Xao5wsn7oGbk3ow78gU8tpXwo-sg@mail.gmail.com>
+ <20190829132949.GA6744@redhat.com> <CAJfpegtd-MQNbUW9YuL4xdXDkGR8K6LMHCqDG2Ppu9F_Hyk2RQ@mail.gmail.com>
+ <20190829143107.GB6744@redhat.com>
+In-Reply-To: <20190829143107.GB6744@redhat.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 29 Aug 2019 16:47:17 +0200
+Message-ID: <CAJfpegtOC8dHofLmpYpryKv9+93KHwn9Xb-NCyvgg0rG8XspTw@mail.gmail.com>
+Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual machines
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support to parsing device tree based
-SoundWire slave devices.
+On Thu, Aug 29, 2019 at 4:31 PM Vivek Goyal <vgoyal@redhat.com> wrote:
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/soundwire/bus.c   |  2 ++
- drivers/soundwire/bus.h   |  1 +
- drivers/soundwire/slave.c | 52 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 55 insertions(+)
+> Cool. That works. Faced another compilation error with "make allmodconfig"
+> config file.
+>
+>   HDRINST usr/include/linux/virtio_fs.h
+> error: include/uapi/linux/virtio_fs.h: missing "WITH Linux-syscall-note" for SPDX-License-Identifier
+> make[1]: *** [scripts/Makefile.headersinst:66: usr/include/linux/virtio_fs.h] Error 1
+>
+> Looks like include/uapi/linux/virtio_fs.h needs following.
+>
+> -/* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
+> +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
 
-diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-index 728db3ebad6e..d83d89b3b15a 100644
---- a/drivers/soundwire/bus.c
-+++ b/drivers/soundwire/bus.c
-@@ -79,6 +79,8 @@ int sdw_add_bus_master(struct sdw_bus *bus)
- 	 */
- 	if (IS_ENABLED(CONFIG_ACPI) && ACPI_HANDLE(bus->dev))
- 		ret = sdw_acpi_find_slaves(bus);
-+	else if (IS_ENABLED(CONFIG_OF) && bus->dev->of_node)
-+		ret = sdw_of_find_slaves(bus);
- 	else
- 		ret = -ENOTSUPP; /* No ACPI/DT so error out */
- 
-diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
-index 9d6ea7e447ff..cb482da914da 100644
---- a/drivers/soundwire/bus.h
-+++ b/drivers/soundwire/bus.h
-@@ -15,6 +15,7 @@ static inline int sdw_acpi_find_slaves(struct sdw_bus *bus)
- }
- #endif
- 
-+int sdw_of_find_slaves(struct sdw_bus *bus);
- void sdw_extract_slave_id(struct sdw_bus *bus,
- 			  u64 addr, struct sdw_slave_id *id);
- 
-diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
-index 4b522f6d1238..48a63ca130d2 100644
---- a/drivers/soundwire/slave.c
-+++ b/drivers/soundwire/slave.c
-@@ -2,6 +2,7 @@
- // Copyright(c) 2015-17 Intel Corporation.
- 
- #include <linux/acpi.h>
-+#include <linux/of.h>
- #include <linux/soundwire/sdw.h>
- #include <linux/soundwire/sdw_type.h>
- #include "bus.h"
-@@ -35,6 +36,7 @@ static int sdw_slave_add(struct sdw_bus *bus,
- 
- 	slave->dev.release = sdw_slave_release;
- 	slave->dev.bus = &sdw_bus_type;
-+	slave->dev.of_node = of_node_get(to_of_node(fwnode));
- 	slave->bus = bus;
- 	slave->status = SDW_SLAVE_UNATTACHED;
- 	slave->dev_num = 0;
-@@ -113,3 +115,53 @@ int sdw_acpi_find_slaves(struct sdw_bus *bus)
- }
- 
- #endif
-+
-+/*
-+ * sdw_of_find_slaves() - Find Slave devices in master device tree node
-+ * @bus: SDW bus instance
-+ *
-+ * Scans Master DT node for SDW child Slave devices and registers it.
-+ */
-+int sdw_of_find_slaves(struct sdw_bus *bus)
-+{
-+	struct device *dev = bus->dev;
-+	struct device_node *node;
-+
-+	for_each_child_of_node(bus->dev->of_node, node) {
-+		int link_id, sdw_version, ret, len;
-+		const char *compat = NULL;
-+		struct sdw_slave_id id;
-+		const __be32 *addr;
-+
-+		compat = of_get_property(node, "compatible", NULL);
-+		if (!compat)
-+			continue;
-+
-+		ret = sscanf(compat, "sdw%01x%04hx%04hx%02hhx", &sdw_version,
-+			     &id.mfg_id, &id.part_id, &id.class_id);
-+
-+		if (ret != 4) {
-+			dev_err(dev, "Invalid compatible string found %s\n",
-+				compat);
-+			continue;
-+		}
-+
-+		addr = of_get_property(node, "reg", &len);
-+		if (!addr || (len < 2 * sizeof(u32))) {
-+			dev_err(dev, "Invalid Link and Instance ID\n");
-+			continue;
-+		}
-+
-+		link_id = be32_to_cpup(addr++);
-+		id.unique_id = be32_to_cpup(addr);
-+		id.sdw_version = sdw_version;
-+
-+		/* Check for link_id match */
-+		if (link_id != bus->link_id)
-+			continue;
-+
-+		sdw_slave_add(bus, &id, of_fwnode_handle(node));
-+	}
-+
-+	return 0;
-+}
--- 
-2.21.0
+Fixed and pushed.
 
+Thanks,
+Miklos
