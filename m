@@ -2,107 +2,118 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA66C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CF0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2814922CED
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A1AC22CED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 03:26:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MEFBjgMl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfH2DZL convert rfc822-to-8bit (ORCPT
+        id S1727144AbfH2D0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 23:25:11 -0400
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:39604 "EHLO
-        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfH2DZK (ORCPT
+        Wed, 28 Aug 2019 23:26:32 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38199 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfH2D0b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 23:25:10 -0400
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x7T3Or8A010001
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 29 Aug 2019 12:24:53 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x7T3Or60018255;
-        Thu, 29 Aug 2019 12:24:53 +0900
-Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x7T3Or8q018852;
-        Thu, 29 Aug 2019 12:24:53 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.152] [10.38.151.152]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-545660; Thu, 29 Aug 2019 10:47:15 +0900
-Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
- BPXC24GP.gisp.nec.co.jp ([10.38.151.152]) with mapi id 14.03.0439.000; Thu,
- 29 Aug 2019 10:47:14 +0900
-From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-To:     Waiman Long <longman@redhat.com>, Michal Hocko <mhocko@kernel.org>
-CC:     Dan Williams <dan.j.williams@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-Subject: Re: [PATCH v2] fs/proc/page: Skip uninitialized page when iterating
- page structures
-Thread-Topic: [PATCH v2] fs/proc/page: Skip uninitialized page when
- iterating page structures
-Thread-Index: AQHVXab+AB6W4hF4zE+DO3WxOpzL56cQAkYAgAACh4CAAMCOgA==
-Date:   Thu, 29 Aug 2019 01:47:13 +0000
-Message-ID: <9a1395bc-d568-c4d7-2dde-7dde7b48ac0b@vx.jp.nec.com>
-References: <20190826124336.8742-1-longman@redhat.com>
- <20190827142238.GB10223@dhcp22.suse.cz>
- <20190828080006.GG7386@dhcp22.suse.cz>
- <8363a4ba-e26f-f88c-21fc-5dd1fe64f646@redhat.com>
- <20190828140938.GL28313@dhcp22.suse.cz>
- <4367f507-97ba-a74e-6bf5-811cdd6ecdf9@redhat.com>
-In-Reply-To: <4367f507-97ba-a74e-6bf5-811cdd6ecdf9@redhat.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.135]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <43FF7CD7AC5C9E4DA042E82DA36846D9@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Wed, 28 Aug 2019 23:26:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e16so1835571wro.5
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 20:26:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4VXtdUN33mfInmL5wwfclcs21XFuQJDuRee8LI2f6Xo=;
+        b=MEFBjgMlGSuqfcOMN7uFDfidUYJwIBaB1Mtu3zVMqHFfHU9gVzku7oMjjFV5aUw9Kx
+         H2zFI1WGyGQ3nKD0fLm+QiZJiZgdbE6EULlVW064Y7dAg5HGsoNaGeUK0Nw7KbTbTE+R
+         XSWrl0DJE5yh+WMNEYhhifodgWcXjlo4uns2g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4VXtdUN33mfInmL5wwfclcs21XFuQJDuRee8LI2f6Xo=;
+        b=CkKM1q/1ONJL1tK51ixEitiajWYUrNjS+/hLcrha1Qn7ng841GmudwGxc98zrVEM4Y
+         D9fJECUa9BdVEKOT1XyzUtlJrDAPmT+FSRHGP03Gs+Trvg1NaENhlAxspUKnhqdTG/YC
+         lbFAvjFYJckONWc+36UNipBybft9Qq/i1i0hQ5RWpJPxjCL1rZGZepHWEBPtaoWtvbWd
+         yfbx3Bmojw3/YNO4gh1BKNfOPQx/OKl7G2V8h3XC5hSiqIgrw4bbREhkLI63OoWjOeMt
+         8Zmn9TFc2F6R0X50Hwl/GHVhqV4iZPzVeH3rFTsxT6QplXd3tMTaNOeDRhPwv1oY88hg
+         fM9g==
+X-Gm-Message-State: APjAAAXELBxlrTG6GEHazfzWm8tj43QTfzn/60g578LbMIdVmRdVHsmD
+        4tPZ3kZn5B4DQioeu3PImSMvT+MiPkuQCVO/A887kw==
+X-Google-Smtp-Source: APXvYqzBHim1x4cIaQbdne2bFTfS/GBlw3QsCk9quT3L6KA2YVmxiN0FWnixRTTK8IkD+SbUs20wWRp4WD0vpCdq2/E=
+X-Received: by 2002:adf:facc:: with SMTP id a12mr8284203wrs.205.1567049189131;
+ Wed, 28 Aug 2019 20:26:29 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+References: <Pine.LNX.4.44L0.1908281155100.1302-100000@iolanthe.rowland.org> <bac067d344bef4e6fff7862fcad49cdbf4cd4ab5.camel@redhat.com>
+In-Reply-To: <bac067d344bef4e6fff7862fcad49cdbf4cd4ab5.camel@redhat.com>
+From:   Julius Werner <jwerner@chromium.org>
+Date:   Wed, 28 Aug 2019 20:26:15 -0700
+Message-ID: <CAODwPW-+c6Ty_gqEFEaE0YhtutMR2tFnhEFOQre81uyM3mfMVA@mail.gmail.com>
+Subject: Re: [PATCH] usb: storage: Add ums-cros-aoa driver
+To:     Dan Williams <dcbw@redhat.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Julius Werner <jwerner@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        USB Storage list <usb-storage@lists.one-eyed-alien.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/08/28 23:18, Waiman Long wrote:
-> On 8/28/19 10:09 AM, Michal Hocko wrote:
->> On Wed 28-08-19 09:46:21, Waiman Long wrote:
->>> On 8/28/19 4:00 AM, Michal Hocko wrote:
->>>> On Tue 27-08-19 16:22:38, Michal Hocko wrote:
->>>>> Dan, isn't this something we have discussed recently?
->>>> This was http://lkml.kernel.org/r/20190725023100.31141-3-t-fukasawa@vx.jp.nec.com
->>>> and talked about /proc/kpageflags but this is essentially the same thing
->>>> AFAIU. I hope we get a consistent solution for both issues.
->>>>
->>> Yes, it is the same problem. The uninitialized page structure problem
->>> affects all the 3 /proc/kpage{cgroup,count,flags) files.
->>>
->>> Toshiki's patch seems to fix it just for /proc/kpageflags, though.
->> Yup. I was arguing that whacking a mole kinda fix is far from good. Dan
->> had some arguments on why initializing those struct pages is a problem.
->> The discussion had a half open end though. I hoped that Dan would try
->> out the initialization side but I migh have misunderstood.
-> 
-> If the page structures of the reserved PFNs are always initialized, that
-> will fix the problem too. I am not familiar with the zone device code.
-> So I didn't attempt to do that.
-> 
-> Cheers,
-> Longman
-> 
-> 
-I also think that the struct pages should be initialized.
-I'm preparing to post the patch.
+(Thanks for the reviews... I'll get back to the kernel code details
+after double-checking if this can be done from userspace.)
 
-Toshiki Fukasawa
+> > Besides, what's wrong with binding to devices that weren't switched
+> > into AOA mode?  Would that just provoke a bunch of unnecessary error
+> > messages?
+
+It's not about devices that aren't switched into AOA mode... it's
+about devices that are switched into AOA mode for other reasons
+(connecting to other Android apps). I don't think a kernel driver like
+that exists today, but it could be added, or people could use libusb
+to talk to an AOA device. AOA is just a general mechanism to talk to
+an Android app for whatever you want, and the descriptors sent during
+mode switch clarify what app it's talking to (and thereby what
+protocol it is using... it could be mass storage or it could be
+something entirely different). But a device switched into AOA mode for
+whatever app will always use that same well-known VID/PID (18d1:2d00).
+So if I just add that VID/PID to the IDs bound by the usb-storage
+driver, it would also grab a device that was mode-switched by
+userspace to talk to a completely different app. I need some way to
+make sure it only grabs the intended device, and there's no good
+identifier for that other than comparing the dev path to what you
+originally mode switched.
+
+> > > +     /*
+> > > +      * Only interface 0 connects to the AOA app. Android devices that have
+> > > +      * ADB enabled also export an interface 1. We don't want it.
+> > > +      */
+> > > +     if (us->pusb_intf->cur_altsetting->desc.bInterfaceNumber != 0)
+> > > +             return -ENODEV;
+> >
+> > Do you really need this test?  What would go wrong if you don't do it?
+
+Yes, otherwise two separate usb-storage instances bind to the two
+interfaces. The second interface is meant for a special ADB debugging
+protocol and will not respond at all to USB mass storage packets, so
+eventually the first request to it times out and
+usb_stor_invoke_transport() will do a port reset to recover. That also
+kills the first interface asynchronously even though it was working
+fine.
+
+> > IMO the userspace approach would be better, unless you can provide a
+> > really compelling argument for why it won't suffice.
+
+Well... okay, let me think through that again. I just found the new_id
+sysfs API that I wasn't aware of before, maybe I could leverage that
+to bind this from userspace after doing the mode switch. But it looks
+like that only operates on whole devices... is there any way to force
+it to only bind one particular interface?
