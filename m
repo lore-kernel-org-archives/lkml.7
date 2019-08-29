@@ -6,45 +6,41 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACE8C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71550C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C1EB2339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DCCF23404
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfH2KLY (ORCPT
+        id S1727781AbfH2KLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:11:24 -0400
-Received: from mga12.intel.com ([192.55.52.136]:20183 "EHLO mga12.intel.com"
+        Thu, 29 Aug 2019 06:11:31 -0400
+Received: from mga11.intel.com ([192.55.52.93]:6438 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfH2KKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:10:44 -0400
+        id S1727063AbfH2KLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:11:30 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 03:10:44 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 03:11:29 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="210487297"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 03:10:42 -0700
-Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id 47AFC208A7;
-        Thu, 29 Aug 2019 13:10:40 +0300 (EEST)
-Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1i3HO7-0006Vb-AX; Thu, 29 Aug 2019 13:10:43 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 02/10] software node: Make argument to to_software_node const
-Date:   Thu, 29 Aug 2019 13:10:35 +0300
-Message-Id: <20190829101043.24963-3-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
-References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
+   d="scan'208";a="210487424"
+Received: from olenz-mobl1.ger.corp.intel.com (HELO artemis.ger.corp.intel.com) ([10.252.5.248])
+  by fmsmga002.fm.intel.com with ESMTP; 29 Aug 2019 03:11:27 -0700
+From:   Rob Bradford <robert.bradford@intel.com>
+To:     x86@kernel.org
+Cc:     Rob Bradford <robert.bradford@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Rik van Riel <riel@surriel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/reboot: Avoid EFI reboot when not running on EFI
+Date:   Thu, 29 Aug 2019 11:11:18 +0100
+Message-Id: <20190829101119.7345-1-robert.bradford@intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,46 +48,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-to_software_node() does not need to modify the fwnode_handle it operates
-on; therefore make it const. This allows passing a const fwnode_handle to
-to_software_node().
+Replace the check using efi_runtime_disabled() which only checks if EFI
+runtime was disabled on the kernel command line with a call to
+efi_enabled(EFI_RUNTIME_SERVICES) to check if EFI runtime services are
+available.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+In the situation where the kernel was booted without an EFI environment
+then only efi_enabled(EFI_RUNTIME_SERVICES) correctly represents that no
+EFI is available. Setting "noefi" or "efi=noruntime" on the commandline
+continue to have the same effect as efi_enabled(EFI_RUNTIME_SERVICES)
+will return false.
+
+Signed-off-by: Rob Bradford <robert.bradford@intel.com>
 ---
- drivers/base/swnode.c    | 4 ++--
- include/linux/property.h | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ arch/x86/kernel/reboot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index a7cb41812cfda..951e7efd47c23 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -71,9 +71,9 @@ software_node_to_swnode(const struct software_node *node)
- 	return swnode;
- }
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 09d6bded3c1e..0b0a7fccdb00 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -500,7 +500,7 @@ static int __init reboot_init(void)
+ 	 */
+ 	rv = dmi_check_system(reboot_dmi_table);
  
--const struct software_node *to_software_node(struct fwnode_handle *fwnode)
-+const struct software_node *to_software_node(const struct fwnode_handle *fwnode)
- {
--	struct swnode *swnode = to_swnode(fwnode);
-+	const struct swnode *swnode = to_swnode(fwnode);
+-	if (!rv && efi_reboot_required() && !efi_runtime_disabled())
++	if (!rv && efi_reboot_required() && efi_enabled(EFI_RUNTIME_SERVICES))
+ 		reboot_type = BOOT_EFI;
  
- 	return swnode ? swnode->node : NULL;
- }
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 5a910ad795910..421c76e53708d 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -418,7 +418,8 @@ struct software_node {
- };
- 
- bool is_software_node(const struct fwnode_handle *fwnode);
--const struct software_node *to_software_node(struct fwnode_handle *fwnode);
-+const struct software_node *
-+to_software_node(const struct fwnode_handle *fwnode);
- struct fwnode_handle *software_node_fwnode(const struct software_node *node);
- 
- int software_node_register_nodes(const struct software_node *nodes);
+ 	return 0;
 -- 
-2.20.1
+2.21.0
 
