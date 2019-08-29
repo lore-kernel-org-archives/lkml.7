@@ -4,39 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2642C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474A4C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E13C2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1EB2189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 12:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfH2McN (ORCPT
+        id S1727892AbfH2McU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 08:32:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36466 "EHLO mx1.suse.de"
+        Thu, 29 Aug 2019 08:32:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36414 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727069AbfH2McH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 08:32:07 -0400
+        id S1727315AbfH2McG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 08:32:06 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DBFB9AF77;
-        Thu, 29 Aug 2019 12:32:05 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id E9C05B023;
+        Thu, 29 Aug 2019 12:32:04 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
+        "Manoj N. Kumar" <manoj@linux.ibm.com>,
+        "Matthew R. Ochs" <mrochs@linux.ibm.com>,
+        Uma Krishnan <ukrishn@linux.ibm.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Cyr <mikecyr@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH 3/3] scsi: ibmvscsi: tgt: Fix fallthrough warnings.
-Date:   Thu, 29 Aug 2019 14:32:02 +0200
-Message-Id: <7a621bd1a818c76c320cfd69ab13a17369e3c979.1567081143.git.msuchanek@suse.de>
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] scsi: cxlflash: Fix fallthrough warnings.
+Date:   Thu, 29 Aug 2019 14:32:00 +0200
+Message-Id: <279d33f05007e9f3e3fb4e6ea19634b2608ffbd3.1567081143.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <cover.1567081143.git.msuchanek@suse.de>
 References: <cover.1567081143.git.msuchanek@suse.de>
@@ -47,36 +48,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add fallthrough comments where they are missing.
+Add fallthrough comments where missing.
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/cxlflash/main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-index 7f9535392a93..57475dbcae0f 100644
---- a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-+++ b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-@@ -1581,6 +1581,7 @@ static long ibmvscsis_adapter_info(struct scsi_info *vscsi,
- 	case H_PERMISSION:
- 		if (connection_broken(vscsi))
- 			flag_bits = (RESPONSE_Q_DOWN | CLIENT_FAILED);
-+		/* fallthrough */
+diff --git a/drivers/scsi/cxlflash/main.c b/drivers/scsi/cxlflash/main.c
+index b1f4724efde2..f402fa9a7bec 100644
+--- a/drivers/scsi/cxlflash/main.c
++++ b/drivers/scsi/cxlflash/main.c
+@@ -753,10 +753,13 @@ static void term_intr(struct cxlflash_cfg *cfg, enum undo_level level,
+ 		/* SISL_MSI_ASYNC_ERROR is setup only for the primary HWQ */
+ 		if (index == PRIMARY_HWQ)
+ 			cfg->ops->unmap_afu_irq(hwq->ctx_cookie, 3, hwq);
++		/* fall through */
+ 	case UNMAP_TWO:
+ 		cfg->ops->unmap_afu_irq(hwq->ctx_cookie, 2, hwq);
++		/* fall through */
+ 	case UNMAP_ONE:
+ 		cfg->ops->unmap_afu_irq(hwq->ctx_cookie, 1, hwq);
++		/* fall through */
+ 	case FREE_IRQ:
+ 		cfg->ops->free_afu_irqs(hwq->ctx_cookie);
+ 		/* fall through */
+@@ -973,14 +976,18 @@ static void cxlflash_remove(struct pci_dev *pdev)
+ 	switch (cfg->init_state) {
+ 	case INIT_STATE_CDEV:
+ 		cxlflash_release_chrdev(cfg);
++		/* fall through */
+ 	case INIT_STATE_SCSI:
+ 		cxlflash_term_local_luns(cfg);
+ 		scsi_remove_host(cfg->host);
++		/* fall through */
+ 	case INIT_STATE_AFU:
+ 		term_afu(cfg);
++		/* fall through */
+ 	case INIT_STATE_PCI:
+ 		cfg->ops->destroy_afu(cfg->afu_cookie);
+ 		pci_disable_device(pdev);
++		/* fall through */
+ 	case INIT_STATE_NONE:
+ 		free_mem(cfg);
+ 		scsi_host_put(cfg->host);
+@@ -3017,6 +3024,7 @@ static ssize_t num_hwqs_store(struct device *dev,
+ 		wait_event(cfg->reset_waitq, cfg->state != STATE_RESET);
+ 		if (cfg->state == STATE_NORMAL)
+ 			goto retry;
++		/* fall through */
  	default:
- 		dev_err(&vscsi->dev, "adapter_info: h_copy_rdma to client failed, rc %ld\n",
- 			rc);
-@@ -2492,8 +2493,10 @@ static long ibmvscsis_ping_response(struct scsi_info *vscsi)
- 		break;
- 	case H_CLOSED:
- 		vscsi->flags |= CLIENT_FAILED;
-+		/* fallthrough */
- 	case H_DROPPED:
- 		vscsi->flags |= RESPONSE_Q_DOWN;
-+		/* fallthrough */
- 	case H_REMOTE_PARM:
- 		dev_err(&vscsi->dev, "ping_response: h_send_crq failed, rc %ld\n",
- 			rc);
+ 		/* Ideally should not happen */
+ 		dev_err(dev, "%s: Device is not ready, state=%d\n",
 -- 
 2.12.3
 
