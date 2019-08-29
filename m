@@ -2,121 +2,108 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F685C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CBEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62F2622CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:19:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="f9g1cyoM"
+	by mail.kernel.org (Postfix) with ESMTP id E69A92173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbfH2RTK (ORCPT
+        id S1727534AbfH2RUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:19:10 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:57736 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbfH2RTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:19:10 -0400
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x7THIqQF009484;
-        Fri, 30 Aug 2019 02:18:53 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x7THIqQF009484
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567099133;
-        bh=jCxDkVSWG7Y4WLqCHMtqonuIZYm6GUxztAGzGCbt8DY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=f9g1cyoMRFyH7y6LclyK92Jot+xdceeqdnWJA/zNPgEqKYQHK273xwL5Eu3jT7TD0
-         CUiEM4/R4i6CuUF2ZkSQQb0cmpRQ8aia0wBUUqn05KTGZVy/kSYxWOJAhKu8sXNM4L
-         j1KElIuyrl5UAA046of0aisi/AQ2YP5JDV5N7oRps+vOyTntcjg0KUQqjkDjQNLJQj
-         kYp2SxvVhhI5JwYCZ0gUj8/6p9+UGr7BHV2Q0Ffg5jEanT81v0EgMljhCQ8yMlxLkx
-         OxozUmYi7YIviYEZkokcbPSKo/lRUs1OmQerQsZE21vQguLDrb1N6wcqP+0eSGSxHt
-         vDuySaTEUeDxg==
-X-Nifty-SrcIP: [209.85.222.45]
-Received: by mail-ua1-f45.google.com with SMTP id k7so1415473uao.6;
-        Thu, 29 Aug 2019 10:18:53 -0700 (PDT)
-X-Gm-Message-State: APjAAAVGHSQnSdIOw//fbpFC374BgD3pJEBzCi4o9ueSqgZx6TzMrPal
-        eDL7iRQvHzdtoUyclkjgqq94pKoWWobYnZfIsaw=
-X-Google-Smtp-Source: APXvYqwqbA8BuFK3YrsS7eH1p7h+IH41cas29tGOrEnUdsWayN0EGgWlTZploEmptPKdma0vz50ED3g+GXZnPjCwY3M=
-X-Received: by 2002:ab0:4261:: with SMTP id i88mr5511251uai.95.1567099131876;
- Thu, 29 Aug 2019 10:18:51 -0700 (PDT)
+        Thu, 29 Aug 2019 13:20:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:48346 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726973AbfH2RUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 13:20:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD061337;
+        Thu, 29 Aug 2019 10:20:50 -0700 (PDT)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37F943F59C;
+        Thu, 29 Aug 2019 10:20:49 -0700 (PDT)
+Subject: Re: [PATCH 13/15] sched,fair: propagate sum_exec_runtime up the
+ hierarchy
+To:     Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
+Cc:     kernel-team@fb.com, pjt@google.com, peterz@infradead.org,
+        mingo@redhat.com, morten.rasmussen@arm.com, tglx@linutronix.de,
+        mgorman@techsingularity.net, vincent.guittot@linaro.org
+References: <20190822021740.15554-1-riel@surriel.com>
+ <20190822021740.15554-14-riel@surriel.com>
+ <f940abf6-3020-014c-74d7-d9be334e201c@arm.com>
+ <a35dd83b9ecadf4e136b588d7696a23e36ff2e9a.camel@surriel.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <1d631d5e-e606-4915-440f-fb00daa41fa5@arm.com>
+Date:   Thu, 29 Aug 2019 19:20:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190815225844.145726-1-nhuck@google.com> <20190827004155.11366-1-natechancellor@gmail.com>
- <CAK7LNATHj5KrnFa0fvHjuC-=5mV8VBT14vrpPMfuNKWw7wabag@mail.gmail.com>
- <CANiq72ndWZWD-KBT1s-mUxQNa1jaD7oDaCB2+NPiT1chf14Z_g@mail.gmail.com>
- <CAKwvOdkuDPfOusJRneeTzg7tZ4VKxaRCNg2SgmjVas58cDwe8w@mail.gmail.com> <CAKwvOdnOo3RXm3cx5YDtPyM=9Ry7kss-i4HzjxQkK4pjE-n9Lw@mail.gmail.com>
-In-Reply-To: <CAKwvOdnOo3RXm3cx5YDtPyM=9Ry7kss-i4HzjxQkK4pjE-n9Lw@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 30 Aug 2019 02:18:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATZSLYMW3NaEgm=r7EiHwLnxjtaogm_CRHZYgcBLVRb-w@mail.gmail.com>
-Message-ID: <CAK7LNATZSLYMW3NaEgm=r7EiHwLnxjtaogm_CRHZYgcBLVRb-w@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Do not enable -Wimplicit-fallthrough for clang
- for now
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Huckleberry <nhuck@google.com>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a35dd83b9ecadf4e136b588d7696a23e36ff2e9a.camel@surriel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 2:44 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Wed, Aug 28, 2019 at 10:39 AM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > On Wed, Aug 28, 2019 at 9:45 AM Miguel Ojeda
-> > <miguel.ojeda.sandonis@gmail.com> wrote:
-> > >
-> > > On Wed, Aug 28, 2019 at 6:21 PM Masahiro Yamada
-> > > <yamada.masahiro@socionext.com> wrote:
-> > > >
-> > > > Applied to linux-kbuild. Thanks.
-> > > >
-> > > > (If other clang folks give tags, I will add them later.)
-> > >
-> > > Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> >
-> > I verified that GCC didn't get support for -Wimplicit-fallthrough
-> > until GCC ~7.1 release, so the cc-option guard is still required.
-> > Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Thanks for the patch Nathan.
->
-> Also, there's an inconsistency between Makefile vs
-> scripts/Makefile.extrawarn that's been bugging me: it seems we enable
-> GCC only flags in Makefile, then disable certain Clang flags in
-> scripts/Makefile.extrawarn.
+On 28/08/2019 15:14, Rik van Riel wrote:
+> On Wed, 2019-08-28 at 09:51 +0200, Dietmar Eggemann wrote:
+>> On 22/08/2019 04:17, Rik van Riel wrote:
+>>> Now that enqueue_task_fair and dequeue_task_fair no longer iterate
+>>> up
+>>> the hierarchy all the time, a method to lazily propagate
+>>> sum_exec_runtime
+>>> up the hierarchy is necessary.
+>>>
+>>> Once a tick, propagate the newly accumulated exec_runtime up the
+>>> hierarchy,
+>>> and feed it into CFS bandwidth control.
+>>>
+>>> Remove the pointless call to account_cfs_rq_runtime from
+>>> update_curr,
+>>> which is always called with a root cfs_rq.
+>>
+>> But what about the call to account_cfs_rq_runtime() in
+>> set_curr_task_fair()? Here you always call it with the root cfs_rq.
+>> Shouldn't this be called also in a loop over all se's until !se-
+>>> parent
+>> (like in propagate_exec_runtime() further below).
+> 
+> I believe that call should be only on the cgroup
+> cfs_rq, with account_cfs_rq_runtime figuring out
+> whether more runtime needs to be obtained from
+> further up in the hierarchy.
 
+So like this?
 
-All the flags listed in scripts/Makefile.extrawarn depend on W= option.
-The options in Makefile are passed irrespective of W=.
+@@ -10248,7 +10248,8 @@ static void set_curr_task_fair(struct rq *rq)
 
-There is no inconsistency.
+        set_next_entity(cfs_rq, se);
+        /* ensure bandwidth has been allocated on our new cfs_rq */
+-       account_cfs_rq_runtime(cfs_rq, 0);
++       if (task_se_in_cgroup(se))
++               account_cfs_rq_runtime(group_cfs_rq_of_parent(se), 0);
+ }
 
+I fail to understand the second part of your sentence, and
+how is this related to the code in propagate_exec_runtime():
 
-> Not necessary to fix here and now, but I
-> hope one day to have one file that has all of the compiler specific
-> flags in one place (maybe its own file), so I only have to look in one
-> place.  I know, I know, "patches welcome." ;)
->
-> --
-> Thanks,
-> ~Nick Desaulniers
+for_each_sched_entity(se) {
 
+    propagate_exec_runtime() {
 
+        if (parent)
+            account_cfs_rq_runtime(cfs_rq, diff);
+    }
+}
 
--- 
-Best Regards
-Masahiro Yamada
+> By default we should probably work under the assumption
+> that account_cfs_rq_runtime() will succeed at the current
+> level, and no gymnastics are required to obtain CPU time.
+
+Maybe this all will become clearer when the reworked CFS Bandwidth
+support is ready ;-) I see this patch as the first part of it.
