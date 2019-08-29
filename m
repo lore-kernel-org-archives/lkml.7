@@ -2,150 +2,175 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD15C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C84C8C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD482073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FCEF2073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 00:05:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ESaJoc8u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OrEbQDx9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfH2AEZ (ORCPT
+        id S1727065AbfH2AF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 20:04:25 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42757 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfH2AEY (ORCPT
+        Wed, 28 Aug 2019 20:05:57 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36677 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfH2AF5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 20:04:24 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j7so1624337ota.9
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 17:04:23 -0700 (PDT)
+        Wed, 28 Aug 2019 20:05:57 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y19so1552773wrd.3;
+        Wed, 28 Aug 2019 17:05:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9V1I2O+TivEgbBfrL+sbjQm1nhJ9MH50acKxm7Jxy80=;
-        b=ESaJoc8uAcMghQKXnUGzQAUXuyljQbXi8D9tnbGffCiBjVzZuOXCax8X2qwURhna8D
-         ZCii/AXaKhwWr4hlRiHLcZ2NkaEVT4y9nfs/aJf8phUBTO5AwR8KTXRZurFFafCjLRhd
-         OY1VXkibH9HabUYOOfTgCyiw8cBHoj6YGzW1YRj33glxC4a0hjLp6bsL2Q74qKKC1DM4
-         hGhKheWRBV0QQd9KYQXbvrdnWI7S30xJ8O484RMAId2aedVlxTJHFFgkevMGBuf5JDwI
-         s88SmUnmj6LY0LPGMVexZlcan5Vud1uQzml64dgeu8YJZO+YkEohexOj5GRTXIpu3dam
-         wc4g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gCMPxZVoHiSuQIWWRJ0Qttndb5+aZBERg8YRY+XH0I8=;
+        b=OrEbQDx9JHiXvFAAkRhBZCo40dT7uqo/z+yARTZHWuKT0sJ1SsJaIsCy5sxWQmnlM+
+         88Tv1x5iYIHNh2Xm8zsrOVsmmBctW8A8+7xq/QposQip8KIv0z/dtbBoOE0rERz6JSY6
+         w/cCcvBnHVgd/m6ltjLioki/oVEMvl+MHN8SqgLN/6/iLGd2DXZ0tPINzWaYfqVxOcD3
+         7yYbCprTfB+DkfXny746BaQoj/xksNB4c7Kls/a8d7PwWFqCDepZ8LW57lzAJWQhALgR
+         XlzeKr8P1BPG/OyThx2/nBm4jpSNVAYoJHRnu1GD/FRgcq1cpwGGDoS0wNckUXEf4fOy
+         zfsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9V1I2O+TivEgbBfrL+sbjQm1nhJ9MH50acKxm7Jxy80=;
-        b=rcy/GG8C6ZvlTh9JYWMyX+/i9YzKIRkSMVlDxXDZWeYoHVaZfqLGt5a6br3PFc/VPD
-         F6OPHBK1VkSw/u6H54CBODZH77zT6vFfsyEnL4gTrVBl4HDlZNyZC4mOlHegMsF66Yeg
-         W5K+ALIC0arDli8smDAdBiew6wWXxDBit3FqtWMhSHO5oSSfLRjxBpx6aDYvLMMih0dM
-         s9HZMgmlsDX2p/7YuwPoe6AHSbNNbVChTc8O2syEgBRjD4u/qVlnAzacp2L0rzNQlHqA
-         yBWT0ql/WJHND6Vv9vESk5i3AdFLDL/fq1y0WpSUJof7bJkIXJ7yoE8n8epdj4Il6adf
-         NTdg==
-X-Gm-Message-State: APjAAAWVLGwPH5u7vV9T8XgUmrluK64oQDR2GABJgvGeOsPh3ysfq7aO
-        eQnwJHUiOtdZsjD2XrP46D7fGCXSbnIkBc+q9tPaeQ==
-X-Google-Smtp-Source: APXvYqw9NltuXUDjLqBgr7ARTZxSXB64T52L8qLE03K+SnICANvhCQNurFmsvJfjCF782hyug4nnoI73YcgZgqRJ+Zo=
-X-Received: by 2002:a9d:6b96:: with SMTP id b22mr5658299otq.363.1567037063279;
- Wed, 28 Aug 2019 17:04:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gCMPxZVoHiSuQIWWRJ0Qttndb5+aZBERg8YRY+XH0I8=;
+        b=QS6FeoON8UkUdFWXxGyALX7lVUGSyW8S4EZ9jhn0+gZPR4lm6LG7FFIcExNbB6oAJs
+         lEbVYzhfGA07Q/LSuF/QFaOaOu7Qouj7ZaIesLHWErq3PYo3xL9jhXvUOUUE6KSM7a7t
+         9k7d0TD2yZL9KEDA6CeDZYmyRBKDdBs3PC1PzrCjJ5E++36yVP6ESS6JwoVLWTJzWXJX
+         4aDRpyCGdc3ZOMvGsaxE+/8yDM5o/DPONIwWC8p7tN2YMqJlpy7SBtd4YTL3djLDy0RT
+         dz77FsBcTUpEhOCPy33YBvoai7S3tc7aCU0Lw7q1ry2BYx5qz/LYtkRG/JZ4G/2wRxqX
+         5aTQ==
+X-Gm-Message-State: APjAAAUzGjPfdhcU9AekZYIc48H2u+DN3pFB2ohjdTpZmwJjaeLtPdQ6
+        Ls5WxdLuEO5rYrN7jJtqrEI=
+X-Google-Smtp-Source: APXvYqxobm+0QzlDnBCAltTC9mN+DzSswyuw4a17MJh4Z1gN0Ra0mgRZx6gJBerdembNaAEpXWshJA==
+X-Received: by 2002:adf:e846:: with SMTP id d6mr7410153wrn.263.1567037153482;
+        Wed, 28 Aug 2019 17:05:53 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id n8sm536310wro.89.2019.08.28.17.05.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 17:05:52 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 17:05:51 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Sven Schnelle <svens@stackframe.org>,
+        Xiaozhou Liu <liuxiaozhou@bytedance.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] kbuild: allow Clang to find unused static inline
+ functions for W=1 build
+Message-ID: <20190829000551.GA62731@archlinux-threadripper>
+References: <20190828055425.24765-1-yamada.masahiro@socionext.com>
+ <20190828055425.24765-2-yamada.masahiro@socionext.com>
+ <20190828182017.GB127646@archlinux-threadripper>
+ <CAKwvOd=r5Y8hQQBeKZ6zAokPdyeT2AVKFsdviTvwV5AyDQQHrw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190821175720.25901-1-vgoyal@redhat.com> <20190821175720.25901-2-vgoyal@redhat.com>
- <20190826115152.GA21051@infradead.org> <20190827163828.GA6859@redhat.com>
- <20190828065809.GA27426@infradead.org> <20190828175843.GB912@redhat.com> <20190828225322.GA7777@dread.disaster.area>
-In-Reply-To: <20190828225322.GA7777@dread.disaster.area>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 28 Aug 2019 17:04:11 -0700
-Message-ID: <CAPcyv4jGEAbYSJef2zLzgg6Arozsuz7eN_vZL1iTcd1XQuNT4Q@mail.gmail.com>
-Subject: Re: [PATCH 01/19] dax: remove block device dependencies
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Vivek Goyal <vgoyal@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=r5Y8hQQBeKZ6zAokPdyeT2AVKFsdviTvwV5AyDQQHrw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 3:53 PM Dave Chinner <david@fromorbit.com> wrote:
->
-> On Wed, Aug 28, 2019 at 01:58:43PM -0400, Vivek Goyal wrote:
-> > On Tue, Aug 27, 2019 at 11:58:09PM -0700, Christoph Hellwig wrote:
-> > > On Tue, Aug 27, 2019 at 12:38:28PM -0400, Vivek Goyal wrote:
-> > > > > For bdev_dax_pgoff
-> > > > > I'd much rather have the partition offset if there is on in the daxdev
-> > > > > somehow so that we can get rid of the block device entirely.
-> > > >
-> > > > IIUC, there is one block_device per partition while there is only one
-> > > > dax_device for the whole disk. So we can't directly move bdev logical
-> > > > offset into dax_device.
+On Wed, Aug 28, 2019 at 04:28:30PM -0700, Nick Desaulniers wrote:
+> On Wed, Aug 28, 2019 at 11:20 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > On Wed, Aug 28, 2019 at 02:54:25PM +0900, Masahiro Yamada wrote:
+> > > GCC and Clang have different policy for -Wunused-function; GCC does not
+> > > warn unused static inline functions at all whereas Clang does if they
+> > > are defined in source files instead of included headers although it has
+> > > been suppressed since commit abb2ea7dfd82 ("compiler, clang: suppress
+> > > warning for unused static inline functions").
 > > >
-> > > Well, then we need to find a way to get partitions for dax devices,
-> > > as we really should not expect a block device hiding behind a dax
-> > > dev.  That is just a weird legacy assumption - block device need to
-> > > layer on top of the dax device optionally.
+> > > We often miss to delete unused functions where 'static inline' is used
+> > > in *.c files since there is no tool to detect them. Unused code remains
+> > > until somebody notices. For example, commit 075ddd75680f ("regulator:
+> > > core: remove unused rdev_get_supply()").
 > > >
-> > > >
-> > > > We probably could put this in "iomap" and leave it to filesystems to
-> > > > report offset into dax_dev in iomap that way dax generic code does not
-> > > > have to deal with it. But that probably will be a bigger change.
+> > > Let's remove __maybe_unused from the inline macro to allow Clang to
+> > > start finding unused static inline functions. For now, we do this only
+> > > for W=1 build since it is not a good idea to sprinkle warnings for the
+> > > normal build.
 > > >
-> > > And where would the file system get that information from?
-> >
-> > File system knows about block device, can it just call get_start_sect()
-> > while filling iomap->addr. And this means we don't have to have
-> > parition information in dax device. Will something like following work?
-> > (Just a proof of concept patch).
-> >
-> >
-> > ---
-> >  drivers/dax/super.c |   11 +++++++++++
-> >  fs/dax.c            |    6 +++---
-> >  fs/ext4/inode.c     |    6 +++++-
-> >  include/linux/dax.h |    1 +
-> >  4 files changed, 20 insertions(+), 4 deletions(-)
-> >
-> > Index: rhvgoyal-linux/fs/ext4/inode.c
-> > ===================================================================
-> > --- rhvgoyal-linux.orig/fs/ext4/inode.c       2019-08-28 13:51:16.051937204 -0400
-> > +++ rhvgoyal-linux/fs/ext4/inode.c    2019-08-28 13:51:44.453937204 -0400
-> > @@ -3589,7 +3589,11 @@ retry:
-> >                       WARN_ON_ONCE(1);
-> >                       return -EIO;
-> >               }
-> > -             iomap->addr = (u64)map.m_pblk << blkbits;
-> > +             if (IS_DAX(inode))
-> > +                     iomap->addr = ((u64)map.m_pblk << blkbits) +
-> > +                                   (get_start_sect(iomap->bdev) * 512);
-> > +             else
-> > +                     iomap->addr = (u64)map.m_pblk << blkbits;
->
-> I'm not a fan of returning a physical device sector address from an
-> interface where ever other user/caller expects this address to be a
-> logical block address into the block device. It creates a landmine
-> in the iomap API that callers may not be aware of and that's going
-> to cause bugs. We're trying really hard to keep special case hacks
-> like this out of the iomap infrastructure, so on those grounds alone
-> I'd suggest this is a dead end approach.
->
-> Hence I think that if the dax device needs a physical offset from
-> the start of the block device the filesystem sits on, it should be
-> set up at dax device instantiation time and so the filesystem/bdev
-> never needs to be queried again for this information.
->
+> > > My initial attempt was to add -Wno-unused-function for no W=1 build
+> > > (https://lore.kernel.org/patchwork/patch/1120594/)
+> > >
+> > > Nathan Chancellor pointed out that would weaken Clang's checks since
+> > > we would no longer get -Wunused-function without W=1. It is true GCC
+> > > would detect unused static non-inline functions, but it would weaken
+> > > Clang as a standalone compiler at least.
+> 
+> Got it. No problem.
+> 
+> > >
+> > > Here is a counter implementation. The current problem is, W=... only
+> > > controls compiler flags, which are globally effective. There is no way
+> > > to narrow the scope to only 'static inline' functions.
+> > >
+> > > This commit defines KBUILD_EXTRA_WARN[123] corresponding to W=[123].
+> > > When KBUILD_EXTRA_WARN1 is defined, __maybe_unused is omitted from
+> > > the 'inline' macro.
+> > >
+> > > This makes the code a bit uglier, so personally I do not want to carry
+> > > this forever. If we can manage to fix most of the warnings, we can
+> > > drop this entirely, then enable -Wunused-function all the time.
+> 
+> How many warnings?
 
-Agree. In retrospect it was my laziness in the dax-device
-implementation to expect the block-device to be available.
+In an x86 defconfig build (one of the smallest builds we do), I see an
+additional 35 warnings that crop up:
 
-It looks like fs_dax_get_by_bdev() is an intercept point where a
-dax_device could be dynamically created to represent the subset range
-indicated by the block-device partition. That would open up more
-cleanup opportunities.
+https://gist.github.com/003ba86ba60b4ac7e8109089d6cb1a5a
+
+> > >
+> > > If you contribute to code clean-up, please run "make CC=clang W=1"
+> > > and check -Wunused-function warnings. You will find lots of unused
+> > > functions.
+> > >
+> > > Some of them are false-positives because the call-sites are disabled
+> > > by #ifdef. I do not like to abuse the inline keyword for suppressing
+> > > unused-function warnings because it is intended to be a hint for the
+> > > compiler optimization. I prefer #ifdef around the definition, or
+> > > __maybe_unused if #ifdef would make the code too ugly.
+> > >
+> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> >
+> > I can still see warnings from static unused functions and with W=1, I
+> > see plenty more. I agree that this is uglier because of the
+> > __inline_maybe_unused but I think this is better for regular developers.
+> > I will try to work on these unused-function warnings!
+> 
+> How many are we talking here?
+> 
+> >
+> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+> 
+> This is getting kind of messy.  I was more ok when the goal seemed to
+> be simplifying the definition of `inline`, but this is worse IMO.
+
+I guess if you want, we can just go back to v1 and have all unused
+function warnings hidden by default with clang. Fixing these warnings
+will take a significant amount of time given there will probably be a
+few hundred so I don't think having this warning hidden behind W=1 for
+that long is a good thing.
+
+Cheers,
+Nathan
