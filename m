@@ -2,104 +2,103 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 844DFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24465C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66FE22339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E274B2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:21:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567102880;
+	bh=QGSwxR0ixi1GzBD2a4uN4S7y5Hz3hhUkzDg8GynnLyo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ukBxA/Fxxd20uGIO6FKEjTG0D7nNxeFJv3NwBNdUH21rs8mQDOYjo+Rp1WgfLzwTv
+	 RoO1XxgFEeLzvjPuOKEyuOtC9gwO+5Cbpq53U760f+0M2Vy3sK09tEo3X8zVnosrf+
+	 GbLNMlHWqODpf/6c7QMV1GRQ50leJJL75OVCpad8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbfH2SVM (ORCPT
+        id S1729803AbfH2SVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:21:12 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52596 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729052AbfH2SVJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:21:09 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t17so4705395wmi.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 11:21:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9wemDLG+al8uBFQtCufV5oYzqlZQzmNTZtOsaYBmOL4=;
-        b=mXix5R/GKhH05FxQiYlol0h1tWjIzt5XdJQ0MMUCI7ZstwYK6iNcBjk4rhx3juw+Xt
-         sSujIkJNknqbTKOgrZoxrPJQ5f5Gt2q3ooastPNh5U684/KIDMpkit7xJRalb7eNm7Sd
-         sVaxAOKly/ZaGLjXfqnClz7TBvfQC2F5iLkmROSSlrZF3uKsOfCvk7WibCKpOCphh/hB
-         xJDlqpBukLX8j0yuY1F1tRXZ86Kblsjd+39lB2cl3H52aOeoksicjVuce4wXcEVP3VlZ
-         r143+0osapSmwBqFdYnMj5s6p8GU99jh0ZcdurztswZOTYsOIONfaXlDJ6XN62GlzKXm
-         8f8w==
-X-Gm-Message-State: APjAAAWdG9wfSftwQrmMzFUV29m1HemipQqj5dQ8frSXUIuGYc0Ns8Rl
-        c1MLtRF7z4giyY/uhDp7HANX2HfL
-X-Google-Smtp-Source: APXvYqxs9hGhMd3GCtvD6OwjDmG0XpiTouttfQ4gQX2eJSe1yrPiPLw9KxNZ1T6jPMpg7kAE1PRLxw==
-X-Received: by 2002:a1c:2d4:: with SMTP id 203mr13320824wmc.105.1567102867216;
-        Thu, 29 Aug 2019 11:21:07 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id c187sm5655385wmd.39.2019.08.29.11.21.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 11:21:06 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] nvme: fire discovery log page change events to
- userspace
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     linux-nvme@lists.infradead.org,
-        Keith Busch <keith.busch@intel.com>,
-        James Smart <james.smart@broadcom.com>,
-        linux-kernel@vger.kernel.org
-References: <20190712180211.26333-1-sagi@grimberg.me>
- <20190712180211.26333-4-sagi@grimberg.me> <20190822002328.GP9511@lst.de>
- <205d06ab-fedc-739d-323f-b358aff2cbfe@grimberg.me>
- <e4603511-6dae-e26d-12a9-e9fa727a8d03@grimberg.me>
- <20190826065639.GA11036@lst.de> <20190826075916.GA30396@kroah.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <ac168168-fed2-2b57-493e-e88261ead73b@grimberg.me>
-Date:   Thu, 29 Aug 2019 11:21:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 14:21:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730117AbfH2SRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:39 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B84602189D;
+        Thu, 29 Aug 2019 18:17:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567102658;
+        bh=QGSwxR0ixi1GzBD2a4uN4S7y5Hz3hhUkzDg8GynnLyo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=dCMRstJi75M2hsKaRCx1ZumvHx8570koFnK2ljNGRWC31AAUPVbkKDQdi5U6nmxof
+         DUm9P3cOEXor2ZZIxNiBcQGEj2YV1AKvhwAcJnAKVs5JTMDkwl9Z0ualYb3KE3og5h
+         CMrpQNGd+/xiMrmHBM19iVYDslgKJsUuQ3WNz/FE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 01/16] net: tundra: tsi108: use spin_lock_irqsave instead of spin_lock_irq in IRQ context
+Date:   Thu, 29 Aug 2019 14:17:19 -0400
+Message-Id: <20190829181736.9040-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190826075916.GA30396@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Fuqian Huang <huangfq.daxian@gmail.com>
 
->>>> You are correct that this information can be derived from sysfs, but the
->>>> main reason why we add these here, is because in udev rule we can't
->>>> just go ahead and start looking these up and parsing these..
->>>>
->>>> We could send the discovery aen with NVME_CTRL_NAME and have
->>>> then have systemd run something like:
->>>>
->>>> nvme connect-all -d nvme0 --sysfs
->>>>
->>>> and have nvme-cli retrieve all this stuff from sysfs?
->>>
->>> Actually that may be a problem.
->>>
->>> There could be a hypothetical case where after the event was fired
->>> and before it was handled, the discovery controller went away and
->>> came back again with a different controller instance, and the old
->>> instance is now a different discovery controller.
->>>
->>> This is why we need this information in the event. And we verify this
->>> information in sysfs in nvme-cli.
->>
->> Well, that must be a usual issue with uevents, right?  Don't we usually
->> have a increasing serial number for that or something?
-> 
-> Yes we do, userspace should use it to order events.  Does udev not
-> handle that properly today?
+[ Upstream commit 8c25d0887a8bd0e1ca2074ac0c6dff173787a83b ]
 
-The problem is not ordering of events, its really about the fact that
-the chardev can be removed and reallocated for a different controller
-(could be a completely different discovery controller) by the time
-that userspace handles the event.
+As spin_unlock_irq will enable interrupts.
+Function tsi108_stat_carry is called from interrupt handler tsi108_irq.
+Interrupts are enabled in interrupt handler.
+Use spin_lock_irqsave/spin_unlock_irqrestore instead of spin_(un)lock_irq
+in IRQ context to avoid this.
+
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/tundra/tsi108_eth.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/tundra/tsi108_eth.c b/drivers/net/ethernet/tundra/tsi108_eth.c
+index 8fd131207ee10..499abe9108fa6 100644
+--- a/drivers/net/ethernet/tundra/tsi108_eth.c
++++ b/drivers/net/ethernet/tundra/tsi108_eth.c
+@@ -381,9 +381,10 @@ tsi108_stat_carry_one(int carry, int carry_bit, int carry_shift,
+ static void tsi108_stat_carry(struct net_device *dev)
+ {
+ 	struct tsi108_prv_data *data = netdev_priv(dev);
++	unsigned long flags;
+ 	u32 carry1, carry2;
+ 
+-	spin_lock_irq(&data->misclock);
++	spin_lock_irqsave(&data->misclock, flags);
+ 
+ 	carry1 = TSI_READ(TSI108_STAT_CARRY1);
+ 	carry2 = TSI_READ(TSI108_STAT_CARRY2);
+@@ -451,7 +452,7 @@ static void tsi108_stat_carry(struct net_device *dev)
+ 			      TSI108_STAT_TXPAUSEDROP_CARRY,
+ 			      &data->tx_pause_drop);
+ 
+-	spin_unlock_irq(&data->misclock);
++	spin_unlock_irqrestore(&data->misclock, flags);
+ }
+ 
+ /* Read a stat counter atomically with respect to carries.
+-- 
+2.20.1
+
