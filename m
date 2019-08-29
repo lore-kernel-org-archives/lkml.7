@@ -2,142 +2,144 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECCAC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FA0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845E622CED
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A9323426
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:38:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="JVWTA4rK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fyV4taM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbfH2Oim (ORCPT
+        id S1728203AbfH2Oi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:38:42 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34700 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbfH2OiL (ORCPT
+        Thu, 29 Aug 2019 10:38:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47836 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727976AbfH2Oiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:38:11 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y135so2228211wmc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 07:38:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qlsO4luZGA7xdDBq4p1qMUU3oONF/sHFPT7E7FVYQM0=;
-        b=JVWTA4rK9yfsAnkd3/S2TmsnSXoQp9poW2HhblLsu22DFOsV+yqUFeLk2fRTnYl0lC
-         u5SIGOt47o5hojZpQvhjh2PHkLq+5PLZAYvyidjM2zQRRpJBCUNXkcGQMREulGvG1rH/
-         V991n+oPSv1cCNWA+XxrEMXwmIRz8gaDu8sAnBmby7W4XcugWL7Bd/gJAmH6vBE9SdB4
-         NgU1MKfTZ9+pBL6jFkWH3yvbid1FPef5dqdfQA5zi8JKQ8EhfHehDnv38o5d4mFWN5RB
-         02yOrR7VTBYCpmBfgl4fObQfg6UnXq8UTOgNfMl7Lv1diu5S7ygDetAcUUBoLFnOii+P
-         mZMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qlsO4luZGA7xdDBq4p1qMUU3oONF/sHFPT7E7FVYQM0=;
-        b=NcifXUoAs5r4cEd24KrQSXLltlLwBkUVbTaCja0/rXYLEBPhHJaeBAqQJd4RWvVJ3A
-         UZx8isAUUOrx+CEQwwtX2s0alWGilp1iwT4tMpMGt8Vl7ZWUdI0tnd2NYi0s7pJlre3F
-         RxQ0f6srLxm+45mJPksu31mvnQcLewKvOJJzYK0GdxXTtayxn+PUA1XfAZEmDbXx2Onl
-         Db0XBk9F6lnU9qS2p5xeV5VBCi/phwEG4huIzLnHMKsaqkCCb2lS+3F68+4sRt1Nwbyz
-         z2zcxGz3wzj3ISZ1ZnmPJhFLKNPldJy3xOEUOtB62/hSVZt6YqJzy07ehz+WzrQpI0bU
-         2Tkg==
-X-Gm-Message-State: APjAAAU5PIN9Z4ZyqQEww9ql7pd/2MUTRDJVxdEZkDyj8vRrl8PznSmC
-        jlP3L70knjzhmbaMCjcAtEtBJg==
-X-Google-Smtp-Source: APXvYqwqhVBmVgrfpSIbnESiSa5F2MHb7ql3NpNi0FVVtwKiErBDLaoIJzfK/GhBfhv8sCTxpxQkaQ==
-X-Received: by 2002:a1c:750f:: with SMTP id o15mr12108340wmc.131.1567089489097;
-        Thu, 29 Aug 2019 07:38:09 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id g15sm3241925wrp.29.2019.08.29.07.38.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 07:38:08 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Alban Bedel <albeu@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 5/9] gpio: em: use devm_platform_ioremap_resource_nocache()
-Date:   Thu, 29 Aug 2019 16:37:38 +0200
-Message-Id: <20190829143742.24726-6-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190829143742.24726-1-brgl@bgdev.pl>
-References: <20190829143742.24726-1-brgl@bgdev.pl>
+        Thu, 29 Aug 2019 10:38:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ox4TpDVV8qRbeaPwwUMz7SCc5tRwz9+n1dU1L+APswQ=; b=fyV4taM3dif6HaciKx9pLvvSI
+        MU/I8meBwuQ81JsRtjD8jd3jelNcdVSx2M3F8E9BW1ZxzvAVGNaC0KUyK1ee3ZJzLPqXusgOnumQy
+        FZoGwuIkBZFtZcYFiWgcl53GF8yya6AVFVdqUtq1TVrJvmRNyfLQsVBjY9Xd2waCrEF3RgHX3GYMi
+        eNNSaxDv2CTxLdxfEFYN2/t0ZpQzAQJdKuwQ/fn3fAPK/7PRDhK8NdCBChEEyBLGMgXXm3gbDM8wG
+        XtjDSmNMEQDA+Jo7p4898WPJuz2KHGXiRcrGUBxBeZDoTIM0Zo86ChdsA0TYoRVZx9IU7auLfTk2w
+        I/j7badlg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3LZ9-0007xw-RZ; Thu, 29 Aug 2019 14:38:24 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EDEC53013A2;
+        Thu, 29 Aug 2019 16:37:46 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 33AF1202411BF; Thu, 29 Aug 2019 16:38:21 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 16:38:21 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Phil Auld <pauld@redhat.com>
+Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190829143821.GX2369@hirez.programming.kicks-ass.net>
+References: <cover.1559129225.git.vpillai@digitalocean.com>
+ <20190827211417.snpwgnhsu5t6u52y@srcf.ucam.org>
+ <20190827215035.GH2332@hirez.programming.kicks-ass.net>
+ <20190828153033.GA15512@pauld.bos.csb>
+ <20190828160114.GE17205@worktop.programming.kicks-ass.net>
+ <20190829143050.GA7262@pauld.bos.csb>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190829143050.GA7262@pauld.bos.csb>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Thu, Aug 29, 2019 at 10:30:51AM -0400, Phil Auld wrote:
+> On Wed, Aug 28, 2019 at 06:01:14PM +0200 Peter Zijlstra wrote:
+> > On Wed, Aug 28, 2019 at 11:30:34AM -0400, Phil Auld wrote:
+> > > On Tue, Aug 27, 2019 at 11:50:35PM +0200 Peter Zijlstra wrote:
+> > 
+> > > > And given MDS, I'm still not entirely convinced it all makes sense. If
+> > > > it were just L1TF, then yes, but now...
+> > > 
+> > > I was thinking MDS is really the reason for this. L1TF has mitigations but
+> > > the only current mitigation for MDS for smt is ... nosmt. 
+> > 
+> > L1TF has no known mitigation that is SMT safe. The moment you have
+> > something in your L1, the other sibling can read it using L1TF.
+> > 
+> > The nice thing about L1TF is that only (malicious) guests can exploit
+> > it, and therefore the synchronizatin context is VMM. And it so happens
+> > that VMEXITs are 'rare' (and already expensive and thus lots of effort
+> > has already gone into avoiding them).
+> > 
+> > If you don't use VMs, you're good and SMT is not a problem.
+> > 
+> > If you do use VMs (and do/can not trust them), _then_ you need
+> > core-scheduling; and in that case, the implementation under discussion
+> > misses things like synchronization on VMEXITs due to interrupts and
+> > things like that.
+> > 
+> > But under the assumption that VMs don't generate high scheduling rates,
+> > it can work.
+> > 
+> > > The current core scheduler implementation, I believe, still has (theoretical?) 
+> > > holes involving interrupts, once/if those are closed it may be even less 
+> > > attractive.
+> > 
+> > No; so MDS leaks anything the other sibling (currently) does, this makes
+> > _any_ privilidge boundary a synchronization context.
+> > 
+> > Worse still, the exploit doesn't require a VM at all, any other task can
+> > get to it.
+> > 
+> > That means you get to sync the siblings on lovely things like system
+> > call entry and exit, along with VMM and anything else that one would
+> > consider a privilidge boundary. Now, system calls are not rare, they
+> > are really quite common in fact. Trying to sync up siblings at the rate
+> > of system calls is utter madness.
+> > 
+> > So under MDS, SMT is completely hosed. If you use VMs exclusively, then
+> > it _might_ work because a 'pure' host doesn't schedule that often
+> > (maybe, same assumption as for L1TF).
+> > 
+> > Now, there have been proposals of moving the privilidge boundary further
+> > into the kernel. Just like PTI exposes the entry stack and code to
+> > Meltdown, the thinking is, lets expose more. By moving the priv boundary
+> > the hope is that we can do lots of common system calls without having to
+> > sync up -- lots of details are 'pending'.
+> 
+> 
+> Thanks for clarifying. My understanding is (somewhat) less fuzzy now. :)
+> 
+> I think, though, that you were basically agreeing with me that the current 
+> core scheduler does not close the holes, or am I reading that wrong.
 
-Use the new devm_platform_ioremap_resource_nocache() helper for memory
-range mapping instead of devm_ioremap_nocache() combined with a call to
-platform_get_resource().
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/gpio/gpio-em.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
-index a87951293aaa..0f4f5e11278a 100644
---- a/drivers/gpio/gpio-em.c
-+++ b/drivers/gpio/gpio-em.c
-@@ -269,7 +269,7 @@ static void em_gio_irq_domain_remove(void *data)
- static int em_gio_probe(struct platform_device *pdev)
- {
- 	struct em_gio_priv *p;
--	struct resource *io[2], *irq[2];
-+	struct resource *irq[2];
- 	struct gpio_chip *gpio_chip;
- 	struct irq_chip *irq_chip;
- 	const char *name = dev_name(&pdev->dev);
-@@ -284,25 +284,21 @@ static int em_gio_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, p);
- 	spin_lock_init(&p->sense_lock);
- 
--	io[0] = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	io[1] = platform_get_resource(pdev, IORESOURCE_MEM, 1);
- 	irq[0] = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
- 	irq[1] = platform_get_resource(pdev, IORESOURCE_IRQ, 1);
- 
--	if (!io[0] || !io[1] || !irq[0] || !irq[1]) {
--		dev_err(&pdev->dev, "missing IRQ or IOMEM\n");
-+	if (!irq[0] || !irq[1]) {
-+		dev_err(&pdev->dev, "missing IRQ resources\n");
- 		return -EINVAL;
- 	}
- 
--	p->base0 = devm_ioremap_nocache(&pdev->dev, io[0]->start,
--					resource_size(io[0]));
--	if (!p->base0)
--		return -ENOMEM;
-+	p->base0 = devm_platform_ioremap_resource_nocache(pdev, 0);
-+	if (IS_ERR(p->base0))
-+		return PTR_ERR(p->base0);
- 
--	p->base1 = devm_ioremap_nocache(&pdev->dev, io[1]->start,
--				   resource_size(io[1]));
--	if (!p->base1)
--		return -ENOMEM;
-+	p->base1 = devm_platform_ioremap_resource_nocache(pdev, 1);
-+	if (IS_ERR(p->base1))
-+		return PTR_ERR(p->base1);
- 
- 	if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios)) {
- 		dev_err(&pdev->dev, "Missing ngpios OF property\n");
--- 
-2.21.0
-
+Agreed; the missing bits for L1TF are ugly but doable (I've actually
+done them before, Tim has that _somewhere_), but I've not seen a
+'workable' solution for MDS yet.
