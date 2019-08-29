@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2400EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5678C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F003C2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7BD205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103587;
-	bh=E7EHSvLSZJd4GlOj41JTabPK+yrB+jUT8faqfwhNk9U=;
+	s=default; t=1567103590;
+	bh=wpmruaQbL2KAE/UKd4qy1TFFndrVLSjSXyqVxwP3wFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ttJ7fN1dTl3pMC0/LxK5NyPx9QYq0/fHScyASM24m+WkcGnkSMMV6rLc6/fR7opJj
-	 V7AbEgiDS6OoB6Ln7UR5Gnhs6LlVRLlkhRdjmqzPH3d6qnivNh7BD471elSc/D99DH
-	 6tWeS1kUHJJlb44gKdY3WTQhMWhV3s4egzVuZuxg=
+	b=uE+xNrM6KuLRYnIwBdIMa82xdmbKT3ONHxAVmL5/3mHGruRvY2yRELXxnVMp52Z/N
+	 HbP8MUyLCyq2wYWTJRO48Vjo9kAH1l+mUcKCIzAPBcEXd7o/gVYrR0G4Wq5gGo7dRl
+	 7E0QvmwSLjgw0sl/yrimX9i339vknCHdjAEA1Tv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbfH2SNy (ORCPT
+        id S1729141AbfH2SdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:13:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55562 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:33:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728546AbfH2SNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:13:50 -0400
+        id S1728585AbfH2SNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:13:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 190FF23428;
-        Thu, 29 Aug 2019 18:13:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67529233FF;
+        Thu, 29 Aug 2019 18:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102428;
-        bh=E7EHSvLSZJd4GlOj41JTabPK+yrB+jUT8faqfwhNk9U=;
+        s=default; t=1567102432;
+        bh=wpmruaQbL2KAE/UKd4qy1TFFndrVLSjSXyqVxwP3wFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0DmZWkYkLy4Y4WnclpxLJz3C+adDj7wfkocSASRHun+cV/+3p159PEBdnrsMS+HOM
-         Q2FEUwmPcWhE66U0JG3f5AW/DXoekPaPFJO9iqkHp6JnSIZcRcB/3KvZDrq3odELuB
-         b41Yk+wgqLj1ztU0sqIHudkKhbbiFO0y4b8H3rUA=
+        b=ZN2qb1PtZ7C9yXDqiRA/eKTYnWk8wb4NWLzSxjBLdDb4ANC6uP7xco/pVfO/fF0xm
+         6XcUoIjI4H0br9Iknqx+qeEnb0pTM9kRD3P2/adNaoWbDk0txCSpa9rIHH3sPUo/te
+         TwIcoe8vOxnzUNx3NYHA1QtSgRtpIu9KLKRJxwuQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harish Bandi <c-hbandi@codeaurora.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 19/76] Bluetooth: hci_qca: Send VS pre shutdown command.
-Date:   Thu, 29 Aug 2019 14:12:14 -0400
-Message-Id: <20190829181311.7562-19-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 21/76] s390/qeth: serialize cmd reply with concurrent timeout
+Date:   Thu, 29 Aug 2019 14:12:16 -0400
+Message-Id: <20190829181311.7562-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
 References: <20190829181311.7562-1-sashal@kernel.org>
@@ -60,99 +59,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harish Bandi <c-hbandi@codeaurora.org>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit a2780889e247561744dd8efbd3478a1999b72ae3 ]
+[ Upstream commit 072f79400032f74917726cf76f4248367ea2b5b8 ]
 
-WCN399x chips are coex chips, it needs a VS pre shutdown
-command while turning off the BT. So that chip can inform
-BT is OFF to other active clients.
+Callbacks for a cmd reply run outside the protection of card->lock, to
+allow for additional cmds to be issued & enqueued in parallel.
 
-Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+When qeth_send_control_data() bails out for a cmd without having
+received a reply (eg. due to timeout), its callback may concurrently be
+processing a reply that just arrived. In this case, the callback
+potentially accesses a stale reply->reply_param area that eg. was
+on-stack and has already been released.
+
+To avoid this race, add some locking so that qeth_send_control_data()
+can (1) wait for a concurrently running callback, and (2) zap any
+pending callback that still wants to run.
+
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btqca.c   | 21 +++++++++++++++++++++
- drivers/bluetooth/btqca.h   |  7 +++++++
- drivers/bluetooth/hci_qca.c |  3 +++
- 3 files changed, 31 insertions(+)
+ drivers/s390/net/qeth_core.h      |  1 +
+ drivers/s390/net/qeth_core_main.c | 20 ++++++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-index 0ee5acb685a10..ee25e6ae1a098 100644
---- a/drivers/bluetooth/btqca.c
-+++ b/drivers/bluetooth/btqca.c
-@@ -99,6 +99,27 @@ static int qca_send_reset(struct hci_dev *hdev)
- 	return 0;
+diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
+index 784a2e76a1b04..c5f60f95e8db9 100644
+--- a/drivers/s390/net/qeth_core.h
++++ b/drivers/s390/net/qeth_core.h
+@@ -640,6 +640,7 @@ struct qeth_seqno {
+ struct qeth_reply {
+ 	struct list_head list;
+ 	struct completion received;
++	spinlock_t lock;
+ 	int (*callback)(struct qeth_card *, struct qeth_reply *,
+ 		unsigned long);
+ 	u32 seqno;
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index b1823d75dd35c..6b8f99e7d8a81 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -548,6 +548,7 @@ static struct qeth_reply *qeth_alloc_reply(struct qeth_card *card)
+ 	if (reply) {
+ 		refcount_set(&reply->refcnt, 1);
+ 		init_completion(&reply->received);
++		spin_lock_init(&reply->lock);
+ 	}
+ 	return reply;
  }
+@@ -832,6 +833,13 @@ static void qeth_issue_next_read_cb(struct qeth_card *card,
  
-+int qca_send_pre_shutdown_cmd(struct hci_dev *hdev)
-+{
-+	struct sk_buff *skb;
-+	int err;
-+
-+	bt_dev_dbg(hdev, "QCA pre shutdown cmd");
-+
-+	skb = __hci_cmd_sync(hdev, QCA_PRE_SHUTDOWN_CMD, 0,
-+				NULL, HCI_INIT_TIMEOUT);
-+	if (IS_ERR(skb)) {
-+		err = PTR_ERR(skb);
-+		bt_dev_err(hdev, "QCA preshutdown_cmd failed (%d)", err);
-+		return err;
+ 	if (!reply->callback) {
+ 		rc = 0;
++		goto no_callback;
 +	}
 +
-+	kfree_skb(skb);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(qca_send_pre_shutdown_cmd);
-+
- static void qca_tlv_check_data(struct rome_config *config,
- 				const struct firmware *fw)
- {
-diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
-index e9c9999596035..f2a9e576a86ce 100644
---- a/drivers/bluetooth/btqca.h
-+++ b/drivers/bluetooth/btqca.h
-@@ -13,6 +13,7 @@
- #define EDL_PATCH_TLV_REQ_CMD		(0x1E)
- #define EDL_NVM_ACCESS_SET_REQ_CMD	(0x01)
- #define MAX_SIZE_PER_TLV_SEGMENT	(243)
-+#define QCA_PRE_SHUTDOWN_CMD		(0xFC08)
++	spin_lock_irqsave(&reply->lock, flags);
++	if (reply->rc) {
++		/* Bail out when the requestor has already left: */
++		rc = reply->rc;
+ 	} else {
+ 		if (cmd) {
+ 			reply->offset = (u16)((char *)cmd - (char *)iob->data);
+@@ -840,7 +848,9 @@ static void qeth_issue_next_read_cb(struct qeth_card *card,
+ 			rc = reply->callback(card, reply, (unsigned long)iob);
+ 		}
+ 	}
++	spin_unlock_irqrestore(&reply->lock, flags);
  
- #define EDL_CMD_REQ_RES_EVT		(0x00)
- #define EDL_PATCH_VER_RES_EVT		(0x19)
-@@ -130,6 +131,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
- 		   enum qca_btsoc_type soc_type, u32 soc_ver);
- int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
- int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
-+int qca_send_pre_shutdown_cmd(struct hci_dev *hdev);
- static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
- {
- 	return soc_type == QCA_WCN3990 || soc_type == QCA_WCN3998;
-@@ -161,4 +163,9 @@ static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
- {
- 	return false;
- }
-+
-+static inline int qca_send_pre_shutdown_cmd(struct hci_dev *hdev)
-+{
-+	return -EOPNOTSUPP;
-+}
- #endif
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index f41fb2c02e4fd..d88b024eaf566 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1319,6 +1319,9 @@ static int qca_power_off(struct hci_dev *hdev)
- {
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
++no_callback:
+ 	if (rc <= 0)
+ 		qeth_notify_reply(reply, rc);
+ 	qeth_put_reply(reply);
+@@ -1880,6 +1890,16 @@ static int qeth_send_control_data(struct qeth_card *card, int len,
+ 		rc = (timeout == -ERESTARTSYS) ? -EINTR : -ETIME;
  
-+	/* Perform pre shutdown command */
-+	qca_send_pre_shutdown_cmd(hdev);
+ 	qeth_dequeue_reply(card, reply);
 +
- 	qca_power_shutdown(hu);
- 	return 0;
- }
++	if (reply_cb) {
++		/* Wait until the callback for a late reply has completed: */
++		spin_lock_irq(&reply->lock);
++		if (rc)
++			/* Zap any callback that's still pending: */
++			reply->rc = rc;
++		spin_unlock_irq(&reply->lock);
++	}
++
+ 	if (!rc)
+ 		rc = reply->rc;
+ 	qeth_put_reply(reply);
 -- 
 2.20.1
 
