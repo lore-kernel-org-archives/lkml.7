@@ -2,109 +2,117 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F3EC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDCAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C264722CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C03D2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:52:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VzanuXRC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfH2WuA (ORCPT
+        id S1728212AbfH2Wwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 18:50:00 -0400
-Received: from mail.phunq.net ([66.183.183.73]:51320 "EHLO voyager.galaxy"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727686AbfH2WuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 18:50:00 -0400
-X-Greylist: delayed 1989 seconds by postgrey-1.27 at vger.kernel.org; Thu, 29 Aug 2019 18:49:59 EDT
-Received: from [172.16.1.14]
-        by voyager.galaxy with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-        (Exim 4.92.1)
-        (envelope-from <daniel@phunq.net>)
-        id 1i3Sim-00062X-Fo; Thu, 29 Aug 2019 15:16:48 -0700
-From:   Daniel Phillips <daniel@phunq.net>
-Subject: [ANNOUNCE] Three things.
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        daye <daye@dddancer.com>
-Message-ID: <8ccfa9b4-d76c-b25d-7eda-303d8faa0b79@phunq.net>
-Date:   Thu, 29 Aug 2019 15:16:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 29 Aug 2019 18:52:32 -0400
+Received: from ozlabs.org ([203.11.71.1]:52091 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727686AbfH2Wwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 18:52:32 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46KHtj1PNdz9sBp;
+        Fri, 30 Aug 2019 08:52:29 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567119149;
+        bh=SzjVO7RDps2DIIsrc1J/jnZpaYyW/yVJ02e6Oz+0270=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VzanuXRCwXmBYakKwNiKUayCSciDd7HnFbcJ1nTkeNMVd5lohY5UIaVfCH8S6UYJo
+         8fl9tPnjd9cf/PFtSPezJ+daAXA9AkWlV95pRcYtxGevBykeq5qiqDxolvWVym8nGo
+         +HKME791DLAHdnj4js793gHBWJbKB5HGBSCtQQhUYuaFhy+gcdfIPOp+HPuzwZkP3F
+         UWcfdtyKFE57C8FH+ZZ3Eq/XEYKZK85ZqrskDg9UhQYejx9uZYCN0egZeYw3QCYt9h
+         4CLez2uklS9QWOrF2NrsewGaT9oKVXRNGRv3ZGI9PMEfHa42RxdRcRMfL8jmaxvcW7
+         KN8VxRLM50Nzw==
+Date:   Fri, 30 Aug 2019 08:52:27 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: linux-next: build failure after merge of the compiler-attributes
+ tree
+Message-ID: <20190830085227.01676c93@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/z6gSYUZMpv79iMiZeUczXGB";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks, how's it going? Over here, we have been rather busy lately,
-and for the last five years or so to be honest. Today it is my pleasure
-to be able to announce three GPL open source projects:
+--Sig_/z6gSYUZMpv79iMiZeUczXGB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-1) Shardmap
+Hi all,
 
-Shardmap is the next generation directory index developed for Tux3, and
-which we are now offering as a much needed replacement for Ext4 HTree.
-Shardmap meets but usually beats HTree at all scales, has way better
-readdir characteristics, and goes where HTree never did: up into the
-billions of files per directory, with ease. Shardmap also is well on
-its way to becoming a full blown standalone KVS in user space with sub
-microsecond ACID operations in persistent memory.[1]
+After merging the compiler-attributes tree, today's linux-next build
+(powerpc ppc64_defconfig) failed like this:
 
-Code for Shardmap is here:
+arch/powerpc/boot/main.c:153:45: error: expected '=3D', ',', ';', 'asm' or =
+'__attribute__' before '__section'
+  153 | static char cmdline[BOOT_COMMAND_LINE_SIZE] __section(__builtin_cmd=
+line);
+      |                                             ^~~~~~~~~
+arch/powerpc/boot/main.c: In function 'prep_cmdline':
+arch/powerpc/boot/main.c:166:6: error: 'cmdline' undeclared (first use in t=
+his function)
+  166 |  if (cmdline[0] =3D=3D '\0')
+      |      ^~~~~~~
+arch/powerpc/boot/main.c:166:6: note: each undeclared identifier is reporte=
+d only once for each function it appears in
+arch/powerpc/boot/main.c: In function 'start':
+arch/powerpc/boot/main.c:196:40: error: 'cmdline' undeclared (first use in =
+this function)
+  196 |  if ((loader_info.cmdline_len > 0) && (cmdline[0] =3D=3D '\0'))
+      |                                        ^~~~~~~
 
-    https://github.com/danielbot/Shardmap
+Caused by commit
 
-2) Teamachine
+  e81c903fb9e2 ("powerpc: prefer __section and __printf from compiler_attri=
+butes.h")
 
-Teamachine is a direct threaded code virtual machine with a cycle time
-of .7 nanoseconds, which may just make it the fastest interpreter in the
-known universe. Teamachine embeds Shardmap as a set of micro ops. With
-Teamachine you can rapidly set up a set of Shardmap unit tests, or you
-can build a world-beating query engine. Or just kick back and script
-your game engine, the possibilities are endless.
+I have reverted that commit for today.
 
-Code for Teamachine is here:
+gcc v9.2.1 (in case that matters)
 
-    https://github.com/danielbot/TeaMachine
+The above error is from the PowerPC boot wrapper that is built without
+the kernel headers (mainly, I think).
 
-3) Tux3
+--=20
+Cheers,
+Stephen Rothwell
 
-Tux3 is still alive, is still maintained against current mainline, and
-is still faster, lighter, and more ACID than any other general purpose
-Linux file system. Inasmuch as other devs have discovered that the same
-issue cited as the blocker for merging Tux3 (get user pages) is also
-problematic for kernel code that is already merged, I propose today that
-we merge Tux3 without further ado, so that we can proceed to develop
-a good solution together as is right, proper and just.
+--Sig_/z6gSYUZMpv79iMiZeUczXGB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Code for Tux3 is here:
+-----BEGIN PGP SIGNATURE-----
 
-    https://github.com/OGAWAHirofumi/tux3/tree/hirofumi
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1oVysACgkQAVBC80lX
+0GxvZQf9Flt5KYIddNbfV+8PnQOG65pTNV5EPAjb6PzfA8i4YikjmYlEZ5dziQLu
+stfSsVjKW8UE3lqoHAB41pdTH3WKLQho3w+OM60qMupeL1pFPIephCfyrCFASq/c
+cA913STHw/pDLRo1OWk5oDJ0XDaULdcB0vk/Ig9kClG+/iEEdIk0F0MVx69H6tY6
+MGnBmMpus3x+fcaYwGV57dmOhCP/6U8ikaAL3ZyQRN+8+6A4M1doNPvWpPmXLl1g
+owDtOOZhr4059gUHYVm2Ot63dHt1Afes4jPt8DIsqo5zIQ3z38tRf6IUi/cA4cUs
+bzH8x1ip5U+OTAM9XPD4n4gdYfE5uQ==
+=377T
+-----END PGP SIGNATURE-----
 
-Everyone is welcome to join OFTC #tux3 and/or post to:
-
-   http://tux3.org/cgi-bin/mailman/listinfo/tux3
-
-to discuss these things, or anything at all. Fun times. See you there!
-
-STANDARD DISCLAIMER: SHARDMAP WILL EAT YOUR DATA[2] TEAMACHINE WILL HALT
-YOUR MACHINE AND SET IT ON FIRE. DOWNLOAD AND RUN OF YOUR OWN FREE WILL.
-
-[1] Big shoutout to Yahoo! Japan for supporting Shardmap work.
-
-[2] Tux3 is actually pretty good about not eating your data, but that is
-another thing.
-
-NB: followup posts are in the works re the detailed nature and status of
-Shardmap, Teamachine and Tux3.
-
-Regards,
-
-Daniel
+--Sig_/z6gSYUZMpv79iMiZeUczXGB--
