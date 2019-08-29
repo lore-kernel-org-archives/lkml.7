@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88087C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170E0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F66D2339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC38B23405
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:10:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfH2KK4 (ORCPT
+        id S1727417AbfH2KK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:10:56 -0400
-Received: from mga14.intel.com ([192.55.52.115]:31773 "EHLO mga14.intel.com"
+        Thu, 29 Aug 2019 06:10:58 -0400
+Received: from mga02.intel.com ([134.134.136.20]:26910 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727176AbfH2KKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:10:49 -0400
+        id S1727230AbfH2KKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:10:50 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 03:10:48 -0700
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 03:10:48 -0700
 X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="182302940"
+   d="scan'208";a="192909487"
 Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 03:10:46 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 03:10:46 -0700
 Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id 60C2220C91;
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 86E9020D6F;
         Thu, 29 Aug 2019 13:10:40 +0300 (EEST)
 Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
         (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1i3HO7-0006Vk-E7; Thu, 29 Aug 2019 13:10:43 +0300
+        id 1i3HO7-0006Vx-J9; Thu, 29 Aug 2019 13:10:43 +0300
 From:   Sakari Ailus <sakari.ailus@linux.intel.com>
 To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
         rafael@kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
         Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 05/10] device property: Add a function to obtain a node's prefix
-Date:   Thu, 29 Aug 2019 13:10:38 +0300
-Message-Id: <20190829101043.24963-6-sakari.ailus@linux.intel.com>
+Subject: [PATCH v3 09/10] lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
+Date:   Thu, 29 Aug 2019 13:10:42 +0300
+Message-Id: <20190829101043.24963-10-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
 References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
@@ -52,187 +52,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The prefix is used for printing purpose before a node, and it also works
-as a separator between two nodes.
+Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+support printing full path of the node, including its name ("f") and only
+the node's name ("P") in the printk family of functions. The two flags
+have equivalent functionality to existing %pOF with the same two modifiers
+("f" and "P") on OF based systems. The ability to do the same on ACPI
+based systems is added by this patch.
+
+On ACPI based systems the resulting strings look like
+
+	\_SB.PCI0.CIO2.port@1.endpoint@0
+
+where the nodes are separated by a dot (".") and the first three are
+ACPI device nodes and the latter two ACPI data nodes.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Acked-by: Rob Herring <robh@kernel.org> (for OF)
 ---
- drivers/acpi/property.c  | 22 ++++++++++++++++++++++
- drivers/base/property.c  | 12 ++++++++++++
- drivers/base/swnode.c    | 26 ++++++++++++++++++++++++++
- drivers/of/property.c    | 10 ++++++++++
- include/linux/fwnode.h   |  2 ++
- include/linux/property.h |  1 +
- 6 files changed, 73 insertions(+)
+ Documentation/core-api/printk-formats.rst | 24 +++++++++++++++
+ lib/vsprintf.c                            | 37 +++++++++++++++++++++++
+ scripts/checkpatch.pl                     |  3 +-
+ 3 files changed, 63 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index 5a9397a390f41..466239d3bb345 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -1336,6 +1336,27 @@ static const char *acpi_fwnode_get_name(const struct fwnode_handle *fwnode)
- 	return acpi_device_bid(adev);
+diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+index 922a29eb70e6c..abba210f67567 100644
+--- a/Documentation/core-api/printk-formats.rst
++++ b/Documentation/core-api/printk-formats.rst
+@@ -418,6 +418,30 @@ Examples::
+ 
+ Passed by reference.
+ 
++Fwnode handles
++--------------
++
++::
++
++	%pfw[fP]
++
++For printing information on fwnode handles. The default is to print the full
++node name, including the path. The modifiers are functionally equivalent to
++%pOF above.
++
++	- f - full name of the node, including the path
++	- P - the name of the node including an address (if there is one)
++
++Examples (ACPI):
++
++	%pfwf	\_SB.PCI0.CIO2.port@1.endpoint@0	- Full node name
++	%pfwP	endpoint@0				- Node name
++
++Examples (OF):
++
++	%pfwf	/ocp@68000000/i2c@48072000/camera@10/port/endpoint - Full name
++	%pfwP	endpoint				- Node name
++
+ Time and date (struct rtc_time)
+ -------------------------------
+ 
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 19f9b3f30623e..79dacd0b9e124 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -1978,6 +1978,37 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+ 	return widen_string(buf, buf - buf_start, end, spec);
  }
  
-+static const char *
-+acpi_fwnode_get_name_prefix(const struct fwnode_handle *fwnode)
++static noinline_for_stack
++char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
++		    struct printf_spec spec, const char *fmt)
 +{
-+	struct fwnode_handle *parent;
++	struct printf_spec str_spec = spec;
++	char *buf_start = buf;
 +
-+	/* Is this the root node? */
-+	parent = fwnode_get_parent(fwnode);
-+	if (!parent)
-+		return "";
++	str_spec.field_width = -1;
 +
-+	/* Is this 2nd node from the root? */
-+	parent = fwnode_get_next_parent(parent);
-+	if (!parent)
-+		return "";
++	if (*fmt != 'w')
++		return error_string(buf, end, "(%pfw?)", spec);
 +
-+	fwnode_handle_put(parent);
++	if (check_pointer(&buf, end, fwnode, spec))
++		return buf;
 +
-+	/* ACPI device or data node. */
-+	return ".";
++	fmt++;
++
++	switch (*fmt) {
++	case 'f':	/* full_name */
++	default:
++		buf = fwnode_full_name_string(fwnode, buf, end);
++		break;
++	case 'P':	/* name */
++		buf = string(buf, end, fwnode_get_name(fwnode),
++			     str_spec);
++		break;
++	}
++
++	return widen_string(buf, buf - buf_start, end, spec);
 +}
 +
- static struct fwnode_handle *
- acpi_fwnode_get_parent(struct fwnode_handle *fwnode)
- {
-@@ -1377,6 +1398,7 @@ acpi_fwnode_device_get_match_data(const struct fwnode_handle *fwnode,
- 		.get_next_child_node = acpi_get_next_subnode,		\
- 		.get_named_child_node = acpi_fwnode_get_named_child_node, \
- 		.get_name = acpi_fwnode_get_name,			\
-+		.get_name_prefix = acpi_fwnode_get_name_prefix,		\
- 		.get_reference_args = acpi_fwnode_get_reference_args,	\
- 		.graph_get_next_endpoint =				\
- 			acpi_graph_get_next_endpoint,			\
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index ea7369e5fdc35..91225f55106b5 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -567,6 +567,18 @@ const char *fwnode_get_name(const struct fwnode_handle *fwnode)
- 	return fwnode_call_ptr_op(fwnode, get_name);
- }
- 
-+/**
-+ * fwnode_get_name_prefix - Return the prefix of node for printing purposes
-+ * @fwnode: The firmware node
-+ *
-+ * Returns the prefix of a node, intended to be printed right before the node.
-+ * The prefix works also as a separator between the nodes.
-+ */
-+const char *fwnode_get_name_prefix(const struct fwnode_handle *fwnode)
-+{
-+	return fwnode_call_ptr_op(fwnode, get_name_prefix);
-+}
-+
- /**
-  * fwnode_get_parent - Return parent firwmare node
-  * @fwnode: Firmware whose parent is retrieved
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index a4a0f5b80bad3..9cc17baa193fc 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -534,6 +534,31 @@ software_node_get_name(const struct fwnode_handle *fwnode)
- 	return kobject_name(&swnode->kobj);
- }
- 
-+static const char *
-+software_node_get_name_prefix(const struct fwnode_handle *fwnode)
-+{
-+	struct fwnode_handle *parent;
-+	const char *prefix;
-+
-+	parent = fwnode_get_parent(fwnode);
-+	if (!parent)
-+		return "";
-+
-+	parent = fwnode_get_next_parent(parent);
-+	if (!parent)
-+		return "/";
-+
-+	/* Figure out the prefix from the parents. */
-+	while (is_software_node(parent))
-+		parent = fwnode_get_next_parent(parent);
-+
-+	prefix = fwnode_get_name_prefix(parent);
-+	fwnode_handle_put(parent);
-+
-+	/* Guess something if prefix was NULL. */
-+	return prefix ?: "/";
-+}
-+
- static struct fwnode_handle *
- software_node_get_parent(const struct fwnode_handle *fwnode)
- {
-@@ -635,6 +660,7 @@ static const struct fwnode_operations software_node_ops = {
- 	.property_read_int_array = software_node_read_int_array,
- 	.property_read_string_array = software_node_read_string_array,
- 	.get_name = software_node_get_name,
-+	.get_name_prefix = software_node_get_name_prefix,
- 	.get_parent = software_node_get_parent,
- 	.get_next_child_node = software_node_get_next_child,
- 	.get_named_child_node = software_node_get_named_child_node,
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 5bed634551ea6..e8202f61a5d93 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -877,6 +877,15 @@ static const char *of_fwnode_get_name(const struct fwnode_handle *fwnode)
- 	return kbasename(to_of_node(fwnode)->full_name);
- }
- 
-+static const char *of_fwnode_get_name_prefix(const struct fwnode_handle *fwnode)
-+{
-+	/* Root needs no prefix here (its name is "/"). */
-+	if (!to_of_node(fwnode)->parent)
-+		return "";
-+
-+	return "/";
-+}
-+
- static struct fwnode_handle *
- of_fwnode_get_parent(const struct fwnode_handle *fwnode)
- {
-@@ -999,6 +1008,7 @@ const struct fwnode_operations of_fwnode_ops = {
- 	.property_read_int_array = of_fwnode_property_read_int_array,
- 	.property_read_string_array = of_fwnode_property_read_string_array,
- 	.get_name = of_fwnode_get_name,
-+	.get_name_prefix = of_fwnode_get_name_prefix,
- 	.get_parent = of_fwnode_get_parent,
- 	.get_next_child_node = of_fwnode_get_next_child_node,
- 	.get_named_child_node = of_fwnode_get_named_child_node,
-diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-index c331e0ef31e80..755709703fe6f 100644
---- a/include/linux/fwnode.h
-+++ b/include/linux/fwnode.h
-@@ -57,6 +57,7 @@ struct fwnode_reference_args {
-  * @property_read_string_array: Read an array of string properties. Return zero
-  *				on success, a negative error code otherwise.
-  * @get_name: Return the name of an fwnode.
-+ * @get_name_prefix: Get a prefix for a node (for printing purposes).
-  * @get_parent: Return the parent of an fwnode.
-  * @get_next_child_node: Return the next child node in an iteration.
-  * @get_named_child_node: Return a child node with a given name.
-@@ -84,6 +85,7 @@ struct fwnode_operations {
- 				      const char *propname, const char **val,
- 				      size_t nval);
- 	const char *(*get_name)(const struct fwnode_handle *fwnode);
-+	const char *(*get_name_prefix)(const struct fwnode_handle *fwnode);
- 	struct fwnode_handle *(*get_parent)(const struct fwnode_handle *fwnode);
- 	struct fwnode_handle *
- 	(*get_next_child_node)(const struct fwnode_handle *fwnode,
-diff --git a/include/linux/property.h b/include/linux/property.h
-index ebc5e2016bb66..c40fcfc5774a7 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -81,6 +81,7 @@ struct fwnode_handle *fwnode_find_reference(const struct fwnode_handle *fwnode,
- 					    unsigned int index);
- 
- const char *fwnode_get_name(const struct fwnode_handle *fwnode);
-+const char *fwnode_get_name_prefix(const struct fwnode_handle *fwnode);
- struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode);
- struct fwnode_handle *fwnode_get_next_parent(
- 	struct fwnode_handle *fwnode);
+ /*
+  * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+  * by an extra set of alphanumeric characters that are extended format
+@@ -2080,6 +2111,10 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+  *                  F device node flags
+  *                  c major compatible string
+  *                  C full compatible string
++ * - 'fw[fP]'	For a firmware node (struct fwnode_handle) pointer
++ *		Without an option prints the full name of the node
++ *		f full name
++ *		P node name, including a possible unit address
+  * - 'x' For printing the address. Equivalent to "%lx".
+  *
+  * ** When making changes please also update:
+@@ -2157,6 +2192,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+ 		return flags_string(buf, end, ptr, spec, fmt);
+ 	case 'O':
+ 		return device_node_string(buf, end, ptr, spec, fmt + 1);
++	case 'f':
++		return fwnode_string(buf, end, ptr, spec, fmt + 1);
+ 	case 'x':
+ 		return pointer_string(buf, end, ptr, spec);
+ 	}
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index a60c241112cd4..8df50911ff4e9 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -5995,7 +5995,8 @@ sub process {
+ 				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
+ 					$specifier = $1;
+ 					$extension = $2;
+-					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxt]/) {
++					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
++					    $extension =~ /^f[^w]/) {
+ 						$bad_specifier = $specifier;
+ 						last;
+ 					}
 -- 
 2.20.1
 
