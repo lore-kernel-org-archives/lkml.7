@@ -7,34 +7,33 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58926C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B00C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F1922CEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B90A22CEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbfH2TCq (ORCPT
+        id S1729190AbfH2TCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:02:46 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51555 "EHLO
+        Thu, 29 Aug 2019 15:02:49 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51549 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728918AbfH2TCQ (ORCPT
+        with ESMTP id S1728903AbfH2TCQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 29 Aug 2019 15:02:16 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i3PgO-0005EW-2X; Thu, 29 Aug 2019 21:02:08 +0200
+        id 1i3PgM-0005Gv-9x; Thu, 29 Aug 2019 21:02:06 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D04B81C0DEB;
-        Thu, 29 Aug 2019 21:01:59 +0200 (CEST)
-Date:   Thu, 29 Aug 2019 19:01:59 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 40A511C0DED;
+        Thu, 29 Aug 2019 21:02:02 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 19:02:02 -0000
 From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] libperf: Add PERF_RECORD_TIME_CONV 'struct
- time_conv_event' to perf/event.h
+Subject: [tip: perf/core] libperf: Move 'enum perf_user_event_type' to perf/event.h
 Cc:     Jiri Olsa <jolsa@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Michael Petlan <mpetlan@redhat.com>,
@@ -43,10 +42,10 @@ Cc:     Jiri Olsa <jolsa@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190828135717.7245-19-jolsa@kernel.org>
-References: <20190828135717.7245-19-jolsa@kernel.org>
+In-Reply-To: <20190828135717.7245-24-jolsa@kernel.org>
+References: <20190828135717.7245-24-jolsa@kernel.org>
 MIME-Version: 1.0
-Message-ID: <156710531977.10595.9991241484739982312.tip-bot2@tip-bot2>
+Message-ID: <156710532214.10610.9063553957043202304.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,63 +61,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     bfd922d8f09a692f2a952a67451bc3eeaad3fb73
-Gitweb:        https://git.kernel.org/tip/bfd922d8f09a692f2a952a67451bc3eeaad3fb73
+Commit-ID:     653dd8e6e8e46591f864b7ad98e10819079d5a88
+Gitweb:        https://git.kernel.org/tip/653dd8e6e8e46591f864b7ad98e10819079d5a88
 Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Wed, 28 Aug 2019 15:57:12 +02:00
+AuthorDate:    Wed, 28 Aug 2019 15:57:17 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Thu, 29 Aug 2019 08:36:12 -03:00
 
-libperf: Add PERF_RECORD_TIME_CONV 'struct time_conv_event' to perf/event.h
+libperf: Move 'enum perf_user_event_type' to perf/event.h
 
-Move the PERF_RECORD_TIME_CONV event definition to libperf's event.h.
-
-In order to keep libperf simple, we switch 'u64/u32/u16/u8' types used
-events to their generic '__u*' versions.
+So it's available for libperf's users.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190828135717.7245-19-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190828135717.7245-24-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/perf/event.h | 7 +++++++
- tools/perf/util/event.h             | 7 -------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/lib/include/perf/event.h | 23 +++++++++++++++++++++++
+ tools/perf/util/event.h             | 23 -----------------------
+ 2 files changed, 23 insertions(+), 23 deletions(-)
 
 diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
-index 34d365b..7600f53 100644
+index 1655c74..1810689 100644
 --- a/tools/perf/lib/include/perf/event.h
 +++ b/tools/perf/lib/include/perf/event.h
-@@ -305,4 +305,11 @@ struct stat_round_event {
- 	__u64			 time;
+@@ -323,6 +323,29 @@ struct perf_record_compressed {
+ 	char			 data[];
  };
  
-+struct time_conv_event {
-+	struct perf_event_header header;
-+	__u64			 time_shift;
-+	__u64			 time_mult;
-+	__u64			 time_zero;
++enum perf_user_event_type { /* above any possible kernel type */
++	PERF_RECORD_USER_TYPE_START		= 64,
++	PERF_RECORD_HEADER_ATTR			= 64,
++	PERF_RECORD_HEADER_EVENT_TYPE		= 65, /* deprecated */
++	PERF_RECORD_HEADER_TRACING_DATA		= 66,
++	PERF_RECORD_HEADER_BUILD_ID		= 67,
++	PERF_RECORD_FINISHED_ROUND		= 68,
++	PERF_RECORD_ID_INDEX			= 69,
++	PERF_RECORD_AUXTRACE_INFO		= 70,
++	PERF_RECORD_AUXTRACE			= 71,
++	PERF_RECORD_AUXTRACE_ERROR		= 72,
++	PERF_RECORD_THREAD_MAP			= 73,
++	PERF_RECORD_CPU_MAP			= 74,
++	PERF_RECORD_STAT_CONFIG			= 75,
++	PERF_RECORD_STAT			= 76,
++	PERF_RECORD_STAT_ROUND			= 77,
++	PERF_RECORD_EVENT_UPDATE		= 78,
++	PERF_RECORD_TIME_CONV			= 79,
++	PERF_RECORD_HEADER_FEATURE		= 80,
++	PERF_RECORD_COMPRESSED			= 81,
++	PERF_RECORD_HEADER_MAX
 +};
 +
- #endif /* __LIBPERF_EVENT_H */
+ union perf_event {
+ 	struct perf_event_header		header;
+ 	struct perf_record_mmap			mmap;
 diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index ec76412..d758485 100644
+index a7341e1..4c0c523 100644
 --- a/tools/perf/util/event.h
 +++ b/tools/perf/util/event.h
-@@ -337,13 +337,6 @@ enum {
- 	PERF_STAT_ROUND_TYPE__FINAL	= 1,
- };
+@@ -146,29 +146,6 @@ struct perf_sample {
+ 	 PERF_MEM_S(LOCK, NA) |\
+ 	 PERF_MEM_S(TLB, NA))
  
--struct time_conv_event {
--	struct perf_event_header header;
--	u64 time_shift;
--	u64 time_mult;
--	u64 time_zero;
+-enum perf_user_event_type { /* above any possible kernel type */
+-	PERF_RECORD_USER_TYPE_START		= 64,
+-	PERF_RECORD_HEADER_ATTR			= 64,
+-	PERF_RECORD_HEADER_EVENT_TYPE		= 65, /* deprecated */
+-	PERF_RECORD_HEADER_TRACING_DATA		= 66,
+-	PERF_RECORD_HEADER_BUILD_ID		= 67,
+-	PERF_RECORD_FINISHED_ROUND		= 68,
+-	PERF_RECORD_ID_INDEX			= 69,
+-	PERF_RECORD_AUXTRACE_INFO		= 70,
+-	PERF_RECORD_AUXTRACE			= 71,
+-	PERF_RECORD_AUXTRACE_ERROR		= 72,
+-	PERF_RECORD_THREAD_MAP			= 73,
+-	PERF_RECORD_CPU_MAP			= 74,
+-	PERF_RECORD_STAT_CONFIG			= 75,
+-	PERF_RECORD_STAT			= 76,
+-	PERF_RECORD_STAT_ROUND			= 77,
+-	PERF_RECORD_EVENT_UPDATE		= 78,
+-	PERF_RECORD_TIME_CONV			= 79,
+-	PERF_RECORD_HEADER_FEATURE		= 80,
+-	PERF_RECORD_COMPRESSED			= 81,
+-	PERF_RECORD_HEADER_MAX
 -};
 -
- struct feature_event {
- 	struct perf_event_header 	header;
- 	u64				feat_id;
+ enum auxtrace_error_type {
+ 	PERF_AUXTRACE_ERROR_ITRACE  = 1,
+ 	PERF_AUXTRACE_ERROR_MAX
