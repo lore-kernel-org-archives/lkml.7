@@ -2,142 +2,105 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C26BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA330C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C7720674
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D6F320674
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:14:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oqZSmeLw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfH2LMA (ORCPT
+        id S1727122AbfH2LOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:12:00 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:60289 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725990AbfH2LMA (ORCPT
+        Thu, 29 Aug 2019 07:14:11 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35526 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726982AbfH2LOL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:12:00 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id 3ILCiR944DqPe3ILFiNgEV; Thu, 29 Aug 2019 13:11:58 +0200
-Subject: Re: [PATCH 8/8] media: cedrus: Add support for V4L2_DEC_CMD_FLUSH
-To:     Jernej Skrabec <jernej.skrabec@siol.net>, mchehab@kernel.org,
-        paul.kocialkowski@bootlin.com, mripard@kernel.org
-Cc:     pawel@osciak.com, m.szyprowski@samsung.com,
-        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
-        acourbot@chromium.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        ezequiel@collabora.com, jonas@kwiboo.se
-References: <20190822194500.2071-1-jernej.skrabec@siol.net>
- <20190822194500.2071-9-jernej.skrabec@siol.net>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <492894c9-4724-7bf4-6382-1efa6c8b04e3@xs4all.nl>
-Date:   Thu, 29 Aug 2019 13:11:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 07:14:11 -0400
+Received: by mail-wm1-f68.google.com with SMTP id l2so3421266wmg.0;
+        Thu, 29 Aug 2019 04:14:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JD+FPst1Rc2Zts2/SszFlnm8yp7vNf5nv1OwzcG2Ea4=;
+        b=oqZSmeLw/EC3Wd0txJnCJRoJzOmmCY56LdWnG2oKlSLUljtbZSUQpyV71svWYX9r4a
+         nHrLUveNwTmd16rB8M0PNaaiHRW9/d9Jzb+ru281rX04x3PB0KLs6Bxo9dZhgg3PBQFW
+         umAZcpfdKECX/Caf4nntQFZS79CEf3J/8mswG+70D4oIMuQx8+TODriRJQp7/uBp+oU5
+         YIObXT9Hj6in32E9rNwbWdIBzc4LDYhJhYYXS/l+iGNtrtqtMpUu2iJVEpFcGHwVmcvO
+         WGWAc/knxRIl1thWtrjKuOJ1V9Y4XxiGwiQTYNaoVFkMGCE0Z/PiqW4tcKI0ZlzxpjIS
+         qzUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JD+FPst1Rc2Zts2/SszFlnm8yp7vNf5nv1OwzcG2Ea4=;
+        b=LAyFiVvM91FV3zjC0zzQBME4wyCCJJF98/gNvip+epxFAAO9DET/8xCOKZOJN0XGfI
+         ePtTfJvdTSml+ia+Zh/8UbIYJK8R5EVoirukVzVgiERunahgVlhaVATyO+vwX+CZBna4
+         X9i9O4Iv1MMAUOhc28wH81oSoEfkE60/fWdx5rojTMhvCnfMwxFx3wUIvU2sMml2uWp+
+         YsoD0w5H3R8hwfUU0/vWfXAwIuzKglivFeLoVe+B2Vn9xhDYcLKzVvH/d43dTe6Im0gZ
+         ha7pqNWC8HX+91adV9eQprjucdhVK9YV6LcYTKwN+t0p94zgEjYGQ2hlmFlYON6HFx+d
+         1llQ==
+X-Gm-Message-State: APjAAAWroUR++SNsXsLh7XbKgcfDuWQGMKB7PoIpW9LWK7zCX8AY7mAO
+        /zqtH//WpnTVZU6hjswEDuo=
+X-Google-Smtp-Source: APXvYqzcmuDvPpuvAAO8pn2NqELxI3Y0KBVVxn316XZ2m3inkhdiVtyJlblr8PnZhlxEiSikUNWvPg==
+X-Received: by 2002:a1c:ca09:: with SMTP id a9mr10586744wmg.43.1567077249051;
+        Thu, 29 Aug 2019 04:14:09 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id l62sm3469749wml.13.2019.08.29.04.14.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 04:14:08 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] iommu: Support reserved-memory regions
+Date:   Thu, 29 Aug 2019 13:14:05 +0200
+Message-Id: <20190829111407.17191-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20190822194500.2071-9-jernej.skrabec@siol.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEwov33oZolPtzZ7XyvSZAIuIvkpc9TulJ+yXPZVzKtoFR2DC2TCYKvHdXqvSPOpqTHHx5FcSQ1ekXSuG4Oo9uM+zntMIRRFnU0wuATMFl1cTORWjCJr
- rKjZagUkg1p7uB6FI1X1eEm2S2kD+75q/XC4/f12WVLFAZatK4Pn8hm/4Z68H5EDl61LUi/dU2jX3ho/NI64Y23GLzpL+CFGyDgnhPSCBTzAOc7uX//3668T
- 9reEi88PUiFSHsHHvYqyFXliFtDA36pkhbMuGZ2n3qFK+RKQvD76UjG39oN5N4LJzv7NYEHESvFxaSOFy46TcMTXL0JGAUhxHdyBj7+IS+IOvkyP7w6f/Vn0
- PqZUHTzoRxVrvv8fgPye6yqCTBaN2zyIzBERHkf8SU6/p/7Sv9RpTCjW42wnGKswtWWv/eG1T7G+OHDgqFcx/XlSE21f6hjfFWdhuvuxo+XiPhq0AvpPRmEY
- sB0IzEFkwH/aUVGe2J8xzC7XNkRgdEYSA+jmJHn4HcysDP9bSuJ1GHM1tSHlkSLTWPqge5brj81I5I6NekFP92nmBp0gl6BzhlA8KuUzysLeuinyDLJmgzzd
- GQsSaxcwsEElAmtcF3EVOS/2GOeuGdqc2qcj6UwQV+5XkCQwp1rAb0QHJe5j1qYd7PyIT7SMNoVXGUTNEpw1bj5cOwbW9f8/rhSB0/7rSiUggSNlnjtNdaAB
- um0xuGCTK0T1VMtidPGpRFgs9Y500env
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/22/19 9:45 PM, Jernej Skrabec wrote:
-> This command is useful for explicitly flushing last decoded frame.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  .../staging/media/sunxi/cedrus/cedrus_video.c | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> index 5153b2bba21e..9eae69d5741c 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> @@ -331,6 +331,37 @@ static int cedrus_s_fmt_vid_out(struct file *file, void *priv,
->  	return 0;
->  }
->  
-> +static int cedrus_try_decoder_cmd(struct file *file, void *fh,
-> +				  struct v4l2_decoder_cmd *dc)
-> +{
-> +	if (dc->cmd != V4L2_DEC_CMD_FLUSH)
-> +		return -EINVAL;
+From: Thierry Reding <treding@nvidia.com>
 
-You need to add this line here as well:
+These two patches implement support for retrieving a list of reserved
+regions for a device from its device tree node. These regions are
+described by the reserved-memory bindings:
 
-	dc->flags = 0;
+	Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
 
-As per the decoder_cmd spec.
+These reserved memory regions will be used to establish 1:1 mappings.
+One case where this is useful is when the Linux kernel wants to take
+over the display controller configuration from a bootloader. In order
+to ensure that the display controller can keep scanning out from the
+framebuffer allocated by the bootloader without faulting after the
+IOMMU has been enabled, a 1:1 mapping needs to be established.
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int cedrus_decoder_cmd(struct file *file, void *fh,
-> +			      struct v4l2_decoder_cmd *dc)
-> +{
-> +	struct cedrus_ctx *ctx = cedrus_file2ctx(file);
+Thierry
 
-You don't need this...
+Thierry Reding (2):
+  iommu: Implement of_iommu_get_resv_regions()
+  iommu: dma: Use of_iommu_get_resv_regions()
 
-> +	struct vb2_v4l2_buffer *out_vb, *cap_vb;
-> +	int ret;
-> +
-> +	ret = cedrus_try_decoder_cmd(file, fh, dc);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	out_vb = v4l2_m2m_last_src_buf(ctx->fh.m2m_ctx);
+ drivers/iommu/dma-iommu.c |  3 +++
+ drivers/iommu/of_iommu.c  | 39 +++++++++++++++++++++++++++++++++++++++
+ include/linux/of_iommu.h  |  8 ++++++++
+ 3 files changed, 50 insertions(+)
 
-... since you can use fh->m2m_ctx directly.
+-- 
+2.22.0
 
-> +	cap_vb = v4l2_m2m_last_dst_buf(ctx->fh.m2m_ctx);
-> +
-> +	if (out_vb)
-> +		out_vb->flags &= ~V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
-> +	else if (cap_vb && cap_vb->is_held)
-> +		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
-> +
-> +	return 0;
-> +}
-> +
-
-Both these functions should be moved to v4l2-mem2mem.c and renamed to
-v4l2_m2m_ioctl_stateless_(try_)decoder_cmd.
-
-As far as I can see they are completely generic and valid for any
-stateless decoder. Which is very nice :-)
-
->  const struct v4l2_ioctl_ops cedrus_ioctl_ops = {
->  	.vidioc_querycap		= cedrus_querycap,
->  
-> @@ -355,6 +386,9 @@ const struct v4l2_ioctl_ops cedrus_ioctl_ops = {
->  	.vidioc_streamon		= v4l2_m2m_ioctl_streamon,
->  	.vidioc_streamoff		= v4l2_m2m_ioctl_streamoff,
->  
-> +	.vidioc_try_decoder_cmd		= cedrus_try_decoder_cmd,
-> +	.vidioc_decoder_cmd		= cedrus_decoder_cmd,
-> +
->  	.vidioc_subscribe_event		= v4l2_ctrl_subscribe_event,
->  	.vidioc_unsubscribe_event	= v4l2_event_unsubscribe,
->  };
-> 
-
-Regards,
-
-	Hans
