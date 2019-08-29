@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AD2C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874B0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F1023405
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA1E2342A
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102593;
-	bh=kpxGeaYPhUCPQgVAFxP07kUxK+mXZySJRP9I+uMrh8k=;
+	s=default; t=1567102597;
+	bh=TPIsYNFrhRAKArqEnmVrYQkgraGfnomGN2VZYg+i0rI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ziQVjxtaXWlTWXzrVyJC2+bBlzlJgDUbEc39oP48s3bQaGhplV8t4v/vzVYfCgE0n
-	 CtoicCViGTdWH/SFe2QPt7rcAMHKHifUcv9XqtL2ZZP2zU6WRSAJksU/fBzxNG0K+s
-	 F2x6MBSRZwHxZIP1UcFAJ21YLT6vsBplNUW82Wx0=
+	b=oWeVunjIwmm6yPSYBONKMJP/P+RA2zdk6KNN/blTowtUse61LVOx2E1g5Fe2h83/W
+	 kbwe1155494UMZvK2APt4Kng2DoetViEVSfp+qZpoTVBld3ThN1+sT+Mob+450o4na
+	 xWjl3ofFVIsB28cS5ux0lSjlrRcmsrG0LJujOZAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729788AbfH2SQc (ORCPT
+        id S1729801AbfH2SQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:16:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58424 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:16:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729741AbfH2SQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:24 -0400
+        id S1729773AbfH2SQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:16:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80D80233FF;
-        Thu, 29 Aug 2019 18:16:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4D842189D;
+        Thu, 29 Aug 2019 18:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102583;
-        bh=kpxGeaYPhUCPQgVAFxP07kUxK+mXZySJRP9I+uMrh8k=;
+        s=default; t=1567102589;
+        bh=TPIsYNFrhRAKArqEnmVrYQkgraGfnomGN2VZYg+i0rI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DtEhSwZsMe3c/k2zOYrsZ5nSCcbFH5hMoomuoJmRBCxgv1tl+ORIP78Jl5E1q5GAI
-         IJTwyJb/MUfJ4wGQpL0in448zfXrVF0DK9O+VfhnMAk92M9uV3r7uH2VsCo6mRKuET
-         CCriI+h/IzUqMlF0t32cJaLzLd91syO1OZF5rIY0=
+        b=XqcPQMjIDFVlDOiulfCgpmpMHf0weTo+O85ZIShjOsyaDVrn/bwrx8cykIyDyKT53
+         21HemNgbJkxJyO9GoLvsIoqpLBMYz3W7kjDrfTnTs3ZpM36/IFmlVfw60fzyBOntAC
+         /uec7Mfr+In/mm+cPtHxfxPuK9T3ZkRSzAE54lDg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
-        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        "Devesh K . Singh" <devesh_singh@in.ibm.com>,
+Cc:     Tho Vu <tho.vu.wh@rvc.renesas.com>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 25/45] ibmvnic: Unmap DMA address of TX descriptor buffers after use
-Date:   Thu, 29 Aug 2019 14:15:25 -0400
-Message-Id: <20190829181547.8280-25-sashal@kernel.org>
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 28/45] ravb: Fix use-after-free ravb_tstamp_skb
+Date:   Thu, 29 Aug 2019 14:15:28 -0400
+Message-Id: <20190829181547.8280-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
 References: <20190829181547.8280-1-sashal@kernel.org>
@@ -62,61 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Tho Vu <tho.vu.wh@rvc.renesas.com>
 
-[ Upstream commit 80f0fe0934cd3daa13a5e4d48a103f469115b160 ]
+[ Upstream commit cfef46d692efd852a0da6803f920cc756eea2855 ]
 
-There's no need to wait until a completion is received to unmap
-TX descriptor buffers that have been passed to the hypervisor.
-Instead unmap it when the hypervisor call has completed. This patch
-avoids the possibility that a buffer will not be unmapped because
-a TX completion is lost or mishandled.
+When a Tx timestamp is requested, a pointer to the skb is stored in the
+ravb_tstamp_skb struct. This was done without an skb_get. There exists
+the possibility that the skb could be freed by ravb_tx_free (when
+ravb_tx_free is called from ravb_start_xmit) before the timestamp was
+processed, leading to a use-after-free bug.
 
-Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Tested-by: Devesh K. Singh <devesh_singh@in.ibm.com>
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Use skb_get when filling a ravb_tstamp_skb struct, and add appropriate
+frees/consumes when a ravb_tstamp_skb struct is freed.
+
+Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
+Signed-off-by: Tho Vu <tho.vu.wh@rvc.renesas.com>
+Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/renesas/ravb_main.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 0ae43d27cdcff..255de7d68cd33 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -1586,6 +1586,8 @@ static int ibmvnic_xmit(struct sk_buff *skb, struct net_device *netdev)
- 		lpar_rc = send_subcrq_indirect(adapter, handle_array[queue_num],
- 					       (u64)tx_buff->indir_dma,
- 					       (u64)num_entries);
-+		dma_unmap_single(dev, tx_buff->indir_dma,
-+				 sizeof(tx_buff->indir_arr), DMA_TO_DEVICE);
- 	} else {
- 		tx_buff->num_entries = num_entries;
- 		lpar_rc = send_subcrq(adapter, handle_array[queue_num],
-@@ -2747,7 +2749,6 @@ static int ibmvnic_complete_tx(struct ibmvnic_adapter *adapter,
- 	union sub_crq *next;
- 	int index;
- 	int i, j;
--	u8 *first;
- 
- restart_loop:
- 	while (pending_scrq(adapter, scrq)) {
-@@ -2777,14 +2778,6 @@ static int ibmvnic_complete_tx(struct ibmvnic_adapter *adapter,
- 
- 				txbuff->data_dma[j] = 0;
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index 5f092bbd05148..5462d2e8a1b71 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Renesas Ethernet AVB device driver
+  *
+- * Copyright (C) 2014-2015 Renesas Electronics Corporation
++ * Copyright (C) 2014-2019 Renesas Electronics Corporation
+  * Copyright (C) 2015 Renesas Solutions Corp.
+  * Copyright (C) 2015-2016 Cogent Embedded, Inc. <source@cogentembedded.com>
+  *
+@@ -514,7 +514,10 @@ static void ravb_get_tx_tstamp(struct net_device *ndev)
+ 			kfree(ts_skb);
+ 			if (tag == tfa_tag) {
+ 				skb_tstamp_tx(skb, &shhwtstamps);
++				dev_consume_skb_any(skb);
+ 				break;
++			} else {
++				dev_kfree_skb_any(skb);
  			}
--			/* if sub_crq was sent indirectly */
--			first = &txbuff->indir_arr[0].generic.first;
--			if (*first == IBMVNIC_CRQ_CMD) {
--				dma_unmap_single(dev, txbuff->indir_dma,
--						 sizeof(txbuff->indir_arr),
--						 DMA_TO_DEVICE);
--				*first = 0;
--			}
+ 		}
+ 		ravb_modify(ndev, TCCR, TCCR_TFR, TCCR_TFR);
+@@ -1556,7 +1559,7 @@ static netdev_tx_t ravb_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 					 DMA_TO_DEVICE);
+ 			goto unmap;
+ 		}
+-		ts_skb->skb = skb;
++		ts_skb->skb = skb_get(skb);
+ 		ts_skb->tag = priv->ts_skb_tag++;
+ 		priv->ts_skb_tag &= 0x3ff;
+ 		list_add_tail(&ts_skb->list, &priv->ts_skb_list);
+@@ -1685,6 +1688,7 @@ static int ravb_close(struct net_device *ndev)
+ 	/* Clear the timestamp list */
+ 	list_for_each_entry_safe(ts_skb, ts_skb2, &priv->ts_skb_list, list) {
+ 		list_del(&ts_skb->list);
++		kfree_skb(ts_skb->skb);
+ 		kfree(ts_skb);
+ 	}
  
- 			if (txbuff->last_frag) {
- 				dev_kfree_skb_any(txbuff->skb);
 -- 
 2.20.1
 
