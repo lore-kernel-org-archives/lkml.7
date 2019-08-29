@@ -2,134 +2,301 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C86C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420B3C41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA24821874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18AB321726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:37:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nN1Wq0mR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbfH2Rgf (ORCPT
+        id S1727834AbfH2Rhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:36:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61578 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727437AbfH2Rgf (ORCPT
+        Thu, 29 Aug 2019 13:37:54 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52768 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727352AbfH2Rhy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:36:35 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7THXtuB003259;
-        Thu, 29 Aug 2019 13:36:29 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2upgfd74qa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Aug 2019 13:36:28 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7THZaVl007325;
-        Thu, 29 Aug 2019 13:36:28 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2upgfd74pu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Aug 2019 13:36:28 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7THUwAE013821;
-        Thu, 29 Aug 2019 17:36:27 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma04dal.us.ibm.com with ESMTP id 2ujvv75gjt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Aug 2019 17:36:27 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7THaQTM31981944
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 17:36:26 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B482FAE062;
-        Thu, 29 Aug 2019 17:36:26 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1FC97AE060;
-        Thu, 29 Aug 2019 17:36:26 +0000 (GMT)
-Received: from [9.53.179.215] (unknown [9.53.179.215])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 29 Aug 2019 17:36:26 +0000 (GMT)
-Subject: Re: [v1] net_sched: act_police: add 2 new attributes to support
- police 64bit rate and peakrate
-From:   "David Z. Dai" <zdai@linux.vnet.ibm.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zdai@us.ibm.com
-In-Reply-To: <7a8a5024-bbff-7443-71b3-9e3976af269f@gmail.com>
-References: <1567032687-973-1-git-send-email-zdai@linux.vnet.ibm.com>
-         <7a8a5024-bbff-7443-71b3-9e3976af269f@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Thu, 29 Aug 2019 12:36:25 -0500
-Message-ID: <1567100185.20025.3.camel@oc5348122405>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.3 (2.32.3-36.el6) 
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908290186
+        Thu, 29 Aug 2019 13:37:54 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7THY7eo125836;
+        Thu, 29 Aug 2019 17:37:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=wZpwXmqOxWqhR0DvbaLn0ZKC1APUcFkWjxi8qiwEj3Q=;
+ b=nN1Wq0mRVz22FSmhc0bCowTcreptKdPzGUyUzBYb7nU1VjnhhMjh53W246hfv+vaL3VE
+ LiOw5H/muOR8sMEfQwIYxeGUKkCFmvdpBX2B3K5XzI3ffYTWAYOHOy3T66mOV4NJ0+bg
+ HVoH+7Aoz03/+RzzUe6Dvh89KUrPwjyzalb10dy/sv4SvAAwLOCYJump7cv4BbNcXQHZ
+ TQaGIvcrkGVitRirkWNCri4VElU+RNSTvU63GtHRP/vUKCfd1DNf/nT/YiRsgcejMAqF
+ +U+8bvefRjFs1I8gD9PQtD/CTYsx8VcT3vmrIhBTx521gstsuw4qcvNCOZODnmjxE3ak 2A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2upk56r2bb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 17:37:41 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7THWb4a008107;
+        Thu, 29 Aug 2019 17:32:41 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2unvu0b2cp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 17:32:40 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7THWePC022063;
+        Thu, 29 Aug 2019 17:32:40 GMT
+Received: from zissou.us.oracle.com (/10.152.34.58)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 29 Aug 2019 10:32:39 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Lai Jiangshan <jiangshanlai@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH v2 5/9] pcrypt: remove padata cpumask notifier
+Date:   Thu, 29 Aug 2019 13:30:34 -0400
+Message-Id: <20190829173038.21040-6-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190829173038.21040-1-daniel.m.jordan@oracle.com>
+References: <20190829173038.21040-1-daniel.m.jordan@oracle.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908290186
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908290186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-29 at 10:32 +0200, Eric Dumazet wrote:
-> 
-> On 8/29/19 12:51 AM, David Dai wrote:
-> > For high speed adapter like Mellanox CX-5 card, it can reach upto
-> > 100 Gbits per second bandwidth. Currently htb already supports 64bit rate
-> > in tc utility. However police action rate and peakrate are still limited
-> > to 32bit value (upto 32 Gbits per second). Add 2 new attributes
-> > TCA_POLICE_RATE64 and TCA_POLICE_RATE64 in kernel for 64bit support
-> > so that tc utility can use them for 64bit rate and peakrate value to
-> > break the 32bit limit, and still keep the backward binary compatibility.
-> > 
-> > Tested-by: David Dai <zdai@linux.vnet.ibm.com>
-> > Signed-off-by: David Dai <zdai@linux.vnet.ibm.com>
-> > ---
-> >  include/uapi/linux/pkt_cls.h |    2 ++
-> >  net/sched/act_police.c       |   27 +++++++++++++++++++++++----
-> >  2 files changed, 25 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/include/uapi/linux/pkt_cls.h b/include/uapi/linux/pkt_cls.h
-> > index b057aee..eb4ea4d 100644
-> > --- a/include/uapi/linux/pkt_cls.h
-> > +++ b/include/uapi/linux/pkt_cls.h
-> > @@ -159,6 +159,8 @@ enum {
-> >  	TCA_POLICE_AVRATE,
-> >  	TCA_POLICE_RESULT,
-> >  	TCA_POLICE_TM,
-> > +	TCA_POLICE_RATE64,
-> > +	TCA_POLICE_PEAKRATE64,
-> >  	TCA_POLICE_PAD,
-> >  	__TCA_POLICE_MAX
-> >  #define TCA_POLICE_RESULT TCA_POLICE_RESULT
-> 
-> Never insert new attributes, as this breaks compatibility with old binaries (including
-> old kernels)
-Thanks for reviewing it!
-My change is only contained within the police part. I am trying to
-follow the same way htb and tbf support their 64 bit rate.
+Now that padata_do_parallel takes care of finding an alternate callback
+CPU, there's no need for pcrypt's callback cpumask, so remove it and the
+notifier callback that keeps it in sync.
 
-I tested the old tc binary with the newly patched kernel. It works fine.
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Acked-by: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ crypto/pcrypt.c | 125 +++++++-----------------------------------------
+ 1 file changed, 18 insertions(+), 107 deletions(-)
 
-I agree the newly compiled tc binary that has these 2 new attributes can
-cause backward compatibility issue when running on the old kernel.
-
-If can't insert new attribute, is there any
-comment/suggestion/alternative on how to support 64bit police rate and
-still keep the backward compatibility?
-
-> Keep TCA_POLICE_PAD value the same, thanks.
-
+diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
+index efca962ab12a..2ec36e6a132f 100644
+--- a/crypto/pcrypt.c
++++ b/crypto/pcrypt.c
+@@ -18,33 +18,8 @@
+ #include <linux/cpu.h>
+ #include <crypto/pcrypt.h>
+ 
+-struct padata_pcrypt {
+-	struct padata_instance *pinst;
+-
+-	/*
+-	 * Cpumask for callback CPUs. It should be
+-	 * equal to serial cpumask of corresponding padata instance,
+-	 * so it is updated when padata notifies us about serial
+-	 * cpumask change.
+-	 *
+-	 * cb_cpumask is protected by RCU. This fact prevents us from
+-	 * using cpumask_var_t directly because the actual type of
+-	 * cpumsak_var_t depends on kernel configuration(particularly on
+-	 * CONFIG_CPUMASK_OFFSTACK macro). Depending on the configuration
+-	 * cpumask_var_t may be either a pointer to the struct cpumask
+-	 * or a variable allocated on the stack. Thus we can not safely use
+-	 * cpumask_var_t with RCU operations such as rcu_assign_pointer or
+-	 * rcu_dereference. So cpumask_var_t is wrapped with struct
+-	 * pcrypt_cpumask which makes possible to use it with RCU.
+-	 */
+-	struct pcrypt_cpumask {
+-		cpumask_var_t mask;
+-	} *cb_cpumask;
+-	struct notifier_block nblock;
+-};
+-
+-static struct padata_pcrypt pencrypt;
+-static struct padata_pcrypt pdecrypt;
++static struct padata_instance *pencrypt;
++static struct padata_instance *pdecrypt;
+ static struct kset           *pcrypt_kset;
+ 
+ struct pcrypt_instance_ctx {
+@@ -128,7 +103,7 @@ static int pcrypt_aead_encrypt(struct aead_request *req)
+ 			       req->cryptlen, req->iv);
+ 	aead_request_set_ad(creq, req->assoclen);
+ 
+-	err = padata_do_parallel(pencrypt.pinst, padata, &ctx->cb_cpu);
++	err = padata_do_parallel(pencrypt, padata, &ctx->cb_cpu);
+ 	if (!err)
+ 		return -EINPROGRESS;
+ 
+@@ -170,7 +145,7 @@ static int pcrypt_aead_decrypt(struct aead_request *req)
+ 			       req->cryptlen, req->iv);
+ 	aead_request_set_ad(creq, req->assoclen);
+ 
+-	err = padata_do_parallel(pdecrypt.pinst, padata, &ctx->cb_cpu);
++	err = padata_do_parallel(pdecrypt, padata, &ctx->cb_cpu);
+ 	if (!err)
+ 		return -EINPROGRESS;
+ 
+@@ -317,36 +292,6 @@ static int pcrypt_create(struct crypto_template *tmpl, struct rtattr **tb)
+ 	return -EINVAL;
+ }
+ 
+-static int pcrypt_cpumask_change_notify(struct notifier_block *self,
+-					unsigned long val, void *data)
+-{
+-	struct padata_pcrypt *pcrypt;
+-	struct pcrypt_cpumask *new_mask, *old_mask;
+-	struct padata_cpumask *cpumask = (struct padata_cpumask *)data;
+-
+-	if (!(val & PADATA_CPU_SERIAL))
+-		return 0;
+-
+-	pcrypt = container_of(self, struct padata_pcrypt, nblock);
+-	new_mask = kmalloc(sizeof(*new_mask), GFP_KERNEL);
+-	if (!new_mask)
+-		return -ENOMEM;
+-	if (!alloc_cpumask_var(&new_mask->mask, GFP_KERNEL)) {
+-		kfree(new_mask);
+-		return -ENOMEM;
+-	}
+-
+-	old_mask = pcrypt->cb_cpumask;
+-
+-	cpumask_copy(new_mask->mask, cpumask->cbcpu);
+-	rcu_assign_pointer(pcrypt->cb_cpumask, new_mask);
+-	synchronize_rcu();
+-
+-	free_cpumask_var(old_mask->mask);
+-	kfree(old_mask);
+-	return 0;
+-}
+-
+ static int pcrypt_sysfs_add(struct padata_instance *pinst, const char *name)
+ {
+ 	int ret;
+@@ -359,63 +304,29 @@ static int pcrypt_sysfs_add(struct padata_instance *pinst, const char *name)
+ 	return ret;
+ }
+ 
+-static int pcrypt_init_padata(struct padata_pcrypt *pcrypt,
+-			      const char *name)
++static int pcrypt_init_padata(struct padata_instance **pinst, const char *name)
+ {
+ 	int ret = -ENOMEM;
+-	struct pcrypt_cpumask *mask;
+ 
+ 	get_online_cpus();
+ 
+-	pcrypt->pinst = padata_alloc_possible(name);
+-	if (!pcrypt->pinst)
+-		goto err;
+-
+-	mask = kmalloc(sizeof(*mask), GFP_KERNEL);
+-	if (!mask)
+-		goto err_free_padata;
+-	if (!alloc_cpumask_var(&mask->mask, GFP_KERNEL)) {
+-		kfree(mask);
+-		goto err_free_padata;
+-	}
+-
+-	cpumask_and(mask->mask, cpu_possible_mask, cpu_online_mask);
+-	rcu_assign_pointer(pcrypt->cb_cpumask, mask);
+-
+-	pcrypt->nblock.notifier_call = pcrypt_cpumask_change_notify;
+-	ret = padata_register_cpumask_notifier(pcrypt->pinst, &pcrypt->nblock);
+-	if (ret)
+-		goto err_free_cpumask;
++	*pinst = padata_alloc_possible(name);
++	if (!*pinst)
++		return ret;
+ 
+-	ret = pcrypt_sysfs_add(pcrypt->pinst, name);
++	ret = pcrypt_sysfs_add(*pinst, name);
+ 	if (ret)
+-		goto err_unregister_notifier;
++		padata_free(*pinst);
+ 
+ 	put_online_cpus();
+ 
+-	return ret;
+-
+-err_unregister_notifier:
+-	padata_unregister_cpumask_notifier(pcrypt->pinst, &pcrypt->nblock);
+-err_free_cpumask:
+-	free_cpumask_var(mask->mask);
+-	kfree(mask);
+-err_free_padata:
+-	padata_free(pcrypt->pinst);
+-err:
+-	put_online_cpus();
+-
+ 	return ret;
+ }
+ 
+-static void pcrypt_fini_padata(struct padata_pcrypt *pcrypt)
++static void pcrypt_fini_padata(struct padata_instance *pinst)
+ {
+-	free_cpumask_var(pcrypt->cb_cpumask->mask);
+-	kfree(pcrypt->cb_cpumask);
+-
+-	padata_stop(pcrypt->pinst);
+-	padata_unregister_cpumask_notifier(pcrypt->pinst, &pcrypt->nblock);
+-	padata_free(pcrypt->pinst);
++	padata_stop(pinst);
++	padata_free(pinst);
+ }
+ 
+ static struct crypto_template pcrypt_tmpl = {
+@@ -440,13 +351,13 @@ static int __init pcrypt_init(void)
+ 	if (err)
+ 		goto err_deinit_pencrypt;
+ 
+-	padata_start(pencrypt.pinst);
+-	padata_start(pdecrypt.pinst);
++	padata_start(pencrypt);
++	padata_start(pdecrypt);
+ 
+ 	return crypto_register_template(&pcrypt_tmpl);
+ 
+ err_deinit_pencrypt:
+-	pcrypt_fini_padata(&pencrypt);
++	pcrypt_fini_padata(pencrypt);
+ err_unreg_kset:
+ 	kset_unregister(pcrypt_kset);
+ err:
+@@ -455,8 +366,8 @@ static int __init pcrypt_init(void)
+ 
+ static void __exit pcrypt_exit(void)
+ {
+-	pcrypt_fini_padata(&pencrypt);
+-	pcrypt_fini_padata(&pdecrypt);
++	pcrypt_fini_padata(pencrypt);
++	pcrypt_fini_padata(pdecrypt);
+ 
+ 	kset_unregister(pcrypt_kset);
+ 	crypto_unregister_template(&pcrypt_tmpl);
+-- 
+2.23.0
 
