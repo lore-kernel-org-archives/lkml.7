@@ -2,172 +2,64 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91524C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251E3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F87523403
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:48:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dqryB45J"
+	by mail.kernel.org (Postfix) with ESMTP id DF75C23404
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbfH2UsE (ORCPT
+        id S1727857AbfH2UuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 16:48:04 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44419 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfH2UsD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 16:48:03 -0400
-Received: by mail-io1-f65.google.com with SMTP id j4so9615422iog.11;
-        Thu, 29 Aug 2019 13:48:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I1nzOTXRSvtsbJ+ewgmrwsmeWIh6DuCYG1u3Ks75aJ4=;
-        b=dqryB45JKi6c599K+mta/pUXZ+fUf5PjqzxsclCkbRqBj+c2qL8jh7cb7pe5txPSoK
-         I+G9tGjnpArIs5qMDd+vfi6ZzE2pKK9qWlI6JDl0dW7pne2y4G/oGvV+sCF66pQlrve/
-         LO9P+ZOi0skdAVJwSRvPHa6keJAmU8TJ1x9c/FVQa9MzjWQUX4vZhpbK1xg7Wa9QTtc6
-         0HVTlE/bTYj65fujkKuvOe2mW3oqSAyQKSi/txoBvBXAjXMOyNq9lQ58upjNmYooi3zW
-         djlydfuUwQEcZ5CmrepPandprZdtvcWLg/2l6JFyHz78Kv471UuCr7SIo6EERno4PNB9
-         mZLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I1nzOTXRSvtsbJ+ewgmrwsmeWIh6DuCYG1u3Ks75aJ4=;
-        b=LuRsoCiTW6TJaP9WXqYKn4CYuGIRf9AnVFc77HjQ4PYJQrj1Xi4WYOOE0GU5z+jBXB
-         xSmWllHj1u2rmIxWc8dOW3BpKKJNXRx9yhKByb5AM1hO8eUnb5hQg78PQMpnTP7DSp5t
-         1SQoAjDfINgeVJtS6Svx9tlgPyA8VSIcHYwqTXfqZBsGocKXIej2Hg/gj7NI7zdTE/tr
-         pgIH0nGKfUAR4S07KcY6ZtC81DKOJIHRKQqzgsGcFTgBKBsXFMXLGlvfFcZV/3wCxjP7
-         p4uN9634KFsZKSuwuunllDjOrE/9QAsxx61h9bHwal2Ok/syHULqJYNYx9DKKAO35dMQ
-         M2ZA==
-X-Gm-Message-State: APjAAAXPpYYWD7Fflfn9opyILZINpiTCGI/cYdf3EXSRSOhh1Jmx03Zs
-        O5YGcnWyXCgYCgZLpVmLNGoit+/cxtO5ALuu6SjHZv8+tfk=
-X-Google-Smtp-Source: APXvYqxzpsYrSjNMwic87+EkulVTAG0JIV9CVRFNncFp6ZgIwjvscM/KVpuk7eQkkxhu/nL6vWCyacvLlRGYsyv1QO4=
-X-Received: by 2002:a05:6638:3af:: with SMTP id z15mr12495908jap.39.1567111682445;
- Thu, 29 Aug 2019 13:48:02 -0700 (PDT)
+        Thu, 29 Aug 2019 16:50:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56844 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726512AbfH2UuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 16:50:17 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 00D9430872CA;
+        Thu, 29 Aug 2019 20:50:17 +0000 (UTC)
+Received: from cantor.redhat.com (ovpn-116-163.phx2.redhat.com [10.3.116.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A5B8060BF7;
+        Thu, 29 Aug 2019 20:50:16 +0000 (UTC)
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Alexey Klimov <aklimov@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>
+Subject: [PATCH 0/3 v3] tpm: add update_durations class op to allow override of chip supplied values
+Date:   Thu, 29 Aug 2019 13:49:44 -0700
+Message-Id: <20190829204947.2591-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
-References: <20190829181311.7562-1-sashal@kernel.org> <20190829181311.7562-66-sashal@kernel.org>
-In-Reply-To: <20190829181311.7562-66-sashal@kernel.org>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Thu, 29 Aug 2019 22:51:04 +0200
-Message-ID: <CAOi1vP9-A-U6J15hT+XmtXzBw5WVRZECry8gPFzqp0CV36ecig@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.2 66/76] ceph: fix buffer free while holding
- i_ceph_lock in __ceph_setxattr()
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ceph Development <ceph-devel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 29 Aug 2019 20:50:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 8:15 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Luis Henriques <lhenriques@suse.com>
->
-> [ Upstream commit 86968ef21596515958d5f0a40233d02be78ecec0 ]
->
-> Calling ceph_buffer_put() in __ceph_setxattr() may end up freeing the
-> i_xattrs.prealloc_blob buffer while holding the i_ceph_lock.  This can be
-> fixed by postponing the call until later, when the lock is released.
->
-> The following backtrace was triggered by fstests generic/117.
->
->   BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
->   in_atomic(): 1, irqs_disabled(): 0, pid: 650, name: fsstress
->   3 locks held by fsstress/650:
->    #0: 00000000870a0fe8 (sb_writers#8){.+.+}, at: mnt_want_write+0x20/0x50
->    #1: 00000000ba0c4c74 (&type->i_mutex_dir_key#6){++++}, at: vfs_setxattr+0x55/0xa0
->    #2: 000000008dfbb3f2 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: __ceph_setxattr+0x297/0x810
->   CPU: 1 PID: 650 Comm: fsstress Not tainted 5.2.0+ #437
->   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
->   Call Trace:
->    dump_stack+0x67/0x90
->    ___might_sleep.cold+0x9f/0xb1
->    vfree+0x4b/0x60
->    ceph_buffer_release+0x1b/0x60
->    __ceph_setxattr+0x2b4/0x810
->    __vfs_setxattr+0x66/0x80
->    __vfs_setxattr_noperm+0x59/0xf0
->    vfs_setxattr+0x81/0xa0
->    setxattr+0x115/0x230
->    ? filename_lookup+0xc9/0x140
->    ? rcu_read_lock_sched_held+0x74/0x80
->    ? rcu_sync_lockdep_assert+0x2e/0x60
->    ? __sb_start_write+0x142/0x1a0
->    ? mnt_want_write+0x20/0x50
->    path_setxattr+0xba/0xd0
->    __x64_sys_lsetxattr+0x24/0x30
->    do_syscall_64+0x50/0x1c0
->    entry_SYSCALL_64_after_hwframe+0x49/0xbe
->   RIP: 0033:0x7ff23514359a
->
-> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  fs/ceph/xattr.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-> index 0619adbcbe14c..8382299fc2d84 100644
-> --- a/fs/ceph/xattr.c
-> +++ b/fs/ceph/xattr.c
-> @@ -1028,6 +1028,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
->         struct ceph_inode_info *ci = ceph_inode(inode);
->         struct ceph_mds_client *mdsc = ceph_sb_to_client(inode->i_sb)->mdsc;
->         struct ceph_cap_flush *prealloc_cf = NULL;
-> +       struct ceph_buffer *old_blob = NULL;
->         int issued;
->         int err;
->         int dirty = 0;
-> @@ -1101,13 +1102,15 @@ int __ceph_setxattr(struct inode *inode, const char *name,
->                 struct ceph_buffer *blob;
->
->                 spin_unlock(&ci->i_ceph_lock);
-> -               dout(" preaallocating new blob size=%d\n", required_blob_size);
-> +               ceph_buffer_put(old_blob); /* Shouldn't be required */
-> +               dout(" pre-allocating new blob size=%d\n", required_blob_size);
->                 blob = ceph_buffer_new(required_blob_size, GFP_NOFS);
->                 if (!blob)
->                         goto do_sync_unlocked;
->                 spin_lock(&ci->i_ceph_lock);
-> +               /* prealloc_blob can't be released while holding i_ceph_lock */
->                 if (ci->i_xattrs.prealloc_blob)
-> -                       ceph_buffer_put(ci->i_xattrs.prealloc_blob);
-> +                       old_blob = ci->i_xattrs.prealloc_blob;
->                 ci->i_xattrs.prealloc_blob = blob;
->                 goto retry;
->         }
-> @@ -1123,6 +1126,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
->         }
->
->         spin_unlock(&ci->i_ceph_lock);
-> +       ceph_buffer_put(old_blob);
->         if (lock_snap_rwsem)
->                 up_read(&mdsc->snap_rwsem);
->         if (dirty)
+We've run into a case where a customer has an STM TPM 1.2 chip
+(version 1.2.8.28), that is getting into an inconsistent state and
+they end up getting tpm transmit errors.  In really old tpm code this
+wasn't seen because the code that grabbed the duration values from the
+chip could fail silently, and would proceed to just use default values
+and move forward. More recent code though successfully gets the
+duration values from the chip, and using those values this particular
+chip version gets into the state seen by the customer.
 
-Hi Sasha,
+The idea with this patchset is to provide a facility like the
+update_timeouts operation to allow the override of chip supplied
+values.
 
-I didn't tag i_ceph_lock series for stable because this is a very old
-bug which no one ever hit in real life, at least to my knowledge.
+v3: Rework update_durations to make use of new version structs
+    and pull tpm1_getcap calls out of loop.
+v2: Update Alexey's v1 submission with suggestions made by Jarkko
 
-Please note that each of these patches requires 5c498950f730 ("libceph:
-allow ceph_buffer_put() to receive a NULL ceph_buffer").
 
-Thanks,
 
-                Ilya
