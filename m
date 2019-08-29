@@ -2,59 +2,64 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B197C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE12C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F9722CF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4060C22CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:46:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BlBlZcZo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yjxatas0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfH2HqK (ORCPT
+        id S1727908AbfH2HqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 03:46:10 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:48419 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfH2HqJ (ORCPT
+        Thu, 29 Aug 2019 03:46:14 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:37474 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbfH2HqN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 03:46:09 -0400
-Received: by mail-pg1-f202.google.com with SMTP id k20so1493420pgg.15
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 00:46:09 -0700 (PDT)
+        Thu, 29 Aug 2019 03:46:13 -0400
+Received: by mail-pf1-f201.google.com with SMTP id w30so1856597pfj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 00:46:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=W1PmjVL/6s5ZXXFzVRoWXIYsoDfmFEis3kh7AY5/b/U=;
-        b=BlBlZcZoKDjgUAr7XG6MtHOGce0R3ksWhAYokbXmmIBoBJml3QfGoVZnzlSpGJZ7fo
-         ctBud1He4pmoya0E8XD2Q32uvOOZ0BdedmzPEab50lAtOEa+5NeR03NsNnFtyn3WRkTE
-         g3GM3mZhgXqy4srOHzbGLNj8cSyz+++EWnPSUacRg70jS7mzrzEM+zqmkOEE8qMbOon7
-         5JWBj0P+lhdTL7oESqnUj3SisI1jTDbiiABGWvDD8AqArQBJXi820TWLlnBCxW6YvuSX
-         LgaKO0ZVZPjezsn1SEIfqZvIaXIZNMVbBPdSuSd0rbrNZSILWVwusSRflGEGf5Z83xwa
-         Xv3A==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=g9neP1BMd9+Wtn3CRZXwPOPnH9RFKMYcA30E3wwujtE=;
+        b=Yjxatas0C4IwQKRotypNbKpfKgceY9v+TzPrOZP8pzE/6GmAr/izNBfD4Y0tl1l6OB
+         scCOHhEaDq2dat/3Gw1CR1MoWtCI6+xMbsyexb2s+96I9fMmCu8PxJVj4J/q1HE9YN8E
+         7yXCr2o00LyKCXwj7DCqhLBi4/Z8UYZkyZi6lqH7O2YCGXU73YvWeD6No8IrrcJS+Fnn
+         +Xgh+UIZmlkDyzQWHVm+yKVYbb7ibOURCuD1aZtnSABI+cczwBfO2fHJzG/tbVJKr9IP
+         9BFh2o/yGs7IviTHa5I7/tCskRQaPtQDIvubr9Li6ZMQVM+EPhu820HHhvi+CMRh/QLj
+         XGrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=W1PmjVL/6s5ZXXFzVRoWXIYsoDfmFEis3kh7AY5/b/U=;
-        b=INtw5wvyLWAKsOqrLz6CoSucxEn/8RBTqnDnr5BK2ZzTy0Dq9/Ff1wZYGg0CuwefVR
-         GXELQK79dDaBFd+OZmW9ntarZvN4tWe3juQdR0CaBrqMNjRCeq4tNFCs08hnzcHDtUHj
-         AleTHBKLdAdCoPDrCkfNVvcNVPr2E470WmgIJZ0iV2cLONCLxMPBm9nsHegIuEXY80BI
-         BRf3w5RGSke49wa0f9N0TrEYbSuafGw7zRlhmnfa0NGyPPnPQVCm/7Cd3WJJ59CqxCG4
-         /KYglUY/0J41173XK9rHuWUL29KfZzewKgg7QRMIr1prUDNXMpmU4wJE6hJdJpGSRs5M
-         bmig==
-X-Gm-Message-State: APjAAAWM4Pmq+Uj54bFSwVDnJexWuG6jk9ebdMsIemQFfRVsirmgnF57
-        AeOedi6uLF9IDoPJv0NbShqGwdZx5Ka3Z3g=
-X-Google-Smtp-Source: APXvYqx8b6RNwtvC8vhWCgQOo7SditWRgK6j21AF90oa0Vxuu2xB7Qykx4b8MpO0DR/c1K1mehO1tLGPMlWRAhs=
-X-Received: by 2002:a63:6901:: with SMTP id e1mr6839120pgc.390.1567064768278;
- Thu, 29 Aug 2019 00:46:08 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 00:45:56 -0700
-Message-Id: <20190829074603.70424-1-saravanak@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=g9neP1BMd9+Wtn3CRZXwPOPnH9RFKMYcA30E3wwujtE=;
+        b=L0BX6RE7wrbmi6kAEm/7hGZICzhEhueIS1gvxWq40QZzeij4kFX3/lRkMSEO9MuKe1
+         +wB+L0dGtAImOf24Vt1qnRd+/jJ8a+KOc4WnoOjzxUH1q/Gl/tf5K9yuo4CPIk6CNIuC
+         xjRd+UHrchT/VCGkb7GAQ9xDLA5qurMN66wVpR/wJJ8/kLss4gp+JL7m6U2cg+SMednt
+         w0brCEC4tBGCOP+0ETwZ8CzlSFOqf+R8Cpe3/bXG6Oj7rXXn8/y3DFOnbPEPw2B1x56/
+         rQnPA5R00djfu3JOM/44dg88WMK1z1KYTt4JhjFCE4UPoXve3EH4zGMI/3e8zrM4xTfS
+         bt7w==
+X-Gm-Message-State: APjAAAVq93KXGSyU4LSFS5TFVh/gGmL7U4FPQyQh+5fyKHPGIQ3rtCWF
+        E/HRu2hEtooa7v06Ukm93omw30yblXmNH/I=
+X-Google-Smtp-Source: APXvYqwhMeQU3fz28Lvj2V0wRdHc3nSTlHNET5OWwSBTrVD3J/QGaEW8Ye9Q8ONxl2B6ofCSveZ9ALitA/jb9uY=
+X-Received: by 2002:a63:2b84:: with SMTP id r126mr7241298pgr.308.1567064771823;
+ Thu, 29 Aug 2019 00:46:11 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 00:45:57 -0700
+In-Reply-To: <20190829074603.70424-1-saravanak@google.com>
+Message-Id: <20190829074603.70424-2-saravanak@google.com>
 Mime-Version: 1.0
+References: <20190829074603.70424-1-saravanak@google.com>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v10 0/7] Solve postboot supplier cleanup and optimize probe ordering
+Subject: [PATCH v10 1/7] driver core: Add support for linking devices during
+ device addition
 From:   Saravana Kannan <saravanak@google.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -73,144 +78,233 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device-links to track functional dependencies between devices
-after they are created (but before they are probed) by looking at
-their common DT bindings like clocks, interconnects, etc.
+The firmware corresponding to a device (dev.fwnode) might be able to
+provide functional dependency information between a device and its
+supplier and consumer devices.  Tracking this functional dependency
+allows optimizing device probe order and informing a supplier when all
+its consumers have probed (and thereby actively managing their
+resources).
 
-Having functional dependencies automatically added before the devices
-are probed, provides the following benefits:
+The existing device links feature allows tracking and using
+supplier-consumer relationships. So, this patch adds the add_links()
+fwnode callback to allow firmware to create device links for each
+device as the device is added.
 
-- Optimizes device probe order and avoids the useless work of
-  attempting probes of devices that will not probe successfully
-  (because their suppliers aren't present or haven't probed yet).
+However, when consumer devices are added, they might not have a supplier
+device to link to despite needing mandatory resources/functionality from
+one or more suppliers. A waiting_for_suppliers list is created to track
+such consumers and retry linking them when new devices get added.
 
-  For example, in a commonly available mobile SoC, registering just
-  one consumer device's driver at an initcall level earlier than the
-  supplier device's driver causes 11 failed probe attempts before the
-  consumer device probes successfully. This was with a kernel with all
-  the drivers statically compiled in. This problem gets a lot worse if
-  all the drivers are loaded as modules without direct symbol
-  dependencies.
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ Documentation/driver-api/device_link.rst |  3 +-
+ drivers/base/core.c                      | 89 ++++++++++++++++++++++++
+ include/linux/device.h                   |  2 +
+ include/linux/fwnode.h                   | 17 +++++
+ 4 files changed, 110 insertions(+), 1 deletion(-)
 
-- Supplier devices like clock providers, interconnect providers, etc
-  need to keep the resources they provide active and at a particular
-  state(s) during boot up even if their current set of consumers don't
-  request the resource to be active. This is because the rest of the
-  consumers might not have probed yet and turning off the resource
-  before all the consumers have probed could lead to a hang or
-  undesired user experience.
-
-  Some frameworks (Eg: regulator) handle this today by turning off
-  "unused" resources at late_initcall_sync and hoping all the devices
-  have probed by then. This is not a valid assumption for systems with
-  loadable modules. Other frameworks (Eg: clock) just don't handle
-  this due to the lack of a clear signal for when they can turn off
-  resources. This leads to downstream hacks to handle cases like this
-  that can easily be solved in the upstream kernel.
-
-  By linking devices before they are probed, we give suppliers a clear
-  count of the number of dependent consumers. Once all of the
-  consumers are active, the suppliers can turn off the unused
-  resources without making assumptions about the number of consumers.
-
-By default we just add device-links to track "driver presence" (probe
-succeeded) of the supplier device. If any other functionality provided
-by device-links are needed, it is left to the consumer/supplier
-devices to change the link when they probe.
-
-v1 -> v2:
-- Drop patch to speed up of_find_device_by_node()
-- Drop depends-on property and use existing bindings
-
-v2 -> v3:
-- Refactor the code to have driver core initiate the linking of devs
-- Have driver core link consumers to supplier before it's probed
-- Add support for drivers to edit the device links before probing
-
-v3 -> v4:
-- Tested edit_links() on system with cyclic dependency. Works.
-- Added some checks to make sure device link isn't attempted from
-  parent device node to child device node.
-- Added way to pause/resume sync_state callbacks across
-  of_platform_populate().
-- Recursively parse DT node to create device links from parent to
-  suppliers of parent and all child nodes.
-
-v4 -> v5:
-- Fixed copy-pasta bugs with linked list handling
-- Walk up the phandle reference till I find an actual device (needed
-  for regulators to work)
-- Added support for linking devices from regulator DT bindings
-- Tested the whole series again to make sure cyclic dependencies are
-  broken with edit_links() and regulator links are created properly.
-
-v5 -> v6:
-- Split, squashed and reordered some of the patches.
-- Refactored the device linking code to follow the same code pattern for
-  any property.
-
-v6 -> v7:
-- No functional changes.
-- Renamed i to index
-- Added comment to clarify not having to check property name for every
-  index
-- Added "matched" variable to clarify code. No functional change.
-- Added comments to include/linux/device.h for add_links()
-
-v7 -> v8:
-- Rebased on top of linux-next to handle device link changes in [1]
-
-v8 -> v9:
-- Fixed kbuild test bot reported errors (docs and const)
-
-v9->v10:
-- Changes made based on reviews on LKML [2] and discussions at ELC [3]
-- Dropped the edit_links() patch
-- Dropped the patch that skips linking for default bus nodes
-- 1/7: Changed from bus.add_links() to fwnode.ops.add_links() 
-- 1/7: Update device link doc
-- 1/7: Lots of comments/fn doc updates
-- 1/7: Renamed device_link_check_waiting_consumers() to
-  device_link_add_missing_supplier_links()
-- 2/7: Moved DT parsing/linking code from of/platform.c to of/property.c
-- 2/7: Lots of comments/fn doc updates
-- 2/7: Returned errors for all error cases in of_link_to_phandle()
-- 2/7: Some minor code refactor to remove "bool done"
-- 2/7: Added debug messages when links not created due permanent errors
-- 3/7: Minor comments update
-- Added 2 new patches 6/7 and 7/7 to handle cyclic dependencies using
-  depends-on
-
-[1] - https://lore.kernel.org/lkml/2305283.AStDPdUUnE@kreacher/
-[2] - https://lore.kernel.org/lkml/20190724001100.133423-2-saravanak@google.com/
-[3] - https://lore.kernel.org/lkml/CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com/
-
--Saravana
-
-Saravana Kannan (7):
-  driver core: Add support for linking devices during device addition
-  of: property: Add functional dependency link from DT bindings
-  driver core: Add sync_state driver/bus callback
-  of/platform: Pause/resume sync state during init and
-    of_platform_populate()
-  of: property: Create device links for all child-supplier depencencies
-  dt-bindings: Add depends-on property to break cyclic inferred
-    dependencies
-  of: property: Add "depends-on" parsing support to
-    of_fwnode_add_links()
-
- .../admin-guide/kernel-parameters.rst         |   1 +
- .../admin-guide/kernel-parameters.txt         |   6 +
- .../devicetree/bindings/depends-on.txt        |  46 ++++
- Documentation/driver-api/device_link.rst      |   3 +-
- drivers/base/core.c                           | 154 +++++++++++
- drivers/of/platform.c                         |  12 +
- drivers/of/property.c                         | 258 ++++++++++++++++++
- include/linux/device.h                        |  26 ++
- include/linux/fwnode.h                        |  17 ++
- 9 files changed, 522 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/depends-on.txt
-
+diff --git a/Documentation/driver-api/device_link.rst b/Documentation/driver-api/device_link.rst
+index 1b5020ec6517..bc2d89af88ce 100644
+--- a/Documentation/driver-api/device_link.rst
++++ b/Documentation/driver-api/device_link.rst
+@@ -281,7 +281,8 @@ State machine
+   :c:func:`driver_bound()`.)
+ 
+ * Before a consumer device is probed, presence of supplier drivers is
+-  verified by checking that links to suppliers are in ``DL_STATE_AVAILABLE``
++  verified by checking the consumer device is not in the wait_for_suppliers
++  list and by checking that links to suppliers are in ``DL_STATE_AVAILABLE``
+   state.  The state of the links is updated to ``DL_STATE_CONSUMER_PROBE``.
+   (Call to :c:func:`device_links_check_suppliers()` from
+   :c:func:`really_probe()`.)
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 2db62d98e395..39633bb75f0f 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -44,6 +44,8 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
+ #endif
+ 
+ /* Device links support. */
++static LIST_HEAD(wait_for_suppliers);
++static DEFINE_MUTEX(wfs_lock);
+ 
+ #ifdef CONFIG_SRCU
+ static DEFINE_MUTEX(device_links_lock);
+@@ -430,6 +432,58 @@ struct device_link *device_link_add(struct device *consumer,
+ }
+ EXPORT_SYMBOL_GPL(device_link_add);
+ 
++/**
++ * device_link_wait_for_supplier - Add device to wait_for_suppliers list
++ * @consumer: Consumer device
++ *
++ * Marks the @consumer device as waiting for suppliers to become available by
++ * adding it to the wait_for_suppliers list. The consumer device will never be
++ * probed until it's removed from the wait_for_suppliers list.
++ *
++ * The caller is responsible for adding the links to the supplier devices once
++ * they are available and removing the @consumer device from the
++ * wait_for_suppliers list once links to all the suppliers have been created.
++ *
++ * This function is NOT meant to be called from the probe function of the
++ * consumer but rather from code that creates/adds the consumer device.
++ */
++static void device_link_wait_for_supplier(struct device *consumer)
++{
++	mutex_lock(&wfs_lock);
++	list_add_tail(&consumer->links.needs_suppliers, &wait_for_suppliers);
++	mutex_unlock(&wfs_lock);
++}
++
++/**
++ * device_link_add_missing_supplier_links - Add links from consumer devices to
++ *					    supplier devices, leaving any
++ *					    consumer with inactive suppliers on
++ *					    the wait_for_suppliers list
++ *
++ * Loops through all consumers waiting on suppliers and tries to add all their
++ * supplier links. If that succeeds, the consumer device is removed from
++ * wait_for_suppliers list. Otherwise, they are left in the wait_for_suppliers
++ * list.  Devices left on the wait_for_suppliers list will not be probed.
++ *
++ * The fwnode add_links callback is expected to return 0 if it has found and
++ * added all the supplier links for the consumer device. It should return an
++ * error if it isn't able to do so.
++ *
++ * The caller of device_link_wait_for_supplier() is expected to call this once
++ * it's aware of potential suppliers becoming available.
++ */
++static void device_link_add_missing_supplier_links(void)
++{
++	struct device *dev, *tmp;
++
++	mutex_lock(&wfs_lock);
++	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
++				 links.needs_suppliers)
++		if (!fwnode_call_int_op(dev->fwnode, add_links, dev))
++			list_del_init(&dev->links.needs_suppliers);
++	mutex_unlock(&wfs_lock);
++}
++
+ static void device_link_free(struct device_link *link)
+ {
+ 	while (refcount_dec_not_one(&link->rpm_active))
+@@ -564,6 +618,17 @@ int device_links_check_suppliers(struct device *dev)
+ 	struct device_link *link;
+ 	int ret = 0;
+ 
++	/*
++	 * Device waiting for supplier to become available is not allowed to
++	 * probe.
++	 */
++	mutex_lock(&wfs_lock);
++	if (!list_empty(&dev->links.needs_suppliers)) {
++		mutex_unlock(&wfs_lock);
++		return -EPROBE_DEFER;
++	}
++	mutex_unlock(&wfs_lock);
++
+ 	device_links_write_lock();
+ 
+ 	list_for_each_entry(link, &dev->links.suppliers, c_node) {
+@@ -848,6 +913,10 @@ static void device_links_purge(struct device *dev)
+ {
+ 	struct device_link *link, *ln;
+ 
++	mutex_lock(&wfs_lock);
++	list_del(&dev->links.needs_suppliers);
++	mutex_unlock(&wfs_lock);
++
+ 	/*
+ 	 * Delete all of the remaining links from this device to any other
+ 	 * devices (either consumers or suppliers).
+@@ -1712,6 +1781,7 @@ void device_initialize(struct device *dev)
+ #endif
+ 	INIT_LIST_HEAD(&dev->links.consumers);
+ 	INIT_LIST_HEAD(&dev->links.suppliers);
++	INIT_LIST_HEAD(&dev->links.needs_suppliers);
+ 	dev->links.status = DL_DEV_NO_DRIVER;
+ }
+ EXPORT_SYMBOL_GPL(device_initialize);
+@@ -2198,6 +2268,25 @@ int device_add(struct device *dev)
+ 					     BUS_NOTIFY_ADD_DEVICE, dev);
+ 
+ 	kobject_uevent(&dev->kobj, KOBJ_ADD);
++
++	/*
++	 * Check if any of the other devices (consumers) have been waiting for
++	 * this device (supplier) to be added so that they can create a device
++	 * link to it.
++	 *
++	 * This needs to happen after device_pm_add() because device_link_add()
++	 * requires the supplier be registered before it's called.
++	 *
++	 * But this also needs to happe before bus_probe_device() to make sure
++	 * waiting consumers can link to it before the driver is bound to the
++	 * device and the driver sync_state callback is called for this device.
++	 */
++	device_link_add_missing_supplier_links();
++
++	if (fwnode_has_op(dev->fwnode, add_links)
++	    && fwnode_call_int_op(dev->fwnode, add_links, dev))
++		device_link_wait_for_supplier(dev);
++
+ 	bus_probe_device(dev);
+ 	if (parent)
+ 		klist_add_tail(&dev->p->knode_parent,
+diff --git a/include/linux/device.h b/include/linux/device.h
+index ec598ede9455..76458cfbb267 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -1131,11 +1131,13 @@ enum dl_dev_state {
+  * struct dev_links_info - Device data related to device links.
+  * @suppliers: List of links to supplier devices.
+  * @consumers: List of links to consumer devices.
++ * @needs_suppliers: Hook to global list of devices waiting for suppliers.
+  * @status: Driver status information.
+  */
+ struct dev_links_info {
+ 	struct list_head suppliers;
+ 	struct list_head consumers;
++	struct list_head needs_suppliers;
+ 	enum dl_dev_state status;
+ };
+ 
+diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+index a11c8c56c78b..068b0024adef 100644
+--- a/include/linux/fwnode.h
++++ b/include/linux/fwnode.h
+@@ -65,6 +65,21 @@ struct fwnode_reference_args {
+  *			       endpoint node.
+  * @graph_get_port_parent: Return the parent node of a port node.
+  * @graph_parse_endpoint: Parse endpoint for port and endpoint id.
++ * @add_links:	Called after the device corresponding to the fwnode is added
++ *		using device_add(). The function is expected to create device
++ *		links to all the suppliers of the device that are available at
++ *		the time this function is called.  The function must NOT stop
++ *		at the first failed device link if other unlinked supplier
++ *		devices are present in the system.  If some suppliers are not
++ *		yet available, this function will be called again when other
++ *		devices are added to allow creating device links to any newly
++ *		available suppliers.
++ *
++ *		Return 0 if device links have been successfully created to all
++ *		the suppliers of this device or if the supplier information is
++ *		not known. Return an error if and only if the supplier
++ *		information is known but some of the suppliers are not yet
++ *		available to create device links to.
+  */
+ struct fwnode_operations {
+ 	struct fwnode_handle *(*get)(struct fwnode_handle *fwnode);
+@@ -102,6 +117,8 @@ struct fwnode_operations {
+ 	(*graph_get_port_parent)(struct fwnode_handle *fwnode);
+ 	int (*graph_parse_endpoint)(const struct fwnode_handle *fwnode,
+ 				    struct fwnode_endpoint *endpoint);
++	int (*add_links)(const struct fwnode_handle *fwnode,
++			 struct device *dev);
+ };
+ 
+ #define fwnode_has_op(fwnode, op)				\
 -- 
 2.23.0.187.g17f5b7556c-goog
 
