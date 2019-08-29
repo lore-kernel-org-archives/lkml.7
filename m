@@ -2,105 +2,220 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9644C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1400EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0952215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E06312166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:58:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfH2L61 (ORCPT
+        id S1727347AbfH2L6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:58:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:23660 "EHLO mx1.redhat.com"
+        Thu, 29 Aug 2019 07:58:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47754 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbfH2L61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:58:27 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1726739AbfH2L6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 07:58:34 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4ED03308FC4A;
-        Thu, 29 Aug 2019 11:58:27 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0EA1160872;
-        Thu, 29 Aug 2019 11:58:23 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 966A12206F5; Thu, 29 Aug 2019 07:58:22 -0400 (EDT)
-Date:   Thu, 29 Aug 2019 07:58:22 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual
- machines
-Message-ID: <20190829115822.GA10416@redhat.com>
-References: <20190821173742.24574-1-vgoyal@redhat.com>
- <CAJfpegv_XS=kLxw_FzWNM2Xao5wsn7oGbk3ow78gU8tpXwo-sg@mail.gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 352E28553A;
+        Thu, 29 Aug 2019 11:58:34 +0000 (UTC)
+Received: from amt.cnet (ovpn-112-4.gru2.redhat.com [10.97.112.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B5FC5D9C9;
+        Thu, 29 Aug 2019 11:58:33 +0000 (UTC)
+Received: from amt.cnet (localhost [127.0.0.1])
+        by amt.cnet (Postfix) with ESMTP id A518310513F;
+        Thu, 29 Aug 2019 08:56:37 -0300 (BRT)
+Received: (from marcelo@localhost)
+        by amt.cnet (8.14.7/8.14.7/Submit) id x7TBuZvW009438;
+        Thu, 29 Aug 2019 08:56:35 -0300
+Date:   Thu, 29 Aug 2019 08:56:34 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Joao Martins <joao.m.martins@oracle.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: Re: [PATCH v1] cpuidle-haltpoll: vcpu hotplug support
+Message-ID: <20190829115634.GA4949@amt.cnet>
+References: <20190828185650.16923-1-joao.m.martins@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJfpegv_XS=kLxw_FzWNM2Xao5wsn7oGbk3ow78gU8tpXwo-sg@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 29 Aug 2019 11:58:27 +0000 (UTC)
+In-Reply-To: <20190828185650.16923-1-joao.m.martins@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 29 Aug 2019 11:58:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 11:28:27AM +0200, Miklos Szeredi wrote:
-> On Wed, Aug 21, 2019 at 7:38 PM Vivek Goyal <vgoyal@redhat.com> wrote:
-> >
-> > Hi,
-> >
-> > Here are the V3 patches for virtio-fs filesystem. This time I have
-> > broken the patch series in two parts. This is first part which does
-> > not contain DAX support. Second patch series will contain the patches
-> > for DAX support.
-> >
-> > I have also dropped RFC tag from first patch series as we believe its
-> > in good enough shape that it should get a consideration for inclusion
-> > upstream.
+Hi Joao,
+
+On Wed, Aug 28, 2019 at 07:56:50PM +0100, Joao Martins wrote:
+> When cpus != maxcpus cpuidle-haltpoll will fail to register all vcpus
+> past the online ones and thus fail to register the idle driver.
+> This is because cpuidle_add_sysfs() will return with -ENODEV as a
+> consequence from get_cpu_device() return no device for a non-existing
+> CPU.
 > 
-> Pushed out to
+> Instead switch to cpuidle_register_driver() and manually register each
+> of the present cpus through cpuhp_setup_state() and future ones that
+> get onlined. This mimics similar logic as intel_idle.
 > 
->   git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git#for-next
+> Fixes: fa86ee90eb11 ("add cpuidle-haltpoll driver")
+> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+> Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> ---
+>  arch/x86/include/asm/cpuidle_haltpoll.h |  4 +-
+>  arch/x86/kernel/kvm.c                   | 18 +++----
+>  drivers/cpuidle/cpuidle-haltpoll.c      | 65 +++++++++++++++++++++++--
+>  include/linux/cpuidle_haltpoll.h        |  4 +-
+>  4 files changed, 70 insertions(+), 21 deletions(-)
 > 
+> diff --git a/arch/x86/include/asm/cpuidle_haltpoll.h b/arch/x86/include/asm/cpuidle_haltpoll.h
+> index ff8607d81526..c8b39c6716ff 100644
+> --- a/arch/x86/include/asm/cpuidle_haltpoll.h
+> +++ b/arch/x86/include/asm/cpuidle_haltpoll.h
+> @@ -2,7 +2,7 @@
+>  #ifndef _ARCH_HALTPOLL_H
+>  #define _ARCH_HALTPOLL_H
+>  
+> -void arch_haltpoll_enable(void);
+> -void arch_haltpoll_disable(void);
+> +void arch_haltpoll_enable(unsigned int cpu);
+> +void arch_haltpoll_disable(unsigned int cpu);
+>  
+>  #endif
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index 8d150e3732d9..a9b6c4e2446d 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -880,32 +880,26 @@ static void kvm_enable_host_haltpoll(void *i)
+>  	wrmsrl(MSR_KVM_POLL_CONTROL, 1);
+>  }
+>  
+> -void arch_haltpoll_enable(void)
+> +void arch_haltpoll_enable(unsigned int cpu)
+>  {
+>  	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL)) {
+> -		printk(KERN_ERR "kvm: host does not support poll control\n");
+> -		printk(KERN_ERR "kvm: host upgrade recommended\n");
+> +		pr_err_once("kvm: host does not support poll control\n");
+> +		pr_err_once("kvm: host upgrade recommended\n");
+>  		return;
+>  	}
+>  
+> -	preempt_disable();
+>  	/* Enable guest halt poll disables host halt poll */
+> -	kvm_disable_host_haltpoll(NULL);
+> -	smp_call_function(kvm_disable_host_haltpoll, NULL, 1);
+> -	preempt_enable();
+> +	smp_call_function_single(cpu, kvm_disable_host_haltpoll, NULL, 1);
+>  }
+>  EXPORT_SYMBOL_GPL(arch_haltpoll_enable);
+>  
+> -void arch_haltpoll_disable(void)
+> +void arch_haltpoll_disable(unsigned int cpu)
+>  {
+>  	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL))
+>  		return;
+>  
+> -	preempt_disable();
+>  	/* Enable guest halt poll disables host halt poll */
+> -	kvm_enable_host_haltpoll(NULL);
+> -	smp_call_function(kvm_enable_host_haltpoll, NULL, 1);
+> -	preempt_enable();
+> +	smp_call_function_single(cpu, kvm_enable_host_haltpoll, NULL, 1);
+>  }
+>  EXPORT_SYMBOL_GPL(arch_haltpoll_disable);
+>  #endif
+> diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
+> index 9ac093dcbb01..0d1853a7185e 100644
+> --- a/drivers/cpuidle/cpuidle-haltpoll.c
+> +++ b/drivers/cpuidle/cpuidle-haltpoll.c
+> @@ -11,12 +11,15 @@
+>   */
+>  
+>  #include <linux/init.h>
+> +#include <linux/cpu.h>
+>  #include <linux/cpuidle.h>
+>  #include <linux/module.h>
+>  #include <linux/sched/idle.h>
+>  #include <linux/kvm_para.h>
+>  #include <linux/cpuidle_haltpoll.h>
+>  
+> +static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
+> +
+>  static int default_enter_idle(struct cpuidle_device *dev,
+>  			      struct cpuidle_driver *drv, int index)
+>  {
+> @@ -46,6 +49,48 @@ static struct cpuidle_driver haltpoll_driver = {
+>  	.state_count = 2,
+>  };
+>  
+> +static int haltpoll_cpu_online(unsigned int cpu)
+> +{
+> +	struct cpuidle_device *dev;
+> +
+> +	dev = per_cpu_ptr(haltpoll_cpuidle_devices, cpu);
+> +	if (!dev->registered) {
+> +		dev->cpu = cpu;
+> +		if (cpuidle_register_device(dev)) {
+> +			pr_notice("cpuidle_register_device %d failed!\n", cpu);
+> +			return -EIO;
+> +		}
+> +		arch_haltpoll_enable(cpu);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void haltpoll_uninit(void)
+> +{
+> +	unsigned int cpu;
+> +
+> +	cpus_read_lock();
+> +
+> +	for_each_online_cpu(cpu) {
+> +		struct cpuidle_device *dev =
+> +			per_cpu_ptr(haltpoll_cpuidle_devices, cpu);
+> +
+> +		if (!dev->registered)
+> +			continue;
+> +
+> +		arch_haltpoll_disable(cpu);
+> +		cpuidle_unregister_device(dev);
+> +	}
 
-Awesome.
+1)
 
-> Major changes compared to patchset:
-> 
->  - renamed to "virtiofs".  Filesystem names don't usually have
-> underscore before "fs" postfix.
-> 
+> +
+> +	cpuidle_unregister(&haltpoll_driver);
 
-Sound good to me.
+cpuidle_unregister_driver.
 
->  - removed option parsing completely.  Virtiofs config is fixed to "-o
-> rootmode=040000,user_id=0,group_id=0,allow_other,default_permissions".
-> Does this sound reasonable?
+> +	free_percpu(haltpoll_cpuidle_devices);
+> +	haltpoll_cpuidle_devices = NULL;
+> +
+> +	cpus_read_unlock();
 
-These are the options we are using now and looks like they make lot of
-sense for virtiofs. I guess if somebody needs a different configuration
-later we can introduce option parsing and override these defaults.
+Any reason you can't cpus_read_unlock() at 1) ?
 
-> 
-> There are miscellaneous changes, so needs to be thoroughly tested.
+Looks good otherwise.
 
-I will test these.
+Thanks!
 
-> 
-> I think we also need something in
-> "Documentation/filesystems/virtiofs.rst" which describes the design
-> (how  request gets to userspace and back) and how to set up the
-> server, etc...  Stefan, Vivek can you do something like that?
-
-Sure, I will write up something and take Stefan's input as well.
-
-Thanks
-Vivek
