@@ -2,196 +2,133 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF17C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C90C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9332D2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3322173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:49:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rfOp5laI"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="StpqtEW5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbfH2PtI (ORCPT
+        id S1728115AbfH2PtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:49:08 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45708 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbfH2PtH (ORCPT
+        Thu, 29 Aug 2019 11:49:14 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43868 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbfH2PtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:49:07 -0400
-Received: by mail-ed1-f68.google.com with SMTP id x19so4531610eda.12;
-        Thu, 29 Aug 2019 08:49:05 -0700 (PDT)
+        Thu, 29 Aug 2019 11:49:12 -0400
+Received: by mail-io1-f65.google.com with SMTP id u185so4048335iod.10
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 08:49:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OMFH7+qjxeCQGYMrtHVwq2Z9xuNxBOoK9zXTLfD2WVQ=;
-        b=rfOp5laI6/xjsO80X1sxdmMFx8QGuwGro3BfHKTFabWhPNW3y6spDEyUMs9jP+m6cx
-         VWLJgGzBoLMVGS0Lm3dzSyWite+/psRInRKDD1A3owUYD8DYdKqUVVYqmRvnADiSquxW
-         0AnhLJifOSFFVEE3ahY4p/Kioc1hwOPhvJNeGnbY04iGetKNRa5mC0YtlUfaqzou+xAZ
-         FgbeEQa7vWqXAlVpxyu79T/ff3v/KCWx1mhl67SAMJ6usW0VjvySueKg1AaKLK3DQMsD
-         thWNjgHYY5KHhHg7+YFfd9lg2SqoTDJFt9JZr+SbSP21BHcds0gEKCO/hKbmSsf1AaTj
-         hw8A==
+        d=arista.com; s=googlenew;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wyGoJL/dRu795TDEcF7qp/dcanjpzr2qNIk3nhp4pBA=;
+        b=StpqtEW508X1BAwN4TV2B06Gk399USwcufzfm6cs9+YDIuN7iPLyOlccmxmNFc/yCh
+         ZEPUF1HcAZMN0/cwMSjtAjdXeWAfysvaNO14b6mDvHuM4HBTcrIgwUHkEVd8mXufZRre
+         IPv+OJxVArIAvk60HYTsBaOsmdwTSD3XLDL1rhXEkbQFih2sbJev70mo2jIBgaSP0+Yw
+         0yO03gN4FSKrzqktA0SkiwrCvGk9eWwKapxu2cp0suc61Vrl9GXvreNjZdTqGywFPWTw
+         w6D+lJLUVjugy7NX0A0xoa19EPP0IdrhUOmMQdfM8F0I69nWJEe5gKew5LRSnNrHtXHC
+         9Wtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OMFH7+qjxeCQGYMrtHVwq2Z9xuNxBOoK9zXTLfD2WVQ=;
-        b=MogBmn/1vpax3j7qayfuXGKP0tqspp3E0+C1/kP+U8TViELMDfFzaGVdvHESvS2LlM
-         PHKsPYy9qHlMv2dHBcHRW3XL9mVDyLAasPibQxWUV+qr/iyFKx9XCO9z/7ShgkMBRK76
-         nW+bkkcV/PsviqFEJgSj9PibuKR6/+C2Inp8PJdcZZ/ogzf71dWPZcgZqrn/CJpQVuZQ
-         uoHVujwNC4roiAumXn600B2pouhlm1puKgKg6sQ5QfD+LuX6vZjItPeAFJKUAeIjJt4G
-         kqHwDHucDM/oxKCU7IuAjfnFGk03illifKGK6vYjnkoRuoWR7wS3C+wgaEBGBnsPQLjV
-         vhlw==
-X-Gm-Message-State: APjAAAX5ltCxNIWsINK1TizIuqTTTlfR+4Ug/6gGIbcPZv6X8CHkhi/9
-        CkbWjc6175MqfSoHLrhQgvU=
-X-Google-Smtp-Source: APXvYqwI5co88zXUDufxRjlo+vg5MbEMZisIAz99qPUitWfRikhAaOML4+k5Qz+V/aLg9T/WPdMS2g==
-X-Received: by 2002:a17:906:185b:: with SMTP id w27mr8732892eje.203.1567093745064;
-        Thu, 29 Aug 2019 08:49:05 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id a22sm501256edt.88.2019.08.29.08.49.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 08:49:03 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 17:49:02 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        YueHaibing <yuehaibing@huawei.com>, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, jonathanh@nvidia.com,
-        robin.murphy@arm.com, linux-media@vger.kernel.org,
-        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: Re: [PATCH] media: staging: tegra-vde: Disable building with
- COMPILE_TEST
-Message-ID: <20190829154902.GC19842@ulmo>
-References: <20190826133140.13456-1-yuehaibing@huawei.com>
- <7f73bcac-f52d-f1b3-324c-e9b551c5378b@xs4all.nl>
- <20190829124034.GA19842@ulmo>
- <b048b460-9d58-8e38-e335-f9a3fface559@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wyGoJL/dRu795TDEcF7qp/dcanjpzr2qNIk3nhp4pBA=;
+        b=eh9QCoyHEJDeDU/gKt+znC3npRTAgYZpwSeozqGq+0hzM3ZrtvFR7AuyE4xDJOfwjH
+         305Q0Cn8ZG8ochIFGPKWpoFG4LB8za2x+3pC+Re2XmcLHGroZmBzJJS3Z70cHhpAy+w4
+         zUlLnB/PMhnwZewsHqmC3dXo0jK8mJRnSBo9M3iIohynjlD72nEPg4MAT0VTaZ9X2hv+
+         tD4jSb51utU7cIwAH9mHUnFg92D9MpwKZ1se5EvC2smFXqT7JtsEW8IGnMI1hIQQcjgh
+         TUSimeMFLJ8FNpXjawcJaZXHdT/HUvlvDtXZU9638MPUUc876ceBkzH7F3PjPHsGoj7Z
+         2umA==
+X-Gm-Message-State: APjAAAXOFq1w7ujV8VlQDWwxJ5i8CGQ76FkGUcrPmDnuCL9pbP7Rl49t
+        MUcYBAMYnOj5Ri9xX4JX+X1NNMvPoTZIYo0U+qxtVA==
+X-Google-Smtp-Source: APXvYqyoe4GeHyy6g7dazTKEG1XkpjWSwVk+OLbTlVX8ayxSPwqBIL0bYI9KsIbZHteZekrObzW9+ZgdQuOdF2uGJn0=
+X-Received: by 2002:a02:94e5:: with SMTP id x92mr203774jah.11.1567093751491;
+ Thu, 29 Aug 2019 08:49:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="E/DnYTRukya0zdZ1"
-Content-Disposition: inline
-In-Reply-To: <b048b460-9d58-8e38-e335-f9a3fface559@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190826193638.6638-1-echron@arista.com> <20190827071523.GR7538@dhcp22.suse.cz>
+ <CAM3twVRZfarAP6k=LLWH0jEJXu8C8WZKgMXCFKBZdRsTVVFrUQ@mail.gmail.com>
+ <20190828065955.GB7386@dhcp22.suse.cz> <CAM3twVR_OLffQ1U-SgQOdHxuByLNL5sicfnObimpGpPQ1tJ0FQ@mail.gmail.com>
+ <20190829071105.GQ28313@dhcp22.suse.cz> <297cf049-d92e-f13a-1386-403553d86401@i-love.sakura.ne.jp>
+ <20190829115608.GD28313@dhcp22.suse.cz> <a8979b50-b8db-55c1-996b-6d86736513f5@i-love.sakura.ne.jp>
+In-Reply-To: <a8979b50-b8db-55c1-996b-6d86736513f5@i-love.sakura.ne.jp>
+From:   Edward Chron <echron@arista.com>
+Date:   Thu, 29 Aug 2019 08:48:59 -0700
+Message-ID: <CAM3twVR_9CgQvqpjVn6TZ0Xq3==eR_KkfMsBO1gLWarbYNtfmQ@mail.gmail.com>
+Subject: Re: [PATCH 00/10] OOM Debug print selection and additional information
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 29, 2019 at 7:09 AM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> On 2019/08/29 20:56, Michal Hocko wrote:
+> >> But please be aware that, I REPEAT AGAIN, I don't think neither eBPF nor
+> >> SystemTap will be suitable for dumping OOM information. OOM situation means
+> >> that even single page fault event cannot complete, and temporary memory
+> >> allocation for reading from kernel or writing to files cannot complete.
+> >
+> > And I repeat that no such reporting is going to write to files. This is
+> > an OOM path afterall.
+>
+> The process who fetches from e.g. eBPF event cannot involve page fault.
+> The front-end for iovisor/bcc is a python userspace process. But I think
+> that such process can't run under OOM situation.
+>
+> >
+> >> Therefore, we will need to hold all information in kernel memory (without
+> >> allocating any memory when OOM event happened). Dynamic hooks could hold
+> >> a few lines of output, but not all lines we want. The only possible buffer
+> >> which is preallocated and large enough would be printk()'s buffer. Thus,
+> >> I believe that we will have to use printk() in order to dump OOM information.
+> >> At that point,
+> >
+> > Yes, this is what I've had in mind.
+>
+> Probably I incorrectly shortcut.
+>
+> Dynamic hooks could hold a few lines of output, but dynamic hooks can not hold
+> all lines when dump_tasks() reports 32000+ processes. We have to buffer all output
+> in kernel memory because we can't complete even a page fault event triggered by
+> the python process monitoring eBPF event (and writing the result to some log file
+> or something) while out_of_memory() is in flight.
+>
+> And "set /proc/sys/vm/oom_dump_tasks to 0" is not the right reaction. What I'm
+> saying is "we won't be able to hold output from dump_tasks() if output from
+> dump_tasks() goes to buffer preallocated for dynamic hooks". We have to find
+> a way that can handle the worst case.
 
---E/DnYTRukya0zdZ1
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+With the patch series we sent the addition of vmalloc entries print
+required us to
+add a small piece of code to vmalloc.c but we thought this should be core
+OOM Reporting function. However you want to limit which vmalloc entries you
+print, probably only very large memory users. For us this generates just a few
+entries and has proven useful.
 
-On Thu, Aug 29, 2019 at 04:58:22PM +0300, Dmitry Osipenko wrote:
-> 29.08.2019 15:40, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Thu, Aug 29, 2019 at 01:39:32PM +0200, Hans Verkuil wrote:
-> >> On 8/26/19 3:31 PM, YueHaibing wrote:
-> >>> If COMPILE_TEST is y and IOMMU_SUPPORT is n, selecting TEGRA_VDE
-> >>> to m will set IOMMU_IOVA to m, this fails the building of
-> >>> TEGRA_HOST1X and DRM_TEGRA which is y like this:
-> >>>
-> >>> drivers/gpu/host1x/cdma.o: In function `host1x_cdma_init':
-> >>> cdma.c:(.text+0x66c): undefined reference to `alloc_iova'
-> >>> cdma.c:(.text+0x698): undefined reference to `__free_iova'
-> >>>
-> >>> drivers/gpu/drm/tegra/drm.o: In function `tegra_drm_unload':
-> >>> drm.c:(.text+0xeb0): undefined reference to `put_iova_domain'
-> >>> drm.c:(.text+0xeb4): undefined reference to `iova_cache_put'
-> >>>
-> >>> Reported-by: Hulk Robot <hulkci@huawei.com>
-> >>> Fixes: 6b2265975239 ("media: staging: tegra-vde: Fix build error")
-> >>> Fixes: b301f8de1925 ("media: staging: media: tegra-vde: Add IOMMU sup=
-port")
-> >>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> >>> ---
-> >>>  drivers/staging/media/tegra-vde/Kconfig | 4 ++--
-> >>>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/drivers/staging/media/tegra-vde/Kconfig b/drivers/stagin=
-g/media/tegra-vde/Kconfig
-> >>> index ba49ea5..a41d30c 100644
-> >>> --- a/drivers/staging/media/tegra-vde/Kconfig
-> >>> +++ b/drivers/staging/media/tegra-vde/Kconfig
-> >>> @@ -1,9 +1,9 @@
-> >>>  # SPDX-License-Identifier: GPL-2.0
-> >>>  config TEGRA_VDE
-> >>>  	tristate "NVIDIA Tegra Video Decoder Engine driver"
-> >>> -	depends on ARCH_TEGRA || COMPILE_TEST
-> >>> +	depends on ARCH_TEGRA
-> >>
-> >> What happens if you drop this change,
-> >>
-> >>>  	select DMA_SHARED_BUFFER
-> >>> -	select IOMMU_IOVA if (IOMMU_SUPPORT || COMPILE_TEST)
-> >>> +	select IOMMU_IOVA if IOMMU_SUPPORT
-> >>
-> >> but keep this change?
-> >>
-> >> iova.h has stubs that are used if IOMMU_IOVA is not set, so it should
-> >> work when compile testing this tegra-vde driver.
-> >>
-> >> Haven't tried it, but making sure that compile testing keep working is
-> >> really important.
->=20
-> The driver's code compilation works okay, it's the linkage stage which
-> fails during compile-testing.
->=20
-> > Yeah, that variant seems to work for me. I think it's also more correct
-> > because the IOMMU_IOVA if IOMMU_SUPPORT dependency really says that the
-> > IOVA usage is bound to IOMMU support. If IOMMU support is not enabled,
-> > then IOVA is not needed either, so the dummies will do just fine.
->=20
-> Am I understanding correctly that you're suggesting to revert [1][2] and
-> get back to the other problem?
->=20
-> [1]
-> https://lore.kernel.org/linux-media/dd547b44-7abb-371f-aeee-a82b96f824e2@=
-gmail.com/T/
-> [2] https://patchwork.ozlabs.org/patch/1136619/
->=20
-> If we want to keep compile testing, I guess the only reasonable variant
-> right now is to select IOMMU_IOVA unconditionally in all of the drivers
-> (vde, host1x, drm and etc) and then just ignore that IOVA will be
-> compiled-and-unused if IOMMU_SUPPORT=3Dn (note that IOMMU_SUPPORT=3Dy in =
-all
-> of default kernel configurations).
+The changes to limit how many processes get printed so you don't have the all
+or nothing would be nice to have. It would be easiest if there was a standard
+mechanism to specify which entries to print, probably by a minimum size which
+is what we did. We used debugfs to set the controls but sysctl or some other
+mechanism could be used.
 
-Agreed. I think we should just select IOMMU_IOVA unconditionally. We
-really do want IOMMU_SUPPORT always as well, but it might be nice to be
-able to switch it off for testing or so. In the cases that really matter
-we will be enabling both IOMMU_SUPPORT and IOMMU_IOVA anyway, so might
-as well select IOMMU_IOVA always. It's not terribly big and I can't
-imagine anyone wanting to run a kernel without IOMMU_SUPPORT for
-anything other than testing.
-
-Thierry
-
---E/DnYTRukya0zdZ1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1n8+oACgkQ3SOs138+
-s6Hbfw//W5zV6nU1EoH+SEkePE93YLIaRnk0SQKzSBCTDuVDIXnRE3iqhCRDH/Fg
-AInyjQFdbHKGt0AWTlpijP7gaEgZDP66trt1BBrJLwaF9/PCM/cKzyY2XUjuIMxN
-rCBvh/jzRcJPb4e9mQAmyJGcrw/MnM+xn+Vk2zPpDA/Km5jQ6NoIR99HdcJ7JBxr
-sncQof6st+gMIarbZ5z9bxG9x6tjUJ6/iJREqKqufxL4TpwCtzuvdzioXSRUF3vz
-u8zGA7dysvAGjPPY/lNTQvFq+HJz8p5BaLDhYc+YH4u/OuvNU8dlnG6nqPiots9l
-yC6K9VRJR0J7q5J+sAwwMggW4nKGP3f3lnTZbewJkAilA4el4u/YabU+Wh6x+VPz
-2gDIfni/lRgJZ8+fxkAF0NQdeKE/zEyCxPngKbEwaFVkIF9JSwdaiNbKwnal5b1I
-24e1TkDHP089dfOS8C1RfUC5+G9JfwkorC1olf2SJ4GtsG12bE94viDLf/VPYPt5
-JCsRXvP8cGjwJmu6sTdxtiHYjYc+WD/uFLe6R+mJFHz7SsCbgU5KwqkBVBYEzpu7
-KBHq9GciM1tokCVdt5XO0j2Oq8X+MerHkX/jEiyFVcCovt/6aHrNgCkxOzmklo5q
-2rISJqrNQO+cw88/i8fW5i3bZpAoJoHemz4SgQdZzdxaFgVNyTg=
-=Pgi/
------END PGP SIGNATURE-----
-
---E/DnYTRukya0zdZ1--
+The rest of what we did might be implemented with hooks as they only output
+a line or two and I've already got rid of information we had that was
+redundant.
