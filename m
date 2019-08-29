@@ -2,189 +2,132 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C12C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA4EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A40B12339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0E02339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:05:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m/hgidyi"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Rf+LakrM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfH2KEY (ORCPT
+        id S1727115AbfH2KFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:04:24 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45676 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfH2KEY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:04:24 -0400
-Received: by mail-qt1-f194.google.com with SMTP id k13so2937712qtm.12
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 03:04:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vwod3g/h3wsMjoG1LnCiS/Wpf4N1PRkHzIkFBfQoSSw=;
-        b=m/hgidyicegyPyO4Uspo+VjOeANso0tBMTHbGMnzh+IJJIAekQigkeObfhGQ43XJxX
-         jkkuiNkzoUrtwU97MBaEka9FMd+Ws2GPbajDlQsP8f15aq9yPCjep3IbrRwYZIfI1ZfH
-         TIOhZ9lnZvoaDYfehhTDLme2nOgKHArjb2M4s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vwod3g/h3wsMjoG1LnCiS/Wpf4N1PRkHzIkFBfQoSSw=;
-        b=mHYjM1tZ9Ly/lfjDRN6g9wsywxGOExL9PLJrh/g3nRDIX0hzC2zCBF2KrugNjhymJX
-         b9H+qFbKfwcVpVpS5fL5Ovcr0Qj0bnjXLOq5unwr+zq0mDqdQSjKth62qFifCCDJh2MG
-         FKuQuErALCg36aMeM9+U0kJaHk5IYxH4GZ690C53snZF18i7QzCjDZqGddMQA5tuEHXG
-         VRpll23wTmP5RXKwdG0CHnO6Wkg03ImB9lOTGmgvzEQgqsPSch9KiOr1HfShDdfjuQ5T
-         lBtGiwX8P4KrV3HsrnBqLhVkU0Z3DhBS5QIdtTJn625OV4Yhjw3gcs3ATFISiKA3EGg1
-         WTAQ==
-X-Gm-Message-State: APjAAAULLYnzuvJs5QrKw7i/wiAQiqj5lgz+/WCqZUSvBzPK59uGFZ2P
-        NKBkX5q2L2v635eLCKdHwPbQmNuXUZjAxwXO5KiUcQ==
-X-Google-Smtp-Source: APXvYqzFV2QhMMIOvBFm8kDuXBJDTG4ory3BugWe2SSfjqg6bDKB2bXQ/IBBCXioYRpHnhFbpw3YoE1Qsaz3ihPmKoA=
-X-Received: by 2002:ad4:4050:: with SMTP id r16mr5793678qvp.200.1567073062956;
- Thu, 29 Aug 2019 03:04:22 -0700 (PDT)
+        Thu, 29 Aug 2019 06:05:52 -0400
+Received: from ozlabs.org ([203.11.71.1]:35671 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726330AbfH2KFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:05:52 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Jyt45h40z9s4Y;
+        Thu, 29 Aug 2019 20:05:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567073149;
+        bh=tf1ypQjpP9xJVJX8gDPglx7QvW/vyQ5w0EeNCZAjaZk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Rf+LakrMJi3Ly9wRsysR6j+BSTKi1WG9tqSgbDFJwkPgEDTu9PeFF7MnAI28J3/+b
+         IlJIqH6rOgVuBiszuRDpOl8krgh37lYuMWz9gAQuTwSzbX2Xa2LlxU7Kq7thtMfORQ
+         tL8riXi/0eROZAGqgLph6Sh3pPS6+bummMgjX6//9VekptBpC8u5uIAAKnSvNps77Y
+         z7CvlUZp3Re/VczRR5wmBv1jFwsQ2wXbV3FdK3rGkV/QneJI4VqKAB1UZr0doXsF0w
+         H2tsdQmLk4KACN+sdbFsEpqCvUQRJszdkUQb7QBrrNi0n3RLG8X9tF1wE1QpTgovUq
+         vaA5snTCxahAQ==
+Date:   Thu, 29 Aug 2019 20:05:46 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Voon Weifeng <weifeng.voon@intel.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>
+Subject: linux-next: build failure after merge of the net-next tree
+Message-ID: <20190829200546.7b9af296@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190822071522.143986-1-hsinyi@chromium.org> <20190822071522.143986-3-hsinyi@chromium.org>
- <5d5ed368.1c69fb81.419fc.0803@mx.google.com> <201908241203.92CC0BE8@keescook>
-In-Reply-To: <201908241203.92CC0BE8@keescook>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Thu, 29 Aug 2019 18:03:57 +0800
-Message-ID: <CAJMQK-iDoPxbFUH3JUeJ7SehCptZOnjKZiUoFd1PqLjDdGHujA@mail.gmail.com>
-Subject: Re: [PATCH v9 2/3] fdt: add support for rng-seed
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wei Li <liwei391@huawei.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Waiman Long <longman@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Grzegorz Halat <ghalat@redhat.com>,
-        Len Brown <len.brown@intel.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Yury Norov <ynorov@marvell.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/=Mx0oFyYb3enaJjPSrlGF8N";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 1:36 AM Kees Cook <keescook@chromium.org> wrote:
->
-> Can this please be a boot param (with the default controlled by the
-> CONFIG)? See how CONFIG_RANDOM_TRUST_CPU is wired up...
->
-> -Kees
->
+--Sig_/=Mx0oFyYb3enaJjPSrlGF8N
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Currently rng-seed read and added in setup_arch() -->
-setup_machine_fdt().. -> early_init_dt_scan_chosen(), which is earlier
-than parse_early_param() that initializes early_param.
+Hi all,
 
-If we want to set it as a boot param, add_bootloader_randomness() can
-only be called after parse_early_param(). The seed can't be directly
-added to pool after it's read in. We need to store into global
-variable and load it later.
-If this seems okay then I'll add a patch for this. Thanks
+After merging the net-next tree, today's linux-next build (powepc
+allmodconfig) failed like this:
 
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -1096,13 +1096,15 @@ static const char *config_cmdline = CONFIG_CMDLINE;
+ld: drivers/net/ethernet/stmicro/stmmac/stmmac_pci.o: in function `.stmmac_=
+pci_remove':
+stmmac_pci.c:(.text.stmmac_pci_remove+0x68): undefined reference to `.clk_u=
+nregister_fixed_rate'
+ld: drivers/net/ethernet/stmicro/stmmac/stmmac_pci.o: in function `.intel_m=
+gbe_common_data':
+stmmac_pci.c:(.text.intel_mgbe_common_data+0x2a8): undefined reference to `=
+.clk_register_fixed_rate'
 
-+const void* rng_seed;
-+int rng_seed_len;
-+
- int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
-                                                            int depth,
-void *data)
- {
-        int l = 0;
-        const char *p = NULL;
-        char *cmdline = data;
--       const void *rng_seed;
+Caused by commit
 
-  pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
+  190f73ab4c43 ("net: stmmac: setup higher frequency clk support for EHL & =
+TGL")
 
-@@ -1137,10 +1139,8 @@ int __init early_init_dt_scan_chosen(unsigned
-long node, const char *uname,
+CONFIG_COMMON_CLK is not set for this build.
 
-         pr_debug("Command line is: %s\n", (char*)data);
+I have added the following patch for today:
 
--        rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
--        if (rng_seed && l > 0) {
--                add_bootloader_randomness(rng_seed, l);  //
-Originally it's added to entropy pool here
--
-+       rng_seed = of_get_flat_dt_prop(node, "rng-seed", &rng_seed_len);
-+       if (rng_seed && rng_seed_len > 0) {
-                /* try to clear seed so it won't be found. */
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 29 Aug 2019 19:49:27 +1000
+Subject: [PATCH] net: stmmac: depend on COMMON_CLK
 
-diff --git a/include/linux/random.h b/include/linux/random.h
-index 831a002a1882..946840bba7c1 100644
---- a/include/linux/random.h
-+++ b/include/linux/random.h
-@@ -31,6 +31,15 @@ static inline void add_latent_entropy(void)
- static inline void add_latent_entropy(void) {}
- #endif
+Fixes: 190f73ab4c43 ("net: stmmac: setup higher frequency clk support for E=
+HL & TGL")
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/net/ethernet/stmicro/stmmac/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-+extern const void* rng_seed;
-+extern int rng_seed_len;
-+
-+static inline void add_bootloader_entropy(void)
-+{
-+        if (rng_seed && rng_seed_len > 0)
-+                add_bootloader_randomness(rng_seed, rng_seed_len);
-+}
-+
- extern void add_input_randomness(unsigned int type, unsigned int code,
-  unsigned int value) __latent_entropy;
- extern void add_interrupt_randomness(int irq, int irq_flags) __latent_entropy;
-diff --git a/init/main.c b/init/main.c
-index 71847af32e4e..f74a8c7b34af 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -645,6 +645,7 @@ asmlinkage __visible void __init start_kernel(void)
-  * - adding command line entropy
-  */
-  rand_initialize();
-+ add_bootloader_entropy();
-  add_latent_entropy();
-  add_device_randomness(command_line, strlen(command_line));
-  boot_init_stack_canary();
+diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethe=
+rnet/stmicro/stmmac/Kconfig
+index 2325b40dff6e..338e25a6374e 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
++++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+@@ -200,6 +200,7 @@ endif
+ config STMMAC_PCI
+ 	tristate "STMMAC PCI bus support"
+ 	depends on STMMAC_ETH && PCI
++	depends on COMMON_CLK
+ 	---help---
+ 	  This selects the platform specific bus support for the stmmac driver.
+ 	  This driver was tested on XLINX XC2V3000 FF1152AMT0221
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/=Mx0oFyYb3enaJjPSrlGF8N
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1no3oACgkQAVBC80lX
+0GwYJQf5AW95Yd94wttbI+/ilAUaktT8zLlhPKRd3YkkIDeOsMxRrgnyseGd8hbS
+xHLwNqbx0R8JGKZ2Dpi1d+KwR9vuSaOmK4bCM5DeS6j2WGDZeh/qpyiSaJOLfCqD
+whVLXmwqoLLzAbLJ/nWwFlOqmMKJYXpc/rc6yGdmihjv8Sdl/YZarKhH9SvJavmY
+TZpSNwN8PCIesO5ryTrMdlgDveRYzMFnJ+l2EWEMziH0iUOfPVdzivuaKmzPh8bV
+Z3a1iAhLuUawtpngWfaLpot6Zt8InSYXvSN/frQyrMIqNeKkU3nA79OQlwqmMNOu
+jbuw4/OtFyPXOwrj750ckXq/1trRuA==
+=sMh9
+-----END PGP SIGNATURE-----
+
+--Sig_/=Mx0oFyYb3enaJjPSrlGF8N--
