@@ -2,111 +2,137 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE60AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 861FEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93329205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:35:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tUNmQb+L"
+	by mail.kernel.org (Postfix) with ESMTP id 56C41205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567103760;
+	bh=vm7PlOFMrhdiuuOeVzjw28rou+yhF1NIk/jyUsin+3A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=f1t1BKd9MKoqEyvZLF9GTYKjnlagSh4/fZ+DhL3CIUno59ArCWn1AaP3WPMsrpZFi
+	 xMZn2fmM2Z2jqTChNs8ZgpYy33oPDKSll8SEJekJHBswlTr5q0v3iTC86YMgpjVGvD
+	 +FqOOqFZFR9pBpqHUixlL7YLOZ66BXpNH+lhJjwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfH2Sft (ORCPT
+        id S1729970AbfH2SeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:35:49 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41540 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfH2Sft (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:35:49 -0400
-Received: by mail-io1-f67.google.com with SMTP id j5so8875254ioj.8;
-        Thu, 29 Aug 2019 11:35:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dE7PRZQ345omAc8kJ4IwmsYptXobZW+/ikZLYjrE7WQ=;
-        b=tUNmQb+LFpYbL1cSRPf5bCe64L++eHLfZ3CowzYJsxcHu6DWB7Khliqd+0WFFTUkut
-         UgliUO5/JyqxYdKS3oPQorxRPZMGv/eyYDZinzXKZUFcL8wfTyTXE54NmzJF+Vo+c7C9
-         /6CxcG+neGPSPOpPtQfvL+hWLHQo3leLd6FTrsSEHeCFcPw6gCq5tkMfnr/hnLWY6L/x
-         hHQ9oTXwrZyOpp4pFqG1Ae7f1l91G0oPB0ISu+2CigxbB/+gg3e8WkinItIZ66L9sl3y
-         sod6Sj1WOSojNdn7hOqcp4ojk/QPz2fC6PhALJTTkADd14rbnYMIbd76D8s9Zygo3Bwj
-         /JgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dE7PRZQ345omAc8kJ4IwmsYptXobZW+/ikZLYjrE7WQ=;
-        b=lr/03c13JUt9Dh/Vfw2PZdxocDFZqmNwcbLL+1lKzB83Lk7QFrZS4E81c6GwA/uaGj
-         ehQq2V0nPGn10cXUtq9xn2OjFdIohMeXptyjmvXrBJGb4vz0Ia5km9iLkltDma4k7ebh
-         Q0C1euk3VtquhJh6FLMHRX1x6TApPVR4YeBVBqB9J/sn8fcAJ1PAuLVUuikJhlzCt83e
-         EsTpESg3oSA/U+4zzdV6fFqXWkeMDWKO4CFUFWLzX/XbTrOuFYWjbUOBya1lPXR/U9K2
-         H7POacCpNlSkRwxGAX1SZzI6dNfpvomfCdez8EQQBifExZLq4cFUWOr7i1QPKCT9tcmq
-         mm6A==
-X-Gm-Message-State: APjAAAWJOEulYxispJTf155z3E7tALGi9rLICiCKE2KJ2wb5ImfTXFB4
-        Dj3Ww6Fd3hAMFI5/S9el1P10wOdfbCvXfSS/60w=
-X-Google-Smtp-Source: APXvYqzg2TrSvQ2sGfxlX6InibTPJ6qPNmnESCZkxiQHWcDZTe8CGM/4kKFmZ8yqnYQphNmu4/FiJ2pT0Ndftf28zJ8=
-X-Received: by 2002:a5d:9bd4:: with SMTP id d20mr1721932ion.243.1567103748387;
- Thu, 29 Aug 2019 11:35:48 -0700 (PDT)
+        Thu, 29 Aug 2019 14:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728330AbfH2SNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:13:38 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7B102339E;
+        Thu, 29 Aug 2019 18:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567102416;
+        bh=vm7PlOFMrhdiuuOeVzjw28rou+yhF1NIk/jyUsin+3A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RYFFzKXc19SD4IH1cfJCE/ozlcj/nuKaYQHjk3aO/e0+5lRjLFOQvy/Qd/M1iRH9I
+         hfr8e66JGWgSiVTzaz2TmgwkZ4yFmJh5OApGORUH31194UOTsuay4bLXGlQ8jNBTHE
+         66C6dJmbzkTfYfQ7d72bugbXInAMkIlu/WATc/EM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 11/76] netfilter: nf_flow_table: conntrack picks up expired flows
+Date:   Thu, 29 Aug 2019 14:12:06 -0400
+Message-Id: <20190829181311.7562-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
+References: <20190829181311.7562-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190828202723.1145-1-linux.amoon@gmail.com> <8c40f334-c723-b524-857c-73734b7d0827@baylibre.com>
-In-Reply-To: <8c40f334-c723-b524-857c-73734b7d0827@baylibre.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Fri, 30 Aug 2019 00:05:37 +0530
-Message-ID: <CANAwSgShr-K-44UzdxFC7pvpTye_pbEMdS6ug1eWwYhnsVNGdQ@mail.gmail.com>
-Subject: Re: [PATCHv1 0/3] Odroid c2 missing regulator linking
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-On Thu, 29 Aug 2019 at 13:58, Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 28/08/2019 22:27, Anand Moon wrote:
-> > Below small changes help re-configure or fix missing inter linking
-> > of regulator node.
-> >
-> > Changes based top on my prevoius series.
->
-> For the serie:
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
->
+[ Upstream commit 3e68db2f6422d711550a32cbc87abd97bb6efab3 ]
 
-Thanks for your review.
+Update conntrack entry to pick up expired flows, otherwise the conntrack
+entry gets stuck with the internal offload timeout (one day). The TCP
+state also needs to be adjusted to ESTABLISHED state and tracking is set
+to liberal mode in order to give conntrack a chance to pick up the
+expired flow.
 
-> >
-> > [0] https://patchwork.kernel.org/cover/11113091/
-> >
-> > TOOD: Add support for DVFS GXBB odroid board in next series.
->
-> I'm curious how you will do this !
+Fixes: ac2a66665e23 ("netfilter: add generic flow table infrastructure")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/netfilter/nf_flow_table_core.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-I was just studying you previous series on how you have implemented
-this feature for C1, N2 and VIM3 boards.
+diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
+index 948b4ebbe3fbd..4254e42605135 100644
+--- a/net/netfilter/nf_flow_table_core.c
++++ b/net/netfilter/nf_flow_table_core.c
+@@ -112,7 +112,7 @@ static void flow_offload_fixup_tcp(struct ip_ct_tcp *tcp)
+ #define NF_FLOWTABLE_TCP_PICKUP_TIMEOUT	(120 * HZ)
+ #define NF_FLOWTABLE_UDP_PICKUP_TIMEOUT	(30 * HZ)
+ 
+-static void flow_offload_fixup_ct_state(struct nf_conn *ct)
++static void flow_offload_fixup_ct(struct nf_conn *ct)
+ {
+ 	const struct nf_conntrack_l4proto *l4proto;
+ 	unsigned int timeout;
+@@ -209,6 +209,11 @@ int flow_offload_add(struct nf_flowtable *flow_table, struct flow_offload *flow)
+ }
+ EXPORT_SYMBOL_GPL(flow_offload_add);
+ 
++static inline bool nf_flow_has_expired(const struct flow_offload *flow)
++{
++	return (__s32)(flow->timeout - (u32)jiffies) <= 0;
++}
++
+ static void flow_offload_del(struct nf_flowtable *flow_table,
+ 			     struct flow_offload *flow)
+ {
+@@ -224,6 +229,9 @@ static void flow_offload_del(struct nf_flowtable *flow_table,
+ 	e = container_of(flow, struct flow_offload_entry, flow);
+ 	clear_bit(IPS_OFFLOAD_BIT, &e->ct->status);
+ 
++	if (nf_flow_has_expired(flow))
++		flow_offload_fixup_ct(e->ct);
++
+ 	flow_offload_free(flow);
+ }
+ 
+@@ -234,7 +242,7 @@ void flow_offload_teardown(struct flow_offload *flow)
+ 	flow->flags |= FLOW_OFFLOAD_TEARDOWN;
+ 
+ 	e = container_of(flow, struct flow_offload_entry, flow);
+-	flow_offload_fixup_ct_state(e->ct);
++	flow_offload_fixup_ct(e->ct);
+ }
+ EXPORT_SYMBOL_GPL(flow_offload_teardown);
+ 
+@@ -299,11 +307,6 @@ nf_flow_table_iterate(struct nf_flowtable *flow_table,
+ 	return err;
+ }
+ 
+-static inline bool nf_flow_has_expired(const struct flow_offload *flow)
+-{
+-	return (__s32)(flow->timeout - (u32)jiffies) <= 0;
+-}
+-
+ static void nf_flow_offload_gc_step(struct flow_offload *flow, void *data)
+ {
+ 	struct nf_flowtable *flow_table = data;
+-- 
+2.20.1
 
-[0] https://patchwork.kernel.org/cover/11114125/
-
-I started gathering key inputs needed for this ie *clk / pwm*
-like VDDCPU and VDDE clk changes.
-
-But it looks like of the complex clk framework needed, so I leave this to the
-expert like your team of developers to do this much quick and efficiently.
-
-Best Regards,
--Anand
