@@ -4,99 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66842C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9854DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 337582053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 642B52053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:55:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="TidcLSDR"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tf+IoCMZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbfH2KuK (ORCPT
+        id S1728306AbfH2Kzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:50:10 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:17271 "EHLO
+        Thu, 29 Aug 2019 06:55:32 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:17274 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726950AbfH2KuJ (ORCPT
+        with ESMTP id S1726983AbfH2KuJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 29 Aug 2019 06:50:09 -0400
-X-Greylist: delayed 84862 seconds by postgrey-1.27 at vger.kernel.org; Thu, 29 Aug 2019 06:50:08 EDT
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x7TAnTog013730;
-        Thu, 29 Aug 2019 19:49:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7TAnTog013730
+        by conuserg-12.nifty.com with ESMTP id x7TAnTof013730;
+        Thu, 29 Aug 2019 19:49:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7TAnTof013730
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
         s=dec2015msa; t=1567075772;
-        bh=mN61Fbu00XTQIXCA2V1aTp6gNwYlWshj6x9afbCTh5c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TidcLSDRKzOZkpVzOluSTBv43i57lTHVfDqOFA489hXt/kuWoCqcLidLjb/E9E81e
-         sUGEb9yFmWosleb2DfiSz+xxg1S3Ui33G3YcqDa7YgH2/Dp3FdxfCd4cn5704BPOMK
-         qixixQSItz0KKtDyPKWUzgQ70Cu9q/V7zOHMBd+FLllBc8plMnL3N8Qiq9UnpB8OgB
-         uWL5V2iGrODcG06Mh5+y/FC2zBSngvKGinmlFrmMkKJDWLfoZiSMQrmNbcDY4H4V6j
-         57Evyga/0JSItxsH6E3JTriBJ+Oz1TbnVh8xZK4B+HmRnwhMUt0xSrFTSnPWOZ8c0o
-         /ru1uFXAqb/ag==
+        bh=bONSGLTFaXqEMmGlC9jNWtPpXwIX2FvApbhg5YEacHY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tf+IoCMZ8FnlxiyVUG2h+Gy5Y+i7OqvaRwxaxqL44y7HIrFVR5O1s87bCOlAVmSDO
+         0d6p10gASi9nIjm3tDfdhjHFq2KynTVYZMS2Hlvk3AOIz/8dDmc2vTMjKCG9jY/Brk
+         nC/tc+Qn1zmMeux84bhSFkZNsGLaRebjUI7E/tWaArsJJJPQcMMfr+cGQz6Zra2blq
+         xjYDwGglnO4+WpI83mNxsv5PgnG6GLm8JdX+aWaIfGZxr3u8WEm2BTUd/0T9kQwbOc
+         Sfuw5ClVm1CZS5pnCftjK0KGbta7/T3IeQ6x7tWiQPE0KlFFxJUwN87qtqg/vvZxqN
+         nGBUW9VnhYAYw==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
 Cc:     Piotr Sroka <piotrs@cadence.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] mmc: sdhci: constify references of parameters to __sdhci_read_caps()
-Date:   Thu, 29 Aug 2019 19:49:27 +0900
-Message-Id: <20190829104928.27404-2-yamada.masahiro@socionext.com>
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] mmc: sdhci-cadence: enable v4_mode to fix ADMA 64-bit addressing
+Date:   Thu, 29 Aug 2019 19:49:26 +0900
+Message-Id: <20190829104928.27404-1-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190829104928.27404-1-yamada.masahiro@socionext.com>
-References: <20190829104928.27404-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__sdhci_read_caps() does not modify *ver, *caps, or *caps1.
+The IP datasheet says this controller is compatible with SD Host
+Specification Version v4.00.
 
-Probably, the caller of this function will want to constifythe
-parameters passed in.
+As it turned out, the ADMA of this IP does not work with 64-bit mode
+when it is in the Version 3.00 compatible mode; it understands the
+old 64-bit descriptor table (as defined in SDHCI v2), but the ADMA
+System Address Register (SDHCI_ADMA_ADDRESS) cannot point to the
+64-bit address.
 
+I noticed this issue only after commit bd2e75633c80 ("dma-contiguous:
+use fallback alloc_pages for single pages"). Prior to that commit,
+dma_set_mask_and_coherent() returned the dma address that fits in
+32-bit range, at least for the default arm64 configuration
+(arch/arm64/configs/defconfig). Now the host->adma_addr exceeds the
+32-bit limit, causing the real problem for the Socionext SoCs.
+(As a side-note, I was also able to reproduce the issue for older
+kernels by turning off CONFIG_DMA_CMA.)
+
+Call sdhci_enable_v4_mode() to fix this.
+
+I think it is better to back-port this, but only possible for v4.20+.
+
+When this driver was merged (v4.10), the v4 mode support did not exist.
+It was added by commit b3f80b434f72 ("mmc: sdhci: Add sd host v4 mode")
+i.e. v4.20.
+
+Cc: <stable@vger.kernel.org> # v4.20+
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- drivers/mmc/host/sdhci.c | 3 ++-
- drivers/mmc/host/sdhci.h | 4 ++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ drivers/mmc/host/sdhci-cadence.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index a5dc5aae973e..08cc0792c174 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -3565,7 +3565,8 @@ static int sdhci_set_dma_mask(struct sdhci_host *host)
- 	return ret;
- }
+diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
+index 163d1cf4367e..44139fceac24 100644
+--- a/drivers/mmc/host/sdhci-cadence.c
++++ b/drivers/mmc/host/sdhci-cadence.c
+@@ -369,6 +369,7 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
+ 	host->mmc_host_ops.execute_tuning = sdhci_cdns_execute_tuning;
+ 	host->mmc_host_ops.hs400_enhanced_strobe =
+ 				sdhci_cdns_hs400_enhanced_strobe;
++	sdhci_enable_v4_mode(host);
  
--void __sdhci_read_caps(struct sdhci_host *host, u16 *ver, u32 *caps, u32 *caps1)
-+void __sdhci_read_caps(struct sdhci_host *host, const u16 *ver,
-+		       const u32 *caps, const u32 *caps1)
- {
- 	u16 v;
- 	u64 dt_caps_mask = 0;
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 902f855efe8f..81e23784475a 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -738,8 +738,8 @@ static inline void *sdhci_priv(struct sdhci_host *host)
- }
+ 	sdhci_get_of_property(pdev);
  
- void sdhci_card_detect(struct sdhci_host *host);
--void __sdhci_read_caps(struct sdhci_host *host, u16 *ver, u32 *caps,
--		       u32 *caps1);
-+void __sdhci_read_caps(struct sdhci_host *host, const u16 *ver,
-+		       const u32 *caps, const u32 *caps1);
- int sdhci_setup_host(struct sdhci_host *host);
- void sdhci_cleanup_host(struct sdhci_host *host);
- int __sdhci_add_host(struct sdhci_host *host);
 -- 
 2.17.1
 
