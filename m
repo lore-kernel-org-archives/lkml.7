@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03B0C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782B6C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9853B21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56AC62080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728726AbfH2Owc (ORCPT
+        id S1728756AbfH2Owj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:52:32 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:37019 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728194AbfH2OvY (ORCPT
+        Thu, 29 Aug 2019 10:52:39 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:52263 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728182AbfH2OvW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:51:24 -0400
-X-UUID: 9ee07644bd19488295ffed4a6fa85c82-20190829
-X-UUID: 9ee07644bd19488295ffed4a6fa85c82-20190829
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        Thu, 29 Aug 2019 10:51:22 -0400
+X-UUID: 0173c9cad35944a2ba9ccfe670b29e71-20190829
+X-UUID: 0173c9cad35944a2ba9ccfe670b29e71-20190829
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
         (envelope-from <yongqiang.niu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 225393793; Thu, 29 Aug 2019 22:51:21 +0800
+        with ESMTP id 2107189064; Thu, 29 Aug 2019 22:51:18 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
  mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 29 Aug 2019 22:51:25 +0800
+ 15.0.1395.4; Thu, 29 Aug 2019 22:51:23 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 29 Aug 2019 22:51:24 +0800
+ Transport; Thu, 29 Aug 2019 22:51:22 +0800
 From:   <yongqiang.niu@mediatek.com>
 To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
@@ -44,9 +44,9 @@ CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH v5, 20/32] drm/mediatek: add function to background color input select for ovl/ovl_2l direct link
-Date:   Thu, 29 Aug 2019 22:50:42 +0800
-Message-ID: <1567090254-15566-21-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v5, 18/32] drm/mediatek: add gmc_bits for ovl private data
+Date:   Thu, 29 Aug 2019 22:50:40 +0800
+Message-ID: <1567090254-15566-19-git-send-email-yongqiang.niu@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
 References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
@@ -60,49 +60,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add function to background color input select for ovl/ovl_2l direct link
-for ovl/ovl_2l direct link usecase, we need set background color
-input select for these hardware.
-this is preparation patch for ovl/ovl_2l usecase
+This patch add gmc_bits for ovl private data
+GMC register was set RDMA ultra and pre-ultra threshold.
+10bit GMC register define is different with other SOC, gmc_thrshd_l not
+used.
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-index 85e096a..268d416 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-@@ -84,6 +84,8 @@ struct mtk_ddp_comp_funcs {
- 			     struct mtk_plane_state *state);
- 	void (*gamma_set)(struct mtk_ddp_comp *comp,
- 			  struct drm_crtc_state *state);
-+	void (*bgclr_in_on)(struct mtk_ddp_comp *comp);
-+	void (*bgclr_in_off)(struct mtk_ddp_comp *comp);
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+index c4f07c2..82eaefd 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+@@ -31,7 +31,9 @@
+ #define DISP_REG_OVL_ADDR_MT8173		0x0f40
+ #define DISP_REG_OVL_ADDR(ovl, n)		((ovl)->data->addr + 0x20 * (n))
+ 
+-#define	OVL_RDMA_MEM_GMC	0x40402020
++#define GMC_THRESHOLD_BITS	16
++#define GMC_THRESHOLD_HIGH	((1 << GMC_THRESHOLD_BITS) / 4)
++#define GMC_THRESHOLD_LOW	((1 << GMC_THRESHOLD_BITS) / 8)
+ 
+ #define OVL_CON_BYTE_SWAP	BIT(24)
+ #define OVL_CON_MTX_YUV_TO_RGB	(6 << 16)
+@@ -49,6 +51,7 @@
+ 
+ struct mtk_disp_ovl_data {
+ 	unsigned int addr;
++	unsigned int gmc_bits;
+ 	bool fmt_rgb565_is_0;
  };
  
- struct mtk_ddp_comp {
-@@ -164,6 +166,18 @@ static inline void mtk_ddp_gamma_set(struct mtk_ddp_comp *comp,
- 		comp->funcs->gamma_set(comp, state);
- }
+@@ -132,9 +135,23 @@ static unsigned int mtk_ovl_layer_nr(struct mtk_ddp_comp *comp)
+ static void mtk_ovl_layer_on(struct mtk_ddp_comp *comp, unsigned int idx)
+ {
+ 	unsigned int reg;
++	unsigned int gmc_thrshd_l;
++	unsigned int gmc_thrshd_h;
++	unsigned int gmc_value;
++	struct mtk_disp_ovl *ovl = comp_to_ovl(comp);
  
-+static inline void mtk_ddp_comp_bgclr_in_on(struct mtk_ddp_comp *comp)
-+{
-+	if (comp->funcs && comp->funcs->bgclr_in_on)
-+		comp->funcs->bgclr_in_on(comp);
-+}
+ 	writel(0x1, comp->regs + DISP_REG_OVL_RDMA_CTRL(idx));
+-	writel(OVL_RDMA_MEM_GMC, comp->regs + DISP_REG_OVL_RDMA_GMC(idx));
 +
-+static inline void mtk_ddp_comp_bgclr_in_off(struct mtk_ddp_comp *comp)
-+{
-+	if (comp->funcs && comp->funcs->bgclr_in_off)
-+		comp->funcs->bgclr_in_off(comp);
-+}
-+
- int mtk_ddp_comp_get_id(struct device_node *node,
- 			enum mtk_ddp_comp_type comp_type);
- int mtk_ddp_comp_init(struct device *dev, struct device_node *comp_node,
++	gmc_thrshd_l = GMC_THRESHOLD_LOW >>
++		      (GMC_THRESHOLD_BITS - ovl->data->gmc_bits);
++	gmc_thrshd_h = GMC_THRESHOLD_HIGH >>
++		      (GMC_THRESHOLD_BITS - ovl->data->gmc_bits);
++	if (ovl->data->gmc_bits == 10)
++		gmc_value = gmc_thrshd_h | gmc_thrshd_h << 16;
++	else
++		gmc_value = gmc_thrshd_l | gmc_thrshd_l << 8 |
++			    gmc_thrshd_h << 16 | gmc_thrshd_h << 24;
++	writel(gmc_value, comp->regs + DISP_REG_OVL_RDMA_GMC(idx));
+ 
+ 	reg = readl(comp->regs + DISP_REG_OVL_SRC_CON);
+ 	reg = reg | BIT(idx);
+@@ -316,11 +333,13 @@ static int mtk_disp_ovl_remove(struct platform_device *pdev)
+ 
+ static const struct mtk_disp_ovl_data mt2701_ovl_driver_data = {
+ 	.addr = DISP_REG_OVL_ADDR_MT2701,
++	.gmc_bits = 8,
+ 	.fmt_rgb565_is_0 = false,
+ };
+ 
+ static const struct mtk_disp_ovl_data mt8173_ovl_driver_data = {
+ 	.addr = DISP_REG_OVL_ADDR_MT8173,
++	.gmc_bits = 8,
+ 	.fmt_rgb565_is_0 = true,
+ };
+ 
 -- 
 1.8.1.1.dirty
 
