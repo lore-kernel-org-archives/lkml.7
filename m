@@ -2,57 +2,53 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663D3C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9565EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35FD12173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7152341C
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567075821;
-	bh=VkLcKxus2piQ7+tKe7x1UHvTz40zStRHNSgPH/Ho+Nc=;
+	s=default; t=1567075830;
+	bh=N1h7TtJ875q5awe/vvwWXc4y4CcTeulGLtMQqFmYWl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ro1uoCy4c7QA+/oYSaP2D03lmEfdJxel1OjEcGDRpYat/nwTU5SYFZWAnjpyKV+jK
-	 3t0CPFSk8pdIy4jVwCmtcS44gFvHQky59sMeAozNlzu85wVBUaxn1JIkP3XJHApA0K
-	 87h4jjGqulsY604KtaRs/Q8rRsviniKwfROfTsFY=
+	b=1T6HnNNW4B69TSyJ8YSxyy3sJKyd4ysiOKh7wDCe+inbDjFmgaJbeF7gzBYUREglC
+	 OFrLZNulazL6HYZzEOu+xMGHOdF4V2KCxUyfDhPEE/fr80DR0XakuaM6pMhwOerH5T
+	 HL3x7jRGHCr3VUa7ru0ztcSYbvELArlShOqdxrBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfH2KuU (ORCPT
+        id S1728017AbfH2Ku3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:50:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57372 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 06:50:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727481AbfH2KuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:50:15 -0400
+        id S1727779AbfH2KuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:50:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA885233FF;
-        Thu, 29 Aug 2019 10:50:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D8FF23405;
+        Thu, 29 Aug 2019 10:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075814;
-        bh=VkLcKxus2piQ7+tKe7x1UHvTz40zStRHNSgPH/Ho+Nc=;
+        s=default; t=1567075820;
+        bh=N1h7TtJ875q5awe/vvwWXc4y4CcTeulGLtMQqFmYWl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wCVLnFXMJ858Q6FVQ3o0ziI06hdHYZFTmDNTRmhELyoSKuyu/157SEcQUjLmmf1qx
-         9SidYwJk09Y7BQ/QqkDg14WqB7eeLueNI4uR3aDnFtB6e4QuDIKmvOCyVEFVaZIczV
-         tQGr0SvjcHQ9EYeBR4jds0sJk6IazEA8lg+qNFlo=
+        b=q9uQNTPvcS/M5o1/b8FBvx4g52JtUU0AQ2mJfUDY26lfhczk45+sqqdPqWv7CwP9a
+         QgsZtnQ7Cimb3fcUlqmURbrv1t+r1RySAUIVdAW+Dkwj0wvKorugaseOUnwrXCx8sO
+         ukNvGBiMhnv+0BMVvChtWWbujNnefWwuu85m/1ok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Righi <andrea.righi@canonical.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+Cc:     Hangbin Liu <liuhangbin@gmail.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 03/29] kprobes: Fix potential deadlock in kprobe_optimizer()
-Date:   Thu, 29 Aug 2019 06:49:43 -0400
-Message-Id: <20190829105009.2265-3-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 09/29] selftests: fib_rule_tests: use pre-defined DEV_ADDR
+Date:   Thu, 29 Aug 2019 06:49:49 -0400
+Message-Id: <20190829105009.2265-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829105009.2265-1-sashal@kernel.org>
 References: <20190829105009.2265-1-sashal@kernel.org>
@@ -65,159 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Righi <andrea.righi@canonical.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit f1c6ece23729257fb46562ff9224cf5f61b818da ]
+[ Upstream commit 34632975cafdd07ce80e85c2eda4e9c16b5f2faa ]
 
-lockdep reports the following deadlock scenario:
+DEV_ADDR is defined but not used. Use it in address setting.
+Do the same with IPv6 for consistency.
 
- WARNING: possible circular locking dependency detected
-
- kworker/1:1/48 is trying to acquire lock:
- 000000008d7a62b2 (text_mutex){+.+.}, at: kprobe_optimizer+0x163/0x290
-
- but task is already holding lock:
- 00000000850b5e2d (module_mutex){+.+.}, at: kprobe_optimizer+0x31/0x290
-
- which lock already depends on the new lock.
-
- the existing dependency chain (in reverse order) is:
-
- -> #1 (module_mutex){+.+.}:
-        __mutex_lock+0xac/0x9f0
-        mutex_lock_nested+0x1b/0x20
-        set_all_modules_text_rw+0x22/0x90
-        ftrace_arch_code_modify_prepare+0x1c/0x20
-        ftrace_run_update_code+0xe/0x30
-        ftrace_startup_enable+0x2e/0x50
-        ftrace_startup+0xa7/0x100
-        register_ftrace_function+0x27/0x70
-        arm_kprobe+0xb3/0x130
-        enable_kprobe+0x83/0xa0
-        enable_trace_kprobe.part.0+0x2e/0x80
-        kprobe_register+0x6f/0xc0
-        perf_trace_event_init+0x16b/0x270
-        perf_kprobe_init+0xa7/0xe0
-        perf_kprobe_event_init+0x3e/0x70
-        perf_try_init_event+0x4a/0x140
-        perf_event_alloc+0x93a/0xde0
-        __do_sys_perf_event_open+0x19f/0xf30
-        __x64_sys_perf_event_open+0x20/0x30
-        do_syscall_64+0x65/0x1d0
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
- -> #0 (text_mutex){+.+.}:
-        __lock_acquire+0xfcb/0x1b60
-        lock_acquire+0xca/0x1d0
-        __mutex_lock+0xac/0x9f0
-        mutex_lock_nested+0x1b/0x20
-        kprobe_optimizer+0x163/0x290
-        process_one_work+0x22b/0x560
-        worker_thread+0x50/0x3c0
-        kthread+0x112/0x150
-        ret_from_fork+0x3a/0x50
-
- other info that might help us debug this:
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(module_mutex);
-                                lock(text_mutex);
-                                lock(module_mutex);
-   lock(text_mutex);
-
-  *** DEADLOCK ***
-
-As a reproducer I've been using bcc's funccount.py
-(https://github.com/iovisor/bcc/blob/master/tools/funccount.py),
-for example:
-
- # ./funccount.py '*interrupt*'
-
-That immediately triggers the lockdep splat.
-
-Fix by acquiring text_mutex before module_mutex in kprobe_optimizer().
-
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: d5b844a2cf50 ("ftrace/x86: Remove possible deadlock between register_kprobe() and ftrace_run_update_code()")
-Link: http://lkml.kernel.org/r/20190812184302.GA7010@xps-13
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-by: David Ahern <dsahern@gmail.com>
+Fixes: fc82d93e57e3 ("selftests: fib_rule_tests: fix local IPv4 address typo")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kprobes.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/testing/selftests/net/fib_rule_tests.sh | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 29ff6635d2597..714d63f60460b 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -483,6 +483,7 @@ static DECLARE_DELAYED_WORK(optimizing_work, kprobe_optimizer);
-  */
- static void do_optimize_kprobes(void)
- {
-+	lockdep_assert_held(&text_mutex);
- 	/*
- 	 * The optimization/unoptimization refers online_cpus via
- 	 * stop_machine() and cpu-hotplug modifies online_cpus.
-@@ -500,9 +501,7 @@ static void do_optimize_kprobes(void)
- 	    list_empty(&optimizing_list))
- 		return;
+diff --git a/tools/testing/selftests/net/fib_rule_tests.sh b/tools/testing/selftests/net/fib_rule_tests.sh
+index 1ba069967fa2b..ba2d9fab28d0f 100755
+--- a/tools/testing/selftests/net/fib_rule_tests.sh
++++ b/tools/testing/selftests/net/fib_rule_tests.sh
+@@ -15,6 +15,7 @@ GW_IP6=2001:db8:1::2
+ SRC_IP6=2001:db8:1::3
  
--	mutex_lock(&text_mutex);
- 	arch_optimize_kprobes(&optimizing_list);
--	mutex_unlock(&text_mutex);
+ DEV_ADDR=192.51.100.1
++DEV_ADDR6=2001:db8:1::1
+ DEV=dummy0
+ 
+ log_test()
+@@ -55,8 +56,8 @@ setup()
+ 
+ 	$IP link add dummy0 type dummy
+ 	$IP link set dev dummy0 up
+-	$IP address add 192.51.100.1/24 dev dummy0
+-	$IP -6 address add 2001:db8:1::1/64 dev dummy0
++	$IP address add $DEV_ADDR/24 dev dummy0
++	$IP -6 address add $DEV_ADDR6/64 dev dummy0
+ 
+ 	set +e
  }
- 
- /*
-@@ -513,6 +512,7 @@ static void do_unoptimize_kprobes(void)
- {
- 	struct optimized_kprobe *op, *tmp;
- 
-+	lockdep_assert_held(&text_mutex);
- 	/* See comment in do_optimize_kprobes() */
- 	lockdep_assert_cpus_held();
- 
-@@ -520,7 +520,6 @@ static void do_unoptimize_kprobes(void)
- 	if (list_empty(&unoptimizing_list))
- 		return;
- 
--	mutex_lock(&text_mutex);
- 	arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
- 	/* Loop free_list for disarming */
- 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
-@@ -537,7 +536,6 @@ static void do_unoptimize_kprobes(void)
- 		} else
- 			list_del_init(&op->list);
- 	}
--	mutex_unlock(&text_mutex);
- }
- 
- /* Reclaim all kprobes on the free_list */
-@@ -563,6 +561,7 @@ static void kprobe_optimizer(struct work_struct *work)
- {
- 	mutex_lock(&kprobe_mutex);
- 	cpus_read_lock();
-+	mutex_lock(&text_mutex);
- 	/* Lock modules while optimizing kprobes */
- 	mutex_lock(&module_mutex);
- 
-@@ -590,6 +589,7 @@ static void kprobe_optimizer(struct work_struct *work)
- 	do_free_cleaned_kprobes();
- 
- 	mutex_unlock(&module_mutex);
-+	mutex_unlock(&text_mutex);
- 	cpus_read_unlock();
- 	mutex_unlock(&kprobe_mutex);
- 
 -- 
 2.20.1
 
