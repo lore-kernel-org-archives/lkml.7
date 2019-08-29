@@ -2,137 +2,335 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402F3C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172EBC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB9E2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC992080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:18:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fewo6YSb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbfH2TRo (ORCPT
+        id S1728880AbfH2TSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:17:44 -0400
-Received: from enpas.org ([46.38.239.100]:55482 "EHLO mail.enpas.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728063AbfH2TRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 15:17:41 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        by mail.enpas.org (Postfix) with ESMTPSA id BEC30FFBE8;
-        Thu, 29 Aug 2019 19:17:37 +0000 (UTC)
-Subject: Re: [PATCH] i2c/busses: Add i2c-icy for I2C on m68k/Amiga
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-m68k@vger.kernel.org,
-        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
-References: <3F017C0B-44D6-4E63-A908-DDAA5586D67C@enpas.org>
- <20190820092739.7213-1-max@enpas.org> <20190829190014.GG3740@ninjato>
-From:   Max Staudt <max@enpas.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=max@enpas.org; prefer-encrypt=mutual; keydata=
- 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
- urZIw0nz8zec+73Bv/qF4GHHftLYfA==
-Message-ID: <e80a6ccb-ca88-a46f-74c7-ae03ab681977@enpas.org>
-Date:   Thu, 29 Aug 2019 21:17:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 29 Aug 2019 15:18:02 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41570 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728538AbfH2TSC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 15:18:02 -0400
+Received: by mail-pl1-f194.google.com with SMTP id m9so2025444pls.8
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 12:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=h82RDi7ZzNpfF4AJAy2P12pYrYk0GOcUf/rAKW7b39I=;
+        b=Fewo6YSb0G8pbm3NVKWjPJJ4aQFAxcAV3z7nvn0LVcFYaw7bkl+6v7OtUiPmt6wUfM
+         2EM/xtMH3lZd7ShILVPWS5BUvWb0zp4FAMGMSxRS7/Ew0BcT8FGXbJrxhNRlsu5Oq4tn
+         diDwd55+pIbAB+cxaj8HItHF91ZVzOxlfA2sE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=h82RDi7ZzNpfF4AJAy2P12pYrYk0GOcUf/rAKW7b39I=;
+        b=JFbacQgtnYxBx5FhMP+6E/pF4ZcgKpF7HDizYvujRxfKEBZICheY1WCyiz/J7EHPSp
+         zqvtwSfKRQqgaDSvuLZrqjX5gLwgCFNLIDrdCyk7uzROhYy34vOgf0Da3eVoPxye4EdR
+         qWSAFTGMCZcNmBak9AaWvq128S9AvR3XEZkRSlGkWQ1qKwou1GjQm7qwHycLgRNIPrX/
+         TN6ERsYcWZ1ftJaIvzcCd8jIn1TBa20WskQRGW3TlFpxPhLFpOwZvLGFHSkPrkr9QMkB
+         NHVayDcP5CgQJQFjlPZIYX0MpCRFIx6TRIC1g6L3ugYBqyGML7pVfJ/4niUAu0CpHuuv
+         z+ag==
+X-Gm-Message-State: APjAAAVwp1JgLu8uZXsGcJnM9QQYpiN2W5lQC3ZElaNygc74IqsHfEgB
+        CcPPoNw3mc3hkd2mYNKX/orIRBIfcP4=
+X-Google-Smtp-Source: APXvYqw4GZuiFmnQGygCrZqfj45t3uqYtoewMkGQCWXIWByBT0W7CGLcM9R2RYYyfi2vJ7sPhMzpdg==
+X-Received: by 2002:a17:902:9889:: with SMTP id s9mr11870896plp.100.1567106281373;
+        Thu, 29 Aug 2019 12:18:01 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c35sm2864072pgl.72.2019.08.29.12.18.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 12:18:00 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 12:17:59 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nathan Huckleberry <nhuck@google.com>
+Cc:     mark.rutland@arm.com, clang-built-linux@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] Add clang-tidy and static analyzer support to
+ makefile
+Message-ID: <201908291207.3AE0872B88@keescook>
+References: <20190806211047.232709-1-nhuck@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190829190014.GG3740@ninjato>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806211047.232709-1-nhuck@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/29/2019 09:00 PM, Wolfram Sang wrote:
-> Thanks for the changelog; it should go below the '---' line, however.
+[ Added kbuild and Masahiro to CC ... ]
 
-Thanks if you fixed it up!
+On Tue, Aug 06, 2019 at 02:10:46PM -0700, Nathan Huckleberry wrote:
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> ---
 
+These two lines should be at the end of your commit log. :)
 
-> Fixed a freshly introduced checkpatch warning for you.
+> These patches add clang-tidy and the clang static-analyzer as make
+> targets. The goal of these patches is to make static analysis tools
+> usable and extendable by any developer or researcher who is familiar
+> with basic c++.
+> 
+> The current static analysis tools require intimate knowledge of the internal
+> workings of the static analysis.  Clang-tidy and the clang static analyzers
+> expose an easy to use api and allow users unfamiliar with clang to
+> write new checks with relative ease.
+> 
+> ===Clang-tidy===
+> 
+> Clang-tidy is an easily extendable 'linter' that runs on the AST.
+> Clang-tidy checks are easy to write and understand. A check consists of
+> two parts, a matcher and a checker. The matcher is created using a
+> domain specific language that acts on the AST
+> (https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
+> nodes are found by the matcher a callback is made to the checker. The
+> checker can then execute additional checks and issue warnings.
+> 
+> Here is an example clang-tidy check to report functions that have calls
+> to local_irq_disable without calls to local_irq_enable and vice-versa.
+> Functions flagged with __attribute((annotation("ignore_irq_balancing")))
+> are ignored for analysis.
+> 
+> The full patch can be found here (https://reviews.llvm.org/D65828)
+> 
+> ```
+> void IrqUnbalancedCheck::registerMatchers(MatchFinder *Finder) {
+>   // finds calls to "arch_local_irq_disable" in a function body
+>   auto disable =
+>               forEachDescendant(
+>                   callExpr(
+>                       hasDeclaration(
+>                           namedDecl(
+>                               hasName("arch_local_irq_disable")))).bind("disable"));
+> 
+>   // finds calls to "arch_local_irq_enable" in a function body
+>   auto enable =
+>               forEachDescendant(
+>                   callExpr(
+>                       hasDeclaration(
+>                           namedDecl(
+>                               hasName("arch_local_irq_enable")))).bind("enable"));
+> 
+>   // Looks for function body that has the following property:
+>   // ((disable && !enable) || (enable && !disable))
+>   auto matcher = functionDecl(
+>       anyOf(allOf(disable, unless(enable)), allOf(enable, unless(disable))));
+> 
+>   Finder->addMatcher(matcher.bind("func"), this);
+> }
+> 
+> std::string annotation = "ignore_irq_balancing";
+> void IrqUnbalancedCheck::check(const MatchFinder::MatchResult &Result) {
+>   const auto *MatchedDecl = Result.Nodes.getNodeAs<FunctionDecl>("func");
+>   const auto *DisableCall = Result.Nodes.getNodeAs<CallExpr>("disable");
+>   const auto *EnableCall = Result.Nodes.getNodeAs<CallExpr>("enable");
+> 
+>   // If the function has __attribute((annotate("ignore_irq_balancing"))
+>   for (const auto *Attr : MatchedDecl->attrs()) {
+>     if (Attr->getKind() == clang::attr::Annotate) {
+>       if(dyn_cast<AnnotateAttr>(Attr)->getAnnotation().str() == annotation) {
+>         return;
+>       }
+>     }
+>   }
+> 
+>   if(EnableCall) {
+>     diag(MatchedDecl->getLocation(), "call to 'enable_local_irq' without 'disable_local_irq' in %0 ")
+>         << MatchedDecl;
+>     diag(EnableCall->getBeginLoc(), "call to 'enable_local_irq'", DiagnosticIDs::Note)
+>         << MatchedDecl;
+>   }
+> 
+>   if(DisableCall) {
+>     diag(MatchedDecl->getLocation(), "call to 'disable_local_irq' without 'enable_local_irq' in %0 ")
+>         << MatchedDecl;
+>     diag(DisableCall->getBeginLoc(), "call to 'disable_local_irq'", DiagnosticIDs::Note)
+>         << MatchedDecl;
+>   }
+> }
+> ```
+> 
+> ===Clang static analyzer===
+> 
+> The clang static analyzer is a more powerful static analysis tool that
+> uses symbolic execution to find bugs. Currently there is a check that
+> looks for potential security bugs from invalid uses of kmalloc and
+> kfree. There are several more general purpose checks that are useful for
+> the kernel.
+> 
+> The clang static analyzer is well documented and designed to be
+> extensible.
+> (https://clang-analyzer.llvm.org/checker_dev_manual.html)
+> (https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
+> 
+> 
+> Why add clang-tidy and the clang static analyzer when other static
+> analyzers are already in the kernel?
+> 
+> The main draw of the clang tools is how accessible they are. The clang
+> documentation is very nice and these tools are built specifically to be
+> easily extendable by any developer. They provide an accessible method of
+> bug-finding and research to people who are not overly familiar with the
+> kernel codebase.
+> 
 
-Ditto.
+^ i.e. they should be right here...
 
+>  Makefile                                      |  3 ++
+>  scripts/clang-tools/Makefile.clang-tools      | 35 ++++++++++++++
+>  .../{ => clang-tools}/gen_compile_commands.py |  0
+>  scripts/clang-tools/parse_compile_commands.py | 47 +++++++++++++++++++
+>  4 files changed, 85 insertions(+)
+>  create mode 100644 scripts/clang-tools/Makefile.clang-tools
+>  rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
+>  create mode 100755 scripts/clang-tools/parse_compile_commands.py
+> 
+> diff --git a/Makefile b/Makefile
+> index fabc127d127f..49f1d3fa48a8 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -709,6 +709,7 @@ KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
+>  
+>  include scripts/Makefile.kcov
+>  include scripts/Makefile.gcc-plugins
+> +include scripts/clang-tools/Makefile.clang-tools
+>  
+>  ifdef CONFIG_READABLE_ASM
+>  # Disable optimizations that make assembler listings hard to read.
+> @@ -1470,6 +1471,8 @@ help:
+>  	@echo  '  headers_check   - Sanity check on exported headers'
+>  	@echo  '  headerdep       - Detect inclusion cycles in headers'
+>  	@echo  '  coccicheck      - Check with Coccinelle'
+> +	@echo  '  clang-analyzer  - Check with clang static analyzer'
+> +	@echo  '  clang-tidy      - Check with clang-tidy'
 
-> But most importantly, applied to for-next, thanks!
+I think this is great; more people will be able to run these tests.
 
-Thank you too for taking this, and Geert for the extra reviews.
+>  	@echo  ''
+>  	@echo  'Kernel selftest:'
+>  	@echo  '  kselftest       - Build and run kernel selftest (run as root)'
+> diff --git a/scripts/clang-tools/Makefile.clang-tools b/scripts/clang-tools/Makefile.clang-tools
+> new file mode 100644
+> index 000000000000..0adb6df20777
+> --- /dev/null
+> +++ b/scripts/clang-tools/Makefile.clang-tools
+> @@ -0,0 +1,35 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +PHONY += clang-tidy
+> +HAS_PARALLEL := $(shell (parallel --version 2> /dev/null) | grep 'GNU parallel' 2> /dev/null)
+> +clang-tidy:
+> +ifdef CONFIG_CC_IS_CLANG
+> +	$(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +ifdef HAS_PARALLEL
 
+Is it worth falling back to xargs? Are there builders where clang-tidy
+or clang-analyzer are installed but parallel isn't? (i.e. it might just
+be better to simply require parallel.) Note that there's no test for
+python3 -- we just try to run it. :)
 
+> +	#Xargs interleaves multiprocessed output. GNU Parallel does not.
+> +	scripts/clang-tools/parse_compile_commands.py compile_commands.json \
+> +		| parallel -k -j $(shell nproc) 'echo {} && clang-tidy -p . "-checks=-*,linuxkernel-*" {}'
+> +else
+> +	@echo "GNU parallel is not installed. Defaulting to non-parallelized runs"
+> +	scripts/clang-tools/parse_compile_commands.py compile_commands.json \
+> +		| xargs -L 1 -I@ sh -c "echo '@' && clang-tidy -p . '-checks=-*,linuxkernel-*' @"
+> +endif
+> +else
+> +	$(error Clang-tidy requires CC=clang)
+> +endif
+> +
+> +PHONY += clang-analyzer
+> +clang-analyzer:
+> +ifdef CONFIG_CC_IS_CLANG
+> +	$(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +ifdef HAS_PARALLEL
+> +	#Xargs interleaves multiprocessed output. GNU Parallel does not.
+> +	scripts/clang-tools/parse_compile_commands.py compile_commands.json \
+> +		| parallel -k -j $(shell nproc) 'echo {} && clang-tidy -p . "-checks=-*,clang-analyzer-*" {}'
+> +else
+> +	@echo "GNU parallel is not installed. Defaulting to non-parallelized runs"
+> +	scripts/clang-tools/parse_compile_commands.py compile_commands.json \
+> +		| xargs -L 1 -I@ sh -c "echo '@' && clang-tidy -p . '-checks=-*,clang-analyzer-*' @"
+> +endif
+> +else
+> +	$(error Clang-analyzer requires CC=clang)
+> +endif
+> diff --git a/scripts/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+> similarity index 100%
+> rename from scripts/gen_compile_commands.py
+> rename to scripts/clang-tools/gen_compile_commands.py
+> diff --git a/scripts/clang-tools/parse_compile_commands.py b/scripts/clang-tools/parse_compile_commands.py
+> new file mode 100755
+> index 000000000000..d6bc1bf9951e
+> --- /dev/null
+> +++ b/scripts/clang-tools/parse_compile_commands.py
+> @@ -0,0 +1,47 @@
+> +#!/usr/bin/env python
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) Google LLC, 2019
+> +#
+> +# Author: Nathan Huckleberry <nhuck@google.com>
+> +#
+> +"""A helper routine for make clang-tidy to parse compile_commands.json."""
+> +
+> +import argparse
+> +import json
+> +import logging
+> +import os
+> +import re
+> +
+> +def parse_arguments():
+> +  """Set up and parses command-line arguments.
+> +  Returns:
+> +    file_path: Path to compile_commands.json file
+> +  """
+> +  usage = """Parse a compilation database and return a list of files
+> +  included in the database"""
+> +  parser = argparse.ArgumentParser(description=usage)
+> +
+> +  file_path_help = ('Path to the compilation database to parse')
+> +  parser.add_argument('file',  type=str, help=file_path_help)
+> +
+> +  args = parser.parse_args()
+> +
+> +  return args.file
+> +
+> +
+> +def main():
+> +  filename = parse_arguments()
+> +
+> +  #Read JSON data into the datastore variable
+> +  if filename:
+> +    with open(filename, 'r') as f:
+> +      datastore = json.load(f)
+> +
+> +      #Use the new datastore datastructure
+> +      for entry in datastore:
+> +        print(entry['file'])
+> +
+> +
+> +if __name__ == '__main__':
+> +    main()
 
-Max
+And this is nice to have because now there is a real consumer of
+gen_compile_commands.py.
+
+-- 
+Kees Cook
