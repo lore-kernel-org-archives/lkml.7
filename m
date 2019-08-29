@@ -2,66 +2,91 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B26BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2065C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD97233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 674C2208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:15:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="JHGw61Xp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbfH2VKQ (ORCPT
+        id S1727729AbfH2VPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 17:10:16 -0400
-Received: from mga06.intel.com ([134.134.136.31]:11325 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbfH2VKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 17:10:16 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 14:10:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,445,1559545200"; 
-   d="scan'208";a="332646511"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga004.jf.intel.com with ESMTP; 29 Aug 2019 14:10:15 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 5271730121D; Thu, 29 Aug 2019 14:10:15 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 14:10:15 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Luwei Kang <luwei.kang@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC v1 1/9] KVM: x86: Add base address parameter for
- get_fixed_pmc function
-Message-ID: <20190829211015.GU5447@tassilo.jf.intel.com>
-References: <1567056849-14608-1-git-send-email-luwei.kang@intel.com>
- <1567056849-14608-2-git-send-email-luwei.kang@intel.com>
+        Thu, 29 Aug 2019 17:15:52 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43601 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbfH2VPw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 17:15:52 -0400
+Received: by mail-ed1-f67.google.com with SMTP id h13so5563054edq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 14:15:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=hS3H3Fejm2Ld774V0kLGhVDnZ7eJ/Yrt7rdUWYJLuoM=;
+        b=JHGw61XpDQ9qnqJjDlskimJniYIpe80UT31I54hzhlwkNrwJdOXVB7tFd/WP7WpaEI
+         n0tUYc3qXXL9vzjDC/ggBWHuTXd4Zw7o6AMgzRNZXgOYt3D70CLylInM/ujPlx2fjIM/
+         5jD1M0KKWYd+76MH/4apoF3xHOQgdtgJuwQW2VFjGsWQ80gR1mLQCGhP0m33LmOL6YpN
+         JGqJDDBCCH7aWJRnWF0Ngnxb0ZdiCV5z+LPr6A3eFpV1cSjrQp9NiM/SrO8ZQcsr8RB2
+         ucfFURwBmugSzfO9gwGkewrlfFUtfHSMh3Q+4j1aSAXjWJj1D5kvSkAV9lHf6KbUKDoO
+         Vw0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=hS3H3Fejm2Ld774V0kLGhVDnZ7eJ/Yrt7rdUWYJLuoM=;
+        b=DDltq3odcPKQI45pp5XfUf5VrWPNTX77znNLe7qISoSZWLtK3YvsQqMiEptuiwx0Ih
+         N/OYCT9s4jyFBWpVMUos/BC195zHgcI7F7rXkxOa7spwVW4fm4xgPH5svCxWWfUGfUui
+         oi8DqDDNRnff15TunA4NwO0tEsduWrZTWGOgIX68l+iEQZBkEtE/zYPhy15DGap/gaXi
+         kFENnVIPctiQlcWkOhX+uM+dZJjq1ei1BsdzTREGlUQFRHB7Yro/13wIQpjYOVUTV4LA
+         yEHOGK1VKV6c7Zr8A3fzC1mh7750NMA4N1eMbviHud9qdAv/0J915QLdlG7Yr9CbMIlX
+         yAlg==
+X-Gm-Message-State: APjAAAXuAzE/FvZuqq6ps+3HtDFHcjR3ZStTrJyzUNsMUJdRFJhYovyI
+        pIetH5t1uaTmwfwMyi93mccoJg==
+X-Google-Smtp-Source: APXvYqyGVMQtZA1SqbkLWfBw96/KNVS3JYfw9CNvXDg9o/pN/JnASnJoDjrfTrcZwqQd33q4FUbBtg==
+X-Received: by 2002:a05:6402:170f:: with SMTP id y15mr12624176edu.55.1567113350852;
+        Thu, 29 Aug 2019 14:15:50 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id jr2sm529163ejb.13.2019.08.29.14.15.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 14:15:50 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 14:15:25 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v2 net-next 00/15] ioc3-eth improvements
+Message-ID: <20190829141525.7b56791e@cakuba.netronome.com>
+In-Reply-To: <20190829155014.9229-1-tbogendoerfer@suse.de>
+References: <20190829155014.9229-1-tbogendoerfer@suse.de>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567056849-14608-2-git-send-email-luwei.kang@intel.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  /* returns fixed PMC with the specified MSR */
-> -static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)
-> +static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr,
-> +								int base)
+On Thu, 29 Aug 2019 17:49:58 +0200, Thomas Bogendoerfer wrote:
+> In my patch series for splitting out the serial code from ioc3-eth
+> by using a MFD device there was one big patch for ioc3-eth.c,
+> which wasn't really usefull for reviews. This series contains the
+> ioc3-eth changes splitted in smaller steps and few more cleanups.
+> Only the conversion to MFD will be done later in a different series.
+> 
+> Changes in v2:
+> - use net_err_ratelimited for printing various ioc3 errors
+> - added missing clearing of rx buf valid flags into ioc3_alloc_rings
+> - use __func__ for printing out of memory messages
 
-Better define a __get_fixed_pmc just for this case, with the existing
-get_fixed_pmc being a wrapper.
-
-This would avoid changing all the callers below.
-
-
--Andi
+Only a few more comments on patch 5, otherwise looks good!
