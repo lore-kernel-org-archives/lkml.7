@@ -2,131 +2,118 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED8CC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBFCC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222C621726
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:22:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VtycVrSA";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RPMpETOq"
+	by mail.kernel.org (Postfix) with ESMTP id C222A2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567102980;
+	bh=y70RxuL2YQSZm/gh3pAfFVLXXKVME29NfFRNWeXDYFw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=h7GLxbjXoT9kjFCzIBPLYSCLwqdTRhUZCmrDidqdYnlDxQYoRl2Nom+qgAEr9KAI6
+	 b0bz7n6IuweGAoa4PE99gqJwiE1/xIP7dGRUmgOF5yYB8dn2pVHgk5Y8/4UJ1UVSXh
+	 dEEbq+1Q42G37lK8ED7sm8dkHbfjo1ukchxMrLYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729987AbfH2SWu (ORCPT
+        id S1730136AbfH2SW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:22:50 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:53514 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728700AbfH2SWq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:22:46 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 328F267898; Thu, 29 Aug 2019 18:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567102965;
-        bh=FeFaJUoDeHdLOh2OaUz0TWmkbjPXVH4svhWA764YwBA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VtycVrSAdkukL9EXA/Nj5URdtARJbT4f2tnn+5EZUFMr7WSmXL+rlzSDC7/jZnW6q
-         PmWt/aQspvB6mKZzr31y7ErivhOdwkR7I56EWnlrgWsnZsomBoI5zd1EM3HFSzJTHu
-         f0PgxHacny5Q09voOOsLnIBMP3UelpPagJ5nT1FU=
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 29 Aug 2019 14:22:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729959AbfH2SRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:06 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 74C0C6883B;
-        Thu, 29 Aug 2019 18:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567102334;
-        bh=FeFaJUoDeHdLOh2OaUz0TWmkbjPXVH4svhWA764YwBA=;
+        by mail.kernel.org (Postfix) with ESMTPSA id A8ABD2189D;
+        Thu, 29 Aug 2019 18:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567102625;
+        bh=y70RxuL2YQSZm/gh3pAfFVLXXKVME29NfFRNWeXDYFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RPMpETOqN+zUgVJ54I7e6zv9LkccOW3ztM6OOrzzC/Te80+y/+TfMkno7u2x1u+eW
-         9yszoW44Ac6fym1pyMb3Kih+1Q9m07v+wgxqjqTMOrnmOAUN37/L63zmhihJPgyE1g
-         WgnM+oaXtWXMPeroZXKYlb2UcWn2urpwfCUkBwQA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 74C0C6883B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com,
-        linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
-        Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RFC 02/14] drivers: irqchip: pdc: Do not toggle IRQ_ENABLE during mask/unmask
-Date:   Thu, 29 Aug 2019 12:11:51 -0600
-Message-Id: <20190829181203.2660-3-ilina@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190829181203.2660-1-ilina@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org>
+        b=AP2ZA/ZOsp87kT+EyJZTIzt0e2VtzXpWCl56CFupBwPyyFSILLC/qTYIKKQSuT1wA
+         IKF4XONkR4ZxDSlLC60/t1jW/24YFoCTto5Ma3s6QTk4K0moSUyH5YXV0jzY7lOrZM
+         mBQE9VR8y0JNCsfzCZIl6qFdWXxsm7TzFJt9Dj0o=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/27] ibmveth: Convert multicast list size for little-endian system
+Date:   Thu, 29 Aug 2019 14:16:32 -0400
+Message-Id: <20190829181655.8741-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190829181655.8741-1-sashal@kernel.org>
+References: <20190829181655.8741-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an interrupt is to be serviced, the convention is to mask the
-interrupt at the chip and unmask after servicing the interrupt. Enabling
-and disabling the interrupt at the PDC irqchip causes an interrupt storm
-due to the way dual edge interrupts are handled in hardware.
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-Skip configuring the PDC when the IRQ is masked and unmasked, instead
-use the irq_enable/irq_disable callbacks to toggle the IRQ_ENABLE
-register at the PDC. The PDC's IRQ_ENABLE register is only used during
-the monitoring mode when the system is asleep and is not needed for
-active mode detection.
+[ Upstream commit 66cf4710b23ab2adda11155684a2c8826f4fe732 ]
 
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+The ibm,mac-address-filters property defines the maximum number of
+addresses the hypervisor's multicast filter list can support. It is
+encoded as a big-endian integer in the OF device tree, but the virtual
+ethernet driver does not convert it for use by little-endian systems.
+As a result, the driver is not behaving as it should on affected systems
+when a large number of multicast addresses are assigned to the device.
+
+Reported-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/qcom-pdc.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ibm/ibmveth.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index faa7d61b9d6c..338fae604af5 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -63,15 +63,25 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
- 	raw_spin_unlock(&pdc_lock);
- }
+diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
+index 754dff4c1771e..880d925438c17 100644
+--- a/drivers/net/ethernet/ibm/ibmveth.c
++++ b/drivers/net/ethernet/ibm/ibmveth.c
+@@ -1618,7 +1618,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 	struct net_device *netdev;
+ 	struct ibmveth_adapter *adapter;
+ 	unsigned char *mac_addr_p;
+-	unsigned int *mcastFilterSize_p;
++	__be32 *mcastFilterSize_p;
+ 	long ret;
+ 	unsigned long ret_attr;
  
--static void qcom_pdc_gic_mask(struct irq_data *d)
-+static void qcom_pdc_gic_disable(struct irq_data *d)
- {
- 	pdc_enable_intr(d, false);
-+	irq_chip_disable_parent(d);
-+}
-+
-+static void qcom_pdc_gic_enable(struct irq_data *d)
-+{
-+	pdc_enable_intr(d, true);
-+	irq_chip_enable_parent(d);
-+}
-+
-+static void qcom_pdc_gic_mask(struct irq_data *d)
-+{
- 	irq_chip_mask_parent(d);
- }
+@@ -1640,8 +1640,9 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 		return -EINVAL;
+ 	}
  
- static void qcom_pdc_gic_unmask(struct irq_data *d)
- {
--	pdc_enable_intr(d, true);
- 	irq_chip_unmask_parent(d);
- }
+-	mcastFilterSize_p = (unsigned int *)vio_get_attribute(dev,
+-						VETH_MCAST_FILTER_SIZE, NULL);
++	mcastFilterSize_p = (__be32 *)vio_get_attribute(dev,
++							VETH_MCAST_FILTER_SIZE,
++							NULL);
+ 	if (!mcastFilterSize_p) {
+ 		dev_err(&dev->dev, "Can't find VETH_MCAST_FILTER_SIZE "
+ 			"attribute\n");
+@@ -1658,7 +1659,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
  
-@@ -148,6 +158,8 @@ static struct irq_chip qcom_pdc_gic_chip = {
- 	.irq_eoi		= irq_chip_eoi_parent,
- 	.irq_mask		= qcom_pdc_gic_mask,
- 	.irq_unmask		= qcom_pdc_gic_unmask,
-+	.irq_disable		= qcom_pdc_gic_disable,
-+	.irq_enable		= qcom_pdc_gic_enable,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
- 	.irq_set_type		= qcom_pdc_gic_set_type,
- 	.flags			= IRQCHIP_MASK_ON_SUSPEND |
+ 	adapter->vdev = dev;
+ 	adapter->netdev = netdev;
+-	adapter->mcastFilterSize = *mcastFilterSize_p;
++	adapter->mcastFilterSize = be32_to_cpu(*mcastFilterSize_p);
+ 	adapter->pool_config = 0;
+ 
+ 	netif_napi_add(netdev, &adapter->napi, ibmveth_poll, 16);
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.20.1
 
