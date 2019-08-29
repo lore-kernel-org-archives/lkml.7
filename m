@@ -2,94 +2,263 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA330C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9131DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7EA52173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0F32166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 11:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbfH2L30 (ORCPT
+        id S1727949AbfH2LaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 07:29:26 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:3540 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726379AbfH2L30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:29:26 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id AAFEA3C849874D2B6330;
-        Thu, 29 Aug 2019 19:29:24 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 29 Aug 2019 19:29:23 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Thu, 29 Aug 2019 19:29:20 +0800
-Date:   Thu, 29 Aug 2019 19:28:33 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        "Dave Chinner" <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v6 08/24] erofs: add namei functions
-Message-ID: <20190829112833.GE64893@architecture4>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-9-gaoxiang25@huawei.com>
- <20190829102838.GG20598@infradead.org>
+        Thu, 29 Aug 2019 07:30:22 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49434 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726245AbfH2LaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 07:30:21 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6AD641A02EB;
+        Thu, 29 Aug 2019 13:30:19 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5D8661A0149;
+        Thu, 29 Aug 2019 13:30:19 +0200 (CEST)
+Received: from fsr-ub1664-120.ea.freescale.net (fsr-ub1664-120.ea.freescale.net [10.171.82.81])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id AF45A20613;
+        Thu, 29 Aug 2019 13:30:18 +0200 (CEST)
+From:   Robert Chiras <robert.chiras@nxp.com>
+To:     =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 01/14] drm/mxsfb: Update mxsfb to support a bridge
+Date:   Thu, 29 Aug 2019 14:30:02 +0300
+Message-Id: <1567078215-31601-2-git-send-email-robert.chiras@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
+References: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190829102838.GG20598@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 03:28:38AM -0700, Christoph Hellwig wrote:
-> On Fri, Aug 02, 2019 at 08:53:31PM +0800, Gao Xiang wrote:
-> > +struct erofs_qstr {
-> > +	const unsigned char *name;
-> > +	const unsigned char *end;
-> > +};
-> 
-> Maybe erofs_name?  The q in qstr stands for quick, because of the
-> existing hash and len, which this doesn't really provide.
-> 
-> Also I don't really see why you don't just pass the actual qstr and
-> just document that dirnamecmp does not look at the hash and thus
-> doesn't require it to be filled out.
+Currently, the MXSFB DRM driver only supports a panel. But, its output
+display signal can also be redirected to another encoder, like a DSI
+controller. In this case, that DSI controller may act like a drm_bridge.
+In order support this use-case too, this patch adds support for drm_bridge
+in mxsfb.
 
-q in erofs_qstr also means quick substring.
-If you have some time to look into it more, it uses a prefixed
-binary search algorithm (rather than linear traversal), which
-provides similar proformance with hashed approach but no need
-to save such hash field and it's natively sorted in alphabet
-order.
+Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+Tested-by: Guido Günther <agx@sigxcpu.org>
+---
+ drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 17 +++++++++++---
+ drivers/gpu/drm/mxsfb/mxsfb_drv.c  | 46 +++++++++++++++++++++++++++++++++-----
+ drivers/gpu/drm/mxsfb/mxsfb_drv.h  |  4 +++-
+ drivers/gpu/drm/mxsfb/mxsfb_out.c  | 26 +++++++++++----------
+ 4 files changed, 72 insertions(+), 21 deletions(-)
 
-Thanks,
-Gao Xiang
+diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+index 1242156..de09b93 100644
+--- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
++++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+@@ -95,8 +95,11 @@ static void mxsfb_set_bus_fmt(struct mxsfb_drm_private *mxsfb)
+ 
+ 	reg = readl(mxsfb->base + LCDC_CTRL);
+ 
+-	if (mxsfb->connector.display_info.num_bus_formats)
+-		bus_format = mxsfb->connector.display_info.bus_formats[0];
++	if (mxsfb->connector->display_info.num_bus_formats)
++		bus_format = mxsfb->connector->display_info.bus_formats[0];
++
++	DRM_DEV_DEBUG_DRIVER(drm->dev, "Using bus_format: 0x%08X\n",
++			     bus_format);
+ 
+ 	reg &= ~CTRL_BUS_WIDTH_MASK;
+ 	switch (bus_format) {
+@@ -204,8 +207,9 @@ static dma_addr_t mxsfb_get_fb_paddr(struct mxsfb_drm_private *mxsfb)
+ 
+ static void mxsfb_crtc_mode_set_nofb(struct mxsfb_drm_private *mxsfb)
+ {
++	struct drm_device *drm = mxsfb->pipe.crtc.dev;
+ 	struct drm_display_mode *m = &mxsfb->pipe.crtc.state->adjusted_mode;
+-	const u32 bus_flags = mxsfb->connector.display_info.bus_flags;
++	const u32 bus_flags = mxsfb->connector->display_info.bus_flags;
+ 	u32 vdctrl0, vsync_pulse_len, hsync_pulse_len;
+ 	int err;
+ 
+@@ -229,6 +233,13 @@ static void mxsfb_crtc_mode_set_nofb(struct mxsfb_drm_private *mxsfb)
+ 
+ 	clk_set_rate(mxsfb->clk, m->crtc_clock * 1000);
+ 
++	DRM_DEV_DEBUG_DRIVER(drm->dev, "Pixel clock: %dkHz (actual: %dkHz)\n",
++			     m->crtc_clock,
++			     (int)(clk_get_rate(mxsfb->clk) / 1000));
++	DRM_DEV_DEBUG_DRIVER(drm->dev, "Connector bus_flags: 0x%08X\n",
++			     bus_flags);
++	DRM_DEV_DEBUG_DRIVER(drm->dev, "Mode flags: 0x%08X\n", m->flags);
++
+ 	writel(TRANSFER_COUNT_SET_VCOUNT(m->crtc_vdisplay) |
+ 	       TRANSFER_COUNT_SET_HCOUNT(m->crtc_hdisplay),
+ 	       mxsfb->base + mxsfb->devdata->transfer_count);
+diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+index e850633..497cf44 100644
+--- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
++++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+@@ -101,9 +101,25 @@ static void mxsfb_pipe_enable(struct drm_simple_display_pipe *pipe,
+ 			      struct drm_crtc_state *crtc_state,
+ 			      struct drm_plane_state *plane_state)
+ {
++	struct drm_connector *connector;
+ 	struct mxsfb_drm_private *mxsfb = drm_pipe_to_mxsfb_drm_private(pipe);
+ 	struct drm_device *drm = pipe->plane.dev;
+ 
++	if (!mxsfb->connector) {
++		list_for_each_entry(connector,
++				    &drm->mode_config.connector_list,
++				    head)
++			if (connector->encoder == &mxsfb->pipe.encoder) {
++				mxsfb->connector = connector;
++				break;
++			}
++	}
++
++	if (!mxsfb->connector) {
++		dev_warn(drm->dev, "No connector attached, using default\n");
++		mxsfb->connector = &mxsfb->panel_connector;
++	}
++
+ 	pm_runtime_get_sync(drm->dev);
+ 	drm_panel_prepare(mxsfb->panel);
+ 	mxsfb_crtc_enable(mxsfb);
+@@ -129,6 +145,9 @@ static void mxsfb_pipe_disable(struct drm_simple_display_pipe *pipe)
+ 		drm_crtc_send_vblank_event(crtc, event);
+ 	}
+ 	spin_unlock_irq(&drm->event_lock);
++
++	if (mxsfb->connector != &mxsfb->panel_connector)
++		mxsfb->connector = NULL;
+ }
+ 
+ static void mxsfb_pipe_update(struct drm_simple_display_pipe *pipe,
+@@ -226,16 +245,33 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
+ 
+ 	ret = drm_simple_display_pipe_init(drm, &mxsfb->pipe, &mxsfb_funcs,
+ 			mxsfb_formats, ARRAY_SIZE(mxsfb_formats), NULL,
+-			&mxsfb->connector);
++			mxsfb->connector);
+ 	if (ret < 0) {
+ 		dev_err(drm->dev, "Cannot setup simple display pipe\n");
+ 		goto err_vblank;
+ 	}
+ 
+-	ret = drm_panel_attach(mxsfb->panel, &mxsfb->connector);
+-	if (ret) {
+-		dev_err(drm->dev, "Cannot connect panel\n");
+-		goto err_vblank;
++	/*
++	 * Attach panel only if there is one.
++	 * If there is no panel attach, it must be a bridge. In this case, we
++	 * need a reference to its connector for a proper initialization.
++	 * We will do this check in pipe->enable(), since the connector won't
++	 * be attached to an encoder until then.
++	 */
++
++	if (mxsfb->panel) {
++		ret = drm_panel_attach(mxsfb->panel, mxsfb->connector);
++		if (ret) {
++			dev_err(drm->dev, "Cannot connect panel: %d\n", ret);
++			goto err_vblank;
++		}
++	} else if (mxsfb->bridge) {
++		ret = drm_simple_display_pipe_attach_bridge(&mxsfb->pipe,
++							    mxsfb->bridge);
++		if (ret) {
++			dev_err(drm->dev, "Cannot connect bridge: %d\n", ret);
++			goto err_vblank;
++		}
+ 	}
+ 
+ 	drm->mode_config.min_width	= MXSFB_MIN_XRES;
+diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+index d975300..0b65b51 100644
+--- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
++++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+@@ -27,8 +27,10 @@ struct mxsfb_drm_private {
+ 	struct clk			*clk_disp_axi;
+ 
+ 	struct drm_simple_display_pipe	pipe;
+-	struct drm_connector		connector;
++	struct drm_connector		panel_connector;
++	struct drm_connector		*connector;
+ 	struct drm_panel		*panel;
++	struct drm_bridge		*bridge;
+ };
+ 
+ int mxsfb_setup_crtc(struct drm_device *dev);
+diff --git a/drivers/gpu/drm/mxsfb/mxsfb_out.c b/drivers/gpu/drm/mxsfb/mxsfb_out.c
+index be36f4d..4eb9474 100644
+--- a/drivers/gpu/drm/mxsfb/mxsfb_out.c
++++ b/drivers/gpu/drm/mxsfb/mxsfb_out.c
+@@ -21,7 +21,8 @@
+ static struct mxsfb_drm_private *
+ drm_connector_to_mxsfb_drm_private(struct drm_connector *connector)
+ {
+-	return container_of(connector, struct mxsfb_drm_private, connector);
++	return container_of(connector, struct mxsfb_drm_private,
++			    panel_connector);
+ }
+ 
+ static int mxsfb_panel_get_modes(struct drm_connector *connector)
+@@ -76,22 +77,23 @@ static const struct drm_connector_funcs mxsfb_panel_connector_funcs = {
+ int mxsfb_create_output(struct drm_device *drm)
+ {
+ 	struct mxsfb_drm_private *mxsfb = drm->dev_private;
+-	struct drm_panel *panel;
+ 	int ret;
+ 
+-	ret = drm_of_find_panel_or_bridge(drm->dev->of_node, 0, 0, &panel, NULL);
++	ret = drm_of_find_panel_or_bridge(drm->dev->of_node, 0, 0,
++					  &mxsfb->panel, &mxsfb->bridge);
+ 	if (ret)
+ 		return ret;
+ 
+-	mxsfb->connector.dpms = DRM_MODE_DPMS_OFF;
+-	mxsfb->connector.polled = 0;
+-	drm_connector_helper_add(&mxsfb->connector,
+-			&mxsfb_panel_connector_helper_funcs);
+-	ret = drm_connector_init(drm, &mxsfb->connector,
+-				 &mxsfb_panel_connector_funcs,
+-				 DRM_MODE_CONNECTOR_Unknown);
+-	if (!ret)
+-		mxsfb->panel = panel;
++	if (mxsfb->panel) {
++		mxsfb->connector = &mxsfb->panel_connector;
++		mxsfb->connector->dpms = DRM_MODE_DPMS_OFF;
++		mxsfb->connector->polled = 0;
++		drm_connector_helper_add(mxsfb->connector,
++					 &mxsfb_panel_connector_helper_funcs);
++		ret = drm_connector_init(drm, mxsfb->connector,
++					 &mxsfb_panel_connector_funcs,
++					 DRM_MODE_CONNECTOR_Unknown);
++	}
+ 
+ 	return ret;
+ }
+-- 
+2.7.4
 
-> 
