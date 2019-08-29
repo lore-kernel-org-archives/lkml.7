@@ -2,83 +2,100 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FDEC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD7FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3989B2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C9022CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:33:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eNdor4/f"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oS3dg9bS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfH2Jcm (ORCPT
+        id S1727025AbfH2JdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:32:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42802 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfH2Jcl (ORCPT
+        Thu, 29 Aug 2019 05:33:10 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:34611 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfH2JdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:32:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jXWv6rxcD/Ytdxuw9oCBSvjHqSotwy8H8FiFgT6NRRg=; b=eNdor4/fygoZH6Xvs2bMeOvXp
-        tLJNYDfk1cimf7+kbTn2BtXDWxLqRI4BEoxvkM59QMQwbcBMvCELCNq/zJkLCXbTBzuB4qK60s7R/
-        haWdRVRaEqnJlYuCV4UwO8CFnpN8keiifEYRocm9hSV7hdJbuhyANoVbu4fvGSZZTtQWctl+4PkEQ
-        /oN+phe7MFMf78kAF3jl7VDQ4vwdv93FRJN87qRsxSrA+o2vNKwsWkTPjLWfJ6jdO987prP1KZI6Z
-        19zNadIV1LWue77KVSIM1O13lgtmraWBA1EkdjuK6SDKTpSqH94t7Ag5Ad+KKj2s3isfBEvJQ6hgD
-        xAZ0rNRsA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3GnG-0007NX-Pm; Thu, 29 Aug 2019 09:32:38 +0000
-Date:   Thu, 29 Aug 2019 02:32:38 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 01/19] dax: remove block device dependencies
-Message-ID: <20190829093238.GA23102@infradead.org>
-References: <20190821175720.25901-1-vgoyal@redhat.com>
- <20190821175720.25901-2-vgoyal@redhat.com>
- <20190826115152.GA21051@infradead.org>
- <20190827163828.GA6859@redhat.com>
- <20190828065809.GA27426@infradead.org>
- <20190828175843.GB912@redhat.com>
- <20190828225322.GA7777@dread.disaster.area>
- <CAPcyv4jGEAbYSJef2zLzgg6Arozsuz7eN_vZL1iTcd1XQuNT4Q@mail.gmail.com>
+        Thu, 29 Aug 2019 05:33:09 -0400
+Received: by mail-ua1-f68.google.com with SMTP id r10so953797uam.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 02:33:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jwMS525ywtt6sOg3VAxDrxJAxwOW0CWRYuAHzYt0J9c=;
+        b=oS3dg9bS3cPrcgG3vOeds6Of/Z1OhxHH73UTSEEvjU7LQ1QpYpJ0chV+hWPiPMuxth
+         h7Awf8JulKMThePAbEgZUhZRbWVWQzNylBVGm90uwKXHvOIx5ZNbRzsohHMdpJg6gqJA
+         3QKuzxTcr+kvW+arPvTtiX5ufTTwT4Lly1rMnYwTDxk37yXuHjs1OUZebbBGXp9+0B6S
+         M/u5dKDxHju7704K8VWl5kP/MGnbJhnpXTZD/T4xXCmn2vgWEGTfmIP9+OOndzaVpDQz
+         uHTfQ9XH65cFSil6BEoX816DV/tqY9tQ3sigPeehTuGujw3ArKxmssehbbVEpXpUIthD
+         oITw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jwMS525ywtt6sOg3VAxDrxJAxwOW0CWRYuAHzYt0J9c=;
+        b=U5k3hr0IYTghuSZrm96UbL0N0BsgRt98sQYmBqL7WcgQDu2Kb+Awjaj99BvigDBtQb
+         YwJAGlyx+30iMnVXqlBoIQcO5OI3a8q8JQKK58pL+fX2TBSqeyHlDKLZm1p36lXQ0Elb
+         esSqK1wUHE3db1ja8Oyi2izE/yHCWYNL8enZ7oSS8PWLhJf2r+2ngSvJiyOwtD0xWGg2
+         1RCF6wdK83lIWZMb9nk1CoBDZftvyrRCetcy/V9kBkS/IDRioeTqYx0S7UjkroMdGEzO
+         CfNtYM4VD/v3EpDwRTb764CUsfOvJKfp+06E8XZrFP4ZZ+0w4P8y2MQEqd289L//t6n3
+         uufw==
+X-Gm-Message-State: APjAAAWx49XsoC0i4BRVi8bxIvykcMOB4ThTTa0x6JEC51SW55167t8J
+        lfkYUcB5WQj6SOzX6wDHe9RrxInYk5A+amiCaWSm7g==
+X-Google-Smtp-Source: APXvYqw4cMfDzwrNTgPt2rfd0EXbGJVRlkTiKDXTWWUi6fN0jj1iS+RcuKcfAvqHKkgKC3y15uSqQbomLBZcx4qiVk4=
+X-Received: by 2002:ab0:1562:: with SMTP id p31mr4257943uae.15.1567071188564;
+ Thu, 29 Aug 2019 02:33:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jGEAbYSJef2zLzgg6Arozsuz7eN_vZL1iTcd1XQuNT4Q@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190829014645.4479-1-zhang.lyra@gmail.com>
+In-Reply-To: <20190829014645.4479-1-zhang.lyra@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 29 Aug 2019 11:32:32 +0200
+Message-ID: <CAPDyKFp_+YuPOjURiE0YhT0uotZi=P2sRVYNr3ejgZmrMaN=tA@mail.gmail.com>
+Subject: Re: [RESEND PATCH v2 0/5] a few fixes for sprd's sd host controller
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 05:04:11PM -0700, Dan Williams wrote:
-> Agree. In retrospect it was my laziness in the dax-device
-> implementation to expect the block-device to be available.
-> 
-> It looks like fs_dax_get_by_bdev() is an intercept point where a
-> dax_device could be dynamically created to represent the subset range
-> indicated by the block-device partition. That would open up more
-> cleanup opportunities.
+On Thu, 29 Aug 2019 at 03:47, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
+> With this patch-set, both sd card and mmc can be setup.  This patch-set was
+> verified on Unisoc's Whale2 and another mobile phone platform SC9863A.
+>
+> Changes from v1:
+> - Added Reviewed-by and Tested-by of Baolin;
+> - Added fixes tag for all patches in this series.
+>
+> Chunyan Zhang (5):
+>   mmc: sdhci-sprd: fixed incorrect clock divider
+>   mmc: sdhci-sprd: add get_ro hook function
+>   mmc: sdhci-sprd: add SDHCI_QUIRK2_PRESET_VALUE_BROKEN
+>   mms: sdhci-sprd: add SDHCI_QUIRK_BROKEN_CARD_DETECTION
+>   mmc: sdhci-sprd: clear the UHS-I modes read from registers
+>
+>  drivers/mmc/host/sdhci-sprd.c | 30 +++++++++++++++++++++++++-----
+>  1 file changed, 25 insertions(+), 5 deletions(-)
+>
+> --
+> 2.20.1
+>
 
-That seems like a decent short-term plan.  But in the long I'd just let
-dax call into the partition table parser directly, as we might want to
-support partitions without first having to create a block device on top
-of the dax device.  Same for the badblocks handling story.
+Thanks, but I amended the current applied patches, assuming the only
+change change you did was to put the fixes tag on one single line (for
+each patch).
+
+Kind regards
+Uffe
