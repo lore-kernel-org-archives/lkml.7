@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2803C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3203AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA8C20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 090B820578
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102996;
-	bh=gTanq0p86gaTdfODTA2HnD4pvQYAj3g9WBxr2OM955c=;
+	s=default; t=1567103001;
+	bh=tEh/zX/idwYlsgWRmY9MyRvVAoNdwwEcLh+B1mAIrHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hQLImGV2id+LLAIn2m9UsULxYM2xUPntCYz/y8GsxLWO2Tlkue4suXODIrqPwiElA
-	 RBHDgcq26/RZL/792D/5lcVf7/ytI3YA+PtL/8E3UT2oVtNj8a/EaqzYwkuiMqFwCE
-	 DMoRcBaVbM8YQUzf5x4TfaaNED4FAY+pL0EbNLrY=
+	b=XWdMJ/6LdzJmEKQa0T3nd8a1YadWo08TYmPsrSIAgtnJ5nJwzEalG/85J/xKTv5z8
+	 vM2l9BaTHKCnRdRk9ldONIKebjsFH2aZB9P6phg+FRXF61fxQogzCTiqY+6e4mu2Ka
+	 R1IJOuni24cuTzjNzmtRPvvJVlwWL0qomzo3ZSFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729937AbfH2SRB (ORCPT
+        id S1728786AbfH2SQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:17:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:16:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728654AbfH2SQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:54 -0400
+        id S1729875AbfH2SQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:16:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ACA62341B;
-        Thu, 29 Aug 2019 18:16:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1D712341B;
+        Thu, 29 Aug 2019 18:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102612;
-        bh=gTanq0p86gaTdfODTA2HnD4pvQYAj3g9WBxr2OM955c=;
+        s=default; t=1567102608;
+        bh=tEh/zX/idwYlsgWRmY9MyRvVAoNdwwEcLh+B1mAIrHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xDFEgPrU5BDvnw7f2GEas/qL46Us49j6BW0fIthsz1WvqvGIh3/YPPCFiZOpIhBUX
-         eXq1I3mMKSL9Fsq+PNXEZruH898S0K/YL0ZtYnhHv00y2kKQoch6OS1URQaV2VQohh
-         mflU4UsiiokWgIMvUcYRRDtgO7yZGTUyDEGyJCNE=
+        b=nt12v1ifBqHK3b9D+DA6FJAXhiEY1VMNlTAT06wlPgSdSK3SOgMqVe23JOT3ppXIV
+         B8TR0ws0W8+V5BVRik6CL07N+XN0I4fvFGRdEtMy73tVnlAL44K/GckkxCVvhCZKF1
+         9ioGSyjd3O4Av3NLuu25+ve244J123hIEhexIRf4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Dave Martin <dave.martin@arm.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 4.19 45/45] KVM: arm/arm64: VGIC: Properly initialise private IRQ affinity
-Date:   Thu, 29 Aug 2019 14:15:45 -0400
-Message-Id: <20190829181547.8280-45-sashal@kernel.org>
+Cc:     Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 42/45] ceph: fix buffer free while holding i_ceph_lock in fill_inode()
+Date:   Thu, 29 Aug 2019 14:15:42 -0400
+Message-Id: <20190829181547.8280-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
 References: <20190829181547.8280-1-sashal@kernel.org>
@@ -61,116 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Luis Henriques <lhenriques@suse.com>
 
-[ Upstream commit 2e16f3e926ed48373c98edea85c6ad0ef69425d1 ]
+[ Upstream commit af8a85a41734f37b67ba8ce69d56b685bee4ac48 ]
 
-At the moment we initialise the target *mask* of a virtual IRQ to the
-VCPU it belongs to, even though this mask is only defined for GICv2 and
-quickly runs out of bits for many GICv3 guests.
-This behaviour triggers an UBSAN complaint for more than 32 VCPUs:
-------
-[ 5659.462377] UBSAN: Undefined behaviour in virt/kvm/arm/vgic/vgic-init.c:223:21
-[ 5659.471689] shift exponent 32 is too large for 32-bit type 'unsigned int'
-------
-Also for GICv3 guests the reporting of TARGET in the "vgic-state" debugfs
-dump is wrong, due to this very same problem.
+Calling ceph_buffer_put() in fill_inode() may result in freeing the
+i_xattrs.blob buffer while holding the i_ceph_lock.  This can be fixed by
+postponing the call until later, when the lock is released.
 
-Because there is no requirement to create the VGIC device before the
-VCPUs (and QEMU actually does it the other way round), we can't safely
-initialise mpidr or targets in kvm_vgic_vcpu_init(). But since we touch
-every private IRQ for each VCPU anyway later (in vgic_init()), we can
-just move the initialisation of those fields into there, where we
-definitely know the VGIC type.
+The following backtrace was triggered by fstests generic/070.
 
-On the way make sure we really have either a VGICv2 or a VGICv3 device,
-since the existing code is just checking for "VGICv3 or not", silently
-ignoring the uninitialised case.
+  BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
+  in_atomic(): 1, irqs_disabled(): 0, pid: 3852, name: kworker/0:4
+  6 locks held by kworker/0:4/3852:
+   #0: 000000004270f6bb ((wq_completion)ceph-msgr){+.+.}, at: process_one_work+0x1b8/0x5f0
+   #1: 00000000eb420803 ((work_completion)(&(&con->work)->work)){+.+.}, at: process_one_work+0x1b8/0x5f0
+   #2: 00000000be1c53a4 (&s->s_mutex){+.+.}, at: dispatch+0x288/0x1476
+   #3: 00000000559cb958 (&mdsc->snap_rwsem){++++}, at: dispatch+0x2eb/0x1476
+   #4: 000000000d5ebbae (&req->r_fill_mutex){+.+.}, at: dispatch+0x2fc/0x1476
+   #5: 00000000a83d0514 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: fill_inode.isra.0+0xf8/0xf70
+  CPU: 0 PID: 3852 Comm: kworker/0:4 Not tainted 5.2.0+ #441
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
+  Workqueue: ceph-msgr ceph_con_workfn
+  Call Trace:
+   dump_stack+0x67/0x90
+   ___might_sleep.cold+0x9f/0xb1
+   vfree+0x4b/0x60
+   ceph_buffer_release+0x1b/0x60
+   fill_inode.isra.0+0xa9b/0xf70
+   ceph_fill_trace+0x13b/0xc70
+   ? dispatch+0x2eb/0x1476
+   dispatch+0x320/0x1476
+   ? __mutex_unlock_slowpath+0x4d/0x2a0
+   ceph_con_workfn+0xc97/0x2ec0
+   ? process_one_work+0x1b8/0x5f0
+   process_one_work+0x244/0x5f0
+   worker_thread+0x4d/0x3e0
+   kthread+0x105/0x140
+   ? process_one_work+0x5f0/0x5f0
+   ? kthread_park+0x90/0x90
+   ret_from_fork+0x3a/0x50
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Reported-by: Dave Martin <dave.martin@arm.com>
-Tested-by: Julien Grall <julien.grall@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/vgic/vgic-init.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ fs/ceph/inode.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
-index 8196e4f8731fb..cd75df25fe140 100644
---- a/virt/kvm/arm/vgic/vgic-init.c
-+++ b/virt/kvm/arm/vgic/vgic-init.c
-@@ -19,6 +19,7 @@
- #include <linux/cpu.h>
- #include <linux/kvm_host.h>
- #include <kvm/arm_vgic.h>
-+#include <asm/kvm_emulate.h>
- #include <asm/kvm_mmu.h>
- #include "vgic.h"
- 
-@@ -175,12 +176,18 @@ static int kvm_vgic_dist_init(struct kvm *kvm, unsigned int nr_spis)
- 		irq->vcpu = NULL;
- 		irq->target_vcpu = vcpu0;
- 		kref_init(&irq->refcount);
--		if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V2) {
-+		switch (dist->vgic_model) {
-+		case KVM_DEV_TYPE_ARM_VGIC_V2:
- 			irq->targets = 0;
- 			irq->group = 0;
--		} else {
-+			break;
-+		case KVM_DEV_TYPE_ARM_VGIC_V3:
- 			irq->mpidr = 0;
- 			irq->group = 1;
-+			break;
-+		default:
-+			kfree(dist->spis);
-+			return -EINVAL;
- 		}
- 	}
- 	return 0;
-@@ -220,7 +227,6 @@ int kvm_vgic_vcpu_init(struct kvm_vcpu *vcpu)
- 		irq->intid = i;
- 		irq->vcpu = NULL;
- 		irq->target_vcpu = vcpu;
--		irq->targets = 1U << vcpu->vcpu_id;
- 		kref_init(&irq->refcount);
- 		if (vgic_irq_is_sgi(i)) {
- 			/* SGIs */
-@@ -230,11 +236,6 @@ int kvm_vgic_vcpu_init(struct kvm_vcpu *vcpu)
- 			/* PPIs */
- 			irq->config = VGIC_CONFIG_LEVEL;
- 		}
--
--		if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3)
--			irq->group = 1;
--		else
--			irq->group = 0;
- 	}
- 
- 	if (!irqchip_in_kernel(vcpu->kvm))
-@@ -297,10 +298,19 @@ int vgic_init(struct kvm *kvm)
- 
- 		for (i = 0; i < VGIC_NR_PRIVATE_IRQS; i++) {
- 			struct vgic_irq *irq = &vgic_cpu->private_irqs[i];
--			if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3)
-+			switch (dist->vgic_model) {
-+			case KVM_DEV_TYPE_ARM_VGIC_V3:
- 				irq->group = 1;
--			else
-+				irq->mpidr = kvm_vcpu_get_mpidr_aff(vcpu);
-+				break;
-+			case KVM_DEV_TYPE_ARM_VGIC_V2:
- 				irq->group = 0;
-+				irq->targets = 1U << idx;
-+				break;
-+			default:
-+				ret = -EINVAL;
-+				goto out;
-+			}
- 		}
- 	}
- 
+diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+index 3e518c2ae2bf9..11f19432a74c4 100644
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -742,6 +742,7 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
+ 	int issued, new_issued, info_caps;
+ 	struct timespec64 mtime, atime, ctime;
+ 	struct ceph_buffer *xattr_blob = NULL;
++	struct ceph_buffer *old_blob = NULL;
+ 	struct ceph_string *pool_ns = NULL;
+ 	struct ceph_cap *new_cap = NULL;
+ 	int err = 0;
+@@ -878,7 +879,7 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
+ 	if ((ci->i_xattrs.version == 0 || !(issued & CEPH_CAP_XATTR_EXCL))  &&
+ 	    le64_to_cpu(info->xattr_version) > ci->i_xattrs.version) {
+ 		if (ci->i_xattrs.blob)
+-			ceph_buffer_put(ci->i_xattrs.blob);
++			old_blob = ci->i_xattrs.blob;
+ 		ci->i_xattrs.blob = xattr_blob;
+ 		if (xattr_blob)
+ 			memcpy(ci->i_xattrs.blob->vec.iov_base,
+@@ -1017,8 +1018,8 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
+ out:
+ 	if (new_cap)
+ 		ceph_put_cap(mdsc, new_cap);
+-	if (xattr_blob)
+-		ceph_buffer_put(xattr_blob);
++	ceph_buffer_put(old_blob);
++	ceph_buffer_put(xattr_blob);
+ 	ceph_put_string(pool_ns);
+ 	return err;
+ }
 -- 
 2.20.1
 
