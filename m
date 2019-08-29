@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7446C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3615C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E439214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9776E214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:47:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcl7DI/s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vNhPBn8W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbfH2Brd (ORCPT
+        id S1727294AbfH2Brg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 21:47:33 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46235 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfH2Brc (ORCPT
+        Wed, 28 Aug 2019 21:47:36 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40884 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727251AbfH2Brf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 21:47:32 -0400
-Received: by mail-pl1-f195.google.com with SMTP id o3so785562plb.13;
-        Wed, 28 Aug 2019 18:47:32 -0700 (PDT)
+        Wed, 28 Aug 2019 21:47:35 -0400
+Received: by mail-pl1-f196.google.com with SMTP id h3so802486pls.7;
+        Wed, 28 Aug 2019 18:47:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iWbB+arBJsDjT4iykZ2xGw0U15fa9Mgp2LMlYFEFahY=;
-        b=dcl7DI/sZV/Cwi3MsGYjLD29jabf7MyJueotrteCEREelfXsF6iPUSmw6NlXm/iSkE
-         OPB2m5/fbW0Cg+pn4iyveTX+/M2qw4tFuCzy6/ilQg1p7L+/8z37LMK/64h4M/+FfJ+d
-         vJ/ieu4ei92rGee81AvWsz23LE26eJQtXglCtt0wL1Vv6nfW9sOVs1OgwZSMzOl9hUN3
-         Wm1Fwfz4bkxfFjWRH+Neq8YTTs8SChrnd7SXPFpxlgTqKzxo9AQrhyuhIVuBnTF4EYK6
-         gmgQYJSMlJqk9oh2FmdXIzuOD0z8ZbS4oOrkXHS60XvSVd4i7LRNs6MUH4bBfu3RsVuU
-         LPEQ==
+        bh=lKatwZV9g/yI2OBBcKsk1xQjsJeHSwIuue1+ya8AQR4=;
+        b=vNhPBn8WuAyD46AWEONXHeF7j1/L5oY2D2IBbWXrkb+YGxvIH/60jVIMZ/Q3fsdLvI
+         lf5+8Um1B5DPWLyugTRRP4DLUUK8HP5hlRhTgNUztXEAVYt7pzaf5U2d1cnxdNWgBKIG
+         M3QdBOMTUp09wB7tycFSH8YdZVK1DoDWD6vW99lq0sorAuik5oQZ8aoyQvinCL3gXqAj
+         f+RdyU5xBQjv/vGYGG+peSFLxLin9iR2YcwCnJs0JW3zj0oPJabExB/zpAY3xuqUT2py
+         D9X3IkFcIHALFDTf//FZp8GKr2lx/4yabDm3+K0ZGXfVTFiRl2OQNp0+chXIaoxVMCVk
+         77uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iWbB+arBJsDjT4iykZ2xGw0U15fa9Mgp2LMlYFEFahY=;
-        b=FzEkQea9/xabqZvjQ87oN/PdHPUjk61RNu9sdorig4kDIJ2Lrg85Jgi/9vbtDZkdfn
-         LY1KiFAxQpjjPogT83f4Zc4/g5y01ibU+bGdKNDu22FDS+vCycfEkMabIt4ZViEbtnbF
-         kUBuTFSfdHmB/Vw9kjtFkAszr9uWT/DDWYVI61668d3limx2oZWhIVMfbSh2IAdYV+v3
-         zohE6Ysr/yLwXL5lEqsigBNNkNuammZ31rVDBFSncnWrq0W4PF5aTRWkw6aSUd5iPXq0
-         5L3YD6qTTqwBYYs6jrZ2DVisCp0wqJuoxfoteZoEGEHEBb24nRjSVdoSlWC1lX14fMZh
-         vvoA==
-X-Gm-Message-State: APjAAAVDFbnZ5ZRKJ7FAACJppRbLZJcOheg2aJIeri/h5QLQj0/vSABz
-        P5m3aKHPfR/JqNOtP2NkIu4=
-X-Google-Smtp-Source: APXvYqzEWsi0SGNnEmGjO2j/IVYnxUC/dHv0hVy7pAURZ8eQ82tdO+H+bbtO2s4dbyX85VgOtzdSvQ==
-X-Received: by 2002:a17:902:8d8c:: with SMTP id v12mr7451128plo.198.1567043251870;
-        Wed, 28 Aug 2019 18:47:31 -0700 (PDT)
+        bh=lKatwZV9g/yI2OBBcKsk1xQjsJeHSwIuue1+ya8AQR4=;
+        b=fOlVVBCwoFOvWHoI+p6DmW5gr2Duyr120hWoSB/Kb0qXQgGbobDgf26KYlnSfZuHpW
+         u+CaAePr3xRA08P0qIvuWCws8mHvVm6YTfTasg1xrp1rsCIDNArkRrhCgqFjlhB9H0Po
+         EZwwaRAew4bumUptZoJHzAANscJoFnsvW+C0pJho0RIxCbPv+WU7vN9z9ITNfnucMTEy
+         lLPUGIT/IDyPgEs5PTNv6tzzS4AyJxLnwKHkWTn6yMjxmoTkURgLPjNGpZisosrRoOOE
+         CZRAkjLheob9Gha/3xBHerliCBvh90NeA+3UJteGetQJeoqdOVsXQoEoKHz8y65yfpMw
+         n9NA==
+X-Gm-Message-State: APjAAAUl9tzMsjapidLV1VgyB634G5wIezbpbKdyr5hKlh9n70a++0Fb
+        MSldijYu3P2DYJmHtWHRMKQ=
+X-Google-Smtp-Source: APXvYqwVKH3GrlQNmocO2B5tep6crTgeMnaTqoSgGmaNnZjlUz0d02+W3cus/vH/WWnO4MkOhfdN5Q==
+X-Received: by 2002:a17:902:110b:: with SMTP id d11mr7501823pla.84.1567043255012;
+        Wed, 28 Aug 2019 18:47:35 -0700 (PDT)
 Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id j10sm404548pjn.3.2019.08.28.18.47.28
+        by smtp.gmail.com with ESMTPSA id j10sm404548pjn.3.2019.08.28.18.47.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 18:47:31 -0700 (PDT)
+        Wed, 28 Aug 2019 18:47:34 -0700 (PDT)
 From:   Chunyan Zhang <zhang.lyra@gmail.com>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
@@ -64,9 +64,9 @@ To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Baolin Wang <baolin.wang@linaro.org>
 Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [RESEND PATCH v2 3/5] mmc: sdhci-sprd: add SDHCI_QUIRK2_PRESET_VALUE_BROKEN
-Date:   Thu, 29 Aug 2019 09:46:43 +0800
-Message-Id: <20190829014645.4479-4-zhang.lyra@gmail.com>
+Subject: [RESEND PATCH v2 4/5] mms: sdhci-sprd: add SDHCI_QUIRK_BROKEN_CARD_DETECTION
+Date:   Thu, 29 Aug 2019 09:46:44 +0800
+Message-Id: <20190829014645.4479-5-zhang.lyra@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829014645.4479-1-zhang.lyra@gmail.com>
 References: <20190829014645.4479-1-zhang.lyra@gmail.com>
@@ -79,8 +79,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-The bit of PRESET_VAL_ENABLE in HOST_CONTROL2 register is reserved on
-sprd's sd host controller, set quirk2 to disable configuring this.
+sprd's sd host controller doesn't support detection to
+card insert or remove.
 
 Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host controller")
 Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
@@ -92,19 +92,19 @@ Tested-by: Baolin Wang <baolin.wang@linaro.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index 90cb2af91159..27d0b57f3f89 100644
+index 27d0b57f3f89..1fecf055682c 100644
 --- a/drivers/mmc/host/sdhci-sprd.c
 +++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -510,7 +510,8 @@ static void sdhci_sprd_phy_param_parse(struct sdhci_sprd_host *sprd_host,
- static const struct sdhci_pltfm_data sdhci_sprd_pdata = {
- 	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
- 	.quirks2 = SDHCI_QUIRK2_BROKEN_HS200 |
--		   SDHCI_QUIRK2_USE_32BIT_BLK_CNT,
-+		   SDHCI_QUIRK2_USE_32BIT_BLK_CNT |
-+		   SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
- 	.ops = &sdhci_sprd_ops,
- };
+@@ -508,7 +508,8 @@ static void sdhci_sprd_phy_param_parse(struct sdhci_sprd_host *sprd_host,
+ }
  
+ static const struct sdhci_pltfm_data sdhci_sprd_pdata = {
+-	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
++	.quirks = SDHCI_QUIRK_BROKEN_CARD_DETECTION |
++		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
+ 	.quirks2 = SDHCI_QUIRK2_BROKEN_HS200 |
+ 		   SDHCI_QUIRK2_USE_32BIT_BLK_CNT |
+ 		   SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
 -- 
 2.20.1
 
