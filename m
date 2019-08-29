@@ -2,117 +2,88 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC0AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB9FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E57820856
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B03214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 01:44:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbfH2Blw (ORCPT
+        id S1727026AbfH2Bow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 21:41:52 -0400
-Received: from mga06.intel.com ([134.134.136.31]:53827 "EHLO mga06.intel.com"
+        Wed, 28 Aug 2019 21:44:52 -0400
+Received: from mga02.intel.com ([134.134.136.20]:55417 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbfH2Blw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 21:41:52 -0400
+        id S1726081AbfH2Bov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 28 Aug 2019 21:44:51 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 18:41:51 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 18:44:51 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="332353236"
-Received: from deyangko-mobl.ccr.corp.intel.com ([10.249.168.35])
-  by orsmga004.jf.intel.com with ESMTP; 28 Aug 2019 18:41:48 -0700
-Message-ID: <186abb640246ea343041ed4b7904ff4c5db44829.camel@intel.com>
-Subject: Re: [PATCH] thermal: armada: Fix -Wshift-negative-value
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        edubezval@gmail.com, linux-pm@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Huckleberry <nhuck@google.com>
-Date:   Thu, 29 Aug 2019 09:42:01 +0800
-In-Reply-To: <CAKwvOd=ej156MVjkVHAVbpWEew08YhCWpM-3BPYoLfeXHPJEMQ@mail.gmail.com>
-References: <20190613184923.245935-1-nhuck@google.com>
-         <27428324-129e-ee37-304a-0da2ed3810a0@linaro.org>
-         <CAJkfWY4X-YwuansL1R5w0rQNmE_hVJZKrMBJmOLp9G2DJPkNow@mail.gmail.com>
-         <CAKwvOdkEp=q+2B_iqqyHJLwwUaFH2jnO+Ey8t-hn=x4shTbdoA@mail.gmail.com>
-         <c2b821f2-545a-9839-3de6-d68dfee5b5dc@linaro.org>
-         <20190819102131.41da667b@xps13>
-         <b94af6b2101f436c1bdeec744e164c78ee7c2682.camel@intel.com>
-         <CAKwvOd=ej156MVjkVHAVbpWEew08YhCWpM-3BPYoLfeXHPJEMQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+   d="scan'208";a="380606108"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga005.fm.intel.com with ESMTP; 28 Aug 2019 18:44:48 -0700
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Micha=c5=82_Wajdeczko?= <michal.wajdeczko@intel.com>
+Subject: Re: [RFC PATCH] iommu/vt-d: Fix IOMMU field not populated on device
+ hot re-plug
+To:     Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+References: <20190822142922.31526-1-janusz.krzysztofik@linux.intel.com>
+ <29020717.Hl6jQjRASr@jkrzyszt-desk.ger.corp.intel.com>
+ <8f505c10-6256-c561-1aea-b3817388c5b2@linux.intel.com>
+ <3275480.HMaYE7B3nd@jkrzyszt-desk.ger.corp.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <0cf4e930-1132-1e7f-815b-57a08a1fe5de@linux.intel.com>
+Date:   Thu, 29 Aug 2019 09:43:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <3275480.HMaYE7B3nd@jkrzyszt-desk.ger.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-08-28 at 11:49 -0700, Nick Desaulniers wrote:
-> On Wed, Aug 28, 2019 at 1:53 AM Zhang Rui <rui.zhang@intel.com>
-> wrote:
-> > 
-> > On Mon, 2019-08-19 at 10:21 +0200, Miquel Raynal wrote:
-> > > Hello,
-> > > 
-> > > Daniel Lezcano <daniel.lezcano@linaro.org> wrote on Thu, 15 Aug
-> > > 2019
-> > > 01:06:21 +0200:
-> > > 
-> > > > On 15/08/2019 00:12, Nick Desaulniers wrote:
-> > > > > On Tue, Aug 13, 2019 at 10:28 AM 'Nathan Huckleberry' via
-> > > > > Clang
-> > > > > Built
-> > > > > Linux <clang-built-linux@googlegroups.com> wrote:
-> > > > > > 
-> > > > > > Following up to see if this patch is going to be accepted.
-> > > > > 
-> > > > > Miquel is listed as the maintainer of this file in
-> > > > > MAINTAINERS.
-> > > > > Miquel, can you please pick this up?  Otherwise Zhang,
-> > > > > Eduardo,
-> > > > > and
-> > > > > Daniel are listed as maintainers for drivers/thermal/.
-> > > > 
-> > > > I'm listed as reviewer, it is up to Zhang or Eduardo to take
-> > > > the
-> > > > patches.
-> > > > 
-> > > > 
-> > > 
-> > > Sorry for the delay, I don't manage a tree for this driver, I'll
-> > > let
-> > > Zhang or Eduardo take the patch with my
-> > > 
-> > > Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > > 
-> > 
-> > Patch applied.
-> > 
-> > thanks,
-> > rui
+Hi Janusz,
+
+On 8/28/19 10:17 PM, Janusz Krzysztofik wrote:
+>> We should avoid kernel panic when a intel_unmap() is called against
+>> a non-existent domain.
+> Does that mean you suggest to replace
+> 	BUG_ON(!domain);
+> with something like
+> 	if (WARN_ON(!domain))
+> 		return;
+> and to not care of orphaned mappings left allocated?  Is there a way to inform
+> users that their active DMA mappings are no longer valid and they shouldn't
+> call dma_unmap_*()?
 > 
-> Thanks Rui, did you push the branch?  I guess I would have expected
-> it
-> in 
-> https://git.kernel.org/pub/scm/linux/kernel/git/rzhang/linux.git/log/?h=next
-> ?
-> I'm trying to track where this lands in
-> https://github.com/ClangBuiltLinux/linux/issues/532.
-
-Not yet. I will push it to kernel.org after I finish my internal build
-test.
-
-thanks,
-rui
+>> But we shouldn't expect the IOMMU driver not
+>> cleaning up the domain info when a device remove notification comes and
+>> wait until all file descriptors being closed, right?
+> Shouldn't then the IOMMU driver take care of cleaning up resources still
+> allocated on device remove before it invalidates and forgets their pointers?
 > 
 
+You are right. We need to wait until all allocated resources (iova and
+mappings) to be released.
+
+How about registering a callback for BUS_NOTIFY_UNBOUND_DRIVER, and
+removing the domain info when the driver detachment completes?
+
+> Thanks,
+> Janusz
+
+Best regards,
+Baolu
