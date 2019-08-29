@@ -2,179 +2,109 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24A5C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F3EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82E542189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567118947;
-	bh=eZr58+WOf6N/N5qzupHqv/5s/W5SJ5hJvzzBfJ5JjAY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=p1zkWNL4UtXNZKb154CqXRes0BR/EkJ7IBfhyEnaI/v6uebv/q1SRd9rsA1P7CkJj
-	 e82rQLYn5HCxS+GG6Nn2nlsQrEm5O2cPmWPo/xRKgqQaXe9rQMsvy4jD3xBFQ0aHWk
-	 OiGIV57NLcS0PKUasxc4J1+1tje9xZKo7t0ATNUM=
+	by mail.kernel.org (Postfix) with ESMTP id C264722CF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbfH2WtG (ORCPT
+        id S1728300AbfH2WuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 18:49:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727686AbfH2WtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 18:49:06 -0400
-Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B748021874;
-        Thu, 29 Aug 2019 22:49:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567118945;
-        bh=eZr58+WOf6N/N5qzupHqv/5s/W5SJ5hJvzzBfJ5JjAY=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=K/tyd1jXYrmcFvFvvXRZM9PeqHCpnielu362H6/Wg0t2yvT9MqjU6J0KDWTtrN9QB
-         e9QWr1DGH/CM8Fg9iSRTiLh+QUza9dchoTkIf8wnhlf29nyhv2B76GqpE7Srrc8MFt
-         EZr/UBWetxbDl3MqWxWlUxuTs2xFIbKJQGNZQYKE=
-Date:   Thu, 29 Aug 2019 15:49:04 -0700 (PDT)
-From:   Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 03/11] xen/arm: simplify dma_cache_maint
-In-Reply-To: <20190827063754.GA32045@lst.de>
-Message-ID: <alpine.DEB.2.21.1908281528110.8175@sstabellini-ThinkPad-T480s>
-References: <20190826121944.515-1-hch@lst.de> <20190826121944.515-4-hch@lst.de> <20190827063754.GA32045@lst.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 29 Aug 2019 18:50:00 -0400
+Received: from mail.phunq.net ([66.183.183.73]:51320 "EHLO voyager.galaxy"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727686AbfH2WuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 18:50:00 -0400
+X-Greylist: delayed 1989 seconds by postgrey-1.27 at vger.kernel.org; Thu, 29 Aug 2019 18:49:59 EDT
+Received: from [172.16.1.14]
+        by voyager.galaxy with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+        (Exim 4.92.1)
+        (envelope-from <daniel@phunq.net>)
+        id 1i3Sim-00062X-Fo; Thu, 29 Aug 2019 15:16:48 -0700
+From:   Daniel Phillips <daniel@phunq.net>
+Subject: [ANNOUNCE] Three things.
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        daye <daye@dddancer.com>
+Message-ID: <8ccfa9b4-d76c-b25d-7eda-303d8faa0b79@phunq.net>
+Date:   Thu, 29 Aug 2019 15:16:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019, Christoph Hellwig wrote:
-> And this was still buggy I think, it really needs some real Xen/Arm
-> testing which I can't do.  Hopefully better version below:
-> 
-> --
-> >From 5ad4b6e291dbb49f65480c9b769414931cbd485a Mon Sep 17 00:00:00 2001
-> From: Christoph Hellwig <hch@lst.de>
-> Date: Wed, 24 Jul 2019 15:26:08 +0200
-> Subject: xen/arm: simplify dma_cache_maint
-> 
-> Calculate the required operation in the caller, and pass it directly
-> instead of recalculating it for each page, and use simple arithmetics
-> to get from the physical address to Xen page size aligned chunks.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/arm/xen/mm.c | 61 ++++++++++++++++-------------------------------
->  1 file changed, 21 insertions(+), 40 deletions(-)
-> 
-> diff --git a/arch/arm/xen/mm.c b/arch/arm/xen/mm.c
-> index 90574d89d0d4..2fde161733b0 100644
-> --- a/arch/arm/xen/mm.c
-> +++ b/arch/arm/xen/mm.c
-> @@ -35,64 +35,45 @@ unsigned long xen_get_swiotlb_free_pages(unsigned int order)
->  	return __get_free_pages(flags, order);
->  }
->  
-> -enum dma_cache_op {
-> -       DMA_UNMAP,
-> -       DMA_MAP,
-> -};
->  static bool hypercall_cflush = false;
->  
-> -/* functions called by SWIOTLB */
-> -
-> -static void dma_cache_maint(dma_addr_t handle, unsigned long offset,
-> -	size_t size, enum dma_data_direction dir, enum dma_cache_op op)
-> +/* buffers in highmem or foreign pages cannot cross page boundaries */
-> +static void dma_cache_maint(dma_addr_t handle, size_t size, u32 op)
->  {
->  	struct gnttab_cache_flush cflush;
-> -	unsigned long xen_pfn;
-> -	size_t left = size;
->  
-> -	xen_pfn = (handle >> XEN_PAGE_SHIFT) + offset / XEN_PAGE_SIZE;
-> -	offset %= XEN_PAGE_SIZE;
-> +	cflush.a.dev_bus_addr = handle & XEN_PAGE_MASK;
-> +	cflush.offset = xen_offset_in_page(handle);
-> +	cflush.op = op;
->  
->  	do {
-> -		size_t len = left;
-> -	
-> -		/* buffers in highmem or foreign pages cannot cross page
-> -		 * boundaries */
-> -		if (len + offset > XEN_PAGE_SIZE)
-> -			len = XEN_PAGE_SIZE - offset;
-> -
-> -		cflush.op = 0;
-> -		cflush.a.dev_bus_addr = xen_pfn << XEN_PAGE_SHIFT;
-> -		cflush.offset = offset;
-> -		cflush.length = len;
-> -
-> -		if (op == DMA_UNMAP && dir != DMA_TO_DEVICE)
-> -			cflush.op = GNTTAB_CACHE_INVAL;
-> -		if (op == DMA_MAP) {
-> -			if (dir == DMA_FROM_DEVICE)
-> -				cflush.op = GNTTAB_CACHE_INVAL;
-> -			else
-> -				cflush.op = GNTTAB_CACHE_CLEAN;
-> -		}
-> -		if (cflush.op)
-> -			HYPERVISOR_grant_table_op(GNTTABOP_cache_flush, &cflush, 1);
-> +		if (size + cflush.offset > XEN_PAGE_SIZE)
-> +			cflush.length = XEN_PAGE_SIZE - cflush.offset;
-> +		else
-> +			cflush.length = size;
-> +
-> +		HYPERVISOR_grant_table_op(GNTTABOP_cache_flush, &cflush, 1);
->  
-> -		offset = 0;
-> -		xen_pfn++;
-> -		left -= len;
-> -	} while (left);
-> +		cflush.offset = 0;
-> +		cflush.a.dev_bus_addr += cflush.length;
-> +		size -= cflush.length;
+Hi folks, how's it going? Over here, we have been rather busy lately,
+and for the last five years or so to be honest. Today it is my pleasure
+to be able to announce three GPL open source projects:
 
-Yes that's better
+1) Shardmap
 
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+Shardmap is the next generation directory index developed for Tux3, and
+which we are now offering as a much needed replacement for Ext4 HTree.
+Shardmap meets but usually beats HTree at all scales, has way better
+readdir characteristics, and goes where HTree never did: up into the
+billions of files per directory, with ease. Shardmap also is well on
+its way to becoming a full blown standalone KVS in user space with sub
+microsecond ACID operations in persistent memory.[1]
 
+Code for Shardmap is here:
 
-> +	} while (size);
->  }
->  
->  static void __xen_dma_page_dev_to_cpu(struct device *hwdev, dma_addr_t handle,
->  		size_t size, enum dma_data_direction dir)
->  {
-> -	dma_cache_maint(handle & PAGE_MASK, handle & ~PAGE_MASK, size, dir, DMA_UNMAP);
-> +	if (dir != DMA_TO_DEVICE)
-> +		dma_cache_maint(handle, size, GNTTAB_CACHE_INVAL);
->  }
->  
->  static void __xen_dma_page_cpu_to_dev(struct device *hwdev, dma_addr_t handle,
->  		size_t size, enum dma_data_direction dir)
->  {
-> -	dma_cache_maint(handle & PAGE_MASK, handle & ~PAGE_MASK, size, dir, DMA_MAP);
-> +	if (dir == DMA_FROM_DEVICE)
-> +		dma_cache_maint(handle, size, GNTTAB_CACHE_INVAL);
-> +	else
-> +		dma_cache_maint(handle, size, GNTTAB_CACHE_CLEAN);
->  }
->  
->  void __xen_dma_map_page(struct device *hwdev, struct page *page,
-> -- 
-> 2.20.1
-> 
+    https://github.com/danielbot/Shardmap
+
+2) Teamachine
+
+Teamachine is a direct threaded code virtual machine with a cycle time
+of .7 nanoseconds, which may just make it the fastest interpreter in the
+known universe. Teamachine embeds Shardmap as a set of micro ops. With
+Teamachine you can rapidly set up a set of Shardmap unit tests, or you
+can build a world-beating query engine. Or just kick back and script
+your game engine, the possibilities are endless.
+
+Code for Teamachine is here:
+
+    https://github.com/danielbot/TeaMachine
+
+3) Tux3
+
+Tux3 is still alive, is still maintained against current mainline, and
+is still faster, lighter, and more ACID than any other general purpose
+Linux file system. Inasmuch as other devs have discovered that the same
+issue cited as the blocker for merging Tux3 (get user pages) is also
+problematic for kernel code that is already merged, I propose today that
+we merge Tux3 without further ado, so that we can proceed to develop
+a good solution together as is right, proper and just.
+
+Code for Tux3 is here:
+
+    https://github.com/OGAWAHirofumi/tux3/tree/hirofumi
+
+Everyone is welcome to join OFTC #tux3 and/or post to:
+
+   http://tux3.org/cgi-bin/mailman/listinfo/tux3
+
+to discuss these things, or anything at all. Fun times. See you there!
+
+STANDARD DISCLAIMER: SHARDMAP WILL EAT YOUR DATA[2] TEAMACHINE WILL HALT
+YOUR MACHINE AND SET IT ON FIRE. DOWNLOAD AND RUN OF YOUR OWN FREE WILL.
+
+[1] Big shoutout to Yahoo! Japan for supporting Shardmap work.
+
+[2] Tux3 is actually pretty good about not eating your data, but that is
+another thing.
+
+NB: followup posts are in the works re the detailed nature and status of
+Shardmap, Teamachine and Tux3.
+
+Regards,
+
+Daniel
