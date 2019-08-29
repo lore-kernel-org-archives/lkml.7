@@ -2,154 +2,110 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DABC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9C5C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0524A2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:14:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rwH2W+E9"
+	by mail.kernel.org (Postfix) with ESMTP id 8CE2321874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbfH2QOR (ORCPT
+        id S1728221AbfH2QOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:14:17 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41350 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727810AbfH2QOR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:14:17 -0400
-Received: by mail-qt1-f193.google.com with SMTP id i4so4270568qtj.8
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:14:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HdsbyusGiMRkq6kSVVJ1Tni1iJ0D5Lbbif3gwg/K05I=;
-        b=rwH2W+E9cpx2iUbbR7UKUGi/jJ6G+nWXtKfJWQvfIh0dWzORi2lxzSjWDUtlwhjDDt
-         u0Z+A9YIB1GzPOnTHPPY3i7BDquPMoJs4nu+mpurcn+a10tVRAsAMHCb8KLywlqlEUq8
-         o1HgP+Z2B3/laH1886ucMyl55HHZBKdx+nrNEpFCC40oz37OGfIiRkeWfqE5xeEQ/PH1
-         /+V3V/fVNEAUTMK0aajSgJffJLVB0iQx2TviNLCuyUoQ5F7+aBqM9iKiKVfGBs9l+z/S
-         zqP5ijZOw6SuO5gbwOZfiO3zywp9PewKIkRlQ7eftXdJTauLMWQpmMdJrLXYEh5ghwmV
-         VIDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HdsbyusGiMRkq6kSVVJ1Tni1iJ0D5Lbbif3gwg/K05I=;
-        b=BUgdt4pHaaVdKs2jbb642KeNGr9AUP9QA8WcnT+gwWm5kei4mrv3/FVfy1RMVJL0CC
-         H4HfptUjuzYBSWvXsxFVOUdLmM8CwJilsPmkB9Kh8vAMjJtDkmVyNaY6FAQPBapbAwH6
-         Qne29lqy1kGYp9PPIjRxJWHqqDVxn+p+9bosi31dLzSH1362NMr0OnASJB16WlUR7Pw3
-         tWR/chf5W0kQc8AO1czZf9p7rs2ZW3QKOh7HKmPO/FV+s/KXHK83YwUJnSE95AmF1QuI
-         MGs4H1PN0yhaBtq/SYYXKHGRxwHWZQPck5zqRGiufZdcuGvVh9055tK76kJAEa1rkiKg
-         g7Zg==
-X-Gm-Message-State: APjAAAXC0MH5a3aPqQYBRpkAUUYcaexKb3VuoXzAF67q4S3J6jfBlehL
-        PhqtnC68vrsq9Z9rqM/+uKZ++OOhJWpfeTatGu5wrA==
-X-Google-Smtp-Source: APXvYqzj6FfEUctPCaUrep4Pr2nFnlVE+D9Q0UCJJ9LCNcByKgj2f+9/1JxEaBfdMrP14mUMcPjz6vkLNAQTrT9ghSI=
-X-Received: by 2002:ac8:4612:: with SMTP id p18mr10715186qtn.49.1567095255854;
- Thu, 29 Aug 2019 09:14:15 -0700 (PDT)
+        Thu, 29 Aug 2019 12:14:30 -0400
+Received: from mga02.intel.com ([134.134.136.20]:56270 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727426AbfH2QOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:14:30 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 09:14:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,444,1559545200"; 
+   d="scan'208";a="171947177"
+Received: from friedlmi-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.54.26])
+  by orsmga007.jf.intel.com with ESMTP; 29 Aug 2019 09:14:24 -0700
+Date:   Thu, 29 Aug 2019 19:14:17 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Andrey Pronin <apronin@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/4] dt-bindings: tpm: document properties for cr50
+Message-ID: <20190829161417.tzk4wewlupr4udgd@linux.intel.com>
+References: <20190828082150.42194-1-swboyd@chromium.org>
+ <20190828082150.42194-2-swboyd@chromium.org>
 MIME-Version: 1.0
-References: <cover.1566907161.git.amit.kucheria@linaro.org>
- <93fa782bde9c66845993ff883532b3f1f02d99e4.1566907161.git.amit.kucheria@linaro.org>
- <20190829140459.szauzhennltrwvg4@holly.lan> <CAHLCerNuycWTLmCvdffM0=GdG7UZ7zNoj0Jb0CeLTULzVmfSJw@mail.gmail.com>
- <20190829151912.z6cflsaox2qnmqxw@holly.lan>
-In-Reply-To: <20190829151912.z6cflsaox2qnmqxw@holly.lan>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Thu, 29 Aug 2019 21:44:04 +0530
-Message-ID: <CAP245DWqbFnKVW9BYCzUMH=Ub+0j=3ycj-=MiPzRRW1Zv5LUmw@mail.gmail.com>
-Subject: Re: [PATCH v2 03/15] drivers: thermal: tsens: Add __func__ identifier
- to debug statements
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828082150.42194-2-swboyd@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 8:49 PM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> On Thu, Aug 29, 2019 at 07:58:45PM +0530, Amit Kucheria wrote:
-> > On Thu, Aug 29, 2019 at 7:35 PM Daniel Thompson
-> > <daniel.thompson@linaro.org> wrote:
-> > >
-> > > On Tue, Aug 27, 2019 at 05:43:59PM +0530, Amit Kucheria wrote:
-> > > > Printing the function name when enabling debugging makes logs easier to
-> > > > read.
-> > > >
-> > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > > > Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > >
-> > > This should need to be manually added at each call site; it is already
-> > > built into the logging system (the f flag for dynamic debug)?
-> >
-> > I assume you meant "shouldn't".
->
-> Quite so. Sorry about that.
->
-> > I haven't yet integrated dynamic debug into my daily workflow.
-> >
-> > Last time I looked at it, it was a bit bothersome to use because I
-> > needed to lookup exact line numbers to trigger useful information. And
-> > those line numbers constantly keep changing as I work on the driver,
-> > so it was a bit painful to script. Not to mention the syntax to frob
-> > the correct files in debugfs to enable this functionality.
-> >
-> > As opposed to this, adding the following to the makefile is so easy. :-)
-> >
-> > CFLAGS_tsens-common.o          := -DDEBUG
-> >
-> > Perhaps I am using it all wrong? How would I go about using dynamic
-> > debug instead of this patch?
->
-> Throwing dyndbg="file <fname>.c +pf" onto the kernel command line is a
-> good start (+p enables debug level prints, +f causes messages to include
-> the function name).
+On Wed, Aug 28, 2019 at 01:21:47AM -0700, Stephen Boyd wrote:
+> From: Andrey Pronin <apronin@chromium.org>
+> 
+> Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
+> firmware.
+> 
+> Cc: Andrey Pronin <apronin@chromium.org>
+> Cc: Duncan Laurie <dlaurie@chromium.org>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Guenter Roeck <groeck@chromium.org>
+> Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Andrey Pronin <apronin@chromium.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  .../bindings/security/tpm/google,cr50.txt     | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.txt b/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+> new file mode 100644
+> index 000000000000..cd69c2efdd37
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+> @@ -0,0 +1,19 @@
+> +* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
+> +
+> +H1 Secure Microcontroller running Cr50 firmware provides several
+> +functions, including TPM-like functionality. It communicates over
+> +SPI using the FIFO protocol described in the PTP Spec, section 6.
+> +
+> +Required properties:
+> +- compatible: Should be "google,cr50".
+> +- spi-max-frequency: Maximum SPI frequency.
+> +
+> +Example:
+> +
+> +&spi0 {
+> +	tpm@0 {
+> +		compatible = "google,cr50";
+> +		reg = <0>;
+> +		spi-max-frequency = <800000>;
+> +	};
+> +};
+> -- 
+> Sent by a computer through tubes
+> 
 
-That's useful to know.
+Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-$ git grep __func__ | wc -l
-30914
-
-Want to send some patches? :-)
-
-> When the C files map to module names (whether the modules are actually
-> built-in or not) then <module>.dyndbg=+pf is a bit cleaner and allows
-> you to debug the whole of a driver without how it is decomposed into
-> files.
-
-And if changing the kernel cmdline options isn't possible or is inconvenient?
-
-> There are (many) other controls to play with[1] but the above should be
-> sufficient to simulate -DDEBUG .
-
-The "hard" bit is explicitly poking the line number in a file to
-activate a paricular pr_dbg statement. Even if I scripted it, those
-lines numbers keep changing in an actively developed driver.
-
-Somehow, I've always felt dyndbg was more useful to debug a production
-system where recompiling the kernel wasn't an option e.g. reporting an
-issue back to a distro-kernel vendor.
-
-> Daniel.
->
-> [1]
-> https://www.kernel.org/doc/html/latest/admin-guide/dynamic-debug-howto.html
+/Jarkko
