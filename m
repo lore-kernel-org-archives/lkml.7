@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD0BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECD3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71762341B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F532189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102606;
-	bh=UawKxel9NpXxg9oacRYyoPRRnVT7c7gYBtipihZk+NQ=;
+	s=default; t=1567102613;
+	bh=CKyadd5oos7cAu41Ww1xXGPEYoofd2Y6aSlkbogwEdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EZibys6ij1ywQxkA5jfhofGzKCrcj0znrZwo8cQlSxyHhw/rjIgNf0SzeBoxcYAKx
-	 yYDaChFhVOs3ixE8+GZmpSvii9e62dPMDF/Y5/2gGJa9mApI0GmF5q3kxsxt3Ng8OR
-	 Njdf/BGSuxsNKfIubsvf81L6K4keDNx90p+8Hb/8=
+	b=d7ZzY5O1Tg1v+dSCuut319Z1H4TWNopy9OQ02fsB7XNlpD2GzipsOd/D4wNORT30o
+	 OGmL+E+W2MksXPK34xxbtJ92lWro0t+UgqYRQKurQNPh9X2zpEqnznCutorKuaFGAq
+	 /x8tbwxL1O/c2EGbFWnKEcpM35OeklipPWV2GoT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729843AbfH2SQp (ORCPT
+        id S1728959AbfH2SQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:16:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58612 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729802AbfH2SQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:35 -0400
+        id S1729849AbfH2SQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:16:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D467D2341B;
-        Thu, 29 Aug 2019 18:16:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C82C233FF;
+        Thu, 29 Aug 2019 18:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102594;
-        bh=UawKxel9NpXxg9oacRYyoPRRnVT7c7gYBtipihZk+NQ=;
+        s=default; t=1567102605;
+        bh=CKyadd5oos7cAu41Ww1xXGPEYoofd2Y6aSlkbogwEdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SQjj961Tq+cps3499BvJv6Zhv7YfC12M48IppJaT6LSaxzBDw2UubZrbxXEHOZx3Z
-         ZKRogd7IpsplpLTRBPoZM53oJUnNzKQsW4bLzETB6nrnouKc2FRN2lHoH/ZtVjWw33
-         CPYHiYRYyj53KbeF6HcBKTQsSwssrOR4M+CMt3Ak=
+        b=oYQ4dk5eT05jxY6+s7EM38VCbSC4aFkaMazh5GrR1hPXRVRTfNsdJ7eD9z7oHDqFF
+         1eHcivQwrNqKv6pV3EBnPPrriOELy9rscZdi5A2B6gYihxjn7hCTXKTHcbWDZ0gV04
+         nufM7pQYv+CUEweJcuBwC7QTXBq+tcbRUVM3Hz9g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 31/45] x86/boot/compressed/64: Fix boot on machines with broken E820 table
-Date:   Thu, 29 Aug 2019 14:15:31 -0400
-Message-Id: <20190829181547.8280-31-sashal@kernel.org>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 39/45] selftests/kvm: make platform_info_test pass on AMD
+Date:   Thu, 29 Aug 2019 14:15:39 -0400
+Message-Id: <20190829181547.8280-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
 References: <20190829181547.8280-1-sashal@kernel.org>
@@ -62,74 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit 0a46fff2f9108c2c44218380a43a736cf4612541 ]
+[ Upstream commit e4427372398c31f57450565de277f861a4db5b3b ]
 
-BIOS on Samsung 500C Chromebook reports very rudimentary E820 table that
-consists of 2 entries:
+test_msr_platform_info_disabled() generates EXIT_SHUTDOWN but VMCB state
+is undefined after that so an attempt to launch this guest again from
+test_msr_platform_info_enabled() fails. Reorder the tests to make test
+pass.
 
-  BIOS-e820: [mem 0x0000000000000000-0x0000000000000fff] usable
-  BIOS-e820: [mem 0x00000000fffff000-0x00000000ffffffff] reserved
-
-It breaks logic in find_trampoline_placement(): bios_start lands on the
-end of the first 4k page and trampoline start gets placed below 0.
-
-Detect underflow and don't touch bios_start for such cases. It makes
-kernel ignore E820 table on machines that doesn't have two usable pages
-below BIOS_START_MAX.
-
-Fixes: 1b3a62643660 ("x86/boot/compressed/64: Validate trampoline placement against E820")
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203463
-Link: https://lkml.kernel.org/r/20190813131654.24378-1-kirill.shutemov@linux.intel.com
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/pgtable_64.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ tools/testing/selftests/kvm/platform_info_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-index f8debf7aeb4c1..f0537a1f7fc25 100644
---- a/arch/x86/boot/compressed/pgtable_64.c
-+++ b/arch/x86/boot/compressed/pgtable_64.c
-@@ -73,6 +73,8 @@ static unsigned long find_trampoline_placement(void)
+diff --git a/tools/testing/selftests/kvm/platform_info_test.c b/tools/testing/selftests/kvm/platform_info_test.c
+index 3764e71212650..65db510dddc34 100644
+--- a/tools/testing/selftests/kvm/platform_info_test.c
++++ b/tools/testing/selftests/kvm/platform_info_test.c
+@@ -100,8 +100,8 @@ int main(int argc, char *argv[])
+ 	msr_platform_info = vcpu_get_msr(vm, VCPU_ID, MSR_PLATFORM_INFO);
+ 	vcpu_set_msr(vm, VCPU_ID, MSR_PLATFORM_INFO,
+ 		msr_platform_info | MSR_PLATFORM_INFO_MAX_TURBO_RATIO);
+-	test_msr_platform_info_disabled(vm);
+ 	test_msr_platform_info_enabled(vm);
++	test_msr_platform_info_disabled(vm);
+ 	vcpu_set_msr(vm, VCPU_ID, MSR_PLATFORM_INFO, msr_platform_info);
  
- 	/* Find the first usable memory region under bios_start. */
- 	for (i = boot_params->e820_entries - 1; i >= 0; i--) {
-+		unsigned long new;
-+
- 		entry = &boot_params->e820_table[i];
- 
- 		/* Skip all entries above bios_start. */
-@@ -85,15 +87,20 @@ static unsigned long find_trampoline_placement(void)
- 
- 		/* Adjust bios_start to the end of the entry if needed. */
- 		if (bios_start > entry->addr + entry->size)
--			bios_start = entry->addr + entry->size;
-+			new = entry->addr + entry->size;
- 
- 		/* Keep bios_start page-aligned. */
--		bios_start = round_down(bios_start, PAGE_SIZE);
-+		new = round_down(new, PAGE_SIZE);
- 
- 		/* Skip the entry if it's too small. */
--		if (bios_start - TRAMPOLINE_32BIT_SIZE < entry->addr)
-+		if (new - TRAMPOLINE_32BIT_SIZE < entry->addr)
- 			continue;
- 
-+		/* Protect against underflow. */
-+		if (new - TRAMPOLINE_32BIT_SIZE > bios_start)
-+			break;
-+
-+		bios_start = new;
- 		break;
- 	}
- 
+ 	kvm_vm_free(vm);
 -- 
 2.20.1
 
