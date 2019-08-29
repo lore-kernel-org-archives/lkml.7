@@ -2,234 +2,207 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD0AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1EEC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F62623403
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C735323404
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:33:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbfH2Kdt (ORCPT
+        id S1728010AbfH2Kds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:33:49 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3980 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727951AbfH2Kdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:33:46 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 34D39B8182DEA8EBA187;
-        Thu, 29 Aug 2019 18:33:41 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 29 Aug 2019 18:33:40 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Thu, 29 Aug 2019 18:33:39 +0800
-Date:   Thu, 29 Aug 2019 18:32:53 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        "Dave Chinner" <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v6 01/24] erofs: add on-disk layout
-Message-ID: <20190829103252.GA64893@architecture4>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-2-gaoxiang25@huawei.com>
- <20190829095954.GB20598@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190829095954.GB20598@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme716-chm.china.huawei.com (10.1.199.112) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+        Thu, 29 Aug 2019 06:33:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33922 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727223AbfH2KdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:33:08 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8A434301A893;
+        Thu, 29 Aug 2019 10:33:07 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-95.ams2.redhat.com [10.36.116.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BFC841001B09;
+        Thu, 29 Aug 2019 10:33:06 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id C878331EEA; Thu, 29 Aug 2019 12:33:02 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     olvaffe@gmail.com, gurchetansingh@chromium.org,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v9 07/18] drm/virtio: add virtio_gpu_object_array & helpers
+Date:   Thu, 29 Aug 2019 12:32:50 +0200
+Message-Id: <20190829103301.3539-8-kraxel@redhat.com>
+In-Reply-To: <20190829103301.3539-1-kraxel@redhat.com>
+References: <20190829103301.3539-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 29 Aug 2019 10:33:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Some helper functions to manage an array of gem objects.
 
-On Thu, Aug 29, 2019 at 02:59:54AM -0700, Christoph Hellwig wrote:
-> > --- /dev/null
-> > +++ b/fs/erofs/erofs_fs.h
-> > @@ -0,0 +1,316 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only OR Apache-2.0 */
-> > +/*
-> > + * linux/fs/erofs/erofs_fs.h
-> 
-> Please remove the pointless file names in the comment headers.
+v9: use dma_resv_lock_interruptible.
+v6:
+ - add ticket to struct virtio_gpu_object_array.
+ - add virtio_gpu_array_{lock,unlock}_resv helpers.
+ - add virtio_gpu_array_add_fence helper.
+v5: some small optimizations (Chia-I Wu).
+v4: make them virtio-private instead of generic helpers.
 
-Already removed in the latest version.
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 
-> 
-> > +struct erofs_super_block {
-> > +/*  0 */__le32 magic;           /* in the little endian */
-> > +/*  4 */__le32 checksum;        /* crc32c(super_block) */
-> > +/*  8 */__le32 features;        /* (aka. feature_compat) */
-> > +/* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
-> 
-> Please remove all the byte offset comments.  That is something that can
-> easily be checked with gdb or pahole.
+[fixup] virtio_gpu_array_lock_resv
+---
+ drivers/gpu/drm/virtio/virtgpu_drv.h | 17 +++++
+ drivers/gpu/drm/virtio/virtgpu_gem.c | 93 ++++++++++++++++++++++++++++
+ 2 files changed, 110 insertions(+)
 
-I have no idea the actual issue here.
-It will help all developpers better add fields or calculate
-these offsets in their mind, and with care.
-
-Rather than they didn't run "gdb" or "pahole" and change it by mistake.
-
-> 
-> > +/* 64 */__u8 volume_name[16];   /* volume name */
-> > +/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
-> > +
-> > +/* 84 */__u8 reserved2[44];
-> > +} __packed;                     /* 128 bytes */
-> 
-> Please don't add __packed.  In this case I think you don't need it
-> (but double check with pahole), but even if you would need it using
-> proper padding fields and making sure all fields are naturally aligned
-> will give you much better code generation on architectures that don't
-> support native unaligned access.
-
-If you can see more, all on-disk fields in EROFS are naturally aligned,
-I can remove all of these as you like, but I think that is not very urgent.
-
-> 
-> > +/*
-> > + * erofs inode data mapping:
-> > + * 0 - inode plain without inline data A:
-> > + * inode, [xattrs], ... | ... | no-holed data
-> > + * 1 - inode VLE compression B (legacy):
-> > + * inode, [xattrs], extents ... | ...
-> > + * 2 - inode plain with inline data C:
-> > + * inode, [xattrs], last_inline_data, ... | ... | no-holed data
-> > + * 3 - inode compression D:
-> > + * inode, [xattrs], map_header, extents ... | ...
-> > + * 4~7 - reserved
-> > + */
-> > +enum {
-> > +	EROFS_INODE_FLAT_PLAIN,
-> 
-> This one doesn't actually seem to be used.
-
-It could be better has a name though, because erofs.mkfs uses it,
-and we keep this on-disk file up with erofs-utils.
-
-> 
-> > +	EROFS_INODE_FLAT_COMPRESSION_LEGACY,
-> 
-> why are we adding a legacy field to a brand new file system?
-
-the difference is just EROFS_INODE_FLAT_COMPRESSION_LEGACY doesn't have
-z_erofs_map_header, nothing special at all.
-
-> 
-> > +	EROFS_INODE_FLAT_INLINE,
-> > +	EROFS_INODE_FLAT_COMPRESSION,
-> > +	EROFS_INODE_LAYOUT_MAX
-> 
-> It seems like these come from the on-disk format, in which case they
-> should have explicit values assigned to them.
-> 
-> Btw, I think it generally helps file system implementation quality
-> if you use a separate header for the on-disk structures vs in-memory
-> structures, as that keeps it clear in everyones mind what needs to
-> stay persistent and what can be chenged easily.
-
-All fields in this file are on-disk representation.
-
-> 
-> > +static bool erofs_inode_is_data_compressed(unsigned int datamode)
-> > +{
-> > +	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
-> > +		return true;
-> > +	return datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY;
-> > +}
-> 
-> This looks like a really obsfucated way to write:
-> 
-> 	return datamode == EROFS_INODE_FLAT_COMPRESSION ||
-> 		datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY;
-
-It depends on the personal choise, if you like, I will change into your form.
-
-> 
-> > +/* 28 */__le32 i_reserved2;
-> > +} __packed;
-> 
-> Sane comment as above.
-> 
-> > +
-> > +/* 32 bytes on-disk inode */
-> > +#define EROFS_INODE_LAYOUT_V1   0
-> > +/* 64 bytes on-disk inode */
-> > +#define EROFS_INODE_LAYOUT_V2   1
-> > +
-> > +struct erofs_inode_v2 {
-> > +/*  0 */__le16 i_advise;
-> 
-> Why do we have two inode version in a newly added file system?
-
-v2 is an exhanced on-disk inode form, it has 64 bytes,
-v1 is more compacted one, which is already suitable
-for Android use case of course.
-
-There is no new and old, both are used for the current EROFS.
-
-> 
-> > +#define ondisk_xattr_ibody_size(count)	({\
-> > +	u32 __count = le16_to_cpu(count); \
-> > +	((__count) == 0) ? 0 : \
-> > +	sizeof(struct erofs_xattr_ibody_header) + \
-> > +		sizeof(__u32) * ((__count) - 1); })
-> 
-> This would be much more readable as a function.
-> 
-> > +#define EROFS_XATTR_ENTRY_SIZE(entry) EROFS_XATTR_ALIGN( \
-> > +	sizeof(struct erofs_xattr_entry) + \
-> > +	(entry)->e_name_len + le16_to_cpu((entry)->e_value_size))
-> 
-> Same here.
-
-Personal tendency, because we are working in a dedicated team rather than
-an individual person.
-
-But I can fix as you like.
-
-> 
-> > +/* available compression algorithm types */
-> > +enum {
-> > +	Z_EROFS_COMPRESSION_LZ4,
-> > +	Z_EROFS_COMPRESSION_MAX
-> > +};
-> 
-> Seems like an on-disk value again that should use explicitly assigned
-> numbers.
-
-I can fix it up as you like but I still cannot get
-what is critical issues here.
-
-Thanks,
-Gao Xiang
-
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+index db57bbb36216..b6bd2b1141fb 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.h
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+@@ -84,6 +84,12 @@ struct virtio_gpu_object {
+ #define gem_to_virtio_gpu_obj(gobj) \
+ 	container_of((gobj), struct virtio_gpu_object, gem_base)
+ 
++struct virtio_gpu_object_array {
++	struct ww_acquire_ctx ticket;
++	u32 nents, total;
++	struct drm_gem_object *objs[];
++};
++
+ struct virtio_gpu_vbuffer;
+ struct virtio_gpu_device;
+ 
+@@ -251,6 +257,17 @@ int virtio_gpu_mode_dumb_mmap(struct drm_file *file_priv,
+ 			      struct drm_device *dev,
+ 			      uint32_t handle, uint64_t *offset_p);
+ 
++struct virtio_gpu_object_array *virtio_gpu_array_alloc(u32 nents);
++struct virtio_gpu_object_array*
++virtio_gpu_array_from_handles(struct drm_file *drm_file, u32 *handles, u32 nents);
++void virtio_gpu_array_add_obj(struct virtio_gpu_object_array *objs,
++			      struct drm_gem_object *obj);
++int virtio_gpu_array_lock_resv(struct virtio_gpu_object_array *objs);
++void virtio_gpu_array_unlock_resv(struct virtio_gpu_object_array *objs);
++void virtio_gpu_array_add_fence(struct virtio_gpu_object_array *objs,
++				struct dma_fence *fence);
++void virtio_gpu_array_put_free(struct virtio_gpu_object_array *objs);
++
+ /* virtio vg */
+ int virtio_gpu_alloc_vbufs(struct virtio_gpu_device *vgdev);
+ void virtio_gpu_free_vbufs(struct virtio_gpu_device *vgdev);
+diff --git a/drivers/gpu/drm/virtio/virtgpu_gem.c b/drivers/gpu/drm/virtio/virtgpu_gem.c
+index 6fe6f72f64d1..fd60b45aabd2 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_gem.c
++++ b/drivers/gpu/drm/virtio/virtgpu_gem.c
+@@ -171,3 +171,96 @@ void virtio_gpu_gem_object_close(struct drm_gem_object *obj,
+ 						qobj->hw_res_handle);
+ 	virtio_gpu_object_unreserve(qobj);
+ }
++
++struct virtio_gpu_object_array *virtio_gpu_array_alloc(u32 nents)
++{
++	struct virtio_gpu_object_array *objs;
++	size_t size = sizeof(*objs) + sizeof(objs->objs[0]) * nents;
++
++	objs = kmalloc(size, GFP_KERNEL);
++	if (!objs)
++		return NULL;
++
++	objs->nents = 0;
++	objs->total = nents;
++	return objs;
++}
++
++static void virtio_gpu_array_free(struct virtio_gpu_object_array *objs)
++{
++	kfree(objs);
++}
++
++struct virtio_gpu_object_array*
++virtio_gpu_array_from_handles(struct drm_file *drm_file, u32 *handles, u32 nents)
++{
++	struct virtio_gpu_object_array *objs;
++	u32 i;
++
++	objs = virtio_gpu_array_alloc(nents);
++	if (!objs)
++		return NULL;
++
++	for (i = 0; i < nents; i++) {
++		objs->objs[i] = drm_gem_object_lookup(drm_file, handles[i]);
++		if (!objs->objs[i]) {
++			objs->nents = i;
++			virtio_gpu_array_put_free(objs);
++			return NULL;
++		}
++	}
++	objs->nents = i;
++	return objs;
++}
++
++void virtio_gpu_array_add_obj(struct virtio_gpu_object_array *objs,
++			      struct drm_gem_object *obj)
++{
++	if (WARN_ON_ONCE(objs->nents == objs->total))
++		return;
++
++	drm_gem_object_get(obj);
++	objs->objs[objs->nents] = obj;
++	objs->nents++;
++}
++
++int virtio_gpu_array_lock_resv(struct virtio_gpu_object_array *objs)
++{
++	int ret;
++
++	if (objs->nents == 1) {
++		ret = dma_resv_lock_interruptible(objs->objs[0]->resv, NULL);
++	} else {
++		ret = drm_gem_lock_reservations(objs->objs, objs->nents,
++						&objs->ticket);
++	}
++	return ret;
++}
++
++void virtio_gpu_array_unlock_resv(struct virtio_gpu_object_array *objs)
++{
++	if (objs->nents == 1) {
++		dma_resv_unlock(objs->objs[0]->resv);
++	} else {
++		drm_gem_unlock_reservations(objs->objs, objs->nents,
++					    &objs->ticket);
++	}
++}
++
++void virtio_gpu_array_add_fence(struct virtio_gpu_object_array *objs,
++				struct dma_fence *fence)
++{
++	int i;
++
++	for (i = 0; i < objs->nents; i++)
++		dma_resv_add_excl_fence(objs->objs[i]->resv, fence);
++}
++
++void virtio_gpu_array_put_free(struct virtio_gpu_object_array *objs)
++{
++	u32 i;
++
++	for (i = 0; i < objs->nents; i++)
++		drm_gem_object_put_unlocked(objs->objs[i]);
++	virtio_gpu_array_free(objs);
++}
+-- 
+2.18.1
 
