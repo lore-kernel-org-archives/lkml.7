@@ -2,51 +2,77 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2041AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C4BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99402189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567097412;
-	bh=Hslj8UGkEo+uEL+vuwTBz4V9Schqb3dk989zc+CeNYE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=JjacwCERWz7JzJjaKYc+xi7AbDzotRoNmIJz0LmcZgomL6BmCnT6S5QJgj8rCpfG4
-	 9CeNXs7C53yP4G6zEm5AOeiEooZq3+XkNgxEaqPrGXiccimLDirYmTo/29iv5x118t
-	 NlusEkRgUIiFi7qLP0v6P9rAdNl31VoQ9OoUYlHo=
+	by mail.kernel.org (Postfix) with ESMTP id 81ABD2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfH2QuK (ORCPT
+        id S1727791AbfH2Quy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:50:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbfH2QuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:50:10 -0400
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBAC9208CB;
-        Thu, 29 Aug 2019 16:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567097409;
-        bh=Hslj8UGkEo+uEL+vuwTBz4V9Schqb3dk989zc+CeNYE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=BWIBnFoCvnav1ZFWTSGjiXYAqgdO6IavKgAGKHeWQ68Cc1JGSC2R8HG/ChKL+FbEq
-         q+SP4H7f3RZ/XFAQedch6EeKn8vQf3q/We5z94rbTYMiOKvPzYwsaDNHQyJRVx6qyf
-         Z1jhCqpYdPUGisEw3PHHzp6C+/zAWX590OKClHR4=
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH] f2fs: fix flushing node pages when checkpoint is disabled
-Date:   Thu, 29 Aug 2019 09:50:08 -0700
-Message-Id: <20190829165008.71226-1-jaegeuk@kernel.org>
-X-Mailer: git-send-email 2.19.0.605.g01d371f741-goog
+        Thu, 29 Aug 2019 12:50:54 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38855 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfH2Qux (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:50:53 -0400
+Received: by mail-wm1-f67.google.com with SMTP id o184so4553699wme.3;
+        Thu, 29 Aug 2019 09:50:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EAPNXwtNcvomkAv43HK7BcSQSi3ID9bH+hr63tWVdSI=;
+        b=B5HGm8Y0d+BC3TOmZ23uuf+WqGqYOV7ombVlzG70cKlsV5JRtEvvNhzfPX4mECWFhx
+         u5j/9cXAx5IqdKYxp7N//EOr02YdCxMO9TImOTBYGSfNXGWuDvoj6pJX11SgB//Tt5im
+         yYal4ni8RQu92gT5EGlqUSz2C0ZgmGFTTf+a6stQq6hqSBqIOsB4/FaV7WQu1kPe6C3X
+         +xLocX36sKRkLLs3x2PB2D+myD7iamK/wRKiMKBKp2+VCm7/qCDUbUDyTARThORMu67E
+         QuOMPvFXZtlfAMMmQxgNFbLz16ewEqahiYYT8vzew1IHcjJ1Y165M5UTbENb5n3dJ24k
+         kxqA==
+X-Gm-Message-State: APjAAAX+kGHw6qYwNcIPCIAbgM17lyiHVPh/qD8mC15U8cFFX3Ij61QJ
+        D4+f5ZSeYUoFEP3fmz575wgwXYvwuHo=
+X-Google-Smtp-Source: APXvYqyG8Uv9qqAEzfuwRYVShx38vJV1pUSPq3W7ZBAlPx5+N1oEiU4zijmswr1WDwZJj2S7mhEW8w==
+X-Received: by 2002:a1c:f704:: with SMTP id v4mr361727wmh.90.1567097450438;
+        Thu, 29 Aug 2019 09:50:50 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id o14sm8340770wrg.64.2019.08.29.09.50.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 09:50:49 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sean Paul <sean@poorly.run>, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net, linux-rdma@vger.kernel.org,
+        linux-wimax@intel.com, linux-xfs@vger.kernel.org,
+        xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Whitcroft <apw@canonical.com>
+Subject: [PATCH v3 01/11] checkpatch: check for nested (un)?likely() calls
+Date:   Thu, 29 Aug 2019 19:50:15 +0300
+Message-Id: <20190829165025.15750-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,40 +80,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes skipping node page writes when checkpoint is disabled.
-In this period, we can't rely on checkpoint to flush node pages.
+IS_ERR(), IS_ERR_OR_NULL(), IS_ERR_VALUE() and WARN*() already contain
+unlikely() optimization internally. Thus, there is no point in calling
+these functions and defines under likely()/unlikely().
 
-Fixes: fd8c8caf7e7c ("f2fs: let checkpoint flush dnode page of regular")
-Fixes: 4354994f097d ("f2fs: checkpoint disabling")
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+This check is based on the coccinelle rule developed by Enrico Weigelt
+https://lore.kernel.org/lkml/1559767582-11081-1-git-send-email-info@metux.net/
+
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Whitcroft <apw@canonical.com>
 ---
- fs/f2fs/node.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ scripts/checkpatch.pl | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index e5044eec8097..8b66bc4c004b 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1524,7 +1524,8 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
- 	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
- 		goto redirty_out;
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 93a7edfe0f05..56969ce06df4 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -6480,6 +6480,12 @@ sub process {
+ 			     "Using $1 should generally have parentheses around the comparison\n" . $herecurr);
+ 		}
  
--	if (wbc->sync_mode == WB_SYNC_NONE &&
-+	if (!is_sbi_flag_set(sbi, SBI_CP_DISABLED) &&
-+			wbc->sync_mode == WB_SYNC_NONE &&
- 			IS_DNODE(page) && is_cold_node(page))
- 		goto redirty_out;
- 
-@@ -1909,7 +1910,8 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
- 	}
- 
- 	if (step < 2) {
--		if (wbc->sync_mode == WB_SYNC_NONE && step == 1)
-+		if (!is_sbi_flag_set(sbi, SBI_CP_DISABLED) &&
-+				wbc->sync_mode == WB_SYNC_NONE && step == 1)
- 			goto out;
- 		step++;
- 		goto next_step;
++# nested likely/unlikely calls
++		if ($line =~ /\b(?:(?:un)?likely)\s*\(\s*!?\s*(IS_ERR(?:_OR_NULL|_VALUE)?|WARN)/) {
++			WARN("LIKELY_MISUSE",
++			     "nested (un)?likely() calls, $1 already uses unlikely() internally\n" . $herecurr);
++		}
++
+ # whine mightly about in_atomic
+ 		if ($line =~ /\bin_atomic\s*\(/) {
+ 			if ($realfile =~ m@^drivers/@) {
 -- 
-2.19.0.605.g01d371f741-goog
+2.21.0
 
