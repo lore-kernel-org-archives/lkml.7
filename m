@@ -2,119 +2,218 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8205C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948D3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9725D2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 680B223407
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 14:35:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfH2Oex (ORCPT
+        id S1727650AbfH2Of0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 10:34:53 -0400
-Received: from mga11.intel.com ([192.55.52.93]:27775 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726950AbfH2Oew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 10:34:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 07:34:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,443,1559545200"; 
-   d="scan'208";a="210560005"
-Received: from irsmsx107.ger.corp.intel.com ([163.33.3.99])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Aug 2019 07:34:50 -0700
-Received: from irsmsx112.ger.corp.intel.com ([169.254.1.71]) by
- IRSMSX107.ger.corp.intel.com ([169.254.10.55]) with mapi id 14.03.0439.000;
- Thu, 29 Aug 2019 15:34:49 +0100
-From:   "Bradford, Robert" <robert.bradford@intel.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "jgross@suse.com" <jgross@suse.com>,
-        "riel@surriel.com" <riel@surriel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jian-hong@endlessm.com" <jian-hong@endlessm.com>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH] x86/reboot: Avoid EFI reboot when not running on EFI
-Thread-Topic: [PATCH] x86/reboot: Avoid EFI reboot when not running on EFI
-Thread-Index: AQHVXlIk9mI2ksshWUO3RxmbfzmajacR+keAgAAmIgA=
-Date:   Thu, 29 Aug 2019 14:34:48 +0000
-Message-ID: <caa320fa61d619a85d6237076f5ec8ed134d11b7.camel@intel.com>
-References: <20190829101119.7345-1-robert.bradford@intel.com>
-         <alpine.DEB.2.21.1908291416560.1938@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1908291416560.1938@nanos.tec.linutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.252.5.248]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <391867AEC980C542B9DB66A857D9EE37@intel.com>
-Content-Transfer-Encoding: base64
+        Thu, 29 Aug 2019 10:35:26 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33796 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfH2Of0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 10:35:26 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id D6BC028D56B;
+        Thu, 29 Aug 2019 15:35:22 +0100 (BST)
+Date:   Thu, 29 Aug 2019 16:35:20 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
+        Przemyslaw Gaj <pgaj@cadence.com>
+Subject: Re: [PATCH 1/4] i3c: master: detach and free device if
+ pre_assign_dyn_addr() fails
+Message-ID: <20190829163520.126d42d6@collabora.com>
+In-Reply-To: <SN6PR12MB26551F172804D039F3EAA991AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+References: <cover.1567071213.git.vitor.soares@synopsys.com>
+        <e26948eaaf765f683d8fe0618a31a98e2ecc0e65.1567071213.git.vitor.soares@synopsys.com>
+        <20190829124115.482cd8ec@collabora.com>
+        <SN6PR12MB26551F172804D039F3EAA991AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA4LTI5IGF0IDE0OjE4ICswMjAwLCBUaG9tYXMgR2xlaXhuZXIgd3JvdGU6
-DQo+IE9uIFRodSwgMjkgQXVnIDIwMTksIFJvYiBCcmFkZm9yZCB3cm90ZToNCj4gDQo+IENDKyBB
-cmQNCj4gDQo+ID4gUmVwbGFjZSB0aGUgY2hlY2sgdXNpbmcgZWZpX3J1bnRpbWVfZGlzYWJsZWQo
-KSB3aGljaCBvbmx5IGNoZWNrcyBpZg0KPiA+IEVGSQ0KPiA+IHJ1bnRpbWUgd2FzIGRpc2FibGVk
-IG9uIHRoZSBrZXJuZWwgY29tbWFuZCBsaW5lIHdpdGggYSBjYWxsIHRvDQo+ID4gZWZpX2VuYWJs
-ZWQoRUZJX1JVTlRJTUVfU0VSVklDRVMpIHRvIGNoZWNrIGlmIEVGSSBydW50aW1lIHNlcnZpY2Vz
-DQo+ID4gYXJlDQo+ID4gYXZhaWxhYmxlLg0KPiA+IA0KPiA+IEluIHRoZSBzaXR1YXRpb24gd2hl
-cmUgdGhlIGtlcm5lbCB3YXMgYm9vdGVkIHdpdGhvdXQgYW4gRUZJDQo+ID4gZW52aXJvbm1lbnQN
-Cj4gPiB0aGVuIG9ubHkgZWZpX2VuYWJsZWQoRUZJX1JVTlRJTUVfU0VSVklDRVMpIGNvcnJlY3Rs
-eSByZXByZXNlbnRzDQo+ID4gdGhhdCBubw0KPiA+IEVGSSBpcyBhdmFpbGFibGUuIFNldHRpbmcg
-Im5vZWZpIiBvciAiZWZpPW5vcnVudGltZSIgb24gdGhlDQo+ID4gY29tbWFuZGxpbmUNCj4gPiBj
-b250aW51ZSB0byBoYXZlIHRoZSBzYW1lIGVmZmVjdCBhcw0KPiA+IGVmaV9lbmFibGVkKEVGSV9S
-VU5USU1FX1NFUlZJQ0VTKQ0KPiA+IHdpbGwgcmV0dXJuIGZhbHNlLg0KPiA+IA0KPiA+IA0KPiA+
-IFNpZ25lZC1vZmYtYnk6IFJvYiBCcmFkZm9yZCA8cm9iZXJ0LmJyYWRmb3JkQGludGVsLmNvbT4N
-Cj4gPiAtLS0NCj4gPiAgYXJjaC94ODYva2VybmVsL3JlYm9vdC5jIHwgMiArLQ0KPiA+ICAxIGZp
-bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gPiANCj4gPiBkaWZm
-IC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL3JlYm9vdC5jIGIvYXJjaC94ODYva2VybmVsL3JlYm9v
-dC5jDQo+ID4gaW5kZXggMDlkNmJkZWQzYzFlLi4wYjBhN2ZjY2RiMDAgMTAwNjQ0DQo+ID4gLS0t
-IGEvYXJjaC94ODYva2VybmVsL3JlYm9vdC5jDQo+ID4gKysrIGIvYXJjaC94ODYva2VybmVsL3Jl
-Ym9vdC5jDQo+ID4gQEAgLTUwMCw3ICs1MDAsNyBAQCBzdGF0aWMgaW50IF9faW5pdCByZWJvb3Rf
-aW5pdCh2b2lkKQ0KPiA+ICAJICovDQo+ID4gIAlydiA9IGRtaV9jaGVja19zeXN0ZW0ocmVib290
-X2RtaV90YWJsZSk7DQo+ID4gIA0KPiA+IC0JaWYgKCFydiAmJiBlZmlfcmVib290X3JlcXVpcmVk
-KCkgJiYgIWVmaV9ydW50aW1lX2Rpc2FibGVkKCkpDQo+ID4gKwlpZiAoIXJ2ICYmIGVmaV9yZWJv
-b3RfcmVxdWlyZWQoKSAmJg0KPiA+IGVmaV9lbmFibGVkKEVGSV9SVU5USU1FX1NFUlZJQ0VTKSkN
-Cj4gDQo+IFdoeSBpcyBlZmlfcmVib290X3JlcXVpcmVkKCkgc2V0IGF0IGFsbCBpbiB0aGF0IHNp
-dHVhdGlvbj8NCj4gDQpIaSBUaG9tYXMsDQoNClRoaXMgcGxhdGZvcm0gdXNlcyBIVyBSZWR1Y2Vk
-IEFDUEkgKA0KaHR0cHM6Ly9naXRodWIuY29tL2ludGVsL2Nsb3VkLWh5cGVydmlzb3IpIGJ1dCBh
-bHNvIHN1cHBvcnRzIGRpcmVjdA0Ka2VybmVsIGJvb3Qgd2l0aG91dCBFRkkuDQoNCi8qDQogKiBG
-b3IgbW9zdCBtb2Rlcm4gcGxhdGZvcm1zIHRoZSBwcmVmZXJyZWQgbWV0aG9kIG9mIHBvd2VyaW5n
-IG9mZiBpcw0KdmlhDQogKiBBQ1BJLiBIb3dldmVyLCB0aGVyZSBhcmUgc29tZSB0aGF0IGFyZSBr
-bm93biB0byByZXF1aXJlIHRoZSB1c2Ugb2YNCiAqIEVGSSBydW50aW1lIHNlcnZpY2VzIGFuZCBm
-b3Igd2hpY2ggQUNQSSBkb2VzIG5vdCB3b3JrIGF0IGFsbC4NCiAqDQogKiBVc2luZyBFRkkgaXMg
-YSBsYXN0IHJlc29ydCwgdG8gYmUgdXNlZCBvbmx5IGlmIG5vIG90aGVyIG9wdGlvbg0KICogZXhp
-c3RzLg0KICovDQpib29sIGVmaV9yZWJvb3RfcmVxdWlyZWQodm9pZCkNCnsNCglpZiAoIWFjcGlf
-Z2JsX3JlZHVjZWRfaGFyZHdhcmUpDQoJCXJldHVybiBmYWxzZTsNCg0KCWVmaV9yZWJvb3RfcXVp
-cmtfbW9kZSA9IEVGSV9SRVNFVF9XQVJNOw0KCXJldHVybiB0cnVlOw0KfQ0KDQpUaGlzIGlzIGEg
-aGFyZHdhcmUgd29ya2Fyb3VuZCB0aGF0IGFzc3VtZXMgdGhhdCBhbGwgQUNQSSBIVyByZWR1Y2Vk
-DQpwbGF0Zm9ybXMgZG8gbm90IHN1cHBvcnQgQUNQSSByZXNldDoNCg0KY29tbWl0IDQ0YmUyOGU5
-ZGQ5ODgwZGNhM2UyY2JmN2E4NDRmMjExNGU2N2YyY2INCkF1dGhvcjogTWF0dCBGbGVtaW5nIDxt
-YXR0LmZsZW1pbmdAaW50ZWwuY29tPg0KRGF0ZTogICBGcmkgSnVuIDEzIDEyOjM5OjU1IDIwMTQg
-KzAxMDANCg0KICAgIHg4Ni9yZWJvb3Q6IEFkZCBFRkkgcmVib290IHF1aXJrIGZvciBBQ1BJIEhh
-cmR3YXJlIFJlZHVjZWQgZmxhZw0KICAgIA0KICAgIEl0IGFwcGVhcnMgdGhhdCB0aGUgQmF5VHJh
-aWwtVCBjbGFzcyBvZiBoYXJkd2FyZSByZXF1aXJlcyBFRkkgaW4NCm9yZGVyDQogICAgdG8gcG93
-ZXJkb3duIGFuZCByZWJvb3QgYW5kIG5vIG90aGVyIHJlbGlhYmxlIG1ldGhvZCBleGlzdHMuDQog
-ICAgDQogICAgVGhpcyBxdWlyayBpcyBnZW5lcmFsbHkgYXBwbGljYWJsZSB0byBhbGwgaGFyZHdh
-cmUgdGhhdCBoYXMgdGhlDQpBQ1BJDQogICAgSGFyZHdhcmUgUmVkdWNlZCBiaXQgc2V0LCBzaW5j
-ZSB1c3VhbGx5IEFDUEkgd291bGQgYmUgdGhlIHByZWZlcnJlZA0KICAgIG1ldGhvZC4NCiAgICAN
-CiAgICBDYzogTGVuIEJyb3duIDxsZW4uYnJvd25AaW50ZWwuY29tPg0KICAgIENjOiBNYXJrIFNh
-bHRlciA8bXNhbHRlckByZWRoYXQuY29tPg0KICAgIENjOiAiUmFmYWVsIEouIFd5c29ja2kiIDxy
-YWZhZWwuai53eXNvY2tpQGludGVsLmNvbT4NCiAgICBTaWduZWQtb2ZmLWJ5OiBNYXR0IEZsZW1p
-bmcgPG1hdHQuZmxlbWluZ0BpbnRlbC5jb20+DQoNCkknbSByZWx1Y3RhbnQgdG8gY2hhbmdlIHRo
-ZSBiZWhhdmlvdXIgb2YgZWZpX3JlYm9vdF9yZXF1aXJlZCgpIGFzIGl0DQptaWdodCBicmVhayBv
-bGRlciBoYXJkd2FyZSB3aGVyZWFzIGNoZWNraW5nIGlmIHdlIGhhdmUgYW4gRUZJIHJ1bnRpbWUN
-CmlzIHNhZmVyLg0KDQpSb2INCg==
+On Thu, 29 Aug 2019 13:53:24 +0000
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+
+> Hi Boris,
+> 
+> From: Boris Brezillon <boris.brezillon@collabora.com>
+> Date: Thu, Aug 29, 2019 at 11:41:15
+> 
+> > +Przemek
+> > 
+> > Please try to Cc active I3C contributors so they get a chance to
+> > comment on your patches.  
+> 
+> I can do that next time.
+> 
+> > 
+> > On Thu, 29 Aug 2019 12:19:32 +0200
+> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> >   
+> > > On pre_assing_dyn_addr() the devices that fail:
+> > >   i3c_master_setdasa_locked()
+> > >   i3c_master_reattach_i3c_dev()
+> > >   i3c_master_retrieve_dev_info()
+> > > 
+> > > are kept in memory and master->bus.devs list. This makes the i3c devices
+> > > without a dynamic address are sent on DEFSLVS CCC command. Fix this by
+> > > detaching and freeing the devices that fail on pre_assign_dyn_addr().  
+> > 
+> > I don't think removing those entries is a good strategy, as one might
+> > want to try to use a different dynamic address if the requested one
+> > is not available.  
+> 
+> Do you mean same 'assigned-address' attribute in DT?
+
+Yes, or say it's another device that got the address we want and this
+device doesn't want to release the address (I'm assuming the !SA case).
+
+> 
+> If so, it is checked here:
+> 
+> static int i3c_master_bus_init(struct i3c_master_controller *master)
+> ...
+> 	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node) {
+> 		struct i3c_device_info info = {
+> 			.static_addr = i3cboardinfo->static_addr,
+> 		};
+> 
+> 		if (i3cboardinfo->init_dyn_addr) {
+> 			status = i3c_bus_get_addr_slot_status(&master->bus,
+> 			^
+> 						i3cboardinfo->init_dyn_addr);
+> 			if (status != I3C_ADDR_SLOT_FREE) {
+> 				ret = -EBUSY;
+> 				goto err_detach_devs;
+> 			}
+> 		}
+> 
+> 		i3cdev = i3c_master_alloc_i3c_dev(master, &info);
+> 		if (IS_ERR(i3cdev)) {
+> 			ret = PTR_ERR(i3cdev);
+> 			goto err_detach_devs;
+> 		}
+> 
+> 		i3cdev->boardinfo = i3cboardinfo;
+> 
+> 		ret = i3c_master_attach_i3c_dev(master, i3cdev);
+> 		if (ret) {
+> 			i3c_master_free_i3c_dev(i3cdev);
+> 			goto err_detach_devs;
+> 		}
+> 	}
+> ...
+> 
+> and later if it fails i3c_master_pre_assign_dyn_addr(), the device can 
+> participate in Enter Dynamic Address Assignment process.
+> I may need to check the boardinfo->init_dyn_addr status on 
+> i3c_master_add_i3c_dev_locked before i3c_master_setnewda_locked().
+
+I need to double check but I thought we were already handling that case
+properly.
+
+> 
+> > Why not simply skipping entries that have ->dyn_addr
+> > set to 0 when preparing a DEFSLVS frame  
+> 
+> I considered that solution too but if the device isn't enumerated why 
+> should it be attached and kept in memory?
+
+Might be a device that supports HJ, and in that case we might want the
+controller to reserve a slot in its device table for that device.
+Anyway, it doesn't hurt to have it around as long as we don't pass the
+device through DEFSLVS if it doesn't have a dynamic address. I really
+prefer to keep the logic unchanged and fix it if it needs to be fixed.
+
+> Anyway we have i3c_boardinfo 
+> with DT information.
+> 
+> >   
+> > > 
+> > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> > > ---
+> > >  drivers/i3c/master.c | 11 ++++++++---
+> > >  1 file changed, 8 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> > > index 5f4bd52..4d29e1f 100644
+> > > --- a/drivers/i3c/master.c
+> > > +++ b/drivers/i3c/master.c
+> > > @@ -1438,7 +1438,7 @@ static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
+> > >  	ret = i3c_master_setdasa_locked(master, dev->info.static_addr,
+> > >  					dev->boardinfo->init_dyn_addr);
+> > >  	if (ret)
+> > > -		return;
+> > > +		goto err_detach_dev;
+> > >  
+> > >  	dev->info.dyn_addr = dev->boardinfo->init_dyn_addr;
+> > >  	ret = i3c_master_reattach_i3c_dev(dev, 0);
+> > > @@ -1453,6 +1453,10 @@ static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
+> > >  
+> > >  err_rstdaa:
+> > >  	i3c_master_rstdaa_locked(master, dev->boardinfo->init_dyn_addr);
+> > > +
+> > > +err_detach_dev:
+> > > +	i3c_master_detach_i3c_dev(dev);
+> > > +	i3c_master_free_i3c_dev(dev);  
+> > 
+> > We certainly shouldn't detach/free the i3c_dev_desc from here. If it
+> > has to be done somewhere (which I'd like to avoid), it should be done
+> > in i3c_master_bus_init() (i3c_master_pre_assign_dyn_addr() should be
+> > converted to return an int in that case).  
+> 
+> I can change it to return an error. 
+> 
+> >   
+> > >  }
+> > >  
+> > >  static void
+> > > @@ -1647,7 +1651,7 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+> > >  	enum i3c_addr_slot_status status;
+> > >  	struct i2c_dev_boardinfo *i2cboardinfo;
+> > >  	struct i3c_dev_boardinfo *i3cboardinfo;
+> > > -	struct i3c_dev_desc *i3cdev;
+> > > +	struct i3c_dev_desc *i3cdev, *i3ctmp;
+> > >  	struct i2c_dev_desc *i2cdev;
+> > >  	int ret;
+> > >  
+> > > @@ -1746,7 +1750,8 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+> > >  	 * Pre-assign dynamic address and retrieve device information if
+> > >  	 * needed.
+> > >  	 */
+> > > -	i3c_bus_for_each_i3cdev(&master->bus, i3cdev)
+> > > +	list_for_each_entry_safe(i3cdev, i3ctmp, &master->bus.devs.i3c,
+> > > +				 common.node)
+> > >  		i3c_master_pre_assign_dyn_addr(i3cdev);
+> > >  
+> > >  	ret = i3c_master_do_daa(master);  
+> 
+> Thank for your feedback.
+> 
+> Best regards,
+> Vitor Soares
+
