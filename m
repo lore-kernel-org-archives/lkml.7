@@ -2,103 +2,130 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C45E3C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36435C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C7121874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567121709;
-	bh=MyHmJUU3Gn2uuapEBmq5L4LI7DM7u2Evj0T5dUzngj8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wdh3oKsPkJ+fQByugQX7sioqD88ress8En4/ZhTbZGotzudB8a2+eG/6lV/ddav/D
-	 gAS1TMZq02jYFya/yh41KJn8THeq26pQOURzN95nXa0gUcuTCiheLZj/1cj0FKP1eL
-	 sXLTowxF7XnoDBGcdi7YCh7etYZUWL3a4214Ke+Q=
+	by mail.kernel.org (Postfix) with ESMTP id 0070F2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:35:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="biWGoeyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbfH2XfI (ORCPT
+        id S1727731AbfH2XfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 19:35:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbfH2XfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 19:35:08 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A0392173E;
-        Thu, 29 Aug 2019 23:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567121707;
-        bh=MyHmJUU3Gn2uuapEBmq5L4LI7DM7u2Evj0T5dUzngj8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MbKkKKR0uyA41FC66Oo4hTRux8s83095GYUAliZ9zLkaKe7iz2b30Mi8EiHVPoF3q
-         clZF0De+LYVO+xsNkIjkfxYgtwFaKjdINb7Y+oqJyLdMAB35Ic2zGoEYOPH7Ny5ELw
-         TBILAOb2LwnxMigNkC8Cbk1WoUYTG/6qrjCEEQos=
-Date:   Thu, 29 Aug 2019 19:35:06 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20190829233506.GT5281@sasha-vm>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190829205631.uhz6jdboneej3j3c@pali>
- <184209.1567120696@turing-police>
+        Thu, 29 Aug 2019 19:35:13 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42120 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727600AbfH2XfM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 19:35:12 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g111so2136041otg.9
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 16:35:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w7I+vTCF8MoRhaFpK08T7rrw/DewwWxf4o+4A7aaGhM=;
+        b=biWGoeyfg87WAVV9jfzPsO0CvuI+vFgmGePiq3Ubf5qve9suqY4yqgfZnPY8o8Q0iT
+         ldqbICZnsF2Z0PcJJv2YH3XLpdVsolvfwJKa93jFo1FNW745Zj62Y68Db8HP69B8yI25
+         FhG4qRqeJbCGxQ393M/TXty/F9pEEPrqLGEgDfA3uIL9CbNCSU0hB6KNTZrks1TU3TWB
+         N+hF1FIw9xfqtVHhstS7aQVZ8LNPNoJxBZvklZrW/o0fwLvD6NMJO014nVOsKc6jM+1X
+         7N27G0dsJ+Vqt3bcnxmg7RIHC0eUgH2lx8ZBSQmf49kc4EMM9HJShs4e9+O7yLgHbDhk
+         vFkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w7I+vTCF8MoRhaFpK08T7rrw/DewwWxf4o+4A7aaGhM=;
+        b=n3X7BHdjadyQJ5DM6fqJ7AiMmT4iJqIB+vWwUiiMausoCQokQhPwgrfZsgbS7flgAQ
+         0x29AiZCcvA/ayZGAO5o18ixmr/V+em7/2+IQZ9YHaLW7c+2DkNVLDffe1g+CMudjjKk
+         54XlVU9P+URVDbo/6qUWWH6Az27deXZvVl+bb0GZbklb620TZLeIvUx8lTNiUs4xDMPg
+         g3xZuQgTe/0w8Hzd/p6QvJ4JqEJVq9uxDm5+mx51GrGhqXhfz1YwjcjCgwAS22m6uBau
+         cwiDdsPyd99mxe2HfefmarYZdhkNUvZ5rPA0/mT11vvOYMXqAXweQq+So8/CVCopbvbT
+         IV/w==
+X-Gm-Message-State: APjAAAUHscdG3dNR3YujuncNS41Dyfkyf4x6RWs8/h2yz0Fd4jgcnfN2
+        XlgyFUElCYQAzEGpt0bM8CF+XgIFHVVohQqE0keI7w==
+X-Google-Smtp-Source: APXvYqyCgFlGZVk6JvnxAvkATHGZWNhCzYn7EP5r7tl1z1c7LpgffQZCiIV9wIvV+Z/O+Cof0dtgknD1/eoqnT+gXWU=
+X-Received: by 2002:a05:6830:1e05:: with SMTP id s5mr9416289otr.247.1567121711247;
+ Thu, 29 Aug 2019 16:35:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <184209.1567120696@turing-police>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <156712072444.1601704.7392596435870876837.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <156712072444.1601704.7392596435870876837.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 29 Aug 2019 16:35:00 -0700
+Message-ID: <CAPcyv4jGOy+WsdFrPfS9Pr9UiJHrogfdYqUcXxC0GxBsFefpWw@mail.gmail.com>
+Subject: Re: [PATCH v2] libata/ahci: Drop PCS quirk for Denverton and beyond
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Stephen Douthit <stephend@silicom-usa.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "IDE/ATA development list" <linux-ide@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 07:18:16PM -0400, Valdis Klētnieks wrote:
->On Thu, 29 Aug 2019 22:56:31 +0200, Pali Roh?r said:
+On Thu, Aug 29, 2019 at 4:33 PM Dan Williams <dan.j.williams@intel.com> wrote:
 >
->> I'm not really sure if this exfat implementation is fully suitable for
->> mainline linux kernel.
->>
->> In my opinion, proper way should be to implement exFAT support into
->> existing fs/fat/ code instead of replacing whole vfat/msdosfs by this
->> new (now staging) fat implementation.
+> The Linux ahci driver has historically implemented a configuration fixup
+> for platforms / platform-firmware that fails to enable the ports prior
+> to OS hand-off at boot. The fixup was originally implemented way back
+> before ahci moved from drivers/scsi/ to drivers/ata/, and was updated in
+> 2007 via commit 49f290903935 "ahci: update PCS programming". The quirk
+> sets a port-enable bitmap in the PCS register at offset 0x92.
 >
->> In linux kernel we really do not need two different implementation of
->> VFAT32.
+> This quirk could be applied generically up until the arrival of the
+> Denverton (DNV) platform. The DNV AHCI controller architecture supports
+> more than 6 ports and along with that the PCS register location and
+> format were updated to allow for more possible ports in the bitmap. DNV
+> AHCI expands the register to 32-bits and moves it to offset 0x94.
 >
->This patch however does have one major advantage over "patch vfat to
->support exfat" - which is that the patch exists.
+> As it stands there are no known problem reports with existing Linux
+> trying to set bits at offset 0x92 which indicates that the quirk is not
+> applicable. Likely it is not applicable on a wider range of platforms,
+> but it is difficult to discern which platforms if any still depend on
+> the quirk.
 >
->If somebody comes forward with an actual "extend vfat to do exfat" patch,
->we should at that point have a discussion about relative merits....
+> Rather than try to fix the PCS quirk to consider the DNV register layout
+> instead require explicit opt-in. The assumption is that the OS driver
+> need not touch this register, and platforms can be added with a new
+> boad_ahci_pcs7 board-id when / if problematic platforms are found in the
+> future. The logic in ahci_intel_pcs_quirk() looks for all Intel AHCI
+> instances with "legacy" board-ids and otherwise skips the quirk if the
+> board was matched by class-code.
+>
+> Reported-by: Stephen Douthit <stephend@silicom-usa.com>
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+> Changes since v1 [1]:
+> - Find a way to not duplicate a large portion of the ahci_pci_tbl[]
+>   array (Stephen).
+> - Add a definition for the PCS register offset rather than hard code
+>   (Stephen)
+>
+> [1]: https://lore.kernel.org/r/a04c0ae7-ef4d-4275-de05-b74beaeef86c@silicom-usa.com/
+>
+>  drivers/ata/ahci.c |   70 ++++++++++++++++++++++++++++++++--------------------
+>  drivers/ata/ahci.h |    2 +
+>  2 files changed, 45 insertions(+), 27 deletions(-)
+>
+> diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+> index f7652baa6337..847e3796d505 100644
+> --- a/drivers/ata/ahci.c
+> +++ b/drivers/ata/ahci.c
+> @@ -65,6 +65,12 @@ enum board_ids {
+>         board_ahci_sb700,       /* for SB700 and SB800 */
+>         board_ahci_vt8251,
+>
+> +       /*
+> +        * board IDs for Intel chipsets that support more than 6 ports
+> +        * *and* end up needing the PCS quirk.
+> +        */
 
-This patch going into staging doesn't necessarily mean that one day
-it'll get moved to fs/exfat/. It's very possible that the approach would
-instead be to use the staging code for reference, build this
-functionality in fs/fat/, and kill off the staging code when it's not
-needed anymore.
-
-With regards to missing specs/docs/whatever - our main concern with this
-release was that we want full interoperability, which is why the spec
-was made public as-is without modifications from what was used
-internally. There's no "secret sauce" that Microsoft is hiding here.
-
-How about we give this spec/code time to get soaked and reviewed for a
-bit, and if folks still feel (in a month or so?) that there are missing
-bits of information related to exfat, I'll be happy to go back and try
-to get them out as well.
-
---
-Thanks,
-Sasha
-
+Ugh, sorry, I just realized I did not opt Denverton out of this... v3
+on the way.
