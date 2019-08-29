@@ -2,83 +2,83 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D44C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F64C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB2A206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 22:58:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Egy9LB6D"
+	by mail.kernel.org (Postfix) with ESMTP id 0F4F32166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 23:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567119692;
+	bh=W9b8uz0feEaW6eZCGVA4xllacD7howC1goKBJQjIsP4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h30WO83OhJJsCWQCX7TzSllLR7zPcjhDkCfeUNXnMzdmh+HrNVBsa/7F6k/HkGE0K
+	 RW5lfA2tdx/vNKGc7YYifBwTjp1G8lzI9sCZ+XDgVuilk6V/A+25j/QtHocdR2EyTN
+	 Mt7FbVhn6PPlIuseT87BX/X++7V1az+5WzKBqToM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbfH2W6R (ORCPT
+        id S1728180AbfH2XBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 18:58:17 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33596 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfH2W6Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 18:58:16 -0400
-Received: by mail-lf1-f67.google.com with SMTP id g9so3845550lfb.0;
-        Thu, 29 Aug 2019 15:58:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jMpEpYdKjxQTMTwoqFDRd4GHoam1TKxyfcWSTCd8Tl4=;
-        b=Egy9LB6DaC3zxQqnylGk3rji2dvWp76VLEoV+WIXgsnS5Q7qz7iRTsnXSEnTEXRvzO
-         Oi6RNY7IBhjMzwJ1Zd5tbKBwIFqrpuuk64I7zdVifFHDMaxBYUZQldtmqnfwsCMqIDBH
-         AJcZIpMSx+xQZfu8w+MdeOTrMU2kcVrdTQRwwmsyHAYf14Szldqp+1zSwul0aIMF2RMS
-         h8WvKJ02Osc4h6cyxwl+izBZcwLLRIKYMldwtLsY3gNSKwjWLYb4orKuR0SMw5o/5BdV
-         T939dtM2YjkP0MnRiPICH0GY5k9JNqw7B7k9DqrU9Bp03Viferu3+hQsaFitNQ4+Bzm+
-         k5cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jMpEpYdKjxQTMTwoqFDRd4GHoam1TKxyfcWSTCd8Tl4=;
-        b=miMUsvUUb48/bV2ZvBR7MM54AeT/qokL+yurhJwCfS2tstBhskD2cyTETzJXJbGo9k
-         tIReGzMB0Dm3D81YfsiBe5kWeD4dA/TIwUyxyIGFa0xwG7Y2DG92jQf/ID9TVsxD7Sy3
-         uQTeQgwPvG7V0LSv8J4mg4GGhUjrhjzJwov6sd3ABfRGfvNvhVoOGu+ffeSes/pCkyCL
-         BTMux5wI2lAwFgn+0onBoxvvuZ0Y+tQg82RpsuQJqwUU4NSMfamUjO2hClls71NX+B5X
-         t34y4zG6ulyyajgfAISBT9FqDMe6Ms8rydb1WI1jrlCaxTTLCT2Jf3B1k+2YKJ8LWOFN
-         nqDg==
-X-Gm-Message-State: APjAAAXkQxeHqkLGJVaApiOWOGNrU4zYd3Es/lmSHWgWLdTLF42gxq0P
-        q36AmWVYPnLgzUg/ZxBYu+siOOaxOiURnaw/K3s=
-X-Google-Smtp-Source: APXvYqxVL/7P09rPYGqWIu+8vgNxEGPIbIlZmnnUZavyaCiYA+JtMtfdTBE8f9LO2d1phLWjDhHel7o7xCP2v4QFphE=
-X-Received: by 2002:ac2:4901:: with SMTP id n1mr7812539lfi.0.1567119494587;
- Thu, 29 Aug 2019 15:58:14 -0700 (PDT)
+        Thu, 29 Aug 2019 19:01:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727826AbfH2XBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 19:01:30 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D2D220828;
+        Thu, 29 Aug 2019 23:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567119689;
+        bh=W9b8uz0feEaW6eZCGVA4xllacD7howC1goKBJQjIsP4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bSJ6EehHO0cOzJSIr27S1Lja+mZUxP500FnEZtxxAgXtdPYX6f/m17eD5+lda6brA
+         YPZdc70TZBBcV2AmJtoXO5/c/Ds6ILtQM+spB9LQXswf+yQTXxIL3t7auVDhf7WLdA
+         tSelT+jtK3910rMvMUNQ02HQ6j9R79g+fxFCiYJY=
+Date:   Thu, 29 Aug 2019 19:01:28 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     stable@vger.kernel.org, architt@codeaurora.org,
+        a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        airlied@linux.ie, jsarha@ti.com, tomi.valkeinen@ti.com,
+        vinholikatti@gmail.com, jejb@linux.vnet.ibm.com,
+        martin.petersen@oracle.com, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Subject: Re: [BACKPORT 4.19.y 1/3] drm/bridge: tfp410: fix memleak in
+ get_modes()
+Message-ID: <20190829230128.GP5281@sasha-vm>
+References: <20190829200001.17092-1-mathieu.poirier@linaro.org>
+ <20190829200001.17092-2-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-References: <20190830085227.01676c93@canb.auug.org.au> <CANiq72mGhn0q=hEJMQ=E7HoMrOEhW=Mgvgtc=mqRCo_twUHD_w@mail.gmail.com>
-In-Reply-To: <CANiq72mGhn0q=hEJMQ=E7HoMrOEhW=Mgvgtc=mqRCo_twUHD_w@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 30 Aug 2019 00:58:03 +0200
-Message-ID: <CANiq72m4QV+ojs-jyxX39+M-Jjr_B47_hgzuwo5dnQXsq2tyxA@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the compiler-attributes tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190829200001.17092-2-mathieu.poirier@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 12:54 AM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
+On Thu, Aug 29, 2019 at 01:59:59PM -0600, Mathieu Poirier wrote:
+>From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 >
-> Yeah, we just saw it, I was about to drop it from the queue. It is
-> indeed because we don't have those __* defines within the compilation
-> environment of the kernel.
+>commit c08f99c39083ab55a9c93b3e93cef48711294dad upstream
+>
+>We don't free the edid blob allocated by the call to drm_get_edid(),
+>causing a memleak. Fix this by calling kfree(edid) at the end of the
+>get_modes().
+>
+>Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+>Link: https://patchwork.freedesktop.org/patch/msgid/20190610135739.6077-1-tomi.valkeinen@ti.com
+>Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Dropped!
+I've queued this one for 4.14-5.2, thanks!
 
-Cheers,
-Miguel
+--
+Thanks,
+Sasha
