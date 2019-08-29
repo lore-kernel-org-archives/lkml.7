@@ -2,96 +2,87 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8962C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A99C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782E421874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:21:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102899;
-	bh=xCREaTygv8b8nm+QPF3XKV3E36VYjZhtrpivCPCooeI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X/vkv3pv/1+4I/+r7xEuVO0DIM0xThtmIyOOPDfp30i3q+j7a7ZJ1uHovlxM15R4+
-	 RxL5uFK2K6h1asXlC+VuUhAKPz74je38ufNabIgcX4Rb6RMZplwgGcBZE9SzTmJMOM
-	 ufpECTI2TYIBqxmlNwb0siW9bMozHZ001VIq/dSI=
+	by mail.kernel.org (Postfix) with ESMTP id 1DA0F2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:21:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730091AbfH2SRd (ORCPT
+        id S1730077AbfH2SVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:17:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730007AbfH2SRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:17:18 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A18023403;
-        Thu, 29 Aug 2019 18:17:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102637;
-        bh=xCREaTygv8b8nm+QPF3XKV3E36VYjZhtrpivCPCooeI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ta6Wj6RB8p0/wHlxYybanRihcNLApNjAOklmuF5kMEymUlMJaX1JyWJEBMat8Miql
-         NGuDA/PVQXkMzPhjrIRkZpJ34P302mpeokqcZmqI7Tw1l6h9tw6S0QRCfYhWH92cBb
-         N/dybzlyM5dkko/B/L5jhPY7rKKfdhMmnb94gTcc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 15/27] cx82310_eth: fix a memory leak bug
-Date:   Thu, 29 Aug 2019 14:16:41 -0400
-Message-Id: <20190829181655.8741-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829181655.8741-1-sashal@kernel.org>
-References: <20190829181655.8741-1-sashal@kernel.org>
+        Thu, 29 Aug 2019 14:21:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51220 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729743AbfH2SVo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:21:44 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i3P38-0003sP-Me; Thu, 29 Aug 2019 20:21:34 +0200
+Date:   Thu, 29 Aug 2019 20:21:33 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Borislav Petkov <bp@suse.de>
+cc:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?ISO-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 10/11] mm: x86: Invoke hypercall when page encryption
+ status is changed
+In-Reply-To: <20190829180717.GF2132@zn.tnic>
+Message-ID: <alpine.DEB.2.21.1908292018500.1938@nanos.tec.linutronix.de>
+References: <20190710201244.25195-1-brijesh.singh@amd.com> <20190710201244.25195-11-brijesh.singh@amd.com> <20190829180717.GF2132@zn.tnic>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+On Thu, 29 Aug 2019, Borislav Petkov wrote:
 
-[ Upstream commit 1eca92eef18719027d394bf1a2d276f43e7cf886 ]
+> On Wed, Jul 10, 2019 at 08:13:11PM +0000, Singh, Brijesh wrote:
+> > @@ -2060,6 +2067,14 @@ static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
+> >  	 */
+> >  	cpa_flush(&cpa, 0);
+> >  
+> > +	/*
+> > +	 * When SEV is active, notify hypervisor that a given memory range is mapped
+> > +	 * encrypted or decrypted. Hypervisor will use this information during
+> > +	 * the VM migration.
+> > +	 */
+> > +	if (sev_active())
+> > +		set_memory_enc_dec_hypercall(addr, numpages << PAGE_SHIFT, enc);
+> 
+> Btw, tglx has a another valid design concern here: why isn't this a
+> pv_ops thing? So that it is active only when the hypervisor is actually
+> present?
+> 
+> I know, I know, this will run on SEV guests only because it is all
+> (hopefully) behind "if (sev_active())" checks but the clean and accepted
+> design is a paravirt call, I'd say.
 
-In cx82310_bind(), 'dev->partial_data' is allocated through kmalloc().
-Then, the execution waits for the firmware to become ready. If the firmware
-is not ready in time, the execution is terminated. However, the allocated
-'dev->partial_data' is not deallocated on this path, leading to a memory
-leak bug. To fix this issue, free 'dev->partial_data' before returning the
-error.
+No. sev_active() has nothing to do with guest mode. It tells whether SEV is
+active or not. So yes, this calls into this function on both guest and
+host. The latter is beyond pointless.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/usb/cx82310_eth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thanks,
 
-diff --git a/drivers/net/usb/cx82310_eth.c b/drivers/net/usb/cx82310_eth.c
-index 947bea81d9241..dfbdea22fbad9 100644
---- a/drivers/net/usb/cx82310_eth.c
-+++ b/drivers/net/usb/cx82310_eth.c
-@@ -175,7 +175,8 @@ static int cx82310_bind(struct usbnet *dev, struct usb_interface *intf)
- 	}
- 	if (!timeout) {
- 		dev_err(&udev->dev, "firmware not ready in time\n");
--		return -ETIMEDOUT;
-+		ret = -ETIMEDOUT;
-+		goto err;
- 	}
- 
- 	/* enable ethernet mode (?) */
--- 
-2.20.1
+	tglx
+
 
