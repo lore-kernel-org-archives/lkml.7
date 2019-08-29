@@ -2,145 +2,108 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA379C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 04:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB48C41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 05:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED8123403
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 04:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32344233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 05:02:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Crh6iKQg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HGUOE0/G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfH2E4C (ORCPT
+        id S1726055AbfH2FCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 00:56:02 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:11823 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbfH2E4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 00:56:02 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46Jr0b5DHPz9v045;
-        Thu, 29 Aug 2019 06:55:59 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Crh6iKQg; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 9z55-teS7QNT; Thu, 29 Aug 2019 06:55:59 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46Jr0b47h8z9v044;
-        Thu, 29 Aug 2019 06:55:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1567054559; bh=C7KnBPSsTOCMKq6tZmmUIqyxDQCGRpUvQfY8hSe07iY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Crh6iKQgHzv0eO4Zt5E/aY5c04/+zsg8gPvFX0T3nRKRRU84j5EOOfjB6tpEcJeOK
-         H6Xo/zcD5it730VdmybY59Uju+tQjAMjpN54UwPR9lXBav8DZ6aEZCYkd3lxHfTwyj
-         rR7aR7Z6R1QPFOIsqIKXtCNlm/GF62ovxRTIBQEY=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6339C8B79B;
-        Thu, 29 Aug 2019 06:56:00 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id XOufC6BwEjVn; Thu, 29 Aug 2019 06:56:00 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BF89B8B761;
-        Thu, 29 Aug 2019 06:55:59 +0200 (CEST)
-Subject: Re: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception
- handler
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Feng Tang <feng.tang@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <201908200943.601DD59DCE@keescook>
- <20190822155611.a1a6e26db99ba0876ba9c8bd@linux-foundation.org>
- <86003539-18ec-f2ff-a46f-764edb820dcd@c-s.fr> <201908241206.D223659@keescook>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <4c1ed94a-4dd0-e5cb-0b87-397b512d465e@c-s.fr>
-Date:   Thu, 29 Aug 2019 06:55:59 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 01:02:41 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35419 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfH2FCl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 01:02:41 -0400
+Received: by mail-pl1-f195.google.com with SMTP id gn20so1014312plb.2;
+        Wed, 28 Aug 2019 22:02:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=LgMi/tOCGdx9z9EgjX0DOVGstnnLhYUUExXCPTNrvk4=;
+        b=HGUOE0/GrUyV2OTY2CITe3OSYyiH1ZaPEVlYKIDE6D3wUi4KNgXz2F3Nw1NPJQvuQY
+         4q0hLcS6BC46Ir4eIlxdKcYm7KyFAIivvMpj+HTTjqwCNiKCrCdjcuICwnfZsUujsQEi
+         WvC5l3hqCtW/udICeHHBV1BnYq30TNVsRU14MTPKf1sUA9Ntw4ycWulsHVnyjj9ifCLI
+         yMPwWCnJrEx1ATI7rb75NRu0PGxbI0p46fNrYW73tEzdOcm96sd5vatezLa1lDGNDg+m
+         RqePAZfocxBvODzP9EvUraPX4W/GFY0k2GwTzUYFExEO511lgm6je1sK5cu9yDDP7dRM
+         74ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=LgMi/tOCGdx9z9EgjX0DOVGstnnLhYUUExXCPTNrvk4=;
+        b=jFblr3vrJ1ZSkVTTsAv6U9Xg6BGeoq/SkJObooCOuTa4TMmriN87rXimQu/pgtObu0
+         ToLYrY4FhjKgN6Tb/7gO9dh7eHA0n0rmlXpBZNeQayrrIZGfrk/t3+jQ1wj6ngRC2qrY
+         iC3hPVpTddYAG3g06Crc6BVwVLRLO9l0xVaXIz95RoNGsC+v+9BOqAOKM60IyuA0CA1m
+         xV3ZEv7der4rpKt8iAneic/ELNWXjx3zeYA31CI7Tjjan15VgvMYWKnItbSzV3wlOhYt
+         zibKB7UEwRYG8U2w/Of+aICWZ3bsITAUsH9B4VxynqM/yvFNgE64nYktKeywydrqCNVX
+         lSSg==
+X-Gm-Message-State: APjAAAXkw6/g2AdqzBvqFdi9o6YSkZr8JEhmwh77onO+en5GUCVfSb0T
+        /iDJy40tVtox7uip/1uqWmI=
+X-Google-Smtp-Source: APXvYqy2pYPQdzCT1BPAq+ZAXzjpkv7FaF1klfsNhhpKdjsKim7tOECfA/6XxqQTcmXrjMzD4/wGQg==
+X-Received: by 2002:a17:902:ff0c:: with SMTP id f12mr1164440plj.67.1567054960830;
+        Wed, 28 Aug 2019 22:02:40 -0700 (PDT)
+Received: from localhost ([39.7.51.95])
+        by smtp.gmail.com with ESMTPSA id s7sm1635703pfb.138.2019.08.28.22.02.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 22:02:40 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 14:02:37 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Cc:     linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: build_path_from_dentry_optional_prefix() may schedule from invalid
+ context
+Message-ID: <20190829050237.GA5161@jagdpanzerIV>
 MIME-Version: 1.0
-In-Reply-To: <201908241206.D223659@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-Le 24/08/2019 à 21:08, Kees Cook a écrit :
+Looking at commit "cifs: create a helper to find a writeable handle
+by path name":
 
-Euh ... only received this mail yesterday. Same for the other answer.
+->open_file_lock scope is atomic context, while build_path_from_dentry()
+can schedule - kmalloc(GFP_KERNEL)
 
+       spin_lock(&tcon->open_file_lock);
+       list_for_each(tmp, &tcon->openFileList) {
+               cfile = list_entry(tmp, struct cifsFileInfo,
+                            tlist);
+               full_path = build_path_from_dentry(cfile->dentry);
+               if (full_path == NULL) {
+                       spin_unlock(&tcon->open_file_lock);
+                       return -ENOMEM;
+               }
+               if (strcmp(full_path, name)) {
+                       kfree(full_path);
+                       continue;
+               }
+               kfree(full_path);
 
-> On Fri, Aug 23, 2019 at 04:26:59PM +0200, Christophe Leroy wrote:
->>
->>
->> Le 23/08/2019 à 00:56, Andrew Morton a écrit :
->>> On Tue, 20 Aug 2019 09:47:55 -0700 Kees Cook <keescook@chromium.org> wrote:
->>>
->>>> Reply-To: 20190819234111.9019-8-keescook@chromium.org
->>>
->>> Really?
->>
->> That seems correct, that's the "[PATCH 7/7] bug: Move WARN_ON() "cut here"
->> into exception handler" from the series at
->> https://lkml.org/lkml/2019/8/19/1155
->>
->>
->>>
->>>> Subject: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception handler
->>>
->>> It's strange to receive a standalone [7/7] patch.
->>
->> Iaw the Reply_To, I understand it as an update of the 7th patch of the
->> series.
-> 
-> Was trying to avoid the churn of resending the identical 1-6 patches
-> (which are all just refactoring to make 7/7 not a mess).
+               cinode = CIFS_I(d_inode(cfile->dentry));
+               spin_unlock(&tcon->open_file_lock);
+               return cifs_get_writable_file(cinode, 0, ret_file);
+       }
 
-Yes but Reply-To: means the address we have to use to answer to this email.
+       spin_unlock(&tcon->open_file_lock);
 
-I think you wanted to use In-reply-to:
+Additionally, kfree() can (and should) be done outside of
+->open_file_lock scope.
 
-> 
-> I can resend the whole series, if that's preferred.
-
-I guess not.
-
-> 
->>>> Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
->>>> Fixes: Fixes: 6b15f678fb7d ("include/asm-generic/bug.h: fix "cut here" for WARN_ON for __WARN_TAINT architectures")
->>>
->>> I'm seeing double.
-> 
-> Tracking down all these combinations has been tricky, which is why I did
-> the patch 1-6 refactoring: it makes the call hierarchy much easier to
-> examine (IMO).
-
-But still, Andrew is seing double ... And me as well :)
-
-Fixes: Fixes:
-
-Christophe
-
-> 
-> -Kees
-> 
+	-ss
