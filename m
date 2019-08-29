@@ -2,178 +2,194 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA30C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0B5C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D2C2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 999C621874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbfH2Qvw (ORCPT
+        id S1728227AbfH2Qw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:51:52 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37508 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728227AbfH2Qvr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:51:47 -0400
-Received: by mail-wm1-f66.google.com with SMTP id d16so4552508wme.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:51:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WRm9Dlayh6LoOp5c/Pq7/z+hWsqAetw4GK4CPNMVmzM=;
-        b=R24AMfsw6a00hT+u7Dxn05otu4djZi3JvrThgF+M7q2jLozuE+NJJAxbYe6Sc4bkY6
-         r2XAAbBhftfj6ZxgiGDxOwxfrxHT/GQPFS3ZVJka/6JP/mwekU1p8xhCIiu32r+ByrGX
-         OtgG2PngpjkzZqdW/KljzgBIYjGOONzS9OhH/HptLY9xfqUWGJxk1SnmGrz5UeERsKBV
-         b6KWhzsF/tS8feqlAI2ktfPkPJPNjFXDdZXpDc6RkJOun+us9PiUAe6Cqf8W59eInqBO
-         JPGVRIeybYnpxSeIWDKIFUQuqCqNK3ssDSCo8tztwNLyyfHzziyYHBDPpy+oA1lfFpbk
-         iAgw==
-X-Gm-Message-State: APjAAAW334KvZH/XykbmupuhY9MnhbrscAJFQUB41BdLj4Wt9j5a4YQc
-        I75eW7gLbyN4MOi4E9laBn8L6gqpSHg=
-X-Google-Smtp-Source: APXvYqxS8+iLPfnMOsQV2WHXPP0Xm+FMBUv/lN9MF07WLkCm1A7Ap2UXdrdTCdBt6n09CFaXPCIcHQ==
-X-Received: by 2002:a1c:be15:: with SMTP id o21mr12562188wmf.140.1567097505283;
-        Thu, 29 Aug 2019 09:51:45 -0700 (PDT)
-Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
-        by smtp.googlemail.com with ESMTPSA id o14sm8340770wrg.64.2019.08.29.09.51.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 09:51:44 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-ntfs-dev@lists.sourceforge.net
-Subject: [PATCH v3 11/11] ntfs: remove (un)?likely() from IS_ERR() conditions
-Date:   Thu, 29 Aug 2019 19:50:25 +0300
-Message-Id: <20190829165025.15750-11-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190829165025.15750-1-efremov@linux.com>
-References: <20190829165025.15750-1-efremov@linux.com>
+        Thu, 29 Aug 2019 12:52:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37824 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727565AbfH2Qw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:52:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4C677AF95;
+        Thu, 29 Aug 2019 16:52:24 +0000 (UTC)
+Date:   Thu, 29 Aug 2019 18:52:18 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     "Singh, Brijesh" <brijesh.singh@amd.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 10/11] mm: x86: Invoke hypercall when page encryption
+ status is changed
+Message-ID: <20190829165218.GD2132@zn.tnic>
+References: <20190710201244.25195-1-brijesh.singh@amd.com>
+ <20190710201244.25195-11-brijesh.singh@amd.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190710201244.25195-11-brijesh.singh@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"likely(!IS_ERR(x))" is excessive. IS_ERR() already uses
-unlikely() internally.
+On Wed, Jul 10, 2019 at 08:13:11PM +0000, Singh, Brijesh wrote:
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
-Cc: Anton Altaparmakov <anton@tuxera.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-ntfs-dev@lists.sourceforge.net
----
- fs/ntfs/mft.c     | 12 ++++++------
- fs/ntfs/namei.c   |  2 +-
- fs/ntfs/runlist.c |  2 +-
- fs/ntfs/super.c   |  2 +-
- 4 files changed, 9 insertions(+), 9 deletions(-)
+> Subject: Re: [PATCH v3 10/11] mm: x86: Invoke hypercall when page encryption status is changed
 
-diff --git a/fs/ntfs/mft.c b/fs/ntfs/mft.c
-index 20c841a906f2..3aac5c917afe 100644
---- a/fs/ntfs/mft.c
-+++ b/fs/ntfs/mft.c
-@@ -71,7 +71,7 @@ static inline MFT_RECORD *map_mft_record_page(ntfs_inode *ni)
- 	}
- 	/* Read, map, and pin the page. */
- 	page = ntfs_map_page(mft_vi->i_mapping, index);
--	if (likely(!IS_ERR(page))) {
-+	if (!IS_ERR(page)) {
- 		/* Catch multi sector transfer fixup errors. */
- 		if (likely(ntfs_is_mft_recordp((le32*)(page_address(page) +
- 				ofs)))) {
-@@ -154,7 +154,7 @@ MFT_RECORD *map_mft_record(ntfs_inode *ni)
- 	mutex_lock(&ni->mrec_lock);
- 
- 	m = map_mft_record_page(ni);
--	if (likely(!IS_ERR(m)))
-+	if (!IS_ERR(m))
- 		return m;
- 
- 	mutex_unlock(&ni->mrec_lock);
-@@ -271,7 +271,7 @@ MFT_RECORD *map_extent_mft_record(ntfs_inode *base_ni, MFT_REF mref,
- 		m = map_mft_record(ni);
- 		/* map_mft_record() has incremented this on success. */
- 		atomic_dec(&ni->count);
--		if (likely(!IS_ERR(m))) {
-+		if (!IS_ERR(m)) {
- 			/* Verify the sequence number. */
- 			if (likely(le16_to_cpu(m->sequence_number) == seq_no)) {
- 				ntfs_debug("Done 1.");
-@@ -1303,7 +1303,7 @@ static int ntfs_mft_bitmap_extend_allocation_nolock(ntfs_volume *vol)
- 	read_unlock_irqrestore(&mftbmp_ni->size_lock, flags);
- 	rl = ntfs_attr_find_vcn_nolock(mftbmp_ni,
- 			(ll - 1) >> vol->cluster_size_bits, NULL);
--	if (unlikely(IS_ERR(rl) || !rl->length || rl->lcn < 0)) {
-+	if (IS_ERR(rl) || unlikely(!rl->length || rl->lcn < 0)) {
- 		up_write(&mftbmp_ni->runlist.lock);
- 		ntfs_error(vol->sb, "Failed to determine last allocated "
- 				"cluster of mft bitmap attribute.");
-@@ -1734,7 +1734,7 @@ static int ntfs_mft_data_extend_allocation_nolock(ntfs_volume *vol)
- 	read_unlock_irqrestore(&mft_ni->size_lock, flags);
- 	rl = ntfs_attr_find_vcn_nolock(mft_ni,
- 			(ll - 1) >> vol->cluster_size_bits, NULL);
--	if (unlikely(IS_ERR(rl) || !rl->length || rl->lcn < 0)) {
-+	if (IS_ERR(rl) || unlikely(!rl->length || rl->lcn < 0)) {
- 		up_write(&mft_ni->runlist.lock);
- 		ntfs_error(vol->sb, "Failed to determine last allocated "
- 				"cluster of mft data attribute.");
-@@ -1776,7 +1776,7 @@ static int ntfs_mft_data_extend_allocation_nolock(ntfs_volume *vol)
- 	do {
- 		rl2 = ntfs_cluster_alloc(vol, old_last_vcn, nr, lcn, MFT_ZONE,
- 				true);
--		if (likely(!IS_ERR(rl2)))
-+		if (!IS_ERR(rl2))
- 			break;
- 		if (PTR_ERR(rl2) != -ENOSPC || nr == min_nr) {
- 			ntfs_error(vol->sb, "Failed to allocate the minimal "
-diff --git a/fs/ntfs/namei.c b/fs/ntfs/namei.c
-index 2d3cc9e3395d..4e6a44bc654c 100644
---- a/fs/ntfs/namei.c
-+++ b/fs/ntfs/namei.c
-@@ -115,7 +115,7 @@ static struct dentry *ntfs_lookup(struct inode *dir_ino, struct dentry *dent,
- 		dent_ino = MREF(mref);
- 		ntfs_debug("Found inode 0x%lx. Calling ntfs_iget.", dent_ino);
- 		dent_inode = ntfs_iget(vol->sb, dent_ino);
--		if (likely(!IS_ERR(dent_inode))) {
-+		if (!IS_ERR(dent_inode)) {
- 			/* Consistency check. */
- 			if (is_bad_inode(dent_inode) || MSEQNO(mref) ==
- 					NTFS_I(dent_inode)->seq_no ||
-diff --git a/fs/ntfs/runlist.c b/fs/ntfs/runlist.c
-index 508744a93180..97932fb5179c 100644
---- a/fs/ntfs/runlist.c
-+++ b/fs/ntfs/runlist.c
-@@ -951,7 +951,7 @@ runlist_element *ntfs_mapping_pairs_decompress(const ntfs_volume *vol,
- 	}
- 	/* Now combine the new and old runlists checking for overlaps. */
- 	old_rl = ntfs_runlists_merge(old_rl, rl);
--	if (likely(!IS_ERR(old_rl)))
-+	if (!IS_ERR(old_rl))
- 		return old_rl;
- 	ntfs_free(rl);
- 	ntfs_error(vol->sb, "Failed to merge runlists.");
-diff --git a/fs/ntfs/super.c b/fs/ntfs/super.c
-index 29621d40f448..7dc3bc604f78 100644
---- a/fs/ntfs/super.c
-+++ b/fs/ntfs/super.c
-@@ -1475,7 +1475,7 @@ static bool load_and_init_usnjrnl(ntfs_volume *vol)
- 	kfree(name);
- 	/* Get the inode. */
- 	tmp_ino = ntfs_iget(vol->sb, MREF(mref));
--	if (unlikely(IS_ERR(tmp_ino) || is_bad_inode(tmp_ino))) {
-+	if (IS_ERR(tmp_ino) || unlikely(is_bad_inode(tmp_ino))) {
- 		if (!IS_ERR(tmp_ino))
- 			iput(tmp_ino);
- 		ntfs_error(vol->sb, "Failed to load $UsnJrnl.");
+Subject prefix: "x86/mm: Invoke ..."
+
+git log <filename> would usually show you how the prefixing should look
+like.
+
+> Invoke a hypercall when a memory region is changed from encrypted ->
+> decrypted and vice versa. Hypervisor need to know the page encryption
+> status during the guest migration.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
+>  arch/x86/include/asm/mem_encrypt.h |  3 ++
+>  arch/x86/mm/mem_encrypt.c          | 45 +++++++++++++++++++++++++++++-
+>  arch/x86/mm/pageattr.c             | 15 ++++++++++
+>  3 files changed, 62 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+> index 0c196c47d621..6e654ab5a8e4 100644
+> --- a/arch/x86/include/asm/mem_encrypt.h
+> +++ b/arch/x86/include/asm/mem_encrypt.h
+> @@ -94,4 +94,7 @@ extern char __start_bss_decrypted[], __end_bss_decrypted[], __start_bss_decrypte
+>  
+>  #endif	/* __ASSEMBLY__ */
+>  
+> +extern void set_memory_enc_dec_hypercall(unsigned long vaddr,
+> +					 unsigned long size, bool enc);
+> +
+>  #endif	/* __X86_MEM_ENCRYPT_H__ */
+> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+> index e0df96fdfe46..f3fda1de2869 100644
+> --- a/arch/x86/mm/mem_encrypt.c
+> +++ b/arch/x86/mm/mem_encrypt.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/dma-direct.h>
+>  #include <linux/swiotlb.h>
+>  #include <linux/mem_encrypt.h>
+> +#include <linux/kvm_para.h>
+>  
+>  #include <asm/tlbflush.h>
+>  #include <asm/fixmap.h>
+> @@ -25,6 +26,7 @@
+>  #include <asm/processor-flags.h>
+>  #include <asm/msr.h>
+>  #include <asm/cmdline.h>
+> +#include <asm/kvm_para.h>
+>  
+>  #include "mm_internal.h"
+>  
+> @@ -192,6 +194,45 @@ void __init sme_early_init(void)
+>  		swiotlb_force = SWIOTLB_FORCE;
+>  }
+>  
+> +void set_memory_enc_dec_hypercall(unsigned long vaddr, unsigned long sz, bool enc)
+> +{
+> +	unsigned long vaddr_end, vaddr_next;
+> +
+> +	vaddr_end = vaddr + sz;
+> +
+> +	for (; vaddr < vaddr_end; vaddr = vaddr_next) {
+> +		int psize, pmask, level;
+> +		unsigned long pfn;
+> +		pte_t *kpte;
+> +
+> +		kpte = lookup_address(vaddr, &level);
+> +		if (!kpte || pte_none(*kpte))
+> +			return;
+> +
+> +		switch (level) {
+> +		case PG_LEVEL_4K:
+> +			pfn = pte_pfn(*kpte);
+> +			break;
+> +		case PG_LEVEL_2M:
+> +			pfn = pmd_pfn(*(pmd_t *)kpte);
+> +			break;
+> +		case PG_LEVEL_1G:
+> +			pfn = pud_pfn(*(pud_t *)kpte);
+> +			break;
+> +		default:
+> +			return;
+> +		}
+> +
+> +		psize = page_level_size(level);
+> +		pmask = page_level_mask(level);
+> +
+> +		kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
+> +				   pfn << PAGE_SHIFT, psize >> PAGE_SHIFT, enc);
+> +
+> +		vaddr_next = (vaddr & pmask) + psize;
+> +	}
+> +}
+> +
+>  static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
+>  {
+>  	pgprot_t old_prot, new_prot;
+> @@ -249,12 +290,13 @@ static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
+>  static int __init early_set_memory_enc_dec(unsigned long vaddr,
+>  					   unsigned long size, bool enc)
+>  {
+> -	unsigned long vaddr_end, vaddr_next;
+> +	unsigned long vaddr_end, vaddr_next, start;
+>  	unsigned long psize, pmask;
+>  	int split_page_size_mask;
+>  	int level, ret;
+>  	pte_t *kpte;
+>  
+> +	start = vaddr;
+>  	vaddr_next = vaddr;
+>  	vaddr_end = vaddr + size;
+>  
+> @@ -309,6 +351,7 @@ static int __init early_set_memory_enc_dec(unsigned long vaddr,
+>  
+>  	ret = 0;
+>  
+> +	set_memory_enc_dec_hypercall(start, size, enc);
+
+That function iterates the same way over the virtual addresses as
+early_set_memory_enc_dec() does. Please call kvm_sev_hypercall3(),
+wrapped of course, directly from early_set_memory_enc_dec(), for
+each iteration of the loop instead of iterating over all the virtual
+addresses a second time in set_memory_enc_dec_hypercall().
+
 -- 
-2.21.0
+Regards/Gruss,
+    Boris.
 
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 247165, AG München
