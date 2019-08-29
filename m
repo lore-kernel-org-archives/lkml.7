@@ -2,85 +2,187 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A69C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D0FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6E6208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C27208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:39:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfH2Kia (ORCPT
+        id S1727234AbfH2Kjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:38:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:42178 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbfH2Ki3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:38:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D896B360;
-        Thu, 29 Aug 2019 03:38:28 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE9F53F59C;
-        Thu, 29 Aug 2019 03:38:27 -0700 (PDT)
-Subject: Re: [PATCH 1/1] sched/rt: avoid contend with CFS task
-To:     Jing-Ting Wu <jing-ting.wu@mediatek.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     wsd_upstream@mediatek.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Qais Yousef <qais.yousef@arm.com>
-References: <1567048502-6064-1-git-send-email-jing-ting.wu@mediatek.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <d5100b2d-46c4-5811-8274-8b06710d2594@arm.com>
-Date:   Thu, 29 Aug 2019 11:38:26 +0100
+        Thu, 29 Aug 2019 06:39:32 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:55099 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726379AbfH2Kjc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:39:32 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id 3HpuiQwL5DqPe3HpxiNXpZ; Thu, 29 Aug 2019 12:39:30 +0200
+Subject: Re: [PATCH v3 1/7] media: add V4L2_CID_UNIT_CELL_SIZE control
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jacopo Mondi <jacopo@jmondi.org>
+References: <20190823123737.7774-1-ribalda@kernel.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <4c2a519a-0e88-c4c8-9a71-e9d0cd370375@xs4all.nl>
+Date:   Thu, 29 Aug 2019 12:39:26 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1567048502-6064-1-git-send-email-jing-ting.wu@mediatek.com>
+In-Reply-To: <20190823123737.7774-1-ribalda@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfKiJd/quV9H3230XA0Uj1qaNmHrLgv4UyY2Ba1ZSFEH4INTC0Fc1teuPky/G4Oe7wbID2tYTQJkRuftHz2+4WBo+suCvSDi/znk9fTxe/33I85gD1OIA
+ zAGWtbMEgrN7xRZ2ckHbRDt6XJmNHVvNNXsAZP8tLIhcY1Fiw5xmJvuxDlUhL2W8HnUxyUM5gdI5oTsiiSu//Cf4pmUX0qnYpVZxhYjEXHGXooDDUKZfB+tp
+ O+7KBhTEnuFFIm96oBK6Lg1r5jFxMUW9p9J1xR+ajL+/o9Ywss7rmMCL7d2lvniQIMeXdNkCuW3WRbLMO2M28M7lWE7jDQFBVjN84NXZsZkTNnVib5yjkTOO
+ PyplP3HwuvOKdXZv47Pi4Zq2AZCPyCUTsElqhKHdlE8lGhw873Q=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/08/2019 04:15, Jing-Ting Wu wrote:
-> At original linux design, RT & CFS scheduler are independent.
-> Current RT task placement policy will select the first cpu in
-> lowest_mask, even if the first CPU is running a CFS task.
-> This may put RT task to a running cpu and let CFS task runnable.
+On 8/23/19 2:37 PM, Ricardo Ribalda Delgado wrote:
+> This control returns the unit cell size in nanometres. The struct provides
+> the width and the height in separated fields to take into consideration
+> asymmetric pixels and/or hardware binning.
+> This control is required for automatic calibration of sensors/cameras.
 > 
-> So we select idle cpu in lowest_mask first to avoid preempting
-> CFS task.
-> 
-
-Regarding the RT & CFS thing, that's working as intended. RT is a whole
-class above CFS, it shouldn't have to worry about CFS.
-
-On the other side of things, CFS does worry about RT. We have the concept
-of RT-pressure in the CFS scheduler, where RT tasks will reduce a CPU's
-capacity (see fair.c::scale_rt_capacity()).
-
-CPU capacity is looked at on CFS wakeup (see wake_cap() and
-find_idlest_cpu()), and the periodic load balancer tries to spread load
-over capacity, so it'll tend to put less things on CPUs that are also
-running RT tasks.
-
-If RT were to start avoiding rqs with CFS tasks, we'd end up with a nasty
-situation were both are avoiding each other. It's even more striking when
-you see that RT pressure is done with a rq-wide RT util_avg, which
-*doesn't* get migrated when a RT task migrates. So if you decide to move
-a RT task to an idle CPU "B" because CPU "A" had runnable CFS tasks, the
-CFS scheduler will keep seeing CPU "B" as not significantly RT-pressured
-while that util_avg signal ramps up, whereas it would correctly see CPU
-"A" as RT-pressured if the RT task previously ran there.
-
-So overall I think this is the wrong approach.
-
-> Signed-off-by: Jing-Ting Wu <jing-ting.wu@mediatek.com>
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
 > ---
+> v3:
+> -Put together all actions on ctrl_fill
+> -Move the control to IMAGE_SOURCE
+> 
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 11 +++++++++++
+>  include/media/v4l2-ctrls.h           |  2 ++
+>  include/uapi/linux/v4l2-controls.h   |  1 +
+>  include/uapi/linux/videodev2.h       | 11 +++++++++++
+>  4 files changed, 25 insertions(+)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 1d8f38824631..b3bf458df7f7 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -994,6 +994,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
+>  	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
+>  	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
+> +	case V4L2_CID_UNIT_CELL_SIZE:		return "Unit Cell Size";
+>  
+>  	/* FM Radio Modulator controls */
+>  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+> @@ -1375,6 +1376,10 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
+>  		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
+>  		break;
+> +	case V4L2_CID_UNIT_CELL_SIZE:
+> +		*type = V4L2_CTRL_TYPE_AREA;
+> +		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> +		break;
+>  	default:
+>  		*type = V4L2_CTRL_TYPE_INTEGER;
+>  		break;
+> @@ -1723,6 +1728,9 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+>  	case V4L2_CTRL_TYPE_FWHT_PARAMS:
+>  		break;
+>  
+> +	case V4L2_CTRL_TYPE_AREA:
+
+You need to check that the width and height are not 0 (that would make no sense).
+
+> +		break;
+> +
+>  	case V4L2_CTRL_TYPE_H264_SPS:
+>  	case V4L2_CTRL_TYPE_H264_PPS:
+>  	case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
+> @@ -2421,6 +2429,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+>  	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+>  		elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
+>  		break;
+> +	case V4L2_CTRL_TYPE_AREA:
+> +		elem_size = sizeof(struct v4l2_area);
+> +		break;
+>  	default:
+>  		if (type < V4L2_CTRL_COMPOUND_TYPES)
+>  			elem_size = sizeof(s32);
+> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> index 570ff4b0205a..9a3d11350e67 100644
+> --- a/include/media/v4l2-ctrls.h
+> +++ b/include/media/v4l2-ctrls.h
+> @@ -50,6 +50,7 @@ struct poll_table_struct;
+>   * @p_h264_slice_params:	Pointer to a struct v4l2_ctrl_h264_slice_params.
+>   * @p_h264_decode_params:	Pointer to a struct v4l2_ctrl_h264_decode_params.
+>   * @p_vp8_frame_header:		Pointer to a VP8 frame header structure.
+> + * @p_area:			Pointer to an area.
+>   * @p:				Pointer to a compound value.
+>   */
+>  union v4l2_ctrl_ptr {
+> @@ -68,6 +69,7 @@ union v4l2_ctrl_ptr {
+>  	struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
+>  	struct v4l2_ctrl_h264_decode_params *p_h264_decode_params;
+>  	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
+> +	struct v4l2_area *p_area;
+>  	void *p;
+>  };
+>  
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index a2669b79b294..5a7bedee2b0e 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -1034,6 +1034,7 @@ enum v4l2_jpeg_chroma_subsampling {
+>  #define V4L2_CID_TEST_PATTERN_GREENR		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 5)
+>  #define V4L2_CID_TEST_PATTERN_BLUE		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 6)
+>  #define V4L2_CID_TEST_PATTERN_GREENB		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 7)
+> +#define V4L2_CID_UNIT_CELL_SIZE			(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 8)
+>  
+>  
+>  /* Image processing controls */
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 530638dffd93..05cfc69d7ed6 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -422,6 +422,11 @@ struct v4l2_fract {
+>  	__u32   denominator;
+>  };
+>  
+> +struct v4l2_area {
+> +	__u32   width;
+> +	__u32   height;
+> +};
+> +
+>  /**
+>    * struct v4l2_capability - Describes V4L2 device caps returned by VIDIOC_QUERYCAP
+>    *
+> @@ -1720,6 +1725,12 @@ enum v4l2_ctrl_type {
+>  	V4L2_CTRL_TYPE_U8	     = 0x0100,
+>  	V4L2_CTRL_TYPE_U16	     = 0x0101,
+>  	V4L2_CTRL_TYPE_U32	     = 0x0102,
+> +	/*
+> +	 * V4L2_CTRL_TYPE_MPEG2_SLICE_PARAMS = 0x0103,
+> +	 * V4L2_CTRL_TYPE_MPEG2_QUANTIZATION = 0x0104,
+> +	 * V4L2_CTRL_TYPE_FWHT_PARAMS = 0x0105,
+> +	 */
+
+I'd drop this comment. Not because it is wrong as such, but it is
+incomplete (there are more of these types today) and I think these
+types (most of them in staging) need a bit of a cleanup. Something
+I want to look at for the next kernel cycle.
+
+> +	V4L2_CTRL_TYPE_AREA    = 0x0106,
+>  };
+>  
+>  /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
+> 
+
+Regards,
+
+	Hans
