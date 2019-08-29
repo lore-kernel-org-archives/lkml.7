@@ -2,157 +2,147 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0750FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA47C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C742F2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:36:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mApPXG0X"
+	by mail.kernel.org (Postfix) with ESMTP id 36001205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:37:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfH2Qgz (ORCPT
+        id S1728099AbfH2Qh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:36:55 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38897 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727344AbfH2Qgl (ORCPT
+        Thu, 29 Aug 2019 12:37:29 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34946 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbfH2Qh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:36:41 -0400
-Received: by mail-wr1-f67.google.com with SMTP id e16so4118686wro.5
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:36:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uODZAlCkiSE/bKJhKAz8rlp7NCW9snJyiy8JBrR1VCw=;
-        b=mApPXG0XWA1gfN05UGmqu2X89CUhhEFqhFFUCJsa9sadnG82mtfokDvxwlYTDWpieO
-         F6SldFti2FnAMbHlNVojpVAr+OllpG7MgvdO/Z6LiSOUhWw6mdzFGLHOS8EnpoR81PxQ
-         Xa/GRf5fSw1R+iZXUFxSc7FUNN2XLgOvHXGZInynrzyDkyQC5LbpLHMjcbmf7mJE7FO6
-         HLh45DZxuXMzpiyQ89u9qsevOaSr/Iy651odrCGgVZeIJmtY3jOnPZu9pIQSU0wl97yX
-         o9w37UW7CZNmeahBINh9vKz3iSMA6h1TErX5v8Fg2wNTl4uG1MrE6z5fQI5qf2vhD0vt
-         /loQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uODZAlCkiSE/bKJhKAz8rlp7NCW9snJyiy8JBrR1VCw=;
-        b=fsjEuf94vhewyWDsH5E6EVSYphfS2oUiXUx29v8YPlj4nhYw6ZYPJ6OeiaHzMt4SnU
-         k0BccaiCNPKRCSHecwE6hAiNE9zB5yCCyqT+xPO3P+1dtDX5XNSFZc/AWD/CQciC033b
-         N07UFWzEUfDERAnHXHtcATcsp1wQIj9zVYWtD2T6MF1X1eF4BnosZ1DT+Tk5khkwphb8
-         PNb/He+pv13rzSXkt2wCzsIToUxX8R3eGGseVg6p3t9IUEs6CLqL5mbVbZOLLvxP+g5v
-         gBBunmKyqMjrp7KILx3D9guj6oOkggXoweqduHFbbmQl+R4LD707RyzOy9XurFTiu66w
-         jhTw==
-X-Gm-Message-State: APjAAAW5jW9Itaj28KQsl6J+LZ0Lcnr9c5B1oyNeujEpJBYXsY+6QMWa
-        cxsearO5IFjH5UC8aGHWNdDFng==
-X-Google-Smtp-Source: APXvYqzGyFneHpcFhMPPomV4ePM5ce4JBgHf2enu6MOATiDfOAfr/WVqucexAtZ9BMn2awNiWQ3KiQ==
-X-Received: by 2002:adf:e50b:: with SMTP id j11mr12682651wrm.65.1567096599459;
-        Thu, 29 Aug 2019 09:36:39 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id k9sm4398243wrq.15.2019.08.29.09.36.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 09:36:38 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
-Cc:     spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, devicetree@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v6 3/4] dt-bindings: ASoC: Add WSA881x bindings
-Date:   Thu, 29 Aug 2019 17:35:13 +0100
-Message-Id: <20190829163514.11221-4-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190829163514.11221-1-srinivas.kandagatla@linaro.org>
-References: <20190829163514.11221-1-srinivas.kandagatla@linaro.org>
+        Thu, 29 Aug 2019 12:37:28 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 11A6D28D69E;
+        Thu, 29 Aug 2019 17:37:25 +0100 (BST)
+Date:   Thu, 29 Aug 2019 18:37:21 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH 2/4] i3c: master: Check if devices have
+ i3c_dev_boardinfo on i3c_master_add_i3c_dev_locked()
+Message-ID: <20190829183721.33a4664d@collabora.com>
+In-Reply-To: <SN6PR12MB26550ABF84AD52C52DE801CFAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+References: <cover.1567071213.git.vitor.soares@synopsys.com>
+        <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
+        <20190829124457.3a750932@collabora.com>
+        <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+        <20190829163918.571fd0d8@collabora.com>
+        <20190829163941.45380b19@collabora.com>
+        <SN6PR12MB2655B08176E14BE9DF2BACA2AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+        <20190829172441.3a76385e@collabora.com>
+        <SN6PR12MB26553867412178B3F7190F0CAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+        <20190829181520.0b33b642@collabora.com>
+        <SN6PR12MB26550ABF84AD52C52DE801CFAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds bindings for WSA8810/WSA8815 Class-D Smart Speaker
-Amplifier. This Amplifier also has a simple thermal sensor for
-over temperature and speaker protection.
+On Thu, 29 Aug 2019 16:33:43 +0000
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- .../bindings/sound/qcom,wsa881x.yaml          | 62 +++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+> From: Boris Brezillon <boris.brezillon@collabora.com>
+> Date: Thu, Aug 29, 2019 at 17:15:20
+> 
+> > On Thu, 29 Aug 2019 15:57:32 +0000
+> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> >   
+> > > -----Original Message-----
+> > > From: Boris Brezillon 
+> > > <boris.brezillon@collabora.com> 
+> > > Sent: Thursday, August 29, 2019 4:25 
+> > > PM
+> > > To: Vitor Soares <Vitor.Soares@synopsys.com>
+> > > Cc: 
+> > > linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; 
+> > > linux-i3c@lists.infradead.org; bbrezillon@kernel.org; robh+dt@kernel.org; 
+> > > mark.rutland@arm.com; Joao.Pinto@synopsys.com
+> > > Subject: Re: [PATCH 2/4] 
+> > > i3c: master: Check if devices have i3c_dev_boardinfo on 
+> > > i3c_master_add_i3c_dev_locked()
+> > > 
+> > > On Thu, 29 Aug 2019 15:07:08 +0000
+> > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > >   
+> > > > From: Boris Brezillon     
+> > > <boris.brezillon@collabora.com>  
+> > > > Date: Thu, Aug 29, 2019 at 15:39:41
+> > > >     
+> > >   
+> > > > > On Thu, 29 Aug 2019 16:39:18 +0200
+> > > > > Boris Brezillon <boris.brezillon@collabora.com> wrote:
+> > > > >       
+> > > > > > On Thu, 29 Aug 2019 14:00:44 +0000
+> > > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > > > > >       
+> > > > > > > Hi Boris,
+> > > > > > > 
+> > > > > > > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > > > > > > Date: Thu, Aug 29, 2019 at 11:44:57
+> > > > > > >         
+> > > > > > > > On Thu, 29 Aug 2019 12:19:33 +0200
+> > > > > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > > > > > > >           
+> > > > > > > > > The I3C devices described in DT might not be attached to the master which
+> > > > > > > > > doesn't allow to assign a specific dynamic address.          
+> > > > > > > > 
+> > > > > > > > I remember testing this when developing the framework, so, unless
+> > > > > > > > another patch regressed it, it should already work. I suspect patch 1
+> > > > > > > > is actually the regressing this use case.          
+> > > > > > > 
+> > > > > > > For today it doesn't address the case where the device is described with 
+> > > > > > > static address = 0, which isn't attached to the controller.        
+> > > > > > 
+> > > > > > Hm, I'm pretty sure I had designed the code to support that case (see
+> > > > > > [1]). It might be buggy, but nothing we can't fix I guess.
+> > > > > >       
+> > > > > 
+> > > > > [1]https://urldefense.proofpoint.com/v2/url?u=https-3A__elixir.bootlin.com_linux_v5.3-2Drc6_source_drivers_i3c_master.c-23L1898&d=DwICAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=qVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=IXS1ygIgEo5vwajk0iwd5aBDVBzRnVTjO3cg4iBmGNc&s=HC-AcYm-AZPrUBoALioej_BDnqOtJHltr39Z2yPkuU4&e=       
+> > > > 
+> > > > That is only valid if you have olddev which will only exist if static 
+> > > > address != 0.    
+> > > 
+> > > Hm, if you revert patch 1 (and assuming the device is properly defined
+> > > in the DT), you should have olddev != NULL when reaching that point. If
+> > > that's not the case there's a bug somewhere that should be fixed.
+> > > 
+> > > No, because the device is not attached.  
+> > 
+> > Oh, my bad, I see what you mean now. This is definitely a bug and should
+> > have the Fixes tags. I mean, even if we don't care about dynamic
+> > address assignment, I3C drivers might care about the ->of_node that's
+> > attached to the device.  
+> 
+> I didn't consider a bug because in dt-bindings says to not use 'assigned 
+> address' if SA = 0.
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-new file mode 100644
-index 000000000000..faa90966a33a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/qcom,wsa881x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for Qualcomm WSA8810/WSA8815 Class-D Smart Speaker Amplifier
-+
-+maintainers:
-+  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-+
-+description: |
-+  WSA8810 is a class-D smart speaker amplifier and WSA8815
-+  is a high-output power class-D smart speaker amplifier.
-+  Their primary operating mode uses a SoundWire digital audio
-+  interface. This binding is for SoundWire interface.
-+
-+properties:
-+  compatible:
-+    const: sdw10217201000
-+
-+  reg:
-+    maxItems: 1
-+
-+  powerdown-gpios:
-+    description: GPIO spec for Powerdown/Shutdown line to use
-+    maxItems: 1
-+
-+  '#thermal-sensor-cells':
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - powerdown-gpios
-+  - "#thermal-sensor-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    soundwire@c2d0000 {
-+        #address-cells = <2>;
-+        #size-cells = <0>;
-+        reg = <0x0c2d0000 0x2000>;
-+
-+        speaker@0,1 {
-+            compatible = "sdw10217201000";
-+            reg = <0 1>;
-+            powerdown-gpios = <&wcdpinctrl 2 0>;
-+            #thermal-sensor-cells = <0>;
-+        };
-+
-+        speaker@0,2 {
-+            compatible = "sdw10217201000";
-+            reg = <0 2>;
-+            powerdown-gpios = <&wcdpinctrl 2 0>;
-+            #thermal-sensor-cells = <0>;
-+        };
-+    };
-+
-+...
--- 
-2.21.0
+The fact that we don't try to assign a predefined dynamic address
+when !SA is indeed not a bug, but failing to propagate the ->of_node
+info to the i3c_device is one.
 
+> Do you think there is a better way to solve it?
+
+Your patch is correct, I just proposed a few adjustments.
