@@ -2,135 +2,129 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C33C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1204C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1ED0208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4FD2189D
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 21:22:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZMNwbJZj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbfH2VVj (ORCPT
+        id S1728026AbfH2VWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 17:21:39 -0400
-Received: from mga18.intel.com ([134.134.136.126]:6003 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfH2VVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 17:21:38 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Aug 2019 14:21:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,445,1559545200"; 
-   d="scan'208";a="175398465"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 29 Aug 2019 14:21:35 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1i3RrK-000DXD-Ot; Fri, 30 Aug 2019 05:21:34 +0800
-Date:   Fri, 30 Aug 2019 05:21:27 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     kbuild-all@01.org, Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        xiang xiao <xiaoxiang781216@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        arnaud.pouliquen@st.com, Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH v5 2/2] tty: add rpmsg driver
-Message-ID: <201908300408.EJgy8luZ%lkp@intel.com>
-References: <1567005566-10986-3-git-send-email-arnaud.pouliquen@st.com>
+        Thu, 29 Aug 2019 17:22:43 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58284 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfH2VWm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 17:22:42 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7TLExTU161570;
+        Thu, 29 Aug 2019 21:22:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=YCmDkvHRK2H6uwl53GM/Ym/ZWwOlzOXox5M0iq/kVD0=;
+ b=ZMNwbJZj2ZgFJpkSXzppb3pQN0+j9sp7OQqD8mosZdeR+OFYr78lpcp8C9RPbdFzfkn5
+ vjaj53UuQau76LhMZHq3K67woYQtcO/3uWZXY/IS//siNUeHCAQLAAGl5GzVQN/enIMl
+ 2o4Sh86v98+IwVs2aKDK7BVx9hx/BCVzpXevVxcbbUf4MHhcK/j5hwGo4wH1WZaLkRv/
+ PAiQk1VZUK8Tjcaqym2138yon6AR6ZM5iiqccD3qfWyoI7cMv1eUtVIF4zuuXjZ1QzFm
+ i/a0fbiJE1+3FM0amh++wCkDnDfb69KYxkCZ/I4OBc8x5WiUoecXHJcxtj4eP547yEIq 8g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2uppet02ek-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 21:22:34 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7TLE7d3018400;
+        Thu, 29 Aug 2019 21:22:34 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2unvu0m7at-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 21:22:34 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7TLMXjb030866;
+        Thu, 29 Aug 2019 21:22:33 GMT
+Received: from localhost (/10.145.178.11)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 29 Aug 2019 14:22:33 -0700
+Date:   Thu, 29 Aug 2019 14:22:32 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v3 07/11] xfs: remove unlikely() from WARN_ON() condition
+Message-ID: <20190829212232.GN5354@magnolia>
+References: <20190829165025.15750-1-efremov@linux.com>
+ <20190829165025.15750-7-efremov@linux.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1567005566-10986-3-git-send-email-arnaud.pouliquen@st.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190829165025.15750-7-efremov@linux.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908290214
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908290214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaud,
+On Thu, Aug 29, 2019 at 07:50:21PM +0300, Denis Efremov wrote:
+> "unlikely(WARN_ON(x))" is excessive. WARN_ON() already uses unlikely()
+> internally.
+> 
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+> Cc: Joe Perches <joe@perches.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-xfs@vger.kernel.org
 
-I love your patch! Perhaps something to improve:
+LGTM,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-[auto build test WARNING on linus/master]
-[cannot apply to v5.3-rc6 next-20190829]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+--D
 
-url:    https://github.com/0day-ci/linux/commits/Arnaud-Pouliquen/rpmsg-core-add-API-to-get-message-length/20190829-222443
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
-   include/linux/sched.h:609:43: sparse: sparse: bad integer constant expression
-   include/linux/sched.h:609:73: sparse: sparse: invalid named zero-width bitfield `value'
-   include/linux/sched.h:610:43: sparse: sparse: bad integer constant expression
-   include/linux/sched.h:610:67: sparse: sparse: invalid named zero-width bitfield `bucket_id'
->> drivers/tty/rpmsg_tty.c:152:20: sparse: sparse: incompatible types in comparison expression (different type sizes):
->> drivers/tty/rpmsg_tty.c:152:20: sparse:    int *
->> drivers/tty/rpmsg_tty.c:152:20: sparse:    long *
-
-vim +152 drivers/tty/rpmsg_tty.c
-
-   132	
-   133	static int rpmsg_tty_write(struct tty_struct *tty, const u8 *buf, int len)
-   134	{
-   135		struct rpmsg_tty_port *cport = tty->driver_data;
-   136		struct rpmsg_device *rpdev;
-   137		ssize_t msg_max_size, msg_size;
-   138		int ret;
-   139		u8 *tmpbuf;
-   140	
-   141		/* If cts not set, the message is not sent*/
-   142		if (!cport->cts)
-   143			return 0;
-   144	
-   145		rpdev = cport->rpdev;
-   146	
-   147		dev_dbg(&rpdev->dev, "%s: send msg from tty->index = %d, len = %d\n",
-   148			__func__, tty->index, len);
-   149	
-   150		msg_max_size = rpmsg_get_mtu(rpdev->ept);
-   151	
- > 152		msg_size = min(len, msg_max_size);
-   153		tmpbuf = kzalloc(msg_size, GFP_KERNEL);
-   154		if (!tmpbuf)
-   155			return -ENOMEM;
-   156	
-   157		memcpy(tmpbuf, buf, msg_size);
-   158	
-   159		/*
-   160		 * Try to send the message to remote processor, if failed return 0 as
-   161		 * no data sent
-   162		 */
-   163		ret = rpmsg_trysendto(cport->d_ept, tmpbuf, msg_size, cport->data_dst);
-   164		kfree(tmpbuf);
-   165		if (ret) {
-   166			dev_dbg(&rpdev->dev, "rpmsg_send failed: %d\n", ret);
-   167			return 0;
-   168		}
-   169	
-   170		return msg_size;
-   171	}
-   172	
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> ---
+>  fs/xfs/xfs_buf.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+> index ca0849043f54..4389d87ff0f0 100644
+> --- a/fs/xfs/xfs_buf.c
+> +++ b/fs/xfs/xfs_buf.c
+> @@ -2096,7 +2096,7 @@ xfs_verify_magic(
+>  	int			idx;
+>  
+>  	idx = xfs_sb_version_hascrc(&mp->m_sb);
+> -	if (unlikely(WARN_ON(!bp->b_ops || !bp->b_ops->magic[idx])))
+> +	if (WARN_ON(!bp->b_ops || !bp->b_ops->magic[idx]))
+>  		return false;
+>  	return dmagic == bp->b_ops->magic[idx];
+>  }
+> @@ -2114,7 +2114,7 @@ xfs_verify_magic16(
+>  	int			idx;
+>  
+>  	idx = xfs_sb_version_hascrc(&mp->m_sb);
+> -	if (unlikely(WARN_ON(!bp->b_ops || !bp->b_ops->magic16[idx])))
+> +	if (WARN_ON(!bp->b_ops || !bp->b_ops->magic16[idx]))
+>  		return false;
+>  	return dmagic == bp->b_ops->magic16[idx];
+>  }
+> -- 
+> 2.21.0
+> 
