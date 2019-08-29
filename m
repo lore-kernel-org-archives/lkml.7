@@ -5,54 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 420B3C41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F0EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18AB321726
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB71821726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nN1Wq0mR"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K9As2e5k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfH2Rhy (ORCPT
+        id S1728001AbfH2Rh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:37:54 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52768 "EHLO
+        Thu, 29 Aug 2019 13:37:58 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52826 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbfH2Rhy (ORCPT
+        with ESMTP id S1727352AbfH2Rh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:37:54 -0400
+        Thu, 29 Aug 2019 13:37:56 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7THY7eo125836;
-        Thu, 29 Aug 2019 17:37:41 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7THXm9p125446;
+        Thu, 29 Aug 2019 17:37:44 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2019-08-05;
- bh=wZpwXmqOxWqhR0DvbaLn0ZKC1APUcFkWjxi8qiwEj3Q=;
- b=nN1Wq0mRVz22FSmhc0bCowTcreptKdPzGUyUzBYb7nU1VjnhhMjh53W246hfv+vaL3VE
- LiOw5H/muOR8sMEfQwIYxeGUKkCFmvdpBX2B3K5XzI3ffYTWAYOHOy3T66mOV4NJ0+bg
- HVoH+7Aoz03/+RzzUe6Dvh89KUrPwjyzalb10dy/sv4SvAAwLOCYJump7cv4BbNcXQHZ
- TQaGIvcrkGVitRirkWNCri4VElU+RNSTvU63GtHRP/vUKCfd1DNf/nT/YiRsgcejMAqF
- +U+8bvefRjFs1I8gD9PQtD/CTYsx8VcT3vmrIhBTx521gstsuw4qcvNCOZODnmjxE3ak 2A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2upk56r2bb-1
+ bh=GgEbaSm1cURsHhVB8EY2Lx/d86Cacme/HQfya9phm7U=;
+ b=K9As2e5kKQVy7Xx/YcLgIFhV1Zxx1X2oDNxWr+1IUkhfWDar/9FiYpFyZVoBmESz9V7/
+ yav9wZ+br1p3NzZxMWAbWTgof2XEGRBUJCKh2gLBzk07qtNHGn04MK9qn30S2XiXS0aS
+ cG+PIm0A4xUCUMFI8x3ZITfKvhg7NaBJoZ+TkL//honcVGkNxwC7llAx7kS64iH4Ue8K
+ DdBQ2iLJd2Ju8AbqLj6PIbipBih9LtW0/x14yvo8xdbXqjTztsG0/deMF+tLSIWE7mux
+ tTKQIvnc/aiN+pkb0pQvlYMQ41IOQP4BwdU6zgYY9N1e6AwCr8wK41DhiZy1Sd1JSTMg Jg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2upk56r2br-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 17:37:41 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7THWb4a008107;
-        Thu, 29 Aug 2019 17:32:41 GMT
+        Thu, 29 Aug 2019 17:37:44 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7THWYVr057171;
+        Thu, 29 Aug 2019 17:32:43 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2unvu0b2cp-1
+        by aserp3020.oracle.com with ESMTP id 2upc8uy168-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 17:32:40 +0000
+        Thu, 29 Aug 2019 17:32:43 +0000
 Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7THWePC022063;
-        Thu, 29 Aug 2019 17:32:40 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7THWgle022091;
+        Thu, 29 Aug 2019 17:32:42 GMT
 Received: from zissou.us.oracle.com (/10.152.34.58)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 29 Aug 2019 10:32:39 -0700
+        with ESMTP ; Thu, 29 Aug 2019 10:32:41 -0700
 From:   Daniel Jordan <daniel.m.jordan@oracle.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         Steffen Klassert <steffen.klassert@secunet.com>
@@ -61,9 +60,9 @@ Cc:     Lai Jiangshan <jiangshanlai@gmail.com>,
         Tejun Heo <tj@kernel.org>, linux-crypto@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: [PATCH v2 5/9] pcrypt: remove padata cpumask notifier
-Date:   Thu, 29 Aug 2019 13:30:34 -0400
-Message-Id: <20190829173038.21040-6-daniel.m.jordan@oracle.com>
+Subject: [PATCH v2 8/9] padata: unbind parallel jobs from specific CPUs
+Date:   Thu, 29 Aug 2019 13:30:37 -0400
+Message-Id: <20190829173038.21040-9-daniel.m.jordan@oracle.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190829173038.21040-1-daniel.m.jordan@oracle.com>
 References: <20190829173038.21040-1-daniel.m.jordan@oracle.com>
@@ -85,218 +84,316 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that padata_do_parallel takes care of finding an alternate callback
-CPU, there's no need for pcrypt's callback cpumask, so remove it and the
-notifier callback that keeps it in sync.
+Padata binds the parallel part of a job to a single CPU and round-robins
+over all CPUs in the system for each successive job.  Though the serial
+parts rely on per-CPU queues for correct ordering, they're not necessary
+for parallel work, and it improves performance to run the job locally on
+NUMA machines and let the scheduler pick the CPU within a node on a busy
+system.
+
+So, make the parallel workqueue unbound.
+
+Update the parallel workqueue's cpumask when the instance's parallel
+cpumask changes.
+
+Now that parallel jobs no longer run on max_active=1 workqueues, two or
+more parallel works that hash to the same CPU may run simultaneously,
+finish out of order, and so be serialized out of order.  Prevent this by
+keeping the works sorted on the reorder list by sequence number and
+checking that in the reordering logic.
+
+padata_get_next becomes padata_find_next so it can be reused for the end
+of padata_reorder, where it's used to avoid uselessly queueing work when
+the next job by sequence number isn't finished yet but a later job that
+hashed to the same CPU has.
+
+The ENODATA case in padata_find_next no longer makes sense because
+parallel jobs aren't bound to specific CPUs.  The EINPROGRESS case takes
+care of the scenario where a parallel job is potentially running on the
+same CPU as padata_find_next, and with only one error code left, just
+use NULL instead.
 
 Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Acked-by: Steffen Klassert <steffen.klassert@secunet.com>
 Cc: Herbert Xu <herbert@gondor.apana.org.au>
 Cc: Lai Jiangshan <jiangshanlai@gmail.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
 Cc: Tejun Heo <tj@kernel.org>
 Cc: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- crypto/pcrypt.c | 125 +++++++-----------------------------------------
- 1 file changed, 18 insertions(+), 107 deletions(-)
+ include/linux/padata.h |   3 ++
+ kernel/padata.c        | 116 +++++++++++++++++++++++------------------
+ 2 files changed, 67 insertions(+), 52 deletions(-)
 
-diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
-index efca962ab12a..2ec36e6a132f 100644
---- a/crypto/pcrypt.c
-+++ b/crypto/pcrypt.c
-@@ -18,33 +18,8 @@
- #include <linux/cpu.h>
- #include <crypto/pcrypt.h>
- 
--struct padata_pcrypt {
--	struct padata_instance *pinst;
--
--	/*
--	 * Cpumask for callback CPUs. It should be
--	 * equal to serial cpumask of corresponding padata instance,
--	 * so it is updated when padata notifies us about serial
--	 * cpumask change.
--	 *
--	 * cb_cpumask is protected by RCU. This fact prevents us from
--	 * using cpumask_var_t directly because the actual type of
--	 * cpumsak_var_t depends on kernel configuration(particularly on
--	 * CONFIG_CPUMASK_OFFSTACK macro). Depending on the configuration
--	 * cpumask_var_t may be either a pointer to the struct cpumask
--	 * or a variable allocated on the stack. Thus we can not safely use
--	 * cpumask_var_t with RCU operations such as rcu_assign_pointer or
--	 * rcu_dereference. So cpumask_var_t is wrapped with struct
--	 * pcrypt_cpumask which makes possible to use it with RCU.
--	 */
--	struct pcrypt_cpumask {
--		cpumask_var_t mask;
--	} *cb_cpumask;
--	struct notifier_block nblock;
--};
--
--static struct padata_pcrypt pencrypt;
--static struct padata_pcrypt pdecrypt;
-+static struct padata_instance *pencrypt;
-+static struct padata_instance *pdecrypt;
- static struct kset           *pcrypt_kset;
- 
- struct pcrypt_instance_ctx {
-@@ -128,7 +103,7 @@ static int pcrypt_aead_encrypt(struct aead_request *req)
- 			       req->cryptlen, req->iv);
- 	aead_request_set_ad(creq, req->assoclen);
- 
--	err = padata_do_parallel(pencrypt.pinst, padata, &ctx->cb_cpu);
-+	err = padata_do_parallel(pencrypt, padata, &ctx->cb_cpu);
- 	if (!err)
- 		return -EINPROGRESS;
- 
-@@ -170,7 +145,7 @@ static int pcrypt_aead_decrypt(struct aead_request *req)
- 			       req->cryptlen, req->iv);
- 	aead_request_set_ad(creq, req->assoclen);
- 
--	err = padata_do_parallel(pdecrypt.pinst, padata, &ctx->cb_cpu);
-+	err = padata_do_parallel(pdecrypt, padata, &ctx->cb_cpu);
- 	if (!err)
- 		return -EINPROGRESS;
- 
-@@ -317,36 +292,6 @@ static int pcrypt_create(struct crypto_template *tmpl, struct rtattr **tb)
- 	return -EINVAL;
+diff --git a/include/linux/padata.h b/include/linux/padata.h
+index b5f18802d015..4d2ba38d99fc 100644
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -36,6 +36,7 @@ struct padata_priv {
+ 	struct parallel_data	*pd;
+ 	int			cb_cpu;
+ 	int			cpu;
++	unsigned int		seq_nr;
+ 	int			info;
+ 	void                    (*parallel)(struct padata_priv *padata);
+ 	void                    (*serial)(struct padata_priv *padata);
+@@ -106,6 +107,7 @@ struct padata_cpumask {
+  * @refcnt: Number of objects holding a reference on this parallel_data.
+  * @flushing_done: Wait for all objects to be sent out.
+  * @max_seq_nr:  Maximal used sequence number.
++ * @processed: Number of already processed objects.
+  * @cpu: Next CPU to be processed.
+  * @cpumask: The cpumasks in use for parallel and serial workers.
+  * @reorder_work: work struct for reordering.
+@@ -118,6 +120,7 @@ struct parallel_data {
+ 	atomic_t			refcnt;
+ 	struct completion		flushing_done;
+ 	atomic_t			seq_nr;
++	unsigned int			processed;
+ 	int				cpu;
+ 	struct padata_cpumask		cpumask;
+ 	struct work_struct		reorder_work;
+diff --git a/kernel/padata.c b/kernel/padata.c
+index eefe4dd3d979..83889e0bf1c4 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -46,18 +46,13 @@ static int padata_index_to_cpu(struct parallel_data *pd, int cpu_index)
+ 	return target_cpu;
  }
  
--static int pcrypt_cpumask_change_notify(struct notifier_block *self,
--					unsigned long val, void *data)
--{
--	struct padata_pcrypt *pcrypt;
--	struct pcrypt_cpumask *new_mask, *old_mask;
--	struct padata_cpumask *cpumask = (struct padata_cpumask *)data;
+-static int padata_cpu_hash(struct parallel_data *pd)
++static int padata_cpu_hash(struct parallel_data *pd, unsigned int seq_nr)
+ {
+-	unsigned int seq_nr;
+-	int cpu_index;
 -
--	if (!(val & PADATA_CPU_SERIAL))
--		return 0;
+ 	/*
+ 	 * Hash the sequence numbers to the cpus by taking
+ 	 * seq_nr mod. number of cpus in use.
+ 	 */
 -
--	pcrypt = container_of(self, struct padata_pcrypt, nblock);
--	new_mask = kmalloc(sizeof(*new_mask), GFP_KERNEL);
--	if (!new_mask)
+-	seq_nr = atomic_inc_return(&pd->seq_nr);
+-	cpu_index = seq_nr % cpumask_weight(pd->cpumask.pcpu);
++	int cpu_index = seq_nr % cpumask_weight(pd->cpumask.pcpu);
+ 
+ 	return padata_index_to_cpu(pd, cpu_index);
+ }
+@@ -144,7 +139,8 @@ int padata_do_parallel(struct padata_instance *pinst,
+ 	padata->pd = pd;
+ 	padata->cb_cpu = *cb_cpu;
+ 
+-	target_cpu = padata_cpu_hash(pd);
++	padata->seq_nr = atomic_inc_return(&pd->seq_nr);
++	target_cpu = padata_cpu_hash(pd, padata->seq_nr);
+ 	padata->cpu = target_cpu;
+ 	queue = per_cpu_ptr(pd->pqueue, target_cpu);
+ 
+@@ -152,7 +148,7 @@ int padata_do_parallel(struct padata_instance *pinst,
+ 	list_add_tail(&padata->list, &queue->parallel.list);
+ 	spin_unlock(&queue->parallel.lock);
+ 
+-	queue_work_on(target_cpu, pinst->parallel_wq, &queue->work);
++	queue_work(pinst->parallel_wq, &queue->work);
+ 
+ out:
+ 	rcu_read_unlock_bh();
+@@ -162,21 +158,19 @@ int padata_do_parallel(struct padata_instance *pinst,
+ EXPORT_SYMBOL(padata_do_parallel);
+ 
+ /*
+- * padata_get_next - Get the next object that needs serialization.
++ * padata_find_next - Find the next object that needs serialization.
+  *
+  * Return values are:
+  *
+  * A pointer to the control struct of the next object that needs
+  * serialization, if present in one of the percpu reorder queues.
+  *
+- * -EINPROGRESS, if the next object that needs serialization will
++ * NULL, if the next object that needs serialization will
+  *  be parallel processed by another cpu and is not yet present in
+  *  the cpu's reorder queue.
+- *
+- * -ENODATA, if this cpu has to do the parallel processing for
+- *  the next object.
+  */
+-static struct padata_priv *padata_get_next(struct parallel_data *pd)
++static struct padata_priv *padata_find_next(struct parallel_data *pd,
++					    bool remove_object)
+ {
+ 	struct padata_parallel_queue *next_queue;
+ 	struct padata_priv *padata;
+@@ -187,27 +181,29 @@ static struct padata_priv *padata_get_next(struct parallel_data *pd)
+ 	reorder = &next_queue->reorder;
+ 
+ 	spin_lock(&reorder->lock);
+-	if (!list_empty(&reorder->list)) {
+-		padata = list_entry(reorder->list.next,
+-				    struct padata_priv, list);
+-
+-		list_del_init(&padata->list);
++	if (list_empty(&reorder->list)) {
++		spin_unlock(&reorder->lock);
++		return NULL;
++	}
+ 
+-		pd->cpu = cpumask_next_wrap(cpu, pd->cpumask.pcpu, -1,
+-					    false);
++	padata = list_entry(reorder->list.next, struct padata_priv, list);
+ 
++	/*
++	 * Checks the rare case where two or more parallel jobs have hashed to
++	 * the same CPU and one of the later ones finishes first.
++	 */
++	if (padata->seq_nr != pd->processed) {
+ 		spin_unlock(&reorder->lock);
+-		goto out;
++		return NULL;
+ 	}
+-	spin_unlock(&reorder->lock);
+ 
+-	if (__this_cpu_read(pd->pqueue->cpu_index) == next_queue->cpu_index) {
+-		padata = ERR_PTR(-ENODATA);
+-		goto out;
++	if (remove_object) {
++		list_del_init(&padata->list);
++		++pd->processed;
++		pd->cpu = cpumask_next_wrap(cpu, pd->cpumask.pcpu, -1, false);
+ 	}
+ 
+-	padata = ERR_PTR(-EINPROGRESS);
+-out:
++	spin_unlock(&reorder->lock);
+ 	return padata;
+ }
+ 
+@@ -233,26 +229,16 @@ static void padata_reorder(struct parallel_data *pd)
+ 		return;
+ 
+ 	while (1) {
+-		padata = padata_get_next(pd);
++		padata = padata_find_next(pd, true);
+ 
+ 		/*
+ 		 * If the next object that needs serialization is parallel
+ 		 * processed by another cpu and is still on it's way to the
+ 		 * cpu's reorder queue, nothing to do for now.
+ 		 */
+-		if (PTR_ERR(padata) == -EINPROGRESS)
++		if (!padata)
+ 			break;
+ 
+-		/*
+-		 * This cpu has to do the parallel processing of the next
+-		 * object. It's waiting in the cpu's parallelization queue,
+-		 * so exit immediately.
+-		 */
+-		if (PTR_ERR(padata) == -ENODATA) {
+-			spin_unlock_bh(&pd->lock);
+-			return;
+-		}
+-
+ 		cb_cpu = padata->cb_cpu;
+ 		squeue = per_cpu_ptr(pd->squeue, cb_cpu);
+ 
+@@ -276,7 +262,8 @@ static void padata_reorder(struct parallel_data *pd)
+ 	smp_mb();
+ 
+ 	next_queue = per_cpu_ptr(pd->pqueue, pd->cpu);
+-	if (!list_empty(&next_queue->reorder.list))
++	if (!list_empty(&next_queue->reorder.list) &&
++	    padata_find_next(pd, false))
+ 		queue_work(pinst->serial_wq, &pd->reorder_work);
+ }
+ 
+@@ -332,9 +319,14 @@ void padata_do_serial(struct padata_priv *padata)
+ 	struct parallel_data *pd = padata->pd;
+ 	struct padata_parallel_queue *pqueue = per_cpu_ptr(pd->pqueue,
+ 							   padata->cpu);
++	struct padata_priv *cur;
+ 
+ 	spin_lock(&pqueue->reorder.lock);
+-	list_add_tail(&padata->list, &pqueue->reorder.list);
++	/* Sort in ascending order of sequence number. */
++	list_for_each_entry_reverse(cur, &pqueue->reorder.list, list)
++		if (cur->seq_nr < padata->seq_nr)
++			break;
++	list_add(&padata->list, &cur->list);
+ 	spin_unlock(&pqueue->reorder.lock);
+ 
+ 	/*
+@@ -352,17 +344,36 @@ static int padata_setup_cpumasks(struct parallel_data *pd,
+ 				 const struct cpumask *pcpumask,
+ 				 const struct cpumask *cbcpumask)
+ {
+-	if (!alloc_cpumask_var(&pd->cpumask.pcpu, GFP_KERNEL))
 -		return -ENOMEM;
--	if (!alloc_cpumask_var(&new_mask->mask, GFP_KERNEL)) {
--		kfree(new_mask);
++	struct workqueue_attrs *attrs;
++	int err = -ENOMEM;
+ 
++	if (!alloc_cpumask_var(&pd->cpumask.pcpu, GFP_KERNEL))
++		goto out;
+ 	cpumask_and(pd->cpumask.pcpu, pcpumask, cpu_online_mask);
+-	if (!alloc_cpumask_var(&pd->cpumask.cbcpu, GFP_KERNEL)) {
+-		free_cpumask_var(pd->cpumask.pcpu);
 -		return -ENOMEM;
 -	}
--
--	old_mask = pcrypt->cb_cpumask;
--
--	cpumask_copy(new_mask->mask, cpumask->cbcpu);
--	rcu_assign_pointer(pcrypt->cb_cpumask, new_mask);
--	synchronize_rcu();
--
--	free_cpumask_var(old_mask->mask);
--	kfree(old_mask);
--	return 0;
--}
--
- static int pcrypt_sysfs_add(struct padata_instance *pinst, const char *name)
- {
- 	int ret;
-@@ -359,63 +304,29 @@ static int pcrypt_sysfs_add(struct padata_instance *pinst, const char *name)
- 	return ret;
+ 
++	if (!alloc_cpumask_var(&pd->cpumask.cbcpu, GFP_KERNEL))
++		goto free_pcpu_mask;
+ 	cpumask_and(pd->cpumask.cbcpu, cbcpumask, cpu_online_mask);
++
++	attrs = alloc_workqueue_attrs();
++	if (!attrs)
++		goto free_cbcpu_mask;
++
++	/* Restrict parallel_wq workers to pd->cpumask.pcpu. */
++	cpumask_copy(attrs->cpumask, pd->cpumask.pcpu);
++	err = apply_workqueue_attrs(pd->pinst->parallel_wq, attrs);
++	free_workqueue_attrs(attrs);
++	if (err < 0)
++		goto free_cbcpu_mask;
++
+ 	return 0;
++
++free_cbcpu_mask:
++	free_cpumask_var(pd->cpumask.cbcpu);
++free_pcpu_mask:
++	free_cpumask_var(pd->cpumask.pcpu);
++out:
++	return err;
  }
  
--static int pcrypt_init_padata(struct padata_pcrypt *pcrypt,
--			      const char *name)
-+static int pcrypt_init_padata(struct padata_instance **pinst, const char *name)
- {
- 	int ret = -ENOMEM;
--	struct pcrypt_cpumask *mask;
+ static void __padata_list_init(struct padata_list *pd_list)
+@@ -428,6 +439,8 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
+ 	pd->squeue = alloc_percpu(struct padata_serial_queue);
+ 	if (!pd->squeue)
+ 		goto err_free_pqueue;
++
++	pd->pinst = pinst;
+ 	if (padata_setup_cpumasks(pd, pcpumask, cbcpumask) < 0)
+ 		goto err_free_squeue;
  
- 	get_online_cpus();
+@@ -437,7 +450,6 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
+ 	/* Initial ref dropped in padata_flush_queues. */
+ 	atomic_set(&pd->refcnt, 1);
+ 	init_completion(&pd->flushing_done);
+-	pd->pinst = pinst;
+ 	spin_lock_init(&pd->lock);
+ 	pd->cpu = cpumask_first(pd->cpumask.pcpu);
+ 	INIT_WORK(&pd->reorder_work, invoke_padata_reorder);
+@@ -920,8 +932,8 @@ static struct padata_instance *padata_alloc(const char *name,
+ 	if (!pinst)
+ 		goto err;
  
--	pcrypt->pinst = padata_alloc_possible(name);
--	if (!pcrypt->pinst)
--		goto err;
--
--	mask = kmalloc(sizeof(*mask), GFP_KERNEL);
--	if (!mask)
--		goto err_free_padata;
--	if (!alloc_cpumask_var(&mask->mask, GFP_KERNEL)) {
--		kfree(mask);
--		goto err_free_padata;
--	}
--
--	cpumask_and(mask->mask, cpu_possible_mask, cpu_online_mask);
--	rcu_assign_pointer(pcrypt->cb_cpumask, mask);
--
--	pcrypt->nblock.notifier_call = pcrypt_cpumask_change_notify;
--	ret = padata_register_cpumask_notifier(pcrypt->pinst, &pcrypt->nblock);
--	if (ret)
--		goto err_free_cpumask;
-+	*pinst = padata_alloc_possible(name);
-+	if (!*pinst)
-+		return ret;
+-	pinst->parallel_wq = alloc_workqueue("%s_parallel", WQ_MEM_RECLAIM |
+-					     WQ_CPU_INTENSIVE, 1, name);
++	pinst->parallel_wq = alloc_workqueue("%s_parallel", WQ_UNBOUND, 0,
++					     name);
+ 	if (!pinst->parallel_wq)
+ 		goto err_free_inst;
  
--	ret = pcrypt_sysfs_add(pcrypt->pinst, name);
-+	ret = pcrypt_sysfs_add(*pinst, name);
- 	if (ret)
--		goto err_unregister_notifier;
-+		padata_free(*pinst);
- 
- 	put_online_cpus();
- 
--	return ret;
--
--err_unregister_notifier:
--	padata_unregister_cpumask_notifier(pcrypt->pinst, &pcrypt->nblock);
--err_free_cpumask:
--	free_cpumask_var(mask->mask);
--	kfree(mask);
--err_free_padata:
--	padata_free(pcrypt->pinst);
--err:
--	put_online_cpus();
--
- 	return ret;
- }
- 
--static void pcrypt_fini_padata(struct padata_pcrypt *pcrypt)
-+static void pcrypt_fini_padata(struct padata_instance *pinst)
- {
--	free_cpumask_var(pcrypt->cb_cpumask->mask);
--	kfree(pcrypt->cb_cpumask);
--
--	padata_stop(pcrypt->pinst);
--	padata_unregister_cpumask_notifier(pcrypt->pinst, &pcrypt->nblock);
--	padata_free(pcrypt->pinst);
-+	padata_stop(pinst);
-+	padata_free(pinst);
- }
- 
- static struct crypto_template pcrypt_tmpl = {
-@@ -440,13 +351,13 @@ static int __init pcrypt_init(void)
- 	if (err)
- 		goto err_deinit_pencrypt;
- 
--	padata_start(pencrypt.pinst);
--	padata_start(pdecrypt.pinst);
-+	padata_start(pencrypt);
-+	padata_start(pdecrypt);
- 
- 	return crypto_register_template(&pcrypt_tmpl);
- 
- err_deinit_pencrypt:
--	pcrypt_fini_padata(&pencrypt);
-+	pcrypt_fini_padata(pencrypt);
- err_unreg_kset:
- 	kset_unregister(pcrypt_kset);
- err:
-@@ -455,8 +366,8 @@ static int __init pcrypt_init(void)
- 
- static void __exit pcrypt_exit(void)
- {
--	pcrypt_fini_padata(&pencrypt);
--	pcrypt_fini_padata(&pdecrypt);
-+	pcrypt_fini_padata(pencrypt);
-+	pcrypt_fini_padata(pdecrypt);
- 
- 	kset_unregister(pcrypt_kset);
- 	crypto_unregister_template(&pcrypt_tmpl);
 -- 
 2.23.0
 
