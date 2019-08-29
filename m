@@ -2,169 +2,101 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57586C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEE7C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260E7208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7216C233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 09:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Hc9GLAgO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbfH2JYW (ORCPT
+        id S1726936AbfH2J2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 05:24:22 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:41005 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbfH2JYU (ORCPT
+        Thu, 29 Aug 2019 05:28:39 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43699 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbfH2J2j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 05:24:20 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: dcw5HvdrWWW4kbMXgGxuMElWhsYPDEZ2r2ibGqZjytgKP860+4DfHv4CXfMD+ddtYGad9OBMgT
- 38QTqQVbl2yzZ+ozBONDV5w410Xbb6vA2BfRsO/us879/sNPHi9jBAt6k1gCLn1wweLlZ5pP7l
- NUY5jztFbtc1yKOaHBgYFju0MQRk+A3MIT/Ym64A7PEYgxPqLc1jx0+BMfbu14byb8OEAVjLHH
- O2iC7jC4Stuup5FZl7lCyFZx2Vkd45pwVLTGEoeLzSD/E9Jyac3BplEO9ava/k3m8vjOrXTab5
- pq8=
-X-IronPort-AV: E=Sophos;i="5.64,442,1559545200"; 
-   d="scan'208";a="44136216"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Aug 2019 02:24:20 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 29 Aug 2019 02:24:16 -0700
-Received: from soft-dev3.microsemi.net (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 29 Aug 2019 02:24:17 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <alexandre.belloni@bootlin.com>, <UNGLinuxDriver@microchip.com>,
-        <davem@davemloft.net>, <andrew@lunn.ch>,
-        <allan.nielsen@microchip.com>, <jiri@resnulli.us>,
-        <ivecera@redhat.com>, <f.fainelli@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH v3 2/2] net: mscc: Implement promisc mode.
-Date:   Thu, 29 Aug 2019 11:22:29 +0200
-Message-ID: <1567070549-29255-3-git-send-email-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567070549-29255-1-git-send-email-horatiu.vultur@microchip.com>
-References: <1567070549-29255-1-git-send-email-horatiu.vultur@microchip.com>
+        Thu, 29 Aug 2019 05:28:39 -0400
+Received: by mail-io1-f68.google.com with SMTP id u185so1757889iod.10
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 02:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v06lta4MYVBJBZLQ73bBpIez3Zzb0/6n6ZDJgeZvvFA=;
+        b=Hc9GLAgOOnaaXsF3NrbM7AecX7f3q0LEmVqWdNl+cCygzK/RxeejM05rD+PoBYvpNy
+         iCfIvK00i3nYnz/7hEF1IyoD0raYoTA0Fi7pIXSNsQiydr+b2RWwANqNTLEGdoi4TVze
+         EI0HrSen2CJeJvMGU2pb8OzX9tm5amIQIkLoI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v06lta4MYVBJBZLQ73bBpIez3Zzb0/6n6ZDJgeZvvFA=;
+        b=mYyjPNRO1xUAQ8WQ0r3klctv6pAHwhWsoioddFNpDpQByiZxDhLXFJlzpVI058xIYB
+         D37MbbpQcGmhlnoi4SsU6OfEFi4zxPtbQZ/ed5p0HMW8dZHZjg8Q58wVvriULmqpJjq8
+         xdExr4Ei/VQgoM//K9ipdzPjTYsHdvXA8sIGdy8qPfB2ASrQ1Dw9hmVYZTSNpWHZ95AG
+         nHP1oQMPOzE0JgPx9MGFRkSzzDan7IZaaiuVg2HmtWuAxG4XR/rS9E9sNqR69tFFd4MH
+         UzDHtk6H5odggRw/MwL8aig8Su3JyJeBIcGbFcJkAlPECfy82nVuhiac2Lekoj6bQMA7
+         0p9g==
+X-Gm-Message-State: APjAAAW39/s3O8bQp0F5gdEsxeTd0Q0D+TzvE8VVrTfOqE7LmoY7JKRe
+        7inMzgAyNCk/o8wFlnoYoofmARzbw8/IcHOStfEK4Q==
+X-Google-Smtp-Source: APXvYqyUavfINYtqJHGpZUBR9A9V8dAVHmilYmO0JxPFl0AJag7dkVSKSrPI4+FtMTzlVFjVPwtJnqsyT6kSq+5gC8c=
+X-Received: by 2002:a5e:da48:: with SMTP id o8mr593380iop.252.1567070918305;
+ Thu, 29 Aug 2019 02:28:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190821173742.24574-1-vgoyal@redhat.com>
+In-Reply-To: <20190821173742.24574-1-vgoyal@redhat.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 29 Aug 2019 11:28:27 +0200
+Message-ID: <CAJfpegv_XS=kLxw_FzWNM2Xao5wsn7oGbk3ow78gU8tpXwo-sg@mail.gmail.com>
+Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual machines
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a port is added to the bridge, the port is added in promisc mode. But
-the HW is capable of switching the frames therefore is not needed for the
-port to be added in promisc mode. In case a user space application requires
-for the port to enter promisc mode then is it needed to enter the promisc
-mode.
+On Wed, Aug 21, 2019 at 7:38 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+>
+> Hi,
+>
+> Here are the V3 patches for virtio-fs filesystem. This time I have
+> broken the patch series in two parts. This is first part which does
+> not contain DAX support. Second patch series will contain the patches
+> for DAX support.
+>
+> I have also dropped RFC tag from first patch series as we believe its
+> in good enough shape that it should get a consideration for inclusion
+> upstream.
 
-Therefore listen in when the promiscuity on a dev is change and when the
-port enters or leaves a bridge. Having this information it is possible to
-know when to set the port in promisc mode and when not:
-If the port is part of bridge and promiscuity > 1 or if the port is not
-part of bridge and promiscuity is > 0 then add then add the port in promisc
-mode otherwise don't.
+Pushed out to
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- drivers/net/ethernet/mscc/ocelot.c | 47 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git#for-next
 
-diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-index 4d1bce4..292fcc1 100644
---- a/drivers/net/ethernet/mscc/ocelot.c
-+++ b/drivers/net/ethernet/mscc/ocelot.c
-@@ -1294,6 +1294,37 @@ static void ocelot_port_attr_mc_set(struct ocelot_port *port, bool mc)
- 	ocelot_write_gix(ocelot, val, ANA_PORT_CPU_FWD_CFG, port->chip_port);
- }
- 
-+static void ocelot_port_attr_promisc_set(struct ocelot_port *port,
-+					 unsigned int promisc,
-+					 bool is_bridge_port)
-+{
-+	struct ocelot *ocelot = port->ocelot;
-+	u32 val;
-+
-+	val = ocelot_read_gix(ocelot, ANA_PORT_CPU_FWD_CFG, port->chip_port);
-+
-+	/* When a port is added to a bridge, the port is added in promisc mode,
-+	 * by calling the function 'ndo_set_rx_mode'. But the HW is capable
-+	 * of switching the frames therefore is not needed for the port to
-+	 * enter in promisc mode.
-+	 * But a port needs to be added in promisc mode if an application
-+	 * requires it(pcap library). Therefore listen when the
-+	 * dev->promiscuity is change and when the port is added or removed from
-+	 * the bridge. Using this information, calculate if the promisc mode
-+	 * is required in the following way:
-+	 */
-+	if (!is_bridge_port && promisc > 0) {
-+		val |= ANA_PORT_CPU_FWD_CFG_CPU_SRC_COPY_ENA;
-+	} else {
-+		if (is_bridge_port && promisc > 1)
-+			val |= ANA_PORT_CPU_FWD_CFG_CPU_SRC_COPY_ENA;
-+		else
-+			val &= ~(ANA_PORT_CPU_FWD_CFG_CPU_SRC_COPY_ENA);
-+	}
-+
-+	ocelot_write_gix(ocelot, val, ANA_PORT_CPU_FWD_CFG, port->chip_port);
-+}
-+
- static int ocelot_port_attr_set(struct net_device *dev,
- 				const struct switchdev_attr *attr,
- 				struct switchdev_trans *trans)
-@@ -1316,6 +1347,10 @@ static int ocelot_port_attr_set(struct net_device *dev,
- 	case SWITCHDEV_ATTR_ID_BRIDGE_MC_DISABLED:
- 		ocelot_port_attr_mc_set(ocelot_port, !attr->u.mc_disabled);
- 		break;
-+	case SWITCHDEV_ATTR_ID_PORT_PROMISCUITY:
-+		ocelot_port_attr_promisc_set(ocelot_port, dev->promiscuity,
-+					     netif_is_bridge_port(dev));
-+		break;
- 	default:
- 		err = -EOPNOTSUPP;
- 		break;
-@@ -1688,6 +1723,18 @@ static int ocelot_netdevice_port_event(struct net_device *dev,
- 
- 			ocelot_vlan_port_apply(ocelot_port->ocelot,
- 					       ocelot_port);
-+
-+			/* In case the port is added or removed from the bridge
-+			 * is it needed to recaulculate the promiscuity. The
-+			 * reason is that when a port leaves the bridge first
-+			 * it decrease the promiscuity and then the flag
-+			 * IFF_BRIDGE_PORT is removed from dev. Therefor the
-+			 * function ocelot_port_attr_promisc is called with
-+			 * the wrong arguments.
-+			 */
-+			ocelot_port_attr_promisc_set(ocelot_port,
-+						     dev->promiscuity,
-+						     info->linking);
- 		}
- 		if (netif_is_lag_master(info->upper_dev)) {
- 			if (info->linking)
--- 
-2.7.4
+Major changes compared to patchset:
 
+ - renamed to "virtiofs".  Filesystem names don't usually have
+underscore before "fs" postfix.
+
+ - removed option parsing completely.  Virtiofs config is fixed to "-o
+rootmode=040000,user_id=0,group_id=0,allow_other,default_permissions".
+Does this sound reasonable?
+
+There are miscellaneous changes, so needs to be thoroughly tested.
+
+I think we also need something in
+"Documentation/filesystems/virtiofs.rst" which describes the design
+(how  request gets to userspace and back) and how to set up the
+server, etc...  Stefan, Vivek can you do something like that?
+
+Thanks,
+Miklos
