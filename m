@@ -2,140 +2,115 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B5FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184C0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEBBD2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567100376;
-	bh=EuCHrvEvdbp8z1/Lg/yUsnYZ4GrW13AmJ1Li6JNqah4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=HukgvtYAyr9KuX4uasWr/+H9QytWfBRU4ENFC2ylRJmFBCKTa6ifo0ijeayVVCVg8
-	 PXSqo+9gD/Ob495Vinl2sK7ZrkRNtrGpxuNuLlwT/S9n7dEIKusa6L2DBj1qFyNW6r
-	 X0PYBh6ZqVGqb8/rvLl2MTMz4Q7JUtsKEiXYxusY=
+	by mail.kernel.org (Postfix) with ESMTP id E1B2521726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 17:40:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z1cP/5ez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfH2Rjg (ORCPT
+        id S1728143AbfH2RkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 13:39:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727228AbfH2Rje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:39:34 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AEF221726;
-        Thu, 29 Aug 2019 17:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567100373;
-        bh=EuCHrvEvdbp8z1/Lg/yUsnYZ4GrW13AmJ1Li6JNqah4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=BEbe7vu3O2sPbUB/hlCQ+OPAVVFF8f+DR6DPd61XoLB4O+eAAYvUXJoZm32wJqset
-         yxsZmnwdOOrWMfl+wg/blme7nNlg3D6Rf6WA6v7dhWhhO7MJxAv2SHJcSgHmbkIjBt
-         mqaQ58iB+xIRLRCcOHMc3VukpwfZNmtc56tKMgN4=
-Subject: Re: [PATCH v2] doc: kselftest: update for clarity on running
- kselftests in CI rings
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dan.rue@linaro.org, anders.roxell@linaro.org,
-        shuah <shuah@kernel.org>
-References: <20190827003709.26950-1-skhan@linuxfoundation.org>
- <CAFd5g47jeZGqdhOUEOFGwHqHQ1O0=99Ce+bFhZ-7PCyFT1YO1Q@mail.gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <f328adad-7559-a459-fd56-b46795d882c6@kernel.org>
-Date:   Thu, 29 Aug 2019 11:39:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 13:40:02 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34274 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727483AbfH2RkB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 13:40:01 -0400
+Received: by mail-io1-f67.google.com with SMTP id s21so8656757ioa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 10:40:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fy1EONJYFzvA6a2F757/vnVFBYdEDoPHNwTUWgsvybk=;
+        b=Z1cP/5ezzJ90NFU0M1U6zbk+KT4PjiIv172TBGDPGRStchob2kMIXvTBkcXqclue2c
+         Pshe76ei8DZxZd/hbugynKc/kZpkF6mSXg2hkUlUffI8nfmY6z5Dzime1bmwMJyrMckU
+         dAcjYiSXvN2cFOLrsXI5NPL7Vx0T7FS0VHjQI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fy1EONJYFzvA6a2F757/vnVFBYdEDoPHNwTUWgsvybk=;
+        b=VRlIZDLS2d4CzJrNozKtg2XLEhL3BabG0+LIa4BvX/V9kZV3ouV5xyrcCtMbXCKq5d
+         zRT8KzTSKYwvV88kjsIAyUhkY/QBCtA4HSaHxjuIwfEJt3Wc+EXBobvpGo/cGqnxROcG
+         +8fT00ujMCsddU38Nb5K1ynavUhV77MneTLKcivk8AHVUVKskzY4U11JjucVIt/5dHTF
+         HXFrQf++xwFDfyRqUwvpu6KYVs55IMlg7dSbrS9XgFXb4WaFxA1FF8BIHvQtdB/XwcVl
+         i7NFDcIHhiTNCi0GDkhadHPDgtWMg1Jq9P7skJOmVfvoK4Cv/qdffX6aMtF8KtbKbmrn
+         mi/A==
+X-Gm-Message-State: APjAAAXH3zYqYs55OrkIrB6o5/inlaEZuQT6VLLCh4GgLHAR0CdQk1Dc
+        rNf4aI25TgsNTuxzkFPwDdDvwTuQwBQ=
+X-Google-Smtp-Source: APXvYqzPLcuoChK4+ohjzd/bYAAvQoM6vL32z4Rx/578+kqXMnMkP402LjktFYmOmL3Uob0Hq4P1jQ==
+X-Received: by 2002:a5d:96cb:: with SMTP id r11mr12952159iol.200.1567100400664;
+        Thu, 29 Aug 2019 10:40:00 -0700 (PDT)
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com. [209.85.166.46])
+        by smtp.gmail.com with ESMTPSA id b17sm2698466ioh.6.2019.08.29.10.40.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Aug 2019 10:40:00 -0700 (PDT)
+Received: by mail-io1-f46.google.com with SMTP id s21so8656655ioa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 10:40:00 -0700 (PDT)
+X-Received: by 2002:a5e:db0a:: with SMTP id q10mr12308339iop.58.1567100399775;
+ Thu, 29 Aug 2019 10:39:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g47jeZGqdhOUEOFGwHqHQ1O0=99Ce+bFhZ-7PCyFT1YO1Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190828214620.66003-1-mka@chromium.org> <20190828214620.66003-2-mka@chromium.org>
+ <CAPDyKFr2R-ta5Xob12-6k=+mXXt0NowJ=dpLGJu10qhn7cB1HQ@mail.gmail.com> <20190829171555.GD70797@google.com>
+In-Reply-To: <20190829171555.GD70797@google.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 29 Aug 2019 10:39:47 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VhAFGZusYac8hqYNZ9t+ipTZ5EAo5qY5+A8jA4xjw2vg@mail.gmail.com>
+Message-ID: <CAD=FV=VhAFGZusYac8hqYNZ9t+ipTZ5EAo5qY5+A8jA4xjw2vg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mmc: core: Run handlers for pending SDIO interrupts
+ on resume
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/19 11:30 AM, Brendan Higgins wrote:
-> On Mon, Aug 26, 2019 at 5:37 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
->>
->> Update to add clarity and recommendations on running newer kselftests
->> on older kernels vs. matching the kernel and kselftest revisions.
->>
->> The recommendation is "Match kernel revision and kselftest."
->>
->> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> 
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> 
-> One minor comment below.
-> 
->> ---
->> Changes since v1: Fixed "WARNING: Title underline too short."
->>
->>   Documentation/dev-tools/kselftest.rst | 25 +++++++++++++++++++++++++
->>   1 file changed, 25 insertions(+)
->>
->> diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
->> index 25604904fa6e..308506c5e8fa 100644
->> --- a/Documentation/dev-tools/kselftest.rst
->> +++ b/Documentation/dev-tools/kselftest.rst
->> @@ -12,6 +12,31 @@ write new tests using the framework on Kselftest wiki:
->>
->>   https://kselftest.wiki.kernel.org/
->>
->> +Recommendations on running kselftests in Continuous Integration test rings
->> +==========================================================================
->> +
->> +It is recommended that users run Kselftest from the same release. Running
->> +newer Kselftest on older kernels isn't recommended for the following
->> +reasons:
->> +
->> +- Kselftest from mainline and linux-next might not be stable enough to run
->> +  on stable kernels.
->> +- Kselftests detect feature dependencies at run-time and skip tests if a
->> +  feature and/or configuration they test aren't enabled. Running newer
->> +  tests on older kernels could result in a few too many skipped/failed
->> +  conditions. It becomes difficult to evaluate the results.
->> +- Newer tests provide better coverage. However, users should make a judgement
->> +  call on coverage vs. run to run consistency and being able to compare
->> +  run to run results on older kernels.
->> +
->> +Recommendations:
-> 
-> I think this should be the "note" directive. You already have a list
-> of recommendations above; this seems like a TLDR section, or an
-> important note or tip.
-> 
->> +
->> +Match kernel revision and kselftest. Especially important for LTS and
->> +Stable kernel Continuous Integration test rings.
->> +
->> +Hot-plug tests
->> +==============
->> +
->>   On some systems, hot-plug tests could hang forever waiting for cpu and
->>   memory to be ready to be offlined. A special hot-plug target is created
->>   to run the full range of hot-plug tests. In default mode, hot-plug tests run
->> --
->> 2.20.1
->>
-> 
+Hi,
 
-Thanks Brendan. I am holding off on this patch for now. I will have
-to make some updates. I will fold your comment in when I send an
-updated patch.
+On Thu, Aug 29, 2019 at 10:16 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> > In one way, this change makes sense as it adopts the legacy behavior,
+> > signaling "cached" SDIO IRQs also for the new SDIO irq work interface.
+> >
+> > However, there is at least one major concern I see with this approach.
+> > That is, in the execution path for sdio_signal_irq() (or calling
+> > wake_up_process() for the legacy path), we may end up invoking the
+> > SDIO func's ->irq_handler() callback, as to let the SDIO func driver
+> > to consume the SDIO IRQ.
+> >
+> > The problem with this is, that the corresponding SDIO func driver may
+> > not have been system resumed, when the ->irq_handler() callback is
+> > invoked.
+>
+> While debugging the the problem with btmrvl I found that this is
+> already the case without the patch, just not during resume, but when
+> suspending. The func driver suspends before the SDIO bus and
+> interrupts can keep coming in. These are processed while the func
+> driver is suspended, until the SDIO core starts dropping the
+> interrupts.
+>
+> And I think it is also already true at resume time: mmc_sdio_resume()
+> re-enables SDIO IRQs and disables dropping them.
 
-thanks,
--- Shuah
+I would also note that this matches the design of the normal system
+suspend/resume functions.  Interrupts continue to be enabled even
+after the "suspend" call is made for a device.  Presumably this is so
+that the suspend function can make use of interrupts even if there is
+no other reason.  If it's important for a device to stop getting
+interrupts after the "suspend" function is called then it's up to that
+device to re-configure the device to stop giving interrupts.
+
+-Doug
