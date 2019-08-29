@@ -2,196 +2,162 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F706C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E44FEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0964D21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:47:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rT/NyY7c"
+	by mail.kernel.org (Postfix) with ESMTP id C54B521726
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbfH2PrG (ORCPT
+        id S1728188AbfH2Pro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:47:06 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39449 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbfH2PrF (ORCPT
+        Thu, 29 Aug 2019 11:47:44 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:59761 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726283AbfH2Pro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:47:05 -0400
-Received: by mail-wm1-f66.google.com with SMTP id n2so2974597wmk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 08:47:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Aaw5MPLGPnpP7hqH6Z404TXcUkGBN8Qiv1+S+/xAVYs=;
-        b=rT/NyY7coIzUv343vYFq7wWdbCT9F36sX/Fd6Rlbe3nR1U5cXovKf3nwRpsN5ymTP2
-         7LMZIqiDpQFCLumf+0JpXoro1S2r6fH0v1306RPD20/tJ8mvLQYSjJOIfIQaY0Y3pQPr
-         99W6gR6/jLWLGvDDofIljq356uA1jBGBJALq80cVFTyJukUm99qydHoHvRilQORJWXgW
-         nGPJffv85OVoJjJyNuK4IFfnJ1C+f+zhmkaXcjFUWvaK6Q7Elr/jeRKFlvAmZHYWytVl
-         k1IG+USz73jXlWv1q7KEsmxB7qQvTpWLp2zmZnGgOp2kCP7UHZSa3Uir1Pp9NkmphXpb
-         27EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Aaw5MPLGPnpP7hqH6Z404TXcUkGBN8Qiv1+S+/xAVYs=;
-        b=XFwQgF//649d7xYb4VKf8QwVgr5M8QrNCi6I0WYhwtbFBJLuagdo2jntB5qojXkq6J
-         IU95H0C9TPV4qCgkBzMmyW3BDxw5wdVQiXyrkqMOMyq0hVcPPAZGHd9i6n/+qmGXVjgm
-         Ek+0FDpkKSv+cGTmBJ/utO2vZ230tqc4G20mQfxcSSVQ91gCIenbzyE7G/jXW3g1DODi
-         pgJBoNq6l32HlICfXellWgrizc/5iwMytQiTLBKzoYHr9z3gbf3T6Q2zMEC+MXSrhvYO
-         yJNnx3EgHZah7GIV3PXqqzNMMytF62VYJcJXHsAY+3nnj18fBM0/omHkT0Bd7h9RQzya
-         +MEw==
-X-Gm-Message-State: APjAAAXD2nqAcAIOJ7jA/mw3Gp+0Ad2Z6JnE9ftMd40RDThJ8taWCcJi
-        WdLnDPr3T5ev6walMtHRYcQPKQ==
-X-Google-Smtp-Source: APXvYqyQZXgC/DaNfrLvmAO/M3j3aa3a7nj3YJJVohAxA+7UE0VyCZXo9XbqRn1ojGqTnKl1laLJuw==
-X-Received: by 2002:a05:600c:386:: with SMTP id w6mr791462wmd.152.1567093623775;
-        Thu, 29 Aug 2019 08:47:03 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id n9sm3284805wrp.54.2019.08.29.08.47.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 08:47:03 -0700 (PDT)
-Subject: Re: [PATCH v5 1/4] dt-bindings: soundwire: add slave bindings
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>, Vinod <vkoul@kernel.org>,
-        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org
-References: <20190829144442.6210-1-srinivas.kandagatla@linaro.org>
- <20190829144442.6210-2-srinivas.kandagatla@linaro.org>
- <CAL_JsqLwbz5eiBEw8PmXsJrxzXffNc7rRON-wQ0KviVW8JVv5A@mail.gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <b00f653f-7337-f475-1696-a94c51aa22ba@linaro.org>
-Date:   Thu, 29 Aug 2019 16:47:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 11:47:44 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x7TFj59e005976
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Aug 2019 11:45:07 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 3F15242049E; Thu, 29 Aug 2019 11:45:05 -0400 (EDT)
+Date:   Thu, 29 Aug 2019 11:45:05 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wei Li <liwei391@huawei.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Rik van Riel <riel@surriel.com>,
+        Waiman Long <longman@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Grzegorz Halat <ghalat@redhat.com>,
+        Len Brown <len.brown@intel.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Yury Norov <ynorov@marvell.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v9 2/3] fdt: add support for rng-seed
+Message-ID: <20190829154505.GB10779@mit.edu>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Kees Cook <keescook@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wei Li <liwei391@huawei.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Rik van Riel <riel@surriel.com>, Waiman Long <longman@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Grzegorz Halat <ghalat@redhat.com>, Len Brown <len.brown@intel.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Yury Norov <ynorov@marvell.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, Jiri Kosina <jkosina@suse.cz>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <20190822071522.143986-1-hsinyi@chromium.org>
+ <20190822071522.143986-3-hsinyi@chromium.org>
+ <5d5ed368.1c69fb81.419fc.0803@mx.google.com>
+ <201908241203.92CC0BE8@keescook>
+ <CAJMQK-iDoPxbFUH3JUeJ7SehCptZOnjKZiUoFd1PqLjDdGHujA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLwbz5eiBEw8PmXsJrxzXffNc7rRON-wQ0KviVW8JVv5A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJMQK-iDoPxbFUH3JUeJ7SehCptZOnjKZiUoFd1PqLjDdGHujA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 29, 2019 at 06:03:57PM +0800, Hsin-Yi Wang wrote:
+> On Thu, Aug 29, 2019 at 1:36 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Can this please be a boot param (with the default controlled by the
+> > CONFIG)? See how CONFIG_RANDOM_TRUST_CPU is wired up...
+> >
+>
+> Currently rng-seed read and added in setup_arch() -->
+> setup_machine_fdt().. -> early_init_dt_scan_chosen(), which is earlier
+> than parse_early_param() that initializes early_param.
+> 
+> If we want to set it as a boot param, add_bootloader_randomness() can
+> only be called after parse_early_param(). The seed can't be directly
+> added to pool after it's read in. We need to store into global
+> variable and load it later.
+> If this seems okay then I'll add a patch for this. Thanks
 
+I thought about asking for this, but we really want to do this as
+early as possible, so that it can be used by KASLR and other services
+that are run super early.  Also, whether or not we can trust the
+bootloader is going to be a system-level thing.  This should probably
+be defaulted to off, and only enabled by the system integrator if they
+are 100%, positively sure, that the entire system is one where we can
+trust the source of randomness which the bootloader is using --- or
+for that matter, that the bootloader is trustworthy!
 
-On 29/08/2019 16:42, Rob Herring wrote:
-> On Thu, Aug 29, 2019 at 9:45 AM Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
->>
->> This patch adds bindings for Soundwire Slave devices that includes how
->> SoundWire enumeration address and Link ID are used to represented in
->> SoundWire slave device tree nodes.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../soundwire/soundwire-controller.yaml       | 72 +++++++++++++++++++
->>   1 file changed, 72 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
->> new file mode 100644
->> index 000000000000..449b6130ce63
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
->> @@ -0,0 +1,72 @@
->> +# SPDX-License-Identifier: GPL-2.0
-> 
-> (GPL-2.0-only OR BSD-2-Clause) for new bindings.
-> 
-Okay Sure will do that!
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/soundwire/soundwire-controller.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: SoundWire Controller Generic Binding
->> +
->> +maintainers:
->> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> +  - Vinod Koul <vkoul@kernel.org>
->> +
->> +description: |
->> +  SoundWire busses can be described with a node for the SoundWire controller
->> +  device and a set of child nodes for each SoundWire slave on the bus.
->> +
->> +properties:
->> +  $nodename:
->> +    pattern: "^soundwire(@.*)?$"
->> +
->> +  "#address-cells":
->> +    const: 2
->> +
->> +  "#size-cells":
->> +    const: 0
->> +
->> +patternProperties:
->> +  "^.*@[0-9a-f],[0-9a-f]$":
->> +    type: object
->> +
->> +    properties:
->> +      compatible:
->> +        pattern: "^sdw[0-9a-f]{1}[0-9a-f]{4}[0-9a-f]{4}[0-9a-f]{2}$"
->> +        description: Is the textual representation of SoundWire Enumeration
->> +          address. compatible string should contain SoundWire Version ID,
->> +          Manufacturer ID, Part ID and Class ID in order and shall be in
->> +          lower-case hexadecimal with leading zeroes.
->> +          Valid sizes of these fields are
->> +          Version ID is 1 nibble, number '0x1' represents SoundWire 1.0
->> +          and '0x2' represents SoundWire 1.1 and so on.
->> +          MFD is 4 nibbles
->> +          PID is 4 nibbles
->> +          CID is 2 nibbles
->> +          More Information on detail of encoding of these fields can be
->> +          found in MIPI Alliance DisCo & SoundWire 1.0 Specifications.
->> +
->> +      reg:
->> +        maxItems: 1
->> +        description:
->> +          Link ID followed by Instance ID of SoundWire Device Address.
->> +
->> +    additionalProperties: false
-> 
-> I'm pretty sure you'll want nodes with other properties. If not, then
-> why are they in DT? So drop this.
+Is it really going to be that useful for a random system administrator
+to be able to flip this on or off from the command line?  Hopefully
+there will be an easy way to configure the firmware or the bootloader
+to simply not supply entropy, if for some reason it's not trustworthy.
 
-will do!
-> 
-> Both the controller and child nodes need to list required properties.
-> 
-Okay, will spin that in next version!
-Thanks,
-srini
-
->> +
->> +examples:
->> +  - |
->> +    soundwire@c2d0000 {
->> +        #address-cells = <2>;
->> +        #size-cells = <0>;
->> +        reg = <0x0c2d0000 0x2000>;
->> +
->> +        speaker@0,1 {
->> +            compatible = "sdw10217201000";
->> +            reg = <0 1>;
->> +        };
->> +
->> +        speaker@0,2 {
->> +            compatible = "sdw10217201000";
->> +            reg = <0 2>;
->> +        };
->> +    };
->> +
->> +...
->> --
->> 2.21.0
->>
+   	      	     	      	     - Ted
