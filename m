@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC68BC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0556FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4182233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE5AF2339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102576;
-	bh=2WlVhwpjVf+d0EsxyMA5hTMnG+bbdycgMkaqW96cp8U=;
+	s=default; t=1567102578;
+	bh=YaV+f0950vjRD5TeumxAXpgg2lCSSecBsPFAdte19FQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rvld5UfKPwYvCg9UrO1VEh3EmlVKXOQmh26Zjmq+OZUVWWZGs8t/CTdQGUz0CWd5e
-	 WdaCIZ/2l+ZRdtr7nsPCha0UuPUjFq7LWhsJlZm42FlHJpsJA2xhOA9M3Y3vfL0O69
-	 LOmJB0BKjmQJ7Rmp+E9rY+1XDjJZuqiMLMr/TiBA=
+	b=qkVAjL2M+U3sc/6reImKKbPN3zsoE/3Tw82uOEQqcWv7hsde1x9j/r7BJnN9I0Auj
+	 z866GRpCS+zGJDP06aChPSFpuo/a9OLOumO2fcjqP3xQ5yaMjETQeNfT5k7vJGZg2u
+	 KKwX7HrwncQfap2JELH14kk6LXAFlS0Harj+o7Nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbfH2SQP (ORCPT
+        id S1729697AbfH2SQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:16:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:16:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729537AbfH2SQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:08 -0400
+        id S1728236AbfH2SQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:16:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECD832341C;
-        Thu, 29 Aug 2019 18:16:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6228F23404;
+        Thu, 29 Aug 2019 18:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102566;
-        bh=2WlVhwpjVf+d0EsxyMA5hTMnG+bbdycgMkaqW96cp8U=;
+        s=default; t=1567102570;
+        bh=YaV+f0950vjRD5TeumxAXpgg2lCSSecBsPFAdte19FQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YhqL6FtePM2SnaWn7lZG66iuOqWQ7Dh03c/Mdy5psQL0xACtVGyp0M17lswfjeSRP
-         afw6aqL74J+elDGE/A4xzSZXJbIPjcCoZYORu7k8e3CIuCrSaCou+1sqlqlmlFAAyX
-         7Y+ZPSy/wICTbWORb/y9zNSxrYjxQhQgAYhpH0do=
+        b=RQPmj9J474XRAC57GsCmWTPer88hbCdzU0vS0+HGGCulwmEOUUsNwjsMvq5tcPfmF
+         hnNxwt2yQt5y2QVS2PvmLEmjIR6R6dr9TwKF5KIBo0bEZKGVBFb6TVvxVIVjyg2p7e
+         LELgrXkkyRX+8uMt0ffdhBjlUczJtYRMniD8vA2g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        syzbot+78e71c5bab4f76a6a719@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 13/45] rxrpc: Fix read-after-free in rxrpc_queue_local()
-Date:   Thu, 29 Aug 2019 14:15:13 -0400
-Message-Id: <20190829181547.8280-13-sashal@kernel.org>
+Cc:     Bill Kuzeja <William.Kuzeja@stratus.com>,
+        Bill Kuzeja <william.kuzeja@stratus.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 16/45] scsi: qla2xxx: Fix gnl.l memory leak on adapter init failure
+Date:   Thu, 29 Aug 2019 14:15:16 -0400
+Message-Id: <20190829181547.8280-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
 References: <20190829181547.8280-1-sashal@kernel.org>
@@ -60,126 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Bill Kuzeja <William.Kuzeja@stratus.com>
 
-[ Upstream commit 06d9532fa6b34f12a6d75711162d47c17c1add72 ]
+[ Upstream commit 26fa656e9a0cbccddf7db132ea020d2169dbe46e ]
 
-rxrpc_queue_local() attempts to queue the local endpoint it is given and
-then, if successful, prints a trace line.  The trace line includes the
-current usage count - but we're not allowed to look at the local endpoint
-at this point as we passed our ref on it to the workqueue.
+If HBA initialization fails unexpectedly (exiting via probe_failed:), we
+may fail to free vha->gnl.l. So that we don't attempt to double free, set
+this pointer to NULL after a free and check for NULL at probe_failed: so we
+know whether or not to call dma_free_coherent.
 
-Fix this by reading the usage count before queuing the work item.
-
-Also fix the reading of local->debug_id for trace lines, which must be done
-with the same consideration as reading the usage count.
-
-Fixes: 09d2bf595db4 ("rxrpc: Add a tracepoint to track rxrpc_local refcounting")
-Reported-by: syzbot+78e71c5bab4f76a6a719@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Bill Kuzeja <william.kuzeja@stratus.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/rxrpc.h |  6 +++---
- net/rxrpc/local_object.c     | 19 ++++++++++---------
- 2 files changed, 13 insertions(+), 12 deletions(-)
+ drivers/scsi/qla2xxx/qla_attr.c |  2 ++
+ drivers/scsi/qla2xxx/qla_os.c   | 11 ++++++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index 147546e0c11bd..815dcfa647430 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -500,10 +500,10 @@ rxrpc_tx_points;
- #define E_(a, b)	{ a, b }
+diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
+index f8f4d3ea67f3f..15d493f30810f 100644
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -2191,6 +2191,8 @@ qla24xx_vport_delete(struct fc_vport *fc_vport)
+ 	dma_free_coherent(&ha->pdev->dev, vha->gnl.size, vha->gnl.l,
+ 	    vha->gnl.ldma);
  
- TRACE_EVENT(rxrpc_local,
--	    TP_PROTO(struct rxrpc_local *local, enum rxrpc_local_trace op,
-+	    TP_PROTO(unsigned int local_debug_id, enum rxrpc_local_trace op,
- 		     int usage, const void *where),
++	vha->gnl.l = NULL;
++
+ 	vfree(vha->scan.l);
  
--	    TP_ARGS(local, op, usage, where),
-+	    TP_ARGS(local_debug_id, op, usage, where),
+ 	if (vha->qpair && vha->qpair->vp_idx == vha->vp_idx) {
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 42b8f0d3e580d..02fa81f122c22 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -3395,6 +3395,12 @@ qla2x00_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	return 0;
  
- 	    TP_STRUCT__entry(
- 		    __field(unsigned int,	local		)
-@@ -513,7 +513,7 @@ TRACE_EVENT(rxrpc_local,
- 			     ),
+ probe_failed:
++	if (base_vha->gnl.l) {
++		dma_free_coherent(&ha->pdev->dev, base_vha->gnl.size,
++				base_vha->gnl.l, base_vha->gnl.ldma);
++		base_vha->gnl.l = NULL;
++	}
++
+ 	if (base_vha->timer_active)
+ 		qla2x00_stop_timer(base_vha);
+ 	base_vha->flags.online = 0;
+@@ -3624,7 +3630,7 @@ qla2x00_remove_one(struct pci_dev *pdev)
+ 	if (!atomic_read(&pdev->enable_cnt)) {
+ 		dma_free_coherent(&ha->pdev->dev, base_vha->gnl.size,
+ 		    base_vha->gnl.l, base_vha->gnl.ldma);
+-
++		base_vha->gnl.l = NULL;
+ 		scsi_host_put(base_vha->host);
+ 		kfree(ha);
+ 		pci_set_drvdata(pdev, NULL);
+@@ -3663,6 +3669,8 @@ qla2x00_remove_one(struct pci_dev *pdev)
+ 	dma_free_coherent(&ha->pdev->dev,
+ 		base_vha->gnl.size, base_vha->gnl.l, base_vha->gnl.ldma);
  
- 	    TP_fast_assign(
--		    __entry->local = local->debug_id;
-+		    __entry->local = local_debug_id;
- 		    __entry->op = op;
- 		    __entry->usage = usage;
- 		    __entry->where = where;
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index 7f82c4e19bd1e..27f4bbe85e799 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -97,7 +97,7 @@ static struct rxrpc_local *rxrpc_alloc_local(struct rxrpc_net *rxnet,
- 		local->debug_id = atomic_inc_return(&rxrpc_debug_id);
- 		memcpy(&local->srx, srx, sizeof(*srx));
- 		local->srx.srx_service = 0;
--		trace_rxrpc_local(local, rxrpc_local_new, 1, NULL);
-+		trace_rxrpc_local(local->debug_id, rxrpc_local_new, 1, NULL);
++	base_vha->gnl.l = NULL;
++
+ 	vfree(base_vha->scan.l);
+ 
+ 	if (IS_QLAFX00(ha))
+@@ -4602,6 +4610,7 @@ struct scsi_qla_host *qla2x00_create_host(struct scsi_host_template *sht,
+ 		    "Alloc failed for scan database.\n");
+ 		dma_free_coherent(&ha->pdev->dev, vha->gnl.size,
+ 		    vha->gnl.l, vha->gnl.ldma);
++		vha->gnl.l = NULL;
+ 		scsi_remove_host(vha->host);
+ 		return NULL;
  	}
- 
- 	_leave(" = %p", local);
-@@ -325,7 +325,7 @@ struct rxrpc_local *rxrpc_get_local(struct rxrpc_local *local)
- 	int n;
- 
- 	n = atomic_inc_return(&local->usage);
--	trace_rxrpc_local(local, rxrpc_local_got, n, here);
-+	trace_rxrpc_local(local->debug_id, rxrpc_local_got, n, here);
- 	return local;
- }
- 
-@@ -339,7 +339,8 @@ struct rxrpc_local *rxrpc_get_local_maybe(struct rxrpc_local *local)
- 	if (local) {
- 		int n = atomic_fetch_add_unless(&local->usage, 1, 0);
- 		if (n > 0)
--			trace_rxrpc_local(local, rxrpc_local_got, n + 1, here);
-+			trace_rxrpc_local(local->debug_id, rxrpc_local_got,
-+					  n + 1, here);
- 		else
- 			local = NULL;
- 	}
-@@ -347,16 +348,16 @@ struct rxrpc_local *rxrpc_get_local_maybe(struct rxrpc_local *local)
- }
- 
- /*
-- * Queue a local endpoint unless it has become unreferenced and pass the
-- * caller's reference to the work item.
-+ * Queue a local endpoint and pass the caller's reference to the work item.
-  */
- void rxrpc_queue_local(struct rxrpc_local *local)
- {
- 	const void *here = __builtin_return_address(0);
-+	unsigned int debug_id = local->debug_id;
-+	int n = atomic_read(&local->usage);
- 
- 	if (rxrpc_queue_work(&local->processor))
--		trace_rxrpc_local(local, rxrpc_local_queued,
--				  atomic_read(&local->usage), here);
-+		trace_rxrpc_local(debug_id, rxrpc_local_queued, n, here);
- 	else
- 		rxrpc_put_local(local);
- }
-@@ -371,7 +372,7 @@ void rxrpc_put_local(struct rxrpc_local *local)
- 
- 	if (local) {
- 		n = atomic_dec_return(&local->usage);
--		trace_rxrpc_local(local, rxrpc_local_put, n, here);
-+		trace_rxrpc_local(local->debug_id, rxrpc_local_put, n, here);
- 
- 		if (n == 0)
- 			call_rcu(&local->rcu, rxrpc_local_rcu);
-@@ -458,7 +459,7 @@ static void rxrpc_local_processor(struct work_struct *work)
- 		container_of(work, struct rxrpc_local, processor);
- 	bool again;
- 
--	trace_rxrpc_local(local, rxrpc_local_processing,
-+	trace_rxrpc_local(local->debug_id, rxrpc_local_processing,
- 			  atomic_read(&local->usage), NULL);
- 
- 	do {
 -- 
 2.20.1
 
