@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFD4C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19B3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A466623405
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDAC32173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567075864;
-	bh=ONx14oMxgGVjejwC1H+cAhSrLULeYa5AfyZ3w2hjqZA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=MOmttyrybx0n4XgBC3SEsuFP0p1wl/cBbi3xtkcK51Je1zdu4a0yrVvHiGcp3KbmK
-	 86ShcASBHHaKhJtMsQ2NVIWoa+ivkib6lFjDRcILmAx0NCMzDrRwz7QCMI29IeFoDB
-	 L4LIRjHY1GNNStwsofrvxILDRKGgSi07ZwQGczxA=
+	s=default; t=1567075867;
+	bh=qi0wl+US15Lm7qS4rUAZnRWyImORiNrhtDC3zuCNeZ8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1dTjp43drg1baCZZ46CheipZFXlVU10Pwn+cuU58RKlrz8oEHxJ8QHQL+3Dso6vAv
+	 ogtUTKn7AntdEl09zkg3Wdqn96HcKsBEm8YkrQ7zw6V9jHcbo9ck1K13D/L/JMfBSa
+	 MDyCKc3dhKhtPgevvHxcxYYaDM78piR8wzImkWMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbfH2KvD (ORCPT
+        id S1728461AbfH2KvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:51:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58266 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 06:51:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728216AbfH2Kuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:50:46 -0400
+        id S1728267AbfH2Kut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:50:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A927623405;
-        Thu, 29 Aug 2019 10:50:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FAE323405;
+        Thu, 29 Aug 2019 10:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075845;
-        bh=ONx14oMxgGVjejwC1H+cAhSrLULeYa5AfyZ3w2hjqZA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WyGH4v+mf7QdMMIM046pQ2TH5Ybho6KjBiDkCfBlN7IfP/2+L81/zLQV3fv6jmg72
-         4bg9GcF8wXcnojAH2yd/SckHzXMJkVcNb73fD8BbjV+5bgBTKEqFCVxLGJPAkmrE5S
-         nI1HbyiWNHayBEEgFDDB1FfQzCdb0Xdq14wXgjpY=
+        s=default; t=1567075848;
+        bh=qi0wl+US15Lm7qS4rUAZnRWyImORiNrhtDC3zuCNeZ8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=k4PCoZwz/zxjskfl1s+9BKhqCqC6gj4irKPJl4gxy8/OSkjVtOeVDEZzp5s1HK6MG
+         AXHB23PBznSAhW2izOAGjqumOsG39CIQ4khtAUhcIH2jzrUS6CBO1tFBnjPSMQWGsl
+         74UTt4+0sibow0ev6nnbDXqPrglJyoTE1Q4XQtxg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: [PATCH AUTOSEL 4.14 01/14] hv_sock: Fix hang when a connection is closed
-Date:   Thu, 29 Aug 2019 06:50:30 -0400
-Message-Id: <20190829105043.2508-1-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 04/14] ALSA: line6: Fix memory leak at line6_init_pcm() error path
+Date:   Thu, 29 Aug 2019 06:50:33 -0400
+Message-Id: <20190829105043.2508-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190829105043.2508-1-sashal@kernel.org>
+References: <20190829105043.2508-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,69 +57,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 685703b497bacea8765bb409d6b73455b73c540e ]
+[ Upstream commit 1bc8d18c75fef3b478dbdfef722aae09e2a9fde7 ]
 
-There is a race condition for an established connection that is being closed
-by the guest: the refcnt is 4 at the end of hvs_release() (Note: here the
-'remove_sock' is false):
+I forgot to release the allocated object at the early error path in
+line6_init_pcm().  For addressing it, slightly shuffle the code so
+that the PCM destructor (pcm->private_free) is assigned properly
+before all error paths.
 
-1 for the initial value;
-1 for the sk being in the bound list;
-1 for the sk being in the connected list;
-1 for the delayed close_work.
-
-After hvs_release() finishes, __vsock_release() -> sock_put(sk) *may*
-decrease the refcnt to 3.
-
-Concurrently, hvs_close_connection() runs in another thread:
-  calls vsock_remove_sock() to decrease the refcnt by 2;
-  call sock_put() to decrease the refcnt to 0, and free the sk;
-  next, the "release_sock(sk)" may hang due to use-after-free.
-
-In the above, after hvs_release() finishes, if hvs_close_connection() runs
-faster than "__vsock_release() -> sock_put(sk)", then there is not any issue,
-because at the beginning of hvs_close_connection(), the refcnt is still 4.
-
-The issue can be resolved if an extra reference is taken when the
-connection is established.
-
-Fixes: a9eeb998c28d ("hv_sock: Add support for delayed close")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 3450121997ce ("ALSA: line6: Fix write on zero-sized buffer")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/vmw_vsock/hyperv_transport.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/usb/line6/pcm.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-index 52ac3e49c7efd..ec72a5edaa1b8 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -320,6 +320,11 @@ static void hvs_close_connection(struct vmbus_channel *chan)
- 	lock_sock(sk);
- 	hvs_do_close_lock_held(vsock_sk(sk), true);
- 	release_sock(sk);
-+
-+	/* Release the refcnt for the channel that's opened in
-+	 * hvs_open_connection().
-+	 */
-+	sock_put(sk);
- }
+diff --git a/sound/usb/line6/pcm.c b/sound/usb/line6/pcm.c
+index f5614507a81c4..896add5ffee38 100644
+--- a/sound/usb/line6/pcm.c
++++ b/sound/usb/line6/pcm.c
+@@ -552,6 +552,15 @@ int line6_init_pcm(struct usb_line6 *line6,
+ 	line6pcm->volume_monitor = 255;
+ 	line6pcm->line6 = line6;
  
- static void hvs_open_connection(struct vmbus_channel *chan)
-@@ -389,6 +394,9 @@ static void hvs_open_connection(struct vmbus_channel *chan)
++	spin_lock_init(&line6pcm->out.lock);
++	spin_lock_init(&line6pcm->in.lock);
++	line6pcm->impulse_period = LINE6_IMPULSE_DEFAULT_PERIOD;
++
++	line6->line6pcm = line6pcm;
++
++	pcm->private_data = line6pcm;
++	pcm->private_free = line6_cleanup_pcm;
++
+ 	line6pcm->max_packet_size_in =
+ 		usb_maxpacket(line6->usbdev,
+ 			usb_rcvisocpipe(line6->usbdev, ep_read), 0);
+@@ -564,15 +573,6 @@ int line6_init_pcm(struct usb_line6 *line6,
+ 		return -EINVAL;
  	}
  
- 	set_per_channel_state(chan, conn_from_host ? new : sk);
-+
-+	/* This reference will be dropped by hvs_close_connection(). */
-+	sock_hold(conn_from_host ? new : sk);
- 	vmbus_set_chn_rescind_callback(chan, hvs_close_connection);
- 
- 	/* Set the pending send size to max packet size to always get
+-	spin_lock_init(&line6pcm->out.lock);
+-	spin_lock_init(&line6pcm->in.lock);
+-	line6pcm->impulse_period = LINE6_IMPULSE_DEFAULT_PERIOD;
+-
+-	line6->line6pcm = line6pcm;
+-
+-	pcm->private_data = line6pcm;
+-	pcm->private_free = line6_cleanup_pcm;
+-
+ 	err = line6_create_audio_out_urbs(line6pcm);
+ 	if (err < 0)
+ 		return err;
 -- 
 2.20.1
 
