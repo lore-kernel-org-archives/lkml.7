@@ -2,162 +2,85 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FD9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAE5C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDEE23405
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD9B23405
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:37:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vDJbpzPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfH2KhT (ORCPT
+        id S1727500AbfH2Khx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:37:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41662 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbfH2KhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:37:18 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 169CBC0546F2;
-        Thu, 29 Aug 2019 10:37:18 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9B3E960C44;
-        Thu, 29 Aug 2019 10:37:13 +0000 (UTC)
-Date:   Thu, 29 Aug 2019 12:37:11 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH v2 3/4] KVM: selftests: Introduce VM_MODE_PXXV48_4K
-Message-ID: <20190829103711.uqj6rrcktnz2y3wi@kamzik.brq.redhat.com>
-References: <20190829022117.10191-1-peterx@redhat.com>
- <20190829022117.10191-4-peterx@redhat.com>
- <20190829094516.fyfhgz7ma2nfazoq@kamzik.brq.redhat.com>
- <20190829100309.GJ8729@xz-x1>
+        Thu, 29 Aug 2019 06:37:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58196 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbfH2Khx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:37:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZZ9awTrmHwspxJUBC4pTryA35oCVUvGKerbRnjNApsQ=; b=vDJbpzPth5LsCcTimIYNmCOAx
+        9P8D58bdWIRa8Cbv9sybzMwbtGcbIucr5MmCaN8i3tNRUPtRZ3E8T5q/IFWuyKleJzq/Sjiv/VdyJ
+        y8UnWm2ppWl48mjgcnnnqTK6h6vcmao5kJukOXJdLX3yXqcqzeysdhYJlVBd4Tx89PpUjIhxM8tNG
+        vxw44VH3Lv2ize116mKLnIiMi3bLor8Hvt+PZT9sRv/oSDK0osK4Ai5SZcL3AOj+dpG/pnT9X3QUs
+        XW0u59pXRTdm40spaY0NorGhLTNMOesNexRPq1dB1N6SXcTXLW8y2fGELfy9BdUS2x75F1oOxC2op
+        aLLKKDg4w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i3HoL-0003aB-FW; Thu, 29 Aug 2019 10:37:49 +0000
+Date:   Thu, 29 Aug 2019 03:37:49 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, devel@driverdev.osuosl.org,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20190829103749.GA13661@infradead.org>
+References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+ <20190828170022.GA7873@kroah.com>
+ <20190829062340.GB3047@infradead.org>
+ <20190829063955.GA30193@kroah.com>
+ <20190829094136.GA28643@infradead.org>
+ <20190829095019.GA13557@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829100309.GJ8729@xz-x1>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 29 Aug 2019 10:37:18 +0000 (UTC)
+In-Reply-To: <20190829095019.GA13557@kroah.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 06:03:09PM +0800, Peter Xu wrote:
-> On Thu, Aug 29, 2019 at 11:45:16AM +0200, Andrew Jones wrote:
-> > On Thu, Aug 29, 2019 at 10:21:16AM +0800, Peter Xu wrote:
-> > > The naming VM_MODE_P52V48_4K is explicit but unclear when used on
-> > > x86_64 machines, because x86_64 machines are having various physical
-> > > address width rather than some static values.  Here's some examples:
-> > > 
-> > >   - Intel Xeon E3-1220:  36 bits
-> > >   - Intel Core i7-8650:  39 bits
-> > >   - AMD   EPYC 7251:     48 bits
-> > > 
-> > > All of them are using 48 bits linear address width but with totally
-> > > different physical address width (and most of the old machines should
-> > > be less than 52 bits).
-> > > 
-> > > Let's create a new guest mode called VM_MODE_PXXV48_4K for current
-> > > x86_64 tests and make it as the default to replace the old naming of
-> > > VM_MODE_P52V48_4K because it shows more clearly that the PA width is
-> > > not really a constant.  Meanwhile we also stop assuming all the x86
-> > > machines are having 52 bits PA width but instead we fetch the real
-> > > vm->pa_bits from CPUID 0x80000008 during runtime.
-> > > 
-> > > We currently make this exclusively used by x86_64 but no other arch.
-> > > 
-> > > As a slight touch up, moving DEBUG macro from dirty_log_test.c to
-> > > kvm_util.h so lib can use it too.
-> > > 
-> > > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > > ---
-> > >  tools/testing/selftests/kvm/dirty_log_test.c  |  5 ++--
-> > >  .../testing/selftests/kvm/include/kvm_util.h  |  9 +++++-
-> > >  .../selftests/kvm/include/x86_64/processor.h  |  3 ++
-> > >  .../selftests/kvm/lib/aarch64/processor.c     |  3 ++
-> > >  tools/testing/selftests/kvm/lib/kvm_util.c    | 29 ++++++++++++++----
-> > >  .../selftests/kvm/lib/x86_64/processor.c      | 30 ++++++++++++++++---
-> > >  6 files changed, 65 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-> > > index efb7746a7e99..c86f83cb33e5 100644
-> > > --- a/tools/testing/selftests/kvm/dirty_log_test.c
-> > > +++ b/tools/testing/selftests/kvm/dirty_log_test.c
-> > > @@ -19,8 +19,6 @@
-> > >  #include "kvm_util.h"
-> > >  #include "processor.h"
-> > >  
-> > > -#define DEBUG printf
-> > > -
-> > >  #define VCPU_ID				1
-> > >  
-> > >  /* The memory slot index to track dirty pages */
-> > > @@ -256,6 +254,7 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
-> > >  
-> > >  	switch (mode) {
-> > >  	case VM_MODE_P52V48_4K:
-> > > +	case VM_MODE_PXXV48_4K:
-> > >  		guest_pa_bits = 52;
-> > >  		guest_page_shift = 12;
-> > >  		break;
-> > > @@ -446,7 +445,7 @@ int main(int argc, char *argv[])
-> > >  #endif
-> > >  
-> > >  #ifdef __x86_64__
-> > > -	vm_guest_mode_params_init(VM_MODE_P52V48_4K, true, true);
-> > > +	vm_guest_mode_params_init(VM_MODE_PXXV48_4K, true, true);
-> > >  #endif
-> > >  #ifdef __aarch64__
-> > >  	vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
-> > > diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> > > index c78faa2ff7f3..430edbacb9b2 100644
-> > > --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> > > +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> > > @@ -24,6 +24,10 @@ struct kvm_vm;
-> > >  typedef uint64_t vm_paddr_t; /* Virtual Machine (Guest) physical address */
-> > >  typedef uint64_t vm_vaddr_t; /* Virtual Machine (Guest) virtual address */
-> > >  
-> > > +#ifndef DEBUG
-> > > +#define DEBUG printf
-> > > +#endif
-> > 
-> > There's no way to turn this off without modifying code. I suggested
-> > 
-> > #ifndef NDEBUG
-> > #define dprintf printf
-> > #endif
-> > 
-> > which allows the dprintf(...) statements to be removed by compiling with
-> > -DNDEBUG added to CFLAGS. And that would also disable all the asserts().
-> > That's probably not all that useful, but then again, defining printf() as
-> > DEBUG() isn't useful either if the intention is to always print.
-> 
-> Sorry I misread that...
-> 
-> Though, I'm afraid even if with above it won't compile with -DNDEBUG
-> because the compiler could start to complain about undefined
-> "dprintf", or even recognize the dprintf as the libc call, dprintf(3).
-> 
-> So instead, does below looks ok?
-> 
-> #ifdef NDEBUG
-> #define DEBUG(...)
-> #else
-> #define DEBUG(...) printf(__VA_ARGS__);
-> #endif
+On Thu, Aug 29, 2019 at 11:50:19AM +0200, Greg Kroah-Hartman wrote:
+> I did try just that, a few years ago, and gave up on it.  I don't think
+> it can be added to the existing vfat code base but I am willing to be
+> proven wrong.
 
-yeah, that's what I was looking for, but I wasn't thinking clearly when
-I suggested just the name redefinition.
+And what exactly was the problem?
 
-drew
+> 
+> Now that we have the specs, it might be easier, and the vfat spec is a
+> subset of the exfat spec, but to get stuff working today, for users,
+> it's good to have it in staging.  We can do the normal, "keep it in
+> stable, get a clean-room implementation merged like usual, and then
+> delete the staging version" three step process like we have done a
+> number of times already as well.
+> 
+> I know the code is horrible, but I will gladly take horrible code into
+> staging.  If it bothers you, just please ignore it.  That's what staging
+> is there for :)
+
+And then after a while you decide it's been long enough and force move
+it out of staging like the POS erofs code?
