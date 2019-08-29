@@ -2,126 +2,103 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73A9C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C585FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62FE20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 969F220644
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:12:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="G49twJpy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfH2PK6 (ORCPT
+        id S1727739AbfH2PMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:10:58 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52396 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbfH2PK5 (ORCPT
+        Thu, 29 Aug 2019 11:12:36 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:35954 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727233AbfH2PMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:10:57 -0400
-Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=elm)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <tyhicks@canonical.com>)
-        id 1i3M4d-0001RJ-7M; Thu, 29 Aug 2019 15:10:55 +0000
-Date:   Thu, 29 Aug 2019 10:10:52 -0500
-From:   Tyler Hicks <tyhicks@canonical.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Todd Kjos <tkjos@android.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Subject: Re: [PATCH AUTOSEL 4.14 05/14] binder: take read mode of mmap_sem in
- binder_alloc_free_page()
-Message-ID: <20190829151052.GB27650@elm>
-References: <20190829105043.2508-1-sashal@kernel.org>
- <20190829105043.2508-5-sashal@kernel.org>
+        Thu, 29 Aug 2019 11:12:36 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7TF95bt170618;
+        Thu, 29 Aug 2019 15:12:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=7KVDA6makHRKF1W7P13Rqq46WC6MHa9VLKGUtmhcqT8=;
+ b=G49twJpyt6U9+ghNKLS3TpWvBUnt042QYHxLQHop0rr1a+6dxqfK1NmRrBZhEOydcbHd
+ oahY/w805QYqFqCqv0Q5qXv+N+cUe6Sj7IPqH5qiwMQaPdn4liUego9Ki94PMEJbfL5R
+ i+eCb6iqIbSKLjIOk+gQitPl5BdStrhqBZ0IXcOtgOcWJDWeNyWHBLftVQojZFFfncVq
+ pX3BgE4RyM5neoOtPW+JI4eC30P0AaIEWJBzMhUG/P27GToCJUTwaonk1AEh8SdZZpdA
+ owV8wCeEfpn75Fjjs5cd8HPJmmL2T8bBQ3FweM73CpZn47TKKWcheYSvDEdkovYm5eRl wA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2uph3c00nb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 15:12:18 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7TF9VPk068501;
+        Thu, 29 Aug 2019 15:12:17 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2up98t0djr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 15:12:17 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7TFCDL7013582;
+        Thu, 29 Aug 2019 15:12:13 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 29 Aug 2019 08:12:12 -0700
+Date:   Thu, 29 Aug 2019 18:11:44 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, devel@driverdev.osuosl.org,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linux-kernel@vger.kernel.org,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linux-fsdevel@vger.kernel.org,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20190829151144.GJ23584@kadam>
+References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+ <20190828170022.GA7873@kroah.com>
+ <20190829062340.GB3047@infradead.org>
+ <20190829063955.GA30193@kroah.com>
+ <20190829094136.GA28643@infradead.org>
+ <20190829095019.GA13557@kroah.com>
+ <20190829103749.GA13661@infradead.org>
+ <20190829111810.GA23393@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829105043.2508-5-sashal@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190829111810.GA23393@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9363 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=725
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908290164
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9363 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=792 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908290164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Sasha!
+On Thu, Aug 29, 2019 at 01:18:10PM +0200, Greg Kroah-Hartman wrote:
+> It could always use more review, which the developers asked for
+> numerous times.
 
-On 2019-08-29 06:50:34, Sasha Levin wrote:
-> From: Tyler Hicks <tyhicks@canonical.com>
-> 
-> [ Upstream commit 60d4885710836595192c42d3e04b27551d30ec91 ]
-> 
-> Restore the behavior of locking mmap_sem for reading in
-> binder_alloc_free_page(), as was first done in commit 3013bf62b67a
-> ("binder: reduce mmap_sem write-side lock"). That change was
-> inadvertently reverted by commit 5cec2d2e5839 ("binder: fix race between
-> munmap() and direct reclaim").
-> 
-> In addition, change the name of the label for the error path to
-> accurately reflect that we're taking the lock for reading.
-> 
-> Backporting note: This fix is only needed when *both* of the commits
-> mentioned above are applied. That's an unlikely situation since they
-> both landed during the development of v5.1 but only one of them is
-> targeted for stable.
+I stopped commenting on erofs style because all the likely/unlikely()
+nonsense is a pet peeve.
 
-This patch isn't meant to be applied to 4.14 since commit 3013bf62b67a
-("binder: reduce mmap_sem write-side lock") was never brought back to
-4.14.
+regards,
+dan carpenter
 
-My backporting note above isn't helpful for AUTOSEL purposes. Do you
-have a suggestion for what I could have done in the patch tags to convey
-that guidance to AUTOSEL?
-
-Tyler
-
-> 
-> Fixes: 5cec2d2e5839 ("binder: fix race between munmap() and direct reclaim")
-> Signed-off-by: Tyler Hicks <tyhicks@canonical.com>
-> Acked-by: Todd Kjos <tkjos@android.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/android/binder_alloc.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_alloc.c
-> index e0b0399ff7ec8..81c67459259ec 100644
-> --- a/drivers/android/binder_alloc.c
-> +++ b/drivers/android/binder_alloc.c
-> @@ -949,8 +949,8 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
->  	mm = alloc->vma_vm_mm;
->  	if (!mmget_not_zero(mm))
->  		goto err_mmget;
-> -	if (!down_write_trylock(&mm->mmap_sem))
-> -		goto err_down_write_mmap_sem_failed;
-> +	if (!down_read_trylock(&mm->mmap_sem))
-> +		goto err_down_read_mmap_sem_failed;
->  	vma = binder_alloc_get_vma(alloc);
->  
->  	list_lru_isolate(lru, item);
-> @@ -965,7 +965,7 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
->  
->  		trace_binder_unmap_user_end(alloc, index);
->  	}
-> -	up_write(&mm->mmap_sem);
-> +	up_read(&mm->mmap_sem);
->  	mmput(mm);
->  
->  	trace_binder_unmap_kernel_start(alloc, index);
-> @@ -980,7 +980,7 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
->  	mutex_unlock(&alloc->mutex);
->  	return LRU_REMOVED_RETRY;
->  
-> -err_down_write_mmap_sem_failed:
-> +err_down_read_mmap_sem_failed:
->  	mmput_async(mm);
->  err_mmget:
->  err_page_already_freed:
-> -- 
-> 2.20.1
-> 
