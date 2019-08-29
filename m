@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC796C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE35FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F782077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8099E2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 15:24:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="S/3okXCK"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="iz3w00oM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbfH2PXx (ORCPT
+        id S1728158AbfH2PYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 11:23:53 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33951 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727066AbfH2PXt (ORCPT
+        Thu, 29 Aug 2019 11:24:00 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39620 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728042AbfH2PXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 11:23:49 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s18so3901919wrn.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 08:23:48 -0700 (PDT)
+        Thu, 29 Aug 2019 11:23:55 -0400
+Received: by mail-wr1-f68.google.com with SMTP id t16so3863378wra.6
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 08:23:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BV274s7zt3wwvGwt3NgSkJi54bLOGbQjevUMF5GAsdI=;
-        b=S/3okXCKjNTOL8vkN0yxlvYrGXaYiBD9C8IO+pFcUgOVRGOs1ELkYjmVFFgrLcQH6C
-         8wdPNFLBqkpjKEWiA0t85ERq3bsV/eCcM2Be3aFFG8gmMFcBtCQL4DdFlQR5FoIfElEu
-         0JQPFWrgNm/mYo/oReoHFqvoApe5aUgUDO6wmfGBtjn899XOxD6MmNTKby0KkTXm/IbC
-         gTn6bLXwnGor/R5dHIfafVm941o3Wt3bYvjrK4GtOC1t2hMn4mnBwR9Urm72w3OuOJ9t
-         XDs5wzOpGLn+QxmS00VnDLGKNFdOjBixrZaSJpITNNTaXAn/283ToOPyImavpgwV4BQ2
-         rjZA==
+        bh=SiL45R060WCezmhZNNgvA5GD6ew6UdT9naA5+iprxJs=;
+        b=iz3w00oMmhwELo5mlz7WH3W3SCHzbt/CfLJWsAoY91Ld9m+Ysai9qYSacAS3GizB4m
+         kMqlbOhOXjDfHq3XiJ7j2dIERqKE5plX/KZAqA4D8uhnrPgKCxQZAgBB34yhvh2HkRk7
+         s85NcR6XFFCR8/xbuJmgHX0afclGzVCVvvOaKrjxUDjOta6Vasf7+nVMTDtdeFeV3Exd
+         cNWIYk8yN8i8yO5NnE1RKT7IDu9D9DglTndbLtMGjppQioO0LjofVRQBIHBIHrwJP0bX
+         n4LQyboRqzBjgrOFllI97n6xmZJZX9WPG8Hc41rAyQ4LDx5ExOfvsmAg+uD3+0BSgnG8
+         +0vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BV274s7zt3wwvGwt3NgSkJi54bLOGbQjevUMF5GAsdI=;
-        b=G7unl52ScSgh+JnOPmAqYoOGXAIQFq+LuLBnEQwcu6Dh55fwztYRNkXT4R0n4H8R2s
-         MqGi/kHC8ZLnsuCt1d94gTewTMu5exrvZD9k62Afyil1KpsMtZ4qbrK5XHprP0jiwqDG
-         IwSha1N4t5p2FdZOX5GCFBhLO+WmDycEwwO+J0sk4SAEMAoPQplOZ8kYlgUw+EsesnSo
-         ZBmQsq8ojTYlx+g2kqYL4vON+S9PCDrVst93zBz8daakHz7pE9FGHBn3lyhMltfsAURc
-         14uVwdjTpjXV4UI6sfXu71+G2pSgAp7DV+TP4J63dgX+4KNznOOeXKnKwndcP82Im9P9
-         X0xw==
-X-Gm-Message-State: APjAAAXboBRs+QxmpK7GOL9xDrk+064aKWtXHZlCw+1hT8VWgCPynPbB
-        ga9Rh3ERZXD367YrpB0meyCOdw==
-X-Google-Smtp-Source: APXvYqydgX/gtdvTwrPnfTWn9Om1yJ56I2EGB7GGkB7eYu7itvRAS9hY7BegpIShnflsBTBc75fqvg==
-X-Received: by 2002:a5d:434f:: with SMTP id u15mr7173257wrr.16.1567092227993;
-        Thu, 29 Aug 2019 08:23:47 -0700 (PDT)
+        bh=SiL45R060WCezmhZNNgvA5GD6ew6UdT9naA5+iprxJs=;
+        b=ZcwisXZYfHIPFS6zfNpTdQgsxDa1Qafp3zO/Is16NdXEUc7L5jeWLjEgf4iUaMBYj6
+         +xWLW3Fy+JYC8WA34NBJxLa5rFvtGcj3SuV9gcosGmfXGiiYeVUgegBFrSfM3H+THkX0
+         YsPykURqxauaqkh8Fh2DXWwZlgOHc7I/X6SXcPYizdwuVf/pJ3P+jy02hoyQYpnrkK5V
+         vn2fwoIRwsOywdUKyB8vsLEwuWiemPeJ0sPqr6WfF3mAUYCyJKL7DBfa3GGXEkd7eyiU
+         393Ri6Vb4IYSuHkV9eePQbJRKCU54BXwGJZv/W4Hk4QeB5zX3lpjBApE/6HSozTYrUm/
+         ZoEw==
+X-Gm-Message-State: APjAAAVS8+dM1BnQusLfJCODV9hIBT5dPaEY6uB3BK6aNGHGlFOVQA2p
+        HG9VGUGT6b8epNJdjuRLvSh78g==
+X-Google-Smtp-Source: APXvYqw4kFKc52LDFXq9PBL0wPfc+IrjPgZFhUUCyDOFG0eZ0v47NcbuorEHE2HuyIfF3ef4eLIGkg==
+X-Received: by 2002:a5d:45cb:: with SMTP id b11mr12837183wrs.117.1567092233542;
+        Thu, 29 Aug 2019 08:23:53 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id d17sm4866871wre.27.2019.08.29.08.23.47
+        by smtp.gmail.com with ESMTPSA id d17sm4866871wre.27.2019.08.29.08.23.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2019 08:23:47 -0700 (PDT)
+        Thu, 29 Aug 2019 08:23:53 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 04/15] arm64: dts: meson-gx-p23x-q20x: add keep-power-in-suspend property in SDIO node
-Date:   Thu, 29 Aug 2019 17:23:31 +0200
-Message-Id: <20190829152342.27794-5-narmstrong@baylibre.com>
+Subject: [PATCH 13/15] arm64: dts: meson-gxm-khadas-vim2: add keep-power-in-suspend property in SDIO node
+Date:   Thu, 29 Aug 2019 17:23:40 +0200
+Message-Id: <20190829152342.27794-14-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190829152342.27794-1-narmstrong@baylibre.com>
 References: <20190829152342.27794-1-narmstrong@baylibre.com>
@@ -80,14 +80,14 @@ suspend state.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi | 3 +++
+ arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-index a9b778571cf5..12d5e333e5f2 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-@@ -169,6 +169,9 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+index f25ddd18a607..5fc38788610f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+@@ -332,6 +332,9 @@
  	non-removable;
  	disable-wp;
  
