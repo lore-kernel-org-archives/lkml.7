@@ -2,209 +2,316 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FBEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF78DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3282320828
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:24:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NXuypbmT"
+	by mail.kernel.org (Postfix) with ESMTP id AA6DE20828
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 07:24:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbfH2HX7 (ORCPT
+        id S1727938AbfH2HYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 03:23:59 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:35814 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbfH2HX6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 03:23:58 -0400
-Received: by mail-yb1-f193.google.com with SMTP id c9so882537ybf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 00:23:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R8EgEva/nN+dxw6+a+tbX87JZIlVuBuzMvhuJDwRRR4=;
-        b=NXuypbmTaSrUawn6dK0eZNoFKLnVaJ7BIWZVqgFlG76S+ATA+MCe8+XdoZm8vDLJll
-         /m3vEwRSe+Kw1sjV9VP135ZrO6XKTdN0l6/Ms6+4BYLRrB2sx1KUJxFe6rlLSCIGtqcZ
-         IwJd7XYNmKPOK1HhNsnVYN6AZ+qv+S74/q2q9wy1NjlXR2CYn5g6TxtO05dnCP5BETa+
-         1vOMw+KOdRogsxcBS/7sQrwFhQZrTKwVPiaVgp2r1n4+eY02INrAGYUNv+5BF3G/XmqL
-         AnmdCj3TZWtviGy97p0vejfvFXY+jqzuRVKNwO0TDskQHHrxTEUTVxPpbqrB6PI/oeX9
-         2u9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R8EgEva/nN+dxw6+a+tbX87JZIlVuBuzMvhuJDwRRR4=;
-        b=OMr0x2c2VJMmM/EXyeswi/qRdO5rekpEm8bV3x7N7AT5L0PbPwt7PzxWO6FjmZPcKE
-         0NjTCpjaOv5tuAjQcftFofsHVBKntrKx24yuHYQiizCWlvXoOCCQxIYJr3Dft27mIONk
-         5WIo9QpYd98Vy6xymoCBOd5NeWk3fn1H1KyDgm4F8stXq9s6D8ZEbmGE1aBV29/F/n3E
-         SekuUZBG1gBdS/MFq5eWRIbR8KfUw3gmHUqvjSiYif7Va5FaOfLaz4uTZG3VsSEgFIC/
-         GCFazAtJrZd3HwCXt2fILYkSkfA5sE2KWeh8BM5R/IgWQza/hDlvrUtZjZJb64rnIWk9
-         zHXA==
-X-Gm-Message-State: APjAAAW2wqlux20anJXdfn7m0M+p5kw5Ppg3dwuQ2JUoLZvqptkABj+r
-        1Zt9e372vtI2RjLAXlFKvb+31w==
-X-Google-Smtp-Source: APXvYqzl8gabGH4zPMEJYFXPgGvZMdADKlGX5Q1XpXlgRWqc5yCW4GiS1Az0+E7aIXUyCD1kagvFBQ==
-X-Received: by 2002:a25:e70b:: with SMTP id e11mr5618813ybh.127.1567063437479;
-        Thu, 29 Aug 2019 00:23:57 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li1320-244.members.linode.com. [45.79.221.244])
-        by smtp.gmail.com with ESMTPSA id e3sm320863ywc.91.2019.08.29.00.23.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 29 Aug 2019 00:23:56 -0700 (PDT)
-Date:   Thu, 29 Aug 2019 15:23:43 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v2 3/3] arm: Add support for function error injection
-Message-ID: <20190829072343.GD10583@leoy-ThinkPad-X240s>
-References: <20190806100015.11256-1-leo.yan@linaro.org>
- <20190806100015.11256-4-leo.yan@linaro.org>
- <20190819091808.GB5599@leoy-ThinkPad-X240s>
- <20190829065729.GU13294@shell.armlinux.org.uk>
+        Thu, 29 Aug 2019 03:24:14 -0400
+Received: from protonic.xs4all.nl ([83.163.252.89]:35640 "EHLO protonic.nl"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727347AbfH2HYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 03:24:14 -0400
+Received: from webmail.promanet.nl (edge2.prtnl [192.168.1.170])
+        by sparta (Postfix) with ESMTP id 3921E44A0065;
+        Thu, 29 Aug 2019 09:26:10 +0200 (CEST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829065729.GU13294@shell.armlinux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 29 Aug 2019 09:24:12 +0200
+From:   robin <robin@protonic.nl>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Robin Gong <yibin.gong@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-arm-kernel @ lists . infradead . org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 1/2] input: keyboard: snvs_pwrkey: Send key events for
+ i.MX6 S, DL and Q
+In-Reply-To: <20190828091550.pdc57wanu6twew5p@pengutronix.de>
+References: <20190827123216.32728-1-robin@protonic.nl>
+ <20190828091550.pdc57wanu6twew5p@pengutronix.de>
+Message-ID: <6d353af709ea545cc34abca5c40674e3@protonic.nl>
+X-Sender: robin@protonic.nl
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Russell,
+Hi Marco,
 
-On Thu, Aug 29, 2019 at 07:57:29AM +0100, Russell King - ARM Linux admin wrote:
-> I'm sorry, I can't apply this, it produces loads of:
+On 2019-08-28 11:15, Marco Felsch wrote:
+> Hi Robin,
 > 
-> include/linux/error-injection.h:7:10: fatal error: asm/error-injection.h: No such file or directory
+> thanks for the patch.
 > 
-> Since your patch 1 has been merged by the ARM64 people, I can't take
-> it until next cycle.
-
-For this case, do you want me to resend this patch in next merge
-window?  Or you have picked up this patch but will send PR in next
-cycle?
-
-Thanks,
-Leo Yan
-
-> On Mon, Aug 19, 2019 at 05:18:08PM +0800, Leo Yan wrote:
-> > Hi Russell,
-> > 
-> > On Tue, Aug 06, 2019 at 06:00:15PM +0800, Leo Yan wrote:
-> > > This patch implements arm specific functions regs_set_return_value() and
-> > > override_function_with_return() to support function error injection.
-> > > 
-> > > In the exception flow, it updates pt_regs::ARM_pc with pt_regs::ARM_lr
-> > > so can override the probed function return.
-> > 
-> > Gentle ping ...  Could you review this patch?
-> > 
-> > Thanks,
-> > Leo.
-> > 
-> > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > > ---
-> > >  arch/arm/Kconfig              |  1 +
-> > >  arch/arm/include/asm/ptrace.h |  5 +++++
-> > >  arch/arm/lib/Makefile         |  2 ++
-> > >  arch/arm/lib/error-inject.c   | 19 +++++++++++++++++++
-> > >  4 files changed, 27 insertions(+)
-> > >  create mode 100644 arch/arm/lib/error-inject.c
-> > > 
-> > > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> > > index 33b00579beff..2d3d44a037f6 100644
-> > > --- a/arch/arm/Kconfig
-> > > +++ b/arch/arm/Kconfig
-> > > @@ -77,6 +77,7 @@ config ARM
-> > >  	select HAVE_EXIT_THREAD
-> > >  	select HAVE_FAST_GUP if ARM_LPAE
-> > >  	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
-> > > +	select HAVE_FUNCTION_ERROR_INJECTION if !THUMB2_KERNEL
-> > >  	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
-> > >  	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
-> > >  	select HAVE_GCC_PLUGINS
-> > > diff --git a/arch/arm/include/asm/ptrace.h b/arch/arm/include/asm/ptrace.h
-> > > index 91d6b7856be4..3b41f37b361a 100644
-> > > --- a/arch/arm/include/asm/ptrace.h
-> > > +++ b/arch/arm/include/asm/ptrace.h
-> > > @@ -89,6 +89,11 @@ static inline long regs_return_value(struct pt_regs *regs)
-> > >  	return regs->ARM_r0;
-> > >  }
-> > >  
-> > > +static inline void regs_set_return_value(struct pt_regs *regs, unsigned long rc)
-> > > +{
-> > > +	regs->ARM_r0 = rc;
-> > > +}
-> > > +
-> > >  #define instruction_pointer(regs)	(regs)->ARM_pc
-> > >  
-> > >  #ifdef CONFIG_THUMB2_KERNEL
-> > > diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
-> > > index b25c54585048..8f56484a7156 100644
-> > > --- a/arch/arm/lib/Makefile
-> > > +++ b/arch/arm/lib/Makefile
-> > > @@ -42,3 +42,5 @@ ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
-> > >    CFLAGS_xor-neon.o		+= $(NEON_FLAGS)
-> > >    obj-$(CONFIG_XOR_BLOCKS)	+= xor-neon.o
-> > >  endif
-> > > +
-> > > +obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
-> > > diff --git a/arch/arm/lib/error-inject.c b/arch/arm/lib/error-inject.c
-> > > new file mode 100644
-> > > index 000000000000..2d696dc94893
-> > > --- /dev/null
-> > > +++ b/arch/arm/lib/error-inject.c
-> > > @@ -0,0 +1,19 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +
-> > > +#include <linux/error-injection.h>
-> > > +#include <linux/kprobes.h>
-> > > +
-> > > +void override_function_with_return(struct pt_regs *regs)
-> > > +{
-> > > +	/*
-> > > +	 * 'regs' represents the state on entry of a predefined function in
-> > > +	 * the kernel/module and which is captured on a kprobe.
-> > > +	 *
-> > > +	 * 'regs->ARM_lr' contains the the link register for the probed
-> > > +	 * function, when kprobe returns back from exception it will override
-> > > +	 * the end of probed function and directly return to the predefined
-> > > +	 * function's caller.
-> > > +	 */
-> > > +	instruction_pointer_set(regs, regs->ARM_lr);
-> > > +}
-> > > +NOKPROBE_SYMBOL(override_function_with_return);
-> > > -- 
-> > > 2.17.1
-> > > 
-> > 
+> On 19-08-27 14:32, Robin van der Gracht wrote:
+>> The first generation i.MX6 processors does not send an interrupt when 
+>> the
+>> power key is pressed. It sends a power down request interrupt if the 
+>> key is
+>> released before a hard shutdown (5 second press). This should allow
+>> software to bring down the SoC safely.
+>> 
+>> For this driver to work as a regular power key with the older SoCs, we 
+>> need
+>> to send a keypress AND release when we get the power down request irq.
+>> 
+>> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
+>> ---
+>>  .../devicetree/bindings/crypto/fsl-sec4.txt   | 16 ++++--
+>>  drivers/input/keyboard/Kconfig                |  2 +-
+>>  drivers/input/keyboard/snvs_pwrkey.c          | 52 
+>> ++++++++++++++++---
 > 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
+> Can we split this so the dt-bindings are a standalone patch? IMHO this
+> is the usual way because the maintainer can squash them on there needs.
+
+Not sure what you mean, do you want me to make a separate patch for the
+devicetree binding documentation here?
+
+> Also it would be cool to document the changes. A common place for
+> changes is after the '---' or on the cover-letter.
+
+Agreed!
+
+v1 -> v2:
+  - Nolonger altering the existing compatible string, just add a second 
+one.
+  - Moved the event emiting work out of the irq handler to the timer 
+handler.
+  - Assign hwtype directly to of_device_id->data instead of a struct
+    platform_device_id entry which has it's .driver_data set to hwtype.
+  - Document the new device tree binding.
+  - Update commit message to make more clear why we want to make this 
+change.
+
+> 
+>>  3 files changed, 57 insertions(+), 13 deletions(-)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt 
+>> b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+>> index 2fe245ca816a..e4fbb9797082 100644
+>> --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+>> +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+>> @@ -420,14 +420,22 @@ EXAMPLE
+>>  =====================================================================
+>>  System ON/OFF key driver
+>> 
+>> -  The snvs-pwrkey is designed to enable POWER key function which 
+>> controlled
+>> -  by SNVS ONOFF, the driver can report the status of POWER key and 
+>> wakeup
+>> -  system if pressed after system suspend.
+>> +  The snvs-pwrkey is designed to enable POWER key function which is 
+>> controlled
+>> +  by SNVS ONOFF. It can wakeup the system if pressed after system 
+>> suspend.
+>> +
+>> +  There are two generations of SVNS pwrkey hardware. The first 
+>> generation is
+>> +  included in i.MX6 Solo, DualLite and Quad processors. The second 
+>> generation
+>> +  is included in i.MX6 SoloX and newer SoCs.
+>> +
+>> +  Second generation SNVS can detect and report the status of POWER 
+>> key, but the
+>> +  first generation can only detect a key release and so emits an 
+>> instantaneous
+>> +  press and release event when the key is released.
+>> 
+>>    - compatible:
+>>        Usage: required
+>>        Value type: <string>
+>> -      Definition: Mush include "fsl,sec-v4.0-pwrkey".
+>> +      Definition: Must include "fsl,sec-v4.0-pwrkey" for i.MX6 SoloX 
+>> and newer
+>> +	   or "fsl,imx6qdl-snvs-pwrkey" for older SoCs.
+>> 
+>>    - interrupts:
+>>        Usage: required
+>> diff --git a/drivers/input/keyboard/Kconfig 
+>> b/drivers/input/keyboard/Kconfig
+>> index 7c4f19dab34f..937e58da5ce1 100644
+>> --- a/drivers/input/keyboard/Kconfig
+>> +++ b/drivers/input/keyboard/Kconfig
+>> @@ -436,7 +436,7 @@ config KEYBOARD_SNVS_PWRKEY
+>>  	depends on OF
+>>  	help
+>>  	  This is the snvs powerkey driver for the Freescale i.MX 
+>> application
+>> -	  processors that are newer than i.MX6 SX.
+>> +	  processors.
+>> 
+>>  	  To compile this driver as a module, choose M here; the
+>>  	  module will be called snvs_pwrkey.
+>> diff --git a/drivers/input/keyboard/snvs_pwrkey.c 
+>> b/drivers/input/keyboard/snvs_pwrkey.c
+>> index 5342d8d45f81..d71c44733103 100644
+>> --- a/drivers/input/keyboard/snvs_pwrkey.c
+>> +++ b/drivers/input/keyboard/snvs_pwrkey.c
+>> @@ -29,6 +29,11 @@
+>>  #define DEBOUNCE_TIME 30
+>>  #define REPEAT_INTERVAL 60
+>> 
+>> +enum imx_snvs_hwtype {
+>> +	IMX6SX_SNVS,	/* i.MX6 SoloX and newer */
+>> +	IMX6QDL_SNVS,	/* i.MX6 Solo, DualLite and Quad */
+>> +};
+>> +
+>>  struct pwrkey_drv_data {
+>>  	struct regmap *snvs;
+>>  	int irq;
+>> @@ -37,14 +42,41 @@ struct pwrkey_drv_data {
+>>  	int wakeup;
+>>  	struct timer_list check_timer;
+>>  	struct input_dev *input;
+>> +	enum imx_snvs_hwtype hwtype;
+>>  };
+>> 
+>> +static const struct of_device_id imx_snvs_pwrkey_ids[] = {
+>> +	{
+>> +		.compatible = "fsl,sec-v4.0-pwrkey",
+>> +		.data = (const void *)IMX6SX_SNVS,
+>> +	},
+>> +	{
+>> +		.compatible = "fsl,imx6qdl-snvs-pwrkey",
+>> +		.data = (const void *)IMX6QDL_SNVS,
+>> +	},
+>> +	{ /* sentinel */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, imx_snvs_pwrkey_ids);
+> 
+> Can we keep this on the original place if you are using ...
+> 
+>> +
+>>  static void imx_imx_snvs_check_for_events(struct timer_list *t)
+>>  {
+>>  	struct pwrkey_drv_data *pdata = from_timer(pdata, t, check_timer);
+>>  	struct input_dev *input = pdata->input;
+>>  	u32 state;
+>> 
+>> +	if (pdata->hwtype == IMX6QDL_SNVS) {
+>> +		/*
+>> +		 * The first generation i.MX6 SoCs only sends an interrupt on
+>> +		 * button release. To mimic power-key usage, we'll prepend a
+>> +		 * press event.
+>> +		 */
+>> +		input_report_key(input, pdata->keycode, 1);
+> 
+> Missing input_sync() here?
+
+Yes you are right. Odd that systemd powerkey handling didn't complain.
+
+> 
+>> +		input_report_key(input, pdata->keycode, 0);
+>> +		input_sync(input);
+>> +		pm_relax(input->dev.parent);
+>> +		return;
+>> +	}
+>> +
+>>  	regmap_read(pdata->snvs, SNVS_HPSR_REG, &state);
+>>  	state = state & SNVS_HPSR_BTN ? 1 : 0;
+>> 
+>> @@ -67,13 +99,17 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int 
+>> irq, void *dev_id)
+>>  {
+>>  	struct platform_device *pdev = dev_id;
+>>  	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
+>> +	unsigned long expire = jiffies;
+>>  	u32 lp_status;
+>> 
+>>  	pm_wakeup_event(pdata->input->dev.parent, 0);
+>> 
+>>  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
+>> -	if (lp_status & SNVS_LPSR_SPO)
+>> -		mod_timer(&pdata->check_timer, jiffies + 
+>> msecs_to_jiffies(DEBOUNCE_TIME));
+>> +	if (lp_status & SNVS_LPSR_SPO) {
+>> +		if (pdata->hwtype == IMX6SX_SNVS)
+>> +			expire += msecs_to_jiffies(DEBOUNCE_TIME);
+>> +		mod_timer(&pdata->check_timer, expire);
+> 
+> Is this desired because the timer gets triggered earlier.
+
+Yes, since the first generation has debounce implemented in hardware,
+we dont need to add another one.
+
+Now looking at it, maybe I should change the conditional to:
+
+if (pdata->hwtype != IMX6QDL_SNVS)
+         expire += msecs_to_jiffies(DEBOUNCE_TIME);
+
+to make this more clear.
+
+> 
+>> +	}
+>> 
+>>  	/* clear SPO status */
+>>  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
+>> @@ -93,6 +129,7 @@ static int imx_snvs_pwrkey_probe(struct 
+>> platform_device *pdev)
+>>  	struct pwrkey_drv_data *pdata = NULL;
+>>  	struct input_dev *input = NULL;
+>>  	struct device_node *np;
+>> +	const struct of_device_id *match;
+>>  	int error;
+>> 
+>>  	/* Get SNVS register Page */
+>> @@ -100,6 +137,10 @@ static int imx_snvs_pwrkey_probe(struct 
+>> platform_device *pdev)
+>>  	if (!np)
+>>  		return -ENODEV;
+>> 
+>> +	match = of_match_node(imx_snvs_pwrkey_ids, np);
+>> +	if (!match)
+>> +		return -ENODEV;
+> 
+> ... of_device_get_match_data() here.
+
+of_device_get_match_data() returns NULL on error. In this case, because 
+I
+assigned integer values to the .data pointers, casting NULL back to an
+integer will result in a valid hwtype.
+
+I could declare a special struct with a 'quirks' field like they did in 
+the
+flexcan diver: 'drivers/net/can/flexcan.c'.
+
+Use of_device_get_match_data() to get it, and define a quirk like:
+SNVS_QUIRK_NO_BTN_PRESS_IRQ. This might also improve readability.
+
+
+> While reading the rm it seems that
+> the snvs block has a dedicated version register. IMHO this could be a
+> better way to apply the change also to existing devices with old
+> firmware.
+
+I thought the same thing, and fully agree with you. However I do not 
+have
+a way to determine which versions are out there. Since I couldn't find 
+any
+documentation on this, and I only have i.MX6 S/DL, D/Q and UL laying 
+around.
+
+Regards,
+Robin van der Gracht
