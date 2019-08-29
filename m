@@ -2,188 +2,95 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70056C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7512FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB872070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:43:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567097033;
-	bh=7Qs6OeqXPoEjk6VZjdjpvfyCnDBrj2rVCbUUfEnMiDs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qDevEzaf5/+sFl+mhWEDE2PxdhIBErVV+fAdsSQLRvp2+APa6kSdLNNogpAbNcn4I
-	 iPseoG2RW/Ov7sWpJVYdftmDFZthqAiFbbNGwk4C5VX+tb0Z7dDu0jzakwpJeoyg2p
-	 8KcEt9VfTR3+ewHxLPz7P43c3dk1Jsa0EA03kvW0=
+	by mail.kernel.org (Postfix) with ESMTP id 3BE492077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 16:44:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="CjUWiJmE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfH2Qnw (ORCPT
+        id S1727959AbfH2QoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 12:43:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbfH2Qnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 12:43:52 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 721FC2341B;
-        Thu, 29 Aug 2019 16:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567097030;
-        bh=7Qs6OeqXPoEjk6VZjdjpvfyCnDBrj2rVCbUUfEnMiDs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=K92dt0qQ6mM95svcgKDFE//HrjDXVlEryQpKCFOqrvJnid2p17ozMXZuQdUcns/qA
-         jCXI2tn5xc21soDSevNZOKZC6X8Yvl+jk861VYmTVeA1sRQejHpGFeRQ5lboTGGp+I
-         RmTXzxXjzkROspwAmmlzkmYhwQtSo3/MIT3SHLqc=
-Received: by mail-qt1-f176.google.com with SMTP id b2so915424qtq.5;
-        Thu, 29 Aug 2019 09:43:50 -0700 (PDT)
-X-Gm-Message-State: APjAAAVWfsA7RMq4C/OLtQdpMsCOlHdXU1yOlRLpOxe9hxzfAwQkzwMO
-        fa0lWKpOXy0SLFZaQCWVA0KTuyjS8UsTvfjhWQ==
-X-Google-Smtp-Source: APXvYqxgQtOtFxkO7kgCl8zbXuT2nFsqGOsVrnXWmrG5VF4zoGK8bS9woQJYu1t/bzTD8UmthfoDjdjpS+15fFJ88kQ=
-X-Received: by 2002:ac8:368a:: with SMTP id a10mr10766806qtc.143.1567097029511;
- Thu, 29 Aug 2019 09:43:49 -0700 (PDT)
+        Thu, 29 Aug 2019 12:44:12 -0400
+Received: from mail-ed1-f41.google.com ([209.85.208.41]:45965 "EHLO
+        mail-ed1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbfH2QoM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 12:44:12 -0400
+Received: by mail-ed1-f41.google.com with SMTP id x19so4713996eda.12
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 09:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=J0mIptJpgCrji3rnOXUkwAg2sK122VXt0E9fIlxztOM=;
+        b=CjUWiJmEnPc7cpwJ/wsprTOwzmCKVjptR7CYO147EQ8lCVLk9PNsUUNihGjDi0yAiU
+         AdhSK4kl0aEt2i34anAuJ5CHeotYjHF8tIYEm3pizhouRuUK1YrIQE9k7itxJ0YcnexA
+         2xxmCkBC+zU1PddIE30q0E+GQLwS5xXelvTGwgwTgCRHUc1mpEfEbNdN9FaevS84+w0A
+         KKda+pmQs9qgR1c9qFKdc00Mlryh7p5phtUGHaZ50O+d2E8lL9LWq8PdysrjSDlD/08l
+         rDCf6VUX8OHUCdYLvFfNVFqqKJyeiQ3PwuqXv0ooKBfDDDwygOUbgOX0gZqeldc+118y
+         0m1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=J0mIptJpgCrji3rnOXUkwAg2sK122VXt0E9fIlxztOM=;
+        b=rT5l54nwonyWI8ISn5fC5K2YxuYxJj/9geNSJnk4qYz8Bzi7PEMkZSyUtmuFEjDM1Z
+         NYnoOPSHcUUnnj8jDSwRzDrRxS0R7qnWKqtktTLgyRgvk91njgNEGxdmwUJwMDH7qe9s
+         KiYqgbvDbecI77JPN0bT5yts1FCj3f1xGgU1J3Y3hX90b3mPL2mpPZiNCHVzbi5OJL3y
+         unC9AHXgIl0E7QoOiNoe5iFKFuhBXWv3it1B6ONuLrpokIU6/Q7fDFV904bNX0X9+ZRU
+         ybpUAV6zJ5nJ4sNcazTtNKoXEx6KoUQE0DoyQ+BlK6sHFEb3Hgt6OqTpwu/Ja/YeBt2N
+         Mubw==
+X-Gm-Message-State: APjAAAXEDGXMa4+mgEEMq92oDS1yaGS52rs3cy6vAWm5aPIWp6OWWria
+        IVrmzliiNjdQ3umDn/+HOyu2HA==
+X-Google-Smtp-Source: APXvYqw5Xs+f6YJcpXnaAvDOyRlabm5hOEmNVZx7gCr2PPOar2OUA5f1/a+08qrVc12CFDoVIZHybA==
+X-Received: by 2002:a50:884b:: with SMTP id c11mr10893613edc.138.1567097050284;
+        Thu, 29 Aug 2019 09:44:10 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id o11sm444273ejd.68.2019.08.29.09.44.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2019 09:44:09 -0700 (PDT)
+Date:   Thu, 29 Aug 2019 09:43:43 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     john.fastabend@gmail.com,
+        syzbot <syzbot+7a6ee4d0078eac6bf782@syzkaller.appspotmail.com>,
+        aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
+        davejwatson@fb.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: general protection fault in tls_sk_proto_close (2)
+Message-ID: <20190829094343.0248c61c@cakuba.netronome.com>
+In-Reply-To: <20190829035200.3340-1-hdanton@sina.com>
+References: <000000000000c3c461059127a1c4@google.com>
+        <20190829035200.3340-1-hdanton@sina.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-References: <20190829074603.70424-1-saravanak@google.com>
-In-Reply-To: <20190829074603.70424-1-saravanak@google.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 29 Aug 2019 11:43:38 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+2vR75ofq=aKOt1bb1T-JfhiGSR9dnHWQf7VLmgJP4eA@mail.gmail.com>
-Message-ID: <CAL_Jsq+2vR75ofq=aKOt1bb1T-JfhiGSR9dnHWQf7VLmgJP4eA@mail.gmail.com>
-Subject: Re: [PATCH v10 0/7] Solve postboot supplier cleanup and optimize
- probe ordering
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-acpi@vger.kernel.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        David Collins <collinsd@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 2:46 AM Saravana Kannan <saravanak@google.com> wrote:
->
-> Add device-links to track functional dependencies between devices
-> after they are created (but before they are probed) by looking at
-> their common DT bindings like clocks, interconnects, etc.
->
-> Having functional dependencies automatically added before the devices
-> are probed, provides the following benefits:
->
-> - Optimizes device probe order and avoids the useless work of
->   attempting probes of devices that will not probe successfully
->   (because their suppliers aren't present or haven't probed yet).
->
->   For example, in a commonly available mobile SoC, registering just
->   one consumer device's driver at an initcall level earlier than the
->   supplier device's driver causes 11 failed probe attempts before the
->   consumer device probes successfully. This was with a kernel with all
->   the drivers statically compiled in. This problem gets a lot worse if
->   all the drivers are loaded as modules without direct symbol
->   dependencies.
->
-> - Supplier devices like clock providers, interconnect providers, etc
->   need to keep the resources they provide active and at a particular
->   state(s) during boot up even if their current set of consumers don't
->   request the resource to be active. This is because the rest of the
->   consumers might not have probed yet and turning off the resource
->   before all the consumers have probed could lead to a hang or
->   undesired user experience.
->
->   Some frameworks (Eg: regulator) handle this today by turning off
->   "unused" resources at late_initcall_sync and hoping all the devices
->   have probed by then. This is not a valid assumption for systems with
->   loadable modules. Other frameworks (Eg: clock) just don't handle
->   this due to the lack of a clear signal for when they can turn off
->   resources. This leads to downstream hacks to handle cases like this
->   that can easily be solved in the upstream kernel.
->
->   By linking devices before they are probed, we give suppliers a clear
->   count of the number of dependent consumers. Once all of the
->   consumers are active, the suppliers can turn off the unused
->   resources without making assumptions about the number of consumers.
->
-> By default we just add device-links to track "driver presence" (probe
-> succeeded) of the supplier device. If any other functionality provided
-> by device-links are needed, it is left to the consumer/supplier
-> devices to change the link when they probe.
->
-> v1 -> v2:
-> - Drop patch to speed up of_find_device_by_node()
-> - Drop depends-on property and use existing bindings
->
-> v2 -> v3:
-> - Refactor the code to have driver core initiate the linking of devs
-> - Have driver core link consumers to supplier before it's probed
-> - Add support for drivers to edit the device links before probing
->
-> v3 -> v4:
-> - Tested edit_links() on system with cyclic dependency. Works.
-> - Added some checks to make sure device link isn't attempted from
->   parent device node to child device node.
-> - Added way to pause/resume sync_state callbacks across
->   of_platform_populate().
-> - Recursively parse DT node to create device links from parent to
->   suppliers of parent and all child nodes.
->
-> v4 -> v5:
-> - Fixed copy-pasta bugs with linked list handling
-> - Walk up the phandle reference till I find an actual device (needed
->   for regulators to work)
-> - Added support for linking devices from regulator DT bindings
-> - Tested the whole series again to make sure cyclic dependencies are
->   broken with edit_links() and regulator links are created properly.
->
-> v5 -> v6:
-> - Split, squashed and reordered some of the patches.
-> - Refactored the device linking code to follow the same code pattern for
->   any property.
->
-> v6 -> v7:
-> - No functional changes.
-> - Renamed i to index
-> - Added comment to clarify not having to check property name for every
->   index
-> - Added "matched" variable to clarify code. No functional change.
-> - Added comments to include/linux/device.h for add_links()
->
-> v7 -> v8:
-> - Rebased on top of linux-next to handle device link changes in [1]
->
-> v8 -> v9:
-> - Fixed kbuild test bot reported errors (docs and const)
->
-> v9->v10:
-> - Changes made based on reviews on LKML [2] and discussions at ELC [3]
-> - Dropped the edit_links() patch
-> - Dropped the patch that skips linking for default bus nodes
-> - 1/7: Changed from bus.add_links() to fwnode.ops.add_links()
-> - 1/7: Update device link doc
-> - 1/7: Lots of comments/fn doc updates
-> - 1/7: Renamed device_link_check_waiting_consumers() to
->   device_link_add_missing_supplier_links()
-> - 2/7: Moved DT parsing/linking code from of/platform.c to of/property.c
+On Thu, 29 Aug 2019 11:52:00 +0800, Hillf Danton wrote:
+> Alternatively work is done if sock is closed again. Anyway ctx is reset
+> under sock's callback lock in write mode.
+> 
+> --- a/net/tls/tls_main.c
+> +++ b/net/tls/tls_main.c
+> @@ -295,6 +295,8 @@ static void tls_sk_proto_close(struct so
+>  	long timeo = sock_sndtimeo(sk, 0);
+>  	bool free_ctx;
+>  
+> +	if (!ctx)
+> +		return;
+>  	if (ctx->tx_conf == TLS_SW)
+>  		tls_sw_cancel_work_tx(ctx);
 
-Why? You'll notice that of/property.c doesn't know anything about
-platform_device (and struct device):
-
-$ git grep platform_device -- drivers/of/property.c
-$
-
-Everything related to platform_device goes in of/platform.c.
-Everything related to struct device only goes in of/device.c. I'd be
-okay with a new file for this too.
-
-Rob
+That's no bueno, the real socket's close will never get called.
