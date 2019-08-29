@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F30C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDA2C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B0A2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E8182166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbfH2TC0 (ORCPT
+        id S1729013AbfH2TCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:02:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51559 "EHLO
+        Thu, 29 Aug 2019 15:02:25 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51565 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728935AbfH2TCR (ORCPT
+        with ESMTP id S1728968AbfH2TCU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 15:02:17 -0400
+        Thu, 29 Aug 2019 15:02:20 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i3Pg2-00051A-Kr; Thu, 29 Aug 2019 21:01:46 +0200
+        id 1i3PgQ-0005IK-2G; Thu, 29 Aug 2019 21:02:10 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 380EE1C0DE6;
-        Thu, 29 Aug 2019 21:01:46 +0200 (CEST)
-Date:   Thu, 29 Aug 2019 19:01:46 -0000
-From:   "tip-bot2 for Igor Lubashev" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D02FF1C0DE7;
+        Thu, 29 Aug 2019 21:02:03 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 19:02:03 -0000
+From:   "tip-bot2 for Steven Rostedt (VMware)" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf event: Check ref_reloc_sym before using it
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/core] tools lib traceevent: Remove unneeded qsort and uses
+ memmove instead
+Cc:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
+        linux-trace-devel@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <1566869956-7154-2-git-send-email-ilubashe@akamai.com>
-References: <1566869956-7154-2-git-send-email-ilubashe@akamai.com>
+In-Reply-To: <20190828191820.127233764@goodmis.org>
+References: <20190828191820.127233764@goodmis.org>
 MIME-Version: 1.0
-Message-ID: <156710530612.10509.7771450026784057544.tip-bot2@tip-bot2>
+Message-ID: <156710532375.10619.16987688702890392152.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -65,60 +62,121 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     e9a6882f267a8105461066e3ea6b4b6b9be1b807
-Gitweb:        https://git.kernel.org/tip/e9a6882f267a8105461066e3ea6b4b6b9be1b807
-Author:        Igor Lubashev <ilubashe@akamai.com>
-AuthorDate:    Mon, 26 Aug 2019 21:39:12 -04:00
+Commit-ID:     301011ba622513cb41ced59973972204e0da2f71
+Gitweb:        https://git.kernel.org/tip/301011ba622513cb41ced59973972204e0da2f71
+Author:        Steven Rostedt (VMware) <rostedt@goodmis.org>
+AuthorDate:    Wed, 28 Aug 2019 15:05:29 -04:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Wed, 28 Aug 2019 17:17:51 -03:00
+CommitterDate: Thu, 29 Aug 2019 08:36:12 -03:00
 
-perf event: Check ref_reloc_sym before using it
+tools lib traceevent: Remove unneeded qsort and uses memmove instead
 
-Check for ref_reloc_sym before using it instead of checking
-symbol_conf.kptr_restrict and relying solely on that check.
+While reading a trace data file that had 100,000s of tasks, the process
+took an extremely long time. I profiled it down to add_new_comm(), which
+was doing a qsort() call on an array that was pretty much already sorted
+(all but the last element. qsort() isn't very efficient when dealing
+with mostly sorted arrays, and this definitely showed its issues.
 
-Reported-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
-Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
+When adding a new task to the task list, instead of using qsort(), do
+another bsearch() with a function that will find the element before
+where the new task will be inserted in. Then simply shift the rest of
+the array, and insert the task where it belongs.
+
+Fixes: f7d82350e597d ("tools/events: Add files to create libtraceevent.a")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/1566869956-7154-2-git-send-email-ilubashe@akamai.com
+Cc: linux-trace-devel@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190828191820.127233764@goodmis.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/event.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/lib/traceevent/event-parse.c | 55 +++++++++++++++++++++++++----
+ 1 file changed, 49 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 33616ea..e33dd1a 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -913,11 +913,13 @@ static int __perf_event__synthesize_kernel_mmap(struct perf_tool *tool,
- 	int err;
- 	union perf_event *event;
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index 13fd9fd..3e83636 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -142,6 +142,25 @@ static int cmdline_cmp(const void *a, const void *b)
+ 	return 0;
+ }
  
--	if (symbol_conf.kptr_restrict)
--		return -1;
- 	if (map == NULL)
- 		return -1;
- 
-+	kmap = map__kmap(map);
-+	if (!kmap->ref_reloc_sym)
++/* Looking for where to place the key */
++static int cmdline_slot_cmp(const void *a, const void *b)
++{
++	const struct tep_cmdline *ca = a;
++	const struct tep_cmdline *cb = b;
++	const struct tep_cmdline *cb1 = cb + 1;
++
++	if (ca->pid < cb->pid)
 +		return -1;
 +
- 	/*
- 	 * We should get this from /sys/kernel/sections/.text, but till that is
- 	 * available use this, and after it is use this as a fallback for older
-@@ -940,7 +942,6 @@ static int __perf_event__synthesize_kernel_mmap(struct perf_tool *tool,
- 		event->header.misc = PERF_RECORD_MISC_GUEST_KERNEL;
++	if (ca->pid > cb->pid) {
++		if (ca->pid <= cb1->pid)
++			return 0;
++		return 1;
++	}
++
++	return 0;
++}
++
+ struct cmdline_list {
+ 	struct cmdline_list	*next;
+ 	char			*comm;
+@@ -239,6 +258,7 @@ static int add_new_comm(struct tep_handle *tep,
+ 	struct tep_cmdline *cmdline;
+ 	struct tep_cmdline key;
+ 	char *new_comm;
++	int cnt;
+ 
+ 	if (!pid)
+ 		return 0;
+@@ -271,18 +291,41 @@ static int add_new_comm(struct tep_handle *tep,
+ 	}
+ 	tep->cmdlines = cmdlines;
+ 
+-	cmdlines[tep->cmdline_count].comm = strdup(comm);
+-	if (!cmdlines[tep->cmdline_count].comm) {
++	key.comm = strdup(comm);
++	if (!key.comm) {
+ 		errno = ENOMEM;
+ 		return -1;
  	}
  
--	kmap = map__kmap(map);
- 	size = snprintf(event->mmap.filename, sizeof(event->mmap.filename),
- 			"%s%s", machine->mmap_name, kmap->ref_reloc_sym->name) + 1;
- 	size = PERF_ALIGN(size, sizeof(u64));
+-	cmdlines[tep->cmdline_count].pid = pid;
+-		
+-	if (cmdlines[tep->cmdline_count].comm)
++	if (!tep->cmdline_count) {
++		/* no entries yet */
++		tep->cmdlines[0] = key;
+ 		tep->cmdline_count++;
++		return 0;
++	}
+ 
+-	qsort(cmdlines, tep->cmdline_count, sizeof(*cmdlines), cmdline_cmp);
++	/* Now find where we want to store the new cmdline */
++	cmdline = bsearch(&key, tep->cmdlines, tep->cmdline_count - 1,
++			  sizeof(*tep->cmdlines), cmdline_slot_cmp);
++
++	cnt = tep->cmdline_count;
++	if (cmdline) {
++		/* cmdline points to the one before the spot we want */
++		cmdline++;
++		cnt -= cmdline - tep->cmdlines;
++
++	} else {
++		/* The new entry is either before or after the list */
++		if (key.pid > tep->cmdlines[tep->cmdline_count - 1].pid) {
++			tep->cmdlines[tep->cmdline_count++] = key;
++			return 0;
++		}
++		cmdline = &tep->cmdlines[0];
++	}
++	memmove(cmdline + 1, cmdline, (cnt * sizeof(*cmdline)));
++	*cmdline = key;
++
++	tep->cmdline_count++;
+ 
+ 	return 0;
+ }
