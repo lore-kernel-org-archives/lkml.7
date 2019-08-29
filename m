@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EE0C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D866C41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE0A2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E4F2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567102785;
-	bh=Orj3bs71HxSHxHM7WdhTxBxMoK1q0mzUk+8eDqMaGNI=;
+	s=default; t=1567102790;
+	bh=xCREaTygv8b8nm+QPF3XKV3E36VYjZhtrpivCPCooeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W3Hy4rdJLiDanCEfnLVmfac0ICOCYV1P781JZ5jzgZDkN6i/rCGWyBzE7YfTwtQYI
-	 4Gj9bWUpjnHNABJ22pLPyVKUxmbUvlaOBL+e6AohMvUFbZA1cY9G6JpwIFH/e+e4jG
-	 ka0p67XMHbMRJX/vbkq7IH4L9bOKwPyOIFF622ck=
+	b=mg7vuRJ2OIb+pogDQM1gvhGhuDsbMq1A/H212E7TZEORez+rbfDjA2rsbTVgtz+A6
+	 fJ3NSnafDg3AtJsKbkLz/qwCHXrU4cH/y2khUH7ogEvVmKZ3g9iZtAv6iNIDFNa05/
+	 9tw1YnRkCD//Ws4ntrGixmfuW+5pm1loel9NFsv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbfH2STp (ORCPT
+        id S1728935AbfH2SSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:19:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60216 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:18:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730283AbfH2SSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:18:01 -0400
+        id S1728939AbfH2SRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CE702342A;
-        Thu, 29 Aug 2019 18:17:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4655A2189D;
+        Thu, 29 Aug 2019 18:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102679;
-        bh=Orj3bs71HxSHxHM7WdhTxBxMoK1q0mzUk+8eDqMaGNI=;
+        s=default; t=1567102670;
+        bh=xCREaTygv8b8nm+QPF3XKV3E36VYjZhtrpivCPCooeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aF2VmdvOmRqA5pemVLPIkRzZ717cCCZX2YWO7C0XMsTQqn4eRq0R7ttgxCwrtSXCC
-         fdQ/Ym4QfIXfYv3WJsJPzMWGvZ7gvWJD2y81tUkoOLKq5qoVioOVAy48SeCntUenER
-         fd4BTzE2zy4BrY43fsTydna4df1POHAfz3dQa7uk=
+        b=aUNYCriMUrIC5DmgsPmiUgJs5ZaWp/m0Uu3QWKDWOKZ27kGauogtzebmV7Xy5PXqT
+         vMNoxHczYlGP12Cz1C+3j8u/XdKTw8hBPaG02EWCsQT8ezqxgmrf4LPzQikT0fk5iS
+         J9FF5x0ZBiWNO7+ddwFhV6nt2bLJEHMQ8GFBgy+A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 15/16] ceph: fix buffer free while holding i_ceph_lock in fill_inode()
-Date:   Thu, 29 Aug 2019 14:17:33 -0400
-Message-Id: <20190829181736.9040-15-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 08/16] cx82310_eth: fix a memory leak bug
+Date:   Thu, 29 Aug 2019 14:17:26 -0400
+Message-Id: <20190829181736.9040-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181736.9040-1-sashal@kernel.org>
 References: <20190829181736.9040-1-sashal@kernel.org>
@@ -60,87 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <lhenriques@suse.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit af8a85a41734f37b67ba8ce69d56b685bee4ac48 ]
+[ Upstream commit 1eca92eef18719027d394bf1a2d276f43e7cf886 ]
 
-Calling ceph_buffer_put() in fill_inode() may result in freeing the
-i_xattrs.blob buffer while holding the i_ceph_lock.  This can be fixed by
-postponing the call until later, when the lock is released.
+In cx82310_bind(), 'dev->partial_data' is allocated through kmalloc().
+Then, the execution waits for the firmware to become ready. If the firmware
+is not ready in time, the execution is terminated. However, the allocated
+'dev->partial_data' is not deallocated on this path, leading to a memory
+leak bug. To fix this issue, free 'dev->partial_data' before returning the
+error.
 
-The following backtrace was triggered by fstests generic/070.
-
-  BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
-  in_atomic(): 1, irqs_disabled(): 0, pid: 3852, name: kworker/0:4
-  6 locks held by kworker/0:4/3852:
-   #0: 000000004270f6bb ((wq_completion)ceph-msgr){+.+.}, at: process_one_work+0x1b8/0x5f0
-   #1: 00000000eb420803 ((work_completion)(&(&con->work)->work)){+.+.}, at: process_one_work+0x1b8/0x5f0
-   #2: 00000000be1c53a4 (&s->s_mutex){+.+.}, at: dispatch+0x288/0x1476
-   #3: 00000000559cb958 (&mdsc->snap_rwsem){++++}, at: dispatch+0x2eb/0x1476
-   #4: 000000000d5ebbae (&req->r_fill_mutex){+.+.}, at: dispatch+0x2fc/0x1476
-   #5: 00000000a83d0514 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: fill_inode.isra.0+0xf8/0xf70
-  CPU: 0 PID: 3852 Comm: kworker/0:4 Not tainted 5.2.0+ #441
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
-  Workqueue: ceph-msgr ceph_con_workfn
-  Call Trace:
-   dump_stack+0x67/0x90
-   ___might_sleep.cold+0x9f/0xb1
-   vfree+0x4b/0x60
-   ceph_buffer_release+0x1b/0x60
-   fill_inode.isra.0+0xa9b/0xf70
-   ceph_fill_trace+0x13b/0xc70
-   ? dispatch+0x2eb/0x1476
-   dispatch+0x320/0x1476
-   ? __mutex_unlock_slowpath+0x4d/0x2a0
-   ceph_con_workfn+0xc97/0x2ec0
-   ? process_one_work+0x1b8/0x5f0
-   process_one_work+0x244/0x5f0
-   worker_thread+0x4d/0x3e0
-   kthread+0x105/0x140
-   ? process_one_work+0x5f0/0x5f0
-   ? kthread_park+0x90/0x90
-   ret_from_fork+0x3a/0x50
-
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/inode.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/usb/cx82310_eth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-index 7a4052501866d..339fdf6355df7 100644
---- a/fs/ceph/inode.c
-+++ b/fs/ceph/inode.c
-@@ -741,6 +741,7 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
- 	int issued = 0, implemented, new_issued;
- 	struct timespec mtime, atime, ctime;
- 	struct ceph_buffer *xattr_blob = NULL;
-+	struct ceph_buffer *old_blob = NULL;
- 	struct ceph_string *pool_ns = NULL;
- 	struct ceph_cap *new_cap = NULL;
- 	int err = 0;
-@@ -858,7 +859,7 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
- 	if ((ci->i_xattrs.version == 0 || !(issued & CEPH_CAP_XATTR_EXCL))  &&
- 	    le64_to_cpu(info->xattr_version) > ci->i_xattrs.version) {
- 		if (ci->i_xattrs.blob)
--			ceph_buffer_put(ci->i_xattrs.blob);
-+			old_blob = ci->i_xattrs.blob;
- 		ci->i_xattrs.blob = xattr_blob;
- 		if (xattr_blob)
- 			memcpy(ci->i_xattrs.blob->vec.iov_base,
-@@ -1004,8 +1005,8 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
- out:
- 	if (new_cap)
- 		ceph_put_cap(mdsc, new_cap);
--	if (xattr_blob)
--		ceph_buffer_put(xattr_blob);
-+	ceph_buffer_put(old_blob);
-+	ceph_buffer_put(xattr_blob);
- 	ceph_put_string(pool_ns);
- 	return err;
- }
+diff --git a/drivers/net/usb/cx82310_eth.c b/drivers/net/usb/cx82310_eth.c
+index 947bea81d9241..dfbdea22fbad9 100644
+--- a/drivers/net/usb/cx82310_eth.c
++++ b/drivers/net/usb/cx82310_eth.c
+@@ -175,7 +175,8 @@ static int cx82310_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	}
+ 	if (!timeout) {
+ 		dev_err(&udev->dev, "firmware not ready in time\n");
+-		return -ETIMEDOUT;
++		ret = -ETIMEDOUT;
++		goto err;
+ 	}
+ 
+ 	/* enable ethernet mode (?) */
 -- 
 2.20.1
 
