@@ -2,443 +2,158 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1132AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 082E7C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB08123430
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:56:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="dMgGnzMy";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="RHYY96Po"
+	by mail.kernel.org (Postfix) with ESMTP id DB5DB23403
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfH2N4z (ORCPT
+        id S1728328AbfH2N47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:56:55 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:25543 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728239AbfH2N4x (ORCPT
+        Thu, 29 Aug 2019 09:56:59 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33524 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728239AbfH2N44 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:56:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1567087013; x=1598623013;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=F3U2BuMiCOtCk5CjaPKjGxvJhQeg4LolT/VieAqkcRs=;
-  b=dMgGnzMy3HSGzaA7cPluET7keIsVges6ivnRZfQQnOVtvtzFiAt35qJg
-   QLsp3DXBuiUgBZwyOfpsq1RsBTNJsS4egTwsPWuBnG3WEO3RDiLCoL52Y
-   PJlWzTUz9phGJ4uc7QjD0MWF7g/baHs8e6+sCAEPoS7gfWoigvJ/kWtDj
-   BrOeNYtCO/9fO3Sz1YsxQ3Z+RPsew/fy31OOkfO2KgyKntHqVUNqlBfaX
-   SyGNPwLnWrpk0k2J77ok+ySsJlLpWvFrOpTLQ5j8d4P44CrX7LPvfPmb3
-   aGkpUw9IFD+QctVnkBQgrvvzABhAA6rw8xv0CESsgKLPnyH8ufFO75WFq
-   Q==;
-IronPort-SDR: l+codSjKDpfb/SHKgTlVGX64oNdLMSiYp/AFCxLzcs4byCkwPD04eY2mmwltyYvr3C0Bk5k7c6
- BGarzFabUaPK4T+u6P8LOGnrTtSpiRnhQ/hA69gpwXSUTcGbPXP36Tt8FRPNIOJSRTLX6o6nRU
- m1EtW6qcBpPo5MaBGwOZnWxelL4tl7qik1eTJhxoAi3LEcxqxwg1s7XaCcXgOfgO9rL9giU9LM
- LgXm3v+ktiXJnQ42QUXYenCm/Osx2QQXUiNEk8WJOzez8/ItZQmYx/FuMkXHiDHOZZ1h3pmVnG
- CsY=
-X-IronPort-AV: E=Sophos;i="5.64,443,1559491200"; 
-   d="scan'208";a="121525744"
-Received: from mail-by2nam05lp2059.outbound.protection.outlook.com (HELO NAM05-BY2-obe.outbound.protection.outlook.com) ([104.47.50.59])
-  by ob1.hgst.iphmx.com with ESMTP; 29 Aug 2019 21:56:52 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NgKZb1sgHs+SCad45FAY/lTzp4K7tftiMxtSvDmuV7v35hPY2dEWTWDRgFEWDr56Wp4vLJYZcZ2zlJkiFAirMjjs9/4oeTDZR5MDipgRzZzouc+Ks4LcsY3GADezXUIJtRK2RqlbtwH7iSnHN6q9XCKvP4BZ2JpcxDC/0XYq1Z4s1YEiJirsbsD0XApj7dkqPU6Uux8DaEki35J9C4ARAPqGsbL0cBSQw1LKTK58ImCYHXVHVmxL5eNHlKdxDihOpe9gl8TARs9KB+SEczErs9b/o3Ap1JStufhM4zxrgGaUpNcOYBxFeMqGBMxsD1J7swxqgwjFsqqQ/DV37gE5ag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6ek+G3vYEvusmR+a/taRqHoRRjoXsbhcwAVKRCXwLWs=;
- b=OnVhgfUo7pHMhbPnVk4QJztDyMMrMcDN/XsAC4WonPWthe1vRn7Fsp6wVNxw9vBLaMF3J8SIT9jAI/QD77gvVqpoRd8tj+hYlOF7O/d2z1gpGzXyVa56TqlECI3a4g7fFMB20IKWX6pxzgtxLccvkwjmoiHCWqyV3Ke9yQjMLJiUenKr0rp2A8sYisQSsan4uOl0CWgD68jVMw39GgCsxdeQw/DU+2dIeDeQVAwg4Q6wVzxCkp14nxMzpRRmPhQEwEgIHdIr1Z2Fwkr0umQKBjqv32oYS18PaX8Oy7Z6DnliFlXVN9Fjln3DOJ3REiNPEDwRivqpnm3zq63L16jQLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6ek+G3vYEvusmR+a/taRqHoRRjoXsbhcwAVKRCXwLWs=;
- b=RHYY96PoVvB1cT5dIr6Sc0/MWGyhqZbAek/PpuU8m1ETTQ4q15DbfFfT32XQBn4q4/dzlGKrIs81NXZf6QjJqFiys+nYTHB7R1Xx2Wrj1Kzoxwo+0JRbScee69zMYSsjVT9QdeqBNTxqlrAdm85tO3aj/u11zlyKKTkdusN1Trg=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB5616.namprd04.prod.outlook.com (20.179.22.29) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Thu, 29 Aug 2019 13:56:50 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::e1a5:8de2:c3b1:3fb0]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::e1a5:8de2:c3b1:3fb0%7]) with mapi id 15.20.2220.013; Thu, 29 Aug 2019
- 13:56:50 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v6 15/21] RISC-V: KVM: Add timer functionality
-Thread-Topic: [PATCH v6 15/21] RISC-V: KVM: Add timer functionality
-Thread-Index: AQHVXnGb+P8ljGVE1U+Bnk9wSd5wOw==
-Date:   Thu, 29 Aug 2019 13:56:50 +0000
-Message-ID: <20190829135427.47808-16-anup.patel@wdc.com>
-References: <20190829135427.47808-1-anup.patel@wdc.com>
-In-Reply-To: <20190829135427.47808-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MAXPR0101CA0072.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:e::34) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [49.207.51.114]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9a0c90bf-124e-4aed-ae99-08d72c88bd88
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB5616;
-x-ms-traffictypediagnostic: MN2PR04MB5616:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR04MB5616C8795CCF6C35DE6614B78DA20@MN2PR04MB5616.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0144B30E41
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(366004)(376002)(346002)(396003)(189003)(199004)(7416002)(52116002)(81166006)(316002)(6506007)(386003)(25786009)(7736002)(81156014)(305945005)(2906002)(36756003)(71190400001)(14454004)(99286004)(1076003)(256004)(14444005)(4326008)(66946007)(76176011)(66446008)(64756008)(66556008)(66476007)(102836004)(6116002)(50226002)(55236004)(476003)(6512007)(3846002)(71200400001)(5660300002)(26005)(186003)(44832011)(86362001)(66066001)(6436002)(446003)(8936002)(6486002)(110136005)(54906003)(2616005)(486006)(53936002)(11346002)(478600001)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5616;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YPGNJx96WB5usBNcw9fChGYZpe6b3QBA1CvMfSB+lm5LvOw9l9BOsi6oWg5IdxpuYFwbW7UokD08qLsSH2sonOVm6lal1ud2F9228gd/F+Rxdo6ZLxzqGJ/qM3T7lCVu22H9jLSN5L2CxXzOqU6/XJ4vCugAXZacArgVZE1NjSg9ZMzKXGcoh/xtKEwIvfSAsvH13Vuk5lteLIA6ic8WHXBbx2Et17nNSQKDRqhLSWE7soj/DeHV35SjGoSeG5WEmBl0dC5f0GvgLEckOvrO7z/8MM1nbLPWX027y41uWHf+QfnQRVxL7021V1wQpqPXUXxjiiJwLFrehM8jB09+yti1lIEtFbMeRW0ttK4h8SXRZzsVRM0rY3oJ2Cr1EYleL8JIURcAgGJJVtQbiEaLJtB2D5d5e91RhbzS31C33c4=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 29 Aug 2019 09:56:56 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 4149C28D4FB
+Subject: Re: [PATCH] arm/arm64: defconfig: Update configs to use the new
+ CROS_EC options
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        SoC Team <soc@kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Collabora kernel ML <kernel@collabora.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Dan iel Lezcano <daniel.lezcano@linaro.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Yannick Fertr? <yannick.fertre@st.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+References: <20190827154851.10486-1-enric.balletbo@collabora.com>
+ <20190827161045.GC26807@tuxbook-pro>
+ <CAK8P3a2h2gUhxcVgD5JhR1Uo4qUSuG5yp4RCrAxevNmyD4ZRTA@mail.gmail.com>
+ <2db6cde1-9e7f-8b1c-f2e4-80bdd2478d28@collabora.com>
+ <CAK8P3a3zYpgouGAibyMjDykZmy+ABnx6AD2cYpHnXq9Zsw2V=w@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <1fe8c0df-5e2d-6b6f-2a21-025a00b86f01@collabora.com>
+Date:   Thu, 29 Aug 2019 15:56:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a0c90bf-124e-4aed-ae99-08d72c88bd88
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 13:56:50.4669
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wGN8NZUB2n9jqtumpsZ2H75teodvUu8QJj57xaLXrLS+Jr11q3vKfhrSAJMl/gIdd/b0S0SFbDzyJsNj2wCS3w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5616
+In-Reply-To: <CAK8P3a3zYpgouGAibyMjDykZmy+ABnx6AD2cYpHnXq9Zsw2V=w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atish Patra <atish.patra@wdc.com>
+Hi,
 
-The RISC-V hypervisor specification doesn't have any virtual timer
-feature.
+On 28/8/19 14:09, Arnd Bergmann wrote:
+> On Wed, Aug 28, 2019 at 12:10 PM Enric Balletbo i Serra
+> <enric.balletbo@collabora.com> wrote:
+>> On 27/8/19 18:12, Arnd Bergmann wrote:
+>>> On Tue, Aug 27, 2019 at 6:08 PM Bjorn Andersson
+>>> <bjorn.andersson@linaro.org> wrote:
+>>>>
+>>>> On Tue 27 Aug 08:48 PDT 2019, Enric Balletbo i Serra wrote:
+>>>>
+>>>>> Recently we refactored the CrOS EC drivers moving part of the code from
+>>>>> the MFD subsystem to the platform chrome subsystem. During this change
+>>>>> we needed to rename some config options, so, update the defconfigs
+>>>>> accordingly.
+>>>>>
+>>>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>>>> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+>>>>> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+>>>>> Tested-by: Gwendal Grignou <gwendal@chromium.org>
+>>>>
+>>>> Can we make the entries in the generic arm64 defconfig modules?
+>>>
+>>> Good idea.
+>>>
+>>> Actually I would prefer to have all of them as modules for consistency,
+>>> if at all possible.
+>>>
+>>
+>> It is very common boot Chromebooks from an USB device, the EC needs to be
+>> built-in in order to boot from these devices, otherwise you should use an
+>> initramfs. I'd like to avoid forcing people to build an initramfs just to boot
+>> from these devices if possible, in fact, my usual workflow is without initramfs,
+>> and knowing that with the default defconfig just should boot helps a lot sometimes.
+>>
+>> Note that, it's not the case for EC subdevices, these are already build as modules.
+> 
+> Ok, fair enough, let's leave it built-in then.
+> 
+>> BTW, Lee asked if this patch should be squashed with the patches that really
+>> renames the config options to help bisect ability, I don't have a hard opinion
+>> as I don't usually run the config option between bisection steps, so please let
+>> me know what do you prefer and I'll respin the patches ASAP if that's the case.
+> 
+> I'm not usually worried about bisection in defconfig changes, since like you
+> say most commonly one would not run 'make defconfig' betweens the
+> bisection steps.
+> 
+> If we really care about it, we could keep a symbol like this
+> in drivers/platform/chrome/Kconfig for one release:
+> 
+> config CONFIG_MFD_CROS_EC
+>         tristate "Enable ChromeOS Embedded Controller"
+>         select CROS_EC
+>         select CHROME_PLATFORMS
+>         select CONFIG_MFD_CROS_EC_DEV
+>         help
+>            This is a transitional Kconfig option and will be removed
+>            after everyone enables the parts individually.
+> 
 
-Due to this, the guest VCPU timer will be programmed via SBI calls.
-The host will use a separate hrtimer event for each guest VCPU to
-provide timer functionality. We inject a virtual timer interrupt to
-the guest VCPU whenever the guest VCPU hrtimer event expires.
+Not sure if really makes sense do this and tbh and don't have a hard opinion, so
+I'll let the final decision to the soc/mfd maintainers. Just let me know and
+I'll respin the patches with that if you really want.
 
-The following features are not supported yet and will be added in
-future:
-1. A time offset to adjust guest time from host time
-2. A saved next event in guest vcpu for vm migration
+Thanks,
+ Enric
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/riscv/include/asm/kvm_host.h       |   4 +
- arch/riscv/include/asm/kvm_vcpu_timer.h |  30 +++++++
- arch/riscv/kvm/Makefile                 |   2 +-
- arch/riscv/kvm/vcpu.c                   |   6 ++
- arch/riscv/kvm/vcpu_timer.c             | 113 ++++++++++++++++++++++++
- drivers/clocksource/timer-riscv.c       |   8 ++
- include/clocksource/timer-riscv.h       |  16 ++++
- 7 files changed, 178 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/include/asm/kvm_vcpu_timer.h
- create mode 100644 arch/riscv/kvm/vcpu_timer.c
- create mode 100644 include/clocksource/timer-riscv.h
-
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm=
-_host.h
-index 9e7f6a0c74dd..54356b228e5f 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -12,6 +12,7 @@
- #include <linux/types.h>
- #include <linux/kvm.h>
- #include <linux/kvm_types.h>
-+#include <asm/kvm_vcpu_timer.h>
-=20
- #ifdef CONFIG_64BIT
- #define KVM_MAX_VCPUS			(1U << 16)
-@@ -167,6 +168,9 @@ struct kvm_vcpu_arch {
- 	unsigned long irqs_pending;
- 	unsigned long irqs_pending_mask;
-=20
-+	/* VCPU Timer */
-+	struct kvm_vcpu_timer timer;
-+
- 	/* MMIO instruction details */
- 	struct kvm_mmio_decode mmio_decode;
-=20
-diff --git a/arch/riscv/include/asm/kvm_vcpu_timer.h b/arch/riscv/include/a=
-sm/kvm_vcpu_timer.h
-new file mode 100644
-index 000000000000..6f904d49e27e
---- /dev/null
-+++ b/arch/riscv/include/asm/kvm_vcpu_timer.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2019 Western Digital Corporation or its affiliates.
-+ *
-+ * Authors:
-+ *	Atish Patra <atish.patra@wdc.com>
-+ */
-+
-+#ifndef __KVM_VCPU_RISCV_TIMER_H
-+#define __KVM_VCPU_RISCV_TIMER_H
-+
-+#include <linux/hrtimer.h>
-+
-+struct kvm_vcpu_timer {
-+	bool init_done;
-+	/* Check if the timer is programmed */
-+	bool next_set;
-+	u64 next_cycles;
-+	struct hrtimer hrt;
-+	/* Mult & Shift values to get nanosec from cycles */
-+	u32 mult;
-+	u32 shift;
-+};
-+
-+int kvm_riscv_vcpu_timer_init(struct kvm_vcpu *vcpu);
-+int kvm_riscv_vcpu_timer_deinit(struct kvm_vcpu *vcpu);
-+int kvm_riscv_vcpu_timer_reset(struct kvm_vcpu *vcpu);
-+int kvm_riscv_vcpu_timer_next_event(struct kvm_vcpu *vcpu, u64 ncycles);
-+
-+#endif
-diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-index c0f57f26c13d..3e0c7558320d 100644
---- a/arch/riscv/kvm/Makefile
-+++ b/arch/riscv/kvm/Makefile
-@@ -9,6 +9,6 @@ ccflags-y :=3D -Ivirt/kvm -Iarch/riscv/kvm
- kvm-objs :=3D $(common-objs-y)
-=20
- kvm-objs +=3D main.o vm.o vmid.o tlb.o mmu.o
--kvm-objs +=3D vcpu.o vcpu_exit.o vcpu_switch.o
-+kvm-objs +=3D vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o
-=20
- obj-$(CONFIG_KVM)	+=3D kvm.o
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index 66158c0b90e6..7c270ba5e4b4 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -54,6 +54,8 @@ static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
-=20
- 	memcpy(cntx, reset_cntx, sizeof(*cntx));
-=20
-+	kvm_riscv_vcpu_timer_reset(vcpu);
-+
- 	WRITE_ONCE(vcpu->arch.irqs_pending, 0);
- 	WRITE_ONCE(vcpu->arch.irqs_pending_mask, 0);
- }
-@@ -108,6 +110,9 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
- 	cntx->hstatus |=3D HSTATUS_SP2P;
- 	cntx->hstatus |=3D HSTATUS_SPV;
-=20
-+	/* Setup VCPU timer */
-+	kvm_riscv_vcpu_timer_init(vcpu);
-+
- 	/* Reset VCPU */
- 	kvm_riscv_reset_vcpu(vcpu);
-=20
-@@ -116,6 +121,7 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
-=20
- void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- {
-+	kvm_riscv_vcpu_timer_deinit(vcpu);
- 	kvm_riscv_stage2_flush_cache(vcpu);
- 	kmem_cache_free(kvm_vcpu_cache, vcpu);
- }
-diff --git a/arch/riscv/kvm/vcpu_timer.c b/arch/riscv/kvm/vcpu_timer.c
-new file mode 100644
-index 000000000000..9ffdd6ff8d6e
---- /dev/null
-+++ b/arch/riscv/kvm/vcpu_timer.c
-@@ -0,0 +1,113 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Western Digital Corporation or its affiliates.
-+ *
-+ * Authors:
-+ *     Atish Patra <atish.patra@wdc.com>
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/err.h>
-+#include <linux/kvm_host.h>
-+#include <clocksource/timer-riscv.h>
-+#include <asm/csr.h>
-+#include <asm/kvm_vcpu_timer.h>
-+
-+#define VCPU_TIMER_PROGRAM_THRESHOLD_NS		1000
-+
-+static enum hrtimer_restart kvm_riscv_vcpu_hrtimer_expired(struct hrtimer =
-*h)
-+{
-+	struct kvm_vcpu_timer *t =3D container_of(h, struct kvm_vcpu_timer, hrt);
-+	struct kvm_vcpu *vcpu =3D container_of(t, struct kvm_vcpu, arch.timer);
-+
-+	t->next_set =3D false;
-+	kvm_riscv_vcpu_set_interrupt(vcpu, IRQ_S_TIMER);
-+
-+	return HRTIMER_NORESTART;
-+}
-+
-+static u64 kvm_riscv_delta_cycles2ns(u64 cycles, struct kvm_vcpu_timer *t)
-+{
-+	unsigned long flags;
-+	u64 cycles_now, cycles_delta, delta_ns;
-+
-+	local_irq_save(flags);
-+	cycles_now =3D get_cycles64();
-+	if (cycles_now < cycles)
-+		cycles_delta =3D cycles - cycles_now;
-+	else
-+		cycles_delta =3D 0;
-+	delta_ns =3D (cycles_delta * t->mult) >> t->shift;
-+	local_irq_restore(flags);
-+
-+	return delta_ns;
-+}
-+
-+static int kvm_riscv_vcpu_timer_cancel(struct kvm_vcpu_timer *t)
-+{
-+	if (!t->init_done || !t->next_set)
-+		return -EINVAL;
-+
-+	hrtimer_cancel(&t->hrt);
-+	t->next_set =3D false;
-+
-+	return 0;
-+}
-+
-+int kvm_riscv_vcpu_timer_next_event(struct kvm_vcpu *vcpu, u64 ncycles)
-+{
-+	struct kvm_vcpu_timer *t =3D &vcpu->arch.timer;
-+	u64 delta_ns =3D kvm_riscv_delta_cycles2ns(ncycles, t);
-+
-+	if (!t->init_done)
-+		return -EINVAL;
-+
-+	if (t->next_set) {
-+		hrtimer_cancel(&t->hrt);
-+		t->next_set =3D false;
-+	}
-+
-+	kvm_riscv_vcpu_unset_interrupt(vcpu, IRQ_S_TIMER);
-+
-+	if (delta_ns > VCPU_TIMER_PROGRAM_THRESHOLD_NS) {
-+		hrtimer_start(&t->hrt, ktime_add_ns(ktime_get(), delta_ns),
-+			      HRTIMER_MODE_ABS);
-+		t->next_cycles =3D ncycles;
-+		t->next_set =3D true;
-+	} else
-+		kvm_riscv_vcpu_set_interrupt(vcpu, IRQ_S_TIMER);
-+
-+	return 0;
-+}
-+
-+int kvm_riscv_vcpu_timer_init(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_vcpu_timer *t =3D &vcpu->arch.timer;
-+
-+	if (t->init_done)
-+		return -EINVAL;
-+
-+	hrtimer_init(&t->hrt, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
-+	t->hrt.function =3D kvm_riscv_vcpu_hrtimer_expired;
-+	t->init_done =3D true;
-+	t->next_set =3D false;
-+
-+	riscv_cs_get_mult_shift(&t->mult, &t->shift);
-+
-+	return 0;
-+}
-+
-+int kvm_riscv_vcpu_timer_deinit(struct kvm_vcpu *vcpu)
-+{
-+	int ret;
-+
-+	ret =3D kvm_riscv_vcpu_timer_cancel(&vcpu->arch.timer);
-+	vcpu->arch.timer.init_done =3D false;
-+
-+	return ret;
-+}
-+
-+int kvm_riscv_vcpu_timer_reset(struct kvm_vcpu *vcpu)
-+{
-+	return kvm_riscv_vcpu_timer_cancel(&vcpu->arch.timer);
-+}
-diff --git a/drivers/clocksource/timer-riscv.c b/drivers/clocksource/timer-=
-riscv.c
-index 09e031176bc6..7c595203aa5c 100644
---- a/drivers/clocksource/timer-riscv.c
-+++ b/drivers/clocksource/timer-riscv.c
-@@ -8,6 +8,7 @@
- #include <linux/cpu.h>
- #include <linux/delay.h>
- #include <linux/irq.h>
-+#include <linux/module.h>
- #include <linux/sched_clock.h>
- #include <asm/smp.h>
- #include <asm/sbi.h>
-@@ -80,6 +81,13 @@ static int riscv_timer_dying_cpu(unsigned int cpu)
- 	return 0;
- }
-=20
-+void riscv_cs_get_mult_shift(u32 *mult, u32 *shift)
-+{
-+	*mult =3D riscv_clocksource.mult;
-+	*shift =3D riscv_clocksource.shift;
-+}
-+EXPORT_SYMBOL_GPL(riscv_cs_get_mult_shift);
-+
- /* called directly from the low-level interrupt handler */
- void riscv_timer_interrupt(void)
- {
-diff --git a/include/clocksource/timer-riscv.h b/include/clocksource/timer-=
-riscv.h
-new file mode 100644
-index 000000000000..e94e4feecbe8
---- /dev/null
-+++ b/include/clocksource/timer-riscv.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2019 Western Digital Corporation or its affiliates.
-+ *
-+ * Authors:
-+ *	Atish Patra <atish.patra@wdc.com>
-+ */
-+
-+#ifndef __TIMER_RISCV_H
-+#define __TIMER_RISCV_H
-+
-+#include <linux/types.h>
-+
-+void riscv_cs_get_mult_shift(u32 *mult, u32 *shift);
-+
-+#endif
---=20
-2.17.1
-
+>       Arnd
+> 
