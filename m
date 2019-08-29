@@ -2,185 +2,123 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC09C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 210A2C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F8B208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:04:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ez6J3AZe"
+	by mail.kernel.org (Postfix) with ESMTP id ED9DF23426
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 20:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbfH2UEY (ORCPT
+        id S1728262AbfH2UEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 16:04:24 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46264 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbfH2UEX (ORCPT
+        Thu, 29 Aug 2019 16:04:51 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21970 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726512AbfH2UEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 16:04:23 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h7so3347352wrt.13;
-        Thu, 29 Aug 2019 13:04:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HsxpJcZSI71PdCWjAkEI23BizxSa4mt7mKkj5knkHJs=;
-        b=Ez6J3AZe/WF5Yml9bO2ExN1KMW03AKxwOL3oBqgvWpWj6G84BtxInZGF/413TlfIgO
-         x+R55BiM8L3DgmrVXvvDSp4xGS8QJhJCWqK9krNlNhaghxkTUbA7L7nRyHe61SNbQoHC
-         6KkI1Zr1XadMUQ5ma5eHwAUaicqYIE5GXhWvgo8ilxrHE+5rNaRTUW5Glj4Fz+XF51tI
-         p02cW7PooE1ZUdj1v/StUN3mKTZMb9A6qN+azExuMTcwkJFEbmFhu7GLEj+rlz6XLX0K
-         TY9BdnJZgsTiLLqugA3UzQexI2eCQ7GgVzhs8wDwJp1f+ALAmg1nX4fZxZrKOdzkQylj
-         Brnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=HsxpJcZSI71PdCWjAkEI23BizxSa4mt7mKkj5knkHJs=;
-        b=odGR2Ww9byKHfrztZDdyQFyFaLeo7YRxQ7YcPCyIg+t/zCZmn02WlhrCVb9uBTDeHD
-         elESAZhiivy17BrnhwD6y5HWxUXxSXOrZ6VL8sHNXapyCEQVKdpci1w8ABtDngwHC3TF
-         teArrO9GLE5nOi3Rp5qyEs/PzWrrgcsEL6BG4uIrMIZaeUHoqvZz8vKyxdC5/OKyicjA
-         iRd7ogwIGHoQ9LUrAS2OtQcovpjSokxMKrVkY80x+Gbs/HfUTJEqESz/Av77CUBLd+ZA
-         i2buhg+YO7xTIvnqgu+bage4ero57sZ3mzOZD7qfcrM/e9O48RC9aYMDZpuQQlFQvU1J
-         u9Ow==
-X-Gm-Message-State: APjAAAWoUFtMiJJJHTuU9g/Zw98gEbHLV3iP8DDYvDIlEkY2gcbsWj0T
-        3LWEIh+6OdrrbTczilZ+pcnN7bYL
-X-Google-Smtp-Source: APXvYqxtibjKrr/KvWr5UbETlkyol0MTxzoL3XGdEsYm7yknBbV/+FHTJNNthym+pRW1/5qwSy/LLA==
-X-Received: by 2002:adf:e74c:: with SMTP id c12mr13676906wrn.173.1567109060940;
-        Thu, 29 Aug 2019 13:04:20 -0700 (PDT)
-Received: from [192.168.1.19] (cjm4.neoplus.adsl.tpnet.pl. [83.31.62.4])
-        by smtp.gmail.com with ESMTPSA id j20sm6671531wre.65.2019.08.29.13.04.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 13:04:20 -0700 (PDT)
-Subject: Re: [PATCH] leds: lm3532: Fix optional led-max-microamp prop error
- handling
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190829191836.9648-1-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <ff3a0662-a71b-79d5-6d28-a882f9f77f89@gmail.com>
-Date:   Thu, 29 Aug 2019 22:04:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 29 Aug 2019 16:04:51 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7TK233X040496;
+        Thu, 29 Aug 2019 16:04:10 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2upna189g9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Aug 2019 16:04:10 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7TK3CUI024417;
+        Thu, 29 Aug 2019 20:04:09 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma02wdc.us.ibm.com with ESMTP id 2ujvv6xcru-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Aug 2019 20:04:09 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7TK49RY51642816
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 20:04:09 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 564A2112062;
+        Thu, 29 Aug 2019 20:04:09 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CE290112061;
+        Thu, 29 Aug 2019 20:04:07 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.111])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 29 Aug 2019 20:04:07 +0000 (GMT)
+Message-ID: <db0f02c5b1a995fde174f036540a3d11008cf116.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 1/1] netfilter: nf_tables: fib: Drop IPV6 packages if
+ IPv6 is disabled on boot
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Date:   Thu, 29 Aug 2019 17:04:03 -0300
+In-Reply-To: <20190821141505.2394-1-leonardo@linux.ibm.com>
+References: <20190821141505.2394-1-leonardo@linux.ibm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-FHDAs17k+gbMZaWPCpYr"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <20190829191836.9648-1-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=845 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908290200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
 
-Thanks for the update.
+--=-FHDAs17k+gbMZaWPCpYr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 8/29/19 9:18 PM, Dan Murphy wrote:
-> Fix the error handling for the led-max-microamp property.
-> Need to check if the property is present and then if it is
-> retrieve the setting and its max boundary
-> 
-> Reported-by: Pavel Machek <pavel@ucw.cz>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  drivers/leds/leds-lm3532.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
-> index c5cfd8e3f15f..13b4265fb85a 100644
-> --- a/drivers/leds/leds-lm3532.c
-> +++ b/drivers/leds/leds-lm3532.c
-> @@ -601,11 +601,15 @@ static int lm3532_parse_node(struct lm3532_data *priv)
->  			goto child_out;
->  		}
->  
-> -		ret = fwnode_property_read_u32(child, "led-max-microamp",
-> -					       &led->full_scale_current);
-> -
-> -		if (led->full_scale_current > LM3532_FS_CURR_MAX)
-> -			led->full_scale_current = LM3532_FS_CURR_MAX;
-> +		if (fwnode_property_present(child, "led-max-microamp")) {
-> +			if (fwnode_property_read_u32(child, "led-max-microamp",
-> +						     &led->full_scale_current))
-> +				dev_err(&priv->client->dev,
-> +					"Failed getting led-max-microamp\n");
-> +
-> +			if (led->full_scale_current > LM3532_FS_CURR_MAX)
-> +				led->full_scale_current = LM3532_FS_CURR_MAX;
+> Thats a good point -- Leonardo, is the
+> "net.bridge.bridge-nf-call-ip6tables" sysctl on?
 
-One more nit: we have min() macro in kernel.h for such things.
+Running
+# sudo sysctl -a
+I can see:
+net.bridge.bridge-nf-call-ip6tables =3D 1
+=20
+So this packets are sent to host iptables for processing?
 
-> +		}
->  
->  		if (led->mode == LM3532_BL_MODE_ALS) {
->  			led->mode = LM3532_ALS_CTRL;
-> 
 
--- 
-Best regards,
-Jacek Anaszewski
+(Sorry for the delay, I did not received the previous e-mails.
+Please include me in to/cc.)
+
+--=-FHDAs17k+gbMZaWPCpYr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1oL7MACgkQlQYWtz9S
+ttSUbA/5AUisorNqlRZnWcdh7AysMoIkbIMEP9J2EMxnJap4lGlqu2SG/C1SSRFK
+zOkU8AeQWHoGIwktUdJGxaux1os6s9mY3NQNmwKeQvr6Hc2IjmUfwjxNiDJMHvyE
+oSH5BuAmP8o/DDDRDmH1MHDJVdmBabmnegjxip+II14jj+gOZ9XzyMeNmBIozaYv
+y9puT0TSpYkR0QiwJ4BKOi2/zPlT1wuvDMdK66ywakTwzqNPVgA89X4e8c3EwBcM
+TjBArAtxAD1P7sm8bN00s/Tm7i1E+DTO2McHwUJdpoFbH0K4UTUxjvkhgE5LhFXH
+2aHGIErLQrTiCX7xmqMPNO3/fVC67Y1TW+AOhKWLZaYtwS82WncSzeRMsnOr0TaH
+UqVsqqZS2H56G5kBRypF5iKvf5dMLDPmWiHru7YVupMEb5oKJaofvy0HPUQ5FLam
+6tMT+xC0DUUFyZkc1t+KCxyZr/zD8yxGck7qOQJqsJn0uM3sQZ54W31iYgpr/q0H
+TUoxRZJS9J/rpoJyryVmE7V2tWJmpyP7sMvcNbu6o8odvrRvzjCZXKXN7r6r5ghG
+iTNe70wJMeHrgamx95Xbj3LAXRD7HNAVrIxh0S3nWo5Cc76ByOk3IN0SBTMpxt5G
+D0nlzyVzNorW76LvMIEfxMECpG5KtTC7OInYlnZue0zLblJR9ZU=
+=Idus
+-----END PGP SIGNATURE-----
+
+--=-FHDAs17k+gbMZaWPCpYr--
+
