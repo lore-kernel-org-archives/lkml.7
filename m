@@ -2,343 +2,91 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 627E3C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A373C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0B92073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DDBC2073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 06:40:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727739AbfH2GkS (ORCPT
+        id S1727794AbfH2Gkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 02:40:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:39614 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727595AbfH2GkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 02:40:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4688D360;
-        Wed, 28 Aug 2019 23:40:15 -0700 (PDT)
-Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E96193F246;
-        Wed, 28 Aug 2019 23:42:33 -0700 (PDT)
-From:   Jianyong Wu <jianyong.wu@arm.com>
-To:     netdev@vger.kernel.org, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, maz@kernel.org,
-        richardcochran@gmail.com, Mark.Rutland@arm.com,
-        Will.Deacon@arm.com, suzuki.poulose@arm.com
-Cc:     linux-kernel@vger.kernel.org, Steve.Capper@arm.com,
-        Kaly.Xin@arm.com, justin.he@arm.com, jianyong.wu@arm.com
-Subject: [RFC PATCH 3/3] Enable ptp_kvm for arm64
-Date:   Thu, 29 Aug 2019 02:39:52 -0400
-Message-Id: <20190829063952.18470-4-jianyong.wu@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190829063952.18470-1-jianyong.wu@arm.com>
-References: <20190829063952.18470-1-jianyong.wu@arm.com>
+        Thu, 29 Aug 2019 02:40:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49053 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727741AbfH2Gkl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 02:40:41 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i3E6n-0002qD-96; Thu, 29 Aug 2019 08:40:37 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 220B51C07C3;
+        Thu, 29 Aug 2019 08:40:36 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 06:40:35 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] posix-timers: Unbreak CONFIG_POSIX_TIMERS=n build
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+Message-ID: <156706083595.5671.10077704238426235734.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently in arm64 virtualization environment, there is no mechanism to
-keep time sync between guest and host. Time in guest will drift compared
-with host after boot up as they may both use third party time sources
-to correct their time respectively. The time deviation will be in order
-of milliseconds but some scenarios ask for higher time precision, like
-in cloud envirenment, we want all the VMs running in the host aquire the
-same level accuracy from host clock.
+The following commit has been merged into the timers/core branch of tip:
 
-Use of kvm ptp clock, which choose the host clock source clock as a
-reference clock to sync time clock between guest and host has been adopted
-by x86 which makes the time sync order from milliseconds to nanoseconds.
+Commit-ID:     8f2edb4a78f7f5fa35c025849152b1d2dfaee4eb
+Gitweb:        https://git.kernel.org/tip/8f2edb4a78f7f5fa35c025849152b1d2dfaee4eb
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 29 Aug 2019 08:19:40 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 29 Aug 2019 08:25:21 +02:00
 
-This patch enable kvm ptp on arm64 and we get the similar clock drift as
-found with x86 with kvm ptp.
+posix-timers: Unbreak CONFIG_POSIX_TIMERS=n build
 
-Test result comparison between with kvm ptp and without it in arm64 are
-as follows. This test derived from the result of command 'chronyc
-sources'. we should take more cure of the last sample column which shows
-the offset between the local clock and the source at the last measurement.
+The rework of the posix-cpu-timers patch series dropped the empty
+declaration of struct cpu_timer for the CONFIG_POSIX_TIMERS=n case which
+causes the build to fail:
 
-no kvm ptp in guest:
-MS Name/IP address   Stratum Poll Reach LastRx Last sample
-========================================================================
-^* dns1.synet.edu.cn      2   6   377    13  +1040us[+1581us] +/-   21ms
-^* dns1.synet.edu.cn      2   6   377    21  +1040us[+1581us] +/-   21ms
-^* dns1.synet.edu.cn      2   6   377    29  +1040us[+1581us] +/-   21ms
-^* dns1.synet.edu.cn      2   6   377    37  +1040us[+1581us] +/-   21ms
-^* dns1.synet.edu.cn      2   6   377    45  +1040us[+1581us] +/-   21ms
-^* dns1.synet.edu.cn      2   6   377    53  +1040us[+1581us] +/-   21ms
-^* dns1.synet.edu.cn      2   6   377    61  +1040us[+1581us] +/-   21ms
-^* dns1.synet.edu.cn      2   6   377     4   -130us[ +796us] +/-   21ms
-^* dns1.synet.edu.cn      2   6   377    12   -130us[ +796us] +/-   21ms
-^* dns1.synet.edu.cn      2   6   377    20   -130us[ +796us] +/-   21ms
+./include/linux/posix-timers.h:218:20: error: field 'cpu' has incomplete type
 
-in host:
-MS Name/IP address   Stratum Poll Reach LastRx Last sample
-========================================================================
-^* 120.25.115.20          2   7   377    72   -470us[ -603us] +/-   18ms
-^* 120.25.115.20          2   7   377    92   -470us[ -603us] +/-   18ms
-^* 120.25.115.20          2   7   377   112   -470us[ -603us] +/-   18ms
-^* 120.25.115.20          2   7   377     2   +872ns[-6808ns] +/-   17ms
-^* 120.25.115.20          2   7   377    22   +872ns[-6808ns] +/-   17ms
-^* 120.25.115.20          2   7   377    43   +872ns[-6808ns] +/-   17ms
-^* 120.25.115.20          2   7   377    63   +872ns[-6808ns] +/-   17ms
-^* 120.25.115.20          2   7   377    83   +872ns[-6808ns] +/-   17ms
-^* 120.25.115.20          2   7   377   103   +872ns[-6808ns] +/-   17ms
-^* 120.25.115.20          2   7   377   123   +872ns[-6808ns] +/-   17ms
+Add it back.
 
-The dns1.synet.edu.cn is the network reference clock for guest and
-120.25.115.20 is the network reference clock for host. we can't get the
-clock error between guest and host directly, but a roughly estimated value
-will be in order of hundreds of us to ms.
-
-with kvm ptp in guest:
-chrony has been disabled in host to remove the disturb by network clock.
-
-MS Name/IP address         Stratum Poll Reach LastRx Last sample
-========================================================================
-* PHC0                    0   3   377     8     -7ns[   +1ns] +/-    3ns
-* PHC0                    0   3   377     8     +1ns[  +16ns] +/-    3ns
-* PHC0                    0   3   377     6     -4ns[   -0ns] +/-    6ns
-* PHC0                    0   3   377     6     -8ns[  -12ns] +/-    5ns
-* PHC0                    0   3   377     5     +2ns[   +4ns] +/-    4ns
-* PHC0                    0   3   377    13     +2ns[   +4ns] +/-    4ns
-* PHC0                    0   3   377    12     -4ns[   -6ns] +/-    4ns
-* PHC0                    0   3   377    11     -8ns[  -11ns] +/-    6ns
-* PHC0                    0   3   377    10    -14ns[  -20ns] +/-    4ns
-* PHC0                    0   3   377     8     +4ns[   +5ns] +/-    4ns
-
-The PHC0 is the ptp clock which choose the host clock as its source
-clock. So we can be sure to say that the clock error between host and guest
-is in order of ns.
-
-Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+Fixes: 60bda037f1dd ("posix-cpu-timers: Utilize timerqueue for storage")
+Reported-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/arm64/include/asm/arch_timer.h  |  3 ++
- arch/arm64/kvm/arch_ptp_kvm.c        | 76 ++++++++++++++++++++++++++++
- drivers/clocksource/arm_arch_timer.c |  6 ++-
- drivers/ptp/Kconfig                  |  2 +-
- include/linux/arm-smccc.h            | 14 +++++
- virt/kvm/arm/psci.c                  | 17 +++++++
- 6 files changed, 115 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm64/kvm/arch_ptp_kvm.c
+ include/linux/posix-timers.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
-index 6756178c27db..880576a814b6 100644
---- a/arch/arm64/include/asm/arch_timer.h
-+++ b/arch/arm64/include/asm/arch_timer.h
-@@ -229,4 +229,7 @@ static inline int arch_timer_arch_init(void)
- 	return 0;
- }
- 
-+extern struct clocksource clocksource_counter;
-+extern u64 arch_counter_read(struct clocksource *cs);
-+
- #endif
-diff --git a/arch/arm64/kvm/arch_ptp_kvm.c b/arch/arm64/kvm/arch_ptp_kvm.c
-new file mode 100644
-index 000000000000..6b2165ebce62
---- /dev/null
-+++ b/arch/arm64/kvm/arch_ptp_kvm.c
-@@ -0,0 +1,76 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ *  Virtual PTP 1588 clock for use with KVM guests
-+ *  Copyright (C) 2019 ARM Ltd.
-+ *  All Rights Reserved
-+ */
-+
-+#include <asm/hypervisor.h>
-+#include <linux/module.h>
-+#include <linux/psci.h>
-+#include <linux/arm-smccc.h>
-+#include <linux/timecounter.h>
-+#include <linux/sched/clock.h>
-+#include <asm/arch_timer.h>
-+
-+/*
-+ * as trap call cause delay, this function will return the delay in nanosecond
-+ */
-+static u64 arm_smccc_1_1_invoke_delay(u32 id, struct arm_smccc_res *res)
-+{
-+	u64 ns, t1, t2;
-+
-+	t1 = sched_clock();
-+	arm_smccc_1_1_invoke(id, res);
-+	t2 = sched_clock();
-+	t2 -= t1;
-+	ns = t2;
-+	return ns;
-+}
-+
-+int kvm_arch_ptp_init(void)
-+{
-+	return 0;
-+}
-+
-+int kvm_arch_ptp_get_clock(struct timespec64 *ts)
-+{
-+	u64 ns;
-+	struct arm_smccc_res hvc_res;
-+
-+	if (!kvm_arm_hyp_service_available(
-+			ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID)) {
-+		return -EOPNOTSUPP;
-+	}
-+	ns = arm_smccc_1_1_invoke_delay(ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID,
-+					&hvc_res);
-+	ts->tv_sec = hvc_res.a0;
-+	ts->tv_nsec = hvc_res.a1;
-+	timespec64_add_ns(ts, ns);
-+	return 0;
-+}
-+
-+int kvm_arch_ptp_get_clock_fn(long *cycle, struct timespec64 *ts,
-+			      struct clocksource **cs)
-+{
-+	u64 ns;
-+	struct arm_smccc_res hvc_res;
-+
-+	if (!kvm_arm_hyp_service_available(
-+			ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID)) {
-+		return -EOPNOTSUPP;
-+	}
-+	ns = arm_smccc_1_1_invoke_delay(ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID,
-+					&hvc_res);
-+	ts->tv_sec = hvc_res.a0;
-+	ts->tv_nsec = hvc_res.a1;
-+	timespec64_add_ns(ts, ns);
-+	*cycle = hvc_res.a2;
-+	*cs = &clocksource_counter;
-+
-+	return 0;
-+}
-+
-+MODULE_AUTHOR("Marcelo Tosatti <mtosatti@redhat.com>");
-+MODULE_DESCRIPTION("PTP clock using KVMCLOCK");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index 07e57a49d1e8..021e3f69364c 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -175,23 +175,25 @@ static notrace u64 arch_counter_get_cntvct(void)
- u64 (*arch_timer_read_counter)(void) = arch_counter_get_cntvct;
- EXPORT_SYMBOL_GPL(arch_timer_read_counter);
- 
--static u64 arch_counter_read(struct clocksource *cs)
-+u64 arch_counter_read(struct clocksource *cs)
- {
- 	return arch_timer_read_counter();
- }
-+EXPORT_SYMBOL(arch_counter_read);
- 
- static u64 arch_counter_read_cc(const struct cyclecounter *cc)
- {
- 	return arch_timer_read_counter();
- }
- 
--static struct clocksource clocksource_counter = {
-+struct clocksource clocksource_counter = {
- 	.name	= "arch_sys_counter",
- 	.rating	= 400,
- 	.read	= arch_counter_read,
- 	.mask	= CLOCKSOURCE_MASK(56),
- 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
- };
-+EXPORT_SYMBOL(clocksource_counter);
- 
- static struct cyclecounter cyclecounter __ro_after_init = {
- 	.read	= arch_counter_read_cc,
-diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig
-index 9b8fee5178e8..e032fafdafa7 100644
---- a/drivers/ptp/Kconfig
-+++ b/drivers/ptp/Kconfig
-@@ -110,7 +110,7 @@ config PTP_1588_CLOCK_PCH
- config PTP_1588_CLOCK_KVM
- 	tristate "KVM virtual PTP clock"
- 	depends on PTP_1588_CLOCK
--	depends on KVM_GUEST && X86
-+	depends on KVM_GUEST && X86 || ARM64
- 	default y
- 	help
- 	  This driver adds support for using kvm infrastructure as a PTP
-diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-index a6e4d3e3d10a..2a222a1a8594 100644
---- a/include/linux/arm-smccc.h
-+++ b/include/linux/arm-smccc.h
-@@ -94,6 +94,7 @@
- 
- /* KVM "vendor specific" services */
- #define ARM_SMCCC_KVM_FUNC_FEATURES		0
-+#define ARM_SMCCC_KVM_PTP			1
- #define ARM_SMCCC_KVM_FUNC_FEATURES_2		127
- #define ARM_SMCCC_KVM_NUM_FUNCS			128
- 
-@@ -102,6 +103,16 @@
- 			   ARM_SMCCC_SMC_32,				\
- 			   ARM_SMCCC_OWNER_VENDOR_HYP,			\
- 			   ARM_SMCCC_KVM_FUNC_FEATURES)
-+/*
-+ * This ID used for virtual ptp kvm clock and it will pass second value
-+ * and nanosecond value of host real time and system counter by vcpu
-+ * register to guest.
-+ */
-+#define ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID				\
-+	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,				\
-+			   ARM_SMCCC_SMC_32,				\
-+			   ARM_SMCCC_OWNER_VENDOR_HYP,			\
-+			   ARM_SMCCC_KVM_PTP)
- 
- #ifndef __ASSEMBLY__
- 
-@@ -373,5 +384,8 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
- 		method;							\
- 	})
- 
-+#include <linux/psci.h>
-+#include <linux/clocksource.h>
-+
- #endif /*__ASSEMBLY__*/
- #endif /*__LINUX_ARM_SMCCC_H*/
-diff --git a/virt/kvm/arm/psci.c b/virt/kvm/arm/psci.c
-index 0debf49bf259..7fffdb25d32c 100644
---- a/virt/kvm/arm/psci.c
-+++ b/virt/kvm/arm/psci.c
-@@ -392,6 +392,8 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
- 	u32 func_id = smccc_get_function(vcpu);
- 	u32 val[4] = {};
- 	u32 option;
-+	struct timespec *ts;
-+	u64 cnt;
- 
- 	val[0] = SMCCC_RET_NOT_SUPPORTED;
- 
-@@ -431,6 +433,21 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
- 	case ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID:
- 		val[0] = BIT(ARM_SMCCC_KVM_FUNC_FEATURES);
- 		break;
-+	/*
-+	 * This will used for virtual ptp kvm clock. three
-+	 * values will be passed back.
-+	 * reg0 stores seconds of host real time;
-+	 * reg1 stores nanoseconds of host real time;
-+	 * reg2 stotes system counter cycle value.
-+	 */
-+	case ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID:
-+		getnstimeofday(ts);
-+		cnt = arch_timer_read_counter();
-+		val[0] = ts->tv_sec;
-+		val[1] = ts->tv_nsec;
-+		val[2] = cnt;
-+		val[3] = 0;
-+		break;
- 	default:
- 		return kvm_psci_call(vcpu);
- 	}
--- 
-2.17.1
-
+diff --git a/include/linux/posix-timers.h b/include/linux/posix-timers.h
+index f9fbb4c..e685916 100644
+--- a/include/linux/posix-timers.h
++++ b/include/linux/posix-timers.h
+@@ -161,6 +161,7 @@ static inline void posix_cputimers_rt_watchdog(struct posix_cputimers *pct,
+ 	},
+ #else
+ struct posix_cputimers { };
++struct cpu_timer { };
+ #define INIT_CPU_TIMERS(s)
+ static inline void posix_cputimers_init(struct posix_cputimers *pct) { }
+ static inline void posix_cputimers_group_init(struct posix_cputimers *pct,
