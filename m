@@ -7,48 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8B5C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3C0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B6C23403
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00FF233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 10:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567075942;
-	bh=xoxk9jxkuoOZfhocIiS0de+uIj2KTFu3DX/VP0RtgBo=;
+	s=default; t=1567075950;
+	bh=qlCOFZjNYI2nNPOt+PsqTthpDctJ6cRrpNMdWEJrrLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GqliGvaMr7umS1nYbqlP/NjtDvBWxNF+4B9YVJRIAqvSGcOTi76CFH9Lc9F+QtPmB
-	 K99OfidXWlxOLPUB18C8SoZ7nJORgFk3c3KQrOKGAIS506d6AVKiCgT/lkVZiN/PoF
-	 VlVwbD37aJhfjC4syce+x+f5v0dHG4+Vr/tP4v8M=
+	b=B1uICfAA6Rn3B0Tf56svN4S55vhjJdA3QjQ0EiKxNCrMcHptl+lPOzSVH+K5XFiyX
+	 YsZZFZKesl4dQwqrl9pxhPy4WIJP2IVEcsP0UcsoTPsS7pEp7pWzcxwkNQZrdMB9Dh
+	 Iq5G//wv2UvVWrmBF+xT5iQZP7+6HzqPQyDAxDfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbfH2KwR (ORCPT
+        id S1728757AbfH2Kwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 06:52:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59222 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 06:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728559AbfH2KvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:51:17 -0400
+        id S1728546AbfH2KvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:51:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5A8323405;
-        Thu, 29 Aug 2019 10:51:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D84EB2173E;
+        Thu, 29 Aug 2019 10:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075876;
-        bh=xoxk9jxkuoOZfhocIiS0de+uIj2KTFu3DX/VP0RtgBo=;
+        s=default; t=1567075874;
+        bh=qlCOFZjNYI2nNPOt+PsqTthpDctJ6cRrpNMdWEJrrLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r3OoZLel88WVmEfiqRKSbY/RmZYPSWeyjk62ZZdbnzK84bpyZvfDRxWE27JyhuOLA
-         dpH+d6gZ8yUUhNcMkw2IHbrIWLaZq9Ma/Gnw7z2ycY3AbL/Qi3mA0eElYikNhPOO2c
-         2hq0yAma89xBmSS+J7yFOZ/Ex3tXeEQ11Ye4v02I=
+        b=P+clGxND6JmQeK5rrFLFqq22mIFy1Bttpej90QRx089OxvcUyLjorf7Y6nc/uI0n/
+         b/5+SIYCqetzQPdShjVZkXWTNJ8f25+FCusHJ1WHnk+W45j4rEYy8PONmf3amH4/6A
+         eKSxdpr9xt2KC1qJHNwg9fmvls4Pco0jdTfGCijs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jann Horn <jannh@google.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 4/6] scripts/decode_stacktrace: match basepath using shell prefix operator, not regex
-Date:   Thu, 29 Aug 2019 06:51:08 -0400
-Message-Id: <20190829105110.2748-4-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 2/6] userfaultfd_release: always remove uffd flags and clear vm_userfaultfd_ctx
+Date:   Thu, 29 Aug 2019 06:51:06 -0400
+Message-Id: <20190829105110.2748-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829105110.2748-1-sashal@kernel.org>
 References: <20190829105110.2748-1-sashal@kernel.org>
@@ -61,37 +68,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Oleg Nesterov <oleg@redhat.com>
 
-[ Upstream commit 31013836a71e07751a6827f9d2ad41ef502ddaff ]
+[ Upstream commit 46d0b24c5ee10a15dfb25e20642f5a5ed59c5003 ]
 
-The basepath may contain special characters, which would confuse the regex
-matcher.  ${var#prefix} does the right thing.
+userfaultfd_release() should clear vm_flags/vm_userfaultfd_ctx even if
+mm->core_state != NULL.
 
-Link: http://lkml.kernel.org/r/20190518055946.181563-1-drinkcat@chromium.org
-Fixes: 67a28de47faa8358 ("scripts/decode_stacktrace: only strip base path when a prefix of the path")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Otherwise a page fault can see userfaultfd_missing() == T and use an
+already freed userfaultfd_ctx.
+
+Link: http://lkml.kernel.org/r/20190820160237.GB4983@redhat.com
+Fixes: 04f5866e41fb ("coredump: fix race condition between mmget_not_zero()/get_task_mm() and core dumping")
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
+Tested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/decode_stacktrace.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/userfaultfd.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
-index ffc46c7c3afbb..4f5e76f76b9dc 100755
---- a/scripts/decode_stacktrace.sh
-+++ b/scripts/decode_stacktrace.sh
-@@ -64,7 +64,7 @@ parse_symbol() {
- 	fi
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index f187e02d267e2..fe1c146f4032e 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -431,6 +431,7 @@ static int userfaultfd_release(struct inode *inode, struct file *file)
+ 	/* len == 0 means wake all */
+ 	struct userfaultfd_wake_range range = { .len = 0, };
+ 	unsigned long new_flags;
++	bool still_valid;
  
- 	# Strip out the base of the path
--	code=${code//^$basepath/""}
-+	code=${code#$basepath/}
+ 	ACCESS_ONCE(ctx->released) = true;
  
- 	# In the case of inlines, move everything to same line
- 	code=${code//$'\n'/' '}
+@@ -446,8 +447,7 @@ static int userfaultfd_release(struct inode *inode, struct file *file)
+ 	 * taking the mmap_sem for writing.
+ 	 */
+ 	down_write(&mm->mmap_sem);
+-	if (!mmget_still_valid(mm))
+-		goto skip_mm;
++	still_valid = mmget_still_valid(mm);
+ 	prev = NULL;
+ 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
+ 		cond_resched();
+@@ -458,19 +458,20 @@ static int userfaultfd_release(struct inode *inode, struct file *file)
+ 			continue;
+ 		}
+ 		new_flags = vma->vm_flags & ~(VM_UFFD_MISSING | VM_UFFD_WP);
+-		prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
+-				 new_flags, vma->anon_vma,
+-				 vma->vm_file, vma->vm_pgoff,
+-				 vma_policy(vma),
+-				 NULL_VM_UFFD_CTX);
+-		if (prev)
+-			vma = prev;
+-		else
+-			prev = vma;
++		if (still_valid) {
++			prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
++					 new_flags, vma->anon_vma,
++					 vma->vm_file, vma->vm_pgoff,
++					 vma_policy(vma),
++					 NULL_VM_UFFD_CTX);
++			if (prev)
++				vma = prev;
++			else
++				prev = vma;
++		}
+ 		vma->vm_flags = new_flags;
+ 		vma->vm_userfaultfd_ctx = NULL_VM_UFFD_CTX;
+ 	}
+-skip_mm:
+ 	up_write(&mm->mmap_sem);
+ 	mmput(mm);
+ wakeup:
 -- 
 2.20.1
 
