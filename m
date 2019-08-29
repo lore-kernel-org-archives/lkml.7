@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEBBC3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 442D2C3A59F
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566FC21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13BD621874
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 18:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567103004;
-	bh=G+q8W9sK4tWUBv/SVJYq/UI4thG9R3b2NXanC0w+jRg=;
+	s=default; t=1567103010;
+	bh=JfugwJoZrrcuXr7gxgP+D6FbKzm1spHA1BgCwXHQ4GA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FdMau0YnWcpGEyE45CqHNXl9gcCuWbgRK6XE57rD9Ndty+OyKsqU+nXToNFxu7Nex
-	 Ksw5hbyWYawoLbqzIiSwM1BII5UEZBjh4uVlKQ+UJMY3HykrGxVAmTYlQcJ+W1XLd2
-	 cR/Fc9vwipLnpco0GVF9/0ld8ynTRa+VfYpcuiBY=
+	b=n2abiMUNNVjtXDu1T1DixRl4pKkG0ih/z+jJ1ptztdBPZB2riLnWXKM6UAuUvcN9x
+	 QVgdf2DUwh2/Rn7JV3fu5OjxAuVCcv0HLQucSJHigOCKENp8SvhzQIzXmSe3c30812
+	 1IXYSkrO71O4yb8zjuPqYGKpj6kF4wgkR92aIKYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729897AbfH2SQ4 (ORCPT
+        id S1729420AbfH2SX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 14:16:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58800 "EHLO mail.kernel.org"
+        Thu, 29 Aug 2019 14:23:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729802AbfH2SQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:47 -0400
+        id S1728488AbfH2SQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:16:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B0372189D;
-        Thu, 29 Aug 2019 18:16:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DCBA2189D;
+        Thu, 29 Aug 2019 18:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102606;
-        bh=G+q8W9sK4tWUBv/SVJYq/UI4thG9R3b2NXanC0w+jRg=;
+        s=default; t=1567102610;
+        bh=JfugwJoZrrcuXr7gxgP+D6FbKzm1spHA1BgCwXHQ4GA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ykXvNeHps+u+xtRwmj1hChZFSgQ3JxzgqzCo2x/gvrTJZGQt2eFLxLxrzKL4TNR8+
-         k5t3eWCj4YN0gTcHv99a64B74yP+tGmFp1DWJsjgddbl+Zcj675tymptD2efMpzCqc
-         2bY1OJFwOKcKJQrhhtCI1UodPncW0x9zK46SSeN4=
+        b=Dp/Jur9Ya1Hz7dxqlXHVGBWranCQQbnva3yUu8GluHcDH821GnNO6o1lb83yH32aZ
+         vJRKwoH4aCrhK2smDWsK+lKz5NX6KsQ9DWhHc/xn/zZ1HcXX1I4bqPqc4lE028IJBz
+         aHEVUkzHmtYT70KHvgGiBZtLSeZ8JdHg/NVX4eQc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 40/45] ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
-Date:   Thu, 29 Aug 2019 14:15:40 -0400
-Message-Id: <20190829181547.8280-40-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 44/45] afs: Fix leak in afs_lookup_cell_rcu()
+Date:   Thu, 29 Aug 2019 14:15:44 -0400
+Message-Id: <20190829181547.8280-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
 References: <20190829181547.8280-1-sashal@kernel.org>
@@ -60,91 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <lhenriques@suse.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 86968ef21596515958d5f0a40233d02be78ecec0 ]
+[ Upstream commit a5fb8e6c02d6a518fb2b1a2b8c2471fa77b69436 ]
 
-Calling ceph_buffer_put() in __ceph_setxattr() may end up freeing the
-i_xattrs.prealloc_blob buffer while holding the i_ceph_lock.  This can be
-fixed by postponing the call until later, when the lock is released.
+Fix a leak on the cell refcount in afs_lookup_cell_rcu() due to
+non-clearance of the default error in the case a NULL cell name is passed
+and the workstation default cell is used.
 
-The following backtrace was triggered by fstests generic/117.
+Also put a bit at the end to make sure we don't leak a cell ref if we're
+going to be returning an error.
 
-  BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
-  in_atomic(): 1, irqs_disabled(): 0, pid: 650, name: fsstress
-  3 locks held by fsstress/650:
-   #0: 00000000870a0fe8 (sb_writers#8){.+.+}, at: mnt_want_write+0x20/0x50
-   #1: 00000000ba0c4c74 (&type->i_mutex_dir_key#6){++++}, at: vfs_setxattr+0x55/0xa0
-   #2: 000000008dfbb3f2 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: __ceph_setxattr+0x297/0x810
-  CPU: 1 PID: 650 Comm: fsstress Not tainted 5.2.0+ #437
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
-  Call Trace:
-   dump_stack+0x67/0x90
-   ___might_sleep.cold+0x9f/0xb1
-   vfree+0x4b/0x60
-   ceph_buffer_release+0x1b/0x60
-   __ceph_setxattr+0x2b4/0x810
-   __vfs_setxattr+0x66/0x80
-   __vfs_setxattr_noperm+0x59/0xf0
-   vfs_setxattr+0x81/0xa0
-   setxattr+0x115/0x230
-   ? filename_lookup+0xc9/0x140
-   ? rcu_read_lock_sched_held+0x74/0x80
-   ? rcu_sync_lockdep_assert+0x2e/0x60
-   ? __sb_start_write+0x142/0x1a0
-   ? mnt_want_write+0x20/0x50
-   path_setxattr+0xba/0xd0
-   __x64_sys_lsetxattr+0x24/0x30
-   do_syscall_64+0x50/0x1c0
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7ff23514359a
+This leak results in an assertion like the following when the kafs module is
+unloaded:
 
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+	AFS: Assertion failed
+	2 == 1 is false
+	0x2 == 0x1 is false
+	------------[ cut here ]------------
+	kernel BUG at fs/afs/cell.c:770!
+	...
+	RIP: 0010:afs_manage_cells+0x220/0x42f [kafs]
+	...
+	 process_one_work+0x4c2/0x82c
+	 ? pool_mayday_timeout+0x1e1/0x1e1
+	 ? do_raw_spin_lock+0x134/0x175
+	 worker_thread+0x336/0x4a6
+	 ? rescuer_thread+0x4af/0x4af
+	 kthread+0x1de/0x1ee
+	 ? kthread_park+0xd4/0xd4
+	 ret_from_fork+0x24/0x30
+
+Fixes: 989782dcdc91 ("afs: Overhaul cell database management")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/xattr.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/afs/cell.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index 0a2d4898ee163..71ea45b0231f9 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -1011,6 +1011,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
- 	struct ceph_inode_info *ci = ceph_inode(inode);
- 	struct ceph_mds_client *mdsc = ceph_sb_to_client(inode->i_sb)->mdsc;
- 	struct ceph_cap_flush *prealloc_cf = NULL;
-+	struct ceph_buffer *old_blob = NULL;
- 	int issued;
- 	int err;
- 	int dirty = 0;
-@@ -1084,13 +1085,15 @@ int __ceph_setxattr(struct inode *inode, const char *name,
- 		struct ceph_buffer *blob;
+diff --git a/fs/afs/cell.c b/fs/afs/cell.c
+index 6127f0fcd62c4..ee07162d35c7a 100644
+--- a/fs/afs/cell.c
++++ b/fs/afs/cell.c
+@@ -76,6 +76,7 @@ struct afs_cell *afs_lookup_cell_rcu(struct afs_net *net,
+ 			cell = rcu_dereference_raw(net->ws_cell);
+ 			if (cell) {
+ 				afs_get_cell(cell);
++				ret = 0;
+ 				break;
+ 			}
+ 			ret = -EDESTADDRREQ;
+@@ -110,6 +111,9 @@ struct afs_cell *afs_lookup_cell_rcu(struct afs_net *net,
  
- 		spin_unlock(&ci->i_ceph_lock);
--		dout(" preaallocating new blob size=%d\n", required_blob_size);
-+		ceph_buffer_put(old_blob); /* Shouldn't be required */
-+		dout(" pre-allocating new blob size=%d\n", required_blob_size);
- 		blob = ceph_buffer_new(required_blob_size, GFP_NOFS);
- 		if (!blob)
- 			goto do_sync_unlocked;
- 		spin_lock(&ci->i_ceph_lock);
-+		/* prealloc_blob can't be released while holding i_ceph_lock */
- 		if (ci->i_xattrs.prealloc_blob)
--			ceph_buffer_put(ci->i_xattrs.prealloc_blob);
-+			old_blob = ci->i_xattrs.prealloc_blob;
- 		ci->i_xattrs.prealloc_blob = blob;
- 		goto retry;
- 	}
-@@ -1106,6 +1109,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
- 	}
+ 	done_seqretry(&net->cells_lock, seq);
  
- 	spin_unlock(&ci->i_ceph_lock);
-+	ceph_buffer_put(old_blob);
- 	if (lock_snap_rwsem)
- 		up_read(&mdsc->snap_rwsem);
- 	if (dirty)
++	if (ret != 0 && cell)
++		afs_put_cell(net, cell);
++
+ 	return ret == 0 ? cell : ERR_PTR(ret);
+ }
+ 
 -- 
 2.20.1
 
