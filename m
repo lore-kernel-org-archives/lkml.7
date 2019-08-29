@@ -2,124 +2,100 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF188C3A59F
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A188AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C15D622CEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:06:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ln7FlWdW"
+	by mail.kernel.org (Postfix) with ESMTP id 789A322CEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 19:06:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbfH2TGJ (ORCPT
+        id S1728654AbfH2TGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 15:06:09 -0400
-Received: from gateway23.websitewelcome.com ([192.185.48.251]:36738 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727437AbfH2TGI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 15:06:08 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 13F30A4EF
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 14:06:08 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 3PkFiB0xb4FKp3PkGiF4du; Thu, 29 Aug 2019 14:06:08 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3+46xOrI9yy3LuOhJZ5rmqfr4aF7buwsYetlbyfyvSU=; b=ln7FlWdWq1Un9s4oy/dP68rvSQ
-        TJnWL2hfqTjoz+3qyEAHw1M9p5TVCgHJRS6FIjDUkVoB5Fp1Xg53bPK6GKtekC+PflgtgtZ776Tdy
-        N8sXXKpmhMhZTMKYKA1Vm0WRGA/VnWDby8hTFEhZHMK2Eegh8898DUK5y06xj/frawbEm+v6KrZNd
-        8a9tJLkqK9os6hZf24ajT6J0HAP6o5V9WF8LEX39ksicjtpwh6M7MaOSRv98v9qJQC6CE2Mkngo7G
-        OZzfg+M8OqxIhqsa6eraB1bLfGSd8UwnPQ3fDm1j03dHFO1C3wKWII3ibEx3uYpgAoPHkqdhrkBxA
-        aH2p7BdQ==;
-Received: from [189.152.216.116] (port=45156 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1i3PkE-001rxt-Vo; Thu, 29 Aug 2019 14:06:07 -0500
-Date:   Thu, 29 Aug 2019 14:06:05 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] percpu: Use struct_size() helper
-Message-ID: <20190829190605.GA17425@embeddedor>
+        Thu, 29 Aug 2019 15:06:41 -0400
+Received: from sauhun.de ([88.99.104.3]:42400 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727437AbfH2TGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 15:06:41 -0400
+Received: from localhost (p54B33070.dip0.t-ipconnect.de [84.179.48.112])
+        by pokefinder.org (Postfix) with ESMTPSA id BA9D42C001C;
+        Thu, 29 Aug 2019 21:06:39 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 21:06:39 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Max Staudt <max@enpas.org>
+Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, linux-m68k@vger.kernel.org,
+        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
+Subject: Re: [PATCH v5 3/3] i2c/busses/i2c-icy: Add LTC2990 present on 2019
+ board revision
+Message-ID: <20190829190639.GH3740@ninjato>
+References: <20190819121618.16557-1-max@enpas.org>
+ <20190819121618.16557-3-max@enpas.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kHRd/tpU31Zn62xO"
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.216.116
-X-Source-L: No
-X-Exim-ID: 1i3PkE-001rxt-Vo
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.152.216.116]:45156
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190819121618.16557-3-max@enpas.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
 
-struct pcpu_alloc_info {
-	...
-        struct pcpu_group_info  groups[];
-};
+--kHRd/tpU31Zn62xO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
+On Mon, Aug 19, 2019 at 02:16:18PM +0200, Max Staudt wrote:
+> Since the 2019 a1k.org community re-print of these PCBs sports an
+> LTC2990 hwmon chip as an example use case, let this driver autoprobe
+> for that as well. If it is present, modprobing ltc2990 is sufficient.
+>=20
+> The property_entry enables the three additional inputs available on
+> this particular board:
+>=20
+>   in1 will be the voltage of the 5V rail, divided by 2.
+>   in2 will be the voltage of the 12V rail, divided by 4.
+>   temp3 will be measured using a PCB loop next the chip.
+>=20
+> v5: Style
+>=20
+> v4: Style
+>     Added other possible addresses for LTC2990.
+>=20
+> v3: Merged with initial LTC2990 support on ICY.
+>     Moved defaults from platform_data to swnode.
+>     Added note to Kconfig.
+>=20
+> Signed-off-by: Max Staudt <max@enpas.org>
 
-So, replace the following form:
+Applied to for-next, thanks!
 
-sizeof(*ai) + nr_groups * sizeof(ai->groups[0])
 
-with:
+--kHRd/tpU31Zn62xO
+Content-Type: application/pgp-signature; name="signature.asc"
 
-struct_size(ai, groups, nr_groups)
+-----BEGIN PGP SIGNATURE-----
 
-This code was detected with the help of Coccinelle.
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1oIj8ACgkQFA3kzBSg
+KbYTIg//aO1FrBTmT/QfrKtesFvAvdPu7gvw0MG4I219fbET8QCNiv0qj66cmeru
+By6FNeH7UIuOAABpKfsJfnQX35VEs758AzrGwD8A47xE7TO/aN94nuhQ9QYK1GJB
+0mxAIkuQ0rkFp/+elWzyRAyALjad4lI+vZRYkgZnGLr3j0FGg6ObEdRccn8OnmdS
+B/Jn2+5DhDKj4gNX/xHCxl8vmnYFiXOIZp4XKxblYqu/HY9KM7BgdNV6eonpN6ZD
+OXScHi+J6CKVg+pOoI/PWvoyB+vPFo+0DZwtGKLxDkAoGmqKtIK5AFZbWQnzw0uz
+S8WqmH0AbVi1A8aXb0YfxgunL96L5rqHaIZx3i3jUi5W9GGA3PTRCHdhMzzDt1DX
+iJW72OyuU7fWlOl0nTKzOTeIpthboTcolH8d3vnFFhpi0hYiYwrP9rI0KP+t6in6
+91F1WkZDHK1ukp9+LjUkeLcmfIzNFc+UMsUeocUu2WL49hwQWN5O+4O1w9DqvR9v
+yb8oNZO5PnBzpaPM2iQV8cfPe2/weJiGfBs+K65NCbmOn8KvlKGzPL4eMCGc62ZL
+cPop+da0XRBAWGo2diN9BkhzTtXWSPTMJDZUAC5mLaRXWD/8AEU81J9JSdpWMvi6
+J9K2b6hUzqINpzVYh+TGVyXZSy+j8MljaAswUTrAHjjRnXDI/XA=
+=7zkG
+-----END PGP SIGNATURE-----
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- mm/percpu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/percpu.c b/mm/percpu.c
-index 7e2aa0305c27..7e06a1e58720 100644
---- a/mm/percpu.c
-+++ b/mm/percpu.c
-@@ -2125,7 +2125,7 @@ struct pcpu_alloc_info * __init pcpu_alloc_alloc_info(int nr_groups,
- 	void *ptr;
- 	int unit;
- 
--	base_size = ALIGN(sizeof(*ai) + nr_groups * sizeof(ai->groups[0]),
-+	base_size = ALIGN(struct_size(ai, groups, nr_groups),
- 			  __alignof__(ai->groups[0].cpu_map[0]));
- 	ai_size = base_size + nr_units * sizeof(ai->groups[0].cpu_map[0]);
- 
--- 
-2.23.0
-
+--kHRd/tpU31Zn62xO--
