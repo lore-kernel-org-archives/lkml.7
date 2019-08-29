@@ -2,73 +2,75 @@ Return-Path: <SRS0=brkd=WZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9817AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4239EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610CA2189D
-	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:49:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="ZZWD9OpN"
+	by mail.kernel.org (Postfix) with ESMTP id 1867423405
+	for <linux-kernel@archiver.kernel.org>; Thu, 29 Aug 2019 13:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567086626;
+	bh=Uh2uOq4Ob8d47W0KPG477Y07xsJB4CFrYSm7rfe/lpk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FqIvCFyMlNf2JGyD4EyDqbASy+i2SVGmKBSro4oDIde2zWR9mplxPv/RWM12r3nHI
+	 hApu/w4LCijWciw5oT2OIRKcSYs9WO4iXw2s3EOZ2O9krOR4eGPV1D6XzdxhvK+KjT
+	 OINx03MDndt6zsf5Q/TlYgMsVmvRrmPuslFVGREY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbfH2NtJ (ORCPT
+        id S1727648AbfH2NuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 29 Aug 2019 09:49:09 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39093 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727454AbfH2NtH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:49:07 -0400
-Received: by mail-io1-f66.google.com with SMTP id d25so4487172iob.6
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Aug 2019 06:49:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0Q3HOIVTiQQjN2WQrPLYQE1BmRGFiieaz+rA81DvnjU=;
-        b=ZZWD9OpNRL0XtYFi2lFZlHxSZinqyJ8TpyLRrYC9iPu82pocpeGILmNJueXE79tL46
-         Hx3iIG3SHdJuf3SlJEy1VlbhChjRlBUg7MhHjF0H71LlBWYxfvIQWax+sVjsQt5WUM/v
-         VduNLbytEHMvZQWgrRu0W2b2t0rKniNs6zLPs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Q3HOIVTiQQjN2WQrPLYQE1BmRGFiieaz+rA81DvnjU=;
-        b=Jz4dR4l5Cm7afUCyipz1Mgj0Obvqu5RRiWcPLNzOqb1moaWC9zahasKqllBSRcrtmW
-         sSlhW0Cliiyuxy4nytDVtqHXKu2gIuV+kw6vNDD3Jy5Utbyq03cHdkvM6OzlW+j2w/D0
-         /HPqp/NR925l2XGX+IGLsMOVDUuOpyk+z0trlgbPQ2d/YaNgCooukN5x+wirVBgeph1M
-         eeyH/YqJrS11zwX9uhwWZ+/qOeQqLbjYL27JLyBGBb7NEJ95i4d+6/r3jMpLrLugRlHU
-         dgV64/JlmSbAC53WtH5qe2WS3JVuUqaLg49xir9J46+0NSRIWTS+katMlFT05QBVktgU
-         Q8Kw==
-X-Gm-Message-State: APjAAAXtGVqDrd55m3LvDVm/tsV0EHaZkMPLt+XEVxaSPS8xcA6Ju/Ew
-        bpVzeAFJCGp+FdQEVPoDjLY6/24gpD3eyw59lFmdDg==
-X-Google-Smtp-Source: APXvYqzW2n25R0aKrJKpGkCfaBBX65DnLGmBlfFac1mmX3iIfD8YBhimr86nLnQnYes5p3+3pE+/AtLQSkscAssggNI=
-X-Received: by 2002:a6b:da1a:: with SMTP id x26mr11000610iob.285.1567086547127;
- Thu, 29 Aug 2019 06:49:07 -0700 (PDT)
+        Thu, 29 Aug 2019 09:50:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbfH2NuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 29 Aug 2019 09:50:25 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3C092189D;
+        Thu, 29 Aug 2019 13:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567086623;
+        bh=Uh2uOq4Ob8d47W0KPG477Y07xsJB4CFrYSm7rfe/lpk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gnpWWrivvds3zCSxR7lT5mO2TVEjBrvDyEubxdQQAEQnUSQyMiQqQQyxGOE+jpNQR
+         4rHTs2rgPcr1vbx3N77UeqLyrbklguPRfTZv0h/WXZA9n0uzFe8HgP8IYePfD/tdfv
+         PkNRjFnKaPmyOg1+uoAtsdYKTedgNq9AU2Fdl0b8=
+Date:   Thu, 29 Aug 2019 09:50:22 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        kbuild test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH 2/2] software node: Fix use of potentially uninitialized
+ variable
+Message-ID: <20190829135022.GI5281@sasha-vm>
+References: <20190829132116.76120-1-heikki.krogerus@linux.intel.com>
+ <20190829132116.76120-3-heikki.krogerus@linux.intel.com>
 MIME-Version: 1.0
-References: <20190829134104.23653-1-stefanha@redhat.com>
-In-Reply-To: <20190829134104.23653-1-stefanha@redhat.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 29 Aug 2019 15:48:56 +0200
-Message-ID: <CAJfpegsMwGLryccnOR5a0RTFKjv3jH4g0DQt-HpkSQTwZgHyKw@mail.gmail.com>
-Subject: Re: [PATCH] virtio-fs: add Documentation/filesystems/virtiofs.rst
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>,
-        linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190829132116.76120-3-heikki.krogerus@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 3:41 PM Stefan Hajnoczi <stefanha@redhat.com> wrote:
->
-> Add information about the new "virtiofs" file system.
+On Thu, Aug 29, 2019 at 04:21:16PM +0300, Heikki Krogerus wrote:
+>reported by smatch:
+>drivers/base/swnode.c:71 software_node_to_swnode() error: uninitialized symbol 'swnode'.
 
-Thanks, applied.
+Could you describe the actual problem it fixes? Under what scenario
+would this issue occur and how would it manifest?
 
-Miklos
+We're not here to fix smatch warnings, we're here to fix bugs that
+smatch warns us about :)
+
+--
+Thanks,
+Sasha
